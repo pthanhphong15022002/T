@@ -309,6 +309,7 @@
                     <span></span>
                     <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết"
                         class="ms-2 fw-bold"></codx-label> -->
+                    <codx-input type="checkbox" (valueChange)="txtValue($event, 'postblog')" label="Tạo bài viết" ></codx-input>
                 </ng-container>
             </div>
             <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">

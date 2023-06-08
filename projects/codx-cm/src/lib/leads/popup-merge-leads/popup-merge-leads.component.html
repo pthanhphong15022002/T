@@ -57,9 +57,10 @@
   </div>
   <div class="px-6 h-100">
     <div class="row mb-2">
-      <div class="w-20"></div>
-      <div class="w-20">
+      <div class="w-10"></div>
+      <div class="w-30">
         <codx-label
+          class="h4"
           [formModel]="dialog.formModel"
           name="lblDataNew"
           default="Dữ liệu mới"
@@ -100,14 +101,14 @@
       >
       </codx-label>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             name="lblAvatar"
-            default="Ảnh đại diện"
+            default="Ảnh đại diện/Logo"
           ></codx-label>
         </div>
-        <div class="w-20" *ngIf="recIDLead">
+        <div class="w-30" *ngIf="recIDLead">
           <codx-img
             #imageAvatar
             class="image-inpt-wrapper fullImage"
@@ -120,7 +121,7 @@
             [isAllowEdit]="true"
             [isDefaulImg]="true"
             [imgOn]="modifyOn"
-            (handleInput)="changeAvatarNew()"
+            (handleInput)="changeAvatarNew('avata')"
           >
           </codx-img>
         </div>
@@ -238,13 +239,13 @@
       </div>
 
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="LeadID"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="leadID"
             type="text"
@@ -309,13 +310,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="LeadName"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="leadName"
             type="text"
@@ -380,13 +381,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="CompanyPhone"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="companyPhone"
             type="text"
@@ -463,13 +464,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="FaxNo"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="faxNo"
             type="text"
@@ -546,13 +547,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="webPage"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="webPage"
             type="text"
@@ -629,13 +630,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="EstablishDate"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             type="datetime"
             format="d"
@@ -712,13 +713,95 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
+        <div class="w-10">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="Headcounts"
+          ></codx-label>
+        </div>
+        <div class="w-30">
+          <codx-input
+            field="headcounts"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.headcounts"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
         <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div class="w-10">
+              <codx-input
+                id="headcounts1"
+                name="headcounts"
+                class="test-check"
+                type="radio"
+                field="headcounts1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'headcounts')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadOne?.headcounts
+                  | formatvalue : dialog.formModel : 'Headcounts'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div class="w-10">
+              <codx-input
+                id="headcounts2"
+                name="headcounts"
+                class="test-check"
+                type="radio"
+                field="headcounts2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'headcounts')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadTwo?.headcounts
+                  | formatvalue : dialog.formModel : 'Headcounts'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div class="w-10">
+              <codx-input
+                id="headcounts3"
+                name="headcounts"
+                class="test-check"
+                type="radio"
+                field="headcounts3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'headcounts')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadThree?.headcounts
+                  | formatvalue : dialog.formModel : 'Headcounts'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="Industries"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="industries"
             [formModel]="dialog.formModel"
@@ -822,13 +905,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="AnnualRevenue"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="annualRevenue"
             [formModel]="dialog.formModel"
@@ -904,13 +987,95 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
+        <div class="w-10">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="BusinesslineID"
+          ></codx-label>
+        </div>
+        <div class="w-30">
+          <codx-input
+            field="businesslineID"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.businesslineID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
         <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businesslineID1"
+                name="businesslineID"
+                class="test-check"
+                type="radio"
+                field="businesslineID1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'businesslineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadOne?.businesslineID
+                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businesslineID2"
+                name="businesslineID"
+                class="test-check"
+                type="radio"
+                field="businesslineID2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'businesslineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadTwo?.businesslineID
+                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div class="w-10">
+              <codx-input
+                id="businesslineID3"
+                name="businesslineID"
+                class="test-check"
+                type="radio"
+                field="businesslineID3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'businesslineID')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadThree?.businesslineID
+                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="Memo"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="memo"
             [formModel]="dialog.formModel"
@@ -982,13 +1147,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="Note"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="note"
             [formModel]="dialog.formModel"
@@ -1062,97 +1227,6 @@
     </div>
     <div class="mt-2">
       <codx-label
-        name="lblUpdateInfo"
-        class="h4 text-dark text-primary fw-bold"
-        default="Thông tin bổ sung"
-        [formModel]="dialog.formModel"
-      >
-      </codx-label>
-      <div class="mt-1 row form-group">
-        <div class="w-20">
-          <codx-label
-            [formModel]="dialog.formModel"
-            fiedName="Headcounts"
-          ></codx-label>
-        </div>
-        <div class="w-20">
-          <codx-input
-            field="headcounts"
-            [formModel]="dialog.formModel"
-            [crrValue]="leadNew?.headcounts"
-            (valueChange)="valueChange($event)"
-          ></codx-input>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadOne?.recID">
-            <div class="w-10">
-              <codx-input
-                id="headcounts1"
-                name="headcounts"
-                class="test-check"
-                type="radio"
-                field="headcounts1"
-                [checked]="true"
-                (valueChange)="changeRadio($event, 'headcounts')"
-              ></codx-input>
-            </div>
-            <div
-              [innerHTML]="
-                leadOne?.headcounts
-                  | formatvalue : dialog.formModel : 'Headcounts'
-                  | async
-              "
-            ></div>
-          </div>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadTwo?.recID">
-            <div class="w-10">
-              <codx-input
-                id="headcounts2"
-                name="headcounts"
-                class="test-check"
-                type="radio"
-                field="headcounts2"
-                [checked]="false"
-                (valueChange)="changeRadio($event, 'headcounts')"
-              ></codx-input>
-            </div>
-            <div
-              [innerHTML]="
-                leadTwo?.headcounts
-                  | formatvalue : dialog.formModel : 'Headcounts'
-                  | async
-              "
-            ></div>
-          </div>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadThree?.recID">
-            <div class="w-10">
-              <codx-input
-                id="headcounts3"
-                name="headcounts"
-                class="test-check"
-                type="radio"
-                field="headcounts3"
-                [checked]="false"
-                (valueChange)="changeRadio($event, 'headcounts')"
-              ></codx-input>
-            </div>
-            <div
-              [innerHTML]="
-                leadThree?.headcounts
-                  | formatvalue : dialog.formModel : 'Headcounts'
-                  | async
-              "
-            ></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="mt-2">
-      <codx-label
         name="lblSystemInfo"
         class="h4 text-dark text-primary fw-bold"
         default="Thông tin hệ thống"
@@ -1160,13 +1234,13 @@
       >
       </codx-label>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="CampaignID"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="campaignID"
             [formModel]="dialog.formModel"
@@ -1243,13 +1317,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="ChannelID"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="channelID"
             [formModel]="dialog.formModel"
@@ -1324,97 +1398,15 @@
           </div>
         </div>
       </div>
-      <div class="mt-1 row form-group">
-        <div class="w-20">
-          <codx-label
-            [formModel]="dialog.formModel"
-            fiedName="BusinesslineID"
-          ></codx-label>
-        </div>
-        <div class="w-20">
-          <codx-input
-            field="businesslineID"
-            [formModel]="dialog.formModel"
-            [crrValue]="leadNew?.businesslineID"
-            (valueChange)="valueChange($event)"
-          ></codx-input>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadOne?.recID">
-            <div class="w-10">
-              <codx-input
-                id="businesslineID1"
-                name="businesslineID"
-                class="test-check"
-                type="radio"
-                field="businesslineID1"
-                [checked]="true"
-                (valueChange)="changeRadio($event, 'businesslineID')"
-              ></codx-input>
-            </div>
-            <div
-              [innerHTML]="
-                leadOne?.businesslineID
-                  | formatvalue : dialog.formModel : 'BusinesslineID'
-                  | async
-              "
-            ></div>
-          </div>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadTwo?.recID">
-            <div class="w-10">
-              <codx-input
-                id="businesslineID2"
-                name="businesslineID"
-                class="test-check"
-                type="radio"
-                field="businesslineID2"
-                [checked]="false"
-                (valueChange)="changeRadio($event, 'businesslineID')"
-              ></codx-input>
-            </div>
-            <div
-              [innerHTML]="
-                leadTwo?.businesslineID
-                  | formatvalue : dialog.formModel : 'BusinesslineID'
-                  | async
-              "
-            ></div>
-          </div>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadThree?.recID">
-            <div class="w-10">
-              <codx-input
-                id="businesslineID3"
-                name="businesslineID"
-                class="test-check"
-                type="radio"
-                field="businesslineID3"
-                [checked]="false"
-                (valueChange)="changeRadio($event, 'businesslineID')"
-              ></codx-input>
-            </div>
-            <div
-              [innerHTML]="
-                leadThree?.businesslineID
-                  | formatvalue : dialog.formModel : 'BusinesslineID'
-                  | async
-              "
-            ></div>
-          </div>
-        </div>
 
-      </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="CustomerResource"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="customerResource"
             [formModel]="dialog.formModel"
@@ -1490,13 +1482,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="SalespersonID"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="salespersonID"
             [formModel]="dialog.formModel"
@@ -1572,13 +1564,13 @@
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="ConsultantID"
           ></codx-label>
         </div>
-        <div class="w-20">
+        <div class="w-30">
           <codx-input
             field="consultantID"
             [formModel]="dialog.formModel"
@@ -1663,617 +1655,432 @@
       >
       </codx-label>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
-            name="lblListContacts"
-            [default]="'Danh sách liên hệ'"
+            name="lblAvatar"
+            default="Ảnh đại diện/Logo"
           ></codx-label>
         </div>
-        <div class="w-20">
-          <div
-            class="d-flex flex-column"
-            *ngIf="lstContactNew != null && lstContactNew.length > 0"
+        <div class="w-30" *ngIf="recIDLead">
+          <codx-img
+            #imageAvatarContact
+            class="image-inpt-wrapper fullImage"
+            [referType]="'avt'"
+            [width]="90"
+            [funcId]="dialog?.formModel?.funcID"
+            [objectId]="recIDAvt"
+            [objectType]="dialog?.formModel?.entityName"
+            [objectName]="nameContact"
+            [isAllowEdit]="true"
+            [isDefaulImg]="true"
+            [imgOn]="modifyOn"
+            (handleInput)="changeAvatarNew('avataContact')"
           >
-            <div class="mb-2">
-              <codx-view-img-contact
-                [lstContact]="lstContactNew"
-                [numberIms]="3"
-                [formModel]="dialog.formModel"
-                [sizeImg]="25"
-              ></codx-view-img-contact>
-            </div>
-
-            <div class="d-flex">
-              <div
-                class="d-flex justify-content-start align-items-center"
-                style="min-width: 130px"
-              >
-                <button
-                  type="button"
-                  class="btn btn-outline-primary min-w-120px me-2"
-                  (click)="clickPopupContacts('remove', lstContactNew, leadNew)"
-                >
-                  <i class="icon-check-correct icon-16 me-1"></i>
-                  <codx-label
-                    name="lblCheckOutContacts"
-                    [formModel]="dialog.formModel"
-                    default="Loại bỏ liên hệ"
-                  ></codx-label>
-                </button>
-              </div>
-            </div>
+          </codx-img>
+        </div>
+        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+          <div class="w-10">
+            <codx-input
+              id="avataContact1"
+              name="avataContact"
+              class="test-check"
+              type="radio"
+              field="avataContact1"
+              [checked]="true"
+              (valueChange)="changeRadio($event, 'avataContact')"
+            ></codx-input>
           </div>
+          <div>
+            <codx-img
+              #imageAvatarContact
+              class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
+              [width]="90"
+              [funcId]="dialog?.formModel?.funcID"
+              [objectId]="leadOne?.contactID"
+              [objectType]="dialog?.formModel?.entityName"
+              [objectName]="leadOne?.contactName"
+              [isDefaulImg]="true"
+              [imgOn]="leadOne?.modifiedOn"
+            >
+            </codx-img>
+          </div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10" *ngIf="leadTwo?.recID">
+            <codx-input
+              id="avataContact2"
+              name="avataContact"
+              class="test-check"
+              type="radio"
+              field="avataContact2"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'avataContact')"
+            ></codx-input>
+          </div>
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <codx-img
+              #imageAvatarContact
+              class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
+              [width]="90"
+              [funcId]="dialog?.formModel?.funcID"
+              [objectId]="leadTwo?.contactID"
+              [objectType]="dialog?.formModel?.entityName"
+              [objectName]="leadTwo?.contactName"
+              [isDefaulImg]="true"
+              [imgOn]="leadTwo?.modifiedOn"
+            >
+            </codx-img>
+          </div>
+        </div>
+        <div class="w-20 d-flex">
+          <div class="w-10" *ngIf="leadThree?.recID">
+            <codx-input
+              id="avataContact3"
+              name="avataContact"
+              class="test-check"
+              type="radio"
+              field="avataContact3"
+              [checked]="false"
+              (valueChange)="changeRadio($event, 'avataContact')"
+            ></codx-input>
+          </div>
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <codx-img
+              #imageAvatarContact
+              class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
+              [width]="90"
+              [funcId]="dialog?.formModel?.entityName"
+              [objectId]="leadThree?.contactID"
+              [objectType]="dialog?.formModel?.entityName"
+              [objectName]="leadThree?.contactName"
+              [isDefaulImg]="true"
+              [imgOn]="leadThree?.modifiedOn"
+            >
+            </codx-img>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-10">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="ContactName"
+          ></codx-label>
+        </div>
+        <div class="w-30">
+          <codx-input
+            field="contactName"
+            type="text"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.contactName"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadOne?.recID">
-            <div
-              class="d-flex flex-column"
-              *ngIf="lstContactOne != null && lstContactOne.length > 0"
-            >
-              <div class="mb-2">
-                <codx-view-img-contact
-                  [lstContact]="lstContactOne"
-                  [numberIms]="3"
-                  [formModel]="dialog.formModel"
-                  [sizeImg]="25"
-                ></codx-view-img-contact>
-              </div>
-
-              <div class="d-flex">
-                <div
-                  class="d-flex justify-content-start align-items-center"
-                  style="min-width: 130px"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupContacts('add', lstContactOne, leadOne)"
-                  >
-                    <i class="icon-check-correct icon-16 me-1"></i>
-                    <codx-label
-                      name="lblSelectContacts"
-                      [formModel]="dialog.formModel"
-                      default="Chọn liên hệ"
-                    ></codx-label>
-                  </button>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
-                  <codx-label
-                    class="label-colon"
-                    name="lblSelect"
-                    [formModel]="dialog.formModel"
-                    default="Đã chọn"
-                  ></codx-label>
-                  <span
-                    class="me-1"
-                    [innerHTML]="
-                      countContactAndAddress(lstContactNew, lstContactOne)
-                    "
-                  ></span>
-                  <span class="me-1">
-                    <codx-label
-                      class=""
-                      name="lblOf"
-                      [formModel]="dialog.formModel"
-                      default="của"
-                    ></codx-label
-                  ></span>
-                  <span class="me-1">
-                    {{ lstContactOne.length }}
-                  </span>
-                </div>
-              </div>
+            <div class="w-10">
+              <codx-input
+                id="contactName1"
+                name="contactName"
+                class="test-check"
+                type="radio"
+                field="contactName1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'contactName')"
+              ></codx-input>
+            </div>
+            <div>
+              {{ leadOne?.contactName }}
             </div>
           </div>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadTwo?.recID">
-            <div
-              class="d-flex flex-column"
-              *ngIf="lstContactTwo != null && lstContactTwo.length > 0"
-            >
-              <div class="mb-2">
-                <codx-view-img-contact
-                  [lstContact]="lstContactTwo"
-                  [numberIms]="3"
-                  [formModel]="dialog.formModel"
-                  [sizeImg]="25"
-                ></codx-view-img-contact>
-              </div>
-
-              <div class="d-flex">
-                <div
-                  class="d-flex justify-content-start align-items-center"
-                  style="min-width: 130px"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupContacts('add', lstContactTwo, leadTwo)"
-                  >
-                    <i class="icon-check-correct icon-16 me-1"></i>
-                    <codx-label
-                      name="lblSelectContacts"
-                      [formModel]="dialog.formModel"
-                      default="Chọn liên hệ"
-                    ></codx-label>
-                  </button>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
-                  <codx-label
-                    class="label-colon"
-                    name="lblSelect"
-                    [formModel]="dialog.formModel"
-                    default="Đã chọn"
-                  ></codx-label>
-                  <span
-                    class="me-1"
-                    [innerHTML]="
-                      countContactAndAddress(lstContactNew, lstContactTwo)
-                    "
-                  ></span>
-                  <span class="me-1">
-                    <codx-label
-                      class=""
-                      name="lblOf"
-                      [formModel]="dialog.formModel"
-                      default="của"
-                    ></codx-label
-                  ></span>
-                  <span class="me-1">
-                    {{ lstContactTwo.length }}
-                  </span>
-                </div>
-              </div>
+            <div class="w-10">
+              <codx-input
+                id="contactName2"
+                name="contactName"
+                class="test-check"
+                type="radio"
+                field="contactName2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'contactName')"
+              ></codx-input>
+            </div>
+            <div>
+              {{ leadTwo?.contactName }}
             </div>
           </div>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadThree?.recID">
-            <div
-              class="d-flex flex-column"
-              *ngIf="lstContactThree != null && lstContactThree.length > 0"
-            >
-              <div class="mb-2">
-                <codx-view-img-contact
-                  [lstContact]="lstContactThree"
-                  [numberIms]="3"
-                  [formModel]="dialog.formModel"
-                  [sizeImg]="25"
-                ></codx-view-img-contact>
-              </div>
-
-              <div class="d-flex">
-                <div
-                  class="d-flex justify-content-start align-items-center"
-                  style="min-width: 130px"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="
-                      clickPopupContacts('add', lstContactThree, leadThree)
-                    "
-                  >
-                    <i class="icon-check-correct icon-16 me-1"></i>
-                    <codx-label
-                      name="lblSelectContacts"
-                      [formModel]="dialog.formModel"
-                      default="Chọn liên hệ"
-                    ></codx-label>
-                  </button>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
-                  <codx-label
-                    class="label-colon"
-                    name="lblSelect"
-                    [formModel]="dialog.formModel"
-                    default="Đã chọn"
-                  ></codx-label>
-                  <span
-                    class="me-1"
-                    [innerHTML]="
-                      countContactAndAddress(lstContactNew, lstContactThree)
-                    "
-                  ></span>
-                  <span class="me-1">
-                    <codx-label
-                      class=""
-                      name="lblOf"
-                      [formModel]="dialog.formModel"
-                      default="của"
-                    ></codx-label
-                  ></span>
-                  <span class="me-1">
-                    {{ lstContactThree.length }}
-                  </span>
-                </div>
-              </div>
+            <div class="w-10">
+              <codx-input
+                id="contactName3"
+                name="contactName"
+                class="test-check"
+                type="radio"
+                field="contactName3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'contactName')"
+              ></codx-input>
+            </div>
+            <div>
+              {{ leadThree?.contactName }}
             </div>
           </div>
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
-            name="lblDefaultContacts"
-            [default]="'Liên hệ mặc định'"
+            fiedName="JobTitle"
           ></codx-label>
         </div>
-        <div class="w-20">
-          <div
-            class="d-flex"
-            *ngIf="lstContactNew != null && lstContactNew.length > 0"
-          >
-            <ejs-combobox
-              [dataSource]="lstContactNew"
-              [fields]="fieldContacts"
-              [value]="contactDefault"
-              (valueChange)="cbxContactChange($event, 'contact')"
-            ></ejs-combobox>
-          </div>
+        <div class="w-30">
+          <codx-input
+            field="jobTitle"
+            type="text"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.jobTitle"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadOne?.recID">
-            <div
-              class="mb-1"
-              *ngIf="lstContactOne != null && lstContactOne.length > 0"
-            >
-              <codx-view-img-contact
-                [lstContact]="getContactDefault(lstContactOne)"
-                [numberIms]="1"
-                [formModel]="dialog.formModel"
-                [sizeImg]="25"
-              ></codx-view-img-contact>
+            <div class="w-10">
+              <codx-input
+                id="jobTitle1"
+                name="jobTitle"
+                class="test-check"
+                type="radio"
+                field="jobTitle1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'jobTitle')"
+              ></codx-input>
             </div>
+            <div
+              [innerHTML]="
+                leadOne?.jobTitle
+                  | formatvalue : dialog.formModel : 'JobTitle'
+                  | async
+              "
+            ></div>
           </div>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div class="w-10">
+              <codx-input
+                id="jobTitle2"
+                name="jobTitle"
+                class="test-check"
+                type="radio"
+                field="jobTitle2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'jobTitle')"
+              ></codx-input>
+            </div>
             <div
-              class="mb-1"
-              *ngIf="lstContactTwo != null && lstContactTwo.length > 0"
-            >
-              <codx-view-img-contact
-                [lstContact]="getContactDefault(lstContactTwo)"
-                [numberIms]="1"
-                [formModel]="dialog.formModel"
-                [sizeImg]="25"
-              ></codx-view-img-contact>
-            </div>
-          </div>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadThree?.recID"></div>
-          <div
-            class="mb-1"
-            *ngIf="lstContactThree != null && lstContactThree.length > 0"
-          >
-            <codx-view-img-contact
-              [lstContact]="getContactDefault(lstContactThree)"
-              [numberIms]="1"
-              [formModel]="dialog.formModel"
-              [sizeImg]="25"
-            ></codx-view-img-contact>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="mt-2">
-      <codx-label
-        name="lblListAddress"
-        class="h4 text-dark text-primary fw-bold"
-        default="Danh sách địa chỉ"
-        [formModel]="dialog.formModel"
-      >
-      </codx-label>
-      <div class="mt-1 row form-group">
-        <div class="w-20">
-          <codx-label
-            [formModel]="dialog.formModel"
-            name="lblListAddress"
-            default="Danh sách địa chỉ"
-          ></codx-label>
-        </div>
-        <div class="w-20">
-          <div
-            class="d-flex flex-column"
-            *ngIf="lstAddressNew != null && lstAddressNew.length > 0"
-          >
-            <div class="d-flex">
-              <div
-                class="d-flex justify-content-start align-items-center"
-                style="min-width: 130px"
-              >
-                <button
-                  type="button"
-                  class="btn btn-outline-primary min-w-120px me-2"
-                  (click)="clickPopupAddress('remove', lstAddressNew, leadNew)"
-                >
-                  <i class="icon-check-correct icon-16 me-1"></i>
-                  <codx-label
-                    name="lblCheckOutAddress"
-                    [formModel]="dialog.formModel"
-                    default="Loại bỏ địa chỉ"
-                  ></codx-label>
-                </button>
-              </div>
-              <div class="d-flex justify-content-end align-items-center">
-                <codx-label
-                  class="label-colon"
-                  name="lblSelect"
-                  [formModel]="dialog.formModel"
-                  default="Đã chọn"
-                ></codx-label>
-
-                <span class="me-1">
-                  {{ lstAddressNew.length }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadOne?.recID">
-            <div
-              class="d-flex flex-column"
-              *ngIf="lstAddressOne != null && lstAddressOne.length > 0"
-            >
-              <div class="d-flex">
-                <div
-                  class="d-flex justify-content-start align-items-center"
-                  style="min-width: 130px"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupAddress('add', lstAddressOne, leadOne)"
-                  >
-                    <i class="icon-check-correct icon-16 me-1"></i>
-                    <codx-label
-                      name="lblSelectAddress"
-                      [formModel]="dialog.formModel"
-                      default="Chọn địa chỉ"
-                    ></codx-label>
-                  </button>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
-                  <codx-label
-                    class="label-colon"
-                    name="lblSelect"
-                    [formModel]="dialog.formModel"
-                    default="Đã chọn"
-                  ></codx-label>
-                  <span
-                    class="me-1"
-                    [innerHTML]="
-                      countContactAndAddress(lstAddressNew, lstAddressOne)
-                    "
-                  ></span>
-                  <span class="me-1">
-                    <codx-label
-                      class=""
-                      name="lblOf"
-                      [formModel]="dialog.formModel"
-                      default="của"
-                    ></codx-label
-                  ></span>
-                  <span class="me-1">
-                    {{ lstAddressOne.length }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="w-20">
-          <div class="d-flex" *ngIf="leadTwo?.recID">
-            <div
-              class="d-flex flex-column"
-              *ngIf="lstAddressTwo != null && lstAddressTwo.length > 0"
-            >
-              <div class="d-flex">
-                <div
-                  class="d-flex justify-content-start align-items-center"
-                  style="min-width: 130px"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="clickPopupAddress('add', lstAddressTwo, leadTwo)"
-                  >
-                    <i class="icon-check-correct icon-16 me-1"></i>
-                    <codx-label
-                      name="lblSelectAddress"
-                      [formModel]="dialog.formModel"
-                      default="Chọn địa chỉ"
-                    ></codx-label>
-                  </button>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
-                  <codx-label
-                    class="label-colon"
-                    name="lblSelect"
-                    [formModel]="dialog.formModel"
-                    default="Đã chọn"
-                  ></codx-label>
-                  <span
-                    class="me-1"
-                    [innerHTML]="
-                      countContactAndAddress(lstAddressNew, lstAddressTwo)
-                    "
-                  ></span>
-                  <span class="me-1">
-                    <codx-label
-                      class=""
-                      name="lblOf"
-                      [formModel]="dialog.formModel"
-                      default="của"
-                    ></codx-label
-                  ></span>
-                  <span class="me-1">
-                    {{ lstAddressTwo.length }}
-                  </span>
-                </div>
-              </div>
-            </div>
+              [innerHTML]="
+                leadTwo?.jobTitle
+                  | formatvalue : dialog.formModel : 'JobTitle'
+                  | async
+              "
+            ></div>
           </div>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadThree?.recID">
-            <div
-              class="d-flex flex-column"
-              *ngIf="lstAddressThree != null && lstAddressThree.length > 0"
-            >
-              <div class="d-flex">
-                <div
-                  class="d-flex justify-content-start align-items-center"
-                  style="min-width: 130px"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary min-w-120px me-2"
-                    (click)="
-                      clickPopupAddress('add', lstAddressThree, leadThree)
-                    "
-                  >
-                    <i class="icon-check-correct icon-16 me-1"></i>
-                    <codx-label
-                      name="lblSelectAddress"
-                      [formModel]="dialog.formModel"
-                      default="Chọn địa chỉ"
-                    ></codx-label>
-                  </button>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
-                  <codx-label
-                    class="label-colon"
-                    name="lblSelect"
-                    [formModel]="dialog.formModel"
-                    default="Đã chọn"
-                  ></codx-label>
-                  <span
-                    class="me-1"
-                    [innerHTML]="
-                      countContactAndAddress(lstAddressNew, lstAddressThree)
-                    "
-                  ></span>
-                  <span class="me-1">
-                    <codx-label
-                      class=""
-                      name="lblOf"
-                      [formModel]="dialog.formModel"
-                      default="của"
-                    ></codx-label
-                  ></span>
-                  <span class="me-1">
-                    {{ lstAddressThree.length }}
-                  </span>
-                </div>
-              </div>
+            <div class="w-10">
+              <codx-input
+                id="jobTitle3"
+                name="jobTitle"
+                class="test-check"
+                type="radio"
+                field="jobTitle3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'jobTitle')"
+              ></codx-input>
             </div>
+            <div
+              [innerHTML]="
+                leadThree?.jobTitle
+                  | formatvalue : dialog.formModel : 'JobTitle'
+                  | async
+              "
+            ></div>
           </div>
         </div>
       </div>
       <div class="mt-1 row form-group">
-        <div class="w-20">
+        <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
-            name="lblDefaultAddress"
-            [default]="'Địa chỉ mặc định'"
+            fiedName="Phone"
           ></codx-label>
         </div>
-        <div class="w-20">
-          <div
-            class="d-flex"
-            *ngIf="lstAddressNew != null && lstAddressNew.length > 0"
-          >
-            <ejs-combobox
-              [dataSource]="lstAddressNew"
-              [fields]="fieldAddress"
-              [value]="addressDefault"
-              (valueChange)="cbxContactChange($event, 'address')"
-            ></ejs-combobox>
-          </div>
+        <div class="w-30">
+          <codx-input
+            field="phone"
+            type="text"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.phone"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadOne?.recID">
-            <div
-              class="mb-1"
-              *ngIf="lstAddressOne != null && lstAddressOne.length > 0"
-            >
-              <div
-                *ngFor="let data of lstAddressOne"
-                class="d-flex align-items-center text-gray-600 codx-textlabel"
-              >
-                <ng-container *ngIf="data.isDefault">
-                  <span
-                    class="icon-16 me-2 text-hover-primary cursor-pointer"
-                    [class]="data?.adressType | vll : 'CRM009' : 'icon' | async"
-                    [style.color]="
-                      data?.adressType | vll : 'CRM009' : 'textColor' | async
-                    "
-                  ></span>
-                  <span>{{ data?.adressName }}</span>
-                </ng-container>
-              </div>
+            <div class="w-10">
+              <codx-input
+                id="phone1"
+                name="phone"
+                class="test-check"
+                type="radio"
+                field="phone1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'phone')"
+              ></codx-input>
             </div>
+            <div
+              [innerHTML]="
+                leadOne?.phone
+                  | formatvalue : dialog.formModel : 'Phone'
+                  | async
+              "
+            ></div>
           </div>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadTwo?.recID">
-            <div
-              class="mb-1"
-              *ngIf="lstAddressTwo != null && lstAddressTwo.length > 0"
-            >
-              <div
-                *ngFor="let data of lstAddressTwo"
-                class="d-flex align-items-center text-gray-600 codx-textlabel"
-              >
-                <ng-container *ngIf="data.isDefault">
-                  <span
-                    class="icon-16 me-2 text-hover-primary cursor-pointer"
-                    [class]="data?.adressType | vll : 'CRM009' : 'icon' | async"
-                    [style.color]="
-                      data?.adressType | vll : 'CRM009' : 'textColor' | async
-                    "
-                  ></span>
-                  <span>{{ data?.adressName }}</span>
-                </ng-container>
-              </div>
+            <div class="w-10">
+              <codx-input
+                id="phone2"
+                name="phone"
+                class="test-check"
+                type="radio"
+                field="phone2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'phone')"
+              ></codx-input>
             </div>
+            <div
+              [innerHTML]="
+                leadTwo?.phone
+                  | formatvalue : dialog.formModel : 'Phone'
+                  | async
+              "
+            ></div>
           </div>
         </div>
         <div class="w-20">
           <div class="d-flex" *ngIf="leadThree?.recID">
-            <div
-              class="mb-1"
-              *ngIf="lstAddressThree != null && lstAddressThree.length > 0"
-            >
-              <div
-                *ngFor="let data of lstAddressThree"
-                class="d-flex align-items-center text-gray-600 codx-textlabel"
-              >
-                <ng-container *ngIf="data.isDefault">
-                  <span
-                    class="icon-16 me-2 text-hover-primary cursor-pointer"
-                    [class]="data?.adressType | vll : 'CRM009' : 'icon' | async"
-                    [style.color]="
-                      data?.adressType | vll : 'CRM009' : 'textColor' | async
-                    "
-                  ></span>
-                  <span>{{ data?.adressName }}</span>
-                </ng-container>
-              </div>
+            <div class="w-10">
+              <codx-input
+                id="phone3"
+                name="phone"
+                class="test-check"
+                type="radio"
+                field="phone3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'phone')"
+              ></codx-input>
             </div>
+            <div
+              [innerHTML]="
+                leadThree?.phone
+                  | formatvalue : dialog.formModel : 'Phone'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-10">
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName="Email"
+          ></codx-label>
+        </div>
+        <div class="w-30">
+          <codx-input
+            field="email"
+            type="text"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.email"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div class="w-10">
+              <codx-input
+                id="email1"
+                name="email"
+                class="test-check"
+                type="radio"
+                field="email1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'email')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadOne?.email
+                  | formatvalue : dialog.formModel : 'Email'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div class="w-10">
+              <codx-input
+                id="email2"
+                name="email"
+                class="test-check"
+                type="radio"
+                field="email2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'email')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadTwo?.email
+                  | formatvalue : dialog.formModel : 'Email'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div class="w-10">
+              <codx-input
+                id="email3"
+                name="email"
+                class="test-check"
+                type="radio"
+                field="email3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'email')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadThree?.email
+                  | formatvalue : dialog.formModel : 'Email'
+                  | async
+              "
+            ></div>
           </div>
         </div>
       </div>
@@ -2281,40 +2088,33 @@
   </div>
 </div>
 
-<ng-template #popupSupport >
-  <codx-form
-    [customToolbar]="title"
-    [body]="body"
-    [dialog]="dialogSup"
-  >
-  <ng-template #title>
-    <div class="d-flex justify-content-between w-100">
-      <div class="d-flex justify-content-start">
-        <div class="h3">
-          <codx-label
-            name="lblMergeSupport"
-            [formModel]="dialog.formModel"
-            [default]="
-              'Hướng dẫn gộp trùng tiềm năng'
-            "
-          ></codx-label>
+<ng-template #popupSupport>
+  <codx-form [customToolbar]="title" [body]="body" [dialog]="dialogSup">
+    <ng-template #title>
+      <div class="d-flex justify-content-between w-100">
+        <div class="d-flex justify-content-start">
+          <div class="h3">
+            <codx-label
+              name="lblMergeSupport"
+              [formModel]="dialog.formModel"
+              [default]="'Hướng dẫn gộp trùng tiềm năng'"
+            ></codx-label>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button
+            style="border: none; outline: none; background: none"
+            (click)="dialogSup.close()"
+          >
+            <i class="icon-close icon-18 text-hover-danger"></i>
+          </button>
         </div>
       </div>
-      <div class="d-flex justify-content-end">
-        <button
-          style="border: none; outline: none; background: none"
-          (click)="dialogSup.close()"
-        >
-          <i class="icon-close icon-18 text-hover-danger"></i>
-        </button>
-      </div>
-    </div>
-
-  </ng-template>
+    </ng-template>
     <ng-template #body>
       <div *ngIf="lstVllSupport">
         <ng-container *ngFor="let item of lstVllSupport">
-          <li class="text-dark text-gray-800 mb-1">{{item?.text}}</li>
+          <li class="text-dark text-gray-800 mb-1">{{ item?.text }}</li>
         </ng-container>
       </div>
     </ng-template>
