@@ -203,17 +203,18 @@ export class DealsComponent
           },
         },
       ];
-   
+   // this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
   reloadData() {
-    // if (this.view) {
+    // if (this.view && this.funcID!="DP0201") {
     //   this.moreFuncInstance = this.view.moreFuncs;
     //   this.dataSelected = null;
     //   this.view.dataService.predicates = null;
     //   this.view.dataService.dataValues = null;
     //   this.view.dataObj = this.dataObj;
+     
     //   this.view?.views?.forEach((x) => {
     //     if (x.type == 6) {
     //       x.request.dataObj = this.dataObj;
@@ -243,12 +244,7 @@ export class DealsComponent
     //         );
     //         kanban.refresh();
     //       });
-    //   }
-    // if (this.processID)
-    //   (this.view?.dataService as CRUDService)
-    //     .setPredicates(['ProcessID==@0'], [this.processID])
-    //     .subscribe();
-    // }
+    //   } 
   }
 
   afterLoad() {

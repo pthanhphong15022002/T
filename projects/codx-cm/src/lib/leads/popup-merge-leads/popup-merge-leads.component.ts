@@ -175,18 +175,16 @@ export class PopupMergeLeadsComponent implements OnInit {
     }
 
     if (this.leadTwo == null && this.leadThree == null) {
-      this.noti.notify('CM008');
+      this.noti.notifyCode('CM008');
       return;
     }
-
 
     var data = [
       this.leadNew,
       this.leadOne?.recID,
       this.leadTwo?.recID,
       this.leadThree?.recID,
-      this.lstContactNew,
-      this.lstAddressNew,
+      this.changeAvata == false ? this.recIDLead : null,
     ];
 
     this.api
@@ -218,15 +216,17 @@ export class PopupMergeLeadsComponent implements OnInit {
             ]);
             this.noti.notifyCode('SYS034');
           } else {
-            await firstValueFrom(
-              this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
-            );
+            // await firstValueFrom(
+            //   this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
+            // );
             if (this.changeAvataContact) {
               await firstValueFrom(
                 this.imageAvatarContact.updateFileDirectReload(res?.contactID)
               );
             } else {
-              this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID);
+              await firstValueFrom(
+                this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
+              );
             }
             this.dialog.close([
               res,
@@ -348,12 +348,14 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.changeAvataContact = true;
       if (this.changeAvataContact) {
         this.recIDAvt = JSON.parse(JSON.stringify(this.leadNew?.contactID));
-        this.nameContact = JSON.parse(JSON.stringify(this.leadNew?.contactName));
-        this.modifyOnContact = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
+        this.nameContact = JSON.parse(
+          JSON.stringify(this.leadNew?.contactName)
+        );
+        this.modifyOnContact = JSON.parse(
+          JSON.stringify(this.leadNew?.modifiedOn)
+        );
       }
     }
-
-
 
     this.changeDetector.detectChanges();
   }
@@ -587,20 +589,26 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.nameContact = JSON.parse(
             JSON.stringify(this.leadOne?.contactName)
           );
-          this.modifyOnContact = JSON.parse(JSON.stringify(this.leadOne?.modifiedOn));
+          this.modifyOnContact = JSON.parse(
+            JSON.stringify(this.leadOne?.modifiedOn)
+          );
         } else if (
           e.field === 'avataContact2' &&
           e.component.checked === true
         ) {
           this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.recID));
           this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.leadName));
-          this.modifyOnContact = JSON.parse(JSON.stringify(this.leadOne?.modifiedOn));
+          this.modifyOnContact = JSON.parse(
+            JSON.stringify(this.leadOne?.modifiedOn)
+          );
         } else {
           this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.recID));
           this.nameContact = JSON.parse(
             JSON.stringify(this.leadThree?.leadName)
           );
-          this.modifyOnContact = JSON.parse(JSON.stringify(this.leadOne?.modifiedOn));
+          this.modifyOnContact = JSON.parse(
+            JSON.stringify(this.leadOne?.modifiedOn)
+          );
         }
         this.changeAvataContact = false;
         this.imageAvatarContact.objectId = this.recIDAvt;
