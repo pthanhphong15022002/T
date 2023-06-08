@@ -1125,12 +1125,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.dialog.dataService
               .save(null, 0, '', 'SYS006', true)
               .subscribe((res) => {
-                if (res && res.update.data != null) {
+                if (res && res.update.data != null && res.update.error != true) {
                   this.dialog.close({
                     update: true,
                     data: res.update,
                   });
                   this.dt.detectChanges();
+                }
+                if(res.update.error)
+                {
+                  this.purchaseinvoices.status = '0';
                 }
               });
           } else {
@@ -1145,10 +1149,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               this.formType === 'edit',
               () => {
                 this.dialog.dataService.save().subscribe((res) => {
-                  if (res && res.save.data != null) {
+                  if (res && res.save.data != null && res.save.error != true) {
                     this.updateVAT();
                     this.dialog.close();
                     this.dt.detectChanges();
+                  }
+                  if(res.save.error)
+                  {
+                    this.purchaseinvoices.status = '0';
                   }
                 });
               }
@@ -1201,7 +1209,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.purchaseinvoices
         );
         this.dialog.dataService.save().subscribe((res) => {
-          if (res && res.update.data != null) {
+          if(res.update.error)
+          {
+            this.purchaseinvoices.status = '0';
+          }
+          if (res && res.update.data != null && res.update.error != true) {
             this.clearPurchaseInvoicesLines();
             this.dialog.dataService.clear();
             this.dialog.dataService
@@ -1226,7 +1238,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.formType === 'edit',
           () => {
             this.dialog.dataService.save().subscribe((res) => {
-              if (res && res.save.data != null) {
+              if(res.save.error)
+              {
+                this.purchaseinvoices.status = '0';
+              }
+              if (res && res.save.data != null && res.save.error != true) {
                 this.clearPurchaseInvoicesLines();
                 this.dialog.dataService.clear();
                 this.dialog.dataService
