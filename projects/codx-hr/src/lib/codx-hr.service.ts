@@ -190,6 +190,16 @@ export class CodxHrService {
     );
   }
 
+  saveEmployeeAssureTaxBankInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeAssurTaxBankInfoAsync',
+      data
+    );
+  }
+
   saveEmployeeSelfInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -210,15 +220,6 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeContactInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EmployeesBusiness',
-      'UpdateEmployeeContactInfoAsync',
-      data
-    );
-  }
 
   saveEmployeeUnionAndPartyInfo(data) {
     return this.api.execSv<any>(
@@ -2299,15 +2300,6 @@ export class CodxHrService {
     );
   }
 
-  addTest() {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EBusinessTravelsBusiness',
-      'AddTestAsync',
-      null
-    );
-  }
 
   getOrgTreeByOrgID(orgID: string, level: number) {
     return this.api.execSv<any>(

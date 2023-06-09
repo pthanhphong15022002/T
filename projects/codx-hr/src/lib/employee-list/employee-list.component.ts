@@ -330,7 +330,7 @@ export class EmployeeListComponent extends UIComponent {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
       let queryParams = {
         employeeID: data.employeeID,
-        page: this.view.dataService.page,
+        page: this.view.dataService.page+1,
         totalPage: this.view.dataService.pageCount
       };
       let state = {
