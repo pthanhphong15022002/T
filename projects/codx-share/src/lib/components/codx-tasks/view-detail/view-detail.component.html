@@ -939,58 +939,6 @@
       <div class="mb-2 pb-2 border-bottom">
         <codx-history-item [data]="item" [funcID]="formModel?.funcID" [formModel]="formModel"></codx-history-item>
     </div>
-        <!-- <div class="mb-2 pb-2 border-bottom">
-          <div class="d-flex align-items-top">
-            <div class="me-3">
-              <img
-                *ngIf="item.image; else noImage"
-                class="w-30px iconHistory"
-                [src]="item.image"
-                alt=""
-              />
-              <ng-template #noImage>
-                <codx-vll
-                  [value]="item.actionType"
-                  name="SYS022"
-                  [icoCss]="'w-30px iconHistory'"
-                  [showIcon]="true"
-                  [path]="'assets/themes/sys/default/img/'"
-                ></codx-vll>
-              </ng-template>
-            </div>
-            <div class="d-flex justify-content-between align-items-top w-100">
-              <div class="d-flex align-items-top w-100">
-                <div class="me-3">
-                  <codx-img
-                    [objectId]="item.createdBy"
-                    [objectName]="item.createdName"
-                    objectType="AD_Users"
-                    [width]="30"
-                  >
-                  </codx-img>
-                </div>
-                <div class="d-flex flex-column flex-wrap w-100">
-                  <div
-                    *ngIf="item.description"
-                    class="w-100"
-                    [innerHTML]="item.description"
-                  ></div>
-                  <div
-                    *ngIf="item.createdOn"
-                    class="text-gray-700 fw-normal flex-grow-1"
-                    data-toggle="tooltip"
-                  >
-                    {{ item.createdOn | timefrom }}
-                  </div>
-                  <div *ngIf="!isNullOrEmpty(item.comment)" class="comment pb-2 fs-7 text-gray-500">
-                    <span [innerHTML]="item.comment"></span>
-                  </div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
     </ng-container>
 </div>
 </ng-template>
