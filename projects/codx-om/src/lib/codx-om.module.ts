@@ -37,12 +37,22 @@ import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.com
 import { AccumulationChartModule, AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
 import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
 import { PopupAddVersionComponent } from './popup/popup-add-version/popup-add-version.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
       {
         path: 'okr/:funcID',
         component: OKRComponent,
