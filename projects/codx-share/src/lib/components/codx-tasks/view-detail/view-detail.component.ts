@@ -99,7 +99,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   param?: TM_Parameter = new TM_Parameter();
   isEdit = true;
   timeoutId: any;
-  listHistoryProgress :any;
+  listHistoryProgress: any;
 
   constructor(
     private api: ApiHttpService,
@@ -641,8 +641,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res: any[]) => {
         if (res) {
           this.listHistoryProgress = JSON.parse(JSON.stringify(res));
-          this.changeDetectorRef.detectChanges();
-        }
+        } else this.listHistoryProgress = [];
+        this.changeDetectorRef.detectChanges();
       });
   }
 }
