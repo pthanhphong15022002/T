@@ -32,6 +32,7 @@ import { L } from '@angular/cdk/keycodes';
 })
 export class PopupMergeLeadsComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
+  @ViewChild('imageAvatarContact') imageAvatarContact: ImageViewerComponent;
 
   dialog: any;
   leadNew: CM_Leads = new CM_Leads();
@@ -62,6 +63,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   linkAvatarTwo: any;
   linkAvatarThree: any;
   changeAvata: boolean = false;
+  changeAvataContact: boolean = false;
+
   recIDLead: any;
   nameLead: any;
   lstLeadCbxOne = [];
@@ -71,6 +74,10 @@ export class PopupMergeLeadsComponent implements OnInit {
   modifyOn: Date;
   countValidate = 0;
   lstVllSupport = [];
+  recIDAvt: any;
+  nameContact: any;
+  modifyOnContact: Date;
+
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -88,14 +95,20 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
   async ngOnInit() {
     this.leadNew.recID = Util.uid();
+    this.leadNew.contactID = Util.uid();
     this.recIDLead = this.leadOne?.recID;
+    this.recIDAvt = this.leadOne?.contactID;
+    this.nameContact = this.leadOne.contactName;
     this.nameLead = this.leadOne?.leadName;
     this.modifyOn = this.leadOne?.modifiedOn;
+    this.modifyOnContact = this.leadOne?.modifiedOn;
+
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
     this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
     this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
 
     this.changeAvata = false;
+    this.changeAvataContact = false;
   }
 
   async ngAfterViewInit() {
@@ -162,27 +175,16 @@ export class PopupMergeLeadsComponent implements OnInit {
     }
 
     if (this.leadTwo == null && this.leadThree == null) {
-      this.noti.notify('CM008');
+      this.noti.notifyCode('CM008');
       return;
     }
 
-    if (this.lstContactNew != null && this.lstContactNew.length > 0) {
-      this.lstContactNew.forEach((res) => {
-        res.recID = Util.uid();
-      });
-    }
-    if (this.lstAddressNew != null && this.lstAddressNew.length > 0) {
-      this.lstAddressNew.forEach((res) => {
-        res.recID = Util.uid();
-      });
-    }
     var data = [
       this.leadNew,
       this.leadOne?.recID,
       this.leadTwo?.recID,
       this.leadThree?.recID,
-      this.lstContactNew,
-      this.lstAddressNew,
+      this.changeAvata == false ? this.recIDLead : null,
     ];
 
     this.api
@@ -199,7 +201,13 @@ export class PopupMergeLeadsComponent implements OnInit {
             await firstValueFrom(
               this.imageAvatar.updateFileDirectReload(res?.recID)
             );
-
+            if (this.changeAvataContact) {
+              await firstValueFrom(
+                this.imageAvatarContact.updateFileDirectReload(res?.contactID)
+              );
+            } else {
+              this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID);
+            }
             this.dialog.close([
               res,
               this.leadOne,
@@ -208,15 +216,25 @@ export class PopupMergeLeadsComponent implements OnInit {
             ]);
             this.noti.notifyCode('SYS034');
           } else {
-            await firstValueFrom(
-              this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
-            );
+            // await firstValueFrom(
+            //   this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
+            // );
+            if (this.changeAvataContact) {
+              await firstValueFrom(
+                this.imageAvatarContact.updateFileDirectReload(res?.contactID)
+              );
+            } else {
+              await firstValueFrom(
+                this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
+              );
+            }
             this.dialog.close([
               res,
               this.leadOne,
               this.leadTwo,
               this.leadThree,
             ]);
+
             this.noti.notifyCode('SYS034');
           }
         }
@@ -318,13 +336,27 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  changeAvatarNew() {
-    this.changeAvata = true;
-    if (this.changeAvata) {
-      this.recIDLead = JSON.parse(JSON.stringify(this.leadNew?.recID));
-      this.nameLead = JSON.parse(JSON.stringify(this.leadNew?.leadName));
-      this.modifyOn = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
+  changeAvatarNew(type) {
+    if (type == 'avata') {
+      this.changeAvata = true;
+      if (this.changeAvata) {
+        this.recIDLead = JSON.parse(JSON.stringify(this.leadNew?.recID));
+        this.nameLead = JSON.parse(JSON.stringify(this.leadNew?.leadName));
+        this.modifyOn = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
+      }
+    } else {
+      this.changeAvataContact = true;
+      if (this.changeAvataContact) {
+        this.recIDAvt = JSON.parse(JSON.stringify(this.leadNew?.contactID));
+        this.nameContact = JSON.parse(
+          JSON.stringify(this.leadNew?.contactName)
+        );
+        this.modifyOnContact = JSON.parse(
+          JSON.stringify(this.leadNew?.modifiedOn)
+        );
+      }
     }
+
     this.changeDetector.detectChanges();
   }
 
@@ -549,6 +581,76 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.businesslineID = this.leadTwo?.businesslineID;
         } else {
           this.leadNew.businesslineID = this.leadThree?.businesslineID;
+        }
+        break;
+      case 'avataContact':
+        if (e.field === 'avataContact1' && e.component.checked === true) {
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadOne?.contactID));
+          this.nameContact = JSON.parse(
+            JSON.stringify(this.leadOne?.contactName)
+          );
+          this.modifyOnContact = JSON.parse(
+            JSON.stringify(this.leadOne?.modifiedOn)
+          );
+        } else if (
+          e.field === 'avataContact2' &&
+          e.component.checked === true
+        ) {
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.recID));
+          this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.leadName));
+          this.modifyOnContact = JSON.parse(
+            JSON.stringify(this.leadOne?.modifiedOn)
+          );
+        } else {
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.recID));
+          this.nameContact = JSON.parse(
+            JSON.stringify(this.leadThree?.leadName)
+          );
+          this.modifyOnContact = JSON.parse(
+            JSON.stringify(this.leadOne?.modifiedOn)
+          );
+        }
+        this.changeAvataContact = false;
+        this.imageAvatarContact.objectId = this.recIDAvt;
+        this.imageAvatarContact.objectName = this.nameContact;
+        this.imageAvatarContact.imgOn = this.modifyOnContact;
+        this.imageAvatarContact.loadAvatar();
+        this.changeDetector.detectChanges();
+        break;
+      case 'contactName':
+        if (e.field === 'contactName1' && e.component.checked === true) {
+          this.leadNew.contactName = this.leadOne?.contactName;
+        } else if (e.field === 'contactName2' && e.component.checked === true) {
+          this.leadNew.contactName = this.leadTwo?.contactName;
+        } else {
+          this.leadNew.contactName = this.leadThree?.contactName;
+        }
+        break;
+      case 'jobTitle':
+        if (e.field === 'jobTitle1' && e.component.checked === true) {
+          this.leadNew.jobTitle = this.leadOne?.jobTitle;
+        } else if (e.field === 'jobTitle2' && e.component.checked === true) {
+          this.leadNew.jobTitle = this.leadTwo?.jobTitle;
+        } else {
+          this.leadNew.jobTitle = this.leadThree?.jobTitle;
+        }
+        break;
+      case 'phone':
+        if (e.field === 'phone1' && e.component.checked === true) {
+          this.leadNew.phone = this.leadOne?.phone;
+        } else if (e.field === 'phone2' && e.component.checked === true) {
+          this.leadNew.phone = this.leadTwo?.phone;
+        } else {
+          this.leadNew.phone = this.leadThree?.phone;
+        }
+        break;
+      case 'email':
+        if (e.field === 'email1' && e.component.checked === true) {
+          this.leadNew.email = this.leadOne?.email;
+        } else if (e.field === 'email2' && e.component.checked === true) {
+          this.leadNew.email = this.leadTwo?.email;
+        } else {
+          this.leadNew.email = this.leadThree?.email;
         }
         break;
     }

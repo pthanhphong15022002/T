@@ -1784,13 +1784,13 @@ export class CodxHrService {
 
   //#region HR_EBenefit
 
-  GetCurrentBenefit(data) {
+  GetCurrentBenefit(empID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EBenefitsBusiness',
-      'GetCurrentBenefitAsync',
-      data
+      'GetEmpCurrentBenefitAsync',
+      empID
     );
   }
 

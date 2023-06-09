@@ -373,26 +373,17 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     this.isVideo = false;
     this.srcVideo = "";
     this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
-    if (this.ext == ".mp4") {
+
+    if (this.ext == ".mp4") 
+    {
       this.isVideo = true;
       this.srcVideo = `${environment.urlUpload}/${this.data.pathDisk}`;
-    } else if (this.ext == ".png"
-      || this.ext == ".jpeg"
-      || this.ext == ".jpg"
-      || this.ext == ".bmp"
-    ) {
-      this.isImg = true;     
-    }
-    else if (this.ext == ".pdf") {
-      this.isPdf = true;
-    }
-    else if(environment.office365) 
-      this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(`${environment.office365}`+`${environment.urlUpload}`+"/"+this.data?.pathDisk);
-    else
-      this.viewFile(this.id);
-    if (!window["librOfficeMessage"]) {
-      window.removeEventListener("message", window["librOfficeMessage"], false);
-    }
+    } 
+    else if (this.ext == ".png" || this.ext == ".jpeg" || this.ext == ".jpg" || this.ext == ".bmp") this.isImg = true;     
+    else if (this.ext == ".pdf") this.isPdf = true;
+    else if(environment.office365) this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(`${environment.office365}`+`${environment.urlUpload}`+"/"+this.data?.pathDisk);
+    else this.viewFile(this.id);
+    if (!window["librOfficeMessage"]) window.removeEventListener("message", window["librOfficeMessage"], false);
 
     window["librOfficeMessage"] = (event) => {
       console.log(event.data);

@@ -40,9 +40,10 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})export class DealsComponent
+})
+export class DealsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit, OnChanges
+  implements OnInit, AfterViewInit
 {
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
@@ -126,29 +127,34 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   ) {
     super(inject);
     this.executeApiCalls();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    if (changes['dataObj']) {
-      this.dataObj = changes['dataObj'].currentValue;
-      if (this.processID != this.dataObj?.processID) {
-        this.processID = this.dataObj?.processID;
-        this.reloadData();
-      }
-    }
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
   }
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   // if (!this.funcID) {
+  //   //   this.funcID = this.activedRouter.snapshot.params['funcID'];
+  //   // }
+  //   // if (changes['dataObj']) {
+  //   //   this.dataObj = changes['dataObj'].currentValue;
+  //   //   if (this.processID != this.dataObj?.processID) {
+  //   //     this.processID = this.dataObj?.processID;
+  //   //     this.reloadData();
+  //   //   }
+  //   // }
+  // }
 
   onInit(): void {
     this.afterLoad();
     this.button = {
       id: this.btnAdd,
     };
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
+    // if (!this.funcID) {
+    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
     this.cache.functionList(this.funcID).subscribe((f) => {
       // if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
@@ -162,7 +168,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
-    if (this.dataObj) {
+    if (this.funcID != 'CM0201') {
       this.views = [
         {
           type: ViewType.listdetail,
@@ -196,69 +202,49 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
             panelRightRef: this.templateDetail,
           },
         },
-        // {
-        //   type: ViewType.kanban,
-        //   active: false,
-        //   sameData: false,
-        //   request: this.request,
-        //   hide: true,
-        //   request2: this.resourceKanban,
-        //   toolbarTemplate: this.footerButton,
-        //   model: {
-        //     template: this.cardKanban,
-        //     template2: this.viewColumKaban,
-        //     setColorHeader: true,
-        //   },
-        // },
       ];
-    this.reloadData();
+   // this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
   reloadData() {
-    if (this.view) {
-      this.moreFuncInstance = this.view.moreFuncs;
-      this.dataSelected = null;
-      this.view.dataService.predicates = null;
-      this.view.dataService.dataValues = null;
-      this.view.dataObj = this.dataObj;
+    // if (this.view && this.funcID!="DP0201") {
+    //   this.moreFuncInstance = this.view.moreFuncs;
+    //   this.dataSelected = null;
+    //   this.view.dataService.predicates = null;
+    //   this.view.dataService.dataValues = null;
+    //   this.view.dataObj = this.dataObj;
 
-      this.view?.views?.forEach((x) => {
-        if (x.type == 6) {
-          x.request.dataObj = this.dataObj;
-          x.request2.dataObj = this.dataObj;
-        }
-      });
-      if ((this.view?.currentView as any)?.kanban) {
-        let kanban = (this.view?.currentView as any)?.kanban;
-        let settingKanban = kanban.kanbanSetting;
-        settingKanban.isChangeColumn = true;
-        settingKanban.formName = this.view?.formModel?.formName;
-        settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-        this.api
-          .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-            settingKanban,
-            this.dataObj,
-          ])
-          .subscribe((resource) => {
-            if (resource?.columns && resource?.columns.length)
-              kanban.columns = resource.columns;
-            kanban.kanbanSetting.isChangeColumn = false;
-            kanban.dataObj = this.dataObj;
-            kanban.loadDataSource(
-              kanban.columns,
-              kanban.kanbanSetting?.swimlaneSettings,
-              false
-            );
-            kanban.refresh();
-          });
-      }
-
-      if (this.processID)
-        (this.view?.dataService as CRUDService)
-          .setPredicates(['ProcessID==@0'], [this.processID])
-          .subscribe();
-    }
+    //   this.view?.views?.forEach((x) => {
+    //     if (x.type == 6) {
+    //       x.request.dataObj = this.dataObj;
+    //       x.request2.dataObj = this.dataObj;
+    //     }
+    //   });
+    //   if ((this.view?.currentView as any)?.kanban) {
+    //     let kanban = (this.view?.currentView as any)?.kanban;
+    //     let settingKanban = kanban.kanbanSetting;
+    //     settingKanban.isChangeColumn = true;
+    //     settingKanban.formName = this.view?.formModel?.formName;
+    //     settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+    //     this.api
+    //       .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+    //         settingKanban,
+    //         this.dataObj,
+    //       ])
+    //       .subscribe((resource) => {
+    //         if (resource?.columns && resource?.columns.length)
+    //           kanban.columns = resource.columns;
+    //         kanban.kanbanSetting.isChangeColumn = false;
+    //         kanban.dataObj = this.dataObj;
+    //         kanban.loadDataSource(
+    //           kanban.columns,
+    //           kanban.kanbanSetting?.swimlaneSettings,
+    //           false
+    //         );
+    //         kanban.refresh();
+    //       });
+    //   }
   }
 
   afterLoad() {
@@ -294,25 +280,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-    if (!data?.roles?.isOnwer) {
-      for (let more of $event) {
-        switch (more.functionID) {
-          case 'SYS01':
-          case 'SYS101':
-          case 'CM0201_1':
-          case 'CM0201_3':
-          case 'CM0201_4':
-          case 'SYS03':
-          case 'SYS04':
-          case 'SYS02':
-          case 'CM0201_2':
-          default:
-            more.disabled = true;
-        }
-      }
-    }
-    else {
-      if (data.status == '1') {
+      if (!data?.roles?.isOnwer) {
         for (let more of $event) {
           switch (more.functionID) {
             case 'SYS01':
@@ -320,84 +288,126 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
             case 'CM0201_1':
             case 'CM0201_3':
             case 'CM0201_4':
-              more.disabled = true;
-              break;
             case 'SYS03':
             case 'SYS04':
             case 'SYS02':
             case 'CM0201_2':
-              more.isblur = false;
-              break;
             default:
-              more.isblur = true;
+              more.disabled = true;
           }
         }
       } else {
-        for (let more of $event) {
-          switch (more.functionID) {
-            // move stage
-            case 'CM0201_1':
-              if (this.checkMoreReason(data) || data.closed) {
+        if (data.status == '1') {
+          for (let more of $event) {
+            switch (more.functionID) {
+              case 'SYS01':
+              case 'SYS101':
+              case 'CM0201_1':
+              case 'CM0201_3':
+              case 'CM0201_4':
                 more.disabled = true;
-              }
-              break;
-            // reason success
-            case 'CM0201_3':
-              if (this.checkMoreReason(data) || data.closed || !data.roleMore?.isReasonSuccess) {
+                break;
+              case 'SYS03':
+              case 'SYS04':
+              case 'SYS02':
+              case 'CM0201_2':
+                more.isblur = false;
+                break;
+              default:
+                more.isblur = true;
+            }
+          }
+        } else {
+          for (let more of $event) {
+            switch (more.functionID) {
+              // move stage
+              case 'CM0201_1':
+                if (this.checkMoreReason(data) || data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              // reason success
+              case 'CM0201_3':
+                if (
+                  this.checkMoreReason(data) ||
+                  data.closed ||
+                  !data.roleMore?.isReasonSuccess
+                ) {
+                  more.disabled = true;
+                }
+                break;
+              // reason fail
+              case 'CM0201_4':
+                if (
+                  this.checkMoreReason(data) ||
+                  data.closed ||
+                  !data.roleMore?.isReasonFail
+                ) {
+                  more.disabled = true;
+                }
+                break;
+              case 'CM0201_2':
                 more.disabled = true;
-              }
-              break;
-            // reason fail
-            case 'CM0201_4':
-              if (this.checkMoreReason(data) || data.closed || !data.roleMore?.isReasonFail)   {
-                more.disabled = true;
-              }
-              break;
-            case 'CM0201_2':
-              more.disabled = true;
-              break;
-            case 'CM0201_8':
-              if (data.closed) {
-                more.disabled = true;
-              }
-              break;
-            case 'CM0201_9':
-              if (!data.closed) {
-                more.disabled = true;
-              }
-              break;
-            case 'SYS101':
-            case 'SYS01':
-              if (this.checkMoreReason(data) || data.closed ) {
-                more.disabled = true;
-              }
-              break;
+                break;
+              case 'CM0201_7':
+                if (data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              case 'CM0201_8':
+                if (data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              case 'CM0201_9':
+                if (!data.closed) {
+                  more.disabled = true;
+                }
+                break;
+              case 'SYS101':
+              case 'SYS01':
+                if (this.checkMoreReason(data) || data.closed) {
+                  more.disabled = true;
+                }
+                break;
 
-            case 'SYS103':
-            case 'SYS03':
-              if ( this.checkMoreReason(data)  || data.closed||!data.roles.write  ) {
-                more.disabled = true;
-              }
-              break;
+              case 'SYS103':
+              case 'SYS03':
+                if (
+                  this.checkMoreReason(data) ||
+                  data.closed ||
+                  !data.roles.write
+                ) {
+                  more.disabled = true;
+                }
+                break;
 
-            case 'SYS102':
-            case 'SYS02':
-              if ( this.checkMoreReason(data)  || data.closed ||  !data.roles.delete ) {
-                more.disabled = true;
-              }
-              break;
+              case 'SYS102':
+              case 'SYS02':
+                if (
+                  this.checkMoreReason(data) ||
+                  data.closed ||
+                  !data.roles.delete
+                ) {
+                  more.disabled = true;
+                }
+                break;
 
-            case 'SYS104':
-            case 'SYS04':
-              if ( this.checkMoreReason(data) || data.closed || !data.roles.delete ) {
-                more.disabled = true;
-              }
-              break;
+              case 'SYS104':
+              case 'SYS04':
+                if (
+                  this.checkMoreReason(data) ||
+                  data.closed ||
+                  !data.roles.delete
+                ) {
+                  more.disabled = true;
+                }
+                break;
+            }
           }
         }
       }
     }
-  }
   }
   async executeApiCalls() {
     try {
@@ -430,10 +440,8 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     return false;
   }
 
-  checkRoleInSystem(tmpRole){
-
+  checkRoleInSystem(tmpRole) {
     return false;
-
   }
 
   clickMF(e, data) {
@@ -621,13 +629,12 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       '',
       option
     );
-   popup.closed.subscribe((e) => {});
+    popup.closed.subscribe((e) => {});
   }
 
   //end Kanaban
 
   moveStage(data: any) {
-
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -693,7 +700,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
                   this.detailViewDeal.dataSelected = data;
 
                   if (e.event.isReason != null) {
-                    this.moveReason( data, e.event.isReason);
+                    this.moveReason(data, e.event.isReason);
                   }
                   this.detectorRef.detectChanges();
                 }
@@ -804,16 +811,16 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
         //     }
         //   });
         // } else {
-          data = this.updateReasonDeal(e.event?.instance, data);
-          var datas = [data, data.customerID];
-          this.codxCmService.updateDeal(datas).subscribe((res) => {
-            if (res) {
-              data = res[0];
-              this.view.dataService.update(data).subscribe();
-              this.detectorRef.detectChanges();
-            }
-          });
-       // }
+        data = this.updateReasonDeal(e.event?.instance, data);
+        var datas = [data, data.customerID];
+        this.codxCmService.updateDeal(datas).subscribe((res) => {
+          if (res) {
+            data = res[0];
+            this.view.dataService.update(data).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+        // }
       }
     });
   }
@@ -952,6 +959,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
+      processID: this.processID,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -961,6 +969,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
+        // this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -996,7 +1005,10 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            this.detailViewDeal.dataSelected = JSON.parse(JSON.stringify(e.event));
+            // this.dataSelected = JSON.parse(JSON.stringify(e.event))
+            this.detailViewDeal.dataSelected = JSON.parse(
+              JSON.stringify(this.dataSelected)
+            );
             this.changeDetectorRef.detectChanges();
           }
         });

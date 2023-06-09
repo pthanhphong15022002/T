@@ -424,7 +424,7 @@
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
       [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
       [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-      (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
+      (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (onDoubleClick)="onDoubleClick($event)"
       [allowTextWrap]="false"></codx-gridview-v2>
       
       <div #btnRef class="btn-addline">
@@ -433,9 +433,26 @@
           <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
         </button>
       </div>
+      <div class="row" *ngIf="purchaseInvoicesLines.length == 0" style="height: 40px;">
+        <table style="table-layout: fixed;" class="table table-row-bordered">
+          <tfoot style="background-color: whitesmoke;position: sticky;
+            bottom: 0;">
+            <ng-container *ngFor="let item of visibleColumns">
+              <td class="w-10" *ngIf="item.summaryBottom == '1'">
+                <div class="d-flex align-items-center">
+                  <span style="font-size: 14px;" class="sum-content fw-bold">Tổng cộng: </span>
+                  <span style="font-size: 14px;" class="sum-content fw-bold">0</span>
+                </div>
+              </td>
+              <td *ngIf="item.summaryBottom != '1'">
+              </td>
+            </ng-container>
+          </tfoot>
+        </table>
+      </div>
   </div>
   <ng-container *ngIf="form?.formGroup && modegrid == '2' && grvPurchaseInvoicesLines">
-    <div class="table-responsive mt-3">
+    <div class="table-responsive table-content mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered mb-2">
         <thead>
           <tr>
@@ -665,9 +682,15 @@
           </tr>
         </tbody>
       </table>
+      <div #btnRef class="btn-addline" style=" top: -38px; ">
+        <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+          <i class="icon-playlist_add icon-16"></i>
+          <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+        </button>
+      </div>
     </div>  
   </ng-container>
-  <div class="d-flex flex-wrap mt-6">
+  <div *ngIf="modegrid == 2" class="d-flex flex-wrap mt-6">
     <div class="d-flex align-items-center mb-1 bg-light me-5">
       <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 bg-primary"></span>
       <span class="py-1 px-2">Tổng tiền: {{ totalnet }}</span>
@@ -685,19 +708,6 @@
     <div *ngIf="purchaseInvoicesLines.length > 0 && modegrid == 2" class="d-flex justify-content-end">
       <ngb-pagination [(page)]="page" [pageSize]="pageSize"
         [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
-    </div>
-  </div>
-  <div *ngIf="modegrid == 2" class="container w-90 h-90">
-    <div style="background: none" class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center mt-2">
-        <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"
-          class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
-          <i class="icon-i-file-earmark-plus icon-18"></i>
-        </div>
-        <ng-template #popContent>
-          <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
-        </ng-template>
-      </div>
     </div>
   </div>
 </ng-template>

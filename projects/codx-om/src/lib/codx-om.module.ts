@@ -1,4 +1,4 @@
-import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxOmComponent } from './codx-om.component';
@@ -35,6 +35,8 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.component';
 import { AccumulationChartModule, AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
+import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
+import { PopupAddVersionComponent } from './popup/popup-add-version/popup-add-version.component';
 
 const routes: Routes = [
   {
@@ -89,6 +91,7 @@ const routes: Routes = [
     PopupCheckInComponent,
     PopupSaveVersionComponent,
     PopupViewVersionComponent,
+    PopupAddVersionComponent,
     PopupOKRWeightComponent,
     PopupShareOkrPlanComponent,
     OkrTreesComponent,

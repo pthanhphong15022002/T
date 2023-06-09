@@ -360,6 +360,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP24':
             if (task.taskType != 'M') res.disabled = true;
             break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
         }
       });
     }
@@ -430,8 +439,70 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP24':
             res.disabled = true;
             break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP24':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
         }
       });
+    }
+  }
+
+  async changeDataMFStep(event, stepData) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa  
+          case 'SYS03': //sửa  
+          case 'SYS04': //copy        
+          case 'SYS003': //đính kèm file
+          case 'DP13': //giao việc
+          case 'DP07': //chi tiêt công việc
+          case 'DP24': //tạo lịch họp
+          case 'DP12':
+          case 'DP25':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
+          case 'DP20': // tiến độ
+            if (!((this.isRoleAll ) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP08': // Thêm nhóm công việc
+            if (!((this.isRoleAll ) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP25': // Chi tiết giai đoạn
+            if (!((this.isRoleAll ) && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
+
+  clickMFStep(e: any, step: any) {
+    switch (e.functionID) {
+      case 'DP08': //them task
+        this.chooseTypeTask();
+        break;
+      case 'DP20': // tien do
+        this.openPopupUpdateProgress(step, 'P');
+        break;
+      case 'DP07': // view
+        this.viewTask(step, 'P');
+        break;
     }
   }
 
@@ -478,7 +549,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.copyGroupTask(group);
         break;
       case 'DP08': //them task
-        this.addTask(group?.refID);
+        this.chooseTypeTask(group?.refID);
         break;
       case 'DP12':
         this.viewTask(group, 'G');
@@ -489,20 +560,25 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //task
-  async chooseTypeTask() {
+  async chooseTypeTask(groupID = null) {
     let popupTypeTask = this.callfc.openForm(
       CodxTypeTaskComponent,
       '',
-      400,
-      400
+      450, 
+      580,
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
-    return dataOutput?.event?.value ? dataOutput?.event : null;
+    if(dataOutput?.event?.value){
+      this.taskType = dataOutput?.event;
+      if(this.taskType?.value == 'G'){
+        this.addGroupTask();
+      }else{
+        this.addTask(groupID);
+      }
+    }
   }
 
   async addTask(groupID) {
-    this.taskType = await this.chooseTypeTask();
-    if (!this.taskType) return;
     let task = new DP_Instances_Steps_Tasks();
     task['taskType'] = this.taskType?.value;
     task['stepID'] = this.currentStep?.recID;
@@ -540,28 +616,37 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async editTask(task) {
     if (task) {
       let taskEdit = JSON.parse(JSON.stringify(task));
+      let groupIdOld = taskEdit?.taskGroupID;
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskEdit?.taskType
       );
-      let taskOutput = await this.openPopupTask('edit', taskEdit);
-      if (taskOutput?.event.task) {
-        let data = taskOutput?.event;
-        let group = this.listGroupTask.find(
-          (group) => group.refID == data.task.taskGroupID
-        );
-        let indexTask = this.currentStep?.tasks?.findIndex(
-          (taskFind) => taskFind.recID == task.recID
-        );
-        if (group) {
-          let index = group?.task?.findIndex(
-            (taskFind) => taskFind.recID == task.recID
-          );
-          if (index >= 0) {
-            group?.task?.splice(index, 1, data?.task);
+      let dataOutput = await this.openPopupTask('edit', taskEdit);
+      if (dataOutput?.event.task) {
+        let taskOutput = dataOutput?.event?.task;
+        let group = this.listGroupTask.find((group) => group.refID == taskOutput?.taskGroupID);
+        let indexTask = this.currentStep?.tasks?.findIndex((taskFind) => taskFind.recID == task.recID);
+
+        if(taskOutput?.taskGroupID != groupIdOld){
+          let groupOld = this.listGroupTask.find((group) => group.refID == groupIdOld);
+          if (groupOld) {
+            let index = groupOld?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            if (index >= 0) {
+              groupOld?.task?.splice(index, 1);
+            }
           }
-        }
+          if (group) {
+            group?.task?.push(taskOutput);
+          }    
+        }else{
+          if (group) {
+            let index = group?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            if (index >= 0) {
+              group?.task?.splice(index, 1, taskOutput);
+            }
+          }    
+        }   
         if (indexTask >= 0) {
-          this.currentStep?.tasks?.splice(indexTask, 1, data?.task);
+          this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
       }
     }
@@ -668,7 +753,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   assignTask(moreFunc, data) {
     if (data?.assigned == '1') {
       this.notiService.notify('tesst kiem tra da giao task');
-      return
+      return;
     }
     var task = new TM_Tasks();
     task.taskName = data.taskName;
@@ -1121,78 +1206,166 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   //tao lich hop
-  createMeeting(data) {
-    this.stepService.getDefault('TMT0501', 'CO_Meetings').subscribe((res) => {
-      if (res && res?.data) {
-        let meeting = res.data;
-        meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
-        meeting['idField'] = 'meetingID';
-        meeting.meetingName = data?.taskName;
-        meeting.meetingType = '1';
-        meeting.reminder = Number.isNaN(data.reminders)
-          ? Number.parseInt(data.reminders)
-          : 0;
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.zIndex = 1011;
-        let formModel = new FormModel();
+  async createMeeting(data) {
+    this.stepService
+      .getDefault('TMT0501', 'CO_Meetings')
+      .subscribe(async (res) => {
+        if (res && res?.data) {
+          let meeting = res.data;
+          meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
+          meeting['idField'] = 'meetingID';
+          meeting.meetingName = data?.taskName;
+          meeting.meetingType = '1';
+          meeting.reminder = Number.isNaN(data.reminders)
+            ? 0
+            : Number.parseInt(data.reminders);
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.zIndex = 1011;
+          let formModel = new FormModel();
 
-        let preside;
-        let participants;
-        let listPermissions = '';
-        if (data?.roles?.length > 0) {
-          preside = data?.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
-          if (preside) listPermissions += preside;
-          participants = data?.roles
-            .filter((x) => x.roleType == 'P')
-            .map((x) => x.objectID)
-            .join(';');
-          if (participants) {
-            listPermissions += ';' + participants;
+          let preside;
+          let participants;
+          let listPermissions = '';
+          if (data?.roles?.length > 0) {
+            preside = data?.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
+            if (preside) listPermissions += preside;
+            participants = data?.roles.filter((x) => x.roleType == 'P');
+            if (participants?.length) {
+              let userIDPar = await this.getListUserIDByOther(participants);
+              if (userIDPar?.length > 0) {
+                let idxPre = userIDPar.findIndex((x) => x == preside);
+                if (idxPre != -1) userIDPar.splice(idxPre, 1);
+                listPermissions += ';' + userIDPar.join(';');
+              }
+            }
           }
+
+          this.cache.functionList('TMT0501').subscribe((f) => {
+            if (f) {
+              this.cache.gridView(f.gridViewName).subscribe((res) => {
+                this.cache
+                  .gridViewSetup(f.formName, f.gridViewName)
+                  .subscribe((grvSetup) => {
+                    if (grvSetup) {
+                      formModel.funcID = 'TMT0501';
+                      formModel.entityName = f.entityName;
+                      formModel.formName = f.formName;
+                      formModel.gridViewName = f.gridViewName;
+                      option.FormModel = formModel;
+                      option.Width = '800px';
+                      let obj = {
+                        action: 'add',
+                        titleAction: this.titleAction,
+                        disabledProject: false,
+                        preside: preside,
+                        data: meeting,
+                        listPermissions: listPermissions,
+                        isOtherModule: true,
+                      };
+                      let dialog = this.callfc.openSide(
+                        PopupAddMeetingComponent,
+                        obj,
+                        option
+                      );
+                      dialog.closed.subscribe((e) => {
+                        if (e?.event) {
+                          this.notiService.notify(
+                            'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+                          );
+                        }
+                      });
+                    }
+                  });
+              });
+            }
+          });
         }
-        this.cache.functionList('TMT0501').subscribe((f) => {
-          if (f) {
-            this.cache.gridView(f.gridViewName).subscribe((res) => {
-              this.cache
-                .gridViewSetup(f.formName, f.gridViewName)
-                .subscribe((grvSetup) => {
-                  if (grvSetup) {
-                    formModel.funcID = 'TMT0501';
-                    formModel.entityName = f.entityName;
-                    formModel.formName = f.formName;
-                    formModel.gridViewName = f.gridViewName;
-                    option.FormModel = formModel;
-                    option.Width = '800px';
-                    let obj = {
-                      action: 'add',
-                      titleAction: this.titleAction,
-                      disabledProject: false,
-                      preside: preside,
-                      data: meeting,
-                      listPermissions: listPermissions,
-                      isOtherModule: true,
-                    };
-                    let dialog = this.callfc.openSide(
-                      PopupAddMeetingComponent,
-                      obj,
-                      option
-                    );
-                    dialog.closed.subscribe((e) => {
-                      if (e?.event) {
-                        this.notiService.notify(
-                          'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
-                        );
-                      }
-                    });
-                  }
-                });
-            });
-          }
-        });
-      }
-    });
+      });
   }
+
+  //get userID cuộc họp
+
+  async getListUserIDByOther(list = []) {
+    let lstUserID = [];
+    if (list != null && list.length > 0) {
+      lstUserID = list
+        .filter((x) => x.objectType == 'U' || x.objectType == '1')
+        .map((x) => x.objectID);
+      //org
+      let listO = list
+        .filter((x) => x.objectType == 'O')
+        .map((x) => x.objectID);
+
+      if (listO?.length > 0) {
+        let userIDO = await firstValueFrom(this.getListUserIDBy(listO, 'O'));
+        if (userIDO?.length > 0) {
+          const set = new Set(lstUserID.concat(userIDO));
+          lstUserID = [...set];
+        }
+      }
+      // dep
+      let listD = list
+        .filter((x) => x.objectType == 'D')
+        .map((x) => x.objectID);
+
+      if (listD?.length > 0) {
+        let userIDD = await firstValueFrom(this.getListUserIDBy(listD, 'D'));
+        if (userIDD?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDD));
+          lstUserID = [...set];
+        }
+      }
+
+      let listP = list
+        .filter((x) => x.objectType == 'P')
+        .map((x) => x.objectID);
+      // positon
+      if (listP?.length > 0) {
+        let userIDP = await firstValueFrom(this.getListUserIDBy(listP, 'P'));
+        if (userIDP?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDP));
+          lstUserID = [...set];
+        }
+      }
+
+      // Role
+      let listR = list
+        .filter((x) => x.objectType == 'R')
+        .map((x) => x.objectID);
+
+      if (listR?.length > 0) {
+        let userIDR = await firstValueFrom(this.getListUserIDByRoleID(listR));
+        if (userIDR?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDR));
+          lstUserID = [...set];
+        }
+      }
+    }
+    return lstUserID;
+  }
+
+  getListUserIDBy(lstId, type) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListODPIDAsync',
+      [lstId, type]
+    );
+  }
+
+  getListUserIDByRoleID(id) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserByRoleIDAsync',
+      [id]
+    );
+  }
+  //lấy user
+  //end gui hop
   //Gửi email
   sendMail() {
     // let option = new SidebarModel();

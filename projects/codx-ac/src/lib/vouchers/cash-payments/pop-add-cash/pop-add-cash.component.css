@@ -1,6 +1,16 @@
 
 .tabline-content .e-content{
-   height: calc(100vh - 509px)!important;
+   height: calc(100vh - 513px)!important;
+}
+.tabline-content .e-inline-edit{
+    background-color: white !important;
+    border-color: white !important;
+}
+.tabline-content .e-inline-edit td .e-editable-component span{
+    border-color: var(--primary-dark) !important;
+}
+.tabline-content .e-inline-edit td .e-editable-component .e-search-icon{
+    border: none !important;
 }
 .tabset-content .e-content{
     height: calc(100vh - 610px)!important;
@@ -12,4 +22,39 @@
 }
 .add-cash #gridViewV2.e-grid .e-summarycell {
     border-width: 0;
+}
+.ac-ng-overlay .ngx-overlay{
+    background-color: whitesmoke !important;
+}
+.ac-ng-overlay .ngx-overlay img{
+    width: 45% !important;
+    height: auto !important;
+}
+.listcash-content .e-float-input input{
+    height: 20px !important;
+    width: 100% !important;
+    border: 0px 0px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+.ac-btn-input{
+    position: absolute;
+    margin-left: -38px;
+    height: 30px;
+    margin-top: 1px;
+    border-radius: 0;
+    padding-right: 0px !important;
+}
+.icon-insert_link:hover{
+    color: var(--primary-dark) !important;
+}
+.ac-dialog .card-header {
+    margin-bottom: 0px !important;
+}
+.input-circle .e-input-group{
+    height: 35px;
+}
+.input-circle .e-input-group select option:read-only{
+    background-color: white;
 }

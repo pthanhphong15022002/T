@@ -227,12 +227,20 @@
             [formModel]="formModelDeals"
           >
           </codx-label>
+<!--
+          <codx-popup-participants
+            [lstParticipants]="listParticipants"
+            [dialog]="dialog"
+            (eventUser)="valueChangeOwner($event)"
+            [owner]="deal?.salespersonID"
+          ></codx-popup-participants> -->
           <ejs-combobox
             [dataSource]="listParticipants"
             [fields]="fieldCbxParticipants"
             [value]="deal?.salespersonID"
             [placeholder]="gridViewSetupDeal?.SalespersonID?.description"
             (valueChange)="valueChangeOwner($event)"
+
           ></ejs-combobox>
         </div>
       </div>
@@ -313,7 +321,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabCustomer>
-  <div class="row">
+  <div class="row mb-4 mt-5">
     <div class="d-flex align-items-center col-6">
       <span
         class="d-flex align-items-center"
@@ -336,9 +344,9 @@
         ></codx-label>
       </span>
     </div>
-    <div class="d-flex col-6">
+    <div class="d-flex align-items-center col-6">
       <span
-        class="d-flex justify-content-between align-items-center"
+        class="d-flex align-items-center"
         style="margin-top: -15px; margin-right: 25px !important"
       >
         <codx-input

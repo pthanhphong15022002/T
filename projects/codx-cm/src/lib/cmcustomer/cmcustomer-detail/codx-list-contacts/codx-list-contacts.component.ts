@@ -174,7 +174,7 @@ export class CodxListContactsComponent implements OnInit {
     this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        if ((this.isButton = true))
+        if (this.isButton == true)
           this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'CM0102_2':
@@ -262,7 +262,7 @@ export class CodxListContactsComponent implements OnInit {
           objectName: this.objectName,
           gridViewSetup: res,
           listContacts: this.listContacts,
-          customerID: this.customerID
+          customerID: this.customerID,
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
@@ -416,6 +416,29 @@ export class CodxListContactsComponent implements OnInit {
     this.objectConvert.emit({ e: e?.target?.checked, data: data });
     if (this.selectAll) {
       this.isCheckedAll = this.listContacts.every((item) => item.checked);
+    }
+  }
+
+
+  getListContactsByObjectId(objectID) {
+    this.loaded = false;
+    if (!this.selectAll) {
+      this.request.predicates = 'ObjectID=@0';
+      this.request.dataValues = objectID;
+      this.request.entityName = 'CM_Contacts';
+      this.request.funcID = 'CM0102';
+      this.className = 'ContactsBusiness';
+      this.fetch().subscribe((item) => {
+        this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+        if (this.listContacts != null && this.listContacts.length > 0) {
+          this.changeContacts(this.listContacts[0]);
+          if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+        }
+        this.loaded = true;
+      });
+    } else {
+      this.loadListContact(this.listContacts);
+      this.loaded = true;
     }
   }
 }
