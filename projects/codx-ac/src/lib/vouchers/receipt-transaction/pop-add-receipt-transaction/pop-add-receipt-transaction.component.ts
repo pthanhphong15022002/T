@@ -49,7 +49,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
-  visibleColumns: Array<any> = [];
   pageCount: any;
   tab: number = 0;
   total: any = 0;
@@ -158,7 +157,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Event
 
   gridCreated() {
-    this.visibleColumns = this.gridInventoryJournalLine.visibleColumns;
     this.gridInventoryJournalLine.hideColumns(this.lockFields);
   }
 
@@ -317,7 +315,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onDoubleClick(data)
   {
-    this.loadPredicate(this.visibleColumns, data.rowData);
+    this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data.rowData);
   }
 
   close() {
@@ -330,6 +328,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onSaveAdd(){
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -340,6 +339,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onSave() {
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -662,7 +662,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               idx = this.gridInventoryJournalLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridInventoryJournalLine.addRow(res, idx);
-              this.loadPredicate(this.visibleColumns, res);
+              this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, res);
               break;
             case '2':
               idx = this.inventoryJournalLines.length;
@@ -727,7 +727,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case '1':
         this.gridInventoryJournalLine.gridRef.selectRow(Number(data.index));
         this.gridInventoryJournalLine.gridRef.startEdit();
-        this.loadPredicate(this.visibleColumns, data);
+        this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data);
         break;
       case '2':
         let index = this.inventoryJournalLines.findIndex(
@@ -916,6 +916,17 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             }
           }
         }
+      }
+    }
+  }
+
+  checkTransLimit(){
+    if(this.journal.transLimit && this.inventoryJournal.totalAmt > this.journal.transLimit)
+    {
+      this.notification.notifyCode('AC0016');
+      if(this.journal.transControl == '2')
+      {
+        this.validate++ ;
       }
     }
   }

@@ -536,6 +536,7 @@ export class CM_Cases {
   severity: string;
   priority: string;
   occuredOn: Date;
+  detectedOn: Date;
   occuredPlace: string;
   reality: string;
   memo: string;

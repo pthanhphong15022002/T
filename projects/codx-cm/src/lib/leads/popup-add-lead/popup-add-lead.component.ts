@@ -138,7 +138,7 @@ saveLead() {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
-      '"' + this.gridViewSetup['DealName']?.headerText + '"'
+      '"' + this.gridViewSetup['LeadName']?.headerText + '"'
     );
     return;
   }
