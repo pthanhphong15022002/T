@@ -129,7 +129,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
-      this.getDataHistoryProgress(this.itemSelected.recID);
+     
     }
   }
   //#region
@@ -145,6 +145,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
+          this.getDataHistoryProgress(this.itemSelected.recID);
           this.viewTags = this.itemSelected?.tags;
           if (this.itemSelected.taskGroupID) {
             this.getTaskGroup(this.itemSelected.taskGroupID);
@@ -630,8 +631,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   isNullOrEmpty(value: string): boolean {
     return value == null || value == undefined || !value.trim();
   }
-  getDataHistoryProgress(objectID) {
-    this.listHistoryProgress = [];
+  getDataHistoryProgress(objectID) {  
     this.loadedHisPro= false
     this.api
       .execSv(
@@ -644,7 +644,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res: any[]) => {
         if (res && res?.length >0) {
           this.listHistoryProgress = JSON.parse(JSON.stringify(res));
-        }
+        }else  this.listHistoryProgress = [];
         this.loadedHisPro= true
         this.changeDetectorRef.detectChanges();
       });

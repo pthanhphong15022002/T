@@ -1497,7 +1497,6 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
-        this.detail.getDataHistoryProgress(this.itemSelected.recID);
       }
       this.detectorRef.detectChanges();
     });
