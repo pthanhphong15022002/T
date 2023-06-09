@@ -201,8 +201,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
     this.isUpdateProgressStep =
-      this.currentStep?.progressTaskGroupControl || false;
+    this.currentStep?.progressTaskGroupControl || false;
     this.isEditTimeDefault = this.currentStep?.leadtimeControl || false;
+    this.isOnlyView = this.currentStep?.stepStatus == '1';
 
     const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
       const { taskGroupID } = product;
@@ -498,7 +499,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.chooseTypeTask();
         break;
       case 'DP20': // tien do
-        this.openPopupUpdateProgress(step, 'P');
+        this.openPopupUpdateProgress(this.currentStep, 'P')
         break;
       case 'DP07': // view
         this.viewTask(step, 'P');

@@ -3093,6 +3093,17 @@ codx-wrapper.hover-scroll-overlay-y {
 /*********** ipad ************/
 
 @media (max-width: 991px) {
+  [data-kt-drawer-aside="on"]{
+    #kt_aside_menu{
+      padding-top: 25px;
+    }
+  }
+  body:not([data-kt-drawer-aside="on"]){
+    .drawer-overlay{
+      display: none;
+      z-index: 0;
+    }
+  }
   .d-lg-none.ms-2.me-n3{
     display: none!important;
   }
