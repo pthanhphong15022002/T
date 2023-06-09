@@ -180,7 +180,12 @@
    margin-left: 5px;
  }
  
- .step-content,
+ .step-content{
+  codx-mfunc {
+    top: 0px !important;
+    right: 5px !important;
+  }
+ }
  .more-funtion-step {
    codx-mfunc {
      top: -5px !important;
