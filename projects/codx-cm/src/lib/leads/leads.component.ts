@@ -365,6 +365,7 @@ export class LeadsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
+        this.view.dataService.clear();
         e.event.modifiedOn = new Date();
         this.view.dataService.update(e.event).subscribe();
         this.changeDetectorRef.detectChanges();
@@ -403,7 +404,6 @@ export class LeadsComponent
           if (e && e.event != null) {
             e.event.modifiedOn = new Date();
             this.view.dataService.update(e.event).subscribe();
-            //this.leadsComponent.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.changeDetectorRef.detectChanges();
           }
         });
