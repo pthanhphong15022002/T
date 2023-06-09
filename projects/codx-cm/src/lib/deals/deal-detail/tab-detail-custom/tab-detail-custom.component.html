@@ -340,10 +340,12 @@
 </ng-template>
 
 <ng-template #ganttChart>
-  <codx-step-chart
+  <div class="w-100 h-100" id="tabGantt">
+    <codx-step-chart
     [dataSelected]="dataSelected"
     [listSteps]="listSteps"
   ></codx-step-chart>
+  </div>
 </ng-template>
 
 <ng-template #field>
