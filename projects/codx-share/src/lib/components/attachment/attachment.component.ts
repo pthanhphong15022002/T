@@ -1275,6 +1275,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
         },
         IsPublic: true,
         ThumbConstraints: '60,200,450,900',
+        meta_data : 
+        {
+          ObjectId : this.objectId,
+          EntityName: this.formModel?.entityName
+        }
       },
     })
   }

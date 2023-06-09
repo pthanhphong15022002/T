@@ -1,9 +1,9 @@
 
 .tabline-content .e-content{
-   height: calc(100vh - 513px)!important;
+   height: calc(100vh - 550px)!important;
 }
 .tabline-content .e-inline-edit{
-    background-color: var(--primary-dark) !important;
+    background-color: var(--primary-light) !important;
     border-color: white !important;
     
 }
@@ -13,9 +13,6 @@
 }
 .tabline-content .e-inline-edit td .e-editable-component .e-search-icon{
     border: none !important;
-}
-.tabline-content .e-inline-edit td .e-editable-value{
-    color: white !important;
 }
 .tabset-content .e-content{
     height: calc(100vh - 610px)!important;
