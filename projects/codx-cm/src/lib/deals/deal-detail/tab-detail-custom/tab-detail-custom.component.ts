@@ -76,6 +76,8 @@ export class TabDetailCustomComponent
   ngAfterViewInit() {}
   onInit(): void {
     this.executeApiCalls();
+    console.log(this.dataSelected);
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {

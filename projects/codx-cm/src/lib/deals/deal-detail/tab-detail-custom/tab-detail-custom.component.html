@@ -46,6 +46,9 @@
       [isShowMore]="true"
       [isDeepCopy]="false"
       [isShowStep]="true"
+      [isStart]="dataSelected?.status == '2'"
+      [isClose]="dataSelected?.closed"
+      [isRoleAll]="dataSelected?.roles?.isOnwer || false"
       (continueStep)="continueStep($event,step)"
       (saveAssign)="saveAssignTask($event)"
     ></codx-step-task>
