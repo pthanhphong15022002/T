@@ -63,36 +63,36 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       name: 'History',
       textDefault: 'Lịch sử',
       isActive: true,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'Attachment',
       textDefault: 'Đính kèm',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'Comment',
       textDefault: 'Bình luận',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'AssignTo',
       textDefault: 'Giao việc',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'References',
       textDefault: 'Nguồn công việc',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
   ];
   loadParam = false;
@@ -119,8 +119,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       name: 'Progess',
       textDefault: 'Cập nhật tiến độ',
       isActive: false,
+      icon: "icon-i-hourglass-split",
       template: this.templetHistoryProgress,
-      icon: 'icon-i-hourglass-split',
     });
   }
 
