@@ -48,7 +48,6 @@ export class EmployeeContractComponent extends UIComponent {
   dialogEditStatus: any;
   statusCbx = true;
 
-  //genderGrvSetup: any
   grvSetup: any;
 
   //#region eContractFuncID
@@ -245,17 +244,14 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.update(res.event).subscribe();
         }
+        this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
     });
   }
 
@@ -272,7 +268,6 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   addContract(evt) {
-    // this.currentEmpObj = this.itemDetail.emp;
     if (evt.id == 'btnAdd') {
       this.HandleEContractInfo(
         evt.text + ' ' + this.view.function.description,

@@ -130,9 +130,7 @@ export class DealDetailComponent implements OnInit {
     await this.getTree() ; //ve cay giao viec
     await this.getContractByDeaID();
     await this.getContactByDeaID(this.dataSelected.recID);
-    // if(this.nameDetail == 'Contact') {
-    //  this.test.getListContactsByObjectId(this.dataSelected.recID);
-    // }
+
 
     } catch (error) {}
 
