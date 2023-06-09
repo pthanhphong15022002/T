@@ -6,17 +6,21 @@
 
 <ng-template #body>
   <div class="notify-content">
-    <div class="d-flex align-items-center justify-content-center">
-      <div class="w-auto notify-tab">
-        <button type="button" [class.active]="mode=='0'" class="btn btn-white me-3" (click)="clickTab('0')">
-          <codx-label class="fs-6 fw-normal" [formModel]="dialogRef.formModel" name="lblNotification"
-            default="Thông báo"></codx-label>
-        </button>
-        <button type="button" [class.active]="mode=='1'" class="btn btn-white" (click)="clickTab('1')">
-          <codx-label class="fs-6 fw-normal" [formModel]="dialogRef.formModel" name="lblBookmark"
-            default="Đã ghim"></codx-label>
-        </button>
-      </div>
+    <div class="d-flex align-items-center mb-2 pt-2">
+      <ul class="nav nav-tabs w-100">
+        <li class="nav-item ms-3">
+          <a [class.active]="mode=='0'" class="nav-link" (click)="clickTab('0')">
+            <codx-label class="text-uppercase" [formModel]="dialogRef.formModel" name="lblNotification"
+              default="Thông báo"></codx-label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [class.active]="mode=='1'" class="nav-link" (click)="clickTab('1')">
+            <codx-label class="text-uppercase" [formModel]="dialogRef.formModel" name="lblBookmark"
+              default="Đã ghim"></codx-label>
+          </a>
+        </li>
+      </ul>
     </div>
     <div class="d-flex align-items-center justify-content-end mb-2 notify-header">
       <div class="d-flex codx-notification-filter me-5">

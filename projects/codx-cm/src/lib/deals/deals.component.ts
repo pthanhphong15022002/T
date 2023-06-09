@@ -116,6 +116,7 @@ export class DealsComponent
   crrStepID: any;
   dataColums: any;
   moreFuncInstance: any;
+  funCrr: any;
 
   constructor(
     private inject: Injector,
@@ -130,6 +131,7 @@ export class DealsComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
   }
@@ -203,7 +205,7 @@ export class DealsComponent
           },
         },
       ];
-   // this.reloadData();
+    // this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -214,7 +216,6 @@ export class DealsComponent
     //   this.view.dataService.predicates = null;
     //   this.view.dataService.dataValues = null;
     //   this.view.dataObj = this.dataObj;
-
     //   this.view?.views?.forEach((x) => {
     //     if (x.type == 6) {
     //       x.request.dataObj = this.dataObj;
@@ -264,7 +265,51 @@ export class DealsComponent
     this.resourceKanban.dataObj = this.dataObj;
   }
 
-  changeView(e) {}
+  changeView(e) {
+    if (!this.funCrr) {
+      this.funCrr = this.funcID;
+      return;
+    }
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    if (this.funCrr != this.funcID) {
+      this.funCrr = this.funcID;
+      this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+      if (this.processID) this.dataObj = { processID: this.processID };
+      this.afterLoad();
+
+      this.view?.views?.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      if ((this.view?.currentView as any)?.kanban) {
+        let kanban = (this.view?.currentView as any)?.kanban;
+        let settingKanban = kanban.kanbanSetting;
+        settingKanban.isChangeColumn = true;
+        settingKanban.formName = this.view?.formModel?.formName;
+        settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+        this.api
+          .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+            settingKanban,
+            this.dataObj,
+          ])
+          .subscribe((resource) => {
+            if (resource?.columns && resource?.columns.length)
+              kanban.columns = resource.columns;
+            kanban.kanbanSetting.isChangeColumn = false;
+            kanban.dataObj = this.dataObj;
+            kanban.loadDataSource(
+              kanban.columns,
+              kanban.kanbanSetting?.swimlaneSettings,
+              false
+            );
+            kanban.refresh();
+          });
+      }
+    }
+  }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -924,17 +969,17 @@ export class DealsComponent
 
   //#region CRUD
   add() {
-    switch (this.funcID) {
-      case 'CM0201': {
-        //statements;
-        this.addDeal();
-        break;
-      }
-      default: {
-        //statements;
-        break;
-      }
-    }
+    // switch (this.funcID) {
+    //   case 'CM0201': {
+    //statements;
+    this.addDeal();
+    //     break;
+    //   }
+    //   default: {
+    //     //statements;
+    //     break;
+    //   }
+    // }
   }
 
   addDeal() {
