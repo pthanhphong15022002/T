@@ -112,7 +112,7 @@
                   <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.objectID!=null">
                     <div class="d-flex flex-row w-100">
                       <span class="me-4">
-                        <codx-img [objectId]="assignmentOKR?.userID" [objectType]="'AD_Users'"></codx-img>
+                        <codx-img [objectId]="assignmentOKR?.owner" [objectType]="'AD_Users'"></codx-img>
                       </span>
                       <div class="d-flex flex-column" >
                         <span class="fs-6 text-dark fw-bold">{{assignmentOKR?.employeeName}}</span>

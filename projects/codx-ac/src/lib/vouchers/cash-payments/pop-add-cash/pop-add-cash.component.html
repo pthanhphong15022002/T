@@ -187,13 +187,13 @@
                   <codx-label fiedName="Payee" [formModel]="form.formModel">
                   </codx-label>
                   <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
-                    (controlBlur)="valueFocusOut($event)"></codx-input>
+                    (valueChange)="valueChange($event)"></codx-input>
                 </div>
                 <div *ngIf="form.formModel.funcID == 'ACT0401'" class="form-group">
                   <codx-label fiedName="Payor" [formModel]="form.formModel">
                   </codx-label>
                   <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payor"
-                    (controlBlur)="valueFocusOut($event)"></codx-input>
+                    (valueChange)="valueChange($event)"></codx-input>
                 </div>
               </div>
             </div>
@@ -280,7 +280,7 @@
         [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (actionEvent)="actionEvent($event)"
+        [autoLoad]="false" (created)="gridCreated()" [rowHeight]="35" (onAddNew)="onAddNew($event)" (actionEvent)="actionEvent($event)"
         (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
@@ -917,22 +917,10 @@
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
         </div>
-        <ng-container *ngIf="form.formGroup">
-          <div *ngIf="action == 'add' || cashpayment?.status == '0'" class="me-3 input-circle input-border-0 w-400px">
-            <codx-input allowRemove="false" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
-              (valueChange)="changeType($event)">
-            </codx-input>
-          </div>
-          <span *ngIf="(action == 'edit' && cashpayment?.status != '0')" class="me-3">
-            <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
-              [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg">
-            </codx-vll>
-          </span>
-        </ng-container>
         <div class="input-circle input-sm" *ngIf="form?.formGroup">
           <span class="me-2">
             <codx-vll [name]="'AC040'" [formModel]="form.formModel" [field]="'Status'" [value]="cashpayment?.status"
-              [showText]="true" [showBgColor]="true" class="badge badge-light badge-lg lg">
+              [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
             </codx-vll>
           </span>
         </div>
@@ -948,7 +936,7 @@
             <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
           </button>
         </div>
-        <div *ngIf="hasSaved" class="ms-2">
+        <div *ngIf="hasSaved && cashpayment?.status == '0'" class="ms-2">
           <button type="button" class="btn btn-md btn-danger" (click)="onDiscard()">
             <div class="d-flex align-items-center">
               <i class="icon-settings_backup_restore icon-16"></i>
@@ -963,6 +951,18 @@
         </div>
       </div>
     </div>
+    <ng-container *ngIf="form.formGroup">
+      <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'" class="input-circle input-border-0 w-400px mt-1">
+        <codx-input allowRemove="false" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
+          (valueChange)="changeType($event)">
+        </codx-input>
+      </div>
+      <span style="margin-left: 30px;" *ngIf="(action == 'edit' && cashpayment?.status != '0')">
+        <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
+          [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg  mt-1">
+        </codx-vll>
+      </span>
+    </ng-container>
   </div>
 </ng-template>
 <!-- End: Sub toolbar -->
