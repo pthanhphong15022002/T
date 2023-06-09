@@ -91,7 +91,6 @@ export class PopupEmployeeBenefitComponent
                   this.currentEJobSalaries.employeeID = this.employeeId;
                   this.currentEJobSalaries.effectedDate = null;
                   this.currentEJobSalaries.expiredDate = null;
-                  this.currentEJobSalaries.status = '1';
                   this.formModel.currentData = this.currentEJobSalaries;
                   this.formGroup.patchValue(this.currentEJobSalaries);
                   this.isAfterRender = true;
