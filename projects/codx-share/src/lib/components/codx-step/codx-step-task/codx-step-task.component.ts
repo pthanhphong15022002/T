@@ -474,19 +474,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP20': // tiến độ
-            if (!((this.isRoleAll ) && this.isOnlyView)) {
+            if (!(this.isRoleAll  && this.isOnlyView && this.isUpdateProgressStep)) {
               res.isblur = true;
             }
+            res.isbookmark = true;
             break;
           case 'DP08': // Thêm nhóm công việc
-            if (!((this.isRoleAll ) && this.isOnlyView)) {
+            if (!(this.isRoleAll && this.isOnlyView)) {
               res.isblur = true;
             }
+            res.isbookmark = true;
             break;
-          case 'DP25': // Chi tiết giai đoạn
-            if (!((this.isRoleAll ) && this.isOnlyView)) {
-              res.isblur = true;
-            }
+          case 'DP26': // Chi tiết giai đoạn
+            // if (!((this.isRoleAll ) && this.isOnlyView)) {
+            //   res.isblur = true;
+            // }
+            res.isbookmark = true;
             break;
         }
       });
@@ -501,7 +504,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP20': // tien do
         this.openPopupUpdateProgress(this.currentStep, 'P')
         break;
-      case 'DP07': // view
+      case 'DP26': // view
         this.viewTask(step, 'P');
         break;
     }
