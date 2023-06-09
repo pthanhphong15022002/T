@@ -110,12 +110,19 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngOnInit() {
+    var options = new DataRequest();
+    options.entityName = 'DP_Processes';
+    options.predicates = 'ApplyFor=@0 && !Deleted';
+    options.dataValues = '1';
+    options.pageLoading = false;
+    this.listCbxProcess = await firstValueFrom(
+      this.cmSv.loadDataAsync('DP', options)
+    );
     if (
       this.lead.businessLineID != null &&
       this.lead.businessLineID.trim() != ''
-    ) {
+    )
       this.getProcessIDBybusinessLineID(this.lead.businessLineID);
-    }
 
     this.formModelDeals = await this.cmSv.getFormModel('CM0201');
     this.gridViewSetupDeal = await firstValueFrom(
@@ -168,26 +175,17 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async getProcessIDBybusinessLineID(businessLineID) {
     var options = new DataRequest();
-    options.entityName = 'CM_businessLines';
+    options.entityName = 'CM_BusinessLines';
     options.predicates = 'RecID=@0';
     options.dataValues = businessLineID;
     options.pageLoading = false;
     var businessLine = await firstValueFrom(
       this.cmSv.loadDataAsync('CM', options)
     );
-    if (businessLine != null && businessLine.length > 0) {
-      var options = new DataRequest();
-      options.entityName = 'DP_Processes';
-      options.predicates = 'ApplyFor=@0 && !Deleted';
-      options.dataValues = '1';
-      options.pageLoading = false;
-      this.listCbxProcess = await firstValueFrom(
-        this.cmSv.loadDataAsync('DP', options)
-      );
-      if (this.listCbxProcess != null && this.listCbxProcess.length > 0) {
-        this.deal.processID = businessLine[0]?.processID;
-        this.getProcessByProcessID(this.deal.processID);
-      }
+
+    if (this.listCbxProcess != null && this.listCbxProcess.length > 0) {
+      this.deal.processID = businessLine[0]?.processID;
+      this.getProcessByProcessID(this.deal.processID);
     }
   }
 
@@ -205,7 +203,6 @@ export class PopupConvertLeadComponent implements OnInit {
         var lstStep =
           process?.steps != null ? this.groupByStep(process?.steps) : [];
         this.deal.endDate = this.HandleEndDate(lstStep);
-
       }
 
       if (
