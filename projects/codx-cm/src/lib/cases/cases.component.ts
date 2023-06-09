@@ -106,9 +106,10 @@ export class CasesComponent
   processID: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
-  caseType:string;
-  applyFor:string;
+  caseType: string;
+  applyFor: string;
   formModelCrr: FormModel = new FormModel();
+  funCrr: any;
 
   constructor(
     private inject: Injector,
@@ -121,7 +122,7 @@ export class CasesComponent
     super(inject);
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-      this.checkFunction(this.funcID);
+     
     }
 
     this.executeApiCalls();
@@ -150,21 +151,9 @@ export class CasesComponent
     // if (!this.funcID) {
     //   this.funcID = this.activedRouter.snapshot.params['funcID'];
     // }
-    this.request = new ResourceModel();
-    this.request.service = 'CM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'CasesBusiness';
-    this.request.method = 'GetListCasesAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
+    this.afterLoad();
   }
+
   ngAfterViewInit(): void {
     if (this.funcID != 'CM0401' && this.funcID != 'CM0402') {
       this.views = [
@@ -200,10 +189,27 @@ export class CasesComponent
             panelRightRef: this.templateDetail,
           },
         },
-
       ];
     // this.reloadData();
     this.changeDetectorRef.detectChanges();
+  }
+
+  afterLoad() {
+    this.checkFunction(this.funcID);
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'CasesBusiness';
+    this.request.method = 'GetListCasesAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
   }
 
   reloadData() {
@@ -242,7 +248,6 @@ export class CasesComponent
     //         kanban.refresh();
     //       });
     //   }
-
     //   if (this.processID)
     //     (this.view?.dataService as CRUDService)
     //       .setPredicates(['ProcessID==@0'], [this.processID])
@@ -270,7 +275,51 @@ export class CasesComponent
     });
   }
 
-  changeView(e) {}
+  changeView(e) {
+    if (!this.funCrr) {
+      this.funCrr = this.funcID;
+      return;
+    }
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    if (this.funCrr != this.funcID) {
+      this.funCrr = this.funcID;
+      this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+      if (this.processID) this.dataObj = { processID: this.processID };
+      this.afterLoad();
+
+      this.view?.views?.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      if ((this.view?.currentView as any)?.kanban) {
+        let kanban = (this.view?.currentView as any)?.kanban;
+        let settingKanban = kanban.kanbanSetting;
+        settingKanban.isChangeColumn = true;
+        settingKanban.formName = this.view?.formModel?.formName;
+        settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+        this.api
+          .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+            settingKanban,
+            this.dataObj,
+          ])
+          .subscribe((resource) => {
+            if (resource?.columns && resource?.columns.length)
+              kanban.columns = resource.columns;
+            kanban.kanbanSetting.isChangeColumn = false;
+            kanban.dataObj = this.dataObj;
+            kanban.loadDataSource(
+              kanban.columns,
+              kanban.kanbanSetting?.swimlaneSettings,
+              false
+            );
+            kanban.refresh();
+          });
+      }
+    }
+  }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -299,22 +348,22 @@ export class CasesComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if ( (data.closed && data.status != '1' ) || data.status == '1' ) {
+      if ((data.closed && data.status != '1') || data.status == '1') {
         eventItem.disabled = true;
       }
     };
     var isDelete = (eventItem, data) => {
-      if ( data.closed) {
+      if (data.closed) {
         eventItem.disabled = true;
       }
     };
     var isCopy = (eventItem, data) => {
-      if ( data.closed  ) {
+      if (data.closed) {
         eventItem.disabled = true;
       }
     };
     var isEdit = (eventItem, data) => {
-      if ( data.closed ) {
+      if (data.closed) {
         eventItem.disabled = true;
       }
     };
@@ -884,21 +933,19 @@ export class CasesComponent
     popup.closed.subscribe((e) => {});
   }
 
-  async checkFunction(funcID:any){
-   await this.cache.functionList(funcID).subscribe((fun) => {
+  async checkFunction(funcID: any) {
+    await this.cache.functionList(funcID).subscribe((fun) => {
       this.formModelCrr.funcID = fun.functionID;
       this.formModelCrr.entityName = fun.entityName;
       this.formModelCrr.formName = fun.formName;
       this.formModelCrr.gridViewName = fun.gridViewName;
-      if(this.formModelCrr.formName === 'CMCases') {
+      if (this.formModelCrr.formName === 'CMCases') {
         this.caseType = '1';
         this.applyFor = '2';
-      }
-      else if(this.formModelCrr.formName === 'CMRequests') {
+      } else if (this.formModelCrr.formName === 'CMRequests') {
         this.caseType = '2';
         this.applyFor = '3';
-      };
+      }
     });
-
   }
 }
