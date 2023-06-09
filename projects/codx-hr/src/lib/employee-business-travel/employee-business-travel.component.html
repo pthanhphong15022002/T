@@ -16,12 +16,12 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-50 p-3">
+    <div class="w-40 p-2">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
             [width]="35"
-            class="me-3"
+            class="me-4"
             [objectId]="data?.emp?.employeeID"
             [referType]="'avt'"
             [objectName]="data?.emp?.employeeName"
@@ -30,12 +30,12 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div>
-            <div class="fw-bold">
-              <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
+          <div class="mb-1">
+            <div class="fw-bold text-dark fs-6">
+              {{ data?.emp?.employeeName }}
             </div>
           </div>
-          <div class="text-gray-700 fs-7 mb-1">
+          <div class="text-gray-600 fs-7 mb-1">
             <span
               [innerHTML]="
                 data?.emp?.positionID
@@ -58,9 +58,9 @@
     </div>
 
     <div class="w-25 p-3">
-      <div class="d-flex">
+      <div class="d-flex mb-1">
         <div
-          class="fw-bold"
+          class="fw-bold text-dark"
           [ngbTooltip]="grvSetup?.KowID?.headerText"
           [innerHTML]="
             data.kowID | formatvalue : view.formModel : 'kowID' | async
@@ -73,9 +73,9 @@
         </codx-attachment-temp>
       </div>
 
-      <div class="d-flex flex-row">
-        <span class="icon-calendar_today icon-15 me-1"></span>
-        <div class="align-items-center d-flex fw-bold">
+      <div class="d-flex align-items-center">
+        <span class="icon-calendar_today icon-14 text-gray-500 me-1"></span>
+        <div class="d-flex align-items-center">
           <span
             [ngbTooltip]="grvSetup?.BeginDate?.headerText"
             [innerHTML]="
@@ -280,7 +280,7 @@
   <ng-template #desc2Tmp>
     <div>
       <div class="d-flex align-items-center mt-1">
-        <span class="icon-calendar_today icon-15 me-1"></span>
+        <span class="icon-calendar_today icon-16 me-1"></span>
         <span [ngbTooltip]="grvSetup?.BeginDate?.headerText">
           {{ data.beginDate | fmDT }}
         </span>
@@ -357,9 +357,9 @@
         ></span>
       </div>
 
-      <div class="d-flex flex-row">
-        <span class="icon-calendar_today icon-15 me-1"></span>
-        <div class="align-self-center fw-bold">
+      <div class="d-flex align-items-center">
+        <span class="icon-calendar_today icon-16 me-1"></span>
+        <div class="d-flex align-items-center">
           <span
             [ngbTooltip]="grvSetup?.BeginDate?.headerText"
             [innerHTML]="

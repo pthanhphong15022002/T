@@ -39,7 +39,7 @@ export class DealDetailComponent implements OnInit {
 
 
 
-  listContract: CM_Contacts[];
+  // listContract: CM_Contacts[];
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -128,11 +128,8 @@ export class DealDetailComponent implements OnInit {
   async promiseAllAsync() {
     try {
     await this.getTree() ; //ve cay giao viec
-    await this.getContractByDeaID();
     await this.getContactByDeaID(this.dataSelected.recID);
-    // if(this.nameDetail == 'Contact') {
-    //  this.test.getListContactsByObjectId(this.dataSelected.recID);
-    // }
+
 
     } catch (error) {}
 
@@ -217,18 +214,6 @@ export class DealDetailComponent implements OnInit {
   changeFooter(e) {
   }
 
- async getContractByDeaID() {
-    if (this.dataSelected?.recID) {
-      var data = [this.dataSelected?.recID];
-      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
-        if (res) {
-          this.listContract = res;
-        } else {
-          this.listContract = [];
-        }
-      });
-    }
-  }
   async getContactByDeaID(recID){
     this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
       if (res) {

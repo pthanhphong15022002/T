@@ -1585,7 +1585,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   {
     if(per && per.length > 0)
     {
-      if(per[0].create) return "Tạo , cập nhật , chia sẻ , ..."
+      if(per[0].create) return "Sửa, chia sẻ, upload, download"
       return "Chỉ được xem"
     }
     return ""

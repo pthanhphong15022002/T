@@ -403,7 +403,6 @@ export class LeadsComponent
           if (e && e.event != null) {
             e.event.modifiedOn = new Date();
             this.view.dataService.update(e.event).subscribe();
-            //this.leadsComponent.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -525,6 +524,8 @@ export class LeadsComponent
         if (e.event.length > 0) {
           e.event[0].modifiedOn = new Date();
           this.view.dataService.add(e.event[0], 0).subscribe();
+          // this.view.dataService.update(e.event[0]).subscribe();
+
           if (e.event[1]) {
             this.view.dataService.remove(e.event[1]).subscribe();
           }

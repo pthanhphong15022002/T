@@ -7,24 +7,24 @@
     <div
       class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
-    <div
+      <div
         class="d-flex align-items-center pe-4"
         [ngStyle]="{
-          background: currentStep?.backgroundColor,
+          'background': currentStep?.backgroundColor || '#d9e3f7',
           'border-radius': '20px'
         }"
       >
         <div
           class="cricle"
-          [ngStyle]="{ color: currentStep?.iconColor, border: '3px solid' }"
+          [ngStyle]="{ color: currentStep?.iconColor || 'gray', border: '2px solid' }"
         >
           <span [ngClass]="currentStep?.icon" class="fs-6"></span>
         </div>
         <span
           class="line-clamp line-clamp-2 fs-5 ms-2"
-          [ngStyle]="{ color: currentStep?.textColor }"
+          [ngStyle]="{ color: currentStep?.textColor || 'gray', 'font-weight': '400'}"
         >
-          {{ currentStep.stepName || ''}}</span
+          {{ currentStep.stepName || "" }}</span
         >
       </div>
 
@@ -38,25 +38,36 @@
       >
       </codx-mfunc>
     </div>
-    <div
-      class="disabled-inline"
-      (click)="openPopupUpdateProgress(currentStep, 'P')"
-      [ngClass]="
-        checkUpdateProgress(currentStep, 'P')
-          ? 'cursor-pointer'
-          : 'cursor-not-allowed'
-      "
+    <div class="d-flex align-items-center">
+      <codx-vll
+      [name]="'DP032'"
+      [field]="'Status'"
+      [value]="currentStep?.stepStatus"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-primary badge-sm"
     >
-      <codx-progressbar
-        [progress]="currentStep?.progress || 0"
-        #popoverDetails="ngbPopover"
-        [ngbPopover]="'Cập nhật tiến độ'"
-        (mouseenter)="popoverDetails.open()"
-        (mouseleave)="popoverDetails.close()"
-        popoverClass="approverStepClass"
-        container="body"
-        placement="top bottom"
-      ></codx-progressbar>
+    </codx-vll>
+      <div
+        class="disabled-inline"
+        (click)="openPopupUpdateProgress(currentStep, 'P')"
+        [ngClass]="
+          checkUpdateProgress(currentStep, 'P')
+            ? 'cursor-pointer'
+            : 'cursor-not-allowed'
+        "
+      >
+        <codx-progressbar
+          [progress]="currentStep?.progress || 0"
+          #popoverDetails="ngbPopover"
+          [ngbPopover]="'Cập nhật tiến độ'"
+          (mouseenter)="popoverDetails.open()"
+          (mouseleave)="popoverDetails.close()"
+          popoverClass="approverStepClass"
+          container="body"
+          placement="top bottom"
+        ></codx-progressbar>
+      </div>
     </div>
   </div>
   <!-- drap drop công việc ngoài-->

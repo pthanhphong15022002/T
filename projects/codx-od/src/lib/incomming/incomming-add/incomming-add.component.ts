@@ -70,8 +70,8 @@ export class IncommingAddComponent implements OnInit {
   user:any;
   agencyName:any;
   referType = 'source';
-
   keyField = false; //Kiểm tra số công văn tự động
+  fileModule:any
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,

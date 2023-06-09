@@ -156,7 +156,7 @@ export class CodxViewTaskComponent implements OnInit {
       );
     }
 
-    this.cache.valueList('DP035').subscribe((res) => {
+    this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
         let type = res.datas.find((x) => x.value === this.type);
