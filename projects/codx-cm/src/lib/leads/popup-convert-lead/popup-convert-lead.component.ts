@@ -305,6 +305,15 @@ export class PopupConvertLeadComponent implements OnInit {
       this.notiService.notifyCode(messageCheckFormat);
       return;
     }
+    setTimeout(() => {
+      if (!this.radioChecked && !this.avatarChange) {
+        this.entityName = JSON.parse(JSON.stringify('CM_Customers'));
+        this.recIDAvt = JSON.parse(JSON.stringify(this.recIDAvt));
+        this.nameAvt = JSON.parse(JSON.stringify(this.nameAvt));
+        this.modifyOnAvt = JSON.parse(JSON.stringify(this.modifyOnAvt));
+        this.imageUpload.loadAvatar();
+      }
+    }, 0);
     this.onConvert();
   }
 
@@ -336,7 +345,9 @@ export class PopupConvertLeadComponent implements OnInit {
                 this.imageUpload.updateFileDirectReload(this.customer.recID)
               );
             } else {
-              this.cmSv.copyFileAvata(this.recIDAvt, this.customer.recID);
+              await firstValueFrom(
+                this.cmSv.copyFileAvata(this.recIDAvt, this.customer.recID)
+              );
             }
             this.dialog.close(res);
           }
@@ -530,7 +541,6 @@ export class PopupConvertLeadComponent implements OnInit {
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
-
       this.setDataCustomer();
       if (this.countAddNew == 0) {
         this.customerID = Util.uid();
@@ -568,6 +578,9 @@ export class PopupConvertLeadComponent implements OnInit {
   }
   valueChangeCustomer(e) {
     this.customer[e.field] = e?.data;
+    if (e.field == 'customerName' && e?.data) {
+      this.recIDAvt = e.data;
+    }
   }
   valueTagChange(e) {
     this.data.tags = e.data;
