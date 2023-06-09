@@ -9,6 +9,8 @@ import {
   Optional,
   Output,
   SimpleChanges,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -28,7 +30,8 @@ import { tmpReferences } from '../../../models/assign-task.model';
   styleUrls: ['./view-detail.component.scss'],
 })
 export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
-  //#region Constructor
+  @ViewChild('templetHistoryProgress')
+  templetHistoryProgress!: TemplateRef<any>;
   dialog: any;
   @Input() formModel?: FormModel;
   @Input() taskExtends?: any;
@@ -56,16 +59,47 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   viewTags = '';
   vllPriority = 'TM005';
   tabControl = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-    { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      template: null,
+      icon: '',
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      template: null,
+      icon: '',
+    },
+    {
+      name: 'Comment',
+      textDefault: 'Bình luận',
+      isActive: false,
+      template: null,
+      icon: '',
+    },
+    {
+      name: 'AssignTo',
+      textDefault: 'Giao việc',
+      isActive: false,
+      template: null,
+      icon: '',
+    },
+    {
+      name: 'References',
+      textDefault: 'Nguồn công việc',
+      isActive: false,
+      template: null,
+      icon: '',
+    },
   ];
   loadParam = false;
   param?: TM_Parameter = new TM_Parameter();
   isEdit = true;
   timeoutId: any;
+  listHistoryProgress: any;
 
   constructor(
     private api: ApiHttpService,
@@ -79,13 +113,22 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region Init
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.tabControl.push({
+      name: 'Progess',
+      textDefault: 'Cập nhật tiến độ',
+      isActive: false,
+      template: this.templetHistoryProgress,
+      icon: 'icon-i-hourglass-split',
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskID']) {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
+      this.getDataHistoryProgress();
     }
   }
   //#region
@@ -581,5 +624,25 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     this.param.ExtendControl = taskGroup.extendControl;
     this.param.ExtendBy = taskGroup.extendBy;
     this.param.CompletedControl = taskGroup.completedControl;
+  }
+
+  isNullOrEmpty(value: string): boolean {
+    return value == null || value == undefined || !value.trim();
+  }
+  getDataHistoryProgress() {
+    this.api
+      .execSv(
+        'BG',
+        'ERM.Business.BG',
+        'TrackLogsBusiness',
+        'GetDataHistoryProgressAsync',
+        [this.itemSelected.recID]
+      )
+      .subscribe((res: any[]) => {
+        if (res && res?.length >0) {
+          this.listHistoryProgress = JSON.parse(JSON.stringify(res));
+        } else this.listHistoryProgress = [];
+        this.changeDetectorRef.detectChanges();
+      });
   }
 }

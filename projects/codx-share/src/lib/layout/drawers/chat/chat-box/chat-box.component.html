@@ -51,7 +51,7 @@
             <ng-container *ngFor="let item of arrMessages; let i = index">
                 <ng-container *ngIf="item.messageType == '3';else tmpMessage">
                     <div class="message-system" [id]="item.recID">
-                        {{item | mssgSYS:tmpMssg1:tmpMssg2 | async}}
+                        {{item | mssgSYS:mssgType5 | async}}
                     </div>
                 </ng-container>
                 <ng-template #tmpMessage>
@@ -463,7 +463,7 @@
         <span class="mssg-item" (click)="clickViewMember(item)">
             <codx-img 
                 [objectId]="item.UserID" 
-                [objectName]="data.UserName" 
+                [objectName]="item.UserName" 
                 [objectType]="'AD_Users'" 
                 [width]="30">
             </codx-img>
@@ -482,3 +482,31 @@
         {{data.UserName}}
     </span>
 </ng-template>
+
+
+<!-- message type 5 -->
+<ng-template #mssgType5 let-memebers let-user="user">
+    <ng-container *ngFor="let item of memebers">
+        <span class="mssg-item" (click)="clickViewMember(item)">
+            <codx-img 
+                [objectId]="item.UserID" 
+                [objectName]="item.UserName" 
+                [objectType]="'AD_Users'" 
+                [width]="30">
+            </codx-img>
+            {{item.UserName}}
+        </span>
+    </ng-container>
+    <span>được</span>
+    <span class="mssg-item" (click)="clickViewMember(user)">
+        <codx-img 
+            [objectId]="user.UserID" 
+            [objectName]="user.UserName" 
+            [objectType]="'AD_Users'" 
+            [width]="30">
+        </codx-img>
+        {{user.UserName}}
+    </span>
+    <span>thêm vào nhóm</span>
+</ng-template>
+<!--  -->

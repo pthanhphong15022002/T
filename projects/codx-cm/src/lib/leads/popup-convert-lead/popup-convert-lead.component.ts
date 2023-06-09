@@ -168,7 +168,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async getProcessIDBybusinessLineID(businessLineID) {
     var options = new DataRequest();
-    options.entityName = 'CM_BusinessLines';
+    options.entityName = 'CM_businessLines';
     options.predicates = 'RecID=@0';
     options.dataValues = businessLineID;
     options.pageLoading = false;

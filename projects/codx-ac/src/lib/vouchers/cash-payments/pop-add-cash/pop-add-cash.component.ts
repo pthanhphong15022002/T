@@ -82,7 +82,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('btnRef') btnRef: ElementRef;
   @ViewChild('docRef') docRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
-  @ViewChild('cbxReason') cbxReason: CodxInputComponent;
   @ViewChild('editTemplate', { static: true }) editTemplate: TemplateRef<any>;
   @ViewChild('grid') public grid: GridComponent;
   @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
@@ -336,8 +335,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       this.settledInvoices = [];
                       this.cashpayment = res;
                       this.cashpayment.subType = reason['SubType'];
-                      this.changeType(null, this.tabObj);
                       this.form.formGroup.patchValue(res);
+                      this.changeType(null, this.tabObj);
                     }
                   });
               } else {
@@ -408,6 +407,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
   }
+  editEnded(e:any){
+    this.cashpayment[e.field] = e.component.value;
+  }
 
   gridCreated() {
     this.hideFields = [];
@@ -459,7 +461,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
 
-    this.loadAccountControl(this.gridCash.visibleColumns);
+    this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
 
     setTimeout(() => {
@@ -1327,14 +1329,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  loadControl(value) {
-    let index = this.hideFields.findIndex((x) => x == value);
-    if (index == -1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // loadControl(value) {
+  //   let index = this.hideFields.findIndex((x) => x == value);
+  //   if (index == -1) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   requireGrid() {
     const field = ['DIM1', 'DIM2', 'DIM3', 'ProjectID'];
@@ -1380,7 +1382,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadAccountControl(visibleColumns) {
+  predicateControl(visibleColumns) {
     var arr = [
       'AccountID',
       'OffsetAcctID',
