@@ -683,14 +683,6 @@ export class CodxCmService {
     );
   }
 
-  getListContactByLeadID(data) {
-    return this.api.exec<any>(
-      'CM',
-      'ContactsBusiness',
-      'GetListContactByLeadIDAsync',
-      data
-    );
-  }
 
   //#endregion -- Bao
 

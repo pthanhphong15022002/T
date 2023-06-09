@@ -39,7 +39,6 @@
   <div
     *ngFor="let step of listStep"
     class="list-step ps-4"
-    [ngStyle]="step?.stepStatus != '1' ? { background: '#00000030' } : {}"
   >
     <codx-step-task
       [dataSources]="step"
@@ -336,6 +335,7 @@
 <ng-template #contact>
   <div>
     <codx-list-contacts
+    #loadContactDeal
       [selectAll]="false"
       [funcID]="'CM0205'"
       [objectID]="dataSelected?.recID"

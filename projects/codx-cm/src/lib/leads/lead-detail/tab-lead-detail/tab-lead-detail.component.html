@@ -3,14 +3,7 @@
     *ngSwitchCase="tabInformation"
     [ngTemplateOutlet]="information"
   ></some-element>
-  <some-element
-    *ngSwitchCase="tabContact"
-    [ngTemplateOutlet]="contact"
-  ></some-element>
-  <some-element
-    *ngSwitchCase="tabAddress"
-    [ngTemplateOutlet]="address"
-  ></some-element>
+
   <some-element *ngSwitchDefault></some-element>
 </container-element>
 <ng-template #information>
@@ -325,27 +318,3 @@
   </div>
 </ng-template>
 
-<ng-template #contact>
-  <codx-list-contacts
-  [selectAll]="false"
-
-    [funcID]="'CM0205'"
-    [objectID]="dataSelected?.recID"
-    [objectName]="dataSelected?.leadName"
-    [objectType]="'2'"
-    [hidenMF]="dataSelected?.status != '5' ? false : true"
-    [type]="'formDetail'"
-  ></codx-list-contacts>
-</ng-template>
-
-<ng-template #address>
-<codx-address-cm
-[type]="'formDetail'"
-[funcID]="'CM0205'"
-[entityName]="'CM_Leads'"
-[id]="dataSelected.recID"
-[hidden]="dataSelected?.status != '5' ? false : true"
-
-(addressName)="addressName($event)"
-></codx-address-cm>
-</ng-template>

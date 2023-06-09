@@ -23,9 +23,9 @@
           <codx-img
             [width]="35"
             class="me-3"
-            [objectId]="data?.emp?.employeeID"
+            [objectId]="data?.emp?.employeeID || data?.employeeID"
             [referType]="'avt'"
-            [objectName]="data?.emp?.employeeName"
+            [objectName]="data?.emp?.employeeName || data?.employeeName"
             [objectType]="'HR_Employees'"
           >
           </codx-img>
@@ -213,7 +213,7 @@
     cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
-    [imageId]="data.emp?.employeeID"
+    [imageId]="data.emp?.employeeID || data?.employeeID"
     [imageObjType]="'HR_Employees'"
     [imageWidth]="35"
     [formModel]="view.formModel"
@@ -224,7 +224,9 @@
     [titleCss]="'fs-6 mb-1'"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
-      data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
+      data?.emp?.positionID || data?.positionID
+        | formatvalue : view.formModel : 'PositionID'
+        | async
     "
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"

@@ -18,8 +18,8 @@ implements OnInit, AfterViewInit
 @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
 @ViewChild('tabGeneralSystemDetail') tabGeneralSystemDetail: TemplateRef<any>;
 @ViewChild('tabGeneralContactDetail') tabGeneralContactDetail: TemplateRef<any>;
-@ViewChild('tabGeneralAddressDetail') tabGeneralAddressDetail: TemplateRef<any>;
-@ViewChild('imageUpload') imageUpload: ImageViewerComponent;
+@ViewChild('imageUpload') imageUploadLead: ImageViewerComponent;
+@ViewChild('imageUpload') imageUploadContact: ImageViewerComponent;
 // setting values in system
 dialog: DialogRef;
 //type any
@@ -74,13 +74,6 @@ menuGeneralContact = {
   subName: 'General contact',
   subText: 'General contact',
 };
-menuGeneralAddress = {
-  icon: 'icon-place',
-  text: 'Danh sách địa chỉ',
-  name: 'GeneralAddress',
-  subName: 'General address',
-  subText: 'General address',
-};
 
 //type any
 gridViewSetup: any;
@@ -94,12 +87,11 @@ funcID:any;
 instance: tmpInstances = new tmpInstances();
 instanceSteps: any;
 listInstanceSteps: any[] = [];
-avatarChange: boolean = false;
+avatarChangeLead: boolean = false;
+avatarChangeContact: boolean = false;
 lstContact:  any[] = [];
 lstContactDeletes:  any[] = [];
-listAddress:  any[] = [];
-listAddressDelete: any[] = [];
-  linkAvatar: string;
+linkAvatar: string;
 
 constructor(
   private inject: Injector,
@@ -175,20 +167,28 @@ onAdd() {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res?.save[0] && res?.save) {
-          var recID = res?.save[0].recID;
-          if (this.avatarChange) {
-            this.imageUpload
-              .updateFileDirectReload(recID)
-              .subscribe((result) => {
-                if (result) {
-                  this.dialog.close(res.save[0]);
-                } else {
-                  this.dialog.close(res.save[0]);
-                }
-              });
-          } else {
-            this.dialog.close(res.save[0]);
-          }
+         this.dialog.close(res.save[0]);
+          // if(this.changeAvatarLead){
+          //   this.imageUploadLead
+          //   .updateFileDirectReload(res.save[0].recID)
+          //   .subscribe((result) => {
+          //     if (result) {
+
+          //         if(this.changeAvatarContact) {
+          //         this.imageUploadContact
+          //         .updateFileDirectReload(res.save[0].contactID)
+          //         .subscribe((result) => {
+          //           if (result) {
+          //             this.dialog.close(res.save[0]);
+          //           }
+          //         });
+          //       }
+          //       else {
+          //         this.dialog.close(res.save[0]);
+          //       }
+          //     }
+          //   });
+          // }
         }
       });
 
@@ -198,32 +198,47 @@ onEdit() {
     .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {
       if (res.update[0] && res.update) {
-        var recID = res.update[0].recID;
         (this.dialog.dataService as CRUDService)
-          .update(res.update[0])
-          .subscribe();
-        if (this.avatarChange) {
-          this.imageUpload
-            .updateFileDirectReload(recID)
-            .subscribe((result) => {
-              if (result) {
-                this.dialog.close(res.update[0]);
-              }
-            });
-        } else {
-          this.dialog.close(res.update[0]);
-        }
+        .update(res.update[0])
+        .subscribe();
+        this.dialog.close(res.update[0]);
       }
     });
 }
-beforeSave(option: RequestOption) {
-  if(this.action !== this.actionEdit) {
-    var data = [this.lead, this.lstContact, this.listAddress, this.formModel.funcID, this.formModel.entityName];
-  }
-  else {
-     var data = [this.lead, this.lstContact,this.lstContactDeletes, this.listAddress, this.listAddressDelete,this.formModel.entityName];
-  }
 
+async promiseSaveFile(leadID, contactID) {
+  try {
+    if(this.changeAvatarContact) {
+      await this.saveFileContact(contactID);
+    }
+    if(this.changeAvatarLead){
+      await  this.saveFileLead(leadID)
+    }
+  } catch (error) {
+
+  }
+}
+async saveFileLead(leadID) {
+
+}
+async saveFileContact(contactID){
+  this.imageUploadContact
+  .updateFileDirectReload(contactID)
+  .subscribe((result) => {
+    if (result) {
+
+    }
+  });
+}
+
+beforeSave(option: RequestOption) {
+  // if(this.action !== this.actionEdit) {
+  //   var data = [this.lead, this.lstContact, this.formModel.funcID, this.formModel.entityName];
+  // }
+  // else {
+
+  // }
+  var data = [this.lead];
   option.methodName = this.action !== this.actionEdit ? 'AddLeadAsync' : 'EditLeadAsync';
   option.className = 'LeadsBusiness';
   option.data = data;
@@ -231,8 +246,8 @@ beforeSave(option: RequestOption) {
 }
 
 ngAfterViewInit(): void {
-  this.tabInfo = [this.menuGeneralInfo,this.menuGeneralSystem,this.menuGeneralContact,this.menuGeneralAddress];
-  this.tabContent = [this.tabGeneralInfoDetail, this.tabGeneralSystemDetail, this.tabGeneralContactDetail, this.tabGeneralAddressDetail];
+  this.tabInfo = [this.menuGeneralInfo,this.menuGeneralSystem,this.menuGeneralContact];
+  this.tabContent = [this.tabGeneralInfoDetail, this.tabGeneralSystemDetail, this.tabGeneralContactDetail];
 }
 async executeApiCalls() {
   try {
@@ -265,18 +280,6 @@ async getAutoNumber(formModel){
   });
 }
 
-// Đợi chị khanh thiết lập xong
-// async getListChannels() {
-//   this.codxCmService.getListChannels().subscribe((res) => {
-//     if (res && res.length > 0) {
-//       this.listCbxChannels = res[0];
-//       this.changeDetectorRef.detectChanges();
-//     }
-//   });
-// }
-
-
-
 // covnert data CM -> data DP
 
 
@@ -287,41 +290,15 @@ isRequired(field:string){
 }
 
 setTitle(e: any) {
-    // if (this.autoName) {
-    //   this.title = this.titleAction + ' ' + this.autoName;
-    // } else {
-    //   this.title = this.titleAction + ' ' + e;
-    //   this.autoName = e;
-    // }
-    this.title = this.titleAction;
+  this.title = this.titleAction;
   this.changeDetectorRef.detectChanges();
 }
 
-changeAvatar() {
-  this.avatarChange = true;
+changeAvatarLead() {
+  this.avatarChangeLead = true;
 }
-lstContactEmit(e) {
-  if (e != null && e.length > 0) {
-    this.lstContact = e;
-  }
-}
-
-lstContactDeleteEmit(e) {
-  if (e != null && e.length > 0) {
-    this.lstContactDeletes = e;
-  }
-}
-
-lstAddressEmit(e){
-  if (e != null && e.length > 0) {
-    this.listAddress = e;
-  }
-}
-
-lstAddressDeleteEmit(e){
-  if (e != null && e.length > 0) {
-    this.listAddressDelete = e;
-  }
+changeAvatarContact() {
+  this.avatarChangeContact = true;
 }
 }
 

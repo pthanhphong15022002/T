@@ -49,7 +49,6 @@ export class EmployeeAwardsComponent extends UIComponent {
     private notify: NotificationsService
   ) {
     super(injector);
-    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
   }
 
   service = 'HR';
@@ -72,7 +71,6 @@ export class EmployeeAwardsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
   eAwardsHeaderText;
   formGroup: FormGroup;
@@ -86,20 +84,19 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   itemDetail;
 
-  onInit(): void {
-    this.cache.gridViewSetup('EAwards', 'grvEAwards').subscribe((res) => {
-      if (res) {
-        this.grvSetup = res;
-      }
+  GetGvSetup() {
+    let funID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
     });
-    // this.cache
-    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-    //   .subscribe((res) => {
-    //     this.genderGrvSetup = res?.Gender;
-    //   });
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
+  }
+
+  onInit(): void {
+    this.GetGvSetup();
   }
 
   ngAfterViewInit(): void {
@@ -116,7 +113,7 @@ export class EmployeeAwardsComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,
@@ -149,8 +146,6 @@ export class EmployeeAwardsComponent extends UIComponent {
     }
   }
 
-  handleAction(event) {}
-  onMoreMulti(event) {}
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
@@ -238,14 +233,12 @@ export class EmployeeAwardsComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event[0]).subscribe((res) => {});
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
     });
@@ -286,12 +279,10 @@ export class EmployeeAwardsComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
-
-  getIdUser(string1, tring2) {}
 
   valueChangeComment(event) {
     this.cmtStatus = event.data;
@@ -312,7 +303,7 @@ export class EmployeeAwardsComponent extends UIComponent {
               null,
               'EAwardsBusiness'
             )
-            .subscribe((res) => {});
+            .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -320,10 +311,9 @@ export class EmployeeAwardsComponent extends UIComponent {
   closeUpdateStatusForm(dialog: DialogRef) {
     dialog.close();
   }
-  clickEvent(event, data) {
+  clickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
-  getDetailEAward(event, data) {}
 
   //#region gui duyet
   beforeRelease() {
@@ -370,12 +360,15 @@ export class EmployeeAwardsComponent extends UIComponent {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
-                this.hrService.UpdateEmployeeAwardInfo((res) => {
-                  if (res) {
-                    // console.log('after release', res);
-                    this.view?.dataService?.update(this.itemDetail).subscribe();
-                  }
-                });
+                this.hrService
+                  .UpdateEmployeeAwardInfo(this.itemDetail)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
               } else this.notify.notifyCode(result?.msgCodeError);
             });
         }

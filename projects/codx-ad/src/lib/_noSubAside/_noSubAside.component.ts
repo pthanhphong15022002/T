@@ -1,24 +1,22 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 
 @Component({
   selector: 'lib-noSubAside',
   templateUrl: './_noSubAside.component.html',
-  styleUrls: ['./_noSubAside.component.css']
+  styleUrls: ['./_noSubAside.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class NoSubAsideComponent extends LayoutBaseComponent {
-  constructor(
-    inject: Injector,
-    private callfc: CallFuncService
-  ) {
+  constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
     this.module = 'AD';
   }
 
-  onInit(): void { }
+  onInit(): void {}
 
-  onAfterViewInit(): void { }
+  onAfterViewInit(): void {}
 
   openFormNoteDrawer() {
     let option = new SidebarModel();

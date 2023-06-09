@@ -8,6 +8,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
@@ -16,6 +17,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { DealsComponent } from '../../deals.component';
 import { DealDetailComponent } from '../deal-detail.component';
+import { CodxListContactsComponent } from '../../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -31,6 +33,7 @@ export class TabDetailCustomComponent
   @Input() formModel: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
   @Output() saveAssign = new EventEmitter<any>();
+  @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent
   // @Output() contactEvent = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
@@ -59,6 +62,8 @@ export class TabDetailCustomComponent
     allowDeleting: true,
   };
 
+  recIdOld: string = '';
+
   constructor(
     private inject: Injector,
     private codxCmService: CodxCmService,
@@ -74,8 +79,11 @@ export class TabDetailCustomComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    //nvthuan
     if (changes.dataSelected) {
+      if(this.tabClicked == 'Contact' )
+      {
+        this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
+      }
       this.getListInstanceStep();
     }
   }
