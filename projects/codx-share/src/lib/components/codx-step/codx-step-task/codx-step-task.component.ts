@@ -524,7 +524,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         // this.addTask(groupTask);
         break;
       case 'DP07': // view
-        this.viewTask(task, 'T');
+        this.viewTask(task, task?.taskType || 'T');
         break;
       case 'DP13': //giao viec
         this.assignTask(e.data, task);
