@@ -35,13 +35,13 @@
     width: 35% !important;
     height: auto !important;
 }
-.listcash-content .e-float-input input{
-    height: 20px !important;
+.listcash-content .e-editable-component .e-input-focus{
     width: 100% !important;
-    border: 0px 0px;
     border-top: none;
     border-left: none;
     border-right: none;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #dee2e6 !important;
 }
 .ac-btn-input{
     position: absolute;
