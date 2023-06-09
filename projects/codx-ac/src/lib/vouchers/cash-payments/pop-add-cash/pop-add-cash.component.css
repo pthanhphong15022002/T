@@ -1,9 +1,9 @@
 
 .tabline-content .e-content{
-   height: calc(100vh - 513px)!important;
+   height: calc(100vh - 550px)!important;
 }
 .tabline-content .e-inline-edit{
-    background-color: var(--primary-dark) !important;
+    background-color: var(--primary-light) !important;
     border-color: white !important;
     
 }
@@ -13,9 +13,6 @@
 }
 .tabline-content .e-inline-edit td .e-editable-component .e-search-icon{
     border: none !important;
-}
-.tabline-content .e-inline-edit td .e-editable-value{
-    color: white !important;
 }
 .tabset-content .e-content{
     height: calc(100vh - 610px)!important;
@@ -35,13 +32,13 @@
     width: 35% !important;
     height: auto !important;
 }
-.listcash-content .e-float-input input{
-    height: 20px !important;
+.listcash-content .e-editable-component .e-input-focus{
     width: 100% !important;
-    border: 0px 0px;
     border-top: none;
     border-left: none;
     border-right: none;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #dee2e6 !important;
 }
 .ac-btn-input{
     position: absolute;

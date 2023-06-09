@@ -100,7 +100,8 @@ export class LeadsComponent
   resourceKanban?: ResourceModel;
   hideMoreFC = true;
   listHeader: any;
-  deadId: string = '';
+  oldIdContact: string = '';
+  oldIdLead: string = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -357,6 +358,8 @@ export class LeadsComponent
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm tiềm năng' : 'Sao chép tiềm năng',
+      leadIdOld: this.oldIdLead,
+      contactIdOld: this.oldIdContact,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -365,9 +368,8 @@ export class LeadsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.view.dataService.clear();
-        e.event.modifiedOn = new Date();
-        this.view.dataService.update(e.event).subscribe();
+         e.event.modifiedOn = new Date();
+         this.view.dataService.update(e.event).subscribe();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -413,7 +415,8 @@ export class LeadsComponent
   copy(data) {
     if (data) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      this.oldIdDeal = data.recID;
+      this.oldIdLead = data.recID;
+      this.oldIdContact = data.contactID;
     }
     this.view.dataService.copy().subscribe((res) => {
       let option = new SidebarModel();
@@ -525,6 +528,8 @@ export class LeadsComponent
         if (e.event.length > 0) {
           e.event[0].modifiedOn = new Date();
           this.view.dataService.add(e.event[0], 0).subscribe();
+          // this.view.dataService.update(e.event[0]).subscribe();
+
           if (e.event[1]) {
             this.view.dataService.remove(e.event[1]).subscribe();
           }

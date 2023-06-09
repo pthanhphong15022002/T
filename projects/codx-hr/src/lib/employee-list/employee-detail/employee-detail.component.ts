@@ -4671,10 +4671,6 @@ export class EmployeeDetailComponent extends UIComponent {
   }
   //#endregion
 
-  addTest() {
-    this.hrService.addTest().subscribe();
-  }
-
   getFormHeader(functionID: string) {
     let funcObj = this.lstFuncID.filter((x) => x.functionID == functionID);
     let headerText = '';

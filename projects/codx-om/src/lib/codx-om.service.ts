@@ -337,13 +337,13 @@ export class CodxOmService {
       [userID]
     );
   }
-  getEmployee(userID:any) {
+  getEmployee(empID:any) {
     return this.api.execSv(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetEmployeeInforAsync',
-      [userID]
+      [empID]
     );
   }
 

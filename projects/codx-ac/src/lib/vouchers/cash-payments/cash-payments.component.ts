@@ -43,7 +43,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd',icon:'' };
+  button?: ButtonModel = { id: 'btnAdd', icon: '' };
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -117,7 +117,6 @@ export class CashPaymentsComponent extends UIComponent {
       if (this.parent) {
         this.view.setRootNode(this.parent?.customName);
       }
-      
     });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
@@ -394,6 +393,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     switch (data.subType) {
+      case '5':
       case '2':
         this.api
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
@@ -401,24 +401,16 @@ export class CashPaymentsComponent extends UIComponent {
             this.settledInvoices = res;
             //this.loadTotal();
           });
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-            this.loadTotal();
-          });
-        break;
-      default:
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-            this.loadTotal();
-          });
         break;
     }
+    this.api
+      .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.acctTrans = res;
+        this.loadTotal();
+      });
     this.loadCashbookName(this.itemSelected);
-    this.loadReasonName(this.itemSelected);
+    // this.loadReasonName(this.itemSelected);
   }
 
   release(data: any) {
