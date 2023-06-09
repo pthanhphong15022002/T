@@ -231,6 +231,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event).subscribe();
+        //Render new data when update new status on view detail
         this.df.detectChanges();
       }
     });

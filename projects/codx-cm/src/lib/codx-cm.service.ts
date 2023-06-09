@@ -26,12 +26,27 @@ export class CodxCmService {
   titleAction: any;
   childMenuClick = new BehaviorSubject<any>(null);
   childMenuDefault = new BehaviorSubject<any>(null);
+  private loadingSubject = new BehaviorSubject<Boolean>(false);
+  valueRadio = this.loadingSubject.asObservable();
+
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     private cache: CacheService,
     private notification: NotificationsService
   ) {}
+
+  openLoadding(): void {
+    setTimeout(() => {
+      this.loadingSubject.next(true);
+    });
+  }
+
+  closeLoadding(): void {
+    setTimeout(() => {
+      this.loadingSubject.next(false);
+    });
+  }
 
   quickAddContacts(data) {
     return this.api.exec<any>(
@@ -604,7 +619,6 @@ export class CodxCmService {
     );
   }
 
-
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
       'SYS',
@@ -673,17 +687,15 @@ export class CodxCmService {
     );
   }
 
-
-
-
-  getListContactByLeadID(data) {
+  getIdBusinessLineByProcessID(data) {
     return this.api.exec<any>(
       'CM',
-      'ContactsBusiness',
-      'GetListContactByLeadIDAsync',
+      'BusinessLinesBusiness',
+      'GetOneBusinessLineByProcessIDAsync',
       data
     );
   }
+
 
   //#endregion -- Bao
 

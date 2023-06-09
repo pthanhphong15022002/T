@@ -642,15 +642,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         this.customers.overDueControl = true;
       }
       if (this.formType == 'add' || this.formType == 'copy') {
+        this.customers.status = '1';
         this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'CustomersBusiness';
-            opt.assemblyName = 'SM';
-            opt.service = 'SM';
-            opt.data = [this.customers];
-            return true;
-          })
+          .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
             if (res.save) {
               this.addObjects();
@@ -699,58 +693,49 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           });
       }
       if (this.formType == 'edit') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'UpdateAsync';
-            opt.className = 'CustomersBusiness';
-            opt.assemblyName = 'SM';
-            opt.service = 'SM';
-            opt.data = [this.customers];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save || res.update) {
-              this.addObjects();
-              this.api
-                .exec(
-                  'ERM.Business.BS',
-                  'BankAccountsBusiness',
-                  'UpdateAsync',
-                  [
-                    this.objecttype,
-                    this.customers.customerID,
-                    this.objectBankaccount,
-                    this.objectBankaccountDelete,
-                  ]
-                )
-                .subscribe((res: any) => {});
-              this.api
-                .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
+        this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+          if (res.save || res.update) {
+            this.addObjects();
+            this.api
+              .exec(
+                'ERM.Business.BS',
+                'BankAccountsBusiness',
+                'UpdateAsync',
+                [
                   this.objecttype,
                   this.customers.customerID,
-                  this.objectAddress,
-                  this.objectAddressDelete,
-                ])
-                .subscribe((res: any) => {});
-              this.api
-                .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
-                  this.objecttype,
-                  this.customers.customerID,
-                  this.objectContact,
-                  this.objectContactDelete,
-                  this.objectContactAddress,
-                  this.objectContactAddressDelete,
-                ])
-                .subscribe((res: any) => {});
-              this.acService
-                .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
-                  this.objects,
-                ])
-                .subscribe((res: []) => {});
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });
+                  this.objectBankaccount,
+                  this.objectBankaccountDelete,
+                ]
+              )
+              .subscribe((res: any) => {});
+            this.api
+              .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
+                this.objecttype,
+                this.customers.customerID,
+                this.objectAddress,
+                this.objectAddressDelete,
+              ])
+              .subscribe((res: any) => {});
+            this.api
+              .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
+                this.objecttype,
+                this.customers.customerID,
+                this.objectContact,
+                this.objectContactDelete,
+                this.objectContactAddress,
+                this.objectContactAddressDelete,
+              ])
+              .subscribe((res: any) => {});
+            this.acService
+              .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
+                this.objects,
+              ])
+              .subscribe((res: []) => {});
+            this.dialog.close();
+            this.dt.detectChanges();
+          }
+        });
       }
     }
   }

@@ -39,7 +39,6 @@
   <div
     *ngFor="let step of listStep"
     class="list-step ps-4"
-    [ngStyle]="step?.stepStatus != '1' ? { background: '#00000030' } : {}"
   >
     <codx-step-task
       [dataSources]="step"
@@ -47,22 +46,12 @@
       [isShowMore]="true"
       [isDeepCopy]="false"
       [isShowStep]="true"
+      [isStart]="dataSelected?.status == '2'"
+      [isClose]="dataSelected?.closed"
+      [isRoleAll]="dataSelected?.roles?.isOnwer || false"
       (continueStep)="continueStep($event,step)"
       (saveAssign)="saveAssignTask($event)"
     ></codx-step-task>
-    <!-- <codx-step-task
-      [dataSources]="step"
-      [isShowMore]="true"
-      [isDeepCopy]="false"
-      [isShowButton]="true"
-      [isStart]="isStart"
-      [isClose]="isClosed"
-      [isRoleAll]="isRoleAll"
-      [isOnlyView]="isOnlyView"
-      (saveAssign)="saveAssignStepTask($event)"
-      (continueStep)="continueStep($event)"
-      (isChangeProgress)="changeProgressStep($event)"
-  ></codx-step-task> -->
     <hr class="m-0 p-0" />
   </div>
 </ng-template>
@@ -336,6 +325,7 @@
 <ng-template #contact>
   <div>
     <codx-list-contacts
+    #loadContactDeal
       [selectAll]="false"
       [funcID]="'CM0205'"
       [objectID]="dataSelected?.recID"
@@ -344,6 +334,7 @@
       [objectType]="'4'"
       [type]="'formDetail'"
       [hidenMF]="false"
+      (contactEvent)="contactChange($event)"
     ></codx-list-contacts>
   </div>
 </ng-template>

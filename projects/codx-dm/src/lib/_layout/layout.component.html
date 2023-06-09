@@ -2,7 +2,7 @@
 <div modifyLang></div>
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
-    <div class="page d-flex flex-row flex-column-fluid">
+    <div class="page d-flex flex-row flex-column-fluid page-dm">
       <codx-aside
         *ngIf="codxService.asideDisplay"
         [asideMenuHeader]="header"
@@ -112,9 +112,22 @@
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <div class="header align-items-stretch">
-          <div class="page-title d-flex align-items-center flex-wrap ms-3">
-            <div class="d-flex align-items-center flex-wrap mt-3">
-              <div ngbDropdown class="nav-item dropdown mr-1">
+          <div class="page-title d-flex align-items-center flex-wrap ms-4">
+            <!-- begin::Aside mobile toggle -->
+            <div
+                class="d-flex align-items-center d-lg-none me-2"
+                title="Show aside menu"
+              >
+                <div class="btn btn-icon btn-light-primary" id="kt_aside_mobile_toggle">
+                  <span
+                    [inlineSVG]="'./assets/media/icons/duotune/abstract/abs015.svg'"
+                    class="svg-icon svg-icon-1"
+                  ></span>
+                </div>
+              </div>
+            <!-- end::Aside mobile toggle -->
+            <div class="d-flex align-items-end flex-wrap mt-1">
+              <div ngbDropdown class="nav-item dropdown me-1">
                 <button
                   ngbDropdownToggle
                   [className]="setClassActive()"
@@ -346,12 +359,12 @@
                 </div>
               </div>
               <a>
-                <h4
-                  class="text-dark font-weight-bold my-0 mr-2 cursor-pointer"
+                <div
+                  class="fs-5 text-dark fw-bold my-0 me-2 cursor-pointer"
                   (click)="onJump()"
                 >
                   {{ this.dmSV.menuActive.getValue() }}
-                </h4>
+                </div>
               </a>
               <codx-breadcumb
                 notTree="true"

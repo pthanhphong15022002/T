@@ -26,6 +26,7 @@ import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-det
   styleUrls: ['./employee-contract.component.css'],
 })
 export class EmployeeContractComponent extends UIComponent {
+  console = console;
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail: ViewDetailContractsComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
@@ -47,7 +48,6 @@ export class EmployeeContractComponent extends UIComponent {
   dialogEditStatus: any;
   statusCbx = true;
 
-  //genderGrvSetup: any
   grvSetup: any;
 
   //#region eContractFuncID
@@ -143,6 +143,8 @@ export class EmployeeContractComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe();
+        //Render new data when update new status on view detail
+        this.df.detectChanges();
       }
     });
   }
@@ -171,6 +173,7 @@ export class EmployeeContractComponent extends UIComponent {
       }
     });
   }
+
   changeDataMf(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
   }
@@ -182,6 +185,7 @@ export class EmployeeContractComponent extends UIComponent {
   clickMF(event, data) {
     this.itemDetail = data;
 
+    console.log(event);
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -240,17 +244,14 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.update(res.event).subscribe();
         }
+        this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
     });
   }
 
@@ -267,7 +268,6 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   addContract(evt) {
-    // this.currentEmpObj = this.itemDetail.emp;
     if (evt.id == 'btnAdd') {
       this.HandleEContractInfo(
         evt.text + ' ' + this.view.function.description,
@@ -315,6 +315,7 @@ export class EmployeeContractComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
+          console.log(this.itemDetail);
           this.hrService
             .release(
               this.itemDetail.recID,
@@ -324,11 +325,10 @@ export class EmployeeContractComponent extends UIComponent {
               '<div> ' +
                 this.view.function.description +
                 ' - ' +
-                this.itemDetail.decisionNo +
+                this.itemDetail.contractNo +
                 '</div>'
             )
             .subscribe((result) => {
-              console.log(result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -337,7 +337,6 @@ export class EmployeeContractComponent extends UIComponent {
                   .editEContract(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
-                      console.log(res);
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();

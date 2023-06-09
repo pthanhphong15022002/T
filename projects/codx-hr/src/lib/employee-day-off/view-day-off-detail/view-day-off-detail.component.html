@@ -1,252 +1,484 @@
-<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter ? footer : null"
-    [body]="body" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="clickMF($event, itemDetail)"
-    (changeDataMF)="changeDataMF($event, itemDetail)" class="h-100 dt-es-view">
-    <ng-template #header>
-        <div class="d-flex mb-2">
-            <codx-temp-full [title]="itemDetail?.ownerName" [imageId]="itemDetail?.emp?.employeeID"
-                imageObjType="'HR_Employees'" [imageWidth]="50" [titleTmp]="title">
-                <!-- info view -->
-                <ng-template #title>
-                    <div class="w-100 d-flex flex-column">
-                        <!-- emp info -->
-                        <div class="justify-content-between text-dark mb-2">
-                            <span class="fs-5 me-1">{{ itemDetail?.emp?.employeeName }}</span>
-                        </div>
-                        <div class="d-flex flex-wrap text-dark fw-bold mb-1 align-items-center">
-                            <div class="d-flex me-10">
-                                <span
-                                    [innerHTML]="itemDetail?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
-                            </div>
-                            <div class="d-flex me-10" *ngIf="itemDetail?.emp?.email">
-                                <i class="icon-email me-2"></i>
-                                {{ itemDetail?.emp?.email }}
-                            </div>
-                            <div class="d-flex me-10" *ngIf="itemDetail?.emp?.mobile">
-                                <i class="icon-phone_android me-2"></i>
-                                {{ itemDetail?.emp?.mobile }}
-                            </div>
-                        </div>
-                        <div class="text-gray-700">
-                            <span
-                                [innerHTML]="itemDetail?.emp?.orgUnitID | formatvalue : view.formModel : 'orgUnitID'| async"></span>
-                        </div>
-                    </div>
-                </ng-template>
-                <!-- end -->
-            </codx-temp-full>
-        </div>
-
-        <div class="d-flex flex-wrap">
-            <div class="d-flex align-items-center  mb-2 me-4">
-                <codx-label fiedName="kowID" [formModel]="formModel" [setRequire]="false"
-                    class="text-gray-700 label-colon">
-                </codx-label>
-                <span class="fw-bold" [innerHTML]="itemDetail?.kowID | formatvalue : formModel : 'kowID'| async">
-                </span>
+<codx-detail-tmp
+  #itemDetailTemplate
+  [header]="header"
+  [dataItem]="itemDetail"
+  [footer]="!hideFooter ? footer : null"
+  [body]="body"
+  [hideMF]="hideMF"
+  [formModel]="formModel"
+  (clickMF)="clickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+  class="h-100 dt-es-view"
+>
+  <ng-template #header>
+    <div class="d-flex mb-2">
+      <codx-temp-full
+        [title]="itemDetail?.ownerName"
+        [imageId]="itemDetail?.emp?.employeeID"
+        imageObjType="'HR_Employees'"
+        [imageWidth]="50"
+        [titleTmp]="title"
+      >
+        <!-- info view -->
+        <ng-template #title>
+          <div class="w-100 d-flex flex-column">
+            <!-- emp info -->
+            <div class="justify-content-between text-dark mb-2">
+              <span class="fs-5 me-1">{{ itemDetail?.emp?.employeeName }}</span>
             </div>
-
-            <div class="d-flex align-items-center  mb-2 me-4">
-                <codx-label fiedName="registeredDate" [formModel]="formModel" [setRequire]="false"
-                    class="text-gray-700 label-colon">
-                </codx-label>
-                <span [innerHTML]="itemDetail?.registeredDate| formatvalue : formModel : 'registeredDate' | async">
-                </span>
+            <div
+              class="d-flex flex-wrap text-dark fw-bold mb-1 align-items-center"
+            >
+              <div class="d-flex me-10">
+                <span
+                  [innerHTML]="
+                    itemDetail?.emp?.positionID
+                      | formatvalue : view.formModel : 'positionID'
+                      | async
+                  "
+                ></span>
+              </div>
+              <div class="d-flex me-10" *ngIf="itemDetail?.emp?.email">
+                <i class="icon-email me-2"></i>
+                {{ itemDetail?.emp?.email }}
+              </div>
+              <div class="d-flex me-10" *ngIf="itemDetail?.emp?.mobile">
+                <i class="icon-phone_android me-2"></i>
+                {{ itemDetail?.emp?.mobile }}
+              </div>
             </div>
-
-            <div class="d-flex align-items-center  mb-2 me-4">
-                <codx-label fiedName="registeredDate" [formModel]="formModel" [setRequire]="false"
-                    class="text-gray-700 label-colon">
-                </codx-label>
-                <span [innerHTML]="itemDetail?.registeredBy| formatvalue : formModel : 'registeredBy' | async">
-                </span>
+            <div class="text-gray-700">
+              <span
+                [innerHTML]="
+                  itemDetail?.emp?.orgUnitID
+                    | formatvalue : view.formModel : 'orgUnitID'
+                    | async
+                "
+              ></span>
             </div>
+          </div>
+        </ng-template>
+        <!-- end -->
+      </codx-temp-full>
+    </div>
 
-            <div class="d-flex align-items-center  mb-2 me-4">
-                <codx-label default="Ngày nghỉ" class="text-gray-700 label-colon">
-                </codx-label>
-                <span [innerHTML]="itemDetail?.beginDate| formatvalue : formModel : 'beginDate' | async">
-                </span>
-                <span class="px-1"> - </span>
-                <span [innerHTML]="itemDetail?.endDate| formatvalue : formModel : 'endDate' | async">
-                </span>
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center mb-2 me-4">
+        <codx-label
+          fiedName="kowID"
+          [formModel]="formModel"
+          [setRequire]="false"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.kowID | formatvalue : formModel : 'kowID' | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center mb-2 me-4">
+        <codx-label
+          fiedName="registeredDate"
+          [formModel]="formModel"
+          [setRequire]="false"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          [innerHTML]="
+            itemDetail?.registeredDate
+              | formatvalue : formModel : 'registeredDate'
+              | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center mb-2 me-4">
+        <codx-label
+          fiedName="registeredDate"
+          [formModel]="formModel"
+          [setRequire]="false"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          [innerHTML]="
+            itemDetail?.registeredBy
+              | formatvalue : formModel : 'registeredBy'
+              | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center mb-2 me-4">
+        <codx-label default="Ngày nghỉ" class="text-gray-700 label-colon">
+        </codx-label>
+        <span
+          [innerHTML]="
+            itemDetail?.beginDate
+              | formatvalue : formModel : 'beginDate'
+              | async
+          "
+        >
+        </span>
+        <span class="px-1"> - </span>
+        <span
+          [innerHTML]="
+            itemDetail?.endDate | formatvalue : formModel : 'endDate' | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center mb-2">
+        <codx-label
+          fiedName="totalDaysOff"
+          [formModel]="formModel"
+          [setRequire]="false"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <!-- <span class="fw-bold" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
+        <span
+          [innerHTML]="
+            itemDetail?.totalDaysOff
+              | formatvalue : formModel : 'totalDaysOff'
+              | async
+          "
+        >
+        </span>
+        <span *ngIf="itemDetail.totalDaysOff">ngày</span>
+      </div>
+
+      <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
+        <codx-label
+          fiedName="reason"
+          [formModel]="formModel"
+          [setRequire]="false"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold text-break"
+          [innerHTML]="
+            itemDetail?.reason | formatvalue : formModel : 'reason' | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
+        <codx-label
+          fiedName="note"
+          [formModel]="formModel"
+          [setRequire]="false"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.note | formatvalue : formModel : 'note' | async
+          "
+        >
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #body>
+    <div class="tab-horizone h-od-tab">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
+        <!-- 1 -->
+        <li [ngbNavItem]="1">
+          <a class="ps-0" ngbNavLink>
+            <div class="d-flex align-item-center">
+              <span
+                class="icon-info icon-18 me-2"
+                [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
+              ></span
+              ><span>
+                <codx-label
+                  [formModel]="itemDetailTemplate.formModel"
+                  default="Thông tin chế độ nghỉ"
+                  class="fw-bold"
+                ></codx-label>
+              </span>
             </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container>
+              <div
+                class="d-flex flex-wrap summary mt-2"
+                *ngIf="itemDetailStt == '1'"
+              >
+                <ng-container #groupA *ngIf="groupKowTypeView['groupA'].isShow">
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="siLeaveNo"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.siLeaveNo
+                          | formatvalue : formModel : 'siLeaveNo'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
 
-            <div class="d-flex align-items-center mb-2">
-                <codx-label fiedName="totalDaysOff" [formModel]="formModel" [setRequire]="false"
-                    class="text-gray-700 label-colon">
-                </codx-label>
-                <!-- <span class="fw-bold" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
-                <span [innerHTML]="itemDetail?.totalDaysOff | formatvalue : formModel : 'totalDaysOff'| async">
-                </span>
-                <span *ngIf="itemDetail.totalDaysOff">ngày</span>
-            </div>
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="hospitalLine"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.hospitalLine
+                          | formatvalue : formModel : 'hospitalLine'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
+                </ng-container>
 
-            <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
-                <codx-label fiedName="reason" [formModel]="formModel" [setRequire]="false"
-                    class="text-gray-700 label-colon">
-                </codx-label>
-                <span class="fw-bold text-break"
-                    [innerHTML]="itemDetail?.reason | formatvalue : formModel : 'reason'| async">
-                </span>
-            </div>
+                <ng-container #groupB *ngIf="groupKowTypeView['groupB'].isShow">
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="childID"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.childID
+                          | formatvalue : formModel : 'childID'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
 
-            <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
-                <codx-label fiedName="note" [formModel]="formModel" [setRequire]="false"
-                    class="text-gray-700 label-colon">
-                </codx-label>
-                <span class="fw-bold" [innerHTML]="itemDetail?.note | formatvalue : formModel : 'note'| async">
-                </span>
-            </div>
-        </div>
-    </ng-template>
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="childHICardNo"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.childHICardNo
+                          | formatvalue : formModel : 'childHICardNo'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
+                </ng-container>
 
-    <ng-template #body>
-        <div class="tab-horizone h-od-tab">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
-                <!-- 1 -->
-                <li [ngbNavItem]="1">
-                    <a class="ps-0" ngbNavLink>
-                        <div class="d-flex align-item-center">
-                            <span class="icon-info icon-18 me-2"
-                                [ngClass]="{ 'text-primary': itemDetailStt === 1 }"></span><span>
-                                <codx-label [formModel]="itemDetailTemplate.formModel" default="Thông tin chế độ nghỉ"
-                                    class="fw-bold"></codx-label>
-                            </span>
-                        </div>
-                    </a>
-                    <ng-template ngbNavContent>
-                        <ng-container>
-                            <div class="d-flex flex-wrap summary mt-2" *ngIf="itemDetailStt == '1'">
-                                <ng-container #groupA *ngIf="groupKowTypeView['groupA'].isShow">
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="siLeaveNo" [formModel]="formModel" [setRequire]="false"
-                                            class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.siLeaveNo| formatvalue : formModel : 'siLeaveNo' | async">
-                                        </span>
-                                    </div>
+                <ng-container #groupC *ngIf="groupKowTypeView['groupC'].isShow">
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="pregnancyFrom"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.pregnancyFrom
+                          | formatvalue : formModel : 'pregnancyFrom'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="pregnancyWeeks"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.pregnancyWeeks
+                          | formatvalue : formModel : 'pregnancyWeeks'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
+                </ng-container>
 
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="hospitalLine" [formModel]="formModel" [setRequire]="false"
-                                            class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.hospitalLine| formatvalue : formModel : 'hospitalLine' | async">
-                                        </span>
-                                    </div>
-                                </ng-container>
+                <ng-container #groupD *ngIf="groupKowTypeView['groupD'].isShow">
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="newChildBirthDate"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.newChildBirthDate
+                          | formatvalue : formModel : 'newChildBirthDate'
+                          | async
+                      "
+                    >
+                    </span>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.newChildBirthDateType
+                          | formatvalue : formModel : 'newChildBirthDateType'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
 
-                                <ng-container #groupB *ngIf="groupKowTypeView['groupB'].isShow">
-                                    <div class="d-flex align-items-center  mb-2 me-4">
-                                        <codx-label fiedName="childID" [formModel]="formModel" [setRequire]="false"
-                                            class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.childID| formatvalue : formModel : 'childID' | async">
-                                        </span>
-                                    </div>
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="newChildNum"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.newChildNum
+                          | formatvalue : formModel : 'newChildNum'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
 
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="childHICardNo" [formModel]="formModel"
-                                            [setRequire]="false" class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.childHICardNo | formatvalue : formModel : 'childHICardNo' | async">
-                                        </span>
-                                    </div>
-                                </ng-container>
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="wifeID"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.wifeID
+                          | formatvalue : formModel : 'wifeID'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
 
-                                <ng-container #groupC *ngIf="groupKowTypeView['groupC'].isShow">
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="pregnancyFrom" [formModel]="formModel"
-                                            [setRequire]="false" class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.pregnancyFrom | formatvalue : formModel : 'pregnancyFrom' | async">
-                                        </span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="pregnancyWeeks" [formModel]="formModel"
-                                            [setRequire]="false" class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.pregnancyWeeks | formatvalue : formModel : 'pregnancyWeeks' | async">
-                                        </span>
-                                    </div>
-                                </ng-container>
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="wifeIDCardNo"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.wifeIDCardNo
+                          | formatvalue : formModel : 'wifeIDCardNo'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
 
-                                <ng-container #groupD *ngIf="groupKowTypeView['groupD'].isShow">
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="newChildBirthDate" [formModel]="formModel"
-                                            [setRequire]="false" class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.newChildBirthDate | formatvalue : formModel : 'newChildBirthDate' | async">
-                                        </span>
-                                        <span class="fw-bold"
-                                        [innerHTML]="itemDetail?.newChildBirthDateType | formatvalue : formModel : 'newChildBirthDateType' | async">
-                                    </span>
-                                    </div>
+                  <div class="d-flex align-items-center mb-2 me-4">
+                    <codx-label
+                      fiedName="wifeSINo"
+                      [formModel]="formModel"
+                      [setRequire]="false"
+                      class="text-gray-700 label-colon"
+                    >
+                    </codx-label>
+                    <span
+                      class="fw-bold"
+                      [innerHTML]="
+                        itemDetail?.wifeSINo
+                          | formatvalue : formModel : 'wifeSINo'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
+                </ng-container>
+                <div class="d-flex align-items-center mb-2 me-4 col-12">
+                  <codx-label
+                    fiedName="regimeNote"
+                    [formModel]="formModel"
+                    [setRequire]="false"
+                    class="text-gray-700 label-colon align-self-start"
+                  >
+                  </codx-label>
+                  <span
+                    class="fw-bold text-break"
+                    [innerHTML]="
+                      itemDetail?.regimeNote
+                        | formatvalue : formModel : 'regimeNote'
+                        | async
+                    "
+                  >
+                  </span>
+                </div>
+              </div>
+            </ng-container>
+          </ng-template>
+        </li>
+        <!-- 2 -->
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-4"></div>
+    </div>
+  </ng-template>
 
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="newChildNum" [formModel]="formModel" [setRequire]="false"
-                                            class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.newChildNum | formatvalue : formModel : 'newChildNum' | async">
-                                        </span>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="wifeID" [formModel]="formModel" [setRequire]="false"
-                                            class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.wifeID | formatvalue : formModel : 'wifeID' | async">
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="wifeIDCardNo" [formModel]="formModel" [setRequire]="false"
-                                            class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.wifeIDCardNo | formatvalue : formModel : 'wifeIDCardNo' | async">
-                                        </span>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-2 me-4">
-                                        <codx-label fiedName="wifeSINo" [formModel]="formModel" [setRequire]="false"
-                                            class="text-gray-700 label-colon">
-                                        </codx-label>
-                                        <span class="fw-bold"
-                                            [innerHTML]="itemDetail?.wifeSINo | formatvalue : formModel : 'wifeSINo' | async">
-                                        </span>
-                                    </div>
-                                </ng-container>
-                                <div class="d-flex align-items-center mb-2 me-4 col-12">
-                                    <codx-label fiedName="regimeNote" [formModel]="formModel" [setRequire]="false"
-                                        class="text-gray-700 label-colon align-self-start">
-                                    </codx-label>
-                                    <span class="fw-bold text-break"
-                                        [innerHTML]="itemDetail?.regimeNote | formatvalue : formModel : 'regimeNote' | async">
-                                    </span>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </ng-template>
-                </li>
-                <!-- 2 -->
-            </ul>
-            <div [ngbNavOutlet]="nav" class="pt-4"></div>
-        </div>
-    </ng-template>
-
-    <ng-template #footer>
-        <codx-tabs [TabControl]="tabControl" [entityName]="formModel.entityName" [objectID]="itemDetail?.recID"
-            [funcID]="formModel.funcID" [transID]="itemDetail?.recID" [approveStatus]="itemDetail?.signStatus">
-        </codx-tabs>
-    </ng-template>
-
+  <ng-template #footer>
+    <codx-tabs
+      [TabControl]="tabControl"
+      [entityName]="formModel.entityName"
+      [objectID]="itemDetail?.recID"
+      [funcID]="formModel.funcID"
+      [transID]="itemDetail?.recID"
+      [approveStatus]="itemDetail?.signStatus"
+    >
+    </codx-tabs>
+  </ng-template>
 </codx-detail-tmp>

@@ -43,7 +43,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel = { id: 'btnAdd',icon:'' };
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -114,7 +114,10 @@ export class CashPaymentsComponent extends UIComponent {
           if (res) this.parent = res;
         });
       }
-      this.view.setRootNode(this.parent?.customName);
+      if (this.parent) {
+        this.view.setRootNode(this.parent?.customName);
+      }
+      
     });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;

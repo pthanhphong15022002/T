@@ -13,30 +13,28 @@
   <ng-container *ngIf="form.formGroup">
     <div class="row mt-3">
       <div class="col-8">
-        <div class="row">
-          <div class="col-6 form-group">
-            <codx-label
-              fiedName="fromUMID"
-              [formModel]="dialogRef.formModel"
-            ></codx-label>
-            <codx-input
-              [formModel]="dialogRef.formModel"
-              field="fromUMID"
-              [Group]="form.formGroup"
-            ></codx-input>
-          </div>
+        <div class="row col-6 form-group">
+          <codx-label
+            fiedName="fromUMID"
+            [formModel]="dialogRef.formModel"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialogRef.formModel"
+            field="fromUMID"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
 
-          <div class="col-6 form-group">
-            <codx-label
-              fiedName="toUMID"
-              [formModel]="dialogRef.formModel"
-            ></codx-label>
-            <codx-input
-              [formModel]="dialogRef.formModel"
-              field="toUMID"
-              [Group]="form.formGroup"
-            ></codx-input>
-          </div>
+        <div class="col-6 form-group">
+          <codx-label
+            fiedName="toUMID"
+            [formModel]="dialogRef.formModel"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialogRef.formModel"
+            field="toUMID"
+            [Group]="form.formGroup"
+          ></codx-input>
         </div>
 
         <div class="row d-flex align-items-center">

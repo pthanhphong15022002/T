@@ -1,6 +1,5 @@
 <codx-views
   #view
-  [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
@@ -12,8 +11,6 @@
   [button]="buttonAdd"
   (buttonClick)="addAward($event)"
   (selectedChange)="changeItemDetail($event)"
-  (onActions)="handleAction($event)"
-  (oneMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
@@ -240,7 +237,7 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'h-100px me-2'"
+    [imgCss]="'me-2'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
@@ -465,8 +462,7 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
-    (clickMFunction)="clickEvent($event, data)"
-    (uploaded)="getDetailEAward($event, data)"
+    (clickMFunction)="clickEvent($event)"
   >
   </lib-view-award-detail>
 </ng-template>

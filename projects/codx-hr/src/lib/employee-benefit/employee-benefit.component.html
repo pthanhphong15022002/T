@@ -1,6 +1,5 @@
 <codx-views
   #view
-  [funcID]="funcID"
   service="HR"
   assemblyName="ERM.Business.HR"
   entityName="HR_EBenefits"
@@ -278,7 +277,7 @@
 <!-- Detail -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'h-100px me-2'"
+    [imgCss]="'me-2'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
@@ -381,11 +380,10 @@
 <ng-template #panelRightListDetail let-data>
   <lib-view-detail-ebenefit
     [itemDetail]="itemDetail"
-    [funcID]="funcID"
     [view]="view"
     [formModel]="view.formModel"
     (uploaded)="getDetailESalary($event, data)"
-    (clickMFunction)="clickEvent($event, data)"
+    (clickMFunction)="clickEvent($event)"
   >
   </lib-view-detail-ebenefit>
 </ng-template>

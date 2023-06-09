@@ -24,7 +24,6 @@ export class CodxTypeTaskComponent implements OnInit {
         this.listJobType = res?.datas?.map((item) => {
           return {
             ...item,
-            color: { background: item['color'] },
             checked: false,
           };
         });
@@ -39,6 +38,7 @@ export class CodxTypeTaskComponent implements OnInit {
     }
     this.jobType = value;
     this.jobType['checked'] = true;
+    this.listJobType;
   }
   handlerContinue(){
     this.dialog.close(this.jobType);

@@ -39,27 +39,26 @@
 
         >
         </codx-label>
-        <!-- {{deal?.processID}} -->
-        <codx-input
+        <div *ngIf="deal?.businessLineID && isViewAll; else viewAll ">
+          <codx-input
           [formModel]="form.formModel"
           field="businessLineID"
-          [disabled]="actionEdit === action"
+          [crrValue]="deal?.businessLineID"
+          [disabled]="deal?.processID"
+          [model]="{ProcessID: deal?.processID }"
           (valueChange)="valueChangeBusinessLine($event)"
         >
         </codx-input>
-        <!-- <codx-input
-        [formModel]="form.formModel"
-        field="businessLineID"
-        [model]="{ProcessID: deal?.processID }"
-      >
-      </codx-input>
-
-      <codx-input
-      [formModel]="form.formModel"
-      field="businessLineID"
-      [model]="{ProcessID: 'eae7f50d-012a-11ee-94b2-00155d035517' }"
-    >
-    </codx-input> -->
+        </div>
+        <ng-template #viewAll>
+          <codx-input
+          [formModel]="form.formModel"
+          field="businessLineID"
+          [crrValue]="deal?.businessLineID"
+          (valueChange)="valueChangeBusinessLine($event)"
+        >
+        </codx-input>
+        </ng-template>
 
       </div>
     </div>
@@ -288,14 +287,12 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         fiedName="ExpectedClosed"
-        default="Ngày dự kiến đóng"
       >
       </codx-label>
       <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="expectedClosed"
-
       (valueChange)="valueChange($event)"
     >
     </codx-input>
@@ -446,17 +443,17 @@
 
     <codx-list-contacts
       #codxListContact
+      [selectAll]="false"
       [funcID]="'CM0101'"
       [objectID]="customerID"
       [listContacts]="lstContactCustomer"
       [objectType]="'1'"
       [objectName]="customerName"
       [isConvertLeadToCus]="true"
-      [selectAll]="false"
       (contactEvent)="contactEvent($event)"
       (lstContactEmit)="lstContactEmit($event)"
       (objectConvert)="objectConvertDeal($event)"
-      [hidenMF]="true"
+      [hidenMF]="false"
       [type]="'formAdd'"
       [lstContactRef]="lstContactDeal"
     ></codx-list-contacts>
@@ -470,12 +467,13 @@
       ></codx-label>
     </div>
     <codx-list-contacts
-    #loadContactDeal
+      #loadContactDeal
+      [selectAll]="false"
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"
+      (contactEvent)="contactEventDeal($event)"
       [objectType]="'4'"
-      [selectAll]="false"
       [objectName]="deal?.dealName"
       [hidenMF]="true"
       [type]="'formAdd'"

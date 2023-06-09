@@ -108,7 +108,7 @@ export class CasesComponent
   colorReasonFail: any;
   caseType:string;
   applyFor:string;
-
+  formModelCrr: FormModel = new FormModel();
 
   constructor(
     private inject: Injector,
@@ -124,33 +124,32 @@ export class CasesComponent
       this.checkFunction(this.funcID);
     }
 
-
     this.executeApiCalls();
-    // Get API
-    // this.getListCustomer();
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-      this.checkFunction(this.funcID);
-    }
-    if (changes['dataObj']) {
-      this.dataObj = changes['dataObj'].currentValue;
-      if (this.processID != this.dataObj?.processID) {
-        this.processID = this.dataObj?.processID;
-        this.reloadData();
-      }
-    }
-  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (!this.funcID) {
+  //     this.funcID = this.activedRouter.snapshot.params['funcID'];
+  //     this.checkFunction(this.funcID);
+  //   }
+  //   if (changes['dataObj']) {
+  //     this.dataObj = changes['dataObj'].currentValue;
+  //     if (this.processID != this.dataObj?.processID) {
+  //       this.processID = this.dataObj?.processID;
+  //       this.reloadData();
+  //     }
+  //   }
+  // }
 
   onInit(): void {
     //test no chosse
     this.button = {
       id: this.btnAdd,
     };
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
+    // if (!this.funcID) {
+    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
@@ -167,7 +166,7 @@ export class CasesComponent
     this.resourceKanban.dataObj = this.dataObj;
   }
   ngAfterViewInit(): void {
-    if (this.dataObj) {
+    if (this.funcID != 'CM0401' && this.funcID != 'CM0402') {
       this.views = [
         {
           type: ViewType.listdetail,
@@ -201,67 +200,54 @@ export class CasesComponent
             panelRightRef: this.templateDetail,
           },
         },
-        // {
-        //   type: ViewType.kanban,
-        //   active: false,
-        //   sameData: false,
-        //   request: this.request,
-        //   hide: true,
-        //   request2: this.resourceKanban,
-        //   toolbarTemplate: this.footerButton,
-        //   model: {
-        //     template: this.cardKanban,
-        //     template2: this.viewColumKaban,
-        //     setColorHeader: true,
-        //   },
-        // },
+
       ];
-    this.reloadData();
+    // this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
   reloadData() {
-    if (this.view) {
-      this.dataSelected = null;
-      this.view.dataService.predicates = null;
-      this.view.dataService.dataValues = null;
-      this.view.dataObj = this.dataObj;
-      this.view?.views?.forEach((x) => {
-        if (x.type == 6) {
-          x.request.dataObj = this.dataObj;
-          x.request2.dataObj = this.dataObj;
-        }
-      });
-      if ((this.view?.currentView as any)?.kanban) {
-        let kanban = (this.view?.currentView as any)?.kanban;
-        let settingKanban = kanban.kanbanSetting;
-        settingKanban.isChangeColumn = true;
-        settingKanban.formName = this.view?.formModel?.formName;
-        settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-        this.api
-          .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-            settingKanban,
-            this.dataObj,
-          ])
-          .subscribe((resource) => {
-            if (resource?.columns && resource?.columns.length)
-              kanban.columns = resource.columns;
-            kanban.kanbanSetting.isChangeColumn = false;
-            kanban.dataObj = this.dataObj;
-            kanban.loadDataSource(
-              kanban.columns,
-              kanban.kanbanSetting?.swimlaneSettings,
-              false
-            );
-            kanban.refresh();
-          });
-      }
+    // if (this.view) {
+    //   this.dataSelected = null;
+    //   this.view.dataService.predicates = null;
+    //   this.view.dataService.dataValues = null;
+    //   this.view.dataObj = this.dataObj;
+    //   this.view?.views?.forEach((x) => {
+    //     if (x.type == 6) {
+    //       x.request.dataObj = this.dataObj;
+    //       x.request2.dataObj = this.dataObj;
+    //     }
+    //   });
+    //   if ((this.view?.currentView as any)?.kanban) {
+    //     let kanban = (this.view?.currentView as any)?.kanban;
+    //     let settingKanban = kanban.kanbanSetting;
+    //     settingKanban.isChangeColumn = true;
+    //     settingKanban.formName = this.view?.formModel?.formName;
+    //     settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+    //     this.api
+    //       .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+    //         settingKanban,
+    //         this.dataObj,
+    //       ])
+    //       .subscribe((resource) => {
+    //         if (resource?.columns && resource?.columns.length)
+    //           kanban.columns = resource.columns;
+    //         kanban.kanbanSetting.isChangeColumn = false;
+    //         kanban.dataObj = this.dataObj;
+    //         kanban.loadDataSource(
+    //           kanban.columns,
+    //           kanban.kanbanSetting?.swimlaneSettings,
+    //           false
+    //         );
+    //         kanban.refresh();
+    //       });
+    //   }
 
-      if (this.processID)
-        (this.view?.dataService as CRUDService)
-          .setPredicates(['ProcessID==@0'], [this.processID])
-          .subscribe();
-    }
+    //   if (this.processID)
+    //     (this.view?.dataService as CRUDService)
+    //       .setPredicates(['ProcessID==@0'], [this.processID])
+    //       .subscribe();
+    // }
   }
 
   async executeApiCalls() {
@@ -284,9 +270,7 @@ export class CasesComponent
     });
   }
 
-
-  changeView(e) {
-  }
+  changeView(e) {}
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -298,11 +282,11 @@ export class CasesComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-        this.getMore($event,data);
+      this.getMore($event, data);
     }
   }
 
-  getMore($event,data){
+  getMore($event, data) {
     for (let eventItem of $event) {
       const functionID = eventItem.functionID;
       const mappingFunction = this.getRoleMoreFunction(functionID);
@@ -315,20 +299,35 @@ export class CasesComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if(data.closed || data.status == '1'){
+      if ( (data.closed && data.status != '1' ) || data.status == '1' ) {
+        eventItem.disabled = true;
+      }
+    };
+    var isDelete = (eventItem, data) => {
+      if ( data.closed) {
+        eventItem.disabled = true;
+      }
+    };
+    var isCopy = (eventItem, data) => {
+      if ( data.closed  ) {
+        eventItem.disabled = true;
+      }
+    };
+    var isEdit = (eventItem, data) => {
+      if ( data.closed ) {
         eventItem.disabled = true;
       }
     };
     var isClosed = (eventItem, data) => {
       eventItem.disabled = data.closed || data.status == '1';
-    }
+    };
     var isOpened = (eventItem, data) => {
-        eventItem.disabled = !data.closed || data.status == '1';
-    }
+      eventItem.disabled = !data.closed || data.status == '1';
+    };
     var isStartDay = (eventItem, data) => {
-        eventItem.disabled = data.status != '1';
-    }
-    if(this.caseType === '1') {
+      eventItem.disabled = data.status != '1';
+    };
+    if (this.caseType === '1') {
       functionMappings = {
         CM0401_1: isDisabled,
         CM0401_3: isDisabled,
@@ -338,27 +337,22 @@ export class CasesComponent
         CM0401_8: isClosed,
         CM0401_9: isOpened,
         SYS101: isDisabled,
-        SYS01: isDisabled,
-        SYS103: isDisabled,
-        SYS03: isDisabled,
-        SYS104: isDisabled ,
-        SYS04: isDisabled,
-        SYS102: isDisabled,
-        SYS02: isDisabled,
+        SYS103: isEdit,
+        SYS03: isEdit,
+        SYS104: isCopy,
+        SYS04: isCopy,
+        SYS102: isDelete,
+        SYS02: isDelete,
       };
-    }
-    else {
-
+    } else {
     }
 
     return functionMappings[type];
-
   }
 
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
-
 
   checkMoreReason(tmpPermission) {
     if (
@@ -498,7 +492,7 @@ export class CasesComponent
                 if (res) {
                   data = res[0];
                   this.view.dataService.update(data).subscribe();
-               //   this.detailViewcases.dataSelected = data;
+                  //   this.detailViewcases.dataSelected = data;
                   this.detectorRef.detectChanges();
                 }
               });
@@ -512,12 +506,12 @@ export class CasesComponent
       .alertCode('DP033', null, ['"' + data?.caseName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-           this.startCases(data.recID,data.caseType);
+          this.startCases(data.recID, data.caseType);
         }
       });
   }
-  startCases(caseId, caseType){
-    var data = [caseId,caseType];
+  startCases(caseId, caseType) {
+    var data = [caseId, caseType];
     this.codxCmService.startCases(data).subscribe((res) => {
       if (res[0]) {
         this.dataSelected = res[0];
@@ -699,7 +693,6 @@ export class CasesComponent
     });
   }
 
-
   dblClick(e, data) {}
 
   getPropertiesHeader(data, type) {
@@ -753,17 +746,7 @@ export class CasesComponent
 
   //#region CRUD
   add() {
-    switch (this.funcID) {
-      case 'CM0401': {
-        //statements;
-        this.addCases();
-        break;
-      }
-      default: {
-        //statements;
-        break;
-      }
-    }
+    this.addCases();
   }
 
   addCases() {
@@ -771,15 +754,9 @@ export class CasesComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-
-      var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
-      this.openFormCases(formMD, option, 'add');
+      this.openFormCases(this.formModelCrr, option, 'add');
     });
   }
 
@@ -816,15 +793,10 @@ export class CasesComponent
         option.FormModel = this.view.formModel;
         option.Width = '800px';
         option.zIndex = 1001;
-        var formMD = new FormModel();
-        // formMD.funcID = funcIDApplyFor;
-        // formMD.entityName = fun.entityName;
-        // formMD.formName = fun.formName;
-        // formMD.gridViewName = fun.gridViewName;
         var obj = {
           action: 'edit',
-          formMD: formMD,
-          titleAction: 'Chỉnh sửa Phiếu ghi nhận sự cố',
+          formMD: this.formModelCrr,
+          titleAction: this.titleAction,
         };
         let dialogCustomcases = this.callfc.openSide(
           PopupAddCasesComponent,
@@ -909,17 +881,24 @@ export class CasesComponent
       '',
       option
     );
-   popup.closed.subscribe((e) => {});
+    popup.closed.subscribe((e) => {});
   }
 
-  checkFunction(funcID:any){
-    if(funcID === 'CM0401') {
-      this.caseType = '1';
-      this.applyFor = '2';
-    }
-    else if(funcID === 'CM0402') {
-      this.caseType = '2';
-      this.applyFor = '3';
-    }
+  async checkFunction(funcID:any){
+   await this.cache.functionList(funcID).subscribe((fun) => {
+      this.formModelCrr.funcID = fun.functionID;
+      this.formModelCrr.entityName = fun.entityName;
+      this.formModelCrr.formName = fun.formName;
+      this.formModelCrr.gridViewName = fun.gridViewName;
+      if(this.formModelCrr.formName === 'CMCases') {
+        this.caseType = '1';
+        this.applyFor = '2';
+      }
+      else if(this.formModelCrr.formName === 'CMRequests') {
+        this.caseType = '2';
+        this.applyFor = '3';
+      };
+    });
+
   }
 }

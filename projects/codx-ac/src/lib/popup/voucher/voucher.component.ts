@@ -87,6 +87,8 @@ export class VoucherComponent implements OnInit {
 
     this.mapPredicates.set('currencyID', 'CurrencyID = @0');
     this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
+    this.mapPredicates.set('objectID', 'ObjectID = @0');
+    this.mapDataValues.set('objectID', this.cashpayment.objectID);
   }
 
   ngAfterViewInit() {

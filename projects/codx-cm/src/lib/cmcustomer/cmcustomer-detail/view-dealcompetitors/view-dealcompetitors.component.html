@@ -78,12 +78,12 @@
       <div
         style="width: 150px; border-radius: 20px"
         class="d-flex align-items-center mb-1"
-        *ngIf="data.status != '1'"
+        *ngIf="data.statusStep != '1'"
         [ngStyle]="{
           'background-color':
-            data.status == '3' || data.status == '4'
+            data.statusStepStep == '3' || data.statusStep == '4'
               ? colorReasonSuccess?.color
-              : data.status == '5' || data.status == '6'
+              : data.statusStep == '5' || data.statusStep == '6'
               ? colorReasonFail?.color
               : getStep(data?.stepID)['backgroundColor']
         }"
@@ -108,11 +108,11 @@
           ></span>
         </div>
       </div>
-      <div *ngIf="data.status == '1'">
+      <div *ngIf="data.statusStep == '1'">
         <codx-vll
           [name]="'DP028'"
-          [field]="'Status'"
-          [value]="data?.status"
+          [field]="'StatusStep'"
+          [value]="data?.statusStep"
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-sm"

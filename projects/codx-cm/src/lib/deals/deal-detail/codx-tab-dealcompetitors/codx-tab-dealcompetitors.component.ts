@@ -246,7 +246,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,
           '',
-          500,
+          800,
           600,
           '',
           obj,
@@ -274,6 +274,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
                         var tmp = {};
                         tmp['recID'] = e.event.competitorID;
                         tmp['address'] = address;
+                        tmp['competitorName'] = e.competitorName;
                         this.lstCompetitorAddress.push(Object.assign({}, tmp));
                       }
                     }
