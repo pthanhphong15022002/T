@@ -3,14 +3,19 @@
    height: calc(100vh - 513px)!important;
 }
 .tabline-content .e-inline-edit{
-    background-color: white !important;
+    background-color: var(--primary-dark) !important;
     border-color: white !important;
+    
 }
 .tabline-content .e-inline-edit td .e-editable-component span{
     border-color: var(--primary-dark) !important;
+    
 }
 .tabline-content .e-inline-edit td .e-editable-component .e-search-icon{
     border: none !important;
+}
+.tabline-content .e-inline-edit td .e-editable-value{
+    color: white !important;
 }
 .tabset-content .e-content{
     height: calc(100vh - 610px)!important;
@@ -27,7 +32,7 @@
     background-color: whitesmoke !important;
 }
 .ac-ng-overlay .ngx-overlay img{
-    width: 45% !important;
+    width: 35% !important;
     height: auto !important;
 }
 .listcash-content .e-float-input input{
