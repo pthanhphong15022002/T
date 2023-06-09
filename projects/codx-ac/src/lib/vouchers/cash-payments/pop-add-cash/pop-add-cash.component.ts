@@ -98,7 +98,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   cashpaymentline: Array<any> = [];
   settledInvoices: Array<SettledInvoices> = [];
   settledInvoicesDelete: Array<any> = [];
-  hideFields = [];
+  hideFields:Array<any> = [];
   requireFields = [];
   pageCount: any;
   tab: number = 0;
@@ -292,14 +292,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'cashbookid',
       'journalno',
       'objectid',
+      'payee'
     ];
     if (e.data) {
       switch (field) {
         case 'currencyid':
-          if (this.columnChange.toLowerCase() == 'cashbookid') {
-            this.columnChange = '';
-            return;
-          }
+          // if (this.columnChange.toLowerCase() == 'cashbookid') {
+          //   this.columnChange = '';
+          //   return;
+          // }
+
           break;
         case 'exchangerate':
           if (this.cashpaymentline.length) {
@@ -390,22 +392,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   valueFocusOut(e: any) {
     this.cashpayment[e.ControlName] = e.crrValue;
-    let text;
-    switch (e.ControlName) {
-      case 'payor':
-      case 'payee':
-        this.api
-          .exec<any>('AC', this.className, 'ValueChangedAsync', [
-            e.ControlName,
-            this.cashpayment,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.form.formGroup.patchValue(res);
-            }
-          });
-        break;
-    }
   }
   editEnded(e:any){
     this.cashpayment[e.field] = e.component.value;
@@ -418,7 +404,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.cashpayment.unbounds.hideFields &&
       this.cashpayment.unbounds.hideFields.length
     ) {
-      this.hideFields = this.cashpayment.unbounds.hideFields as Array<string>;
+      this.hideFields = [...(this.cashpayment.unbounds.hideFields as Array<string>)];
     }
     if (this.journal.subControl == '0') {
       this.hideFields.push('ObjectID');
@@ -428,12 +414,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       );
       if (i > -1) {
         this.gridCash.columnsGrid[i].isVisible = true;
-        let idx = this.gridCash.visibleColumns.findIndex(
-          (x) => x.field == this.gridCash.columnsGrid[i].field
-        );
-        if (idx > -1) {
-          this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
-        }
+        this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
       }
     }
     if (this.journal.postingMode == '1') {
@@ -450,12 +431,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           );
           if (i > -1) {
             this.gridCash.columnsGrid[i].isVisible = true;
-            let idx = this.gridCash.visibleColumns.findIndex(
-              (x) => x.field == this.gridCash.columnsGrid[i].field
-            );
-            if (idx > -1) {
-              this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
-            }
+            this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
           }
         });
       }
@@ -734,9 +710,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (res) {
           this.hasSaved = true;
           this.loadTotal();
-          if (this.total > this.cashpayment.totalAmt) {
-            this.notification.notifyCode('AC0012');
-          }
+          if (this.cashpayment.totalAmt != 0) {
+            if (this.total > this.cashpayment.totalAmt) {
+              this.notification.notifyCode('AC0012');
+            }
+          } 
           this.dialog.dataService.updateDatas.set(
             this.cashpayment['_uuid'],
             this.cashpayment
@@ -755,9 +733,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (res) {
           this.hasSaved = true;
           this.loadTotal();
-          if (this.total > this.cashpayment.totalAmt) {
-            this.notification.notifyCode('AC0012');
-          }
+          if (this.cashpayment.totalAmt != 0) {
+            if (this.total > this.cashpayment.totalAmt) {
+              this.notification.notifyCode('AC0012');
+            }
+          } 
           this.dialog.dataService.updateDatas.set(
             this.cashpayment['_uuid'],
             this.cashpayment

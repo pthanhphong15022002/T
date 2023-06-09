@@ -24,35 +24,78 @@
     [ngTemplateOutlet]="ganttChart"
   ></some-element>
   <some-element
-  *ngSwitchCase="tabQuotation"
-  [ngTemplateOutlet]="quotation"
-></some-element>
-<some-element
-*ngSwitchCase="tabContract"
-[ngTemplateOutlet]="contract"
-></some-element>
+    *ngSwitchCase="tabQuotation"
+    [ngTemplateOutlet]="quotation"
+  ></some-element>
+  <some-element
+    *ngSwitchCase="tabContract"
+    [ngTemplateOutlet]="contract"
+  ></some-element>
 
   <some-element *ngSwitchDefault></some-element>
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div
-    *ngFor="let step of listStep"
-    class="list-step ps-4"
-  >
-    <codx-step-task
-      [dataSources]="step"
-      [isShowButton]="false"
-      [isShowMore]="true"
-      [isDeepCopy]="false"
-      [isShowStep]="true"
-      [isStart]="dataSelected?.status == '2'"
-      [isClose]="dataSelected?.closed"
-      [isRoleAll]="dataSelected?.roles?.isOnwer || false"
-      (continueStep)="continueStep($event,step)"
-      (saveAssign)="saveAssignTask($event)"
-    ></codx-step-task>
-    <hr class="m-0 p-0" />
+  <div *ngIf="isDataLoading">
+    <div *ngFor="let step of [1,2,3]">
+      <div class="d-flex align-items-center w-100">
+        <ngx-skeleton-loader
+          appearance="circle"
+          [theme]="{ width: '60px', height: '60px' }"
+        >
+        </ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+                width: '100%',
+                'border-radius': '5px',
+                height: '60px',
+                'margin': '0px',
+              }"
+        ></ngx-skeleton-loader>
+      </div>
+      <div style="padding-left: 70px; width: 100%;">
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+                width: '100%',
+                'border-radius': '10px',
+                height: '100px',
+                'margin': '0px',
+              }"
+        ></ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+                width: '100%',
+                'border-radius': '10px',
+                height: '100px',
+                'margin': '0px',
+              }"
+        ></ngx-skeleton-loader>
+      </div>
+      <hr class="m-0 p-0" />
+    </div>
+  </div>
+  <div *ngIf="!isDataLoading && listStep?.length > 0">
+    <div *ngFor="let step of listStep" class="list-step ps-4">
+      <codx-step-task
+        [dataSources]="step"
+        [isShowButton]="false"
+        [isShowMore]="true"
+        [isDeepCopy]="false"
+        [isShowStep]="true"
+        [isStart]="dataSelected?.status == '2'"
+        [isClose]="dataSelected?.closed"
+        [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+        (continueStep)="continueStep($event, step)"
+        (saveAssign)="saveAssignTask($event)"
+      ></codx-step-task>
+      <hr class="m-0 p-0" />
+    </div>
+  </div>
+  <div *ngIf="!isDataLoading && listStep?.length == 0">
+    <codx-no-data></codx-no-data>
   </div>
 </ng-template>
 <!-- nvthuan sản phẩm -->
@@ -87,7 +130,7 @@
               <codx-label default="Mã cơ hội"></codx-label>:
             </div>
             <div class="text-dark fw-bold codx-textcontent">
-              {{dataSelected?.dealID }}
+              {{ dataSelected?.dealID }}
             </div>
           </div>
         </div>
@@ -95,17 +138,17 @@
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              fiedName="ChannelID"
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
+                fiedName="ChannelID"
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
               ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
                 #channelID
                 [innerHTML]="
-                dataSelected?.channelID
+                  dataSelected?.channelID
                     | formatvalue
                       : formModel
                       : 'channelID'
@@ -120,18 +163,17 @@
         </div>
       </div>
 
-
       <div class="row">
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              fiedName="Category"
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-
-              default="Loại cơ hội"></codx-label>
+                fiedName="Category"
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+                default="Loại cơ hội"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               {{ getNameCategory(dataSelected?.category) }}
@@ -142,30 +184,29 @@
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              fiedName="CampaignID"
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-             ></codx-label>
+                fiedName="CampaignID"
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
-              #campaignID
-              [innerHTML]="
-              dataSelected?.campaignID
-                  | formatvalue
-                    : formModel
-                    : 'campaignID'
-                    : campaignID
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
+                #campaignID
+                [innerHTML]="
+                  dataSelected?.campaignID
+                    | formatvalue
+                      : formModel
+                      : 'campaignID'
+                      : campaignID
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="row">
@@ -173,26 +214,26 @@
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="DealValue"
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+                fiedName="DealValue"
               ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
-              #dealValue
-              [innerHTML]="
-              dataSelected?.dealValue
-                  | formatvalue
-                    : formModel
-                    : 'dealValue'
-                    : dealValue
-                    : 'CMDeals'
-                    : 'grvCMDeals'
-                  | async
-              "
-            ></span>
+                #dealValue
+                [innerHTML]="
+                  dataSelected?.dealValue
+                    | formatvalue
+                      : formModel
+                      : 'dealValue'
+                      : dealValue
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
             </div>
           </div>
         </div>
@@ -200,17 +241,17 @@
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="ConsultantID"
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+                fiedName="ConsultantID"
               ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
                 #consultantID
                 [innerHTML]="
-                dataSelected?.consultantID
+                  dataSelected?.consultantID
                     | formatvalue
                       : formModel
                       : 'consultantID'
@@ -230,18 +271,17 @@
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="Probability"
-
-            ></codx-label>
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+                fiedName="Probability"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
                 #probability
                 [innerHTML]="
-                dataSelected?.probability
+                  dataSelected?.probability
                     | formatvalue
                       : formModel
                       : 'probability'
@@ -258,16 +298,17 @@
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="SalespersonID"></codx-label>
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+                fiedName="SalespersonID"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
                 #salespersonID
                 [innerHTML]="
-                dataSelected?.salespersonID
+                  dataSelected?.salespersonID
                     | formatvalue
                       : formModel
                       : 'salespersonID'
@@ -280,7 +321,6 @@
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="row">
@@ -288,16 +328,17 @@
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
-              class="me-2 label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="ExpectedClosed"></codx-label>
+                class="me-2 label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+                fiedName="ExpectedClosed"
+              ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
                 #expectedClosed
                 [innerHTML]="
-                dataSelected?.expectedClosed
+                  dataSelected?.expectedClosed
                     | formatvalue
                       : formModel
                       : 'expectedClosed'
@@ -308,15 +349,14 @@
             </div>
           </div>
         </div>
-
       </div>
-  </div>
+    </div>
     <div class="mt-5">
       <div class="text-dark text-primary fw-bold fs-6 mb-3">
         <codx-label default="Mô tả nhu cầu"></codx-label>
       </div>
       <span class="py-2">
-        {{dataSelected.memo}}
+        {{ dataSelected.memo }}
       </span>
     </div>
   </div>
@@ -325,7 +365,7 @@
 <ng-template #contact>
   <div>
     <codx-list-contacts
-    #loadContactDeal
+      #loadContactDeal
       [selectAll]="false"
       [funcID]="'CM0205'"
       [objectID]="dataSelected?.recID"
@@ -342,9 +382,9 @@
 <ng-template #ganttChart>
   <div class="w-100 h-100" id="tabGantt">
     <codx-step-chart
-    [dataSelected]="dataSelected"
-    [listSteps]="listSteps"
-  ></codx-step-chart>
+      [dataSelected]="dataSelected"
+      [listSteps]="listSteps"
+    ></codx-step-chart>
   </div>
 </ng-template>
 
@@ -367,12 +407,17 @@
     [dealID]="dataSelected.recID"
   ></codx-tab-dealcompetitors>
 </ng-template>
-
-
 <ng-template #quotation>
-<codx-no-data>
-
-</codx-no-data>
+  <codx-quotations
+    [typeModel]="'deals'"
+    [showButton]="true"
+    [predicates]="'RefID==@0'"
+    [dataValues]="dataSelected.recID"
+    [refID]="dataSelected.recID"
+    [refType]="'CM_Deals'"
+    [disableRefID]="true"
+  >
+  </codx-quotations>
 </ng-template>
 
 <ng-template #contract let-data>
@@ -382,4 +427,3 @@
     [type]="'deal'"
   ></list-contracts>
 </ng-template>
-

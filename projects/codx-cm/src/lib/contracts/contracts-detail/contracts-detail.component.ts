@@ -289,6 +289,8 @@ export class ContractsDetailComponent extends UIComponent{
   }
 
   async addContractAdjourn(data: CM_Contracts){
+    console.log('-------------',this.view.formModel);
+    
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
       contracts.contractType = '2';

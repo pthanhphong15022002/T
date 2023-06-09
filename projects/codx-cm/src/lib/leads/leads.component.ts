@@ -524,6 +524,8 @@ export class LeadsComponent
         if (e.event.length > 0) {
           e.event[0].modifiedOn = new Date();
           this.view.dataService.add(e.event[0], 0).subscribe();
+          // this.view.dataService.update(e.event[0]).subscribe();
+
           if (e.event[1]) {
             this.view.dataService.remove(e.event[1]).subscribe();
           }

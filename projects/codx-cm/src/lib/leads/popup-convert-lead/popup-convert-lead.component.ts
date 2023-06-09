@@ -94,6 +94,10 @@ export class PopupConvertLeadComponent implements OnInit {
   customerNewOld: any;
   instance: tmpInstances = new tmpInstances();
   countValidate = 0;
+  recIDAvt: any;
+  nameAvt: any;
+  modifyOnAvt: Date;
+  entityName: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -107,6 +111,10 @@ export class PopupConvertLeadComponent implements OnInit {
     this.dialog = dialog;
     this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.titleAction = dt?.data?.title;
+    this.recIDAvt = this.lead?.recID;
+    this.nameAvt = this.lead?.leadName;
+    this.modifyOnAvt = this.lead?.modifiedOn;
+    this.entityName = this.dialog.formModel?.entityName;
   }
 
   async ngOnInit() {
@@ -137,11 +145,7 @@ export class PopupConvertLeadComponent implements OnInit {
     if (this.radioChecked) {
       this.countAddSys++;
     }
-    this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
 
-    this.gridViewSetupCustomer = await firstValueFrom(
-      this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
-    );
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.changeDetectorRef.detectChanges();
@@ -153,15 +157,6 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   setData() {
-    this.customer.customerName = this.lead?.leadName;
-    this.customer.phone = this.lead?.companyPhone;
-    this.customer.faxNo = this.lead?.faxNo;
-    this.customer.webPage = this.lead?.webPage;
-    this.customer.industries = this.lead?.industries;
-    this.customer.annualRevenue = this.lead?.annualRevenue;
-    this.customer.headcounts = this.lead?.headcounts;
-    this.customer.customerResource = this.lead?.customerResource;
-    this.customer.establishDate = this.lead?.establishDate;
     this.deal.recID = Util.uid();
     this.deal.channelID = this.lead?.channelID;
     this.deal.businessLineID = this.lead?.businessLineID;
@@ -310,6 +305,15 @@ export class PopupConvertLeadComponent implements OnInit {
       this.notiService.notifyCode(messageCheckFormat);
       return;
     }
+    setTimeout(() => {
+      if (!this.radioChecked && !this.avatarChange) {
+        this.entityName = JSON.parse(JSON.stringify('CM_Customers'));
+        this.recIDAvt = JSON.parse(JSON.stringify(this.recIDAvt));
+        this.nameAvt = JSON.parse(JSON.stringify(this.nameAvt));
+        this.modifyOnAvt = JSON.parse(JSON.stringify(this.modifyOnAvt));
+        this.imageUpload.loadAvatar();
+      }
+    }, 0);
     this.onConvert();
   }
 
@@ -337,18 +341,15 @@ export class PopupConvertLeadComponent implements OnInit {
             this.dialog.close(res);
           } else {
             if (this.avatarChange) {
-              this.imageUpload
-                .updateFileDirectReload(this.customer.recID)
-                .subscribe((result) => {
-                  if (result) {
-                    this.dialog.close(res);
-                  } else {
-                    this.dialog.close(res);
-                  }
-                });
+              await firstValueFrom(
+                this.imageUpload.updateFileDirectReload(this.customer.recID)
+              );
             } else {
-              this.dialog.close(res);
+              await firstValueFrom(
+                this.cmSv.copyFileAvata(this.recIDAvt, this.customer.recID)
+              );
             }
+            this.dialog.close(res);
           }
           await firstValueFrom(
             this.api.execSv<any>(
@@ -539,23 +540,47 @@ export class PopupConvertLeadComponent implements OnInit {
       this.getListContactByObjectID(this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
-      this.customer.recID = null;
+      this.radioChecked = false;
+      this.setDataCustomer();
       if (this.countAddNew == 0) {
         this.customerID = Util.uid();
         this.customerNewOld = this.customerID;
+        this.customer.recID = this.customerNewOld;
       }
+      this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+
+      this.gridViewSetupCustomer = await firstValueFrom(
+        this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+      );
+
+      this.countAddNew++;
 
       this.getListContactByObjectID(this.customerNewOld);
-      this.radioChecked = false;
-      this.countAddNew++;
     }
   }
+
+  setDataCustomer() {
+    this.customer.recID = null;
+    this.customer.customerName = this.lead?.leadName;
+    this.customer.phone = this.lead?.companyPhone;
+    this.customer.faxNo = this.lead?.faxNo;
+    this.customer.webPage = this.lead?.webPage;
+    this.customer.industries = this.lead?.industries;
+    this.customer.annualRevenue = this.lead?.annualRevenue;
+    this.customer.headcounts = this.lead?.headcounts;
+    this.customer.establishDate = this.lead?.establishDate;
+    this.customer.channelID = this.lead?.channelID;
+  }
+
   valueChangeOwner(e) {
     this.deal.salespersonID = e;
     this.deal.owner = e;
   }
   valueChangeCustomer(e) {
     this.customer[e.field] = e?.data;
+    if (e.field == 'customerName' && e?.data) {
+      this.recIDAvt = e.data;
+    }
   }
   valueTagChange(e) {
     this.data.tags = e.data;
@@ -576,9 +601,9 @@ export class PopupConvertLeadComponent implements OnInit {
   valueDateChange(e, type) {
     if (e) {
       if (type == 'deal') {
-        this.deal[e.field] = e.data.fromDate;
+        this.deal[e.field] = e?.data?.fromDate;
       } else {
-        this.customer[e.field] = e.data.fromDate;
+        this.customer[e.field] = e?.data?.fromDate;
       }
     }
   }
@@ -813,5 +838,11 @@ export class PopupConvertLeadComponent implements OnInit {
 
   changeAvatar() {
     this.avatarChange = true;
+    if (this.avatarChange) {
+      this.recIDAvt = this.customer?.recID;
+      this.entityName = 'CM_Customers';
+      this.nameAvt = this.customer?.customerName;
+      this.modifyOnAvt = this.customer?.modifiedOn;
+    }
   }
 }

@@ -1,6 +1,6 @@
-<div >
+<div>
   <div
-    *ngIf="disableRefID"
+    *ngIf="showButton"
     class="custom-toolbar d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2"
   >
     <div>
@@ -22,11 +22,11 @@
     [attr.data-kt-scroll-offset]="'0px'"
   > -->
   <ng-container *ngIf="loaded">
-  <ng-container
-    *ngIf="listQuotations?.length > 0; else noData"
-    [ngTemplateOutlet]="itemViewList"
-  ></ng-container>
-</ng-container>
+    <ng-container
+      *ngIf="listQuotations?.length > 0; else noData"
+      [ngTemplateOutlet]="itemViewList"
+    ></ng-container>
+  </ng-container>
   <!-- </div> -->
 </div>
 
@@ -71,11 +71,25 @@
             class=""
             #totalAmt
             [innerHTML]="
-              data.quotationName
+              data.totalAmt
                 | formatvalue
                   : formModel
                   : 'totalAmt'
                   : totalAmt
+                  : 'CMQuotations'
+                  : 'grvCMQuotations'
+                | async
+            "
+          ></span>
+          <span
+            class="ms-1"
+            #currencyID
+            [innerHTML]="
+              data.currencyID
+                | formatvalue
+                  : formModel
+                  : 'currencyID'
+                  : currencyID
                   : 'CMQuotations'
                   : 'grvCMQuotations'
                 | async
