@@ -534,16 +534,16 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.channelID = this.leadThree?.channelID;
         }
         break;
-      case 'customerResource':
-        if (e.field === 'customerResource1' && e.component.checked === true) {
-          this.leadNew.customerResource = this.leadOne?.customerResource;
+      case 'channelID':
+        if (e.field === 'channelID1' && e.component.checked === true) {
+          this.leadNew.channelID = this.leadOne?.channelID;
         } else if (
-          e.field === 'customerResource2' &&
+          e.field === 'channelID2' &&
           e.component.checked === true
         ) {
-          this.leadNew.customerResource = this.leadTwo?.customerResource;
+          this.leadNew.channelID = this.leadTwo?.channelID;
         } else {
-          this.leadNew.customerResource = this.leadThree?.customerResource;
+          this.leadNew.channelID = this.leadThree?.channelID;
         }
         break;
       case 'salespersonID':

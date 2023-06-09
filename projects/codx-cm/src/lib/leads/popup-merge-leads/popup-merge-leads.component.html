@@ -1403,14 +1403,14 @@
         <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
-            fiedName="CustomerResource"
+            fiedName="ChannelID"
           ></codx-label>
         </div>
         <div class="w-30">
           <codx-input
-            field="customerResource"
+            field="channelID"
             [formModel]="dialog.formModel"
-            [crrValue]="leadNew?.customerResource"
+            [crrValue]="leadNew?.channelID"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
@@ -1418,19 +1418,19 @@
           <div class="d-flex" *ngIf="leadOne?.recID">
             <div class="w-10">
               <codx-input
-                id="customerResource1"
-                name="customerResource"
+                id="channelID1"
+                name="channelID"
                 class="test-check"
                 type="radio"
-                field="customerResource1"
+                field="channelID1"
                 [checked]="true"
-                (valueChange)="changeRadio($event, 'customerResource')"
+                (valueChange)="changeRadio($event, 'channelID')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadOne?.customerResource
-                  | formatvalue : dialog.formModel : 'CustomerResource'
+                leadOne?.channelID
+                  | formatvalue : dialog.formModel : 'channelID'
                   | async
               "
             ></div>
@@ -1440,19 +1440,19 @@
           <div class="d-flex" *ngIf="leadTwo?.recID">
             <div class="w-10">
               <codx-input
-                id="customerResource2"
-                name="customerResource"
+                id="channelID2"
+                name="channelID"
                 class="test-check"
                 type="radio"
-                field="customerResource2"
+                field="channelID2"
                 [checked]="false"
-                (valueChange)="changeRadio($event, 'customerResource')"
+                (valueChange)="changeRadio($event, 'channelID')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadTwo?.customerResource
-                  | formatvalue : dialog.formModel : 'CustomerResource'
+                leadTwo?.channelID
+                  | formatvalue : dialog.formModel : 'channelID'
                   | async
               "
             ></div>
@@ -1462,19 +1462,19 @@
           <div class="d-flex" *ngIf="leadThree?.recID">
             <div class="w-10">
               <codx-input
-                id="customerResource3"
-                name="customerResource"
+                id="channelID3"
+                name="channelID"
                 class="test-check"
                 type="radio"
-                field="customerResource3"
+                field="channelID3"
                 [checked]="false"
-                (valueChange)="changeRadio($event, 'customerResource')"
+                (valueChange)="changeRadio($event, 'channelID')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadThree?.customerResource
-                  | formatvalue : dialog.formModel : 'CustomerResource'
+                leadThree?.channelID
+                  | formatvalue : dialog.formModel : 'channelID'
                   | async
               "
             ></div>
