@@ -37,6 +37,8 @@ import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.com
 import { AccumulationChartModule, AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
 import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
 import { PopupAddVersionComponent } from './popup/popup-add-version/popup-add-version.component';
+import { PopupViewOKRLinkComponent } from './popup/popup-view-okr-link/popup-view-okr-link.component';
+import { PopupCheckInHistoryComponent } from './popup/popup-check-in-history/popup-check-in-history.component';
 
 const routes: Routes = [
   {
@@ -98,6 +100,8 @@ const routes: Routes = [
     PopupAddOKRPlanComponent,
     ViewOKRComponent,
     PopupAddRoleComponent,
+    PopupViewOKRLinkComponent,
+    PopupCheckInHistoryComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
