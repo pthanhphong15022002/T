@@ -1703,8 +1703,8 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
   color: var(--primary-dark);
 }
 
-.nav-pills .nav-link:hover {
-  cursor: pointer;
+.nav-pills .nav-link:hover, a.nav-link:hover {
+  cursor: pointer!important;
 }
 
 .card-img-mwp.img-storage .codx-image.h-100 {
