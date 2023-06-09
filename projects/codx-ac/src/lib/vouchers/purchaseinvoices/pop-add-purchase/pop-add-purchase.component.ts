@@ -837,7 +837,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   checkTransLimit(){
-    if(this.purchaseinvoices.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit && this.purchaseinvoices.totalAmt > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
       if(this.journal.transControl == '2')

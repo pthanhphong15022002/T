@@ -921,7 +921,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   checkTransLimit(){
-    if(this.inventoryJournal.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit && this.inventoryJournal.totalAmt > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
       if(this.journal.transControl == '2')
