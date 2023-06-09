@@ -7,7 +7,7 @@
     <div
       class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
-      <div
+    <div
         class="d-flex align-items-center pe-4"
         [ngStyle]="{
           background: currentStep?.backgroundColor,
@@ -24,18 +24,19 @@
           class="line-clamp line-clamp-2 fs-5 ms-2"
           [ngStyle]="{ color: currentStep?.textColor }"
         >
-          {{ currentStep?.stepName }}</span
+          {{ currentStep.stepName || ''}}</span
         >
       </div>
+
       <codx-mfunc
-      [formModel]="grvMoreFunction"
-      [isBookMark]="true"
-      [dataItem]="moreDefaut"
-      [type]="'hover'"
-      (changeDataMF)="changeDataMFStep($event, currentStep)"
-      (clickMF)="clickMFStep($event, currentStep)"
-    >
-    </codx-mfunc>
+        [formModel]="grvMoreFunction"
+        [isBookMark]="false"
+        [dataItem]="moreDefaut"
+        [type]="'hover'"
+        (changeDataMF)="changeDataMFStep($event, currentStep)"
+        (clickMF)="clickMFStep($event, currentStep)"
+      >
+      </codx-mfunc>
     </div>
     <div
       class="disabled-inline"
