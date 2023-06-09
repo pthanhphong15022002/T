@@ -81,6 +81,7 @@ const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
+        data: {noReuse: true}
       },
       {
         path: 'deals/:funcID',
@@ -88,15 +89,10 @@ const routes: Routes = [
       },
 
       // {
-      //   path: 'processrelease/:funcID',
+      //   path: 'processrelease/:funcID/:recID',
       //   component: ProcessReleaseComponent,
+      //   data: { noReuse: true },
       // },
-
-      {
-        path: 'processrelease/:funcID/:recID',
-        component: ProcessReleaseComponent,
-        data: { noReuse: true },
-      },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,

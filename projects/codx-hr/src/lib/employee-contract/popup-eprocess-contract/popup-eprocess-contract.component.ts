@@ -106,10 +106,8 @@ export class PopupEProcessContractComponent
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
 
-    if (this.data) {
-      if (this.data.benefits) {
-        this.tempBenefitArr = JSON.parse(JSON.stringify(this.data?.benefits));
-      }
+    if (this.data?.benefits) {
+      this.tempBenefitArr = JSON.parse(this.data.benefits);
     }
 
     if (this.dialog.dataService?.keyField === 'ContractNo') {
@@ -230,7 +228,6 @@ export class PopupEProcessContractComponent
         )
         .subscribe((res) => {
           if (res) {
-            console.log(res);
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
             this.data.signedDate = null;

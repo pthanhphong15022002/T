@@ -18,6 +18,7 @@ import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { DealsComponent } from '../../deals.component';
 import { DealDetailComponent } from '../deal-detail.component';
 import { CodxListContactsComponent } from '../../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CM_Contacts } from '../../../models/cm_model';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -40,6 +41,7 @@ export class TabDetailCustomComponent
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
+  listContract: CM_Contacts[];
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
@@ -63,6 +65,7 @@ export class TabDetailCustomComponent
   };
 
   recIdOld: string = '';
+  isDataLoading = true;
 
   constructor(
     private inject: Injector,
@@ -82,15 +85,28 @@ export class TabDetailCustomComponent
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
+      this.isDataLoading = true;
       if(this.tabClicked === this.tabContact )
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
       }
       this.getListInstanceStep();
-
+      this.getContractByDeaID();
     }
   }
 
+  async getContractByDeaID() {
+    if (this.dataSelected?.recID) {
+      var data = [this.dataSelected?.recID];
+      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
+        if (res) {
+          this.listContract = res;
+        } else {
+          this.listContract = [];
+        }
+      });
+    }
+  }
   async executeApiCalls() {
     try {
       await this.getValueList();
@@ -106,8 +122,11 @@ export class TabDetailCustomComponent
       this.dataSelected?.status,
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
-      this.listStep = res;
-      this.checkCompletedInstance(this.dataSelected?.status);
+      if(res){
+        this.listStep = res;
+        this.checkCompletedInstance(this.dataSelected?.status);
+      }
+      this.isDataLoading = false;
     });
   }
 
