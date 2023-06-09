@@ -188,7 +188,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     }
   }
 
-  changeDataMF(event, data) {
+  changeDataMF(event, data): void {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
 
@@ -208,9 +208,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.view.dataService.update(res.event).subscribe();
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
   handlerEBasicSalaries(
@@ -238,17 +238,14 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.update(res.event).subscribe();
         }
+        this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
     });
   }
   beforeDelete(opt: RequestOption, data) {
@@ -285,17 +282,17 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
-          res[0].emp = this.currentEmpObj;
+          res.emp = this.currentEmpObj;
           this.hrService
             .addBGTrackLog(
-              res[0].recID,
+              res.recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
               null,
               'EBasicSalariesBusiness'
             )
-            .subscribe((res) => {});
+            .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -351,12 +348,18 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
-                this.hrService.UpdateEmployeeBasicSalariesInfo((res) => {
-                  if (res) {
-                    this.view?.dataService?.update(this.itemDetail).subscribe();
-                  }
-                });
-              } else this.notify.notifyCode(result?.msgCodeError);
+                this.hrService
+                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else {
+                this.notify.notifyCode(result?.msgCodeError);
+              }
             });
         }
       });

@@ -176,9 +176,10 @@
       </div>
     </div>
   </div>
+
   <div class="row">
     <div class="col-6">
-      <div class="form-group">
+      <div class="form-group" >
         <codx-label [formModel]="form.formModel" fiedName="OccuredPlace">
         </codx-label>
 
@@ -213,7 +214,7 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="form-group">
+      <div class="form-group" *ngIf="cases.caseType == '1' ">
         <codx-label
           fiedName="OccuredOn"
           [formModel]="form.formModel"
@@ -252,9 +253,9 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="form-group">
+      <div class="form-group" *ngIf="cases.caseType == '1' ">
         <codx-label
-          fiedName="OccuredOn"
+          fiedName="DetectedOn"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -262,7 +263,7 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="occuredOn"
+          field="detectedOn"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -314,7 +315,6 @@
       <div class="form-group">
         <codx-label
           fiedName="Memo"
-          default="Mô tả chi tiết"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -336,7 +336,6 @@
       <div class="form-group">
         <codx-label
           fiedName="Solution"
-          default="Gợi ý biện pháp xử lý"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >

@@ -265,10 +265,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     );
     if (count > 0) return;
     if (!(this.listQuotationLines?.length > 0)) {
-      this.notiService.notify(
-        'Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !',
-        '3'
-      );
+      this.notiService.notifyCode("CM013");
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {

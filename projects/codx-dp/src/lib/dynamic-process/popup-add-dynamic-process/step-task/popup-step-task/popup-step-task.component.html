@@ -1,6 +1,6 @@
 <codx-form
   #form
-  [headerText]="title"
+  [customToolbar]="header"
   subHeaderText=""
   [subHeader]="subHeader"
   [body]="body"
@@ -11,8 +11,30 @@
   [openMore]="false"
 ></codx-form>
 
+<ng-template #header>
+  <div class="pt-2 px-2 w-100">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <div class="d-flex align-items-center w-100 job">
+        <span
+            class="icon-18 me-2 circle"
+            [ngClass]="typeTask?.icon"
+            [ngStyle]="{'color' : (typeTask?.color || 'gray'), 'border': '2px solid'}"
+          ></span>
+          <span class="fs-4 fw-bold">{{ typeTask?.text }}</span>
+      </div>
+      <button
+        class="button-close d-flex "
+        style="border: none; outline: none; background: none"
+        (click)="dialog.close()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #subHeader>
-  <div class="ms-4" *ngIf="taskType == 'A'">
+  <div class="ms-4" *ngIf="typeTask?.value == 'A'">
     <codx-input
       class="me-2"
       type="colorpicker"
@@ -55,11 +77,11 @@
         </div>
         <div>
           <ejs-dropdownlist
-            [dataSource]="taskGroupList"
+            [dataSource]="listGroupTask"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="changeCombobox($event, 'taskGroupID')"
-            [readonly]="taskGroupID || taskGroupList.length === 0"
+            [readonly]="taskGroupID || listGroupTask.length === 0"
           ></ejs-dropdownlist>
         </div>
       </div>
@@ -67,10 +89,10 @@
     <!-- Ten Cong Viec -->
     <div
       class="form-group d-flex justify-content-between align-item-center w-100"
-      *ngIf="taskType != 'Q'"
+      *ngIf="typeTask?.value != 'Q'"
     >
       <!-- name -->
-      <div class="step-name w-100" [ngClass]="taskType === 'P' ? 'me-4' : ''">
+      <div class="step-name w-100" [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''">
         <div>
           <codx-label
             fiedName="taskName"
@@ -90,7 +112,7 @@
       </div>
       <!--End name -->
       <!-- Cuoc goi -->
-      <div *ngIf="taskType === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
+      <div *ngIf="typeTask?.value === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
         <div>
           <codx-label
             fiedName="callType"
@@ -111,7 +133,7 @@
       <!--end Cuoc goi -->
 
       <!-- Cuoc hop -->
-      <div *ngIf="taskType === 'M'" style="flex-basis: 25%" class="">
+      <div *ngIf="typeTask?.value === 'M'" style="flex-basis: 25%" class="">
         <div class="d-flex justify-content-end">
           <codx-label
             fiedName="isOnline"
@@ -133,8 +155,8 @@
       </div>
       <!-- End cuoc hop -->
       <!-- Gui mail -->
-      <div
-        *ngIf="taskType === 'E' || taskType === 'Q'"
+      <!-- <div
+        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
         class=""
         style="flex-basis: 10%"
       >
@@ -142,13 +164,13 @@
           <codx-label></codx-label>
         </div>
         <div
-          *ngIf="taskType === 'E'"
+          *ngIf="typeTask?.value === 'E'"
           class="d-flex justify-content-end"
           style="margin-top: 2px"
         >
           <button
             class="button-mail"
-            *ngIf="taskType == 'E'"
+            *ngIf="typeTask?.value == 'E'"
             (click)="handelMail()"
           >
             <span
@@ -156,13 +178,13 @@
             ></span>
           </button>
         </div>
-      </div>
+      </div> -->
       <!-- End gui mail -->
     </div>
     <!--End ten Cong Viec -->
 
     <!-- Khảo sát -->
-    <div class="form-group" *ngIf="taskType == 'S'">
+    <div class="form-group" *ngIf="typeTask?.value == 'S'">
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label
           fiedName="Reference"
@@ -306,10 +328,27 @@
 
     <div class="form-group">
       <codx-user
-        *ngIf="taskType === 'M'"
+        *ngIf="typeTask?.value != 'M' && typeTask?.value != 'B' "
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]="'Người chủ trì'"
+        [default]="'Vai trò/bộ phận thực hiện'"
+        [dataSource]="owner"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event,'O')"
+        [vllShare]="'DP0331'"
+        [multiple]="false"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-user>
+    </div>
+
+    <div class="form-group">
+      <codx-user
+        *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="typeTask?.value === 'M'? 'Người chủ trì' : 'Người đi công tác'"
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
@@ -321,17 +360,16 @@
 
     <div class="form-group">
       <codx-user
+        *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]="
-          taskType == 'M' ? 'Người tham gia' : 'Vai trò/bộ phận thực hiện'
-        "
-        [dataSource]="taskType == 'M' ? participant : owner"
+        [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
+        [dataSource]="participant"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event)"
+        (valueList)="changeRoler($event,'P')"
         [vllShare]="'DP0331'"
-        [multiple]="taskType == 'M' ? true : false"
+        [multiple]="true"
         [listCombobox]="listCombobox"
         [type]="'all'"
       ></codx-user>

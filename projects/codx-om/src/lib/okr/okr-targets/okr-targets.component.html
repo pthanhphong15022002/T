@@ -166,7 +166,7 @@
   <!--KR node-->
   <div class="d-flex align-items-center py-2 kr-background justify-content-between okr-treenode w-100"
     (click)="clickTreeNode($event)" *ngIf="item?.okrType == krType || item?.okrType == skrType">
-    <div class="d-flex align-items-center col-6">
+    <div class="d-flex align-items-center col-5">
       <!-- <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span> -->
       <!-- <span class="okr-node border-3px rounded-circle border pe-1 "
         [ngClass]="item?.okrType==krType?'border-warning':'border-primary'"></span> -->
@@ -219,24 +219,67 @@
       </span>
     </div>
 
-    <div class="d-flex align-items-center justify-content-end col-6 ps-5">
+    <div class="d-flex align-items-center justify-content-end col-7 ps-5">
       <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText"
         [ngbTooltip]="'Kế hoạch chỉ tiêu: ' + item?.rangeDateText"></span>
-      <div class="position-relative" ngbTooltip="Người chịu trách nhiệm">
-        <!-- <span *ngIf="item?.hasAssign!=null"
-          class="position-absolute end-0 bottom-0 d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-30px h-30px me-5">
-          <span class="icon-i-building text-primary"></span>
-        </span> -->
-        <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-        <span *ngIf="item?.hasAssign != null"
-          class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
-          <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
-        </span>
+      <div class="position-relative col-3" ngbTooltip="Người chịu trách nhiệm" (click)="showOKRLink($event,item)">
+        <!-- Phân bổ-->
+
+        <div *ngIf="item?.hasAssign != null && item?.okrLink?.length>=2" class="d-flex flex-row">
+          <span class="position-relative">
+            <codx-img [width]="30" [objectId]="item?.okrLink[0]?.owner" [objectType]="'AD_Users'"></codx-img>
+            <span
+              class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
+
+              <span class="icon-16 text-primary"
+              [ngClass]="item?.okrLink[0]?.objectType =='1' ? 'icon-person' : item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='2' ? 'icon-i-building':'icon-person_pin_circle' "></span>
+          </span>
+          </span>
+          <span class="position-relative ps-2">
+            <codx-img [width]="30" [objectId]="item?.okrLink[1]?.owner" [objectType]="'AD_Users'"></codx-img>
+            <span
+              class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
+
+              <span class="icon-16 text-primary"
+              [ngClass]="item?.okrLink[0]?.objectType =='1' ? 'icon-person' : item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='2' ? 'icon-i-building':'icon-person_pin_circle' "></span>
+          </span>
+          </span>
+          <span class="ps-2" *ngIf="item?.okrLink?.length > 2">
+            <div class="symbol-group-badge ">
+              <span class="symbol symbol-30px symbol-circle">
+                <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ item?.okrLink?.length - 2
+                  }}</span>
+              </span>
+            </div>
+          </span>
+        </div>
+
+        <!-- Phân công-->
+        <div *ngIf="item?.hasAssign != null && item?.okrLink?.length==1" class="d-flex flex-row">
+          <codx-img [width]="30" [objectId]="item?.okrLink[0]?.owner" [objectType]="'AD_Users'"></codx-img>
+          <span
+            class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
+            <span class="icon-16 text-primary"
+              [ngClass]="item?.okrLink[0]?.objectType =='1' ? 'icon-person' : item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='2' ? 'icon-i-building':'icon-person_pin_circle' "></span>
+          </span>
+          <span class="ps-3 d-flex align-items-center">
+            <span *ngIf="item?.okrLink[0]?.objectType =='1'" [innerHTML]="item?.okrLink[0]?.owner | formatvalue : okrFM?.krFM : 'owner' | async"></span>
+            <span *ngIf="item?.okrLink[0]?.objectType =='3'||item?.okrLink[0]?.objectType =='2'" [innerHTML]="item?.okrLink[0]?.orgUnitName "></span>
+            <span *ngIf="item?.okrLink[0]?.objectType !='1' && item?.okrLink[0]?.objectType !='2' && item?.okrLink[0]?.objectType !='3'" [innerHTML]="item?.okrLink[0]?.positionName"></span>
+          </span>            
+        </div>
+        <!-- mặc định-->
+        <div *ngIf="item?.hasAssign == null" class="d-flex flex-row">
+          <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
+          <span class="ps-3 d-flex align-items-center"
+            [innerHTML]=" item?.owner | formatvalue : okrFM?.krFM : 'owner' | async "></span>
+        </div>
+
       </div>
       <div class="d-flex ps-9 align-items-center justify-content-center">
         <div class="d-flex flex-row align-items-center kr-process w-150px me-7 pb-2" [ngbTooltip]="'Tiến độ'"
           (click)="showHistoryCheckIn($event, item)">
-          
+
           <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
             <div class="rounded-4 h-5px" [ngClass]="
                 item?.actual >= item?.current ? 'bg-success' : 'bg-danger'
@@ -247,10 +290,11 @@
                   ? 'border-success'
                   : 'border-danger'
               ]" [style.left]="item?.progress - 2 + '%'">
-            
+
             </span>
-            <!-- <span class="icon-notifications noti-checkin text-warning position-absolute "  [style.left]="item?.progress - 3 + '%'">        
-            </span> -->
+            <span *ngIf="false" class="icon-notifications noti-checkin text-warning position-absolute "
+              [style.left]="item?.progress - 3 + '%'">
+            </span>
           </div>
           <span class="ps-4">
             <span class="mb-1" *ngIf="item?.progress != 0" [innerHTML]="
@@ -258,19 +302,19 @@
               | formatvalue : okrFM?.krFM : 'progress'
               | async) + '%'
           "></span>
-          <span class="mb-1" *ngIf="item?.progress == 0" [innerHTML]="item?.progress + '%'"></span>
+            <span class="mb-1" *ngIf="item?.progress == 0" [innerHTML]="item?.progress + '%'"></span>
           </span>
-          
+
         </div>
-        <!-- <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Lịch sử cập nhật"
-          >
+        <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Lịch sử cập nhật"
+          (click)="showCheckInHistory($event,item)">
           <span class="icon-i-clock-history text-hover-primary icon-20 text-gray-400"></span>
           <span
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
             *ngIf="item?.okrTasks != null && item?.okrTasks.length > 0"
             [ngClass]="item?.okrTasks && item?.okrTasks.length > 0 ? '' : ''">{{ item?.okrTasks ? item?.okrTasks?.length
             : 0 }}</span>
-        </div> -->
+        </div>
 
         <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
           (click)="showTasks($event, item)">

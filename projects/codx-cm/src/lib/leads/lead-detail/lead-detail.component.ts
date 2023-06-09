@@ -64,17 +64,12 @@ export class LeadDetailComponent  implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-      if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID ) {
-        this.getContactByObjectID(changes['dataSelected'].currentValue?.recID,'2');
-      }
     }
   }
 
   listTab(funcID){
     this.tabDetail = [
       { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-      { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
-      { name: 'Address', textDefault: 'Địa chỉ', icon: 'icon-location_on', isActive: false },
     ]
   }
 
@@ -96,16 +91,6 @@ export class LeadDetailComponent  implements OnInit {
   }
 
   changeFooter(e){
-    console.log(e);
-  }
-
-  getContactByObjectID(recId,objectType) {
-    var data = [recId,objectType];
-    this.codxCmService.getListContactByLeadID(data).subscribe((res) => {
-      if (res) {
-        this.contactPerson = res[0];
-      }
-    });
   }
 }
 

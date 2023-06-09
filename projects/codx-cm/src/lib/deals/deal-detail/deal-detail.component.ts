@@ -14,6 +14,7 @@ import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
 import { async } from '@angular/core/testing';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -36,7 +37,9 @@ export class DealDetailComponent implements OnInit {
   @ViewChild('contract') contract: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
 
-  listContract: CM_Contacts[];
+
+
+  // listContract: CM_Contacts[];
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -125,8 +128,8 @@ export class DealDetailComponent implements OnInit {
   async promiseAllAsync() {
     try {
     await this.getTree() ; //ve cay giao viec
-    await this.getContractByDeaID();
     await this.getContactByDeaID(this.dataSelected.recID);
+
 
     } catch (error) {}
 
@@ -209,21 +212,8 @@ export class DealDetailComponent implements OnInit {
   }
 
   changeFooter(e) {
-    console.log(e);
   }
 
- async getContractByDeaID() {
-    if (this.dataSelected?.recID) {
-      var data = [this.dataSelected?.recID];
-      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
-        if (res) {
-          this.listContract = res;
-        } else {
-          this.listContract = [];
-        }
-      });
-    }
-  }
   async getContactByDeaID(recID){
     this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
       if (res) {

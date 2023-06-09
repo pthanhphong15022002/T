@@ -69,7 +69,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   journal: IJournal;
   hasSaved: any = false;
   isSaveMaster: any = false;
-  visibleColumns: Array<any> = [];
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -193,13 +192,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.vatinvoices[e.field] = e.data;
   }
   gridCreated(e, grid) {
-    this.visibleColumns = this.gridPurchaseInvoicesLine.visibleColumns;
     this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
   }
 
   onDoubleClick(data)
   {
-    this.loadPredicate(this.visibleColumns, data.rowData);
+    this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, data.rowData);
   }
 
   expandTab() {}
@@ -406,7 +404,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               idx = this.gridPurchaseInvoicesLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridPurchaseInvoicesLine.addRow(res, idx);
-              this.loadPredicate(this.visibleColumns, res);
+              this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, res);
               break;
             case '2':
               idx = this.purchaseInvoicesLines.length;
@@ -514,7 +512,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       case '1':
         this.gridPurchaseInvoicesLine.gridRef.selectRow(Number(data.index));
         this.gridPurchaseInvoicesLine.gridRef.startEdit();
-        this.loadPredicate(this.visibleColumns, data)
+        this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, data)
         break;
       case '2':
         let index = this.purchaseInvoicesLines.findIndex(
@@ -838,6 +836,17 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
   }
 
+  checkTransLimit(){
+    if(this.journal.transLimit && this.purchaseinvoices.totalAmt > this.journal.transLimit)
+    {
+      this.notification.notifyCode('AC0016');
+      if(this.journal.transControl == '2')
+      {
+        this.validate++ ;
+      }
+    }
+  }
+
   detaiClick(e) {
     this.detailActive = e;
   }
@@ -1109,6 +1118,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
 
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -1125,12 +1135,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.dialog.dataService
               .save(null, 0, '', 'SYS006', true)
               .subscribe((res) => {
-                if (res && res.update.data != null) {
+                if (res && res.update.data != null && res.update.error != true) {
                   this.dialog.close({
                     update: true,
                     data: res.update,
                   });
                   this.dt.detectChanges();
+                }
+                if(res.update.error)
+                {
+                  this.purchaseinvoices.status = '0';
                 }
               });
           } else {
@@ -1145,10 +1159,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               this.formType === 'edit',
               () => {
                 this.dialog.dataService.save().subscribe((res) => {
-                  if (res && res.save.data != null) {
+                  if (res && res.save.data != null && res.save.error != true) {
                     this.updateVAT();
                     this.dialog.close();
                     this.dt.detectChanges();
+                  }
+                  if(res.save.error)
+                  {
+                    this.purchaseinvoices.status = '0';
                   }
                 });
               }
@@ -1190,6 +1208,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onSaveAdd(){
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -1201,7 +1220,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.purchaseinvoices
         );
         this.dialog.dataService.save().subscribe((res) => {
-          if (res && res.update.data != null) {
+          if(res.update.error)
+          {
+            this.purchaseinvoices.status = '0';
+          }
+          if (res && res.update.data != null && res.update.error != true) {
             this.clearPurchaseInvoicesLines();
             this.dialog.dataService.clear();
             this.dialog.dataService
@@ -1226,7 +1249,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.formType === 'edit',
           () => {
             this.dialog.dataService.save().subscribe((res) => {
-              if (res && res.save.data != null) {
+              if(res.save.error)
+              {
+                this.purchaseinvoices.status = '0';
+              }
+              if (res && res.save.data != null && res.save.error != true) {
                 this.clearPurchaseInvoicesLines();
                 this.dialog.dataService.clear();
                 this.dialog.dataService
