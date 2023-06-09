@@ -99,7 +99,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   param?: TM_Parameter = new TM_Parameter();
   isEdit = true;
   timeoutId: any;
-  listHistoryProgress =[];
+  listHistoryProgress = [];
   loadedHisPro = false;
 
   constructor(
@@ -130,7 +130,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       this.id = changes['taskID'].currentValue;
       this.loadedHisPro = false;
       this.getTaskDetail();
-     
     }
   }
   //#region
@@ -165,8 +164,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
-           // if(!this.loadedHisPro)
-           this.getDataHistoryProgress(this.itemSelected.recID);
+          if (!this.loadedHisPro)
+            this.getDataHistoryProgress(this.itemSelected.recID);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -633,7 +632,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   isNullOrEmpty(value: string): boolean {
     return value == null || value == undefined || !value.trim();
   }
-  getDataHistoryProgress(objectID) {  
+  getDataHistoryProgress(objectID) {
     this.api
       .execSv(
         'BG',
@@ -643,10 +642,10 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         [objectID]
       )
       .subscribe((res: any[]) => {
-        if (res && res?.length >0) {
+        if (res && res?.length > 0) {
           this.listHistoryProgress = JSON.parse(JSON.stringify(res));
-        }else  this.listHistoryProgress = [];
-        this.loadedHisPro= true
+        } else this.listHistoryProgress = [];
+        this.loadedHisPro = true;
         this.changeDetectorRef.detectChanges();
       });
   }
