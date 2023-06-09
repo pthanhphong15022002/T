@@ -639,7 +639,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         [this.itemSelected.recID]
       )
       .subscribe((res: any[]) => {
-        if (res) {
+        if (res && res?.length >0) {
           this.listHistoryProgress = JSON.parse(JSON.stringify(res));
         } else this.listHistoryProgress = [];
         this.changeDetectorRef.detectChanges();
