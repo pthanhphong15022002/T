@@ -208,7 +208,9 @@ export class PopupMergeLeadsComponent implements OnInit {
                 this.imageAvatarContact.updateFileDirectReload(res?.contactID)
               );
             } else {
-              await firstValueFrom(this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID));
+              await firstValueFrom(
+                this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
+              );
             }
             this.dialog.close([
               res,
@@ -537,10 +539,7 @@ export class PopupMergeLeadsComponent implements OnInit {
       case 'channelID':
         if (e.field === 'channelID1' && e.component.checked === true) {
           this.leadNew.channelID = this.leadOne?.channelID;
-        } else if (
-          e.field === 'channelID2' &&
-          e.component.checked === true
-        ) {
+        } else if (e.field === 'channelID2' && e.component.checked === true) {
           this.leadNew.channelID = this.leadTwo?.channelID;
         } else {
           this.leadNew.channelID = this.leadThree?.channelID;
@@ -549,16 +548,25 @@ export class PopupMergeLeadsComponent implements OnInit {
       case 'salespersonID':
         if (e.field === 'salespersonID1' && e.component.checked === true) {
           this.leadNew.salespersonID = this.leadOne?.salespersonID;
-          this.leadNew.owner = this.leadOne?.salespersonID;
         } else if (
           e.field === 'salespersonID2' &&
           e.component.checked === true
         ) {
           this.leadNew.salespersonID = this.leadTwo?.salespersonID;
-          this.leadNew.owner = this.leadTwo?.salespersonID;
         } else {
           this.leadNew.salespersonID = this.leadThree?.salespersonID;
-          this.leadNew.owner = this.leadThree?.salespersonID;
+        }
+        break;
+      case 'owner':
+        if (e.field === 'owner1' && e.component.checked === true) {
+          this.leadNew.owner = this.leadOne?.owner;
+        } else if (
+          e.field === 'owner2' &&
+          e.component.checked === true
+        ) {
+          this.leadNew.owner = this.leadTwo?.owner;
+        } else {
+          this.leadNew.owner = this.leadThree?.owner;
         }
         break;
       case 'consultantID':
@@ -599,7 +607,9 @@ export class PopupMergeLeadsComponent implements OnInit {
           e.component.checked === true
         ) {
           this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.contactID));
-          this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.contactName));
+          this.nameContact = JSON.parse(
+            JSON.stringify(this.leadTwo?.contactName)
+          );
           this.modifyOnContact = JSON.parse(
             JSON.stringify(this.leadOne?.modifiedOn)
           );

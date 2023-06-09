@@ -1485,6 +1485,88 @@
         <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
+            fiedName="Owner"
+          ></codx-label>
+        </div>
+        <div class="w-30">
+          <codx-input
+            field="owner"
+            [formModel]="dialog.formModel"
+            [crrValue]="leadNew?.owner"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadOne?.recID">
+            <div class="w-10">
+              <codx-input
+                id="owner1"
+                name="owner"
+                class="test-check"
+                type="radio"
+                field="owner1"
+                [checked]="true"
+                (valueChange)="changeRadio($event, 'owner')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadOne?.owner
+                  | formatvalue : dialog.formModel : 'Owner'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadTwo?.recID">
+            <div class="w-10">
+              <codx-input
+                id="owner2"
+                name="owner"
+                class="test-check"
+                type="radio"
+                field="owner2"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'owner')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadTwo?.owner
+                  | formatvalue : dialog.formModel : 'Owner'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div class="w-20">
+          <div class="d-flex" *ngIf="leadThree?.recID">
+            <div class="w-10">
+              <codx-input
+                id="owner3"
+                name="owner"
+                class="test-check"
+                type="radio"
+                field="owner3"
+                [checked]="false"
+                (valueChange)="changeRadio($event, 'owner')"
+              ></codx-input>
+            </div>
+            <div
+              [innerHTML]="
+                leadThree?.owner
+                  | formatvalue : dialog.formModel : 'Owner'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 row form-group">
+        <div class="w-10">
+          <codx-label
+            [formModel]="dialog.formModel"
             fiedName="SalespersonID"
           ></codx-label>
         </div>
