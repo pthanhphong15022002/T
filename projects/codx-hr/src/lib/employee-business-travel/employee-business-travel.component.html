@@ -75,7 +75,7 @@
 
       <div class="d-flex flex-row">
         <span class="icon-calendar_today icon-15 me-1"></span>
-        <div class="align-self-center fw-bold">
+        <div class="align-items-center d-flex fw-bold">
           <span
             [ngbTooltip]="grvSetup?.BeginDate?.headerText"
             [innerHTML]="
@@ -85,7 +85,7 @@
             "
           >
           </span>
-          <span *ngIf="data.beginDate !== data.endDate"> - </span>
+          <span *ngIf="data.beginDate !== data.endDate" class="mx-2"> - </span>
           <span
             *ngIf="data.beginDate !== data.endDate"
             [ngbTooltip]="grvSetup?.EndDate?.headerText"
@@ -95,10 +95,12 @@
           >
           </span>
           <span
+            *ngIf="data.days"
             class="icon-i-info-circle-fill icon-6 mx-2 text-gray-400"
           ></span>
           <span
-            class="align-self-center fw-bold"
+            *ngIf="data.days"
+            class="align-self-center me-2 fw-bold"
             [ngbTooltip]="grvSetup?.Days?.headerText"
             [innerHTML]="
               data.days | formatvalue : view.formModel : 'days' | async
@@ -282,7 +284,7 @@
         <span [ngbTooltip]="grvSetup?.BeginDate?.headerText">
           {{ data.beginDate | fmDT }}
         </span>
-        <span *ngIf="data.beginDate !== data.endDate"> - </span>
+        <span *ngIf="data.beginDate !== data.endDate" class="mx-2"> - </span>
         <span
           *ngIf="data.beginDate !== data.endDate"
           [ngbTooltip]="grvSetup?.EndDate?.headerText"
@@ -290,8 +292,12 @@
           {{ data.endDate | fmDT }}
         </span>
 
-        <span class="icon-i-info-circle-fill icon-6 mx-2 text-gray-400"></span>
         <span
+          *ngIf="data.days"
+          class="icon-i-info-circle-fill icon-6 mx-2 text-gray-400"
+        ></span>
+        <span
+          *ngIf="data.days"
           class="align-self-center fw-bold me-1"
           [ngbTooltip]="grvSetup?.Days?.headerText"
           [innerHTML]="
