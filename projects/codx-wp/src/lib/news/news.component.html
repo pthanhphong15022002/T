@@ -203,7 +203,7 @@
   <ng-template #tmpData>
     <div (click)="clickViewDetail(item)" class="row my-4 post">
       <div class="col-2">
-        <codx-img [width]="180" 
+        <codx-img [width]="150" 
           [isDefaulImg]="true" 
           [cssClass]="'image-150 w-100'" 
           imageType="square" 
@@ -214,7 +214,7 @@
       <div class="col-10 d-flex flex-wrap">
         <div>
           <span class="d-block news-title fs-5 mt-2 fw-bolder ">{{item.subject}}</span>
-          <span class="d-block text-gray-700 mt-1">
+          <span class="d-block text-gray-700 mt-1" *ngIf="item.subContent">
             {{item.subContent | maxlenght:500}}
           </span>
         </div>

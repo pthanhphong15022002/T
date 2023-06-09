@@ -53,7 +53,7 @@
             [referType]="'avt'"
             [width]="90"
             [funcId]="funcID"
-            [objectId]="lead?.recID"
+            [objectId]="leadId"
             [objectType]="form.formModel.entityName"
             [objectName]="lead?.leadName"
             [isAllowEdit]="true"
@@ -215,7 +215,7 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="businessLineID"
+          fiedName="BusinessLineID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -431,7 +431,7 @@
               [referType]="'avt'"
               [width]="90"
               [funcId]="funcID"
-              [objectId]="lead?.contactID"
+              [objectId]="contactId"
               [objectType]="form.formModel.entityName"
               [objectName]="lead?.contactName"
               [isAllowEdit]="true"

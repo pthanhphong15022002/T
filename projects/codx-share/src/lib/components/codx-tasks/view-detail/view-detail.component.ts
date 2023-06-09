@@ -63,43 +63,44 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       name: 'History',
       textDefault: 'Lịch sử',
       isActive: true,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'Attachment',
       textDefault: 'Đính kèm',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'Comment',
       textDefault: 'Bình luận',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'AssignTo',
       textDefault: 'Giao việc',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
     {
       name: 'References',
       textDefault: 'Nguồn công việc',
       isActive: false,
-      template: null,
       icon: '',
+      template: null,
     },
   ];
   loadParam = false;
   param?: TM_Parameter = new TM_Parameter();
   isEdit = true;
   timeoutId: any;
-  listHistoryProgress :any;
+  listHistoryProgress = [];
+  loadedHisPro = false;
 
   constructor(
     private api: ApiHttpService,
@@ -118,8 +119,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       name: 'Progess',
       textDefault: 'Cập nhật tiến độ',
       isActive: false,
+      icon: "icon-i-hourglass-split",
       template: this.templetHistoryProgress,
-      icon: 'icon-i-hourglass-split',
     });
   }
 
@@ -127,8 +128,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     if (changes['taskID']) {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
+      this.loadedHisPro = false;
       this.getTaskDetail();
-      this.getDataHistoryProgress();
     }
   }
   //#region
@@ -163,6 +164,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
+          if (!this.loadedHisPro)
+            this.getDataHistoryProgress(this.itemSelected.recID);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -629,20 +632,21 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   isNullOrEmpty(value: string): boolean {
     return value == null || value == undefined || !value.trim();
   }
-  getDataHistoryProgress() {
+  getDataHistoryProgress(objectID) {
     this.api
       .execSv(
         'BG',
         'ERM.Business.BG',
         'TrackLogsBusiness',
         'GetDataHistoryProgressAsync',
-        [this.itemSelected.recID]
+        [objectID]
       )
       .subscribe((res: any[]) => {
-        if (res) {
+        if (res && res?.length > 0) {
           this.listHistoryProgress = JSON.parse(JSON.stringify(res));
-          this.changeDetectorRef.detectChanges();
-        }
+        } else this.listHistoryProgress = [];
+        this.loadedHisPro = true;
+        this.changeDetectorRef.detectChanges();
       });
   }
 }

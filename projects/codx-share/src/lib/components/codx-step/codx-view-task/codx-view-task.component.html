@@ -313,12 +313,12 @@
 
 <ng-template #showOwner>
   <!-- Chủ quy trình -->
-  <div class="d-flex align-items-center" *ngIf="type == 'M'">
+  <div class="d-flex align-items-center" *ngIf="type == 'M' || type == 'B'">
     <codx-label
       class="fs-5 me-4"
       fiedName="roles"
       [formModel]="frmModel"
-      [default]="'Người phụ trách/chủ trì:'"
+      [default]="type == 'M' ? 'Người phụ trách/chủ trì:' : 'Người đi công tác:'"
       style="font-weight: 500"
     >
     </codx-label>
@@ -331,7 +331,7 @@
     </div>
   </div>
 
-  <div class="d-flex align-items-center" *ngIf="type != 'M'">
+  <div class="d-flex align-items-center" *ngIf="type != 'M' && type != 'B'">
     <codx-label
       class="fs-5 font-weight-normal me-4"
       fiedName="roles"
@@ -349,12 +349,12 @@
   </div>
 
   <!-- Người tham gia -->
-  <div class="d-flex mt-4" *ngIf="type == 'M'">
+  <div class="d-flex mt-4" *ngIf="type == 'M' || type == 'B'">
     <codx-label
       class="fs-5 font-weight-normal me-4"
       fiedName="roles"
       [formModel]="frmModel"
-      default="Người tham gia:"
+      [default]="type == 'M' ? 'Người tham gia:' : 'Người đi cùng:'"
       style="min-width: 160px; font-weight: 500"
     >
     </codx-label>

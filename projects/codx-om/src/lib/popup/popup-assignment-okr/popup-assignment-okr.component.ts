@@ -242,7 +242,7 @@ export class PopupAssignmentOKRComponent
     }
   }
   assignTo(owner:any){
-    this.assignmentOKR.userID = owner?.domainUser;
+    this.assignmentOKR.owner = owner?.domainUser;
     this.assignmentOKR.employeeID = owner?.employeeID;
     this.assignmentOKR.orgUnitID = owner?.orgUnitID;
     this.assignmentOKR.departmentID = owner?.departmentID;
@@ -263,7 +263,7 @@ export class PopupAssignmentOKRComponent
   //---------------------------------------------------------------------------------//
 
   onSaveForm() {
-    if (this.assignmentOKR.orgUnitID == null) {
+    if (this.assignmentOKR.objectID == null) {
       this.notificationsService.notify('Đối tượng phân công không được bỏ trống', '2', null);
       return;
     }

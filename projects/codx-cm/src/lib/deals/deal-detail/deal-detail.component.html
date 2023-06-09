@@ -310,7 +310,7 @@
               </div>
             </div>
 
-            <div class="view-details-header bg-body scroll-y me-3 h-100">
+            <!-- <div class="view-details-header bg-body scroll-y me-3 h-100">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex tab-header">
                   <codx-taskbar
@@ -322,7 +322,7 @@
                   ></codx-taskbar>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -330,12 +330,24 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <codx-tab-deal-detail
-    [tabClicked]="tabClicked"
-    [dataSelected]="dataSelected"
-    [formModel]="formModel"
-    (saveAssign)="saveAssign($event)"
-  ></codx-tab-deal-detail>
+  <div class="d-flex flex-column" >
+    <codx-taskbar
+    [listTab]="tabDetail"
+    [change]="dataSelected"
+    (tab)="changeTab($event)"
+    size="18"
+    class="mb-3"
+  ></codx-taskbar>
+
+      <codx-tab-deal-detail
+      [tabClicked]="tabClicked"
+      [dataSelected]="dataSelected"
+      [formModel]="formModel"
+      (saveAssign)="saveAssign($event)"
+    ></codx-tab-deal-detail>
+
+  </div>
+
 </ng-template>
 <ng-template #tabs let-data>
   <codx-tabs
@@ -358,11 +370,11 @@
   ></codx-tabs>
 </ng-template>
 
-<ng-template #contract let-data>
+<!-- <ng-template #contract let-data>
   <list-contracts
     [dealID]="dataSelected?.recID"
     [listContract]="listContract"
     [type]="'deal'"
   ></list-contracts>
-</ng-template>
+</ng-template> -->
 <ng-template #defaultNull> <p>0</p></ng-template>
