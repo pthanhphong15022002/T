@@ -1,5 +1,5 @@
 import { E } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, Output, EventEmitter, ApplicationRef, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, Output, EventEmitter, ApplicationRef, TemplateRef, EmbeddedViewRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -65,6 +65,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   @ViewChild("codxViewFile") codxViewFile:AttachmentComponent;
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
   @ViewChild("templateVotes") popupVoted:TemplateRef<any>;
+  @ViewChild("mssgType5") mssgType5:TemplateRef<any>;
+
   constructor
   (
     private api:ApiHttpService,
@@ -600,9 +602,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   closePopupVote(dialog:any){
     dialog?.close();
   }
-
   //
   clickViewMember(data:any){
+    debugger
   }
 }
 
