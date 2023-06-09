@@ -225,7 +225,7 @@ export class PopupMergeLeadsComponent implements OnInit {
               );
             } else {
               await firstValueFrom(
-                this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
+                this.cmSv.copyFileAvata(this.recIDAvt, res?.contactID)
               );
             }
             this.dialog.close([
@@ -571,16 +571,16 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.consultantID = this.leadThree?.consultantID;
         }
         break;
-      case 'businesslineID':
-        if (e.field === 'businesslineID1' && e.component.checked === true) {
-          this.leadNew.businesslineID = this.leadOne?.businesslineID;
+      case 'businessLineID':
+        if (e.field === 'businessLineID1' && e.component.checked === true) {
+          this.leadNew.businessLineID = this.leadOne?.businessLineID;
         } else if (
-          e.field === 'businesslineID2' &&
+          e.field === 'businessLineID2' &&
           e.component.checked === true
         ) {
-          this.leadNew.businesslineID = this.leadTwo?.businesslineID;
+          this.leadNew.businessLineID = this.leadTwo?.businessLineID;
         } else {
-          this.leadNew.businesslineID = this.leadThree?.businesslineID;
+          this.leadNew.businessLineID = this.leadThree?.businessLineID;
         }
         break;
       case 'avataContact':
@@ -596,15 +596,15 @@ export class PopupMergeLeadsComponent implements OnInit {
           e.field === 'avataContact2' &&
           e.component.checked === true
         ) {
-          this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.recID));
-          this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.leadName));
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.contactID));
+          this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.contactName));
           this.modifyOnContact = JSON.parse(
             JSON.stringify(this.leadOne?.modifiedOn)
           );
         } else {
-          this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.recID));
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.contactID));
           this.nameContact = JSON.parse(
-            JSON.stringify(this.leadThree?.leadName)
+            JSON.stringify(this.leadThree?.contactName)
           );
           this.modifyOnContact = JSON.parse(
             JSON.stringify(this.leadOne?.modifiedOn)

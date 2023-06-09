@@ -81,6 +81,7 @@ const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
+        data: {noReuse: true}
       },
       {
         path: 'deals/:funcID',
