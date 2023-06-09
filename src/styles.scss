@@ -164,6 +164,15 @@ codx-view-list-detail {
 .w-60 {
   width: 60%;
 }
+.symbol.symbol-80px{
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  img{
+    width: auto;
+    height: 80px;
+  }
+}
 
 input.e-input,
 textarea.e-input,
