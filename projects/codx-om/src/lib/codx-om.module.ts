@@ -39,12 +39,22 @@ import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view
 import { PopupAddVersionComponent } from './popup/popup-add-version/popup-add-version.component';
 import { PopupViewOKRLinkComponent } from './popup/popup-view-okr-link/popup-view-okr-link.component';
 import { PopupCheckInHistoryComponent } from './popup/popup-check-in-history/popup-check-in-history.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
       {
         path: 'okr/:funcID',
         component: OKRComponent,

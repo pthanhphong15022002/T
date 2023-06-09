@@ -201,8 +201,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
     this.isUpdateProgressStep =
-      this.currentStep?.progressTaskGroupControl || false;
+    this.currentStep?.progressTaskGroupControl || false;
     this.isEditTimeDefault = this.currentStep?.leadtimeControl || false;
+    this.isOnlyView = this.currentStep?.stepStatus == '1';
 
     const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
       const { taskGroupID } = product;
@@ -473,19 +474,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP20': // tiến độ
-            if (!((this.isRoleAll ) && this.isOnlyView)) {
+            if (!(this.isRoleAll  && this.isOnlyView && this.isUpdateProgressStep)) {
               res.isblur = true;
             }
+            res.isbookmark = true;
             break;
           case 'DP08': // Thêm nhóm công việc
-            if (!((this.isRoleAll ) && this.isOnlyView)) {
+            if (!(this.isRoleAll && this.isOnlyView)) {
               res.isblur = true;
             }
+            res.isbookmark = true;
             break;
-          case 'DP25': // Chi tiết giai đoạn
-            if (!((this.isRoleAll ) && this.isOnlyView)) {
-              res.isblur = true;
-            }
+          case 'DP26': // Chi tiết giai đoạn
+            // if (!((this.isRoleAll ) && this.isOnlyView)) {
+            //   res.isblur = true;
+            // }
+            res.isbookmark = true;
             break;
         }
       });
@@ -498,9 +502,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.chooseTypeTask();
         break;
       case 'DP20': // tien do
-        this.openPopupUpdateProgress(step, 'P');
+        this.openPopupUpdateProgress(this.currentStep, 'P')
         break;
-      case 'DP07': // view
+      case 'DP26': // view
         this.viewTask(step, 'P');
         break;
     }
@@ -520,7 +524,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         // this.addTask(groupTask);
         break;
       case 'DP07': // view
-        this.viewTask(task, 'T');
+        this.viewTask(task, task?.taskType || 'T');
         break;
       case 'DP13': //giao viec
         this.assignTask(e.data, task);
