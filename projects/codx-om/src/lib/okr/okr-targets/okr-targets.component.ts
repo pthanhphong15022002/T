@@ -33,6 +33,8 @@ import { PopupCheckInComponent } from '../../popup/popup-check-in/popup-check-in
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { PopupViewOKRLinkComponent } from '../../popup/popup-view-okr-link/popup-view-okr-link.component';
+import { PopupCheckInHistoryComponent } from '../../popup/popup-check-in-history/popup-check-in-history.component';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -1213,7 +1215,42 @@ export class OkrTargetsComponent implements OnInit {
       }
     });
   }
-
+  showOKRLink(evt:any,data:any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    let height =400;
+    if(data?.hasAssign==null){
+      return;
+    }
+    if(data?.hasAssign?.toString()?.includes('AS')){
+      height=200;
+    }
+    if (data != null) {
+      let dialogShowLink = this.callfunc.openForm(
+        PopupViewOKRLinkComponent,
+        '',
+        600,
+        height,
+        null,
+        [data,this.okrGrv,this.okrFM]
+      );
+    }
+  }
+  showCheckInHistory(evt:any,data:any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    
+    if (data != null) {
+      let dialogShowHistoryCheckIn = this.callfunc.openForm(
+        PopupCheckInHistoryComponent,
+        '',
+        800,
+        850,
+        null,
+        [data,this.okrGrv,this.okrFM,this.groupModel]
+      );
+    }
+  }
   showTasks(evt: any, data: any) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -1242,6 +1279,11 @@ export class OkrTargetsComponent implements OnInit {
         600,
         null
       );
+      dialogShowCheckInHistory.closed.subscribe((res) => {
+        if (res?.event) {
+          this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
+        }
+      });
     }
   }
 }
