@@ -208,7 +208,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe();
+        this.view.dataService.update(res.event).subscribe();
         this.df.detectChanges();
       }
     });
@@ -282,17 +282,17 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
-          res[0].emp = this.currentEmpObj;
+          res.emp = this.currentEmpObj;
           this.hrService
             .addBGTrackLog(
-              res[0].recID,
+              res.recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
               null,
               'EBasicSalariesBusiness'
             )
-            .subscribe((res) => {});
+            .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
