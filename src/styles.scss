@@ -2109,6 +2109,7 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
     border-radius: 50% !important;
   }
 }
+
 .input-border-0 .e-input-group {
   border: 0 !important;
   background-color: transparent;
@@ -2577,6 +2578,13 @@ codx-view-list-detail .codx-detail-main .task-name + .text-gray-700 {
 .input-sm codx-input {
   height: 26px !important;
 }
+// .input-lg codx-input {
+//   input.e-input {
+//     height: 38px !important;
+//     line-height: 38px;
+//     font-size: 16px!important;
+//   }
+// }
 codx-toolbar {
   .btn.btn-outline-default {
     border-color: var(--gray-150);
