@@ -232,13 +232,13 @@ async saveFileContact(contactID){
 }
 
 beforeSave(option: RequestOption) {
-  if(this.action !== this.actionEdit) {
-    var data = [this.lead, this.lstContact, this.formModel.funcID, this.formModel.entityName];
-  }
-  else {
-     var data = [this.lead, this.lstContact,this.lstContactDeletes,this.formModel.entityName];
-  }
+  // if(this.action !== this.actionEdit) {
+  //   var data = [this.lead, this.lstContact, this.formModel.funcID, this.formModel.entityName];
+  // }
+  // else {
 
+  // }
+  var data = [this.lead];
   option.methodName = this.action !== this.actionEdit ? 'AddLeadAsync' : 'EditLeadAsync';
   option.className = 'LeadsBusiness';
   option.data = data;
