@@ -18,8 +18,8 @@ implements OnInit, AfterViewInit
 @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
 @ViewChild('tabGeneralSystemDetail') tabGeneralSystemDetail: TemplateRef<any>;
 @ViewChild('tabGeneralContactDetail') tabGeneralContactDetail: TemplateRef<any>;
-@ViewChild('imageUpload') imageUploadLead: ImageViewerComponent;
-@ViewChild('imageUpload') imageUploadContact: ImageViewerComponent;
+@ViewChild('imageUploadLead') imageUploadLead: ImageViewerComponent;
+@ViewChild('imageUploadContact') imageUploadContact: ImageViewerComponent;
 // setting values in system
 dialog: DialogRef;
 //type any
@@ -138,16 +138,12 @@ saveLead() {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
-      '"' + this.gridViewSetup['DealName']?.headerText + '"'
+      '"' + this.gridViewSetup['LeadName']?.headerText + '"'
     );
     return;
   }
-  if(this.action !== this.actionEdit) {
-    this.onAdd();
-  }
-  else {
-    this.onEdit();
-  }
+  this.promiseSaveFile();
+
 
 
 }
@@ -167,29 +163,11 @@ onAdd() {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res?.save[0] && res?.save) {
-         this.dialog.close(res.save[0]);
-          // if(this.changeAvatarLead){
-          //   this.imageUploadLead
-          //   .updateFileDirectReload(res.save[0].recID)
-          //   .subscribe((result) => {
-          //     if (result) {
-
-          //         if(this.changeAvatarContact) {
-          //         this.imageUploadContact
-          //         .updateFileDirectReload(res.save[0].contactID)
-          //         .subscribe((result) => {
-          //           if (result) {
-          //             this.dialog.close(res.save[0]);
-          //           }
-          //         });
-          //       }
-          //       else {
-          //         this.dialog.close(res.save[0]);
-          //       }
-          //     }
-          //   });
-          // }
-        }
+          (this.dialog.dataService as CRUDService)
+          .update(res.update[0])
+          .subscribe();
+          this.dialog.close(res.save[0]);
+         }
       });
 
 }
@@ -197,29 +175,49 @@ onEdit() {
     this.dialog.dataService
     .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {
-      if (res.update[0] && res.update) {
+      if (res?.update[0] && res?.update) {
         (this.dialog.dataService as CRUDService)
         .update(res.update[0])
         .subscribe();
         this.dialog.close(res.update[0]);
       }
+
+
     });
 }
 
-async promiseSaveFile(leadID, contactID) {
+async promiseSaveFile() {
   try {
-    if(this.changeAvatarContact) {
-      await this.saveFileContact(contactID);
+    if(this.avatarChangeLead){
+      await  this.saveFileLead(this.lead.recID)
     }
-    if(this.changeAvatarLead){
-      await  this.saveFileLead(leadID)
+    if(this.avatarChangeContact) {
+      await this.saveFileContact(this.lead.contactID);
     }
-  } catch (error) {
+    if(this.action !== this.actionEdit) {
+      this.onAdd();
+    }
+    else {
+      this.onEdit();
+    }
 
+  } catch (error) {
+    if(this.action !== this.actionEdit) {
+      this.onAdd();
+    }
+    else {
+      this.onEdit();
+    }
   }
 }
 async saveFileLead(leadID) {
+  this.imageUploadLead
+  .updateFileDirectReload(leadID)
+  .subscribe((result) => {
+    if (result) {
 
+    }
+  });
 }
 async saveFileContact(contactID){
   this.imageUploadContact

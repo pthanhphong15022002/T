@@ -932,3 +932,13 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #templetHistoryProgress>
+  <div class="container envelop" *ngIf="listHistoryProgress?.length>0">
+    <ng-container *ngFor="let item of listHistoryProgress">
+      <div class="mb-2 pb-2 border-bottom">
+        <codx-history-item [data]="item" [funcID]="formModel?.funcID" [formModel]="formModel"></codx-history-item>
+    </div>
+    </ng-container>
+</div>
+</ng-template>
