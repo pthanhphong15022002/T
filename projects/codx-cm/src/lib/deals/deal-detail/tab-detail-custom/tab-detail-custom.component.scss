@@ -26,3 +26,10 @@
     height: unset;
 }
 }
+
+.main-right{
+  // flex: 1;
+  height: 50vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

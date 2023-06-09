@@ -68,7 +68,6 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       return;
     }
-    debugger
 
     let ddd = new Date();
     if(this.data.pitIssuedOn > ddd.toISOString()){
@@ -83,7 +82,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
 
 
     this.hrService
-      .saveEmployeeSelfInfo(this.data)
+      .saveEmployeeAssureTaxBankInfo(this.data)
       .subscribe((p) => {
         if (p != null) {
           this.notify.notifyCode('SYS007');

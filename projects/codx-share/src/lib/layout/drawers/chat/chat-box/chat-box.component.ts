@@ -10,6 +10,7 @@ import { MessageSystemPipe } from './mssgSystem.pipe';
 import { WP_Messages, tmpMessage } from '../models/WP_Messages.model';
 import moment from 'moment';
 import { Permission } from '@shared/models/file.model';
+import { map } from 'rxjs';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
@@ -66,6 +67,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
   @ViewChild("templateVotes") popupVoted:TemplateRef<any>;
   @ViewChild("mssgType5") mssgType5:TemplateRef<any>;
+  @ViewChild("tmpViewMember") tmpViewMember:TemplateRef<any>;
+
 
   constructor
   (
@@ -602,8 +605,23 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   closePopupVote(dialog:any){
     dialog?.close();
   }
+  memberSelected:any = null;
   //
   clickViewMember(data:any){
+    debugger
+    let dialogModel = new DialogModel();
+    dialogModel.FormModel = this.formModel;
+    this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","GetEmpByUserIDAsync",[data.UserID])
+    .subscribe((member:any) => {
+      debugger
+      this.callFC.openForm(this.tmpViewMember,"Thông tin người dùng",300,350,"",member,"",dialogModel);
+    });
+  }
+  //
+  closePoppViewMember(dialog:DialogRef){
+    dialog?.close();
+  }
+  click(dialog,member){
     debugger
   }
 }
