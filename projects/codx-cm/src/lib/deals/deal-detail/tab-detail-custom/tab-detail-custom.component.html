@@ -52,19 +52,6 @@
       (continueStep)="continueStep($event,step)"
       (saveAssign)="saveAssignTask($event)"
     ></codx-step-task>
-    <!-- <codx-step-task
-      [dataSources]="step"
-      [isShowMore]="true"
-      [isDeepCopy]="false"
-      [isShowButton]="true"
-      [isStart]="isStart"
-      [isClose]="isClosed"
-      [isRoleAll]="isRoleAll"
-      [isOnlyView]="isOnlyView"
-      (saveAssign)="saveAssignStepTask($event)"
-      (continueStep)="continueStep($event)"
-      (isChangeProgress)="changeProgressStep($event)"
-  ></codx-step-task> -->
     <hr class="m-0 p-0" />
   </div>
 </ng-template>
@@ -386,8 +373,11 @@
 </codx-no-data>
 </ng-template>
 
-<ng-template #contract>
-<codx-no-data>
-
-</codx-no-data>
+<ng-template #contract let-data>
+  <list-contracts
+    [dealID]="dataSelected?.recID"
+    [listContract]="listContract"
+    [type]="'deal'"
+  ></list-contracts>
 </ng-template>
+

@@ -96,6 +96,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   async ngOnInit() {
     this.leadNew.recID = Util.uid();
     this.leadNew.contactID = Util.uid();
+    this.leadTwo.recID = null;
+    this.leadThree.recID = null;
     this.recIDLead = this.leadOne?.recID;
     this.recIDAvt = this.leadOne?.contactID;
     this.nameContact = this.leadOne.contactName;
@@ -206,7 +208,7 @@ export class PopupMergeLeadsComponent implements OnInit {
                 this.imageAvatarContact.updateFileDirectReload(res?.contactID)
               );
             } else {
-              this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID);
+              await firstValueFrom(this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID));
             }
             this.dialog.close([
               res,
@@ -225,7 +227,7 @@ export class PopupMergeLeadsComponent implements OnInit {
               );
             } else {
               await firstValueFrom(
-                this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
+                this.cmSv.copyFileAvata(this.recIDAvt, res?.contactID)
               );
             }
             this.dialog.close([
@@ -596,15 +598,15 @@ export class PopupMergeLeadsComponent implements OnInit {
           e.field === 'avataContact2' &&
           e.component.checked === true
         ) {
-          this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.recID));
-          this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.leadName));
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.contactID));
+          this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.contactName));
           this.modifyOnContact = JSON.parse(
             JSON.stringify(this.leadOne?.modifiedOn)
           );
         } else {
-          this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.recID));
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.contactID));
           this.nameContact = JSON.parse(
-            JSON.stringify(this.leadThree?.leadName)
+            JSON.stringify(this.leadThree?.contactName)
           );
           this.modifyOnContact = JSON.parse(
             JSON.stringify(this.leadOne?.modifiedOn)

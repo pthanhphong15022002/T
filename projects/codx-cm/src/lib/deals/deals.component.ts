@@ -924,17 +924,17 @@ export class DealsComponent
 
   //#region CRUD
   add() {
-    switch (this.funcID) {
-      case 'CM0201': {
+    // switch (this.funcID) {
+    //   case 'CM0201': {
         //statements;
         this.addDeal();
-        break;
-      }
-      default: {
-        //statements;
-        break;
-      }
-    }
+    //     break;
+    //   }
+    //   default: {
+    //     //statements;
+    //     break;
+    //   }
+    // }
   }
 
   addDeal() {
