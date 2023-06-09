@@ -408,6 +408,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             oldOB.current = newOB?.current;
             oldOB.weight = newOB?.weight;
             oldOB.progress = newOB?.progress;
+            oldOB.hasAssign = newOB?.hasAssign;
             oldOB.modifiedOn = new Date();
             if(newOB?.items!=null && newOB?.items?.length>0){
               //update KR
@@ -421,6 +422,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   oldKR.current = newKR?.current;
                   oldKR.weight = newKR?.weight;
                   oldKR.progress = newKR?.progress;
+                  oldKR.targets = newKR?.targets;
+                  oldKR.checkIns = newKR?.checkIns;
+                  oldKR.hasAssign = newKR?.hasAssign;
+                  oldKR.okrLink = newKR?.okrLink;
+                  oldKR.personIncharge = newKR?.personIncharge;
                   oldKR.modifiedOn = new Date();
                   if(newKR?.items!=null && newKR?.items?.length>0){
                     //update SKR
@@ -434,6 +440,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                         oldSKR.current = newSKR?.current;
                         oldSKR.weight = newSKR?.weight;
                         oldSKR.progress = newSKR?.progress;  
+                        oldSKR.targets = newSKR?.targets;
+                        oldSKR.checkIns = newSKR?.checkIns;
+                        oldSKR.hasAssign = newSKR?.hasAssign;
+                        oldSKR.okrLink = newSKR?.okrLink;
+                        oldSKR.personIncharge = newSKR?.personIncharge;
                         oldSKR.modifiedOn = new Date();    
                       }
                       else{

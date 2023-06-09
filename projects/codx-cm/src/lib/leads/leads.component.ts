@@ -365,7 +365,6 @@ export class LeadsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.view.dataService.clear();
         e.event.modifiedOn = new Date();
         this.view.dataService.update(e.event).subscribe();
         this.changeDetectorRef.detectChanges();

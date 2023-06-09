@@ -222,14 +222,6 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave(type) {
-    if (this.contactType == null || this.contactType.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ContactType'].headerText + '"'
-      );
-      return;
-    }
     if (this.data.firstName == null || this.data.firstName.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
