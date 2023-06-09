@@ -65,7 +65,7 @@ export class CodxClearCacheComponent implements OnInit {
       .pipe()
       .subscribe((data) => {
         if (data) {
-          if (!data.isError) this.notifyService.notifyCode('SYS017');
+          if (!data.error) this.notifyService.notifyCode('SYS017');
           else this.notifyService.notify(data.error);
         }
         this.dialog.close();
