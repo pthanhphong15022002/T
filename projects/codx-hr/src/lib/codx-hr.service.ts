@@ -98,6 +98,8 @@ export class CodxHrService {
     // );
   }
 
+
+
   loadPosInfo(positionID: string): Observable<any> {
     return this.api
       .call(
@@ -561,6 +563,7 @@ export class CodxHrService {
       data
     );
   }
+
 
   loadDataEDisciplines(data){
     return this.api.execSv<any>(
@@ -1318,7 +1321,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EBasicSalariesBusiness',
-      'GetCurrentBasicSalariesByEmployeeIDAsync',
+      'GetEmpCurrentSalariesAsync',
       [empID]
     );
   }

@@ -97,6 +97,7 @@ export class PopupEBasicSalariesComponent
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
+          debugger
           this.initForm();
         }
       });
