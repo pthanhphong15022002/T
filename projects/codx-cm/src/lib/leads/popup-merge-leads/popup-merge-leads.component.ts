@@ -96,6 +96,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   async ngOnInit() {
     this.leadNew.recID = Util.uid();
     this.leadNew.contactID = Util.uid();
+    this.leadTwo.recID = null;
+    this.leadThree.recID = null;
     this.recIDLead = this.leadOne?.recID;
     this.recIDAvt = this.leadOne?.contactID;
     this.nameContact = this.leadOne.contactName;
