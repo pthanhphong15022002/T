@@ -8,7 +8,6 @@ import {
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
-  AuthService,
   ButtonModel,
   DialogRef,
   NotificationsService,
@@ -47,7 +46,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
   cmtStatus: string = '';
   currentEmpObj: any = null;
   dialogEditStatus: any;
-  eDisciplineGrvSetup: any;
   grvSetup: any;
 
   //#region eDisciplineFuncID
@@ -65,24 +63,27 @@ export class EmployeeDisciplineComponent extends UIComponent {
     private hrService: CodxHrService,
     private activedRouter: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService,
-    private auth: AuthService
+    private notify: NotificationsService
   ) {
     super(inject);
   }
 
-  onInit(): void {
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
-    this.cache
-      .gridViewSetup('EDisciplines', 'grvEDisciplines')
-      .subscribe((res) => {
-        this.grvSetup = res;
-      });
+  GetGvSetup() {
+    let funID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
+    });
   }
 
-  clickEvent(event, data) {
+  onInit(): void {
+    this.GetGvSetup();
+  }
+
+  clickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
 
@@ -100,7 +101,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.itemTemplateListDetail,
           panelRightRef: this.panelRightListDetail,
@@ -121,16 +122,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
         )
         .then((res) => {
           this.formGroup = res;
-        });
-    }
-    if (!this.eDisciplineGrvSetup) {
-      this.cache
-        .gridViewSetup(
-          this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
-        )
-        .subscribe((res) => {
-          this.eDisciplineGrvSetup = res?.Status;
         });
     }
   }
@@ -164,9 +155,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
               null,
               'EDisciplinesBusiness'
             )
-            .subscribe((res) => {
-              console.log('kq luu track log', res);
-            });
+            .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -193,14 +182,12 @@ export class EmployeeDisciplineComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
     });
@@ -234,8 +221,8 @@ export class EmployeeDisciplineComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event).subscribe((res) => {});
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
 
@@ -272,24 +259,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-        this.view.dataService.delete([data]).subscribe((res) => {
-          if (res) {
-            // debugger
-            // this.view.dataService.remove(data).subscribe((res) => {
-            //   console.log('res sau khi remove', res);
-            // });
-            // this.df.detectChanges();
-          }
-        });
-        // this.hrService.deleteEContract(data.contract).subscribe((p) => {
-        //   if (p) {
-        //     this.notify.notifyCode('SYS008');
-        //     this.view.dataService.delete(data).subscribe((res) => {});
-        //     this.df.detectChanges();
-        //   } else {
-        //     this.notify.notifyCode('SYS022');
-        //   }
-        // });
+        this.view.dataService.delete([data]).subscribe();
         break;
       case 'SYS04': //copy
         this.currentEmpObj = data.emp;
@@ -339,7 +309,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
               '<div> Kỷ luật - ' + this.itemDetail.decisionNo + '</div>'
             )
             .subscribe((result) => {
-              // console.log('ok', result);
+              console.log('ok', result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -348,7 +318,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
                   .UpdateEmployeeDisciplineInfo(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
-                      // console.log('after release', res);
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();

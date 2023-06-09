@@ -77,20 +77,16 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
-  // ngAfterViewInit() {
-  //   this.tabControl = [
-  //     { name: 'History', textDefault: 'Lịch sử', isActive: true },
-  //     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-  //     { name: 'Comment', textDefault: 'Thảo Luận', isActive: false },
-  //     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
-  //     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
-  //   ];
-  // }
+
   ngOnChanges(changes: SimpleChanges) {
     this.getOldSalaries();
   }
-  changeDataMF(e: any, data: any) {}
-  openFormFuncID(event: any, data: any = null) {
+
+  changeDataMF(e: any, data: any) {
+    this.hrService.handleShowHideMF(e, data, this.view);
+  }
+
+  clickMFunc(event: any, data: any = null) {
     this.clickMF.emit({ event: event, data: data });
   }
 

@@ -653,14 +653,14 @@ export class CM_Competitors {
 }
 
 export class CM_Leads {
-  recID: string;
+  recID: string = Util.uid();
   leadID: string;
   leadName: string;
   leadName2: string;
   category: string;
   channelID: string;
   campaignID: string;
-  businesslineID: string;
+  businessLineID: string;
   memo: string;
   companyName: string;
   tags: string;
@@ -694,7 +694,7 @@ export class CM_Leads {
   attachments: number;
   comments: number;
   isDuplicated: boolean;
-  contactID: string;
+  contactID: string = Util.uid();
   customerID: string;
   salespersonID: string;
   consultantID: string;
