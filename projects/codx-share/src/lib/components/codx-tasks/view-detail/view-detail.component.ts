@@ -128,6 +128,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     if (changes['taskID']) {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
+      this.loadedHisPro = false;
       this.getTaskDetail();
      
     }
@@ -145,7 +146,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
-          this.getDataHistoryProgress(this.itemSelected.recID);
           this.viewTags = this.itemSelected?.tags;
           if (this.itemSelected.taskGroupID) {
             this.getTaskGroup(this.itemSelected.taskGroupID);
@@ -165,6 +165,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
+           // if(!this.loadedHisPro)
+           this.getDataHistoryProgress(this.itemSelected.recID);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -632,7 +634,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     return value == null || value == undefined || !value.trim();
   }
   getDataHistoryProgress(objectID) {  
-    this.loadedHisPro= false
     this.api
       .execSv(
         'BG',
