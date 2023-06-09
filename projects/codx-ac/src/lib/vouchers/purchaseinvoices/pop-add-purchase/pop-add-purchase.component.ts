@@ -69,7 +69,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   journal: IJournal;
   hasSaved: any = false;
   isSaveMaster: any = false;
-  visibleColumns: Array<any> = [];
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -194,12 +193,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
   gridCreated(e, grid) {
     this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
-    this.visibleColumns = this.gridPurchaseInvoicesLine.visibleColumns;
   }
 
   onDoubleClick(data)
   {
-    this.loadPredicate(this.visibleColumns, data.rowData);
+    this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, data.rowData);
   }
 
   expandTab() {}
@@ -406,7 +404,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               idx = this.gridPurchaseInvoicesLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridPurchaseInvoicesLine.addRow(res, idx);
-              this.loadPredicate(this.visibleColumns, res);
+              this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, res);
               break;
             case '2':
               idx = this.purchaseInvoicesLines.length;
@@ -514,7 +512,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       case '1':
         this.gridPurchaseInvoicesLine.gridRef.selectRow(Number(data.index));
         this.gridPurchaseInvoicesLine.gridRef.startEdit();
-        this.loadPredicate(this.visibleColumns, data)
+        this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, data)
         break;
       case '2':
         let index = this.purchaseInvoicesLines.findIndex(
