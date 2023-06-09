@@ -1025,6 +1025,7 @@ export class CodxTasksComponent
             this.notiService.notifyCode('TM009');
 
             if (kanban) kanban.updateCard(taskAction);
+            if(this.itemSelected.status=="90") this.detail.getDataHistoryProgress(this.itemSelected.recID)
           } else this.notiService.notifyCode('SYS021');
         });
     }
@@ -1065,6 +1066,7 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
+        if(this.itemSelected.status=="90") this.detail.getDataHistoryProgress(this.itemSelected.recID)
       } else {
         if (kanban) kanban.updateCard(taskAction);
       }
@@ -1497,7 +1499,7 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
-        this.detail.getDataHistoryProgress();
+        this.detail.getDataHistoryProgress(this.itemSelected.recID);
       }
       this.detectorRef.detectChanges();
     });

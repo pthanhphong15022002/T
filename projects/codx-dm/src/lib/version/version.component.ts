@@ -486,6 +486,7 @@ export class VersionComponent implements OnInit {
       this.fileEditing.createdOn = new Date();
       this.fileService.updateVersionFile(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
+          debugger
           var files = that.dmSV.listFiles;
           let index = files.findIndex(d => d.recID.toString() === this.fileEditing.recID);
           if (index != -1) {
@@ -498,7 +499,7 @@ export class VersionComponent implements OnInit {
           }
           var appName = this.user.tenant; // Tam thoi de hard
           var uploadFile = fileItem.item.rawFile;
-          var sizeInBytes = fileItem.fileSize; // uploadFile.size;
+          var sizeInBytes = fileItem.fileSize; // uploadFile.size;j
           var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
           var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
           if (fileItem.fileSize % chunSizeInfBytes > 0) {
@@ -514,7 +515,7 @@ export class VersionComponent implements OnInit {
             var fileChunk = new File([blogPart], uploadFile.name, {
               type: uploadFile.type,
             }); //Gói lại thành 1 file chunk để upload
-            var uploadChunk = await lvFileClientAPI.formPostWithToken(
+            await lvFileClientAPI.formPostWithToken(
               `api/${appName}/files/upload`,
               {
                 FilePart: fileChunk,

@@ -380,10 +380,12 @@
 </ng-template>
 
 <ng-template #ganttChart>
-  <codx-step-chart
-    [dataSelected]="dataSelected"
-    [listSteps]="listSteps"
-  ></codx-step-chart>
+  <div class="w-100 h-100" id="tabGantt">
+    <codx-step-chart
+      [dataSelected]="dataSelected"
+      [listSteps]="listSteps"
+    ></codx-step-chart>
+  </div>
 </ng-template>
 
 <ng-template #field>
@@ -405,9 +407,17 @@
     [dealID]="dataSelected.recID"
   ></codx-tab-dealcompetitors>
 </ng-template>
-
 <ng-template #quotation>
-  <codx-no-data> </codx-no-data>
+  <codx-quotations
+    [typeModel]="'deals'"
+    [showButton]="true"
+    [predicates]="'RefID==@0'"
+    [dataValues]="dataSelected.recID"
+    [refID]="dataSelected.recID"
+    [refType]="'CM_Deals'"
+    [disableRefID]="true"
+  >
+  </codx-quotations>
 </ng-template>
 
 <ng-template #contract let-data>

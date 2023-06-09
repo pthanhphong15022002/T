@@ -42,6 +42,8 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   @Input() disableRefID = false;
   @Input() disableCusID = false;
   @Input() disableContactsID = false;
+  @Input() typeModel = 'custormmers' || 'deals';
+  @Input() showButton = false
 
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -68,12 +70,13 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     funcID: 'CM0202',
   };
   customerIDCrr = '';
+  refIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
 
   quotation: any;
-  titleAction: any='';
-  loaded = false ;
+  titleAction: any = '';
+  loaded = false;
 
   constructor(
     private inject: Injector,
@@ -94,11 +97,21 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['customerID']) {
-      if (changes['customerID'].currentValue === this.customerIDCrr) return;
-      this.customerIDCrr = changes['customerID'].currentValue;
-      this.getQuotations();
+    switch (this.typeModel) {
+      case 'custormmers':
+        if (changes['customerID']) {
+          if (changes['customerID'].currentValue === this.customerIDCrr) return;
+          this.customerIDCrr = changes['customerID']?.currentValue;
+        } else return;
+        break;
+      case 'deals':
+        if (changes['refID']) {
+          if (changes['refID'].currentValue === this.refIDCrr) return;
+          this.refIDCrr = changes['refID'].currentValue;
+        } else return;
+        break;
     }
+    this.getQuotations();
   }
 
   onInit(): void {}
@@ -114,7 +127,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
 
     this.fetch().subscribe((res) => {
       this.listQuotations = res;
-      this.loaded =true
+      this.loaded = true;
     });
   }
 
@@ -143,7 +156,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   changeDataMF(e, data) {}
 
   clickMF(e, data) {
-    this.titleAction = e.text
+    this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -268,9 +281,9 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
         (x: any) => x.allowCopy
       );
       if (Array.isArray(arrField)) {
-        arrField.forEach((v:any) => {
-            let field = Util.camelize(v.fieldName);
-            data[field] = dataCopy[field];
+        arrField.forEach((v: any) => {
+          let field = Util.camelize(v.fieldName);
+          data[field] = dataCopy[field];
         });
       }
       this.quotation = data;
