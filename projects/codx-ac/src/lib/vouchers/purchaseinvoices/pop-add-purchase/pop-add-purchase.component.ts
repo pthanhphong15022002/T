@@ -193,8 +193,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.vatinvoices[e.field] = e.data;
   }
   gridCreated(e, grid) {
-    this.visibleColumns = this.gridPurchaseInvoicesLine.visibleColumns;
     this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
+    this.visibleColumns = this.gridPurchaseInvoicesLine.visibleColumns;
   }
 
   onDoubleClick(data)
@@ -838,6 +838,17 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
   }
 
+  checkTransLimit(){
+    if(this.purchaseinvoices.totalAmt > this.journal.transLimit)
+    {
+      this.notification.notifyCode('AC0016');
+      if(this.journal.transControl == '2')
+      {
+        this.validate++ ;
+      }
+    }
+  }
+
   detaiClick(e) {
     this.detailActive = e;
   }
@@ -1109,6 +1120,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
 
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -1198,6 +1210,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onSaveAdd(){
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;

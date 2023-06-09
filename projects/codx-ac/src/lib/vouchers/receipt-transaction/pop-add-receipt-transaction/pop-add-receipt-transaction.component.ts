@@ -158,8 +158,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Event
 
   gridCreated() {
-    this.visibleColumns = this.gridInventoryJournalLine.visibleColumns;
     this.gridInventoryJournalLine.hideColumns(this.lockFields);
+    this.visibleColumns = this.gridInventoryJournalLine.visibleColumns;
   }
 
   clickMF(e, data) {
@@ -330,6 +330,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onSaveAdd(){
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -340,6 +341,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onSave() {
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -916,6 +918,17 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             }
           }
         }
+      }
+    }
+  }
+
+  checkTransLimit(){
+    if(this.inventoryJournal.totalAmt > this.journal.transLimit)
+    {
+      this.notification.notifyCode('AC0016');
+      if(this.journal.transControl == '2')
+      {
+        this.validate++ ;
       }
     }
   }
