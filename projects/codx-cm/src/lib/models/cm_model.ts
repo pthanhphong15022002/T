@@ -536,6 +536,7 @@ export class CM_Cases {
   severity: string;
   priority: string;
   occuredOn: Date;
+  detectedOn: Date;
   occuredPlace: string;
   reality: string;
   memo: string;
@@ -653,7 +654,7 @@ export class CM_Competitors {
 }
 
 export class CM_Leads {
-  recID: string;
+  recID: string = Util.uid();
   leadID: string;
   leadName: string;
   leadName2: string;
@@ -694,7 +695,7 @@ export class CM_Leads {
   attachments: number;
   comments: number;
   isDuplicated: boolean;
-  contactID: string;
+  contactID: string = Util.uid();
   customerID: string;
   salespersonID: string;
   consultantID: string;

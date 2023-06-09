@@ -1,21 +1,44 @@
-<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter ? footer : null"
-  [body]="body" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="openFormFuncID($event, itemDetail)"
-  (changeDataMF)="changeDataMF($event, itemDetail)" class="h-100">
-
+<codx-detail-tmp
+  #itemDetailTemplate
+  [header]="header"
+  [dataItem]="itemDetail"
+  [footer]="!hideFooter ? footer : null"
+  [body]="body"
+  [hideMF]="hideMF"
+  [formModel]="formModel"
+  (clickMF)="clickMFunc($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+  class="h-100"
+>
   <ng-template #header>
     <div class="d-flex justify-content-between mb-2">
-      <codx-temp-full [title]="itemDetail?.ownerName" [imageId]="itemDetail?.emp?.employeeID"
-        imageObjType="'HR_Employees'" [imageWidth]="50" [titleTmp]="title">
+      <codx-temp-full
+        [title]="itemDetail?.ownerName"
+        [imageId]="itemDetail?.emp?.employeeID"
+        imageObjType="'HR_Employees'"
+        [imageWidth]="50"
+        [titleTmp]="title"
+      >
         <!-- info view -->
         <ng-template #title>
           <div class="d-flex flex-column">
             <!-- emp info -->
             <div class="d-flex align-items-center mb-2">
-              <span class="fs-5 fw-bold text-dark me-1">{{ itemDetail?.emp?.employeeName }}</span>
+              <span class="fs-5 fw-bold text-dark me-1">{{
+                itemDetail?.emp?.employeeName
+              }}</span>
             </div>
-            <div class="d-flex flex-wrap text-dark fw-bold mb-1 align-items-center">
+            <div
+              class="d-flex flex-wrap text-dark fw-bold mb-1 align-items-center"
+            >
               <div class="d-flex me-10">
-                <span [innerHTML]="itemDetail?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
+                <span
+                  [innerHTML]="
+                    itemDetail?.emp?.positionID
+                      | formatvalue : view.formModel : 'positionID'
+                      | async
+                  "
+                ></span>
               </div>
               <div class="d-flex me-10" *ngIf="itemDetail?.emp?.email">
                 <i class="icon-email me-2"></i>
@@ -27,65 +50,130 @@
               </div>
             </div>
             <div class="text-gray-700">
-              <span [innerHTML]="itemDetail?.emp?.orgUnitID | formatvalue : view.formModel : 'orgUnitID'| async"></span>
+              <span
+                [innerHTML]="
+                  itemDetail?.emp?.orgUnitID
+                    | formatvalue : view.formModel : 'orgUnitID'
+                    | async
+                "
+              ></span>
             </div>
           </div>
         </ng-template>
         <!-- end -->
       </codx-temp-full>
-      <ng-container  *ngIf="itemDetail?.isCurrent">
-        <span [style.color]="'#0078FF'" class="icon-bookmark icon-25 me-2" [ngbPopover]="popIsNewest" #popOver="ngbPopover"
-          [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()" placement="left">
+      <ng-container *ngIf="itemDetail?.isCurrent">
+        <span
+          [style.color]="'#0078FF'"
+          class="icon-bookmark icon-25 me-2"
+          [ngbPopover]="popIsNewest"
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+        >
         </span>
       </ng-container>
     </div>
     <div class="d-flex flex-wrap">
       <div class="d-flex align-items-center mb-2 me-4">
-        <codx-label fiedName="decisionNo" [formModel]="formModel" class="text-gray-700 label-colon"
-          [setRequire]="false">
+        <codx-label
+          fiedName="decisionNo"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+          [setRequire]="false"
+        >
         </codx-label>
         <span>
           {{ itemDetail?.decisionNo }}
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 me-4" *ngIf="itemDetail?.expiredDate; else noExpiredDate">
-        <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon"
-          [setRequire]="false">
+      <div
+        class="d-flex align-items-center mb-2 me-4"
+        *ngIf="itemDetail?.expiredDate; else noExpiredDate"
+      >
+        <codx-label
+          fiedName="effectedDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+          [setRequire]="false"
+        >
         </codx-label>
-        <span [innerHTML]="itemDetail?.effectedDate| formatvalue : formModel : 'effectedDate' | async">
+        <span
+          [innerHTML]="
+            itemDetail?.effectedDate
+              | formatvalue : formModel : 'effectedDate'
+              | async
+          "
+        >
         </span>
         <span class="px-1"> - </span>
-        <span [innerHTML]="itemDetail?.expiredDate| formatvalue : formModel : 'expiredDate' | async">
+        <span
+          [innerHTML]="
+            itemDetail?.expiredDate
+              | formatvalue : formModel : 'expiredDate'
+              | async
+          "
+        >
         </span>
       </div>
 
       <ng-template #noExpiredDate>
         <div class="d-flex align-items-center mb-2 me-4">
-          <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon"
-            [setRequire]="false">
+          <codx-label
+            fiedName="effectedDate"
+            [formModel]="formModel"
+            class="text-gray-700 label-colon"
+            [setRequire]="false"
+          >
           </codx-label>
-          <span class="fw-bold"
-            [innerHTML]="itemDetail?.effectedDate| formatvalue : formModel : 'effectedDate' | async">
+          <span
+            class="fw-bold"
+            [innerHTML]="
+              itemDetail?.effectedDate
+                | formatvalue : formModel : 'effectedDate'
+                | async
+            "
+          >
           </span>
         </div>
       </ng-template>
 
       <div class="d-flex align-items-center mb-2 me-4">
-        <codx-label fiedName="signedDate" [formModel]="formModel" class="text-gray-700 label-colon"
-          [setRequire]="false">
+        <codx-label
+          fiedName="signedDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+          [setRequire]="false"
+        >
         </codx-label>
-        <span [innerHTML]="itemDetail?.signedDate| formatvalue: formModel: 'signedDate'| async">
+        <span
+          [innerHTML]="
+            itemDetail?.signedDate
+              | formatvalue : formModel : 'signedDate'
+              | async
+          "
+        >
         </span>
       </div>
 
       <div class="d-flex flex-wrap align-items-top mb-2 col-12">
-        <codx-label fiedName="note" [formModel]="formModel" class="text-gray-700 label-colon" [setRequire]="false">
+        <codx-label
+          fiedName="note"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+          [setRequire]="false"
+        >
         </codx-label>
-        <span [innerHTML]="itemDetail?.note | formatvalue : formModel : 'note'| async">
+        <span
+          [innerHTML]="
+            itemDetail?.note | formatvalue : formModel : 'note' | async
+          "
+        >
         </span>
       </div>
-
     </div>
     <!-- <div class="mt-2">
       <ng-container *ngIf="files.length > 0">
@@ -102,9 +190,17 @@
         <li [ngbNavItem]="1">
           <a class="ps-0" ngbNavLink>
             <div class="d-flex align-item-center">
-              <span class="icon-info icon-18 me-2" [ngClass]="{ 'text-primary': itemDetailStt === 1 }"></span><span>
-                <codx-label [formModel]="itemDetailTemplate.formModel" default="Mức lương" [setRequire]="false"
-                  class="fw-bold"></codx-label>
+              <span
+                class="icon-info icon-18 me-2"
+                [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
+              ></span
+              ><span>
+                <codx-label
+                  [formModel]="itemDetailTemplate.formModel"
+                  default="Mức lương"
+                  [setRequire]="false"
+                  class="fw-bold"
+                ></codx-label>
               </span>
             </div>
           </a>
@@ -114,29 +210,62 @@
                 <!-- current salary -->
                 <div class="col-6">
                   <div class="d-flex align-items-center mb-2">
-                    <codx-label class="text-primary fw-bold me-4" default="Mức mới"></codx-label>
+                    <codx-label
+                      class="text-primary fw-bold me-4"
+                      default="Mức mới"
+                    ></codx-label>
                   </div>
                   <div class="d-flex align-items-center mb-2">
-                    <codx-label fiedName="bSalary" [formModel]="formModel" class="text-gray-700 w-30 label-colon"
-                      [setRequire]="false">
+                    <codx-label
+                      fiedName="bSalary"
+                      [formModel]="formModel"
+                      class="text-gray-700 w-30 label-colon"
+                      [setRequire]="false"
+                    >
                     </codx-label>
-                    <span [innerHTML]="itemDetail?.bSalary | formatvalue : formModel : 'bSalary'| async">
+                    <span
+                      [innerHTML]="
+                        itemDetail?.bSalary
+                          | formatvalue : formModel : 'bSalary'
+                          | async
+                      "
+                    >
                     </span>
                   </div>
 
                   <div class="d-flex align-items-center mb-2">
-                    <codx-label fiedName="siSalary" [formModel]="formModel" class="text-gray-700 w-30 label-colon"
-                      [setRequire]="false">
+                    <codx-label
+                      fiedName="siSalary"
+                      [formModel]="formModel"
+                      class="text-gray-700 w-30 label-colon"
+                      [setRequire]="false"
+                    >
                     </codx-label>
-                    <span [innerHTML]="itemDetail?.siSalary | formatvalue : formModel : 'siSalary'| async">
+                    <span
+                      [innerHTML]="
+                        itemDetail?.siSalary
+                          | formatvalue : formModel : 'siSalary'
+                          | async
+                      "
+                    >
                     </span>
                   </div>
 
                   <div class="d-flex align-items-center mb-2">
-                    <codx-label fiedName="jSalary" [formModel]="formModel" class="text-gray-700 w-30 label-colon"
-                      [setRequire]="false">
+                    <codx-label
+                      fiedName="jSalary"
+                      [formModel]="formModel"
+                      class="text-gray-700 w-30 label-colon"
+                      [setRequire]="false"
+                    >
                     </codx-label>
-                    <span [innerHTML]="itemDetail?.jSalary | formatvalue : formModel : 'jSalary'| async">
+                    <span
+                      [innerHTML]="
+                        itemDetail?.jSalary
+                          | formatvalue : formModel : 'jSalary'
+                          | async
+                      "
+                    >
                     </span>
                   </div>
                 </div>
@@ -145,43 +274,93 @@
                 <div class="col-6">
                   <div class="d-flex flex-wrap align-items-center mb-2">
                     <div class="d-flex align-items-center me-4">
-                      <codx-label class="text-primary fw-bold " default="Mức cũ"></codx-label>
+                      <codx-label
+                        class="text-primary fw-bold"
+                        default="Mức cũ"
+                      ></codx-label>
                     </div>
-                    <div class="d-flex align-items-center" *ngIf="olderItem?.expiredDate; else noOlderExpiredDate">
-                      <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon"
-                        [setRequire]="false">
+                    <div
+                      class="d-flex align-items-center"
+                      *ngIf="olderItem?.expiredDate; else noOlderExpiredDate"
+                    >
+                      <codx-label
+                        fiedName="effectedDate"
+                        [formModel]="formModel"
+                        class="text-gray-700 label-colon"
+                        [setRequire]="false"
+                      >
                       </codx-label>
-                      <span [innerHTML]="olderItem?.effectedDate| formatvalue : formModel : 'effectedDate' | async">
+                      <span
+                        [innerHTML]="
+                          olderItem?.effectedDate
+                            | formatvalue : formModel : 'effectedDate'
+                            | async
+                        "
+                      >
                       </span>
                       <span class="px-1"> - </span>
-                      <span [innerHTML]="olderItem?.expiredDate| formatvalue : formModel : 'expiredDate' | async">
+                      <span
+                        [innerHTML]="
+                          olderItem?.expiredDate
+                            | formatvalue : formModel : 'expiredDate'
+                            | async
+                        "
+                      >
                       </span>
                     </div>
 
                     <ng-template #noOlderExpiredDate>
-                      <div class="d-flex align-items-center ">
-                        <codx-label fiedName="effectedDate" [formModel]="formModel" class="text-gray-700 label-colon"
-                          [setRequire]="false">
+                      <div class="d-flex align-items-center">
+                        <codx-label
+                          fiedName="effectedDate"
+                          [formModel]="formModel"
+                          class="text-gray-700 label-colon"
+                          [setRequire]="false"
+                        >
                         </codx-label>
-                        <span class="fw-bold"
-                          [innerHTML]="olderItem?.effectedDate| formatvalue : formModel : 'effectedDate' | async">
+                        <span
+                          class="fw-bold"
+                          [innerHTML]="
+                            olderItem?.effectedDate
+                              | formatvalue : formModel : 'effectedDate'
+                              | async
+                          "
+                        >
                         </span>
                       </div>
                     </ng-template>
                   </div>
 
                   <div class="d-flex align-items-center mb-2">
-                    <span [innerHTML]="olderItem?.bSalary | formatvalue : formModel : 'bSalary'| async">
+                    <span
+                      [innerHTML]="
+                        olderItem?.bSalary
+                          | formatvalue : formModel : 'bSalary'
+                          | async
+                      "
+                    >
                     </span>
                   </div>
 
                   <div class="d-flex align-items-center mb-2">
-                    <span [innerHTML]="olderItem?.siSalary | formatvalue : formModel : 'siSalary'| async">
+                    <span
+                      [innerHTML]="
+                        olderItem?.siSalary
+                          | formatvalue : formModel : 'siSalary'
+                          | async
+                      "
+                    >
                     </span>
                   </div>
 
                   <div class="d-flex align-items-center mb-2">
-                    <span [innerHTML]="olderItem?.jSalary | formatvalue : formModel : 'jSalary'| async">
+                    <span
+                      [innerHTML]="
+                        olderItem?.jSalary
+                          | formatvalue : formModel : 'jSalary'
+                          | async
+                      "
+                    >
                     </span>
                   </div>
                 </div>
@@ -196,35 +375,64 @@
   </ng-template>
 
   <ng-template #footer>
-    <codx-tabs [TabControl]="tabControl" [entityName]="formModel.entityName" [objectID]="itemDetail?.recID"
-      [funcID]="formModel.funcID" [transID]="itemDetail?.recID" [approveStatus]="itemDetail?.signStatus">
+    <codx-tabs
+      [TabControl]="tabControl"
+      [entityName]="formModel.entityName"
+      [objectID]="itemDetail?.recID"
+      [funcID]="formModel.funcID"
+      [transID]="itemDetail?.recID"
+      [approveStatus]="itemDetail?.signStatus"
+    >
     </codx-tabs>
   </ng-template>
-
 </codx-detail-tmp>
 
 <ng-template #baseHeaderRightTmp let-data>
   <div>
     <ng-container *ngIf="data?.isCurrent && !data?.isExpire">
-      <span [style.color]="'#0078FF'" class="icon-bookmark icon-18" [ngbPopover]="popIsNewest" #popOver="ngbPopover"
-        [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()" placement="left">
+      <span
+        [style.color]="'#0078FF'"
+        class="icon-bookmark icon-18"
+        [ngbPopover]="popIsNewest"
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+      >
       </span>
     </ng-container>
     <ng-container *ngIf="data?.isCurrent && data?.isExpire">
-      <span class="icon-notifications icon-18" [style.color]="'#F64E60'" [ngbPopover]="popOverDue" #p="ngbPopover"
-        [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="left">
+      <span
+        class="icon-notifications icon-18"
+        [style.color]="'#F64E60'"
+        [ngbPopover]="popOverDue"
+        #p="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="p.open()"
+        (mouseleave)="p.close()"
+        placement="left"
+      >
       </span>
     </ng-container>
   </div>
 </ng-template>
 <ng-template #popIsNewest>
   <span>
-    <codx-label name="lblIsCurrent" [formModel]="view.formModel" default="Mới nhất"></codx-label>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Mới nhất"
+    ></codx-label>
   </span>
 </ng-template>
 
 <ng-template #popOverDue>
   <span>
-    <codx-label name="lblOverDue" [formModel]="view.formModel" default="Đã quá hạn!"></codx-label>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Đã quá hạn!"
+    ></codx-label>
   </span>
 </ng-template>

@@ -34,13 +34,10 @@ export class PopupEmployeeBenefitComponent
   isAfterRender = false;
   headerText: string;
   employeeObj: any;
-  genderGrvSetup: any;
   decisionNoDisable: boolean = false;
-  //Render Signer Position follow Singer ID
   data: any;
 
   @ViewChild('form') form: CodxFormComponent;
-  // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -81,8 +78,9 @@ export class PopupEmployeeBenefitComponent
                 this.formModel.entityName,
                 this.idField
               )
-              .subscribe((res: any) => {
+              .subscribe((res) => {
                 if (res) {
+                  console.log(res);
                   this.currentEJobSalaries = res?.data;
                   if (
                     this.currentEJobSalaries.effectedDate ==
@@ -93,6 +91,7 @@ export class PopupEmployeeBenefitComponent
                   this.currentEJobSalaries.employeeID = this.employeeId;
                   this.currentEJobSalaries.effectedDate = null;
                   this.currentEJobSalaries.expiredDate = null;
+                  this.currentEJobSalaries.status = '1';
                   this.formModel.currentData = this.currentEJobSalaries;
                   this.formGroup.patchValue(this.currentEJobSalaries);
                   this.isAfterRender = true;
@@ -166,15 +165,8 @@ export class PopupEmployeeBenefitComponent
         }
       });
     } else {
-      this.initForm();
     }
-
-    //Load data field gender from database
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
+    this.initForm();
 
     //Update Employee Information when CRUD then render
     if (this.employeeId != null)
@@ -189,17 +181,6 @@ export class PopupEmployeeBenefitComponent
       delete this.employeeObj;
     }
   }
-
-  //Render Signer Position follow Signer ID
-
-  // setExpiredDate(month) {
-  //   if (this.data.effectedDate) {
-  //     let date = new Date(this.data.effectedDate);
-  //     this.data.expiredDate = new Date(date.setMonth(date.getMonth() + month));
-  //     this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
-  //     this.cr.detectChanges();
-  //   }
-  // }
 
   valueChange(event) {
     if (!event.data) {
