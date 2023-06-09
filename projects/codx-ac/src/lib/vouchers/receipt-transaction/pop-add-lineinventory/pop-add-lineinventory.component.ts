@@ -26,7 +26,6 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   hasSave: boolean = false;
   type: any;
   lsVatCode: any;
-  lsitem: any;
   journals: any;
   objectIdim: any;
   lockFields: any;
@@ -65,7 +64,6 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
       });
   }
   onInit(): void {
-    this.loadItems();
   }
   ngAfterViewInit() {
     this.loadInit();
@@ -87,7 +85,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
       switch (e.field) 
       {
         case 'itemID':
-          this.loadItemNameAndItemUMID(e.data);
+          this.getUMIDAndItemName(e.data);
           if(this.idiM0)
           {
             (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
@@ -214,22 +212,6 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     this.form.formGroup.patchValue(this.inventoryJournalLine);
   }
 
-  loadItems(){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if (res != null) {
-        this.lsitem = res;
-      }
-    });
-  }
-
-  loadItemNameAndItemUMID(itemID: any){
-    var item = this.lsitem.filter(x => x.itemID == itemID);
-    this.inventoryJournalLine.itemName = item[0].itemName;
-    this.inventoryJournalLine.umid = item[0].umid;
-    this.form.formGroup.patchValue(this.inventoryJournalLine);
-  }
-
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.inventoryJournalLine);
@@ -284,6 +266,18 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
           this.form.formGroup.patchValue(res);
         }
       });
+  }
+
+  getUMIDAndItemName(itemID: any){
+    this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [itemID])
+          .subscribe((res: any) => {
+            if (res)
+            {
+              this.inventoryJournalLine.itemName = res.itemName;
+              this.inventoryJournalLine.umid = res.umid;
+              this.form.formGroup.patchValue(this.inventoryJournalLine);
+            }
+          });
   }
   //endregion Function
 }

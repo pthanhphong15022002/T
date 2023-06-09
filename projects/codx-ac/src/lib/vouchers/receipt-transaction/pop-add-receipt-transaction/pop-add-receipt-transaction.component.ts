@@ -46,8 +46,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   validate: any = 0;
   journalNo: any;
   modeGrid: any;
-  lsitem: any;
-  lswarehouse: any;
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
@@ -148,7 +146,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   onInit(): void {
     this.loadInit();
     this.loadTotal();
-    this.loadItems();
   }
 
   ngAfterViewInit() {
@@ -250,9 +247,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           e.data.costAmt = 0;
         break;
       case 'itemID':
-        var item = this.getItem(e.data.itemID);
-        e.data.itemName = item.itemName;
-        e.data.umid = item.umid;
+        this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data.itemID])
+          .subscribe((res: any) => {
+            if (res)
+            {
+              e.data.itemName = res.itemName;
+              e.data.umid = res.umid;
+            }
+          });
         this.loadItemID(e.value);
         break;
       case 'idiM4':
@@ -339,7 +341,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.inventoryJournal
         );
         this.dialog.dataService.save().subscribe((res) => {
-          if (res && res.update.data != null) {
+          if(res.update.error)
+          {
+            this.inventoryJournal.status = '0';
+          }
+          if (res && res.update.data != null && res.update.error != true) {
             this.clearInventoryJournal();
             this.dialog.dataService.clear();
             this.dialog.dataService
@@ -364,7 +370,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.formType === 'edit',
           () => {
             this.dialog.dataService.save().subscribe((res) => {
-              if (res && res.save.data != null) {
+              if(res.save.error)
+              {
+                this.inventoryJournal.status = '0';
+              }
+              if (res && res.save.data != null && res.save.error != true) {
                 this.clearInventoryJournal();
                 this.dialog.dataService.clear();
                 this.dialog.dataService
@@ -399,7 +409,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.dialog.dataService
               .save(null, 0, '', 'SYS006', true)
               .subscribe((res) => {
-                if (res && res.update.data != null) {
+                if(res.update.error)
+                {
+                  this.inventoryJournal.status = '0';
+                }
+                if (res && res.update.data != null && res.update.error != true) {
                   this.dialog.close({
                     update: true,
                     data: res.update,
@@ -419,7 +433,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.formType === 'edit',
               () => {
                 this.dialog.dataService.save().subscribe((res) => {
-                  if (res && res.save.data != null) {
+                  if(res.save.error)
+                  {
+                    this.inventoryJournal.status = '0';
+                  }
+                  if (res && res.save.data != null && res.save.error != true) {
                     this.dialog.close();
                     this.dt.detectChanges();
                   }
@@ -572,14 +590,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   loadPageCount() {
     this.pageCount = '(' + this.inventoryJournalLines.length + ')';
-  }
-
-  loadItems(){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-    .subscribe((res: any) => {
-      if(res)
-        this.lsitem = res;
-    });
   }
 
   loadTotal() {
@@ -1065,11 +1075,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.form.formGroup.patchValue(this.inventoryJournal);
         }
       });
-  }
-
-  getItem(itemID: any){
-    var item = this.lsitem.filter(x => x.itemID == itemID);
-    return item[0];
   }
 
   calculateNetAmt(quantity: any, costPrice: any)

@@ -74,7 +74,7 @@ export class DynamicFormComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.grid,
-        sameData: true,
+        sameData: false,
         active: true,
         model: {
           //resources: this.columnsGrid,
@@ -93,8 +93,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   changeDataMF(e: any, data) {
-    console.log('event', e);
-    console.log('data', data);
     if (data.isSystem) {
       let delMF = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
@@ -167,7 +165,7 @@ export class DynamicFormComponent extends UIComponent {
         });
       }
     })
-   
+
   }
 
   click(evt: ButtonModel) {

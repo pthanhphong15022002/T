@@ -39,6 +39,7 @@ export class ViewListComponent implements OnInit {
   vllPriority = 'TM005';
 
   @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() changeMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
 
@@ -64,69 +65,70 @@ export class ViewListComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    if (e) {
-      e.forEach((x) => {
-        if (
-          (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          data.confirmControl == '0'
-        ) {
-          x.disabled = true;
-        }
-        if (
-          x.functionID == 'TMT02019' &&
-          data.verifyControl == '0' &&
-          data.category == '1'
-        ) {
-          x.disabled = true;
-        }
-        //an giao viec
-        if (x.functionID == 'SYS005') {
-          x.disabled = true;
-        }
-        if (
-          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
-          data.status == '90'
-        ) {
-          x.disabled = true;
-        }
-        //an cap nhat tien do khi hoan tat
-        if (
-          (x.functionID == 'TMT02018' ||
-            x.functionID == 'TMT02026' ||
-            x.functionID == 'TMT02035') &&
-          data.status == '90'
-        ) {
-          x.disabled = true;
-        }
-        //an voi ca TMT026
-        if (
-          (x.functionID == 'SYS02' ||
-            x.functionID == 'SYS03' ||
-            x.functionID == 'SYS04') &&
-          (this.formModel?.funcID == 'TMT0206' ||
-            this.formModel?.funcID == 'MWP0063')
-        ) {
-          x.disabled = true;
-        }
-        //an voi fun TMT03011
-        if (
-          (this.formModel?.funcID == 'TMT03011' ||
-            this.formModel?.funcID == 'TMT05011') &&
-          data.category == '1' &&
-          data.createdBy != this.user?.userID &&
-          !this.user?.administrator &&
-          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
-        ) {
-          x.disabled = true;
-        }
-        //an TMT02019
-        if (
-          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
-          (data.status == '80' || data.status == '90')
-        )
-          x.disabled = true;
-      });
-    }
+    this.changeMoreFunction.emit({e:e,data:data})
+    // if (e) {
+    //   e.forEach((x) => {
+    //     if (
+    //       (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
+    //       data.confirmControl == '0'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     if (
+    //       (x.functionID == 'TMT02019' || x.functionID == 'TMT02027') &&
+    //       data.verifyControl == '0' &&
+    //       data.category == '1'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     //an giao viec
+    //     if (x.functionID == 'SYS005') {
+    //       x.disabled = true;
+    //     }
+    //     if (
+    //       (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+    //       data.status == '90'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     //an cap nhat tien do khi hoan tat
+    //     if (
+    //       (x.functionID == 'TMT02018' ||
+    //         x.functionID == 'TMT02026' ||
+    //         x.functionID == 'TMT02035') &&
+    //       data.status == '90'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     //an voi ca TMT026
+    //     if (
+    //       (x.functionID == 'SYS02' ||
+    //         x.functionID == 'SYS03' ||
+    //         x.functionID == 'SYS04') &&
+    //       (this.formModel?.funcID == 'TMT0206' ||
+    //         this.formModel?.funcID == 'MWP0063')
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     //an voi fun TMT03011
+    //     if (
+    //       (this.formModel?.funcID == 'TMT03011' ||
+    //         this.formModel?.funcID == 'TMT05011') &&
+    //       data.category == '1' &&
+    //       data.createdBy != this.user?.userID &&
+    //       !this.user?.administrator &&
+    //       (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     //an TMT02019
+    //     if (
+    //       (x.functionID == 'TMT02019' || x.functionID == 'TMT02027' ) &&
+    //       (data.status == '80' || data.status == '90' || data.extendControl=="0")
+    //     )
+    //       x.disabled = true;
+    //   });
+    // }
   }
 
   PopoverDetail(p: any, emp) {
