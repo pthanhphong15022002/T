@@ -205,7 +205,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.isEditTimeDefault = this.currentStep?.leadtimeControl || false;
     this.isOnlyView = this.currentStep?.stepStatus == '1';
 
-    const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
+    const taskGroupList = this.currentStep?.tasks?.reduce((group, product) => {
       const { taskGroupID } = product;
       group[taskGroupID] = group[taskGroupID] ?? [];
       group[taskGroupID].push(product);

@@ -65,6 +65,7 @@ export class TabDetailCustomComponent
   };
 
   recIdOld: string = '';
+  isDataLoading = true;
 
   constructor(
     private inject: Injector,
@@ -84,6 +85,7 @@ export class TabDetailCustomComponent
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
+      this.isDataLoading = true;
       if(this.tabClicked == 'Contact' )
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
@@ -120,8 +122,11 @@ export class TabDetailCustomComponent
       this.dataSelected?.status,
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
-      this.listStep = res;
-      this.checkCompletedInstance(this.dataSelected?.status);
+      if(res){
+        this.listStep = res;
+        this.checkCompletedInstance(this.dataSelected?.status);
+      }
+      this.isDataLoading = false;
     });
   }
 
