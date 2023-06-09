@@ -208,7 +208,7 @@ export class PopupMergeLeadsComponent implements OnInit {
                 this.imageAvatarContact.updateFileDirectReload(res?.contactID)
               );
             } else {
-              this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID);
+              await firstValueFrom(this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID));
             }
             this.dialog.close([
               res,
