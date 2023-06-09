@@ -99,7 +99,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   cashpaymentline: Array<any> = [];
   settledInvoices: Array<SettledInvoices> = [];
   settledInvoicesDelete: Array<any> = [];
-  lockFields = [];
+  hideFields = [];
   requireFields = [];
   pageCount: any;
   tab: number = 0;
@@ -185,16 +185,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.dataLine = new CashReceiptsLines();
         break;
     }
-    if (
-      this.cashpayment.unbounds &&
-      this.cashpayment.unbounds.baseCurr &&
-      this.cashpayment.unbounds.baseCurr.length
-    ) {
-      (this.cashpayment.unbounds.baseCurr as Array<string>).forEach(
-        (element) => {
-          this.baseCurr = element;
-        }
-      );
+    if (this.cashpayment.unbounds && this.cashpayment.unbounds.baseCurr) {
+      this.baseCurr = this.cashpayment.unbounds.baseCurr;
+    }
+    if (this.cashpayment.unbounds && this.cashpayment.unbounds.journal) {
+      this.journal = this.cashpayment.unbounds.journal;
+      this.modegrid = this.cashpayment.unbounds.journal.inputMode;
     }
   }
   //#endregion
@@ -414,16 +410,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   gridCreated() {
-    this.lockFields = [];
+    this.hideFields = [];
     if (
       this.cashpayment.unbounds &&
-      this.cashpayment.unbounds.lockFields &&
-      this.cashpayment.unbounds.lockFields.length
+      this.cashpayment.unbounds.hideFields &&
+      this.cashpayment.unbounds.hideFields.length
     ) {
-      this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
+      this.hideFields = this.cashpayment.unbounds.hideFields as Array<string>;
     }
     if (this.journal.subControl == '0') {
-      this.lockFields.push('ObjectID');
+      this.hideFields.push('ObjectID');
     } else {
       let i = this.gridCash.columnsGrid.findIndex(
         (x) => x.fieldName == 'ObjectID'
@@ -439,11 +435,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
     if (this.journal.postingMode == '1') {
-      this.lockFields.push('CR2');
-      this.lockFields.push('CR');
+      this.hideFields.push('CR2');
+      this.hideFields.push('CR');
       if (this.cashpayment.currencyID == this.baseCurr) {
-        this.lockFields.push('DR2');
-        this.lockFields.push('TaxAmt2');
+        this.hideFields.push('DR2');
+        this.hideFields.push('TaxAmt2');
       } else {
         var arr = ['DR2', 'TaxAmt2'];
         arr.forEach((fieldName) => {
@@ -464,7 +460,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
 
     this.loadAccountControl(this.gridCash.visibleColumns);
-    this.gridCash.hideColumns(this.lockFields);
+    this.gridCash.hideColumns(this.hideFields);
 
     setTimeout(() => {
       this.ngxService.stopLoader('loader');
@@ -786,7 +782,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       dataline: this.cashpaymentline,
       datacash: this.cashpayment,
       type: 'add',
-      lockFields: this.lockFields,
+      lockFields: this.hideFields,
       journal: this.journal,
       grid: this.gridCash,
     };
@@ -1302,6 +1298,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
           //#endregion
         }
+        this.loadjounal();
         break;
     }
     if (this.cashpayment.status == '0' && this.action == 'edit') {
@@ -1317,7 +1314,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.loadjounal();
   }
 
   loadjounal() {
@@ -1325,13 +1321,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
         this.journal = res[0];
-        this.lockFields = res[1];
+        this.hideFields = res[1];
+        this.baseCurr = res[2];
         this.modegrid = this.journal.inputMode;
       });
   }
 
   loadControl(value) {
-    let index = this.lockFields.findIndex((x) => x == value);
+    let index = this.hideFields.findIndex((x) => x == value);
     if (index == -1) {
       return true;
     } else {

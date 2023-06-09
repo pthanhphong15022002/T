@@ -125,13 +125,8 @@ export class CasesComponent
     }
 
     this.executeApiCalls();
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
-    // Get API
-    // this.getListCustomer();
   }
   // ngOnChanges(changes: SimpleChanges): void {
   //   if (!this.funcID) {
@@ -304,7 +299,22 @@ export class CasesComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if (data.closed || data.status == '1') {
+      if ( (data.closed && data.status != '1' ) || data.status == '1' ) {
+        eventItem.disabled = true;
+      }
+    };
+    var isDelete = (eventItem, data) => {
+      if ( data.closed) {
+        eventItem.disabled = true;
+      }
+    };
+    var isCopy = (eventItem, data) => {
+      if ( data.closed  ) {
+        eventItem.disabled = true;
+      }
+    };
+    var isEdit = (eventItem, data) => {
+      if ( data.closed ) {
         eventItem.disabled = true;
       }
     };
@@ -327,12 +337,12 @@ export class CasesComponent
         CM0401_8: isClosed,
         CM0401_9: isOpened,
         SYS101: isDisabled,
-        SYS103: isDisabled,
-        SYS03: isDisabled,
-        SYS104: isDisabled,
-        SYS04: isDisabled,
-        SYS102: isDisabled,
-        SYS02: isDisabled,
+        SYS103: isEdit,
+        SYS03: isEdit,
+        SYS104: isCopy,
+        SYS04: isCopy,
+        SYS102: isDelete,
+        SYS02: isDelete,
       };
     } else {
     }

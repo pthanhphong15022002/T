@@ -64,9 +64,6 @@ export class LeadDetailComponent  implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-      if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID ) {
-        this.getContactByObjectID(changes['dataSelected'].currentValue?.recID,'2');
-      }
     }
   }
 
@@ -94,16 +91,6 @@ export class LeadDetailComponent  implements OnInit {
   }
 
   changeFooter(e){
-    console.log(e);
-  }
-
-  getContactByObjectID(recId,objectType) {
-    var data = [recId,objectType];
-    this.codxCmService.getListContactByLeadID(data).subscribe((res) => {
-      if (res) {
-        this.contactPerson = res[0];
-      }
-    });
   }
 }
 
