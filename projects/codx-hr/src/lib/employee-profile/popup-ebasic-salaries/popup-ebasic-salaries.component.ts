@@ -188,7 +188,7 @@ export class PopupEBasicSalariesComponent
 
             this.EBasicSalaryObj.effectedDate = null;
             this.EBasicSalaryObj.employeeID = this.employeeId;
-
+            this.EBasicSalaryObj.status = '1';
             this.formModel.currentData = this.EBasicSalaryObj;
             this.formGroup.patchValue(this.EBasicSalaryObj);
             this.isAfterRender = true;
@@ -235,6 +235,7 @@ export class PopupEBasicSalariesComponent
       this.hrService
         .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)
         .subscribe((p) => {
+          console.log(p);
           if (p != null) {
             this.notify.notifyCode('SYS006');
             // p[0].emp = this.employeeObj;

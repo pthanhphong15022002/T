@@ -203,7 +203,7 @@ export class DealsComponent
           },
         },
       ];
-    this.reloadData();
+   // this.reloadData();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -214,7 +214,7 @@ export class DealsComponent
     //   this.view.dataService.predicates = null;
     //   this.view.dataService.dataValues = null;
     //   this.view.dataObj = this.dataObj;
-     
+
     //   this.view?.views?.forEach((x) => {
     //     if (x.type == 6) {
     //       x.request.dataObj = this.dataObj;
@@ -244,7 +244,7 @@ export class DealsComponent
     //         );
     //         kanban.refresh();
     //       });
-    //   } 
+    //   }
   }
 
   afterLoad() {
@@ -969,6 +969,7 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
+        // this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1004,8 +1005,9 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
+            // this.dataSelected = JSON.parse(JSON.stringify(e.event))
             this.detailViewDeal.dataSelected = JSON.parse(
-              JSON.stringify(e.event)
+              JSON.stringify(this.dataSelected)
             );
             this.changeDetectorRef.detectChanges();
           }

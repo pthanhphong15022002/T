@@ -50,6 +50,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   favorite = '';
   loaded = false ;
   @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() changeMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
 
   constructor(
@@ -114,6 +115,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   }
 
   changeDataMF(e, data) {
+    // this.changeMoreFunction.emit({e:e,data:data})
     if (e) {
       e.forEach((x) => {
         if (
@@ -123,7 +125,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
           x.disabled = true;
         }
         if (
-          x.functionID == 'TMT02019' &&
+          (x.functionID == 'TMT02019') &&
           data.verifyControl == '0' &&
           data.category == '1'
         ) {
@@ -146,8 +148,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         if (
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
-            x.functionID == 'SYS04') &&
-          this.formModel?.funcID == 'TMT0206'
+            x.functionID == 'SYS04') 
+         // &&this.formModel?.funcID == 'TMT0206'
         ) {
           x.disabled = true;
         }

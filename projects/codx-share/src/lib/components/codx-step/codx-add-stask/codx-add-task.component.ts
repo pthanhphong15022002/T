@@ -35,8 +35,7 @@ export class CodxAddTaskComponent implements OnInit {
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   dialog!: DialogRef;
-  title = '';
-  taskType = '';
+  typeTask ;
   isEditTimeDefault = false;
   vllShare = 'BP021';
   linkQuesiton = 'http://';
@@ -93,8 +92,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.action = dt?.data?.action;
-    this.title = dt?.data?.taskType?.text;
-    this.taskType = dt?.data?.taskType?.value;
+    this.typeTask = dt?.data?.taskType;
     this.step = dt?.data?.step;
     this.listGroup = dt?.data?.listGroup;
     this.listTask = dt?.data?.listTask;
@@ -116,12 +114,6 @@ export class CodxAddTaskComponent implements OnInit {
     }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     this.participant = this.roles?.filter((role) => role.roleType === 'P');
-    // if(this.taskType == "M"){
-    // }else{
-    //   let role = new DP_Instances_Steps_Tasks_Roles();
-    //   this.setRole(role);
-    //   this.participant = [role]
-    // }
     if(this.action == 'add'){
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);

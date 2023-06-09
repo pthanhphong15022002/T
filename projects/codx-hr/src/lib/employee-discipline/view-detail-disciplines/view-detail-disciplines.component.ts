@@ -1,5 +1,19 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { AuthStore, FormModel, NotificationsService, ViewsComponent } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  AuthStore,
+  FormModel,
+  NotificationsService,
+  ViewsComponent,
+} from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -8,23 +22,21 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'lib-view-detail-disciplines',
   templateUrl: './view-detail-disciplines.component.html',
-  styleUrls: ['./view-detail-disciplines.component.css']
+  styleUrls: ['./view-detail-disciplines.component.css'],
 })
-export class ViewDetailDisciplinesComponent implements OnInit  {
+export class ViewDetailDisciplinesComponent {
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,
     private router: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService,
+    private notify: NotificationsService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
-
 
   @Input() funcID;
   @Input() formModel;
@@ -41,23 +53,8 @@ export class ViewDetailDisciplinesComponent implements OnInit  {
   isAfterRender = true;
   // benefitFuncID = 'HRTEM0403';
   // benefitFormModel : FormModel;
-  benefitFormGroup : FormGroup;
+  benefitFormGroup: FormGroup;
   active = 1;
-
-  ngOnInit(): void {
-    // this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
-    //   if (formModel) {
-    //     this.benefitFormModel = formModel;
-    //     this.hrService
-    //       .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName)
-    //       .then((fg) => {
-    //         if (fg) {
-    //           this.benefitFormGroup = fg;
-    //         }
-    //       });
-    //   }
-    // });
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (
@@ -65,23 +62,23 @@ export class ViewDetailDisciplinesComponent implements OnInit  {
       changes.itemDetail?.previousValue?.recID !=
         changes.itemDetail?.currentValue?.recID
     ) {
-      this.hrService.loadDataEDisciplines(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.df.detectChanges();
-        }
-      });
+      this.hrService
+        .loadDataEDisciplines(changes.itemDetail?.currentValue?.recID)
+        .subscribe((res) => {
+          if (res) {
+            this.itemDetail = res;
+            this.df.detectChanges();
+          }
+        });
     }
-
   }
 
   changeDataMF(e: any, data: any) {
     this.hrService.handleShowHideMF(e, data, this.formModel);
-  } 
+  }
 
-  clickMF(evt: any, data: any = null){
-
-    this.clickMFunction.emit({event: evt, data: data});
+  clickMF(evt: any, data: any = null) {
+    this.clickMFunction.emit({ event: evt, data: data });
   }
 
   ngAfterViewInit(): void {

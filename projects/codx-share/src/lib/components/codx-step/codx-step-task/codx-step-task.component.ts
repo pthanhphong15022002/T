@@ -201,8 +201,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
     this.isUpdateProgressStep =
-      this.currentStep?.progressTaskGroupControl || false;
+    this.currentStep?.progressTaskGroupControl || false;
     this.isEditTimeDefault = this.currentStep?.leadtimeControl || false;
+    this.isOnlyView = this.currentStep?.stepStatus == '1';
 
     const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
       const { taskGroupID } = product;
@@ -360,6 +361,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP24':
             if (task.taskType != 'M') res.disabled = true;
             break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
         }
       });
     }
@@ -430,8 +440,73 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP24':
             res.disabled = true;
             break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP24':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
         }
       });
+    }
+  }
+
+  async changeDataMFStep(event, stepData) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa  
+          case 'SYS03': //sửa  
+          case 'SYS04': //copy        
+          case 'SYS003': //đính kèm file
+          case 'DP13': //giao việc
+          case 'DP07': //chi tiêt công việc
+          case 'DP24': //tạo lịch họp
+          case 'DP12':
+          case 'DP25':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
+          case 'DP20': // tiến độ
+            if (!(this.isRoleAll  && this.isOnlyView && this.isUpdateProgressStep)) {
+              res.isblur = true;
+            }
+            res.isbookmark = true;
+            break;
+          case 'DP08': // Thêm nhóm công việc
+            if (!(this.isRoleAll && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            res.isbookmark = true;
+            break;
+          case 'DP26': // Chi tiết giai đoạn
+            // if (!((this.isRoleAll ) && this.isOnlyView)) {
+            //   res.isblur = true;
+            // }
+            res.isbookmark = true;
+            break;
+        }
+      });
+    }
+  }
+
+  clickMFStep(e: any, step: any) {
+    switch (e.functionID) {
+      case 'DP08': //them task
+        this.chooseTypeTask();
+        break;
+      case 'DP20': // tien do
+        this.openPopupUpdateProgress(this.currentStep, 'P')
+        break;
+      case 'DP26': // view
+        this.viewTask(step, 'P');
+        break;
     }
   }
 
@@ -478,7 +553,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.copyGroupTask(group);
         break;
       case 'DP08': //them task
-        this.addTask(group?.refID);
+        this.chooseTypeTask(group?.refID);
         break;
       case 'DP12':
         this.viewTask(group, 'G');
@@ -489,20 +564,25 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //task
-  async chooseTypeTask() {
+  async chooseTypeTask(groupID = null) {
     let popupTypeTask = this.callfc.openForm(
       CodxTypeTaskComponent,
       '',
-      400,
-      400
+      450, 
+      580,
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
-    return dataOutput?.event?.value ? dataOutput?.event : null;
+    if(dataOutput?.event?.value){
+      this.taskType = dataOutput?.event;
+      if(this.taskType?.value == 'G'){
+        this.addGroupTask();
+      }else{
+        this.addTask(groupID);
+      }
+    }
   }
 
   async addTask(groupID) {
-    this.taskType = await this.chooseTypeTask();
-    if (!this.taskType) return;
     let task = new DP_Instances_Steps_Tasks();
     task['taskType'] = this.taskType?.value;
     task['stepID'] = this.currentStep?.recID;
@@ -540,28 +620,37 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async editTask(task) {
     if (task) {
       let taskEdit = JSON.parse(JSON.stringify(task));
+      let groupIdOld = taskEdit?.taskGroupID;
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskEdit?.taskType
       );
-      let taskOutput = await this.openPopupTask('edit', taskEdit);
-      if (taskOutput?.event.task) {
-        let data = taskOutput?.event;
-        let group = this.listGroupTask.find(
-          (group) => group.refID == data.task.taskGroupID
-        );
-        let indexTask = this.currentStep?.tasks?.findIndex(
-          (taskFind) => taskFind.recID == task.recID
-        );
-        if (group) {
-          let index = group?.task?.findIndex(
-            (taskFind) => taskFind.recID == task.recID
-          );
-          if (index >= 0) {
-            group?.task?.splice(index, 1, data?.task);
+      let dataOutput = await this.openPopupTask('edit', taskEdit);
+      if (dataOutput?.event.task) {
+        let taskOutput = dataOutput?.event?.task;
+        let group = this.listGroupTask.find((group) => group.refID == taskOutput?.taskGroupID);
+        let indexTask = this.currentStep?.tasks?.findIndex((taskFind) => taskFind.recID == task.recID);
+
+        if(taskOutput?.taskGroupID != groupIdOld){
+          let groupOld = this.listGroupTask.find((group) => group.refID == groupIdOld);
+          if (groupOld) {
+            let index = groupOld?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            if (index >= 0) {
+              groupOld?.task?.splice(index, 1);
+            }
           }
-        }
+          if (group) {
+            group?.task?.push(taskOutput);
+          }    
+        }else{
+          if (group) {
+            let index = group?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            if (index >= 0) {
+              group?.task?.splice(index, 1, taskOutput);
+            }
+          }    
+        }   
         if (indexTask >= 0) {
-          this.currentStep?.tasks?.splice(indexTask, 1, data?.task);
+          this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
       }
     }

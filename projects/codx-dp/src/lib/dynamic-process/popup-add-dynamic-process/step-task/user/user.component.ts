@@ -35,6 +35,9 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
   }
   ngOnChanges(changes: SimpleChanges): void {
+    if(changes?.dataSource){
+      this.dataSource;
+    }
   }
   
   shareUser(share) {

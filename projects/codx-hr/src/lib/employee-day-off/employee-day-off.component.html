@@ -13,8 +13,6 @@
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
-  (onActions)="handleAction($event)"
-  (oneMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
@@ -489,7 +487,7 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
-    (clickMFunction)="clickEvent($event, data)"
+    (clickMFunction)="clickEvent($event)"
   >
   </lib-view-day-off-detail>
 </ng-template>

@@ -14,6 +14,7 @@ import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
 import { async } from '@angular/core/testing';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -35,6 +36,8 @@ export class DealDetailComponent implements OnInit {
   @ViewChild('quotations') quotations: TemplateRef<any>;
   @ViewChild('contract') contract: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+
+
 
   listContract: CM_Contacts[];
   tabControl = [
@@ -128,6 +131,7 @@ export class DealDetailComponent implements OnInit {
     await this.getContractByDeaID();
     await this.getContactByDeaID(this.dataSelected.recID);
 
+
     } catch (error) {}
 
   }
@@ -209,7 +213,6 @@ export class DealDetailComponent implements OnInit {
   }
 
   changeFooter(e) {
-    console.log(e);
   }
 
  async getContractByDeaID() {

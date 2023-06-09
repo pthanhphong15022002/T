@@ -117,16 +117,12 @@ export class LeadsComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    this.dataObj = {
-      processID: '327eb334-5695-468c-a2b6-98c0284d0620',
-    };
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
     this.request.className = 'LeadsBusiness';
     this.request.method = 'GetListLeadsAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
@@ -369,6 +365,7 @@ export class LeadsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
+        this.view.dataService.clear();
         e.event.modifiedOn = new Date();
         this.view.dataService.update(e.event).subscribe();
         this.changeDetectorRef.detectChanges();
@@ -407,7 +404,6 @@ export class LeadsComponent
           if (e && e.event != null) {
             e.event.modifiedOn = new Date();
             this.view.dataService.update(e.event).subscribe();
-            //this.leadsComponent.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -440,11 +436,9 @@ export class LeadsComponent
 
     // });
     this.view.dataService.dataSelected = data;
-
-    this.cache.functionList(this.funcID).subscribe((fun) => {
       this.view.dataService
         .delete([this.view.dataService.dataSelected], true, (opt) =>
-          this.beforeDel(opt, fun.entityName)
+          this.beforeDel(opt)
         )
         .subscribe((res) => {
           if (res) {
@@ -452,12 +446,11 @@ export class LeadsComponent
           }
         });
       this.changeDetectorRef.detectChanges();
-    });
   }
-  beforeDel(opt: RequestOption, entityName: string) {
+  beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedLeadAsync';
-    opt.data = [itemSelected.recID, entityName];
+    opt.data = [itemSelected.recID];
     return true;
   }
   //#endregion

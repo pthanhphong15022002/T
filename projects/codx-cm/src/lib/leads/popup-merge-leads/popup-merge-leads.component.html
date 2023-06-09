@@ -823,7 +823,7 @@
               ></codx-input>
             </div>
             <div
-              *ngFor="let item of leadOne?.industries.split(';'); index as i"
+              *ngFor="let item of leadOne?.industries?.split(';'); index as i"
               class="d-inline"
             >
               <span
@@ -834,7 +834,7 @@
               ></span
               ><span
                 class="me-1"
-                *ngIf="i < leadOne?.industries.split(';').length - 1"
+                *ngIf="i < leadOne?.industries?.split(';').length - 1"
                 >,</span
               >
               <!-- {{ dataSelected?.segmentID }} -->
@@ -855,7 +855,7 @@
               ></codx-input>
             </div>
             <div
-              *ngFor="let item of leadTwo?.industries.split(';'); index as i"
+              *ngFor="let item of leadTwo?.industries?.split(';'); index as i"
               class="d-inline"
             >
               <span
@@ -866,7 +866,7 @@
               ></span
               ><span
                 class="me-1"
-                *ngIf="i < leadTwo?.industries.split(';').length - 1"
+                *ngIf="i < leadTwo?.industries?.split(';').length - 1"
                 >,</span
               >
             </div>
@@ -886,7 +886,7 @@
               ></codx-input>
             </div>
             <div
-              *ngFor="let item of leadThree?.industries.split(';'); index as i"
+              *ngFor="let item of leadThree?.industries?.split(';'); index as i"
               class="d-inline"
             >
               <span
@@ -897,7 +897,7 @@
               ></span
               ><span
                 class="me-1"
-                *ngIf="i < leadThree?.industries.split(';').length - 1"
+                *ngIf="i < leadThree?.industries?.split(';').length - 1"
                 >,</span
               >
             </div>
@@ -990,14 +990,14 @@
         <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
-            fiedName="BusinesslineID"
+            fiedName="businessLineID"
           ></codx-label>
         </div>
         <div class="w-30">
           <codx-input
-            field="businesslineID"
+            field="businessLineID"
             [formModel]="dialog.formModel"
-            [crrValue]="leadNew?.businesslineID"
+            [crrValue]="leadNew?.businessLineID"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
@@ -1005,19 +1005,19 @@
           <div class="d-flex" *ngIf="leadOne?.recID">
             <div class="w-10">
               <codx-input
-                id="businesslineID1"
-                name="businesslineID"
+                id="businessLineID1"
+                name="businessLineID"
                 class="test-check"
                 type="radio"
-                field="businesslineID1"
+                field="businessLineID1"
                 [checked]="true"
-                (valueChange)="changeRadio($event, 'businesslineID')"
+                (valueChange)="changeRadio($event, 'businessLineID')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadOne?.businesslineID
-                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                leadOne?.businessLineID
+                  | formatvalue : dialog.formModel : 'businessLineID'
                   | async
               "
             ></div>
@@ -1027,19 +1027,19 @@
           <div class="d-flex" *ngIf="leadTwo?.recID">
             <div class="w-10">
               <codx-input
-                id="businesslineID2"
-                name="businesslineID"
+                id="businessLineID2"
+                name="businessLineID"
                 class="test-check"
                 type="radio"
-                field="businesslineID2"
+                field="businessLineID2"
                 [checked]="false"
-                (valueChange)="changeRadio($event, 'businesslineID')"
+                (valueChange)="changeRadio($event, 'businessLineID')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadTwo?.businesslineID
-                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                leadTwo?.businessLineID
+                  | formatvalue : dialog.formModel : 'businessLineID'
                   | async
               "
             ></div>
@@ -1049,19 +1049,19 @@
           <div class="d-flex" *ngIf="leadThree?.recID">
             <div class="w-10">
               <codx-input
-                id="businesslineID3"
-                name="businesslineID"
+                id="businessLineID3"
+                name="businessLineID"
                 class="test-check"
                 type="radio"
-                field="businesslineID3"
+                field="businessLineID3"
                 [checked]="false"
-                (valueChange)="changeRadio($event, 'businesslineID')"
+                (valueChange)="changeRadio($event, 'businessLineID')"
               ></codx-input>
             </div>
             <div
               [innerHTML]="
-                leadThree?.businesslineID
-                  | formatvalue : dialog.formModel : 'BusinesslineID'
+                leadThree?.businessLineID
+                  | formatvalue : dialog.formModel : 'businessLineID'
                   | async
               "
             ></div>

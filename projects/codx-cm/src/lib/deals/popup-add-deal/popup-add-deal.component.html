@@ -39,7 +39,7 @@
 
         >
         </codx-label>
-        <div *ngIf="deal?.businessLineID">
+        <div *ngIf="deal?.businessLineID && isViewAll; else viewAll ">
           <codx-input
           [formModel]="form.formModel"
           field="businessLineID"
@@ -50,7 +50,15 @@
         >
         </codx-input>
         </div>
-
+        <ng-template #viewAll>
+          <codx-input
+          [formModel]="form.formModel"
+          field="businessLineID"
+          [crrValue]="deal?.businessLineID"
+          (valueChange)="valueChangeBusinessLine($event)"
+        >
+        </codx-input>
+        </ng-template>
 
       </div>
     </div>
@@ -435,17 +443,17 @@
 
     <codx-list-contacts
       #codxListContact
+      [selectAll]="false"
       [funcID]="'CM0101'"
       [objectID]="customerID"
       [listContacts]="lstContactCustomer"
       [objectType]="'1'"
       [objectName]="customerName"
       [isConvertLeadToCus]="true"
-      [selectAll]="false"
       (contactEvent)="contactEvent($event)"
       (lstContactEmit)="lstContactEmit($event)"
       (objectConvert)="objectConvertDeal($event)"
-      [hidenMF]="true"
+      [hidenMF]="false"
       [type]="'formAdd'"
       [lstContactRef]="lstContactDeal"
     ></codx-list-contacts>
@@ -459,12 +467,13 @@
       ></codx-label>
     </div>
     <codx-list-contacts
-    #loadContactDeal
+      #loadContactDeal
+      [selectAll]="false"
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"
+      (contactEvent)="contactEventDeal($event)"
       [objectType]="'4'"
-      [selectAll]="false"
       [objectName]="deal?.dealName"
       [hidenMF]="true"
       [type]="'formAdd'"
