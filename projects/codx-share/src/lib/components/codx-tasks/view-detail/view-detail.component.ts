@@ -99,7 +99,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   param?: TM_Parameter = new TM_Parameter();
   isEdit = true;
   timeoutId: any;
-  listHistoryProgress: any;
+  listHistoryProgress =[];
+  loadedHisPro = false;
 
   constructor(
     private api: ApiHttpService,
@@ -128,7 +129,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
-      this.getDataHistoryProgress();
+      this.getDataHistoryProgress(this.itemSelected.recID);
     }
   }
   //#region
@@ -629,19 +630,22 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   isNullOrEmpty(value: string): boolean {
     return value == null || value == undefined || !value.trim();
   }
-  getDataHistoryProgress() {
+  getDataHistoryProgress(objectID) {
+    this.listHistoryProgress = [];
+    this.loadedHisPro= false
     this.api
       .execSv(
         'BG',
         'ERM.Business.BG',
         'TrackLogsBusiness',
         'GetDataHistoryProgressAsync',
-        [this.itemSelected.recID]
+        [objectID]
       )
       .subscribe((res: any[]) => {
         if (res && res?.length >0) {
           this.listHistoryProgress = JSON.parse(JSON.stringify(res));
-        } else this.listHistoryProgress = [];
+        }
+        this.loadedHisPro= true
         this.changeDetectorRef.detectChanges();
       });
   }
