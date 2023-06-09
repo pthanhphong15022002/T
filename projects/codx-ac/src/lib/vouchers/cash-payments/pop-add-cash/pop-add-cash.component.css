@@ -26,6 +26,10 @@
 .ac-ng-overlay .ngx-overlay{
     background-color: whitesmoke !important;
 }
+.ac-ng-overlay .ngx-overlay img{
+    width: 45% !important;
+    height: auto !important;
+}
 .listcash-content .e-float-input input{
     height: 20px !important;
     width: 100% !important;
