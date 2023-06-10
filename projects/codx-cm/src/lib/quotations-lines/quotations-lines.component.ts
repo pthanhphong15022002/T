@@ -40,10 +40,11 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() quotationLinesAddNew = [];
   @Input() quotationLinesEdit = [];
   @Input() quotationLinesDeleted = [];
-
+  //mac dinh thuộc tính
+  @Input() isViewTemp = false;
+  @Input() showButtonAdd = true; //
+  @Input() hideMoreFunc = '0'; //chua dung
   @Output() eventQuotationLines = new EventEmitter<any>();
-  // @Output() eventEdit = new EventEmitter<any>();
-  // @Output() eventDeleted = new EventEmitter<any>();
 
   fmQuotationLines: FormModel = {
     formName: 'CMQuotationsLines',
@@ -67,6 +68,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   grvSetupQuotationsLines: any;
   crrCustomerID: string;
   objectOut: any;
+  titleAdd = 'Thêm'; //sau gọi sys
 
   constructor(
     private codxCM: CodxCmService,
@@ -93,7 +95,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       });
   }
   ngAfterViewInit(): void {}
-  
+
   ngOnInit(): void {
     this.objectOut = {
       listQuotationLines: this.listQuotationLines,
@@ -171,8 +173,12 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                   this.fmQuotationLines.gridViewName
                 )
                 .subscribe((res) => {
+                  let customName = f.customName || f.description;
                   var obj = {
-                    headerText: 'Thêm sản phẩm báo giá',
+                    headerText:
+                      this.titleAdd +
+                      customName.charAt(0).toLowerCase() +
+                      customName.slice(1),
                     quotationsLine: data,
                     listQuotationLines: this.listQuotationLines,
                     grvSetup: this.grvSetupQuotationsLines,
@@ -184,8 +190,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                   let dialogQuotations = this.callFC.openForm(
                     PopupAddQuotationsLinesComponent,
                     '',
-                    650,
-                    850,
+                    1000,
+                    700,
                     '',
                     obj,
                     '',
@@ -270,8 +276,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           let dialogQuotations = this.callFC.openForm(
             PopupAddQuotationsLinesComponent,
             '',
-            650,
-            570,
+            1000,
+            700,
             '',
             obj,
             '',
@@ -360,8 +366,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                   let dialogQuotations = this.callFC.openForm(
                     PopupAddQuotationsLinesComponent,
                     '',
-                    650,
-                    570,
+                    1000,
+                    700,
                     '',
                     obj,
                     '',

@@ -108,7 +108,7 @@ export class MoveComponent implements OnInit {
     this.user = this.auth.get();     
     this.folderService.options.funcID = this.dmSV.idMenuActive; 
     this.folderService.getFolders("").subscribe(async res => {    
-      if (res != null) {
+      if (res) {
         this.listNodeMove = res[0].filter(item => item.read && item.recID.toString() != this.id);      
         this.selection = 0; 
         this.changeDetectorRef.detectChanges();
@@ -219,7 +219,6 @@ export class MoveComponent implements OnInit {
             res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
             files.push(Object.assign({}, res.data));
             this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
             that.displayThumbnail(res.data.recID, res.data.pathDisk);
             this.modalService.dismissAll();
           }
@@ -402,7 +401,8 @@ export class MoveComponent implements OnInit {
     this.selectId = id;       
     if ($node.data.items && $node.data.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async res => {
-        tree.addChildNodes($node.data, res[0]);
+        var data = res[0].filter(item => item.read && item.recID.toString() != this.id);
+        tree.addChildNodes($node.data, data);
         this.changeDetectorRef.detectChanges();
       });
     }    

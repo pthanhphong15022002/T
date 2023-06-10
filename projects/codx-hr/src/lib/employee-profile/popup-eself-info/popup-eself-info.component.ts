@@ -125,15 +125,6 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
-  handleOnSaveEmployeeContactInfo() {
-    this.hrService.saveEmployeeContactInfo(this.data).subscribe((p) => {
-      if (p != null) {
-        this.notitfy.notifyCode('SYS006');
-        this.dialog.close();
-      } else this.notitfy.notifyCode('SYS021');
-    });
-  }
-
   handleOnSaveEmployeeSelfInfo(e?: any) {
     // if(this.formGroup.invalid){
     //   this.hrService.notifyInvalid(this.formGroup, this.formModel);

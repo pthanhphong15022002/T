@@ -737,6 +737,8 @@ export class CodxDMService {
         // DMT0204;DMT0216
         // khong phai cho duyet
         var listMove = 'DMT0204;DMT0216';
+
+
         if (data.isSystem || (this.idMenuActive != 'DMT02' && this.idMenuActive != 'DMT03' && this.idMenuActive != 'DMT00')) 
         {
           if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) 
@@ -744,7 +746,6 @@ export class CodxDMService {
             e[i].disabled = true;
           }
         }
-
         // if (this.idMenuActive == "DMT03") {
         //   if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) {
         //     e[i].disabled = true;
@@ -878,6 +879,7 @@ export class CodxDMService {
               break;
             case 'DMT0204': // di chuyen thu muc
             case 'DMT0216': // di chuyen file
+              debugger
               if (!data.moveable) e[i].isblur = true; // duoc view
               break;
             case 'DMT0206': //delete

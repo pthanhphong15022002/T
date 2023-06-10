@@ -7,3 +7,6 @@
   white-space: nowrap;
   max-width: 150px;
 }
+:host ::ng-deep codx-view-list-detail .codx-detail-main {
+  overflow: hidden;
+}

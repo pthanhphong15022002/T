@@ -15,13 +15,15 @@
           <div class="profile-bg"></div>
           <div class="d-flex flex-column text-center mx-4 profile-info">
             <div class="mb-4 d-flex justify-content-between align-items-top">
-              <span
+             <div class="w-30px min-w-30px">
+              <span *ngIf="crrIndex > 0" 
                 type="button"
                 class="btn btn-icon btn-light-primary rounded-circle"
                 (click)="previousEmp()"
               >
                 <i class="icon-arrow_back_ios icon-16"></i>
               </span>
+            </div>
               <div class="d-flex justify-content-center">
                 <div class="position-relative mt-1">
                   <codx-img
@@ -345,13 +347,15 @@
                   </div>
                 </div>
               </div>
-              <span
+              <div class="w-30px min-w-30px">
+              <span *ngIf="pageNum <= maxPageNum && crrIndex < listEmp.length - 1"
                 type="button"
                 class="btn btn-icon btn-light-primary rounded-circle"
                 (click)="nextEmp()"
               >
                 <i class="icon-arrow_forward_ios icon-16"></i>
               </span>
+            </div>
             </div>
             <div class="d-flex flex-center">
               <div class="fs-5-sm mb-1 d-flex align-items-center">
@@ -366,12 +370,14 @@
             <div
               class="text-gray-500 mb-1"
               *ngIf="infoPersonal"
-              [innerHTML]="
+              >
+              {{this.infoPersonal.PositionName}}
+            </div>
+              <!-- [innerHTML]="
                 infoPersonal.positionID
                   | formatvalue : eInfoFormModel : 'positionID'
                   | async
-              "
-            ></div>
+              " -->
             <div class="d-flex flex-center mb-2">
               <div class="text-dark d-flex flex-wrap" *ngIf="lstOrg">
                 <div
@@ -3650,7 +3656,6 @@
                 [method]="'LoadDataAsync'"
                 [predicates]="'EmployeeID=@0'"
                 [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
                 height="auto"
               ></codx-gridview>
             </div>
@@ -4082,7 +4087,6 @@
             </div>
           </div>
           <div class="mb-1 mt-5">
-            <!-- <div *ngIf="reRenderGrid == true && appointionFormModel && appointionColumnGrid"> -->
             <div *ngIf="appointionFormModel && appointionColumnGrid">
               <!-- <codx-gridview
                 *ngIf="appointionColumnGrid"
@@ -4138,7 +4142,7 @@
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
-                *ngIf="eDayOffGrvSetup"
+                *ngIf="eDayOffGrvSetup && dayoffHeaderTexts"
                 [cssClass]="'rounded-pill border-1'"
                 cssPopup="h-350px w-300px"
                 [emptyText]="dayoffHeaderTexts['KowID']"
@@ -5199,7 +5203,7 @@
                 <span>({{ eDiseasesRowCount }})</span>
               </span> -->
             </div>
-            <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5" *ngIf="eDiseasesHeaderText">
               <span>
                 <codx-dropdown-select
                   *ngIf="eDiseasesGrvSetup"
@@ -5391,7 +5395,7 @@
                 <span>({{ eVaccineRowCount }})</span>
               </span> -->
             </div>
-            <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5" *ngIf="eVaccineHeaderText">
               <codx-dropdown-select
                 *ngIf="eVaccineGrvSetup"
                 [cssClass]="'rounded-pill border-1'"
@@ -5539,7 +5543,7 @@
                 </codx-label>
               </div>
               <div class="d-flex align-items-center">
-                <span class="text-dark fw-bold">
+                <span class="ms-7 text-dark fw-bold">
                   {{ infoPersonal?.submitDate | fmDT }}
                 </span>
               </div>
@@ -5571,13 +5575,13 @@
           <div class="row mb-5">
             <div class="col-4">
               <div class="text-gray-600 pb-1 d-flex">
-                <span class=""></span>
+                <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                 <codx-label fiedName="QuitForm" [formModel]="formModel">
                 </codx-label>
               </div>
               <div class="d-flex align-items-center">
                 <span
-                  class="text-dark fw-bold"
+                  class="ms-7 text-dark fw-bold"
                   [innerHTML]="
                     infoPersonal?.quitForm
                       | formatvalue : formModel : 'quitForm'
@@ -7728,7 +7732,6 @@
             [dataValues]="employeeID"
             [emptyTemplate]="emptyDataTemplate"
             [dataService]="dataService"
-            [pageSize]="numPageSizeGridView"
             height="auto"
             [sort]="[eContractSortModel]"
           ></codx-gridview>
