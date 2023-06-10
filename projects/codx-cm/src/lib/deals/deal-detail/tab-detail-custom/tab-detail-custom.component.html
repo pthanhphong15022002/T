@@ -1,3 +1,6 @@
+
+<div class="main-right">
+
 <container-element [ngSwitch]="tabClicked">
   <some-element
     *ngSwitchCase="tabInformation"
@@ -34,6 +37,8 @@
 
   <some-element *ngSwitchDefault></some-element>
 </container-element>
+
+</div>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
   <div *ngIf="isDataLoading">

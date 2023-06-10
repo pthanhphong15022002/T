@@ -39,6 +39,7 @@ import { CM_Contacts } from '../../models/tmpCrm.model';
 import { TempComponent } from 'codx-core/lib/templates/base-temp/base.component';
 import { firstValueFrom, map } from 'rxjs';
 import { DateTimePickerAllModule } from '@syncfusion/ej2-angular-calendars';
+import { QuotationsLinesComponent } from '../../quotations-lines/quotations-lines.component';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -56,6 +57,9 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('tabObj') tabObj: TabComponent;
 
   @ViewChild('itemTemp') itemTemp: TemplateRef<any>;
+  @ViewChild('viewQuotationsLine') viewQuotationsLine: QuotationsLinesComponent;
+
+  
 
   quotations: CM_Quotations;
   action = 'add';
@@ -772,7 +776,8 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.listQuotationLines.forEach((ql) => {
             ql['currencyID'] = this.quotations.currencyID;
             ql['exchangeRate'] = this.quotations.exchangeRate;
-
+           
+            ql['salesPrice'] = (ql['salesPrice'] * exchangeRateOld) / exchangeRateNew;
             ql['costPrice'] =
               (ql['costPrice'] * exchangeRateOld) / exchangeRateNew;
             ql['discAmt'] = (ql['discAmt'] * exchangeRateOld) / exchangeRateNew;
@@ -781,11 +786,12 @@ export class PopupAddQuotationsComponent implements OnInit {
             ql['vatBase'] = (ql['vatBase'] * exchangeRateOld) / exchangeRateNew;
             ql['vatAmt'] = (ql['vatAmt'] * exchangeRateOld) / exchangeRateNew;
             ql['netAmt'] = (ql['netAmt'] * exchangeRateOld) / exchangeRateNew;
+ 
             if (this.action == 'edit') {
               this.linesUpdate(ql);
             }
           });
-          this.gridQuationsLines.refresh();
+          this.viewQuotationsLine.gridQuationsLines.refresh();
         }
       });
   }
@@ -829,7 +835,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.listQuotationLines.push(lineCrr);
     }
     this.loadTotal();
-    this.gridQuationsLines.refresh();
+    this.viewQuotationsLine.gridQuationsLines.refresh();
   }
 
   checkLines(lineCrr) {

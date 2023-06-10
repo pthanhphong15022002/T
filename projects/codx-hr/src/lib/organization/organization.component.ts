@@ -5,20 +5,17 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CRUDService,
-  CodxFormDynamicComponent,
   CodxTreeviewComponent,
-  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
-import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',

@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { load } from '@syncfusion/ej2-angular-charts';
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
@@ -310,14 +311,6 @@ export class PopupAddDealComponent
       });
   }
 
-  // loadListContact(lstContact) {
-  //   this.l = this.codxCmService.bringDefaultContactToFront(lstContact);
-  //   if (this.listContacts != null && this.listContacts.length > 0) {
-  //     this.changeContacts(this.listContacts[0]);
-  //     if (this.isConvertLeadToCus) this.insertFieldCheckbox();
-  //   }
-  // }
-
   getListContactByObjectID(objectID) {
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
@@ -435,12 +428,24 @@ export class PopupAddDealComponent
 
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
-    if (this.action !== this.actionEdit) {
-      this.insertInstance();
-    } else {
-      this.editInstance();
-    }
+    this.executeSaveData();
+
   }
+
+  async executeSaveData(){
+    try {
+      if (this.action !== this.actionEdit) {
+        await this.insertInstance();
+        await this.onAdd();
+      } else {
+        await this.editInstance();
+        await this.onEdit();
+      }
+
+    } catch (error) {}
+
+  }
+
   cbxChange($event, field) {
     if ($event) {
       this.deal[field] = $event;
@@ -563,7 +568,7 @@ export class PopupAddDealComponent
       }
     }
   }
-  onAdd() {
+  async onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -572,7 +577,7 @@ export class PopupAddDealComponent
         } else this.dialog.close();
       });
   }
-  onEdit() {
+  async onEdit() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
@@ -703,19 +708,18 @@ export class PopupAddDealComponent
     });
   }
 
-  insertInstance() {
+  async insertInstance() {
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
-        this.onAdd();
+
       }
     });
   }
-  editInstance() {
+  async editInstance() {
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
-        this.onEdit();
       }
     });
   }

@@ -16,12 +16,14 @@ export class MessageSystemPipe implements PipeTransform {
      if(mssg.defaultName){
        switch(data.jsMessage.mssgCode){
          case"WP038":// add member
-            let param = {
-              members : JSON.parse(data.jsMessage.value[0].fieldValue),
-              user:JSON.parse(data.jsMessage.value[1].fieldValue)
-            };
             debugger
-            let viewRef = this.dynamicTemplate(template,param.members,param.user);
+            let members = Array.from<any>(JSON.parse(data.jsMessage.value[0].fieldValue));
+            let param = {
+              memberIDs : members.map((x:any) => x.UserID).join(";"),
+              members: members,
+              user : JSON.parse(data.jsMessage.value[1].fieldValue),
+            };
+            let viewRef = this.dynamicTemplate(template,param.memberIDs,param.members,param.user);
             let container = document.getElementById(data.recID);
             if(container && viewRef)
               container.append(viewRef);
@@ -34,7 +36,7 @@ export class MessageSystemPipe implements PipeTransform {
    // dynamic template
    dynamicTemplate(template:TemplateRef<any>,...arg:any[]){
     debugger
-    let viewRef = template.createEmbeddedView({$implicit: arg[0], value2:arg[1]});
+    let viewRef = template.createEmbeddedView({$implicit: arg[0], value2:arg[1], value3:arg[2]});
     this.applicationRef.attachView(viewRef);
     viewRef.detectChanges();
     let container = document.createElement("div"); 

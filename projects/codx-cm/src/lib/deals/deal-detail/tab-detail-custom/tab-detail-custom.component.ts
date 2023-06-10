@@ -80,13 +80,13 @@ export class TabDetailCustomComponent
   onInit(): void {
     this.executeApiCalls();
     console.log(this.dataSelected);
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
       this.isDataLoading = true;
-      if(this.tabClicked == 'Contact' )
+      if(this.tabClicked === this.tabContact )
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
       }
@@ -153,33 +153,6 @@ export class TabDetailCustomComponent
     return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
   }
 
-  addContact() {
-    var contact = 'CM0103'; // contact
-    this.cache.functionList(contact).subscribe((fun) => {
-      let option = new SidebarModel();
-      // option.DataService = this.view.dataService;
-      var formMD = new FormModel();
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      formMD.funcID = contact;
-      option.FormModel = JSON.parse(JSON.stringify(formMD));
-      option.Width = '800px';
-      option.DataService = null;
-      this.titleAction = ' Bao test';
-      var dialog = this.callfc.openSide(
-        PopupAddCmCustomerComponent,
-        ['add', this.titleAction],
-        option
-      );
-      dialog.closed.subscribe((e) => {
-        //      if (!e?.event) this.view.dataService.clear();
-        // if (e && e.event != null) {
-        //   this.customerDetail.listTab(this.funcID);
-        // }
-      });
-    });
-  }
 
   //truong tuy chinh - đang cho bằng 1
   showColumnControl(stepID) {

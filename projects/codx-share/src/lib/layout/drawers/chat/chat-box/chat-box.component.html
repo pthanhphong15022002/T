@@ -485,28 +485,80 @@
 
 
 <!-- message type 5 -->
-<ng-template #mssgType5 let-memebers let-user="user">
-    <ng-container *ngFor="let item of memebers">
-        <span class="mssg-item" (click)="clickViewMember(item)">
-            <codx-img 
-                [objectId]="item.UserID" 
-                [objectName]="item.UserName" 
+<ng-template #mssgType5 let-memberIDs let-memebers="value2" let-user="value3">
+    <div class="d-flex align-items-center">
+        <span class="d-flex align-items-center">
+            <codx-imgs
+                [width]="30"
+                [objectId]="memberIDs" 
                 [objectType]="'AD_Users'" 
-                [width]="30">
-            </codx-img>
-            {{item.UserName}}
+                [numberImages]="1">
+            </codx-imgs>
+            <ng-container *ngFor="let memeber of memebers">
+                <span class="mssg-item mssg-item-name" (click)="clickViewMember(memeber)">{{memeber.UserName}}</span>
+            </ng-container>
         </span>
-    </ng-container>
-    <span>được</span>
-    <span class="mssg-item" (click)="clickViewMember(user)">
-        <codx-img 
-            [objectId]="user.UserID" 
-            [objectName]="user.UserName" 
-            [objectType]="'AD_Users'" 
-            [width]="30">
-        </codx-img>
-        {{user.UserName}}
-    </span>
-    <span>thêm vào nhóm</span>
+        <span>được</span>
+        <span class="mssg-item" (click)="clickViewMember(user)">{{user.UserName}}</span>
+        <span>thêm vào nhóm</span>
+    </div>
 </ng-template>
-<!--  -->
+<!-- template view member -->
+<ng-template #tmpViewMember let-dialog let-member="data">
+    <div class="popup-view">
+        <div class="popup-view-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <span class="fw-bolder fs-5">Thông tin người dùng</span>
+                <span>
+                    <button type="button" class="btn-light btn btn-icon btn-sm ms-1" (click)="closePoppViewMember(dialog)">
+                        <span class="icon-close icon-16"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="popup-view-body" *ngIf="member">
+            <div class="popup-view-body_img">
+                <codx-img 
+                    [objectId]="member.userID" 
+                    [objectName]="member.userName" 
+                    [objectType]="'AD_Users'" [width]="90">
+                </codx-img>
+                <p class="fw-bolder fs-5">{{member.userName}}</p>
+            </div>
+            <div class="popup-view-body_infor">
+                <p class="fw-bolder">Thông tin chung</p>
+                <p>
+                    <span class="me-4">Điện thoại:</span>
+                    <span>{{member.phone}}</span>
+                </p>
+                <p>
+                    <span class="me-4">Giới tính:</span>
+                    <codx-vll 
+                        [name]="'HR001'" 
+                        [value]="member.gender" 
+                        showText="true" 
+                        [showBgColor]="true"
+                        [classList]="'badge badge-sm badge-inline flex-wrap me-0'">
+                    </codx-vll>
+                </p>
+                <p>
+                    <span class="me-4">Ngày sinh:</span>
+                    <span>{{member.Birthday | date:"ddmmyyyy"}}</span>
+                </p>
+                <p>
+                    <span class="me-4">Trạng thái:</span>
+                    <span>
+                        <codx-vll 
+                            [name]="'HR003'" 
+                            [value]="member.status" 
+                            [showBgColor]="true" 
+                            [showText]="true"
+                            [className]="'badge badge-sm badge-inline'">
+                        </codx-vll>
+                    </span>
+                </p>
+            </div>
+        </div>
+        
+    </div>
+</ng-template>

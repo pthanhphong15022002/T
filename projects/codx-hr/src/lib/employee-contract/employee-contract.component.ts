@@ -185,7 +185,6 @@ export class EmployeeContractComponent extends UIComponent {
   clickMF(event, data) {
     this.itemDetail = data;
 
-    console.log(event);
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -315,7 +314,6 @@ export class EmployeeContractComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          console.log(this.itemDetail);
           this.hrService
             .release(
               this.itemDetail.recID,

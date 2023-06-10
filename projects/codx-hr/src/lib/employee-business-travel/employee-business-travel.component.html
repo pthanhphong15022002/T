@@ -31,7 +31,9 @@
         </div>
         <div class="d-flex flex-column">
           <div class="mb-1">
-            <div class="fw-bold text-dark fs-6">{{ data?.emp?.employeeName }}</div>
+            <div class="fw-bold text-dark fs-6">
+              {{ data?.emp?.employeeName }}
+            </div>
           </div>
           <div class="text-gray-600 fs-7 mb-1">
             <span
@@ -83,7 +85,7 @@
             "
           >
           </span>
-          <span *ngIf="data.beginDate !== data.endDate"> - </span>
+          <span *ngIf="data.beginDate !== data.endDate" class="mx-2"> - </span>
           <span
             *ngIf="data.beginDate !== data.endDate"
             [ngbTooltip]="grvSetup?.EndDate?.headerText"
@@ -93,10 +95,12 @@
           >
           </span>
           <span
+            *ngIf="data.days"
             class="icon-i-info-circle-fill icon-6 mx-2 text-gray-400"
           ></span>
           <span
-            class="align-self-center fw-bold"
+            *ngIf="data.days"
+            class="align-self-center me-2 fw-bold"
             [ngbTooltip]="grvSetup?.Days?.headerText"
             [innerHTML]="
               data.days | formatvalue : view.formModel : 'days' | async
@@ -280,7 +284,7 @@
         <span [ngbTooltip]="grvSetup?.BeginDate?.headerText">
           {{ data.beginDate | fmDT }}
         </span>
-        <span *ngIf="data.beginDate !== data.endDate"> - </span>
+        <span *ngIf="data.beginDate !== data.endDate" class="mx-2"> - </span>
         <span
           *ngIf="data.beginDate !== data.endDate"
           [ngbTooltip]="grvSetup?.EndDate?.headerText"
@@ -288,8 +292,12 @@
           {{ data.endDate | fmDT }}
         </span>
 
-        <span class="icon-i-info-circle-fill icon-6 mx-2 text-gray-400"></span>
         <span
+          *ngIf="data.days"
+          class="icon-i-info-circle-fill icon-6 mx-2 text-gray-400"
+        ></span>
+        <span
+          *ngIf="data.days"
           class="align-self-center fw-bold me-1"
           [ngbTooltip]="grvSetup?.Days?.headerText"
           [innerHTML]="

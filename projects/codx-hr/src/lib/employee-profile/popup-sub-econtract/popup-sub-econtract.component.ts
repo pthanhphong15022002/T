@@ -1,8 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { DialogData, DialogRef, FormModel, NotificationsFCMService, NotificationsService } from 'codx-core';
-import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import {
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 
 @Component({
@@ -66,8 +69,8 @@ export class PopupSubEContractComponent implements OnInit {
 
           this.fmSubContract.currentData = this.oSubContract;
           this.fgSubContract.patchValue(this.oSubContract);
-          this.cr.detectChanges();
           this.isAfterRender = true;
+          this.cr.detectChanges();
         }
       });
     } else if (this.actionType == 'edit' || this.actionType == 'copy') {
@@ -82,8 +85,8 @@ export class PopupSubEContractComponent implements OnInit {
 
       this.fmSubContract.currentData = this.oSubContract;
       this.fgSubContract.patchValue(this.oSubContract);
-      this.cr.detectChanges();
       this.isAfterRender = true;
+      this.cr.detectChanges();
     }
   }
 
@@ -96,24 +99,23 @@ export class PopupSubEContractComponent implements OnInit {
       );
       return;
     }
-    if(this.actionType == 'add' || this.actionType == 'copy'){
+    if (this.actionType == 'add' || this.actionType == 'copy') {
       this.oSubContract.contractTypeID = '1';
+      this.oSubContract.status = '1';
       this.hrService.addEContract(this.oSubContract).subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(res);
         }
       });
-    }
-    else if(this.actionType == 'edit'){
+    } else if (this.actionType == 'edit') {
       this.oSubContract.contractTypeID = '1';
       this.hrService.editEContract(this.oSubContract).subscribe((res) => {
-        if(res){
+        if (res) {
           this.notify.notifyCode('SYS007');
-          debugger
           this.dialog && this.dialog.close(res);
         }
-      })
+      });
     }
   }
 
