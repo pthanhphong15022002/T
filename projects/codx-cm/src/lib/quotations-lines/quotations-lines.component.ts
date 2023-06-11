@@ -40,10 +40,11 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() quotationLinesAddNew = [];
   @Input() quotationLinesEdit = [];
   @Input() quotationLinesDeleted = [];
-
+  //mac dinh thuộc tính
+  @Input() isViewTemp = false;
+  @Input() showButtonAdd = true; //
+  @Input() hideMoreFunc = '0'; //chua dung
   @Output() eventQuotationLines = new EventEmitter<any>();
-  // @Output() eventEdit = new EventEmitter<any>();
-  // @Output() eventDeleted = new EventEmitter<any>();
 
   fmQuotationLines: FormModel = {
     formName: 'CMQuotationsLines',
