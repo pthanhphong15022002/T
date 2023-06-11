@@ -143,7 +143,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   oldSubType: any = '';
   authStore: AuthStore;
   typeSet: any;
-  loading:any = false;
+  loading: any = false;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -420,26 +420,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
       }
     }
-    if (this.journal.postingMode == '1') {
-      this.hideFields.push('CR2');
-      this.hideFields.push('CR');
-      if (this.cashpayment.currencyID == this.baseCurr) {
-        this.hideFields.push('DR2');
-        this.hideFields.push('TaxAmt2');
-      } else {
-        var arr = ['DR2', 'TaxAmt2'];
-        arr.forEach((fieldName) => {
-          let i = this.gridCash.columnsGrid.findIndex(
-            (x) => x.fieldName == fieldName
-          );
-          if (i > -1) {
-            this.gridCash.columnsGrid[i].isVisible = true;
-            this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
-          }
-        });
-      }
-    }
-
+    this.loadAccountControl();
     this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
 
@@ -800,8 +781,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  actionEvent(e: any) {}
-
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       this.journalNo,
@@ -994,7 +973,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     data: res.update,
                   });
                   this.dt.detectChanges();
-                }else {
+                } else {
                   this.loading = false;
                   this.cashpayment.unbounds.isAddNew = true;
                 }
@@ -1034,7 +1013,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 this.hasSaved = false;
                 this.loading = false;
               });
-          }else{
+          } else {
             this.cashpayment.unbounds.isAddNew = true;
             this.loading = false;
           }
@@ -1064,7 +1043,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     this.cashpayment = res;
                     this.form.formGroup.patchValue(this.cashpayment);
                   });
-              }else{
+              } else {
                 this.cashpayment.unbounds.isAddNew = true;
                 this.loading = false;
               }
@@ -1393,25 +1372,70 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadFormSubType(subtype) {
-    var arr = ['1', '3', '5'];
-    arr.forEach((eName) => {
-      if (eName == subtype) {
-        var element = document.querySelectorAll('.ac-type-' + eName);
-        if (element) {
-          for (let index = 0; index < element.length; index++) {
-            (element[index] as HTMLElement).style.display = 'inline';
-          }
-        }
+  loadAccountControl() {
+    if (this.journal.postingMode == '1') {
+      this.hideFields.push('CR2');
+      this.hideFields.push('CR');
+      if (this.cashpayment.currencyID == this.baseCurr) {
+        this.hideFields.push('DR2');
+        this.hideFields.push('TaxAmt2');
       } else {
-        var element = document.querySelectorAll('.ac-type-' + eName);
-        if (element) {
-          for (let index = 0; index < element.length; index++) {
-            (element[index] as HTMLElement).style.display = 'none';
+        var arr = ['DR2', 'TaxAmt2'];
+        arr.forEach((fieldName) => {
+          let i = this.gridCash.columnsGrid.findIndex(
+            (x) => x.fieldName == fieldName
+          );
+          if (i > -1) {
+            this.gridCash.columnsGrid[i].isVisible = true;
+            this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
           }
-        }
+        });
       }
-    });
+    } else {
+      let i = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'AccountID'
+      );
+      if (i > -1) {
+        this.gridCash.columnsGrid[i].headerText = 'TK';
+      }
+      this.hideFields.push('OffsetAcctID');
+      if (this.cashpayment.currencyID == this.baseCurr) {
+        this.hideFields.push('DR2');
+        this.hideFields.push('TaxAmt2');
+        this.hideFields.push('CR2');
+      } else {
+        var arr = ['DR2', 'TaxAmt2', 'CR2'];
+        arr.forEach((fieldName) => {
+          let i = this.gridCash.columnsGrid.findIndex(
+            (x) => x.fieldName == fieldName
+          );
+          if (i > -1) {
+            this.gridCash.columnsGrid[i].isVisible = true;
+            this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
+          }
+        });
+      }
+    }
   }
+  // loadFormSubType(subtype) {
+  //   var arr = ['1', '3', '5'];
+  //   arr.forEach((eName) => {
+  //     if (eName == subtype) {
+  //       var element = document.querySelectorAll('.ac-type-' + eName);
+  //       if (element) {
+  //         for (let index = 0; index < element.length; index++) {
+  //           (element[index] as HTMLElement).style.display = 'inline';
+  //         }
+  //       }
+  //     } else {
+  //       var element = document.querySelectorAll('.ac-type-' + eName);
+  //       if (element) {
+  //         for (let index = 0; index < element.length; index++) {
+  //           (element[index] as HTMLElement).style.display = 'none';
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
   //#endregion
 }
