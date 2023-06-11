@@ -315,7 +315,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
               this.dmSV.getRight(res2);
               this.refeshData();
               this.getDataFolder(res2.recID , true);
-             
+              this.dmSV.parentFolder.next(res2);
               var breadcumb = this.dmSV.breadcumb.getValue();
               if(!breadcumb.includes(res2.folderName)) breadcumb.push(res2.folderName);
               if(!this.dmSV.breadcumbLink.includes(res2.recID))this.dmSV.breadcumbLink.push(res2.recID);
@@ -326,6 +326,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         else
         {
           this.refeshData();
+          this.dmSV.parentFolder.next(res);
           var treeView = this.codxview?.currentView?.currentComponent?.treeView;
           if (treeView) {
               var list = treeView.getBreadCumb(res.recID);
