@@ -69,7 +69,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   crrCustomerID: string;
   objectOut: any;
   titleAdd = 'Thêm'; //sau gọi sys
-  readonly hideColums = ['rowno', 'netamt', 'salesamt','vatamt'];
+  readonly hideColums = ['rowno', 'netamt', 'salesamt','vatamt','discamt',''];
 
   constructor(
     private codxCM: CodxCmService,
@@ -589,5 +589,12 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     //     this.gridQuationsLines.refresh();
     //   }
     // });
+  }
+  onAddNew(e){
+    debugger
+  }
+
+  onEdit(e){
+    debugger
   }
 }
