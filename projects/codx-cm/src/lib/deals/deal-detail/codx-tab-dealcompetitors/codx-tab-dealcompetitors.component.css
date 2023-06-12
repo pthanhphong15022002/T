@@ -18,3 +18,25 @@
 .user-nav-item:hover{
   background-color:var(--primary-lighter);
 }
+
+.tooltip-container {
+  position: relative;
+  white-space: break-spaces;
+  max-height: 2em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tooltip-container:hover::after {
+  content: attr(data-tooltip); /* Hiển thị nội dung tooltip */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  white-space: normal;
+  background-color: #e4e1e1;
+  color: #1a1919;
+  padding: 5px;
+  z-index: 999;
+}
+
