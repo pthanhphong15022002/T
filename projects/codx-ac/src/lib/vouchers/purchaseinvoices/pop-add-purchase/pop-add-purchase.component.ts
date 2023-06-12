@@ -35,6 +35,7 @@ import { VATInvoices } from '../../../models/VATInvoices.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { map } from 'rxjs';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-purchase',
@@ -116,6 +117,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private ngxService: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -132,6 +134,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
+    this.ngxService.startLoader('loader');
     this.loadInit();
   }
 
@@ -193,6 +196,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
   gridCreated(e, grid) {
     this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
+    this.closeLoader();
   }
 
   onDoubleClick(data)
@@ -1035,6 +1039,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             }
           });
       }
+      if(this.modegrid == '2')
+        this.closeLoader();
       });
   }
 
@@ -1270,6 +1276,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
+  closeLoader(){
+    setTimeout(() => {
+      this.ngxService.stopLoader('loader');
+      this.ngxService.destroyLoaderData('loader');
+    }, 500);
+  }
   
   //#endregion
 }
