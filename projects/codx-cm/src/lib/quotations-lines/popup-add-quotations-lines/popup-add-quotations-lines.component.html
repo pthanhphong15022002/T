@@ -348,6 +348,20 @@
         fiedName="NetAmt"
         [formModel]="form.formModel"
       ></codx-label>
+      <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+        "("
+      }}</span>
+      <span
+        class="codx-label"
+        [innerHTML]="
+          quotationsLine.currencyID
+            | formatvalue : form.formModel : 'currencyID'
+            | async
+        "
+      ></span>
+      <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+        ")"
+      }}</span>
       <codx-input
         class="text-danger"
         field="netAmt"
