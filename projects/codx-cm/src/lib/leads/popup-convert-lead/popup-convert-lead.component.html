@@ -93,7 +93,7 @@
             default="Quy trình"
           >
           </codx-label>
-          <div *ngIf="deal?.processID">
+          <div>
             <ejs-combobox
               [dataSource]="listCbxProcess"
               [placeholder]="gridViewSetupDeal?.ProcessID?.description"
@@ -491,10 +491,10 @@
 </ng-template>
 
 <ng-template #systemCustomer>
-  <div class="form-group mt-5">
+  <div class="form-group mt-5" *ngIf="formModelDeals">
     <codx-label
-      name="CustomerID"
-      [formModel]="formModelCustomer"
+      fiedName="CustomerID"
+      [formModel]="formModelDeals"
       default="Khách hàng"
     ></codx-label>
     <codx-input

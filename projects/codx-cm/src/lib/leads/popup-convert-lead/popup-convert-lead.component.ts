@@ -251,7 +251,7 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   setTitle(e: any) {
-    this.title = e.charAt(0).toLocaleLowerCase() + e.slice(1);
+    this.title = this.titleAction;
     //this.changDetec.detectChanges();
   }
 
