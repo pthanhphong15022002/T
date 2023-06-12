@@ -100,19 +100,19 @@ export class PopupModuleDetailComponent extends UIComponent {
     this.clmnGrid = [
       {
         field: 'UserID',
-        width: 150,
+        width: 50,
         template: this.tmplUserInfo,
         textAlign: 'center',
       },
       {
         headerTemplate: this.operatorHT,
-        width: 45,
+        width: 25,
         template: this.operRoleEndDate,
         textAlign: 'center',
       },
       {
         headerTemplate: this.employeeHT,
-        width: 45,
+        width: 25,
         template: this.emplRoleEndDate,
         textAlign: 'center',
       },
