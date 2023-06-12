@@ -88,6 +88,7 @@ export class PopupAddKRComponent extends UIComponent {
     ) {
       this.typePlan = this.oldKR.plan;
     }
+    
     this.curUser = authStore.get();
     this.oldPlan = this.kr?.plan;
   }
@@ -352,6 +353,7 @@ export class PopupAddKRComponent extends UIComponent {
     } else {
       this.kr = { ...this.groupModel?.krModel };
     }
+    this.kr.checkInControl ="0"
     this.kr.transID = this.okrPlan?.recID;
   }
   fullTargets(planVLL: any, targets: any, plan: string) {

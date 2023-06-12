@@ -1,0 +1,123 @@
+<div>
+  <header class="d-flex align-items-center justify-content-between search p-2">
+    <div class="left d-flex align-items-center">
+      <div>
+        <codx-dropdown-select
+          cssPopup="h-350px w-300px"
+          [isMulti]="true"
+          type="valuelist"
+          [emptyText]="'Tình trạng'"
+          field="StepID"
+          [dataSource]="status"
+        ></codx-dropdown-select>
+      </div>
+      <div class="ms-4">
+        <codx-dropdown-select
+          cssPopup="h-250px w-300px"
+          [isMulti]="true"
+          type="valuelist"
+          [emptyText]="'Colapse'"
+          field="StepID"
+          [refValue]="'DP046'"
+        ></codx-dropdown-select>
+      </div>
+    </div>
+    <div class="right">
+      <codx-valuelist
+         [crrValue]="type"
+         [name]="'DP034'"
+         (valueChange)="changeValue($event)"
+      ></codx-valuelist>
+      <!-- <codx-input
+          field="viewModeDetail"
+          type="valuelist"
+          [crrValue]="type"
+          [refValue]="'DP047'"
+          (valueChange)="changeValue($event)"
+      ></codx-input> -->
+    </div>
+  </header>
+  <main>
+   <ng-container
+      *ngIf="type == 'S'"
+      [ngTemplateOutlet]="taskTem"
+   ></ng-container>
+   <ng-container
+      *ngIf="type == 'G'"
+      [ngTemplateOutlet]="ganttChart"
+   ></ng-container>
+  </main>
+</div>
+
+<ng-template #taskTem>
+   <div *ngIf="isDataLoading">
+      <div *ngFor="let step of [1, 2, 3]">
+        <div class="d-flex align-items-center w-100">
+          <ngx-skeleton-loader
+            appearance="circle"
+            [theme]="{ width: '60px', height: '60px' }"
+          >
+          </ngx-skeleton-loader>
+          <ngx-skeleton-loader
+            style="width: 100%"
+            [theme]="{
+                     width: '100%',
+                     'border-radius': '5px',
+                     height: '60px',
+                     'margin': '0px',
+                   }"
+          ></ngx-skeleton-loader>
+        </div>
+        <div style="padding-left: 70px; width: 100%">
+          <ngx-skeleton-loader
+            style="width: 100%"
+            [theme]="{
+                     width: '100%',
+                     'border-radius': '10px',
+                     height: '100px',
+                     'margin': '0px',
+                   }"
+          ></ngx-skeleton-loader>
+          <ngx-skeleton-loader
+            style="width: 100%"
+            [theme]="{
+                     width: '100%',
+                     'border-radius': '10px',
+                     height: '100px',
+                     'margin': '0px',
+                   }"
+          ></ngx-skeleton-loader>
+        </div>
+        <hr class="m-0 p-0" />
+      </div>
+    </div>
+    <div *ngIf="!isDataLoading && listStep?.length > 0">
+      <div *ngFor="let step of listStep" class="list-step ps-4">
+        <codx-step-task
+          [dataSources]="step"
+          [isShowButton]="false"
+          [isShowMore]="true"
+          [isDeepCopy]="false"
+          [isShowStep]="true"
+          [isStart]="dataSelected?.status == '2'"
+          [isClose]="dataSelected?.closed"
+          [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+          (continueStep)="handelContinueStep($event, step)"
+          (saveAssign)="handelSaveAssignTask($event)"
+        ></codx-step-task>
+        <hr class="m-0 p-0" />
+      </div>
+    </div>
+    <div *ngIf="!isDataLoading && listStep?.length == 0">
+      <codx-no-data></codx-no-data>
+    </div>
+</ng-template>
+
+<ng-template #ganttChart>
+   <div class="w-100 h-100" id="tabGantt">
+     <codx-step-chart
+       [dataSelected]="dataSelected"
+       [listSteps]="listStep"
+     ></codx-step-chart>
+   </div>
+ </ng-template>

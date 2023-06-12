@@ -13,6 +13,7 @@ import { JournalService } from '../../../journals/journals.service';
 import { Observable } from 'rxjs';
 import { InventoryJournals } from '../../../models/InventoryJournals.model';
 import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-lineinventory.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -92,6 +93,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private ngxService: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -143,6 +145,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Init
 
   onInit(): void {
+    this.ngxService.startLoader('loader');
     this.loadInit();
     this.loadTotal();
   }
@@ -158,6 +161,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   gridCreated() {
     this.gridInventoryJournalLine.hideColumns(this.lockFields);
+    this.closeLoader();
   }
 
   clickMF(e, data) {
@@ -405,6 +409,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     .addNew((o) => this.setDefault(o))
                     .subscribe((res) => {
                     this.inventoryJournal = res;
+                    this.setWarehouseID();
                     this.form.formGroup.patchValue(this.inventoryJournal);
                     this.hasSaved = false;
                     this.isSaveMaster = false;
@@ -442,6 +447,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     .addNew((o) => this.setDefault(o))
                     .subscribe((res) => {
                       this.inventoryJournal = res;
+                      this.setWarehouseID();
                       this.form.formGroup.patchValue(this.inventoryJournal);
                     });
                   }
@@ -511,23 +517,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
     if(this.formType == 'add')
     {
-      switch(this.funcID)
-      {
-        case 'ACT0708':
-          if(this.inventoryJournal.warehouseReceipt)
-          {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
-            this.getWarehouseName(this.inventoryJournal.warehouseID);
-          }
-          break;
-        case 'ACT0714':
-          if(this.inventoryJournal.warehouseIssue)
-          {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
-            this.getWarehouseName(this.inventoryJournal.warehouseID);
-          }
-          break;
-      }
+      this.setWarehouseID();
     }
     if (
       this.inventoryJournal &&
@@ -568,6 +558,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
       this.modeGrid = this.journal.inputMode;
+      if(this.modeGrid == '2')
+        this.closeLoader();
     });
   }
 
@@ -1071,12 +1063,39 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       });
   }
 
+  setWarehouseID(){
+    switch(this.funcID)
+      {
+        case 'ACT0708':
+          if(this.inventoryJournal.warehouseReceipt)
+          {
+            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
+          }
+          break;
+        case 'ACT0714':
+          if(this.inventoryJournal.warehouseIssue)
+          {
+            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
+          }
+          break;
+      }
+  }
+
   calculateNetAmt(quantity: any, costPrice: any)
   {
     if(quantity == 0 || costPrice == 0)
       return 0;
     var costAmt = quantity * costPrice;
     return costAmt;
+  }
+
+  closeLoader(){
+    setTimeout(() => {
+      this.ngxService.stopLoader('loader');
+      this.ngxService.destroyLoaderData('loader');
+    }, 500);
   }
 
   //#endregion

@@ -424,10 +424,11 @@ export class CodxCmService {
       data
     );
   }
-  copyFileAvata(idOld, idNew) {
+  copyFileAvata(idOld, idNew, entityName = null) {
     return this.api.exec<any>('CM', 'ContactsBusiness', 'CopyAvatarByIdAsync', [
       idOld,
       idNew,
+      entityName
     ]);
   }
 
@@ -694,6 +695,16 @@ export class CodxCmService {
       'GetOneBusinessLineByProcessIDAsync',
       data
     );
+  }
+
+  isCheckDealInUse(data){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'isCheckDealInUseAsync',
+      data
+    );
+
   }
 
 
