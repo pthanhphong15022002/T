@@ -782,7 +782,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.eBasicSalaryFuncID).then((res) => {
       this.eBasicSalaryFormmodel = res;
-      
+
     });
     this.hrService.getFormModel(this.eTrainCourseFuncID).then((res) => {
       this.eTrainCourseFormModel = res;
@@ -1042,7 +1042,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       'EmployeesBusiness',
       'GetEmpFullInfoAsync',
       empID
-    ) 
+    )
   }
 
   initEmpSalary() {
@@ -1718,7 +1718,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   add(functionID) {
     switch (functionID) {
-      case this.eFamiliesFuncID: 
+      case this.eFamiliesFuncID:
         this.handleEFamilyInfo(this.addHeaderText, 'add', null);
         break;
       case this.ePassportFuncID:
@@ -3286,7 +3286,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           actionHeaderText + ' ' + this.getFormHeader(this.eCertificateFuncID),
         employeeId: this.employeeID,
         funcID: this.eCertificateFuncID,
-        dataInput: data, 
+        dataInput: data,
       },
       option
     );
@@ -3567,7 +3567,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.df.detectChanges();
     });
   }
-  
+
   addSkill() {
     this.hrService.addSkill(null).subscribe();
   }
@@ -3748,7 +3748,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     if(isNextPage == true){
       debugger
       let newPageNum = Number(this.pageNum) + 1
-      this.pageNum = newPageNum; 
+      this.pageNum = newPageNum;
     }
     if (this.crrIndex > -1) {
       let urlView = '/hr/employeedetail/HRT03b';
@@ -4692,7 +4692,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         });
     }
   }
-  
+
   valueChangeFilterTrainCourse(evt) {
     this.Filter_By_ETrainCourse_IDArr = evt.data;
     this.UpdateTrainCoursePredicate();

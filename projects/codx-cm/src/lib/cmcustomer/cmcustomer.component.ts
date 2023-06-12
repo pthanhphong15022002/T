@@ -155,12 +155,12 @@ export class CmCustomerComponent
   }
 
   afterLoad() {
-    this.cache.functionList(this.funcID).subscribe((fun) => {
+    this.cache.functionList(this.funcID).subscribe(async (fun) => {
       var formMD = new FormModel();
-      this.entityName = JSON.parse(JSON.stringify(fun.entityName));
-      formMD.entityName = JSON.parse(JSON.stringify(fun.entityName));
-      formMD.formName = JSON.parse(JSON.stringify(fun.formName));
-      formMD.gridViewName = JSON.parse(JSON.stringify(fun.gridViewName));
+      this.entityName = JSON.parse(JSON.stringify(fun?.entityName));
+      formMD.entityName = JSON.parse(JSON.stringify(fun?.entityName));
+      formMD.formName = JSON.parse(JSON.stringify(fun?.formName));
+      formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
       this.view.formModel = formMD;
     });
     this.detectorRef.detectChanges();
