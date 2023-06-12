@@ -405,6 +405,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     .addNew((o) => this.setDefault(o))
                     .subscribe((res) => {
                     this.inventoryJournal = res;
+                    this.setWarehouseID();
                     this.form.formGroup.patchValue(this.inventoryJournal);
                     this.hasSaved = false;
                     this.isSaveMaster = false;
@@ -442,6 +443,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     .addNew((o) => this.setDefault(o))
                     .subscribe((res) => {
                       this.inventoryJournal = res;
+                      this.setWarehouseID();
                       this.form.formGroup.patchValue(this.inventoryJournal);
                     });
                   }
@@ -511,23 +513,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
     if(this.formType == 'add')
     {
-      switch(this.funcID)
-      {
-        case 'ACT0708':
-          if(this.inventoryJournal.warehouseReceipt)
-          {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
-            this.getWarehouseName(this.inventoryJournal.warehouseID);
-          }
-          break;
-        case 'ACT0714':
-          if(this.inventoryJournal.warehouseIssue)
-          {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
-            this.getWarehouseName(this.inventoryJournal.warehouseID);
-          }
-          break;
-      }
+      this.setWarehouseID();
     }
     if (
       this.inventoryJournal &&
@@ -1069,6 +1055,26 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.form.formGroup.patchValue(this.inventoryJournal);
         }
       });
+  }
+
+  setWarehouseID(){
+    switch(this.funcID)
+      {
+        case 'ACT0708':
+          if(this.inventoryJournal.warehouseReceipt)
+          {
+            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
+          }
+          break;
+        case 'ACT0714':
+          if(this.inventoryJournal.warehouseIssue)
+          {
+            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
+          }
+          break;
+      }
   }
 
   calculateNetAmt(quantity: any, costPrice: any)
