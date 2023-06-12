@@ -82,7 +82,7 @@
               ></span>
               <span
                 class="fw-bold"
-                *ngIf="dataSelected?.probability; else defaultNull"
+                *ngIf="dataSelected?.dealValue; else defaultNull"
                 #dealValue
                 [innerHTML]="
                   dataSelected?.dealValue
