@@ -46,14 +46,14 @@ export class ReceiptTransactionComponent extends UIComponent {
   funcName: any;
   parentID: string;
   journalNo: string;
+  totalQuantity: any = 0;
+  totalAmt: any = 0;
   width: any;
   height: any;
   innerWidth: any;
   itemSelected: any;
   objectname: any;
   oData: any;
-  page: any = 1;
-  pageSize = 5;
   lsVatCode: any;
   gridViewLines: any;
   entityName: any;
@@ -322,6 +322,7 @@ export class ReceiptTransactionComponent extends UIComponent {
       ])
       .subscribe((res: any) => {
         this.inventoryJournalLines = res;
+        this.loadTotal();
       });
   }
   changeItemDetail(event) {
@@ -349,6 +350,18 @@ export class ReceiptTransactionComponent extends UIComponent {
 
   formatDate(date) {
     return new Date(date).toLocaleDateString();
+  }
+
+  loadTotal(){
+    this.totalAmt = 0;
+    this.totalQuantity = 0;
+    this.inventoryJournalLines.forEach((item) => {
+      if(item)
+      {
+        this.totalQuantity += item.quantity;
+        this.totalAmt += item.costAmt;
+      }
+    });
   }
   //#endregion
 }
