@@ -24,6 +24,8 @@ import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/co
 export class DealDetailComponent implements OnInit {
   @Input() dataSelected: any;
   @Input() formModel: any;
+  @Input() gridViewSetup: any;
+
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
   @Input() funcID = 'CM0201'; //
@@ -166,12 +168,6 @@ export class DealDetailComponent implements OnInit {
         name: 'Task',
         textDefault: 'Công việc',
         icon: 'icon-more',
-        isActive: false,
-      },
-      {
-        name: 'GanttChart',
-        textDefault: 'Biểu đồ Gantt',
-        icon: 'icon-insert_chart_outlined',
         isActive: false,
       },
       {

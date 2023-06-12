@@ -189,7 +189,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       delete this.dayoffObj.recID;
     }
     if (!this.dateCompare(this.dayoffObj.beginDate, this.dayoffObj.endDate)) {
-      this.hrSevice.notifyInvalidFromTo('BeginDate', 'EndDate', this.formModel);
+      this.hrSevice.notifyInvalidFromTo('EndDate', 'BeginDate', this.formModel);
       return;
     }
 

@@ -68,6 +68,7 @@
                         [formModel]="form.formModel"
                         [Group]="form.formGroup"
                         [disabled]="journal?.multiCurrency === '0'"
+                        (controlBlur)="onInputChange($event)"
                       ></codx-input>
                     </div>
                   </div>
@@ -81,6 +82,7 @@
                       field="voucherDate"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
+                      (valueChange)="onInputChange($event)"
                     ></codx-input>
                   </div>
 
@@ -645,6 +647,7 @@
       field="salespersonID"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
+      (valueChange)="onInputChange($event)"
     ></codx-input>
   </div>
   <div class="col-3 form-group">
@@ -696,6 +699,7 @@
       field="salespersonID"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
+      (valueChange)="onInputChange($event)"
     ></codx-input>
   </div>
   <div class="col-4 form-group">

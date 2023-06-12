@@ -5,6 +5,7 @@ import {
   OnInit,
   Optional,
   Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -20,6 +21,7 @@ import { CodxHrService } from '../../codx-hr.service';
   selector: 'hr-popup-add-positions',
   templateUrl: './popup-add-positions.component.html',
   styleUrls: ['./popup-add-positions.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopupAddPositionsComponent implements OnInit {
   title = 'Thêm mới';
@@ -107,11 +109,13 @@ export class PopupAddPositionsComponent implements OnInit {
   }
   //get grvSetup
   getGrvSetup(fromName: string, grdViewName: string) {
-    this.cacheService.gridViewSetup(fromName, grdViewName).subscribe((grv: any) => {
-      if (grv) {
-        this.grvSetup = grv;
-      }
-    });
+    this.cacheService
+      .gridViewSetup(fromName, grdViewName)
+      .subscribe((grv: any) => {
+        if (grv) {
+          this.grvSetup = grv;
+        }
+      });
   }
   // value change
   dataChange(e: any, field: string) {
@@ -120,23 +124,20 @@ export class PopupAddPositionsComponent implements OnInit {
         this.data[field] = e?.data;
       } else {
         this.data[field] = e[0];
-        if(field == "positionID"){
+        if (field == 'positionID') {
           let itemSelected = e.component?.itemsSelected[0];
-          if(itemSelected){
-            if(itemSelected.hasOwnProperty("DepartmentID"))
-            {
-              let departmentID = itemSelected["DepartmentID"];
-              this.data["departmentID"] = departmentID;
+          if (itemSelected) {
+            if (itemSelected.hasOwnProperty('DepartmentID')) {
+              let departmentID = itemSelected['DepartmentID'];
+              this.data['departmentID'] = departmentID;
             }
-            if(itemSelected.hasOwnProperty("DivisionID"))
-            {
-              let departmentID = itemSelected["DivisionID"];
-              this.data["divisionID"] = departmentID;
+            if (itemSelected.hasOwnProperty('DivisionID')) {
+              let departmentID = itemSelected['DivisionID'];
+              this.data['divisionID'] = departmentID;
             }
-            if(itemSelected.hasOwnProperty("CompanyID"))
-            {
-              let departmentID = itemSelected["CompanyID"];
-              this.data["companyID"] = departmentID;
+            if (itemSelected.hasOwnProperty('CompanyID')) {
+              let departmentID = itemSelected['CompanyID'];
+              this.data['companyID'] = departmentID;
             }
           }
         }

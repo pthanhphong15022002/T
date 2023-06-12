@@ -13,7 +13,9 @@ export class LeadDetailComponent  implements OnInit {
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
-  @Input() funcID = 'CM0201'; //
+  @Input() funcID: any; //
+  @Input() gridViewSetup: any;
+
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
@@ -29,9 +31,6 @@ export class LeadDetailComponent  implements OnInit {
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
-    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
   ];
 
   treeTask = [];

@@ -426,6 +426,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   oldKR.checkIns = newKR?.checkIns;
                   oldKR.hasAssign = newKR?.hasAssign;
                   oldKR.okrLink = newKR?.okrLink;
+                  oldKR.notiCheckIn = newKR?.notiCheckIn;
                   oldKR.personIncharge = newKR?.personIncharge;
                   oldKR.modifiedOn = new Date();
                   if(newKR?.items!=null && newKR?.items?.length>0){
@@ -444,6 +445,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                         oldSKR.checkIns = newSKR?.checkIns;
                         oldSKR.hasAssign = newSKR?.hasAssign;
                         oldSKR.okrLink = newSKR?.okrLink;
+                        oldSKR.notiCheckIn = newSKR?.notiCheckIn;
                         oldSKR.personIncharge = newSKR?.personIncharge;
                         oldSKR.modifiedOn = new Date();    
                       }
@@ -767,7 +769,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   this.detectorRef.detectChanges();
                   this.reloadedMF = true;
                   this.detectorRef.detectChanges();
-                  //this.getOKRPlans(this.periodID, this.interval, this.year);
+                  this.updateOKRPlans(this.dataOKRPlans.recID);
                   this.notificationsService.notifyCode('SYS034'); //thành công
 
                 }
@@ -788,7 +790,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             this.detectorRef.detectChanges();
             this.reloadedMF = true;
             this.detectorRef.detectChanges();
-            //this.getOKRPlans(this.periodID, this.interval, this.year);
+            this.updateOKRPlans(this.dataOKRPlans.recID);
             this.notificationsService.notifyCode('SYS034'); //thành công
             if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
               this.codxOmService
