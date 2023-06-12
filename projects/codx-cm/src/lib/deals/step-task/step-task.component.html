@@ -22,19 +22,27 @@
         ></codx-dropdown-select>
       </div>
     </div>
-    <div class="right">
-      <codx-valuelist
-         [crrValue]="type"
+    <div class="right d-flex align-items-center">
+      <!-- <codx-valuelist
+         [valueSelected]="type"
          [name]="'DP034'"
          (valueChange)="changeValue($event)"
-      ></codx-valuelist>
-      <!-- <codx-input
+      ></codx-valuelist> -->
+      <div  *ngIf="type == 'G'" class="me-4">
+        <codx-input
+          type="valuelist"
+          [crrValue]="crrViewGant"
+          [refValue]="vllViewGannt"
+          (valueChange)="changeViewTimeGant($event)"
+        ></codx-input>
+      </div>
+      <codx-input
           field="viewModeDetail"
           type="valuelist"
           [crrValue]="type"
-          [refValue]="'DP047'"
+          [refValue]="'DP034'"
           (valueChange)="changeValue($event)"
-      ></codx-input> -->
+      ></codx-input>
     </div>
   </header>
   <main>
@@ -50,7 +58,7 @@
 </div>
 
 <ng-template #taskTem>
-   <div *ngIf="isDataLoading">
+   <div *ngIf="isDataLoading || !type">
       <div *ngFor="let step of [1, 2, 3]">
         <div class="d-flex align-items-center w-100">
           <ngx-skeleton-loader
@@ -91,7 +99,7 @@
         <hr class="m-0 p-0" />
       </div>
     </div>
-    <div *ngIf="!isDataLoading && listStep?.length > 0">
+    <div *ngIf="!isDataLoading && listStep?.length > 0 && type">
       <div *ngFor="let step of listStep" class="list-step ps-4">
         <codx-step-task
           [dataSources]="step"
@@ -116,8 +124,9 @@
 <ng-template #ganttChart>
    <div class="w-100 h-100" id="tabGantt">
      <codx-step-chart
-       [dataSelected]="dataSelected"
-       [listSteps]="listStep"
+      [typeTime]="typeTime"
+      [dataSelected]="dataSelected"
+      [listSteps]="listStep"
      ></codx-step-chart>
    </div>
  </ng-template>

@@ -13,7 +13,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   status = [];
-  type;
+  type = '';
+  crrViewGant = 'W';
+  vllViewGannt = 'DP042';
+  typeTime;
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
@@ -33,14 +36,31 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(changes?.dataSelected){
+      this.getViewModeDetailByProcessID();
+    }
   }
 
   ngAfterViewInit(): void {
 
   }
 
+  getViewModeDetailByProcessID(){
+    if(this.dataSelected){
+      this.api.exec<any>(
+        'DP',
+        'ProcessesBusiness',
+        'GetViewModeDetailByProcessIDAsync',
+        this.dataSelected?.processID
+      ).subscribe(res => {
+        this.type = res ? res : 'S';        
+      })
+    }
+    
+  }
+
   changeValue(e){
-    this.type = e;
+    this.type = e.data;
   }
   
 
@@ -50,5 +70,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   handelSaveAssignTask(event){
     this.saveAssignTask.emit(event);
+  }
+
+  changeViewTimeGant(e) {
+    this.typeTime = e;
   }
 }
