@@ -1,0 +1,9 @@
+.line-quotations:hover {
+    background-color:var(--primary-lighter);
+  }
+
+  .text-header {
+    font: 1em sans-serif;
+    font-weight: 600;
+    color: black;
+  }
