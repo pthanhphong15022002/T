@@ -24,6 +24,8 @@ import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/co
 export class DealDetailComponent implements OnInit {
   @Input() dataSelected: any;
   @Input() formModel: any;
+  @Input() gridViewSetup: any;
+
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
   @Input() funcID = 'CM0201'; //

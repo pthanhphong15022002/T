@@ -132,8 +132,8 @@
       <div class="form-group">
         <codx-label
           fiedName="Industries"
-          default="Lĩnh vực hoạt động"
-          type="valuelist"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-label>
 
@@ -142,7 +142,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="industries"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeIndustries($event)"
       >
       </codx-input>
 
