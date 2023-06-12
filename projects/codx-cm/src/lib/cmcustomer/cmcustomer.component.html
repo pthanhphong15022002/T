@@ -140,7 +140,15 @@
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <div class="d-flex justify-content-end" *ngIf="data.isBlackList">
-    <span class="icon-do_disturb_alt icon-16 text-gray-700"></span>
+    <span
+      class="icon-do_disturb_alt icon-16 text-gray-700"
+      [ngbTooltip]="popupIsBlackList"
+      ><ng-template #popupIsBlackList>
+        <codx-label
+          fiedName="IsBlackList"
+          [formModel]="view.formModel"
+        ></codx-label> </ng-template
+    ></span>
   </div>
 </ng-template>
 
