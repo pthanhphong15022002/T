@@ -55,11 +55,9 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.fromListView = data?.data?.fromListView;
     this.formModel = this.dialog.formModel;
     this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
-    if(this.awardObj){
-      this.valueYear = this.awardObj.inYear
+    if (this.awardObj) {
+      this.valueYear = this.awardObj.inYear;
     }
-    debugger
-    console.log('khen thuong truyen vao', this.awardObj);
     if (this.awardObj?.employeeID && this.fromListView) {
       this.employId = this.awardObj?.employeeID;
     } else {
