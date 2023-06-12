@@ -171,12 +171,6 @@ export class DealDetailComponent implements OnInit {
         isActive: false,
       },
       {
-        name: 'GanttChart',
-        textDefault: 'Biểu đồ Gantt',
-        icon: 'icon-insert_chart_outlined',
-        isActive: false,
-      },
-      {
         name: 'Quotation',
         textDefault: 'Báo giá',
         icon: 'icon-monetization_on',

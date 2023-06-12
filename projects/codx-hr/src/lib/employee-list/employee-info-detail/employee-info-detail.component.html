@@ -5512,7 +5512,7 @@
       <!-- Thông tin thôi việc -->
       <div class="user-profile overview d-block" [id]="eDiseasesFuncID">
         <div class="rounded-2 p-5 bg-white mb-4">
-          <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center justify-content-between mb-3">
             <div class="d-flex align-items-center">
               <div class="user-status text-primary">
                 <span class="icon-sick icon-20 me-2"></span>
@@ -6851,8 +6851,8 @@
 
 <ng-template #templateAwardGridCol2 let-data>
   <div class="d-flex flex-wrap">
-    <div class="d-flex align-items-center mb-5px" #ranking>
-      <i class="icon-event icon-16 me-2"></i>
+    <div class="d-flex align-items-center mb-2 me-4" #ranking>
+      <i class="icon-event icon-16 me-1"></i>
       <span class="text-dark">
         {{ data?.awardDate | fmDT }}
       </span>
@@ -6866,8 +6866,8 @@
         "
       ></span> -->
     </div>
-    <div class="d-flex align-items-center">
-      <i class="icon-library_books icon-16 me-2"></i>
+    <div class="d-flex align-items-center mb-2">
+      <i class="icon-library_books icon-16 me-1"></i>
       <span class="text-dark">
         {{ data?.decisionNo }}
       </span>
@@ -7626,7 +7626,7 @@
     [formModel]="awardFormModel"
     [name]="'lblAwardsGridCol1'"
     default="Loại khen thưởng"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7636,7 +7636,7 @@
     [formModel]="awardFormModel"
     [name]="'lblAwardsGridCol2'"
     default="Ngày khen thưởng"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7646,7 +7646,7 @@
     [formModel]="awardFormModel"
     [name]="'lblAwardsGridCol3'"
     default="Lý do khen thưởng"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7656,7 +7656,7 @@
     [formModel]="eDisciplineFormModel"
     [name]="'lblDisciplineGridCol1'"
     default="Loại kỷ luật"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7666,7 +7666,7 @@
     [formModel]="eDisciplineFormModel"
     [name]="'lblDisciplineGridCol2'"
     default="Ngày vi phạm"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7676,7 +7676,7 @@
     [formModel]="eDisciplineFormModel"
     [name]="'lblDisciplineGridCol3'"
     default="Nội dung vi phạm"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7762,7 +7762,7 @@
     [formModel]="dayoffFormModel"
     [name]="'lblDayOffGridCol1'"
     default="Loại nghỉ"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7772,7 +7772,7 @@
     [formModel]="dayoffFormModel"
     [name]="'lblDayOffGridCol2'"
     default="Thời gian nghỉ"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7782,7 +7782,7 @@
     [formModel]="dayoffFormModel"
     [name]="'lblDayOffGridCol3'"
     default="Lý do nghỉ"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7792,7 +7792,7 @@
     [formModel]="EBusinessTravelFormodel"
     [name]="'lblBusinessTravelGridCol1'"
     default="Nơi đến công tác"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7802,7 +7802,7 @@
     [formModel]="EBusinessTravelFormodel"
     [name]="'lblBusinessTravelGridCol2'"
     default="Thời gian công tác"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7812,7 +7812,7 @@
     [formModel]="EBusinessTravelFormodel"
     [name]="'lblBusinessTravelGridCol3'"
     default="Mục đích công tác"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7822,7 +7822,7 @@
     [formModel]="EBusinessTravelFormodel"
     [name]="'lblAppointionGridCol1'"
     default="Loại quyết định"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7832,7 +7832,7 @@
     [formModel]="EBusinessTravelFormodel"
     [name]="'lblAppointionGridCol2'"
     default="Chức danh"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7842,7 +7842,7 @@
     [formModel]="EBusinessTravelFormodel"
     [name]="'lblAppointionGridCol3'"
     default="Phòng ban"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7856,7 +7856,7 @@
       ' | ' +
       eDegreeHeaderText['TrainFieldID']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7871,7 +7871,7 @@
       eDegreeHeaderText['Ranking']
     "
     default="Nơi đào tạo | Xếp loại tốt nghiệp"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7885,7 +7885,7 @@
       eDegreeHeaderText['IssuedDate']
     "
     [name]="'lblDegreeGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7895,7 +7895,7 @@
     [formModel]="eCertificateFormModel"
     [name]="'lblCertificateGridCol1'"
     [default]="eCertificateHeaderText['CertificateID']"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7909,7 +7909,7 @@
       ' | ' +
       eCertificateHeaderText['Ranking']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7923,7 +7923,7 @@
       eCertificateHeaderText['EffectedDate']
     "
     [name]="'lblCertificateGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7935,7 +7935,7 @@
     [default]="
       eSkillHeaderText['SkillID'] + ' | ' + eSkillHeaderText['SkillGradeID']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7951,7 +7951,7 @@
       ' - ' +
       eSkillHeaderText['TotalScore']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7963,7 +7963,7 @@
       eSkillHeaderText['TrainFrom'] + ' | ' + eSkillHeaderText['TrainForm']
     "
     [name]="'lblSkillGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7977,7 +7977,7 @@
       ' | ' +
       eTrainCourseHeaderText['TrainForm']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -7991,7 +7991,7 @@
       ' | ' +
       eTrainCourseHeaderText['InYear']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8005,7 +8005,7 @@
       eTrainCourseHeaderText['Result']
     "
     [name]="'lblTrainCourseGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8019,7 +8019,7 @@
       ' | ' +
       eAccidentHeaderText['AccidentDate']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8033,7 +8033,7 @@
       ' | ' +
       eAccidentHeaderText['AccidentReasonID']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8043,7 +8043,7 @@
     [formModel]="eAccidentsFormModel"
     [default]="eAccidentHeaderText['AccidentLevel']"
     [name]="'lblAccidentGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8053,7 +8053,7 @@
     [formModel]="eDiseasesFormModel"
     [name]="'lblAccidentGridCol1'"
     [default]="eDiseasesHeaderText['DiseaseID']"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8065,7 +8065,7 @@
     [default]="
       'Thời gian điều trị' + ' | ' + eDiseasesHeaderText['TreatHopitalID']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8075,7 +8075,7 @@
     [formModel]="eDiseasesFormModel"
     [default]="eDiseasesHeaderText['Conclusion']"
     [name]="'lblAccidentGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8091,7 +8091,7 @@
       ' | ' +
       eHealthHeaderText['HospitalID']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8105,7 +8105,7 @@
       ' | ' +
       eHealthHeaderText['FinalConclusion']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8115,7 +8115,7 @@
     [formModel]="eHealthFormModel"
     [default]="eHealthHeaderText['Suggestion']"
     [name]="'lblHealthGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8129,7 +8129,7 @@
       ' | ' +
       eVaccineHeaderText['HopitalID']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8143,7 +8143,7 @@
       ' | ' +
       eVaccineHeaderText['NextInjectDate']
     "
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>
@@ -8153,7 +8153,7 @@
     [formModel]="eVaccineFormModel"
     [default]="eVaccineHeaderText['Note']"
     [name]="'lblVaccineGridCol3'"
-    class="fw-bold fs-5-sm text-gray-600"
+    class="fw-bold fs-6 text-gray-800"
   >
   </codx-label>
 </ng-template>

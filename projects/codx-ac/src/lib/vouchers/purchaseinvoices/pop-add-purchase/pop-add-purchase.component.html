@@ -1,6 +1,9 @@
 <codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
   [dialog]="dialog" [data]="purchaseinvoices" [customToolbar]="subToolbar" [openMore]="false">
 </codx-form>
+<div class="ac-ng-overlay">
+  <ngx-ui-loader [loaderId]="'loader'" [logoUrl]="'../assets/themes/ac/default/img/bussiness-accouting-codx.svg'"></ngx-ui-loader>
+</div>
 <ng-template #subHeader>
   <ng-container *ngIf="form?.formGroup"> </ng-container>
 </ng-template>

@@ -634,6 +634,15 @@ export class CodxOmService {
       recID
     );
   }
+  getOKRByPlanID(recID: string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetOKRByPlanIDAsync',
+      recID
+    );
+  }
   //Lấy danh sách phụ thuộc OKR
   getListAssign(recID: string) {
     return this.api.execSv(

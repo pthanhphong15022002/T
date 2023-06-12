@@ -9,7 +9,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
-import { CallFuncService, DialogModel, DialogRef, Util } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogModel, DialogRef, Util } from 'codx-core';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-view-list-cm',
@@ -31,17 +32,21 @@ export class ViewListCmComponent implements OnInit {
   listContacts = [];
   countDeal = 0;
   countDealCompetitor = 0;
+  countContract = 0;
   contactPerson: any;
   addressNameCM: any;
-  constructor(private cmSv: CodxCmService, private callFunc: CallFuncService) {}
+  constructor(private cmSv: CodxCmService, private callFunc: CallFuncService, private api: ApiHttpService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
       this.getListContactByObjectID(this.dataSelected?.recID);
     if (this.funcID == 'CM0101') {
       this.countDealsByCustomerID(this.dataSelected?.recID);
+      var lst = await firstValueFrom(this.api.execSv<any>('CM', 'ERM.Business.CM','ContractsBusiness','CountContractByCustomerIDAsync', this.dataSelected?.recID));
+      this.countContract = lst > 0 ? lst : 0;
     }
+
     if (this.funcID == 'CM0104')
       this.countDealCompetiorsByCompetitorID(this.dataSelected?.recID);
   }
@@ -119,7 +124,7 @@ export class ViewListCmComponent implements OnInit {
     } else if (this.funcID == 'CM0103') {
       return data.partnerName;
     } else {
-      return data.opponentName;
+      return data.competitorName;
     }
   }
 

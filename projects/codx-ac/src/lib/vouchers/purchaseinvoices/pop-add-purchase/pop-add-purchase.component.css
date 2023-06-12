@@ -22,4 +22,11 @@
  .add-cash #gridViewV2.e-grid .e-summarycell {
      border-width: 0;
  }
+ .ac-ng-overlay .ngx-overlay{
+    background-color: whitesmoke !important;
+}
+.ac-ng-overlay .ngx-overlay img{
+    width: 35% !important;
+    height: auto !important;
+}
  
