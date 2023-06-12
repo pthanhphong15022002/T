@@ -150,6 +150,7 @@ export class PopupAddDealComponent
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.model = { ApplyFor: '1' };
+    this.gridViewSetup = dt?.data.gridViewSetup;
     if(dt?.data.processID) {
       this.deal.processID = dt?.data.processID;
       this.isViewAll = true;
@@ -610,7 +611,7 @@ export class PopupAddDealComponent
   }
   async executeApiCalls() {
     try {
-      await this.getGridView(this.formModel);
+    //  await this.getGridView(this.formModel);
       await this.getListProcess(this.typeForDeal);
       if(this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
@@ -651,15 +652,15 @@ export class PopupAddDealComponent
       }
     });
   }
-  async getGridView(formModel) {
-    this.cache
-      .gridViewSetup(formModel.formName, formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-  }
+  // async getGridView(formModel) {
+  //   this.cache
+  //     .gridViewSetup(formModel.formName, formModel.gridViewName)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.gridViewSetup = res;
+  //       }
+  //     });
+  // }
   async getListProcess(applyFor) {
     var processID = this.action !== this.actionEdit ? '' : this.deal.processID;
     var data = [applyFor, processID];

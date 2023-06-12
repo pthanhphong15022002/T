@@ -346,7 +346,7 @@ export class PopupConvertLeadComponent implements OnInit {
               );
             } else {
               await firstValueFrom(
-                this.cmSv.copyFileAvata(this.recIDAvt, this.customer.recID)
+                this.cmSv.copyFileAvata(this.recIDAvt, this.customer.recID, this.entityName)
               );
             }
             this.dialog.close(res);
