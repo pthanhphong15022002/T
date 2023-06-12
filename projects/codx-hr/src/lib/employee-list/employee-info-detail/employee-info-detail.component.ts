@@ -3723,7 +3723,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         requestNewEmpPage.page = this.request.page + 1;
         requestNewEmpPage.predicate = this.request.predicate;
         requestNewEmpPage.dataValue = this.request.dataValue;
-        requestNewEmpPage.selector = "EmployeeID;";
+        // requestNewEmpPage.selector = "EmployeeID;";
         requestNewEmpPage.pageSize = this.request.pageSize;
         this.hrService.loadData('HR', requestNewEmpPage).subscribe((res) =>{
           if(res && res[0].length > 0){
