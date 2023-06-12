@@ -31,14 +31,20 @@
   <div class="d-flex justify-content-between mb-4">
     <div class="d-flex flex-column">
       <div
-        class="fw-bold fs-6 line-clamp line-clamp-1 mb-2"
+        class="fw-bold fs-6 line-clamp line-clamp-1 mb-3"
         [innerHTML]="
           data.dealName | formatvalue : formModel : 'DealName' | async
         "
       ></div>
       <div class="d-flex flex-wrap align-items-top me-4 mb-1">
         <div class="me-3 d-flex justify-content-start me-6">
-          <span class="icon-money icon-16 me-1"></span>
+          <span class="icon-money icon-16 me-1" [ngbTooltip]="popupDealValue">
+            <ng-template #popupDealValue>
+              <codx-label
+                fiedName="DealValue"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <codx-label
             class="label-colon text-gray-600"
             [formModel]="formModel"
@@ -52,7 +58,16 @@
           ></span>
         </div>
         <div class="d-flex align-items-center">
-          <span class="icon-offline_pin icon-16 me-2"></span>
+          <span
+            class="icon-offline_pin icon-16 me-2"
+            [ngbTooltip]="popupProbability"
+          >
+            <ng-template #popupProbability>
+              <codx-label
+                fiedName="Probability"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <codx-label
             class="label-colon text-gray-600 me-1"
             [formModel]="formModel"
@@ -68,8 +83,8 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-top">
-      <div class="d-flex flex-column">
+    <div class="d-flex align-items-top ms-4">
+      <div class="d-flex flex-column min-w-125px">
         <div
           style="width: 150px; border-radius: 20px"
           class="d-flex align-items-center mb-1"
@@ -103,7 +118,7 @@
             ></span>
           </div>
         </div>
-        <div *ngIf="data.status == '1'">
+        <div class="mb-1" *ngIf="data.status == '1'">
           <codx-vll
             [name]="'DP028'"
             [field]="'Status'"
@@ -116,7 +131,15 @@
         </div>
 
         <div class="ms-1 d-flex align-items-center mt-1">
-          <span class="icon-money icon-16 text-gray-800 me-1"></span>
+          <span
+            class="icon-date_range icon-16 text-gray-800 me-1"
+            [ngbTooltip]="popupEndDate"
+            ><ng-template #popupEndDate>
+              <codx-label
+                fiedName="EndDate"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <span
             class="text-gray-700"
             [innerHTML]="
@@ -125,7 +148,7 @@
           ></span>
         </div>
       </div>
-      <div class="ms-3" *ngIf="data.owner">
+      <div class="ms-5" *ngIf="data.owner">
         <codx-imgs
           [isToolTip]="true"
           [width]="30"

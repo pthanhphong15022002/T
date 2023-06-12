@@ -3063,13 +3063,25 @@ codx-toolbar-report{
 .cal-notes .checkbox-list {
   padding: 7px 16px;
 }
+codx-calendar .codx-form .card-footer{
+  margin-top: -42px;
+  padding-top: 0;
+}
+// .h-300px.dropdown-menu{
+//   codx-calendar .h-375px{
+//     height: 280px!important;
+//     border: 1px aqua solid;
+//   }
+// }
 
+/////
 .e-gantt-splitter table tr{
   height: 40px!important;
 }
 .e-gantt-splitter table tr.e-chart-row div{
   height: 40px!important;
 }
+
 
 ///
 /// 

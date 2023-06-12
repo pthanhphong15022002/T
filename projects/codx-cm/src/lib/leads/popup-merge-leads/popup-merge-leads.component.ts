@@ -161,6 +161,7 @@ export class PopupMergeLeadsComponent implements OnInit {
 
   //#region  Save
   onMerge() {
+    this.gridViewSetup.BusinessLineID.isRequire = false;
     this.countValidate = this.cmSv.checkValidate(
       this.gridViewSetup,
       this.leadNew

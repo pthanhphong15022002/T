@@ -49,7 +49,6 @@ export class TabDetailCustomComponent
   readonly tabOpponent: string = 'Opponent';
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
-  readonly tabGanttChart: string = 'GanttChart';
   readonly tabQuotation: string = 'Quotation';
   readonly tabContract: string = 'Contract';
 
@@ -164,7 +163,10 @@ export class TabDetailCustomComponent
     return 1;
   }
 
-  continueStep(isTaskEnd, step) {
+  continueStep(event) {
+    let isTaskEnd = event?.isTaskEnd;
+    let step = event?.step;
+
     let transferControl = this.dataSelected.steps.transferControl;
     if(transferControl == '0') return;
 

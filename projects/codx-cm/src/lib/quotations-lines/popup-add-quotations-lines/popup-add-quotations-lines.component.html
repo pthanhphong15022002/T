@@ -344,10 +344,24 @@
     </div>
     <div class="form-group">
       <codx-label
-        class="text-danger"
+        class="text-danger me-1"
         fiedName="NetAmt"
         [formModel]="form.formModel"
       ></codx-label>
+      <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+        "("
+      }}</span>
+      <span
+        class="codx-label"
+        [innerHTML]="
+          quotationsLine.currencyID
+            | formatvalue : form.formModel : 'currencyID'
+            | async
+        "
+      ></span>
+      <span *ngIf="quotationsLine.currencyID" class="codx-label">{{
+        ")"
+      }}</span>
       <codx-input
         class="text-danger"
         field="netAmt"
