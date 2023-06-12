@@ -112,9 +112,12 @@ export class AddLinkComponent implements OnInit , AfterViewInit {
         pageSize: 20,
       })
       .subscribe((item) => {
-        this.count = 0;
-        this.data = item;
-        if (item[1]) this.count = item[1];
+        if(item)
+        {
+          this.count = 0;
+          this.data = item;
+          if (item[1]) this.count = item[1];
+        }
       });
   }
 

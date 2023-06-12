@@ -92,6 +92,10 @@ avatarChangeContact: boolean = false;
 lstContact:  any[] = [];
 lstContactDeletes:  any[] = [];
 linkAvatar: string;
+leadId:string = '';
+contactId:string = '';
+isCopyAvtLead: boolean = false;
+isCopyAvtContact: boolean = false;
 
 constructor(
   private inject: Injector,
@@ -109,16 +113,21 @@ constructor(
   this.titleAction = dt?.data?.titleAction;
   this.action = dt?.data?.action;
   this.executeApiCalls();
-  if (this.action != this.actionAdd) {
+  if (this.action !== this.actionAdd) {
     this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.customerIDOld = this.lead?.customerID;
+  }
+  if(this.action === this.actionCopy) {
+    this.leadId = dt?.data?.leadIdOld;
+    this.contactId =  dt?.data?.contactIdOld;
+  }
+  else {
+    this.leadId = this.lead.recID;
+    this.contactId =  this.lead.contactID;
   }
 }
 
 onInit(): void {
-  if(this.action == this.actionAdd || this.action == this.actionCopy){
-    this.lead.recID = Util.uid();
-  }
 }
 
 valueChange($event) {
@@ -142,6 +151,7 @@ saveLead() {
     );
     return;
   }
+
   this.promiseSaveFile();
 
 
@@ -163,9 +173,7 @@ onAdd() {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res?.save[0] && res?.save) {
-          (this.dialog.dataService as CRUDService)
-          .update(res.update[0])
-          .subscribe();
+
           this.dialog.close(res.save[0]);
          }
       });
@@ -181,18 +189,16 @@ onEdit() {
         .subscribe();
         this.dialog.close(res.update[0]);
       }
-
-
     });
 }
 
 async promiseSaveFile() {
   try {
     if(this.avatarChangeLead){
-      await  this.saveFileLead(this.lead.recID)
+      await  this.saveFileLead(this.leadId)
     }
     if(this.avatarChangeContact) {
-      await this.saveFileContact(this.lead.contactID);
+      await this.saveFileContact(this.contactId);
     }
     if(this.action !== this.actionEdit) {
       this.onAdd();
@@ -230,13 +236,8 @@ async saveFileContact(contactID){
 }
 
 beforeSave(option: RequestOption) {
-  // if(this.action !== this.actionEdit) {
-  //   var data = [this.lead, this.lstContact, this.formModel.funcID, this.formModel.entityName];
-  // }
-  // else {
-
-  // }
-  var data = [this.lead];
+  this.checkCopyAvatar();
+  var data = this.action !== this.actionEdit? [this.lead,this.leadId, this.contactId] :[this.lead];
   option.methodName = this.action !== this.actionEdit ? 'AddLeadAsync' : 'EditLeadAsync';
   option.className = 'LeadsBusiness';
   option.data = data;
@@ -294,9 +295,31 @@ setTitle(e: any) {
 
 changeAvatarLead() {
   this.avatarChangeLead = true;
+
+  if(this.action === this.actionCopy && !this.isCopyAvtLead) {
+    this.lead.recID = Util.uid(); ;
+    this.leadId = this.lead.recID;
+
+    this.isCopyAvtLead = true;
+  }
 }
 changeAvatarContact() {
   this.avatarChangeContact = true;
+
+  if(this.action === this.actionCopy && !this.isCopyAvtContact) {
+    this.lead.contactID = Util.uid();
+    this.contactId = this.lead.contactID;
+    this.isCopyAvtContact = true;
+  }
+}
+
+checkCopyAvatar(){
+  if(this.isCopyAvtContact) {
+    this.contactId = null;
+  }
+  if(this.isCopyAvtLead) {
+    this.leadId = null;
+  }
 }
 }
 

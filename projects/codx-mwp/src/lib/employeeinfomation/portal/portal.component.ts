@@ -2126,9 +2126,6 @@ export class PortalComponent extends UIComponent {
     }, 100);
   }
 
-  addTest() {
-    this.hrService.addTest().subscribe();
-  }
 
   getFormHeader(functionID: string) {
     let funcObj = this.lstFuncID.filter((x) => x.functionID == functionID);

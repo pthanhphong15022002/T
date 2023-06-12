@@ -164,6 +164,15 @@ codx-view-list-detail {
 .w-60 {
   width: 60%;
 }
+.symbol.symbol-80px{
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  img{
+    width: auto;
+    height: 80px;
+  }
+}
 
 input.e-input,
 textarea.e-input,
@@ -1694,8 +1703,8 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
   color: var(--primary-dark);
 }
 
-.nav-pills .nav-link:hover {
-  cursor: pointer;
+.nav-pills .nav-link:hover, a.nav-link:hover {
+  cursor: pointer!important;
 }
 
 .card-img-mwp.img-storage .codx-image.h-100 {

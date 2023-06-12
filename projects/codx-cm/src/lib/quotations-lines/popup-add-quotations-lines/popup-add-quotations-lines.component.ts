@@ -61,10 +61,6 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       0
     );
     if (count > 0) return;
-    this.quotationsLine['netAmt'] =
-      (this.quotationsLine['salesAmt'] ?? 0) -
-      (this.quotationsLine['discAmt'] ?? 0) +
-      (this.quotationsLine['vatAmt'] ?? 0);
 
     this.dialog.close(this.quotationsLine);
   }
@@ -108,6 +104,11 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
     this.quotationsLine['vatAmt'] =
       (this.quotationsLine['vatRate'] ?? 0) *
       (this.quotationsLine['vatBase'] ?? 0);
+
+    this.quotationsLine['netAmt'] =
+      (this.quotationsLine['salesAmt'] ?? 0) -
+      (this.quotationsLine['discAmt'] ?? 0) +
+      (this.quotationsLine['vatAmt'] ?? 0);
   }
 
   loadItem(itemID) {

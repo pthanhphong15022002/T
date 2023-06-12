@@ -89,15 +89,10 @@ const routes: Routes = [
       },
 
       // {
-      //   path: 'processrelease/:funcID',
+      //   path: 'processrelease/:funcID/:recID',
       //   component: ProcessReleaseComponent,
+      //   data: { noReuse: true },
       // },
-
-      {
-        path: 'processrelease/:funcID/:recID',
-        component: ProcessReleaseComponent,
-        data: { noReuse: true },
-      },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,

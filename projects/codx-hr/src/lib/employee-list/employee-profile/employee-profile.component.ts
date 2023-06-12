@@ -2904,9 +2904,6 @@ export class EmployeeProfileComponent extends UIComponent {
     }
   }
 
-  addTest() {
-    this.hrService.addTest().subscribe();
-  }
 
   valueChangeFilterBenefit(evt) {
     console.log('filter theo type', evt);

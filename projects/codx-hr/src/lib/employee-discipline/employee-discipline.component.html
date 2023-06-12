@@ -324,7 +324,7 @@
       [typeMF]="'hover'"
       [title]="data.emp?.employeeName"
       [subTitle]="
-        data.emp.positionID
+        data?.emp?.positionID
           | formatvalue : view.formModel : 'PositionID'
           | async
       "
