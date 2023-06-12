@@ -18,6 +18,7 @@ import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ItemSize } from '../interfaces/ItemSize.interface';
+import { EntityName, getClassName } from '../utils/unknown.util';
 
 @Component({
   selector: 'lib-popup-add-item-size',
@@ -105,7 +106,12 @@ export class PopupAddItemSizeComponent
 
     this.itemSize.sizeType = this.dialogData.data.sizeType;
     this.api
-      .exec('IV', 'ItemSizesBusiness', 'AddItemSizeAsync', this.itemSize)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsSizes),
+        'AddItemSizeAsync',
+        this.itemSize
+      )
       .subscribe((res: ItemSize) => {
         if (res) {
           this.notiService.notifyCode('SYS006');
@@ -143,7 +149,12 @@ export class PopupAddItemSizeComponent
     }
 
     this.api
-      .exec('IV', 'ItemSizesBusiness', 'UpdateItemSizeAsync', this.itemSize)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsSizes),
+        'UpdateItemSizeAsync',
+        this.itemSize
+      )
       .subscribe((res: ItemSize) => {
         if (res) {
           this.notiService.notifyCode('SYS007');

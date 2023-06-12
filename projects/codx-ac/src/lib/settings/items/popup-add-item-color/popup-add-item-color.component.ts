@@ -9,6 +9,7 @@ import {
 import { map } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
+import { EntityName, getClassName } from '../utils/unknown.util';
 
 @Component({
   selector: 'lib-popup-add-item-color',
@@ -91,7 +92,12 @@ export class PopupAddItemColorComponent extends UIComponent {
     }
 
     this.api
-      .exec('IV', 'ItemColorsBusiness', 'AddItemColorAsync', this.itemColor)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsColors),
+        'AddItemColorAsync',
+        this.itemColor
+      )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS006');
@@ -121,7 +127,12 @@ export class PopupAddItemColorComponent extends UIComponent {
     }
 
     this.api
-      .exec('IV', 'ItemColorsBusiness', 'UpdateItemColorAsync', this.itemColor)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsColors),
+        'UpdateItemColorAsync',
+        this.itemColor
+      )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS007');
