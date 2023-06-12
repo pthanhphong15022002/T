@@ -313,24 +313,6 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="CustomerResource"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="customerResource"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           fiedName="ChannelID"
@@ -345,25 +327,7 @@
         </codx-input>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="SalespersonID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-          field="salespersonID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
+
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -376,6 +340,43 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="consultantID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+
+      <div class="form-group">
+        <codx-label
+          fiedName="Owner"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="owner"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="SalespersonID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          field="salespersonID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
