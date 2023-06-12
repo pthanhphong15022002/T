@@ -42,9 +42,9 @@ export class PopupCheckInComponent
   dataKR: any;
   formModel = new FormModel();
   grView: any;
-  checkIns: any;
   okrFM: any;
   curUser: any;
+  data: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -58,8 +58,9 @@ export class PopupCheckInComponent
     this.headerText = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.oldDataKR = dialogData.data[0];
-    this.checkIns = dialogData.data[2];
-    this.checkIns.status = new Date(this.oldDataKR?.nextCheckIn)< new Date()? '1' :'2';
+    this.data = dialogData.data[2];
+    this.data.status = new Date(this.oldDataKR?.nextCheckIn)< new Date()? '1' :'2';
+    this.data.createdOn = new Date();
     this.okrFM = dialogData.data[2];
     this.curUser = authStore.get();
   }
@@ -110,7 +111,7 @@ export class PopupCheckInComponent
   //---------------------------------------------------------------------------------//
   valueChange(evt: any) {
     if (evt?.field && evt?.data != null) {
-      this.checkIns[evt?.field] = evt?.data;
+      this.data[evt?.field] = evt?.data;
       this.detectorRef.detectChanges();
     }
   }
@@ -133,8 +134,9 @@ export class PopupCheckInComponent
     //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
     //   return;
     // }
+    this.data.checkIn= this.dataKR.nextCheckIn;
     if (
-      this.checkIns?.cummulated < this.dataKR?.actual &&
+      this.data?.cummulated < this.dataKR?.actual &&
       this.dataKR.checkInMode == '1'
     ) {
       this.notificationsService.notify(
@@ -143,21 +145,21 @@ export class PopupCheckInComponent
       return;
     }
     if (this.dataKR.checkInMode == '1') {
-      this.checkIns.value = this.checkIns?.cummulated - this.dataKR?.actual;
+      this.data.value = this.data?.cummulated - this.dataKR?.actual;
     } else {
-      this.checkIns.cummulated = this.checkIns.value + this.dataKR?.actual;
+      this.data.cummulated = this.data.value + this.dataKR?.actual;
     }
     if(this.dataKR.owner == this.curUser?.userID){
-      this.checkIns.okrStatus='5';
+      this.data.okrStatus='5';
     }
     else{
-      this.checkIns.okrStatus='3';
+      this.data.okrStatus='3';
     }
     // if(this.dataKR.frequence !='D'&&this.dataKR.frequence !='M'&&this.dataKR.frequence !='W'){
-    //   this.checkIns.checkInType
+    //   this.data.checkInType
     // }
     this.codxOmService
-    .checkInKR(this.dataKR.recID, this.checkIns)
+    .checkInKR(this.dataKR.recID, this.data)
     .subscribe((res: any) => {
       if (res) {
         this.codxOmService
