@@ -33,8 +33,8 @@
 <ng-template #itemViewList>
   <ng-container [ngTemplateOutlet]="tempHeader"></ng-container>
   <ng-container *ngFor="let data of listQuotations; let i = index">
-    <div class="has-action-menu py-3 border-bottom border-gray-100 line-quotations cursor-pointer ">
-      <div class="row">
+    <div class="has-action-menu py-3 border-bottom border-gray-100 px-5 line-quotations cursor-pointer">
+      <div class="row py-2">
         <div class="col-1 d-flex justify-content-center align-items-center">
           <span>{{ i + 1 }}</span>
         </div>

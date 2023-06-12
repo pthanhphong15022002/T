@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -119,7 +120,7 @@ export class DealsComponent
   funCrr: any;
   viewCrr: any;
   viewsDefault: any;
-
+  gridViewSetup: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -143,13 +144,9 @@ export class DealsComponent
     this.button = {
       id: this.btnAdd,
     };
-  
+
     this.cache.functionList(this.funcID).subscribe((f) => {
-      this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-        if (res && res.length > 0) {
-          this.moreFuncInstance = res;
-        }
-      });
+        this.executeApiCallFunctionID(f.formName,f.gridViewName);
     });
     this.detectorRef.detectChanges();
   }
@@ -441,6 +438,36 @@ export class DealsComponent
       await this.getColorReason();
     } catch (error) {}
   }
+
+  async executeApiCallFunctionID(formName,gridViewName) {
+    try {
+      await this.getMoreFunction(formName,gridViewName);
+      await this.getGridViewSetup(formName,gridViewName);
+    } catch (error) {}
+  }
+
+
+  async getMoreFunction(formName,gridViewName){
+    this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.moreFuncInstance = res;
+      }
+    });
+  }
+  async getGridViewSetup(formName,gridViewName){    this.cache
+    .gridViewSetup(formName, gridViewName)
+    .subscribe((res) => {
+      if(res) {
+        this.gridViewSetup = res;
+      }
+
+    });
+
+  }
+
+
+
+
 
   async getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
@@ -987,6 +1014,7 @@ export class DealsComponent
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
       processID: this.processID,
+      gridViewSetup: this.gridViewSetup
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1023,6 +1051,7 @@ export class DealsComponent
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa cơ hội',
+          gridViewSetup:this.gridViewSetup
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
