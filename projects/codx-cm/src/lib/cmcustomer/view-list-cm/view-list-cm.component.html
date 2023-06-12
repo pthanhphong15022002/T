@@ -22,7 +22,10 @@
   </div>
 </ng-template>
 <ng-template #customers let-data>
-  <div class="d-flex align-items-center justify-content-between" (dblclick)="dbClick(data)">
+  <div
+    class="d-flex align-items-center justify-content-between"
+    (dblclick)="dbClick(data)"
+  >
     <div class="w-100 pe-6">
       <codx-temp-full
         cardCss="card-template list-task"
@@ -60,7 +63,15 @@
       <ng-template #descTmp let-data>
         <div class="d-flex flex-column">
           <div class="mb-1" *ngIf="addressNameCM">
-            <span class="icon-location_on icon-16 me-1 text-gray-600"></span>
+            <span
+              class="icon-location_on icon-16 me-1 text-gray-600"
+              [ngbTooltip]="popupAddress"
+              ><ng-template #popupAddress>
+                <codx-label
+                  fiedName="Address"
+                  [formModel]="formModel"
+                ></codx-label> </ng-template
+            ></span>
             <span class="text-gray-600">{{ addressNameCM }}</span>
           </div>
           <div *ngIf="funcID != 'CM0102'">
@@ -78,12 +89,23 @@
     <div class="w-250px min-w-250px pe-6" *ngIf="funcID == 'CM0102'">
       <div class="col-6 d-flex align-items-center" *ngIf="data?.mobile">
         <span
+          [ngbTooltip]="popupAllowCall"
           [ngClass]="
             data?.allowCall
               ? 'icon-phone_android text-primary'
               : 'icon-phonelink_erase'
           "
           class="icon-16 me-2"
+          ><ng-template #popupAllowCall>
+            <codx-label
+              name="lblAllowCall"
+              [formModel]="formModel"
+              [default]="
+                data?.allowCall
+                  ? 'Cho phép điện thoại'
+                  : 'Không cho phép điện thoại'
+              "
+            ></codx-label> </ng-template
         ></span>
         <span
           [ngClass]="data?.allowCall ? 'text-primary' : ''"
@@ -93,10 +115,21 @@
       </div>
       <div class="col-6 d-flex align-items-center" *ngIf="data?.personalEmail">
         <span
+          [ngbTooltip]="popupAllowEmail"
           [ngClass]="
             data?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
           "
           class="icon-16 me-2 text-gray-900"
+          ><ng-template #popupAllowEmail>
+            <codx-label
+              name="lblAllowEmail"
+              [formModel]="formModel"
+              [default]="
+                data?.allowEmail
+                  ? 'Cho phép gửi mail'
+                  : 'Không cho phép gửi mail'
+              "
+            ></codx-label> </ng-template
         ></span>
         <span
           [ngClass]="data?.allowEmail ? 'text-primary' : ''"
@@ -165,7 +198,15 @@
       </div> -->
       <div *ngIf="data?.industries">
         <div class="d-flex align-items-top ms-3">
-          <span class="icon-work_outline icon-18 me-2 text-gray-700"></span>
+          <span
+            class="icon-work_outline icon-18 me-2 text-gray-700"
+            [ngbTooltip]="popupIndustries"
+            ><ng-template #popupIndustries>
+              <codx-label
+                fiedName="Industries"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <div>
             <div
               *ngFor="let item of data?.industries.split(';'); index as i"
@@ -190,7 +231,15 @@
     <div class="w-250px min-w-250px me-6" *ngIf="funcID == 'CM0102'">
       <div class="d-flex flex-column">
         <div class="d-flex align-items-top mb-1">
-          <span class="icon-corporate_fare icon-16 me-1"></span>
+          <span
+            class="icon-corporate_fare icon-16 me-1"
+            [ngbTooltip]="popupObjectName"
+            ><ng-template #popupObjectName>
+              <codx-label
+                fiedName="ObjectName"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <span
             [innerHTML]="
               dataSelected?.objectName
@@ -224,55 +273,88 @@
       *ngIf="funcID != 'CM0102'"
       class="d-flex justify-content-end align-items-center w-150px min-w-150px"
     >
-    <div class="me-4 d-flex align-items-center">
-      <span
-        *ngIf="funcID == 'CM0103'"
-        class="icon-date_range icon-18 text-gray-500 me-2"
-      ></span>
-      <span
-        *ngIf="funcID == 'CM0103'"
-        class="text-gray-900"
-        [innerHTML]="
-          dataSelected?.partnerFrom
-            | formatvalue : formModel : 'PartnerFrom'
-            | async
-        "
-      >
-      </span>
-    </div>
-    <div class="me-4 d-flex align-items-center">    
-      <span
-        *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-        class="icon-contact_phone icon-18 text-gray-500 me-2"
-      ></span>
+      <div class="me-4 d-flex align-items-center">
+        <span
+          [ngbTooltip]="popupPartnerFrom"
+          *ngIf="funcID == 'CM0103'"
+          class="icon-date_range icon-18 text-gray-500 me-2"
+          ><ng-template #popupPartnerFrom>
+            <codx-label
+              name="PartnerFrom"
+              [formModel]="formModel"
+            ></codx-label> </ng-template
+        ></span>
+        <span
+          *ngIf="funcID == 'CM0103'"
+          class="text-gray-900"
+          [innerHTML]="
+            dataSelected?.partnerFrom
+              | formatvalue : formModel : 'PartnerFrom'
+              | async
+          "
+        >
+        </span>
+      </div>
+      <div class="me-4 d-flex align-items-center">
+        <span
+          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+          class="icon-contact_phone icon-18 text-gray-500 me-2"
+          [ngbTooltip]="popupCountContact"
+          ><ng-template #popupCountContact>
+            <codx-label
+              name="lblCountContact"
+              [formModel]="formModel"
+              default="Số lượng liên hệ"
+            ></codx-label> </ng-template
+        ></span>
         <span
           *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
           class="text-gray-900"
           >{{ listContacts.length }}</span
         >
-    </div>
-
-    <div
-        *ngIf="funcID == 'CM0101'"
-        class="d-flex align-items-center me-4"
-    >
-        <span class="icon-add_shopping_cart icon-18 text-gray-500 me-2"></span>
-        <span class="text-gray-900">{{ countDeal }}</span>
-    </div>
+      </div>
 
       <div *ngIf="funcID == 'CM0101'" class="d-flex align-items-center me-4">
-        <span class="icon-shopping_bag icon-18 text-gray-500 me-2"></span>
+        <span
+          class="icon-add_shopping_cart icon-18 text-gray-500 me-2"
+          [ngbTooltip]="popupCountDeal"
+          ><ng-template #popupCountDeal>
+            <codx-label
+              name="lblCountDeal"
+              [formModel]="formModel"
+              default="Số lượng cơ hội"
+            ></codx-label> </ng-template
+        ></span>
+        <span class="text-gray-900">{{ countDeal }}</span>
+      </div>
+
+      <div *ngIf="funcID == 'CM0101'" class="d-flex align-items-center me-4">
+        <span
+          class="icon-shopping_bag icon-18 text-gray-500 me-2"
+          [ngbTooltip]="popupCountContract"
+          ><ng-template #popupCountContract>
+            <codx-label
+              name="lblCountContract"
+              [formModel]="formModel"
+              default="Số lượng hợp đồng"
+            ></codx-label> </ng-template
+        ></span>
         <span class="text-gray-900">0</span>
       </div>
 
-      <div
-        *ngIf="funcID == 'CM0104'"
-        class="d-flex align-items-center me-2"
-        >
-          <span class="icon-shopping_cart icon-18 text-gray-500 me-2"></span>
-          <span class="text-gray-900">{{countDealCompetitor}}</span>
-        </div
-      >
+      <div *ngIf="funcID == 'CM0104'" class="d-flex align-items-center me-2">
+        <span
+          class="icon-shopping_cart icon-18 text-gray-500 me-2"
+          [ngbTooltip]="popupcountDealCompetitor"
+          ><ng-template #popupcountDealCompetitor>
+            <codx-label
+              name="lblCountDealCompetitor"
+              [formModel]="formModel"
+              default="Số lượng đối thủ cơ hội"
+            ></codx-label> </ng-template
+        ></span>
+        <span class="text-gray-900">{{ countDealCompetitor }}</span>
+      </div>
     </div>
     <div class="w-100px min-w-100px">
       <codx-mfunc
@@ -289,8 +371,7 @@
 </ng-template>
 
 <ng-template #popDetail>
-  <codx-form [body]="dbClickDetail" [dialog]="dialogDetail">
-  </codx-form>
+  <codx-form [body]="dbClickDetail" [dialog]="dialogDetail"> </codx-form>
 </ng-template>
 
 <ng-template #dbClickDetail>

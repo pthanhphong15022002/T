@@ -119,7 +119,7 @@ export class ViewListCmComponent implements OnInit {
     } else if (this.funcID == 'CM0103') {
       return data.partnerName;
     } else {
-      return data.opponentName;
+      return data.competitorName;
     }
   }
 
