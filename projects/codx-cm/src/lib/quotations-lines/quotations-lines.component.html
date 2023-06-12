@@ -3,6 +3,7 @@
     <div class="tabline-content position-relative">
       <codx-gridview-v2
         #gridQuationsLines
+        class="tabLine"
         service="CM"
         [formName]="fmQuotationLines.formName"
         [gridViewName]="fmQuotationLines.gridViewName"
@@ -18,6 +19,8 @@
         [editSettings]="editSettings"
         (cellChanged)="quotationsLineChanged($event)"
         (created)="gridCreated($event, gridQuationsLines)"
+        (onAddNew)="onAddNew($event)"
+        (onEdit)="onEdit($event)"
       ></codx-gridview-v2>
         <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
       <div
