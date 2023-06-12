@@ -139,6 +139,18 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       return;
     }
 
+            //Xu li validate thong tin CMND nhan vien
+            if(this.visaObj.expiredDate && this.visaObj.effectedDate){
+              if (this.visaObj.expiredDate < this.visaObj.effectedDate) {
+                this.hrService.notifyInvalidFromTo(
+                  'ExpiredDate',
+                  'EffectedDate',
+                  this.formModel
+                  )
+                  return;
+                }
+            }
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeVisaInfo(this.visaObj).subscribe((p) => {
         if (p != null) {

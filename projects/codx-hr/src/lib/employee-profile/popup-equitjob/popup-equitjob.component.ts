@@ -226,6 +226,7 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
+    
 
     this.hrSevice.SaveEmployeeQuitJobInfo(this.quitJobObj).subscribe((p) => {
       if (p != null) {

@@ -103,8 +103,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
         this.radioPersonalCheck = false;
         this.radioGroupCheck = true;
       }
-    }
-    else{
+    } else {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
     }
@@ -152,11 +151,9 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           }
         }
       });
-    this.cache
-      .gridViewSetup("Stationery", "grvStationery")
-      .subscribe((gv) => {
-        this.grvStationery = gv;
-      });
+    this.cache.gridViewSetup('Stationery', 'grvStationery').subscribe((gv) => {
+      this.grvStationery = gv;
+    });
 
     this.initForm();
 
@@ -215,6 +212,12 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
               'issueStatus',
               new FormControl('1')
             );
+
+            this.cache.getCompany(this.user.userID).subscribe((res) => {
+              this.dialogAddBookingStationery.patchValue({
+                orgUnitID: res.orgUnitID,
+              });
+            });
 
             this.detectorRef.detectChanges();
           }
@@ -416,7 +419,8 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.data.title = this.dialogAddBookingStationery.value.reasonID;
     this.data.approval = this.approvalRule;
     this.data.resourceType = this.dialogAddBookingStationery.value.resourceType;
-    this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus?? '1';
+    this.data.issueStatus =
+      this.dialogAddBookingStationery.value.issueStatus ?? '1';
     if (this.approvalRule == '0' && approval) {
       this.data.approveStatus = '5';
     }

@@ -244,7 +244,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         ];
         if (this.funcID == this.ePassportFuncID) {
           this.columnGrid = this.passportColumnGrid;
-          this.filter = this.filterPassport;
+          this.filter = null;
           //Get row count
           this.getRowCount();
         }

@@ -77,6 +77,19 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
+    this.api
+      .execSv(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetEmployeeInfoByIDAsync',
+        [this.data.employeeID]
+      ).subscribe(res => {
+        if (res) {
+          this.data = res;
+          this.form.formGroup.patchValue(this.data);
+        }
+      })
     // this.getOrgNote();
   }
 

@@ -98,6 +98,7 @@
   </div>
 
   <ng-template #tmplUserInfo let-data>
+    <div class="py-2">
     <codx-temp-full
       [imageObjType]="'AD_Users'"
       [imageId]="data.userID"
@@ -105,6 +106,7 @@
       [subTitle]="data.email"
     >
     </codx-temp-full>
+  </div>
   </ng-template>
 
   <ng-template #operatorHT let-data>

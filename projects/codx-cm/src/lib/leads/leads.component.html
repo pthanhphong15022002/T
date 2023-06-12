@@ -55,6 +55,7 @@
         <span
         class="text-gray-600 fs-7"
         #businessLineID
+        [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
         [innerHTML]="
         data?.businessLineID
             | formatvalue
@@ -71,6 +72,7 @@
     <div
       class="text-gray-600 mb-2 line-clamp line-clamp-2"
       #note
+      [ngbTooltip]="gridViewSetup['Note']?.headerText"
       [innerHTML]="
       data?.note
           | formatvalue
@@ -102,6 +104,7 @@
         <span
           class="text-gray-700"
           #createdOn
+          [ngbTooltip]="gridViewSetup['CreatedOn']?.headerText"
           [innerHTML]="
           data.createdOn
               | formatvalue
@@ -150,6 +153,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
+    [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"

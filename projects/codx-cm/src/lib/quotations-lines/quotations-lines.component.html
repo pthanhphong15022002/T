@@ -1,36 +1,56 @@
 <ng-container *ngIf="!isViewTemp">
   <div class="h-100 p-3">
-    <codx-gridview-v2
-      #gridQuationsLines
-      service="CM"
-      [formName]="fmQuotationLines.formName"
-      [gridViewName]="fmQuotationLines.gridViewName"
-      [entityName]="fmQuotationLines.entityName"
-      [templateMore]="morefunction"
-      [allowFiltering]="true"
-      [allowSorting]="true"
-      [dataSource]="listQuotationLines"
-      [autoLoad]="false"
-      rowHeight="50"
-      predicates="TransID=@0"
-      [dataValues]="transID"
-      (cellChanged)="quotationsLineChanged($event)"
-      (created)="gridCreated($event, gridQuationsLines)"
-    ></codx-gridview-v2>
+    <div class="tabline-content position-relative">
+      <codx-gridview-v2
+        #gridQuationsLines
+        service="CM"
+        [formName]="fmQuotationLines.formName"
+        [gridViewName]="fmQuotationLines.gridViewName"
+        [entityName]="fmQuotationLines.entityName"
+        [templateMore]="morefunction"
+        [allowFiltering]="true"
+        [allowSorting]="true"
+        [dataSource]="listQuotationLines"
+        [autoLoad]="false"
+        rowHeight="40"
+        predicates="TransID=@0"
+        [dataValues]="transID"
+        [editSettings]="editSettings"
+        (cellChanged)="quotationsLineChanged($event)"
+        (created)="gridCreated($event, gridQuationsLines)"
+      ></codx-gridview-v2>
+        <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
+      <div
+        class="row"
+        *ngIf="listQuotationLines?.length == 0"
+        style="height: 30px; background-color: whitesmoke"
+      ></div>
+    </div>
   </div>
+
   <div class="d-flex" *ngIf="showButtonAdd">
-    <button
-      type="button"
-      class="btn btn-clean btn-sm btn-icon btn-icon-md p-5"
-      (click)="addPopup()"
-    >
-      <i class="icon-add_box icon-24 text-primary"></i>
-    </button>
-    <button class="btn btn-light-primary" (click)="addRow()">
-      <codx-label name="AddLines" default="Thêm dòng"></codx-label>
-    </button>
+    <div class="btn-addline me-3">
+      <button
+        type="button"
+        class="btn btn-sm btn-light-primary"
+        (click)="addPopup()"
+      >
+        <i class="icon-add_box icon-16 text-primary"></i>
+        <codx-label name="blbAddPopup" default="Thêm form"></codx-label>
+      </button>
+    </div>
+    <div #btnRef class="btn-addline">
+      <button
+        type="button"
+        class="btn btn-sm btn-light-primary"
+        (click)="addRow()"
+      >
+        <i class="icon-playlist_add icon-16"></i>
+        <codx-label name="blbAddLines" default="Thêm dòng"></codx-label>
+      </button>
+    </div>
   </div>
-  <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
+
   <ng-template #morefunction let-data>
     <div class="" style="height: 30px">
       <codx-mfunc
@@ -420,9 +440,7 @@
             <span
               class="text-nowrap"
               [innerHTML]="
-                item?.umid
-                  | formatvalue : fmQuotationLines : 'umid'
-                  | async
+                item?.umid | formatvalue : fmQuotationLines : 'umid' | async
               "
             ></span>
           </td>

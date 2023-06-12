@@ -100,14 +100,8 @@ export class PopupCheckInHistoryComponent
       if(res){
         this.data=res;
         if(this.data?.checkIns?.length>0){
-          this.checkIns= this.data?.checkIns.filter((x :any)=>x.okrid == this.data?.recID).reverse();
-          // let t=this;
-          // setTimeout(()=>{
-          //   document.querySelector('popup-check-in-history')?.querySelector('.icon-close')?.addEventListener('click',function(e){
-              
-          //     e.preventDefault();
-          //     t.close()})
-          // },100)
+          //this.checkIns= this.data?.checkIns.filter((x :any)=>x.okrid == this.data?.recID).reverse();
+          this.checkIns=this.data?.checkIns.reverse();
           this.detectorRef.detectChanges();
         }
         this.isAfterRender =true;
