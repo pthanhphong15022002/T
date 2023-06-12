@@ -14,6 +14,7 @@
         <span class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></span>
           <span class="text-dark fs-6 fw-bold"
             #businessLineID
+            [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
             [innerHTML]="
             dataSelected?.businessLineID
                 | formatvalue

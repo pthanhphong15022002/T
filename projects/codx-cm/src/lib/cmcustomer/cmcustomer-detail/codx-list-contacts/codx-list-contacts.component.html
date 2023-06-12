@@ -127,12 +127,23 @@
     <div class="w-200px min-w-200px d-flex flex-column">
       <div class="mb-1 d-flex align-items-center" *ngIf="data?.mobile">
         <span
+          [ngbTooltip]="popupAllowCall"
           [ngClass]="
             data.allowCall
               ? 'icon-phone_android text-primary'
               : 'icon-phonelink_erase'
           "
-          class="icon-16 me-1"
+          class="icon-16 me-1 text-hover-primary cursor-pointer"
+          ><ng-template #popupAllowCall>
+            <codx-label
+              name="lblAllowCall"
+              [formModel]="formModel"
+              [default]="
+                data?.allowCall
+                  ? 'Cho phép điện thoại'
+                  : 'Không cho phép điện thoại'
+              "
+            ></codx-label> </ng-template
         ></span>
         <span
           [ngClass]="data.allowCall ? 'text-primary' : ''"
@@ -142,10 +153,21 @@
       </div>
       <div class="d-flex align-items-center" *ngIf="data?.personalEmail">
         <span
+          [ngbTooltip]="popupAllowEmail"
           [ngClass]="
             data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
           "
-          class="icon-16 me-1 text-gray-900"
+          class="icon-16 me-1 text-gray-900 text-hover-primary cursor-pointer"
+          ><ng-template #popupAllowEmail>
+            <codx-label
+              name="lblAllowEmail"
+              [formModel]="formModel"
+              [default]="
+                data?.allowEmail
+                  ? 'Cho phép gửi mail'
+                  : 'Không cho phép gửi mail'
+              "
+            ></codx-label> </ng-template
         ></span>
         <span
           [ngClass]="data.allowEmail ? 'text-primary' : ''"
@@ -159,7 +181,14 @@
         class="d-flex justify-content-start align-items-center"
         *ngIf="data.isDefault"
       >
-        <span class="icon-vpn_key icon-16"></span>
+        <span class="icon-vpn_key icon-16 text-hover-primary cursor-pointer" [ngbTooltip]="popupIsDefault"
+          ><ng-template #popupIsDefault>
+            <codx-label
+              name="lblIsDefault"
+              [formModel]="formModelContact"
+              default="Liên hệ mặc định"
+            ></codx-label> </ng-template
+        ></span>
       </div>
     </div>
     <div class="action-menu-od w-100px">

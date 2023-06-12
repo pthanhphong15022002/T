@@ -44,7 +44,7 @@ export class PopupAddOKRPlanComponent
   curOrgName = '';
   okrFG: FormGroup;
   listFG: any;
-  dataOKR: any;
+  dataOKR = [];
   owner: any;
   funcType: any;
   isAdd = false;
@@ -124,7 +124,7 @@ export class PopupAddOKRPlanComponent
   }
   afterOpenEditForm() {
     this.codxOmService
-      .getAllOKROfPlan(this.okrPlan.recID)
+      .getOKRByPlanID(this.okrPlan.recID)
       .subscribe((item: any) => {
         if (item) {
           this.dataOKR = item;
@@ -161,10 +161,14 @@ export class PopupAddOKRPlanComponent
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
   addOKR(type: any, obIndex: number, krIndex: number) {
+    if(this.dataOKR==null){
+      this.dataOKR=[];
+    }
     if (type && obIndex != null && krIndex != null) {
       switch (type) {
         case this.obType:
-          this.dataOKR.push(this.createNewOKR(type));
+          let tmpOB=this.createNewOKR(type)
+          this.dataOKR.push(tmpOB);
           break;
 
         case this.krType:
@@ -302,7 +306,12 @@ export class PopupAddOKRPlanComponent
   obChange(evt: any, obIndex: number) {
     if (evt && evt?.field && evt?.data != null && obIndex != null) {
       this.dataOKR[obIndex][evt?.field] = evt?.data;
-
+      if(evt?.field =='okrGroupID'){
+        this.dataOKR[obIndex].bscType = evt?.itemData?.BSCType;
+        
+      }
+      console.log(this.dataOKR[obIndex]);
+      
       this.detectorRef.detectChanges();
     }
   }

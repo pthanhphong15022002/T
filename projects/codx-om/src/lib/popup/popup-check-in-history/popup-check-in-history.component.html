@@ -21,20 +21,20 @@
             let index = index;
             let count = count
           ">
-        <div class="d-flex flex-column" *ngIf="item?.okrid == data?.recID">
-          <div class="d-flex flex-row" *ngIf="index==0">
+        <div class="d-flex flex-column" >
+          <div class="d-flex flex-row" *ngIf="index==0 && data?.hasAssign==null && (data?.items ==null ||data?.items?.length==0 )">
             <div class="d-flex flex-column align-items-center justify-content-between col-1">
               
               <div class="om-step-number border border-2" [ngClass]="item?.status =='1'? 'border-secondary': item?.status =='2'? 'border-success': item?.status =='3'? 'border-warning': 'border-info'   ">
               </div>
-              <span *ngIf="count - index != 1" style="width: 1px" class="flex-grow-1 border om-dot"></span>
+              <span  style="width: 1px" class="flex-grow-1 border om-dot"></span>
             </div>
   
             <div class="d-flex flex-column pe-5 col-3">  
               <div class="d-flex flex-row">
                 <codx-label name="Kế hoạch:"></codx-label>
                 <span class="ps-2 fw-bold">
-                  {{ item?.checkIn | fmDT : "dmy" }}
+                  {{ data?.nextCheckIn | fmDT : "dmy" }}
                 </span>
               </div>
             </div>
@@ -64,7 +64,7 @@
               <div class="d-flex flex-row">
                 <codx-label name="Thực tế:"></codx-label>
                 <span class="ps-2 fw-bold">
-                  {{ item?.checkIn | fmDT : "dmy" }}
+                  {{ item?.createdOn | fmDT : "dmy" }}
                 </span>
               </div>
               <!-- <div *ngIf="index == 0" class="d-flex w-100px">
@@ -78,7 +78,7 @@
                   }}</span>
               </div> -->
               <span>
-                <codx-vll [name]="'EP022'" [value]="item?.okrStatus" [showText]="true" [showBgColor]="true"
+                <codx-vll [name]="'OM025'" [value]="item?.status" [showText]="true" [showBgColor]="true"
                   class="badge badge-light badge-sm">
                 </codx-vll>
                 <span type="button" *ngIf="item?.status=='4'"

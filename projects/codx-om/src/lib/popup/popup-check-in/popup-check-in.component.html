@@ -1,5 +1,5 @@
 <codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef" [formModel]="formModel" [formGroup]="fCheckinKR"
-  [data]="checkIns"  [showHeader]="false" *ngIf="fCheckinKR && isAfterRender">
+  [data]="data"  [showHeader]="false" *ngIf="fCheckinKR && isAfterRender">
   <ng-template #body>
     <div class="pt-5 h-100 d-flex justify-content-center">
       <!--Header-->
@@ -23,15 +23,20 @@
           <div class="row">
             <div class="col-4" *ngIf="dataKR?.checkInMode=='1'">
               <codx-label class="fw-bold mb-1" default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
-              <codx-input type="number"  [min]="0" [placeholder]="grView?.value?.description" [showSpinButton]="false" field="cummulated" (valueChange)="valueChange($event)"  [crrValue]="checkIns?.cummulated"></codx-input>
+              <codx-input type="number"  [min]="0" [placeholder]="grView?.value?.description" [showSpinButton]="false" field="cummulated" (valueChange)="valueChange($event)"  [crrValue]="data?.cummulated"></codx-input>
             </div>
+            
             <div class="col-4" *ngIf="dataKR?.checkInMode!='1'">
               <codx-label class="fw-bold mb-1"  fiedName="Value" [formModel]="form.formModel"></codx-label>
-              <codx-input type="number" [min]="0" [placeholder]="grView?.value?.description" [showSpinButton]="false" field="value"  (valueChange)="valueChange($event)" [crrValue]="checkIns?.value"></codx-input>
+              <codx-input type="number" [min]="0" [placeholder]="grView?.value?.description" [showSpinButton]="false" field="value"  (valueChange)="valueChange($event)" [crrValue]="data?.value"></codx-input>
+            </div>
+            <div class="col-4">
+              <codx-label class="fw-bold mb-1"  fiedName="CreatedOn" default="Ngày cập nhật" [formModel]="form.formModel"></codx-label>
+              <codx-input type="datetime" field="createdOn" [crrValue]="data?.createdOn" [disabled]="true"></codx-input>
             </div>
             <div class="col-4">
               <codx-label class="fw-bold mb-1" default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>
-              <codx-input type="valuelist" field="status" [crrValue]="checkIns?.status" [refValue]="grView?.status?.referedValue" [disabled]="true"></codx-input>
+              <codx-input type="valuelist" field="status" [crrValue]="data?.status" [refValue]="grView?.status?.referedValue" [disabled]="true"></codx-input>
             
               <!-- <codx-input ControlName="status" [formModel]="formModel" [Group]="fCheckinKR"></codx-input> -->
             </div>

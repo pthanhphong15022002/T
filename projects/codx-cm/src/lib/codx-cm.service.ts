@@ -697,6 +697,16 @@ export class CodxCmService {
     );
   }
 
+  isCheckDealInUse(data){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'isCheckDealInUseAsync',
+      data
+    );
+
+  }
+
 
   //#endregion -- Bao
 
