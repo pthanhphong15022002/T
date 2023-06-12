@@ -424,10 +424,11 @@ export class CodxCmService {
       data
     );
   }
-  copyFileAvata(idOld, idNew) {
+  copyFileAvata(idOld, idNew, entityName = null) {
     return this.api.exec<any>('CM', 'ContactsBusiness', 'CopyAvatarByIdAsync', [
       idOld,
       idNew,
+      entityName
     ]);
   }
 
