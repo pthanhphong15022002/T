@@ -1014,6 +1014,7 @@ export class DealsComponent
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
       processID: this.processID,
+      gridViewSetup: this.gridViewSetup
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1050,6 +1051,7 @@ export class DealsComponent
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa cơ hội',
+          gridViewSetup:this.gridViewSetup
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
