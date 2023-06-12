@@ -4610,8 +4610,8 @@
 
 <ng-template #templateAwardGridCol2 let-data>
   <div class="d-flex flex-wrap">
-    <div class="d-flex align-items-center mb-5px" #ranking>
-      <i class="icon-event icon-16 me-2"></i>
+    <div class="d-flex align-items-center mb-2 me-5" #ranking>
+      <i class="icon-event icon-16 me-1"></i>
       <span class="text-dark">
         {{ data?.awardDate | fmDT }}
       </span>
@@ -4621,8 +4621,8 @@
           data?.inYear | formatvalue : awardFormModel : 'inYear' | async
         "></span>
     </div>
-    <div class="d-flex align-items-center">
-      <i class="icon-library_books icon-16 me-2"></i>
+    <div class="d-flex align-items-center mb-2">
+      <i class="icon-library_books icon-16 me-1"></i>
       <span class="text-dark">
         {{ data?.decisionNo }}
       </span>
