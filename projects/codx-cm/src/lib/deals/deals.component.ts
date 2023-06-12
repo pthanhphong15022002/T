@@ -1093,17 +1093,31 @@ export class DealsComponent
   }
 
   delete(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.onAction.next({ type: 'delete', data: data });
-        }
-      });
-    this.changeDetectorRef.detectChanges();
+    var datas = [data.recID];
+    this.codxCmService.isCheckDealInUse(datas).subscribe((res)=> {
+      if(res[0]) {
+        this.notificationsService.notifyCode('Cơ hội đang được không liên kết với hợp đồng');
+        return;
+      }
+      else if(res[1]) {
+        this.notificationsService.notifyCode('Cơ hội đang được không liên kết với báo giá');
+        return;
+      }
+      else {
+        this.view.dataService.dataSelected = data;
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected], true, (opt) =>
+            this.beforeDel(opt)
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.onAction.next({ type: 'delete', data: data });
+            }
+          });
+        this.changeDetectorRef.detectChanges();
+      }
+    })
+
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];

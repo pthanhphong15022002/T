@@ -13,7 +13,9 @@ export class LeadDetailComponent  implements OnInit {
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
-  @Input() funcID = 'CM0201'; //
+  @Input() funcID: any; //
+  @Input() gridViewSetup: any;
+
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })

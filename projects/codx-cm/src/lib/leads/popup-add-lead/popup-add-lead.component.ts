@@ -96,6 +96,7 @@ leadId:string = '';
 contactId:string = '';
 isCopyAvtLead: boolean = false;
 isCopyAvtContact: boolean = false;
+listIndustries:any[]=[];
 
 constructor(
   private inject: Injector,
@@ -158,14 +159,19 @@ saveLead() {
 
 }
 cbxChange($event, field) {
-  if ($event) {
+  if ($event  && $event.data ) {
     this.lead[field] = $event;
   }
 }
 valueChangeOwner($event) {
-  if ($event != null) {
+  if ($event  && $event.data ) {
     this.owner = $event;
     this.lead.owner = this.owner;
+  }
+}
+valueChangeIndustries($event){
+  if ($event  && $event.data ) {
+     this.listIndustries.push($event.data);
   }
 }
 onAdd() {

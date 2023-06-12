@@ -238,7 +238,6 @@
         </thead>
         <tbody class="border-bottom" *ngFor="
             let item of inventoryJournalLines
-              | slice : (page - 1) * pageSize : page * pageSize
           ">
           <tr>
             <td class="text-center fw-bold">
@@ -423,10 +422,6 @@
     <div class="d-flex align-items-center mb-1 bg-light me-5">
       <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
       <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total + ' ' + inventoryJournal.currencyID }}</span>
-    </div>
-    <div *ngIf="inventoryJournalLines.length > 0 && modeGrid == 2" class="d-flex justify-content-end">
-      <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-        [collectionSize]="inventoryJournalLines.length"></ngb-pagination>
     </div>
   </div>
 </ng-template>

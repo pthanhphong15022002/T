@@ -9,12 +9,19 @@
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
   >
+  <ng-template #tooltipDealName>
+    <div class="text-end text-sm-start">
+      <strong>{{ gridViewSetup["DealName"]?.headerText }}</strong
+      >: {{ dataSelected?.dealName }}
+    </div>
+  </ng-template>
     <ng-template #header let-data>
       <div class="d-flex justify-content-between">
         <div class="text-info d-flex align-items-center">
           <i class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></i>
           <span
-            class="text-dark fs-6 fw-bold"
+            class="text-dark fs-6 fw-bold line-clamp-menu"
+            [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
             #businessLineID
             [innerHTML]="
               dataSelected?.businessLineID
@@ -63,7 +70,8 @@
                 </div>
                 <div class="d-flex align-items-center mb-1">
                   <span
-                    class="text-gray-600"
+                    class="text-gray-600 line-clamp-menu "
+                    [ngbTooltip]="tooltipDealName"
                     #dealName
                     [innerHTML]="
                       dataSelected?.dealName
@@ -81,8 +89,9 @@
                 class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
               ></span>
               <span
-                class="fw-bold"
+                class="fw-bold line-clamp-menu"
                 *ngIf="dataSelected?.dealValue; else defaultNull"
+                [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
                 #dealValue
                 [innerHTML]="
                   dataSelected?.dealValue
@@ -98,7 +107,8 @@
 
                 <span
                 *ngIf="dataSelected?.probability; else defaultNull"
-                  class="text-primary"
+                  class="text-primary line-clamp-menu"
+                  [ngbTooltip]="gridViewSetup['Probability']?.headerText"
                   #probability
                   [innerHTML]="
                     dataSelected?.probability
@@ -167,7 +177,6 @@
                 </div>
                 <div
                   class="d-flex flex-wrap align-items-top mb-1"
-                  *ngIf="contactPerson"
                 >
                   <div class="d-flex flex-column">
                     <div class="mb-2">
@@ -188,7 +197,21 @@
                         </codx-img>
                       </div>
                       <div class="d-flex flex-column">
-                        <div class="fw-bold text-dark fs-6 mb-1">
+
+                        <span
+                        class="fw-bold text-dark fs-6 mb-1"
+                        #contactName
+                        [innerHTML]="
+                          dataSelected?.contactName
+                            | formatvalue
+                              : formModel
+                              : 'contactName'
+                              : contactName
+                            | async
+                        "
+                      ></span>
+
+                        <div >
                           {{ contactPerson?.contactName }}
                         </div>
                         <div class="fs-7 text-gray-600 mb-1">
@@ -198,7 +221,7 @@
                           {{ contactPerson?.role }}
                         </div>
                         <div class="d-flex align-items-start">
-                          <div class="d-flex align-items-center me-5">
+                          <div class="d-flex align-items-center me-5" *ngIf="contactPerson?.mobile">
                             <span
                               class="icon-phone_android text-primary icon-16 me-2"
                             ></span>
@@ -206,7 +229,7 @@
                               contactPerson?.mobile
                             }}</span>
                           </div>
-                          <div class="d-flex align-items-center">
+                          <div class="d-flex align-items-center" *ngIf="contactPerson?.personalEmail">
                             <span
                               class="icon-print_disabled icon-16 me-2 text-gray-600"
                             ></span>
@@ -265,16 +288,15 @@
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
                     <span
-                      class="text-gray-600"
+                      class="text-gray-600 line-clamp-menu"
                       #expectedClosed
+                      [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
                       [innerHTML]="
                         dataSelected?.expectedClosed
                           | formatvalue
                             : formModel
                             : 'expectedClosed'
                             : expectedClosed
-                            : 'CMDeals'
-                            : 'grvCMDeals'
                           | async
                       "
                     ></span>

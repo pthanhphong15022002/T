@@ -164,7 +164,16 @@
                     class="d-flex justify-content-end w-100 mb-3"
                     *ngIf="dataSelected.isBlackList"
                   >
-                    <span class="icon-do_disturb_alt text-gray-700"></span>
+                    <span
+                      class="icon-do_disturb_alt text-gray-700"
+                      [ngbTooltip]="popupIsBlackList"
+                      ><ng-template #popupIsBlackList>
+                        <codx-label
+                          fiedName="IsBlackList"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </ng-template>
+                    </span>
                   </div>
                 </div>
               </div>

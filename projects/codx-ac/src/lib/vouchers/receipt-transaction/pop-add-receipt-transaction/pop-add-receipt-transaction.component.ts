@@ -50,11 +50,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
-  pageCount: any;
   tab: number = 0;
   total: any = 0;
-  page: any = 1;
-  pageSize = 5;
   hasSaved: any = false;
   isSaveMaster: any = false;
   vllReceipt: any = 'AC116';
@@ -152,7 +149,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.inventoryJournal);
-    this.pageCount = '(' + this.inventoryJournalLines.length + ')';
   }
 
   //#endregion
@@ -563,10 +559,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
   }
 
-  loadPageCount() {
-    this.pageCount = '(' + this.inventoryJournalLines.length + ')';
-  }
-
   loadTotal() {
     var totals = 0;
     this.inventoryJournalLines.forEach((element) => {
@@ -704,7 +696,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               {
                 this.inventoryJournalLines.push(dataline);
               }
-              this.loadPageCount();
               this.hasSaved = true;
               this.isSaveMaster = true;
               this.loadTotal();
@@ -827,7 +818,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             for (let i = 0; i < this.inventoryJournalLines.length; i++) {
               this.inventoryJournalLines[i].rowNo = i + 1;
             }
-            this.loadPageCount();
             break;
         }
         this.api
