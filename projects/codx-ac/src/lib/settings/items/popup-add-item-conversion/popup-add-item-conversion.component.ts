@@ -22,7 +22,9 @@ export class PopupAddItemConversionComponent extends UIComponent {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('itemConversionImage') itemConversionImage?: ImageViewerComponent;
 
-  itemConversion: UMConversion = {} as UMConversion;
+  itemConversion: UMConversion = {
+    useFormula: false,
+  } as UMConversion;
   savedItemConversions: UMConversion[] = [];
   isEdit: boolean = false;
   formTitle: string;

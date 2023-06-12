@@ -40,6 +40,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   employId: string;
   actionType: string;
   dialog: DialogRef;
+  fieldHeaderTexts
   // lstFamilyMembers;
   // indexSelected;
   isEmployee = false;
@@ -136,7 +137,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
             });
         }
       });
-    } else
+    } else{
       this.hrService
         .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
         .then((fg) => {
@@ -145,9 +146,15 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
             this.initForm();
           }
         });
+      }
+      this.hrService.getHeaderText(this.funcID).then((res) => {
+        this.fieldHeaderTexts = res;
+      })
   }
 
   onSaveForm() {
+    console.log('du lieu chuan bi luu', this.familyMemberObj);
+    
     let today = new Date();
 
     this.familyMemberObj.registerFrom = this.fromdateVal;
@@ -160,6 +167,17 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
 
     if (this.familyMemberObj.birthday >= today.toJSON()) {
       this.notify.notifyCode('HR004');
+      return;
+    }
+
+    let ddd = new Date();
+    if(this.familyMemberObj.passportIssuedOn > ddd.toISOString()){
+      this.notify.notifyCode('HR014',0,this.fieldHeaderTexts['PassportIssuedOn']);
+      return;
+    }
+
+    if(this.familyMemberObj.IDIssuedOn > ddd.toISOString()){
+      this.notify.notifyCode('HR014',0,this.fieldHeaderTexts['IDIssuedOn']);
       return;
     }
 

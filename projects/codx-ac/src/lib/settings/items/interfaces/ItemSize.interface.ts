@@ -18,4 +18,7 @@ export interface ItemSize {
   createdBy: string;
   modifiedOn: string | null;
   modifiedBy: string;
+  conversion: number;
+  cwum: string;
+  cwConversion: number;
 }

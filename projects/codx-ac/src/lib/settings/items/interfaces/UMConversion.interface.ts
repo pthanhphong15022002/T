@@ -14,10 +14,6 @@ export interface UMConversion {
     createdBy: string;
     modifiedOn: string | null;
     modifiedBy: string;
-    owner: string;
-    bUID: string;
-    employeeID: string;
-    positionID: string;
-    orgUnitID: string;
-    divisionID: string;
+    useFormula: boolean;
+    formula: string;
 }

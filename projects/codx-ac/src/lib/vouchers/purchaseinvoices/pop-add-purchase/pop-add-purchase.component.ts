@@ -66,7 +66,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   VATType: any;
   detailActive = 1;
   countDetail = 0;
-  pageCount: any;
   journal: IJournal;
   hasSaved: any = false;
   isSaveMaster: any = false;
@@ -101,8 +100,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   ];
   columnGrids = [];
   keymodel: any = [];
-  page: any = 1;
-  pageSize = 5;
   modegrid: any;
   lsVatCode: any;
   journals: any;
@@ -383,7 +380,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               {
                 this.purchaseInvoicesLines.push(dataline);
               }
-              this.loadPageCount();
               this.hasSaved = true;
               this.isSaveMaster = true;
               this.loadTotal();
@@ -593,7 +589,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             for (let i = 0; i < this.purchaseInvoicesLines.length; i++) {
               this.purchaseInvoicesLines[i].rowNo = i + 1;
             }
-            this.loadPageCount();
             break;
         }
         this.api
@@ -741,10 +736,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       }
     });
-  }
-
-  loadPageCount() {
-    this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
   }
 
   searchName(e) {
