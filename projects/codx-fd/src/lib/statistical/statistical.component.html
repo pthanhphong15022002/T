@@ -5,18 +5,18 @@
     <div class="d-flex flex-column">
       <div class="d-flex justify-content-between">
         <div class="d-flex" #control>
-          <div class="btn-30px w-200px">
+          <div class="w-200px">
             <codx-input class="form-control" type="valuelist" field="vllOrganize" refValue="L1483"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
-          <div class="btn-30px w-250px ms-2">
+          <div class="w-250px ms-2">
             <codx-input class="form-control" type="combobox" field="Organize" [refValue]="cbb"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
-          <div class="btn-30px ms-2">
-            <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-400px w-500px border'"
+          <div class="ms-2">
+            <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-450px w-700px border'"
               (change)="dateChange($event)"></codx-dropdown-calendar>
           </div>
         </div>
@@ -26,14 +26,14 @@
               [crrValue]="cardType" (valueChange)="changeCardType($event)">
             </codx-input>
           </div>
-          <div class="btn-30px ms-2">
+          <div class="ms-2">
             <span class="btn btn-outline-secondary text-dark" [class.active]="ballot_SENDED"
               (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)">
               <codx-label name="lblBallotSended" formName="FED_TagObjects" default="Phiếu cho">
               </codx-label>
             </span>
           </div>
-          <div class="btn-30px ms-2">
+          <div class="ms-2">
             <span class="btn btn-outline-secondary text-dark" [class.active]="ballot_RECEIVED"
               (click)="changeTypeCoins(TYPE_Ballot.Ballot_RECEIVED)">
               <codx-label name="lblBallotReceived" formName="FED_TagObjects" default="Phiếu nhận">

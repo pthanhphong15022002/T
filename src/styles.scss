@@ -2061,18 +2061,18 @@ a.nav-link {
 /*** control calendar **/
 codx-calendar {
   .e-tab .e-tab-header.e-vertical {
-    width: 130px !important;
-    max-width: 130px !important;
+    width: 125px !important;
+    max-width: 125px !important;
   }
   .e-tab .e-tab-header.e-vertical:before {
     border-color: var(--gray-200);
-    left: 145px;
+    left: 140px;
   }
   .e-tab .e-tab-header.e-vertical .e-toolbar-item {
     border-left: 3px transparent solid !important;
   }
   .e-tab > .e-content{
-    margin-left: 152px;
+    margin-left: 140px;
   }
 }
 
