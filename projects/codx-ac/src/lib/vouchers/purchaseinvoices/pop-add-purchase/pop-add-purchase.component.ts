@@ -674,7 +674,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.total = totalnet + totalvat;
     if(this.journal && (this.total <= this.journal.transLimit || this.journal.transLimit == null))
       this.purchaseinvoices.totalAmt = this.total;
-    this.purchaseinvoices.totalAmt = this.total;
     this.totalnet = totalnet.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
