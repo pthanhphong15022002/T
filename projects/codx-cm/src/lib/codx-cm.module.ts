@@ -74,6 +74,7 @@ import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.
 import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
+import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 
 const routes: Routes = [
   {
@@ -195,7 +196,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewPaymentComponent,
     GanttChartComponent,
     StepTaskComponent,
-    SettingProcessCmComponent
+    SettingProcessCmComponent,
+    QuotationsTabViewComponent
   ],
   imports: [
     RouterModule.forChild(routes),

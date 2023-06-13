@@ -346,7 +346,7 @@
   ></codx-tab-dealcompetitors>
 </ng-template>
 <ng-template #quotation>
-  <codx-quotations
+  <!-- <codx-quotations
     [typeModel]="'deals'"
     [showButton]="true"
     [predicates]="'RefID==@0'"
@@ -355,7 +355,14 @@
     [refType]="'CM_Deals'"
     [disableRefID]="true"
   >
-  </codx-quotations>
+  </codx-quotations> -->
+  <codx-quotations-tab-view  [typeModel]="'deals'"
+  [showButton]="true"
+  [predicates]="'RefID==@0'"
+  [dataValues]="dataSelected.recID"
+  [refID]="dataSelected.recID"
+  [refType]="'CM_Deals'"
+  [disableRefID]="true"></codx-quotations-tab-view>
 </ng-template>
 
 <ng-template #contract let-data>
