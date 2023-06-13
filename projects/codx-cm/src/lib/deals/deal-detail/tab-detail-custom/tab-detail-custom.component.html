@@ -23,10 +23,6 @@
     [ngTemplateOutlet]="task"
   ></some-element>
   <some-element
-    *ngSwitchCase="tabGanttChart"
-    [ngTemplateOutlet]="ganttChart"
-  ></some-element>
-  <some-element
     *ngSwitchCase="tabQuotation"
     [ngTemplateOutlet]="quotation"
   ></some-element>
@@ -41,67 +37,13 @@
 </div>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div *ngIf="isDataLoading">
-    <div *ngFor="let step of [1,2,3]">
-      <div class="d-flex align-items-center w-100">
-        <ngx-skeleton-loader
-          appearance="circle"
-          [theme]="{ width: '60px', height: '60px' }"
-        >
-        </ngx-skeleton-loader>
-        <ngx-skeleton-loader
-          style="width: 100%"
-          [theme]="{
-                width: '100%',
-                'border-radius': '5px',
-                height: '60px',
-                'margin': '0px',
-              }"
-        ></ngx-skeleton-loader>
-      </div>
-      <div style="padding-left: 70px; width: 100%;">
-        <ngx-skeleton-loader
-          style="width: 100%"
-          [theme]="{
-                width: '100%',
-                'border-radius': '10px',
-                height: '100px',
-                'margin': '0px',
-              }"
-        ></ngx-skeleton-loader>
-        <ngx-skeleton-loader
-          style="width: 100%"
-          [theme]="{
-                width: '100%',
-                'border-radius': '10px',
-                height: '100px',
-                'margin': '0px',
-              }"
-        ></ngx-skeleton-loader>
-      </div>
-      <hr class="m-0 p-0" />
-    </div>
-  </div>
-  <div *ngIf="!isDataLoading && listStep?.length > 0">
-    <div *ngFor="let step of listStep" class="list-step ps-4">
-      <codx-step-task
-        [dataSources]="step"
-        [isShowButton]="false"
-        [isShowMore]="true"
-        [isDeepCopy]="false"
-        [isShowStep]="true"
-        [isStart]="dataSelected?.status == '2'"
-        [isClose]="dataSelected?.closed"
-        [isRoleAll]="dataSelected?.roles?.isOnwer || false"
-        (continueStep)="continueStep($event, step)"
-        (saveAssign)="saveAssignTask($event)"
-      ></codx-step-task>
-      <hr class="m-0 p-0" />
-    </div>
-  </div>
-  <div *ngIf="!isDataLoading && listStep?.length == 0">
-    <codx-no-data></codx-no-data>
-  </div>
+  <step-task
+    [isDataLoading]="isDataLoading"
+    [dataSelected]="dataSelected"
+    [listInstanceStep]="listStep"
+    (continueStep)="continueStep($event)"
+    (saveAssignTask)="saveAssignTask($event)"
+  ></step-task>
 </ng-template>
 <!-- nvthuan sản phẩm -->
 <ng-template #product>
@@ -381,15 +323,6 @@
       [hidenMF]="false"
       (contactEvent)="contactChange($event)"
     ></codx-list-contacts>
-  </div>
-</ng-template>
-
-<ng-template #ganttChart>
-  <div class="w-100 h-100" id="tabGantt">
-    <codx-step-chart
-      [dataSelected]="dataSelected"
-      [listSteps]="listSteps"
-    ></codx-step-chart>
   </div>
 </ng-template>
 

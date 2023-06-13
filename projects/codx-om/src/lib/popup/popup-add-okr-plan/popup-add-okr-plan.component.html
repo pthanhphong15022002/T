@@ -56,15 +56,22 @@
 
                                 <div class="w-40 d-flex justify-content-start  h-100">
                                     <div
-                                        class="w-45 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom  border-top vll-inplace">
-                                        <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.category?.headerText"
+                                        class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom  border-top vll-inplace">                                        
+                                        <codx-inplace class="om-input w-100  fw-bold" field="okrGroupID" type="combobox" [ngbTooltip]="'Nhóm mục tiêu'"
+                                            [refValue]="'OKRGroups'" [class]="''"
+                                            [cssClass]="'fw-bold'" [emptyText]="'Nhóm mục tiêu'"
+                                            [value]="ob?.okrGroupID" (valueChange)="obChange($event,i)"></codx-inplace>
+                                    </div>
+                                    <div
+                                        class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom  border-top vll-inplace">
+                                        <codx-inplace class="om-input w-100  fw-bold" field="category" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.category?.headerText"
                                             [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.category?.description"
                                             [value]="ob?.category" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
                                     <div
-                                        class="w-45 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom border-top border-end vll-inplace">
-                                        <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.confidence?.headerText"
+                                        class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom border-top border-end vll-inplace">
+                                        <codx-inplace class="om-input w-100  fw-bold" field="confidence" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.confidence?.headerText"
                                             [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.confidence?.description"
                                             [value]="ob?.confidence" (valueChange)="obChange($event,i)"></codx-inplace>

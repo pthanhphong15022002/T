@@ -39,14 +39,15 @@ export class PurchaseinvoicesComponent extends UIComponent {
   funcName: any;
   parentID: string;
   journalNo: string;
+  totalAmt: any = 0;
+  totalQuantity: any = 0;
+  totalVat: any = 0;
   width: any;
   height: any;
   innerWidth: any;
   itemSelected: any;
   objectname: any;
   oData: any;
-  page: any = 1;
-  pageSize = 5;
   itemName: any;
   lsVatCode: any;
   grvPurchaseInvoicesLines: any;
@@ -313,7 +314,22 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [data.recID])
       .subscribe((res: any) => {
         this.purchaseInvoicesLines = res;
+        this.loadTotal();
       });
+  }
+
+  loadTotal(){
+    this.totalAmt = 0;
+    this.totalQuantity = 0;
+    this.totalVat = 0;
+    this.purchaseInvoicesLines.forEach((item) => {
+      if(item)
+      {
+        this.totalQuantity += item.quantity;
+        this.totalAmt += item.netAmt;
+        this.totalVat += item.vatAmt;
+      }
+    });
   }
   //#endregion
 }

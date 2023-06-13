@@ -1,29 +1,46 @@
-
 <div class="okr-treeview w-100 h-100 container mx-auto">
     <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree" [enableCheck]="false"
-    idField="orgUnitID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
-    (selectionChange)="selectionChange($event)" *ngIf="isAfterRender">
-</codx-treeview>
+        idField="orgUnitID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
+        (selectionChange)="selectionChange($event)" *ngIf="isAfterRender">
+    </codx-treeview>
 </div>
 <ng-template #templateTreeView let-item>
     <div (click)="clickTreeNode($event)" class="mb-2">
-        <div class="d-flex flex-row align-items-center h-50px" >
-            <div *ngIf="item?.orgUnitType=='1'" class="d-flex justify-content-center align-items-center rounded-1" style="height:30px;width:30px;background:#3699FF">
+        <div class="d-flex flex-row align-items-center h-50px">
+            <div *ngIf="item?.orgUnitType=='1'" class="d-flex justify-content-center align-items-center rounded-1"
+                style="height:30px;width:30px;background:#3699FF">
                 <span class="icon-home justify-content-center align-items-center text-light"></span>
-            </div>       
-            <div *ngIf="item?.orgUnitType=='4'" class="d-flex justify-content-center align-items-center rounded-circle" style="height:30px;width:30px;background:#ff3636">            
+            </div>
+            <div *ngIf="item?.orgUnitType=='4'" class="d-flex justify-content-center align-items-center rounded-circle"
+                style="height:30px;width:30px;background:#ff3636">
                 <span class="icon-account_balance_wallet justify-content-center align-items-center text-light"></span>
-            </div>  
-            <div *ngIf="item?.orgUnitType=='6'" class="d-flex justify-content-center align-items-center rounded-circle" style="height:30px;width:30px;background:#3699FF">            
+            </div>
+            <div *ngIf="item?.orgUnitType=='6'" class="d-flex justify-content-center align-items-center rounded-circle"
+                style="height:30px;width:30px;background:#3699FF">
                 <span class="icon-groups justify-content-center align-items-center text-light"></span>
-            </div>   
+            </div>
             <span class="ps-3 fs-4 fw-bold">{{item?.orgUnitName}}</span>
         </div>
         <!--Content-->
-        <div class="me-2" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">
-    
+        <!-- <div class="me-2" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">    
           <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [okrGrv]="okrGrv" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" [allowShowDetail]="true">
           </view-okr>
+        </div> -->
+        {{item?.listOKRByGroup[0]?.okrGroupName}}
+        <div *ngIf="item?.listOKRByGroup !=null && item?.listOKRByGroup?.length>0">
+            <div *ngFor="let gr of item?.listOKRByGroup">
+                <div *ngIf="gr?.listOKR?.length>0">
+                    <span *ngIf="gr?.okrGroupName!=null" class="fs-5 fw-bold">{{gr?.okrGroupName}}</span>
+                    <span *ngIf="gr?.okrGroupName==null && item?.listOKRByGroup?.length>1"
+                        class="fs-5 fw-bold text-gray-500"><codx-label name="lblGroupID"
+                            [default]="'Mục tiêu chiến lược'"></codx-label></span>
+                    <div class="okr-treeview">
+                        <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [okrGrv]="okrGrv" [dataOKR]="gr?.listOKR"
+                            [isCollapsedAll]="false" [allowShowDetail]="true">
+                        </view-okr>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>    
+    </div>
 </ng-template>

@@ -32,6 +32,7 @@ import { PopupAddItemColorComponent } from '../popup-add-item-color/popup-add-it
 import { PopupAddItemConversionComponent } from '../popup-add-item-conversion/popup-add-item-conversion.component';
 import { PopupAddItemSizeComponent } from '../popup-add-item-size/popup-add-item-size.component';
 import { PopupAddItemStyleComponent } from '../popup-add-item-style/popup-add-item-style.component';
+import { EntityName, getClassName } from '../utils/unknown.util';
 
 @Component({
   selector: 'lib-popup-add-item',
@@ -190,13 +191,16 @@ export class PopupAddItemComponent
         this.api
           .exec(
             'IV',
-            'ItemSizesBusiness',
+            getClassName(EntityName.IV_ItemsSizes),
             'DeleteItemSizeAsync',
             itemSize.recID
           )
           .subscribe((res) => {
             if (res) {
-              this.acService.deleteFile(itemSize.recID, 'IV_ItemSizes');
+              this.acService.deleteFile(
+                itemSize.recID,
+                EntityName.IV_ItemsSizes
+              );
             }
           });
       }
@@ -205,13 +209,16 @@ export class PopupAddItemComponent
         this.api
           .exec(
             'IV',
-            'ItemSizesBusiness',
+            getClassName(EntityName.IV_ItemsSizes),
             'DeleteItemSizeAsync',
             itemSize.recID
           )
           .subscribe((res) => {
             if (res) {
-              this.acService.deleteFile(itemSize.recID, 'IV_ItemSizes');
+              this.acService.deleteFile(
+                itemSize.recID,
+                EntityName.IV_ItemsSizes
+              );
             }
           });
       }
@@ -222,13 +229,16 @@ export class PopupAddItemComponent
         this.api
           .exec(
             'IV',
-            'ItemStylesBusiness',
+            getClassName(EntityName.IV_ItemsStyles),
             'DeleteItemStyleAsync',
             itemStyle.recID
           )
           .subscribe((res) => {
             if (res) {
-              this.acService.deleteFile(itemStyle.recID, 'IV_ItemStyles');
+              this.acService.deleteFile(
+                itemStyle.recID,
+                EntityName.IV_ItemsStyles
+              );
             }
           });
       }
@@ -239,7 +249,7 @@ export class PopupAddItemComponent
         this.api
           .exec(
             'IV',
-            'ItemColorsBusiness',
+            getClassName(EntityName.IV_ItemsColors),
             'DeleteItemColorAsync',
             itemColor.recID
           )
@@ -292,7 +302,7 @@ export class PopupAddItemComponent
       );
       this.loadData(
         'IV',
-        'IV_ItemSizes',
+        EntityName.IV_ItemsSizes,
         'ItemID=@0&&SizeType==@1',
         `${this.item.itemID};1`,
         'itemSizes1',
@@ -300,7 +310,7 @@ export class PopupAddItemComponent
       );
       this.loadData(
         'IV',
-        'IV_ItemSizes',
+        EntityName.IV_ItemsSizes,
         'ItemID=@0&&SizeType==@1',
         `${this.item.itemID};0`,
         'itemSizes2',
@@ -308,7 +318,7 @@ export class PopupAddItemComponent
       );
       this.loadData(
         'IV',
-        'IV_ItemColors',
+        EntityName.IV_ItemsColors,
         'ItemID=@0',
         this.item.itemID,
         'itemColors',
@@ -316,7 +326,7 @@ export class PopupAddItemComponent
       );
       this.loadData(
         'IV',
-        'IV_ItemStyles',
+        EntityName.IV_ItemsStyles,
         'ItemID=@0',
         this.item.itemID,
         'itemStyles',
@@ -445,12 +455,17 @@ export class PopupAddItemComponent
 
   onDeleteItemSize(itemSize: ItemSize): void {
     this.api
-      .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.recID)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsSizes),
+        'DeleteItemSizeAsync',
+        itemSize.recID
+      )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS008');
 
-          this.acService.deleteFile(itemSize.recID, 'IV_ItemSizes');
+          this.acService.deleteFile(itemSize.recID, EntityName.IV_ItemsSizes);
 
           if (itemSize.sizeType === '1') {
             this.itemSizes1 = this.itemSizes1.filter(
@@ -491,7 +506,7 @@ export class PopupAddItemComponent
       if (res) {
         const options = new DialogModel();
         options.FormModel = {
-          entityName: 'IV_ItemSizes',
+          entityName: EntityName.IV_ItemsSizes,
           formName: 'ItemSizes',
           gridViewName: 'grvItemSizes',
         };
@@ -549,12 +564,17 @@ export class PopupAddItemComponent
     event.stopPropagation();
 
     this.api
-      .exec('IV', 'ItemStylesBusiness', 'DeleteItemStyleAsync', itemStyle.recID)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsStyles),
+        'DeleteItemStyleAsync',
+        itemStyle.recID
+      )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS008');
 
-          this.acService.deleteFile(itemStyle.recID, 'IV_ItemStyles');
+          this.acService.deleteFile(itemStyle.recID, EntityName.IV_ItemsStyles);
 
           this.itemStyles = this.itemStyles.filter(
             (i) => i.recID !== itemStyle.recID
@@ -567,7 +587,12 @@ export class PopupAddItemComponent
     event.stopPropagation();
 
     this.api
-      .exec('IV', 'ItemColorsBusiness', 'DeleteItemColorAsync', itemColor.recID)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsColors),
+        'DeleteItemColorAsync',
+        itemColor.recID
+      )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS008');
@@ -584,7 +609,7 @@ export class PopupAddItemComponent
       if (res) {
         const options = new DialogModel();
         options.FormModel = {
-          entityName: 'IV_ItemStyles',
+          entityName: EntityName.IV_ItemsStyles,
           formName: 'ItemStyles',
           gridViewName: 'grvItemStyles',
         };
@@ -627,7 +652,7 @@ export class PopupAddItemComponent
       if (res) {
         const options = new DialogModel();
         options.FormModel = {
-          entityName: 'IV_ItemColors',
+          entityName: EntityName.IV_ItemsColors,
           formName: 'ItemColors',
           gridViewName: 'grvItemColors',
         };

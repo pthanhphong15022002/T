@@ -35,6 +35,7 @@ import { VATInvoices } from '../../../models/VATInvoices.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { map } from 'rxjs';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-purchase',
@@ -65,7 +66,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   VATType: any;
   detailActive = 1;
   countDetail = 0;
-  pageCount: any;
   journal: IJournal;
   hasSaved: any = false;
   isSaveMaster: any = false;
@@ -100,8 +100,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   ];
   columnGrids = [];
   keymodel: any = [];
-  page: any = 1;
-  pageSize = 5;
   modegrid: any;
   lsVatCode: any;
   journals: any;
@@ -116,6 +114,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private ngxService: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -132,6 +131,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
+    this.ngxService.startLoader('loader');
     this.loadInit();
   }
 
@@ -193,6 +193,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
   gridCreated(e, grid) {
     this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
+    this.closeLoader();
   }
 
   onDoubleClick(data)
@@ -379,7 +380,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               {
                 this.purchaseInvoicesLines.push(dataline);
               }
-              this.loadPageCount();
               this.hasSaved = true;
               this.isSaveMaster = true;
               this.loadTotal();
@@ -589,7 +589,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             for (let i = 0; i < this.purchaseInvoicesLines.length; i++) {
               this.purchaseInvoicesLines[i].rowNo = i + 1;
             }
-            this.loadPageCount();
             break;
         }
         this.api
@@ -737,10 +736,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       }
     });
-  }
-
-  loadPageCount() {
-    this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
   }
 
   searchName(e) {
@@ -1035,6 +1030,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             }
           });
       }
+      if(this.modegrid == '2')
+        this.closeLoader();
       });
   }
 
@@ -1270,6 +1267,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
+  closeLoader(){
+    setTimeout(() => {
+      this.ngxService.stopLoader('loader');
+      this.ngxService.destroyLoaderData('loader');
+    }, 500);
+  }
   
   //#endregion
 }

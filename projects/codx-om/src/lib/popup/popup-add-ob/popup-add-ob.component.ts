@@ -155,7 +155,13 @@ export class PopupAddOBComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   valueChange(evt: any) {
     if (evt && evt.field) {
-      this.ob[evt.field] = evt.data;
+      this.ob[evt.field] = evt?.data;
+      if(evt?.field =='okrGroupID'){
+        let cbbGr = evt?.component?.dataService?.data.filter(x=>x.RecID ==evt?.data);
+        if(cbbGr?.length>0){
+          this.ob.bscType = cbbGr[0]?.BSCType;
+        }
+      }
     }
     this.detectorRef.detectChanges();
   }
@@ -171,7 +177,7 @@ export class PopupAddOBComponent extends UIComponent {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   beforeSave(option: RequestOption) {
-    let itemData = this.fGroupAddOB.value;
+    let itemData = this.ob;
     option.methodName = '';
     option.data = [itemData, this.funcType];
     return true;
@@ -204,12 +210,12 @@ export class PopupAddOBComponent extends UIComponent {
       this.funcType == OMCONST.MFUNCID.Add ||
       this.funcType == OMCONST.MFUNCID.Copy
     ) {
-      this.methodAdd(this.ob, this.listShares);
+      this.methodAdd(this.ob);
     } else if (this.funcType == OMCONST.MFUNCID.Edit) {
-      this.methodEdit(this.ob, this.listShares);
+      this.methodEdit(this.ob);
     }
   }
-  methodAdd(ob: any, listShares: any) {
+  methodAdd(ob: any) {
     this.codxOmService.addOB(ob).subscribe((res: any) => {
       if (res) {
         res.write = true;
@@ -222,7 +228,7 @@ export class PopupAddOBComponent extends UIComponent {
     });
   }
 
-  methodEdit(ob: any, listShares: any) {
+  methodEdit(ob: any) {
     this.codxOmService.editOB(ob).subscribe((res: any) => {
       if (res) {
         res.write = true;
