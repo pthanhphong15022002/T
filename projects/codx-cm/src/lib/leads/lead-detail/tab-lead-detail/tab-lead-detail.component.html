@@ -111,7 +111,7 @@
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Điện thoại:"></codx-label>
+              <codx-label default="Điện thoại:" fiedName="CompanyPhone" ></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
@@ -122,7 +122,8 @@
                       : formModel
                       : 'companyPhone'
                       : companyPhone
-
+                      : 'CMLeads'
+                      : 'grvCMLeads'
                     | async
                 "
               ></span>
@@ -179,19 +180,20 @@
         <div class="col-6">
           <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
-              <codx-label default="Nguồn khách hàng" fiedName="CustomerResource" [formModel]="formModel"></codx-label>
+              <codx-label
+              fiedName="Owner"
+               class="me-2 label-colon"
+              [setRequire]="false" [formModel]="formModel"></codx-label>
             </div>
             <div class="text-dark fw-bold codx-textcontent">
               <span
-                #customerResource
+                #owner
                 [innerHTML]="
-                dataSelected?.customerResource
+                dataSelected?.owner
                     | formatvalue
                       : formModel
-                      : 'customerResource'
-                      : customerResource
-                      : 'CMLeads'
-                      : 'grvCMLeads'
+                      : 'owner'
+                      : owner
                     | async
                 "
               ></span>

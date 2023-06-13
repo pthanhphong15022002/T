@@ -34,7 +34,6 @@ export class PopupEProcessContractComponent
   implements OnInit
 {
   formModel: FormModel;
-  formModelPL: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
@@ -46,7 +45,6 @@ export class PopupEProcessContractComponent
   lstSubContract: any;
   headerText: string;
   openFrom: string;
-  genderGrvSetup: any;
   employeeObj: any;
   contractNoDisable: boolean = false;
 
@@ -96,12 +94,6 @@ export class PopupEProcessContractComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if (!this.formModelPL) {
-      this.formModelPL = new FormModel();
-      this.formModelPL.entityName = 'HR_EContracts';
-      this.formModelPL.formName = 'EContracts';
-      this.formModelPL.gridViewName = 'grvEContracts';
-    }
 
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
@@ -114,10 +106,8 @@ export class PopupEProcessContractComponent
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
 
-    if (this.data) {
-      if (this.data.benefits) {
-        this.tempBenefitArr = JSON.parse(JSON.stringify(this.data?.benefits));
-      }
+    if (this.data?.benefits) {
+      this.tempBenefitArr = JSON.parse(this.data.benefits);
     }
 
     if (this.dialog.dataService?.keyField === 'ContractNo') {
@@ -132,12 +122,26 @@ export class PopupEProcessContractComponent
     this.fmSubContract.formName = 'EContracts';
   }
 
-  onInit(): void {
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
+  initFormAddContract() {
+    this.hrSevice
+      .getDataDefault(
+        this.benefitFormModel.funcID,
+        this.benefitFormModel.entityName,
+        'RecID'
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.benefitObj = res?.data;
+          this.benefitObj.effectedDate = null;
+          this.benefitObj.expiredDate = null;
+          // this.benefitObj.employeeID = this.employId;
+          this.benefitFormModel.currentData = this.benefitObj;
+          this.benefitFormGroup.patchValue(this.benefitObj);
+        }
       });
+  }
+
+  onInit(): void {
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
@@ -149,7 +153,7 @@ export class PopupEProcessContractComponent
           .then((fg) => {
             if (fg) {
               this.benefitFormGroup = fg;
-              this.initFormAddBenefit();
+              this.initFormAddContract();
             }
           });
       }
@@ -179,28 +183,8 @@ export class PopupEProcessContractComponent
         });
   }
 
-  initFormAddBenefit() {
-    this.hrSevice
-      .getDataDefault(
-        this.benefitFormModel.funcID,
-        this.benefitFormModel.entityName,
-        'RecID'
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.benefitObj = res?.data;
-          this.benefitObj.effectedDate = null;
-          this.benefitObj.expiredDate = null;
-          // this.benefitObj.employeeID = this.employId;
-          this.benefitFormModel.currentData = this.benefitObj;
-          this.benefitFormGroup.patchValue(this.benefitObj);
-        }
-      });
-  }
-
   addBenefit() {
     let option = new DialogModel();
-    //option.zIndex = 999;
     option.FormModel = this.benefitFormModel;
     this.dialogAddBenefit = this.callfunc.openForm(
       this.tmpAddBenefit,
@@ -314,7 +298,6 @@ export class PopupEProcessContractComponent
       this.hrSevice
         .validateBeforeSaveContract(this.data, true)
         .subscribe((res) => {
-          // console.log('result', res);
           if (res) {
             if (res[0]) {
               //code test
@@ -324,7 +307,6 @@ export class PopupEProcessContractComponent
               this.data = res;
             } else if (res[1]) {
               this.notify.alertCode(res[1]).subscribe((stt) => {
-                // console.log('click', res);
                 if (stt?.event.status == 'Y') {
                   if (res[1] == 'HR010') {
                     this.hrSevice

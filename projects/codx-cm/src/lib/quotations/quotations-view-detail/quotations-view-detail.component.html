@@ -35,7 +35,8 @@
             "
           ></span>
           <span class="icon-i-dot icon-22 text-gray-700"></span>
-          <span class="fs-5 text-gray-600"
+          <span
+            class="fs-5 text-gray-600"
             [innerHTML]="
               itemSelected.quotationID
                 | formatvalue : formModel : 'quotationID'
@@ -46,15 +47,15 @@
         <div class="d-flex align-items-center justify-content-end ms-5">
           <span>
             <codx-vll
-            *ngIf="vllStatus"
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="itemSelected?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
+              *ngIf="vllStatus"
+              [name]="vllStatus"
+              [field]="'Status'"
+              [value]="itemSelected?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
           </span>
           <codx-imgs
             [width]="25"
@@ -70,8 +71,8 @@
       <div class="container_detail mt-2">
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-column w-100">
-            <div class="d-flex align-items-center mb-2">
-              <div class="me-5 d-flex align-items-center">
+            <div class="d-flex flex-wrap align-items-center">
+              <div class="me-4 d-flex align-items-center mb-1">
                 <span class="fw-bold text-dark">
                   <codx-label
                     class="label-colon"
@@ -79,7 +80,8 @@
                     [formModel]="formModel"
                   ></codx-label
                 ></span>
-                <span class="text-gray-700"
+                <span
+                  class="text-gray-700"
                   [innerHTML]="
                     itemSelected?.versionName
                       | formatvalue : formModel : 'versionName'
@@ -87,7 +89,7 @@
                   "
                 ></span>
               </div>
-              <div class="me-5 d-flex align-items-center">
+              <div class="me-4 d-flex align-items-center mb-1">
                 <span class="fw-bold text-dark">
                   <codx-label
                     class="label-colon"
@@ -95,7 +97,8 @@
                     [formModel]="formModel"
                   ></codx-label
                 ></span>
-                <span class="text-gray-700"
+                <span
+                  class="text-gray-700"
                   [innerHTML]="
                     itemSelected?.createdOn
                       | formatvalue : formModel : 'createdOn'
@@ -103,7 +106,7 @@
                   "
                 ></span>
               </div>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center mb-1">
                 <span class="fw-bold text-dark">
                   <codx-label
                     class="label-colon"
@@ -111,7 +114,8 @@
                     [formModel]="formModel"
                   ></codx-label
                 ></span>
-                <span class="text-gray-700"
+                <span
+                  class="text-gray-700"
                   [innerHTML]="
                     itemSelected?.deadline
                       | formatvalue : formModel : 'deadline'
@@ -120,7 +124,7 @@
                 ></span>
               </div>
             </div>
-            
+
             <div class="d-flex flex-column">
               <div class="d-flex align-items-center mb-1">
                 <span class="fw-bold text-dark text-nowrap">
@@ -130,7 +134,8 @@
                     [formModel]="formModel"
                   ></codx-label
                 ></span>
-                <span class="text-gray-700"
+                <span
+                  class="text-gray-700"
                   [innerHTML]="
                     itemSelected?.refID
                       | formatvalue : formModel : 'refID'
@@ -157,11 +162,9 @@
                   "
                 ></span>
               </div>
-
             </div>
           </div>
           <div class="d-flex flex-column w-150px min-w-150px">
-            
             <div class="d-flex align-items-center"></div>
             <div class="d-flex justify-content-end align-items-center mb-1">
               <span class="text-dark fw-bold">
@@ -171,7 +174,8 @@
                   [formModel]="formModel"
                 ></codx-label
               ></span>
-              <span class="text-gray-700"
+              <span
+                class="text-gray-700"
                 [innerHTML]="
                   itemSelected?.currencyID
                     | formatvalue : formModel : 'currencyID'
@@ -187,7 +191,8 @@
                   [formModel]="formModel"
                 ></codx-label
               ></span>
-              <span class="text-gray-700"
+              <span
+                class="text-gray-700"
                 [innerHTML]="
                   itemSelected?.exchangeRate
                     | formatvalue : formModel : 'exchangeRate'
@@ -196,7 +201,6 @@
               ></span>
             </div>
           </div>
-          
         </div>
 
         <div *ngIf="contact" class="d-flex flex-grow-1 mt-2 mb-2">
@@ -229,7 +233,7 @@
                     "
                   ></span>
                 </div>
-                
+
                 <ng-container>
                   <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center me-5">
@@ -289,7 +293,7 @@
         </codx-label>
       </div>
 
-      <codx-gridview-v2
+      <!-- <codx-gridview-v2
         #gridQuationsLines
         service="CM"
         [formName]="fmQuotationLines.formName"
@@ -305,9 +309,14 @@
         [height]="'auto'"
         predicates="TransID=@0"
         [dataValues]="itemSelected.recID"
-      ></codx-gridview-v2>
+      ></codx-gridview-v2> -->
+      <codx-quotations-lines
+        #viewQuotationsLine
+        [listQuotationLines]="dataSource"
+        [isViewTemp]="true"
+      ></codx-quotations-lines>
 
-      <div #tabsNote class="mt-3"> 
+      <div #tabsNote class="mt-3">
         <!-- d-flex justify-content-between -->
         <div class="form-group w-100">
           <codx-label fiedName="Memo" [formModel]="formModel"></codx-label>
@@ -316,7 +325,8 @@
             *ngIf="itemSelected?.memo"
             [innerHTML]="sanitizer.bypassSecurityTrustHtml(itemSelected?.memo)"
           ></div>
-          <div class="text-gray-700 mb-1"
+          <div
+            class="text-gray-700 mb-1"
             *ngIf="!itemSelected?.memo"
             [innerHTML]="
               itemSelected?.memo | formatvalue : formModel : 'memo' | async
@@ -452,6 +462,8 @@
   <list-contracts
     [quotationID]="itemSelected?.recID"
     [listContract]="listContract"
-    [type]="'quotation'">
-  ></list-contracts>
+    [type]="'quotation'"
+  >
+    ></list-contracts
+  >
 </ng-template>

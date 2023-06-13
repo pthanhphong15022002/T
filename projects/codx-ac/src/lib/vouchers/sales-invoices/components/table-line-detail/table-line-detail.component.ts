@@ -147,8 +147,11 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
           '',
           dialogModel
         )
-        .closed.subscribe(() => {
-          this.grid.refresh();
+        .closed.subscribe((res) => {
+          console.log(res);
+          if (res.event) {
+            this.grid.refresh();
+          }
         });
     });
   }

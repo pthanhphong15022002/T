@@ -1,4 +1,12 @@
-import {  Component, EventEmitter, Input, Output, ViewChild, OnInit,SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, FormModel, ViewsComponent } from 'codx-core';
@@ -8,24 +16,19 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 @Component({
   selector: 'lib-view-detail-ebenefit',
   templateUrl: './view-detail-ebenefit.component.html',
-  styleUrls: ['./view-detail-ebenefit.component.css']
+  styleUrls: ['./view-detail-ebenefit.component.css'],
 })
-export class ViewDetailEbenefitComponent implements OnInit{
+export class ViewDetailEbenefitComponent implements OnInit {
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,
-    private router: ActivatedRoute,
-  ) {
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.user = this.authStore.get();
-  }
-
+    private router: ActivatedRoute
+  ) {}
 
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
   @Input() itemDetail: any;
-  @Input() funcID;
   @Input() view: ViewsComponent;
   @Input() formModel;
   @Input() hideFooter = false;
@@ -37,8 +40,8 @@ export class ViewDetailEbenefitComponent implements OnInit{
   renderFooter = false;
   isAfterRender = true;
   benefitFuncID = 'HRTApp05';
-  benefitFormModel : FormModel;
-  benefitFormGroup : FormGroup;
+  benefitFormModel: FormModel;
+  benefitFormGroup: FormGroup;
   active = 1;
 
   ngOnInit(): void {
@@ -46,7 +49,10 @@ export class ViewDetailEbenefitComponent implements OnInit{
       if (formModel) {
         this.benefitFormModel = formModel;
         this.hrService
-          .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName)
+          .getFormGroup(
+            this.benefitFormModel.formName,
+            this.benefitFormModel.gridViewName
+          )
           .then((fg) => {
             if (fg) {
               this.benefitFormGroup = fg;
@@ -70,7 +76,6 @@ export class ViewDetailEbenefitComponent implements OnInit{
   //     });
   //   }
 
-
   //   if(this.itemDetail.benefits){
   //     this.lstBenefit = JSON.parse(this.itemDetail.benefits)
   //   }
@@ -83,16 +88,13 @@ export class ViewDetailEbenefitComponent implements OnInit{
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
-    
   }
 
   changeDataMF(e: any, data: any) {
     this.hrService.handleShowHideMF(e, data, this.view);
-  } 
- 
-  
+  }
 
-  clickMF(evt: any, data: any = null){
-    this.clickMFunction.emit({event: evt, data: data});
+  clickMF(evt: any, data: any = null) {
+    this.clickMFunction.emit({ event: evt, data: data });
   }
 }

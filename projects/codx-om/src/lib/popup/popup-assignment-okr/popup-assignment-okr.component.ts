@@ -184,9 +184,9 @@ export class PopupAssignmentOKRComponent
   }
   orgTypeToObjectType(orgUnitType:string){
     switch(orgUnitType){
-      case '1': return OMCONST.OBJECT_TYPE.COMP; 
-      case '4': return OMCONST.OBJECT_TYPE.DEPT;
-      case '6': return OMCONST.OBJECT_TYPE.ORG;
+      case '1': return OMCONST.VLL.OKRLevel.COMP; 
+      case '4': return OMCONST.VLL.OKRLevel.DEPT;
+      case '6': return OMCONST.VLL.OKRLevel.ORG;
       default : return null;
     }
   }
@@ -209,12 +209,12 @@ export class PopupAssignmentOKRComponent
   cbxPosChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
       this.assignmentOKR.objectID = evt.data;
-      this.codxOmService.getEmployeesByPositionID(this.assignmentOKR.objectID).subscribe((res:any) => {
+      this.codxOmService.getEmployeesByPositionID(this.assignmentOKR?.objectID).subscribe((res:any) => {
           if (res) {
             this.codxOmService.getEmployeesByEmpID(res?.employeeID).subscribe((ownerInfo) => {
               if (ownerInfo) {
                 this.assignTo(ownerInfo);
-                this.assignmentOKR.objectType=OMCONST.OBJECT_TYPE.EMP;
+                this.assignmentOKR.objectType=OMCONST.VLL.OKRLevel.POSITION;
               }
             });
     
@@ -232,7 +232,7 @@ export class PopupAssignmentOKRComponent
       this.codxOmService.getEmployeesByEmpID(this.assignmentOKR.objectID).subscribe((ownerInfo) => {
           if (ownerInfo) {
             this.assignTo(ownerInfo);
-            this.assignmentOKR.objectType=OMCONST.OBJECT_TYPE.EMP;
+            this.assignmentOKR.objectType=OMCONST.VLL.OKRLevel.PERS;
           }
         });
 
@@ -242,7 +242,7 @@ export class PopupAssignmentOKRComponent
     }
   }
   assignTo(owner:any){
-    this.assignmentOKR.userID = owner?.domainUser;
+    this.assignmentOKR.owner = owner?.domainUser;
     this.assignmentOKR.employeeID = owner?.employeeID;
     this.assignmentOKR.orgUnitID = owner?.orgUnitID;
     this.assignmentOKR.departmentID = owner?.departmentID;
@@ -263,7 +263,7 @@ export class PopupAssignmentOKRComponent
   //---------------------------------------------------------------------------------//
 
   onSaveForm() {
-    if (this.assignmentOKR.orgUnitID == null) {
+    if (this.assignmentOKR.objectID == null) {
       this.notificationsService.notify('Đối tượng phân công không được bỏ trống', '2', null);
       return;
     }

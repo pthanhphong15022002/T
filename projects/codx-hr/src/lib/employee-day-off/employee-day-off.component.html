@@ -13,15 +13,13 @@
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
-  (onActions)="handleAction($event)"
-  (oneMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
 <!-- header -->
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-30 text-dark fw-bold p-3 fw-500">
+    <div class="w-50 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
@@ -50,7 +48,7 @@
       >
       </codx-label>
     </div>
-    <div class="w-40 text-dark fw-bold p-3 fw-500">
+    <div class="w-20 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblStatus"
         [formModel]="view.formModel"
@@ -66,7 +64,7 @@
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center min-h-100px">
     <!-- emp info -->
-    <div class="w-30 p-3">
+    <div class="w-50 p-3">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column w-50px">
           <codx-img
@@ -151,10 +149,11 @@
             "
           ></span>
           <span
+            *ngIf="data?.totalDaysOff"
             class="bi-circle-fill fs-icon fs-10 mx-2 text-gray-400 me-2"
           ></span>
           <div
-            *ngIf="data?.totalDaysOff > 0; else noTotalDayOff"
+            *ngIf="data?.totalDaysOff > 0"
             [ngbTooltip]="grvSetup?.TotalDaysOff?.headerText"
           >
             <span
@@ -202,7 +201,7 @@
     <!-- day off type / day off periods -->
 
     <!-- status -->
-    <div class="w-40 p-3">
+    <div class="w-20 p-3">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'Status'"
@@ -489,7 +488,7 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
-    (clickMFunction)="clickEvent($event, data)"
+    (clickMFunction)="clickEvent($event)"
   >
   </lib-view-day-off-detail>
 </ng-template>

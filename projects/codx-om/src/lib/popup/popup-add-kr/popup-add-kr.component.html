@@ -18,13 +18,13 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-6">
+        <div class="form-group col-4">
           <codx-label fiedName="Measurement" [formModel]="form?.formModel">
           </codx-label>
           <codx-input ControlName="measurement" [formModel]="form?.formModel" [Group]="form?.formGroup"></codx-input>
         </div>
 
-        <div class="form-group col-3">
+        <div class="form-group col-4">
           <codx-label fiedName="Target" [formModel]="form?.formModel">
           </codx-label>
           <codx-input ControlName="target" [formModel]="form?.formModel" [Group]="form?.formGroup"
@@ -32,7 +32,7 @@
           </codx-input>
         </div>
 
-        <div class="form-group col-3 ps-0">
+        <div class="form-group col-4 ps-0">
           <codx-label fiedName="UMID" [formModel]="form?.formModel">
           </codx-label>
           <codx-input ControlName="umid" [formModel]="form?.formModel" [Group]="form?.formGroup">
@@ -59,23 +59,24 @@
 
       </div>
 
-      <div class="row form-group mb-0">
-        <div class="col-6">
+      <div class="row form-group">
+        <div class="col-4">
           <codx-label fiedName="Frequence" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="frequence" [formModel]="form?.formModel" [Group]="form?.formGroup">
+          <codx-input ControlName="frequence" [formModel]="form?.formModel" [Group]="form?.formGroup" >
           </codx-input>
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <codx-label fiedName="CheckInMode" [formModel]="form?.formModel">
           </codx-label>
           <codx-input ControlName="checkInMode" [formModel]="form?.formModel" [Group]="form?.formGroup">
           </codx-input>
         </div>
-        <!-- <div class="col-1 position-relative">
-          <span class="icon-settings text-mute position-absolute bottom-0"
-            (click)="openPopupFrequence(popupFrequence)"></span>
-        </div> -->
+        <div class=" col-4">
+          <codx-label default="Kiểm soát cập nhật" name="lblCheckInControl"></codx-label>
+          <codx-input field="checkInControl" type="valuelist" refValue="OM015"  [crrValue]="kr?.checkInControl" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
 
 
       </div>

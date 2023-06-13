@@ -1,44 +1,91 @@
 <div id="id" class="main" [ngClass]="'show-main'">
   <div
     class="d-flex align-items-center justify-content-between me-5"
+    style="margin: -3px 0 -15px 0"
     *ngIf="isShowStep"
   >
     <div
-      class="qqq d-flex align-items-center fw-bold w-100 has-action-menu step-content"
+      class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
-      <i class="icon-account_balance icon-20 me-2"></i>
-      <span class="fs-5 w-100">{{ currentStep.stepName }}</span>
+      <div
+        class="d-flex align-items-center pe-4"
+        [ngStyle]="{
+          background: currentStep?.backgroundColor || '#d9e3f7',
+          'border-radius': '20px'
+        }"
+      >
+        <div
+          class="cricle"
+          [ngStyle]="{
+            color: currentStep?.iconColor || 'gray',
+            border: '2px solid'
+          }"
+        >
+          <span [ngClass]="currentStep?.icon" class="fs-6"></span>
+        </div>
+        <span
+          class="line-clamp line-clamp-2 fs-5 ms-2"
+          [ngStyle]="{
+            color: currentStep?.textColor || 'gray',
+            'font-weight': '400'
+          }"
+        >
+          {{ currentStep.stepName || "" }}</span
+        >
+      </div>
+
       <codx-mfunc
-        [formModel]="frmModelInstancesTask"
-        [isBookMark]="true"
+        [formModel]="grvMoreFunction"
+        [isBookMark]="false"
         [dataItem]="moreDefaut"
         [type]="'hover'"
-        class="mb-5"
-      ></codx-mfunc>
+        (changeDataMF)="changeDataMFStep($event, currentStep)"
+        (clickMF)="clickMFStep($event, currentStep)"
+      >
+      </codx-mfunc>
     </div>
-    <div
-      class="disabled-inline"
-      (click)="openPopupUpdateProgress(currentStep, 'P')"
-      [ngClass]="
-        checkUpdateProgress(currentStep, 'P')
-          ? 'cursor-pointer'
-          : 'cursor-not-allowed'
-      "
-    >
-      <codx-progressbar
-        [progress]="currentStep?.progress || 0"
-        #popoverDetails="ngbPopover"
-        [ngbPopover]="'Cập nhật tiến độ'"
-        (mouseenter)="popoverDetails.open()"
-        (mouseleave)="popoverDetails.close()"
-        popoverClass="approverStepClass"
-        container="body"
-        placement="top bottom"
-      ></codx-progressbar>
+    <div class="d-flex align-items-center">
+      <codx-vll
+        [name]="'DP032'"
+        [field]="'Status'"
+        [value]="currentStep?.stepStatus"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-primary badge-sm"
+      >
+      </codx-vll>
+      <div
+        class="disabled-inline"
+        (click)="openPopupUpdateProgress(currentStep, 'P')"
+        [ngClass]="
+          checkUpdateProgress(currentStep, 'P')
+            ? 'cursor-pointer'
+            : 'cursor-not-allowed'
+        "
+      >
+        <codx-progressbar
+          [progress]="currentStep?.progress || 0"
+          #popoverDetails="ngbPopover"
+          [ngbPopover]="'Cập nhật tiến độ'"
+          (mouseenter)="popoverDetails.open()"
+          (mouseleave)="popoverDetails.close()"
+          popoverClass="approverStepClass"
+          container="body"
+          placement="top bottom"
+        ></codx-progressbar>
+      </div>
+      <div (click)="toggleElemen()" class="d-flex align-items-center show-step">
+        <i *ngIf="isShowElement" class="icon-24 icon-expand_less text-primary"></i>
+        <i *ngIf="!isShowElement" class="icon-24 icon-expand_more text-primary"></i>
+      </div>
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
-  <div class="main-body" *ngIf="listGroupTask?.length > 0">
+  <div
+    [@fadeInOut]
+    class="main-body"
+    *ngIf="listGroupTask?.length > 0 && isShowElement"
+  >
     <div
       cdkDropList
       class="list"
@@ -263,7 +310,7 @@
 
 <ng-template #buttonTemplate let-data="value">
   <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView">
-    <button
+    <!-- <button
       type="button"
       class="btn btn-outline-primary me-2"
       (click)="addGroupTask()"
@@ -275,11 +322,11 @@
         [gridViewName]="'grvDPStepsFields'"
         [default]="'Thêm nhóm công việc'"
       ></codx-label>
-    </button>
+    </button> -->
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
-      (click)="addTask(null)"
+      (click)="chooseTypeTask()"
       style="min-width: 170px"
     >
       <i class="icon-add_task icon-18 text-primary"></i>

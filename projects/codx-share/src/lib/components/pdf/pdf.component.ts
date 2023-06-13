@@ -813,9 +813,9 @@ export class PdfComponent
         left: x / this.xScale,
         width: w / this.xScale,
         height: h / this.yScale,
-        pageNumber: Number(konva?.parent?.id().replace('layer', '')) - 1,
-        fileRotate: -this.rotate, //Number(konva?.attrs?.rotation),
-        rotate: -this.rotate,
+        pageNumber:
+          Number(konva?.parent?.id().replace('layer', '')) - 1 ??
+          this.curPage - 1,
       },
       stepNo: stepNo,
       fontStyle: type == 'text' ? konva.fontFamily() : '',
@@ -1684,7 +1684,7 @@ export class PdfComponent
     let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea?.attrs?.name);
     let textContent = '';
     let curArea = this.lstAreas.find((area) => area.recID == recID);
-
+    if (curArea == null) return;
     if (this.imgConfig.includes(type)) {
       if (!newUrl) return;
       else {

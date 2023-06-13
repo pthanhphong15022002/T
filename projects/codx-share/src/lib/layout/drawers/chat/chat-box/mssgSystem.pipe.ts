@@ -11,21 +11,22 @@ export class MessageSystemPipe implements PipeTransform {
     private applicationRef:ApplicationRef
   )
   {}
-  transform(item:any,...arg:any[]): Observable<any> {
-    debugger
-    return this.cache.message(item.jsMessage.mssgCode).pipe(map((mssg:any) => {
+  transform(data:any,template:TemplateRef<any>): Observable<any> {
+    return this.cache.message(data.jsMessage.mssgCode).pipe(map((mssg:any) => {
      if(mssg.defaultName){
-       switch(item.jsMessage.mssgCode){
+       switch(data.jsMessage.mssgCode){
          case"WP038":// add member
-            let value1 = JSON.parse(item.jsMessage.value[0].fieldValue)
-            let value2 = JSON.parse(item.jsMessage.value[1].fieldValue)
-            let text1 = this.dynamicTemplate(value1,arg[0]);
-            let text2 = this.dynamicTemplate(value2,arg[1]);
-            let content = Util.stringFormat(mssg.defaultName,text1,text2);
-            let containerRef = document.getElementById(item.recID);
-            containerRef.innerHTML = content;
-            break;
-          default:
+            debugger
+            let members = Array.from<any>(JSON.parse(data.jsMessage.value[0].fieldValue));
+            let param = {
+              memberIDs : members.map((x:any) => x.UserID).join(";"),
+              members: members,
+              user : JSON.parse(data.jsMessage.value[1].fieldValue),
+            };
+            let viewRef = this.dynamicTemplate(template,param.memberIDs,param.members,param.user);
+            let container = document.getElementById(data.recID);
+            if(container && viewRef)
+              container.append(viewRef);
             break;
         }
      };
@@ -33,13 +34,14 @@ export class MessageSystemPipe implements PipeTransform {
    }
  
    // dynamic template
-   dynamicTemplate(data:any,template:TemplateRef<any>){
-      let viewRef = template.createEmbeddedView({$implicit: data});
-      this.applicationRef.attachView(viewRef);
-      viewRef.detectChanges();
-      let container = document.createElement("div"); 
-      viewRef.rootNodes.forEach(x => container.append(x));
-      return container.innerHTML;
+   dynamicTemplate(template:TemplateRef<any>,...arg:any[]){
+    debugger
+    let viewRef = template.createEmbeddedView({$implicit: arg[0], value2:arg[1], value3:arg[2]});
+    this.applicationRef.attachView(viewRef);
+    viewRef.detectChanges();
+    let container = document.createElement("div"); 
+    viewRef.rootNodes.forEach(x => container.append(x));
+    return container;
    }
 
 }

@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { load } from '@syncfusion/ej2-angular-charts';
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
@@ -149,6 +150,7 @@ export class PopupAddDealComponent
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.model = { ApplyFor: '1' };
+    this.gridViewSetup = dt?.data.gridViewSetup;
     if(dt?.data.processID) {
       this.deal.processID = dt?.data.processID;
       this.isViewAll = true;
@@ -310,14 +312,6 @@ export class PopupAddDealComponent
       });
   }
 
-  // loadListContact(lstContact) {
-  //   this.l = this.codxCmService.bringDefaultContactToFront(lstContact);
-  //   if (this.listContacts != null && this.listContacts.length > 0) {
-  //     this.changeContacts(this.listContacts[0]);
-  //     if (this.isConvertLeadToCus) this.insertFieldCheckbox();
-  //   }
-  // }
-
   getListContactByObjectID(objectID) {
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
@@ -435,12 +429,24 @@ export class PopupAddDealComponent
 
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
-    if (this.action !== this.actionEdit) {
-      this.insertInstance();
-    } else {
-      this.editInstance();
-    }
+    this.executeSaveData();
+
   }
+
+  async executeSaveData(){
+    try {
+      if (this.action !== this.actionEdit) {
+        await this.insertInstance();
+        await this.onAdd();
+      } else {
+        await this.editInstance();
+        await this.onEdit();
+      }
+
+    } catch (error) {}
+
+  }
+
   cbxChange($event, field) {
     if ($event) {
       this.deal[field] = $event;
@@ -563,7 +569,7 @@ export class PopupAddDealComponent
       }
     }
   }
-  onAdd() {
+  async onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -572,7 +578,7 @@ export class PopupAddDealComponent
         } else this.dialog.close();
       });
   }
-  onEdit() {
+  async onEdit() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
@@ -605,7 +611,7 @@ export class PopupAddDealComponent
   }
   async executeApiCalls() {
     try {
-      await this.getGridView(this.formModel);
+    //  await this.getGridView(this.formModel);
       await this.getListProcess(this.typeForDeal);
       if(this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
@@ -646,15 +652,15 @@ export class PopupAddDealComponent
       }
     });
   }
-  async getGridView(formModel) {
-    this.cache
-      .gridViewSetup(formModel.formName, formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-  }
+  // async getGridView(formModel) {
+  //   this.cache
+  //     .gridViewSetup(formModel.formName, formModel.gridViewName)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.gridViewSetup = res;
+  //       }
+  //     });
+  // }
   async getListProcess(applyFor) {
     var processID = this.action !== this.actionEdit ? '' : this.deal.processID;
     var data = [applyFor, processID];
@@ -703,19 +709,18 @@ export class PopupAddDealComponent
     });
   }
 
-  insertInstance() {
+  async insertInstance() {
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
-        this.onAdd();
+
       }
     });
   }
-  editInstance() {
+  async editInstance() {
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
-        this.onEdit();
       }
     });
   }

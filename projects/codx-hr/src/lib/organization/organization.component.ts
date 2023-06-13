@@ -5,20 +5,17 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CRUDService,
-  CodxFormDynamicComponent,
   CodxTreeviewComponent,
-  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
-import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
@@ -26,6 +23,7 @@ import { ActivatedRoute } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
 })
 export class OrgorganizationComponent extends UIComponent {
+  console = console;
   views: Array<ViewModel> = [];
   button: ButtonModel;
   orgUnitID: string = '';
@@ -43,6 +41,9 @@ export class OrgorganizationComponent extends UIComponent {
   dataService: CRUDService = null;
   templateActive: number = 0;
   isCorporation: boolean = false;
+  buttonAdd: ButtonModel = {
+    id: 'btnAdd',
+  };
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
@@ -53,30 +54,14 @@ export class OrgorganizationComponent extends UIComponent {
 
   constructor(inject: Injector, private activedRouter: ActivatedRoute) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  onInit(): void {
-    // if (!this.funcID) {
-    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // }
-
-    this.router.params.subscribe((params) => {
-      if (params['funcID']) {
-        this.funcID = params['funcID'];
-        if (!this.funcID.includes('WP')) {
-          this.button = {
-            id: 'btnAdd',
-          };
-        }
-      }
-    });
-  }
+  onInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
       {
-        // id: '1',
+        id: '1',
         type: ViewType.list,
         active: true,
         sameData: true,
@@ -85,9 +70,9 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
       {
-        // id: '2',
+        id: '2',
         type: ViewType.tree_masterdetail,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           resizable: true,
@@ -98,11 +83,11 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
     ];
-    this.detectorRef.detectChanges();
+    // this.detectorRef.detectChanges();
   }
 
   //loadEmployList
-  loadEmployList(h, orgUnitID: string, abc) {}
+  // loadEmployList(h, orgUnitID: string, abc) {}
   // click moreFC
   clickMF(event: any, data: any) {
     if (event) {
@@ -124,8 +109,7 @@ export class OrgorganizationComponent extends UIComponent {
   // delete data
   deleteData(data: any) {
     if (data) {
-      // this.view.dataService.delete([data], true).subscribe();
-      this.view.dataService.delete([data]).subscribe(() => {});
+      this.view.dataService.delete([data]).subscribe();
     }
   }
   // edit data
@@ -187,14 +171,14 @@ export class OrgorganizationComponent extends UIComponent {
     }
   }
   // change view
-  changeView(evt: any) {
-    // this.currView = null;
-    // if (evt.view) {
-    //   this.templateActive = evt.view.type;
-    //   this.currView = evt.view.model.template2;
-    // }
-    // this.detectorRef.detectChanges();
-  }
+  // changeView(evt: any) {
+  // this.currView = null;
+  // if (evt.view) {
+  //   this.templateActive = evt.view.type;
+  //   this.currView = evt.view.model.template2;
+  // }
+  // this.detectorRef.detectChanges();
+  // }
   // selected change
   onSelectionChanged(evt: any) {
     var data = evt.data || evt;

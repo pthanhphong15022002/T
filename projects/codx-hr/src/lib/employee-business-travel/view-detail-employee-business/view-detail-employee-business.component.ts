@@ -3,16 +3,15 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
-  OnInit,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
-  DataRequest,
   FormModel,
   NotificationsService,
   ViewsComponent,
@@ -33,14 +32,12 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
     private df: ChangeDetectorRef,
     private notify: NotificationsService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
-  @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
@@ -102,7 +99,7 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
   }
 
   changeDataMF(e: any, data: any) {
-    // this.hrService.handleShowHideMF(e, data, this.view);
+    this.hrService.handleShowHideMF(e, data, this.view);
   }
 
   clickMF(evt: any, data: any = null) {

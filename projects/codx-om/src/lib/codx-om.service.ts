@@ -337,13 +337,13 @@ export class CodxOmService {
       [userID]
     );
   }
-  getEmployee(userID:any) {
+  getEmployee(empID:any) {
     return this.api.execSv(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetEmployeeInforAsync',
-      [userID]
+      [empID]
     );
   }
 
@@ -634,6 +634,15 @@ export class CodxOmService {
       recID
     );
   }
+  getOKRByPlanID(recID: string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetOKRByPlanIDAsync',
+      recID
+    );
+  }
   //Lấy danh sách phụ thuộc OKR
   getListAssign(recID: string) {
     return this.api.execSv(
@@ -682,6 +691,16 @@ export class CodxOmService {
       OMCONST.BUSINESS.OKR,
       'GetOKRByIDAsync',
       [recID]
+    );
+  }
+  //Duyệt checkIn
+  approveCheckIn(recID: string,status:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'ApproveCheckInKRAsync',
+      [recID,status]
     );
   }
   //Lấy ds OKR_Links theo OKR RecID

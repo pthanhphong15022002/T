@@ -333,7 +333,7 @@ db.DM_FolderInfo.updateMany(
       this.dmSV.idMenuActive == 'DMT06' ||
       this.dmSV.idMenuActive == 'DMT05' ||
       this.dmSV.idMenuActive == 'DMT07' ||
-      this.dmSV.idMenuActive == 'DMT00'
+      this.dmSV.idMenuActive == 'DMT00' 
     )
       return;
     var data = {} as any;

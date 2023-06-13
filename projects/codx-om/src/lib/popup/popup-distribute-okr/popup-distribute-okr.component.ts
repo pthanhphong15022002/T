@@ -171,7 +171,9 @@ export class PopupDistributeOKRComponent
                           } else {
                             temp.okrName = this.dataOKR?.okrName;
                             temp.orgUnitID = item?.orgUnitID;
-                            temp.orgUnitName = item?.orgUnitName;
+                            temp.orgUnitName = item?.orgUnitName;                         
+                            temp.owner = item?.owner;
+                            temp.employeeID = item?.employeeID;
                             temp.umid = this.dataOKR?.umid;
                             temp.refType = '1'; //Phân bổ
                             temp.objectID = item?.orgUnitID;
@@ -194,10 +196,12 @@ export class PopupDistributeOKRComponent
                       Array.from(this.orgUnitTree.listChildrens).forEach(
                         (item: any) => {
                           let temp = new DistributeOKR();
-                          temp.okrName = this.dataOKR.okrName;
-                          temp.orgUnitID = item.orgUnitID;
-                          temp.orgUnitName = item.orgUnitName;
-                          temp.umid = this.dataOKR.umid;
+                          temp.okrName = this.dataOKR?.okrName;
+                          temp.orgUnitID = item?.orgUnitID;
+                          temp.orgUnitName = item?.orgUnitName;                          
+                          temp.owner = item?.owner;
+                          temp.employeeID = item?.employeeID;
+                          temp.umid = this.dataOKR?.umid;
                           temp.refType = '1'; //Phân bổ
                           temp.objectID = item?.orgUnitID;
                           temp.objectType = this.orgTypeToObjectType(
@@ -319,11 +323,11 @@ export class PopupDistributeOKRComponent
   orgTypeToObjectType(orgUnitType: string) {
     switch (orgUnitType) {
       case '1':
-        return OMCONST.OBJECT_TYPE.COMP;
+        return OMCONST.VLL.OKRLevel.COMP;
       case '4':
-        return OMCONST.OBJECT_TYPE.DEPT;
+        return OMCONST.VLL.OKRLevel.DEPT;
       case '6':
-        return OMCONST.OBJECT_TYPE.ORG;
+        return OMCONST.VLL.OKRLevel.ORG;
       default:
         return null;
     }
@@ -332,33 +336,5 @@ export class PopupDistributeOKRComponent
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
 
-  // public connDefaults(
-  //   connector: ConnectorModel,
-  //   diagram: Diagram
-  // ): ConnectorModel {
-  //   connector.targetDecorator.shape = 'None';
-  //   connector.type = 'Orthogonal';
-  //   connector.constraints = 0;
-  //   connector.cornerRadius = 5;
-  //   connector.style.strokeColor = '#6d6d6d';
-  //   return connector;
-  // }
-
-  // public nodeDefaults(obj: NodeModel): NodeModel {
-  //   obj.expandIcon = {
-  //     height: 15,
-  //     width: 15,
-  //     shape: 'Minus',
-  //     fill: 'lightgray',
-  //     offset: { x: 0.5, y: 1 },
-  //   };
-  //   obj.collapseIcon = {
-  //     height: 15,
-  //     width: 15,
-  //     shape: 'Plus',
-  //     fill: 'lightgray',
-  //     offset: { x: 0.5, y: 1 },
-  //   };
-  //   return obj;
-  // }
+  
 }

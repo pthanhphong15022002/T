@@ -18,6 +18,7 @@ import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { DealsComponent } from '../../deals.component';
 import { DealDetailComponent } from '../deal-detail.component';
 import { CodxListContactsComponent } from '../../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CM_Contacts } from '../../../models/cm_model';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -40,6 +41,7 @@ export class TabDetailCustomComponent
   isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
+  listContract: CM_Contacts[];
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
@@ -47,7 +49,6 @@ export class TabDetailCustomComponent
   readonly tabOpponent: string = 'Opponent';
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
-  readonly tabGanttChart: string = 'GanttChart';
   readonly tabQuotation: string = 'Quotation';
   readonly tabContract: string = 'Contract';
 
@@ -63,6 +64,7 @@ export class TabDetailCustomComponent
   };
 
   recIdOld: string = '';
+  isDataLoading = true;
 
   constructor(
     private inject: Injector,
@@ -76,18 +78,34 @@ export class TabDetailCustomComponent
   ngAfterViewInit() {}
   onInit(): void {
     this.executeApiCalls();
+    console.log(this.dataSelected);
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
-      if(this.tabClicked == 'Contact' )
+      this.isDataLoading = true;
+      if(this.tabClicked === this.tabContact )
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
       }
       this.getListInstanceStep();
+      this.getContractByDeaID();
     }
   }
 
+  async getContractByDeaID() {
+    if (this.dataSelected?.recID) {
+      var data = [this.dataSelected?.recID];
+      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
+        if (res) {
+          this.listContract = res;
+        } else {
+          this.listContract = [];
+        }
+      });
+    }
+  }
   async executeApiCalls() {
     try {
       await this.getValueList();
@@ -103,8 +121,11 @@ export class TabDetailCustomComponent
       this.dataSelected?.status,
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
-      this.listStep = res;
-      this.checkCompletedInstance(this.dataSelected?.status);
+      if(res){
+        this.listStep = res;
+        this.checkCompletedInstance(this.dataSelected?.status);
+      }
+      this.isDataLoading = false;
     });
   }
 
@@ -131,33 +152,6 @@ export class TabDetailCustomComponent
     return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
   }
 
-  addContact() {
-    var contact = 'CM0103'; // contact
-    this.cache.functionList(contact).subscribe((fun) => {
-      let option = new SidebarModel();
-      // option.DataService = this.view.dataService;
-      var formMD = new FormModel();
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      formMD.funcID = contact;
-      option.FormModel = JSON.parse(JSON.stringify(formMD));
-      option.Width = '800px';
-      option.DataService = null;
-      this.titleAction = ' Bao test';
-      var dialog = this.callfc.openSide(
-        PopupAddCmCustomerComponent,
-        ['add', this.titleAction],
-        option
-      );
-      dialog.closed.subscribe((e) => {
-        //      if (!e?.event) this.view.dataService.clear();
-        // if (e && e.event != null) {
-        //   this.customerDetail.listTab(this.funcID);
-        // }
-      });
-    });
-  }
 
   //truong tuy chinh - đang cho bằng 1
   showColumnControl(stepID) {
@@ -169,7 +163,10 @@ export class TabDetailCustomComponent
     return 1;
   }
 
-  continueStep(isTaskEnd, step) {
+  continueStep(event) {
+    let isTaskEnd = event?.isTaskEnd;
+    let step = event?.step;
+
     let transferControl = this.dataSelected.steps.transferControl;
     if(transferControl == '0') return;
 

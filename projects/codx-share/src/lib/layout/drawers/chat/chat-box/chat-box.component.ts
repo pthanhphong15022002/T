@@ -1,5 +1,5 @@
 import { E } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, Output, EventEmitter, ApplicationRef, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, Output, EventEmitter, ApplicationRef, TemplateRef, EmbeddedViewRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -10,6 +10,7 @@ import { MessageSystemPipe } from './mssgSystem.pipe';
 import { WP_Messages, tmpMessage } from '../models/WP_Messages.model';
 import moment from 'moment';
 import { Permission } from '@shared/models/file.model';
+import { map } from 'rxjs';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
@@ -59,12 +60,17 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  mssgDeleted:string = "";
   @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
   @ViewChild("codxATMImages") codxATMImages:AttachmentComponent;
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   @ViewChild("codxViewFile") codxViewFile:AttachmentComponent;
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
   @ViewChild("templateVotes") popupVoted:TemplateRef<any>;
+  @ViewChild("mssgType5") mssgType5:TemplateRef<any>;
+  @ViewChild("tmpViewMember") tmpViewMember:TemplateRef<any>;
+
+
   constructor
   (
     private api:ApiHttpService,
@@ -126,10 +132,16 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
         }
       });
     }
-    this.cache.valueList("L1480").subscribe((vll:any) => {
+
+    let valuelist = this.cache.valueList("L1480").subscribe((vll:any) => {
       if(vll?.datas){
         this.vllL1480 = vll.datas;
       }
+      valuelist.unsubscribe();
+    });
+    let mssgDelete = this.cache.message("CHAT002").subscribe((res:any) => {
+      this.mssgDeleted = res.defaultName;
+      mssgDelete.unsubscribe();
     });
   }
   ngAfterViewInit(): void {
@@ -600,9 +612,24 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   closePopupVote(dialog:any){
     dialog?.close();
   }
-
+  memberSelected:any = null;
   //
   clickViewMember(data:any){
+    debugger
+    let dialogModel = new DialogModel();
+    dialogModel.FormModel = this.formModel;
+    this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","GetEmpByUserIDAsync",[data.UserID])
+    .subscribe((member:any) => {
+      debugger
+      this.callFC.openForm(this.tmpViewMember,"Thông tin người dùng",300,350,"",member,"",dialogModel);
+    });
+  }
+  //
+  closePoppViewMember(dialog:DialogRef){
+    dialog?.close();
+  }
+  click(dialog,member){
+    debugger
   }
 }
 

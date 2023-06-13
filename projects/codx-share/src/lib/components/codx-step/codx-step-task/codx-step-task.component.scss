@@ -9,9 +9,19 @@
      font-weight: 400;
    }
  }
- 
  .task{
    max-height:  1000px;
+ }
+
+ .cricle{
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
  }
  
  .hiddenTask  {
@@ -170,7 +180,12 @@
    margin-left: 5px;
  }
  
- .step-content,
+ .step-content{
+  codx-mfunc {
+    top: 0px !important;
+    right: 5px !important;
+  }
+ }
  .more-funtion-step {
    codx-mfunc {
      top: -5px !important;
@@ -268,4 +283,7 @@ li {
 }
 .cursor-not-allowed{
   cursor: not-allowed;
+}
+.show-step :hover{
+  box-shadow: 0 0px 5px 1px #a2ecff;
 }

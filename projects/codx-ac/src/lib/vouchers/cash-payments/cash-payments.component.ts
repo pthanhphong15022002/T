@@ -43,7 +43,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel = { id: 'btnAdd', icon: '' };
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -117,7 +117,6 @@ export class CashPaymentsComponent extends UIComponent {
       if (this.parent) {
         this.view.setRootNode(this.parent?.customName);
       }
-      
     });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
@@ -349,31 +348,63 @@ export class CashPaymentsComponent extends UIComponent {
       (x: { functionID: string }) =>
         x.functionID == 'ACT041003' ||
         x.functionID == 'ACT041002' ||
-        x.functionID == 'ACT041004'
+        x.functionID == 'ACT041004' ||
+        x.functionID == 'ACT041008' ||
+        x.functionID == 'ACT042901'
     );
     if (bm.length > 0) {
-      // check có hay ko duyệt trước khi ghi sổ
-      if (data?.status == '1') {
-        if (this.approval == '0') {
+      switch (data?.status) {
+        case '0':
+        case '2':
+        case '3':
+        case '4':
           bm.forEach((element) => {
             element.disabled = true;
           });
-        } else {
-          bm[1].disabled = true;
-          bm[2].disabled = true;
-        }
+          break;
+        case '1':
+        case '5':
+        case '9':
+          bm.forEach((element) => {
+            if ((element.functionID == 'ACT041003')) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '6':
+          bm.forEach((element) => {
+            if ((element.functionID == 'ACT041008')) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
       }
-      //Chờ duyệt
-      if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
-        bm[1].disabled = true;
-        bm[0].disabled = true;
-      }
-      //hủy duyệt
-      if (data?.approveStatus == '4' || data?.status == '0') {
-        for (var i = 0; i < bm.length; i++) {
-          bm[i].disabled = true;
-        }
-      }
+      // check có hay ko duyệt trước khi ghi sổ
+      // if (data?.status == '1') {
+      //   if (this.approval == '0') {
+      //     bm.forEach((element) => {
+      //       element.disabled = true;
+      //     });
+      //   } else {
+      //     bm[1].disabled = true;
+      //     bm[2].disabled = true;
+      //   }
+      // }
+      // //Chờ duyệt
+      // if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
+      //   bm[1].disabled = true;
+      //   bm[0].disabled = true;
+      // }
+      // //hủy duyệt
+      // if (data?.approveStatus == '4' || data?.status == '0') {
+      //   for (var i = 0; i < bm.length; i++) {
+      //     bm[i].disabled = true;
+      //   }
+      // }
     }
   }
 
@@ -394,6 +425,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     switch (data.subType) {
+      case '5':
       case '2':
         this.api
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
@@ -401,24 +433,16 @@ export class CashPaymentsComponent extends UIComponent {
             this.settledInvoices = res;
             //this.loadTotal();
           });
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-            this.loadTotal();
-          });
-        break;
-      default:
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-            this.loadTotal();
-          });
         break;
     }
+    this.api
+      .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.acctTrans = res;
+        this.loadTotal();
+      });
     this.loadCashbookName(this.itemSelected);
-    this.loadReasonName(this.itemSelected);
+    // this.loadReasonName(this.itemSelected);
   }
 
   release(data: any) {

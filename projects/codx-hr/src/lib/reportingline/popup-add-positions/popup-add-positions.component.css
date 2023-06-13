@@ -1,0 +1,4 @@
+.hr-jobdesc ejs-richtexteditor.form-control .e-rte-content{
+    height: calc(100vh - 232px)!important;
+    max-height: none;
+}

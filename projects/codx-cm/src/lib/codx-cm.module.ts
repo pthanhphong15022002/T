@@ -72,6 +72,7 @@ import { CasesDetailComponent } from './cases/case-detail/cases-detail.component
 import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
 import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
+import { StepTaskComponent } from './deals/step-task/step-task.component';
 
 const routes: Routes = [
   {
@@ -81,6 +82,7 @@ const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
+        data: {noReuse: true}
       },
       {
         path: 'deals/:funcID',
@@ -88,15 +90,10 @@ const routes: Routes = [
       },
 
       // {
-      //   path: 'processrelease/:funcID',
+      //   path: 'processrelease/:funcID/:recID',
       //   component: ProcessReleaseComponent,
+      //   data: { noReuse: true },
       // },
-
-      {
-        path: 'processrelease/:funcID/:recID',
-        component: ProcessReleaseComponent,
-        data: { noReuse: true },
-      },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,
@@ -185,6 +182,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupRemoveAddContactComponent,
     ViewPaymentComponent,
     GanttChartComponent,
+    StepTaskComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

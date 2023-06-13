@@ -1,6 +1,5 @@
 <codx-views
   #view
-  [funcID]="funcID"
   service="HR"
   assemblyName="ERM.Business.HR"
   entityName="HR_EDisciplines"
@@ -325,7 +324,7 @@
       [typeMF]="'hover'"
       [title]="data.emp?.employeeName"
       [subTitle]="
-        data.emp.positionID
+        data?.emp?.positionID
           | formatvalue : view.formModel : 'PositionID'
           | async
       "
@@ -393,11 +392,10 @@
           </span>
         </div>
       </div>
-
       <div class="d-flex mt-1 align-items-center">
         <codx-vll
-          class="badge badge-sm me-4"
-          [name]="eDisciplineGrvSetup?.referedValue"
+          class="badge badge-sm me-3"
+          [name]="'HRS102'"
           [value]="data?.status"
           [showText]="true"
           [showBgColor]="true"
@@ -415,17 +413,6 @@
           "
         >
         </span>
-
-        <!-- <span class="d-flex flex-row justify-content-end">
-          <codx-imgs
-            [objectId]="getIdUser(data.createdBy, data.owner)"
-            [objectType]="'AD_Users'"
-            [width]="30"
-            [numberImages]="3"
-            [mode]="false"
-          >
-          </codx-imgs>
-        </span> -->
       </div>
     </div>
   </ng-template>
@@ -438,7 +425,7 @@
     [funcID]="funcID"
     [view]="view"
     [formModel]="view.formModel"
-    (clickMFunction)="clickEvent($event, data)"
+    (clickMFunction)="clickEvent($event)"
   >
   </lib-view-detail-disciplines>
   <ng-template #itemRightDetail> </ng-template>

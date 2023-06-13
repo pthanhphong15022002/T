@@ -506,9 +506,7 @@
         type="button"
         class="btn btn-primary"
         id="btnCreateFolder"
-        [disabled]="
-          dmSV.idMenuActive == 'DMT03' ? false : ( this.id ? (this.updateRight == false || this.propertiesFolder) : (this.createRight == false || this.propertiesFolder))
-        "
+        [disabled]="dmSV.idMenuActive == 'DMT03' ? false : this.id ? (this.updateRight == false || this.propertiesFolder) : (this.createRight == false || this.propertiesFolder)"
         (click)="onFolderSave()"
       >
         {{ titleOK }}

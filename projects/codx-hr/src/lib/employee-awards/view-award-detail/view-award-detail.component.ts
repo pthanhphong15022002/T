@@ -48,7 +48,6 @@ export class ViewAwardDetailComponent {
   @Input() hideMF = false;
   @Input() hideFooter = false;
   @Output() clickMFunction = new EventEmitter();
-  @Output() uploaded = new EventEmitter();
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;

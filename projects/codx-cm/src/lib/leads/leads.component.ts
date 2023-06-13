@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -100,7 +101,10 @@ export class LeadsComponent
   resourceKanban?: ResourceModel;
   hideMoreFC = true;
   listHeader: any;
-  deadId: string = '';
+  oldIdContact: string = '';
+  oldIdLead: string = '';
+  funcIDCrr:any;
+  gridViewSetup: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -113,27 +117,18 @@ export class LeadsComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+    this.executeApiCalls();
+
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    this.dataObj = {
-      processID: '327eb334-5695-468c-a2b6-98c0284d0620',
-    };
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
     this.request.className = 'LeadsBusiness';
     this.request.method = 'GetListLeadsAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
 
     this.button = {
       id: this.btnAdd,
@@ -148,19 +143,6 @@ export class LeadsComponent
           panelRightRef: this.templateDetail,
         },
       },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
-        },
-      },
     ];
 
     this.router.params.subscribe((param: any) => {
@@ -169,6 +151,34 @@ export class LeadsComponent
       }
     });
   }
+
+  async executeApiCalls() {
+    try {
+      await this.getFuncID(this.funcID);
+
+    } catch (error) {}
+  }
+
+  async getGridViewSetup(formName,gridViewName){
+     this.cache
+    .gridViewSetup(formName, gridViewName)
+    .subscribe((res) => {
+      if(res) {
+        this.gridViewSetup = res;
+      }
+    });
+  }
+  async getFuncID(funcID){
+    this.cache.functionList(funcID).subscribe((f) => {
+      if(f){
+        this.funcIDCrr = f;
+        this.getGridViewSetup(this.funcIDCrr.formName,this.funcIDCrr.gridViewName);
+      }
+    });
+  }
+
+
+
 
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
@@ -250,9 +260,6 @@ export class LeadsComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'CM0201_2':
-        this.handelStartDay(data);
-        break;
       case 'CM0205_1':
         this.convertLead(data);
         break;
@@ -265,33 +272,6 @@ export class LeadsComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  handelStartDay(data) {
-    this.notificationsService
-      .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.startDeal(data.recID);
-        }
-      });
-  }
-
-  startDeal(recId) {
-    var data = [recId];
-    this.codxCmService.startDeal(data).subscribe((res) => {
-      if (res) {
-        debugger;
-        // data.status = '2';
-        // data.startDate = res?.length > 0 ? res[0].startDate : null;
-        //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        //   this.listInstanceStep = res;
-        this.dataSelected = res[0];
-        this.notificationsService.notifyCode('SYS007');
-        this.view.dataService.update(this.dataSelected).subscribe();
-        if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      }
-      this.detectorRef.detectChanges();
-    });
-  }
 
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
@@ -361,6 +341,8 @@ export class LeadsComponent
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm tiềm năng' : 'Sao chép tiềm năng',
+      leadIdOld: this.oldIdLead,
+      contactIdOld: this.oldIdContact,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -369,8 +351,8 @@ export class LeadsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        e.event.modifiedOn = new Date();
-        this.view.dataService.update(e.event).subscribe();
+         e.event.modifiedOn = new Date();
+         this.view.dataService.update(e.event).subscribe();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -407,7 +389,6 @@ export class LeadsComponent
           if (e && e.event != null) {
             e.event.modifiedOn = new Date();
             this.view.dataService.update(e.event).subscribe();
-            //this.leadsComponent.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -417,7 +398,8 @@ export class LeadsComponent
   copy(data) {
     if (data) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      this.oldIdDeal = data.recID;
+      this.oldIdLead = data.recID;
+      this.oldIdContact = data.contactID;
     }
     this.view.dataService.copy().subscribe((res) => {
       let option = new SidebarModel();
@@ -440,11 +422,9 @@ export class LeadsComponent
 
     // });
     this.view.dataService.dataSelected = data;
-
-    this.cache.functionList(this.funcID).subscribe((fun) => {
       this.view.dataService
         .delete([this.view.dataService.dataSelected], true, (opt) =>
-          this.beforeDel(opt, fun.entityName)
+          this.beforeDel(opt)
         )
         .subscribe((res) => {
           if (res) {
@@ -452,12 +432,11 @@ export class LeadsComponent
           }
         });
       this.changeDetectorRef.detectChanges();
-    });
   }
-  beforeDel(opt: RequestOption, entityName: string) {
+  beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedLeadAsync';
-    opt.data = [itemSelected.recID, entityName];
+    opt.data = [itemSelected.recID];
     return true;
   }
   //#endregion
@@ -532,6 +511,8 @@ export class LeadsComponent
         if (e.event.length > 0) {
           e.event[0].modifiedOn = new Date();
           this.view.dataService.add(e.event[0], 0).subscribe();
+          // this.view.dataService.update(e.event[0]).subscribe();
+
           if (e.event[1]) {
             this.view.dataService.remove(e.event[1]).subscribe();
           }

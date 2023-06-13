@@ -15,6 +15,23 @@
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
+  <div
+    *ngFor="let step of listStep"
+    class="list-step ps-4"
+  >
+    <codx-step-task
+      [dataSources]="step"
+      [isShowButton]="false"
+      [isShowMore]="true"
+      [isDeepCopy]="false"
+      [isShowStep]="true"
+      [isStart]="dataSelected?.status == '2'"
+      [isClose]="dataSelected?.closed"
+      [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+      (saveAssign)="saveAssignTask($event)"
+    ></codx-step-task>
+    <hr class="m-0 p-0" />
+  </div>
     <div *ngFor="let step of listStep; let i = index" >
       <codx-step-task
         [dataSources]="step"
@@ -166,23 +183,23 @@
           <div class="row py-2">
             <div class="col-2">
               <codx-label
-                default="Thời gian phát hiện"
-                fiedName="OccuredOn"
+              class="label-colon"
+                [setRequire]="false"
+                [formModel]="formModel"
+                fiedName="DetectedOn"
               ></codx-label
               >
             </div>
             <div class="col-4">
               <span
                 class="fs-7"
-                #occuredOn
+                #detectedOn
                 [innerHTML]="
-                  dataSelected?.occuredOn
+                  dataSelected?.detectedOn
                     | formatvalue
                       : formModel
-                      : 'occuredOn'
-                      : occuredOn
-                      : 'CMCases'
-                      : 'grvCMCases'
+                      : 'detectedOn'
+                      : detectedOn
                     | async
                 "
               ></span>

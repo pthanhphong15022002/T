@@ -18,8 +18,8 @@ implements OnInit, AfterViewInit
 @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
 @ViewChild('tabGeneralSystemDetail') tabGeneralSystemDetail: TemplateRef<any>;
 @ViewChild('tabGeneralContactDetail') tabGeneralContactDetail: TemplateRef<any>;
-@ViewChild('tabGeneralAddressDetail') tabGeneralAddressDetail: TemplateRef<any>;
-@ViewChild('imageUpload') imageUpload: ImageViewerComponent;
+@ViewChild('imageUploadLead') imageUploadLead: ImageViewerComponent;
+@ViewChild('imageUploadContact') imageUploadContact: ImageViewerComponent;
 // setting values in system
 dialog: DialogRef;
 //type any
@@ -74,13 +74,6 @@ menuGeneralContact = {
   subName: 'General contact',
   subText: 'General contact',
 };
-menuGeneralAddress = {
-  icon: 'icon-place',
-  text: 'Danh sách địa chỉ',
-  name: 'GeneralAddress',
-  subName: 'General address',
-  subText: 'General address',
-};
 
 //type any
 gridViewSetup: any;
@@ -94,12 +87,16 @@ funcID:any;
 instance: tmpInstances = new tmpInstances();
 instanceSteps: any;
 listInstanceSteps: any[] = [];
-avatarChange: boolean = false;
+avatarChangeLead: boolean = false;
+avatarChangeContact: boolean = false;
 lstContact:  any[] = [];
 lstContactDeletes:  any[] = [];
-listAddress:  any[] = [];
-listAddressDelete: any[] = [];
-  linkAvatar: string;
+linkAvatar: string;
+leadId:string = '';
+contactId:string = '';
+isCopyAvtLead: boolean = false;
+isCopyAvtContact: boolean = false;
+listIndustries:any[]=[];
 
 constructor(
   private inject: Injector,
@@ -117,16 +114,21 @@ constructor(
   this.titleAction = dt?.data?.titleAction;
   this.action = dt?.data?.action;
   this.executeApiCalls();
-  if (this.action != this.actionAdd) {
+  if (this.action !== this.actionAdd) {
     this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.customerIDOld = this.lead?.customerID;
+  }
+  if(this.action === this.actionCopy) {
+    this.leadId = dt?.data?.leadIdOld;
+    this.contactId =  dt?.data?.contactIdOld;
+  }
+  else {
+    this.leadId = this.lead.recID;
+    this.contactId =  this.lead.contactID;
   }
 }
 
 onInit(): void {
-  if(this.action == this.actionAdd || this.action == this.actionCopy){
-    this.lead.recID = Util.uid();
-  }
 }
 
 valueChange($event) {
@@ -146,28 +148,30 @@ saveLead() {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
-      '"' + this.gridViewSetup['DealName']?.headerText + '"'
+      '"' + this.gridViewSetup['LeadName']?.headerText + '"'
     );
     return;
   }
-  if(this.action !== this.actionEdit) {
-    this.onAdd();
-  }
-  else {
-    this.onEdit();
-  }
+
+  this.promiseSaveFile();
+
 
 
 }
 cbxChange($event, field) {
-  if ($event) {
+  if ($event  && $event.data ) {
     this.lead[field] = $event;
   }
 }
 valueChangeOwner($event) {
-  if ($event != null) {
+  if ($event  && $event.data ) {
     this.owner = $event;
     this.lead.owner = this.owner;
+  }
+}
+valueChangeIndustries($event){
+  if ($event  && $event.data ) {
+     this.listIndustries.push($event.data);
   }
 }
 onAdd() {
@@ -175,21 +179,9 @@ onAdd() {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res?.save[0] && res?.save) {
-          var recID = res?.save[0].recID;
-          if (this.avatarChange) {
-            this.imageUpload
-              .updateFileDirectReload(recID)
-              .subscribe((result) => {
-                if (result) {
-                  this.dialog.close(res.save[0]);
-                } else {
-                  this.dialog.close(res.save[0]);
-                }
-              });
-          } else {
-            this.dialog.close(res.save[0]);
-          }
-        }
+
+          this.dialog.close(res.save[0]);
+         }
       });
 
 }
@@ -197,33 +189,61 @@ onEdit() {
     this.dialog.dataService
     .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {
-      if (res.update[0] && res.update) {
-        var recID = res.update[0].recID;
+      if (res?.update[0] && res?.update) {
         (this.dialog.dataService as CRUDService)
-          .update(res.update[0])
-          .subscribe();
-        if (this.avatarChange) {
-          this.imageUpload
-            .updateFileDirectReload(recID)
-            .subscribe((result) => {
-              if (result) {
-                this.dialog.close(res.update[0]);
-              }
-            });
-        } else {
-          this.dialog.close(res.update[0]);
-        }
+        .update(res.update[0])
+        .subscribe();
+        this.dialog.close(res.update[0]);
       }
     });
 }
-beforeSave(option: RequestOption) {
-  if(this.action !== this.actionEdit) {
-    var data = [this.lead, this.lstContact, this.listAddress, this.formModel.funcID, this.formModel.entityName];
-  }
-  else {
-     var data = [this.lead, this.lstContact,this.lstContactDeletes, this.listAddress, this.listAddressDelete,this.formModel.entityName];
-  }
 
+async promiseSaveFile() {
+  try {
+    if(this.avatarChangeLead){
+      await  this.saveFileLead(this.leadId)
+    }
+    if(this.avatarChangeContact) {
+      await this.saveFileContact(this.contactId);
+    }
+    if(this.action !== this.actionEdit) {
+      this.onAdd();
+    }
+    else {
+      this.onEdit();
+    }
+
+  } catch (error) {
+    if(this.action !== this.actionEdit) {
+      this.onAdd();
+    }
+    else {
+      this.onEdit();
+    }
+  }
+}
+async saveFileLead(leadID) {
+  this.imageUploadLead
+  .updateFileDirectReload(leadID)
+  .subscribe((result) => {
+    if (result) {
+
+    }
+  });
+}
+async saveFileContact(contactID){
+  this.imageUploadContact
+  .updateFileDirectReload(contactID)
+  .subscribe((result) => {
+    if (result) {
+
+    }
+  });
+}
+
+beforeSave(option: RequestOption) {
+  this.checkCopyAvatar();
+  var data = this.action !== this.actionEdit? [this.lead,this.leadId, this.contactId] :[this.lead];
   option.methodName = this.action !== this.actionEdit ? 'AddLeadAsync' : 'EditLeadAsync';
   option.className = 'LeadsBusiness';
   option.data = data;
@@ -231,8 +251,8 @@ beforeSave(option: RequestOption) {
 }
 
 ngAfterViewInit(): void {
-  this.tabInfo = [this.menuGeneralInfo,this.menuGeneralSystem,this.menuGeneralContact,this.menuGeneralAddress];
-  this.tabContent = [this.tabGeneralInfoDetail, this.tabGeneralSystemDetail, this.tabGeneralContactDetail, this.tabGeneralAddressDetail];
+  this.tabInfo = [this.menuGeneralInfo,this.menuGeneralSystem,this.menuGeneralContact];
+  this.tabContent = [this.tabGeneralInfoDetail, this.tabGeneralSystemDetail, this.tabGeneralContactDetail];
 }
 async executeApiCalls() {
   try {
@@ -265,18 +285,6 @@ async getAutoNumber(formModel){
   });
 }
 
-// Đợi chị khanh thiết lập xong
-// async getListChannels() {
-//   this.codxCmService.getListChannels().subscribe((res) => {
-//     if (res && res.length > 0) {
-//       this.listCbxChannels = res[0];
-//       this.changeDetectorRef.detectChanges();
-//     }
-//   });
-// }
-
-
-
 // covnert data CM -> data DP
 
 
@@ -287,40 +295,36 @@ isRequired(field:string){
 }
 
 setTitle(e: any) {
-    // if (this.autoName) {
-    //   this.title = this.titleAction + ' ' + this.autoName;
-    // } else {
-    //   this.title = this.titleAction + ' ' + e;
-    //   this.autoName = e;
-    // }
-    this.title = this.titleAction;
+  this.title = this.titleAction;
   this.changeDetectorRef.detectChanges();
 }
 
-changeAvatar() {
-  this.avatarChange = true;
+changeAvatarLead() {
+  this.avatarChangeLead = true;
+
+  if(this.action === this.actionCopy && !this.isCopyAvtLead) {
+    this.lead.recID = Util.uid(); ;
+    this.leadId = this.lead.recID;
+
+    this.isCopyAvtLead = true;
+  }
 }
-lstContactEmit(e) {
-  if (e != null && e.length > 0) {
-    this.lstContact = e;
+changeAvatarContact() {
+  this.avatarChangeContact = true;
+
+  if(this.action === this.actionCopy && !this.isCopyAvtContact) {
+    this.lead.contactID = Util.uid();
+    this.contactId = this.lead.contactID;
+    this.isCopyAvtContact = true;
   }
 }
 
-lstContactDeleteEmit(e) {
-  if (e != null && e.length > 0) {
-    this.lstContactDeletes = e;
+checkCopyAvatar(){
+  if(this.isCopyAvtContact) {
+    this.contactId = null;
   }
-}
-
-lstAddressEmit(e){
-  if (e != null && e.length > 0) {
-    this.listAddress = e;
-  }
-}
-
-lstAddressDeleteEmit(e){
-  if (e != null && e.length > 0) {
-    this.listAddressDelete = e;
+  if(this.isCopyAvtLead) {
+    this.leadId = null;
   }
 }
 }

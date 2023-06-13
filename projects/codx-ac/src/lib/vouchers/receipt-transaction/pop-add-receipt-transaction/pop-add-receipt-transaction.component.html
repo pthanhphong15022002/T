@@ -1,7 +1,6 @@
 <codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
   [dialog]="dialog" [data]="inventoryJournal" [customToolbar]="subToolbar" [openMore]="false">
 </codx-form>
-
 <!-- Start: Sub header -->
 <ng-template #subHeader>
   <ng-container *ngIf="form?.formGroup"> </ng-container>
@@ -188,7 +187,7 @@
       <table style="table-layout: fixed;" class="table table-row-bordered">
         <tfoot style="background-color: whitesmoke;position: sticky;
           bottom: 0;">
-          <ng-container *ngFor="let item of visibleColumns">
+          <ng-container *ngFor="let item of gridInventoryJournalLine.visibleColumns">
             <td class="w-10" *ngIf="item.summaryBottom == '1'">
               <div class="d-flex align-items-center">
                 <span style="font-size: 14px;" class="sum-content fw-bold">Tổng cộng: </span>
@@ -236,7 +235,6 @@
         </thead>
         <tbody class="border-bottom" *ngFor="
             let item of inventoryJournalLines
-              | slice : (page - 1) * pageSize : page * pageSize
           ">
           <tr>
             <td class="text-center fw-bold">
@@ -420,11 +418,7 @@
   <div *ngIf="modeGrid == 2" class="d-flex flex-wrap justify-content-between mt-6">
     <div class="d-flex align-items-center mb-1 bg-light me-5">
       <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
-      <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total + ' ' + inventoryJournal.currencyID }}</span>
-    </div>
-    <div *ngIf="inventoryJournalLines.length > 0 && modeGrid == 2" class="d-flex justify-content-end">
-      <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-        [collectionSize]="inventoryJournalLines.length"></ngb-pagination>
+      <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total.toLocaleString('it-IT') + ' ' + inventoryJournal.currencyID }}</span>
     </div>
   </div>
 </ng-template>
