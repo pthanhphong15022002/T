@@ -10,19 +10,25 @@
       <div
         class="d-flex align-items-center pe-4"
         [ngStyle]="{
-          'background': currentStep?.backgroundColor || '#d9e3f7',
+          background: currentStep?.backgroundColor || '#d9e3f7',
           'border-radius': '20px'
         }"
       >
         <div
           class="cricle"
-          [ngStyle]="{ color: currentStep?.iconColor || 'gray', border: '2px solid' }"
+          [ngStyle]="{
+            color: currentStep?.iconColor || 'gray',
+            border: '2px solid'
+          }"
         >
           <span [ngClass]="currentStep?.icon" class="fs-6"></span>
         </div>
         <span
           class="line-clamp line-clamp-2 fs-5 ms-2"
-          [ngStyle]="{ color: currentStep?.textColor || 'gray', 'font-weight': '400'}"
+          [ngStyle]="{
+            color: currentStep?.textColor || 'gray',
+            'font-weight': '400'
+          }"
         >
           {{ currentStep.stepName || "" }}</span
         >
@@ -40,14 +46,14 @@
     </div>
     <div class="d-flex align-items-center">
       <codx-vll
-      [name]="'DP032'"
-      [field]="'Status'"
-      [value]="currentStep?.stepStatus"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-primary badge-sm"
-    >
-    </codx-vll>
+        [name]="'DP032'"
+        [field]="'Status'"
+        [value]="currentStep?.stepStatus"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-primary badge-sm"
+      >
+      </codx-vll>
       <div
         class="disabled-inline"
         (click)="openPopupUpdateProgress(currentStep, 'P')"
@@ -68,10 +74,18 @@
           placement="top bottom"
         ></codx-progressbar>
       </div>
+      <div (click)="toggleElemen()" class="d-flex align-items-center show-step">
+        <i *ngIf="isShowElement" class="icon-24 icon-expand_less text-primary"></i>
+        <i *ngIf="!isShowElement" class="icon-24 icon-expand_more text-primary"></i>
+      </div>
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
-  <div class="main-body" *ngIf="listGroupTask?.length > 0">
+  <div
+    [@fadeInOut]
+    class="main-body"
+    *ngIf="listGroupTask?.length > 0 && isShowElement"
+  >
     <div
       cdkDropList
       class="list"

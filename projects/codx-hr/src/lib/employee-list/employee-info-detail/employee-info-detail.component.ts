@@ -2567,6 +2567,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.lstBtnAdd = this.lstFuncHealth;
         this.initEmpHealth();
         break;
+      case this.quitJobInfoFuncID:
+        this.lstBtnAdd = null;
+        break;
     }
   }
 
@@ -2589,7 +2592,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (res?.event) {
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
         this.df.detectChanges();
-        this.view.dataService.clear();
       }
     });
   }
@@ -2994,11 +2996,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.df.detectChanges();
           }
         } else if (actionType == 'edit') {
+          debugger
           if (
-            res?.event.issuedDate > this.crrPassport.issuedDate ||
-            res?.event.issuedDate > this.crrPassport.issuedDate
+            res?.event.issuedDate >= this.crrPassport.issuedDate
           ) {
-            //do nothing, old is current value is still is current
+            this.crrPassport = res.event;
           } else {
             this.hrService
               .GetEmpCurrentPassport(this.employeeID)
@@ -3072,10 +3074,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         } else if (actionType == 'edit') {
           if (
-            res?.event.issuedDate > this.crrWorkpermit.issuedDate ||
-            res?.event.issuedDate > this.crrWorkpermit.issuedDate
+            res?.event.issuedDate >= this.crrWorkpermit.issuedDate
           ) {
-            //do nothing, old is current value is still is current
+            this.crrWorkpermit = res.event
           } else {
             this.hrService
               .GetEmpCurrentWorkpermit(this.employeeID)
@@ -3115,6 +3116,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         // (this.passportGridview.dataService as CRUDService).clear();
       } else {
         if (actionType == 'add' || actionType == 'copy') {
+          debugger
           if (
             !this.crrVisa ||
             res?.event.issuedDate > this.crrVisa.issuedDate
@@ -3124,10 +3126,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         } else if (actionType == 'edit') {
           if (
-            res?.event.issuedDate > this.crrVisa.issuedDate ||
-            res?.event.issuedDate > this.crrVisa.issuedDate
+            res?.event.issuedDate >= this.crrVisa.issuedDate 
           ) {
-            //do nothing, old is current value is still is current
+            this.crrVisa = res.event;
           } else {
             this.hrService
               .GetEmpCurrentPassport(this.employeeID)

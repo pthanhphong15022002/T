@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="container mt-4 h-100">
   <div class="row mb-2" *ngIf="employeeManager">
     <div class="col-2 col-xl-2 col-md-4 col-xs-12">
       <codx-img
@@ -105,7 +105,7 @@
       </div>
     </div>
   </div>
-  <div id="detail" *ngIf="columnsGrid && columnsGrid.length">
+  <div id="detail" *ngIf="columnsGrid && columnsGrid.length" class="h-100">
     <codx-gridview-v2
       #grid
       [formModel]="formModelEmp"

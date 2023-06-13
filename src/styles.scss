@@ -6,6 +6,7 @@
 
 :root {
   --fs-body: 13px;
+  --speeddialVertDist: 98px;
 
   .e-grid .e-rowcell {
     font-size: var(--fs-body);
@@ -586,6 +587,8 @@ codx-user-inner .top-100.start-100 {
   background-color: var(--gray-100);
 }
 
+///// *calendar*
+
 ejs-calendar {
   width: 320px;
 }
@@ -593,7 +596,19 @@ ejs-calendar {
 .e-calendar .e-content.e-month td.e-today span.e-day {
   line-height: 30px;
 }
+.e-calendar .e-content.e-month td, .e-bigger.e-small .e-calendar .e-content.e-month td {
+  height: 36px!important;
+  padding: 0;
+}
 
+.e-schedule .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar .e-appointment,
+.e-schedule .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar .e-appointment-indicator {
+  background-color: var(--bs-orange)!important;
+  width: 5px!important;
+  height: 5px!important;
+  border-radius: 0!important;
+}
+/////
 .card {
   box-shadow: none;
 }
@@ -2046,18 +2061,18 @@ a.nav-link {
 /*** control calendar **/
 codx-calendar {
   .e-tab .e-tab-header.e-vertical {
-    width: 100px !important;
-    max-width: 100px !important;
+    width: 130px !important;
+    max-width: 130px !important;
   }
   .e-tab .e-tab-header.e-vertical:before {
     border-color: var(--gray-200);
-    left: 115px;
+    left: 145px;
   }
   .e-tab .e-tab-header.e-vertical .e-toolbar-item {
     border-left: 3px transparent solid !important;
   }
   .e-tab > .e-content{
-    margin-left: 132px;
+    margin-left: 152px;
   }
 }
 
@@ -3063,16 +3078,28 @@ codx-toolbar-report{
 .cal-notes .checkbox-list {
   padding: 7px 16px;
 }
-codx-calendar .codx-form .card-footer{
-  margin-top: -42px;
-  padding-top: 0;
+.h-350px.w-550px{
+  codx-calendar .codx-form .card-footer{
+
+    padding-top: 0;
+  }
+  .h-375px{
+    height: 275px!important;
+  }
 }
-// .h-300px.dropdown-menu{
-//   codx-calendar .h-375px{
-//     height: 280px!important;
-//     border: 1px aqua solid;
-//   }
-// }
+
+.h-450px.dropdown-menu{
+  .w-75px {
+    width: 66px !important;
+  }
+  codx-calendar .codx-form .card-footer{
+    margin-top: 0px;
+    padding-top: 0;
+  }
+  
+}
+
+
 
 /////
 .e-gantt-splitter table tr{
@@ -3146,4 +3173,10 @@ codx-wrapper.hover-scroll-overlay-y {
     }
   }
   
+}
+
+//////////// end tablet
+
+codx-card-center .card.codx_cardcenter{
+  overflow: hidden;
 }

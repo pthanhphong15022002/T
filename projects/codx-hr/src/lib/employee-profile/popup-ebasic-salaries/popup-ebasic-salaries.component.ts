@@ -206,6 +206,10 @@ export class PopupEBasicSalariesComponent
         this.cr.detectChanges();
       }
     }
+    console.log('form Model ne', this.formModel);
+    console.log('form group', this.formGroup);
+    console.log('dialog ne', this.dialog)
+    
   }
 
   onSaveForm() {

@@ -59,7 +59,7 @@
 
       </div>
 
-      <div class="row form-group mb-0">
+      <div class="row form-group">
         <div class="col-4">
           <codx-label fiedName="Frequence" [formModel]="form?.formModel">
           </codx-label>
@@ -72,9 +72,9 @@
           <codx-input ControlName="checkInMode" [formModel]="form?.formModel" [Group]="form?.formGroup">
           </codx-input>
         </div>
-        <div class=" col-4 form-group">
+        <div class=" col-4">
           <codx-label default="Kiểm soát cập nhật" name="lblCheckInControl"></codx-label>
-          <codx-input field="checkInControl" type="valuelist" refValue="OM015"  [crrValue]="kr?.checkInControl ==null? 0 :kr?.checkInControl">
+          <codx-input field="checkInControl" type="valuelist" refValue="OM015"  [crrValue]="kr?.checkInControl" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
 

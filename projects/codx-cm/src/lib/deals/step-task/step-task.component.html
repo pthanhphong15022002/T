@@ -7,34 +7,47 @@
           [isMulti]="true"
           type="valuelist"
           [emptyText]="'Tình trạng'"
-          field="StepID"
+          field="status"
           [dataSource]="status"
+          (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div>
       <div class="ms-4">
         <codx-dropdown-select
           cssPopup="h-250px w-300px"
-          [isMulti]="true"
+          [isMulti]="false"
           type="valuelist"
           [emptyText]="'Colapse'"
-          field="StepID"
+          field="show"
           [refValue]="'DP046'"
+          (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div>
     </div>
-    <div class="right">
-      <codx-valuelist
-         [crrValue]="type"
+    <div class="right d-flex align-items-center">
+      <div (click)="addTask()" class="d-flex align-items-center me-4">
+        <i *ngIf="isShowElement" class="icon-22 icon-add_task text-primary"></i>
+      </div>
+      <!-- <codx-valuelist
+         [valueSelected]="type"
          [name]="'DP034'"
          (valueChange)="changeValue($event)"
-      ></codx-valuelist>
-      <!-- <codx-input
+      ></codx-valuelist> -->
+      <div  *ngIf="type == 'G'" class="me-4">
+        <codx-input
+          type="valuelist"
+          [crrValue]="crrViewGant"
+          [refValue]="vllViewGannt"
+          (valueChange)="changeViewTimeGant($event)"
+        ></codx-input>
+      </div>
+      <codx-input
           field="viewModeDetail"
           type="valuelist"
           [crrValue]="type"
-          [refValue]="'DP047'"
+          [refValue]="'DP034'"
           (valueChange)="changeValue($event)"
-      ></codx-input> -->
+      ></codx-input>
     </div>
   </header>
   <main>
@@ -50,7 +63,7 @@
 </div>
 
 <ng-template #taskTem>
-   <div *ngIf="isDataLoading">
+   <div *ngIf="isDataLoading || !type">
       <div *ngFor="let step of [1, 2, 3]">
         <div class="d-flex align-items-center w-100">
           <ngx-skeleton-loader
@@ -91,8 +104,8 @@
         <hr class="m-0 p-0" />
       </div>
     </div>
-    <div *ngIf="!isDataLoading && listStep?.length > 0">
-      <div *ngFor="let step of listStep" class="list-step ps-4">
+    <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
+      <div *ngFor="let step of listInstanceStepShow" class="list-step ps-4">
         <codx-step-task
           [dataSources]="step"
           [isShowButton]="false"
@@ -102,13 +115,14 @@
           [isStart]="dataSelected?.status == '2'"
           [isClose]="dataSelected?.closed"
           [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+          [isShowElement]="isShowElement"
           (continueStep)="handelContinueStep($event, step)"
           (saveAssign)="handelSaveAssignTask($event)"
         ></codx-step-task>
         <hr class="m-0 p-0" />
       </div>
     </div>
-    <div *ngIf="!isDataLoading && listStep?.length == 0">
+    <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
       <codx-no-data></codx-no-data>
     </div>
 </ng-template>
@@ -116,8 +130,9 @@
 <ng-template #ganttChart>
    <div class="w-100 h-100" id="tabGantt">
      <codx-step-chart
-       [dataSelected]="dataSelected"
-       [listSteps]="listStep"
+      [typeTime]="typeTime"
+      [dataSelected]="dataSelected"
+      [listSteps]="listInstanceStepShow"
      ></codx-step-chart>
    </div>
  </ng-template>

@@ -45,7 +45,7 @@
           </span>
         </div>
         <codx-dropdown-calendar cssPopup="h-500px w-800px" [value]="date" [selectedType]="'y'" [displayOption]="ops"
-          cssClass="w-100 om-calendar" class="me-2" (change)="changeCalendar($event)"></codx-dropdown-calendar>
+          cssClass="w-100 om-calendar" class="me-2" (valueChange)="changeCalendar($event)" (change)="changeCalendar($event)"></codx-dropdown-calendar>
         <div class="symbol symbol-30px symbol-circle cursor-pointer" *ngIf="formModelPlan  && reloadedMF">
           <span class="symbol-label bg-om-gray" >
             

@@ -9,11 +9,16 @@ import { ApiHttpService, CacheService, CallFuncService, NotificationsService } f
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() isDataLoading: any;
   @Input() dataSelected: any;
-  @Input() listStep: any;
+  @Input() listInstanceStep: any[];
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   status = [];
-  type;
+  type = '';
+  crrViewGant = 'W';
+  vllViewGannt = 'DP042';
+  typeTime;
+  listInstanceStepShow = [];
+  isShowElement = true;
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
@@ -29,18 +34,52 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {
     this.isDataLoading;
-    this.listStep;
+    this.listInstanceStep;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(changes?.dataSelected){
+      this.getViewModeDetailByProcessID();
+    }
+    if(changes?.listInstanceStep){
+      this.listInstanceStepShow = this.listInstanceStep;
+    }
   }
 
   ngAfterViewInit(): void {
 
   }
 
+  getViewModeDetailByProcessID(){
+    if(this.dataSelected){
+      this.api.exec<any>(
+        'DP',
+        'ProcessesBusiness',
+        'GetViewModeDetailByProcessIDAsync',
+        this.dataSelected?.processID
+      ).subscribe(res => {
+        this.type = res ? res : 'S';        
+      })
+    }
+    
+  }
+
   changeValue(e){
-    this.type = e;
+    this.type = e.data;
+  }
+  changeValueDropdownSelect(e){
+    if(e.field == 'status'){
+      if(e?.data?.length == 0){
+        this.listInstanceStepShow = this.listInstanceStep;
+      }else{
+        this.listInstanceStepShow = this.listInstanceStep.filter(step => e?.data?.includes(step.stepStatus))
+      }
+    }
+    if(e.field == 'show' && e.data?.length >= 0){
+      this.isShowElement = e.data[0] == '1' ? true : false;
+    }else{
+      this.isShowElement = true;
+    }
   }
   
 
@@ -50,5 +89,12 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   handelSaveAssignTask(event){
     this.saveAssignTask.emit(event);
+  }
+
+  changeViewTimeGant(e) {
+    this.typeTime = e;
+  }
+  addTask(){
+    
   }
 }

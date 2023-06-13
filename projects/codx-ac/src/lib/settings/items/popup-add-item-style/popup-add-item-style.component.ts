@@ -11,6 +11,7 @@ import {
 import { map } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ItemStyle } from '../interfaces/ItemStyle.interface';
+import { EntityName, getClassName } from '../utils/unknown.util';
 
 @Component({
   selector: 'lib-popup-add-item-style',
@@ -88,7 +89,12 @@ export class PopupAddItemStyleComponent extends UIComponent {
     }
 
     this.api
-      .exec('IV', 'ItemStylesBusiness', 'AddItemStyleAsync', this.itemStyle)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsStyles),
+        'AddItemStyleAsync',
+        this.itemStyle
+      )
       .subscribe((res: ItemStyle) => {
         if (res) {
           this.notiService.notifyCode('SYS006');
@@ -125,7 +131,12 @@ export class PopupAddItemStyleComponent extends UIComponent {
     }
 
     this.api
-      .exec('IV', 'ItemStylesBusiness', 'UpdateItemStyleAsync', this.itemStyle)
+      .exec(
+        'IV',
+        getClassName(EntityName.IV_ItemsStyles),
+        'UpdateItemStyleAsync',
+        this.itemStyle
+      )
       .subscribe((res: ItemStyle) => {
         if (res) {
           this.notiService.notifyCode('SYS007');
