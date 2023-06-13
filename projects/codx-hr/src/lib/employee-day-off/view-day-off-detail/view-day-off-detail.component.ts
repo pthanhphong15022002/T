@@ -35,11 +35,9 @@ export class ViewDayOffDetailComponent implements OnChanges {
     private authStore: AuthStore,
     private cache: CacheService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 
-  @Input() funcID: any;
   @Input() itemDetail: any;
   @Input() formModel;
   @Input() view: ViewsComponent;

@@ -232,12 +232,6 @@ export class PopupMoveStageComponent implements OnInit {
   getStepByStepIDAndInID(insID, stepID) {
     this.codxDpService.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
       if (res) {
-        if (this.isStopData) {
-          var data = JSON.parse(JSON.stringify(res));
-          this.updateDataInstance(data);
-          this.isStopData = false;
-        }
-
         this.stepCurrent = res;
         var i = -1;
         this.assignControl = this.stepCurrent.assignControl;
@@ -351,12 +345,23 @@ export class PopupMoveStageComponent implements OnInit {
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
         }
+
+        if (this.isStopData) {
+          var data = JSON.parse(JSON.stringify(res));
+          this.updateDataInstance(data);
+          this.isStopData = false;
+
+        }
+
       }
     });
   }
 
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
+    if(data.owner){
+      this.owner = data.owner;
+    }
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
     this.instancesStepOld.actualEnd =  this.checkDuration(this.isDurationControl,this.instancesStepOld?.actualEnd);
     this.listTaskDone = this.instancesStepOld.tasks.filter(
@@ -576,7 +581,7 @@ export class PopupMoveStageComponent implements OnInit {
     var indexClick = this.listStepsCbx.findIndex((x) => x.stepID == stepClick);
     var indexOld = this.listStepsCbx.findIndex((x) => x.stepID == stepOld);
     var space = indexClick - indexOld;
-    if (space >= 0) {
+    if (space > 0) {
       return true;
     }
     return false;

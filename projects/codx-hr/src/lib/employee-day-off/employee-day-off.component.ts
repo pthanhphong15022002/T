@@ -68,7 +68,6 @@ export class EmployeeDayOffComponent extends UIComponent {
   actionUpdateApproved = 'HRTPro09AU5';
   actionUpdateClosed = 'HRTPro09AU9'; // đóng
 
-  funcID: string;
   grvSetup: any;
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
@@ -98,14 +97,12 @@ export class EmployeeDayOffComponent extends UIComponent {
   }
 
   onInit() {
-    this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
-      if (res) {
-        this.grvSetup = res;
-      }
-    });
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
+    this.GetGvSetup();
+    // this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
+    //   if (res) {
+    //     this.grvSetup = res;
+    //   }
+    // });
   }
 
   ngAfterViewInit(): void {
