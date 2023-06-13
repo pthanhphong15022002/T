@@ -1,7 +1,6 @@
 <div id="id" class="main" [ngClass]="'show-main'">
   <div
     class="d-flex align-items-center justify-content-between me-5"
-    style="margin: -3px 0 -15px 0"
     *ngIf="isShowStep"
   >
     <div
@@ -74,7 +73,7 @@
           placement="top bottom"
         ></codx-progressbar>
       </div>
-      <div (click)="toggleElemen()" class="d-flex align-items-center show-step">
+      <div (click)="toggleElemen()" class="d-flex align-items-center show-step mx-2">
         <i *ngIf="isShowElement" class="icon-24 icon-expand_less text-primary"></i>
         <i *ngIf="!isShowElement" class="icon-24 icon-expand_more text-primary"></i>
       </div>

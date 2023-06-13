@@ -11,6 +11,7 @@ import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -23,8 +24,10 @@ export class CodxStepChartComponent
   implements OnInit, AfterViewInit
 {
   @Input() ganttDs = [];
-  @Input() dataSelected;
+  @Input() instance;
   @Input() typeTime;
+  @Input() listInstanceStep;
+  @Input() isShowTypeTime = true;
   @Input() listSteps: DP_Instances_Steps[] = [];
 
   crrViewGant = 'W';
@@ -32,6 +35,7 @@ export class CodxStepChartComponent
   ganttDsClone = [];
   timelineSettings: any;
   ownerInstance: string[] = [];
+  listColor = [];
   columns = [
     { field: 'name', headerText: 'Tên', width: '250' },
     { field: 'startDate', headerText: 'Ngày bắt đầu' },
@@ -171,21 +175,20 @@ export class CodxStepChartComponent
 
   constructor(
     private inject: Injector,
-    private changeDetec: ChangeDetectorRef
+    private changeDetec: ChangeDetectorRef,
   ) {
     super(inject);
   }
   ngAfterViewInit() {}
-  onInit(): void {}
+  onInit(): void {
+  }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.dataSelected) {
+    if (changes.instance) {
       this.getDataGanttChart(
-        this.dataSelected?.refID,
-        this.dataSelected?.processID
+      this.instance?.refID,
+      this.instance?.processID
       );
-      //  this.dataSelected? = ch
-      //  this.getListContactByObjectID(this.dataSelected?.recID);
     }
     if(changes.typeTime){
       this.changeViewTimeGant(this.typeTime);
@@ -200,23 +203,23 @@ export class CodxStepChartComponent
   //ganttchar
   getDataGanttChart(instanceID, processID) {
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
-        instanceID,
-        processID,
-      ])
-      .subscribe((res) => {
-        if (res && res?.length > 0) {
-          this.ganttDs = res;
-          this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
-          let test = this.ganttDsClone.map((i) => {
-            return {
-              name: i.name,
-              start: i.startDate,
-              end: i.endDate,
-            };
-          });
-        }
-      });
+    .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
+      instanceID,
+      processID,
+    ])
+    .subscribe((res) => {
+      if (res && res?.length > 0) {
+        this.ganttDs = res;
+        this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
+        let test = this.ganttDsClone.map((i) => {
+          return {
+            name: i.name,
+            start: i.startDate,
+            end: i.endDate,
+          };
+        });
+      }
+    });
   }
 
   clickDetailGanchart(recID) {
