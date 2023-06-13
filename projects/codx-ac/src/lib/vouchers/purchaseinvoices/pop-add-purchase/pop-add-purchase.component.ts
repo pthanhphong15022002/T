@@ -191,8 +191,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.vatinvoices[e.field] = e.data;
   }
   gridCreated(e, grid) {
-    this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
     this.closeLoader();
+    this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
   }
 
   onDoubleClick(data)
@@ -670,7 +670,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       totalvat = totalvat + element.vatAmt;
     });
     this.total = totalnet + totalvat;
-    if(this.journal && this.total <= this.journal.transLimit)
+    if(this.journal && (this.total <= this.journal.transLimit || this.journal.transLimit == null))
       this.purchaseinvoices.totalAmt = this.total;
     this.purchaseinvoices.totalAmt = this.total;
     this.totalnet = totalnet.toLocaleString('it-IT', {
@@ -827,6 +827,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   checkTransLimit(){
+    if(this.journal.transLimit == null)
+      this.purchaseinvoices.totalAmt = parseInt(this.total);
     if(this.journal.transLimit && this.total > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
@@ -905,25 +907,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           );
         }
       });
-
-    if (this.formType == 'edit') {
-      this.api
-        .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
-          this.purchaseinvoices.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.purchaseInvoicesLines = res;
-            this.purchaseInvoicesLines.forEach((element) => {
-              if (element.vatid != null) {
-                this.countDetail++;
-              }
-              this.loadTotal();
-            });
-          }
-        });
-    }
 
     if (this.purchaseinvoices.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
@@ -1026,6 +1009,24 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                     }
                   }
                 });
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        this.api
+          .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
+            this.purchaseinvoices.recID,
+          ])
+          .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.keymodel = Object.keys(res[0]);
+              this.purchaseInvoicesLines = res;
+              this.purchaseInvoicesLines.forEach((element) => {
+                if (element.vatid != null) {
+                  this.countDetail++;
+                }
+                this.loadTotal();
+              });
             }
           });
       }
