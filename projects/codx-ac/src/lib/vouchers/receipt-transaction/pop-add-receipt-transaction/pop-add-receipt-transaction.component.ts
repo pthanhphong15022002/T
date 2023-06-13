@@ -13,7 +13,6 @@ import { JournalService } from '../../../journals/journals.service';
 import { Observable } from 'rxjs';
 import { InventoryJournals } from '../../../models/InventoryJournals.model';
 import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-lineinventory.component';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -90,7 +89,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
-    private ngxService: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -142,7 +140,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Init
 
   onInit(): void {
-    this.ngxService.startLoader('loader');
     this.loadInit();
     this.loadTotal();
   }
@@ -156,7 +153,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Event
 
   gridCreated() {
-    this.closeLoader();
     this.gridInventoryJournalLine.hideColumns(this.lockFields);
   }
 
@@ -547,8 +543,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
       this.modeGrid = this.journal.inputMode;
-      if(this.modeGrid == '2')
-        this.closeLoader();
       if (this.formType == 'edit') {
         this.api
           .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
@@ -1084,13 +1078,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       return 0;
     var costAmt = quantity * costPrice;
     return costAmt;
-  }
-
-  closeLoader(){
-    setTimeout(() => {
-      this.ngxService.stopLoader('loader');
-      this.ngxService.destroyLoaderData('loader');
-    }, 500);
   }
 
   //#endregion
