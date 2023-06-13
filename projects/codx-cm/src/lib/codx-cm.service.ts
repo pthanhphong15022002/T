@@ -707,6 +707,23 @@ export class CodxCmService {
 
   }
 
+  autoMoveStageInInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AutoMoveStageAsync',
+      data
+    );
+  }
+  autoMoveStageInDeal(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'AutoMoveStageDealAsync',
+      data
+    );
+  }
+
 
   //#endregion -- Bao
 
