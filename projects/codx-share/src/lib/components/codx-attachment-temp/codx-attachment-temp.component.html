@@ -1,19 +1,19 @@
 <div *ngIf="viewType == '0'" (click)="openViewPopup ? openPopup() : ''">
-  <div class="d-flex align-items-center" *ngIf="countData > 0">
+  <div class="d-flex align-items-center text-hover-primary cursor-pointer" *ngIf="countData > 0">
     <div class="d-flex align-items-center">
       <i
-        class="text-hover-primary icon-i-paperclip icon-18 cursor-pointer text-gray-400"
+        class="icon-i-paperclip icon-16"
       ></i>
     </div>
     <div>{{ countData }}</div>
   </div>
 </div>
 
-<div class="d-flex align-items-center red"
+<div class="d-flex align-items-center"
   *ngIf="viewType == '1' && (count > 0 || countData > 0)"
   (click)="openViewPopup ? openPopup() : ''"
 >
-  <span class="icon-i-paperclip icon-18 text-gray-400"> </span>
+  <span class="icon-i-paperclip icon-16"> </span>
   <span
     *ngIf="countData > 0"
     class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
@@ -23,7 +23,7 @@
 </div>
 
 <div *ngIf="viewType == '2'" (click)="openViewPopup ? openPopup() : ''">
-  <span class="icon-i-paperclip icon-18"> </span>
+  <span class="icon-i-paperclip icon-16"> </span>
   <span
     *ngIf="countData > 0"
     class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
@@ -37,7 +37,7 @@
   (click)="openViewPopup ? openPopup() : ''"
   class="d-flex align-items-center position-relative me-4"
 >
-  <span class="icon-i-paperclip icon-18 text-gray-400"></span>
+  <span class="icon-i-paperclip icon-16"></span>
   <span
     *ngIf="countData > 0"
     class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
@@ -46,10 +46,10 @@
 </div>
 
 <div *ngIf="viewType == '4'" (click)="openViewPopup ? openPopup() : ''">
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center cursor-pointer text-hover-primary">
     <div class="d-flex align-items-center me-1">
       <i
-        class="text-hover-primary icon-i-paperclip icon-18 cursor-pointer text-gray-400"
+        class="icon-i-paperclip icon-16"
       ></i>
     </div>
     <div>{{ countData }}</div>

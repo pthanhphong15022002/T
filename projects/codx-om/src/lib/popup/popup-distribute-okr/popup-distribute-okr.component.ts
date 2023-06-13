@@ -323,11 +323,11 @@ export class PopupDistributeOKRComponent
   orgTypeToObjectType(orgUnitType: string) {
     switch (orgUnitType) {
       case '1':
-        return OMCONST.OBJECT_TYPE.COMP;
+        return OMCONST.VLL.OKRLevel.COMP;
       case '4':
-        return OMCONST.OBJECT_TYPE.DEPT;
+        return OMCONST.VLL.OKRLevel.DEPT;
       case '6':
-        return OMCONST.OBJECT_TYPE.ORG;
+        return OMCONST.VLL.OKRLevel.ORG;
       default:
         return null;
     }

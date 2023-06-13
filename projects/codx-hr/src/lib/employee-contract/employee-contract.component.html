@@ -16,7 +16,7 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-50 min-w-350px p-2">
+    <div class="w-50 min-w-350px p-1">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -30,8 +30,8 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <span class="me-2 fw-bold">{{ data?.emp?.employeeName }}</span>
-          <span
+          <span class="fs-6 fw-bold mb-1">{{ data?.emp?.employeeName }}</span>
+          <span class="text-gray-600 fs-7"
             [innerHTML]="
               data?.positionID
                 | formatvalue : view.formModel : 'positionID'
@@ -39,7 +39,7 @@
             "
           ></span>
           <span
-            class="mt-1"
+            class="fs-7"
             [innerHTML]="
               data?.orgUnitID
                 | formatvalue : view.formModel : 'orgUnitID'
@@ -51,8 +51,8 @@
     </div>
 
     <div class="w-30 min-w-250px px-2">
-      <div class="d-flex flex-row">
-        <span [ngbTooltip]="grvSetup?.ContractNo?.headerText">
+      <div class="d-flex flex-row mb-1">
+        <span class="me-2 fw-bold" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
           {{ data?.contractNo }}</span
         >
 

@@ -88,8 +88,11 @@
       <div [ngClass]="data.isDefault ? 'w-100' : 'w-100'">
         <div lass="d-flex align-items-center text-gray-600 codx-textlabel">
           <span class="me-1" *ngIf="isConvertLeadToCus">
-            <input type="checkbox" [(ngModel)]="data.checked" (change)="valueChange($event, data)">
-
+            <input
+              type="checkbox"
+              [(ngModel)]="data.checked"
+              (change)="valueChange($event, data)"
+            />
           </span>
           <span
             class="icon-16 me-2 text-hover-primary cursor-pointer"
@@ -119,7 +122,13 @@
         class="d-flex justify-content-end align-items-center"
         *ngIf="data.isDefault"
       >
-        <span class="icon-vpn_key icon-16"></span>
+        <span class="icon-vpn_key icon-16" [ngbTooltip]="popupIsDefault"
+          ><ng-template #popupIsDefault>
+            <codx-label
+              fiedName="IsDefault"
+              [formModel]="formModelAddress"
+            ></codx-label> </ng-template
+        ></span>
       </div>
       <div
         class="w-100px min-w-100px d-flex justify-content-end action-menu-od"

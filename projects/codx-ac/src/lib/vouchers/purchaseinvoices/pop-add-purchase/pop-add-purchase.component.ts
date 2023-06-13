@@ -65,7 +65,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   VATType: any;
   detailActive = 1;
   countDetail = 0;
-  pageCount: any;
   journal: IJournal;
   hasSaved: any = false;
   isSaveMaster: any = false;
@@ -100,8 +99,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   ];
   columnGrids = [];
   keymodel: any = [];
-  page: any = 1;
-  pageSize = 5;
   modegrid: any;
   lsVatCode: any;
   journals: any;
@@ -283,7 +280,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.purchaseinvoices,
+      });
+    } else {
+      this.dialog.close();
+    }
   }
 
   onDiscard(){
@@ -379,7 +383,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               {
                 this.purchaseInvoicesLines.push(dataline);
               }
-              this.loadPageCount();
               this.hasSaved = true;
               this.isSaveMaster = true;
               this.loadTotal();
@@ -589,7 +592,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             for (let i = 0; i < this.purchaseInvoicesLines.length; i++) {
               this.purchaseInvoicesLines[i].rowNo = i + 1;
             }
-            this.loadPageCount();
             break;
         }
         this.api
@@ -670,16 +672,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       totalvat = totalvat + element.vatAmt;
     });
     this.total = totalnet + totalvat;
-    this.purchaseinvoices.totalAmt = this.total;
+    if(this.journal && (this.total <= this.journal.transLimit || this.journal.transLimit == null))
+      this.purchaseinvoices.totalAmt = this.total;
     this.totalnet = totalnet.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
     this.totalvat = totalvat.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
-    this.total = this.total.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
@@ -737,10 +736,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       }
     });
-  }
-
-  loadPageCount() {
-    this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
   }
 
   searchName(e) {
@@ -837,13 +832,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit && this.purchaseinvoices.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit == null)
+      this.purchaseinvoices.totalAmt = parseInt(this.total);
+    if(this.journal.transLimit && this.total > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      if(this.journal.transControl == '2')
-      {
-        this.validate++ ;
-      }
+      this.validate++ ;
     }
   }
 
@@ -911,25 +905,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           );
         }
       });
-
-    if (this.formType == 'edit') {
-      this.api
-        .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
-          this.purchaseinvoices.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.purchaseInvoicesLines = res;
-            this.purchaseInvoicesLines.forEach((element) => {
-              if (element.vatid != null) {
-                this.countDetail++;
-              }
-              this.loadTotal();
-            });
-          }
-        });
-    }
 
     if (this.purchaseinvoices.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
@@ -1035,7 +1010,25 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             }
           });
       }
-      });
+      if (this.formType == 'edit') {
+        this.api
+          .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
+            this.purchaseinvoices.recID,
+          ])
+          .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.keymodel = Object.keys(res[0]);
+              this.purchaseInvoicesLines = res;
+              this.purchaseInvoicesLines.forEach((element) => {
+                if (element.vatid != null) {
+                  this.countDetail++;
+                }
+                this.loadTotal();
+              });
+            }
+          });
+      }
+    });
   }
 
   getTaxRate(vatCodeID: any){
@@ -1088,7 +1081,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         .subscribe(() => {});
     }
   }
-  
+
   onSaveMaster()
   {
     this.checkValidate();
@@ -1194,7 +1187,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   this.updateVAT();
                   this.dialog.close({
                     update: true,
-                    data: res.update,
+                    data: res.update.data,
                   });
                   this.dt.detectChanges();
                 }
@@ -1269,7 +1262,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
     }
   }
-
   
   //#endregion
 }

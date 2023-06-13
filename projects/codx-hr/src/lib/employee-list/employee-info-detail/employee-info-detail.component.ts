@@ -782,7 +782,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.eBasicSalaryFuncID).then((res) => {
       this.eBasicSalaryFormmodel = res;
-      
+
     });
     this.hrService.getFormModel(this.eTrainCourseFuncID).then((res) => {
       this.eTrainCourseFormModel = res;
@@ -1042,7 +1042,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       'EmployeesBusiness',
       'GetEmpFullInfoAsync',
       empID
-    ) 
+    )
   }
 
   initEmpSalary() {
@@ -1718,7 +1718,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   add(functionID) {
     switch (functionID) {
-      case this.eFamiliesFuncID: 
+      case this.eFamiliesFuncID:
         this.handleEFamilyInfo(this.addHeaderText, 'add', null);
         break;
       case this.ePassportFuncID:
@@ -2567,6 +2567,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.lstBtnAdd = this.lstFuncHealth;
         this.initEmpHealth();
         break;
+      case this.quitJobInfoFuncID:
+        this.lstBtnAdd = null;
+        break;
     }
   }
 
@@ -2589,7 +2592,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (res?.event) {
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
         this.df.detectChanges();
-        this.view.dataService.clear();
       }
     });
   }
@@ -2994,11 +2996,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.df.detectChanges();
           }
         } else if (actionType == 'edit') {
+          debugger
           if (
-            res?.event.issuedDate > this.crrPassport.issuedDate ||
-            res?.event.issuedDate > this.crrPassport.issuedDate
+            res?.event.issuedDate >= this.crrPassport.issuedDate
           ) {
-            //do nothing, old is current value is still is current
+            this.crrPassport = res.event;
           } else {
             this.hrService
               .GetEmpCurrentPassport(this.employeeID)
@@ -3072,10 +3074,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         } else if (actionType == 'edit') {
           if (
-            res?.event.issuedDate > this.crrWorkpermit.issuedDate ||
-            res?.event.issuedDate > this.crrWorkpermit.issuedDate
+            res?.event.issuedDate >= this.crrWorkpermit.issuedDate
           ) {
-            //do nothing, old is current value is still is current
+            this.crrWorkpermit = res.event
           } else {
             this.hrService
               .GetEmpCurrentWorkpermit(this.employeeID)
@@ -3115,6 +3116,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         // (this.passportGridview.dataService as CRUDService).clear();
       } else {
         if (actionType == 'add' || actionType == 'copy') {
+          debugger
           if (
             !this.crrVisa ||
             res?.event.issuedDate > this.crrVisa.issuedDate
@@ -3124,10 +3126,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         } else if (actionType == 'edit') {
           if (
-            res?.event.issuedDate > this.crrVisa.issuedDate ||
-            res?.event.issuedDate > this.crrVisa.issuedDate
+            res?.event.issuedDate >= this.crrVisa.issuedDate 
           ) {
-            //do nothing, old is current value is still is current
+            this.crrVisa = res.event;
           } else {
             this.hrService
               .GetEmpCurrentPassport(this.employeeID)
@@ -3286,7 +3287,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           actionHeaderText + ' ' + this.getFormHeader(this.eCertificateFuncID),
         employeeId: this.employeeID,
         funcID: this.eCertificateFuncID,
-        dataInput: data, 
+        dataInput: data,
       },
       option
     );
@@ -3567,7 +3568,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.df.detectChanges();
     });
   }
-  
+
   addSkill() {
     this.hrService.addSkill(null).subscribe();
   }
@@ -3723,7 +3724,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         requestNewEmpPage.page = this.request.page + 1;
         requestNewEmpPage.predicate = this.request.predicate;
         requestNewEmpPage.dataValue = this.request.dataValue;
-        requestNewEmpPage.selector = "EmployeeID;";
+        // requestNewEmpPage.selector = "EmployeeID;";
         requestNewEmpPage.pageSize = this.request.pageSize;
         this.hrService.loadData('HR', requestNewEmpPage).subscribe((res) =>{
           if(res && res[0].length > 0){
@@ -3748,7 +3749,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     if(isNextPage == true){
       debugger
       let newPageNum = Number(this.pageNum) + 1
-      this.pageNum = newPageNum; 
+      this.pageNum = newPageNum;
     }
     if (this.crrIndex > -1) {
       let urlView = '/hr/employeedetail/HRT03b';
@@ -4692,7 +4693,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         });
     }
   }
-  
+
   valueChangeFilterTrainCourse(evt) {
     this.Filter_By_ETrainCourse_IDArr = evt.data;
     this.UpdateTrainCoursePredicate();

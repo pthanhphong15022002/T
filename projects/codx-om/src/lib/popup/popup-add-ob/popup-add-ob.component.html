@@ -25,16 +25,24 @@
         <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="okrName">
         </codx-input>
       </div>
-      <!-- <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">
-        </codx-input>
-      </div> -->
+      <div class="row">
+        <div class=" col-6 form-group">
+          <codx-label default="Nhóm mục tiêu" name="lblOKRGroupID"></codx-label>
+          <codx-input field="okrGroupID" type="combobox" [crrValue]="ob?.okrGroupID" refValue="OKRGroups" placeholder="Nhóm mục tiêu" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <div class=" col-6 form-group">
+          <codx-label default="Phân loại BSC" name="lblBSCType"></codx-label>
+          <codx-input field="bscType" type="valuelist" refValue="OM023" placeholder="Phân loại BSC" [disabled]="true" [crrValue]="ob?.bscType">
+          </codx-input>
+        </div>
+      </div>
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
         <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
         </codx-input>
       </div>
+      
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
         <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">

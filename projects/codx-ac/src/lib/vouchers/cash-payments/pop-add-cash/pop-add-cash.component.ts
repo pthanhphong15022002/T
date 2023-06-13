@@ -61,7 +61,6 @@ import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
 import { E } from '@angular/cdk/keycodes';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
@@ -78,14 +77,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
-  @ViewChild('itemRef') itemRef: ElementRef;
-  @ViewChild('btnRef') btnRef: ElementRef;
-  @ViewChild('docRef') docRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('editTemplate', { static: true }) editTemplate: TemplateRef<any>;
   @ViewChild('grid') public grid: GridComponent;
-  @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
-  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
+  @ViewChild('cbxReason') cbxReason: CodxInputComponent;
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -100,6 +95,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   settledInvoicesDelete: Array<any> = [];
   hideFields: Array<any> = [];
   requireFields = [];
+  lockFields = [];
   pageCount: any;
   tab: number = 0;
   total: any = 0;
@@ -143,7 +139,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   oldSubType: any = '';
   authStore: AuthStore;
   typeSet: any;
-  loading:any = false;
+  loading: any = false;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -151,7 +147,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
-    private ngxService: NgxUiLoaderService,
     private auth: AuthService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -197,7 +192,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
-    this.ngxService.startLoader('loader');
     this.loadInit();
   }
 
@@ -259,19 +253,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 if (res) {
                   this.cashpayment.subType = e.data;
+                  this.cashpayment.memo = '';
                   this.cashpaymentline = [];
                   this.settledInvoices = [];
+                  this.form.formGroup.patchValue(this.cashpayment);
                   this.loadSubType(i, this.tabObj);
                 }
               });
           } else {
-            this.cashpayment.subType = this.oldSubType;
-            this.form.formGroup.patchValue(this.cashpayment);
+            this.form.formGroup.patchValue({ ...this.cashpayment });
           }
         });
       } else {
         this.cashpayment.subType = e.data;
+        this.cashpayment.memo = '';
         this.oldSubType = e.data;
+        this.form.formGroup.patchValue(this.cashpayment);
         this.loadSubType(i, this.tabObj);
       }
       return;
@@ -294,6 +291,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'journalno',
       'objectid',
       'payee',
+      'reasonid',
     ];
     if (e.data) {
       switch (field) {
@@ -319,53 +317,53 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               });
           }
           break;
-        case 'reasonid':
-          let reason = e.component.itemsSelected[0];
-          if (
-            reason['SubType'] != this.oldSubType &&
-            ((this.gridCash && this.gridCash.dataSource.length > 0) ||
-              (this.gridSet && this.gridSet.dataSource.length > 0))
-          ) {
-            this.notification.alertCode('AC0014', null).subscribe((res) => {
-              if (res.event.status === 'Y') {
-                this.api
-                  .exec<any>('AC', 'CommonBusiness', 'DeleteAllAsync', [
-                    this.cashpayment,
-                  ])
-                  .subscribe((res) => {
-                    if (res) {
-                      this.cashpaymentline = [];
-                      this.settledInvoices = [];
-                      this.cashpayment = res;
-                      this.cashpayment.subType = reason['SubType'];
-                      this.form.formGroup.patchValue(res);
-                      this.changeType(null, this.tabObj);
-                    }
-                  });
-              } else {
-                this.cashpayment.subType = this.oldSubType;
-                // e.component.itemsSelected[0]['SubType'] =  this.oldSubType;
-                this.cashpayment.reasonID = this.oldReasonID;
-                this.form.formGroup.patchValue(this.cashpayment);
-              }
-            });
-          } else {
-            this.cashpayment.subType = reason['SubType'];
-            this.changeType(null, this.tabObj);
-            this.api
-              .exec<any>('AC', this.className, 'ValueChangedAsync', [
-                e.field,
-                this.cashpayment,
-              ])
-              .subscribe((res) => {
-                if (res) {
-                  this.cashpayment = res;
-                  this.oldSubType = this.cashpayment.subType;
-                  this.form.formGroup.patchValue(res);
-                }
-              });
-          }
-          break;
+        // case 'reasonid':
+        //   let reason = e.component.itemsSelected[0];
+        //   if (
+        //     reason['SubType'] != this.oldSubType &&
+        //     ((this.gridCash && this.gridCash.dataSource.length > 0) ||
+        //       (this.gridSet && this.gridSet.dataSource.length > 0))
+        //   ) {
+        //     this.notification.alertCode('AC0014', null).subscribe((res) => {
+        //       if (res.event.status === 'Y') {
+        //         this.api
+        //           .exec<any>('AC', 'CommonBusiness', 'DeleteAllAsync', [
+        //             this.cashpayment,
+        //           ])
+        //           .subscribe((res) => {
+        //             if (res) {
+        //               this.cashpaymentline = [];
+        //               this.settledInvoices = [];
+        //               this.cashpayment = res;
+        //               this.cashpayment.subType = reason['SubType'];
+        //               this.form.formGroup.patchValue(res);
+        //               this.changeType(null, this.tabObj);
+        //             }
+        //           });
+        //       } else {
+        //         this.cashpayment.subType = this.oldSubType;
+        //         // e.component.itemsSelected[0]['SubType'] =  this.oldSubType;
+        //         this.cashpayment.reasonID = this.oldReasonID;
+        //         this.form.formGroup.patchValue(this.cashpayment);
+        //       }
+        //     });
+        //   } else {
+        //     this.cashpayment.subType = reason['SubType'];
+        //     this.changeType(null, this.tabObj);
+        //     this.api
+        //       .exec<any>('AC', this.className, 'ValueChangedAsync', [
+        //         e.field,
+        //         this.cashpayment,
+        //       ])
+        //       .subscribe((res) => {
+        //         if (res) {
+        //           this.cashpayment = res;
+        //           this.oldSubType = this.cashpayment.subType;
+        //           this.form.formGroup.patchValue(res);
+        //         }
+        //       });
+        //   }
+        //   break;
         case 'objectid':
           let data = e.component.itemsSelected[0];
           this.cashpayment.objectType = data['ObjectType'];
@@ -394,8 +392,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   valueFocusOut(e: any) {
     this.cashpayment[e.ControlName] = e.crrValue;
   }
-  editEnded(e: any) {
-    this.cashpayment[e.field] = e.component.value;
+  changeRef(e: any) {
+    this.cashpayment[e.field] = e.data;
+    let length;
+    var wDef = document.getElementById('ac-column-def');
+    let element = document.querySelectorAll(
+      '.listcash-content .e-float-input input'
+    );
+    if (e && e.data) {
+      var numberOfChar = e.data.length;
+      if (numberOfChar > 19) {
+        length = numberOfChar + 'ch';
+        (element[0] as HTMLElement).style.width = length;
+        if (((element[0] as HTMLElement).offsetWidth) > wDef.offsetWidth) {
+          (element[0] as HTMLElement).style.maxWidth = ((wDef.offsetWidth) - 10) + 'px';
+        }      
+      }
+    } else {
+      (element[0] as HTMLElement).style.width = '100%';
+    } 
   }
 
   gridCreated() {
@@ -420,40 +435,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
       }
     }
-    if (this.journal.postingMode == '1') {
-      this.hideFields.push('CR2');
-      this.hideFields.push('CR');
-      if (this.cashpayment.currencyID == this.baseCurr) {
-        this.hideFields.push('DR2');
-        this.hideFields.push('TaxAmt2');
-      } else {
-        var arr = ['DR2', 'TaxAmt2'];
-        arr.forEach((fieldName) => {
-          let i = this.gridCash.columnsGrid.findIndex(
-            (x) => x.fieldName == fieldName
-          );
-          if (i > -1) {
-            this.gridCash.columnsGrid[i].isVisible = true;
-            this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
-          }
-        });
-      }
-    }
-
+    this.loadAccountControl();
     this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
-
-    setTimeout(() => {
-      this.ngxService.stopLoader('loader');
-      this.ngxService.destroyLoaderData('loader');
-    }, 500);
   }
-  gridCreatedSet() {
-    setTimeout(() => {
-      this.ngxService.stopLoader('loader');
-      this.ngxService.destroyLoaderData('loader');
-    }, 500);
-  }
+  gridCreatedSet() {}
 
   lineChanged(e: any) {
     const field = [
@@ -482,7 +468,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             switch (e.field.toLowerCase()) {
               case 'accountid':
                 this.requireFields = res.requireFields;
+                this.lockFields = res.lockField;
                 this.requireGrid();
+                this.lockGrid();
                 break;
             }
             this.setDataGrid(res.line.updateColumns, res.line);
@@ -800,8 +788,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  actionEvent(e: any) {}
-
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       this.journalNo,
@@ -994,7 +980,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     data: res.update,
                   });
                   this.dt.detectChanges();
-                }else {
+                } else {
                   this.loading = false;
                   this.cashpayment.unbounds.isAddNew = true;
                 }
@@ -1034,7 +1020,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 this.hasSaved = false;
                 this.loading = false;
               });
-          }else{
+          } else {
             this.cashpayment.unbounds.isAddNew = true;
             this.loading = false;
           }
@@ -1064,7 +1050,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     this.cashpayment = res;
                     this.form.formGroup.patchValue(this.cashpayment);
                   });
-              }else{
+              } else {
                 this.cashpayment.unbounds.isAddNew = true;
                 this.loading = false;
               }
@@ -1130,14 +1116,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         case '1':
           idx = this.gridCash.dataSource.length;
           this.dataLine.rowNo = idx + 1;
-          if (
-            this.dataLine.unbounds &&
-            this.dataLine.unbounds.requireFields.length
-          ) {
-            this.requireFields = this.dataLine.unbounds
-              .requireFields as Array<string>;
-            this.requireGrid();
-          }
+          this.requireFields = this.dataLine.unbounds
+            .requireFields as Array<string>;
+          this.lockFields = this.dataLine.unbounds.lockFields as Array<string>;
+          this.requireGrid();
+          this.lockGrid();
           this.gridCash.endEdit();
           this.gridCash.addRow(this.dataLine, idx);
           break;
@@ -1275,6 +1258,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
+  lockGrid() {
+    const field = ['DIM1', 'DIM2', 'DIM3', 'ProjectID'];
+    field.forEach((element) => {
+      let i = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == element
+      );
+      this.gridCash.columnsGrid[i].allowEdit = true;
+    });
+    this.gridCash.disableField(this.lockFields);
+  }
+
   loadTotal() {
     if (this.cashpaymentline.length > 0) {
       this.cashpaymentline.forEach((element) => {
@@ -1393,25 +1387,70 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadFormSubType(subtype) {
-    var arr = ['1', '3', '5'];
-    arr.forEach((eName) => {
-      if (eName == subtype) {
-        var element = document.querySelectorAll('.ac-type-' + eName);
-        if (element) {
-          for (let index = 0; index < element.length; index++) {
-            (element[index] as HTMLElement).style.display = 'inline';
-          }
-        }
+  loadAccountControl() {
+    if (this.journal.postingMode == '1') {
+      this.hideFields.push('CR2');
+      this.hideFields.push('CR');
+      if (this.cashpayment.currencyID == this.baseCurr) {
+        this.hideFields.push('DR2');
+        this.hideFields.push('TaxAmt2');
       } else {
-        var element = document.querySelectorAll('.ac-type-' + eName);
-        if (element) {
-          for (let index = 0; index < element.length; index++) {
-            (element[index] as HTMLElement).style.display = 'none';
+        var arr = ['DR2', 'TaxAmt2'];
+        arr.forEach((fieldName) => {
+          let i = this.gridCash.columnsGrid.findIndex(
+            (x) => x.fieldName == fieldName
+          );
+          if (i > -1) {
+            this.gridCash.columnsGrid[i].isVisible = true;
+            this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
           }
-        }
+        });
       }
-    });
+    } else {
+      let i = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'AccountID'
+      );
+      if (i > -1) {
+        this.gridCash.columnsGrid[i].headerText = 'TK';
+      }
+      this.hideFields.push('OffsetAcctID');
+      if (this.cashpayment.currencyID == this.baseCurr) {
+        this.hideFields.push('DR2');
+        this.hideFields.push('TaxAmt2');
+        this.hideFields.push('CR2');
+      } else {
+        var arr = ['DR2', 'TaxAmt2', 'CR2'];
+        arr.forEach((fieldName) => {
+          let i = this.gridCash.columnsGrid.findIndex(
+            (x) => x.fieldName == fieldName
+          );
+          if (i > -1) {
+            this.gridCash.columnsGrid[i].isVisible = true;
+            this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
+          }
+        });
+      }
+    }
   }
+  // loadFormSubType(subtype) {
+  //   var arr = ['1', '3', '5'];
+  //   arr.forEach((eName) => {
+  //     if (eName == subtype) {
+  //       var element = document.querySelectorAll('.ac-type-' + eName);
+  //       if (element) {
+  //         for (let index = 0; index < element.length; index++) {
+  //           (element[index] as HTMLElement).style.display = 'inline';
+  //         }
+  //       }
+  //     } else {
+  //       var element = document.querySelectorAll('.ac-type-' + eName);
+  //       if (element) {
+  //         for (let index = 0; index < element.length; index++) {
+  //           (element[index] as HTMLElement).style.display = 'none';
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
   //#endregion
 }

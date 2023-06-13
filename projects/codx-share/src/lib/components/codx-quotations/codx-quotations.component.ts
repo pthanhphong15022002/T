@@ -43,7 +43,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   @Input() disableCusID = false;
   @Input() disableContactsID = false;
   @Input() typeModel = 'custormmers' || 'deals';
-  @Input() showButton = false
+  @Input() showButton = false;
 
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -51,6 +51,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   className = 'QuotationsBusiness';
   methodLoadData = 'GetListQuotationsAsync';
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
+  @ViewChild('tempHeader') tempHeader?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   //test

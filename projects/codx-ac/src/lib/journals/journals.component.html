@@ -50,7 +50,6 @@
     [formModel]="view.formModel"
     [typeMF]="'hover'"
     [titleTmp]="titleTmp"
-    [desc]="data?.description"
     (clickMF)="clickMF($event, data)"
     (click)="dbClick(data)"
   >
@@ -58,7 +57,18 @@
 </ng-template>
 
 <ng-template #titleTmp let-data>
-  <span class="fs-6 fw-bold text-dark w-100 py-3">{{ data?.journalDesc }}</span>
+  <div class="d-flex py-3 gap-2">
+    <span [class]="data?.journalType | vll : 'AC064' : 'icon' | async"></span>
+    <div>
+      <div class="fs-6 fw-bold text-dark w-100">
+        {{
+          vllJournalTypes064
+            | nameById : "value" : "default" : data?.journalType
+        }}
+      </div>
+      <div class="fst-italic">{{ data?.journalDesc }}</div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #header1Template>
@@ -209,7 +219,8 @@
 
   <div class="d-flex flex-wrap gap-2">
     <div class="d-flex align-items-center">
-      <codx-label class="label-colon"
+      <codx-label
+        class="label-colon"
         fiedName="projectControl"
         [formModel]="view.formModel"
       ></codx-label>
@@ -224,22 +235,24 @@
       <span class="ms-2">•</span>
     </div>
     <div class="d-flex align-items-center">
-       
-      <codx-label class="label-colon"
+      <codx-label
+        class="label-colon"
         fiedName="loanControl"
         [formModel]="view.formModel"
       ></codx-label>
       <span
         class="text-primary"
         [innerHTML]="
-          data.assetControl | formatvalue : view.formModel : 'loanControl' | async
+          data.assetControl
+            | formatvalue : view.formModel : 'loanControl'
+            | async
         "
       ></span>
       <span class="ms-2">•</span>
     </div>
     <div class="d-flex align-items-center">
-      
-      <codx-label class="label-colon"
+      <codx-label
+        class="label-colon"
         fiedName="assetControl"
         [formModel]="view.formModel"
       ></codx-label>

@@ -118,6 +118,10 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.formModelDeals = await this.cmSv.getFormModel('CM0201');
+    this.gridViewSetupDeal = await firstValueFrom(
+      this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
+    );
     var options = new DataRequest();
     options.entityName = 'DP_Processes';
     options.predicates = 'ApplyFor=@0 && !Deleted';
@@ -132,10 +136,6 @@ export class PopupConvertLeadComponent implements OnInit {
     )
       this.getProcessIDBybusinessLineID(this.lead.businessLineID);
 
-    this.formModelDeals = await this.cmSv.getFormModel('CM0201');
-    this.gridViewSetupDeal = await firstValueFrom(
-      this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
-    );
     this.setData();
 
     this.changeDetectorRef.detectChanges();
@@ -251,8 +251,7 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   setTitle(e: any) {
-    this.title =
-      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
+    this.title = this.titleAction;
     //this.changDetec.detectChanges();
   }
 
@@ -346,7 +345,11 @@ export class PopupConvertLeadComponent implements OnInit {
               );
             } else {
               await firstValueFrom(
-                this.cmSv.copyFileAvata(this.recIDAvt, this.customer.recID)
+                this.cmSv.copyFileAvata(
+                  this.recIDAvt,
+                  this.customer.recID,
+                  this.entityName
+                )
               );
             }
             this.dialog.close(res);

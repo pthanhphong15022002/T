@@ -46,7 +46,7 @@ import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/vie
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
-import { ContractsDetailComponent} from './contracts/contracts-detail/contracts-detail.component';
+import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
@@ -72,6 +72,9 @@ import { CasesDetailComponent } from './cases/case-detail/cases-detail.component
 import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
 import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
+import { StepTaskComponent } from './deals/step-task/step-task.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 
 const routes: Routes = [
   {
@@ -81,7 +84,7 @@ const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
-        data: {noReuse: true}
+        data: { noReuse: true },
       },
       {
         path: 'deals/:funcID',
@@ -117,6 +120,17 @@ const routes: Routes = [
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'setting/settingprocess/:funcID',
+        component: SettingProcessCmComponent,
+
       },
     ],
   },
@@ -181,6 +195,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupRemoveAddContactComponent,
     ViewPaymentComponent,
     GanttChartComponent,
+    StepTaskComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

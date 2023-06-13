@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -102,6 +103,8 @@ export class LeadsComponent
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';
+  funcIDCrr:any;
+  gridViewSetup: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -114,6 +117,8 @@ export class LeadsComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+    this.executeApiCalls();
+
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
@@ -124,13 +129,6 @@ export class LeadsComponent
     this.request.className = 'LeadsBusiness';
     this.request.method = 'GetListLeadsAsync';
     this.request.idField = 'recID';
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
 
     this.button = {
       id: this.btnAdd,
@@ -145,19 +143,6 @@ export class LeadsComponent
           panelRightRef: this.templateDetail,
         },
       },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
-        },
-      },
     ];
 
     this.router.params.subscribe((param: any) => {
@@ -166,6 +151,34 @@ export class LeadsComponent
       }
     });
   }
+
+  async executeApiCalls() {
+    try {
+      await this.getFuncID(this.funcID);
+
+    } catch (error) {}
+  }
+
+  async getGridViewSetup(formName,gridViewName){
+     this.cache
+    .gridViewSetup(formName, gridViewName)
+    .subscribe((res) => {
+      if(res) {
+        this.gridViewSetup = res;
+      }
+    });
+  }
+  async getFuncID(funcID){
+    this.cache.functionList(funcID).subscribe((f) => {
+      if(f){
+        this.funcIDCrr = f;
+        this.getGridViewSetup(this.funcIDCrr.formName,this.funcIDCrr.gridViewName);
+      }
+    });
+  }
+
+
+
 
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
@@ -203,36 +216,36 @@ export class LeadsComponent
               more.disabled = true;
           }
         }
-      } else {
-        if (data.status == '1') {
-          for (let more of $event) {
-            switch (more.functionID) {
-              case 'SYS03':
-              case 'SYS04':
-              case 'SYS02':
-              case 'CM0201_2':
-                more.isblur = false;
-                break;
-              default:
-                more.isblur = true;
-            }
-          }
-        }
       }
+
+      // else {
+      //     for (let more of $event) {
+      //       switch (more.functionID) {
+      //         case 'SYS03':
+      //         case 'SYS04':
+      //         case 'SYS02':
+      //         case 'CM0201_2':
+      //           more.isblur = false;
+      //           break;
+      //         default:
+      //           more.isblur = true;
+      //       }
+      //     }
+      // }
     }
   }
-  checkMoreReason(data, isUseReason) {
-    if (data.status != '2' || isUseReason) {
-      return true;
-    }
-    if (data.closed) {
-      return true;
-    }
-    if (!data.permissionMoveInstances) {
-      return true;
-    }
-    return false;
-  }
+  // checkMoreReason(data, isUseReason) {
+  //   if (data.status != '2' || isUseReason) {
+  //     return true;
+  //   }
+  //   if (data.closed) {
+  //     return true;
+  //   }
+  //   if (!data.permissionMoveInstances) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   clickMF(e, data) {
     this.dataSelected = data;
@@ -247,9 +260,6 @@ export class LeadsComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'CM0201_2':
-        this.handelStartDay(data);
-        break;
       case 'CM0205_1':
         this.convertLead(data);
         break;
@@ -262,33 +272,6 @@ export class LeadsComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  handelStartDay(data) {
-    this.notificationsService
-      .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.startDeal(data.recID);
-        }
-      });
-  }
-
-  startDeal(recId) {
-    var data = [recId];
-    this.codxCmService.startDeal(data).subscribe((res) => {
-      if (res) {
-        debugger;
-        // data.status = '2';
-        // data.startDate = res?.length > 0 ? res[0].startDate : null;
-        //   this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        //   this.listInstanceStep = res;
-        this.dataSelected = res[0];
-        this.notificationsService.notifyCode('SYS007');
-        this.view.dataService.update(this.dataSelected).subscribe();
-        if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      }
-      this.detectorRef.detectChanges();
-    });
-  }
 
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {

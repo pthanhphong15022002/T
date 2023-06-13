@@ -66,7 +66,7 @@ export interface IJournal {
   transLimit: number | null;
   transControl: string;
   transConfirmUser: string;
-  exchangeRatesType: string;
+  exchangeType: string;
   multiCurrency: any;
   vatType: string;
   dataValue: string;

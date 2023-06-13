@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LayoutModel } from '@syncfusion/ej2-angular-diagrams';
 import {
   ApiHttpService,
   CacheService,
@@ -424,10 +425,11 @@ export class CodxCmService {
       data
     );
   }
-  copyFileAvata(idOld, idNew) {
+  copyFileAvata(idOld, idNew, entityName = null) {
     return this.api.exec<any>('CM', 'ContactsBusiness', 'CopyAvatarByIdAsync', [
       idOld,
       idNew,
+      entityName
     ]);
   }
 
@@ -692,6 +694,33 @@ export class CodxCmService {
       'CM',
       'BusinessLinesBusiness',
       'GetOneBusinessLineByProcessIDAsync',
+      data
+    );
+  }
+
+  isCheckDealInUse(data){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'isCheckDealInUseAsync',
+      data
+    );
+
+  }
+
+  autoMoveStageInInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AutoMoveStageAsync',
+      data
+    );
+  }
+  autoMoveStageInDeal(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'AutoMoveStageDealAsync',
       data
     );
   }

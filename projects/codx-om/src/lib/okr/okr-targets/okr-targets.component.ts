@@ -1,3 +1,4 @@
+import { group } from 'console';
 declare var window: any;
 import { CodxOmService } from './../../codx-om.service';
 import { OMCONST } from './../../codx-om.constant';
@@ -50,7 +51,6 @@ export class OkrTargetsComponent implements OnInit {
   @ViewChild('treeView') treeView: any;
   @ViewChild('showTask') showTask: any;
   @ViewChild('showCommnent') showCommnent: any;
-  @ViewChild('checkInHistory') checkInHistory: any;
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
@@ -582,19 +582,25 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
 
   collapeKR(collapsed: boolean) {
-    this.dataOKR.forEach((ob) => {
-      ob.isCollapse = collapsed;
-    });
-
-    this.detec.detectChanges();
-
-    this.dataOKR.forEach((ob) => {
-      if (ob.items != null && ob.items.length > 0) {
-        ob.items.forEach((kr) => {
-          kr.isCollapse = collapsed;
+    this.dataOKR.forEach((group) => {
+      if(group?.listOKR?.length>0){
+        group?.listOKR.forEach((ob) => {          
+          ob.isCollapse = collapsed;
         });
       }
     });
+    this.detec.detectChanges();
+    this.dataOKR.forEach((group) => {
+      if(group?.listOKR?.length>0){
+        group?.listOKR.forEach((ob) => {          
+          if (ob.items != null && ob.items.length > 0) {
+            ob.items.forEach((kr) => {
+              kr.isCollapse = collapsed;
+            });
+          }
+        });
+      }
+    });    
     this.isCollapsed = collapsed;
     this.detec.detectChanges();
   }
@@ -693,45 +699,116 @@ export class OkrTargetsComponent implements OnInit {
   renderOB(ob: any, isAdd: boolean) {
     if (ob != null) {
       if (isAdd) {
-        this.dataOKR.push(ob);
-      } else {
-        for (let oldOB of this.dataOKR) {
-          if (oldOB.recID == ob.recID) {
-            this.editRender(oldOB, ob);
+        for(let group of this.dataOKR){
+          if(ob?.okrGroupID==group?.okrGroupID){
+            if(group.listOKR==null){
+              group.listOKR = [];
+            }
+            group.listOKR.push(ob);
           }
         }
+      } else {
+        for(let group of this.dataOKR){
+          if(ob?.okrGroupID==group?.okrGroupID){            
+            for (let oldOB of group.listOKR) {
+              if (oldOB?.recID == ob?.recID) {
+                this.editRender(oldOB, ob);
+              }
+            }
+          }
+        }
+        
       }
     }
   }
   renderKR(kr: any, isAdd: boolean) {
     if (kr != null) {
       if (isAdd) {
-        for (let ob of this.dataOKR) {
-          if (ob.recID == kr.parentID) {
-            if (ob.items == null) {
-              ob.items = [];
-            }
-            kr.rangeDateText = this.getRangeDate(kr?.rangeDate);
-            ob.items.push(kr);
-            ob.hasChildren = true;
-            return;
-          }
-        }
-      } else {
-        for (let ob of this.dataOKR) {
-          if (ob.recID == kr.parentID) {
-            if (ob.items == null) {
-              ob.items = [];
-            }
-            for (let i = 0; i < ob.items.length; i++) {
-              if (ob.items[i].recID == kr.recID) {
-                this.editRender(ob.items[i], kr);
+        for(let group of this.dataOKR){
+          if(kr?.okrGroupID==group?.okrGroupID){            
+            for (let ob of group.listOKR) {
+              if (ob?.recID == kr?.parentID) {
+                if (ob.items == null) {
+                  ob.items = [];
+                }
+                kr.rangeDateText = this.getRangeDate(kr?.rangeDate);
+                ob.items.push(kr);
+                ob.hasChildren = true;
                 return;
               }
             }
-            // đổi mục tiêu cho kr
           }
         }
+        
+      } else {        
+        for(let group of this.dataOKR){
+          if(kr?.okrGroupID==group?.okrGroupID){            
+            for (let ob of group.listOKR) {
+              if (ob.recID == kr.parentID) {
+                if (ob.items == null) {
+                  ob.items = [];
+                }
+                for (let oldKR of ob.items) {
+                  if (oldKR.recID == kr.recID) {
+                    this.editRender(oldKR, kr);
+                    return;
+                  }
+                }
+                // đổi mục tiêu cho kr
+              }
+            }
+          }
+        }        
+      }
+    }
+  }
+  renderSKR(skr: any, isAdd: boolean) {
+    if (skr != null) {
+      if (isAdd) {
+
+        for(let group of this.dataOKR){
+          if(skr?.okrGroupID==group?.okrGroupID){            
+            for (let ob of group.listOKR) {
+              if (ob.items != null) {
+                for (let kr of ob.items) {
+                  if (kr.recID == skr.parentID) {
+                    if (kr.items == null) {
+                      kr.items = [];
+                    }
+                    skr.rangeDateText = this.getRangeDate(skr?.rangeDate);
+                    kr.items.push(skr);
+                    kr.hasChildren = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        
+      } else {
+
+        for(let group of this.dataOKR){
+          if(skr?.okrGroupID==group?.okrGroupID){            
+            for (let ob of group.listOKR) {
+              if (ob.items != null) {
+                for (let kr of ob.items) {
+                  if (kr.recID == skr.parentID) {
+                    if (kr.items == null) {
+                      kr.items = [];
+                    }
+                    for (let oldSKR of kr.items) {
+                      if (oldSKR.recID == skr.recID) {
+                        this.editRender(oldSKR, skr);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        
       }
     }
   }
@@ -751,69 +828,51 @@ export class OkrTargetsComponent implements OnInit {
       oldOKR.okrTasks = newOKR?.okrTasks;
     }
   }
-  renderSKR(skr: any, isAdd: boolean) {
-    if (skr != null) {
-      if (isAdd) {
-        for (let ob of this.dataOKR) {
-          if (ob.items != null) {
-            for (let kr of ob.items) {
-              if (kr.recID == skr.parentID) {
-                if (kr.items == null) {
-                  kr.items = [];
-                }
-                skr.rangeDateText = this.getRangeDate(skr?.rangeDate);
-                kr.items.push(skr);
-                kr.hasChildren = true;
-              }
-            }
-          }
-        }
-      } else {
-        for (let ob of this.dataOKR) {
-          if (ob.items != null) {
-            for (let kr of ob.items) {
-              if (kr.recID == skr.parentID) {
-                if (kr.items == null) {
-                  kr.items = [];
-                }
-                for (let oldSKR of kr.items) {
-                  if (oldSKR.recID == skr.recID) {
-                    this.editRender(oldSKR, skr);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  
   removeOB(ob: any) {
     if (ob != null) {
-      this.dataOKR = this.dataOKR.filter((res) => res.recID != ob.recID);
+      for(let group of this.dataOKR){
+        if(ob?.okrGroupID==group?.okrGroupID){    
+          group.listOKR=group?.listOKR.filter((res) => res.recID != ob.recID);
+          this.detec.detectChanges();
+        }
+      }
     }
   }
   removeKR(kr: any) {
     if (kr != null) {
-      for (let ob of this.dataOKR) {
-        if (ob?.recID == kr?.parentID) {
-          ob.items = ob?.items.filter((res) => res.recID != kr.recID);
-        }
-      }
-    }
-  }
-  removeSKR(skr: any) {
-    if (skr != null) {
-      for (let ob of this.dataOKR) {
-        for (let kr of ob?.items) {
-          for (let i = 0; i < kr?.items.length; i++) {
-            if (skr?.recID == kr.items[i].recID) {
-              kr.items = kr.items.filter((res) => res.recID != skr.recID);
-              return;
+      for(let group of this.dataOKR){
+        if(kr?.okrGroupID==group?.okrGroupID){    
+          for (let ob of group?.listOKR) {
+            if (ob?.recID == kr?.parentID) {    
+              ob.items = ob?.items?.filter((res) => res.recID != kr.recID);    
+              this.detec.detectChanges();
             }
           }
         }
       }
+      
+    }
+  }
+  removeSKR(skr: any) {
+    if (skr != null) {
+
+      for(let group of this.dataOKR){
+        if(skr?.okrGroupID==group?.okrGroupID){   
+          for (let ob of group?.listOKR) {
+            for (let kr of ob?.items) {
+              for (let i = 0; i < kr?.items?.length; i++) {
+                if (skr?.recID == kr?.items[i]?.recID) {
+                  kr.items = kr?.items.filter((res) => res.recID != skr.recID);
+                  return;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      
     }
   }
 
@@ -1249,6 +1308,11 @@ export class OkrTargetsComponent implements OnInit {
         null,
         [data,this.okrGrv,this.okrFM,this.groupModel]
       );
+      dialogShowHistoryCheckIn.closed.subscribe((res) => {
+        //if (res?.event) {
+          this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
+        //}
+      });
     }
   }
   showTasks(evt: any, data: any) {
@@ -1265,25 +1329,5 @@ export class OkrTargetsComponent implements OnInit {
       );
     }
   }
-  showHistoryCheckIn(evt: any, data: any) {
-    evt.stopPropagation();
-    evt.preventDefault();
-
-    if (data?.checkIns != null && data?.checkIns.length > 0 != null) {
-      this.selectOKR = data;
-      this.selectOKR.checkIns = Array.from(this.selectOKR.checkIns).reverse();
-      let dialogShowCheckInHistory = this.callfunc.openForm(
-        this.checkInHistory,
-        '',
-        1000,
-        600,
-        null
-      );
-      dialogShowCheckInHistory.closed.subscribe((res) => {
-        if (res?.event) {
-          this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
-        }
-      });
-    }
-  }
+  
 }
