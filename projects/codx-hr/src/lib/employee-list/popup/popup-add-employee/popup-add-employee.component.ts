@@ -324,7 +324,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   //
   changeAvatar(event: any) {
     this.codxModifiedOn = new Date();
-    //this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+    this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
   // getOrgNote() {
   //   if (this.data['orgUnitID']) {

@@ -49,6 +49,14 @@
         </div>
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let i = index">
+                <ng-container [ngSwitch]="">
+                    <ng-container *ngSwitchCase="'3'"></ng-container>
+                    <ng-container *ngSwitchCase="'5'"></ng-container>
+                    <ng-container *ngSwitchDefault>
+                        
+                    </ng-container>
+
+                </ng-container>
                 <ng-container *ngIf="item.messageType == '3';else tmpMessage">
                     <div class="message-system" [id]="item.recID">
                         {{item | mssgSYS:mssgType5 | async}}
@@ -60,8 +68,7 @@
                             <div class="message-send">
                                 <ng-container *ngIf="item.messageType != '5'">
                                     <div class="message-function">
-                                        <ng-container *ngIf="item.createdBy == user.userID">
-                                            <span ngbDropdown ngbDropdownToggle 
+                                        <span ngbDropdown ngbDropdownToggle 
                                                 class="icon-more_vert me-2 cursor-pointer text-gray-600">
                                                 <ul ngbDropdownMenu>
                                                     <li ngbDropdownItem *ngIf="item.messageType != '5'">
@@ -72,7 +79,6 @@
                                                     </li>
                                                 </ul>
                                             </span>
-                                        </ng-container>
                                         <ng-container *ngIf="item.refType != 'm'">
                                             <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
                                         </ng-container>
@@ -89,7 +95,7 @@
                                 <ng-container *ngIf="item.messageType != '2'">
                                     <div class="message-send-message">
                                         <ng-container *ngIf="item.messageType == '5';else messageContent">
-                                            <span>Tin nhắn đã bị xóa.</span>
+                                            <span>{{mssgDeleted}}</span>
                                         </ng-container>
                                         <ng-template #messageContent>
                                             <!-- message reply -->
@@ -172,7 +178,7 @@
                                 <ng-container *ngIf="item.messageType != '2' ">
                                     <div class="message-reciver-message">
                                         <ng-container *ngIf="item.messageType == '5';else tmpReciverContent">
-                                            <span>Tin nhắn đã bị xóa.</span>
+                                            <span>{{mssgDeleted}}</span>
                                         </ng-container>
                                         <ng-template #tmpReciverContent>
                                             <!-- message reply -->
