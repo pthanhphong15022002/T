@@ -61,7 +61,7 @@
 <ng-template #item2 let-data>
   <div class="tm-viewlist">
     <div class="d-flex flex-row align-items-top p-3 border-bottom">
-      <div class="w-100 min-w-300px ps-3">
+      <div class="w-100 min-w-300px ps-2">
         <codx-temp-full
           cardCss="card-template"
           (clickMF)="moreFunction($event, data)"
@@ -100,17 +100,18 @@
           </codx-imgs>
         </ng-container>
       </div>
+      <div class="w-100px min-w-100px">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="moreFunction($event, data)"
+          [isBookMark]="false"
+          [dataItem]="data"
+          type="hover"
+        >
+        </codx-mfunc>
+      </div>
     </div>
-    <div class="w-10px min-w-10px">
-      <codx-mfunc
-        [formModel]="view.formModel"
-        (clickMF)="moreFunction($event, data)"
-        [isBookMark]="false"
-        [dataItem]="data"
-        type="hover"
-      >
-      </codx-mfunc>
-    </div>
+   
   </div>
 </ng-template>
 
