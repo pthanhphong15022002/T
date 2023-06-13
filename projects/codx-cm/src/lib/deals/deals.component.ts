@@ -121,6 +121,7 @@ export class DealsComponent
   viewCrr: any;
   viewsDefault: any;
   gridViewSetup: any;
+  functionModule:any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -146,6 +147,7 @@ export class DealsComponent
     };
 
     this.cache.functionList(this.funcID).subscribe((f) => {
+      this.functionModule =  f.module;
         this.executeApiCallFunctionID(f.formName,f.gridViewName);
     });
     this.detectorRef.detectChanges();
@@ -1014,7 +1016,8 @@ export class DealsComponent
       formMD: formMD,
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
       processID: this.processID,
-      gridViewSetup: this.gridViewSetup
+      gridViewSetup: this.gridViewSetup,
+      functionModule: this.functionModule
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
