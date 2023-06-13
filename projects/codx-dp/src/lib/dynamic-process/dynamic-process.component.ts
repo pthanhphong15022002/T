@@ -143,7 +143,6 @@ export class DynamicProcessComponent
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private activedRouter: ActivatedRoute,
-    private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private layoutDP: LayoutComponent,
@@ -367,7 +366,7 @@ export class DynamicProcessComponent
               this.oldIdProccess,
               this.view.dataService.dataSelected.recID,
             ];
-            this.codxDpService.copyAvatarById(data).subscribe((res) => {
+            this.dpService.copyAvatarById(data).subscribe((res) => {
               this.openFormCopyProccess(obj, dialogModel);
             });
           });
@@ -1030,7 +1029,7 @@ export class DynamicProcessComponent
   }
   //setting trình kí
   settingSubmit(categoryID) {
-    this.codxDpService
+    this.dpService
       .getESCategoryByCategoryID(categoryID)
       .subscribe((item: any) => {
         if (item) {
@@ -1051,8 +1050,8 @@ export class DynamicProcessComponent
                     let option = new SidebarModel();
                     option.Width = '550px';
                     option.FormModel = formES;
-                    var dataService = new DataService(this.inject);
-                    dataService.dataSelected = item;
+                    // var dataService = new DataService(this.inject);
+                    // dataService.dataSelected = item;
                     let popupEditES = this.callfc.openSide(
                       PopupAddCategoryComponent,
                       {
@@ -1066,7 +1065,7 @@ export class DynamicProcessComponent
                     );
 
                     popupEditES.closed.subscribe((res) => {
-                      if (!res?.event) {
+                      if (res?.event) {
                       }
                     });
                   });
