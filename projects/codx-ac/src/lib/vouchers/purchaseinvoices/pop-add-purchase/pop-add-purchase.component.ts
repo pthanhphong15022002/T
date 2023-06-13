@@ -283,7 +283,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.purchaseinvoices,
+      });
+    } else {
+      this.dialog.close();
+    }
   }
 
   onDiscard(){
@@ -663,16 +670,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       totalvat = totalvat + element.vatAmt;
     });
     this.total = totalnet + totalvat;
+    if(this.journal && this.total <= this.journal.transLimit)
+      this.purchaseinvoices.totalAmt = this.total;
     this.purchaseinvoices.totalAmt = this.total;
     this.totalnet = totalnet.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
     this.totalvat = totalvat.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
-    this.total = this.total.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
@@ -822,12 +827,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit && this.purchaseinvoices.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit && this.total > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      if(this.journal.transControl == '2')
+      switch(this.journal.transControl)
       {
-        this.validate++ ;
+        case '1':
+          this.purchaseinvoices.totalAmt = this.total;
+          break;
+        case '2':
+          this.validate++ ;
       }
     }
   }
@@ -1160,7 +1169,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   this.updateVAT();
                   this.dialog.close({
                     update: true,
-                    data: res.update,
+                    data: res.update.data,
                   });
                   this.dt.detectChanges();
                 }

@@ -316,7 +316,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.inventoryJournal,
+      });
+    } else {
+      this.dialog.close();
+    }
   }
 
   //#endregion
@@ -452,7 +459,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               if (res && res.update.data != null) {
                 this.dialog.close({
                   update: true,
-                  data: res.update,
+                  data: res.update.data,
                 });
                 this.dt.detectChanges();
               }
@@ -543,8 +550,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.total = totals;
-    this.inventoryJournal.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT')
+    if(this.journal && totals <= this.journal.transLimit)
+      this.inventoryJournal.totalAmt = totals;
   }
 
   addRow(){
@@ -875,12 +882,16 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit && this.inventoryJournal.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit && parseInt(this.total) > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      if(this.journal.transControl == '2')
+      switch(this.journal.transControl)
       {
-        this.validate++ ;
+        case '1':
+          this.inventoryJournal.totalAmt = parseInt(this.total);
+          break;
+        case '2':
+          this.validate++ ;
       }
     }
   }
