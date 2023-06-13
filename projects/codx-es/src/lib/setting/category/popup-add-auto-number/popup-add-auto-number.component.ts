@@ -102,6 +102,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.description = data?.data?.description;
     this.isAdd=data?.data?.isAdd;
     this.disableAssignRule = data?.data?.disableAssignRule;
+    if(data?.data?.autoAssignRule) this.autoAssignRule = data?.data?.autoAssignRule;
     // Thiết lập số tự động mặc định của function
     this.functionID = data?.data?.functionID;
     if(this.functionID){
