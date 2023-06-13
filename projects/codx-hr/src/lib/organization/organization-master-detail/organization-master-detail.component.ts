@@ -11,6 +11,7 @@ import {
 
 import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   CacheService,
@@ -22,7 +23,6 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-organization-masterdetail',
