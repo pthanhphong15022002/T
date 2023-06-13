@@ -257,7 +257,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = results;
-      } else if (e.field == 'C') {
+      } 
+      else if (e.field == 'C') {
         if (e.data) this.lstAnswer.push(JSON.parse(JSON.stringify(itemAnswer)));
         else
           this.lstAnswer = this.lstAnswer.filter((x) => {
@@ -267,7 +268,11 @@ export class ReviewComponent extends UIComponent implements OnInit {
           itemQuestion.seqNo
         ].answers = this.lstAnswer;
       }
-       else
+      else if(e.field == 'O2')
+      {
+        debugger
+      }
+      else
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
