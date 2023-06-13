@@ -13,7 +13,6 @@ import { JournalService } from '../../../journals/journals.service';
 import { Observable } from 'rxjs';
 import { InventoryJournals } from '../../../models/InventoryJournals.model';
 import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-lineinventory.component';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -53,6 +52,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   tab: number = 0;
   total: any = 0;
   hasSaved: any = false;
+  isSaveMaster: any = false;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   funcID: any;
@@ -89,7 +89,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
-    private ngxService: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -141,7 +140,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Init
 
   onInit(): void {
-    this.ngxService.startLoader('loader');
     this.loadInit();
     this.loadTotal();
   }
@@ -156,7 +154,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   gridCreated() {
     this.gridInventoryJournalLine.hideColumns(this.lockFields);
-    this.closeLoader();
   }
 
   clickMF(e, data) {
@@ -274,6 +271,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -293,6 +291,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
+            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -352,6 +351,24 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
+  onSaveMaster(){
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.dialog.dataService.updateDatas.set(
+        this.inventoryJournal['_uuid'],
+        this.inventoryJournal
+      );
+      this.dialog.dataService.save(null, 0, '', '', false).subscribe((res) => {
+        if (res && res.update.data != null) {
+          this.dt.detectChanges();
+        }
+      });
+    }
+  }
+
   //#endregion
 
   //#region Function
@@ -394,6 +411,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     this.setWarehouseID();
                     this.form.formGroup.patchValue(this.inventoryJournal);
                     this.hasSaved = false;
+                    this.isSaveMaster = false;
                     });
                     this.dt.detectChanges();
                 }
@@ -477,21 +495,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   loadInit(){
-    if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
-          this.inventoryJournal.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.inventoryJournalLines = res;
-            this.inventoryJournalLines.forEach((element) => {
-              this.loadTotal();
-            });
-          }
-        });
-    }
+    
     if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
     {
       this.getWarehouseName(this.inventoryJournal.warehouseID);
@@ -539,8 +543,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
       this.modeGrid = this.journal.inputMode;
-      if(this.modeGrid == '2')
-        this.closeLoader();
+      if (this.formType == 'edit') {
+        this.api
+          .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+            this.inventoryJournal.recID,
+          ])
+          .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.keymodel = Object.keys(res[0]);
+              this.inventoryJournalLines = res;
+              this.inventoryJournalLines.forEach((element) => {
+                this.loadTotal();
+              });
+            }
+          });
+      }
     });
   }
 
@@ -550,8 +567,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.total = totals;
-    if(this.journal && totals <= this.journal.transLimit)
+    if(this.journal && (totals <= this.journal.transLimit || this.journal.transLimit == null))
       this.inventoryJournal.totalAmt = totals;
+    if (this.isSaveMaster ) {
+      this.onSaveMaster();
+    }
   }
 
   addRow(){
@@ -679,6 +699,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 this.inventoryJournalLines.push(dataline);
               }
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -733,6 +754,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   var dataline = res.event['data'];
                   this.inventoryJournalLines[index] = dataline;
                   this.hasSaved = true;
+                  this.isSaveMaster = true;
                   this.loadTotal();
                 }
               });
@@ -805,6 +827,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
+              this.isSaveMaster = true;
               this.api
                 .exec(
                   'IV',
@@ -885,14 +908,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if(this.journal.transLimit && parseInt(this.total) > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      switch(this.journal.transControl)
-      {
-        case '1':
-          this.inventoryJournal.totalAmt = parseInt(this.total);
-          break;
-        case '2':
-          this.validate++ ;
-      }
+      this.validate++ ;
     }
   }
 
@@ -1062,13 +1078,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       return 0;
     var costAmt = quantity * costPrice;
     return costAmt;
-  }
-
-  closeLoader(){
-    setTimeout(() => {
-      this.ngxService.stopLoader('loader');
-      this.ngxService.destroyLoaderData('loader');
-    }, 500);
   }
 
   //#endregion

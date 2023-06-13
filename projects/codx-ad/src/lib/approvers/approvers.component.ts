@@ -146,7 +146,13 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
           } else {
             this.view.dataService.dataSelected.members = x.event.members;
             this.view.dataService.dataSelected.memberIDs = x.event.memberIDs;
-            this.view.dataService.add(x.event).subscribe();
+            if (this.view.dataService.hasSaved) {
+              this.view.dataService
+                .update(this.view.dataService.dataSelected)
+                .subscribe();
+            } else {
+              this.view.dataService.add(x.event).subscribe();
+            }
           }
           this.view.dataService.hasSaved = false;
 

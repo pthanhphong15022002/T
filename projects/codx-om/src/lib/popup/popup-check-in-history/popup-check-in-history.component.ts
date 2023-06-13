@@ -1,30 +1,21 @@
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { CheckIns } from './../../model/okr.model';
 import {
   AfterViewInit,
   Component,
   Injector,
   Optional,
-  ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
   AuthStore,
   DialogData,
   DialogRef,
-  FormModel,
   NotificationsService,
   UIComponent,
-  Util,
   ViewModel,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
-import { OkrTargetsComponent } from '../../okr/okr-targets/okr-targets.component';
-import { OKRComponent } from '../../okr/okr.component';
 
 @Component({
   selector: 'popup-check-in-history',
@@ -64,7 +55,7 @@ export class PopupCheckInHistoryComponent
     this.oldData = dialogData?.data[0];
     this.okrGrv= dialogData.data[1];
     this.okrFM= dialogData.data[2];
-    this.groupModel= dialogData.data[2];
+    this.groupModel= dialogData.data[3];
     this.curUser = authStore.get();
   }
   //---------------------------------------------------------------------------------//
@@ -193,5 +184,23 @@ export class PopupCheckInHistoryComponent
       //   }
       }
     });
+  }
+  approve(item:any,status:string){
+    if(item!=null){
+      let recID='';
+      if(item?.refCheckIn!=null){
+        recID= item?.refCheckIn;
+      }
+      else{
+        recID =item?.recID
+      }
+      this.codxOmService.approveCheckIn(recID,status).subscribe((res:any)=>{
+        if(res){
+          item.approveStatus=status;
+          this.detectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS034'); //thành công
+        }
+      })
+    }
   }
 }

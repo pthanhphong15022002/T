@@ -22,10 +22,10 @@
             let count = count
           ">
         <div class="d-flex flex-column" >
-          <div class="d-flex flex-row" *ngIf="index==0 && data?.hasAssign==null && (data?.items ==null ||data?.items?.length==0 )">
+          <div class="d-flex flex-row" *ngIf="index==0 && data?.hasAssign==null && data?.kRs==0 && curUser?.userID == data?.owner">
             <div class="d-flex flex-column align-items-center justify-content-between col-1">
               
-              <div class="om-step-number border border-2" [ngClass]="item?.status =='1'? 'border-secondary': item?.status =='2'? 'border-success': item?.status =='3'? 'border-warning': 'border-info'   ">
+              <div class="om-step-number border border-2" [ngClass]="item?.approveStatus =='1'? 'border-secondary': item?.approveStatus =='2'? 'border-success': item?.approveStatus =='3'? 'border-warning': 'border-info'   ">
               </div>
               <span  style="width: 1px" class="flex-grow-1 border om-dot"></span>
             </div>
@@ -48,7 +48,7 @@
 
           <div class="d-flex flex-row">
             <div class="d-flex flex-column align-items-center justify-content-between col-1">
-              <div class="om-step-number border border-2" [ngClass]="item?.status =='1'? 'border-secondary': item?.status =='2'? 'border-success': item?.status =='3'? 'border-warning': 'border-info'">
+              <div class="om-step-number border border-2" [ngClass]="item?.approveStatus =='1'? 'border-secondary': item?.approveStatus =='2'? 'border-success': item?.approveStatus =='3'? 'border-warning': 'border-info'">
               </div>
               <span *ngIf="count - index != 1" style="width: 1px" class="flex-grow-1 border om-dot"></span>
             </div>
@@ -78,14 +78,14 @@
                   }}</span>
               </div> -->
               <span>
-                <codx-vll [name]="'OM025'" [value]="item?.status" [showText]="true" [showBgColor]="true"
+                <codx-vll [name]="'OM025'" [value]="item?.approveStatus" [showText]="true" [showBgColor]="true"
                   class="badge badge-light badge-sm">
                 </codx-vll>
-                <span type="button" *ngIf="item?.status=='4'"
+                <span type="button" *ngIf="item?.approveStatus=='4'"
                   class="me-2 badge badge-primary badge-sm border-0">
                   <codx-label name="lblCheckIn" default="Cập nhật lại" ></codx-label>
                 </span>
-                <span type="button" *ngIf="item?.status=='3'"
+                <span type="button" *ngIf="item?.approveStatus=='3'"
                   class="me-2 badge badge-primary badge-sm border-0">
                   <codx-label name="lblCheckIn" default="Chỉnh sửa" ></codx-label>
                 </span>
@@ -151,17 +151,17 @@
                     (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
                   </codx-attachment>-->
                 </div>
-                <div class=" mt-3 px-3 py-3 border rounded-3 w-100 d-flex flex-row justify-content-between align-items-center " *ngIf="data?.checkInControl !='1' && curUser?.userID == item?.approver">
+                <div class=" mt-3 px-3 py-3 border rounded-3 w-100 d-flex flex-row justify-content-between align-items-center " *ngIf="data?.checkInControl !='0'&& item?.approveStatus == '3' && curUser?.userID == item?.approver">
                   <div>
                     <codx-label name="lblCheckInApprover" default="Người duyệt:"> </codx-label>
-                    <span class="ps-2 fw-bold">{{'Nguyễn Văn A'}}</span>
+                    <span class="ps-2 fw-bold" [innerHTML]="item?.approver | formatvalue : okrFM?.krFM : 'owner' | async "></span>
                   </div>
                   <div>
-                    <button type="button" 
+                    <button type="button" (click)="approve(item,'5')"
                       class="me-2 btn btn-outline-success">
                       <codx-label name="lblCheckIn" default="Duyệt" ></codx-label>
                     </button>
-                    <button type="button"
+                    <button type="button" (click)="approve(item,'4')"
                       class="me-2 btn btn-outline-danger">
                       <codx-label name="lblCheckIn" default="Từ chối" ></codx-label>
                     </button>
