@@ -13,6 +13,8 @@ export class tmpSignArea {
     width: number;
     height: number;
     pageNumber: number;
+    fileRotate: number;
+    rotate: number;
   };
   fontStyle: string;
   fontFormat: string;

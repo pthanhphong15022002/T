@@ -1134,6 +1134,17 @@ export class DealsComponent
   }
   //#endregion
 
+
+  autoMoveStage($event){
+    if ($event && $event != null) {
+      this.view.dataService.update($event).subscribe();
+      this.detailViewDeal.dataSelected = JSON.parse(
+        JSON.stringify(this.dataSelected)
+      );
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
   //xuất file
   exportFile(dt) {
     this.codxCmService.exportFile(dt, this.titleAction);

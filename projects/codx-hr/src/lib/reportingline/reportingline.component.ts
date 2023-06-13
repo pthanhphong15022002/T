@@ -118,7 +118,6 @@ export class ReportinglineComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  viewChange(event: any) { }
   orgChartViewInit(component: any) {
     if (component) {
       this.detailComponent = component;
@@ -146,7 +145,7 @@ export class ReportinglineComponent extends UIComponent {
             data: result,
             funcID: this.funcID,
             isAdd: true,
-            title: event.text,
+            title: event.text + ' ' + this.view.function.description,
             isCorporation: this.isCorporation,
           };
           let form = this.callfc.openSide(
@@ -199,7 +198,7 @@ export class ReportinglineComponent extends UIComponent {
             data: result,
             funcID: this.funcID,
             isAdd: false,
-            title: event.text,
+            title: event.text + ' ' + this.view.function.description,
             isCorporation: this.isCorporation,
           };
           this.callfc.openSide(
@@ -229,13 +228,14 @@ export class ReportinglineComponent extends UIComponent {
             data: res,
             funcID: this.funcID,
             isAdd: true,
-            title: event.text,
+            title: event.text + ' ' + this.view.function.description,
           };
           this.callfc.openSide(PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe((res) => {
-              if (res?.event?.save) {
-                let node = res.event.save.data;
+              if (res?.event) {
+                let node = res.event;
                 this.codxTreeView.setNodeTree(node);
+                this.detectorRef.detectChanges();
               }
             });
         }
@@ -264,8 +264,6 @@ export class ReportinglineComponent extends UIComponent {
         }
       });
   }
-  loadEmployByCountStatus() { }
-
   // selected data
   onSelectionChanged(event) {
     if (this.view) {

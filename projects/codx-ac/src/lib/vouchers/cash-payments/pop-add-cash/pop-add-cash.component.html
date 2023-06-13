@@ -986,11 +986,14 @@
         (controlBlur)="valueFocusOut($event)"></codx-input>
     </div> -->
     <div class="flex-column d-flex justify-content-start">
-      <div class="d-flex align-items-center cursor-pointer w-fit ac-refdoc">
+      <div id="ac-column-def" class="d-flex align-items-center cursor-pointer w-fit ac-refdoc">
         
-        <i class="icon-i-link-45deg om-fs-3 mt-1"></i>
-        <codx-inplace style="width: fit-content" type="text" [value]="cashpayment.refDocs" field="refDocs"
-          emptyText="Nhập chứng từ gốc" (editEnded)="editEnded($event)"></codx-inplace>
+        <i class="icon-i-link-45deg om-fs-3 me-1 mt-1"></i>
+        <!-- <codx-inplace style="width: fit-content" type="text" [value]="cashpayment.refDocs" field="refDocs"
+          emptyText="Nhập chứng từ gốc" (actionEvent)="changeRef($event)"></codx-inplace> -->
+        <codx-input class="fw-bold" [Group]="form.formGroup" field="refDocs" [formModel]="form.formModel"
+          (valueChange)="changeRef($event)">
+        </codx-input>
       </div>
     </div>
   </ng-container>

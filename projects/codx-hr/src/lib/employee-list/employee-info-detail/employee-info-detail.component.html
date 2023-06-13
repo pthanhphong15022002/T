@@ -3200,7 +3200,7 @@
         class="user-profile overview d-block"
         [id]="eNeedToSubmitProfileFuncID"
       >
-        <div class="rounded-2 p-5 bg-white mb-1">
+        <!-- <div class="rounded-2 p-5 bg-white mb-1">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
               <div class="user-status d-flex align-items-center text-primary">
@@ -3228,7 +3228,6 @@
           </div>
 
           <div #salaryInfo class="mb-1 mt-6" *ngIf="eInfoFormModel">
-            <!-- Nhóm tính lương/ Nguyên tệ tính lương/ Mức đóng thuế -->
             <div class="row mb-5">
               <div class="col">
                 <div class="text-gray-600 pb-1">
@@ -3293,7 +3292,6 @@
                 </div>
               </div>
             </div>
-            <!-- Cam kết quyết toàn thuế/ Tạm ứng lương theo số tiền quyết định -->
             <div class="row mb-5">
               <div class="col-4">
                 <div class="text-gray-600 pb-1">
@@ -3335,7 +3333,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </ng-container>
     <!-- </div> -->
@@ -4771,25 +4769,26 @@
               <span class="text-dark">({{ eSkillRowCount }})</span> -->
             </div>
             <div class="d-flex align-items-center ms-5">
-              <button
-                type="button"
-                class="btn btn-icon btn-sm btn-white"
-                (click)="HandleEmployeeESkillsInfo(addHeaderText, 'add', null)"
-              >
-                <i class="icon-add icon-18"></i>
-              </button>
-              <span class="text-gray-500 mx-2">|</span>
               <codx-dropdown-select
-                *ngIf="eSkillgrvSetup"
-                [cssClass]="'rounded-pill border-1'"
-                cssPopup="h-350px w-300px"
-                [isMulti]="true"
-                type="combobox"
-                [emptyText]="'Kỹ năng'"
-                field="SkillID"
-                [refValue]="eSkillgrvSetup.SkillID.referedValue"
-                (valueChange)="valueChangeFilterSkillID($event)"
-              ></codx-dropdown-select>
+              *ngIf="eSkillgrvSetup"
+              [cssClass]="'rounded-pill border-1'"
+              cssPopup="h-350px w-300px"
+              [isMulti]="true"
+              type="combobox"
+              [emptyText]="'Kỹ năng'"
+              field="SkillID"
+              [refValue]="eSkillgrvSetup.SkillID.referedValue"
+              (valueChange)="valueChangeFilterSkillID($event)"
+            ></codx-dropdown-select>
+
+              <span class="text-gray-500 mx-2">|</span>
+              <button
+              type="button"
+              class="btn btn-icon btn-sm btn-white"
+              (click)="HandleEmployeeESkillsInfo(addHeaderText, 'add', null)"
+            >
+              <i class="icon-add icon-18"></i>
+            </button>
               <!-- <codx-label
                 class="text-dark me-3"
                 name="lblSeeAllEBenefit"
@@ -4993,6 +4992,7 @@
                   (change)="valueChangeYearFilterETrainCourse($event)"
                 ></codx-dropdown-calendar
               ></span>
+              <span class="text-gray-500 mx-2">|</span>
               <span class="ms-3">
                 <button
                   type="button"
@@ -5948,14 +5948,23 @@
 <!--#region template Bằng cấp 123123-->
 <ng-template #templateEDegreeGridCol1 let-data>
   <div class="d-flex align-items-center mb-2">
-    <span
+    <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
       [class]="data.isMain ? 'bg-primary' : 'bg-transparent'"
-    ></span>
+    ></span> -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-1">
         <span class="icon-school text-primary icon-16 me-2"></span>
         <div class="text-dark text-dark fw-bold">{{ data?.degreeName }}</div>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="text-dark"
+        [innerHTML]="
+        data?.trainFieldID
+          | formatvalue : eDegreeFormModel : 'trainFieldID'
+          | async
+      "
+        ></span>
       </div>
       <div class="d-flex align-items-center">
         <div class="text-dark">{{ data?.trainFieldDetail }}</div>
@@ -6058,17 +6067,17 @@
           | async
       "
     >
-      <i
-        class="icon-i-info-circle-fill icon-circle-group text-gray-400 mx-1"
-      ></i>
-      <span
-        [innerHTML]="
-          data?.certificateGradeID
-            | formatvalue : eCertificateFormModel : 'certificateGradeID'
-            | async
-        "
-      ></span>
     </span>
+    <i
+    class="icon-i-info-circle-fill icon-circle-group text-gray-400 mx-1"
+  ></i>
+  <span
+    [innerHTML]="
+      data?.certificateGradeID
+        | formatvalue : eCertificateFormModel : 'certificateGradeID'
+        | async
+    "
+  ></span>
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
   <div class="d-flex align-items-center">
@@ -6152,8 +6161,8 @@
             | async
         "
       ></span>
-      <span class="me-2">-</span>
-      <span
+      <span *ngIf="data?.expiredDate" class="me-2">-</span>
+      <span *ngIf="data?.expiredDate"
         [innerHTML]="
           data?.expiredDate
             | formatvalue : eCertificateFormModel : 'expiredDate'
