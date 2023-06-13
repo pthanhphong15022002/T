@@ -90,3 +90,9 @@
 .ac-refdoc .e-editable-value{
     margin-top: 5px !important;
 }
+.listcash-content .e-float-input input{
+    padding-left: 5px !important;
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+    white-space: nowrap;
+}
