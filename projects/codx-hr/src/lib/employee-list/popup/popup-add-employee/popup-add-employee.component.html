@@ -11,10 +11,16 @@
         <div>
           <codx-label [formModel]="formModel" name="lblEmployeeInfor" [default]="'THÔNG TIN NHÂN VIÊN'"
             [classList]="'text-primary fs-6 d-block'"></codx-label>
-          <codx-img #codxImg [objectId]="data.employeeID" [objectType]="'HR_Employees'" [funcId]="formModel.funcID"
-            [isAllowEdit]="true" [imgOn]="codxModifiedOn" [width]="80" [imageType]="'circle'"
-            class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage" [updateDirect]="action === 'edit'"
-            (reloadChanged)="action === 'edit' ? changeAvatar($event) : null">
+          <!-- <codx-img #codxImg [objectId]="data.employeeID" 
+            [objectType]="'HR_Employees'" [funcId]="formModel.funcID"
+            [isAllowEdit]="true" [imgOn]="codxModifiedOn" [width]="80" 
+            [imageType]="'circle'" 
+            [updateDirect]="true"
+            (reloadChanged)="action === 'edit' || action === 'add' ? changeAvatar($event) : null">
+          </codx-img> -->
+          <codx-img  #codxImg [width]="80" [objectId]="data?.employeeID"
+            [objectName]="data?.employeeName" [objectType]="'HR_Employees'" [imageType]="'circle'" (reloadChanged)="action === 'edit' ? changeAvatar($event) : null"
+            [isAllowEdit]="true" [updateDirect]="true" [isAllowChangeInputID]="true" class="pic-emloyee" [width]="100">
           </codx-img>
         </div>
         <div>
