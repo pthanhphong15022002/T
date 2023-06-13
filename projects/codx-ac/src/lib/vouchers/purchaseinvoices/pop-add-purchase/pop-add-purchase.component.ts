@@ -68,7 +68,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   countDetail = 0;
   journal: IJournal;
   hasSaved: any = false;
-  isSaveMaster: any = false;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -312,7 +311,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.updateVAT();
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -333,7 +331,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -381,7 +378,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.purchaseInvoicesLines.push(dataline);
               }
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -551,7 +547,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   var dataline = res.event['data'];
                   this.purchaseInvoicesLines[index] = dataline;
                   this.hasSaved = true;
-                  this.isSaveMaster = true;
                   if (dataline.vatid != null) {
                     this.loadPurchaseInfo();
                   }
@@ -596,7 +591,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.api
                 .exec(
                   'PS',
@@ -682,10 +676,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       style: 'currency',
       currency: 'VND',
     });
-    if(this.isSaveMaster)
-    {
-      this.onSaveMaster();
-    }
   }
 
   loadPredicate(visibleColumns, data)
@@ -1085,27 +1075,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         .subscribe(() => {});
     }
   }
-  
-  onSaveMaster()
-  {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      this.dialog.dataService.updateDatas.set(
-        this.purchaseinvoices['_uuid'],
-        this.purchaseinvoices
-      );
-      this.dialog.dataService
-        .save(null, 0, '', 'SYS006', false)
-        .subscribe((res) => {
-          if (res && res.update.data != null) {
-            this.dt.detectChanges();
-          }
-        });
-    }
-  }
 
   onSave() {
     // tu dong khi luu, khong check voucherNo
@@ -1230,7 +1199,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.purchaseinvoices = res;
                 this.form.formGroup.patchValue(this.purchaseinvoices);
                 this.hasSaved = false;
-                this.isSaveMaster = false;
               });
           }
         });

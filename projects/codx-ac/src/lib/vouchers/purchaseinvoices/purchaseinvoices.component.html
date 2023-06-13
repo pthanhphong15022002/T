@@ -86,7 +86,7 @@
       </div>
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-customize icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
+        <codx-label [setRequire]="false" class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
         </codx-label>
         <span #voucherDate class="text-gray-600"
           [innerHTML]="itemSelected?.voucherDate | formatvalue : view.formModel : 'voucherDate' : voucherDate | async"></span>
@@ -184,7 +184,7 @@
               <div class="d-flex">
                 <!-- <i class="icon-i-box icon-16 me-2"></i> -->
                 <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="ItemID"
-                  [formModel]="fmPurchaseInvoicesLines">
+                  [formModel]="fmPurchaseInvoicesLines" [setRequire]="false">
                 </codx-label>
               </div>
             </th>
