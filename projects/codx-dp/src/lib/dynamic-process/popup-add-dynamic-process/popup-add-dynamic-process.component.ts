@@ -4114,7 +4114,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   // new setting
   //setting trình kí - lần 2
   actionOpenFormApprove2(item, isAdd = false) {
-    this.recIDCategory = item.recID;
+   
     // this.dpService
     //   .getESCategoryByCategoryID(categoryID)
     //   .subscribe((item: any) => {
@@ -4151,6 +4151,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               popupEditES.closed.subscribe((res) => {
                 if (res?.event) {
                   this.loadListApproverStep();
+                  this.recIDCategory = res?.event?.recID;
                 }
               });
             });
