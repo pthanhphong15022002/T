@@ -886,14 +886,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if(this.journal.transLimit && parseInt(this.total) > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      switch(this.journal.transControl)
-      {
-        case '1':
-          this.inventoryJournal.totalAmt = parseInt(this.total);
-          break;
-        case '2':
-          this.validate++ ;
-      }
+      this.validate++ ;
     }
   }
 
