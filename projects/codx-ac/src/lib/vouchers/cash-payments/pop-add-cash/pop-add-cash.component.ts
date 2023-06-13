@@ -260,9 +260,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   this.loadSubType(i, this.tabObj);
                 }
               });
-          } else {      
-            this.form.formGroup.patchValue({...this.cashpayment});
-            
+          } else {
+            this.form.formGroup.patchValue({ ...this.cashpayment });
           }
         });
       } else {
@@ -393,8 +392,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   valueFocusOut(e: any) {
     this.cashpayment[e.ControlName] = e.crrValue;
   }
-  editEnded(e: any) {
-    this.cashpayment[e.field] = e.component.value;
+  changeRef(e: any) {
+    this.cashpayment[e.field] = e.data;
+    let length;
+    var wDef = document.getElementById('ac-column-def');
+    let element = document.querySelectorAll(
+      '.listcash-content .e-float-input input'
+    );
+    if (e && e.data) {
+      var numberOfChar = e.data.length;
+      if (numberOfChar > 19) {
+        length = numberOfChar + 'ch';
+        (element[0] as HTMLElement).style.width = length;
+        if (((element[0] as HTMLElement).offsetWidth) > wDef.offsetWidth) {
+          (element[0] as HTMLElement).style.maxWidth = ((wDef.offsetWidth) - 10) + 'px';
+        }      
+      }
+    } else {
+      (element[0] as HTMLElement).style.width = '100%';
+    } 
   }
 
   gridCreated() {

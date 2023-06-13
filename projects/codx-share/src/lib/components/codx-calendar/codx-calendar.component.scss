@@ -143,21 +143,22 @@ body.tailwind #selected {
 .e-speeddial-li .itemlist:hover {
   background-color: var(--primary-dark);
 }
-
-.e-btn.e-primary,
-.e-css.e-btn.e-primary {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-  min-width: 56px;
-  min-height: 28px; 
-  
-  &:hover,
-  &:active,
-  &:focus {
+.calendar-btnadd{
+  .e-btn.e-primary,
+  .e-css.e-btn.e-primary {
     background-color: var(--primary);
     border-color: var(--primary);
     color: #fff;
+    min-width: 56px;
+    min-height: 56px; 
+    
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
   }
 }
 .e-calendar .e-content.e-month td.e-today span.e-day {
