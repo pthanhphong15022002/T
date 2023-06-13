@@ -29,7 +29,6 @@ import { PopupListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-
 import { PopupQuickaddContactComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
-import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 import { DealsComponent } from './deals/deals.component';
 import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
 import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
@@ -212,7 +211,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
-    CodxDpModule,
   ],
   exports: [RouterModule, ListContractsComponent],
   providers: [AccumulationTooltipService],
