@@ -816,6 +816,8 @@ export class PdfComponent
         pageNumber:
           Number(konva?.parent?.id().replace('layer', '')) - 1 ??
           this.curPage - 1,
+        fileRotate: 0,
+        rotate: 0,
       },
       stepNo: stepNo,
       fontStyle: type == 'text' ? konva.fontFamily() : '',
