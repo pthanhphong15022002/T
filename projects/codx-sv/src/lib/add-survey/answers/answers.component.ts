@@ -273,6 +273,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     switch(answerType)
     {
       case "T":
+      case "T2":
         {
           switch(properties)
           {

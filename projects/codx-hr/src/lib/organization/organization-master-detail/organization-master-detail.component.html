@@ -1,24 +1,14 @@
 <div class="container mt-4 h-100">
-  <div class="row mb-2" *ngIf="employeeManager">
-    <div class="col-2 col-xl-2 col-md-4 col-xs-12">
-      <codx-img
-        [funcId]="funcID"
-        [width]="90"
-        [objectId]="employeeManager?.employeeID"
-        [objectName]="employeeManager?.employeeName"
-        [objectType]="'HR_Employees'"
-        [imageType]="'circle'"
-        [isAllowEdit]="true"
-        [updateDirect]="true"
-        [isAllowChangeInputID]="true"
-        class="pic-emloyee"
-        [width]="100"
-      >
-      </codx-img>
-    </div>
-    <div
-      class="col-2 col-xl-10 col-md-8 col-xs-12 d-flex align-items-center justify-content-between p-2"
+  <div class="d-flex align-items-center mb-2">
+    <codx-img
+      [width]="50"
+      [objectId]="employeeManager?.employeeID"
+      [objectName]="employeeManager?.employeeName"
+      [objectType]="'HR_Employees'"
+      [imageType]="'circle'"
     >
+    </codx-img>
+    <div class="d-flex w-100 justify-content-between p-4">
       <div>
         <div>
           <ng-container
@@ -105,35 +95,23 @@
       </div>
     </div>
   </div>
-  <div id="detail" *ngIf="columnsGrid && columnsGrid.length" class="h-100">
-    <codx-gridview-v2
-      #grid
-      [formModel]="formModelEmp"
-      [columnsGrid]="columnsGrid"
-      [service]="'HR'"
-      assemblyName="ERM.Business.HR"
-      [className]="'OrganizationUnitsBusiness'"
-      [hideMoreFunc]="true"
-      [method]="'GetEmployeesMasterDetailAsync'"
-      [dataValues]="orgUnitID"
-      [emptyTemplate]="emptyDataTemplate"
-      height="100%"
-    ></codx-gridview-v2>
-    <!-- <codx-gridview
-      #grid
-      [formModel]="formModelEmp"
-      idField="EmployeeID"
-      [entityName]="'HR_Employees'"
-      service="HR"
-      assemblyName="ERM.Business.HR"
-      className="OrganizationUnitsBusiness"
-      method="GetEmployeesMasterDetailAsync"
-      rowHeight="40"
-      [dataValues]="orgUnitID"
-      [columnsGrid]="columnsGrid"
-    >
-    </codx-gridview> -->
-  </div>
+  <ng-container>
+    <div id="detail" *ngIf="columnsGrid && columnsGrid.length" class="h-100">
+      <codx-gridview-v2
+        #grid
+        [formModel]="formModelEmp"
+        [columnsGrid]="columnsGrid"
+        [service]="'HR'"
+        assemblyName="ERM.Business.HR"
+        [className]="'OrganizationUnitsBusiness'"
+        [hideMoreFunc]="true"
+        [method]="'GetEmployeesMasterDetailAsync'"
+        [dataValues]="orgUnitID"
+        [emptyTemplate]="emptyDataTemplate"
+        height="100%"
+      ></codx-gridview-v2>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #templateName let-item>
