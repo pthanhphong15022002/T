@@ -29,7 +29,7 @@ export class CodxViewTaskComponent implements OnInit {
   owner = []; //role
   person = []; //role
   listDataLink = [];
-  dataInput: any; 
+  dataInput: any;
   dataProgress: any = null;
 
   isOnlyView = false;
@@ -50,6 +50,18 @@ export class CodxViewTaskComponent implements OnInit {
   viewModelDetail = 'history';
   dateFomat = 'dd/MM/yyyy';
   frmModel: FormModel = {};
+  grvMoreFunction: FormModel = {
+    entityName: 'DP_Instances_Steps_Tasks',
+    formName: 'DPInstancesStepsTasks',
+    gridViewName: 'grvDPInstancesStepsTasks',
+  };
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
@@ -313,5 +325,58 @@ export class CodxViewTaskComponent implements OnInit {
   }
   saveAssign(e) {
     if (e) this.getTree();
+  }
+
+  changeDataMFStep(event) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa
+          case 'SYS03': //sửa
+          case 'SYS04': //copy
+          case 'SYS003': //đính kèm file
+          case 'DP13': //giao việc
+          case 'DP07': //chi tiêt công việc
+           //tạo lịch họp
+          case 'DP12':
+          case 'DP25':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            case 'DP26':// chi tiêt
+            res.disabled = true;
+            break;
+          case 'DP13':
+          case 'DP24':
+          case 'DP20': // tiến độ
+            if (
+              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
+            ) {
+              res.isblur = true;
+            }
+            res.isbookmark = true;
+            break;
+          case 'DP08': // Thêm nhóm công việc
+            if (!(this.isRoleAll && this.isOnlyView)) {
+              res.isblur = true;
+            }
+            res.isbookmark = true;
+            break;
+         
+        }
+      });
+    }
+  }
+  clickMFStep(event) {
+    switch (event.functionID) {
+      case 'DP08': //them task
+     
+        break;
+      case 'DP20': // tien do
+        
+      case 'DP26': // view
+        
+        break;
+    }
   }
 }
