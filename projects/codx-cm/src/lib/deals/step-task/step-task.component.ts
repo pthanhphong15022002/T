@@ -9,7 +9,7 @@ import { ApiHttpService, CacheService, CallFuncService, NotificationsService } f
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() isDataLoading: any;
   @Input() dataSelected: any;
-  @Input() listStep: any;
+  @Input() listInstanceStep: any[];
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   status = [];
@@ -17,6 +17,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   crrViewGant = 'W';
   vllViewGannt = 'DP042';
   typeTime;
+  listInstanceStepShow = [];
+  isShowElement = true;
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
@@ -32,12 +34,15 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {
     this.isDataLoading;
-    this.listStep;
+    this.listInstanceStep;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.dataSelected){
       this.getViewModeDetailByProcessID();
+    }
+    if(changes?.listInstanceStep){
+      this.listInstanceStepShow = this.listInstanceStep;
     }
   }
 
@@ -62,6 +67,20 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   changeValue(e){
     this.type = e.data;
   }
+  changeValueDropdownSelect(e){
+    if(e.field == 'status'){
+      if(e?.data?.length == 0){
+        this.listInstanceStepShow = this.listInstanceStep;
+      }else{
+        this.listInstanceStepShow = this.listInstanceStep.filter(step => e?.data?.includes(step.stepStatus))
+      }
+    }
+    if(e.field == 'show' && e.data?.length >= 0){
+      this.isShowElement = e.data[0] == '1' ? true : false;
+    }else{
+      this.isShowElement = true;
+    }
+  }
   
 
   handelContinueStep(event, step){
@@ -74,5 +93,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   changeViewTimeGant(e) {
     this.typeTime = e;
+  }
+  addTask(){
+    
   }
 }

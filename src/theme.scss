@@ -425,7 +425,11 @@
     background-color: var(--primary-lighter);
     color: var(--text-dark);
   }
-
+  dropdown-content{
+    .e-listview .e-list-item:hover {
+      background-color: transparent;
+    }
+  }
   div#newfeed {
     ejs-listview {
       background-color: transparent;

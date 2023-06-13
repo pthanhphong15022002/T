@@ -53,7 +53,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   tab: number = 0;
   total: any = 0;
   hasSaved: any = false;
-  isSaveMaster: any = false;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   funcID: any;
@@ -275,7 +274,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -295,7 +293,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -348,24 +345,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  onSaveMaster(){
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      this.dialog.dataService.updateDatas.set(
-        this.inventoryJournal['_uuid'],
-        this.inventoryJournal
-      );
-      this.dialog.dataService.save(null, 0, '', '', false).subscribe((res) => {
-        if (res && res.update.data != null) {
-          this.dt.detectChanges();
-        }
-      });
-    }
-  }
-
   //#endregion
 
   //#region Function
@@ -408,7 +387,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     this.setWarehouseID();
                     this.form.formGroup.patchValue(this.inventoryJournal);
                     this.hasSaved = false;
-                    this.isSaveMaster = false;
                     });
                     this.dt.detectChanges();
                 }
@@ -567,9 +545,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.total = totals;
     this.inventoryJournal.totalAmt = totals;
     this.total = totals.toLocaleString('it-IT')
-    if (this.isSaveMaster ) {
-      this.onSaveMaster();
-    }
   }
 
   addRow(){
@@ -697,7 +672,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 this.inventoryJournalLines.push(dataline);
               }
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -752,7 +726,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   var dataline = res.event['data'];
                   this.inventoryJournalLines[index] = dataline;
                   this.hasSaved = true;
-                  this.isSaveMaster = true;
                   this.loadTotal();
                 }
               });
@@ -825,7 +798,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.api
                 .exec(
                   'IV',
