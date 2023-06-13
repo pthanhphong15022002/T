@@ -40,6 +40,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
   //default degreeName
+  fieldHeaderTexts
   levelText: string;
   trainFieldText: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -190,14 +191,44 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         this.initForm();
       });
     else this.initForm();
+
+    this.hrService.getHeaderText(this.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    })
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
     this.degreeObj.employeeID = this.employId;
+    console.log('data chuan bi luu', this.degreeObj);
+    
+    let ddd = new Date();
+    if(this.degreeObj.issuedDate > ddd.toISOString()){
+      this.notify.notifyCode('HR014',0, this.fieldHeaderTexts['IssuedDate']);
+      return;
+    }
+
+    if(this.degreeObj.trainTo && this.degreeObj.trainFrom){
+      if (Number(this.degreeObj.trainTo) < Number(this.degreeObj.trainFrom)) {
+        this.hrService.notifyInvalidFromTo(
+          'TrainTo',
+          'TrainFrom',
+          this.formModel
+          )
+          return;
+      }
+    }
+
+    if(this.degreeObj.expiredDate && this.degreeObj.effectedDate){
+      if (this.degreeObj.expiredDate < this.degreeObj.effectedDate) {
+        this.hrService.notifyInvalidFromTo(
+          'ExpiredDate',
+          'EffectedDate',
+          this.formModel
+          )
+          return;
+      }
+    }
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       if(this.actionType === 'add'){
         localStorage.setItem('add', JSON.stringify(this.degreeObj));

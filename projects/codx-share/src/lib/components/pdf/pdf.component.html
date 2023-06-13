@@ -196,8 +196,8 @@
               <e-item prefixIcon="e-icons icon-skip_next" id="lastPage">
               </e-item>
 
-              <!-- <e-item (click)="removeCA()" prefixIcon="e-icons icon-article">
-              </e-item> -->
+              <e-item (click)="removeCA()" prefixIcon="e-icons icon-article">
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -298,6 +298,10 @@
                 "
                 (click)="changeShowActionsState()"
               ></e-item>
+              <e-item id="pageRotateCcw" prefixIcon="e-icons e-transform-left">
+              </e-item>
+              <e-item id="pageRotateCw" prefixIcon="e-icons e-transform-right">
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -310,8 +314,8 @@
         [src]="curFileUrl"
         [(zoom)]="zoomValue"
         [(page)]="curPage"
-        [handTool]="showHand"
-        [showHandToolButton]="showHand"
+        [handTool]="false"
+        [showHandToolButton]="false"
         [useBrowserLocale]="true"
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
@@ -326,6 +330,8 @@
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
         (textLayerRendered)="getTextLayerInfo($event)"
+        [(rotation)]="rotate"
+        (rotationChange)="changeRotation($event)"
       >
       </ngx-extended-pdf-viewer>
 
@@ -943,7 +949,7 @@
             <ng-template #content>
               <!-- <ejs-toolbar>
                 <e-items>
-                 // <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item> 
+                 // <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item>
                 </e-items>
               </ejs-toolbar> -->
               <div class="" *ngIf="lstKey.length">

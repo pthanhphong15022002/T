@@ -132,7 +132,13 @@ export class AddApproversComponent extends UIComponent {
         .subscribe((res: any) => {
           if (res && !res.error) {
             this.master.groupID = this.dialog.dataService.dataSelected.groupID;
-            this.beforeSaveMember();
+            if (this.members.length > 0) {
+              this.beforeSaveMember();
+            } else {
+              this.dialog.dataService.hasSaved = true;
+
+              this.dialog.close(this.master);
+            }
           }
         });
     }
@@ -162,7 +168,7 @@ export class AddApproversComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           // this.dialog.dataService.hasSaved = true;
-          this.dialog.dataService.hasSaved = false;
+          this.dialog.dataService.hasSaved = true;
           this.master.members = res[2];
           this.master.memberIDs = res[1];
           // this.dialog.dataService.update(this.master).subscribe((res2) => {

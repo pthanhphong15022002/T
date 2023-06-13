@@ -6,6 +6,7 @@
 
 :root {
   --fs-body: 13px;
+  --speeddialVertDist: 98px;
 
   .e-grid .e-rowcell {
     font-size: var(--fs-body);
@@ -600,6 +601,13 @@ ejs-calendar {
   padding: 0;
 }
 
+.e-schedule .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar .e-appointment,
+.e-schedule .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar .e-appointment-indicator {
+  background-color: var(--bs-orange)!important;
+  width: 5px!important;
+  height: 5px!important;
+  border-radius: 0!important;
+}
 /////
 .card {
   box-shadow: none;
@@ -3165,4 +3173,10 @@ codx-wrapper.hover-scroll-overlay-y {
     }
   }
   
+}
+
+//////////// end tablet
+
+codx-card-center .card.codx_cardcenter{
+  overflow: hidden;
 }

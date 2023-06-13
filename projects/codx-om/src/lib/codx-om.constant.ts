@@ -102,6 +102,7 @@ export const OMCONST = {
       DEPT: '3',
       ORG: '5',
       PERS: '9',
+      POSITION: '7',
     },
 
     Plan: {
@@ -128,14 +129,6 @@ export const OMCONST = {
     Type2:'2',
     Type3:'3',
     Type4:'4',
-  },
-  OBJECT_TYPE:{
-    EMP:'1',
-    ORG:'2',
-    DEPT:'3',
-    DIVI:'4',
-    COMP:'5',
-    USER:'U',
   },
   ASSET_URL:'./assets/themes/om/default/img/'
   //region format

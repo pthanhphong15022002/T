@@ -163,7 +163,10 @@ export class PopupAddPositionsComponent implements OnInit {
         this.functionID,
       ])
       .subscribe((res) => {
-        if (this.isAdd) this.dialogRef.dataService.add(res, 0).subscribe();
+        if (this.isAdd) {
+          this.dialogRef.dataService.add(res, 0).subscribe();
+          this.notifiSV.notifyCode('SYS006');
+        }
         else {
           this.notifiSV.notifyCode('SYS007');
           this.dialogRef.dataService.update(res).subscribe();
