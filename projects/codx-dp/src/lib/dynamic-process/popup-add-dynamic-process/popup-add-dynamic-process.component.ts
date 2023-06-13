@@ -38,7 +38,7 @@ import {
   AlertConfirmInputConfig,
   DialogModel,
   DataRequest,
-  DataService,
+  CodxService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -146,6 +146,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   noteFail: string = '';
   noteResult: string = '';
   isUpdatePermiss = false;
+  systemProcess: boolean = false;
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -313,12 +314,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private dpService: CodxDpService,
     private authStore: AuthStore,
     private formBuilder: FormBuilder,
+    private codxService: CodxService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
+    this.systemProcess = dt?.data?.systemProcess ?? false;
     this.action = dt.data.action;
     this.showID = dt.data.showID;
     this.user = this.authStore.get();
@@ -333,7 +336,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.formModelField.entityName = 'DP_Steps_Fields';
     this.formModelField.funcID = 'DPT0301';
 
-    this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.process = !this.systemProcess
+      ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
+      : dt?.data?.data;
+    console.log(this.process);
     this.getIconReason();
     this.getValueYesNo();
     this.getValueDayHour();
@@ -587,38 +593,73 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   onUpdate() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        this.attachment?.clearData();
-        this.imageAvatar.clearData();
-        if (res && res.update) {
-          this.dpService.upDataApprovalStep(
-            this.listStepApprover,
-            this.listStepApproverDelete
-          );
+    if (!this.systemProcess) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option))
+        .subscribe((res) => {
+          this.attachment?.clearData();
+          this.imageAvatar.clearData();
+          if (res && res.update) {
+            this.dpService.upDataApprovalStep(
+              this.listStepApprover,
+              this.listStepApproverDelete
+            );
 
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
-          res.update.modifiedOn = new Date();
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+            res.update.modifiedOn = new Date();
 
-          var isUseSuccess = this.stepSuccess.isUsed;
-          var isUseFail = this.stepFail.isUsed;
-          var dataCountInstance = [res.update.recID, isUseSuccess, isUseFail];
-          this.dpService
-            .countInstanceByProccessId(dataCountInstance)
-            .subscribe((totalInstance) => {
-              if (totalInstance) {
-                res.update.totalInstance = totalInstance;
-                this.dialog.close(res.update);
-              } else {
-                res.update.totalInstance = 0;
-                this.dialog.close(res.update);
-              }
-            });
-        }
-      });
+            var isUseSuccess = this.stepSuccess.isUsed;
+            var isUseFail = this.stepFail.isUsed;
+            var dataCountInstance = [res.update.recID, isUseSuccess, isUseFail];
+            this.dpService
+              .countInstanceByProccessId(dataCountInstance)
+              .subscribe((totalInstance) => {
+                if (totalInstance) {
+                  res.update.totalInstance = totalInstance;
+                  this.dialog.close(res.update);
+                } else {
+                  res.update.totalInstance = 0;
+                  this.dialog.close(res.update);
+                }
+              });
+          }
+        });
+    } else {
+      this.addStepsBeforeSave();
+      const listStepDrop = this.convertListStepDrop();
+      var data = [
+        this.process,
+        this.recIDCategory,
+        this.listStepAdd || [],
+        this.listStepEdit || [],
+        this.listStepDelete || [],
+        listStepDrop || [],
+        this.lstTmp,
+        this.isUpdatePermiss,
+      ];
+      this.api
+        .execSv<any>(
+          'DP',
+          'ERM.Business.DP',
+          'ProcessesBusiness',
+          'UpdateProcessAsync',
+          data
+        )
+        .subscribe((res) => {
+          if (res) {
+            console.log(res);
+            this.dpService.upDataApprovalStep(
+              this.listStepApprover,
+              this.listStepApproverDelete
+            );
+            this.codxService.navigate('', `shared/settings/CMS`);
+            this.dialog.close(res);
+            this.notiService.notifyCode('SYS007');
+          }
+        });
+    }
   }
 
   addStepsBeforeSave() {
@@ -706,18 +747,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           //   //     .removeListApprovalStep(this.listStepAproveRemove)
           //   //     .subscribe();
           // }
-
           //yeu cau doi view ngay 13/06/2023
           if (this.action == 'add' || this.action == 'copy') {
             //xoa Aprover
             this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
             if (this.listStepApproverView?.length > 0)
-              this.dpService.removeListApprovalStep(this.listStepApproverView).subscribe();;
+              this.dpService
+                .removeListApprovalStep(this.listStepApproverView)
+                .subscribe();
+          }
+
+          if (this.systemProcess) {
+            this.codxService.navigate('', `shared/settings/CMS`);
           }
           this.dialog.close();
         } else return;
       });
-    } else this.dialog.close();
+    } else {
+      if (this.systemProcess) {
+        this.codxService.navigate('', `shared/settings/CMS`);
+      }
+
+      this.dialog.close();
+    }
   }
 
   //#region Change Tab

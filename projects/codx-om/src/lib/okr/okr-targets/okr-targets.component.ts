@@ -831,30 +831,48 @@ export class OkrTargetsComponent implements OnInit {
   
   removeOB(ob: any) {
     if (ob != null) {
-      this.dataOKR = this.dataOKR.filter((res) => res.recID != ob.recID);
+      for(let group of this.dataOKR){
+        if(ob?.okrGroupID==group?.okrGroupID){    
+          group.listOKR=group?.listOKR.filter((res) => res.recID != ob.recID);
+          this.detec.detectChanges();
+        }
+      }
     }
   }
   removeKR(kr: any) {
     if (kr != null) {
-      for (let ob of this.dataOKR) {
-        if (ob?.recID == kr?.parentID) {
-          ob.items = ob?.items.filter((res) => res.recID != kr.recID);
-        }
-      }
-    }
-  }
-  removeSKR(skr: any) {
-    if (skr != null) {
-      for (let ob of this.dataOKR) {
-        for (let kr of ob?.items) {
-          for (let i = 0; i < kr?.items.length; i++) {
-            if (skr?.recID == kr.items[i].recID) {
-              kr.items = kr.items.filter((res) => res.recID != skr.recID);
-              return;
+      for(let group of this.dataOKR){
+        if(kr?.okrGroupID==group?.okrGroupID){    
+          for (let ob of group?.listOKR) {
+            if (ob?.recID == kr?.parentID) {    
+              ob.items = ob?.items?.filter((res) => res.recID != kr.recID);    
+              this.detec.detectChanges();
             }
           }
         }
       }
+      
+    }
+  }
+  removeSKR(skr: any) {
+    if (skr != null) {
+
+      for(let group of this.dataOKR){
+        if(skr?.okrGroupID==group?.okrGroupID){   
+          for (let ob of group?.listOKR) {
+            for (let kr of ob?.items) {
+              for (let i = 0; i < kr?.items?.length; i++) {
+                if (skr?.recID == kr?.items[i]?.recID) {
+                  kr.items = kr?.items.filter((res) => res.recID != skr.recID);
+                  return;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      
     }
   }
 
@@ -1291,9 +1309,9 @@ export class OkrTargetsComponent implements OnInit {
         [data,this.okrGrv,this.okrFM,this.groupModel]
       );
       dialogShowHistoryCheckIn.closed.subscribe((res) => {
-        if (res?.event) {
+        //if (res?.event) {
           this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
-        }
+        //}
       });
     }
   }

@@ -94,12 +94,18 @@
 
     <div ngbAccordion>
       <div ngbAccordionItem class="border-0">
-        <div ngbAccordionHeader>
-          <button ngbAccordionButton class="px-0 pt-0 pb-3 bg-body">
+        <div ngbAccordionHeader class="line-around-flex pb-3">
+          <button
+            ngbAccordionButton
+            class="px-0 pt-0 pb-0 bg-body gap-3"
+            style="width: fit-content"
+            [style.--url]="arrowColorStyle"
+          >
             <codx-label
               [formModel]="form.formModel"
               default="Thông tin mặc định"
-              class="fw-bold"
+              class="fw-bold text-primary"
+              id="moreInfo"
             ></codx-label>
           </button>
         </div>
@@ -251,7 +257,7 @@
               [Group]="form.formGroup"
             ></codx-input>
           </div>
-          <div class="w-auto">
+          <div class="w-auto" *ngIf="journal.assignRule !== '0'">
             <button
               type="button"
               class="btn btn-icon btn-light-primary"
@@ -312,12 +318,12 @@
           <div class="mb-1">
             <codx-label
               class="fw-bold"
-              fiedName="exchangeRatesType"
+              fiedName="exchangeType"
               [formModel]="form.formModel"
             ></codx-label>
           </div>
           <codx-label
-            fiedName="lblExchangeRatesType"
+            fiedName="exchangeType"
             [formModel]="form.formModel"
             [default]="gvs.CurrSourceType?.description"
             class="text-gray-500 font-italic fw-normal"
@@ -327,7 +333,7 @@
         <div class="col-4 d-flex align-items-center justify-content-end">
           <div class="w-100 me-1">
             <codx-input
-              field="exchangeRatesType"
+              field="exchangeType"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [placeholder]="' '"

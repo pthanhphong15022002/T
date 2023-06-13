@@ -117,7 +117,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   loadedData: boolean;
   loadedDataTree: boolean;
   useSKR = false;
-  reloadedMF=true;
+  reloadedMF = true;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -167,6 +167,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.setTitle();
       this.getOKRPlans(this.periodID, this.interval, this.year);
     }
+
+    this.api
+      .exec('OM', 'OKRReportBussiness', 'OKRsListAsync', [null])
+      .subscribe();
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -386,15 +390,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
   }
   updateOKRPlans(planRecID: string) {
-    this.okrService.getOKRPlansByID(planRecID).subscribe((res:any)=>{
-      if(res){
-        this.dataOKRPlans.status=res?.status;
-        this.dataOKRPlans.progress=res?.progress;
+    this.okrService.getOKRPlansByID(planRecID).subscribe((res: any) => {
+      if (res) {
+        this.dataOKRPlans.status = res?.status;
+        this.dataOKRPlans.progress = res?.progress;
       }
-    })
-    this.okrService
-    .getAllOKROfPlan(planRecID)
-    .subscribe((okrs: any) => {
+    });
+    this.okrService.getAllOKROfPlan(planRecID).subscribe((okrs: any) => {
       if (okrs) {
         let x = okrs;
         this.getOrgTreeOKR();
@@ -469,7 +471,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  
+
   getOrgTreeOKR() {
     if (this.curUser?.employee != null) {
       let tempOrgID = '';
@@ -755,11 +757,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                 res +
                 ' để xử lí.'
             ); //OM_WAIT: Đợi mssgCode
-            
-              this.reloadedMF = true;
-              this.detectorRef.detectChanges();
+
+            this.reloadedMF = true;
+            this.detectorRef.detectChanges();
             return;
-            
           } else {
             this.codxOmService
               .changePlanStatus(this.dataOKRPlans.recID, status)
@@ -771,13 +772,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   this.detectorRef.detectChanges();
                   this.updateOKRPlans(this.dataOKRPlans.recID);
                   this.notificationsService.notifyCode('SYS034'); //thành công
-
                 }
                 // else{
 
                 //   this.notificationsService.notifyCode('SYS034'); //thành công
                 // }
-                
               });
           }
         });
@@ -802,7 +801,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                 });
             }
           }
-          
         });
     }
   }

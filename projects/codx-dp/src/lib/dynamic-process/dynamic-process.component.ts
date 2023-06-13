@@ -643,6 +643,7 @@ export class DynamicProcessComponent
           //   break;
           case 'SYS02': // xoa
             if (
+              data.category === '0' ||
               !data.delete ||
               data.deleted ||
               this.funcID == 'DP0203' ||
