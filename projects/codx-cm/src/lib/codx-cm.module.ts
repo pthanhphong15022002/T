@@ -130,7 +130,7 @@ const routes: Routes = [
       {
         path: 'setting/settingprocess/:funcID',
         component: SettingProcessCmComponent,
-
+        data: { noReuse: true },
       },
     ],
   },
@@ -196,6 +196,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewPaymentComponent,
     GanttChartComponent,
     StepTaskComponent,
+    SettingProcessCmComponent
   ],
   imports: [
     RouterModule.forChild(routes),

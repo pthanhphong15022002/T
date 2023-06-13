@@ -1,18 +1,16 @@
 <codx-views
   #view
-  [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [views]="views"
   [button]="buttonAdd"
   (buttonClick)="addDayOff($event)"
+  [autoLoad]="true"
   idField="recID"
   [className]="className"
   [method]="method"
   (selectedChange)="changeItemDetail($event)"
-  [selectedFirst]="true"
-  [autoLoad]="true"
 >
 </codx-views>
 
@@ -485,7 +483,6 @@
   <lib-view-day-off-detail
     #viewDetail
     [itemDetail]="itemDetail"
-    [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
     (clickMFunction)="clickEvent($event)"

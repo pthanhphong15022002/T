@@ -928,7 +928,7 @@
       (itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') &&
       itemQuestion?.active
     "
-    class="w-700 pt-6 ps-6"
+    class="w-100 px-7 pt-5"
   >
     <div class="row">
       <div class="col">
@@ -938,7 +938,7 @@
           class="text-row-column"
         ></codx-label>
         <div
-          class="e-input-group e-input-group1 pd-t-5p answerRow"
+          class="e-input-group e-input-group1 answerRow"
           cdkDropList
           (cdkDropListDropped)="
             dropAnswerRC($event, itemSession.seqNo, itemQuestion.seqNo, 'row')
@@ -951,7 +951,7 @@
           >
             <div
               *ngIf="!itemAnswerR.isColumn"
-              class="d-flex w-100 pd-t-5p has-action-menu"
+              class="d-flex align-items-center w-100 pd-t-5p has-action-menu"
             >
               <div class="action-menu example-handle" cdkDragHandle>
                 <span class="icon-reorder"></span>
@@ -980,16 +980,9 @@
             </div>
           </div>
         </div>
-        <div class="d-flex pd-t-5p ps-6">
+        <div class="d-flex align-items-center pd-t-5p ps-6">
           <span>{{ amountOfRow }}.</span>
-          <input
-            (click)="addAnswerR(itemSession.seqNo, itemQuestion.seqNo)"
-            class="e-input me-2"
-            type="text"
-            placeholder="Thêm hàng"
-            (focus)="focusIn($event.target)"
-            (blur)="focusOut($event.target)"
-          />
+          <codx-label default="Thêm hàng" (click)="addAnswerR(itemSession.seqNo, itemQuestion.seqNo)" ngClass="ms-2 text-gray-500"></codx-label>
         </div>
       </div>
       <div class="col">
@@ -999,7 +992,7 @@
           class="text-row-column"
         ></codx-label>
         <div
-          class="e-input-group e-input-group2 pd-t-5p answerColumn"
+          class="e-input-group e-input-group2 answerColumn"
           cdkDropList
           (cdkDropListDropped)="
             dropAnswerRC(
@@ -1023,7 +1016,7 @@
                 <span class="icon-reorder"></span>
               </div>
               <span
-                class="icon-radio_button_unchecked icon-radio pt-1 aqua"
+                class="icon-radio_button_unchecked icon-radio pt-1"
                 *ngIf="itemQuestion.answerType == 'O2'"
               ></span>
               <span
@@ -1052,23 +1045,16 @@
             </div>
           </div>
         </div>
-        <div class="d-flex pd-t-5p ps-6">
+        <div class="d-flex align-items-center pd-t-5p ps-6">
           <span
-            class="icon-radio_button_unchecked icon-radio mt-1 red"
+            class="icon-radio_button_unchecked icon-radio"
             *ngIf="itemQuestion.answerType == 'O2'"
           ></span>
           <span
             class="icon-check_box_outline_blank"
             *ngIf="itemQuestion.answerType == 'C2'"
           ></span>
-          <input
-            (click)="addAnswerC(itemSession.seqNo, itemQuestion.seqNo)"
-            class="e-input me-2"
-            type="text"
-            placeholder="Thêm cột"
-            (focus)="focusIn($event.target)"
-            (blur)="focusOut($event.target)"
-          />
+          <codx-label default="Thêm cột" (click)="addAnswerC(itemSession.seqNo, itemQuestion.seqNo)" ngClass="ms-2 text-gray-500"></codx-label>
         </div>
       </div>
     </div>
@@ -1096,7 +1082,7 @@
         </td>
         <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">
           <span
-            class="icon-radio_button_unchecked icon-radio red"
+            class="icon-radio_button_unchecked icon-radio"
             *ngIf="itemQuestion.answerType == 'O2'"
           ></span>
           <span

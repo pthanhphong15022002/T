@@ -799,35 +799,38 @@ export class PdfComponent
     let x = konva.position().x;
     let w = konva.scale().x * this.xScale;
     let h = konva.scale().y * this.yScale;
-    let tmpArea;
-    // let tmpArea: tmpSignArea = {
-    //   signer: authorID,
-    //   labelType: labelType,
-    //   labelValue: url.replace(environment.urlUpload + '/', ''),
-    //   isLock: false,
-    //   allowEditAreas: this.signerInfo.allowEditAreas,
-    //   signDate: this.curSignDateType == this.lstSignDateType[0] ? false : true,
-    //   dateFormat: this.curAnnotDateFormat,
-    //   // location: {
-    //   //   top: y / this.yScale,
-    //   //   left: x / this.xScale,
-    //   //   width: w / this.xScale,
-    //   //   height: h / this.yScale,
-    //   //   pageNumber:
-    //   //     Number(konva?.parent?.id().replace('layer', '')) - 1 ??
-    //   //     this.curPage - 1,
-    //   // },
-    //   stepNo: stepNo,
-    //   fontStyle: type == 'text' ? konva.fontFamily() : '',
-    //   fontFormat:
-    //     type == 'text' ? konva.fontStyle() + ' ' + konva.textDecoration() : '',
-    //   fontSize: type == 'text' ? konva.fontSize() : '',
-    //   signatureType: this.signerInfo.signType,
-    //   comment: '',
-    //   createdBy: authorID,
-    //   modifiedBy: authorID,
-    //   recID: recID,
-    // };
+
+    let tmpArea: tmpSignArea = {
+      signer: authorID,
+      labelType: labelType,
+      labelValue: url.replace(environment.urlUpload + '/', ''),
+      isLock: false,
+      allowEditAreas: this.signerInfo.allowEditAreas,
+      signDate: this.curSignDateType == this.lstSignDateType[0] ? false : true,
+      dateFormat: this.curAnnotDateFormat,
+      location: {
+        top: y / this.yScale,
+        left: x / this.xScale,
+        width: w / this.xScale,
+        height: h / this.yScale,
+        pageNumber:
+          Number(konva?.parent?.id().replace('layer', '')) - 1 ??
+          this.curPage - 1,
+        rotate: -this.rotate,
+        fileRotate: -this.rotate,
+
+      },
+      stepNo: stepNo,
+      fontStyle: type == 'text' ? konva.fontFamily() : '',
+      fontFormat:
+        type == 'text' ? konva.fontStyle() + ' ' + konva.textDecoration() : '',
+      fontSize: type == 'text' ? konva.fontSize() : '',
+      signatureType: this.signerInfo.signType,
+      comment: '',
+      createdBy: authorID,
+      modifiedBy: authorID,
+      recID: recID,
+    };
     if (this.needAddKonva) {
       if (this.imgConfig.includes(tmpArea.labelType)) {
         tmpArea.labelValue = tmpArea.labelValue.replace(

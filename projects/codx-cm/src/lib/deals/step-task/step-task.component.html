@@ -105,7 +105,7 @@
       </div>
     </div>
     <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
-      <div *ngFor="let step of listInstanceStepShow" class="list-step ps-4">
+      <div *ngFor="let step of listInstanceStepShow; let i = index" class="list-step ps-4">
         <codx-step-task
           [dataSources]="step"
           [isShowButton]="false"
@@ -116,10 +116,11 @@
           [isClose]="dataSelected?.closed"
           [isRoleAll]="dataSelected?.roles?.isOnwer || false"
           [isShowElement]="isShowElement"
+          [isAddTask]="i == indexAddTask"
           (continueStep)="handelContinueStep($event, step)"
           (saveAssign)="handelSaveAssignTask($event)"
         ></codx-step-task>
-        <hr class="m-0 p-0" />
+        <hr/>
       </div>
     </div>
     <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
@@ -130,8 +131,10 @@
 <ng-template #ganttChart>
    <div class="w-100 h-100" id="tabGantt">
      <codx-step-chart
+      [listInstanceStep]="listInstanceStep"
+      [isShowTypeTime]="false"
       [typeTime]="typeTime"
-      [dataSelected]="dataSelected"
+      [instance]="dataSelected"
       [listSteps]="listInstanceStepShow"
      ></codx-step-chart>
    </div>
