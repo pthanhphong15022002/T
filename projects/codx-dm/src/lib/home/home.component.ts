@@ -213,7 +213,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.dmSV.isAddFolder.subscribe((item) => {
       if (item) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree) tree.setNodeTree(item);
+        if (tree && this.funcID != "DMT00") tree.setNodeTree(item);
         if(this.view.dataService.data.length == 0)
           this.view.dataService.data.push(item);
         // var ele = document.getElementsByClassName('item-selected');
@@ -234,6 +234,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.setHideModeView();
         this.view.viewChange(this.viewActive);
         this.codxview.currentView.viewModel.model.panelLeftHide = false;
+
+        if(this.funcID == "DMT04")
+          this.codxview.currentView.viewModel.model.panelLeftHide = true;
         if (tree) {
           tree.textField = 'folderName';
           if (res.recID) {
@@ -299,9 +302,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         this.loaded = false;
         this.disableMark();
+
+        
+        this.dmSV.parentCreate = false;
+
         if(this.funcID == "DMT00")
         {
-          
           this.folderService.getFolder(res.recID).subscribe((res2) => {
             if(res)
             {
@@ -309,7 +315,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
               this.dmSV.getRight(res2);
               this.refeshData();
               this.getDataFolder(res2.recID , true);
-             
+              this.dmSV.parentFolder.next(res2);
               var breadcumb = this.dmSV.breadcumb.getValue();
               if(!breadcumb.includes(res2.folderName)) breadcumb.push(res2.folderName);
               if(!this.dmSV.breadcumbLink.includes(res2.recID))this.dmSV.breadcumbLink.push(res2.recID);
@@ -320,6 +326,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         else
         {
           this.refeshData();
+          this.dmSV.parentFolder.next(res);
           var treeView = this.codxview?.currentView?.currentComponent?.treeView;
           if (treeView) {
               var list = treeView.getBreadCumb(res.recID);
@@ -327,33 +334,23 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
               treeView.getCurrentNode(res.recID)
               this.scrollTop();
           }
-          // else
-          // {
-          //   this.refeshData();
-          //   if(this.dmSV.folderID)
-          //   {
-          //     this.folderService.getFolder(this.dmSV.folderID).subscribe((res2) => {
-          //       if(res)
-          //       {
-          //         this.dmSV.folderID = res2.recID
-          //         this.dmSV.getRight(res2 , this.funcID);
-          //         this.refeshData();
-          //         this.getDataFolder(res2.recID);
-          //         var breadcumb = this.dmSV.breadcumb.getValue();
-          //         breadcumb.push(res2.folderName);
-          //         this.dmSV.breadcumbLink.push(res2.recID);
-          //         this.dmSV.breadcumb.next(breadcumb);
-          //       }
-          //     });
-          //   }
-            
-          // }
+          else if(this.funcID == "DMT04")
+          {
+            this.dmSV.getRight(res);
+            this.refeshData();
+            this.getDataFolder(res.recID);
+            var breadcumb = this.dmSV.breadcumb.getValue();
+            breadcumb.push(res.folderName);
+            if(!this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = [""];
+            this.dmSV.breadcumbLink.push(res.recID);
+            this.dmSV.breadcumb.next(breadcumb);
+          }
         }
       }
     })
 
     this.dmSV.isRefreshTree.subscribe((res) => {
-      if(this.funcID != "DMT02" && this.funcID != "DMT03") return;
+      if(this.funcID != "DMT02" && this.funcID != "DMT03" && this.funcID != "DMT04") return;
       if (res) {
         var ele = document.getElementsByClassName('collapse');
         for (var i = 0; i < ele.length; i++) {
@@ -392,6 +389,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.currView = this.templateCard;
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
+        }
+
+        if(this.funcID == 'DMT04')
+        {
+          this.codxview.currentView.viewModel.model.panelLeftHide = true;
         }
         //this.data = this.view.dataService.data
       }
@@ -650,11 +652,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if(this.funcID != "DMT00" && this.funcID != "DMT06" && this.funcID != "DMT07") this.getDataByFuncID(this.funcID);
         else if(this.funcID == "DMT06" || this.funcID == "DMT07") 
         {
-          
           var vll = this.dmSV.loadValuelist("DM003") as any;
           if(isObservable(vll))
           {
-           
             vll.subscribe((item:any)=>{
               this.vllDM003 = item?.datas;
               this.getDataByFuncID(this.funcID)
@@ -1157,16 +1157,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         var breadcumb = [];
         breadcumb.push(item.customName);
-        
+        this.dmSV.breadcumbLink = [""];
         //Tài liệu yêu cầu chia sẻ
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07")
         {
-          
           var x =this.breakCumbArr.filter(x=>x.id == this.funcID)
           breadcumb.push(x[0].sub[0].name);
           this.dmSV.breadcumbLink = ["",""];
         }
-
+      
         //this.dmSV.breadcumbLink.push(item.customName);
         this.dmSV.menuActive.next(item.customName);
         this.dmSV.breadcumb.next(breadcumb);

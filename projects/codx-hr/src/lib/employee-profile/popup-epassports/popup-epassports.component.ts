@@ -123,6 +123,19 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
+
+        //Xu li validate thong tin CMND nhan vien
+        if(this.passportObj.expiredDate && this.passportObj.issuedDate){
+          if (this.passportObj.expiredDate < this.passportObj.issuedDate) {
+            this.hrService.notifyInvalidFromTo(
+              'ExpiredDate',
+              'IssuedDate',
+              this.formModel
+              )
+              return;
+            }
+        }
+
     this.passportObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService

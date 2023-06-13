@@ -39,11 +39,20 @@ import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.componen
 import { StepService } from '../step.service';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
   styleUrls: ['./codx-step-task.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('void', style({ opacity: 0 })),
+      transition(':enter, :leave', [
+        animate(500, style({ opacity: 1 }))
+      ])
+    ])
+  ]
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
@@ -63,6 +72,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isRoleAll = true;
   @Input() isViewStep = false;
+  @Input() isShowElement = true;
 
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -1382,5 +1392,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         // this.data.listInformationRel = x.event[1];
       }
     });
+  }
+  toggleElemen(){
+    this.isShowElement = !this.isShowElement;
   }
 }

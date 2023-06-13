@@ -196,10 +196,32 @@ export class PopupAddSalesInvoiceComponent
   }
 
   onInputChange(e): void {
-    if (e.field.toLowerCase() === 'objectid') {
+    console.log('onInputChange', e);
+
+    if (e.field === 'objectID') {
       this.form.formGroup.patchValue({
-        objectName: e.component.itemsSelected[0].ObjectName,
+        objectName: e.component.itemsSelected[0]?.ObjectName,
       });
+    }
+
+    const postFields: string[] = [
+      'objectID',
+      'currencyID',
+      'exchangeRate',
+      'voucherDate',
+      'salespersonID',
+    ];
+    if (postFields.includes(e.field)) {
+      this.api
+        .exec('SM', 'SalesInvoicesBusiness', 'ValueChangeAsync', [
+          e.field,
+          this.salesInvoice,
+        ])
+        .subscribe((res) => {
+          console.log(res);
+
+          this.form.formGroup.patchValue(res);
+        });
     }
   }
 
@@ -333,41 +355,49 @@ export class PopupAddSalesInvoiceComponent
         if (res.save.data || res.update.data) {
           this.masterService.hasSaved = true;
 
-          this.detailService.addNew().subscribe((res: ISalesInvoicesLine) => {
-            console.log(res);
+          this.detailService
+            .addNew(() =>
+              this.api.exec(
+                'SM',
+                'SalesInvoicesLinesBusiness',
+                'GetDefaultAsync',
+                [this.salesInvoice]
+              )
+            )
+            .subscribe((res: ISalesInvoicesLine) => {
+              console.log(res);
 
-            let index = this.salesInvoicesLines.length;
-            res.rowNo = index + 1;
-            res.transID = this.salesInvoice.recID;
+              let index = this.salesInvoicesLines.length;
+              res.rowNo = index + 1;
 
-            if (this.editSettings.mode === 'Normal') {
-              this.grid.addRow(res, index);
-            } else {
-              const dialogModel = new DialogModel();
-              dialogModel.FormModel = this.fmSalesInvoicesLines;
-              dialogModel.DataService = this.detailService;
+              if (this.editSettings.mode === 'Normal') {
+                this.grid.addRow(res, index);
+              } else {
+                const dialogModel = new DialogModel();
+                dialogModel.FormModel = this.fmSalesInvoicesLines;
+                dialogModel.DataService = this.detailService;
 
-              this.callfc
-                .openForm(
-                  PopupAddSalesInvoicesLineComponent,
-                  'This param is not working',
-                  500,
-                  700,
-                  '',
-                  {
-                    formType: 'add',
-                    index: index,
-                  },
-                  '',
-                  dialogModel
-                )
-                .closed.subscribe(({ event }) => {
-                  if (event?.length > 0) {
-                    this.tableLineDetail.grid.refresh();
-                  }
-                });
-            }
-          });
+                this.callfc
+                  .openForm(
+                    PopupAddSalesInvoicesLineComponent,
+                    'This param is not working',
+                    500,
+                    700,
+                    '',
+                    {
+                      formType: 'add',
+                      index: index,
+                    },
+                    '',
+                    dialogModel
+                  )
+                  .closed.subscribe(({ event }) => {
+                    if (event?.length > 0) {
+                      this.tableLineDetail.grid.refresh();
+                    }
+                  });
+              }
+            });
         }
       });
   }

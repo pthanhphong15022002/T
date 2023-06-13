@@ -1,6 +1,6 @@
 .line-clamp-menu {
   display: inline-block!important;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -9,4 +9,8 @@
 }
 :host ::ng-deep codx-view-list-detail .codx-detail-main {
   overflow: hidden;
+}
+
+.nowrap {
+  white-space: nowrap !important;
 }

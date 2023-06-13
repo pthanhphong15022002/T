@@ -1,6 +1,5 @@
 <codx-views
   #view
-  [funcID]="funcID"
   service="HR"
   assemblyName="ERM.Business.HR"
   entityName="HR_OrganizationUnits"
@@ -9,7 +8,7 @@
   [views]="views"
   [autoLoad]="true"
   idField="OrgUnitID"
-  [button]="button"
+  [button]="buttonAdd"
   (selectedChange)="onSelectionChanged($event)"
   (buttonClick)="btnClick($event)"
 >

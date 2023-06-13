@@ -35,6 +35,7 @@ import { VATInvoices } from '../../../models/VATInvoices.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { map } from 'rxjs';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-purchase',
@@ -65,10 +66,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   VATType: any;
   detailActive = 1;
   countDetail = 0;
-  pageCount: any;
   journal: IJournal;
   hasSaved: any = false;
-  isSaveMaster: any = false;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -100,8 +99,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   ];
   columnGrids = [];
   keymodel: any = [];
-  page: any = 1;
-  pageSize = 5;
   modegrid: any;
   lsVatCode: any;
   journals: any;
@@ -116,6 +113,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private ngxService: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -132,6 +130,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
+    this.ngxService.startLoader('loader');
     this.loadInit();
   }
 
@@ -192,6 +191,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.vatinvoices[e.field] = e.data;
   }
   gridCreated(e, grid) {
+    this.closeLoader();
     this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
   }
 
@@ -283,7 +283,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.purchaseinvoices,
+      });
+    } else {
+      this.dialog.close();
+    }
   }
 
   onDiscard(){
@@ -311,7 +318,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.updateVAT();
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -332,7 +338,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -379,9 +384,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               {
                 this.purchaseInvoicesLines.push(dataline);
               }
-              this.loadPageCount();
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -551,7 +554,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   var dataline = res.event['data'];
                   this.purchaseInvoicesLines[index] = dataline;
                   this.hasSaved = true;
-                  this.isSaveMaster = true;
                   if (dataline.vatid != null) {
                     this.loadPurchaseInfo();
                   }
@@ -589,7 +591,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             for (let i = 0; i < this.purchaseInvoicesLines.length; i++) {
               this.purchaseInvoicesLines[i].rowNo = i + 1;
             }
-            this.loadPageCount();
             break;
         }
         this.api
@@ -597,7 +598,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.api
                 .exec(
                   'PS',
@@ -670,6 +670,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       totalvat = totalvat + element.vatAmt;
     });
     this.total = totalnet + totalvat;
+    if(this.journal && (this.total <= this.journal.transLimit || this.journal.transLimit == null))
+      this.purchaseinvoices.totalAmt = this.total;
     this.purchaseinvoices.totalAmt = this.total;
     this.totalnet = totalnet.toLocaleString('it-IT', {
       style: 'currency',
@@ -679,14 +681,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       style: 'currency',
       currency: 'VND',
     });
-    this.total = this.total.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'VND',
-    });
-    if(this.isSaveMaster)
-    {
-      this.onSaveMaster();
-    }
   }
 
   loadPredicate(visibleColumns, data)
@@ -737,10 +731,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       }
     });
-  }
-
-  loadPageCount() {
-    this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
   }
 
   searchName(e) {
@@ -837,13 +827,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit && this.purchaseinvoices.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit == null)
+      this.purchaseinvoices.totalAmt = parseInt(this.total);
+    if(this.journal.transLimit && this.total > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      if(this.journal.transControl == '2')
-      {
-        this.validate++ ;
-      }
+      this.validate++ ;
     }
   }
 
@@ -911,25 +900,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           );
         }
       });
-
-    if (this.formType == 'edit') {
-      this.api
-        .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
-          this.purchaseinvoices.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.purchaseInvoicesLines = res;
-            this.purchaseInvoicesLines.forEach((element) => {
-              if (element.vatid != null) {
-                this.countDetail++;
-              }
-              this.loadTotal();
-            });
-          }
-        });
-    }
 
     if (this.purchaseinvoices.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
@@ -1035,6 +1005,26 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             }
           });
       }
+      if (this.formType == 'edit') {
+        this.api
+          .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
+            this.purchaseinvoices.recID,
+          ])
+          .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.keymodel = Object.keys(res[0]);
+              this.purchaseInvoicesLines = res;
+              this.purchaseInvoicesLines.forEach((element) => {
+                if (element.vatid != null) {
+                  this.countDetail++;
+                }
+                this.loadTotal();
+              });
+            }
+          });
+      }
+      if(this.modegrid == '2')
+        this.closeLoader();
       });
   }
 
@@ -1086,27 +1076,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.vatinvoices,
         ])
         .subscribe(() => {});
-    }
-  }
-  
-  onSaveMaster()
-  {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      this.dialog.dataService.updateDatas.set(
-        this.purchaseinvoices['_uuid'],
-        this.purchaseinvoices
-      );
-      this.dialog.dataService
-        .save(null, 0, '', 'SYS006', false)
-        .subscribe((res) => {
-          if (res && res.update.data != null) {
-            this.dt.detectChanges();
-          }
-        });
     }
   }
 
@@ -1194,7 +1163,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   this.updateVAT();
                   this.dialog.close({
                     update: true,
-                    data: res.update,
+                    data: res.update.data,
                   });
                   this.dt.detectChanges();
                 }
@@ -1233,7 +1202,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.purchaseinvoices = res;
                 this.form.formGroup.patchValue(this.purchaseinvoices);
                 this.hasSaved = false;
-                this.isSaveMaster = false;
               });
           }
         });
@@ -1270,6 +1238,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
+  closeLoader(){
+    setTimeout(() => {
+      this.ngxService.stopLoader('loader');
+      this.ngxService.destroyLoaderData('loader');
+    }, 500);
+  }
   
   //#endregion
 }

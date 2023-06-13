@@ -38,15 +38,36 @@
     <div class="col-4 d-flex justify-content-start">
       <div class="d-flex flex-column">
         <div
-          class="align-items-start text-dark fw-bold"
+          class="align-items-start text-dark fw-bold line-clamp line-clamp-1"
+          [ngbTooltip]="dealNameTemp"
           [innerHTML]="
             data?.dealName | formatvalue : fromModelDeal : 'DealName' | async
           "
-        ></div>
+        >
+          <ng-template #dealNameTemp>
+            <span
+              [innerHTML]="
+                data?.dealName
+                  | formatvalue : fromModelDeal : 'DealName'
+                  | async
+              "
+            ></span>
+          </ng-template>
+        </div>
         <div class="row mb-1">
           <div class="col-6">
             <div class="d-flex justify-content-start">
-              <span class="icon-money icon-16 me-1"></span>
+              <span
+                [ngbTooltip]="popupDealValue"
+                class="icon-money icon-16 me-1"
+              >
+                <ng-template #popupDealValue>
+                  <codx-label
+                    fiedName="DealValue"
+                    [formModel]="fromModelDeal"
+                  ></codx-label>
+                </ng-template>
+              </span>
               <span
                 class="ms-1 text-dark fw-bold"
                 [innerHTML]="
@@ -59,7 +80,17 @@
           </div>
           <div class="col-6">
             <div class="d-flex justify-content-end">
-              <span class="icon-offline_pin icon-16 me-2"></span>
+              <span
+                class="icon-offline_pin icon-16 me-2"
+                [ngbTooltip]="popupProbability"
+              >
+                <ng-template #popupProbability>
+                  <codx-label
+                    fiedName="Probability"
+                    [formModel]="fromModelDeal"
+                  ></codx-label>
+                </ng-template>
+              </span>
               <span
                 class="text-dark fw-bold"
                 [innerHTML]="
@@ -74,7 +105,7 @@
         </div>
       </div>
     </div>
-    <div class="col-2" *ngIf="getStep(data?.stepID)">
+    <div class="col-2 ms-1" *ngIf="getStep(data?.stepID)">
       <div
         style="width: 150px; border-radius: 20px"
         class="d-flex align-items-center mb-1"
@@ -121,7 +152,17 @@
       </div>
     </div>
     <div class="d-flex col-3 ustify-content-between align-items-start">
-      <span class="icon-star_purple500 icon-16 me-1"> </span>
+      <span
+        class="icon-star_purple500 icon-16 me-1"
+        [ngbTooltip]="popupIconStreng"
+      >
+        <ng-template #popupIconStreng>
+          <codx-label
+            fiedName="Strengths"
+            [formModel]="fromModelDealCompetitor"
+          ></codx-label>
+        </ng-template>
+      </span>
       <span
         class="text-dark fw-bold"
         [innerHTML]="
@@ -132,7 +173,17 @@
       ></span>
     </div>
     <div class="col-3 d-flex align-items-start">
-      <span class="icon-star_border_purple500 icon-16 me-1"> </span>
+      <span
+        class="icon-star_border_purple500 icon-16 me-1"
+        [ngbTooltip]="popupIconWeaknesses"
+      >
+        <ng-template #popupIconWeaknesses>
+          <codx-label
+            fiedName="Weaknesses"
+            [formModel]="fromModelDealCompetitor"
+          ></codx-label>
+        </ng-template>
+      </span>
       <span
         class="text-dark fw-bold"
         [innerHTML]="

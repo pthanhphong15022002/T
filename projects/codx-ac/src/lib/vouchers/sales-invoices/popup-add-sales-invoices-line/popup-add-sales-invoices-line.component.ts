@@ -87,13 +87,6 @@ export class PopupAddSalesInvoicesLineComponent
 
   //#region Init
   onInit(): void {
-    this.dialogRef.beforeClose.subscribe(
-      (res) =>
-        (res.event = !this.isEdit
-          ? this.salesInvoicesLines
-          : this.salesInvoicesLine)
-    );
-
     this.journalService
       .getJournal(this.journalNo)
       .subscribe((res: IJournal) => {
@@ -241,7 +234,9 @@ export class PopupAddSalesInvoicesLineComponent
         this.index++;
 
         if (closeAfterSave) {
-          this.dialogRef.close();
+          this.dialogRef.close(
+            !this.isEdit ? this.salesInvoicesLines : this.salesInvoicesLine
+          );
         } else {
           this.dataService.addNew().subscribe((res: ISalesInvoicesLine) => {
             console.log(res);

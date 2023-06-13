@@ -24,6 +24,7 @@ export class CodxStepChartComponent
 {
   @Input() ganttDs = [];
   @Input() dataSelected;
+  @Input() typeTime;
   @Input() listSteps: DP_Instances_Steps[] = [];
 
   crrViewGant = 'W';
@@ -185,6 +186,9 @@ export class CodxStepChartComponent
       );
       //  this.dataSelected? = ch
       //  this.getListContactByObjectID(this.dataSelected?.recID);
+    }
+    if(changes.typeTime){
+      this.changeViewTimeGant(this.typeTime);
     }
   }
 

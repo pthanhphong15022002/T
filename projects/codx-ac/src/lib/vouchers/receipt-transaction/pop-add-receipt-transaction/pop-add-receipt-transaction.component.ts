@@ -13,6 +13,7 @@ import { JournalService } from '../../../journals/journals.service';
 import { Observable } from 'rxjs';
 import { InventoryJournals } from '../../../models/InventoryJournals.model';
 import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-lineinventory.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -49,13 +50,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   inventoryJournalLines: Array<InventoryJournalLines> = [];
   inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
   lockFields = [];
-  pageCount: any;
   tab: number = 0;
   total: any = 0;
-  page: any = 1;
-  pageSize = 5;
   hasSaved: any = false;
-  isSaveMaster: any = false;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   funcID: any;
@@ -92,6 +89,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private ngxService: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -143,13 +141,13 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Init
 
   onInit(): void {
+    this.ngxService.startLoader('loader');
     this.loadInit();
     this.loadTotal();
   }
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.inventoryJournal);
-    this.pageCount = '(' + this.inventoryJournalLines.length + ')';
   }
 
   //#endregion
@@ -157,6 +155,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Event
 
   gridCreated() {
+    this.closeLoader();
     this.gridInventoryJournalLine.hideColumns(this.lockFields);
   }
 
@@ -275,7 +274,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -295,7 +293,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
             this.loadTotal();
           }
         });
@@ -319,7 +316,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.inventoryJournal,
+      });
+    } else {
+      this.dialog.close();
+    }
   }
 
   //#endregion
@@ -345,24 +349,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       return;
     } else {
       this.save(true);
-    }
-  }
-
-  onSaveMaster(){
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      this.dialog.dataService.updateDatas.set(
-        this.inventoryJournal['_uuid'],
-        this.inventoryJournal
-      );
-      this.dialog.dataService.save(null, 0, '', '', false).subscribe((res) => {
-        if (res && res.update.data != null) {
-          this.dt.detectChanges();
-        }
-      });
     }
   }
 
@@ -405,9 +391,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     .addNew((o) => this.setDefault(o))
                     .subscribe((res) => {
                     this.inventoryJournal = res;
+                    this.setWarehouseID();
                     this.form.formGroup.patchValue(this.inventoryJournal);
                     this.hasSaved = false;
-                    this.isSaveMaster = false;
                     });
                     this.dt.detectChanges();
                 }
@@ -442,6 +428,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     .addNew((o) => this.setDefault(o))
                     .subscribe((res) => {
                       this.inventoryJournal = res;
+                      this.setWarehouseID();
                       this.form.formGroup.patchValue(this.inventoryJournal);
                     });
                   }
@@ -472,7 +459,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               if (res && res.update.data != null) {
                 this.dialog.close({
                   update: true,
-                  data: res.update,
+                  data: res.update.data,
                 });
                 this.dt.detectChanges();
               }
@@ -490,44 +477,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   loadInit(){
-    if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
-          this.inventoryJournal.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.inventoryJournalLines = res;
-            this.inventoryJournalLines.forEach((element) => {
-              this.loadTotal();
-            });
-          }
-        });
-    }
+    
     if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
     {
       this.getWarehouseName(this.inventoryJournal.warehouseID);
     }
     if(this.formType == 'add')
     {
-      switch(this.funcID)
-      {
-        case 'ACT0708':
-          if(this.inventoryJournal.warehouseReceipt)
-          {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
-            this.getWarehouseName(this.inventoryJournal.warehouseID);
-          }
-          break;
-        case 'ACT0714':
-          if(this.inventoryJournal.warehouseIssue)
-          {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
-            this.getWarehouseName(this.inventoryJournal.warehouseID);
-          }
-          break;
-      }
+      this.setWarehouseID();
     }
     if (
       this.inventoryJournal &&
@@ -568,11 +525,24 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
       this.modeGrid = this.journal.inputMode;
+      if(this.modeGrid == '2')
+        this.closeLoader();
+      if (this.formType == 'edit') {
+        this.api
+          .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+            this.inventoryJournal.recID,
+          ])
+          .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.keymodel = Object.keys(res[0]);
+              this.inventoryJournalLines = res;
+              this.inventoryJournalLines.forEach((element) => {
+                this.loadTotal();
+              });
+            }
+          });
+      }
     });
-  }
-
-  loadPageCount() {
-    this.pageCount = '(' + this.inventoryJournalLines.length + ')';
   }
 
   loadTotal() {
@@ -581,11 +551,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.total = totals;
-    this.inventoryJournal.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT')
-    if (this.isSaveMaster ) {
-      this.onSaveMaster();
-    }
+    if(this.journal && (totals <= this.journal.transLimit || this.journal.transLimit == null))
+      this.inventoryJournal.totalAmt = totals;
   }
 
   addRow(){
@@ -712,9 +679,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               {
                 this.inventoryJournalLines.push(dataline);
               }
-              this.loadPageCount();
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.loadTotal();
             }
           });
@@ -769,7 +734,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   var dataline = res.event['data'];
                   this.inventoryJournalLines[index] = dataline;
                   this.hasSaved = true;
-                  this.isSaveMaster = true;
                   this.loadTotal();
                 }
               });
@@ -835,7 +799,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             for (let i = 0; i < this.inventoryJournalLines.length; i++) {
               this.inventoryJournalLines[i].rowNo = i + 1;
             }
-            this.loadPageCount();
             break;
         }
         this.api
@@ -843,7 +806,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.api
                 .exec(
                   'IV',
@@ -921,13 +883,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit && this.inventoryJournal.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit && parseInt(this.total) > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      if(this.journal.transControl == '2')
-      {
-        this.validate++ ;
-      }
+      this.validate++ ;
     }
   }
 
@@ -1071,12 +1030,39 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       });
   }
 
+  setWarehouseID(){
+    switch(this.funcID)
+      {
+        case 'ACT0708':
+          if(this.inventoryJournal.warehouseReceipt)
+          {
+            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
+          }
+          break;
+        case 'ACT0714':
+          if(this.inventoryJournal.warehouseIssue)
+          {
+            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
+            this.getWarehouseName(this.inventoryJournal.warehouseID);
+          }
+          break;
+      }
+  }
+
   calculateNetAmt(quantity: any, costPrice: any)
   {
     if(quantity == 0 || costPrice == 0)
       return 0;
     var costAmt = quantity * costPrice;
     return costAmt;
+  }
+
+  closeLoader(){
+    setTimeout(() => {
+      this.ngxService.stopLoader('loader');
+      this.ngxService.destroyLoaderData('loader');
+    }, 500);
   }
 
   //#endregion

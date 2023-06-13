@@ -143,6 +143,19 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
+    console.log('data chuan bi luu', this.skillObj);
+
+    if(this.skillObj.trainTo && this.skillObj.trainFrom){
+      if (Number(this.skillObj.trainTo) < Number(this.skillObj.trainFrom)) {
+        this.hrService.notifyInvalidFromTo(
+          'TrainTo',
+          'TrainFrom',
+          this.formModel
+          )
+          return;
+      }
+    }
+    
     this.skillObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
