@@ -155,8 +155,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#region Event
 
   gridCreated() {
-    this.gridInventoryJournalLine.hideColumns(this.lockFields);
     this.closeLoader();
+    this.gridInventoryJournalLine.hideColumns(this.lockFields);
   }
 
   clickMF(e, data) {
@@ -316,7 +316,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.inventoryJournal,
+      });
+    } else {
+      this.dialog.close();
+    }
   }
 
   //#endregion
@@ -452,7 +459,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               if (res && res.update.data != null) {
                 this.dialog.close({
                   update: true,
-                  data: res.update,
+                  data: res.update.data,
                 });
                 this.dt.detectChanges();
               }
@@ -470,21 +477,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   loadInit(){
-    if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
-          this.inventoryJournal.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.inventoryJournalLines = res;
-            this.inventoryJournalLines.forEach((element) => {
-              this.loadTotal();
-            });
-          }
-        });
-    }
+    
     if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
     {
       this.getWarehouseName(this.inventoryJournal.warehouseID);
@@ -534,6 +527,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.modeGrid = this.journal.inputMode;
       if(this.modeGrid == '2')
         this.closeLoader();
+      if (this.formType == 'edit') {
+        this.api
+          .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+            this.inventoryJournal.recID,
+          ])
+          .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.keymodel = Object.keys(res[0]);
+              this.inventoryJournalLines = res;
+              this.inventoryJournalLines.forEach((element) => {
+                this.loadTotal();
+              });
+            }
+          });
+      }
     });
   }
 
@@ -543,8 +551,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.total = totals;
-    this.inventoryJournal.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT')
+    if(this.journal && (totals <= this.journal.transLimit || this.journal.transLimit == null))
+      this.inventoryJournal.totalAmt = totals;
   }
 
   addRow(){
@@ -875,13 +883,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit && this.inventoryJournal.totalAmt > this.journal.transLimit)
+    if(this.journal.transLimit && parseInt(this.total) > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
-      if(this.journal.transControl == '2')
-      {
-        this.validate++ ;
-      }
+      this.validate++ ;
     }
   }
 
