@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LayoutModel } from '@syncfusion/ej2-angular-diagrams';
 import {
   ApiHttpService,
   CacheService,
