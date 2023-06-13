@@ -49,15 +49,14 @@ export class ActiviesSliderComponent implements OnInit {
   ngOnInit(): void {
     this.getDataAsync();
     this.cache.valueList("SYS055").subscribe(vll => {
-      if(vll){
+      if(vll)
+      {
         this.datas = vll.datas;
         let _defaultVLL  = vll.datas.find(x => x.value == "");
-        if(_defaultVLL){
+        if(_defaultVLL)
           this.valueSelected = _defaultVLL;
-        }
-        else{
+        else
           this.valueSelected = vll.datas[0];
-        }
       }
     });
   }
@@ -159,8 +158,8 @@ export class ActiviesSliderComponent implements OnInit {
     }
   }
   setStyles(value){
-    let vll = this.datas.find(x => x.value === value);
-    if(!vll) vll = this.datas.find(x => x.value === "");
+    let vll = this.datas.find(x => x.value == value);
+    if(!vll) vll = this.datas.find(x => x.value == "");
     let styles = {
       backgroundColor: vll.color ,
       color: vll.textColor,

@@ -693,6 +693,16 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Duyệt checkIn
+  approveCheckIn(recID: string,status:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'ApproveCheckInKRAsync',
+      [recID,status]
+    );
+  }
   //Lấy ds OKR_Links theo OKR RecID
   getOKRHavedLinks(recID: string) {    
     return this.api.execSv(

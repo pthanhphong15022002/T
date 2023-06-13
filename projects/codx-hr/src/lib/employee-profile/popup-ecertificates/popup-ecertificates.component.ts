@@ -144,10 +144,22 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if(this.certificateObj.trainTo && this.certificateObj.trainFrom){
+      if (Number(this.certificateObj.trainTo) < Number(this.certificateObj.trainFrom)) {
+        this.hrService.notifyInvalidFromTo(
+          'TrainTo',
+          'TrainFrom',
+          this.formModel
+          )
+          return;
+      }
+    }
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
         if (p != null) {

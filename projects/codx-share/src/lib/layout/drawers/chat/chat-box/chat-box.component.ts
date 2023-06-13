@@ -60,6 +60,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  mssgDeleted:string = "";
   @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
   @ViewChild("codxATMImages") codxATMImages:AttachmentComponent;
   @ViewChild("codxATM") codxATM:AttachmentComponent;
@@ -131,10 +132,16 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
         }
       });
     }
-    this.cache.valueList("L1480").subscribe((vll:any) => {
+
+    let valuelist = this.cache.valueList("L1480").subscribe((vll:any) => {
       if(vll?.datas){
         this.vllL1480 = vll.datas;
       }
+      valuelist.unsubscribe();
+    });
+    let mssgDelete = this.cache.message("CHAT002").subscribe((res:any) => {
+      this.mssgDeleted = res.defaultName;
+      mssgDelete.unsubscribe();
     });
   }
   ngAfterViewInit(): void {
