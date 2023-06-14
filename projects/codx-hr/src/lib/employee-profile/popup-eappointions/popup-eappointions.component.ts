@@ -214,10 +214,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
-  }
-
   valueChange(event) {
     if (!event.data) {
       this.EAppointionObj.signerPosition = '';
