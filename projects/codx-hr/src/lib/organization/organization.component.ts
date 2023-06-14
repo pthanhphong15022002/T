@@ -190,7 +190,7 @@ export class OrgorganizationComponent extends UIComponent {
       // if (viewActive?.id == '1') return;
       var data = evt.data || evt;
       this.orgUnitID = data.orgUnitID;
-      this.detectorRef.detectChanges();
+      // this.detectorRef.detectChanges();
     }
   }
   // button add toolbar
