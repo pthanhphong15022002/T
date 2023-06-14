@@ -248,6 +248,17 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       return;
     }
 
+    if(this.EAppointionObj.expiredDate && this.EAppointionObj.effectedDate){
+      if (this.EAppointionObj.expiredDate < this.EAppointionObj.effectedDate) {
+        this.hrService.notifyInvalidFromTo(
+          'ExpiredDate',
+          'EffectedDate',
+          this.formModel
+          )
+          return;
+        }
+    }
+
     // if (this.actionType === 'copy' || this.actionType === 'add') {
     //   delete this.EAppointionObj.recID;
     // }
