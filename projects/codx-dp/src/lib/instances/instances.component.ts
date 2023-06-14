@@ -1266,6 +1266,7 @@ export class InstancesComponent
             obj
           );
           dialogMoveStage.closed.subscribe((e) => {
+            debugger
             this.isClick = true;
             this.stepIdClick = '';
             if (!e || !e.event) {

@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -28,6 +29,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   successFlag = false;
   actionType: string;
   idField = 'RecID';
+  employeeObj;
   headerText: '';
   funcID: string;
 
@@ -103,6 +105,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            console.log('get default benefit', res);
+
             this.benefitObj = res?.data;
             this.benefitObj.effectedDate = null;
             this.benefitObj.expiredDate = null;
@@ -161,6 +165,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       });
     } else {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
+        debugger
         if (p != null) {
           this.notify.notifyCode('SYS007');
           this.dialog && this.dialog.close(this.benefitObj);
@@ -174,7 +179,58 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
   }
 
+    //change employee
+    handleSelectEmp(evt) {
+      switch (evt?.field) {
+        case 'signerID': // check if signer changed
+          if (evt?.data && evt?.data.length > 0) {
+            this.getEmployeeInfoById(evt?.data, evt?.field);
+          } else {
+            this.formGroup.patchValue({
+              signerID: null,
+              signerPosition: null,
+            });
+          }
+          break;
+      }
+    }
+
+    getEmployeeInfoById(empId: string, fieldName: string) {
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = empId;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+          else if (fieldName === 'signerID') {
+            if (emp[0][0]?.positionID) {
+              this.hrService
+                .getPositionByID(emp[0][0]?.positionID)
+                .subscribe((res) => {
+                  if (res) {
+                    this.benefitObj.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.benefitObj.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+            } else {
+              this.benefitObj.signerPosition = null;
+              this.formGroup.patchValue({
+                signerPosition: this.benefitObj.signerPosition,
+              });
+            }
+          }
+        }
+        this.cr.detectChanges();
+      });
+    }
+
   valueChange(event) {
+    debugger
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         case 'SignerID': {
