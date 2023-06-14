@@ -12,13 +12,14 @@ export class CodxTaskGoalTempComponent {
   @Input() viewType = '1';
   @Input() countData = 0;
   @Input() zIndex = 0;
-  @Input() headerText = 'Danh sách công việc cần làm'
+  @Input() headerText = 'Danh sách công việc cần làm';
   listTaskGoals = [];
 
   constructor(private api: ApiHttpService, private callfc: CallFuncService) {}
   onInit() {}
 
   openPopupTodoList() {
+    this.listTaskGoals = [];
     this.api
       .execSv<any>(
         'TM',

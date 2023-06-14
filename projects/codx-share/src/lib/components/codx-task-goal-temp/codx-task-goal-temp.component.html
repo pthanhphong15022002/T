@@ -15,9 +15,7 @@
 <ng-container *ngIf="viewType == '2'">
   <div
     (click)="openPopupTodoList()"
-    class="d-flex align-items-center me-3 {{
-      countData ? 'text-success' : 'text-gray-600'
-    }}"
+    class="d-flex align-items-center me-3 text-gray-600"
   >
     <span class="text-hover-primary icon-check-correct icon-16"></span>
     <span class="ms-1"> {{ countData }}</span>
