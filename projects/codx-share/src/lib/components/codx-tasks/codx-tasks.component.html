@@ -758,25 +758,33 @@
   </ng-template>
 </ng-template>
 
-<ng-container #popupToDoList>
-  <div class="checkbox-list mt-2 ms-6 text-dark">
-    <ng-container *ngFor="let item of listTaskGoals">
-      <div class="mb-2">
-        <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
-          [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
-        <codx-input
-          type="checkbox"
-          class="me-2"
-          [crrValue]="item.status == '90'"
-          [disabled]="true"
-        ></codx-input>
-        <span class="text-gray-700">
-          {{ item.memo }}
-        </span>
-      </div>
-    </ng-container>
-  </div>
-</ng-container>
+<ng-template #popupToDoList let-dialog>
+  <codx-form
+    [body]="body"
+    [dialog]="dialog"
+    headerText="Danh sách công việc cần làm"
+  >
+  </codx-form>
+  <ng-template #body>
+    <div class="checkbox-list mt-2 ms-6 text-dark">
+      <ng-container *ngFor="let item of listTaskGoals">
+        <div class="mb-2">
+          <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
+            [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
+          <codx-input
+            type="checkbox"
+            class="me-2"
+            [crrValue]="item.status == '90'"
+            [disabled]="true"
+          ></codx-input>
+          <span class="text-gray-700">
+            {{ item.memo }}
+          </span>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+</ng-template>
 
 <codx-views
   #view
