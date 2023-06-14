@@ -98,6 +98,14 @@
           </codx-input>
         </div>
       </div>
+      <div class="col-2">
+        <div class="form-group">
+          <codx-label fiedName="lblVoucherType" [formModel]="form.formModel" default="Loại hóa đơn">
+          </codx-label>
+          <codx-input field="voucherType" type="valuelist" refValue="AC082" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
       <ng-container *ngIf="type === 0 ">
         <div class="col-2">
           <div class="form-group">
@@ -118,14 +126,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-2">
-          <div class="form-group">
-            <codx-label fiedName="lblVoucherType" [formModel]="form.formModel" default="Loại hóa đơn">
-            </codx-label>
-            <codx-input field="voucherType" type="valuelist" refValue="AC082" (valueChange)="valueChange($event)">
-            </codx-input>
-          </div>
-        </div>
+        
       </ng-container>
       <ng-container *ngIf="type === 1">
         <ng-container *ngTemplateOutlet="tempAutpay"></ng-container>
