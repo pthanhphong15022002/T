@@ -167,13 +167,13 @@
           <codx-comment-temp
             [objectID]="data.recID"
             [viewType]="3"
-            [openViewPopup]="false"
+            [openViewPopup]="true"
           ></codx-comment-temp>
 
           <div class="d-flex align-items-center position-relative me-4">
             <span class="icon-i-check2-square icon-18 text-gray-400"></span>
             <span
-              *ngIf="data?.todo > 0"
+              *ngIf="data?.todo > 0" (click)="openPopupTodoList(data.taskID)"
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
               >{{ data?.todo }}</span
             >
@@ -182,7 +182,7 @@
             [objectID]="data?.recID"
             [formModel]="view.formModel"
             [viewType]="3"
-            [openViewPopup]="false"
+            [openViewPopup]="true"
           ></codx-attachment-temp>
         </ng-container>
       </div>
@@ -225,7 +225,7 @@
       </div>
     </div>
     <!--end::Item-->
-    <div class="w-100 m-3 flex-column text-center">
+    <div class="w-100 m-3 flex-column text-center" *ngIf="data.memo || data.memo2">
       <div class="justify-content-between">
         <div></div>
         <div
@@ -751,6 +751,26 @@
     </span>
   </ng-template>
 </ng-template>
+
+<ng-container #popupToDoList>
+  <div class="checkbox-list mt-2 ms-6 text-dark">
+    <ng-container *ngFor="let item of listTaskGoals">
+      <div class="mb-2">
+        <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
+          [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
+        <codx-input
+          type="checkbox"
+          class="me-2"
+          [crrValue]="item.status == '90'"
+          [disabled]="true"
+        ></codx-input>
+        <span class="text-gray-700">
+          {{ item.memo }}
+        </span>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
 
 <codx-views
   #view

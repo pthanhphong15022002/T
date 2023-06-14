@@ -26,7 +26,7 @@ import { IJournal } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 import { JournalService } from '../journals.service';
 import { MultiSelectPopupComponent } from '../multi-select-popup/multi-select-popup.component';
-import { PopupSetupTransactionLimitComponent } from '../popup-setup-transaction-limit/popup-setup-transaction-limit.component';
+import { PopupPermissionComponent } from '../popup-permission/popup-permission/popup-permission.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -496,34 +496,6 @@ export class PopupAddJournalComponent
     });
   }
 
-  onClickOpenTransactionLimitSetup(): void {
-    const options = new DialogModel();
-    options.FormModel = this.form.formModel;
-
-    this.callfc
-      .openForm(
-        PopupSetupTransactionLimitComponent,
-        'This param is not working',
-        550,
-        250,
-        '',
-        {
-          journal: { ...this.journal },
-          gvs: this.gvs,
-        },
-        '',
-        options
-      )
-      .closed.subscribe(({ event }) => {
-        console.log(event);
-        if (event) {
-          this.journal.transLimit = event.transLimit;
-          this.journal.transControl = event.transControl;
-          this.journal.transConfirmUser = event.transConfirmUser;
-        }
-      });
-  }
-
   onClickOpenComboboxPopup(
     comboboxName: string,
     comboboxValue: string,
@@ -542,6 +514,15 @@ export class PopupAddJournalComponent
     this.comboboxValue = comboboxValue;
     this.propName = propName;
     this.isHidden = false;
+  }
+
+  onClickOpenPermissionPopup(): void {
+    this.callfc.openForm(
+      PopupPermissionComponent,
+      'This param is not working',
+      950,
+      650
+    );
   }
 
   onClickHideComboboxPopup(e): void {
