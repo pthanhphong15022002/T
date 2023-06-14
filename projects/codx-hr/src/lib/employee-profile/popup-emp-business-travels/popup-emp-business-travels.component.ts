@@ -166,10 +166,22 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   onSaveForm(isCloseForm: boolean) {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if(this.data.endDate && this.data.beginDate){
+      if (this.data.endDate < this.data.beginDate) {
+        this.hrService.notifyInvalidFromTo(
+          'EndDate',
+          'BeginDate',
+          this.formModel
+          )
+          return;
+        }
+    }
+
     if (this.data.isOversea == true && this.data.country == null) {
       this.notitfy.notifyCode('HR011');
       return;
@@ -180,8 +192,6 @@ export class PopupEmpBusinessTravelsComponent
 
       this.hrService.addEBusinessTravels(this.data).subscribe((res) => {
         if (res) {
-          //code test
-
           this.data = res;
           this.notitfy.notifyCode('SYS006');
           this.successFlag = true;

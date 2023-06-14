@@ -236,7 +236,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.isLoadDate = !this.isLoadDate;
   }
 
-  changeRoler(e, datas, type) {    
+  changeRoler(e, type) {    
     if (!e || e?.length == 0) return;
     let listUser = e || [];
     let listRole = [];

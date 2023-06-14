@@ -9,7 +9,7 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
-import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
+import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_TaskGroups_Roles, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 import { firstValueFrom } from 'rxjs';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { StepService } from '../step.service';
@@ -22,6 +22,7 @@ import { CodxStepTaskComponent } from '../codx-step-task/codx-step-task.componen
 })
 export class CodxViewTaskComponent implements OnInit {
   instanceStep: DP_Instances_Steps;
+
   dataView: any;
   type = '';
   title = '';
@@ -73,6 +74,9 @@ export class CodxViewTaskComponent implements OnInit {
   dataTree: any;
   listRefIDAssign: any;
 
+  groupTaskAdd: DP_Instances_Steps_TaskGroups;
+  taskAdd: DP_Instances_Steps_Tasks;
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -92,6 +96,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.listRefIDAssign = dt?.data?.listRefIDAssign; // a thảo truyền để lấy listRef của cong việc
+    this.instanceStep = dt?.data?.instanceStep;
     this.getModeFunction();
     this.getTree(); //get tree by refID
   }
@@ -105,7 +110,8 @@ export class CodxViewTaskComponent implements OnInit {
   }
 
   async getInstanceStepByRecID(recID) {
-    this.api
+    if(!this.instanceStep){
+      this.api
       .exec<any>(
         'DP',
         'InstanceStepsBusiness',
@@ -121,6 +127,11 @@ export class CodxViewTaskComponent implements OnInit {
           // this.checkRole();
         }
       });
+    }else{
+      await this.setDataView();
+      this.settingData();
+      this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
+    }
   }
 
   checkRole() {
@@ -207,13 +218,13 @@ export class CodxViewTaskComponent implements OnInit {
   getIconTask(task) {
     let type = task?.taskType || this.type;
     let color = this.listTypeTask?.find((x) => x.value === type);
-    return color?.icon;
+    return type == 'P'? task?.icon : color?.icon;
   }
 
   getColor(task) {
     let type = task?.taskType || this.type;
     let color = this.listTypeTask?.find((x) => x.value === type);
-    return { 'background-color': color?.color, with: '40px', height: '40px' };
+    return { 'background-color': type == 'P' ? task?.backgroundColor: color?.color, with: '40px', height: '40px' };
   }
   getColorTile(task) {
     let type = task?.taskType || this.type;
@@ -245,18 +256,24 @@ export class CodxViewTaskComponent implements OnInit {
       }
     }
   }
+
+  checkUpdateProgress(data, type) {
+    let check = this.stepService.checkUpdateProgress(
+      data,
+      type,
+      this.instanceStep,
+      this.isRoleAll,
+      this.isOnlyView,
+      this.isUpdateProgressGroup,
+      this.isUpdateProgressStep,
+      this.user
+    );
+    return check;
+  }
+
   async openPopupUpdateProgress(data, type) {
-    // let checkUpdate = this.stepService.checkUpdateProgress(
-    //   data,
-    //   type,
-    //   this.instanceStep,
-    //   this.isRoleAll,
-    //   this.isOnlyView,
-    //   this.isUpdateProgressGroup,
-    //   this.isUpdateProgressStep,
-    //   this.user
-    // );
-    // if (!checkUpdate) return;
+    let checkUpdate = this.checkUpdateProgress(data, type);
+    if (!checkUpdate) return;
     if (type != 'P' && type != 'G') {
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
@@ -292,19 +309,6 @@ export class CodxViewTaskComponent implements OnInit {
   }
   closePopup() {
     this.dialog.close(this.dataProgress);
-  }
-  checkUpdateProgress(data, type) {
-    let check = this.stepService.checkUpdateProgress(
-      data,
-      type,
-      this.instanceStep,
-      this.isRoleAll,
-      this.isOnlyView,
-      this.isUpdateProgressGroup,
-      this.isUpdateProgressStep,
-      this.user
-    );
-    return check;
   }
   //ve tree giao viec byRef
   getTree() {
@@ -362,17 +366,17 @@ export class CodxViewTaskComponent implements OnInit {
             break;
           case 'DP13': // giao việc
             res.isbookmark = true;
-            // if (
-            //   !(
-            //     this.dataView?.createTask &&
-            //     this.isOnlyView &&
-            //     (this.isRoleAll || isGroup || isTask) &&
-            //     this.type != 'P' &&
-            //     this.type != 'G'
-            //   )
-            // ) {
-            //   res.disabled = true;
-            // }
+            if (
+              !(
+                this.dataView?.createTask &&
+                this.isOnlyView &&
+                (this.isRoleAll || isGroup || isTask) &&
+                this.type != 'P' &&
+                this.type != 'G'
+              )
+            ) {
+              res.disabled = true;
+            }
             break;
           case 'DP24': // tạo lịch họp
             res.isbookmark = true;
@@ -382,10 +386,8 @@ export class CodxViewTaskComponent implements OnInit {
             break;
           case 'DP20': // tiến độ
             res.isbookmark = true;
-            if (
-              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
-            ) {
-              res.isblur = true;
+            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)) {
+              res.disabled = true;
             }
             break;
         }
@@ -393,20 +395,33 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
 
-  clickMFStep(event) {
+  async clickMFStep(event) {
     switch (event.functionID) {
       case 'DP13': //giao viec
         this.dialog.close();
         this.stepService.assignTask(event.data, this.dataView,this.instanceStep);
         break;
       case 'DP08': //them task
-        this.stepService.chooseTypeTask(this.instanceStep);
+        await this.addTask();
         break;
       case 'DP20': // tien do
         this.openPopupUpdateProgress(this.dataView, this.type)
         break;
       case 'DP26': // view
         break;
+    }
+  }
+
+  async addTask(){
+    let dataOutput = await this.stepService.chooseTypeTask(this.instanceStep);
+    console.log(dataOutput);
+    if(dataOutput?.event?.groupTask){
+      this.groupTaskAdd = dataOutput?.event?.groupTask;
+      this.instanceStep?.taskGroups?.push(dataOutput?.event?.groupTask);
+    }
+    if(dataOutput?.event?.task){
+      this.taskAdd = dataOutput?.event?.task;
+      this.instanceStep?.tasks?.push(dataOutput?.event?.groupTask);
     }
   }
 }

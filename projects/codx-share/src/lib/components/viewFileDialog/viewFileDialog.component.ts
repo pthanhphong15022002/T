@@ -351,6 +351,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
 
   getData()
   {
+    debugger
     this.id = this.dataFile?.recID;
     let baseurlExcel: string = environment.apiUrl+'/api/documenteditor/openexcel';
     baseurlExcel += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
