@@ -362,6 +362,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((okrs: any) => {
                 if (okrs) {
                   this.dataOKR = okrs;
+                  
                   this.isAfterRender = true;
                   this.showPlanMF = true;
                   this.loadedData = true;

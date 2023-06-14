@@ -1,8 +1,9 @@
-<div>
+<div *ngIf="isAfterRender">
   <div class="d-flex justify-content-between align-items-center flex-grow-1 px-5 pt-5">
     <div class="d-flex flex-column">
-      <div class="fw-bold fs-4 mb-1" id="modal-basic-title">
-        <codx-label name="lblCheckInHistoryView" default="Lịch sử cập nhật tiến độ"></codx-label>
+      <div class="fw-bold fs-4 mb-1" >
+        <codx-label *ngIf="listLink[0]?.refType=='2'" name="lblCheckInHistoryView" default="Phân công"></codx-label>
+        <codx-label *ngIf="listLink[0]?.refType!='2'" name="lblCheckInHistoryView" default="Phân bổ"></codx-label>
       </div>
     </div>
     <button type="button" class="btn btn-sm btn-icon" aria-label="Close" (click)="dialog.close()">
