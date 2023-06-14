@@ -2163,7 +2163,7 @@ export class CodxTasksComponent
   }
 
   openPopupTodoList(taskID) {
-    this.tmSv.listTaskGoad(taskID).subscribe(res=>{
+    this.tmSv.getListTaskGoad(taskID).subscribe(res=>{
       if(res && res.length >0) {
         this.listTaskGoals = res
         let option = new DialogModel();
