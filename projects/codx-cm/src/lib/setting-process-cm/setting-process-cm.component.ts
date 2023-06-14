@@ -93,17 +93,17 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
         'DP',
         'ERM.Business.DP',
         'ProcessesBusiness',
-        'GetAsync',
+        'GetProcessDefaultAsync',
         [
           this.funcID == 'CMS0301'
-            ? '1a6d0f15-09d0-11ee-94b3-00155d035517'
-            : this.funcID == 'CMS0302'
-            ? 'dd6d5e19-09cf-11ee-94b3-00155d035517'
-            : this.funcID == 'CMS0303'
-            ? 'f431d63d-09cf-11ee-94b3-00155d035517'
-            : this.funcID == 'CMS0304'
-            ? 'f431d63d-09cf-11ee-94b3-00155d035517'
-            : 'f431d63d-09cf-11ee-94b3-00155d035517',
+          ? '1'
+          : this.funcID == 'CMS0302'
+          ? '2'
+          : this.funcID == 'CMS0303'
+          ? '3'
+          : this.funcID == 'CMS0304'
+          ? '4'
+          : '5'
         ]
       )
     );

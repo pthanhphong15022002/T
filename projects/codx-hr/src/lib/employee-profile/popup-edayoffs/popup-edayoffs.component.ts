@@ -435,8 +435,4 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       }
     }
   }
-
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
-  }
 }

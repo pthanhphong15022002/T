@@ -61,7 +61,7 @@
       <iframe [src]="urlSafe" class="h-100 w-100"></iframe>
     </ng-container>
     <ng-template #elseOffice>
-      <ng-container *ngIf="!isVideo && !isImg">
+      <ng-container *ngIf="!isVideo && !isImg && !isAudio">
         <ng-container [ngSwitch]="data?.extension">
           <ng-container *ngSwitchCase="'.doc'">
             <ng-container *ngTemplateOutlet="formword"></ng-container
@@ -129,8 +129,19 @@
       width="100%"
       height="100%"
     >
-      <source src="{{ srcVideo }}" type="video/mp4" />
+      <source src="{{ linkFile }}" type="video/mp4" />
     </video>
+    <ng-container *ngIf="isAudio">
+      <div class="d-flex flex-column s-w-mt-200px">
+        <div class="div-view-mp3">
+        </div>
+        <audio controls class="w-500px">
+          <source src="{{linkFile}}" type="audio/mpeg">
+        </audio>
+      </div>
+      
+    </ng-container>
+   
     <ng-container *ngIf="isPdf"
       ><lib-pdf
         [isEditable]="false"
