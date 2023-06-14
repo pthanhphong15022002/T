@@ -1,1 +1,10 @@
-<p>setting-process-cm works!</p>
+<codx-views
+  class="system-settings"
+  #view
+  [views]="views"
+  entityName="DP_Processes"
+  [autoLoad]="false"
+  (viewChanged)="viewChanged($event)"
+  [autoSearch]="false"
+>
+</codx-views>

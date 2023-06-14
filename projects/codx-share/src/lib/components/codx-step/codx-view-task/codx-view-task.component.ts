@@ -13,6 +13,7 @@ import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { firstValueFrom } from 'rxjs';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { StepService } from '../step.service';
+import { CodxStepTaskComponent } from '../codx-step-task/codx-step-task.component';
 
 @Component({
   selector: 'codx-view-task',
@@ -29,7 +30,7 @@ export class CodxViewTaskComponent implements OnInit {
   owner = []; //role
   person = []; //role
   listDataLink = [];
-  dataInput: any; 
+  dataInput: any;
   dataProgress: any = null;
 
   isOnlyView = false;
@@ -50,6 +51,18 @@ export class CodxViewTaskComponent implements OnInit {
   viewModelDetail = 'history';
   dateFomat = 'dd/MM/yyyy';
   frmModel: FormModel = {};
+  grvMoreFunction: FormModel = {
+    entityName: 'DP_Instances_Steps_Tasks',
+    formName: 'DPInstancesStepsTasks',
+    gridViewName: 'grvDPInstancesStepsTasks',
+  };
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
@@ -313,5 +326,87 @@ export class CodxViewTaskComponent implements OnInit {
   }
   saveAssign(e) {
     if (e) this.getTree();
+  }
+
+  changeDataMFStep(event) {
+    let isGroup = true;
+    let isTask = true;
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa
+          case 'SYS03': //sửa
+          case 'SYS04': //copy
+          case 'SYS003': //đính kèm file
+          case 'DP07': //chi tiêt công việc
+          case 'DP12':
+          case 'DP25':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP26': // chi tiêt
+            res.disabled = true;
+            break;
+
+          case 'DP08': // Thêm công việc
+            res.isbookmark = true;
+            if (
+              !(
+                this.isRoleAll &&
+                this.isOnlyView &&
+                (this.type == 'P' || this.type == 'G')
+              )
+            ) {
+              res.disabled = true;
+            }
+            break;
+          case 'DP13': // giao việc
+            res.isbookmark = true;
+            // if (
+            //   !(
+            //     this.dataView?.createTask &&
+            //     this.isOnlyView &&
+            //     (this.isRoleAll || isGroup || isTask) &&
+            //     this.type != 'P' &&
+            //     this.type != 'G'
+            //   )
+            // ) {
+            //   res.disabled = true;
+            // }
+            break;
+          case 'DP24': // tạo lịch họp
+            res.isbookmark = true;
+            if (this.type != 'M') {
+              res.disabled = true;
+            }
+            break;
+          case 'DP20': // tiến độ
+            res.isbookmark = true;
+            if (
+              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
+            ) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
+
+  clickMFStep(event) {
+    switch (event.functionID) {
+      case 'DP13': //giao viec
+        this.dialog.close();
+        this.stepService.assignTask(event.data, this.dataView,this.instanceStep);
+        break;
+      case 'DP08': //them task
+        this.stepService.chooseTypeTask(this.instanceStep);
+        break;
+      case 'DP20': // tien do
+        this.openPopupUpdateProgress(this.dataView, this.type)
+        break;
+      case 'DP26': // view
+        break;
+    }
   }
 }

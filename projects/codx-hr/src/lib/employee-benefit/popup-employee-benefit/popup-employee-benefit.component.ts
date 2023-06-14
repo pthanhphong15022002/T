@@ -243,8 +243,4 @@ export class PopupEmployeeBenefitComponent
       });
     }
   }
-
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
-  }
 }

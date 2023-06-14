@@ -154,7 +154,7 @@
         <codx-mfunc
           [formModel]="view.formModel"
           (clickMF)="clickMF($event, data)"
-          (ChangeDataMF)="ChangeDataMF($event, data)"
+          (changeDataMF)="ChangeDataMF($event, data)"
           [dataItem]="data"
           type="hover"
         >
@@ -282,7 +282,7 @@
     "
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
-    (ChangeDataMF)="ChangeDataMF($event, data)"
+    (changeDataMF)="ChangeDataMF($event, data)"
   >
   </codx-temp-full>
 

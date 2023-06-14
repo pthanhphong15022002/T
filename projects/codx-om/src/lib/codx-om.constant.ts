@@ -50,24 +50,32 @@ export const OMCONST = {
     PlanWeightCOMP:'OMT013',
     SharesPlanCOMP:'OMT014',
     PermissionCOMP:'OMT015',
+    UpdateVerPlanCOMP:'OMT016',
+    ShowVerPlanCOMP:'OMT017',
     //Plan
     ReleasePlanDEPT:'OMT021',
     UnReleasePlanDEPT:'OMT022',
     PlanWeightDEPT:'OMT023',
     SharesPlanDEPT:'OMT024',
     PermissionDEPT:'OMT025',
+    UpdateVerPlanDEPT:'OMT026',
+    ShowVerPlanDEPT:'OMT027',
     //Plan
     ReleasePlanORG:'OMT031',
     UnReleasePlanORG:'OMT032',
     PlanWeightORG:'OMT033',
     SharesPlanORG:'OMT034',
     PermissionORG:'OMT035',
+    UpdateVerPlanORG:'OMT036',
+    ShowVerPlanORG:'OMT037',
     //Plan
     ReleasePlanPER:'OMT041',
     UnReleasePlanPER:'OMT042',
     PlanWeightPER:'OMT043',
     SharesPlanPER:'OMT044',
     PermissionPER:'OMT045',
+    UpdateVerPlanPER:'OMT046',
+    ShowVerPlanPER:'OMT047',
     
     //OB
     OBDetail: 'OMT101',
