@@ -22,7 +22,7 @@
         (onAddNew)="onAddNew($event)"
         (onEdit)="onEdit($event)"
       ></codx-gridview-v2>
-        <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
+      <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
       <div
         class="row"
         *ngIf="listQuotationLines?.length == 0"
@@ -220,7 +220,7 @@
       <thead style="position: sticky; top: 0">
         <tr class="border-bottom">
           <th class="w-50 min-w-350px">
-            <div class="d-flex">
+            <div class="d-flex ms-3">
               <!-- <i class="icon-i-box icon-16 me-2"></i> -->
               <codx-label
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
@@ -230,9 +230,9 @@
               </codx-label>
             </div>
           </th>
-          <th class="min-w-100px">
+          <!-- <th class="min-w-100px">
             <div class="d-flex">
-              <!-- <i class="icon-i-bar-chart icon-16 me-2"></i> -->
+             
               <codx-label
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
                 fiedName="umid"
@@ -240,9 +240,9 @@
               >
               </codx-label>
             </div>
-          </th>
+          </th> -->
           <th class="min-w-100px">
-            <div class="d-flex">
+            <div class="d-flex ms-3" style="float: right">
               <!-- <i class="icon-i-bar-chart icon-16 me-2"></i> -->
               <codx-label
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
@@ -253,7 +253,7 @@
             </div>
           </th>
           <th class="min-w-125px">
-            <div class="d-flex">
+            <div class="d-flex ms-3" style="float: right">
               <!-- <i class="icon-payments icon-16 me-2"></i> -->
               <codx-label
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
@@ -264,7 +264,7 @@
             </div>
           </th>
           <th class="min-w-125px">
-            <div class="d-flex">
+            <div class="d-flex ms-3" style="float: right">
               <!-- <i class="icon-i-cash-stack icon-16 me-2"></i> -->
               <codx-label
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
@@ -275,7 +275,7 @@
             </div>
           </th>
           <th class="min-w-150px">
-            <div class="d-flex">
+            <div class="d-flex ms-3" style="float: right">
               <!-- <i class="icon-analytics icon-16 me-2"></i> -->
               <codx-label
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
@@ -286,7 +286,7 @@
             </div>
           </th>
           <th class="min-w-125px">
-            <div class="d-flex">
+            <div class="d-flex ms-3" style="float: right">
               <!-- <i class="icon-i-cash icon-16 me-2"></i> -->
               <codx-label
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
@@ -313,99 +313,88 @@
               ></span>
             </div>
             <div class="d-flex flex-wrap text-nowrap">
-              <div class="d-flex align-items-center mb-1 me-6">
-                <!-- <span class="icon-i-dot icon-22"></span> -->
-                <codx-label
+              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
+              <!-- <span class="icon-i-dot icon-22"></span> -->
+              <!-- <codx-label
                   class="text-dark fw-bold label-colon"
                   fiedName="IDIM0"
                   [formModel]="fmQuotationLines"
                 >
-                </codx-label>
-                <span
-                  class="text-dark"
-                  [innerHTML]="
-                    item.idiM0
-                      | formatvalue : fmQuotationLines : 'idiM0'
-                      | async
-                  "
-                ></span>
-              </div>
-
-              <div class="d-flex align-items-center mb-1 me-6">
-                <!-- <span class="icon-i-dot icon-22"></span> -->
-                <codx-label
+                </codx-label> -->
+              <span
+                class="text-dark mx-1"
+                [innerHTML]="
+                  item.idiM0 | formatvalue : fmQuotationLines : 'idiM0' | async
+                "
+              ></span>
+              <!-- </div> -->
+              |
+              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
+              <!-- <codx-label
                   class="text-dark fw-bold label-colon"
                   fiedName="IDIM1"
                   [formModel]="fmQuotationLines"
                 >
-                </codx-label>
-                <span
-                  class="text-dark"
-                  [innerHTML]="
-                    item.idiM1
-                      | formatvalue : fmQuotationLines : 'idiM1'
-                      | async
-                  "
-                ></span>
-              </div>
-
-              <div class="d-flex align-items-center mb-1 me-6">
-                <!-- <span class="icon-i-dot icon-22"></span> -->
-                <codx-label
+                </codx-label> -->
+              <span
+                class="text-dark mx-1"
+                [innerHTML]="
+                  item.idiM1 | formatvalue : fmQuotationLines : 'idiM1' | async
+                "
+              ></span>
+              <!-- </div> -->
+              |
+              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
+              <!-- <codx-label
                   class="text-dark fw-bold label-colon"
                   fiedName="IDIM2"
                   [formModel]="fmQuotationLines"
                 >
-                </codx-label>
-                <span
-                  class="text-dark"
-                  [innerHTML]="
-                    item.idiM2
-                      | formatvalue : fmQuotationLines : 'idiM2'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center mb-1 me-6">
-                <!-- <span class="icon-i-dot icon-22"></span> -->
-                <codx-label
+                </codx-label> -->
+              <span
+                class="text-dark mx-1"
+                [innerHTML]="
+                  item.idiM2 | formatvalue : fmQuotationLines : 'idiM2' | async
+                "
+              ></span>
+              <!-- </div> -->
+              |
+              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
+              <!-- <codx-label
                   class="text-dark fw-bold label-colon"
                   fiedName="IDIM3"
                   [formModel]="fmQuotationLines"
                 >
-                </codx-label>
-                <span
-                  class="text-dark"
-                  [innerHTML]="
-                    item.idiM3
-                      | formatvalue : fmQuotationLines : 'idiM3'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center mb-1 me-6">
-                <!-- <span class="icon-i-dot icon-22"></span> -->
-                <codx-label
+                </codx-label> -->
+              <span
+                class="text-dark mx-1"
+                [innerHTML]="
+                  item.idiM3 | formatvalue : fmQuotationLines : 'idiM3' | async
+                "
+              ></span>
+              <!-- </div> -->
+
+              <!-- <div class="d-flex align-items-center mb-1 me-6"> 
+                 <codx-label
                   class="text-dark fw-bold label-colon"
                   fiedName="IDIM4"
                   [formModel]="fmQuotationLines"
                 >
-                </codx-label>
+                </codx-label> 
 
                 <span
                   #idiM4
-                  class="text-dark"
+                  class="text-dark mx-1"
                   [innerHTML]="
                     item.idiM4
                       | formatvalue : fmQuotationLines : 'idiM4' : idiM4
                       | async
                   "
                 ></span>
-              </div>
+             </div> -->
             </div>
-            <div class="d-flex flex-wrap text-nowrap">
+            <!-- <div class="d-flex flex-wrap text-nowrap">
               <div class="d-flex align-items-center mb-1 me-6">
-                <!-- <span class="icon-i-dot icon-22"></span> -->
                 <codx-label
                   class="text-dark fw-bold label-colon"
                   fiedName="Onhand"
@@ -437,29 +426,38 @@
                   "
                 ></span>
               </div>
-            </div>
+            </div> -->
           </td>
-          <td>
+          <!-- <td>
             <span
               class="text-nowrap"
               [innerHTML]="
                 item?.umid | formatvalue : fmQuotationLines : 'umid' | async
               "
             ></span>
-          </td>
+          </td> -->
           <td>
-            <span
-              class="text-nowrap"
-              [innerHTML]="
-                item?.quantity
-                  | formatvalue : fmQuotationLines : 'quantity'
-                  | async
-              "
+            <span class="ms-3" style="float: right">
+              <span
+                class="text-nowrap"
+                [innerHTML]="
+                  item?.quantity
+                    | formatvalue : fmQuotationLines : 'quantity'
+                    | async
+                "
+              ></span
+              ><span
+                class="text-nowrap mx-1"
+                [innerHTML]="
+                  item?.umid | formatvalue : fmQuotationLines : 'umid' | async
+                "
+              ></span
             ></span>
           </td>
           <td>
             <span
-              class="text-nowrap"
+              style="float: right"
+              class="text-nowrap ms-3"
               [innerHTML]="
                 item?.salesPrice
                   | formatvalue : fmQuotationLines : 'salesPrice'
@@ -469,7 +467,8 @@
           </td>
           <td>
             <span
-              class="text-nowrap"
+              style="float: right"
+              class="text-nowrap ms-3"
               [innerHTML]="
                 item?.netAmt | formatvalue : fmQuotationLines : 'netAmt' | async
               "
@@ -478,7 +477,8 @@
           <td>
             <span
               #vatid
-              class="text-gray-600 text-italic"
+              style="float: right"
+              class="text-gray-600 text-italic ms-3"
               [innerHTML]="
                 item?.vatid
                   | formatvalue : fmQuotationLines : 'vatid' : vatid
@@ -488,7 +488,8 @@
           </td>
           <td>
             <span
-              class="text-nowrap"
+              style="float: right"
+              class="text-nowrap ms-3"
               [innerHTML]="
                 item?.vatAmt | formatvalue : fmQuotationLines : 'vatAmt' | async
               "
@@ -496,6 +497,45 @@
           </td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr class="custom-toolbar bg-gray-200 min-w-100px">
+          <td>
+            <span class="text-nowrap ms-3" style="float: right"> Tổng cộng </span>
+          </td>
+          <td>
+            <span class="text-nowrap ms-3" style="float: right"> - </span>
+          </td>
+          <td>
+            <span class="text-nowrap ms-3" style="float: right">-</span>
+          </td>
+          <td>
+            <span
+              class="text-nowrap ms-3"
+              style="float: right"
+              [innerHTML]="
+                sum('netAmt')
+                  | formatvalue : fmQuotationLines : 'netAmt'
+                  | async
+              "
+            >
+            </span>
+          </td>
+          <td>
+            <span class="text-nowrap ms-3" style="float: right"> -</span>
+          </td>
+          <td>
+            <span
+              class="text-nowrap ms-3"
+              style="float: right"
+              [innerHTML]="
+                sum('vatAmt')
+                  | formatvalue : fmQuotationLines : 'vatAmt'
+                  | async
+              "
+            ></span>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </ng-container>
