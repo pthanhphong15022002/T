@@ -190,7 +190,8 @@ export class QuotationsTabViewComponent extends UIComponent implements OnChanges
     res.consultantID = res.consultantID ?? this.consultantID;
     res.totalAmt = res.totalAmt ?? 0;
     res.exchangeRate = res.exchangeRate ?? 1;
-
+    res.currencyID = res.currencyID ?? 'VND';
+    
     var obj = {
       data: res,
       disableRefID: this.disableRefID,
