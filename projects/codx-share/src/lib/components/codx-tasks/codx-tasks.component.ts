@@ -14,6 +14,7 @@ import {
   AuthStore,
   ButtonModel,
   DataRequest,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
@@ -92,6 +93,9 @@ export class CodxTasksComponent
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
+  @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
+
+  
 
   @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
@@ -187,6 +191,7 @@ export class CodxTasksComponent
   // progressThickness: number = 10;
   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
   HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
+  listTaskGoals = [] ;
 
   constructor(
     inject: Injector,
@@ -2155,5 +2160,25 @@ export class CodxTasksComponent
   }
   genData(por) {
     return Number.parseInt(por) ?? 0;
+  }
+
+  openPopupTodoList(taskID) {
+    this.tmSv.getListTaskGoad(taskID).subscribe(res=>{
+      if(res && res.length >0) {
+        this.listTaskGoals = res
+        let option = new DialogModel();
+        //option.zIndex = 999;
+        let popup = this.callfc.openForm(
+          this.popupToDoList,
+          '',
+          400,
+          500,
+          '',
+          null,
+          '',
+          option
+        );
+      }
+    })
   }
 }

@@ -39,6 +39,7 @@ import {
   DialogModel,
   DataRequest,
   CodxService,
+  AuthService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -304,7 +305,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listStepApprover: any;
   listStepApproverDelete = [];
   viewApproverStep: any;
-
+  languages: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -313,6 +314,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private cache: CacheService,
     private dpService: CodxDpService,
     private authStore: AuthStore,
+    private auth: AuthService,
     private formBuilder: FormBuilder,
     private codxService: CodxService,
     @Optional() dialog: DialogRef,
@@ -325,6 +327,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.action = dt.data.action;
     this.showID = dt.data.showID;
     this.user = this.authStore.get();
+    this.languages = this.auth.userValue?.language?.toLowerCase();
     this.userId = this.user?.userID;
     this.gridViewSetup = dt.data.gridViewSetup;
     this.titleAction = dt.data.titleAction;
@@ -390,6 +393,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.getAvatar(this.process);
       this.instanceNoSetting = this.process.instanceNoSetting;
     } else if (this.action == 'add') {
+      this.process.autoName =
+        this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
       this.setDefaultOwner();
       // this.step.owner = this.user.userID;
       // this.process.instanceNoSetting = this.process.processNo;
@@ -537,6 +542,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     var data = [];
     op.className = 'ProcessesBusiness';
     if (this.action == 'add' || this.action == 'copy') {
+      if (this.process.applyFor != '0') {
+        this.setAutoName(this.process.applyFor);
+      }
+
       op.methodName = 'AddProcessAsync';
       data = [this.process, this.recIDCategory];
     } else {
@@ -554,6 +563,38 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ];
     }
     op.data = data;
+  }
+
+  setAutoName(applyFor) {
+    if (this.languages) {
+      if (this.languages == 'vn') {
+        this.process.autoName =
+          applyFor == '1'
+            ? 'Cơ hội'
+            : applyFor == '2'
+            ? 'Sự cố'
+            : applyFor == '3'
+            ? 'Yêu cầu'
+            : applyFor == '4'
+            ? 'Hợp đồng'
+            : applyFor == '5'
+            ? 'Tiềm năng'
+            : '';
+      } else {
+        this.process.autoName =
+          applyFor == '1'
+            ? 'Deal'
+            : applyFor == '2'
+            ? 'Case'
+            : applyFor == '3'
+            ? 'Request'
+            : applyFor == '4'
+            ? 'Contract'
+            : applyFor == '5'
+            ? 'Lead'
+            : '';
+      }
+    }
   }
 
   convertListStepDrop() {
@@ -4114,7 +4155,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   // new setting
   //setting trình kí - lần 2
   actionOpenFormApprove2(item, isAdd = false) {
-   
     // this.dpService
     //   .getESCategoryByCategoryID(categoryID)
     //   .subscribe((item: any) => {

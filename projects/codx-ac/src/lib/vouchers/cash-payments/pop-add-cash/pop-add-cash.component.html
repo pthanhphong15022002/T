@@ -280,7 +280,7 @@
     </div>
   </ng-container>
   <!-- <ng-container
-    *ngIf="form?.formGroup && (cashpayment?.subType === '1' || cashpayment?.subType === '3') && modegrid == '2'">
+    *ngIf="form?.formGroup && (cashpayment?.subType != '2') && modegrid == '2'">
     <div class="table-responsive table-addcash mt-3">
       <table style="table-layout: fixed;" class="table table-row-bordered">
         <thead class="bg-gray-100" style="position: sticky;top: 0;z-index: 15;">
@@ -357,9 +357,9 @@
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
                         <span [ngbTooltip]="account" #accountID
-                          class="fw-bold line-clamp line-clamp-1">{{loadAccountName(item.accountID)}}</span>
+                          class="fw-bold line-clamp line-clamp-1">{{item.accountID}}</span>
                         <ng-template #account>
-                          <span class="fw-bold">{{loadAccountName(item.accountID)}}</span>
+                          <span class="fw-bold">{{item.accountID}}</span>
                         </ng-template>
                       </ng-container>
                     </div>
@@ -571,9 +571,9 @@
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
                         <span [ngbTooltip]="offsetAcct"
-                          class="fw-bold line-clamp line-clamp-1">{{loadAccountName(item.offsetAcctID)}}</span>
+                          class="fw-bold line-clamp line-clamp-1">{{item.offsetAcctID}}</span>
                         <ng-template #offsetAcct>
-                          <span class="fw-bold">{{loadAccountName(item.offsetAcctID)}}</span>
+                          <span class="fw-bold">{{item.offsetAcctID}}</span>
                         </ng-template>
                       </ng-container>
                     </div>
@@ -808,17 +808,17 @@
         </div>
       </div>
     </div>
-  </ng-container> -->
+  </ng-container>
   <ng-container *ngIf="(cashpayment?.subType != '2')">
-    <!-- <div #btnRef class="d-flex justify-content-start mt-2">
+    <div #btnRef class="d-flex justify-content-start mt-2">
       <button type="button" class="btn btn-md btn-light-primary" (click)="addRow()">
         <div class="d-flex align-items-center">
           <i class="icon-playlist_add icon-18"></i>
           <codx-label class="fw-bold" fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
         </div>
       </button>
-    </div> -->
-  </ng-container>
+    </div>
+  </ng-container> -->
 </ng-template>
 <!-- End: CashPaymentLine -->
 

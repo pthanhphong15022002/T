@@ -154,8 +154,13 @@
         </button>
       </div>
 
-      <div class="px-10">
-        <div class="d-flex flex-column flex-grow-1 justify-content-between w-100" *ngFor="
+      <div class="px-10" *ngIf="dataKR!=null">
+        <popup-check-in-history [okrFM]="okrFM" [okrGrv]="okrGrv" [oldData]="dataKR" [groupModel]="groupModel" [isPopup]="false"></popup-check-in-history>
+      </div>
+    </ng-container>
+  </div>
+    <ng-template>
+      <div class="d-flex flex-column flex-grow-1 justify-content-between w-100" *ngFor="
           let item of dataKR?.checkIns;
           let index = index;
           let count = count
@@ -246,10 +251,7 @@
             </div>
           </div>
         </div>
-      </div>
-    </ng-container>
-  </div>
-    
+    </ng-template>
 
 </ng-template>
 <ng-template #templateLinks>

@@ -150,5 +150,15 @@ export class CodxTasksService {
       taskID
     );
   }
-
+ 
+  //get listTaskGoad
+  getListTaskGoad(taskID){
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetListTaskGoalByTaskIDAsync',
+      taskID
+    );
+  }
 }
