@@ -780,7 +780,7 @@ export class DealsComponent
   openOrCloseDeal(data, check) {
     var datas = [data.recID, data.processID, check];
     this.notificationsService
-      .alertCode('DP018', null, "'" + this.titleAction + "'")
+      .alertCode('DP018',null ,this.titleAction , "'"+data.dealName + "'")
       .subscribe((info) => {
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
@@ -790,7 +790,7 @@ export class DealsComponent
               data.ModifiedOn = new Date();
               this.dataSelected = data;
               this.view.dataService.update(data).subscribe();
-              this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+              this.notificationsService.notifyCode(check ? 'DP016' : 'DP017',0,"'"+data.dealName+"'");
               if (data.showInstanceControl === '1') {
                 this.view.dataService.update(this.dataSelected).subscribe();
               }
