@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LayoutModel } from '@syncfusion/ej2-angular-diagrams';
 import {
   ApiHttpService,
   CacheService,
@@ -705,6 +706,23 @@ export class CodxCmService {
       data
     );
 
+  }
+
+  autoMoveStageInInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AutoMoveStageAsync',
+      data
+    );
+  }
+  autoMoveStageInDeal(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'AutoMoveStageDealAsync',
+      data
+    );
   }
 
 

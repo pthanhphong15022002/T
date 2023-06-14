@@ -1,0 +1,25 @@
+.line-around-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.line-around-flex::before,
+.line-around-flex::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  background-color: var(--primary);
+}
+
+.line-around-flex::before {
+  margin-right: 10px;
+}
+
+.line-around-flex::after {
+  margin-left: 10px;
+}
+
+.accordion-button::after {
+  background-image: var(--url);
+}

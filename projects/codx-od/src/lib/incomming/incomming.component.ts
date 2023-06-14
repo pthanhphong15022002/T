@@ -558,11 +558,7 @@ export class IncommingComponent
             this.lstDtDis = formatDtDis(item);
             if(this.funcList.runMode == "1" && data)
             {
-              this.lstDtDis.processType = data.processType;
-              this.lstDtDis.stepType = data.stepType;
-              this.lstDtDis.stepNo = data.stepNo;
-              this.lstDtDis.statusApproval = data.statusApproval;
-              this.lstDtDis.approvalRecID = data.approvalRecID;
+              this.lstDtDis.unbounds = data.unbounds;
             }
             //this.view.dataService.setDataSelected(this.lstDtDis);
           }

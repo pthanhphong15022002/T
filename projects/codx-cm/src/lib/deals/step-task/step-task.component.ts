@@ -19,6 +19,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   typeTime;
   listInstanceStepShow = [];
   isShowElement = true;
+  indexAddTask: number;
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
@@ -75,7 +76,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         this.listInstanceStepShow = this.listInstanceStep.filter(step => e?.data?.includes(step.stepStatus))
       }
     }
-    if(e.field == 'show' && e.data?.length >= 0){
+    if(e.field == 'show' && e.data?.length > 0){
       this.isShowElement = e.data[0] == '1' ? true : false;
     }else{
       this.isShowElement = true;
@@ -94,7 +95,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   changeViewTimeGant(e) {
     this.typeTime = e;
   }
+
   addTask(){
-    
+    this.indexAddTask = this.listInstanceStep.findIndex(step => step.stepStatus == '1');
+    setTimeout(() => {
+      this.indexAddTask = -1;
+    },1000);
   }
 }

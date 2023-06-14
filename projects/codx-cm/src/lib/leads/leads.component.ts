@@ -216,36 +216,36 @@ export class LeadsComponent
               more.disabled = true;
           }
         }
-      } else {
-        if (data.status == '1') {
-          for (let more of $event) {
-            switch (more.functionID) {
-              case 'SYS03':
-              case 'SYS04':
-              case 'SYS02':
-              case 'CM0201_2':
-                more.isblur = false;
-                break;
-              default:
-                more.isblur = true;
-            }
-          }
-        }
       }
+
+      // else {
+      //     for (let more of $event) {
+      //       switch (more.functionID) {
+      //         case 'SYS03':
+      //         case 'SYS04':
+      //         case 'SYS02':
+      //         case 'CM0201_2':
+      //           more.isblur = false;
+      //           break;
+      //         default:
+      //           more.isblur = true;
+      //       }
+      //     }
+      // }
     }
   }
-  checkMoreReason(data, isUseReason) {
-    if (data.status != '2' || isUseReason) {
-      return true;
-    }
-    if (data.closed) {
-      return true;
-    }
-    if (!data.permissionMoveInstances) {
-      return true;
-    }
-    return false;
-  }
+  // checkMoreReason(data, isUseReason) {
+  //   if (data.status != '2' || isUseReason) {
+  //     return true;
+  //   }
+  //   if (data.closed) {
+  //     return true;
+  //   }
+  //   if (!data.permissionMoveInstances) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   clickMF(e, data) {
     this.dataSelected = data;

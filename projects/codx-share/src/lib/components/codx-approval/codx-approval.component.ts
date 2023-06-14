@@ -161,12 +161,9 @@ export class CodxApprovalComponent
           var params = fuc?.url.split('/');
           if (
             r &&
-            params[1] != null &&
-            params[1] != '' &&
-            fuc?.functionID != null &&
-            fuc?.functionID != '' &&
-            this.dataItem?.transID != null &&
-            this.dataItem?.transID != ''
+            params[1] &&
+            fuc?.functionID &&
+            this.dataItem?.transID
           ) {
             var url =
               r +

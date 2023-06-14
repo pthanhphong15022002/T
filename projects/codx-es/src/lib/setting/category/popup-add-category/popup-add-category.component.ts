@@ -406,7 +406,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.isSaved = true;
           if (isClose) {
-            this.notify.notifyCode('SYS006');            
+            this.notify.notifyCode('SYS006');     
+            if(this.dialog?.dataService)       
             (this.dialog?.dataService as CRUDService).add(res).subscribe();
             this.dialog && this.dialog.close(res);
           }
@@ -519,7 +520,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             });
             this.cr.detectChanges();
           }
-          
+          if(this.dialog?.dataService)       
           (this.dialog?.dataService as CRUDService).add(this.data).subscribe();
           this.isSaved = true;
 
