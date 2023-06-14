@@ -5,7 +5,7 @@ import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { CodxTypeTaskComponent } from './codx-type-task/codx-type-task.component';
 import { firstValueFrom } from 'rxjs';
-import { DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
+import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddGroupTaskComponent } from './codx-add-group-task/codx-add-group-task.component';
 
 @Injectable({
@@ -17,6 +17,7 @@ export class StepService {
     private api: ApiHttpService,
     private callfc: CallFuncService,
   ) {}
+
   checkTaskLink(task, step) {
     let check = true;
     let tasks = step?.tasks;
@@ -152,7 +153,7 @@ export class StepService {
     });
   }
 
-  async chooseTypeTask(groupID = null) {
+  async chooseTypeTask(instanceStep,groupID = null) {
     setTimeout(async () => {
       let popupTypeTask = this.callfc.openForm(
         CodxTypeTaskComponent,
@@ -165,7 +166,7 @@ export class StepService {
       if (dataOutput?.event?.value) {
         taskType = dataOutput?.event;
         if (taskType?.value == 'G') {
-          this.addGroupTask();
+          this.addGroupTask(instanceStep);
         } else {
           // this.addTask(groupID);
         }
@@ -174,28 +175,25 @@ export class StepService {
 
   }
 
-  async addGroupTask() {
+   async addGroupTask(instanceStep:DP_Instances_Steps) {
     let taskGroup = new DP_Instances_Steps_TaskGroups();
     taskGroup.recID = Util.uid();
     taskGroup.refID = Util.uid();
     taskGroup['isTaskDefault'] = false;
     taskGroup['progress'] = 0;
-    // taskGroup['stepID'] = currentStep['recID'];
+    taskGroup['stepID'] = instanceStep?.recID;
 
-    // let taskBeforeIndex = -1;
-    // for (let i = this.listGroupTask?.length - 1; i >= 0; i--) {
-    //   if (this.listGroupTask[i]?.recID) {
-    //     taskBeforeIndex = i;
-    //     break;
-    //   }
-    // }
-    // if (taskBeforeIndex >= 0) {
-    //   taskGroup['startDate'] =
-    //     this.listGroupTask[taskBeforeIndex]?.endDate ||
-    //     this.currentStep?.startDate;
-    //   taskGroup['indexNo'] = taskBeforeIndex + 1;
-    // }
-    let taskOutput = await this.openPopupGroup('add', taskGroup);
+    let listGroup = instanceStep?.taskGroups?.sort((a, b) => a['indexNo'] - b['indexNo']);
+    let taskBeforeIndex = listGroup?.length;
+
+    if (taskBeforeIndex) {
+      taskBeforeIndex -= 1;
+      taskGroup['startDate'] =
+      listGroup[taskBeforeIndex]?.endDate ||
+      instanceStep?.startDate;
+      taskGroup['indexNo'] = taskBeforeIndex + 1;
+    }
+    let taskOutput = await this.openPopupGroup('add', taskGroup, instanceStep);
     // if (taskOutput?.event.groupTask) {
     //   let data = taskOutput?.event;
     //   this.currentStep?.taskGroups?.push(data.groupTask);
@@ -203,12 +201,14 @@ export class StepService {
     //   this.currentStep['progress'] = data.progressStep;
     // }
   }
-  async openPopupGroup(action, group) {
+
+
+  async openPopupGroup(action, group, instanceStep) {
     let dataInput = {
-      // action,
-      // step: this.currentStep,
-      // dataGroup: group || {},
-      // isEditTimeDefault: this.currentStep?.leadtimeControl,
+      action,
+      step: instanceStep,
+      dataGroup: group || {},
+      isEditTimeDefault: instanceStep?.leadtimeControl,
     };
     let popupTask = this.callfc.openForm(
       CodxAddGroupTaskComponent,
