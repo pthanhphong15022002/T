@@ -73,6 +73,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isRoleAll = true;
   @Input() isViewStep = false;
   @Input() isShowElement = true;
+  @Input() isAddTask = false;
 
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -157,6 +158,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.getTaskEnd();
       }
     }
+    if (changes?.isAddTask && this.isRoleAll && this.isOnlyView && this.isAddTask) {
+      this.chooseTypeTask();
+    }
   }
 
   async getFormModel(functionID) {
@@ -171,9 +175,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   // loại bỏ những task có progress 100%
   removeTaskSuccess() {
     if (this.listGroupTask?.length > 0) {
-      for (let i = 0; i < this.listGroupTask.length; ) {
+      for (let i = 0; i < this.listGroupTask.length;) {
         if (this.listGroupTask[i]?.task?.length > 0) {
-          for (let j = 0; j < this.listGroupTask[i]?.task.length; ) {
+          for (let j = 0; j < this.listGroupTask[i]?.task.length;) {
             let task = this.listGroupTask[i]?.task[j];
             if (task?.progress == 100) {
               this.listGroupTask[i]?.task.splice(j, 1);
@@ -211,7 +215,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
     this.isUpdateProgressStep =
-    this.currentStep?.progressTaskGroupControl || false;
+      this.currentStep?.progressTaskGroupControl || false;
     this.isEditTimeDefault = this.currentStep?.leadtimeControl || false;
     this.isOnlyView = this.currentStep?.stepStatus == '1';
 
@@ -296,7 +300,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return type == 'ID' ? role?.objectID : role?.objectName;
   }
 
-  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
+  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) { }
 
   // more functions
   async changeDataMFTask(event, task, groupTask) {
@@ -484,22 +488,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP20': // tiến độ
-            if (!(this.isRoleAll  && this.isOnlyView && this.isUpdateProgressStep)) {
+            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)) {
               res.isblur = true;
             }
-            res.isbookmark = true;
+            // res.isbookmark = true;
             break;
           case 'DP08': // Thêm nhóm công việc
             if (!(this.isRoleAll && this.isOnlyView)) {
               res.isblur = true;
             }
-            res.isbookmark = true;
+            // res.isbookmark = true;
             break;
           case 'DP26': // Chi tiết giai đoạn
             // if (!((this.isRoleAll ) && this.isOnlyView)) {
             //   res.isblur = true;
             // }
-            res.isbookmark = true;
+            // res.isbookmark = true;
             break;
         }
       });
@@ -575,21 +579,25 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   //task
   async chooseTypeTask(groupID = null) {
-    let popupTypeTask = this.callfc.openForm(
-      CodxTypeTaskComponent,
-      '',
-      450, 
-      580,
-    );
-    let dataOutput = await firstValueFrom(popupTypeTask.closed);
-    if(dataOutput?.event?.value){
-      this.taskType = dataOutput?.event;
-      if(this.taskType?.value == 'G'){
-        this.addGroupTask();
-      }else{
-        this.addTask(groupID);
+    this.isAddTask = false;
+    setTimeout(async () => {
+      let popupTypeTask = this.callfc.openForm(
+        CodxTypeTaskComponent,
+        '',
+        450,
+        580,
+      );
+      let dataOutput = await firstValueFrom(popupTypeTask.closed);
+      if (dataOutput?.event?.value) {
+        this.taskType = dataOutput?.event;
+        if (this.taskType?.value == 'G') {
+          this.addGroupTask();
+        } else {
+          this.addTask(groupID);
+        }
       }
-    }
+    },0);
+
   }
 
   async addTask(groupID) {
@@ -640,7 +648,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         let group = this.listGroupTask.find((group) => group.refID == taskOutput?.taskGroupID);
         let indexTask = this.currentStep?.tasks?.findIndex((taskFind) => taskFind.recID == task.recID);
 
-        if(taskOutput?.taskGroupID != groupIdOld){
+        if (taskOutput?.taskGroupID != groupIdOld) {
           let groupOld = this.listGroupTask.find((group) => group.refID == groupIdOld);
           if (groupOld) {
             let index = groupOld?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
@@ -650,15 +658,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
           if (group) {
             group?.task?.push(taskOutput);
-          }    
-        }else{
+          }
+        } else {
           if (group) {
             let index = group?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
             if (index >= 0) {
               group?.task?.splice(index, 1, taskOutput);
             }
-          }    
-        }   
+          }
+        }
         if (indexTask >= 0) {
           this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
@@ -936,7 +944,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 this.listGroupTask?.splice(indexView, 1);
               }
               if (this.currentStep?.tasks?.length > 0) {
-                for (let i = 0; i < this.currentStep?.tasks?.length; ) {
+                for (let i = 0; i < this.currentStep?.tasks?.length;) {
                   if (this.currentStep?.tasks[i]?.taskGroupID == group?.refID) {
                     this.currentStep?.tasks.splice(i, 1);
                   } else {
@@ -1393,7 +1401,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
   }
-  toggleElemen(){
+  toggleElemen() {
     this.isShowElement = !this.isShowElement;
   }
 }

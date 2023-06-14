@@ -167,6 +167,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.setTitle();
       this.getOKRPlans(this.periodID, this.interval, this.year);
     }
+
+    this.api
+      .exec('OM', 'OKRReportBussiness', 'OKRsListAsync', [null])
+      .subscribe();
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -397,90 +401,72 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       if (okrs) {
         let x = okrs;
         this.getOrgTreeOKR();
-        for (let gr of okrs) {
-          let filterGR = this.dataOKR.filter(
-            (x) => x?.okrGroupID == gr?.okrGroupID
-          );
-
-
-          if (filterGR != null && filterGR?.length > 0) {
-            for (let ob of gr?.listOKR) {
-              let filterOB = filterGR[0]?.listOKR.filter(
-                (x) => x.recID == ob?.recID
-              );
-              let newOB = ob;
-              if (filterOB != null && filterOB.length > 0) {
-                let oldOB = filterOB[0];
-                oldOB.actual = newOB?.actual;
-                oldOB.target = newOB?.target;
-                oldOB.current = newOB?.current;
-                oldOB.weight = newOB?.weight;
-                oldOB.progress = newOB?.progress;
-                oldOB.hasAssign = newOB?.hasAssign;
-                oldOB.modifiedOn = new Date();
-
-                this.detectorRef.detectChanges();
-                if (newOB?.items != null && newOB?.items?.length > 0) {
-                  //update KR
-                  for (let k = 0; k < newOB?.items?.length; k++) {
-                    let filterKR = oldOB?.items.filter(
-                      (x) => x.recID == newOB?.items[k]?.recID
-                    );
-                    let newKR = newOB?.items[k];
-                    if (filterKR != null && filterKR.length > 0) {
-                      let oldKR = filterKR[0];
-                      oldKR.actual = newKR?.actual;
-                      oldKR.target = newKR?.target;
-                      oldKR.current = newKR?.current;
-                      oldKR.weight = newKR?.weight;
-                      oldKR.progress = newKR?.progress;
-                      oldKR.targets = newKR?.targets;
-                      oldKR.checkIns = newKR?.checkIns;
-                      oldKR.hasAssign = newKR?.hasAssign;
-                      oldKR.okrLink = newKR?.okrLink;
-                      oldKR.notiCheckIn = newKR?.notiCheckIn;
-                      oldKR.personIncharge = newKR?.personIncharge;
-                      oldKR.modifiedOn = new Date();
-
-                      this.detectorRef.detectChanges();
-                      if (newKR?.items != null && newKR?.items?.length > 0) {
-                        //update SKR
-                        for (let s = 0; s < newKR?.items?.length; s++) {
-                          let filterSKR = oldKR?.items.filter(
-                            (x) => x.recID == newKR?.items[s]?.recID
-                          );
-                          let newSKR = newKR?.items[s];
-                          if (filterSKR != null && filterSKR.length > 0) {
-                            let oldSKR = filterSKR[0];
-                            oldSKR.actual = newSKR?.actual;
-                            oldSKR.target = newSKR?.target;
-                            oldSKR.current = newSKR?.current;
-                            oldSKR.weight = newSKR?.weight;
-                            oldSKR.progress = newSKR?.progress;
-                            oldSKR.targets = newSKR?.targets;
-                            oldSKR.checkIns = newSKR?.checkIns;
-                            oldSKR.hasAssign = newSKR?.hasAssign;
-                            oldSKR.okrLink = newSKR?.okrLink;
-                            oldSKR.notiCheckIn = newSKR?.notiCheckIn;
-                            oldSKR.personIncharge = newSKR?.personIncharge;
-                            oldSKR.modifiedOn = new Date();
-
-                            this.detectorRef.detectChanges();
-                          } else {
-                            oldKR?.items.push(newSKR);
-                          }
-                        }
+        for(let i=0;i<okrs.length;i++){
+          let filterOB = this.dataOKR.filter(x=> x.recID ==okrs[i]?.recID);
+          let newOB = okrs[i];
+          if(filterOB!=null && filterOB.length>0){
+            let oldOB =filterOB[0];
+            oldOB.actual = newOB?.actual;
+            oldOB.target = newOB?.target;
+            oldOB.current = newOB?.current;
+            oldOB.weight = newOB?.weight;
+            oldOB.progress = newOB?.progress;
+            oldOB.hasAssign = newOB?.hasAssign;
+            oldOB.modifiedOn = new Date();
+            if(newOB?.items!=null && newOB?.items?.length>0){
+              //update KR
+              for(let k=0;k<newOB?.items?.length;k++){
+                let filterKR = oldOB?.items.filter(x=> x.recID == newOB?.items[k]?.recID);
+                let newKR = newOB?.items[k];
+                if(filterKR!=null && filterKR.length>0){
+                  let oldKR =filterKR[0];
+                  oldKR.actual = newKR?.actual;
+                  oldKR.target = newKR?.target;
+                  oldKR.current = newKR?.current;
+                  oldKR.weight = newKR?.weight;
+                  oldKR.progress = newKR?.progress;
+                  oldKR.targets = newKR?.targets;
+                  oldKR.checkIns = newKR?.checkIns;
+                  oldKR.hasAssign = newKR?.hasAssign;
+                  oldKR.okrLink = newKR?.okrLink;
+                  oldKR.notiCheckIn = newKR?.notiCheckIn;
+                  oldKR.personIncharge = newKR?.personIncharge;
+                  oldKR.modifiedOn = new Date();
+                  if(newKR?.items!=null && newKR?.items?.length>0){
+                    //update SKR
+                    for(let s=0;s<newKR?.items?.length;s++){
+                      let filterSKR = oldKR?.items.filter(x=> x.recID == newKR?.items[s]?.recID);
+                      let newSKR = newKR?.items[s];
+                      if(filterSKR!=null && filterSKR.length>0){
+                        let oldSKR =filterSKR[0];
+                        oldSKR.actual = newSKR?.actual;
+                        oldSKR.target = newSKR?.target;
+                        oldSKR.current = newSKR?.current;
+                        oldSKR.weight = newSKR?.weight;
+                        oldSKR.progress = newSKR?.progress;  
+                        oldSKR.targets = newSKR?.targets;
+                        oldSKR.checkIns = newSKR?.checkIns;
+                        oldSKR.hasAssign = newSKR?.hasAssign;
+                        oldSKR.okrLink = newSKR?.okrLink;
+                        oldSKR.notiCheckIn = newSKR?.notiCheckIn;
+                        oldSKR.personIncharge = newSKR?.personIncharge;
+                        oldSKR.modifiedOn = new Date();    
                       }
-                    } else {
-                      oldOB?.items.push(newKR);
+                      else{
+                        oldKR?.items.push(newSKR);
+                      }            
                     }
                   }
                 }
-              } else {
-                filterGR[0].listOKR.push(newOB);
+                else{
+                  oldOB?.items.push(newKR);
+                }            
               }
             }
           }
+          else{
+            this.dataOKR.push(newOB);
+          }            
         }
         this.detectorRef.detectChanges();
       }
