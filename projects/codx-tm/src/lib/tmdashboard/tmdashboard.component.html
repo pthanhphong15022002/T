@@ -425,7 +425,9 @@
             #pie1
             style="display: block"
             [tooltip]="tooltip"
-            [centerLabel]="{ text: '963' }"
+            [centerLabel]="{
+              text: myDBData?.totalTasksByGroup.toString()
+            }"
           >
             <e-accumulation-series-collection>
               <e-accumulation-series
