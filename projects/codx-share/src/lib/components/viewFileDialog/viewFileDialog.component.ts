@@ -13,6 +13,7 @@ import { PropertiesComponent } from 'projects/codx-dm/src/lib/properties/propert
 import { environment } from 'src/environments/environment';
 import { threadId } from 'worker_threads';
 import { SystemDialogService } from './systemDialog.service';
+import { variableAudio } from './extention';
 @Component({
   selector: 'codx-viewfiledialog',
   templateUrl: './viewFileDialog.component.html',
@@ -47,6 +48,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   isShow = false;
   isOffice=false;
   isClose = false;
+  isAudio = false;
   public urlSafe: any;
   @Input() id: string;
   @Input() ext: string;
@@ -370,15 +372,9 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
       this.data = this.data.data;
       this.getBookmark();
     }
-    this.isVideo = false;
-    this.srcVideo = "";
     this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
-
-    if (this.ext == ".mp4") 
-    {
-      this.isVideo = true;
-      this.srcVideo = `${environment.urlUpload}/${this.data.pathDisk}`;
-    } 
+    if (this.ext == ".mp4") this.isVideo = true;
+    else if (variableAudio.includes(this.ext))  this.isAudio = true;
     else if (this.ext == ".png" || this.ext == ".jpeg" || this.ext == ".jpg" || this.ext == ".bmp") this.isImg = true;     
     else if (this.ext == ".pdf") this.isPdf = true;
     else if(environment.office365) this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(`${environment.office365}`+`${environment.urlUpload}`+"/"+this.data?.pathDisk);

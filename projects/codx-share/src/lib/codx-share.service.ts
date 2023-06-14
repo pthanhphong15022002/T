@@ -176,8 +176,111 @@ export class CodxShareService {
     dataService?: any,
     that: any = null
   ) {
+     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
     switch (funcID) {
+      case 'SYS201' :
+      case 'SYS202' :
+      case 'SYS203' :
+      case 'SYS204' :
+      case 'SYS205' :
+      case 'SYS206' :
+      {
+        if(data?.unbounds?.eSign == true)
+        {
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = dataService;
+          option.FormModel = formModel;
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+  
+          var listApproveMF = this.getMoreFunction(funcID);
+  
+          let dialogApprove = this.callfunc.openForm(
+            PopupSignForApprovalComponent,
+            'Thêm mới',
+            700,
+            650,
+            formModel.funcID,
+            {
+              funcID: 'EST021',
+              sfRecID: data?.unbounds?.transID,
+              title: data?.unbounds?.htmlView,
+              status: data?.unbounds?.statusApproval,
+              stepType: data?.unbounds?.stepType,
+              stepNo: data?.unbounds?.stepNo,
+              transRecID: data?.unbounds?.approvalRecID,
+              oTrans: data?.unbounds,
+              lstMF: listApproveMF,
+            },
+            '',
+            dialogModel
+          );
+          dialogApprove.closed.subscribe((x) => {
+            if (x.event?.result) {
+              data.statusApproval = x.event?.mode;
+              dataService.update(data).subscribe();
+             
+            }
+          });
+        }
+        else
+        {
+          var status;
+          if (funcID == 'SYS201' || funcID == 'SYS202' || funcID == 'SYS203' || funcID == 'SYS204')  status = '5';
+          else if (funcID == 'SYS205') status = '4';
+          else if (funcID == 'SYS206') status = '2'
+          let dialog = this.beforeApprove(
+            status,
+            data?.unbounds,
+            formModel.funcID,
+            val?.text,
+            formModel
+          );
+          if (dialog) {
+            dialog.closed.subscribe((res) => {
+              let oComment = res?.event;
+              this.approval(
+                data?.unbounds?.approvalRecID,
+                status,
+                oComment.comment,
+                oComment.reasonID
+              ).subscribe((res2: any) => {
+                if (!res2?.msgCodeError) {
+                  data.unbounds.statusApproval = status;
+                  dataService.update(data).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                  //afterSave(data.statusApproval);
+                } else this.notificationsService.notify(res2?.msgCodeError);
+              });
+            });
+          } 
+          else {
+            this.approval(data?.unbounds?.approvalRecID, status, '', '').subscribe(
+              (res2: any) => {
+                if (!res2?.msgCodeError) {
+                  data.unbounds.statusApproval = status;
+                  dataService.update(data).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                  afterSave(data.statusApproval);
+                } else this.notificationsService.notify(res2?.msgCodeError);
+              }
+            );
+          }
+        }
+        break;
+      }
+      case 'SYS207' :
+      {
+        this.undoApproval(data?.unbounds?.approvalRecID).subscribe((res) => {
+          if (res) {
+            data.unbounds.statusApproval = res?.status;
+            dataService.update(data).subscribe();
+            //this.notificationsService.notifyCode('SYS007');
+          }
+        });
+      }
     }
   }
 
@@ -874,145 +977,7 @@ export class CodxShareService {
       }
     }
   }
-  clickMFApproval(
-    e: any,
-    data: any,
-    dataService: any,
-    formModel: any,
-    afterSave: any
-  ) {
-    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
-    var funcID = e?.functionID;
-    if (data.eSign == true) {
-      //Kys
-      if (
-        funcID == 'SYS201' ||
-        funcID == 'SYS205' ||
-        funcID == 'SYS206' ||
-        funcID == 'SYS204' ||
-        funcID == 'SYS203' ||
-        funcID == 'SYS202'
-      ) {
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = dataService;
-        option.FormModel = formModel;
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-
-        var listApproveMF = this.getMoreFunction(funcID);
-
-        let dialogApprove = this.callfunc.openForm(
-          PopupSignForApprovalComponent,
-          'Thêm mới',
-          700,
-          650,
-          formModel.funcID,
-          {
-            funcID: 'EST021',
-            sfRecID: data?.unbounds?.transID,
-            title: data?.unbounds?.htmlView,
-            status: data?.unbounds?.statusApproval,
-            stepType: data?.unbounds?.stepType,
-            stepNo: data?.unbounds?.stepNo,
-            transRecID: data?.unbounds?.approvalRecID,
-            oTrans: data?.unbounds,
-            lstMF: listApproveMF,
-          },
-          '',
-          dialogModel
-        );
-        dialogApprove.closed.subscribe((x) => {
-          if (x.event?.result) {
-            data.statusApproval = x.event?.mode;
-            dataService.update(data).subscribe();
-            //  this.esService.setupChange.next(true);
-            //  this.esService.isStatusChange.subscribe((res) => {
-            //    if (res != null) {
-            //      if (res.toString() == '2') {
-            //        this.view.dataService.remove(data).subscribe();
-            //      } else {
-            //        data.status = res;
-            //        this.view.dataService.update(data).subscribe();
-            //      }
-            //    }
-            //  });
-          }
-
-          /*return {
-              result: true,
-              mode: 1
-            }
-  
-            mode: 1. Ký
-                2. Từ chối
-                3. Làm lại */
-        });
-      }
-
-      //hoan tat
-      // else if (funcID == 'SYS204') {
-
-      // }
-    } else {
-      var status;
-      if (
-        funcID == 'SYS201' ||
-        funcID == 'SYS202' ||
-        funcID == 'SYS203' ||
-        funcID == 'SYS204'
-      )
-        status = '5';
-      else if (funcID == 'SYS205') status = '4';
-      else if (funcID == 'SYS206') status = '2';
-
-      let dialog = this.beforeApprove(
-        status,
-        data?.unbounds,
-        formModel.funcID,
-        e?.text,
-        formModel
-      );
-      if (dialog) {
-        dialog.closed.subscribe((res) => {
-          let oComment = res?.event;
-          this.approval(
-            data?.unbounds?.approvalRecID,
-            status,
-            oComment.comment,
-            oComment.reasonID
-          ).subscribe((res2: any) => {
-            if (!res2?.msgCodeError) {
-              data.unbounds.statusApproval = status;
-              dataService.update(data).subscribe();
-              this.notificationsService.notifyCode('SYS007');
-              afterSave(data.statusApproval);
-            } else this.notificationsService.notify(res2?.msgCodeError);
-          });
-        });
-      } else {
-        this.approval(data?.approvalRecID, status, '', '').subscribe(
-          (res2: any) => {
-            if (!res2?.msgCodeError) {
-              data.unbounds.statusApproval = status;
-              dataService.update(data).subscribe();
-              this.notificationsService.notifyCode('SYS007');
-              afterSave(data.statusApproval);
-            } else this.notificationsService.notify(res2?.msgCodeError);
-          }
-        );
-      }
-    }
-    if (funcID == 'SYS207') {
-      this.undoApproval(data.approvalRecID).subscribe((res) => {
-        if (res) {
-          data.unbounds.statusApproval = res?.status;
-          dataService.update(data).subscribe();
-          //this.notificationsService.notifyCode('SYS007');
-        }
-      });
-    }
-  }
+ 
 
   getMoreFunction(funcID: any) {
     var listApproveMF = [];

@@ -127,7 +127,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   }
 
   changeDataMf(event, data) {
-    this.hrService.handleShowHideMF(event, data, this.view);
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
   }
 
   ValueChangeComment(evt) {
@@ -213,8 +213,8 @@ export class EmployeeDisciplineComponent extends UIComponent {
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
-      850,
-      550,
+      500,
+      350,
       null,
       null
     );
