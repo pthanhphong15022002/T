@@ -20,6 +20,7 @@ import {
   Util,
   NotificationsService,
   AuthService,
+  SidebarModel,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { ActivatedRoute } from '@angular/router';
@@ -27,6 +28,7 @@ import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-wei
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
 import { PopupAddRoleComponent } from '../popup/popup-add-role/popup-add-role.component';
+import { PopupViewVersionComponent } from '../popup/popup-view-version/popup-view-version.component';
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -362,7 +364,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((okrs: any) => {
                 if (okrs) {
                   this.dataOKR = okrs;
-                  
+
                   this.isAfterRender = true;
                   this.showPlanMF = true;
                   this.loadedData = true;
@@ -401,11 +403,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       if (okrs) {
         let x = okrs;
         this.getOrgTreeOKR();
-        for(let i=0;i<okrs.length;i++){
-          let filterOB = this.dataOKR.filter(x=> x.recID ==okrs[i]?.recID);
+        for (let i = 0; i < okrs.length; i++) {
+          let filterOB = this.dataOKR.filter((x) => x.recID == okrs[i]?.recID);
           let newOB = okrs[i];
-          if(filterOB!=null && filterOB.length>0){
-            let oldOB =filterOB[0];
+          if (filterOB != null && filterOB.length > 0) {
+            let oldOB = filterOB[0];
             oldOB.actual = newOB?.actual;
             oldOB.target = newOB?.target;
             oldOB.current = newOB?.current;
@@ -413,13 +415,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             oldOB.progress = newOB?.progress;
             oldOB.hasAssign = newOB?.hasAssign;
             oldOB.modifiedOn = new Date();
-            if(newOB?.items!=null && newOB?.items?.length>0){
+            if (newOB?.items != null && newOB?.items?.length > 0) {
               //update KR
-              for(let k=0;k<newOB?.items?.length;k++){
-                let filterKR = oldOB?.items.filter(x=> x.recID == newOB?.items[k]?.recID);
+              for (let k = 0; k < newOB?.items?.length; k++) {
+                let filterKR = oldOB?.items.filter(
+                  (x) => x.recID == newOB?.items[k]?.recID
+                );
                 let newKR = newOB?.items[k];
-                if(filterKR!=null && filterKR.length>0){
-                  let oldKR =filterKR[0];
+                if (filterKR != null && filterKR.length > 0) {
+                  let oldKR = filterKR[0];
                   oldKR.actual = newKR?.actual;
                   oldKR.target = newKR?.target;
                   oldKR.current = newKR?.current;
@@ -432,41 +436,40 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   oldKR.notiCheckIn = newKR?.notiCheckIn;
                   oldKR.personIncharge = newKR?.personIncharge;
                   oldKR.modifiedOn = new Date();
-                  if(newKR?.items!=null && newKR?.items?.length>0){
+                  if (newKR?.items != null && newKR?.items?.length > 0) {
                     //update SKR
-                    for(let s=0;s<newKR?.items?.length;s++){
-                      let filterSKR = oldKR?.items.filter(x=> x.recID == newKR?.items[s]?.recID);
+                    for (let s = 0; s < newKR?.items?.length; s++) {
+                      let filterSKR = oldKR?.items.filter(
+                        (x) => x.recID == newKR?.items[s]?.recID
+                      );
                       let newSKR = newKR?.items[s];
-                      if(filterSKR!=null && filterSKR.length>0){
-                        let oldSKR =filterSKR[0];
+                      if (filterSKR != null && filterSKR.length > 0) {
+                        let oldSKR = filterSKR[0];
                         oldSKR.actual = newSKR?.actual;
                         oldSKR.target = newSKR?.target;
                         oldSKR.current = newSKR?.current;
                         oldSKR.weight = newSKR?.weight;
-                        oldSKR.progress = newSKR?.progress;  
+                        oldSKR.progress = newSKR?.progress;
                         oldSKR.targets = newSKR?.targets;
                         oldSKR.checkIns = newSKR?.checkIns;
                         oldSKR.hasAssign = newSKR?.hasAssign;
                         oldSKR.okrLink = newSKR?.okrLink;
                         oldSKR.notiCheckIn = newSKR?.notiCheckIn;
                         oldSKR.personIncharge = newSKR?.personIncharge;
-                        oldSKR.modifiedOn = new Date();    
-                      }
-                      else{
+                        oldSKR.modifiedOn = new Date();
+                      } else {
                         oldKR?.items.push(newSKR);
-                      }            
+                      }
                     }
                   }
-                }
-                else{
+                } else {
                   oldOB?.items.push(newKR);
-                }            
+                }
               }
             }
-          }
-          else{
+          } else {
             this.dataOKR.push(newOB);
-          }            
+          }
         }
         this.detectorRef.detectChanges();
       }
@@ -605,6 +608,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       case OMCONST.MFUNCID.PermissionORG:
       case OMCONST.MFUNCID.PermissionPER:
         this.showPermission(evt?.text);
+        break;
+      case OMCONST.MFUNCID.ShowVerPlanCOMP:
+      case OMCONST.MFUNCID.ShowVerPlanDEPT:
+      case OMCONST.MFUNCID.ShowVerPlanORG:
+      case OMCONST.MFUNCID.ShowVerPlanPER:
+        this.viewListVersion();
         break;
     }
   }
@@ -979,5 +988,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.dataOKRPlans?.recID,
       { ...this.groupModel.sharesModel },
     ]);
+  }
+  viewListVersion() {
+    let option = new SidebarModel();
+    option.FormModel = this.formModelPlan;
+    let dialogViewVersion = this.callfc.openSide(
+      PopupViewVersionComponent,
+      [this.dataOKRPlans],
+      option
+    );
+    dialogViewVersion.closed.subscribe((res) => {});
   }
 }

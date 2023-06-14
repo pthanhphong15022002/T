@@ -672,13 +672,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       totalvat = totalvat + element.vatAmt;
     });
     this.total = totalnet + totalvat;
-    if(this.journal && (this.total <= this.journal.transLimit || this.journal.transLimit == null))
-      this.purchaseinvoices.totalAmt = this.total;
+    this.purchaseinvoices.totalAmt = this.total;
     this.totalnet = totalnet.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
     this.totalvat = totalvat.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
+    this.total = this.total.toLocaleString('it-IT', {
       style: 'currency',
       currency: 'VND',
     });
@@ -832,9 +835,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit == null)
-      this.purchaseinvoices.totalAmt = parseInt(this.total);
-    if(this.journal.transLimit && this.total > this.journal.transLimit)
+    if(this.journal.transLimit && this.purchaseinvoices.totalAmt > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
       this.validate++ ;
@@ -905,6 +906,25 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           );
         }
       });
+
+    if (this.formType == 'edit') {
+      this.api
+        .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
+          this.purchaseinvoices.recID,
+        ])
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.keymodel = Object.keys(res[0]);
+            this.purchaseInvoicesLines = res;
+            this.purchaseInvoicesLines.forEach((element) => {
+              if (element.vatid != null) {
+                this.countDetail++;
+              }
+              this.loadTotal();
+            });
+          }
+        });
+    }
 
     if (this.purchaseinvoices.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
@@ -1007,24 +1027,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                     }
                   }
                 });
-            }
-          });
-      }
-      if (this.formType == 'edit') {
-        this.api
-          .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
-            this.purchaseinvoices.recID,
-          ])
-          .subscribe((res: any) => {
-            if (res.length > 0) {
-              this.keymodel = Object.keys(res[0]);
-              this.purchaseInvoicesLines = res;
-              this.purchaseInvoicesLines.forEach((element) => {
-                if (element.vatid != null) {
-                  this.countDetail++;
-                }
-                this.loadTotal();
-              });
             }
           });
       }

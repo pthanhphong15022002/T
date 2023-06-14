@@ -208,8 +208,7 @@ export class PopupEBasicSalariesComponent
     }
     console.log('form Model ne', this.formModel);
     console.log('form group', this.formGroup);
-    console.log('dialog ne', this.dialog)
-    
+    console.log('dialog ne', this.dialog);
   }
 
   onSaveForm() {
@@ -262,9 +261,5 @@ export class PopupEBasicSalariesComponent
       return date1 <= date2;
     }
     return false;
-  }
-
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }
