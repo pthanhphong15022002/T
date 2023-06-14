@@ -435,7 +435,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.gridPurchaseInvoicesLine.addRow(res, idx);
-              
+              this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, res);
               break;
             case '2':
               idx = this.purchaseInvoicesLines.length;
