@@ -23,13 +23,34 @@
 </ng-container>
 
 <ng-template #popupToDoList let-dialog>
-  <codx-form
+  <!-- <codx-form
     [body]="body"
     [dialog]="dialog"
     [headerText]="headerText"
   >
-  </codx-form>
-  <ng-template #body>
+  </codx-form> -->
+
+  <div class="container p-4">
+    <div class="d-flex justify-content-between">
+      <div class="dialog-title line-clamp line-clamp-1">
+        <codx-label
+          name="lblTodos"
+          formName="Tasks"
+          gridViewName="grvTasks"
+          default="Danh sách công việc cần làm"
+        >
+        </codx-label>
+        <span class="">{{ "(" + countData + ")" }}</span>
+      </div>
+      <div>
+        <button
+          class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
+          (click)="dialog.close()"
+        >
+          <span class="icon-close icon-18"></span>
+        </button>
+      </div>
+    </div>
     <div class="checkbox-list mt-2 ms-6 text-dark">
       <ng-container *ngFor="let item of listTaskGoals">
         <div class="mb-2">
@@ -45,5 +66,23 @@
         </div>
       </ng-container>
     </div>
-  </ng-template>
+  </div>
+
+  <!-- <ng-template #body>
+    <div class="checkbox-list mt-2 ms-6 text-dark">
+      <ng-container *ngFor="let item of listTaskGoals">
+        <div class="mb-2">
+          <codx-input
+            type="checkbox"
+            class="me-2"
+            [crrValue]="item.status == '90'"
+            [disabled]="true"
+          ></codx-input>
+          <span class="text-gray-700">
+            {{ item.memo }}
+          </span>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template> -->
 </ng-template>
