@@ -299,8 +299,4 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
-
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
-  }
 }

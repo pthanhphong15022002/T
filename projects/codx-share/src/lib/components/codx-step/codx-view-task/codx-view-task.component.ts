@@ -400,7 +400,7 @@ export class CodxViewTaskComponent implements OnInit {
         this.stepService.assignTask(event.data, this.dataView,this.instanceStep);
         break;
       case 'DP08': //them task
-        this.stepService.chooseTypeTask();
+        this.stepService.chooseTypeTask(this.instanceStep);
         break;
       case 'DP20': // tien do
         this.openPopupUpdateProgress(this.dataView, this.type)

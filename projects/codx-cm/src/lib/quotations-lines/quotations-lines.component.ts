@@ -69,7 +69,13 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   crrCustomerID: string;
   objectOut: any;
   titleAdd = 'Thêm'; //sau gọi sys
-  readonly hideColums = ['rowno', 'netamt', 'salesamt','vatamt','discamt',''];
+  readonly hideColums = [
+    'rowno',
+    'netamt',
+    'salesamt',
+    'vatamt',
+    'discamt'
+  ];
 
   constructor(
     private codxCM: CodxCmService,
@@ -97,8 +103,11 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     if (this.gridQuationsLines?.visibleColumns?.length > 0) {
-      this.gridQuationsLines.visibleColumns.forEach((e,index) => {   
-        if (e?.fieldName && this.hideColums.some(x=>x==e?.fieldName.toLowerCase())) {
+      this.gridQuationsLines.visibleColumns.forEach((e, index) => {
+        if (
+          e?.fieldName &&
+          this.hideColums.some((x) => x == e?.fieldName.toLowerCase())
+        ) {
           e.allowEdit = false;
         }
       });
@@ -590,11 +599,20 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     //   }
     // });
   }
-  onAddNew(e){
-    debugger
+  onAddNew(e) {
+    debugger;
   }
 
-  onEdit(e){
-    debugger
+  onEdit(e) {
+    debugger;
+  }
+
+  sum(field) {
+    let sum = 0;
+    this.listQuotationLines.forEach((e) => {
+      sum += e[field];
+    });
+
+    return sum;
   }
 }

@@ -1,0 +1,158 @@
+<codx-form [headerText]="'Người nhập liệu'" [body]="body" [footer]="footer">
+  <ng-template #body>
+    <div class="row h-100">
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 position-relative border-right">
+        <div class="user-mini-nav">
+        </div>
+
+        <div class="position-absolute bottom-0" style="right: 1.5rem">
+          <codx-input
+            type="share"
+            field="creater"
+            refValue="AC068"
+            [showInput]="false"
+            (valueChange)="onChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+
+      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">
+                <codx-label
+                  fieldName="lblFunctionHeader"
+                  [formModel]=""
+                  default="Chức năng"
+                ></codx-label>
+              </th>
+              <th scope="col">
+                <codx-label
+                  fieldName="lblDescriptionHeader"
+                  [formModel]=""
+                  default="Mô tả"
+                ></codx-label>
+              </th>
+              <th scope="col">
+                <codx-label
+                  fieldName="lblOptionHeader"
+                  [formModel]=""
+                  default="Chọn"
+                ></codx-label>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <codx-label
+                  fieldName="lblFunctionRow"
+                  [formModel]=""
+                  default="Thêm"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-label
+                  fieldName="lblDescriptionRow"
+                  [formModel]=""
+                  default="Cho phép thêm mới chứng từ"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-input type="switch"></codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <codx-label
+                  fieldName="lblFunctionRow"
+                  [formModel]=""
+                  default="Xem"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-label
+                  fieldName="lblDescriptionRow"
+                  [formModel]=""
+                  default="Cho phép xem chứng từ"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-input type="input"></codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <codx-label
+                  fieldName="lblFunctionRow"
+                  [formModel]=""
+                  default="Xóa"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-label
+                  fieldName="lblDescriptionRow"
+                  [formModel]=""
+                  default="Cho phép xóa chứng từ"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-input type="input"></codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <codx-label
+                  fieldName="lblFunctionRow"
+                  [formModel]=""
+                  default="Xuất khẩu dữ liệu"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-label
+                  fieldName="lblDescriptionRow"
+                  [formModel]=""
+                  default="Cho phép xuất khẩu dữ liệu chứng từ"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-input type="switch"></codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <codx-label
+                  fieldName="lblFunctionRow"
+                  [formModel]=""
+                  default="Ghi sổ"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-label
+                  fieldName="lblDescriptionRow"
+                  [formModel]=""
+                  default="Cho phép ghi sổ chứng từ"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-input type="switch"></codx-input>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        [fiedName]="'titleSave'"
+        [formModel]=""
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </ng-template>
+</codx-form>

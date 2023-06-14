@@ -495,6 +495,21 @@ export class CodxDMService {
         return 'javascript.svg';
       case '.apk':
         return 'android.svg';
+      case '.ppt':
+        return 'ppt.svg';
+      case '.mp3':
+      case '.wma':
+      case '.wav':
+      case '.flac':
+      case '.ogg':
+      case '.aiff':
+      case '.aac':
+      case '.alac':
+      case '.lossless':
+      case '.wma9':
+      case '.aac+':
+      case '.ac3':
+        return 'audio.svg';
       default:
         return 'file.svg';
     }

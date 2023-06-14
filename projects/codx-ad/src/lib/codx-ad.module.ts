@@ -51,6 +51,8 @@ import { DecentralizedGroupComponent } from './decentralized-group/decentralized
 import { AddDecentralGroupMemComponent } from './decentralized-group/add-decentral-group-mem/add-decentral-group-mem.component';
 import { PopupOrderDetailComponent } from './company-setting/popup-order-detail/popup-order-detail.component';
 import { PopupExtendModuleComponent } from './company-setting/popup-extend-module/popup-extend-module.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 export const routes: Routes = [
   {
@@ -78,6 +80,14 @@ export const routes: Routes = [
       {
         path: 'grouppermissions/:funcID',
         component: DecentralizedGroupComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
     ],
   },

@@ -118,6 +118,7 @@ export class PopupMoveReasonComponent implements OnInit {
     var data = [this.recID, this.moveProccess, this.reasonStep, this.isReason,this.ownerMove,this.applyFor];
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
       if(res){
+        debugger
         this.instances = res[0];
         this.listStep = res[1];
         if(this.applyFor != '0' ){

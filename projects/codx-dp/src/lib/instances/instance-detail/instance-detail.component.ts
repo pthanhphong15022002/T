@@ -390,7 +390,7 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpTeps = data;
+        this.tmpTeps = JSON.parse(JSON.stringify(data));;
         this.outStepInstance.emit({ data: this.tmpTeps });
         this.stepValue = {
           textColor: data.textColor,
@@ -498,7 +498,7 @@ export class InstanceDetailComponent implements OnInit {
       this.isOnlyView = $event?.isOnlyView;
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
-      this.tmpTeps = this.listSteps[indx];
+      this.tmpTeps = JSON.parse(JSON.stringify(this.listSteps[indx]));
       this.outStepInstance.emit({ data: this.tmpTeps });
       this.lstInv = this.getInvolved(this.tmpTeps.roles);
       this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái

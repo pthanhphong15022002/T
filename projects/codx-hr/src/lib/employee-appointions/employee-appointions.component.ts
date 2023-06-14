@@ -223,8 +223,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
-      850,
-      550,
+      500,
+      350,
       null,
       null
     );
@@ -360,8 +360,11 @@ export class EmployeeAppointionsComponent extends UIComponent {
       );
     });
   }
-  ChangeDataMF(event, data): void {
-    this.hrService.handleShowHideMF(event, data, this.view);
+  ChangeDataMF(event, data) {
+    console.log(event);
+    console.log(data);
+    console.log(this.view.formModel);
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
   }
 
   //#endregion

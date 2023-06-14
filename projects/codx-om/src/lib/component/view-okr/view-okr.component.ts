@@ -17,6 +17,8 @@ import { OMCONST } from '../../codx-om.constant';
 import { CodxOmService } from '../../codx-om.service';
 import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
+import { PopupViewOKRLinkComponent } from '../../popup/popup-view-okr-link/popup-view-okr-link.component';
+import { PopupCheckInHistoryComponent } from '../../popup/popup-check-in-history/popup-check-in-history.component';
 
 @Component({
   selector: 'view-okr',
@@ -150,6 +152,43 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
       '',
       dModel
     );
+  }
+  showOKRLink(evt:any,data:any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    let height =400;
+    if(data?.hasAssign==null){
+      return;
+    }
+    if(data?.hasAssign?.toString()?.includes('AS')){
+      height=200;
+    }
+    if (data != null) {
+      let dialogShowLink = this.callfc.openForm(
+        PopupViewOKRLinkComponent,
+        '',
+        600,
+        height,
+        null,
+        [data,this.okrGrv,this.okrFM]
+      );
+    }
+  }
+  showCheckInHistory(evt:any,data:any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    
+    if (data != null) {
+      let dialogShowHistoryCheckIn = this.callfc.openForm(
+        PopupCheckInHistoryComponent,
+        '',
+        800,
+        850,
+        null,
+        [data,this.okrGrv,this.okrFM]
+      );
+      
+    }
   }
   clickTreeNode(evt:any, ){
     evt.stopPropagation();
