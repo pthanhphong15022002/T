@@ -679,5 +679,161 @@
   </ng-container>
 </ng-template>
 <ng-template #tabVat>
-
+  <div class="table-responsive table-cashpayment">
+    <table style="table-layout: fixed;" class="table border mb-0">
+      <thead class="border-gray-200" style="position: sticky; top: 0">
+        <tr class="border-bottom">
+          <th class="bg-gray-100 border-bottom w-20">
+            <div class="d-flex">
+              <codx-label class="ps-3 fw-bold" fiedName="lblInvoiceNo" [formModel]="view.formModel" default="Mẫu số">
+              </codx-label>
+            </div>
+          </th>
+          <th class="bg-gray-100 border-bottom w-30">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblInvoiceDate" [formModel]="view.formModel" default="Ký hiệu">
+              </codx-label>
+            </div>
+          </th>
+          <th class="bg-gray-100 border-bottom w-30">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblDueDate" [formModel]="view.formModel" default="Số hóa đơn">
+              </codx-label>
+            </div>
+          </th>
+          <th class="bg-gray-100 border-bottom w-20">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblBalanceAmt" default="Ngày hóa đơn">
+              </codx-label>
+            </div>
+          </th>
+          <!-- <th class="w-20">
+            <div class="d-flex">
+              <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="CurrencyID"
+                [formModel]="fmSettledInvoices">
+              </codx-label>
+            </div>
+          </th> -->
+          <th class="bg-gray-100 border-bottom w-30">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblSettledAmt" default="Đối tượng">
+              </codx-label>
+            </div>
+          </th>
+          <th class="bg-gray-100 border-bottom w-30">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblNote" default="Số tiền">
+              </codx-label>
+            </div>
+          </th>
+          <th class="bg-gray-100 border-bottom w-30">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblNote" default="Thuế suất">
+              </codx-label>
+            </div>
+          </th>
+          <th class="bg-gray-100 border-bottom w-30">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblNote" default="Tiền thuế">
+              </codx-label>
+            </div>
+          </th>
+          <th class="bg-gray-100 border-bottom w-30">
+            <div class="d-flex">
+              <codx-label class="fw-bold" fiedName="lblNote" default="Ghi chú">
+              </codx-label>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="border-bottom">
+        <!-- <tr *ngFor="let item of settledInvoices">
+          <td class="ps-3">
+            <div class="d-flex align-items-center justify-content-start">
+              <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">
+                <span [ngbTooltip]="popno" class="fw-bold line-clamp line-clamp-1">{{item.invoiceNo}}</span>
+                <ng-template #popno>
+                  <span class="fw-bold">{{item.invoiceNo}}</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center justify-content-start">
+              <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
+                <span #invoiceDate [innerHTML]="
+                  item?.invoiceDate
+            | formatvalue : view.formModel : 'invoiceDate' : invoiceDate : 'SettledInvoices' : 'grvSettledInvoices'
+            | async
+        " class="text-gray-600 mt-1"></span>
+              </ng-container>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center justify-content-start">
+              <ng-container *ngIf="(item.dueDate != null && item.dueDate != '')">
+                <span #dueDate [innerHTML]="
+                  item?.dueDate
+            | formatvalue : view.formModel : 'dueDate' : dueDate : 'SettledInvoices' : 'grvSettledInvoices'
+            | async
+        " class="text-gray-600 mt-1"></span>
+              </ng-container>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center justify-content-start">
+              <ng-container *ngIf="(item.balanceAmt != null && item.balanceAmt != '')">
+                <span [ngbTooltip]="popbalance"
+                  class="fw-bold line-clamp line-clamp-1">{{item.balanceAmt.toLocaleString("it-IT")}}</span>
+                <ng-template #popbalance>
+                  <span class="fw-bold">{{item.balanceAmt.toLocaleString("it-IT")}}</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center justify-content-start">
+              <ng-container *ngIf="(item.currencyID != null && item.currencyID != '')">
+                <span [ngbTooltip]="popcur" class="fw-bold line-clamp line-clamp-1">{{item.currencyID}}</span>
+                <ng-template #popcur>
+                  <span class="fw-bold">{{item.currencyID}}</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center justify-content-start">
+              <ng-container *ngIf="(item.settledAmt != null && item.settledAmt != '')">
+                <span [ngbTooltip]="popset"
+                  class="fw-bold line-clamp line-clamp-1">{{item.settledAmt.toLocaleString("it-IT")}}</span>
+                <ng-template #popset>
+                  <span class="fw-bold">{{item.settledAmt.toLocaleString("it-IT")}}</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center justify-content-start">
+              <ng-container *ngIf="(item.note != null && item.note != '')">
+                <span [ngbTooltip]="popnote" class="fw-bold line-clamp line-clamp-1">{{item.note}}</span>
+                <ng-template #popnote>
+                  <span class="fw-bold">{{item.note}}</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </td>
+        </tr> -->
+      </tbody>
+    </table>
+    <div *ngIf="settledInvoices.length == 0" class="container w-90 h-90">
+      <div class="list-empty card card-flush h-100 mt-20">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>

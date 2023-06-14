@@ -29,7 +29,6 @@ import { PopupListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-
 import { PopupQuickaddContactComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
-import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 import { DealsComponent } from './deals/deals.component';
 import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
 import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
@@ -46,7 +45,7 @@ import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/vie
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
-import { ContractsDetailComponent} from './contracts/contracts-detail/contracts-detail.component';
+import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
@@ -73,6 +72,9 @@ import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
 import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
 import { StepTaskComponent } from './deals/step-task/step-task.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
+import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 
 const routes: Routes = [
   {
@@ -82,7 +84,7 @@ const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
-        data: {noReuse: true}
+        data: { noReuse: true },
       },
       {
         path: 'deals/:funcID',
@@ -118,6 +120,17 @@ const routes: Routes = [
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'setting/settingprocess/:funcID',
+        component: SettingProcessCmComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -183,6 +196,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewPaymentComponent,
     GanttChartComponent,
     StepTaskComponent,
+    SettingProcessCmComponent,
+    QuotationsTabViewComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -198,7 +213,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
-    CodxDpModule,
   ],
   exports: [RouterModule, ListContractsComponent],
   providers: [AccumulationTooltipService],

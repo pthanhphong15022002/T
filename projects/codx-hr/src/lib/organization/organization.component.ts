@@ -10,6 +10,7 @@ import {
   ButtonModel,
   CRUDService,
   CodxTreeviewComponent,
+  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -30,7 +31,6 @@ export class OrgorganizationComponent extends UIComponent {
   parentID: string = '';
   detailComponent: any;
   dataSource: any[] = [];
-  dataCard: any = new Array();
   treeComponent?: CodxTreeviewComponent;
   currentView: any;
   currView?: TemplateRef<any>;
@@ -41,6 +41,8 @@ export class OrgorganizationComponent extends UIComponent {
   dataService: CRUDService = null;
   templateActive: number = 0;
   isCorporation: boolean = false;
+  request: any = null;
+
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
   };
@@ -57,11 +59,12 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   onInit(): void {}
-
   ngAfterViewInit(): void {
+    this.request = new ResourceModel();
+    this.request.service = 'HR';
     this.views = [
       {
-        id: '1',
+        // id: '1',
         type: ViewType.list,
         active: true,
         sameData: true,
@@ -70,10 +73,11 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
       {
-        id: '2',
+        // id: '2',
         type: ViewType.tree_masterdetail,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.request,
         model: {
           resizable: true,
           template: this.tempTree,
@@ -83,7 +87,7 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
     ];
-    // this.detectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   //loadEmployList
@@ -181,9 +185,12 @@ export class OrgorganizationComponent extends UIComponent {
   // }
   // selected change
   onSelectionChanged(evt: any) {
-    var data = evt.data || evt;
-    if (data && this.orgUnitID !== data.orgUnitID) {
+    if (this.view) {
+      // let viewActive = this.view.views.find((e) => e.active == true);
+      // if (viewActive?.id == '1') return;
+      var data = evt.data || evt;
       this.orgUnitID = data.orgUnitID;
+      this.detectorRef.detectChanges();
     }
   }
   // button add toolbar
@@ -220,22 +227,22 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   // convert org to tmp
-  getOrgInfor(data) {
-    this.api
-      .execSv(
-        'HR',
-        'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
-        'GetOrgInforAsync',
-        [data.orgUnitID]
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          data.parentName = res.parentName;
-          data.employeeManager = res.employeeManager;
-          data.positionName = res.positionName;
-          this.view.dataService.update(data).subscribe();
-        }
-      });
-  }
+  // getOrgInfor(data) {
+  //   this.api
+  //     .execSv(
+  //       'HR',
+  //       'ERM.Business.HR',
+  //       'OrganizationUnitsBusiness',
+  //       'GetOrgInforAsync',
+  //       [data.orgUnitID]
+  //     )
+  //     .subscribe((res: any) => {
+  //       if (res) {
+  //         data.parentName = res.parentName;
+  //         data.employeeManager = res.employeeManager;
+  //         data.positionName = res.positionName;
+  //         this.view.dataService.update(data).subscribe();
+  //       }
+  //     });
+  // }
 }

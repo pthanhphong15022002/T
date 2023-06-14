@@ -55,6 +55,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   functionList: any;
   formModel: any;
   modifiedOn = new Date();
+  sysSetting;
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -78,6 +79,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
           gridViewName: this.functionList.gridViewName,
         };
       }
+    });
+    this.cache.systemSetting().subscribe((res) => {
+      console.log('systemSet', res);
+      this.sysSetting = res;
     });
   }
 

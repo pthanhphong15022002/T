@@ -910,13 +910,13 @@ export class CodxShareService {
           formModel.funcID,
           {
             funcID: 'EST021',
-            sfRecID: data.transID,
-            title: data.htmlView,
-            status: data.statusApproval,
-            stepType: data.stepType,
-            stepNo: data.stepNo,
-            transRecID: data.approvalRecID,
-            oTrans: data,
+            sfRecID: data?.unbounds?.transID,
+            title: data?.unbounds?.htmlView,
+            status: data?.unbounds?.statusApproval,
+            stepType: data?.unbounds?.stepType,
+            stepNo: data?.unbounds?.stepNo,
+            transRecID: data?.unbounds?.approvalRecID,
+            oTrans: data?.unbounds,
             lstMF: listApproveMF,
           },
           '',
@@ -968,7 +968,7 @@ export class CodxShareService {
 
       let dialog = this.beforeApprove(
         status,
-        data,
+        data?.unbounds,
         formModel.funcID,
         e?.text,
         formModel
@@ -977,13 +977,13 @@ export class CodxShareService {
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
           this.approval(
-            data?.approvalRecID,
+            data?.unbounds?.approvalRecID,
             status,
             oComment.comment,
             oComment.reasonID
           ).subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
-              data.statusApproval = status;
+              data.unbounds.statusApproval = status;
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
               afterSave(data.statusApproval);
@@ -994,7 +994,7 @@ export class CodxShareService {
         this.approval(data?.approvalRecID, status, '', '').subscribe(
           (res2: any) => {
             if (!res2?.msgCodeError) {
-              data.statusApproval = status;
+              data.unbounds.statusApproval = status;
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
               afterSave(data.statusApproval);
@@ -1006,7 +1006,7 @@ export class CodxShareService {
     if (funcID == 'SYS207') {
       this.undoApproval(data.approvalRecID).subscribe((res) => {
         if (res) {
-          data.statusApproval = res?.status;
+          data.unbounds.statusApproval = res?.status;
           dataService.update(data).subscribe();
           //this.notificationsService.notifyCode('SYS007');
         }
