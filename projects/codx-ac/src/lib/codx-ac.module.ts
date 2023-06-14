@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CoreModule } from '../../../../src/core/core.module';
@@ -15,19 +16,23 @@ import { ApprovalsComponent } from './approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
+import { GroupShareComponent } from './journals/components/group-share/group-share.component';
 import { Group067Component } from './journals/components/group067/group067.component';
-import { MultiSelectPopupComponent } from './journals/multi-select-popup/multi-select-popup.component';
 import { JournalsComponent } from './journals/journals.component';
+import { MultiSelectPopupComponent } from './journals/multi-select-popup/multi-select-popup.component';
 import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
-import { PopupSetupTransactionLimitComponent } from './journals/popup-setup-transaction-limit/popup-setup-transaction-limit.component';
 import { PeriodicComponent } from './periodic/periodic.component';
+import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-periodic/pop-add-run-periodic.component';
+import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
 import { NameByIdPipe } from './pipes/nameById.pipe';
+import { ReplacePipe } from './pipes/replace.pipe';
 import { VoucherComponent } from './popup/voucher/voucher.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
 import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.component';
 import { PopAddCashComponent } from './vouchers/cash-payments/pop-add-cash/pop-add-cash.component';
 import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
+import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
 import { CashReceiptsComponent } from './vouchers/cash-receipts/cash-receipts.component';
 import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 import { PopAddReceiptsComponent } from './vouchers/cash-receipts/pop-add-receipts/pop-add-receipts.component';
@@ -43,13 +48,7 @@ import { TableLineDetailComponent } from './vouchers/sales-invoices/components/t
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
-import { GroupShareComponent } from './journals/components/group-share/group-share.component';
-import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
-import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-periodic/pop-add-run-periodic.component';
-import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
-import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
-import { ReplacePipe } from './pipes/replace.pipe';
-import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { PopupPermissionComponent } from './journals/popup-permission/popup-permission/popup-permission.component';
 
 export const routes: Routes = [
   {
@@ -156,7 +155,6 @@ export const routes: Routes = [
     PopAddPurchaseComponent,
     PopupAddJournalComponent,
     DropdownDetailComponent,
-    PopupSetupTransactionLimitComponent,
     PopAddLineComponent,
     MultiSelectPopupComponent,
     VoucherComponent,
@@ -179,7 +177,8 @@ export const routes: Routes = [
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
     PopUpCashComponent,
-    ReplacePipe
+    ReplacePipe,
+    PopupPermissionComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
@@ -198,7 +197,6 @@ export const routes: Routes = [
     DragDropModule,
     CoreModule,
     NgxUiLoaderModule,
-    
   ],
 })
 export class AcModule {}

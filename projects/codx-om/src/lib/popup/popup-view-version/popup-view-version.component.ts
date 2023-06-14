@@ -27,8 +27,8 @@ export class PopupViewVersionComponent extends UIComponent {
 
   dialogRef: DialogRef;
   formModel: FormModel;
-  data: any;
   funcID: string;
+  dataPlan: any;
 
   constructor(
     private injector: Injector,
@@ -38,8 +38,7 @@ export class PopupViewVersionComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
-    //this.data = dialogData?.data[0];
+    this.dataPlan = dialogData?.data[0];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
   }
