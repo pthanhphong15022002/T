@@ -123,19 +123,25 @@ export class StepService {
       task: task,
     };
     
-    let option = new SidebarModel();
+    let option = new DialogModel();
     option.FormModel =  {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
       funcID: 'DPT040102',
       gridViewName: 'grvDPInstancesStepsTasks',
     };
-    option.Width = '550px';
-    var dialogAssign = this.callfc.openSide(
+
+    var dialogAssign = this.callfc.openForm(
       AssignInfoComponent,
+      '',
+      600,
+      800,
+      '',
       assignModel,
+      '',
       option
     );
+   
     dialogAssign.closed.subscribe((e) => {
       var doneSave = false;
       if (e && e.event != null) {

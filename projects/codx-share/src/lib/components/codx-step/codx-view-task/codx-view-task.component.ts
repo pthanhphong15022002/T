@@ -22,7 +22,6 @@ import { CodxStepTaskComponent } from '../codx-step-task/codx-step-task.componen
 })
 export class CodxViewTaskComponent implements OnInit {
   instanceStep: DP_Instances_Steps;
-
   dataView: any;
   type = '';
   title = '';
@@ -184,7 +183,7 @@ export class CodxViewTaskComponent implements OnInit {
       if (res.datas) {
         this.listTypeTask = res?.datas;
         let type = res.datas.find((x) => x.value === this.type);
-        this.title = type['text'];
+        this.title = type?.text;
       }
     });
 
@@ -308,7 +307,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.dataProgress = dataPopupOutput?.event;
   }
   closePopup() {
-    this.dialog.close(this.dataProgress);
+    this.dialog.close({dataProgress: this.dataProgress, group: this.groupTaskAdd, task: this.taskAdd });
   }
   //ve tree giao viec byRef
   getTree() {
@@ -398,7 +397,7 @@ export class CodxViewTaskComponent implements OnInit {
   async clickMFStep(event) {
     switch (event.functionID) {
       case 'DP13': //giao viec
-        this.dialog.close();
+        // this.dialog.close();
         this.stepService.assignTask(event.data, this.dataView,this.instanceStep);
         break;
       case 'DP08': //them task
@@ -421,7 +420,7 @@ export class CodxViewTaskComponent implements OnInit {
     }
     if(dataOutput?.event?.task){
       this.taskAdd = dataOutput?.event?.task;
-      this.instanceStep?.tasks?.push(dataOutput?.event?.groupTask);
+      this.instanceStep?.tasks?.push(dataOutput?.event?.task);
     }
   }
 }
