@@ -928,9 +928,9 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
 }
 
 // dialog width extend
-.extend-main {
-  padding-right: 10px;
-}
+// .extend-main {
+//   padding-right: 10px;
+// }
 
 .extend-main .e-tab-header {
   margin-left: 10px;
@@ -1426,12 +1426,22 @@ img.symbol-12px.symbol-circle {
   margin-right: 1px;
 }
 
+.tab-item codx-label{
+  color: var(--gray-700);
+  font-weight: 500;
+  font-size: var(--fs-6);
+}
 .tab-item:hover,
 .tab-item.tab-active {
   cursor: pointer;
   color: var(--text-primary) !important;
   border-color: var(--text-primary);
 }
+
+.tab-item.tab-active codx-label, .tab-item.active codx-label{
+  color: var(--primary-dark) !important;
+}
+
 
 .e-toolbar .e-tbar-btn:focus span,
 .e-toolbar .e-tbar-btn:hover span {
@@ -1711,10 +1721,12 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 }
 
 #dropdownContent .e-list-item {
-  padding: 4px 8px !important;
+  padding: 6px !important;
   border-bottom: 1px var(--gray-150) solid;
 }
-
+#dropdownContent .card-body{
+  height: calc(100% - 16px)!important;
+}
 .user-mini-nav-custom a {
   color: var(--primary-dark);
 }
@@ -2211,6 +2223,10 @@ codx-tasks {
   }
 }
 
+.pin-bar {
+  /* width: calc(100% - 400px); */
+  width: 100%!important;
+}
 .pin-bar .codx-text.e-input {
   border-radius: 20px !important;
   padding-left: 12px;
@@ -2442,16 +2458,23 @@ codx-valuelist .btn.select-icon {
     width: 1150px !important;
   }
   .dialog-more {
-    width: 350px;
+    width: 360px;
     position: absolute;
     top: 0;
     bottom: 0;
     right: 0;
     overflow: auto;
-    padding: 0 15px;
+    padding: 0 10px;
     display: block;
     border-left: 1px var(--gray-150) solid;
     z-index: 99;
+    codx-tabs .nav-link{
+      padding-left: 0!important;
+      padding-right: 10px!important;
+    }
+    .nav-item.pe-1{
+      padding-right: 0!important;
+    }
   }
   .icon-login {
     rotate: 180deg;
@@ -3180,4 +3203,14 @@ codx-wrapper.hover-scroll-overlay-y {
 
 codx-card-center .card.codx_cardcenter{
   overflow: hidden;
+}
+.role-group ejs-listview .e-ul > li .d-flex.user-card {
+  border-bottom: 1px var(--gray-150) solid;
+}
+#Content-Fillter .e-tab .e-tab-header .e-tab-wrap{
+  min-width: auto;
+}
+.card-body.fillter-card-body{
+  padding-left: 0!important;
+  padding-right: 0!important;
 }
