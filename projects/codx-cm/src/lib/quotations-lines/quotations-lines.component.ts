@@ -74,8 +74,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     'netamt',
     'salesamt',
     'vatamt',
-    'discamt',
-    '',
+    'discamt'
   ];
 
   constructor(
