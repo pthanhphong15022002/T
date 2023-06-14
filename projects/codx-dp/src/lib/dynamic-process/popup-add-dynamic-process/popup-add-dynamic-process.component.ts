@@ -61,6 +61,7 @@ import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -746,21 +747,28 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           //   //     .removeListApprovalStep(this.listStepAproveRemove)
           //   //     .subscribe();
           // }
-          if (!this.systemProcess) {
-            this.dialog.close();
-          } else {
-            this.codxService.navigate('', `shared/settings/CMS`);
-            this.dialog.close();
+          //yeu cau doi view ngay 13/06/2023
+          if (this.action == 'add' || this.action == 'copy') {
+            //xoa Aprover
+            this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+            if (this.listStepApproverView?.length > 0)
+              this.dpService
+                .removeListApprovalStep(this.listStepApproverView)
+                .subscribe();
           }
+
+          if (this.systemProcess) {
+            this.codxService.navigate('', `shared/settings/CMS`);
+          }
+          this.dialog.close();
         } else return;
       });
     } else {
-      if (!this.systemProcess) {
-        this.dialog.close();
-      } else {
+      if (this.systemProcess) {
         this.codxService.navigate('', `shared/settings/CMS`);
-        this.dialog.close();
       }
+
+      this.dialog.close();
     }
   }
 
@@ -1690,10 +1698,39 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.dpService.getESCategoryByCategoryID(this.process.processNo)
       );
     if (category) {
-      this.actionOpenFormApprove(category.recID);
+      //this.actionOpenFormApprove(category.recID);
+      this.actionOpenFormApprove2(category);
     } else {
-      let transID = Util.uid();
-      this.actionOpenFormApprove(transID);
+      //let transID = Util.uid();
+      // this.actionOpenFormApprove(transID);
+      this.api
+        .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+          'ESS22',
+          'ES_Categories',
+        ])
+        .subscribe(async (res) => {
+          if (res && res?.data) {
+            if (!this.process.processNo) {
+              this.process.processNo = await firstValueFrom(
+                this.dpService.genAutoNumber(
+                  this.funcID,
+                  this.entityName,
+                  'ProcessNo'
+                )
+              );
+            }
+            category = res.data;
+            category.recID = res?.recID ?? Util.uid();
+            category.eSign = false;
+            category.Category = 'DP_Processes';
+            category.categoryID = this.process.processNo;
+            category.categoryName = this.process.processName;
+            category.createdBy = this.user.userID;
+            category.owner = this.user.userID;
+            category.FunctionApproval = 'DP01';
+            this.actionOpenFormApprove2(category, true);
+          }
+        });
     }
   }
   actionOpenFormApprove(transID) {
@@ -4074,4 +4111,54 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       reason
     );
   }
+  // new setting
+  //setting trình kí - lần 2
+  actionOpenFormApprove2(item, isAdd = false) {
+   
+    // this.dpService
+    //   .getESCategoryByCategoryID(categoryID)
+    //   .subscribe((item: any) => {
+    //     if (item) {
+    //gọi ko ra
+    this.cache.functionList('ESS22').subscribe((f) => {
+      if (f) {
+        if (!f || !f.gridViewName || !f.formName) return;
+        this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+          this.cache
+            .gridViewSetup(f.formName, f.gridViewName)
+            .subscribe((grvSetup) => {
+              let formES = new FormModel();
+              formES.funcID = f?.functionID;
+              formES.entityName = f?.entityName;
+              formES.formName = f?.formName;
+              formES.gridViewName = f?.gridViewName;
+              formES.currentData = item;
+              let option = new SidebarModel();
+              option.Width = '550px';
+              option.FormModel = formES;
+              let popupEditES = this.callfc.openSide(
+                PopupAddCategoryComponent,
+                {
+                  disableCategoryID: '1',
+                  data: item,
+                  isAdd: isAdd,
+                  headerText: this.titleAction,
+                  dataType: 'auto',
+                },
+                option
+              );
+
+              popupEditES.closed.subscribe((res) => {
+                if (res?.event) {
+                  this.loadListApproverStep();
+                  this.recIDCategory = res?.event?.recID;
+                }
+              });
+            });
+        });
+      }
+    });
+  }
+  //  });
+  // }
 }

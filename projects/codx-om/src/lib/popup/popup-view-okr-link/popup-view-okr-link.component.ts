@@ -47,6 +47,7 @@ export class PopupViewOKRLinkComponent extends UIComponent {
       this.omService.getOKRHavedLinks(this.data?.recID).subscribe((res:any)=>{
         if(res){
           this.listLink = res;
+          
         }
         this.isAfterRender = true;
       })

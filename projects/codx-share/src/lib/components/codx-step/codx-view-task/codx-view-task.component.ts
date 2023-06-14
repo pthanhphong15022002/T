@@ -13,6 +13,7 @@ import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { firstValueFrom } from 'rxjs';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { StepService } from '../step.service';
+import { CodxStepTaskComponent } from '../codx-step-task/codx-step-task.component';
 
 @Component({
   selector: 'codx-view-task',
@@ -328,6 +329,8 @@ export class CodxViewTaskComponent implements OnInit {
   }
 
   changeDataMFStep(event) {
+    let isGroup = true;
+    let isTask = true;
     if (event != null) {
       event.forEach((res) => {
         switch (res.functionID) {
@@ -335,47 +338,74 @@ export class CodxViewTaskComponent implements OnInit {
           case 'SYS03': //sửa
           case 'SYS04': //copy
           case 'SYS003': //đính kèm file
-          case 'DP13': //giao việc
           case 'DP07': //chi tiêt công việc
-           //tạo lịch họp
           case 'DP12':
           case 'DP25':
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
-            case 'DP26':// chi tiêt
+          case 'DP26': // chi tiêt
             res.disabled = true;
             break;
-          case 'DP13':
-          case 'DP24':
+
+          case 'DP08': // Thêm công việc
+            res.isbookmark = true;
+            if (
+              !(
+                this.isRoleAll &&
+                this.isOnlyView &&
+                (this.type == 'P' || this.type == 'G')
+              )
+            ) {
+              res.disabled = true;
+            }
+            break;
+          case 'DP13': // giao việc
+            res.isbookmark = true;
+            // if (
+            //   !(
+            //     this.dataView?.createTask &&
+            //     this.isOnlyView &&
+            //     (this.isRoleAll || isGroup || isTask) &&
+            //     this.type != 'P' &&
+            //     this.type != 'G'
+            //   )
+            // ) {
+            //   res.disabled = true;
+            // }
+            break;
+          case 'DP24': // tạo lịch họp
+            res.isbookmark = true;
+            if (this.type != 'M') {
+              res.disabled = true;
+            }
+            break;
           case 'DP20': // tiến độ
+            res.isbookmark = true;
             if (
               !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
             ) {
               res.isblur = true;
             }
-            res.isbookmark = true;
             break;
-          case 'DP08': // Thêm nhóm công việc
-            if (!(this.isRoleAll && this.isOnlyView)) {
-              res.isblur = true;
-            }
-            res.isbookmark = true;
-            break;
-         
         }
       });
     }
   }
+
   clickMFStep(event) {
     switch (event.functionID) {
+      case 'DP13': //giao viec
+        this.dialog.close();
+        this.stepService.assignTask(event.data, this.dataView,this.instanceStep);
+        break;
       case 'DP08': //them task
-     
+        this.stepService.chooseTypeTask();
         break;
       case 'DP20': // tien do
-        
+        this.openPopupUpdateProgress(this.dataView, this.type)
+        break;
       case 'DP26': // view
-        
         break;
     }
   }
