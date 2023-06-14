@@ -452,9 +452,9 @@ export class PopupEProcessContractComponent
     }
   }
 
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
-  }
+  // clickOpenPopup(codxInput) {
+  //   codxInput.elRef.nativeElement.querySelector('button').click();
+  // }
   clickMFSubContract(evt, data) {
     switch (evt.functionID) {
       case 'SYS02':

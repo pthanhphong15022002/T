@@ -1,5 +1,5 @@
 <div>
-  <div class="d-flex justify-content-between align-items-center flex-grow-1 px-5 pt-5">
+  <div class="d-flex justify-content-between align-items-center flex-grow-1 px-5 pt-5" *ngIf="isPopup">
     <div class="d-flex flex-column">
       <div class="fw-bold fs-4 pb-1" >
         <codx-label name="lblCheckInHistoryView" default="Lịch sử cập nhật tiến độ"></codx-label>        
@@ -10,13 +10,13 @@
     </button>
   </div>
 
-  <div class=" ps-5 w-100 d-flex flex-wrap pb-5">
+  <div class=" ps-5 w-100 d-flex flex-wrap pb-5"  *ngIf="isPopup">
     <span class="fs-6">{{data?.okrName}}
     </span>
   </div>
-  <div class="w-100 overflow-auto mxh-750px" >
+  <div class="w-100 overflow-auto " [ngClass]="isPopup ? 'mxh-750px' :''" >
     <div class="px-5 py-5 d-flex flex-column justify-content-between align-items-between">
-      <div class="d-flex flex-row" >
+      <div class="d-flex flex-row mnh-50px" >
         <div class="d-flex flex-column align-items-center justify-content-between col-1">
           
           <div class="om-step-number border border-2 border-secondary">
@@ -32,8 +32,8 @@
             </span>
           </div>
         </div>
-        <div class="ps-5 pb-5" >
-          <button type="button" (click)="checkIn()" [disabled]="curUser?.userID != data?.owner && data?.hasAssign!=null && data?.kRs>0 "
+        <div class="ps-5 pb-5"  *ngIf="isPopup">
+          <button type="button" (click)="checkIn()" [disabled]="curUser?.userID == data?.owner && data?.hasAssign==null && data?.kRs==0 ? false : true "
             class="me-2 btn btn-outline-primary">
             <codx-label name="lblCheckIn" default="Cập nhật tiến độ" ></codx-label>
           </button>
