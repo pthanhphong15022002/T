@@ -108,7 +108,7 @@
             <span class="badge badge-square badge-od me-2">{{data?.percentage}}%</span>
           </ng-container>
           <ng-container *ngIf="formModel.funcID != 'ODT42' else tmpApprovalStatus">
-            <codx-vll [showText]="true" [showBgColor]="true" [formModel]="formModel" [field]="'Status'"
+            <codx-vll [showText]="true" [showBgColor]="true" [formModel]="formModel" [field]="'Status'" 
               [value]="data?.status" class="badge badge-light badge-square badge-md fs-7 p-2">
             </codx-vll>
           </ng-container>

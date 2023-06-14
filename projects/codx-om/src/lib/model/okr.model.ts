@@ -130,3 +130,19 @@ export class OKRs {
     isActive: boolean;
     icon:string;
   }
+
+  export class OM_Statistical {
+    percentOBDone: string='0';
+    percentOBStarting: string='0';
+    percentOBNotStart: string='0';
+
+    totalOB:number=0;
+    totalHighOB:number=0;
+    obDone:number=0;
+    highOBDone:number=0;
+
+    krLateCheckIn:number=0;
+    krLateProgress:number=0;
+    krInProgress:number=0;
+    krOverProgress:number=0;
+  }

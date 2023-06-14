@@ -82,7 +82,7 @@
                 <div class="form-group">
                   <codx-label fiedName="CashBookID" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input onSelection="true" [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
+                  <codx-input tabindex="0" [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
                     (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
@@ -279,7 +279,7 @@
     <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 30px;background-color: whitesmoke;">
     </div>
   </ng-container>
-  <ng-container
+  <!-- <ng-container
     *ngIf="form?.formGroup && (cashpayment?.subType != '2') && modegrid == '2'">
     <div class="table-responsive table-addcash mt-3">
       <table style="table-layout: fixed;" class="table table-row-bordered">
@@ -818,7 +818,7 @@
         </div>
       </button>
     </div>
-  </ng-container>
+  </ng-container> -->
 </ng-template>
 <!-- End: CashPaymentLine -->
 
