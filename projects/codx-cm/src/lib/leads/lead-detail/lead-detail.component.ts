@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { CRUDService, ImageViewerComponent } from 'codx-core';
+import { CRUDService, DataRequest, ImageViewerComponent, ResourceModel } from 'codx-core';
 import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-lead-detail',
@@ -15,6 +16,7 @@ export class LeadDetailComponent  implements OnInit {
   @Input() formModel: any;
   @Input() funcID: any; //
   @Input() gridViewSetup: any;
+  @Input() dataObj?: any;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -24,15 +26,16 @@ export class LeadDetailComponent  implements OnInit {
   @ViewChild('quotations')quotations: TemplateRef<any>;
   @ViewChild('contract')contract: TemplateRef<any>;
 
+  @ViewChild('references')references: TemplateRef<any>;
+
+
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false, template: null },
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
-    { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
   ];
-
   treeTask = [];
 
   nameDetail = '';
@@ -42,6 +45,9 @@ export class LeadDetailComponent  implements OnInit {
   ]
 
   contactPerson:any;
+  deals:any;
+  request: ResourceModel;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -53,16 +59,15 @@ export class LeadDetailComponent  implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    let index = this.tabControl.findIndex(item => item.name == 'Contract');
-    if(index >= 0){
-      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
-      this.tabControl.splice(index,1,contract)
-    }
+      let references = { name: 'References', textDefault: 'Liên kết', isActive: false, template: this.references};
+      this.tabControl.push(references)
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+      //this.afterLoad();
     }
   }
 
@@ -90,6 +95,21 @@ export class LeadDetailComponent  implements OnInit {
   }
 
   changeFooter(e){
+  }
+
+  async afterLoad() {
+    // var options = new DataRequest();
+    // options.entityName = 'CM_Deals';
+    // options.
+    // options.predicates = 'RecID=@0';
+    // options.dataValues = '61bc2462-069e-11ee-94b2-00155d035517';
+    // options.pageLoading = false;
+    // debugger;
+    // this.deals = await firstValueFrom(
+    //   this.codxCmService.loadDataAsync('CM', options)
+    // );
+
+
   }
 }
 
