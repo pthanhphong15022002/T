@@ -86,19 +86,22 @@
         </span>
       </div>
     </div>
-    <div *ngFor="let item of dataOKR">
-      <div *ngIf="item?.listOKR?.length>0">
-        <span *ngIf="item?.okrGroupName!=null" class="fs-5 fw-bold">{{item?.okrGroupName}}</span>
-        <span *ngIf="item?.okrGroupName==null && dataOKR?.length>1" class="fs-5 fw-bold text-gray-500"><codx-label name="lblGroupID" [default]="'Mục tiêu chiến lược'" [formModel]="formModel"></codx-label></span>
-        <div class="okr-treeview">
-          <codx-treeview [id]="'tree'+ item?.okrGroupID" #treeView [itemTemplate]="templateTreeView" [data]="item?.listOKR" [enableCheck]="false"
-            idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
-            (selectionChange)="selectionChange($event)" class="overflow-auto h-100">
-          </codx-treeview>
+    <div *ngIf="this.totalOB >0; else defaultEmpty">
+      <div *ngFor="let item of dataOKR">
+        <div *ngIf="item?.listOKR?.length>0">
+          <span *ngIf="item?.okrGroupName!=null" class="fs-5 fw-bold">{{item?.okrGroupName}}</span>
+          <span *ngIf="item?.okrGroupName==null && dataOKR?.length>1" class="fs-5 fw-bold text-gray-500"><codx-label
+              name="lblGroupID" [default]="'Mục tiêu chiến lược'" [formModel]="formModel"></codx-label></span>
+          <div class="okr-treeview">
+            <codx-treeview [id]="'tree'+ item?.okrGroupID" #treeView [itemTemplate]="templateTreeView"
+              [data]="item?.listOKR" [enableCheck]="false" idField="recID" parentIdField="parentID" [autoLoad]="false"
+              [isOutput]="true" [isLoadChild]="true" (selectionChange)="selectionChange($event)"
+              class="overflow-auto h-100">
+            </codx-treeview>
+          </div>
         </div>
-      </div>      
+      </div>
     </div>
-    
   </div>
 </div>
 <ng-template #templateTreeView let-item>
@@ -227,9 +230,9 @@
             okrGrv?.krGrv?.personIncharge?.headerText + ":"
             }}</span> -->
           <codx-label class="text-gray-500 me-1" name="lblPersonIncharge" default="Người phụ trách:"></codx-label>
-          <span  class="me-1" [innerHTML]="
+          <span class="me-1" [innerHTML]="
               item?.personIncharge | formatvalue : okrFM?.krFM : 'owner' | async
-            "></span>         
+            "></span>
         </div>
       </span>
     </div>
@@ -247,8 +250,8 @@
               class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
 
               <span class="icon-16 text-primary"
-              [ngClass]="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[0]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
-          </span>
+                [ngClass]="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[0]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
+            </span>
           </span>
           <span class="position-relative ps-2">
             <codx-img [width]="30" [objectId]="item?.okrLink[1]?.owner" [objectType]="'AD_Users'"></codx-img>
@@ -256,8 +259,8 @@
               class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
 
               <span class="icon-16 text-primary"
-              [ngClass]="item?.okrLink[1]?.objectType =='1' || item?.okrLink[1]?.objectType =='3' || item?.okrLink[1]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[1]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
-          </span>
+                [ngClass]="item?.okrLink[1]?.objectType =='1' || item?.okrLink[1]?.objectType =='3' || item?.okrLink[1]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[1]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
+            </span>
           </span>
           <span class="ps-2" *ngIf="item?.okrLink?.length > 2">
             <div class="symbol-group-badge ">
@@ -278,10 +281,13 @@
               [ngClass]="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[0]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
           </span>
           <span class="ps-3 d-flex align-items-center">
-            <span *ngIf="item?.okrLink[0]?.objectType =='9'" [innerHTML]="item?.okrLink[0]?.owner | formatvalue : okrFM?.krFM : 'owner' | async"></span>
-            <span *ngIf="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5'" [innerHTML]="item?.okrLink[0]?.orgUnitName "></span>
+            <span *ngIf="item?.okrLink[0]?.objectType =='9'"
+              [innerHTML]="item?.okrLink[0]?.owner | formatvalue : okrFM?.krFM : 'owner' | async"></span>
+            <span
+              *ngIf="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5'"
+              [innerHTML]="item?.okrLink[0]?.orgUnitName "></span>
             <span *ngIf="item?.okrLink[0]?.objectType =='7'" [innerHTML]="item?.okrLink[0]?.positionName"></span>
-          </span>            
+          </span>
         </div>
         <!-- mặc định-->
         <div *ngIf="item?.hasAssign == null" class="d-flex flex-row">
@@ -444,6 +450,19 @@
                 }}</span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #defaultEmpty>
+  <div class="container h-100 ">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center  pt-10">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { group } from 'console';
+import { group, count } from 'console';
 declare var window: any;
 import { CodxOmService } from './../../codx-om.service';
 import { OMCONST } from './../../codx-om.constant';
@@ -173,6 +173,7 @@ export class OkrTargetsComponent implements OnInit {
   krFuncID: any;
   obFuncID: any;
   vllRangeDate: any;
+  totalOB=0;
   constructor(
     private callfunc: CallFuncService,
     private cache: CacheService,
@@ -192,6 +193,7 @@ export class OkrTargetsComponent implements OnInit {
     this.createBase();
     this.getCacheData();
     this.getData();
+    
   }
 
   //---------------------------------------------------------------------------------//
@@ -214,6 +216,11 @@ export class OkrTargetsComponent implements OnInit {
         },
       ],
     };
+    if(this.dataOKR?.length>0){
+      for (let gr of this.dataOKR){
+        this.totalOB += gr.listOKR.length;
+      }
+    }
   }
 
   getCacheData() {
