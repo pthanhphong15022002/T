@@ -1,6 +1,25 @@
-import { Component, Injector, Input, OnChanges, Optional, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  Input,
+  OnChanges,
+  Optional,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CallFuncService, DataRequest, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent, Util, ViewModel } from 'codx-core';
+import {
+  CallFuncService,
+  DataRequest,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  UIComponent,
+  Util,
+  ViewModel,
+} from 'codx-core';
 import { QuotationsComponent } from '../quotations.component';
 import { Observable, finalize, map } from 'rxjs';
 import { PopupAddQuotationsComponent } from '../popup-add-quotations/popup-add-quotations.component';
@@ -8,9 +27,12 @@ import { PopupAddQuotationsComponent } from '../popup-add-quotations/popup-add-q
 @Component({
   selector: 'codx-quotations-tab-view',
   templateUrl: './quotations-tab-view.component.html',
-  styleUrls: ['./quotations-tab-view.component.css']
+  styleUrls: ['./quotations-tab-view.component.css'],
 })
-export class QuotationsTabViewComponent extends UIComponent implements OnChanges {
+export class QuotationsTabViewComponent
+  extends UIComponent
+  implements OnChanges
+{
   @Input() funcID: string = 'CM0202';
   @Input() predicates: any; // 'RefType==@0 && RefID==@1';
   @Input() dataValues: any; //= '
@@ -135,7 +157,7 @@ export class QuotationsTabViewComponent extends UIComponent implements OnChanges
   changeItemDetail(e) {}
 
   changeDataMF(e, data) {
-  //  this.qtsComponet.changeDataMF(e, data); 
+    //  this.qtsComponet.changeDataMF(e, data);
   }
 
   clickMF(e, data) {
@@ -150,8 +172,8 @@ export class QuotationsTabViewComponent extends UIComponent implements OnChanges
       case 'SYS04':
         this.copy(e, data);
         break;
-        // default:
-        //   this.qtsComponet.clickMF(e, data);
+      // default:
+      //   this.qtsComponet.clickMF(e, data);
     }
   }
 
@@ -181,7 +203,6 @@ export class QuotationsTabViewComponent extends UIComponent implements OnChanges
   }
 
   openPopup(res, action) {
-    res.versionNo = res.versionNo ?? 'V1.0';
     res.status = res.status ?? '0';
     res.customerID = res.customerID ?? this.customerID;
     res.refType = res.refType ?? this.refType;
@@ -191,7 +212,10 @@ export class QuotationsTabViewComponent extends UIComponent implements OnChanges
     res.totalAmt = res.totalAmt ?? 0;
     res.exchangeRate = res.exchangeRate ?? 1;
     res.currencyID = res.currencyID ?? 'VND';
-    
+    res.versionNo = res.versionNo ?? 'V1';
+    res.revision = res.revision ?? 0;
+    res.versionName = res.versionNo + '.' + res.revision;
+
     var obj = {
       data: res,
       disableRefID: this.disableRefID,
