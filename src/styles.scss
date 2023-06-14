@@ -1438,8 +1438,8 @@ img.symbol-12px.symbol-circle {
   border-color: var(--text-primary);
 }
 
-.tab-item.tab-active codx-label{
-  color: var(--text-primary) !important;
+.tab-item.tab-active codx-label, .tab-item.active codx-label{
+  color: var(--primary-dark) !important;
 }
 
 
