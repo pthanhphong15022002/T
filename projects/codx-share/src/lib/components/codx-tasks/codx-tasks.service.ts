@@ -152,12 +152,12 @@ export class CodxTasksService {
   }
  
   //get listTaskGoad
-  listTaskGoad(taskID){
+  getListTaskGoad(taskID){
     return this.api.execSv<any>(
       'TM',
       'TM',
       'TaskBusiness',
-      'GetTaskGoalByTaskIDAsync',
+      'GetListTaskGoalByTaskIDAsync',
       taskID
     );
   }
