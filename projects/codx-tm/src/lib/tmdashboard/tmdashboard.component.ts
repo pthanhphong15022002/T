@@ -396,6 +396,12 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', [model, params])
       .subscribe((res) => {
         this.myDBData = res;
+        let totalTasksByGroup = 0;
+
+        this.myDBData.tasksByGroup.map((res) => {
+          totalTasksByGroup += res.quantity;
+        });
+        this.myDBData.totalTasksByGroup = totalTasksByGroup
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);

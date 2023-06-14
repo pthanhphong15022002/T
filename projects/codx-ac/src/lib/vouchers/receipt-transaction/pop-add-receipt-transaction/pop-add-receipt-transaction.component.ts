@@ -778,10 +778,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.gridInventoryJournalLine.addRow(res, idx);
-              setTimeout(() => {
-                this.gridInventoryJournalLine.updateRow(idx, res);
-              }, 500);
-              
+              this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data);
               break;
             case '2':
               idx = this.inventoryJournalLines.length;
