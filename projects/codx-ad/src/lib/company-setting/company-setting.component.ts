@@ -440,13 +440,15 @@ export class CompanySettingComponent
     mapMD.set(module.boughtModule.moduleID, 1);
     let md_qty = JSON.stringify(Object.fromEntries(mapMD));
     this.adService.buyNewModule(md_qty, mode).subscribe((endDate: string) => {
-      this.lstNotInstallModule = this.lstNotInstallModule.filter(
-        (x) => x.boughtModule.moduleID != module.boughtModule.moduleID
-      );
-      module.bought = true;
-      module.expiredOn = endDate;
-      this.lstInstalledModule.push(module);
-      this.detectorRef.detectChanges();
+      window.location.reload();
+
+      // this.lstNotInstallModule = this.lstNotInstallModule.filter(
+      //   (x) => x.boughtModule.moduleID != module.boughtModule.moduleID
+      // );
+      // module.bought = true;
+      // module.expiredOn = endDate;
+      // this.lstInstalledModule.push(module);
+      // this.detectorRef.detectChanges();
     });
   }
 
