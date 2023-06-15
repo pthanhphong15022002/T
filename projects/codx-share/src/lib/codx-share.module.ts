@@ -194,7 +194,6 @@ import { SaveNoteComponent } from './components/calendar-notes/add-note/save-not
 import { UpdateNotePinComponent } from './components/calendar-notes/update-note-pin/update-note-pin.component';
 import { CodxCreateIndexComponent } from './components/codx-create-index/codx-create-index.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
-import { CodxAsideCustomComponent } from './components/codx-aside-custom/codx-aside-custom.component';
 import { CodxStepChartComponent } from './components/codx-step/codx-step-chart/codx-step-chart.component';
 import { CodxTaskGoalTempComponent } from './components/codx-task-goal-temp/codx-task-goal-temp.component';
 
@@ -341,7 +340,6 @@ const T_Component: Type<any>[] = [
   CodxFieldsDetailTempComponent,
   PopupCustomFieldComponent,
   CodxViewDetailLittleComponent,
-  CodxAsideCustomComponent,
   CodxStepChartComponent,
   //CO
   CalendarCenterComponent,

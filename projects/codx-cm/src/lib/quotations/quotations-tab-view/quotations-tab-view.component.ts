@@ -79,6 +79,7 @@ export class QuotationsTabViewComponent
 
   quotation: any;
   titleAction: any = '';
+  titleActionAdd: any = '';
   loaded = false;
 
   constructor(
@@ -95,6 +96,13 @@ export class QuotationsTabViewComponent
         if (res) {
           this.grvSetup = res;
           this.vllStatus = res['Status'].referedValue;
+        }
+      });
+
+      this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+        if (mf) {
+          var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+          if (mfAdd) this.titleActionAdd = mfAdd?.customName;
         }
       });
   }
@@ -222,7 +230,7 @@ export class QuotationsTabViewComponent
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
       action: action,
-      headerText: this.titleAction,
+      headerText: this.titleActionAdd,
     };
     let option = new DialogModel();
     option.IsFull = true;
