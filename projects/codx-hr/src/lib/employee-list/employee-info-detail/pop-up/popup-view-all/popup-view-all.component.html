@@ -398,14 +398,16 @@
               | async
           "
         ></span>
-        <span class="mx-2">-</span>
-        <span
-          [innerHTML]="
-            data?.expiredDate
-              | formatvalue : formModel : 'expiredDate'
-              | async
-          "
-        ></span>
+        <span *ngIf="data?.expiredDate">
+          <span class="mx-2">-</span>
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : formModel : 'expiredDate'
+                | async
+            "
+          ></span>
+        </span>
       </div>
     </div>
     <codx-mfunc
@@ -484,14 +486,16 @@
           | async
       "
     ></span>
-    <span class="mx-2"> - </span>
-    <span
-      [innerHTML]="
-        data?.expiredDate
-          | formatvalue : formModel : 'expiredDate'
-          | async
-      "
-    ></span>
+    <span *ngIf="data?.expiredDate">
+      <span class="mx-2"> - </span>
+      <span
+        [innerHTML]="
+          data?.expiredDate
+            | formatvalue : formModel : 'expiredDate'
+            | async
+        "
+      ></span>
+    </span>
     <codx-mfunc
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
