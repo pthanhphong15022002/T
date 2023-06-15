@@ -96,8 +96,11 @@
     margin-bottom: 0px !important;
     padding-bottom: 0px !important;
 }
-.input-circle .e-input-group select option:read-only{
-    background-color: white;
+.input-circle button{
+    border: none !important;
+}
+.input-circle button .text-truncate{
+    text-align: left !important;
 }
 .ac-refdoc .e-editable-value{
     margin-top: 5px !important;
