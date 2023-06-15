@@ -42,6 +42,19 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Bệnh nghề nghiệp',
+      name: 'diseasesInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Giám định y khoa',
+      name: 'hospitalCheck',
+    },
+  ];
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -58,6 +71,8 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     //   this.formModel.gridViewName = 'grvEDiseases';
     // }
     this.dialog = dialog;
+    console.log('dialog nhan vao', this.dialog);
+    
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
