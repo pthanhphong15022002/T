@@ -62,11 +62,16 @@ export class OrgorganizationComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.request = new ResourceModel();
     this.request.service = 'HR';
+    this.request.assemblyName = "ERM.Business.HR";
+    this.request.className = "OrganizationUnitsBusiness";
+    this.request.method = "GetDataOrgAsync";
+    this.request.autoLoad = false;
+    this.request.parentIDField = "ParentID";
     this.views = [
       {
         // id: '18',
         type: ViewType.list,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -75,12 +80,11 @@ export class OrgorganizationComponent extends UIComponent {
       {
         // id: '18',
         type: ViewType.listtree,
-        active: true,
-        sameData: true,
+        active: false,
+        sameData: false,
         request: this.request,
         model: {
           template: this.itemTemplate,
-          resourceModel: { parentIDField: 'ParentID' },
         },
       },
       {
@@ -93,8 +97,6 @@ export class OrgorganizationComponent extends UIComponent {
           resizable: true,
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
-          // template2: this.tmpMasterDetail,
-          resourceModel: { parentIDField: 'ParentID' },
         },
       },
     ];
