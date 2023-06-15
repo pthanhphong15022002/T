@@ -228,6 +228,8 @@ export class PopupEProcessContractComponent
         )
         .subscribe((res) => {
           if (res) {
+            console.log('get default contract', res);
+            
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
             this.data.signedDate = null;
@@ -452,9 +454,9 @@ export class PopupEProcessContractComponent
     }
   }
 
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
-  }
+  // clickOpenPopup(codxInput) {
+  //   codxInput.elRef.nativeElement.querySelector('button').click();
+  // }
   clickMFSubContract(evt, data) {
     switch (evt.functionID) {
       case 'SYS02':

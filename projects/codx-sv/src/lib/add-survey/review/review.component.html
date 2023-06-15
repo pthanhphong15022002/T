@@ -626,7 +626,7 @@
     </div>
   </div>
   <div *ngIf="(itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') ; else tmpL">
-    <table>
+    <table class="w-100">
       <tr>
         <th scope="col" class="w-20"></th>
         <th
@@ -636,18 +636,19 @@
           <span>{{ itemC.answer }}</span>
         </th>
       </tr>
-      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers)">
+      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers) ; let i = index" [attr.data-index]="i">
         <td>
           {{ itemR.answer }}
         </td>
-        <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">
+        <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers) ; let x = index" [attr.data-index]="x">
           <codx-input
             *ngIf="itemQuestion.answerType == 'O2'"
             type="radio"
             labelPosition="After"
             [disabled]="false"
             class="test-check"
-            name="group"
+            [name]="'group'+itemQuestion.recID+i"
+            (valueChange)="valueChange($event, itemSession, itemQuestion, itemC)"
           ></codx-input>
           <codx-input
             *ngIf="itemQuestion.answerType == 'C2'"

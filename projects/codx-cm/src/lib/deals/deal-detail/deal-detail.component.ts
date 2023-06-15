@@ -107,17 +107,6 @@ export class DealDetailComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    // đưa lên tab rồi em cmt lại nha a bảo
-    // let index = this.tabControl.findIndex((item) => item.name == 'Contract');
-    // if (index >= 0) {
-    //   let contract = {
-    //     name: 'Contract',
-    //     textDefault: 'Hợp đồng',
-    //     isActive: false,
-    //     template: this.contract,
-    //   };
-    //   this.tabControl.splice(index, 1, contract);
-    // }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -1,4 +1,4 @@
-import { group } from 'console';
+import { group, count } from 'console';
 declare var window: any;
 import { CodxOmService } from './../../codx-om.service';
 import { OMCONST } from './../../codx-om.constant';
@@ -36,6 +36,7 @@ import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { PopupViewOKRLinkComponent } from '../../popup/popup-view-okr-link/popup-view-okr-link.component';
 import { PopupCheckInHistoryComponent } from '../../popup/popup-check-in-history/popup-check-in-history.component';
+import { OM_Statistical } from '../../model/okr.model';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -65,6 +66,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() listUM = [];
   @Input() currentUser;  
   @Input() reloadedMF=true;
+  @Input() value=new OM_Statistical();
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
   @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> =
@@ -173,6 +175,7 @@ export class OkrTargetsComponent implements OnInit {
   krFuncID: any;
   obFuncID: any;
   vllRangeDate: any;
+  totalOB=0;
   constructor(
     private callfunc: CallFuncService,
     private cache: CacheService,
@@ -192,6 +195,7 @@ export class OkrTargetsComponent implements OnInit {
     this.createBase();
     this.getCacheData();
     this.getData();
+    
   }
 
   //---------------------------------------------------------------------------------//
@@ -214,6 +218,11 @@ export class OkrTargetsComponent implements OnInit {
         },
       ],
     };
+    if(this.dataOKR?.length>0){
+      for (let gr of this.dataOKR){
+        this.totalOB += gr.listOKR.length;
+      }
+    }
   }
 
   getCacheData() {
@@ -812,6 +821,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
+  
   editRender(oldOKR: any, newOKR: any) {
     oldOKR.okrName = newOKR?.okrName;
     oldOKR.target = newOKR?.target;

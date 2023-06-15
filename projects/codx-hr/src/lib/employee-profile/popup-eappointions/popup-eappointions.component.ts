@@ -214,10 +214,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
-  }
-
   valueChange(event) {
     if (!event.data) {
       this.EAppointionObj.signerPosition = '';
@@ -246,6 +242,17 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
+    }
+
+    if(this.EAppointionObj.expiredDate && this.EAppointionObj.effectedDate){
+      if (this.EAppointionObj.expiredDate < this.EAppointionObj.effectedDate) {
+        this.hrService.notifyInvalidFromTo(
+          'ExpiredDate',
+          'EffectedDate',
+          this.formModel
+          )
+          return;
+        }
     }
 
     // if (this.actionType === 'copy' || this.actionType === 'add') {

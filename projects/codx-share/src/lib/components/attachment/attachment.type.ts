@@ -12,3 +12,5 @@ export var type_image = [
     'jpg',
     'bmp',
 ];
+
+export var type_audio =  ['.mp3','.wma','.wav','.flac','.ogg','.aiff','.aac','.alac','.lossless','.wma9','.aac+','.ac3'];

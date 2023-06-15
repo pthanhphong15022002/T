@@ -29,7 +29,6 @@ import { PopupListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-
 import { PopupQuickaddContactComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
-import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 import { DealsComponent } from './deals/deals.component';
 import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
 import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
@@ -75,6 +74,7 @@ import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.
 import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
+import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 
 const routes: Routes = [
   {
@@ -130,7 +130,7 @@ const routes: Routes = [
       {
         path: 'setting/settingprocess/:funcID',
         component: SettingProcessCmComponent,
-
+        data: { noReuse: true },
       },
     ],
   },
@@ -196,6 +196,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewPaymentComponent,
     GanttChartComponent,
     StepTaskComponent,
+    SettingProcessCmComponent,
+    QuotationsTabViewComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -211,7 +213,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
-    CodxDpModule,
   ],
   exports: [RouterModule, ListContractsComponent],
   providers: [AccumulationTooltipService],
