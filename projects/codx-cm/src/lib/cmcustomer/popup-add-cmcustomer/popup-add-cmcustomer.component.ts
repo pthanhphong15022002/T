@@ -155,6 +155,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (edit) this.moreFuncEdit = edit.customName;
       }
     });
+
   }
 
   setTitle(e: any) {
