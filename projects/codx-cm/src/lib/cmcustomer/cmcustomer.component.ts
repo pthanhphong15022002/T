@@ -401,17 +401,12 @@ export class CmCustomerComponent
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
                 e.event.modifiedOn = new Date();
+                this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e.event).subscribe();
-                this.dataSelected = JSON.parse(
-                  JSON.stringify(this.view.dataService.data[0])
-                );
-                // this.customerDetail.getListContactByObjectID(
-                //   this.dataSelected?.recID
+                // this.dataSelected = JSON.parse(
+                //   JSON.stringify(this.view.dataService.data[0])
                 // );
-                this.customerDetail.getListAddress(
-                  this.entityName,
-                  this.dataSelected?.recID
-                );
+
                 this.detectorRef.detectChanges();
               }
             });

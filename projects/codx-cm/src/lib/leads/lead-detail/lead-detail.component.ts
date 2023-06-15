@@ -103,7 +103,6 @@ export class LeadDetailComponent  implements OnInit {
     options.predicates = 'RecID=@0';
     options.dataValues = '61bc2462-069e-11ee-94b2-00155d035517';
     options.pageLoading = false;
-    debugger;
     this.deals = await firstValueFrom(
       this.codxCmService.loadDataAsync('CM', options)
     );
