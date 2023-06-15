@@ -321,13 +321,14 @@
 <ng-template #moduleTmp let-module>
   <!-- {{ module.moduleName }}{{ log(module) }} -->
   <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    cardCss="card-template border-bottom p-3 card-order"
     [typeMF]="'hover'"
     [title]="module.moduleName"
     [descTmp]="moduleOperatorDescTmp"
     [desc2Tmp]="moduleEmplDescTmp"
     [descLine]="2"
     [imageSrc]="module.image"
+    [imageWidth]="35"
     [titleLine]="2"
     [icoDateCss]="'icon-access_alarm'"
     typeMF="hover"
