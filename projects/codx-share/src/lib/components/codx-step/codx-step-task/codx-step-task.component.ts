@@ -16,6 +16,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  DialogModel,
   FormModel,
   NotificationsService,
   SidebarModel,
@@ -46,6 +47,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 
 @Component({
   selector: 'codx-step-task',
@@ -172,8 +174,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.listGroupTask?.splice(index, 0, this.groupTaskAdd);
     }
     if (changes?.taskAdd && this.taskAdd) {
-      let group = this.listGroupTask?.find((group) => group.refID == this.taskAdd?.taskGroupID);
-      if(group){
+      let group = this.listGroupTask?.find(
+        (group) => group.refID == this.taskAdd?.taskGroupID
+      );
+      if (group) {
         group?.push(this.taskAdd);
       }
     }
@@ -517,7 +521,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP20': // tiến độ
             res.isbookmark = true;
-            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)){
+            if (
+              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
+            ) {
               res.disabled = true;
             }
 
@@ -577,6 +583,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'SYS004':
         this.sendMail();
+        break;
+      case 'DP27':
+        this.addBookingCar();
         break;
     }
   }
@@ -1440,5 +1449,38 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   toggleElemen() {
     this.isShowElement = !this.isShowElement;
+  }
+
+  addBookingCar() {
+    let option = new DialogModel();
+    option.FormModel = this.frmModelInstancesTask;
+    this.callfc
+      .openForm(
+        CodxAddBookingCarComponent,
+        '',
+        600,
+        800,
+        '',
+        null,
+        '',
+        option
+      )
+      // .closed.subscribe((returnData) => {
+      //   if (!this.calendarType) {
+      //     this.calendarType = this.defaultCalendar;
+      //   }
+      //   if (returnData.event) {
+      //     this.api
+      //       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+      //         this.calendarType,
+      //       ])
+      //       .subscribe((res: any) => {
+      //         if (res) {
+      //           this.getDataAfterAddEvent(res);
+      //         }
+      //         this.detectorRef.detectChanges();
+      //       });
+      //   }
+      // });
   }
 }
