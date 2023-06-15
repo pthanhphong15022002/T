@@ -2637,7 +2637,12 @@ codx-toolbar {
   .btn.btn-outline-default {
     border-color: var(--gray-150);
   }
+  .dropdown-toggle.btn-active-light-primary .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill:var(--primary-dark);
+  }
 }
+
+
 .addpost-scroll {
   .e-richtexteditor .e-rte-toolbar.e-rte-tb-float,
   .e-richtexteditor .e-rte-toolbar.e-toolbar.e-extended-toolbar.e-rte-tb-float {

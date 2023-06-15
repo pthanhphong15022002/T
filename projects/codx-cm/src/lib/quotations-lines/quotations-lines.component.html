@@ -1,7 +1,7 @@
 <ng-container *ngIf="!isViewTemp">
   <div class="h-100 p-3">
     <div class="tabline-content position-relative">
-      <codx-gridview-v2
+       <codx-gridview-v2
         #gridQuationsLines
         class="tabLine"
         service="CM"
@@ -14,15 +14,13 @@
         [dataSource]="listQuotationLines"
         [autoLoad]="false"
         rowHeight="40"
-        predicates="TransID=@0"
+        predicates="TransID==@0"
         [dataValues]="transID"
         [editSettings]="editSettings"
         (cellChanged)="quotationsLineChanged($event)"
         (created)="gridCreated($event, gridQuationsLines)"
-        (onAddNew)="onAddNew($event)"
-        (onEdit)="onEdit($event)"
       ></codx-gridview-v2>
-      <!-- //  [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
+      <!-- //    [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
       <div
         class="row"
         *ngIf="listQuotationLines?.length == 0"

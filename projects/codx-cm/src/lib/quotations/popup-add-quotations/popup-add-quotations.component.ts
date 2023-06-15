@@ -59,8 +59,6 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('itemTemp') itemTemp: TemplateRef<any>;
   @ViewChild('viewQuotationsLine') viewQuotationsLine: QuotationsLinesComponent;
 
-  
-
   quotations: CM_Quotations;
   action = 'add';
   dialog: DialogRef;
@@ -198,9 +196,9 @@ export class PopupAddQuotationsComponent implements OnInit {
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {
           if (res.save) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.save)
-              .subscribe();
+              (this.dialog.dataService as CRUDService)
+                .update(res.save)
+                .subscribe();
             this.dialog.close(res.save);
           } else {
             this.dialog.close();
@@ -210,7 +208,8 @@ export class PopupAddQuotationsComponent implements OnInit {
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
-          [this.quotations, this.listQuotationLines],
+          this.quotations,
+          this.listQuotationLines
         ])
         .subscribe((res) => {
           if (res) {
@@ -269,7 +268,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     );
     if (count > 0) return;
     if (!(this.listQuotationLines?.length > 0)) {
-      this.notiService.notifyCode("CM013");
+      this.notiService.notifyCode('CM013');
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {
@@ -776,8 +775,9 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.listQuotationLines.forEach((ql) => {
             ql['currencyID'] = this.quotations.currencyID;
             ql['exchangeRate'] = this.quotations.exchangeRate;
-           
-            ql['salesPrice'] = (ql['salesPrice'] * exchangeRateOld) / exchangeRateNew;
+
+            ql['salesPrice'] =
+              (ql['salesPrice'] * exchangeRateOld) / exchangeRateNew;
             ql['costPrice'] =
               (ql['costPrice'] * exchangeRateOld) / exchangeRateNew;
             ql['discAmt'] = (ql['discAmt'] * exchangeRateOld) / exchangeRateNew;
@@ -786,7 +786,7 @@ export class PopupAddQuotationsComponent implements OnInit {
             ql['vatBase'] = (ql['vatBase'] * exchangeRateOld) / exchangeRateNew;
             ql['vatAmt'] = (ql['vatAmt'] * exchangeRateOld) / exchangeRateNew;
             ql['netAmt'] = (ql['netAmt'] * exchangeRateOld) / exchangeRateNew;
- 
+
             if (this.action == 'edit') {
               this.linesUpdate(ql);
             }

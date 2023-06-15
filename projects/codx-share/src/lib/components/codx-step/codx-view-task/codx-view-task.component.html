@@ -30,9 +30,7 @@
             [dataItem]="moreDefaut"
             (changeDataMF)="changeDataMFStep($event)"
             (clickMF)="clickMFStep($event)"
-            >
-    
-          </codx-mfunc>
+          ></codx-mfunc>
       </div>
       <div
       class="btn-extand d-flex align-items-center"
@@ -157,7 +155,7 @@
       </div>
       <div class="ms-2">
         <span class="fs-4 fw-bold text-dark">{{
-          dataView?.taskName || dataView?.taskGroupName
+          dataView?.taskName || dataView?.taskGroupName || dataView?.stepName
         }}</span>
         <ng-container [ngTemplateOutlet]="describe"></ng-container>
       </div>
@@ -228,6 +226,8 @@
         [isShowFile]="false"
         [isShowComment]="false"
         [isViewStep]="true"
+        [groupTaskAdd]="groupTaskAdd"
+        [taskAdd]="taskAdd"
         (saveAssign)="saveAssign($event)"
       ></codx-step-task>
     </div>

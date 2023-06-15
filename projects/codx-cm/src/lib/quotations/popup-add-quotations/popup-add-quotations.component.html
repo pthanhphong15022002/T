@@ -481,21 +481,9 @@
 
   <!--  Start:thêm sản phẩm -->
   <ng-template #descriptionQuotation>
-    <div>
-      <!-- <div class="d-flex">
-        <button
-          type="button"
-          class="btn btn-clean btn-sm btn-icon btn-icon-md p-5"
-          (click)="addPopup()"
-        >
-          <i class="icon-add_box icon-24 text-primary"></i>
-        </button>
-        <button class="btn btn-light-primary" (click)="addRow()">
-          <codx-label name="AddLines" default="Thêm dòng"></codx-label>
-        </button>
-      </div> -->
+    
       <div #tabsNote class="row">
-        <div class="form-group col-8">
+        <div class="form-group">
           <codx-label fiedName="Memo" [formModel]="form.formModel"></codx-label>
           <codx-input
             field="memo"
@@ -503,7 +491,7 @@
             [Group]="form.formGroup"
           ></codx-input>
         </div>
-        <div
+        <!-- <div
           class="col-4 fw-bolder fs-5"
           style="padding-left: 100px; padding-right: 20px"
         >
@@ -615,9 +603,9 @@
               ></span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
-    </div>
+
   </ng-template>
   <!--  End:thêm sản phẩm -->
 </codx-form>
