@@ -53,17 +53,17 @@ export class CodxTabsComponent implements OnInit {
   @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
 
   //Quotations - CM
-  @Input() customerID : string ;
-  @Input() funcIDQuotations ='CM0202' ;
-  @Input() refType: string;
-  @Input() refID: string;
-  @Input() predicates : string ;
-  @Input() dataValues :string;
-  @Input() salespersonID: string;
-  @Input() consultantID: string;
-  @Input() disableRefID = false;
-  @Input() disableCusID = false;
-  @Input() disableContactsID = false;
+  // @Input() customerID : string ;
+  // @Input() funcIDQuotations ='CM0202' ;
+  // @Input() refType: string;
+  // @Input() refID: string;
+  // @Input() predicates : string ;
+  // @Input() dataValues :string;
+  // @Input() salespersonID: string;
+  // @Input() consultantID: string;
+  // @Input() disableRefID = false;
+  // @Input() disableCusID = false;
+  // @Input() disableContactsID = false;
   
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true,icon: "icon-i-clock-history" },
