@@ -112,10 +112,7 @@
 
 <!-- temp right -->
 <ng-template #templateDetail>
-  <h1>thuận test</h1>
-  <h2>{{itemSelected?.contractName}}</h2> 
-  <contracts-view-detail></contracts-view-detail>
-  <contracts-detail></contracts-detail>
+  <contracts-view-detail [contract]="itemSelected" [formModel]="view.formModel"></contracts-view-detail>
 </ng-template>
 
 
