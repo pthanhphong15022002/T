@@ -113,3 +113,10 @@
     border-radius: 30px !important;
     padding-right: 20px;
 }
+.conmement-header{
+    height: 40px;
+}
+.conmement-body{
+    height: calc(100vh - 190px);
+    overflow: auto;
+}
