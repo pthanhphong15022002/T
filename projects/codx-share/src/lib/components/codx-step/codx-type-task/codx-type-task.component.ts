@@ -10,6 +10,7 @@ export class CodxTypeTaskComponent implements OnInit {
   listJobType = [];
   dialog!: DialogRef;
   jobType: any;
+  isShowGroup = true;
   constructor(
     private cache: CacheService,
     @Optional() dt?: DialogData,
@@ -27,6 +28,7 @@ export class CodxTypeTaskComponent implements OnInit {
             checked: false,
           };
         });
+        
         this.jobType = this.listJobType[0];
         this.jobType['checked'] = true;
       }
