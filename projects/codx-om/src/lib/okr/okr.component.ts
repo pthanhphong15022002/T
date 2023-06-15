@@ -538,7 +538,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
   }
   getOrgTreeOKR() {
-    if (this.curUser?.employee != null) {
+    if (this.curUser?.employee != null ) {
       let tempOrgID = '';
       let okrLevel = '';
       switch (this.funcID) {
@@ -558,7 +558,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           tempOrgID = this.curUser?.employee.employeeID;
           okrLevel = OMCONST.VLL.OKRLevel.PERS;
           break;
-      }
+      }    
+      if(okrLevel == OMCONST.VLL.OKRLevel.PERS) return;
       this.codxOmService
         .getOrgTreeOKR(this.dataOKRPlans?.recID, tempOrgID)
         .subscribe((listOrg: any) => {

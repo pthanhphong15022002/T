@@ -232,7 +232,8 @@ export class CodxApprovalComponent
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') 
+        {
           list[i].disabled = true;
           if (value.status == '5' || value.status == '2' || value.status == '4')
             list[i].disabled = true;
@@ -241,17 +242,18 @@ export class CodxApprovalComponent
               datas?.stepType == 'S2' ||
               datas?.stepType == 'S3' ||
               datas?.stepType == 'S') &&
-              list[i].functionID == 'SYS200') ||
+              list[i].functionID == 'SYS202') ||
             ((datas?.stepType == 'A1' ||
               datas?.stepType == 'R' ||
               datas?.stepType == 'C') &&
-              list[i].functionID == 'SYS200') ||
-            (datas?.stepType == 'S3' && list[i].functionID == 'SYS200') ||
-            (datas?.stepType == 'A2' && list[i].functionID == 'SYS200')
+              list[i].functionID == 'SYS203') ||
+            (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
+            (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
           ) {
             list[i].disabled = false;
           }
-        } else if (
+        } 
+        else if (
           value.status == '5' ||
           value.status == '2' ||
           value.status == '4'
@@ -261,6 +263,26 @@ export class CodxApprovalComponent
       this.listApproveMF = list.filter(
         (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
       );
+
+      if(datas?.eSign)
+      {
+        var listDis = data.filter(
+          (x) =>
+            x.functionID == 'SYS202' ||
+            x.functionID == 'SYS203' ||
+            x.functionID == 'SYS204' ||
+            x.functionID == 'SYS205' ||
+            x.functionID == 'SYS206' ||
+            x.functionID == 'SYS201'
+            
+        );
+        for (var i = 0; i < listDis.length; i++) {
+          listDis[i].disabled = true;
+        }
+
+        var sys200 = data.filter(x=>x.functionID == "SYS200");
+        sys200[0].disabled = false;
+      }
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>

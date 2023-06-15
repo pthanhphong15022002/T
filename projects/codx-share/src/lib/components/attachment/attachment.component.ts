@@ -733,6 +733,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
+    debugger
     var check = this.CheckTenantFile(this.user.tenant) as any;
     if(isObservable(check))
     {
