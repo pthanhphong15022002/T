@@ -8,7 +8,7 @@
           type="valuelist"
           [emptyText]="'Tình trạng'"
           field="status"
-          [dataSource]="status"
+          [refValue]="'DP032'"
           (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div>
@@ -136,6 +136,7 @@
       [typeTime]="typeTime"
       [instance]="dataSelected"
       [listSteps]="listInstanceStepShow"
+      [isRoleAll]="dataSelected?.roles?.isOnwer || false"
      ></codx-step-chart>
    </div>
  </ng-template>

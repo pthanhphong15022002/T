@@ -39,7 +39,13 @@ import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.componen
 import { StepService } from '../step.service';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'codx-step-task',
@@ -48,11 +54,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   animations: [
     trigger('fadeInOut', [
       state('void', style({ opacity: 0 })),
-      transition(':enter, :leave', [
-        animate(500, style({ opacity: 1 }))
-      ])
-    ])
-  ]
+      transition(':enter, :leave', [animate(500, style({ opacity: 1 }))]),
+    ]),
+  ],
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
@@ -66,6 +70,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isDeepCopy = true; // copy sâu
   @Input() isLockSuccess = false; // lọc cái task 100%
   @Input() isSaveProgress = true; // lưu progress vào db
+  @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
+  @Input() taskAdd: DP_Instances_Steps_Tasks;
 
   @Input() isClose = false; // đóng nhiệm vụ
   @Input() isStart = true; // bắt đầu ngay
@@ -150,7 +156,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes.dataSources || changes.stepId) {
       this.grvMoreFunction = await this.getFormModel('DPT040102');
-      await this.getStepById(this.stepId);
+      await this.getStepById();
       if (this.isLockSuccess) {
         await this.removeTaskSuccess();
       }
@@ -158,7 +164,28 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.getTaskEnd();
       }
     }
-    if (changes?.isAddTask && this.isRoleAll && this.isOnlyView && this.isAddTask) {
+    if (changes?.groupTaskAdd && this.groupTaskAdd) {
+      let indexGroupNoID = this.listGroupTask?.findIndex(
+        (group) => !group.recID
+      );
+      let index = indexGroupNoID ? indexGroupNoID : this.listGroupTask?.length;
+      this.listGroupTask?.splice(index, 0, this.groupTaskAdd);
+    }
+    if (changes?.taskAdd && this.taskAdd) {
+      let group = this.listGroupTask?.find((group) => group.refID == this.taskAdd?.taskGroupID);
+      if(group){
+        if(!group?.task){
+          group['task']=[];
+        }
+        group['task']?.push(this.taskAdd);
+      }
+    }
+    if (
+      changes?.isAddTask &&
+      this.isRoleAll &&
+      this.isOnlyView &&
+      this.isAddTask
+    ) {
       this.chooseTypeTask();
     }
   }
@@ -175,9 +202,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   // loại bỏ những task có progress 100%
   removeTaskSuccess() {
     if (this.listGroupTask?.length > 0) {
-      for (let i = 0; i < this.listGroupTask.length;) {
+      for (let i = 0; i < this.listGroupTask.length; ) {
         if (this.listGroupTask[i]?.task?.length > 0) {
-          for (let j = 0; j < this.listGroupTask[i]?.task.length;) {
+          for (let j = 0; j < this.listGroupTask[i]?.task.length; ) {
             let task = this.listGroupTask[i]?.task[j];
             if (task?.progress == 100) {
               this.listGroupTask[i]?.task.splice(j, 1);
@@ -198,14 +225,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  async getStepById(stepId: string) {
+  async getStepById() {
     if (this.stepId) {
       this.currentStep = await firstValueFrom(
         this.api.exec<any>(
           'DP',
           'InstanceStepsBusiness',
           'GetStepByIdAsync',
-          stepId
+          this.stepId
         )
       );
     } else {
@@ -278,15 +305,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return 'text-red';
     }
     let check = 'd-none';
-    if (task['groupTaskID']) {
+    if (task?.groupTaskID) {
       taskList?.forEach((taskItem) => {
-        if (taskItem['parentID']?.includes(task['refID'])) {
+        if (taskItem?.parentID?.includes(task['refID'])) {
           check = 'text-orange';
         }
       });
     } else {
       this.listTask?.forEach((taskItem) => {
-        if (taskItem['parentID']?.includes(task['refID'])) {
+        if (taskItem?.parentID?.includes(task?.refID)) {
           check = 'text-orange';
         }
       });
@@ -300,7 +327,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return type == 'ID' ? role?.objectID : role?.objectName;
   }
 
-  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) { }
+  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
 
   // more functions
   async changeDataMFTask(event, task, groupTask) {
@@ -384,6 +411,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS002':
             res.disabled = true;
             break;
+          case 'DP27': // đặt xe
+            if (task.taskType != 'B') break;
         }
       });
     }
@@ -398,6 +427,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       event.forEach((res) => {
         switch (res.functionID) {
           case 'DP13':
+          case 'DP27': // đặt xe
           case 'DP07':
             res.disabled = true;
             break;
@@ -473,13 +503,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (event != null) {
       event.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS02': //xóa  
-          case 'SYS03': //sửa  
-          case 'SYS04': //copy        
-          case 'SYS003': //đính kèm file
+          case 'SYS02': //xóa
+          case 'SYS03': //sửa
+          case 'SYS04': //copy
+          case 'DP27': // đặt xe
           case 'DP13': //giao việc
-          case 'DP07': //chi tiêt công việc
           case 'DP24': //tạo lịch họp
+          case 'DP07': //chi tiêt công việc
+          case 'SYS003': //đính kèm file
           case 'DP12':
           case 'DP25':
           case 'SYS004':
@@ -488,22 +519,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP20': // tiến độ
-            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)) {
-              res.isblur = true;
+            res.isbookmark = true;
+            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)){
+              res.disabled = true;
             }
-            // res.isbookmark = true;
+
             break;
           case 'DP08': // Thêm nhóm công việc
+            res.isbookmark = true;
             if (!(this.isRoleAll && this.isOnlyView)) {
-              res.isblur = true;
+              res.disabled = true;
             }
-            // res.isbookmark = true;
             break;
           case 'DP26': // Chi tiết giai đoạn
-            // if (!((this.isRoleAll ) && this.isOnlyView)) {
-            //   res.isblur = true;
-            // }
-            // res.isbookmark = true;
+            res.isbookmark = true;
             break;
         }
       });
@@ -516,7 +545,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.chooseTypeTask();
         break;
       case 'DP20': // tien do
-        this.openPopupUpdateProgress(this.currentStep, 'P')
+        this.openPopupUpdateProgress(this.currentStep, 'P');
         break;
       case 'DP26': // view
         this.viewTask(step, 'P');
@@ -585,7 +614,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         CodxTypeTaskComponent,
         '',
         450,
-        580,
+        580
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
       if (dataOutput?.event?.value) {
@@ -596,8 +625,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.addTask(groupID);
         }
       }
-    },0);
-
+    }, 0);
   }
 
   async addTask(groupID) {
@@ -645,13 +673,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let dataOutput = await this.openPopupTask('edit', taskEdit);
       if (dataOutput?.event.task) {
         let taskOutput = dataOutput?.event?.task;
-        let group = this.listGroupTask.find((group) => group.refID == taskOutput?.taskGroupID);
-        let indexTask = this.currentStep?.tasks?.findIndex((taskFind) => taskFind.recID == task.recID);
+        let group = this.listGroupTask.find(
+          (group) => group.refID == taskOutput?.taskGroupID
+        );
+        let indexTask = this.currentStep?.tasks?.findIndex(
+          (taskFind) => taskFind.recID == task.recID
+        );
 
         if (taskOutput?.taskGroupID != groupIdOld) {
-          let groupOld = this.listGroupTask.find((group) => group.refID == groupIdOld);
+          let groupOld = this.listGroupTask.find(
+            (group) => group.refID == groupIdOld
+          );
           if (groupOld) {
-            let index = groupOld?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            let index = groupOld?.task?.findIndex(
+              (taskFind) => taskFind.recID == task.recID
+            );
             if (index >= 0) {
               groupOld?.task?.splice(index, 1);
             }
@@ -661,7 +697,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
         } else {
           if (group) {
-            let index = group?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            let index = group?.task?.findIndex(
+              (taskFind) => taskFind.recID == task.recID
+            );
             if (index >= 0) {
               group?.task?.splice(index, 1, taskOutput);
             }
@@ -944,7 +982,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 this.listGroupTask?.splice(indexView, 1);
               }
               if (this.currentStep?.tasks?.length > 0) {
-                for (let i = 0; i < this.currentStep?.tasks?.length;) {
+                for (let i = 0; i < this.currentStep?.tasks?.length; ) {
                   if (this.currentStep?.tasks[i]?.taskGroupID == group?.refID) {
                     this.currentStep?.tasks.splice(i, 1);
                   } else {
@@ -1131,6 +1169,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         isOnlyView: this.isOnlyView,
         isUpdateProgressGroup: this.isUpdateProgressGroup,
         listRefIDAssign: listRefIDAssign,
+        instanceStep: this.currentStep,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -1141,10 +1180,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         listData,
         option
       );
-      dialog.closed.subscribe((dataOuput) => {
+      dialog.closed.subscribe(async (dataOuput) => {
         if (dataOuput?.event) {
           this.handelProgress(data, dataOuput?.event);
         }
+        await this.getStepById();
       });
     }
   }

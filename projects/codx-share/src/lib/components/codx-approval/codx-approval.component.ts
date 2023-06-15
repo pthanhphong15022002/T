@@ -241,13 +241,13 @@ export class CodxApprovalComponent
               datas?.stepType == 'S2' ||
               datas?.stepType == 'S3' ||
               datas?.stepType == 'S') &&
-              list[i].functionID == 'SYS202') ||
+              list[i].functionID == 'SYS200') ||
             ((datas?.stepType == 'A1' ||
               datas?.stepType == 'R' ||
               datas?.stepType == 'C') &&
-              list[i].functionID == 'SYS203') ||
-            (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
-            (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
+              list[i].functionID == 'SYS200') ||
+            (datas?.stepType == 'S3' && list[i].functionID == 'SYS200') ||
+            (datas?.stepType == 'A2' && list[i].functionID == 'SYS200')
           ) {
             list[i].disabled = false;
           }
@@ -259,9 +259,8 @@ export class CodxApprovalComponent
           list[i].disabled = true;
       }
       this.listApproveMF = list.filter(
-        (p) => p.data.functionID == 'SYS208' || p.disabled == false
+        (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
       );
-
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
@@ -295,6 +294,7 @@ export class CodxApprovalComponent
           this.detectorRef.detectChanges();
         });
     }
+    this.detectorRef.detectChanges();
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
@@ -307,7 +307,8 @@ export class CodxApprovalComponent
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||
         funcID == 'SYS203' ||
-        funcID == 'SYS202'
+        funcID == 'SYS202' ||
+        funcID == 'SYS200'
       ) {
         let option = new SidebarModel();
         option.Width = '800px';
