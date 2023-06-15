@@ -65,6 +65,15 @@ export class OrgorganizationComponent extends UIComponent {
     this.views = [
       {
         // id: '18',
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+        },
+      },
+      {
+        // id: '18',
         type: ViewType.listtree,
         active: true,
         sameData: true,

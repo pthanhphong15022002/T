@@ -21,7 +21,10 @@
     
     &:hover{
       .menu-title {
-        color: var(--primary) !important;
+        color: var(--primary-light) !important;
+      }
+      .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: var(--primary-light)!important;
       }
     }
     &.active {
