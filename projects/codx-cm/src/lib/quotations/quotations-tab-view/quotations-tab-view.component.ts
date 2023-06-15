@@ -33,18 +33,24 @@ export class QuotationsTabViewComponent
   extends UIComponent
   implements OnChanges
 {
+  @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
+  @ViewChild('tempHeader') tempHeader?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail?: TemplateRef<any>;
   @Input() funcID: string = 'CM0202';
   @Input() predicates: any; // 'RefType==@0 && RefID==@1';
   @Input() dataValues: any; //= '
   @Input() customerID: string;
   @Input() refType: string;
   @Input() refID: string;
+  @Input() recID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
   @Input() disableRefID = false;
   @Input() disableCusID = false;
   @Input() disableContactsID = false;
-  @Input() typeModel = 'custormmers' || 'deals';
+  @Input() typeModel = 'custormmers' || 'deals' || 'contracts';
   @Input() showButton = false;
 
   service = 'CM';
@@ -52,9 +58,7 @@ export class QuotationsTabViewComponent
   entityName = 'CM_Quotations';
   className = 'QuotationsBusiness';
   methodLoadData = 'GetListQuotationsAsync';
-  @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
-  @ViewChild('tempHeader') tempHeader?: TemplateRef<any>;
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   //test
   moreDefaut = {
@@ -74,6 +78,7 @@ export class QuotationsTabViewComponent
   };
   customerIDCrr = '';
   refIDCrr = '';
+  recIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
 
@@ -81,6 +86,8 @@ export class QuotationsTabViewComponent
   titleAction: any = '';
   titleActionAdd: any = '';
   loaded = false;
+  itemSelected: any;
+  popupView: DialogRef;
 
   constructor(
     private inject: Injector,
@@ -99,12 +106,12 @@ export class QuotationsTabViewComponent
         }
       });
 
-      this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-        if (mf) {
-          var mfAdd = mf.find((f) => f.functionID == 'SYS01');
-          if (mfAdd) this.titleActionAdd = mfAdd?.customName;
-        }
-      });
+    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      if (mf) {
+        var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+        if (mfAdd) this.titleActionAdd = mfAdd?.customName;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -121,6 +128,12 @@ export class QuotationsTabViewComponent
           this.refIDCrr = changes['refID'].currentValue;
         } else return;
         break;
+      // case 'contracts':
+      //   if (changes['recID']) {
+      //     if (changes['recID'].currentValue === this.recIDCrr) return;
+      //     this.recIDCrr = changes['recID'].currentValue;
+      //   } else return;
+      //break;
     }
     this.getQuotations();
   }
@@ -370,5 +383,21 @@ export class QuotationsTabViewComponent
     //   }
     //   return this.quotation
     // });
+  }
+  viewDetail(data) {
+    this.itemSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+    this.popupView = this.callfc.openForm(
+      this.popDetail,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
   }
 }

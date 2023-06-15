@@ -43,7 +43,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd', icon: 'icon-i-file-earmark-plus' };
+  button?: ButtonModel = { id: 'btnAdd', icon: 'icon-i-menu-button-wide-fill',text:'Thêm phiếu chi' };
   headerText: any;
   moreFuncName: any;
   funcName: any;
