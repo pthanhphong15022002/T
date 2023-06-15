@@ -426,7 +426,7 @@
             style="display: block"
             [tooltip]="tooltip"
             [centerLabel]="{
-              text: myDBData?.totalTasksByGroup.toString()
+              text: '71'
             }"
           >
             <e-accumulation-series-collection>
@@ -582,17 +582,25 @@
             <div
               class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
             >
-              <span class="fs-6 fw-bold">80%</span>
+              <span class="fw-bold" style="font-size: 0.5vw"
+                >{{
+                  toFixed(
+                    (+teamDBData?.status?.onTimeTasks /
+                      +teamDBData?.status?.doneTasks) *
+                      100
+                  )
+                }}%</span
+              >
             </div>
             <ejs-progressbar
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="100"
+              [maximum]="+teamDBData?.status?.doneTasks"
               [minimum]="0"
-              [value]="80"
-              [width]="'70'"
-              [height]="'70'"
+              [value]="+teamDBData?.status?.onTimeTasks"
+              [width]="'75'"
+              [height]="'75'"
               [trackThickness]="10"
               [progressThickness]="10"
               [animation]="animation"
@@ -603,7 +611,9 @@
       </div>
       <div class="p-2">
         <div class="fw-bold">Đúng hạn</div>
-        <div class="fw-bold">1551</div>
+        <div class="fw-bold" style="font-size: 1.25rem">
+          {{ +teamDBData?.status?.onTimeTasks }}
+        </div>
       </div>
     </div>
   </div>
@@ -620,17 +630,25 @@
             <div
               class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
             >
-              <span class="fs-6 fw-bold">80%</span>
+              <span class="fw-bold" style="font-size: 0.5vw">
+                {{
+                  toFixed(
+                    (+teamDBData?.status?.overDueTasks /
+                      +teamDBData?.status?.doneTasks) *
+                      100
+                  )
+                }}%</span
+              >
             </div>
             <ejs-progressbar
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="100"
+              [maximum]="+teamDBData?.status?.doneTasks"
               [minimum]="0"
-              [value]="80"
-              [width]="'70'"
-              [height]="'70'"
+              [value]="+teamDBData?.status?.overDueTasks"
+              [width]="'75'"
+              [height]="'75'"
               [trackThickness]="10"
               [progressThickness]="10"
               [progressColor]="'#FF4500'"
@@ -642,7 +660,9 @@
       </div>
       <div class="p-2">
         <div class="fw-bold">Quá hạn</div>
-        <div class="fw-bold">1551</div>
+        <div class="fw-bold" style="font-size: 1.25rem">
+          {{ +teamDBData?.status?.overDueTasks }}
+        </div>
       </div>
     </div>
   </div>
@@ -923,17 +943,25 @@
             <div
               class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
             >
-              <span class="fs-6 fw-bold">80%</span>
+              <span class="fw-bold" style="font-size: 0.5vw"
+                >{{
+                  toFixed(
+                    (+assignDBData?.status?.onTimeTasks /
+                      +assignDBData?.status?.doneTasks) *
+                      100
+                  )
+                }}%</span
+              >
             </div>
             <ejs-progressbar
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="100"
+              [maximum]="+assignDBData?.status?.doneTasks"
               [minimum]="0"
-              [value]="80"
-              [width]="'70'"
-              [height]="'70'"
+              [value]="+assignDBData?.status?.onTimeTasks"
+              [width]="'75'"
+              [height]="'75'"
               [trackThickness]="10"
               [progressThickness]="10"
               [animation]="animation"
@@ -944,7 +972,9 @@
       </div>
       <div class="p-2">
         <div class="fw-bold">Đúng hạn</div>
-        <div class="fw-bold">1551</div>
+        <div class="fw-bold" style="font-size: 1.25rem">
+          {{ +assignDBData?.status?.onTimeTasks }}
+        </div>
       </div>
     </div>
   </div>
@@ -961,17 +991,25 @@
             <div
               class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
             >
-              <span class="fs-6 fw-bold">80%</span>
+              <span class="fw-bold" style="font-size: 0.5vw"
+                >{{
+                  toFixed(
+                    (+assignDBData?.status?.overDueTasks /
+                      +assignDBData?.status?.doneTasks) *
+                      100
+                  )
+                }}%</span
+              >
             </div>
             <ejs-progressbar
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="100"
+              [maximum]="+assignDBData?.status?.doneTasks"
               [minimum]="0"
-              [value]="80"
-              [width]="'70'"
-              [height]="'70'"
+              [value]="+assignDBData?.status?.overDueTasks"
+              [width]="'75'"
+              [height]="'75'"
               [trackThickness]="10"
               [progressThickness]="10"
               [progressColor]="'#FF4500'"
@@ -983,7 +1021,9 @@
       </div>
       <div class="p-2">
         <div class="fw-bold">Quá hạn</div>
-        <div class="fw-bold" style="font-size: 1.25rem">1551</div>
+        <div class="fw-bold" style="font-size: 1.25rem">
+          {{ +assignDBData?.status?.overDueTasks }}
+        </div>
       </div>
     </div>
   </div>

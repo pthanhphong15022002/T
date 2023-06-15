@@ -2405,7 +2405,7 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncJobInfo; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 1)">
+        <li class="nav-item" (click)="navChange(item.functionID, 1)" *ngIf="item.functionID != eNeedToSubmitProfileFuncID">
           <a
             class="nav-link"
             [ngClass]="item.functionID == active[1] ? 'active' : ''"
@@ -2427,7 +2427,7 @@
     data-kt-scroll-offset="0px"
     scrollSpy
     [spiedTags]="['DIV']"
-    (sectionChange)="onSectionChange($event, 2)"
+    (sectionChange)="onSectionChange($event, 1)"
   >
     <!-- <div
       class="user-content flex-row-fluid"
@@ -3366,7 +3366,7 @@
     data-kt-scroll-offset="0px"
     scrollSpy
     [spiedTags]="['DIV']"
-    (sectionChange)="onSectionChange($event, 3)"
+    (sectionChange)="onSectionChange($event, 2)"
   >
     <!-- <div
       class="user-content flex-row-fluid"
@@ -3889,7 +3889,7 @@
     data-kt-scroll-offset="0px"
     scrollSpy
     [spiedTags]="['DIV']"
-    (sectionChange)="onSectionChange($event, 4)"
+    (sectionChange)="onSectionChange($event, 3)"
   >
     <!-- [spiedTags]="['DIV']" -->
     <!-- <div
@@ -4498,7 +4498,7 @@
     data-kt-scroll-offset="0px"
     scrollSpy
     [spiedTags]="['DIV']"
-    (sectionChange)="onSectionChange($event, 5)"
+    (sectionChange)="onSectionChange($event, 4)"
   >
     <!-- <div class="user-content flex-row-fluid"> -->
     <ng-container>
@@ -5102,7 +5102,7 @@
     data-kt-scroll-offset="0px"
     scrollSpy
     [spiedTags]="['DIV']"
-    (sectionChange)="onSectionChange($event, 7)"
+    (sectionChange)="onSectionChange($event, 5)"
   >
     <!-- <div class="user-content flex-row-fluid"> -->
     <ng-container>
@@ -5500,7 +5500,7 @@
     data-kt-scroll-offset="0px"
     scrollSpy
     [spiedTags]="['DIV']"
-    (sectionChange)="onSectionChange($event, 7)"
+    (sectionChange)="onSectionChange($event, 6)"
   >
     <!-- <div class="user-content flex-row-fluid"> -->
     <ng-container>
