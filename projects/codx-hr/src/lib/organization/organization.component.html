@@ -2,7 +2,6 @@
   #view
   service="HR"
   assemblyName="ERM.Business.HR"
-  entityName="HR_OrganizationUnits"
   className="OrganizationUnitsBusiness"
   method="GetDataOrgAsync"
   [views]="views"
@@ -178,7 +177,7 @@
           <div class="fs-2 fw-bold mb-2 text-primary number-users">
             {{ item.counts ? item.counts : 0 }}
           </div>
-          <ng-container *ngIf="item.staffEmp.length > 0">
+          <ng-container *ngIf="item.staffEmp?.length > 0">
             <ng-container
               *ngTemplateOutlet="
                 templateListEmployee;
@@ -240,7 +239,7 @@
         >
         </codx-img>
         <span
-          *ngIf="employees.length > 1"
+          *ngIf="employees?.length > 1"
           class="multiple-employee rounded-circle"
         >
           <span class="text-white">+{{ employees.length - 1 }}</span>
@@ -254,7 +253,7 @@
     >
       <div class="py-2">
         <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
-        <span class="fw-bold">{{ employees.length }}</span>
+        <span class="fw-bold">{{ employees?.length }}</span>
       </div>
       <!-- <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar> -->
       <div class="hr-list-employee">

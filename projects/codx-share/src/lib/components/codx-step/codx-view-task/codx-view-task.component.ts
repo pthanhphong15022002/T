@@ -130,6 +130,8 @@ export class CodxViewTaskComponent implements OnInit {
       await this.setDataView();
       this.settingData();
       this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
+      this.isUpdateProgressGroup = this.instanceStep?.progressTaskGroupControl || false;
+      this.isUpdateProgressStep = this.instanceStep?.progressStepControl || false;
     }
   }
 
