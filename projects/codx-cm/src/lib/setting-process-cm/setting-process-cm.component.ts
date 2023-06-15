@@ -40,7 +40,7 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
   funcID: any;
   data: any;
   views: Array<ViewModel> = [];
-
+  title = '';
   constructor(
     private inject: Injector,
     private cmSv: CodxCmService,
@@ -54,6 +54,11 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
     this.widthWin = Util.getViewPort().width - 100;
   }
   onInit() {
+    this.cache.functionList(this.funcID).subscribe((fun) => {
+      if(fun){
+       this.title = fun.customName || fun.description;
+      }
+    })
     this.getListProcessGroups();
   }
 
@@ -139,7 +144,7 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
           if (res) {
             var obj = {
               action: 'edit',
-              titleAction: 'edit',
+              titleAction: this.title,
               gridViewSetup: res,
               lstGroup: this.lstGroup,
               systemProcess: true,
