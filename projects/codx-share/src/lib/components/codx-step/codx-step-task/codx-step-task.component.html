@@ -32,8 +32,6 @@
           {{ currentStep.stepName || "" }}</span
         >
       </div>
-
-
       <codx-mfunc
         [formModel]="grvMoreFunction"
         [isBookMark]="false"
@@ -236,7 +234,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && isStart && !isClose"
+      *ngIf="isShowMore && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -283,7 +281,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && isStart && !isClose"
+      *ngIf="isShowMore  && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"

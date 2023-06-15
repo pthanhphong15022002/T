@@ -125,8 +125,8 @@ export class PopupEProcessContractComponent
       )
       .subscribe((res: any) => {
         if (res) {
-          if(res.key){
-            this.autoNumField = res.key
+          if (res.key) {
+            this.autoNumField = res.key;
           }
           this.benefitObj = res?.data;
           this.benefitObj.effectedDate = null;
@@ -225,11 +225,10 @@ export class PopupEProcessContractComponent
         )
         .subscribe((res) => {
           if (res) {
-            if(res.key){
-              this.autoNumField = res.key
+            if (res.key) {
+              this.autoNumField = res.key;
             }
-            console.log('get default contract', res);
-            
+
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
             this.data.signedDate = null;

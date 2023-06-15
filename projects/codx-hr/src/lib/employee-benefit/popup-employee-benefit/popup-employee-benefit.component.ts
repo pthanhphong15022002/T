@@ -34,7 +34,8 @@ export class PopupEmployeeBenefitComponent
   isAfterRender = false;
   headerText: string;
   employeeObj: any;
-  decisionNoDisable: boolean = false;
+  // decisionNoDisable: boolean = false;
+  autoNumField: string;
   data: any;
 
   @ViewChild('form') form: CodxFormComponent;
@@ -60,12 +61,6 @@ export class PopupEmployeeBenefitComponent
   }
 
   initForm() {
-    if (this.dialog.dataService?.keyField === 'DecisionNo') {
-      this.decisionNoDisable = false;
-    } else {
-      this.decisionNoDisable = true;
-    }
-
     this.hrSevice
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
@@ -80,7 +75,10 @@ export class PopupEmployeeBenefitComponent
               )
               .subscribe((res) => {
                 if (res) {
-                  console.log(res);
+                  if (res.key) {
+                    this.autoNumField = res.key;
+                  }
+
                   this.currentEJobSalaries = res?.data;
                   if (
                     this.currentEJobSalaries.effectedDate ==
