@@ -306,15 +306,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return 'text-red';
     }
     let check = 'd-none';
-    if (task['groupTaskID']) {
+    if (task?.groupTaskID) {
       taskList?.forEach((taskItem) => {
-        if (taskItem['parentID']?.includes(task['refID'])) {
+        if (taskItem?.parentID?.includes(task['refID'])) {
           check = 'text-orange';
         }
       });
     } else {
       this.listTask?.forEach((taskItem) => {
-        if (taskItem['parentID']?.includes(task['refID'])) {
+        if (taskItem?.parentID?.includes(task?.refID)) {
           check = 'text-orange';
         }
       });

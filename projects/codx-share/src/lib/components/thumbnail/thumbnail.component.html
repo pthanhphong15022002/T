@@ -89,7 +89,7 @@
         </ng-container>
       </ng-template>
       <ng-template #nodata>
-        <div (dblclick)="openFile(item)" class="cursor-pointer d-flex justify-content-between align-items-center w-100">
+        <div (click)="openFile(item)" class="cursor-pointer d-flex justify-content-between align-items-center w-100">
           <div class="has-action-menu-1 d-flex align-items-center w-100">
             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
             <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex align-items-center cursor-pointer">

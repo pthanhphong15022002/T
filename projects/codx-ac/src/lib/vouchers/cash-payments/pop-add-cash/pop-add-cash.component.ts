@@ -136,6 +136,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   className: any;
   dataLine: any;
   oldReasonID: any = '';
+  oldObjectID: any = '';
   oldSubType: any = '';
   authStore: AuthStore;
   typeSet: any;
@@ -293,15 +294,54 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'reasonid',
     ];
 
-    switch (field) {
-      case 'reasonid':
-        this.cashpayment.unbounds.reasonName = e.component.itemsSelected[0]['ReasonName'];
-        break;
-      case 'payee':
-        this.cashpayment.unbounds.payname = e.component.itemsSelected[0]['ContactName'];
-        break;
-      
-    }
+    // switch (field) {
+    //   case 'reasonid':
+    //     let oldreason = '';
+    //     let newreason = '';
+    //     if (!e.data) {
+    //       let i = e.component.dataService.data.findIndex(
+    //         (x) => x.ReasonID == e.component.valueSelected[0]
+    //       );
+    //       oldreason = e.component.dataService.data[i].ReasonName;
+    //       newreason = e.data;
+    //     } else {
+    //       if (
+    //         e?.component?.dataService.currentComponent.previousItemData != null
+    //       ) {
+    //         oldreason =
+    //           e?.component?.dataService.currentComponent.previousItemData
+    //             .ReasonName;
+    //       }
+    //       newreason = e.component.itemsSelected[0]['ReasonName'];
+    //     }
+    //     this.setMemo(oldreason, newreason, this.cashpayment.memo);
+    //     break;
+    //   case 'payee':
+    //     // this.cashpayment.unbounds.payname =
+    //     //   e.component.itemsSelected[0]['ContactName'];
+    //     break;
+    //   case 'objectid':
+    //     let oldobject = '';
+    //     let newobject = '';
+    //     if (!e.data) {
+    //       let i = e.component.dataService.data.findIndex(
+    //         (x) => x.ObjectID == e.component.valueSelected[0]
+    //       );
+    //       oldobject = e.component.dataService.data[i].ObjectName;
+    //       newobject = e.data;
+    //     } else {
+    //       this.cashpayment.objectType = e.component.itemsSelected[0]['ObjectType'];
+    //       this.cashpayment.objectName = e.component.itemsSelected[0]['ObjectName'];
+    //       if (e?.component?.dataService.currentComponent.previousItemData != null) {
+    //         oldobject = e?.component?.dataService.currentComponent.previousItemData.ObjectName;
+    //       }
+    //       newobject = e.component.itemsSelected[0]['ObjectName'];
+    //     }
+    //     this.setMemo(oldobject, newobject, this.cashpayment.memo);
+        
+    //     // this.setReason(field, e.component.itemsSelected[0]['ObjectName'], 1);
+    //     break;
+    // }
     if (sArray.includes(field)) {
       this.api
         .exec<any>('AC', this.className, 'ValueChangedAsync', [
@@ -360,8 +400,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 }
                 break;
               case 'objectid':
-                this.cashpayment.objectType = e.component.itemsSelected[0]['ObjectType'];
-                this.cashpayment.objectName = e.component.itemsSelected[0]['ObjectName'];
                 if (this.cashpaymentline.length > 0) {
                   this.notification
                     .alertCode('AC0019', null)
@@ -618,7 +656,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       this.dataLine = this.cashpayment.unbounds.lineDefault;
                     }
                     this.loadGrid();
-                    this.oldReasonID = res.save.data.reasonID;
+                    this.oldReasonID = this.cashpayment.reasonID;
                     this.hasSaved = true;
                   }
                 });
@@ -1489,30 +1527,39 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
   }
 
-  focusInput(){
+  focusInput() {
     var element = document.querySelectorAll('input');
     (element[1] as HTMLInputElement).focus();
-    (element[1] as HTMLInputElement).setSelectionRange(0, 1000)
+    (element[1] as HTMLInputElement).setSelectionRange(0, 1000);
   }
 
-  // setReason(field, text, idx) {
-  //   if (!this.reason.some((x) => x.field == field)) {
-  //     let transText = new Reason();
-  //     transText.field = field;
-  //     transText.value = text;
-  //     transText.index = idx;
-  //     this.reason.push(transText);
-  //   } else {
-  //     let iTrans = this.reason.find((x) => x.field == field);
-  //     if (iTrans) iTrans.value = text;
-  //   }
+  setMemo(oldvalue, newvalue, memo) {
+    if (memo.includes(oldvalue)) {
+      if (newvalue != null) {
+        this.cashpayment.memo = memo.replace(oldvalue, newvalue);
+      } else {
+        this.cashpayment.memo = memo.replace(oldvalue, '');
+      }
+    } else {
+      this.cashpayment.memo = memo + newvalue;
+    }
+    // if (!this.reason.some((x) => x.field == field)) {
+    //   let transText = new Reason();
+    //   transText.field = field;
+    //   transText.value = text;
+    //   transText.index = idx;
+    //   this.reason.push(transText);
+    // } else {
+    //   let iTrans = this.reason.find((x) => x.field == field);
+    //   if (iTrans) iTrans.value = text;
+    // }
 
-  //   this.cashpayment.memo = this.acService.setMemo(
-  //     this.cashpayment,
-  //     this.reason
-  //   );
-  //   this.form.formGroup.patchValue(this.cashpayment);
-  // }
+    // this.cashpayment.memo = this.acService.setMemo(
+    //   this.cashpayment,
+    //   this.reason
+    // );
+    this.form.formGroup.patchValue(this.cashpayment);
+  }
 
   updateLine() {}
   //#endregion
