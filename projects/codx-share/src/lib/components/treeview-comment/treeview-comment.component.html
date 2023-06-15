@@ -63,26 +63,30 @@
         </div>
     </div>
     <div class="isHiden border-top" [class.isShow]="isShowComment">
-        <codx-comments 
-            [parent]="data"
-            [refID]="data.recID"
-            [new]="true" 
-            [funcID]="funcID" 
-            [formModel]="formModel" 
-            (evtSendComment)="sendComment($event)">
-        </codx-comments>
-        <ng-container *ngIf="data.listComment">
-            <ng-container *ngFor="let cm of data.listComment">
-                <ng-container *ngTemplateOutlet="cmt1; context: { $implicit: cm }"></ng-container>
+        <div class="conmement-header">
+            <codx-comments 
+                [parent]="data"
+                [refID]="data.recID"
+                [new]="true" 
+                [funcID]="funcID" 
+                [formModel]="formModel" 
+                (evtSendComment)="sendComment($event)">
+            </codx-comments>
+        </div>
+        <div class="conmement-body">
+            <ng-container *ngIf="data.listComment">
+                <ng-container *ngFor="let cm of data.listComment">
+                    <ng-container *ngTemplateOutlet="cmt1; context: { $implicit: cm }"></ng-container>
+                </ng-container>
             </ng-container>
-        </ng-container>
-        <ng-container *ngIf="data.totalComment > 0 && !data.full">
-            <div class="ms-16">
-                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(data)">
-                    <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
-                </span>
-            </div>
-        </ng-container>
+            <ng-container *ngIf="data.totalComment > 0 && !data.full">
+                <div class="ms-16">
+                    <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(data)">
+                        <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
+                    </span>
+                </div>
+            </ng-container>
+        </div>
     </div>
 </ng-container>
 <!-- lv1 -->

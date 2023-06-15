@@ -3,4 +3,8 @@ export class Paras {
     warehouseID: any;
     accountID: any;
     itemID: any;
+    deprModelID: any;
+    assetGroupID: any;
+    assetID: any;
+    journalNo: any;
   }

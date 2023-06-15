@@ -49,14 +49,6 @@
         </div>
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let i = index">
-                <!-- <ng-container [ngSwitch]="">
-                    <ng-container *ngSwitchCase="'3'"></ng-container>
-                    <ng-container *ngSwitchCase="'5'"></ng-container>
-                    <ng-container *ngSwitchDefault>
-                        
-                    </ng-container>
-
-                </ng-container> -->
                 <ng-container *ngIf="item.messageType == '3';else tmpMessage">
                     <div class="message-system" [id]="item.recID">
                         {{item | mssgSYS:mssgType5 | async}}
@@ -84,7 +76,7 @@
                                             #ngbPopover1="ngbPopover"
                                             placement="top"
                                             [autoClose]="true"
-                                            triggers="manual"
+                                            triggers="click"
                                             container="body"
                                             [ngbPopover]="tooltipEmojiMssg"
                                             (click)="openTooltipEmoji(ngbPopover1,item)">
