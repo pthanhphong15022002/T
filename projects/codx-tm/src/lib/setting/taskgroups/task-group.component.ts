@@ -302,12 +302,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
               template: this.itemCreatedOn,
               width: 100,
             },
-            {
-              field: '',
-              headerText: '',
-              template: this.itemMoreFunc,
-              width: 30,
-            },
           ];
         });
       this.views = [
@@ -317,7 +311,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
           active: false,
           model: {
             resources: this.columnsGrid,
-            hideMoreFunc: true,
+            template2: this.itemMoreFunc,
           },
         },
       ];
