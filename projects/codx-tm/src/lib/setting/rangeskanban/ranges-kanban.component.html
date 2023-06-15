@@ -200,13 +200,14 @@
 
 <ng-template #itemCreatedBy let-data>
   <div class="d-flex align-items-center">
-    <codx-img
-      class="symbol symbol-24 symbol-circle me-3"
+    <codx-imgs
+      class="symbol symbol-24 symbol-circle me-3 cursor-pointer"
       [objectId]="data.createdBy"
       [objectName]="data.createName"
       objectType="AD_Users"
+      [numberImages]="1"
     >
-    </codx-img>
+    </codx-imgs>
     <div
       class="text-dark font-size-lg"
       placement="bottom"
