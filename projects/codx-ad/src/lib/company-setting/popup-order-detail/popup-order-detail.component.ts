@@ -67,10 +67,6 @@ export class PopupOrderDetailComponent extends UIComponent {
         this.lstOrderModule = orderDetail[1];
         this.payment = orderDetail[2];
         this.lstModule = orderDetail[3];
-        console.log('order', this.order);
-        console.log('lstOrderModule', this.lstOrderModule);
-        console.log('payment', this.payment);
-        console.log('lstModule', this.lstModule);
         this.detectorRef.detectChanges();
       }
     });
