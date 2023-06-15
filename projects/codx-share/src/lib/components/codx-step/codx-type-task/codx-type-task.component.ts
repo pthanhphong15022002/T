@@ -17,6 +17,7 @@ export class CodxTypeTaskComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) { 
    this.dialog = dialog;
+   this.isShowGroup = dt?.data?.isShowGroup;
   }
 
   ngOnInit(): void {
@@ -28,8 +29,11 @@ export class CodxTypeTaskComponent implements OnInit {
             checked: false,
           };
         });
-        
-        this.jobType = this.listJobType[0];
+        if(!this.isShowGroup){
+          this.listJobType = this.listJobType.filter((item) => item?.value != 'G')
+        }
+        this.listJobType
+        this.jobType = this.isShowGroup ? this.listJobType[1] : this.listJobType[0];
         this.jobType['checked'] = true;
       }
     });

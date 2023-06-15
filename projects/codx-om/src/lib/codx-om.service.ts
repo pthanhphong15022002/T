@@ -471,7 +471,15 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------KR--------------------------------------------//
   //---------------------------------------------------------------------------------//
-  
+  updatePlanVersion(recID: any,version :any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'UpdatePlanVersionAsync',
+      [recID,version]
+    );
+  }
   calculatorProgressOfPlan(listRecID: any) {
     return this.api.execSv(
       OMCONST.SERVICES,

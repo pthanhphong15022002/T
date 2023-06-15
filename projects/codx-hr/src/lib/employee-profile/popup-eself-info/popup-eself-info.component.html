@@ -1,3 +1,19 @@
+<codx-layout-add
+  #form
+  [title]="headerText"
+  [tabInfo]="tabInfo"
+  [formModel]="formModel"
+  [subHeader]=""
+  [footer]="footer1"
+  [dialog]="dialog"
+  [openMore]="true"
+  [tabContent]="[selfInfo, contactInfo]"
+  [data]="data"
+  *ngIf="isAfterRender"
+>
+
+</codx-layout-add>
+
 <ng-template #footer1>
   <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="handleOnSaveEmployeeSelfInfo()">
@@ -11,7 +27,571 @@
   </div>
 </ng-template>
 
-<codx-form
+<ng-template #selfInfo>
+  <div class="form-group pt-5">
+    <codx-label
+      fiedName="EmployeeID"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [disabled]="true"
+      [formModel]="formModel"
+      field="employeeID"
+    ></codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="EmployeeName"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="employeeName"
+    ></codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="EmployeeName2"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="employeeName2"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="Gender"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="gender"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="MaritalStatus"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="maritalStatus"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="Birthday"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="birthday"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="BirthPlace"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="birthPlace"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="Domicile"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="domicile"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="Nationality"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="nationality"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="EthnicGroup"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="ethnicGroup"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="Religion"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="religion"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="extend-function">
+    <hr />
+    <div class="d-flex justify-content-center">
+      <div class="d-flex align-items-center w-auto extend-title">
+        <span
+          class="text-primary text-hover-primary_darker fw-bold me-1"
+        >
+          <codx-label
+            default="CMND/CCCD"
+            [formModel]="formModel"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="IDCardNo"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          (valueChange)="HandleValueChangeIDCard($event)"
+          field="idCardNo"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="IssuedOn"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="issuedOn"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="IDExpiredOn"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="idExpiredOn"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="IssuedBy"
+        [formModel]="formModel"
+      ></codx-label>
+      <div>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="issuedBy"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="Distinguishing"
+      [formModel]="formModel"
+    ></codx-label>
+    <div>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="distinguishing"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="extend-function">
+    <hr />
+    <div class="d-flex justify-content-center">
+      <div class="d-flex align-items-center w-auto extend-title">
+        <span
+          class="text-primary text-hover-primary_darker fw-bold me-1"
+        >
+          <codx-label
+            default="Học vấn"
+            [formModel]="formModel"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="Education" [formModel]="formModel">
+      </codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="education"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="EducationTrainForm"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="educationTrainForm"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="TrainFieldID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="trainFieldID"
+        (keyup)="updateDegreeName()"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="TrainLevel"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="trainLevel"
+        (keyup)="updateDegreeName()"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="DegreeName"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="degreeName"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="Achievement"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="achievement"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <codx-label fiedName="Forte" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="forte"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <codx-label fiedName="Hobby" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="hobby"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<ng-template #contactInfo>
+  <div class="form-group row pt-5">
+    <div class="col-6">
+      <codx-label
+        fiedName="Email"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="email"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="Phone"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="phone"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="PersonalEmail"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="personalEmail"
+      ></codx-input>
+    </div>
+
+    <div class="col-6">
+      <codx-label
+        fiedName="Mobile"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="mobile"
+      ></codx-input>
+    </div>
+  </div>
+  <!-- 
+  <codx-label default="Thường trú" [formModel]="formModel">
+  </codx-label> -->
+
+  <div class="extend-function">
+    <hr />
+    <div class="d-flex justify-content-center">
+      <div class="d-flex align-items-center w-auto extend-title">
+        <span
+          class="text-primary text-hover-primary_darker fw-bold me-1"
+        >
+          <codx-label
+            default="Thường trú"
+            [formModel]="formModel"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="Address"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="address"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="ProvinceID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="provinceID"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="DistrictID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        #districtID
+        [Group]="formGroup"
+        [formModel]="formModel"
+        [data]=""
+        field="districtID"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="WardID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="wardID"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="Hamlet"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="hamlet"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="extend-function">
+    <hr />
+    <div class="d-flex justify-content-center">
+      <div class="d-flex align-items-center w-auto extend-title">
+        <span
+          class="text-primary text-hover-primary_darker fw-bold me-1"
+        >
+          <codx-label
+            default="Tạm trú"
+            [formModel]="formModel"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+  </div>
+  <!-- <codx-label default="Tạm trú" [formModel]="formModel"> </codx-label> -->
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="TAddress"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="tAddress"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="TProvinceID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="tProvinceID"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="TDistrictID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="tDistrictID"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="TWardID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="tWardID"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="THamlet"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="tHamlet"
+      ></codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<!-- <codx-form
   #form
   [headerText]="headerText"
   [body]="tmpContent"
@@ -442,9 +1022,6 @@
                 ></codx-input>
               </div>
             </div>
-            <!-- 
-            <codx-label default="Thường trú" [formModel]="formModel">
-            </codx-label> -->
 
             <div class="extend-function">
               <hr />
@@ -541,7 +1118,6 @@
                 </div>
               </div>
             </div>
-            <!-- <codx-label default="Tạm trú" [formModel]="formModel"> </codx-label> -->
 
             <div class="form-group row">
               <codx-label
@@ -609,4 +1185,4 @@
       </e-tabitems>
     </ejs-tab>
   </ng-template>
-</codx-form>
+</codx-form> -->

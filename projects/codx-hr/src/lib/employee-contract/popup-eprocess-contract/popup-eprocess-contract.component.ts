@@ -226,7 +226,6 @@ export class PopupEProcessContractComponent
           this.idField
         )
         .subscribe((res) => {
-          debugger
           
           if (res) {
             this.autoNumField = res.key ? res.key : null; 
@@ -352,7 +351,6 @@ export class PopupEProcessContractComponent
         }
       });
     }
-
     this.cr.detectChanges();
   }
 

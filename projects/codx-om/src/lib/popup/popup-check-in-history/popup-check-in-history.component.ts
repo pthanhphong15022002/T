@@ -173,7 +173,7 @@ export class PopupCheckInHistoryComponent
       [this.data, "Cập nhật tiến độ", { ...this.groupModel?.checkInsModel }, this.okrFM]
     );
     dialogCheckIn.closed.subscribe((res) => {
-      if (res?.event && res?.event?.length != null) {
+      if (res?.event ) {
         this.getData();
         this.dataChange=true;
         this.detectorRef.detectChanges();

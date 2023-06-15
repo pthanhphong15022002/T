@@ -41,6 +41,8 @@ import { PopupViewOKRLinkComponent } from './popup/popup-view-okr-link/popup-vie
 import { PopupCheckInHistoryComponent } from './popup/popup-check-in-history/popup-check-in-history.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { PopupViewPlanVersionComponent } from './popup/popup-view-plan-version/popup-view-plan-version.component';
+import { PopupChangeTargetComponent } from './popup/popup-change-target/popup-change-target.component';
 
 const routes: Routes = [
   {
@@ -112,6 +114,8 @@ const routes: Routes = [
     PopupAddRoleComponent,
     PopupViewOKRLinkComponent,
     PopupCheckInHistoryComponent,
+    PopupViewPlanVersionComponent,
+    PopupChangeTargetComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

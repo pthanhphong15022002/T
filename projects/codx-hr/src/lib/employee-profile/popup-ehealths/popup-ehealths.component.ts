@@ -44,6 +44,29 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   @ViewChild('bloodtest') bloodtest: CodxListviewComponent;
   dialog2: DialogRef
 
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'overallInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'I. Khám thể lực',
+      name: 'health1Info',
+    },
+    {
+      icon: 'icon-info',
+      text: 'II. Khám lâm sàng',
+      name: 'health2Info',
+    },
+    {
+      icon: 'icon-info',
+      text: 'III. Khám cận lâm sàng',
+      name: 'health3Info',
+    },
+  ];
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,

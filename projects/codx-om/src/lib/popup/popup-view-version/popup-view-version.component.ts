@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -14,6 +15,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
+import { PopupViewPlanVersionComponent } from '../popup-view-plan-version/popup-view-plan-version.component';
 
 @Component({
   selector: 'lib-popup-view-version',
@@ -44,6 +46,7 @@ export class PopupViewVersionComponent extends UIComponent {
     this.okrFM = dialogData?.data[1];
     this.okrGrv = dialogData?.data[2];
     this.headerText = dialogData?.data[3];
+    this.funcID = dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
 
@@ -63,4 +66,19 @@ export class PopupViewVersionComponent extends UIComponent {
     })
   }
   onSaveForm() {}
+  showOldVersion(recID:any){
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    dModel.FormModel = this.okrFM?.krFM;
+    let dialogShowKR = this.callfc.openForm(
+      PopupViewPlanVersionComponent,
+      '',
+      null,
+      null,
+      null,
+      [recID,this.funcID,this.okrGrv,this.okrFM],
+      '',
+      dModel
+    );
+  }
 }

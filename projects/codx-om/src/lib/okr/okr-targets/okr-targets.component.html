@@ -358,7 +358,7 @@
     <div class="d-flex align-items-center justify-content-end col-7 ps-5">
       <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText"
         [ngbTooltip]="'Kế hoạch chỉ tiêu: ' + item?.rangeDateText"></span>
-      <div class="position-relative col-3" ngbTooltip="Người chịu trách nhiệm" (click)="showOKRLink($event,item)">
+      <div class="position-relative col-3" ngbTooltip="Người chịu trách nhiệm" (click)="showOKRLink($event,item)">        
         <!-- Phân bổ-->
 
         <div *ngIf="item?.hasAssign != null && item?.okrLink?.length>=2" class="d-flex flex-row">

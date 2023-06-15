@@ -146,3 +146,11 @@ export class OKRs {
     krInProgress:number=0;
     krOverProgress:number=0;
   }
+
+  export class OM_PlanVersion {
+    versionName: string;
+    versionNo: string;
+    comment: string;
+    activedOn :Date;
+
+  }
