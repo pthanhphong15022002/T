@@ -50,8 +50,6 @@ export class CodxShareService {
   settingValue = new BehaviorSubject<any>(null);
   public caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
-  childMenuClick = new BehaviorSubject<any>(null);
-  childMenuDefault = new BehaviorSubject<any>(null);
   //
   user;
   //

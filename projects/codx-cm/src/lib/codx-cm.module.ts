@@ -58,7 +58,6 @@ import { PopupStatusCompetitorComponent } from './deals/deal-detail/codx-tab-dea
 import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns-detail.component';
 import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
-import { ProcessReleaseComponent } from './process-release/process-release.component';
 import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/popup-add-payment.component';
 import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
@@ -90,12 +89,6 @@ const routes: Routes = [
         path: 'deals/:funcID',
         component: DealsComponent,
       },
-
-      // {
-      //   path: 'processrelease/:funcID/:recID',
-      //   component: ProcessReleaseComponent,
-      //   data: { noReuse: true },
-      // },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,
@@ -186,7 +179,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewQuotationsComponent,
     //test
     CodxAsideCustomComponent,
-    ProcessReleaseComponent,
     PopupAddPaymentComponent,
     PopupAddPaymentHistoryComponent,
     PopupViewPaymentHistoryComponent,
