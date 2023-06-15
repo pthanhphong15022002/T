@@ -273,9 +273,8 @@ export class PopupAssignmentOKRComponent
     }
     this.codxOmService.assignmentOKR( this.dataOKR?.recID, this.dataOKR?.okrType, this.assignmentOKR, this.isAdd, this.funcID).subscribe((res) => {
         if (res) {
-          this.notificationsService.notifyCode('SYS034');
-          
-        this.dialogRef && this.dialogRef.close(this.okrPlan);
+          this.notificationsService.notifyCode('SYS034');          
+          this.dialogRef && this.dialogRef.close(this.okrPlan);
         }
       });
   }

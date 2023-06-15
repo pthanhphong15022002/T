@@ -25,6 +25,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./view-detail-disciplines.component.css'],
 })
 export class ViewDetailDisciplinesComponent {
+  console = console;
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,

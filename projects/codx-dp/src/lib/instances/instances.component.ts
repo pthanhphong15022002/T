@@ -51,6 +51,7 @@ import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
 import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { PopupSelectTempletComponent } from './popup-select-templet/popup-select-templet.component';
 import { X } from '@angular/cdk/keycodes';
+import { PopupAddDealComponent } from 'projects/codx-cm/src/lib/deals/popup-add-deal/popup-add-deal.component';
 
 @Component({
   selector: 'codx-instances',
@@ -231,7 +232,7 @@ export class InstancesComponent
   nameTemp = '';
   ownerRoles = '';
   dataVll: any;
-
+  dataCM: any;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -433,9 +434,10 @@ export class InstancesComponent
 
   //CRUD
   add() {
+    // if(this.process.applyFor == '0') {
     this.view.dataService.addNew().subscribe((res) => {
       const funcIDApplyFor =
-        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+        this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -458,7 +460,10 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
+            option.Width =
+              this.addFieldsControl == '1' || this.process.applyFor != '0'
+                ? '800px'
+                : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (!this.process.instanceNoSetting) {
@@ -496,6 +501,9 @@ export class InstancesComponent
           });
       });
     });
+    // else {
+    //   this.openFormCM();
+    // }
   }
   copy(data, titleAction) {
     if (data) {
@@ -504,7 +512,7 @@ export class InstancesComponent
     }
     this.view.dataService.copy().subscribe((res) => {
       const funcIDApplyFor =
-        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+        this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -529,8 +537,13 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-              option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
+              option.Width =
+                this.addFieldsControl == '1' || this.process.applyFor != '0'
+                  ? '800px'
+                  : '550px';
               option.zIndex = 1001;
+
+
               let data = [this.oldIdInstance, this.process.recID];
               this.codxDpService
                 .getInstanceStepsCopy(data)
@@ -577,6 +590,19 @@ export class InstancesComponent
                   }
                 });
             }
+
+
+
+
+            //   this.openPopUpAdd(
+            //                     applyFor,
+            //                     formMD,
+            //                     option,
+            //                     'copy',
+            //                     null
+            //  );
+
+          //  }
           });
       });
     });
@@ -594,12 +620,24 @@ export class InstancesComponent
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
       addFieldsControl: this.addFieldsControl,
+      isLoad: applyFor != '0',
+      processID: this.processID,
+      instanceNoSetting: this.process.instanceNoSetting
     };
-    var dialogCustomField = this.callfc.openSide(
-      PopupAddInstanceComponent,
-      obj,
-      option
-    );
+    let dialogCustomField;
+    if (applyFor == '0') {
+      dialogCustomField = this.callfc.openSide(
+        PopupAddInstanceComponent,
+        obj,
+        option
+      );
+    } else if (applyFor == '1') {
+      dialogCustomField = this.callfc.openSide(
+        PopupAddDealComponent,
+        obj,
+        option
+      );
+    }
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
         var data = e.event;
@@ -614,7 +652,58 @@ export class InstancesComponent
           this.detailViewInstance.dataSelect = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
+        this.view?.dataService.update(this.dataSelected);
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
 
+  openPopupEdit(applyFor, formMD, option, titleAction){
+    var obj = {
+      action: 'edit',
+      applyFor: applyFor,
+      titleAction: titleAction,
+      formMD: formMD,
+      endDate: this.HandleEndDate(
+        this.listStepsCbx,
+        'edit',
+        this.view.dataService?.dataSelected?.createdOn
+      ),
+      autoName: this.autoName,
+      lstParticipants: this.lstOrg,
+      addFieldsControl: this.addFieldsControl,
+      isLoad: applyFor != '0',
+      dataCM: this.dataCM,
+    };
+
+    let dialogEditInstance;
+    if (this.process.applyFor == '0') {
+      dialogEditInstance = this.callfc.openSide(
+        PopupAddInstanceComponent,
+        obj,
+        option
+      );
+    } else if (this.process.applyFor == '1') {
+      dialogEditInstance = this.callfc.openSide(
+        PopupAddDealComponent,
+        obj,
+        option
+      );
+    }
+    dialogEditInstance.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        this.view.dataService.update(e.event).subscribe();
+
+        if (this.kanban) {
+          if (this.kanban?.dataSource?.length == 1) {
+            this.kanban.refresh();
+          }
+        }
+        this.dataSelected = e.event;
+        if (this.detailViewInstance) {
+          this.detailViewInstance.dataSelect = this.dataSelected;
+          this.detailViewInstance.listSteps = this.listStepInstances;
+        }
         this.detectorRef.detectChanges();
       }
     });
@@ -624,12 +713,11 @@ export class InstancesComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         const funcIDApplyFor =
-          this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+          this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
         const applyFor = this.process.applyFor;
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -645,70 +733,32 @@ export class InstancesComponent
               customName.slice(1);
           }
           this.cache
-            .gridViewSetup(fun.formName, fun.gridViewName)
-            .subscribe((grvSt) => {
-              this.codxDpService
-                .GetStepsByInstanceIDAsync([
-                  data.recID,
-                  data.processID,
-                  data.status,
-                ])
-                .subscribe((res) => {
-                  if (res && res?.length > 0) {
-                    this.listStepInstances = JSON.parse(JSON.stringify(res));
-                    var formMD = new FormModel();
-                    formMD.funcID = funcIDApplyFor;
-                    formMD.entityName = fun.entityName;
-                    formMD.formName = fun.formName;
-                    formMD.gridViewName = fun.gridViewName;
-                    option.Width =
-                      this.addFieldsControl == '1' ? '800px' : '550px';
-                    option.zIndex = 1001;
-                    this.view.dataService.dataSelected.processID =
-                      this.process.recID;
-                    var obj = {
-                      action: 'edit',
-                      applyFor: applyFor,
-                      listSteps: this.listStepInstances,
-                      titleAction: titleAction,
-                      formMD: formMD,
-                      endDate: this.HandleEndDate(
-                        this.listStepsCbx,
-                        'edit',
-                        this.view.dataService?.dataSelected?.createdOn
-                      ),
-                      autoName: this.autoName,
-                      lstParticipants: this.lstOrg,
-                      addFieldsControl: this.addFieldsControl,
-                    };
-                    var dialogEditInstance = this.callfc.openSide(
-                      PopupAddInstanceComponent,
-                      obj,
-                      option
-                    );
-                    dialogEditInstance.closed.subscribe((e) => {
-                      if (e && e.event != null) {
-                        this.view.dataService.update(e.event).subscribe();
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = funcIDApplyFor;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            option.Width =
+              this.addFieldsControl == '1' || applyFor != '0' ? '800px' : '550px';
+            option.zIndex = 1001;
+            this.view.dataService.dataSelected.processID = this.process.recID;
 
-                        if (this.kanban) {
-                          // this.kanban.updateCard(data);  //core mới lỗi chô này
-                          if (this.kanban?.dataSource?.length == 1) {
-                            this.kanban.refresh();
-                          }
-                        }
-                        this.dataSelected = e.event;
-                        if (this.detailViewInstance) {
-                          this.detailViewInstance.dataSelect =
-                            this.dataSelected;
-                          this.detailViewInstance.listSteps =
-                            this.listStepInstances;
-                        }
-                        this.detectorRef.detectChanges();
-                      }
-                    });
-                  }
-                });
-            });
+            if( applyFor != '0') {
+              var datas = [this.view.dataService.dataSelected.recID, applyFor];
+              this.codxDpService.getOneDeal(datas).subscribe((dataCM) => {
+                if (dataCM && dataCM[0]) {
+                  this.dataCM = dataCM[0];
+                  this.openPopupEdit(applyFor,formMD,option,titleAction);
+                }
+              });
+            }
+            else {
+              this.openPopupEdit(applyFor,formMD,option,titleAction);
+            }
+          });
+
         });
       });
   }
@@ -732,10 +782,10 @@ export class InstancesComponent
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.listInstanceStep = res;
 
-        if(this.detailViewInstance){
+        if (this.detailViewInstance) {
           this.detailViewInstance.loadChangeData();
         }
-        if(this.detailViewPopup){
+        if (this.detailViewPopup) {
           this.detailViewPopup.loadChangeData();
         }
         this.notificationsService.notifyCode('SYS007');
@@ -836,7 +886,8 @@ export class InstancesComponent
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReason(data, null) ) res.disabled = true;
+                if (!this.isCreate || this.checkMoreReason(data, null))
+                  res.disabled = true;
                 break;
               //xóa
               case 'SYS102':
@@ -1058,14 +1109,16 @@ export class InstancesComponent
       formMD.gridViewName = fun.gridViewName;
       dialogModel.zIndex = 999;
       dialogModel.FormModel = formMD;
-      var startControl = this.process.steps.filter(x=> x.recID === data.stepID)[0].startControl;
+      var startControl = this.process.steps.filter(
+        (x) => x.recID === data.stepID
+      )[0].startControl;
       var dialog = this.callfc.openForm(
         PopupEditOwnerstepComponent,
         '',
         500,
         280,
         '',
-        [this.lstOrg, this.titleAction, data,'0',startControl],
+        [this.lstOrg, this.titleAction, data, '0', startControl],
         '',
         dialogModel
       );

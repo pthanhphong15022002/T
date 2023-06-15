@@ -136,6 +136,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseinvoices);
     this.loadTotal();
+    setTimeout(() => {
+      this.focusInput();
+    }, 500);
   }
   //#endregion
 
@@ -1260,6 +1263,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         );
       }
     }
+  }
+
+  focusInput() {
+    var element = document.querySelectorAll('input');
+    console.log(element[0]);
+    (element[0] as HTMLInputElement).focus();
+    (element[0] as HTMLInputElement).setSelectionRange(0, 1000);
   }
   
   //#endregion

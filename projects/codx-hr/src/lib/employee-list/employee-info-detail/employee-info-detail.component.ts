@@ -628,6 +628,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.lstFuncJobInfo = this.lstFuncID.filter(
               (p) => p.parentID == this.jobInfoFuncID
             );
+            console.log('ds function tt cv', this.lstFuncID);
+            
             this.lstFuncSalaryBenefit = this.lstFuncID.filter(
               (p) => p.parentID == this.salaryBenefitInfoFuncID
             );
@@ -995,6 +997,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //chua dung
   navChange(evt: any, index: number = -1) {
+    debugger
     if (!evt) return;
     let element = document.getElementById(evt);
     if (index > -1) {
@@ -1015,7 +1018,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }, 500);
   }
 
-  //chua dung
   onSectionChange(data: any, index: number = -1) {
     if (index > -1 && this.isClick == false) {
       // let element = document.getElementById(this.active[index]);

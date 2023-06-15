@@ -162,6 +162,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   //#region  Save
   onMerge() {
     this.gridViewSetup.BusinessLineID.isRequire = false;
+    this.gridViewSetup.ProcessID.isRequire = false;
+
     this.countValidate = this.cmSv.checkValidate(
       this.gridViewSetup,
       this.leadNew
@@ -181,7 +183,7 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.noti.notifyCode('CM008');
       return;
     }
-
+    let lstObjectIdFile = this.getListIdFile();
     var data = [
       this.leadNew,
       this.leadOne?.recID,
@@ -213,13 +215,6 @@ export class PopupMergeLeadsComponent implements OnInit {
                 this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
               );
             }
-            this.dialog.close([
-              res,
-              this.leadOne,
-              this.leadTwo,
-              this.leadThree,
-            ]);
-            this.noti.notifyCode('SYS034');
           } else {
             // await firstValueFrom(
             //   this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
@@ -233,15 +228,18 @@ export class PopupMergeLeadsComponent implements OnInit {
                 this.cmSv.copyFileAvata(this.recIDAvt, res?.contactID)
               );
             }
-            this.dialog.close([
-              res,
-              this.leadOne,
-              this.leadTwo,
-              this.leadThree,
-            ]);
-
-            this.noti.notifyCode('SYS034');
           }
+          await firstValueFrom(
+            this.api.execSv<any>(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'CopyListFilesFromListObjectIDToObjectIDAsync',
+              [this.leadNew?.recID, lstObjectIdFile]
+            )
+          );
+          this.dialog.close([res, this.leadOne, this.leadTwo, this.leadThree]);
+          this.noti.notifyCode('SYS034');
         }
       });
   }
@@ -280,6 +278,32 @@ export class PopupMergeLeadsComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  async getListIdFile() {
+    var lst1 = [];
+    var lst2 = [];
+    var lst3 = [];
+    if (this.leadOne.recID != null) {
+      lst1 = await this.getListFile(this.leadOne.recID, 'CM_Leads');
+    }
+    if (this.leadTwo.recID != null) {
+      lst2 = await this.getListFile(this.leadTwo.recID, 'CM_Leads');
+    }
+    if (this.leadThree.recID != null) {
+      lst3 = await this.getListFile(this.leadThree.recID, 'CM_Leads');
+    }
+
+    return [...lst1, ...lst2, ...lst3]
+      .filter((item) => item.referType !== 'avt')
+      .map((item) => item.objectID);
+  }
+
+  async getListFile(objectID, objectType) {
+    var lst = await firstValueFrom(
+      this.cmSv.getListFile('CM0205', objectID, objectType, '')
+    );
+    return lst ? lst : [];
   }
   //#endregion
   async cbxLeadChange(e, type) {
@@ -561,10 +585,7 @@ export class PopupMergeLeadsComponent implements OnInit {
       case 'owner':
         if (e.field === 'owner1' && e.component.checked === true) {
           this.leadNew.owner = this.leadOne?.owner;
-        } else if (
-          e.field === 'owner2' &&
-          e.component.checked === true
-        ) {
+        } else if (e.field === 'owner2' && e.component.checked === true) {
           this.leadNew.owner = this.leadTwo?.owner;
         } else {
           this.leadNew.owner = this.leadThree?.owner;

@@ -36,6 +36,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   isUseEmployee: boolean;
   employeeObj: any;
   decisionNoDisable: boolean = false;
+  autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
@@ -106,6 +107,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            if (res.key) {
+              this.autoNumField = res.key;
+            }
+
             this.EAppointionObj = res?.data;
             this.EAppointionObj.effectedDate = null;
             this.EAppointionObj.employeeID = this.employId;
@@ -165,12 +170,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    if (this.dialog.dataService?.keyField === 'ContractNo') {
-      this.decisionNoDisable = false;
-    } else {
-      this.decisionNoDisable = true;
-    }
-
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((fg) => {
@@ -244,15 +243,15 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if(this.EAppointionObj.expiredDate && this.EAppointionObj.effectedDate){
+    if (this.EAppointionObj.expiredDate && this.EAppointionObj.effectedDate) {
       if (this.EAppointionObj.expiredDate < this.EAppointionObj.effectedDate) {
         this.hrService.notifyInvalidFromTo(
           'ExpiredDate',
           'EffectedDate',
           this.formModel
-          )
-          return;
-        }
+        );
+        return;
+      }
     }
 
     // if (this.actionType === 'copy' || this.actionType === 'add') {

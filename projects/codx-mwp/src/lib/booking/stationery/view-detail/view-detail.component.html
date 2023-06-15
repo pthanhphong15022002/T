@@ -70,7 +70,7 @@
       <div class="w-100 h-100">
         <div *ngIf="itemDetail?.bookingItems?.length > 0; else defaulEmpt">
           <div *ngFor="let item of itemDetail?.bookingItems">
-            <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-75">
+            <div class="d-flex justify-content-between w-100">
               <div class="d-flex flex-row">
                 <div class="me-2">
                   <codx-img [objectId]="item?.recID" imageType="circle" width="35" objectType="EP_Resources"

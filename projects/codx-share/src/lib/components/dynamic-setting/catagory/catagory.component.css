@@ -8,7 +8,7 @@
 }
 
 codx-header>div>.d-flex.align-items-center.flex-grow-0 a {
-    height: 20px !important;
+    display: flex;
 }
 
 
