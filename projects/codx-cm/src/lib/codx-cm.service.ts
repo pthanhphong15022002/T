@@ -434,6 +434,15 @@ export class CodxCmService {
     ]);
   }
 
+  getListFile(funcID, objectID, objectType, referType) {
+    return this.api.exec<any>('DM', 'FileBussiness', 'GetFilesForOutsideAsync', [
+      funcID,
+      objectID,
+      objectType,
+      referType,
+    ]);
+  }
+
   addInstance(data: any) {
     return this.api.exec<any>(
       'DP',
