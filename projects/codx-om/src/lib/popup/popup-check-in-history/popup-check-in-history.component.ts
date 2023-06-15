@@ -76,8 +76,8 @@ export class PopupCheckInHistoryComponent
   getCacheData() {
     this.cache.valueList('OM016').subscribe((res:any)=>{
       if(res){
-        this.statusVLL = res;
-        
+        this.statusVLL = res?.datas;
+
       }
     })
   }
