@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CallFuncService, NotificationsService, SidebarModel, Util } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogModel, FormModel, NotificationsService, SidebarModel, Util } from 'codx-core';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { CodxTypeTaskComponent } from './codx-type-task/codx-type-task.component';
 import { firstValueFrom } from 'rxjs';
-import { DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
+import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddGroupTaskComponent } from './codx-add-group-task/codx-add-group-task.component';
+import { CodxAddTaskComponent } from './codx-add-stask/codx-add-task.component';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,7 @@ export class StepService {
     private api: ApiHttpService,
     private callfc: CallFuncService,
   ) {}
+
   checkTaskLink(task, step) {
     let check = true;
     let tasks = step?.tasks;
@@ -121,19 +123,25 @@ export class StepService {
       task: task,
     };
     
-    let option = new SidebarModel();
+    let option = new DialogModel();
     option.FormModel =  {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
       funcID: 'DPT040102',
       gridViewName: 'grvDPInstancesStepsTasks',
     };
-    option.Width = '550px';
-    var dialogAssign = this.callfc.openSide(
+
+    var dialogAssign = this.callfc.openForm(
       AssignInfoComponent,
+      '',
+      600,
+      800,
+      '',
       assignModel,
+      '',
       option
     );
+   
     dialogAssign.closed.subscribe((e) => {
       var doneSave = false;
       if (e && e.event != null) {
@@ -152,8 +160,7 @@ export class StepService {
     });
   }
 
-  async chooseTypeTask(groupID = null) {
-    setTimeout(async () => {
+  async chooseTypeTask(instanceStep,groupID = null) {
       let popupTypeTask = this.callfc.openForm(
         CodxTypeTaskComponent,
         '',
@@ -161,54 +168,47 @@ export class StepService {
         580,
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
-      let taskType;
+      let data;
       if (dataOutput?.event?.value) {
-        taskType = dataOutput?.event;
+        let taskType = dataOutput?.event;
         if (taskType?.value == 'G') {
-          this.addGroupTask();
+          data = await this.addGroupTask(instanceStep);
+          return data;
         } else {
-          // this.addTask(groupID);
+          data = await this.addTask(taskType,instanceStep, groupID); 
         }
       }
-    },0);
-
+      return data;
   }
 
-  async addGroupTask() {
+   async addGroupTask(instanceStep:DP_Instances_Steps) {
     let taskGroup = new DP_Instances_Steps_TaskGroups();
     taskGroup.recID = Util.uid();
     taskGroup.refID = Util.uid();
     taskGroup['isTaskDefault'] = false;
     taskGroup['progress'] = 0;
-    // taskGroup['stepID'] = currentStep['recID'];
+    taskGroup['stepID'] = instanceStep?.recID;
 
-    // let taskBeforeIndex = -1;
-    // for (let i = this.listGroupTask?.length - 1; i >= 0; i--) {
-    //   if (this.listGroupTask[i]?.recID) {
-    //     taskBeforeIndex = i;
-    //     break;
-    //   }
-    // }
-    // if (taskBeforeIndex >= 0) {
-    //   taskGroup['startDate'] =
-    //     this.listGroupTask[taskBeforeIndex]?.endDate ||
-    //     this.currentStep?.startDate;
-    //   taskGroup['indexNo'] = taskBeforeIndex + 1;
-    // }
-    let taskOutput = await this.openPopupGroup('add', taskGroup);
-    // if (taskOutput?.event.groupTask) {
-    //   let data = taskOutput?.event;
-    //   this.currentStep?.taskGroups?.push(data.groupTask);
-    //   this.listGroupTask.splice(taskBeforeIndex + 1, 0, data.groupTask);
-    //   this.currentStep['progress'] = data.progressStep;
-    // }
+    let listGroup = instanceStep?.taskGroups?.sort((a, b) => a['indexNo'] - b['indexNo']);
+    let taskBeforeIndex = listGroup?.length;
+
+    if (taskBeforeIndex) {
+      taskBeforeIndex -= 1;
+      taskGroup['startDate'] =
+      listGroup[taskBeforeIndex]?.endDate ||
+      instanceStep?.startDate;
+      taskGroup['indexNo'] = taskBeforeIndex + 1;
+    }
+    let taskOutput = await this.openPopupGroup('add', taskGroup, instanceStep);
+    return taskOutput;
   }
-  async openPopupGroup(action, group) {
+
+  async openPopupGroup(action, group, instanceStep) {
     let dataInput = {
-      // action,
-      // step: this.currentStep,
-      // dataGroup: group || {},
-      // isEditTimeDefault: this.currentStep?.leadtimeControl,
+      action,
+      step: instanceStep,
+      dataGroup: group || {},
+      isEditTimeDefault: instanceStep?.leadtimeControl,
     };
     let popupTask = this.callfc.openForm(
       CodxAddGroupTaskComponent,
@@ -222,38 +222,50 @@ export class StepService {
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
-  // async addTask(groupID) {
-  //   let task = new DP_Instances_Steps_Tasks();
-  //   task['taskType'] = this.taskType?.value;
-  //   task['stepID'] = this.currentStep?.recID;
-  //   task['progress'] = 0;
-  //   task['taskGroupID'] = groupID || null;
-  //   task['refID'] = Util.uid();
-  //   task['isTaskDefault'] = false;
 
-  //   let taskOutput = await this.openPopupTask('add', task, groupID);
-  //   if (taskOutput?.event.task) {
-  //     let data = taskOutput?.event;
-  //     let groupData = this.currentStep?.taskGroups.find(
-  //       (group) => group.refID == data.task.taskGroupID
-  //     );
-  //     let group = this.listGroupTask.find(
-  //       (group) => group.refID == data.task.taskGroupID
-  //     );
+  async addTask(taskType,instanceStep, groupID) {
+    let task = new DP_Instances_Steps_Tasks();
+    task['taskType'] = taskType?.value;
+    task['stepID'] = instanceStep?.recID;
+    task['progress'] = 0;
+    task['taskGroupID'] = groupID || null;
+    task['refID'] = Util.uid();
+    task['isTaskDefault'] = false;
 
-  //     if (group) {
-  //       if (!group?.task) {
-  //         group['task'] = [];
-  //       }
-  //       group?.task?.push(data.task);
-  //       group['progress'] = data.progressGroup;
-  //     }
-  //     if (groupData) {
-  //       groupData['progress'] = data.progressGroup;
-  //     }
-  //     this.currentStep?.tasks?.push(data.task);
-  //     this.currentStep['progress'] = data?.progressStep;
-  //     this.changeDetectorRef.detectChanges();
-  //   }
-  // }
+    let taskOutput = await this.openPopupTask('add',taskType,instanceStep, task, groupID);
+    return taskOutput;
+  }
+
+  async openPopupTask(action,taskType,instanceStep ,dataTask , groupTaskID = null) {
+    let dataInput = {
+      action,
+      taskType: taskType,
+      step: instanceStep,
+      listGroup: instanceStep?.taskGroups,
+      dataTask: dataTask || {},
+      listTask: instanceStep?.tasks,
+      isEditTimeDefault: instanceStep?.leadtimeControl,
+      groupTaskID, // trường hợp chọn thêm từ nhóm
+    };
+    let frmModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+
+    let opt = new DialogModel();
+    opt.FormModel = frmModel;
+    let popupTask = this.callfc.openForm(
+      CodxAddTaskComponent,
+      '',
+      600,
+      800,
+      '',
+      dataInput,
+      '',
+      opt
+    );
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    return dataPopupOutput;
+  }
 }

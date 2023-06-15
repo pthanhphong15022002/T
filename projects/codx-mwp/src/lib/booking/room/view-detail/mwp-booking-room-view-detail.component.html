@@ -10,15 +10,15 @@
       </div>
 
       <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-        <i class="icon-email me-1"></i>
-        <span class="fw-bold">
+        <i class="icon-email icon-16 me-2"></i>
+        <span class="text-gray-700">
           {{ itemDetail?.email }}
         </span>
       </div>
 
       <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-        <i class="icon-phone_android me-1"></i>
-        <span class="fw-bold">
+        <i class="icon-phone_android icon-16 me-1"></i>
+        <span class="text-gray-700">
           {{ itemDetail?.phoneNumber }}
         </span>
       </div>
@@ -33,8 +33,8 @@
       </codx-vll>
     </div>
     <div class="d-flex flex-column flex-grow-1 mb-2">
-      <codx-temp-full [title]="itemDetail?.requester" [subTitleTmp]="subTitleHeader" [imageId]="itemDetail?.createdBy"
-        imageObjType="AD_Users" [imageWidth]="40">
+      <codx-temp-full [title]="itemDetail?.requester" [titleCss]="'fs-6'" [subTitleTmp]="subTitleHeader" [imageId]="itemDetail?.createdBy"
+        imageObjType="AD_Users" [imageWidth]="35">
       </codx-temp-full>
     </div>
 

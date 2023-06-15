@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   Injector,
+  Input,
   Optional,
 } from '@angular/core';
 
@@ -25,20 +26,19 @@ import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.componen
 export class PopupCheckInHistoryComponent
   extends UIComponent
   implements AfterViewInit
-{
-  
+{  
+  @Input()groupModel:any;
+  @Input()okrGrv: any;
+  @Input()okrFM: any;
+  @Input()oldData: any;
+  @Input()isPopup=true;
   views: Array<ViewModel> | any = [];
   dialog :any;
-  data:any;
-  okrGrv: any;
-  okrFM: any;
   statusVLL: any;
+  data:any;
   curUser :any;
-  oldData: any;
   isAfterRender: boolean = false;
-  emptyData: boolean =true;
   checkIns= [];
-  groupModel:any;
   dataChange: boolean=false;
   okrTarget:any;
   constructor(
@@ -76,8 +76,8 @@ export class PopupCheckInHistoryComponent
   getCacheData() {
     this.cache.valueList('OM016').subscribe((res:any)=>{
       if(res){
-        this.statusVLL = res;
-        
+        this.statusVLL = res?.datas;
+
       }
     })
   }
@@ -98,7 +98,6 @@ export class PopupCheckInHistoryComponent
         this.isAfterRender =true;
       }
       else{
-        this.emptyData=true;
         this.isAfterRender =true;
       }
     })

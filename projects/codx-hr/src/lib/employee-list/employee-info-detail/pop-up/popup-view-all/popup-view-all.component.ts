@@ -200,17 +200,17 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
   checkIsNewestDate(effectedDate, expiredDate){
     if(effectedDate){
-      let eff = new Date(effectedDate).toISOString();
-      let date = new Date().toISOString();
+      let eff = new Date(effectedDate).toLocaleDateString();
+      let date = new Date().toLocaleDateString();
       if(expiredDate){
-        let expire = new Date(expiredDate).toISOString();
-        if(date >= eff && date <= expire){
+        let expire = new Date(expiredDate).toLocaleDateString();
+        if(new Date(date) >= new Date(eff) && new Date(date) <= new Date(expire)){
           return true;
         }
         return false;
       }
       else{
-        if(date >= eff){
+        if(new Date(date) >= new Date(eff)){
           return true;
         }
         return false;

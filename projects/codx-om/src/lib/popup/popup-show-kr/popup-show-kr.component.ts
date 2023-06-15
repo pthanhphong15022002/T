@@ -17,16 +17,12 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
-  SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { ChartSettings } from '../../model/chart.model';
-import { OMCONST } from '../../codx-om.constant';
-import { PopupAddKRComponent } from '../popup-add-kr/popup-add-kr.component';
 
 @Component({
   selector: 'popup-show-kr',

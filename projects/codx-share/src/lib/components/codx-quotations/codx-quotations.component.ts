@@ -197,7 +197,6 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   }
 
   openPopup(res, action) {
-    res.versionNo = res.versionNo ?? 'V1.0';
     res.status = res.status ?? '0';
     res.customerID = res.customerID ?? this.customerID;
     res.refType = res.refType ?? this.refType;
@@ -206,6 +205,10 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
     res.consultantID = res.consultantID ?? this.consultantID;
     res.totalAmt = res.totalAmt ?? 0;
     res.exchangeRate = res.exchangeRate ?? 1;
+    res.currencyID = res.currencyID ?? 'VND';
+    res.versionNo = res.versionNo ?? 'V1';
+    res.revision = res.revision ?? 0;
+    res.versionName = res.versionNo + '.' + res.revision;
 
     var obj = {
       data: res,

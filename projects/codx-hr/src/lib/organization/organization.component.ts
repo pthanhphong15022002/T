@@ -64,12 +64,23 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.service = 'HR';
     this.views = [
       {
-        // id: '1',
+        // id: '18',
         type: ViewType.list,
         active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
+        },
+      },
+      {
+        // id: '18',
+        type: ViewType.listtree,
+        active: true,
+        sameData: true,
+        request: this.request,
+        model: {
+          template: this.itemTemplate,
+          resourceModel: { parentIDField: 'ParentID' },
         },
       },
       {
@@ -190,7 +201,7 @@ export class OrgorganizationComponent extends UIComponent {
       // if (viewActive?.id == '1') return;
       var data = evt.data || evt;
       this.orgUnitID = data.orgUnitID;
-      this.detectorRef.detectChanges();
+      // this.detectorRef.detectChanges();
     }
   }
   // button add toolbar

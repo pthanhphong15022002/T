@@ -426,10 +426,11 @@ export class CodxCmService {
     );
   }
   copyFileAvata(idOld, idNew, entityName = null) {
-    return this.api.exec<any>('CM', 'ContactsBusiness', 'CopyAvatarByIdAsync', [
-      idOld,
+    return this.api.exec<any>('DM', 'FileBussiness', 'CoppyFileByIdAsync', [
       idNew,
-      entityName
+      idOld,
+      'avt',
+      entityName,
     ]);
   }
 
@@ -715,14 +716,13 @@ export class CodxCmService {
     );
   }
 
-  isCheckDealInUse(data){
+  isCheckDealInUse(data) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
       'isCheckDealInUseAsync',
       data
     );
-
   }
 
   autoMoveStageInInstance(data) {
@@ -741,7 +741,6 @@ export class CodxCmService {
       data
     );
   }
-
 
   //#endregion -- Bao
 

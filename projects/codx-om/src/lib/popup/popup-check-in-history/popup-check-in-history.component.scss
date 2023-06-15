@@ -2,7 +2,7 @@
     border-left: 1px solid dotted gray ;
 }
 .mxh-750px{
-    height: 750px !important;
+    height: 700px !important;
 }
 .om-step-number{
     width: 15px !important;
@@ -16,4 +16,7 @@
     border-width: 3px !important;
     position: relative;
     z-index: 2;
+}
+.mnh-50px{
+    min-height: 50px !important;
 }

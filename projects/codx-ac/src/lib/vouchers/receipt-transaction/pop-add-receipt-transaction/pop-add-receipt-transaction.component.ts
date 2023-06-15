@@ -495,7 +495,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   loadInit(){
-    
+    if (this.formType == 'edit') {
+      this.api
+        .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+          this.inventoryJournal.recID,
+        ])
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.keymodel = Object.keys(res[0]);
+            this.inventoryJournalLines = res;
+            this.inventoryJournalLines.forEach((element) => {
+              this.loadTotal();
+            });
+          }
+        });
+    }
     if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
     {
       this.getWarehouseName(this.inventoryJournal.warehouseID);
@@ -543,21 +557,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
       this.modeGrid = this.journal.inputMode;
-      if (this.formType == 'edit') {
-        this.api
-          .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
-            this.inventoryJournal.recID,
-          ])
-          .subscribe((res: any) => {
-            if (res.length > 0) {
-              this.keymodel = Object.keys(res[0]);
-              this.inventoryJournalLines = res;
-              this.inventoryJournalLines.forEach((element) => {
-                this.loadTotal();
-              });
-            }
-          });
-      }
     });
   }
 
@@ -567,8 +566,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       totals = totals + element.costAmt;
     });
     this.total = totals;
-    if(this.journal && (totals <= this.journal.transLimit || this.journal.transLimit == null))
-      this.inventoryJournal.totalAmt = totals;
+    this.inventoryJournal.totalAmt = totals;
+    this.total = totals.toLocaleString('it-IT')
     if (this.isSaveMaster ) {
       this.onSaveMaster();
     }
@@ -779,10 +778,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.gridInventoryJournalLine.addRow(res, idx);
-              setTimeout(() => {
-                this.gridInventoryJournalLine.updateRow(idx, res);
-              }, 500);
-              
+              this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data);
               break;
             case '2':
               idx = this.inventoryJournalLines.length;
@@ -905,7 +901,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   checkTransLimit(){
-    if(this.journal.transLimit && parseInt(this.total) > this.journal.transLimit)
+    if(this.journal.transLimit && this.inventoryJournal.totalAmt > this.journal.transLimit)
     {
       this.notification.notifyCode('AC0016');
       this.validate++ ;

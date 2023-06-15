@@ -33,13 +33,13 @@
         </div>
         <div class=" col-6 form-group">
           <codx-label default="Phân loại BSC" name="lblBSCType"></codx-label>
-          <codx-input field="bscType" type="valuelist" refValue="OM023" placeholder="Phân loại BSC" [disabled]="true" [crrValue]="ob?.bscType">
+          <codx-input field="bscType" type="valuelist" refValue="OM023" placeholder="Phân loại BSC" (valueChange)="valueChange($event)" [crrValue]="ob?.bscType">
           </codx-input>
         </div>
       </div>
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner" [disabled]="true">
         </codx-input>
       </div>
       
