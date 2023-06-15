@@ -139,6 +139,8 @@ export class PopupAddDealComponent
   paramView: any;
   processIdDefault: string = '';
 
+  // load data form DP
+  isLoading: boolean = false;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -150,19 +152,36 @@ export class PopupAddDealComponent
   ) {
     super(inject);
     this.dialog = dialog;
-    this.formModel = dialog.formModel;
+    this.formModel = dialog?.formModel;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
+    this.isLoading = dt?.data?.isLoad;
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
-    this.gridViewSetup = dt?.data.gridViewSetup;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
+
+    //
+    if(this.isLoading){
+      this.formModel = dt?.data?.formMD;
+
+      if(this.action != this.actionAdd) {
+        // setTimeout(() => {
+
+        // }, 0);
+        this.deal = dt?.data?.dataCM;
+      }
+
+    }
+    else {
+      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    }
+
     if (dt?.data.processID) {
-      this.deal.processID = dt?.data.processID;
+      this.deal.processID = dt?.data?.processID;
       this.isViewAll = true;
     }
     this.executeApiCalls();
     if (this.action != this.actionAdd) {
-      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
@@ -434,13 +453,26 @@ export class PopupAddDealComponent
 
   async executeSaveData() {
     try {
-      if (this.action !== this.actionEdit) {
-        await this.insertInstance();
-        await this.onAdd();
-      } else {
-        await this.editInstance();
-        await this.onEdit();
+
+      if(this.isLoading) {
+        if (this.action !== this.actionEdit) {
+          await this.addDealForDP();
+          await this.insertInstance();
+        } else {
+          await this.editDealForDP();
+          await this.editInstance();
+        }
       }
+      else {
+        if (this.action !== this.actionEdit) {
+          await this.insertInstance();
+          await this.onAdd();
+        } else {
+          await this.editInstance();
+          await this.onEdit();
+        }
+      }
+
     } catch (error) {}
   }
 
@@ -562,10 +594,6 @@ export class PopupAddDealComponent
             this.getListInstanceSteps(processId);
           }
         }
-        //  else {
-        //   this.executeGetDataParamter();
-        // }
-
         this.changeDetectorRef.detectChanges();
       }
     }
@@ -598,10 +626,7 @@ export class PopupAddDealComponent
     if (this.action !== this.actionEdit) {
       datas = [this.deal, this.lstContactDeal];
     } else {
-      this.covnertListContact(
-        this.lstContactOld,
-        JSON.parse(JSON.stringify(this.lstContactDeal))
-      );
+      this.covnertListContact(  this.lstContactOld, JSON.parse(JSON.stringify(this.lstContactDeal)) );
       datas = [
         this.deal,
         this.customerIDOld,
@@ -615,6 +640,7 @@ export class PopupAddDealComponent
       this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
     option.className = 'DealsBusiness';
     option.data = datas;
+    option.service="CM";
     return true;
   }
 
@@ -628,8 +654,8 @@ export class PopupAddDealComponent
   }
   async executeApiCalls() {
     try {
-      //  await this.getGridView(this.formModel);
-      await this.getListProcess(this.typeForDeal);
+
+   //   await this.getListProcess(this.typeForDeal);
       if (this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
       }
@@ -691,25 +717,6 @@ export class PopupAddDealComponent
         }
       });
   }
-  // async getGridView(formModel) {
-  //   this.cache
-  //     .gridViewSetup(formModel.formName, formModel.gridViewName)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.gridViewSetup = res;
-  //       }
-  //     });
-  // }
-  async getListProcess(applyFor) {
-    var processID = this.action !== this.actionEdit ? '' : this.deal.processID;
-    var data = [applyFor, processID];
-    this.codxCmService.getListCbxProcess(data).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listCbxProcess = res[0];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-  }
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.deal.processID : processId;
@@ -753,6 +760,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+       this.isLoading && this.dialog.close(instance);
       }
     });
   }
@@ -760,6 +768,31 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+        this.isLoading && this.dialog.close(instance);
+      }
+    });
+  }
+
+  async addDealForDP(){
+    var datas = [this.deal, this.lstContactDeal];
+    this.codxCmService.addDeal(datas).subscribe((deal) => {
+      if (deal) {
+
+      }
+    });
+  }
+  async editDealForDP(){
+    this.covnertListContact(  this.lstContactOld, JSON.parse(JSON.stringify(this.lstContactDeal)) );
+    var datas = [
+      this.deal,
+      this.customerIDOld,
+      this.lstContactDeal,
+      this.lstContactAdd,
+      this.lstContactDelete,
+    ];
+    this.codxCmService.editDeal(datas).subscribe((deal) => {
+      if (deal) {
+
       }
     });
   }

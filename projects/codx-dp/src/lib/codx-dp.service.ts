@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, Util } from 'codx-core';
-import { BehaviorSubject, Observable, Subject, firstValueFrom } from 'rxjs';
+import { ApiHttpService, AuthStore, CacheService, DataRequest, Util } from 'codx-core';
+import { BehaviorSubject, Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -802,5 +802,31 @@ export class CodxDpService {
       'GetListPermissionInCMAsync',
       data
     );
+  }
+
+  getOneDeal(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetOneDealAsync',
+      data
+    );
+  }
+
+
+  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
+    return this.api
+      .execSv(
+        service,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'LoadDataAsync',
+        options
+      )
+      .pipe(
+        tap(),
+        map((r) => r[0]),
+        tap()
+      );
   }
 }
