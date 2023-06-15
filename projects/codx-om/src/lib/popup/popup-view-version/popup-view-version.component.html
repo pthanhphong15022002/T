@@ -4,12 +4,13 @@
   [bodyCss]="''"
   [body]="body"
   [footer]="footer"
-></codx-form>
+  *ngIf="isAfterRender"
+>
 
 <ng-template #body>
-  <div *ngIf="dataPlan?.versions?.length>0;defaultEmpty ">
-    <div *ngFor="let version of dataPlan?.versions">
-      <div class="px-4 py-2">
+  <div *ngIf="dataPlan?.versions?.length>0 && versions?.length>0 ;else defaultEmpty ">
+    <div *ngFor="let version of versions">
+      <div class="px-4 pb-4">
         <div class="d-flex justify-content-between">
           <div>
             <div class="d-flex align-item-center">
@@ -38,17 +39,18 @@
   </div>
   
 </ng-template>
+</codx-form>
 
 <ng-template #footer>
   <div class="d-flex flex-column mb-4">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">
+      <!-- <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label
           name="lblSave"
           default="Lưu"
           [formModel]="formModel"
         ></codx-label>
-      </button>
+      </button> -->
     </div>
   </div>
 </ng-template>

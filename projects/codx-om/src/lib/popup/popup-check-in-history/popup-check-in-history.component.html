@@ -14,6 +14,14 @@
     <span class="fs-6">{{data?.okrName}}
     </span>
   </div>
+  <div class=" ps-5 w-100 d-flex flex-wrap pb-5" *ngIf="isPopup && statusVLL?.length >0">
+    <div *ngFor="let v of statusVLL ">
+      <span class="ps-4">
+        <span class="icon-i-arrow-down-left-circle-fill icon-10" [style]="'color: ' + v?.textColor + ';'"></span> 
+        <span class="ps-2">{{v?.text  }} </span> 
+      </span>
+    </div>
+  </div>
   <div class="w-100 overflow-auto " [ngClass]="isPopup ? 'mxh-750px' :''">
     <div class="px-5 py-5 d-flex flex-column justify-content-between align-items-between">
       <div class="d-flex flex-row mnh-50px">
@@ -46,35 +54,12 @@
         let index = index;
         let count = count
       ">
-          <div class="d-flex flex-column">
-            <!-- <div class="d-flex flex-row" *ngIf="index==0 ">
-        <div class="d-flex flex-column align-items-center justify-content-between col-1">
-          
-          <div class="om-step-number border border-2" [ngClass]="item?.approveStatus =='1'? 'border-secondary': item?.approveStatus =='2'? 'border-success': item?.approveStatus =='3'? 'border-warning': 'border-info'   ">
-          </div>
-          <span  style="width: 1px" class="flex-grow-1 border om-dot"></span>
-        </div>
-
-        <div class="d-flex flex-column pe-5 col-3">  
-          <div class="d-flex flex-row">
-            <codx-label name="Kế hoạch:"></codx-label>
-            <span class="ps-2 fw-bold">
-              {{ data?.nextCheckIn | fmDT : "dmy" }}
-            </span>
-          </div>
-        </div>
-        <div class="ps-5 pb-5" *ngIf="curUser?.userID == data?.owner && data?.hasAssign==null && data?.kRs==0 ">
-          <button type="button" (click)="checkIn()"
-            class="me-2 btn btn-outline-primary">
-            <codx-label name="lblCheckIn" default="Cập nhật tiến độ" ></codx-label>
-          </button>
-        </div>
-      </div> -->
+          <div class="d-flex flex-column">            
 
             <div class="d-flex flex-row">
               <div class="d-flex flex-column align-items-center justify-content-between col-1">
                 <div class="om-step-number border border-2"
-                  [ngClass]="item?.approveStatus =='1'? 'border-secondary': item?.approveStatus =='2'? 'border-success': item?.approveStatus =='3'? 'border-warning': 'border-info'">
+                  [ngClass]="statusVLL[item?.status]?.textColor">
                 </div>
                 <span *ngIf="count - index != 1" style="width: 1px" class="flex-grow-1 border om-dot"></span>
               </div>
@@ -93,16 +78,6 @@
                     {{ item?.createdOn | fmDT : "dmy" }}
                   </span>
                 </div>
-                <!-- <div *ngIf="index == 0" class="d-flex w-100px">
-            <span class="d-flex text-primary">{{
-              item?.status | vll : "OM016" : "text" | async
-              }}</span>
-          </div>
-          <div *ngIf="index != 0" class="d-flex w-100px">
-            <span class="d-flex text-primary">{{
-              item?.status | vll : "OM016" : "text" | async
-              }}</span>
-          </div> -->
                 <span>
                   <codx-vll [name]="'OM025'" [value]="item?.approveStatus" [showText]="true" [showBgColor]="true"
                     class="badge badge-light badge-sm">
@@ -128,18 +103,6 @@
                     </div>
                   </div>
                   <div class="d-flex flex-row align-items-center">
-                    <!-- <div class="d-flex flex-column align-items-center kr-process w-150px pe-7 pb-2" [ngbTooltip]="'Tiến độ'">
-                <span class="mb-1" *ngIf="item?.cummulated==0" [innerHTML]="(item?.cummulated)+'%'"></span>
-                <span class="mb-1" *ngIf="item?.cummulated!=0"
-                  [innerHTML]="(item?.cummulated | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
-                <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
-                  <div class="rounded-4 h-5px " [ngClass]="'bg-success'" role="progressbar"
-                    [style.width]="item?.cummulated + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                  </div>
-                  <span class="progress-node border-2px position-absolute rounded-circle border pe-1"
-                    [ngClass]="['border-success']" [style.left]="(item?.cummulated-2) + '%'"></span>
-                </div>
-              </div> -->
                     <codx-label name="lblCheckInValue" default="Giá trị cập nhật:"></codx-label>
                     <span class="fs-6 fw-bold">
                       {{ item?.value }}
@@ -159,14 +122,6 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column justify-content-between flex-grow-1 pb-5">
-                  <!-- <span class="ps-5 flex-grow-1 pt-2 pb-5">{{
-              item?.compent
-              }}</span>
-            <div class="d-flex">
-              <span class="fs-6 w-150px text-end text-primary">{{
-                item?.createdOn | fmDT : "dmy" : true
-                }}</span>
-            </div> -->
                   <div *ngIf="item?.comment!=null && item?.comment!=''" class="pb-5  px-3 py-3 w-100 bg-light">
                     {{item?.comment}}</div>
                   <div>
@@ -176,7 +131,7 @@
               </codx-attachment>-->
                   </div>
                   <div
-                    class=" mt-3 px-3 py-3 border rounded-3 w-100 d-flex flex-row justify-content-between align-items-center "
+                    class=" pt-3 px-3 py-3 border rounded-3 w-100 d-flex flex-row justify-content-between align-items-center "
                     *ngIf="data?.checkInControl !='0'&& item?.approveStatus == '3' && curUser?.userID == item?.approver">
                     <div>
                       <codx-label name="lblCheckInApprover" default="Người duyệt:"> </codx-label>
@@ -211,7 +166,7 @@
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
         <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-        <div class="fw-bold mt-1 text-center">
+        <div class="fw-bold pt-1 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
       </div>
