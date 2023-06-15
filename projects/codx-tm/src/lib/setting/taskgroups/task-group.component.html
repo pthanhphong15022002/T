@@ -432,12 +432,13 @@
 </ng-template>
 
 <ng-template #itemMoreFunc let-data>
-  <div class="padding">
+  <div class="" style="height: 30px">
     <codx-mfunc
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
       [isBookMark]="false"
       [dataItem]="data"
+      type="view"
     >
     </codx-mfunc>
   </div>
