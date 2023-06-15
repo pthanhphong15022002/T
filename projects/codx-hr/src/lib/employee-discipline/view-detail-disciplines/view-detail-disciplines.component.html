@@ -43,8 +43,14 @@
             class="text-gray-700 label-colon"
           >
           </codx-label>
-          <span>
-            {{ itemDetail?.signedDate | fmDT }}
+          <span
+            class="fw-bold"
+            [innerHTML]="
+              itemDetail?.signedDate
+                | formatvalue : view.formModel : 'signedDate'
+                | async
+            "
+          >
           </span>
         </div>
         <div class="d-flex align-item-center mb-1 ms-6">
@@ -54,8 +60,13 @@
             class="text-gray-700 label-colon"
           >
           </codx-label>
-          <span>
-            {{ itemDetail?.signerID }}
+          <span
+            [innerHTML]="
+              itemDetail?.signerID
+                | formatvalue : view.formModel : 'signerID'
+                | async
+            "
+          >
           </span>
         </div>
       </div>
@@ -119,9 +130,34 @@
             class="text-gray-700 label-colon"
           >
           </codx-label>
-          <span>
-            {{ itemDetail?.fromDate | fmDT }} - {{ itemDetail?.ToDate }}
+          <span
+            class="fw-bold"
+            [innerHTML]="
+              itemDetail?.fromDate
+                | formatvalue : view.formModel : 'fromDate'
+                | async
+            "
+          >
           </span>
+
+          <span class="mx-2" *ngIf="itemDetail?.fromDate && itemDetail?.toDate"
+            >-</span
+          >
+
+          <span
+            *ngIf="itemDetail?.toDate"
+            class="fw-bold ms-2"
+            [innerHTML]="
+              itemDetail?.toDate
+                | formatvalue : view.formModel : 'toDate'
+                | async
+            "
+          >
+          </span>
+
+          <!-- <span>
+            {{ itemDetail?.fromDate | fmDT }} - {{ itemDetail?.toDate }}
+          </span> -->
         </div>
         <div class="d-flex align-item-center mb-1 ms-6">
           <codx-label
@@ -130,8 +166,13 @@
             class="text-gray-700 label-colon"
           >
           </codx-label>
-          <span>
-            {{ itemDetail?.limitMonths }}
+          <span
+            [innerHTML]="
+              itemDetail?.limitMonths
+                | formatvalue : view.formModel : 'limitMonths'
+                | async
+            "
+          >
           </span>
         </div>
       </div>
@@ -144,8 +185,13 @@
             class="text-gray-700 label-colon"
           >
           </codx-label>
-          <span>
-            {{ itemDetail?.disciplinePlace }}
+          <span
+            [innerHTML]="
+              itemDetail?.disciplinePlace
+                | formatvalue : view.formModel : 'disciplinePlace'
+                | async
+            "
+          >
           </span>
         </div>
       </div>
@@ -158,8 +204,11 @@
             class="text-gray-700 label-colon"
           >
           </codx-label>
-          <span>
-            {{ itemDetail?.note }}
+          <span
+            [innerHTML]="
+              itemDetail?.note | formatvalue : view.formModel : 'note' | async
+            "
+          >
           </span>
         </div>
       </div>
@@ -174,8 +223,13 @@
           </codx-label>
         </div>
         <div class="d-flex align-item-center mb-1 ms-6">
-          <span>
-            {{ itemDetail?.reason }}
+          <span
+            [innerHTML]="
+              itemDetail?.reason
+                | formatvalue : view.formModel : 'reason'
+                | async
+            "
+          >
           </span>
         </div>
       </div>
@@ -190,8 +244,13 @@
           </codx-label>
         </div>
         <div class="d-flex align-item-center mb-1 ms-6">
-          <span>
-            {{ itemDetail?.content }}
+          <span
+            [innerHTML]="
+              itemDetail?.content
+                | formatvalue : view.formModel : 'content'
+                | async
+            "
+          >
           </span>
         </div>
       </div>

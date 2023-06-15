@@ -165,7 +165,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    if (this.dialog.dataService?.keyField === 'ContractNo') {
+    if (this.dialog.dataService?.keyField === 'DecisionNo') {
       this.decisionNoDisable = false;
     } else {
       this.decisionNoDisable = true;
