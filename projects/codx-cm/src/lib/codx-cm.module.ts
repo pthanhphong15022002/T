@@ -74,6 +74,8 @@ import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
+import { ContractsComponent } from './contracts/contracts.component';
+import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
 
 const routes: Routes = [
   {
@@ -100,7 +102,7 @@ const routes: Routes = [
       },
       {
         path: 'contracts/:funcID',
-        component: ContractsDetailComponent,
+        component: ContractsComponent,
       },
       {
         path: 'cases/:funcID',
@@ -161,7 +163,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
-    ContractsDetailComponent,
     CasesComponent,
     CasesDetailComponent,
     PopupAddCasesComponent,
@@ -177,6 +178,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
     ViewQuotationsComponent,
+    ContractsComponent,
     //test
     CodxAsideCustomComponent,
     PopupAddPaymentComponent,
@@ -189,7 +191,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     GanttChartComponent,
     StepTaskComponent,
     SettingProcessCmComponent,
-    QuotationsTabViewComponent
+    QuotationsTabViewComponent,
+    ContractsViewDetailComponent,
+    ContractsDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
