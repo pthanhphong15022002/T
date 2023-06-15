@@ -190,7 +190,7 @@ export class ContractsDetailComponent extends UIComponent{
         },
       },
     ];
-    let quotations = { name: 'Quotations', textDefault: 'Báo giá', isActive: false, icon: 'icon-more',template: this.tabQuotations};
+    let quotations = { name: 'Quotations', textDefault: 'Báo giá', isActive: false, icon : 'icon-i-link',template: this.tabQuotations};
     this.tabControl.push(quotations) ;
     this.tabControl.push({ name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null })
   }
