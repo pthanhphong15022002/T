@@ -38,7 +38,6 @@ export class PopupCheckInHistoryComponent
   data:any;
   curUser :any;
   isAfterRender: boolean = false;
-  emptyData: boolean =true;
   checkIns= [];
   dataChange: boolean=false;
   okrTarget:any;
@@ -77,8 +76,8 @@ export class PopupCheckInHistoryComponent
   getCacheData() {
     this.cache.valueList('OM016').subscribe((res:any)=>{
       if(res){
-        this.statusVLL = res;
-        
+        this.statusVLL = res?.datas;
+
       }
     })
   }
@@ -99,7 +98,6 @@ export class PopupCheckInHistoryComponent
         this.isAfterRender =true;
       }
       else{
-        this.emptyData=true;
         this.isAfterRender =true;
       }
     })

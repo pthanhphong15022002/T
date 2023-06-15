@@ -232,7 +232,8 @@ export class CodxApprovalComponent
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') 
+        {
           list[i].disabled = true;
           if (value.status == '5' || value.status == '2' || value.status == '4')
             list[i].disabled = true;
@@ -251,7 +252,8 @@ export class CodxApprovalComponent
           ) {
             list[i].disabled = false;
           }
-        } else if (
+        } 
+        else if (
           value.status == '5' ||
           value.status == '2' ||
           value.status == '4'
@@ -259,9 +261,28 @@ export class CodxApprovalComponent
           list[i].disabled = true;
       }
       this.listApproveMF = list.filter(
-        (p) => p.data.functionID == 'SYS208' || p.disabled == false
+        (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
       );
 
+      if(datas?.eSign)
+      {
+        var listDis = data.filter(
+          (x) =>
+            x.functionID == 'SYS202' ||
+            x.functionID == 'SYS203' ||
+            x.functionID == 'SYS204' ||
+            x.functionID == 'SYS205' ||
+            x.functionID == 'SYS206' ||
+            x.functionID == 'SYS201'
+            
+        );
+        for (var i = 0; i < listDis.length; i++) {
+          listDis[i].disabled = true;
+        }
+
+        var sys200 = data.filter(x=>x.functionID == "SYS200");
+        sys200[0].disabled = false;
+      }
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
@@ -295,6 +316,7 @@ export class CodxApprovalComponent
           this.detectorRef.detectChanges();
         });
     }
+    this.detectorRef.detectChanges();
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
@@ -307,7 +329,8 @@ export class CodxApprovalComponent
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||
         funcID == 'SYS203' ||
-        funcID == 'SYS202'
+        funcID == 'SYS202' ||
+        funcID == 'SYS200'
       ) {
         let option = new SidebarModel();
         option.Width = '800px';

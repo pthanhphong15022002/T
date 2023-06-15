@@ -1,7 +1,7 @@
 <div class="w-100" *ngIf="formModel?.funcID != undefined">
   <div class="h-100 container mx-auto">
-    <div class="" [ngClass]="isHiddenChart ? 'd-none' : 'd-block'">
-      <!-- Content Dasboard -->
+    <!-- Content Dasboard -->
+    <!-- <div class="" [ngClass]="isHiddenChart ? 'd-none' : 'd-block'">      
       <div class="d-flex justify-content-center">
         <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2" [ngbTooltip]="'Tiến độ'">
           <span class="mb-1" *ngIf="dataOKRPlans?.progress == 0" [innerHTML]="dataOKRPlans?.progress + '%'"></span>
@@ -61,12 +61,121 @@
           </ejs-accumulationchart>
         </div>
       </div>
+    </div> -->
+
+    <!--Content Statistical-->
+    <div class="d-flex align-items-start justify-content-between " >
+      <div class="col-4 px-3 py-3 h-100 om-statistical">
+        <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
+          <codx-label class="fs-3 fw-bold" name="lblTotal" default="Tổng hợp"></codx-label>
+          <div class="flex-grow-1 d-flex flex-row  align-items-center ">
+            <div class="d-flex align-items-center justify-content-center col-6">
+              <div class="progress-container-align position-relative">
+                <span class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                  <span>
+                    <span class="fs-1 fw-bold text-success plan-progress-color">{{ value?.percentOBDone }}</span>
+                    <span class="fs-4 text-success plan-progress-color">%</span>
+                  </span>
+                </span>
+                <ejs-progressbar id="plan-progress" [type]="'Circular'" [maximum]="100" [minimum]="0"
+                  [value]="value?.percentOBDone" [width]="'110px'" [height]="'110px'"
+                  [trackThickness]="10" [progressThickness]="10" [progressColor]="'#08ad9d'">
+                  <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
+                </ejs-progressbar>
+              </div>
+            </div>
+            <div class=" d-flex flex-column col-6">
+              <div class="pb-2 d-flex flex-row">
+                <span class="fs-6 fw-bold text-secondary">{{value?.percentOBNotStart+'%'}}</span>
+                <codx-label class=" ps-2 fs-6 fw-bold" name="lblObjectNotStart" default="Chưa bắt đầu"></codx-label>
+              </div>
+              <div class="pb-2 d-flex flex-row">
+                <span class="fs-6 fw-bold blue-primary" >{{value?.percentOBStarting+'%'}}</span>
+                <codx-label class="ps-2 fs-6 fw-bold " name="lblObjectStarting" default="Đang thực hiện"></codx-label>
+              </div>
+              <div class=" d-flex flex-row">
+                <span class="fs-6 fw-bold plan-progress-color" >{{value?.percentOBDone+'%'}}</span>
+                <codx-label class="ps-2 fs-6 fw-bold" name="lblObjectDone" default="Đã hoàn tất"></codx-label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4 px-3 py-3 h-100 om-statistical">
+        <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
+          <codx-label class="fs-3 fw-bold" name="lblObject" default="Mục tiêu"></codx-label>
+          <div class="flex-grow-1 d-flex flex-column">
+            <div class="flex-row d-flex ">
+              <div class="d-flex flex-column pt-4 col-6 ps-3">
+                <span class="fs-2 fw-bold">{{value?.totalOB}}</span>
+                <codx-label class="fs-6 fw-bold" name="lblTotalObject" default="Tổng số mục tiêu"></codx-label>
+              </div>
+              <div class="d-flex flex-column pt-4 col-6 ps-3">
+                <span class="fs-2 fw-bold">{{value?.totalHighOB}}</span>
+                <codx-label class="fs-6 fw-bold " name="lblImportantObject" default="Mục tiêu quan trọng"></codx-label>
+              </div>
+            </div>
+            <div class="flex-row d-flex ">
+              <div class="d-flex flex-column pt-4 col-6 ps-3">
+                <span class="fs-2 fw-bold">{{value?.obDone}}</span>
+                <codx-label class="fs-6 fw-bold" name="lblObjectFinished" default="Đã hoàn tất"></codx-label>
+              </div>
+              <div class="d-flex flex-column pt-4 col-6 ps-3">
+                <span class="fs-2 fw-bold">{{value?.highOBDone}}</span>
+                <codx-label class="fs-6 fw-bold" name="lblImportantObjectFinished"
+                  default="Mục tiêu quan trọng hoàn tất"></codx-label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4 px-3 py-3 h-100 om-statistical">
+        <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
+          <codx-label class="fs-3 fw-bold" name="lblKeyResult" default="Tiến độ kết quả thực hiện"></codx-label>
+          <div class="flex-grow-1 d-flex flex-column">
+            <div class="flex-row d-flex ">
+              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                <span [inlineSVG]="'./assets/themes/tm/default/img/OM_DB_Overdue.svg'"></span>
+                <div class=" ps-2 d-flex flex-column ">
+                  <codx-label class="fs-6 fw-bold" name="lblLateCheckIn" default="Trễ hạn cập nhật"></codx-label>
+                  <span class="fs-2 fw-bold">{{value?.krLateCheckIn}}</span>
+                </div>
+              </div>
+              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                <span [inlineSVG]="'./assets/themes/tm/default/img/OM_BD_Delay.svg'"></span>
+                <div class=" ps-2 d-flex flex-column ">
+                  <codx-label class="fs-6 fw-bold" name="lblLateTarget" default="Trễ tiến độ"></codx-label>
+                  <span class="fs-2 fw-bold">{{value?.krLateProgress}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex-row d-flex">
+
+              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                <span [inlineSVG]="'./assets/themes/tm/default/img/OM_DB_OnSchedule.svg'"></span>
+                <div class=" ps-2 d-flex flex-column ">
+                  <codx-label class="fs-6 fw-bold" name="lblInProgress" default="Đúng tiến độ"></codx-label>
+                  <span class="fs-2 fw-bold">{{value?.krInProgress}}</span>
+                </div>
+              </div>
+
+              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                <span [inlineSVG]="'./assets/themes/tm/default/img/OM_DB_OverSchedule.svg'"></span>
+                <div class=" ps-2 d-flex flex-column ">
+                  <codx-label class="fs-6 fw-bold" name="lblOverProgress" default="Vượt tiến độ"></codx-label>
+                  <span class="fs-2 fw-bold">{{value?.krOverProgress}}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Title OKR -->
     <div class="d-flex align-items-center justify-content-end" #titleOKR>
-      <!-- <div class="d-flex align-items-center">
-        <codx-label default="Mục tiêu" fiedName="lblTaget" class="fs-3 fw-bold"></codx-label>
-      </div> -->
       <div class="d-flex align-items-center justify-content-end">
         <div class="ms-2 me-2" ngbDropdown [container]="'body'">
           <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
@@ -109,7 +218,7 @@
   <div class="d-flex align-items-center flex-column justify-content-between" (click)="clickTreeNode($event)"
     *ngIf="item?.okrType == obType">
     <div class="w-100 ob-background d-flex justify-content-between">
-      <div class="d-flex align-items-center okr-treegroup col-6">
+      <div class="d-flex align-items-center okr-treegroup col-10">
         <!-- <span class="ms-5 me-3" [inlineSVG]="okrVll?.ob?.icon"></span> -->
         <div class="progress-container" [ngbTooltip]="'Tiến độ'">
           <div class="progress-container-align position-relative" *ngIf="item != null">
@@ -132,10 +241,12 @@
         <div class="d-flex flex-column">
           <div class="d-flex flex-stack">
             <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
+              [headerText]="okrGrv.krGrv?.category?.headerText" [showHeaderText]="true"
               [ngbTooltip]="okrGrv.krGrv?.category?.headerText" [value]="item?.category"
               class="me-2 badge badge-light badge-md fs-7">
             </codx-vll>
             <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
+              [headerText]="okrGrv.krGrv?.confidence?.headerText" [showHeaderText]="true"
               [ngbTooltip]="okrGrv.krGrv?.confidence?.headerText" [value]="item?.confidence"
               class="me-2 badge badge-light badge-md fs-7">
             </codx-vll>
@@ -143,7 +254,7 @@
         </div>
       </div>
 
-      <div class="d-flex align-items-center justify-content-end col-6 ps-5">
+      <div class="d-flex align-items-center justify-content-end col-2 ps-5">
         <!-- <div class="position-relative" ngbTooltip="Người chịu trách nhiệm">
           <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
           <span *ngIf="item?.hasAssign != null"
@@ -203,12 +314,15 @@
             <span class="text-gray-500 me-1">{{
               okrGrv?.krGrv?.current?.headerText + ":"
               }}</span>
-            <span *ngIf="item?.umid == '%'" class="me-1" [innerHTML]="
+            <span *ngIf="item?.umid == '%'&& item?.current>0" class="me-1" [innerHTML]="
                 item?.current | formatvalue : okrFM?.krFM : 'progress' | async
               "></span>
-            <span *ngIf="item?.umid != '%'" class="me-1" [innerHTML]="
+            <span *ngIf="item?.umid != '%'&& item?.current>0" class="me-1" [innerHTML]="
                 item?.current | formatvalue : okrFM?.krFM : 'target' | async
               "></span>
+              <span *ngIf=" item?.current==0" class="me-1" [innerHTML]="
+              item?.current 
+            "></span>
             <span [innerHTML]="item?.umName"></span>
           </div>
           <span class="mx-2 text-gray-400">|</span>
@@ -216,12 +330,16 @@
             <span class="text-gray-500 me-1">{{
               okrGrv?.krGrv?.actual?.headerText + ":"
               }}</span>
-            <span *ngIf="item?.umid == '%'" class="me-1" [innerHTML]="
+            <span *ngIf="item?.umid == '%' && item?.actual>0" class="me-1" [innerHTML]="
                 item?.actual | formatvalue : okrFM?.krFM : 'progress' | async
               "></span>
-            <span *ngIf="item?.umid != '%'" class="me-1" [innerHTML]="
+            <span *ngIf="item?.umid != '%' && item?.actual>0" class="me-1" [innerHTML]="
                 item?.actual | formatvalue : okrFM?.krFM : 'target' | async
               "></span>
+            <span *ngIf=" item?.actual==0" class="me-1" [innerHTML]="
+              item?.actual 
+            "></span>
+              
             <span [innerHTML]="item?.umName"></span>
           </div>
         </div>

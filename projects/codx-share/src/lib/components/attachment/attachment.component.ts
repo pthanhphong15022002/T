@@ -56,7 +56,7 @@ import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { type_image, type_video } from './attachment.type';
+import { type_audio, type_image, type_video } from './attachment.type';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -733,6 +733,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
+    debugger
     var check = this.CheckTenantFile(this.user.tenant) as any;
     if(isObservable(check))
     {
@@ -1794,10 +1795,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
       filename.substring(filename.lastIndexOf('.'), filename.length) ||
       filename;
 
-    if (ext == null) {
-      // alert(1);
-      return 'file.svg';
-    } else {
+    if (ext == null) return 'file.svg';
+    else {
       switch (ext) {
         case '.txt':
           return 'txt.svg';
@@ -1809,6 +1808,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
         case '.zip':
           return 'zip.svg';
         case '.jpg':
+        case '.jpeg':
+        case '.jfif':
           return 'jpg.svg';
         case '.mp4':
           return 'mp4.svg';
@@ -1821,6 +1822,23 @@ export class AttachmentComponent implements OnInit, OnChanges {
           return 'png.svg';
         case '.js':
           return 'javascript.svg';
+        case '.apk':
+          return 'android.svg';
+        case '.ppt':
+          return 'ppt.svg';
+        case '.mp3':
+        case '.wma':
+        case '.wav':
+        case '.flac':
+        case '.ogg':
+        case '.aiff':
+        case '.aac':
+        case '.alac':
+        case '.lossless':
+        case '.wma9':
+        case '.aac+':
+        case '.ac3':
+          return 'audio.svg';
         default:
           return 'file.svg';
       }
@@ -3182,7 +3200,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   public async handleFileInput(files: any[], drag = false) {
-    debugger
     var count = this.fileUploadList.length;
     //this.getFolderPath();
     var addedList = [];
@@ -3214,7 +3231,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var type = files[i].type.toLowerCase();
         fileUpload.fileName = files[i].name;
         
-
+        debugger
         //Lấy avatar mặc định theo định dạng file
         //Image
         if (type_image.includes(type)) fileUpload.avatar = data;
@@ -3224,9 +3241,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
           var url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(files[i].rawFile));
           fileUpload.data = url;
           fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
-        } 
+        }
+        
         //Các file định dạng khác
         else fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
+
 
         fileUpload.extension =
           files[i].name.substring(

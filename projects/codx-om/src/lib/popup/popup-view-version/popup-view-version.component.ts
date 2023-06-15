@@ -22,14 +22,16 @@ import { CodxOmService } from '../../codx-om.service';
 })
 export class PopupViewVersionComponent extends UIComponent {
   @ViewChild('attachment') attachment: AttachmentComponent;
-  headerText: string = 'Phiên bản';
-  versions: any = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+  headerText='';
 
   dialogRef: DialogRef;
   formModel: FormModel;
   funcID: string;
   dataPlan: any;
-
+  okrFM: any;
+  versions =[];
+  isAfterRender: boolean;
+  okrGrv: any;
   constructor(
     private injector: Injector,
     private omService: CodxOmService,
@@ -39,11 +41,26 @@ export class PopupViewVersionComponent extends UIComponent {
   ) {
     super(injector);
     this.dataPlan = dialogData?.data[0];
+    this.okrFM = dialogData?.data[1];
+    this.okrGrv = dialogData?.data[2];
+    this.headerText = dialogData?.data[3];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
+
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.getData();
+  }
 
+  getData(){
+    this.omService.getOKRPlansByID(this.dataPlan?.recID).subscribe(res=>{
+      if(res){
+        this.dataPlan=res; 
+        this.versions = this.dataPlan?.versions?.reverse();
+        this.isAfterRender=true;
+      }
+    })
+  }
   onSaveForm() {}
 }

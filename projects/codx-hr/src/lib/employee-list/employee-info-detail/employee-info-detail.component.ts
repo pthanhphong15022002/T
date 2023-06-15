@@ -1697,17 +1697,17 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   checkIsNewestDate(effectedDate, expiredDate){
     if(effectedDate){
-      let eff = new Date(effectedDate).toISOString();
-      let date = new Date().toISOString();
+      let eff = new Date(effectedDate).toLocaleDateString();
+      let date = new Date().toLocaleDateString();
       if(expiredDate){
-        let expire = new Date(expiredDate).toISOString();
-        if(date >= eff && date <= expire){
+        let expire = new Date(expiredDate).toLocaleDateString();
+        if(new Date(date) >= new Date(eff) && new Date(date) <= new Date(expire)){
           return true;
         }
         return false;
       }
       else{
-        if(date >= eff){
+        if(new Date(date) >= new Date(eff)){
           return true;
         }
         return false;
@@ -3724,9 +3724,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         requestNewEmpPage.page = this.request.page + 1;
         requestNewEmpPage.predicate = this.request.predicate;
         requestNewEmpPage.dataValue = this.request.dataValue;
-        // requestNewEmpPage.selector = "EmployeeID;";
+        requestNewEmpPage.selector = "EmployeeID;";
         requestNewEmpPage.pageSize = this.request.pageSize;
         this.hrService.loadData('HR', requestNewEmpPage).subscribe((res) =>{
+          debugger
           if(res && res[0].length > 0){
             this.listEmp.push(...res[0])
             this.request.page += 1;
