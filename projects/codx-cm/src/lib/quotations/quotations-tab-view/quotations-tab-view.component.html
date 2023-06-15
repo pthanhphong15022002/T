@@ -45,6 +45,7 @@
   <ng-container *ngFor="let data of listQuotations; let i = index">
     <div
       class="has-action-menu py-3 border-bottom border-gray-100 px-5 line-quotations cursor-pointer"
+      (dblclick)="viewDetail(data)"
     >
       <div class="row py-2">
         <div class="col-1 d-flex justify-content-center align-items-center">
@@ -194,4 +195,16 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #popDetail>
+  <codx-form [body]="templateDetail" [dialog]="popupView"> </codx-form>
+</ng-template>
+<ng-template #templateDetail>
+  <lib-quotations-view-detail
+    [itemSelected]="itemSelected"
+    [formModel]="formModel"
+    [hideMF]="true"
+  >
+  </lib-quotations-view-detail>
 </ng-template>
