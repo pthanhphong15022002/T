@@ -47,7 +47,6 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
-    debugger
     this.formGroup.patchValue(this.data);
     this.formModel.currentData = this.data;
     this.cr.detectChanges();
@@ -183,5 +182,4 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     });
   }
 
-  handleProvinceChange(value) {}
 }
