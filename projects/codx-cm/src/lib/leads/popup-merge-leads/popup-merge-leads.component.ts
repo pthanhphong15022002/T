@@ -183,7 +183,6 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.noti.notifyCode('CM008');
       return;
     }
-    let lstObjectIdFile = this.getListIdFile();
     var data = [
       this.leadNew,
       this.leadOne?.recID,
@@ -229,13 +228,17 @@ export class PopupMergeLeadsComponent implements OnInit {
               );
             }
           }
+          var lstObjectIdFile = [];
+          lstObjectIdFile = this.getListIdFile();
+          var lstRef = [];
+          lstRef.push('avt');
           await firstValueFrom(
             this.api.execSv<any>(
               'DM',
               'ERM.Business.DM',
               'FileBussiness',
               'CopyListFilesFromListObjectIDToObjectIDAsync',
-              [this.leadNew?.recID, lstObjectIdFile]
+              [this.leadNew?.recID, lstObjectIdFile, lstRef]
             )
           );
           this.dialog.close([res, this.leadOne, this.leadTwo, this.leadThree]);
@@ -280,23 +283,20 @@ export class PopupMergeLeadsComponent implements OnInit {
     return true;
   }
 
-  async getListIdFile() {
-    var lst1 = [];
-    var lst2 = [];
-    var lst3 = [];
+  getListIdFile() {
+    var lstID = [];
+
     if (this.leadOne.recID != null) {
-      lst1 = await this.getListFile(this.leadOne.recID, 'CM_Leads');
+      lstID.push(this.leadOne.recID);
     }
     if (this.leadTwo.recID != null) {
-      lst2 = await this.getListFile(this.leadTwo.recID, 'CM_Leads');
+      lstID.push(this.leadTwo.recID);
     }
     if (this.leadThree.recID != null) {
-      lst3 = await this.getListFile(this.leadThree.recID, 'CM_Leads');
+      lstID.push(this.leadThree.recID);
     }
 
-    return [...lst1, ...lst2, ...lst3]
-      .filter((item) => item.referType !== 'avt')
-      .map((item) => item.objectID);
+    return lstID;
   }
 
   async getListFile(objectID, objectType) {
