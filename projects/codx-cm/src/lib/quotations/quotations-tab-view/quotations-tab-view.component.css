@@ -7,3 +7,10 @@
     font-weight: 600;
     color: black;
   }
+  
+  .button-add-custom {
+    position: fixed;
+    bottom: 50px;
+    z-index: 10;
+  }
+ 

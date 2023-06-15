@@ -314,7 +314,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
         )
         .subscribe((res) => {
           var obj = {
-            headerText: this.titleActionLine + f?.customName || f?.description,
+            headerText: this.titleActionLine + ' ' + f?.customName || f?.description,
             quotationsLine: dt,
             listQuotationLines: this.listQuotationLines,
             grvSetup: this.grvSetupQuotationsLines,
