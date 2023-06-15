@@ -30,6 +30,10 @@ export class CodxCmService {
   private loadingSubject = new BehaviorSubject<Boolean>(false);
   valueRadio = this.loadingSubject.asObservable();
 
+  contactSubject = new BehaviorSubject<any>(null);
+  // valueContact = this.contactSubject.asObservable();
+
+
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,

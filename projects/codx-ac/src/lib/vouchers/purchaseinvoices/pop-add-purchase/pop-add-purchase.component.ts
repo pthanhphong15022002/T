@@ -1269,7 +1269,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     var element = document.querySelectorAll('input');
     console.log(element[0]);
     (element[0] as HTMLInputElement).focus();
-    (element[0] as HTMLInputElement).setSelectionRange(0, 1000);
+    (element[0] as HTMLInputElement).setSelectionRange(0, 2000);
   }
   
   //#endregion

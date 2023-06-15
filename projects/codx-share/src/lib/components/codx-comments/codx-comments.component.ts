@@ -62,9 +62,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
       this.data.parentID = this.parent.recID;
     }
     else
-    {
       this.getFileByObjectID();
-    }
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
         this.vllL1480 = res.datas;
@@ -122,14 +120,10 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
       this.loading = true;
       //update
       if(this.isEdit)
-      {
         this.updateComment(this.data);
-      }
       //insert
       else
-      {
         this.insertComment(this.data);
-      }
     }
   }
   // insert comments

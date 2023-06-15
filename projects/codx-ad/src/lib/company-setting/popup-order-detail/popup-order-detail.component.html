@@ -9,24 +9,24 @@
 </codx-form>
 
 <ng-template #header>
-  <div class="close d-flex justify-content-end w-100">
-    <button
-      type="button"
-      class="btn btn-light-primary me-4"
-      (click)="onClose()"
-    >
-      <codx-label formName="" default="X"></codx-label>
-    </button>
+  <div class="card-toolbar w-100 d-flex justify-content-end">
+    <div class="float-end">
+      <button
+        type="button"
+        class="btn btn-icon"
+        (click)="onClose()"
+      >
+        <i class="icon-close icon-18"></i>
+      </button>
+    </div>
   </div>
+
 </ng-template>
 
 <ng-template #body>
   <div *ngIf="order" class="container w-100 h-100">
-    <div class="header d-flex justify-content-center">
-      <div></div>
-      <h1>
-        <codx-label name="lblOrderTitle" default="Đơn hàng"> </codx-label>
-      </h1>
+    <div class="mt-1 fs-3 text-dark fw-bold mb-3">
+      <codx-label name="lblOrderTitle" default="Đơn hàng"> </codx-label>
     </div>
 
     <div class="orderTitle">
@@ -49,194 +49,208 @@
   </div>
 </ng-template>
 <ng-template #orderTmp>
-  <div class="d-flex justify-content-between h-25 p-2 orderInfo">
-    <codx-temp-full
-      [typeMF]="'hover'"
-      [titleTmp]="oTitleTmp"
-      typeMF="hover"
-      [dataItem]="order"
-      [hideMF]="false"
-    >
-    </codx-temp-full>
-
-    <codx-temp-full
-      [(imageId)]="order.createdBy"
-      [imageObjType]="'AD_Users'"
-      [imageWidth]="35"
-      [title]="order.invoiceBuyerName"
-      [subTitle]="order.invoiceEmail"
-      [desc]="order.phone"
-      imgCss="me-2"
-    >
-    </codx-temp-full>
+  <div class="row orderInfo">
+    <div class="col-6">
+      <codx-temp-full
+        [typeMF]="'hover'"
+        [titleTmp]="oTitleTmp"
+        typeMF="hover"
+        [dataItem]="order"
+        [hideMF]="false"
+      >
+      </codx-temp-full>
+    </div>
+    <div class="col-6">
+      <codx-temp-full
+        [(imageId)]="order.createdBy"
+        [imageObjType]="'AD_Users'"
+        [imageWidth]="35"
+        [title]="order.invoiceBuyerName"
+        [titleCss]="'fs-6'"
+        [subTitle]="order.invoiceEmail"
+        [desc]="order.phone"
+        imgCss="me-4"
+      >
+      </codx-temp-full>
+    </div>
   </div>
   <div class="billInfo">
-    <div class="title d-flex justify-content-center">
-      <h1>
-        <codx-label name="" default="Thông tin hóa đơn"> </codx-label>
-      </h1>
+    <div class="fs-3 text-dark fw-bold mb-2 mt-5">
+      <codx-label name="" default="Thông tin hóa đơn"> </codx-label>
     </div>
     <div class="info row">
-      <div class="col-8">
-        <div class="d-flex text-gray-600">
-          <codx-label
+      <div class="col-6">
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyName"
             [formModel]="orderFormodel"
             [default]="'Tên công ty: '"
           >
           </codx-label>
-          {{ order.invoiceName }}
+          <span class="text-gray-600">
+          {{ order.invoiceName }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblOrderAddress"
             [formModel]="orderFormodel"
             [default]="'Địa chỉ: '"
           >
           </codx-label>
-          {{ order.invoiceAddress }}
+          <span class="text-gray-600">
+          {{ order.invoiceAddress }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyTax"
             [formModel]="orderFormodel"
             [default]="'Mã số thuế: '"
           >
           </codx-label>
-          {{ order.invoiceTaxCode }}
+          <span class="text-gray-600">
+          {{ order.invoiceTaxCode }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblContact"
             [formModel]="orderFormodel"
             [default]="'Người liên hệ: '"
           >
           </codx-label>
-          {{ order.invoiceBuyerName }}
+          <span class="text-gray-600">
+          {{ order.invoiceBuyerName }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyEmail"
             [formModel]="orderFormodel"
             [default]="'Email: '"
           >
           </codx-label>
-          {{ order.invoiceEmail }}
+          <span class="text-gray-600">
+          {{ order.invoiceEmail }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyPhone"
             [formModel]="orderFormodel"
             [default]="'Số điện thoại: '"
           >
           </codx-label>
-          {{ order.invoicePhone }}
+          <span class="text-gray-600">
+          {{ order.invoicePhone }}</span>
         </div>
       </div>
-      <div class="col-4">
-        <div class="d-flex text-gray-600">
-          <codx-label
+      <div class="col-6">
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyPhone"
             [formModel]="orderFormodel"
             [default]="'Số hóa đơn: '"
           >
           </codx-label>
-          {{ order.invoiceNo }}
+          <span class="text-gray-600">
+          {{ order.invoiceNo }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyPhone"
             [formModel]="orderFormodel"
             [default]="'Ngày hóa đơn: '"
           >
           </codx-label>
-          {{ order.invoiceDate }}
+          <span class="text-gray-600">
+          {{ order.invoiceDate }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyPhone"
             [formModel]="orderFormodel"
             [default]="'Số seri: '"
           >
           </codx-label>
-          {{ order.invoiceSeri }}
+          <span class="text-gray-600">
+          {{ order.invoiceSeri }}</span>
         </div>
-        <div class="d-flex text-gray-600">
-          <codx-label
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="text-dark fw-bold me-2"
             fiedName="lblCompanyPhone"
             [formModel]="orderFormodel"
             [default]="'Form: '"
           >
           </codx-label>
-          {{ order.invoiceForm }}
+          <span class="text-gray-600">
+            {{ order.invoiceForm }}
+          </span>
         </div>
       </div>
     </div>
   </div>
 </ng-template>
 <ng-template #oTitleTmp>
-  <div class="row">
-    <div class="col">
-      <div class="text-gray-600">
-        <codx-label
-          fiedName="lblOrderNo"
-          [formModel]="orderFormodel"
-          [default]="'Đơn hàng: '"
-        >
-        </codx-label>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-1">
+      <codx-label class="text-dark fw-bold me-2"
+        fiedName="lblOrderNo"
+        [formModel]="orderFormodel"
+        [default]="'Đơn hàng: '"
+      >
+      </codx-label>
+      <span class="text-primary fw-bold">
         {{ order.orderNo }}
-        <span class="">
-          <codx-vll
-            [name]="grvTNOrders['OrderType']?.referedValue"
-            [value]="order?.orderType"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-square badge-md fs-7 p-2"
-          >
-          </codx-vll>
-        </span>
-      </div>
-
-      <div class="text-gray-600">
-        <codx-label
-          fiedName="lblpaymentCreatedOn"
-          [formModel]="orderFormodel"
-          [default]="'Ngày giao dịch: '"
-        >
-        </codx-label>
-        {{ payment.createdOn ?? "" }}
-      </div>
-      <div class="text-gray-600">
-        <codx-label
-          fiedName="lblpaymentStatus"
-          [formModel]="orderFormodel"
-          [default]="'Tình trạng: '"
-        >
-        </codx-label>
+      </span>
+      <span class="ms-2">
         <codx-vll
-          [name]="grvTNOrders['Status']?.referedValue"
-          [value]="order?.status"
+          [name]="grvTNOrders['OrderType']?.referedValue"
+          [value]="order?.orderType"
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-square badge-md fs-7 p-2"
         >
         </codx-vll>
-      </div>
-      <div class="text-gray-600">
-        <codx-label
-          fiedName="lblpaymentMethod"
-          [formModel]="orderFormodel"
-          [default]="'Hình thức thanh toán: '"
-        >
-        </codx-label>
-        <codx-vll
-          [name]="grvTNOrders['PmtMethod']?.referedValue"
-          [value]="order?.pmtMethod"
-          [showText]="true"
-          [showBgColor]="true"
-        >
-        </codx-vll>
-      </div>
+      </span>
+    </div>
+
+    <div class="d-flex align-items-center mb-1">
+      <codx-label class="text-dark fw-bold me-2"
+        fiedName="lblpaymentCreatedOn"
+        [formModel]="orderFormodel"
+        [default]="'Ngày giao dịch: '"
+      >
+      </codx-label>
+      <span class="text-gray-600">
+        {{ payment.createdOn ?? "" }}</span>
+    </div>
+    <div class="d-flex align-items-center mb-1">
+      <codx-label class="text-dark fw-bold me-2"
+        fiedName="lblpaymentStatus"
+        [formModel]="orderFormodel"
+        [default]="'Tình trạng: '"
+      >
+      </codx-label>
+      <codx-vll
+        [name]="grvTNOrders['Status']?.referedValue"
+        [value]="order?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
+      </codx-vll>
+    </div>
+    <div class="d-flex align-items-center mb-1">
+      <codx-label class="text-dark fw-bold me-2"
+        fiedName="lblpaymentMethod"
+        [formModel]="orderFormodel"
+        [default]="'Hình thức thanh toán: '"
+      >
+      </codx-label>
+      <codx-vll
+        [name]="grvTNOrders['PmtMethod']?.referedValue"
+        [value]="order?.pmtMethod"
+        [showText]="true"
+        [showBgColor]="true"
+      >
+      </codx-vll>
     </div>
   </div>
 </ng-template>
@@ -314,9 +328,6 @@
     [desc2Tmp]="moduleEmplDescTmp"
     [descLine]="2"
     [imageSrc]="module.image"
-    [icoCss]="
-      'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 '
-    "
     [titleLine]="2"
     [icoDateCss]="'icon-access_alarm'"
     typeMF="hover"
