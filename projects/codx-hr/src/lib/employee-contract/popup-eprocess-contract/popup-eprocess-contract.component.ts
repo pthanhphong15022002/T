@@ -42,15 +42,17 @@ export class PopupEProcessContractComponent
   employeeId: string;
   idField = 'RecID';
   isAfterRender = false;
+  autoNumField: string;
+  autoNumField2: string;
   lstSubContract: any;
   headerText: string;
   openFrom: string;
   employeeObj: any;
-  contractNoDisable: boolean = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
   benefitObj: any;
+  loadedAutoField = false;
   benefitFormModel: FormModel;
   benefitFormGroup: FormGroup;
   dialogAddBenefit: any;
@@ -110,12 +112,6 @@ export class PopupEProcessContractComponent
       this.tempBenefitArr = JSON.parse(this.data.benefits);
     }
 
-    if (this.dialog.dataService?.keyField === 'ContractNo') {
-      this.contractNoDisable = false;
-    } else {
-      this.contractNoDisable = true;
-    }
-
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
@@ -131,6 +127,9 @@ export class PopupEProcessContractComponent
       )
       .subscribe((res: any) => {
         if (res) {
+          if(res.key){
+            this.autoNumField2 = res.key
+          }
           this.benefitObj = res?.data;
           this.benefitObj.effectedDate = null;
           this.benefitObj.expiredDate = null;
@@ -227,7 +226,12 @@ export class PopupEProcessContractComponent
           this.idField
         )
         .subscribe((res) => {
+          debugger
+          
           if (res) {
+            this.autoNumField = res.key ? res.key : null; 
+            this.loadedAutoField = true;
+            this.df.detectChanges();
             console.log('get default contract', res);
             
             this.data = res?.data;

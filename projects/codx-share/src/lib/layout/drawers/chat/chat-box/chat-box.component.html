@@ -49,14 +49,14 @@
         </div>
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let i = index">
-                <ng-container [ngSwitch]="">
+                <!-- <ng-container [ngSwitch]="">
                     <ng-container *ngSwitchCase="'3'"></ng-container>
                     <ng-container *ngSwitchCase="'5'"></ng-container>
                     <ng-container *ngSwitchDefault>
                         
                     </ng-container>
 
-                </ng-container>
+                </ng-container> -->
                 <ng-container *ngIf="item.messageType == '3';else tmpMessage">
                     <div class="message-system" [id]="item.recID">
                         {{item | mssgSYS:mssgType5 | async}}
@@ -67,68 +67,65 @@
                         <ng-container *ngIf="user.userID == item.createdBy;else reciverMssg">
                             <div class="message-send">
                                 <ng-container *ngIf="item.messageType != '5'">
-                                    <div class="message-function">
-                                        <span ngbDropdown ngbDropdownToggle 
-                                                class="icon-more_vert me-2 cursor-pointer text-gray-600">
-                                                <ul ngbDropdownMenu>
-                                                    <li ngbDropdownItem *ngIf="item.messageType != '5'">
-                                                        <a (click)="deleteMessage(item)"  href="javascript:void(0)">
-                                                            <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                                                            <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </span>
-                                        <ng-container *ngIf="item.refType != 'm'">
-                                            <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
-                                        </ng-container>
-                                        <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
-                                            (click)="openTooltipEmoji(tooltip1,item)"
-                                            #tooltip1="ngbTooltip"
-                                            triggers="manual"
+                                    <div class="message-function cursor-pointer text-gray-600">
+                                        <span
+                                            class="icon-more_vert me-2"
+                                            #ngbPopover0="ngbPopover"
                                             placement="top"
                                             [autoClose]="true"
-                                            [ngbTooltip]="tooltipEmojiMssg">
+                                            triggers="manual"
+                                            [ngbPopover]="tooltipMfc"
+                                            (click)="openTooltipEmoji(ngbPopover0,item)">
+                                        </span>
+                                        <ng-container *ngIf="item.refType != 'm'">
+                                            <span class="icon-undo me-2" (click)="clickReplyMssg(item)"></span>
+                                        </ng-container>
+                                        <span class="icon-tag_faces me-2"
+                                            #ngbPopover1="ngbPopover"
+                                            placement="top"
+                                            [autoClose]="true"
+                                            triggers="manual"
+                                            container="body"
+                                            [ngbPopover]="tooltipEmojiMssg"
+                                            (click)="openTooltipEmoji(ngbPopover1,item)">
                                         </span>
                                     </div>
                                 </ng-container>
-                                <ng-container *ngIf="item.messageType != '2'">
-                                    <div class="message-send-message">
-                                        <ng-container *ngIf="item.messageType == '5';else messageContent">
-                                            <span>{{mssgDeleted}}</span>
+                                <div class="message-send-message">
+                                    <ng-container *ngIf="item.messageType == '5';else tmpSendContent">
+                                        <span>{{mssgDeleted}}</span>
+                                    </ng-container>
+                                    <ng-template #tmpSendContent>
+                                        <!-- message reply -->
+                                        <ng-container *ngIf="item.refID">
+                                            <div class="message-reft">
+                                                <span class="d-block">{{item.refContent.createdName}}</span>
+                                                <ng-container *ngIf="item.refContent.content">
+                                                    <span class="d-block text-gray-500">{{item.refContent.content}}</span>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.refContent.type == '2'">
+                                                    <codx-temp-full 
+                                                        [dataItem]="item"
+                                                        [imageId]="item.refID" 
+                                                        imageObjType="WP_Messages"
+                                                        [imageReferType]="item.fileType"
+                                                        [title]="item.fileName"
+                                                        [desc]="formatBytes(item.fileSize)">
+                                                    </codx-temp-full>
+                                                </ng-container>
+                                            </div>
                                         </ng-container>
-                                        <ng-template #messageContent>
-                                            <!-- message reply -->
-                                            <ng-container *ngIf="item.refID">
-                                                <div class="message-reft">
-                                                    <span class="d-block">{{item.refContent.createdName}}</span>
-                                                    <ng-container *ngIf="item.refContent.content">
-                                                        <span class="d-block text-gray-500">{{item.refContent.content}}</span>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="item.refContent.type == '2'">
-                                                        <codx-temp-full 
-                                                            [dataItem]="item"
-                                                            [imageId]="item.refID" 
-                                                            imageObjType="WP_Messages"
-                                                            [imageReferType]="item.fileType"
-                                                            [title]="item.fileName"
-                                                            [desc]="formatBytes(item.fileSize)">
-                                                        </codx-temp-full>
-                                                    </ng-container>
-                                                </div>
-                                            </ng-container>
-                                                <ng-container *ngIf="item.message">
-                                                    <div class="message-send_content">
-                                                        <span>{{item.message}}</span>
-                                                        <!-- time -->
-                                                        <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
-                                                            <span class="d-block">{{item.createdOn | date:'hh:mm'}}</span>
-                                                        </ng-container>
-                                                    </div>
-                                                </ng-container>     
-                                        </ng-template>
-                                    </div>
-                                </ng-container>
+                                        <ng-container *ngIf="item.message">
+                                            <div class="message-send_content">
+                                                <span>{{item.message}}</span>
+                                                <!-- time -->
+                                                <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
+                                                    <span class="d-block">{{item.createdOn | date:'hh:mm'}}</span>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>     
+                                    </ng-template>
+                                </div>
                                 <!-- files -->
                                 <ng-container *ngIf="item.messageType == '2'" >
                                     <div class="message-files">
@@ -151,12 +148,12 @@
                                         <ng-container *ngFor="let voteItem of item.lstVote">
                                             <ng-container *ngIf="voteItem.count > 0">
                                                 <codx-vll 
-                                                [path]="'assets/themes/wp/default/img/'"
-                                                [name]="'L1480'" 
-                                                [value]="voteItem.voteType" 
-                                                [showIcon]="true" 
-                                                [icoCss]="'w-15px h-15px'">
-                                            </codx-vll>
+                                                    [path]="'assets/themes/wp/default/img/'"
+                                                    [name]="'L1480'" 
+                                                    [value]="voteItem.voteType" 
+                                                    [showIcon]="true" 
+                                                    [icoCss]="'w-15px h-15px'">
+                                                </codx-vll>
                                             <span *ngIf="voteItem.count > 1">{{voteItem.count}}</span>
                                             </ng-container>
                                         </ng-container>
@@ -175,43 +172,41 @@
                                     </codx-img>
                                 </div>
                                 <!-- text -->
-                                <ng-container *ngIf="item.messageType != '2' ">
-                                    <div class="message-reciver-message">
-                                        <ng-container *ngIf="item.messageType == '5';else tmpReciverContent">
-                                            <span>{{mssgDeleted}}</span>
+                                <div class="message-reciver-message">
+                                    <ng-container *ngIf="item.messageType == '5';else tmpReciveContent">
+                                        <span>{{mssgDeleted}}</span>
+                                    </ng-container>
+                                    <ng-template #tmpReciveContent>
+                                        <!-- message reply -->
+                                        <ng-container *ngIf="item.refID">
+                                            <div class="message-reft">
+                                                <span class="d-block">{{item.refContent.createdName}}</span>
+                                                <ng-container *ngIf="item.refContent.content">
+                                                    <span class="d-block text-gray-500">{{item.refContent.content}}</span>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.refContent.type == '2'">
+                                                    <codx-temp-full 
+                                                        [dataItem]="item"
+                                                        [imageId]="item.refID" 
+                                                        imageObjType="WP_Messages"
+                                                        [imageReferType]="item.fileType"
+                                                        [title]="item.fileName"
+                                                        [desc]="formatBytes(item.fileSize)">
+                                                    </codx-temp-full>
+                                                </ng-container>
+                                            </div>
                                         </ng-container>
-                                        <ng-template #tmpReciverContent>
-                                            <!-- message reply -->
-                                            <ng-container *ngIf="item.refID">
-                                                <div class="message-reft">
-                                                    <span class="d-block">{{item.refContent.createdName}}</span>
-                                                    <ng-container *ngIf="item.refContent.content">
-                                                        <span class="d-block text-gray-500">{{item.refContent.content}}</span>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="item.refContent.type == '2'">
-                                                        <codx-temp-full 
-                                                            [dataItem]="item"
-                                                            [imageId]="item.refID" 
-                                                            imageObjType="WP_Messages"
-                                                            [imageReferType]="item.fileType"
-                                                            [title]="item.fileName"
-                                                            [desc]="formatBytes(item.fileSize)">
-                                                        </codx-temp-full>
-                                                    </ng-container>
-                                                </div>
-                                            </ng-container>
-                                            <ng-container *ngIf="item.message">
-                                                <div class="reciver-message">
-                                                    <span>{{item.message}}</span>
-                                                    <!-- time -->
-                                                    <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
-                                                        <span class="d-block text-start">{{item.createdOn | date:'hh:mm'}}</span>
-                                                    </ng-container>
-                                                </div>
-                                            </ng-container>      
-                                        </ng-template>
-                                    </div>
-                                </ng-container>
+                                        <ng-container *ngIf="item.message">
+                                            <div class="reciver-message">
+                                                <span>{{item.message}}</span>
+                                                <!-- time -->
+                                                <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
+                                                    <span class="d-block text-start">{{item.createdOn | date:'hh:mm'}}</span>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>      
+                                    </ng-template>
+                                </div>
                                 <!-- files -->
                                 <ng-container *ngIf="item.messageType == '2'">
                                     <div class="message-files">
@@ -249,28 +244,28 @@
                                 </ng-container>
                             </div>
                             <ng-container *ngIf="item.messageType != '5'">
-                                <div class="message-function">
-                                    <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
-                                        (click)="openTooltipEmoji(tooltip2,item)"
-                                        #tooltip2="ngbTooltip"
-                                        triggers="manual"
+                                <div class="message-function cursor-pointer text-gray-600">
+                                    <span class="icon-tag_faces me-2"
+                                        #ngbPopover1="ngbPopover"
+                                        placement="top"
                                         [autoClose]="true"
-                                        [ngbTooltip]="tooltipEmojiMssg">
+                                        triggers="manual"
+                                        [ngbPopover]="tooltipEmojiMssg"
+                                        (click)="openTooltipEmoji(ngbPopover1,item)">
                                     </span>
                                     <ng-container *ngIf="item.refType != 'm'">
-                                        <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
+                                        <span class="icon-undo me-2 " (click)="clickReplyMssg(item)"></span>
                                     </ng-container>
                                     <ng-container *ngIf="item.createdBy == user.userID" >
-                                        <span ngbDropdown ngbDropdownToggle 
-                                            class="icon-more_vert me-2 cursor-pointer text-gray-600">
-                                            <ul ngbDropdownMenu>
-                                                <li ngbDropdownItem *ngIf="item.messageType !='5'">
-                                                    <a (click)="deleteMessage(item)"  href="javascript:void(0)">
-                                                        <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                                                        <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
-                                                    </a>
-                                                </li>
-                                            </ul>
+                                        <span
+                                            class="icon-more_vert me-2"
+                                            #ngbPopover0="ngbPopover"
+                                            placement="top"
+                                            [autoClose]="true"
+                                            triggers="manual"
+                                            container="body"
+                                            [ngbPopover]="tooltipMfc"
+                                            (click)="openTooltipEmoji(ngbPopover0,item)">
                                         </span>
                                     </ng-container>
                                 </div>
@@ -376,6 +371,19 @@
         </div>
     </div>
 </ng-container>
+<ng-template #tmpMssgFile>
+    
+</ng-template>
+<!-- more function -->
+<ng-template #tooltipMfc let-mssg="mssg">
+    <div class="row">
+        <span class="d-block" *ngIf="mssg.messageType != '5'">
+            <span class="icon-close icon-16 text-danger me-2" (click)="deleteMessage(mssg)"></span>
+            <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+        </span>
+    </div>
+</ng-template>
+<!-- vote -->
 <ng-template #tooltipEmojiMssg let-mssg="mssg">
     <div class="row">
         <ng-container *ngFor="let item of vllL1480">
