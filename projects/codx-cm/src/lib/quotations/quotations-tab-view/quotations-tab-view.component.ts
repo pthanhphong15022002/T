@@ -39,12 +39,13 @@ export class QuotationsTabViewComponent
   @Input() customerID: string;
   @Input() refType: string;
   @Input() refID: string;
+  @Input() recID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
   @Input() disableRefID = false;
   @Input() disableCusID = false;
   @Input() disableContactsID = false;
-  @Input() typeModel = 'custormmers' || 'deals';
+  @Input() typeModel = 'custormmers' || 'deals' || 'contracts';
   @Input() showButton = false;
 
   service = 'CM';
@@ -74,6 +75,7 @@ export class QuotationsTabViewComponent
   };
   customerIDCrr = '';
   refIDCrr = '';
+  recIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
 
@@ -121,6 +123,12 @@ export class QuotationsTabViewComponent
           this.refIDCrr = changes['refID'].currentValue;
         } else return;
         break;
+      // case 'contracts':
+      //   if (changes['recID']) {
+      //     if (changes['recID'].currentValue === this.recIDCrr) return;
+      //     this.recIDCrr = changes['recID'].currentValue;
+      //   } else return;
+      //break;
     }
     this.getQuotations();
   }

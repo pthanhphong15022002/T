@@ -56,6 +56,8 @@ export class ContractsDetailComponent extends UIComponent{
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
 
+  @ViewChild('tabQuotations')tabQuotations: TemplateRef<any>;
+
   listPayment: CM_ContractsPayments[] = [];
   listPaymentHistory: CM_ContractsPayments[] = [];
   listQuotationsLine: CM_QuotationsLines[];
@@ -129,8 +131,8 @@ export class ContractsDetailComponent extends UIComponent{
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
-    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    // { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
+    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   constructor(
     private inject: Injector,
@@ -188,6 +190,9 @@ export class ContractsDetailComponent extends UIComponent{
         },
       },
     ];
+    let quotations = { name: 'Quotations', textDefault: 'Báo giá', isActive: false, icon : 'icon-i-link',template: this.tabQuotations};
+    this.tabControl.push(quotations) ;
+    this.tabControl.push({ name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null })
   }
 
   changeTab(e){
