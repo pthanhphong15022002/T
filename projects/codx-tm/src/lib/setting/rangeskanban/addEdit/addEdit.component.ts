@@ -42,7 +42,7 @@ export class AddEditComponent implements OnInit {
     @Optional() dialogData?: DialogData
   ) {
     this.dialog = dialog;
-    this.master = dialog.dataService!.dataSelected;
+    this.master = JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
     this.orgData = JSON.parse(JSON.stringify(this.master));
     this.lines = this.master.rangeLines || [];
     this.action = dialogData.data[0];
@@ -99,6 +99,18 @@ export class AddEditComponent implements OnInit {
   }
   //#endregion
   //#region master
+  // beforeSave(op: any) {
+  //   var data = [this.master];
+  //   op.className = 'RangesBusiness';
+  //   if (this.action === 'add') {
+  //     op.method = 'AddAsync';
+  //   } else if (this.action === 'edit') {
+  //     op.method = 'UpdateAsync';
+  //   }
+
+  //   op.data = data;
+  //   return true;
+  // }
   onSave() {
     if (!this.master['updateColumn']) {
       this.dialog.close(true);
@@ -113,7 +125,7 @@ export class AddEditComponent implements OnInit {
         if (this.action == 'add') opt.methodName = 'AddAsync';
         else opt.methodName = 'UpdateAsync';
 
-        opt.data = this.dialog.dataService.dataSelected;
+        opt.data = this.master;
         return true;
       }, 0)
       .subscribe((res) => {

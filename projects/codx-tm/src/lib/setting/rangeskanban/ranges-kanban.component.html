@@ -11,13 +11,14 @@
   (viewChanged)="changeView($event)"
   (buttonClick)="buttonClick($event)"
   (selectedChange)="selectedChange($event)"
+  (onLoading)="onLoading($event)"
   idField="rangeID"
   [selectedFirst]="true"
   [autoLoad]="true"
 >
 </codx-views>
 
-<ng-template #grid let-data>
+<!-- <ng-template #grid let-data>
   <tr>
     <td class="rowphoto">
       {{ data.rangeID }}
@@ -28,8 +29,6 @@
       </div>
     </td>
     <td class="rowphoto">
-      <!-- <div [innerHTML]="data.note" placement="left" [ngbTooltip]="data.note">
-      </div> -->
       <div
         [innerHTML]="data.note"
         placement="left"
@@ -68,7 +67,7 @@
       </div>
     </td>
     <td class="rowphoto">
-      {{ data.createdOn | date: "dd/MM/yyyy" }}
+      {{ data.createdOn | date : "dd/MM/yyyy" }}
     </td>
     <td class="rowphoto">
       <codx-mfunc
@@ -81,9 +80,9 @@
       </codx-mfunc>
     </td>
   </tr>
-</ng-template>
+</ng-template> -->
 
-<ng-template #itemRangeID let-data>
+<!-- <ng-template #itemRangeID let-data>
   <div class="padding">
     <codx-label
       fiedName="RangeID"
@@ -105,9 +104,9 @@
     >
     </codx-label>
   </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #itemNote let-data>
+<!-- <ng-template #itemNote let-data>
   <div class="padding">
     <codx-label
       fiedName="Note"
@@ -117,9 +116,9 @@
     >
     </codx-label>
   </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #itemRange let-data>
+<!-- <ng-template #itemRange let-data>
   <div class="padding">
     <codx-label
       fiedName="RangeID"
@@ -129,9 +128,9 @@
     >
     </codx-label>
   </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #itemCreatedBy let-data>
+<!-- <ng-template #itemCreatedBy let-data>
   <div class="padding">
     <codx-label
       fiedName="CreatedBy"
@@ -141,9 +140,9 @@
     >
     </codx-label>
   </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #itemCreatedOn let-data>
+<!-- <ng-template #itemCreatedOn let-data>
   <div class="padding">
     <codx-label
       fiedName="CreatedOn"
@@ -153,24 +152,58 @@
     >
     </codx-label>
   </div>
+</ng-template> -->
+
+<!-- temp new dua theo temp cu -->
+<ng-template #itemRangeID let-data>
+  <span
+    [innerHTML]="
+      data.rangeID | formatvalue : view.formModel : 'rangeID' | async
+    "
+  ></span>
 </ng-template>
 
+<ng-template #itemRangeName let-data>
+  <span
+    class="line-clamp line-clamp-1"
+    [ngbTooltip]="data.rangeName"
+    [innerHTML]="
+      data.rangeName | formatvalue : view.formModel : 'rangeName' | async
+    "
+  ></span>
+</ng-template>
+
+<ng-template #itemRangeLine let-data>
+  <div class="padding">
+    <codx-label
+      name="lblRangeLine"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Khoảng thời gian"
+    >
+    </codx-label>
+  </div>
+</ng-template> 
 <ng-template #itemListReadmore let-data>
   <div *ngFor="let h of data?.rangeLines; let i = index">
     <li *ngIf="i < 3 || data.disableReadmore">{{ h?.breakName }}</li>
   </div>
   <div *ngIf="data.rangeLines?.length > 3">
-    <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
-      !data.disableReadmore ? "Read More ..." : "... Read Less"
-    }}</a>
+    <a
+      class="text-35-italic cursor-pointer"
+      style="color: blue"
+      (click)="readMore(data)"
+      >{{ !data.disableReadmore ? "Read More ..." : "... Read Less" }}</a
+    >
   </div>
 </ng-template>
 
-<ng-template #itemCreateBy let-dataItem>
-  <div class="d-flex align-items-center" #itemCreateBy>
+<ng-template #itemCreatedBy let-data>
+  <div class="d-flex align-items-center">
     <codx-img
       class="symbol symbol-24 symbol-circle me-3"
-      [objectId]="dataItem.createdBy"
+      [objectId]="data.createdBy"
+      [objectName]="data.createName"
       objectType="AD_Users"
     >
     </codx-img>
@@ -179,31 +212,42 @@
       placement="bottom"
       style="margin-left: 20px"
     >
-      {{ dataItem.createName }}
+      {{ data.createName }}
     </div>
   </div>
 </ng-template>
 
-<ng-template #itemCreate let-data>
-  {{ data.createdOn | date: "dd/MM/yyyy" }}
+<ng-template #itemCreatedOn let-data>
+  <span
+    [innerHTML]="
+      data.createdOn | formatvalue : view.formModel : 'createdOn' | async
+    "
+  >
+  </span>
 </ng-template>
 
 <ng-template #itemNote let-data>
-  <div [innerHTML]="data.note"></div>
+  <span
+    class="line-clamp line-clamp-1"
+    [ngbTooltip]="data.note"
+    [innerHTML]="data.note | formatvalue : view.formModel : 'note' | async"
+  ></span>
 </ng-template>
 
 <ng-template #moreFun let-data>
-  <div>
+  <div class="" style="height: 30px">
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
-      [isBookMark]="true"
-      [itemSelected]="itemSelected"
+      [isBookMark]="false"
+      type="view"
       (clickMF)="moreFuncClick($event, data)"
     >
     </codx-mfunc>
   </div>
 </ng-template>
+
+<!--End  temp new -->
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
