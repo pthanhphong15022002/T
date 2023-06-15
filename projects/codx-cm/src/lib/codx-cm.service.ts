@@ -460,6 +460,23 @@ export class CodxCmService {
     );
   }
 
+  addDeal(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'AddDealAsync',
+      data
+    );
+  }
+  editDeal(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'EditDealAsync',
+      data
+    );
+  }
+
   getListCbxCampaigns() {
     return this.api.exec<any>(
       'CM',
