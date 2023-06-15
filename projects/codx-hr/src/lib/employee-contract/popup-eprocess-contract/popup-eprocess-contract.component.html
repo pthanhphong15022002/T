@@ -192,7 +192,7 @@
     <div class="col-6">
       <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
       <codx-input
-        [disabled]="contractNoDisable"
+        [disabled]="autoNumField === 'ContractNo'"
         field="contractNo"
         [formModel]="formModel"
         [Group]="formGroup"
