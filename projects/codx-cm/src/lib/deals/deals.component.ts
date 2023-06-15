@@ -41,8 +41,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})
-export class DealsComponent
+})export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {

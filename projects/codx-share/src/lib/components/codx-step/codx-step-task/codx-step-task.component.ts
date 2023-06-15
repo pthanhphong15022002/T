@@ -178,7 +178,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         (group) => group.refID == this.taskAdd?.taskGroupID
       );
       if (group) {
-        group?.push(this.taskAdd);
+        if(!group?.task){
+          group['task']=[];
+        }
+        group?.task?.push(this.taskAdd);
       }
     }
     if (
@@ -1187,10 +1190,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         option
       );
       dialog.closed.subscribe(async (dataOuput) => {
-        if (dataOuput?.event) {
-          this.handelProgress(data, dataOuput?.event);
+        if (dataOuput?.event?.dataProgress) {
+          this.handelProgress(data, dataOuput?.event?.dataProgress);
         }
-        await this.getStepById();
+        if(dataOuput?.event?.task || dataOuput?.event?.group){
+          await this.getStepById();
+        }
       });
     }
   }
