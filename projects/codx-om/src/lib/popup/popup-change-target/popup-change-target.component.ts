@@ -30,7 +30,7 @@ export class PopupChangeTargetComponent extends UIComponent {
   dialogRef: DialogRef;
   formModel: FormModel;
   funcID: string;
-  dataPlan: any;
+  dataKR: any;
   okrFM: any;
   versions =[];
   isAfterRender: boolean;
@@ -38,7 +38,11 @@ export class PopupChangeTargetComponent extends UIComponent {
   quarterVLL: any;
   monthVLL: any;
   kr: any;
-  editTargets: any;
+  totalTargets=0;
+  disabledTargets=0;
+  enabledTargets=0;  
+  newTarget=0;
+  backupTar=[];
   planVLL: any[];
   constructor(
     private injector: Injector,
@@ -48,11 +52,8 @@ export class PopupChangeTargetComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.dataPlan = dialogData?.data[0];
-    this.okrFM = dialogData?.data[1];
-    this.okrGrv = dialogData?.data[2];
-    this.headerText = dialogData?.data[3];
-    this.funcID = dialogData?.data[4];
+    this.dataKR = dialogData?.data[0];
+    this.headerText = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
 
@@ -63,112 +64,122 @@ export class PopupChangeTargetComponent extends UIComponent {
   }
 
   getData(){
-    this.omService.getOKRPlansByID(this.dataPlan?.recID).subscribe(res=>{
+    this.omService.getOKRByID(this.dataKR?.recID).subscribe(res=>{
       if(res){
-        this.dataPlan=res; 
-        this.versions = this.dataPlan?.versions?.reverse();
+        this.dataKR=res; 
+        if(this.dataKR?.targets?.length>0){
+          this.totalTargets= this.dataKR?.targets?.length;
+          for(let tar of this.dataKR?.targets){  
+            this.backupTar.push({...tar});
+            if(tar?.checkIns!=null || tar?.checkIns?.length>0){
+              for(let checkIn of this.dataKR?.checkIns){
+                if(checkIn?.status!='3' && checkIn?.createdOn!=null && tar?.planDate!=null && new Date(checkIn?.createdOn) > new Date(tar?.planDate))
+                {
+                  tar.comment='disabled';
+                  this.disabledTargets+=1;
+                }
+              }
+            }        
+            
+          }
+          this.enabledTargets= this.totalTargets-this.disabledTargets;
+        }
         this.isAfterRender=true;
       }
     })
   }
-  getCache(){
-    this.cache.valueList('SYS054').subscribe((vll) => {
-      if (vll) {
-        this.quarterVLL = vll;
-      }
-    });
-    this.cache.valueList('SYS053').subscribe((vll) => {
-      if (vll) {
-        this.monthVLL = vll;
-      }
-    });
+  getCache(){    
     this.cache.valueList('OM020').subscribe((vll) => {
       if (vll?.datas && vll?.datas.length > 0) {
       }
     });
   }
   onSaveForm() {}
-  showOldVersion(recID:any){
-    let dModel = new DialogModel();
-    dModel.IsFull = true;
-    dModel.FormModel = this.okrFM?.krFM;
-    let dialogShowKR = this.callfc.openForm(
-      PopupViewPlanVersionComponent,
-      '',
-      null,
-      null,
-      null,
-      [recID,this.funcID,this.okrGrv,this.okrFM],
-      '',
-      dModel
-    );
+  changeTarget(evt:any){
+    if(evt?.field){
+      this.newTarget= evt?.data;
+      //Tính lại target tự động
+      let targetsNotChanged = [];
+      let totalTargetsEdited = 0;
+
+      for (let i = 0; i < this.dataKR?.targets.length; i++) {
+        if (this.dataKR?.targets[i]?.edited != true && this.dataKR?.targets[i]?.comment==null)   {
+          targetsNotChanged.push(i);
+        } else {
+          totalTargetsEdited += this.dataKR?.targets[i]?.target;
+        }
+      }
+      let avgTarget =
+        (this.newTarget - totalTargetsEdited) / targetsNotChanged.length;
+      for (let i = 0; i < this.dataKR?.targets.length; i++) {
+        if (this.dataKR?.targets[i]?.edited != true  && this.dataKR?.targets[i]?.comment==null) {
+          this.dataKR.targets[i].target = avgTarget;
+        }
+      }
+      this.detectorRef.detectChanges();
+    }
   }
   onSaveTarget() {
-    let sumTargets = 0;
-    for (let i = 0; i < this.editTargets.length; i++) {
-      sumTargets += this.editTargets[i].target;
-    }
-    if (Math.round(sumTargets) != this.kr.target) {
-      this.notificationsService.notify(
-        'Tổng chỉ tiêu phân bổ chưa đồng nhất với chỉ tiêu',
-        '2'
-      );
-      return;
-    }
+    // let sumTargets = 0;
+    // for (let i = 0; i < this.dataKR?.targets.length; i++) {      
+    //   sumTargets += this.dataKR?.targets[i].target;
+    // }
+    // if (Math.round(sumTargets) != this.kr.target) {
+    //   this.notificationsService.notify(
+    //     'Tổng chỉ tiêu phân bổ chưa đồng nhất với chỉ tiêu',
+    //     '2'
+    //   );
+    //   return;
+    // }
     // if (this.funcType == OMCONST.MFUNCID.Edit) {
     //   this.codxOmService
     //     .editKRTargets(this.kr?.recID, this.kr?.targets)
     //     .subscribe((res) => {});
     // }
-    this.kr.targets = [];
-    for (let i = 0; i < this.editTargets.length; i++) {
-      this.kr.targets.push({ ...this.editTargets[i] });
-    }
-    this.dialogRef?.close();
+    // this.kr.targets = [];
+    // for (let i = 0; i < this.dataKR?.targets.length; i++) {
+    //   this.kr.targets.push({ ...this.dataKR?.targets[i] });
+    // }
+    // this.dialogRef?.close();
+    this.omService.editKR(this.kr).subscribe((res: any) => {
+      if (res) {
+        res.write = true;
+        res.delete = true;
+      }
+      this.notificationsService.notifyCode('SYS007');
+      this.dialogRef && this.dialogRef.close(res);        
+    });      
   }
+  
   valuePlanTargetChange(evt: any, index: number) {
     if (index != null && evt?.data != null) {
-      this.editTargets[index].target = evt.data;
-      this.editTargets[index].edited = true;
+      this.dataKR.targets[index].target = evt.data;
+      this.dataKR.targets[index].edited = true;
       //Tính lại target tự động
       let targetsNotChanged = [];
       let totalTargetsEdited = 0;
 
-      for (let i = 0; i < this.editTargets.length; i++) {
-        if (this.editTargets[i]?.edited != true) {
+      for (let i = 0; i < this.dataKR?.targets.length; i++) {
+        if (this.dataKR?.targets[i]?.edited != true && this.dataKR?.targets[i]?.comment==null)   {
           targetsNotChanged.push(i);
         } else {
-          totalTargetsEdited += this.editTargets[i]?.target;
+          totalTargetsEdited += this.dataKR?.targets[i]?.target;
         }
       }
       let avgTarget =
-        (this.kr.target - totalTargetsEdited) / targetsNotChanged.length;
-      for (let i = 0; i < this.editTargets.length; i++) {
-        if (this.editTargets[i]?.edited != true) {
-          this.editTargets[i].target = avgTarget;
+        (this.newTarget - totalTargetsEdited) / targetsNotChanged.length;
+      for (let i = 0; i < this.dataKR?.targets.length; i++) {
+        if (this.dataKR?.targets[i]?.edited != true  && this.dataKR?.targets[i]?.comment==null) {
+          this.dataKR.targets[i].target = avgTarget;
         }
       }
-    }
-  }
-  
-  calculatorTarget(planType: any) {
-    if (this.kr?.target && this.kr?.plan) {
-      this.editTargets = [];
-      this.planVLL = [];
-      if (planType == OMCONST.VLL.Plan.Month) {
-        this.planVLL = this.monthVLL?.datas;
-      } else if (planType == OMCONST.VLL.Plan.Quarter) {
-        this.planVLL = this.quarterVLL.datas;
-      }
-      
     }
   }
 
   refreshPlanTargets() {
-    if (this.kr.target && this.editTargets && this.editTargets.length > 0) {
-      let avgTarget = this.kr.target / this.editTargets.length;
-      for (let i = 0; i < this.editTargets.length; i++) {
-        this.editTargets[i].target = avgTarget;
+    if (this.kr.target && this.dataKR?.targets && this.dataKR?.targets.length > 0) {
+      for (let i = 0; i < this.dataKR?.targets.length; i++) {
+        this.dataKR.targets[i].target = this.backupTar[i]?.target;
       }
       this.detectorRef.detectChanges();
     }
