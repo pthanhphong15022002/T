@@ -245,6 +245,7 @@ export class PopupEProcessContractComponent
           }
         });
     } else if (this.actionType === 'edit' || this.actionType === 'copy') {
+      this.loadedAutoField = true;
       if (this.actionType == 'copy') {
         if (this.data.signedDate == '0001-01-01T00:00:00') {
           this.data.signedDate = null;
