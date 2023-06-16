@@ -111,7 +111,7 @@ export class DealDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.dataSelected) {
-      this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+      this.dataSelected = this.dataSelected;
       this.promiseAllAsync();
     }
   }
