@@ -52,6 +52,7 @@ import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-o
 import { PopupSelectTempletComponent } from './popup-select-templet/popup-select-templet.component';
 import { X } from '@angular/cdk/keycodes';
 import { PopupAddDealComponent } from 'projects/codx-cm/src/lib/deals/popup-add-deal/popup-add-deal.component';
+import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add-cases/popup-add-cases.component';
 
 @Component({
   selector: 'codx-instances',
@@ -436,8 +437,7 @@ export class InstancesComponent
   add() {
     // if(this.process.applyFor == '0') {
     this.view.dataService.addNew().subscribe((res) => {
-      const funcIDApplyFor =
-        this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+      const funcIDApplyFor = this.checkFunctionID( this.process.applyFor);
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -466,23 +466,24 @@ export class InstancesComponent
                 : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
-            if (!this.process.instanceNoSetting) {
-              this.codxDpService
-                .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
-                .subscribe((res) => {
-                  if (res) {
-                    this.view.dataService.dataSelected.instanceNo = res;
-                    this.openPopUpAdd(
-                      applyFor,
-                      formMD,
-                      option,
-                      'add',
-                      this.listSteps
-                    );
-                  }
-                });
-            } else
-              this.codxDpService
+            if(this.process.applyFor == '0') {
+              if (!this.process.instanceNoSetting) {
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.dataSelected.instanceNo = res;
+                      this.openPopUpAdd(
+                        applyFor,
+                        formMD,
+                        option,
+                        'add',
+                        this.listSteps
+                      );
+                    }
+                  });
+              } else {
+                this.codxDpService
                 .getAutoNumberByInstanceNoSetting(
                   this.process.instanceNoSetting
                 )
@@ -498,12 +499,21 @@ export class InstancesComponent
                     );
                   }
                 });
+              }
+            }
+            else {
+              this.openPopUpAdd(
+                applyFor,
+                formMD,
+                option,
+                'add',
+                this.listSteps
+              );
+            }
+
           });
       });
     });
-    // else {
-    //   this.openFormCM();
-    // }
   }
   copy(data, titleAction) {
     if (data) {
@@ -544,65 +554,25 @@ export class InstancesComponent
               option.zIndex = 1001;
 
 
-              let data = [this.oldIdInstance, this.process.recID];
-              this.codxDpService
-                .getInstanceStepsCopy(data)
-                .subscribe((instanceSteps) => {
-                  if (instanceSteps) {
-                    if (!this.process.instanceNoSetting) {
-                      this.codxDpService
-                        .genAutoNumber(
-                          this.funcID,
-                          'DP_Instances',
-                          'InstanceNo'
-                        )
-                        .subscribe((res) => {
-                          if (res) {
-                            this.view.dataService.dataSelected.instanceNo = res;
-                            this.openPopUpAdd(
-                              applyFor,
-                              formMD,
-                              option,
-                              'copy',
-                              instanceSteps
-                            );
-                          }
-                        });
-                    } else {
-                      this.codxDpService
-                        .getAutoNumberByInstanceNoSetting(
-                          this.process.instanceNoSetting
-                        )
-                        .subscribe((isNo) => {
-                          if (isNo) {
-                            this.view.dataService.dataSelected.instanceNo =
-                              isNo;
-                            this.openPopUpAdd(
-                              applyFor,
-                              formMD,
-                              option,
-                              'copy',
-                              instanceSteps
-                            );
-                          }
-                        });
-                    }
+
+              if (applyFor != '0') {
+                var datas = [
+                  this.oldIdInstance,
+                  applyFor,
+                ];
+                this.codxDpService.getOneDeal(datas).subscribe((dataCM) => {
+                  if (dataCM && dataCM[0]) {
+                    this.dataCM = dataCM[0];
+                    this.dataCM.reCID =  Util.uid();
+                    this.openPopUpAdd(applyFor, formMD, option, 'copy', null);
                   }
                 });
+              } else {
+                this.openPopUpAdd(applyFor, formMD, option, 'copy', null);
+              }
+
+
             }
-
-
-
-
-            //   this.openPopUpAdd(
-            //                     applyFor,
-            //                     formMD,
-            //                     option,
-            //                     'copy',
-            //                     null
-            //  );
-
-          //  }
           });
       });
     });
@@ -622,22 +592,10 @@ export class InstancesComponent
       addFieldsControl: this.addFieldsControl,
       isLoad: applyFor != '0',
       processID: this.processID,
-      instanceNoSetting: this.process.instanceNoSetting
+      instanceNoSetting: this.process.instanceNoSetting,
+      dataCM: this.dataCM,
     };
-    let dialogCustomField;
-    if (applyFor == '0') {
-      dialogCustomField = this.callfc.openSide(
-        PopupAddInstanceComponent,
-        obj,
-        option
-      );
-    } else if (applyFor == '1') {
-      dialogCustomField = this.callfc.openSide(
-        PopupAddDealComponent,
-        obj,
-        option
-      );
-    }
+    let dialogCustomField = this.checkPopupInCM(applyFor,obj,option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
         var data = e.event;
@@ -658,7 +616,7 @@ export class InstancesComponent
     });
   }
 
-  openPopupEdit(applyFor, formMD, option, titleAction){
+  openPopupEdit(applyFor, formMD, option, titleAction) {
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -675,25 +633,10 @@ export class InstancesComponent
       isLoad: applyFor != '0',
       dataCM: this.dataCM,
     };
-
-    let dialogEditInstance;
-    if (this.process.applyFor == '0') {
-      dialogEditInstance = this.callfc.openSide(
-        PopupAddInstanceComponent,
-        obj,
-        option
-      );
-    } else if (this.process.applyFor == '1') {
-      dialogEditInstance = this.callfc.openSide(
-        PopupAddDealComponent,
-        obj,
-        option
-      );
-    }
+    let dialogEditInstance = this.checkPopupInCM(applyFor,obj,option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
@@ -733,32 +676,35 @@ export class InstancesComponent
               customName.slice(1);
           }
           this.cache
-          .gridViewSetup(fun.formName, fun.gridViewName)
-          .subscribe((grvSt) => {
-            var formMD = new FormModel();
-            formMD.funcID = funcIDApplyFor;
-            formMD.entityName = fun.entityName;
-            formMD.formName = fun.formName;
-            formMD.gridViewName = fun.gridViewName;
-            option.Width =
-              this.addFieldsControl == '1' || applyFor != '0' ? '800px' : '550px';
-            option.zIndex = 1001;
-            this.view.dataService.dataSelected.processID = this.process.recID;
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width =
+                this.addFieldsControl == '1' || applyFor != '0'
+                  ? '800px'
+                  : '550px';
+              option.zIndex = 1001;
+              this.view.dataService.dataSelected.processID = this.process.recID;
 
-            if( applyFor != '0') {
-              var datas = [this.view.dataService.dataSelected.recID, applyFor];
-              this.codxDpService.getOneDeal(datas).subscribe((dataCM) => {
-                if (dataCM && dataCM[0]) {
-                  this.dataCM = dataCM[0];
-                  this.openPopupEdit(applyFor,formMD,option,titleAction);
-                }
-              });
-            }
-            else {
-              this.openPopupEdit(applyFor,formMD,option,titleAction);
-            }
-          });
-
+              if (applyFor != '0') {
+                var datas = [
+                  this.view.dataService.dataSelected.recID,
+                  applyFor,
+                ];
+                this.codxDpService.getOneDeal(datas).subscribe((dataCM) => {
+                  if (dataCM && dataCM[0]) {
+                    this.dataCM = dataCM[0];
+                    this.openPopupEdit(applyFor, formMD, option, titleAction);
+                  }
+                });
+              } else {
+                this.openPopupEdit(applyFor, formMD, option, titleAction);
+              }
+            });
         });
       });
   }
@@ -1319,7 +1265,6 @@ export class InstancesComponent
             obj
           );
           dialogMoveStage.closed.subscribe((e) => {
-            debugger
             this.isClick = true;
             this.stepIdClick = '';
             if (!e || !e.event) {
@@ -1619,6 +1564,30 @@ export class InstancesComponent
   }
 
   delete(data: any) {
+    if(this.process.applyFor == '1') {
+      var datas = [null,data.recID];
+      this.codxDpService.isCheckDealInUse(datas).subscribe((res)=> {
+        if(res[0]) {
+          this.notificationsService.notifyCode('CM015');
+          return;
+        }
+        else if(res[1]) {
+          this.notificationsService.notifyCode('CM014');
+          return;
+        }
+        else {
+          this.deleteInstance(data);
+        }
+      });
+    }
+    else {
+      this.deleteInstance(data);
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+
+  deleteInstance(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (opt) =>
@@ -1629,12 +1598,11 @@ export class InstancesComponent
           this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
-    this.changeDetectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedInstanceAsync';
-    opt.data = [itemSelected.recID];
+    opt.data = [itemSelected.recID, this.process.applyFor];
     return true;
   }
 
@@ -2387,5 +2355,37 @@ export class InstancesComponent
 
   toolTip(stt) {
     return this.dataVll?.filter((vl) => vl.value == stt)[0]?.text;
+  }
+
+
+  checkPopupInCM(applyFor,obj,option){
+    if (applyFor == '0') {
+      return this.callfc.openSide( PopupAddInstanceComponent, obj,option);
+    } else if (applyFor == '1') {
+      return  this.callfc.openSide( PopupAddDealComponent,obj, option);
+    }
+    else if (applyFor == '2' || applyFor == '3') {
+
+      return  this.callfc.openSide( PopupAddCasesComponent,obj, option);
+    }
+    return null;
+  }
+
+
+  checkFunctionID(applyFor){
+    if(applyFor == '0') {
+      return this.funcID;
+    }
+    if(applyFor == '1') {
+      return 'CM0201';
+    }
+    else if(applyFor == '2') {
+      return 'CM0401';
+    }
+    else if(applyFor == '3') {
+      return 'CM0402';
+    }
+    return null;
+
   }
 }

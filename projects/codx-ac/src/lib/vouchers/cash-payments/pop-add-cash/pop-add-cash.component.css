@@ -37,6 +37,9 @@
 .tabset-content .e-content{
     height: calc(100vh - 610px)!important;
  }
+.tabvat-content .e-content{
+    height: calc(100vh - 485px)!important;
+}
 .btn-addline{
     position: absolute;
     right: 0;

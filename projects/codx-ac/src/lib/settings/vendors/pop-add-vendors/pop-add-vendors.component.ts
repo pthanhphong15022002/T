@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   CacheService,
   CallFuncService,
@@ -649,61 +650,22 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
         this.vendors.overDueControl = true;
       }
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'VendorsBusiness';
-            opt.assemblyName = 'PS';
-            opt.service = 'PS';
-            opt.data = [this.vendors];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save) {
-              this.addObjects();
-              this.acService
-                .addData(
-                  'ERM.Business.BS',
-                  'BankAccountsBusiness',
-                  'AddAsync',
-                  [
-                    this.objecttype,
-                    this.vendors.vendorID,
-                    this.objectBankaccount,
-                  ]
-                )
-                .subscribe((res: []) => {});
-              this.acService
-                .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
-                  this.objecttype,
-                  this.vendors.vendorID,
-                  this.objectAddress,
-                ])
-                .subscribe((res: []) => {});
-              this.acService
-                .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
-                  this.objecttype,
-                  this.vendors.vendorID,
-                  this.objectContact,
-                  this.objectContactAddress,
-                ])
-                .subscribe((res: []) => {});
-              this.acService
-                .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
-                  this.objects,
-                ])
-                .subscribe((res: []) => {});
-              this.dialog.close();
-              this.dt.detectChanges();
-            } else {
-              this.notification.notifyCode(
-                'SYS031',
-                0,
-                '"' + this.vendors.vendorID + '"'
-              );
-              return;
-            }
-          });
+        this.api.exec('PS', 'VendorsBusiness', 'LoadDataAsync', [this.vendors.vendorTaxCode])
+        .subscribe((res: any) => {
+          if(res.length > 0)
+          {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notification.alertCode('AC0007', config, '"' + this.vendors.vendorTaxCode + '"').subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.save();
+              }
+            });
+          }
+          else{
+            this.save();
+          }
+        });
       }
       if (this.formType == 'edit') {
         this.dialog.dataService
@@ -760,6 +722,64 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           });
       }
     }
+  }
+
+  save(){
+    this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'VendorsBusiness';
+            opt.assemblyName = 'PS';
+            opt.service = 'PS';
+            opt.data = [this.vendors];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.addObjects();
+              this.acService
+                .addData(
+                  'ERM.Business.BS',
+                  'BankAccountsBusiness',
+                  'AddAsync',
+                  [
+                    this.objecttype,
+                    this.vendors.vendorID,
+                    this.objectBankaccount,
+                  ]
+                )
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
+                  this.objecttype,
+                  this.vendors.vendorID,
+                  this.objectAddress,
+                ])
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
+                  this.objecttype,
+                  this.vendors.vendorID,
+                  this.objectContact,
+                  this.objectContactAddress,
+                ])
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
+                  this.objects,
+                ])
+                .subscribe((res: []) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.vendors.vendorID + '"'
+              );
+              return;
+            }
+          });
   }
   //#endregion
 }

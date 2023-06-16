@@ -466,10 +466,6 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
   }
 
-
-
-
-
   async getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
@@ -1098,11 +1094,11 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     var datas = [data.recID];
     this.codxCmService.isCheckDealInUse(datas).subscribe((res)=> {
       if(res[0]) {
-        this.notificationsService.notifyCode('Cơ hội đang được không liên kết với hợp đồng');
+        this.notificationsService.notifyCode('CM015');
         return;
       }
       else if(res[1]) {
-        this.notificationsService.notifyCode('Cơ hội đang được không liên kết với báo giá');
+        this.notificationsService.notifyCode('CM014');
         return;
       }
       else {

@@ -19,7 +19,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
-import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
+import { CmCustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InformationComponent } from './cmcustomer/cmcustomer-detail/information/information.component';
 import { PopupAddCmCustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
@@ -138,7 +138,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxCmComponent,
     LayoutComponent,
     CmCustomerComponent,
-    CmcustomerDetailComponent,
+    CmCustomerDetailComponent,
     InformationComponent,
     PopupAddCmCustomerComponent,
     PopupAddressComponent,
