@@ -57,28 +57,6 @@
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-    <div class="form-group mb-0" *ngIf="checkListDoneIsNull(listTaskDone,listTaskGroupDone)">
-      <div>
-        <div class="w-100 fs-6 text-primary fw-bold">
-          <codx-label fiedName="TaskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
-            default="Công việc chưa hoàn tất">
-          </codx-label>
-        </div>
-        <div class="pt-2 ms-5">
-          <div class="accordion" id="accordion1">
-            <codx-step-task
-              [dataSources]="instancesStepOld"
-              [isSaveProgress]="false"
-              [isLockSuccess]="true"
-              [typeProgress]="2"
-              (valueChangeProgress)="changeProgress($event)"
-              [isShowButton]="false"
-              [isShowMore]="false"
-            ></codx-step-task>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="form-group" *ngIf="fieldsNull?.length > 0">
       <div>
@@ -104,7 +82,28 @@
         </div>
       </div>
     </div>
-
+    <div class="form-group mb-0" *ngIf="checkListDoneIsNull(listTaskDone,listTaskGroupDone)">
+      <div>
+        <div class="w-100 fs-6 text-primary fw-bold">
+          <codx-label fiedName="TaskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Công việc chưa hoàn tất">
+          </codx-label>
+        </div>
+        <div class="pt-2 ms-5">
+          <div class="accordion" id="accordion1">
+            <codx-step-task
+              [dataSources]="instancesStepOld"
+              [isSaveProgress]="false"
+              [isLockSuccess]="true"
+              [typeProgress]="2"
+              (valueChangeProgress)="changeProgress($event)"
+              [isShowButton]="false"
+              [isShowMore]="false"
+            ></codx-step-task>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
