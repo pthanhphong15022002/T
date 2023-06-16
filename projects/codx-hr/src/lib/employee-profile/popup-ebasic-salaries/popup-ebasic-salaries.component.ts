@@ -244,7 +244,7 @@ export class PopupEBasicSalariesComponent
             this.notify.notifyCode('SYS006');
             p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS023');
+          };
         });
     } else {
       this.hrService
@@ -254,7 +254,7 @@ export class PopupEBasicSalariesComponent
             this.notify.notifyCode('SYS007');
             p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
+          };
         });
     }
   }

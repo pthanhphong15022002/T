@@ -219,6 +219,27 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     return true;
   }
 
+  // checkIsNewestDate(effectedDate, expiredDate){
+  //   if(effectedDate){
+  //     let eff = new Date(effectedDate).toISOString();
+  //     let date = new Date().toISOString();
+  //     if(expiredDate){
+  //       let expire = new Date(expiredDate).toISOString();
+  //       if(date >= eff && date <= expire){
+  //         return true;
+  //       }
+  //       return false;
+  //     }
+  //     else{
+  //       if(date >= eff){
+  //         return true;
+  //       }
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+
   onInit(): void {
     //#region columnGrid EPassport - Hộ chiếu
     if (!this.passportColumnGrid) {
