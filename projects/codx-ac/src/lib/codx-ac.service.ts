@@ -74,8 +74,17 @@ export class CodxAcService {
     let newMemo = '';
     let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
     for (let i = 0; i < sortTrans.length; i++) {
-      if (i == sortTrans.length - 1) newMemo += sortTrans[i].value;
-      else newMemo += sortTrans[i].value + ' - ';
+      if (sortTrans[i].value != null) {
+        
+      }
+      if (i == sortTrans.length - 1 && sortTrans[i].value != null){
+        newMemo += sortTrans[i].value;
+      }else{
+        if (sortTrans[i].value != null) {
+          newMemo += sortTrans[i].value + ' - ';
+        }
+      }
+      
     }
     return newMemo;
   }

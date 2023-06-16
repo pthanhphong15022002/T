@@ -78,22 +78,30 @@ export class TreeviewCommentComponent implements OnInit {
   // get comment
   getCommentsAsync(data:any){ 
     if(!Array.isArray(data.listComment))
-    {
       data.listComment = [];
+    if(data.pageIndex && data.totalPage && data.totalPage < data.pageIndex){
+      return;
     }
+    let pageIndex = data.pageIndex == null ? 1 : data.pageIndex + 1;
+    data.pageIndex = pageIndex;
+
     this.api.execSv(
     "WP",
     "ERM.Business.WP",
     "CommentsBusiness",
     "GetCommentsAsync",
-    [data.recID,data.pageIndex == null ? 0 : data.pageIndex + 1])
+    [data.recID,pageIndex])
     .subscribe((res:any[]) => {
       if(Array.isArray(res[0]))
       {
         data.listComment = data.listComment.concat(res[0]);
-        data.pageIndex++;
+        if(!data.totalPage)
+        {
+          data.totalPage = Math.ceil(res[1]/5);
+        }
       }
-      data.full = data.listComment.length == res[1];
+      // data.full = data.listComment.length == res[1];
+      data.full = data.totalPage == data.pageIndex;
     });
   }
   // click show votes
@@ -136,7 +144,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // votes post
   votePost(data: any, voteType = null) {
-    debugger
     if(data && voteType){
       this.api.execSv(
         "WP",

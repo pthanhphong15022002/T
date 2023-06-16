@@ -3219,3 +3219,9 @@ codx-card-center .card.codx_cardcenter{
   padding-left: 0!important;
   padding-right: 0!important;
 }
+
+/***/
+.e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {
+  min-height: 36px!important;
+  border-left: 0!important;
+}

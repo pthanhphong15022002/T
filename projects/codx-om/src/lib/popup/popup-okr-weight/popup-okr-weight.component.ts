@@ -198,13 +198,13 @@ export class PopupOKRWeightComponent
 
   onSaveForm() {
     if (this.okrChild) {
-      this.totalWeight = 0;
-      this.okrChild.forEach((okr) => {
-        if (okr.weight != null) {
-          this.totalWeight = this.totalWeight + okr.weight;
-          this.detectorRef.detectChanges();
-        }
-      });
+      // this.totalWeight = 0;
+      // this.okrChild.forEach((okr) => {
+      //   if (okr.weight != null) {
+      //     this.totalWeight = this.totalWeight + okr.weight;
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
       if (this.totalWeight != 1) {
         this.notificationsService.notify('Tổng trọng số phải bằng 1', '2'); //OM_WAIT đợi messageCode
         return;

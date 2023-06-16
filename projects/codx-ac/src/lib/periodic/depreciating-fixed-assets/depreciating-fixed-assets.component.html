@@ -1,0 +1,35 @@
+<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="entityName"
+  (buttonClick)="toolBarClick($event)">
+</codx-views>
+<ng-template #templateMore let-data>
+    <div>
+      <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+        type="view"></codx-mfunc>
+    </div>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-card-center
+    cardCss="dp-card-process border rounded-2 h-100"
+    [resourceObjType]="entityName"
+    [rootData]="data"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    [typeMF]="'hover'"
+    [titleTmp]="titleTmp"
+    [descTmp]="descTmp"
+    (clickMF)="clickMF($event, data)"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
+  >
+  </codx-card-center>
+</ng-template>
+
+<ng-template #titleTmp let-data>
+  <span class="fs-3 fw-bold text-dark w-100 pt-3 text-center">{{ getDate(data?.runDate) }}</span>
+</ng-template>
+<ng-template #descTmp let-data>
+  <span class="line-clamp line-clamp-2 fs-8 mt-1 pb-3 text-center">{{ getDate(data?.fromDate) }} - {{ getDate(data?.toDate)}}</span>
+</ng-template>
+<ng-template #baseHeaderRightTmp let-data>
+  <span class="icon-lock text-danger"></span>
+</ng-template>

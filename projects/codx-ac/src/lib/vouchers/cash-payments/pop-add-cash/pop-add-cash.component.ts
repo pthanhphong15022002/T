@@ -81,6 +81,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('editTemplate', { static: true }) editTemplate: TemplateRef<any>;
   @ViewChild('grid') public grid: GridComponent;
   @ViewChild('cbxReason') cbxReason: CodxInputComponent;
+  @ViewChild('cbxObject') cbxObject: CodxInputComponent;
+  @ViewChild('cbxPayname') cbxPayname: CodxInputComponent;
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -199,7 +201,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
-    this.oldReasonID = this.cashpayment.reasonID;
     this.dt.detectChanges();
   }
   //#endregion
@@ -239,10 +240,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   changeType(e?: any, ele?: TabComponent) {
     let i;
-    if (e && e.data != null) {
-      i = e.data;
+    if (e && e.data[0] != null) {
+      i = e.data[0];
       if (
-        e.data != this.oldSubType &&
+        e.data[0] != this.oldSubType &&
         ((this.gridCash && this.gridCash.dataSource.length > 0) ||
           (this.gridSet && this.gridSet.dataSource.length > 0))
       ) {
@@ -254,7 +255,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               ])
               .subscribe((res) => {
                 if (res) {
-                  this.cashpayment.subType = e.data;
+                  this.cashpayment.subType = e.data[0];
                   this.cashpaymentline = [];
                   this.settledInvoices = [];
                   this.form.formGroup.patchValue(this.cashpayment);
@@ -266,8 +267,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         });
       } else {
-        this.cashpayment.subType = e.data;
-        this.oldSubType = e.data;
+        this.cashpayment.subType = e.data[0];
+        this.oldSubType = e.data[0];
         this.form.formGroup.patchValue(this.cashpayment);
         this.loadSubType(i, this.tabObj);
       }
@@ -293,137 +294,62 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'payee',
       'reasonid',
     ];
-
-    // switch (field) {
-    //   case 'reasonid':
-    //     let oldreason = '';
-    //     let newreason = '';
-    //     if (!e.data) {
-    //       let i = e.component.dataService.data.findIndex(
-    //         (x) => x.ReasonID == e.component.valueSelected[0]
-    //       );
-    //       oldreason = e.component.dataService.data[i].ReasonName;
-    //       newreason = e.data;
-    //     } else {
-    //       if (
-    //         e?.component?.dataService.currentComponent.previousItemData != null
-    //       ) {
-    //         oldreason =
-    //           e?.component?.dataService.currentComponent.previousItemData
-    //             .ReasonName;
-    //       }
-    //       newreason = e.component.itemsSelected[0]['ReasonName'];
-    //     }
-    //     this.setMemo(oldreason, newreason, this.cashpayment.memo);
-    //     break;
-    //   case 'payee':
-    //     // this.cashpayment.unbounds.payname =
-    //     //   e.component.itemsSelected[0]['ContactName'];
-    //     break;
-    //   case 'objectid':
-    //     let oldobject = '';
-    //     let newobject = '';
-    //     if (!e.data) {
-    //       let i = e.component.dataService.data.findIndex(
-    //         (x) => x.ObjectID == e.component.valueSelected[0]
-    //       );
-    //       oldobject = e.component.dataService.data[i].ObjectName;
-    //       newobject = e.data;
-    //     } else {
-    //       this.cashpayment.objectType = e.component.itemsSelected[0]['ObjectType'];
-    //       this.cashpayment.objectName = e.component.itemsSelected[0]['ObjectName'];
-    //       if (e?.component?.dataService.currentComponent.previousItemData != null) {
-    //         oldobject = e?.component?.dataService.currentComponent.previousItemData.ObjectName;
-    //       }
-    //       newobject = e.component.itemsSelected[0]['ObjectName'];
-    //     }
-    //     this.setMemo(oldobject, newobject, this.cashpayment.memo);
-        
-    //     // this.setReason(field, e.component.itemsSelected[0]['ObjectName'], 1);
-    //     break;
-    // }
-    if (sArray.includes(field)) {
-      this.api
-        .exec<any>('AC', this.className, 'ValueChangedAsync', [
-          e.field,
-          this.cashpayment,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.cashpayment = res;
-            this.form.formGroup.patchValue(res);
-            switch (field) {
-              case 'currencyid':
-                this.gridCreated();
-                if (this.cashpaymentline.length > 0) {
-                  this.notification
-                    .alertCode('AC0018', null)
-                    .subscribe((res) => {
-                      if (res.event.status === 'Y') {
-                        this.api
-                          .exec<any>(
-                            'AC',
-                            this.classNameLine,
-                            'ChangeExchangeRateAsync',
-                            [this.cashpayment, this.cashpaymentline]
-                          )
-                          .subscribe((res) => {
-                            if (res) {
-                              this.cashpaymentline = [...res];
-                            }
-                          });
-                      }
-                    });
-                }
-                break;
-              case 'reasonid':
-                if (this.cashpaymentline.length > 0) {
-                  this.notification
-                    .alertCode('AC0018', null)
-                    .subscribe((res) => {
-                      if (res.event.status === 'Y') {
-                        this.api
-                          .exec<any>('AC', this.classNameLine, 'UpdateLine', [
-                            e.field,
-                            this.oldReasonID,
-                            this.cashpayment,
-                            this.cashpaymentline,
-                          ])
-                          .subscribe((res) => {
-                            if (res) {
-                              this.cashpaymentline = [...res];
-                              this.oldReasonID = this.cashpayment.reasonID;
-                            }
-                          });
-                      }
-                    });
-                }
-                break;
-              case 'objectid':
-                if (this.cashpaymentline.length > 0) {
-                  this.notification
-                    .alertCode('AC0019', null)
-                    .subscribe((res) => {
-                      if (res.event.status === 'Y') {
-                        this.api
-                          .exec<any>('AC', this.classNameLine, 'UpdateLine', [
-                            e.field,
-                            null,
-                            this.cashpayment,
-                            this.cashpaymentline,
-                          ])
-                          .subscribe((res) => {
-                            if (res) {
-                              this.cashpaymentline = [...res];
-                            }
-                          });
-                      }
-                    });
-                }
-                break;
+    switch (field) {
+      case 'objectid':
+        let data = e.component.itemsSelected[0];
+        this.cashpayment.objectType = data['ObjectType'];
+        this.cashpayment.objectName = data['ObjectName'];
+        break;
+    }
+    if (e.data) {
+      if (sArray.includes(field)) {
+        this.api
+          .exec<any>('AC', this.className, 'ValueChangedAsync', [
+            e.field,
+            this.cashpayment,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.cashpayment = res;
+              this.form.formGroup.patchValue(res);
+              switch (field) {
+                case 'currencyid':
+                  this.gridCreated();
+                  if (this.cashpaymentline.length > 0) {
+                    this.api
+                      .exec<any>(
+                        'AC',
+                        this.classNameLine,
+                        'ChangeExchangeRateAsync',
+                        [this.cashpayment, this.cashpaymentline]
+                      )
+                      .subscribe((res) => {
+                        if (res) {
+                          this.cashpaymentline = [...res];
+                        }
+                      });
+                  }
+                  break;
+                case 'reasonid':
+                  if (this.cashpaymentline.length > 0) {
+                    if (e.component.dataService.currentComponent.previousItemData) {
+                      this.oldReasonID = e.component.dataService.currentComponent.previousItemData.ReasonID;
+                    }
+                    this.updateLine(e.field,this.oldReasonID);
+                  }
+                  break;
+                case 'objectid':
+                  if (this.cashpaymentline.length > 0) {
+                    if (e.component.dataService.currentComponent.previousItemData) {
+                      this.oldObjectID = e.component.dataService.currentComponent.previousItemData.ObjectID;
+                    }
+                    this.updateLine(e.field,this.oldObjectID);
+                  }
+                  break;
+              }
             }
-          }
-        });
+          });
+      }
     }
   }
 
@@ -465,24 +391,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
   changeRef(e: any) {
     this.cashpayment[e.field] = e.data;
-    let length;
-    var wDef = document.getElementById('ac-column-def');
-    let element = document.querySelectorAll(
-      '.listcash-content .e-float-input input'
-    );
-    if (e && e.data) {
-      var numberOfChar = e.data.length;
-      if (numberOfChar > 19) {
-        length = numberOfChar + 'ch';
-        (element[0] as HTMLElement).style.width = length;
-        if ((element[0] as HTMLElement).offsetWidth > wDef.offsetWidth) {
-          (element[0] as HTMLElement).style.maxWidth =
-            wDef.offsetWidth - 10 + 'px';
-        }
-      }
-    } else {
-      (element[0] as HTMLElement).style.width = '100%';
-    }
+    // let length;
+    // var wDef = document.getElementById('ac-column-def');
+    // let element = document.querySelectorAll(
+    //   '.listcash-content .e-float-input input'
+    // );
+    // if (e && e.data) {
+    //   var numberOfChar = e.data.length;
+
+    //   if (((numberOfChar * 7) + 10) > (element[0] as HTMLElement).offsetWidth) {
+    //     length = ((numberOfChar *7)+ 10) + 'px';
+    //     (element[0] as HTMLElement).style.width = length;
+    //     if ((element[0] as HTMLElement).offsetWidth > wDef.offsetWidth) {
+    //       (element[0] as HTMLElement).style.maxWidth =
+    //         wDef.offsetWidth - 10 + 'px';
+    //     }
+    //   }
+    // } else {
+    //   (element[0] as HTMLElement).style.width = '100%';
+    // }
   }
 
   gridCreated() {
@@ -1297,15 +1224,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  // loadControl(value) {
-  //   let index = this.hideFields.findIndex((x) => x == value);
-  //   if (index == -1) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   requireGrid() {
     const field = ['DIM1', 'DIM2', 'DIM3', 'ProjectID'];
     field.forEach((element) => {
@@ -1533,34 +1451,19 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     (element[1] as HTMLInputElement).setSelectionRange(0, 1000);
   }
 
-  setMemo(oldvalue, newvalue, memo) {
-    if (memo.includes(oldvalue)) {
-      if (newvalue != null) {
-        this.cashpayment.memo = memo.replace(oldvalue, newvalue);
-      } else {
-        this.cashpayment.memo = memo.replace(oldvalue, '');
-      }
-    } else {
-      this.cashpayment.memo = memo + newvalue;
-    }
-    // if (!this.reason.some((x) => x.field == field)) {
-    //   let transText = new Reason();
-    //   transText.field = field;
-    //   transText.value = text;
-    //   transText.index = idx;
-    //   this.reason.push(transText);
-    // } else {
-    //   let iTrans = this.reason.find((x) => x.field == field);
-    //   if (iTrans) iTrans.value = text;
-    // }
-
-    // this.cashpayment.memo = this.acService.setMemo(
-    //   this.cashpayment,
-    //   this.reason
-    // );
-    this.form.formGroup.patchValue(this.cashpayment);
+  updateLine(field,oldvalue) {
+    this.api
+      .exec<any>('AC', this.classNameLine, 'UpdateLine', [
+        field,
+        oldvalue,
+        this.cashpayment,
+        this.cashpaymentline,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.cashpaymentline = [...res];
+        }
+      });
   }
-
-  updateLine() {}
   //#endregion
 }

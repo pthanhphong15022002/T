@@ -50,6 +50,24 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin đào tạo',
+      name: 'trainInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chứng chỉ',
+      name: 'certificateInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Hợp đồng đào tạo',
+      name: 'contractInfo',
+    },
+  ];
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,

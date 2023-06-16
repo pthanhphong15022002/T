@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { NotificationsService, UIComponent } from 'codx-core';
+import { CacheService, NotificationsService, UIComponent } from 'codx-core';
 import { RequestOption } from 'codx-core';
 import {
   ButtonModel,
@@ -30,10 +30,13 @@ export class RangesKanbanComponent extends UIComponent {
   @ViewChild('itemRangeID', { static: true }) itemRangeID: TemplateRef<any>;
   @ViewChild('itemRangeName', { static: true }) itemRangeName: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
-  @ViewChild('itemRange', { static: true }) itemRange: TemplateRef<any>;
+  @ViewChild('itemRangeLine', { static: true }) itemRangeLine: TemplateRef<any>;
+  @ViewChild('itemListReadmore') itemListReadmore: TemplateRef<any>;
   @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('moreFun') moreFun: TemplateRef<any>;
+
   dialog!: DialogRef;
   columnsGrid = [];
   button?: ButtonModel;
@@ -42,7 +45,7 @@ export class RangesKanbanComponent extends UIComponent {
   itemSelected: any;
   funcName: any;
   moreFuncName: any;
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private cacheSv: CacheService) {
     super(injector);
   }
 
@@ -54,36 +57,97 @@ export class RangesKanbanComponent extends UIComponent {
         if (m) this.moreFuncName = m.defaultName;
       }
     });
-    this.columnsGrid = [
-      { width: 200, headerTemplate: this.itemRangeID },
-      { width: 250, headerTemplate: this.itemRangeName },
-      { width: 200, headerTemplate: this.itemNote },
-      { width: 200, headerTemplate: this.itemRange },
-      { width: 200, headerTemplate: this.itemCreatedBy },
-      { width: 150, headerTemplate: this.itemCreatedOn },
-      { field: '', headerText: '#', width: 30 },
-    ];
+
     this.button = {
       id: 'btnAdd',
     };
+  }
+  onLoading(e) {
+    let formModel = this.view.formModel;
+    if (formModel) {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          if (gv) {
+            this.columnsGrid = [
+              {
+                field: 'RangeID',
+                headerText: gv['RangeID'].headerText,
+                template: this.itemRangeID,
+                width: 200,
+              },
+              {
+                field: 'RangeName',
+                headerText: gv['RangeName'].headerText,
+                template: this.itemRangeName,
+                width: 250,
+              },
+              {
+                field: 'Note',
+                headerText: gv['Note'].headerText,
+                template: this.itemNote,
+                width: 200,
+              },
+              {
+                headerTemplate: this.itemRangeLine,
+                template: this.itemListReadmore,
+                width: 200,
+              },
+              {
+                field: 'CreatedBy',
+                headerText: gv['CreatedBy'].headerText,
+                template: this.itemCreatedBy,
+                width: 200,
+              },
+              {
+                field: 'CreatedOn',
+                headerText: gv['CreatedOn'].headerText,
+                template: this.itemCreatedOn,
+                width: 150,
+              },
+            ];
+            this.views = [
+              {
+                type: ViewType.grid,
+                sameData: true,
+                active: true,
+                model: {
+                  resources: this.columnsGrid,
+                  // template: this.grid,
+                  template2: this.moreFun,
+                },
+              },
+            ];
+          }
+        });
+    }
   }
 
   ngAfterViewInit(): void {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
     });
-
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: true,
-        model: {
-          resources: this.columnsGrid,
-          template: this.grid,
-        },
-      },
-    ];
+    // this.columnsGrid = [
+    //   { width: 200, headerTemplate: this.itemRangeID },
+    //   { width: 250, headerTemplate: this.itemRangeName },
+    //   { width: 200, headerTemplate: this.itemNote },
+    //   { width: 200, headerTemplate: this.itemRange },
+    //   { width: 200, headerTemplate: this.itemCreatedBy },
+    //   { width: 150, headerTemplate: this.itemCreatedOn }
+    //   // { field: '', headerText: '#', width: 30 },
+    // ];
+    // this.views = [
+    //   {
+    //     type: ViewType.grid,
+    //     sameData: true,
+    //     active: true,
+    //     model: {
+    //       resources: this.columnsGrid,
+    //       // template: this.grid,
+    //       template2: this.moreFun
+    //     },
+    //   },
+    // ];
     this.view.dataService.methodSave = '';
     this.view.dataService.methodDelete = '';
   }
@@ -122,7 +186,7 @@ export class RangesKanbanComponent extends UIComponent {
         );
 
         this.dialog.closed.subscribe((x) => {
-          this.view.dataService.clear();
+        //  if (!x.event) this.view.dataService.clear();
         });
       });
   }
