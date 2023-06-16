@@ -61,6 +61,7 @@ import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
 import { E } from '@angular/cdk/keycodes';
+import { PopUpVatComponent } from '../pop-up-vat/pop-up-vat.component';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
@@ -852,6 +853,27 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     );
   }
 
+  popupVat() {
+    var obj = {
+      cashpayment: this.cashpayment,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'VATInvoices';
+    dataModel.gridViewName = 'grvVATInvoices';
+    dataModel.entityName = 'AC_VATInvoices';
+    opt.FormModel = dataModel;
+    let cashdialog = this.callfc.openForm(
+      PopUpVatComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      opt
+    );
+  }
   //#endregion
 
   //#region Method
