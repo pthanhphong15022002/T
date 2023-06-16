@@ -812,21 +812,12 @@ export class CodxDpService {
       data
     );
   }
-
-
-  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
-    return this.api
-      .execSv(
-        service,
-        'ERM.Business.Core',
-        'DataBusiness',
-        'LoadDataAsync',
-        options
-      )
-      .pipe(
-        tap(),
-        map((r) => r[0]),
-        tap()
-      );
+  isCheckDealInUse(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'isCheckDealInUseAsync',
+      data
+    );
   }
 }
