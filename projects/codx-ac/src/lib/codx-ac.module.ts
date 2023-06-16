@@ -49,12 +49,27 @@ import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-a
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
 import { PopupPermissionComponent } from './journals/popup-permission/popup-permission/popup-permission.component';
+import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
+import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
+import { DepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/depreciating-fixed-assets.component';
+import { PopAddDepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/pop-add-depreciating-fixed-assets/pop-add-depreciating-fixed-assets.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+
     children: [
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
       {
         path: 'periodic/:funcID',
         component: PeriodicComponent,
@@ -106,11 +121,6 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'reports/:funcID',
-        component: ReportsComponent,
-        data: { noReuse: true },
-      },
-      {
         path: 'approvals/:funcID',
         component: ApprovalsComponent,
         data: { noReuse: true },
@@ -128,6 +138,16 @@ export const routes: Routes = [
       {
         path: 'calculatingthecostprice/:funcID',
         component: RunPeriodicComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'updatetheledger/:funcID',
+        component: UpdateTheLedgerComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'depreciatingfixedassets/:funcID',
+        component: DepreciatingFixedAssetsComponent,
         data: { noReuse: true },
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
@@ -178,7 +198,11 @@ export const routes: Routes = [
     PopAddRunPeriodicComponent,
     PopUpCashComponent,
     ReplacePipe,
+    UpdateTheLedgerComponent,
+    PopAddUpdateTheLedgerComponent,
     PopupPermissionComponent,
+    DepreciatingFixedAssetsComponent,
+    PopAddDepreciatingFixedAssetsComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

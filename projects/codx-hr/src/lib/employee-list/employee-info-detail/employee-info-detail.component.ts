@@ -2670,7 +2670,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   editEmployeeSelfInfo(actionHeaderText) {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupESelfInfoComponent,
       {
@@ -3180,7 +3180,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.eAccidentGridView?.dataService;
     option.FormModel = this.eAccidentsFormModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEaccidentsComponent,
       {
@@ -3366,7 +3366,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.eTrainCourseGrid?.dataService;
     option.FormModel = this.eTrainCourseFormModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupETraincourseComponent,
       {
@@ -3454,7 +3454,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.Width = '550px';
+    option.Width = '850px';
     option.FormModel = this.eHealthsGrid.formModel;
     let dialogAdd = this.callfunc.openSide(
       PopupEhealthsComponent,
@@ -3503,17 +3503,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
+    option.Width = '850px';
     option.FormModel = this.view.formModel;
-    option.DataService = this.view.dataService;
-    option.Width = '550px';
-    let dialogAdd = this.callfc.openSide(PopupEDiseasesComponent, {
-      actionType: actionType,
-      funcID: this.eDiseasesFuncID,
-      employeeId: this.employeeID,
-      dataInput: data,
-      headerText:
-        actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
-    });
+    option.DataService = this.eDiseasesGrid?.dataService;
+    let dialogAdd = this.callfc.openSide(
+      PopupEDiseasesComponent, 
+      {
+        actionType: actionType,
+        funcID: this.eDiseasesFuncID,
+        employeeId: this.employeeID,
+        dataInput: data,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
+      }, option);
     dialogAdd.closed.subscribe((res) => {
       if (res.event) this.updateGridView(this.eDiseasesGrid, actionType, res.event, data);
       this.df.detectChanges();

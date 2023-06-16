@@ -461,7 +461,7 @@ export class CompanySettingComponent
     let orderDialog = this.callfc.openForm(
       PopupOrderDetailComponent,
       '',
-      650,
+      800,
       900,
       '',
       data
