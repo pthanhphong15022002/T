@@ -115,6 +115,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.nameAvt = this.lead?.leadName;
     this.modifyOnAvt = this.lead?.modifiedOn;
     this.entityName = this.dialog.formModel?.entityName;
+    this.deal.processID = null;
   }
 
   async ngOnInit() {

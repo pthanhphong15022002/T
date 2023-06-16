@@ -1301,6 +1301,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           meeting['idField'] = 'meetingID';
           meeting.meetingName = data?.taskName;
           meeting.meetingType = '1';
+          meeting.refID = data.recID;
+          meeting.refType = "DP_Instances_Steps_Tasks";
+          meeting.meetingType = '1';
           meeting.reminder = Number.isNaN(data.reminders)
             ? 0
             : Number.parseInt(data.reminders);

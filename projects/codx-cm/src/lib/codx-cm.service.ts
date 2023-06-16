@@ -481,6 +481,23 @@ export class CodxCmService {
     );
   }
 
+  addCases(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'AddCasesAsync',
+      data
+    );
+  }
+  editCases(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'EditCasesAsync',
+      data
+    );
+  }
+
   getListCbxCampaigns() {
     return this.api.exec<any>(
       'CM',
