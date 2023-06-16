@@ -136,15 +136,6 @@ export class CashPaymentsComponent extends UIComponent {
     });
     this.views = [
       {
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          template2: this.templateMore,
-          frozenColumns: 1,
-        },
-      },
-      {
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -152,6 +143,15 @@ export class CashPaymentsComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: false,
+        model: {
+          frozenColumns: 1,
+          template2: this.templateMore,
         },
       },
     ];
@@ -170,6 +170,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     //this.view.setRootNode(this.parent?.customName);
+    
     this.detectorRef.detectChanges();
   }
 
