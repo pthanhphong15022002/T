@@ -1,3 +1,18 @@
+<codx-layout-add
+  #form
+  [title]="headerText"
+  [tabInfo]="tabInfo"
+  [formModel]="formModel"
+  [subHeader]=""
+  [footer]="footer1"
+  [dialog]="dialog"
+  [openMore]="true"
+  [tabContent]="[diseasesInfo, hospitalCheck]"
+  [data]="ediseasesObj"
+  *ngIf="isAfterRender"
+>
+</codx-layout-add>
+
 <ng-template #footer1>
   <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="onSaveForm()">
@@ -11,7 +26,241 @@
   </div>
 </ng-template>
 
-<codx-form
+<ng-template #diseasesInfo>
+  <div class="fs-6 fw-bold text-uppercase text-primary form-group mt-6">
+    <codx-label
+      name="lblEDiseaseInfo"
+      [formModel]="formModel"
+      default="Thông tin chung"
+    >
+    </codx-label>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="DiseaseID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="diseaseID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="DiseaseDate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="diseaseDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="FromDate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="fromDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="ToDate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="toDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <codx-label
+      fiedName="TreatHopitalID"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      field="treatHopitalID"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="TreatDoctor"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="treatDoctor"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="TotalCost"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="TotalCost"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        [showSpinButton]="false"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="PayForm"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="payForm"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="AllowanceLevel"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="AllowanceLevel"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        [showSpinButton]="false"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="Conclusion"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      field="conclusion"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-input
+      field="note"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<ng-template #hospitalCheck>
+  <div class="d-flex flex-stack form-group mt-6">
+    <div class="fs-6 fw-bold text-uppercase text-primary">
+      <codx-label
+      fiedName="IsInspect"
+      [formModel]="formModel"
+    ></codx-label>
+    </div>
+    <codx-input
+      field="IsInspect"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+  <div class="form-group row">
+    <codx-label
+      fiedName="InspectionPlace"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      field="InspectionPlace"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="InspectionDecisionNo"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="InspectionDecisionNo"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="InspectionDate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="inspectionDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="DiseaseRate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="DiseaseRate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        [showSpinButton]="false"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="Seniority"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="Seniority"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        [showSpinButton]="false"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group rpw">
+    <codx-label
+      fiedName="InspectionNote"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      field="inspectionNote"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<!-- <codx-form
   #form
   [headerText]="headerText"
   [body]="tmpContent"
@@ -285,7 +534,7 @@
   </ejs-tab>
 </ng-template>
 
-</codx-form>
+</codx-form> -->
 
 <!-- <layout-list-detail
   #lstDetail

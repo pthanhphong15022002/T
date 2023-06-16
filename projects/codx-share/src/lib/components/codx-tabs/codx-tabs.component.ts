@@ -152,7 +152,7 @@ export class CodxTabsComponent implements OnInit {
   }
   activeTabControl()
   {
-    this.TabControl.map(x => x.icon = this.all.find(e => e.name.toLowerCase() == x.name.toLowerCase())?.icon ?? "");
+    this.TabControl.map(x => x.icon = this.all.find(e => e.name.toLowerCase() == x.name.toLowerCase())?.icon ?? x.icon );
       this.active = this.TabControl.findIndex(
         (x: TabModel) => x.isActive == true
       );

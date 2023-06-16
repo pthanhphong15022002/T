@@ -30,6 +30,19 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin bản thân',
+      name: 'selfInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Liên hệ',
+      name: 'contactInfo',
+    },
+  ];
+
   constructor(
     private injector: Injector,
     private notitfy: NotificationsService,

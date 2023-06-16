@@ -94,6 +94,13 @@ export class CodxListContactsComponent implements OnInit {
         if (m) this.moreFuncAdd = m.defaultName;
       }
     });
+    this.cmSv.contactSubject.subscribe((res) => {
+      if (res) {
+        this.lstContactEmit.emit(res);
+        this.cmSv.contactSubject.next(null);
+
+      }
+    });
   }
 
   loadListContact(lstContact) {
@@ -340,6 +347,7 @@ export class CodxListContactsComponent implements OnInit {
         );
         dialog.closed.subscribe((e) => {
           this.isButton = true;
+
           if (e && e.event != null) {
             if (e.event?.recID) {
               var index = this.listContacts.findIndex(
@@ -418,7 +426,6 @@ export class CodxListContactsComponent implements OnInit {
       this.isCheckedAll = this.listContacts.every((item) => item.checked);
     }
   }
-
 
   getListContactsByObjectId(objectID) {
     this.loaded = false;

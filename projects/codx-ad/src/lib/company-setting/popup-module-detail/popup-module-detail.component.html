@@ -9,40 +9,42 @@
 </codx-form>
 
 <ng-template #header>
-  <div class="close d-flex w-100 justify-content-end">
-    <button
-      type="button"
-      class="btn btn-light-primary me-4"
-      (click)="closePopup()"
-    >
-      <codx-label formName="" default="X"></codx-label>
-    </button>
+  <div class="card-toolbar w-100 d-flex justify-content-end">
+    <div class="float-end">
+      <button
+        type="button"
+        class="btn btn-icon"
+        (click)="closePopup()"
+      >
+        <i class="icon-close icon-18"></i>
+      </button>
+    </div>
   </div>
-  <div class="row d-flex">
+  
+
+  <div class="mt-n3 fs-body">
     <codx-temp-full
-      cardCss="card-template border-bottom px-2 pt-4 pb-2"
+      cardCss="card-template"
       [typeMF]="'hover'"
       [title]="module.boughtModule.moduleName"
       [desc]="module.boughtModule.description"
       [descLine]="2"
       [imageSrc]="module.boughtModule?.image"
-      [icoCss]="
-        'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 '
-      "
+      [titleCss]="'fs-5-sm mb-1 mt-1'"
       [titleLine]="2"
       [icoDateCss]="'icon-access_alarm'"
       typeMF="hover"
       [dataItem]="module"
     >
     </codx-temp-full>
-    <div class="row d-flex">
-      <span>
-        <codx-label
-          formName=""
-          name="lblUsers"
-          [default]="'Nhân viên nghiệp vụ: '"
-        >
-        </codx-label>
+    <div class="d-flex align-items-center ms-18 mt-2" >
+      <codx-label class="fs-6 text-dark me-2"
+        formName=""
+        name="lblUsers"
+        [default]="'Nhân viên nghiệp vụ: '"
+      >
+      </codx-label>
+      <span class="text-gray-600">
         {{
           module.boughtModule.price +
             " " +
@@ -54,13 +56,13 @@
         }}
       </span>
     </div>
-    <div class="row" *ngIf="childMD">
-      <span>
-        <codx-label
-          formName=""
-          name="lblEmpls"
-          [default]="'Nhân viên thường: '"
-        ></codx-label>
+    <div class="d-flex align-items-center ms-18 mt-1" *ngIf="childMD">
+      <codx-label class="fs-6 text-dark me-2"
+        formName=""
+        name="lblEmpls"
+        [default]="'Nhân viên thường: '"
+      ></codx-label>
+      <span class="text-gray-600">
         {{
           childMD.boughtModule.price +
             " " +
@@ -76,24 +78,20 @@
 </ng-template>
 <ng-template #body>
   <div class="mainInfo d-flex w-100 h-100 flex-column justify-content-between">
-    <div class="row body">
-      <div class="row body">
-        <div class="row d-flex">
-          <codx-gridview-v2
-            #grid
-            [formName]="fmUserRole?.formName"
-            [gridViewName]="fmUserRole?.gridViewName"
-            [entityName]="fmUserRole?.entityName"
-            [dataSource]="lstADUserRoles"
-            [hideMoreFunc]="true"
-            [columnsGrid]="clmnGrid"
-            [predicates]="predicate"
-            [dataValues]="dataValue"
-            [autoLoad]="false"
-            rowHeight="40"
-          ></codx-gridview-v2>
-        </div>
-      </div>
+    <div class="body">
+      <codx-gridview-v2
+          #grid
+          [formName]="fmUserRole?.formName"
+          [gridViewName]="fmUserRole?.gridViewName"
+          [entityName]="fmUserRole?.entityName"
+          [dataSource]="lstADUserRoles"
+          [hideMoreFunc]="true"
+          [columnsGrid]="clmnGrid"
+          [predicates]="predicate"
+          [dataValues]="dataValue"
+          [autoLoad]="false"
+          rowHeight="40"
+        ></codx-gridview-v2>
       <ng-template #operRoleEndDate let-data>
         <div
           [innerHTML]="
@@ -129,7 +127,7 @@
   </div>
 </ng-template>
 <ng-template #tmplUserInfo let-data>
-  <div class="py-2">
+  <div class="py-3">
     <codx-temp-full
       [imageObjType]="'AD_Users'"
       [imageId]="data.userID"

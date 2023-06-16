@@ -27,7 +27,7 @@
             <div class="ps-3">
               {{version?.comment}}
             </div>
-            
+            <span role="button" (click)="showOldVersion(version?.planID)"><codx-label class="text-primary" name="lblViewDetail" default="Xem chi tiết"></codx-label></span>
           </div>
           <div>
             <codx-label name="lblActivedOn" default="Hiệu lực" [formModel]="form?.formModel"></codx-label> 
