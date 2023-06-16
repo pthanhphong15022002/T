@@ -17,6 +17,7 @@ import {
   CodxFormComponent,
   DialogModel,
   RequestOption,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import { PopAddAddressComponent } from '../pop-add-address/pop-add-address.component';
 import { PopAddBankComponent } from '../pop-add-bank/pop-add-bank.component';
@@ -565,6 +566,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       }
     }
   }
+
+  checkMST(){
+    
+  }
+
   addObjects() {
     this.objects.transID = this.customers.recID;
     this.objects.objectID = this.customers.customerID;
@@ -642,102 +648,126 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         this.customers.overDueControl = true;
       }
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.customers.status = '1';
-        this.dialog.dataService
-          .save(null, 0, '', 'SYS006', true)
-          .subscribe((res) => {
-            if (res.save) {
-              this.addObjects();
-              this.acService
-                .addData(
-                  'ERM.Business.BS',
-                  'BankAccountsBusiness',
-                  'AddAsync',
-                  [
-                    this.objecttype,
-                    this.customers.customerID,
-                    this.objectBankaccount,
-                  ]
-                )
-                .subscribe((res: []) => {});
-              this.acService
-                .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
-                  this.objecttype,
-                  this.customers.customerID,
-                  this.objectAddress,
-                ])
-                .subscribe((res: []) => {});
-              this.acService
-                .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
-                  this.objecttype,
-                  this.customers.customerID,
-                  this.objectContact,
-                  this.objectContactAddress,
-                ])
-                .subscribe((res: []) => {});
-              this.acService
-                .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
-                  this.objects,
-                ])
-                .subscribe((res: []) => {});
-              this.dialog.close();
-              this.dt.detectChanges();
-            } else {
-              this.notification.notifyCode(
-                'SYS031',
-                0,
-                '"' + this.customers.customerID + '"'
-              );
-              return;
-            }
-          });
-      }
-      if (this.formType == 'edit') {
-        this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
-          if (res.save || res.update) {
-            this.addObjects();
-            this.api
-              .exec(
-                'ERM.Business.BS',
-                'BankAccountsBusiness',
-                'UpdateAsync',
-                [
-                  this.objecttype,
-                  this.customers.customerID,
-                  this.objectBankaccount,
-                  this.objectBankaccountDelete,
-                ]
-              )
-              .subscribe((res: any) => {});
-            this.api
-              .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
-                this.objecttype,
-                this.customers.customerID,
-                this.objectAddress,
-                this.objectAddressDelete,
-              ])
-              .subscribe((res: any) => {});
-            this.api
-              .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
-                this.objecttype,
-                this.customers.customerID,
-                this.objectContact,
-                this.objectContactDelete,
-                this.objectContactAddress,
-                this.objectContactAddressDelete,
-              ])
-              .subscribe((res: any) => {});
-            this.acService
-              .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
-                this.objects,
-              ])
-              .subscribe((res: []) => {});
-            this.dialog.close();
-            this.dt.detectChanges();
+        this.api.exec('SM', 'CustomersBusiness', 'LoadDataAsync', [this.customers.custTaxCode])
+        .subscribe((res: any) => {
+          if(res.length > 0)
+          {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notification.alertCode('AC0007', config, '"' + this.customers.custTaxCode + '"').subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.save();
+              }
+            });
+          }
+          else
+          {
+            this.save();
           }
         });
       }
+      if (this.formType == 'edit') {
+        this.edit();
+      }
     }
+  }
+
+  save(){
+    this.customers.status = '1';
+    this.dialog.dataService
+    .save(null, 0, '', 'SYS006', true)
+    .subscribe((res) => {
+      if (res.save) {
+        this.addObjects();
+        this.acService
+          .addData(
+            'ERM.Business.BS',
+            'BankAccountsBusiness',
+            'AddAsync',
+            [
+              this.objecttype,
+              this.customers.customerID,
+              this.objectBankaccount,
+            ]
+          )
+          .subscribe((res: []) => {});
+        this.acService
+          .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
+            this.objecttype,
+            this.customers.customerID,
+            this.objectAddress,
+          ])
+          .subscribe((res: []) => {});
+        this.acService
+          .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
+            this.objecttype,
+            this.customers.customerID,
+            this.objectContact,
+            this.objectContactAddress,
+          ])
+          .subscribe((res: []) => {});
+        this.acService
+          .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
+            this.objects,
+          ])
+          .subscribe((res: []) => {});
+        this.dialog.close();
+        this.dt.detectChanges();
+      } else {
+        this.notification.notifyCode(
+          'SYS031',
+          0,
+          '"' + this.customers.customerID + '"'
+        );
+        return;
+      }
+    });
+  }
+
+  edit(){
+    this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+      if (res.save || res.update) {
+        this.addObjects();
+        this.api
+          .exec(
+            'ERM.Business.BS',
+            'BankAccountsBusiness',
+            'UpdateAsync',
+            [
+              this.objecttype,
+              this.customers.customerID,
+              this.objectBankaccount,
+              this.objectBankaccountDelete,
+            ]
+          )
+          .subscribe((res: any) => {});
+        this.api
+          .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
+            this.objecttype,
+            this.customers.customerID,
+            this.objectAddress,
+            this.objectAddressDelete,
+          ])
+          .subscribe((res: any) => {});
+        this.api
+          .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
+            this.objecttype,
+            this.customers.customerID,
+            this.objectContact,
+            this.objectContactDelete,
+            this.objectContactAddress,
+            this.objectContactAddressDelete,
+          ])
+          .subscribe((res: any) => {});
+        this.acService
+          .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
+            this.objects,
+          ])
+          .subscribe((res: []) => {});
+        this.dialog.close();
+        this.dt.detectChanges();
+      }
+    });
   }
   //#endregion
 }
