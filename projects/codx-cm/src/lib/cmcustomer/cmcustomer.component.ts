@@ -21,7 +21,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
+import { CmCustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
 import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
@@ -52,7 +52,7 @@ export class CmCustomerComponent
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('customerDetail') customerDetail: CmcustomerDetailComponent;
+  @ViewChild('customerDetail') customerDetail: CmCustomerDetailComponent;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
