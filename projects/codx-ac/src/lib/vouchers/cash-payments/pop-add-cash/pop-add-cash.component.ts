@@ -61,6 +61,7 @@ import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
 import { E } from '@angular/cdk/keycodes';
+import { PopUpVatComponent } from '../pop-up-vat/pop-up-vat.component';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
@@ -388,28 +389,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.cashpayment[e.ControlName] = e.crrValue;
         break;
     }
-  }
-  changeRef(e: any) {
-    this.cashpayment[e.field] = e.data;
-    // let length;
-    // var wDef = document.getElementById('ac-column-def');
-    // let element = document.querySelectorAll(
-    //   '.listcash-content .e-float-input input'
-    // );
-    // if (e && e.data) {
-    //   var numberOfChar = e.data.length;
-
-    //   if (((numberOfChar * 7) + 10) > (element[0] as HTMLElement).offsetWidth) {
-    //     length = ((numberOfChar *7)+ 10) + 'px';
-    //     (element[0] as HTMLElement).style.width = length;
-    //     if ((element[0] as HTMLElement).offsetWidth > wDef.offsetWidth) {
-    //       (element[0] as HTMLElement).style.maxWidth =
-    //         wDef.offsetWidth - 10 + 'px';
-    //     }
-    //   }
-    // } else {
-    //   (element[0] as HTMLElement).style.width = '100%';
-    // }
   }
 
   gridCreated() {
@@ -874,6 +853,27 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     );
   }
 
+  popupVat() {
+    var obj = {
+      cashpayment: this.cashpayment,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'VATInvoices';
+    dataModel.gridViewName = 'grvVATInvoices';
+    dataModel.entityName = 'AC_VATInvoices';
+    opt.FormModel = dataModel;
+    let cashdialog = this.callfc.openForm(
+      PopUpVatComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      opt
+    );
+  }
   //#endregion
 
   //#region Method
@@ -883,7 +883,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ) {
       return;
     }
-    if (this.cashpaymentline.length == 0) {
+    if (this.cashpaymentline.length == 0 && this.settledInvoices.length == 0) {
       this.notification.notifyCode('AC0013');
       return;
     }

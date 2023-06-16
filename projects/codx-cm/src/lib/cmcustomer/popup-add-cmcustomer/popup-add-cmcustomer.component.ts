@@ -169,7 +169,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
-          icon: 'icon-info',
+          icon: 'icon-read_more',
           text: 'Thông tin khác',
           name: 'InformationDefault',
         },
@@ -188,7 +188,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
-          icon: 'icon-info',
+          icon: 'icon-read_more',
           text: 'Thông tin khác',
           name: 'InformationDefault',
         },
@@ -202,7 +202,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
-          icon: 'icon-info',
+          icon: 'icon-read_more',
           text: 'Thông tin khác',
           name: 'InformationDefault',
         },
@@ -217,7 +217,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
-          icon: 'icon-info',
+          icon: 'icon-read_more',
           text: 'Thông tin khác',
           name: 'InformationDefault',
         },
