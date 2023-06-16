@@ -74,6 +74,18 @@ export class LeadDetailComponent  implements OnInit {
   listTab(funcID){
     this.tabDetail = [
       { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+      {
+        name: 'Field',
+        textDefault: 'Thông tin mở rộng',
+        icon: 'icon-add_to_photos',
+        isActive: false,
+      },
+      {
+        name: 'Task',
+        textDefault: 'Công việc',
+        icon: 'icon-more',
+        isActive: false,
+      },
     ]
   }
 
@@ -98,14 +110,14 @@ export class LeadDetailComponent  implements OnInit {
   }
 
   async afterLoad() {
-    var options = new DataRequest();
-    options.entityName = 'CM_Deals';
-    options.predicates = 'RecID=@0';
-    options.dataValues = '61bc2462-069e-11ee-94b2-00155d035517';
-    options.pageLoading = false;
-    this.deals = await firstValueFrom(
-      this.codxCmService.loadDataAsync('CM', options)
-    );
+    // var options = new DataRequest();
+    // options.entityName = 'CM_Deals';
+    // options.predicates = 'RecID=@0';
+    // options.dataValues = '61bc2462-069e-11ee-94b2-00155d035517';
+    // options.pageLoading = false;
+    // this.deals = await firstValueFrom(
+    //   this.codxCmService.loadDataAsync('CM', options)
+    // );
 
 
   }

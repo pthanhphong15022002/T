@@ -1,3 +1,5 @@
+import { Util } from "codx-core";
+
 export class VATInvoices {
   accountID: any;
   address: any;
@@ -35,7 +37,7 @@ export class VATInvoices {
   pmtMethodID: any;
   projectID: any;
   quantity: any;
-  recID: any;
+  recID: any = Util.uid();;
   rowNo: any;
   selected: any;
   taxAcctID: any;

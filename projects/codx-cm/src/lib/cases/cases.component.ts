@@ -184,7 +184,7 @@ export class CasesComponent
       });
       this.changeDetectorRef.detectChanges();
     });
-  
+
   }
 
   afterLoad() {
@@ -850,6 +850,7 @@ export class CasesComponent
       caseType: this.caseType,
       applyFor: this.applyFor,
       titleAction: this.titleAction,
+      processID:this.processID,
     };
     let dialogCustomcases = this.callfc.openSide(
       PopupAddCasesComponent,

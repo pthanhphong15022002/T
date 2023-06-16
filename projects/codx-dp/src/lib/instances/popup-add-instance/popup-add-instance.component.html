@@ -95,10 +95,9 @@
     >
     </codx-label>
     <codx-input
+      type="text"
       field="instanceNo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      (valueChange)="valueChange($event)"
+      [crrValue]="instance?.instanceNo"
       [disabled]="true"
     >
     </codx-input>

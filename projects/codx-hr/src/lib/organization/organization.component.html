@@ -330,13 +330,10 @@
             >
             </codx-label>
           </span>
-          <div
-            class="fs-2 fw-bold mb-2 text-primary number-users"
-            *ngFor="let opc of dataCount | async"
-          >
-            {{ getCount(item.orgUnitID) }}
-            <!-- {{ item.counts ? item.counts : 0 }} -->
-            {{ console.log(opc) }}
+          <div class="fs-2 fw-bold mb-2 text-primary number-users">
+            <!-- {{ getCount(item.orgUnitID) }} -->
+            {{ item.counts ? item.counts : 0 }}
+            <!-- {{ console.log(opc) }} -->
           </div>
           <ng-container *ngIf="item.staffEmp?.length > 0">
             <ng-container
