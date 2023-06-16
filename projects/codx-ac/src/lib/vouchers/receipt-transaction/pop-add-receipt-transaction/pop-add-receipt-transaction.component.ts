@@ -146,6 +146,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.inventoryJournal);
+    setTimeout(() => {
+      this.focusInput();
+    }, 500);
   }
 
   //#endregion
@@ -1074,6 +1077,13 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       return 0;
     var costAmt = quantity * costPrice;
     return costAmt;
+  }
+
+  focusInput() {
+    var element = document.querySelectorAll('input');
+    console.log(element[0]);
+    (element[0] as HTMLInputElement).focus();
+    (element[0] as HTMLInputElement).setSelectionRange(0, 2000);
   }
 
   //#endregion

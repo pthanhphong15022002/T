@@ -41,11 +41,10 @@ export class CompanyInforComponent extends UIComponent {
   }
 
   onInit(): void {
-    let funcID =  this.router.snapshot.params["funcID"];
-    if(funcID){
-      this.funcID = funcID + "P";
-      this.loadData(this.funcID);
-      this.getUserPermission(this.funcID);
+    this.funcID =  this.router.snapshot.params["funcID"];
+    if(this.funcID){
+      this.loadData();
+      this.getUserPermission(this.funcID + "P");
     }
     
   }
@@ -62,15 +61,13 @@ export class CompanyInforComponent extends UIComponent {
     }
   }
   // get companyinfor
-  loadData(funcID:string){
-    if(funcID){
-      this.api
+  loadData(){
+    this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
-        'GetConpanyInforAsync',
-        [funcID])
+        'GetConpanyInforAsync')
         .subscribe((res:any) => {
           if(res)
           {
@@ -79,7 +76,6 @@ export class CompanyInforComponent extends UIComponent {
           }
           this.loaded = true;
       });
-    }
   }
 
   clickShowPopupEdit(){

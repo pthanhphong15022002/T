@@ -34,6 +34,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   valueYear;
   isAfterRender = false;
   defaultAwardDate: string = '0001-01-01T00:00:00';
+  autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -163,6 +164,10 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            if (res.key) {
+              this.autoNumField = res.key;
+            }
+
             this.awardObj = res?.data;
             if (this.awardObj.awardDate.toString() == this.defaultAwardDate)
               this.awardObj.awardDate = null;

@@ -130,6 +130,8 @@ export class CodxViewTaskComponent implements OnInit {
       await this.setDataView();
       this.settingData();
       this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
+      this.isUpdateProgressGroup = this.instanceStep?.progressTaskGroupControl || false;
+      this.isUpdateProgressStep = this.instanceStep?.progressStepControl || false;
     }
   }
 
@@ -389,6 +391,12 @@ export class CodxViewTaskComponent implements OnInit {
               res.disabled = true;
             }
             break;
+          case 'DP27':// đặt xe
+            res.isbookmark = true;
+            if (this.type != 'B') {
+              res.disabled = true;
+            }
+            break;
         }
       });
     }
@@ -397,30 +405,50 @@ export class CodxViewTaskComponent implements OnInit {
   async clickMFStep(event) {
     switch (event.functionID) {
       case 'DP13': //giao viec
-        // this.dialog.close();
         this.stepService.assignTask(event.data, this.dataView,this.instanceStep);
         break;
       case 'DP08': //them task
-        await this.addTask();
+        await this.chooseTypeTask();
         break;
       case 'DP20': // tien do
         this.openPopupUpdateProgress(this.dataView, this.type)
         break;
-      case 'DP26': // view
+      case 'DP27': // đặt xe
+        await this.stepService.addBookingCar()
         break;
+
     }
   }
 
-  async addTask(){
-    let dataOutput = await this.stepService.chooseTypeTask(this.instanceStep);
-    console.log(dataOutput);
-    if(dataOutput?.event?.groupTask){
-      this.groupTaskAdd = dataOutput?.event?.groupTask;
-      this.instanceStep?.taskGroups?.push(dataOutput?.event?.groupTask);
+  async chooseTypeTask(){
+    let isAddGroup = this.type == 'P' ? true : false;
+    let dataType = await this.stepService.chooseTypeTask(isAddGroup);
+    if(dataType){
+      if (dataType?.value == 'G') {          
+        await this.addGroup();
+      } else {
+        await this.addTask(dataType);
+      }
     }
-    if(dataOutput?.event?.task){
-      this.taskAdd = dataOutput?.event?.task;
-      this.instanceStep?.tasks?.push(dataOutput?.event?.task);
+  }
+
+  async addGroup(){
+    let groupOutput = await this.stepService.addGroupTask(this.instanceStep);
+    if(groupOutput?.groupTask){
+      this.groupTaskAdd = groupOutput?.groupTask;
+      this.instanceStep?.taskGroups?.push(groupOutput?.groupTask);
+    }
+  }
+
+  async addTask(dataType){
+    let groupId = this.type == "G" ? this.dataView?.refID : null;
+    let taskOutput = await this.stepService.addTask(dataType,this.instanceStep,groupId);
+    if(taskOutput?.task){
+      this.taskAdd = taskOutput?.task;
+      this.instanceStep?.tasks?.push(taskOutput?.task);
+      if(this.type != "P"){
+        this.listDataLink?.push(this.taskAdd);
+      }
     }
   }
 }

@@ -25,6 +25,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   @Input() dataValue:any="";
   @Input() print:any="false";
   _paramString:any="";
+  _labelString:any="";
   orgReportList:any=[];
   moreFc: any = [
     {
@@ -162,27 +163,19 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     //   this.dataValue = e[0].dataValues;
     // }
     let objParam:any = {};
+    let objLabel:any={};
     if(e[1]){
       for(let key in e[1]){
-        // if(key.includes('Date')){
-        //   objParam['fromDate'] = e[1][key].fromDate;
-        //   objParam['toDate'] = e[1][key].toDate;
-        // }
-        // else{
-        //   objParam[key] = e[1][key]
-        // }
         objParam[key] = e[1][key]
       }
-      // let parameters = this.funcItem.parameters;
-      // if(parameters){
-      //   parameters.forEach((e:any) => {
-      //     if(e.defaultValue){
-      //       objParam[e.mappingName] = e.defaultValue;
-      //     }
-      //   });
-      // }
 
       this._paramString = JSON.stringify(objParam);
+    }
+    if(e[2]){
+      for(let key in e[2]){
+        objLabel[key] = e[2][key];
+      }
+      this._labelString = JSON.stringify(objLabel);
     }
   }
 

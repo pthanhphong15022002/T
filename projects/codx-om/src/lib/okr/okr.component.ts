@@ -30,6 +30,7 @@ import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup
 import { PopupAddRoleComponent } from '../popup/popup-add-role/popup-add-role.component';
 import { PopupViewVersionComponent } from '../popup/popup-view-version/popup-view-version.component';
 import { OM_Statistical } from '../model/okr.model';
+import { PopupAddVersionComponent } from '../popup/popup-add-version/popup-add-version.component';
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -132,9 +133,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.auth = inject.get(AuthStore);
+    this.curUser = this.auth.get();
     this.okrService = inject.get(CodxOmService);
 
-    this.curUser = this.auth.get();
     this.createCOObject();
   }
 
@@ -367,7 +368,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((okrs: any) => {
                 if (okrs) {
                   this.dataOKR = okrs;
-                  this.calculateStatistical();
+                  this.calculateStatistical(null);
                   this.isAfterRender = true;
                   this.showPlanMF = true;
                   this.loadedData = true;
@@ -407,7 +408,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         let x = okrs;
         this.getOrgTreeOKR();
         for (let gr of okrs) {
-          let filterGR = this.dataOKR.filter(
+          let filterGR = this.dataOKR?.filter(
             (x) => x?.okrGroupID == gr?.okrGroupID
           );
 
@@ -491,12 +492,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             }
           }
         }
-        this.calculateStatistical();
+        this.calculateStatistical(null);
         this.detectorRef.detectChanges();
       }
     });
   }
-  calculateStatistical(){
+  calculateStatistical(evt:any){
     if(this.dataOKR!=null){
       var tempValue = new OM_Statistical();
       let countNotStartOB = 0;
@@ -676,6 +677,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       case OMCONST.MFUNCID.ShowVerPlanORG:
       case OMCONST.MFUNCID.ShowVerPlanPER:
         this.viewListVersion(evt?.text);
+        break;
+      case OMCONST.MFUNCID.UpdateVerPlanCOMP:
+      case OMCONST.MFUNCID.UpdateVerPlanDEPT:
+      case OMCONST.MFUNCID.UpdateVerPlanORG:
+      case OMCONST.MFUNCID.UpdateVerPlanPER:
+        this.updateVersion(evt?.text);
         break;
     }
   }
@@ -1056,9 +1063,19 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     option.FormModel = this.formModelPlan;
     let dialogViewVersion = this.callfc.openSide(
       PopupViewVersionComponent,
-      [this.dataOKRPlans,this.okrFM,this.okrGrv,title],
+      [this.dataOKRPlans,this.okrFM,this.okrGrv,title,this.funcID],
       option
     );
     dialogViewVersion.closed.subscribe((res) => {});
+  }
+  updateVersion(title:any) {
+    let dialogPermission = this.callfc.openForm(
+      PopupAddVersionComponent,
+      "",
+      600,
+      330,
+      null,
+      [this.dataOKRPlans, title]
+    );
   }
 }

@@ -205,8 +205,9 @@
       <div class="modal-body h-kr-add2">
         <div class="w-100 d-flex flex-wrap">
           <div class="d-flex justify-content-between align-items-center w-50 mb-4"
-            *ngFor="let item of this.editTargets;let i=index">
-            <span class="col-3 text-dark fw-bold">{{this.planVLL[i]?.text}}</span>
+            *ngFor="let item of editTargets;let i=index">
+            
+            <span class="col-3 text-dark fw-bold">{{ item?.period | vll: "OM021":"text" | async }} </span>
             <div class="col-7 ">
               <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="w-100 border-1 border text-right"
                 (valueChange)="valuePlanTargetChange($event,i)"></codx-inplace>

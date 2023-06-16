@@ -215,7 +215,7 @@ lib-company-setting .e-tab .e-tab-header.e-vertical:before {
 }
 
 
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
+.e-tab .e-tab-header .e-toolbar-item:hover {
   background-color: var(--primary-lightest);
 }
 
@@ -225,8 +225,9 @@ lib-company-setting .e-toolbar-items {
 }
 
 .e-toolbar-items .e-toolbar-item {
-  margin-bottom: 6px !important;
-  min-height: 34px !important;
+  margin-bottom: 2px !important;
+  min-height: 38px !important;
+      padding: 6px 10px!important;
 }
 
 .memory-store .e-control-wrapper.e-slider-container.e-horizontal {

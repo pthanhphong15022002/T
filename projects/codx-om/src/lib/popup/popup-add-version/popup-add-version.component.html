@@ -1,36 +1,42 @@
-<codx-form #form [headerText]="" [body]="body" [footer]="footer" [dialog]=""
-  [formModel]=""></codx-form>
-<ng-template #body>
-  <div class="form-group">
-    <div class="row g-3">
-      <div class="col-8">
-        <codx-label fiedName="VersionName" [formModel]="form.formModel" default="Tên phiên bản">
-        </codx-label>
-        <codx-input field="versionName" type="text" [placeholder]="" [crrValue]=""
-          >
-        </codx-input>
-      </div>
-      <div class="col-4">
-        <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã phiên bản">
-        </codx-label>
-        <codx-input field="versionNo" type="text" [crrValue]="" [disabled]="" >
-        </codx-input>
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef" *ngIf="isAfterRender"
+  [formModel]="">
+  <ng-template #body>
+    <div class="form-group">
+      <div class="row g-3">
+        <div class="col-6">
+          <codx-label fiedName="VersionName" [formModel]="form.formModel" default="Tên phiên bản">
+          </codx-label>
+          <codx-input field="versionName" type="text" [placeholder]="'Nhập tên phiên bản'" [crrValue]="data?.versionName"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã phiên bản">
+          </codx-label>
+          <codx-input field="versionNo" type="text" [crrValue]="data?.versionNo" [disabled]="true">
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-label class="fw-bold mb-1"  fiedName="CreatedOn" default="Ngày hiệu lực" [formModel]="form?.formModel"></codx-label>
+          <codx-input type="datetime" field="activedOn" format="d" [crrValue]="data?.activedOn" (valueChange)="timeChange($event)"></codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group">
-    <codx-label fiedName="Comment" [formModel]="form.formModel" default="Mô tả">
-    </codx-label>
-    <codx-input field="comment" type="textarea" [placeholder]="" [crrValue]=""
-      >
-    </codx-input>
-  </div>
-</ng-template>
+    <div class="form-group">
+      <codx-label fiedName="Comment" [formModel]="form.formModel" default="Ghi chú">
+      </codx-label>
+      <codx-input field="comment" type="text" [placeholder]="'Nhập ghi chú'" [crrValue]="data?.comment"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </ng-template>
 
-<ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary ms-1" >
-      <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
-    </button>
-  </div>
-</ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-1" (click)="onSaveForm()">
+        <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+
+</codx-form>

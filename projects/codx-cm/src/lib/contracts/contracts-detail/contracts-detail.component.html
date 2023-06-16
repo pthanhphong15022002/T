@@ -1,4 +1,7 @@
-<codx-views
+<div>
+  <h2>thuạna</h2>
+</div>
+<!-- <codx-views
   #view
   [service]="service"
   [assemblyName]="assemblyName"
@@ -15,7 +18,7 @@
   [autoLoad]="true"
   [autoSearch]="true"
   (selectedChange)="selectedChange($event)"
-></codx-views>
+></codx-views> -->
 <!-- temp left -->
 <ng-template #itemTemplate let-data>
   <codx-temp-full
@@ -191,7 +194,8 @@
         fiedName="effectiveTo"
         [formModel]="view.formModel"
       ></codx-label>
-      <span class="text-gray-600"
+      <span
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.effectiveTo
             | formatvalue : view.formModel : 'EffectiveTo'
@@ -205,7 +209,8 @@
         fiedName="extendOn"
         [formModel]="view.formModel"
       ></codx-label>
-      <span class="text-gray-600"
+      <span
+        class="text-gray-600"
         [innerHTML]="
           itemSelected?.extendOn
             | formatvalue : view.formModel : 'ExtendOn'
@@ -343,7 +348,7 @@
 </ng-template>
 
 <ng-template #mainRightTemp>
-  <div class="d-flex flex-column" style="height: 100vh;">
+  <div class="d-flex flex-column" style="height: 100vh">
     <div>
       <codx-taskbar
         [change]="itemSelected"
@@ -418,7 +423,9 @@
 
 <ng-template #payTemplate>
   <div>
-    <div class="fs-6 fw-bold text-primary mb-3"><span>Tiến độ thanh toán</span></div>
+    <div class="fs-6 fw-bold text-primary mb-3">
+      <span>Tiến độ thanh toán</span>
+    </div>
     <div class="row mb-2">
       <div class="col-4">
         <codx-label
@@ -547,7 +554,9 @@
   </div>
 
   <div>
-    <div class="fs-6 fw-bold text-primary mb-3 mt-5"><span>Lịch thanh toán</span></div>
+    <div class="fs-6 fw-bold text-primary mb-3 mt-5">
+      <span>Lịch thanh toán</span>
+    </div>
     <view-payment
       class="view-pay-contract"
       [isSave]="true"
@@ -558,7 +567,9 @@
   </div>
 
   <div>
-    <div class="fs-6 fw-bold text-primary mb-3"><span>Tiến độ giao hàng</span></div>
+    <div class="fs-6 fw-bold text-primary mb-3">
+      <span>Tiến độ giao hàng</span>
+    </div>
     <div class="row mb-2">
       <div class="col-4">
         <codx-label
@@ -739,7 +750,11 @@
         >
         </codx-label>
       </div>
-      <span class="text-dark fw-bold codx-textcontent" *ngIf="data?.type == 'A'">{{ data?.value?.legalName }}</span>
+      <span
+        class="text-dark fw-bold codx-textcontent"
+        *ngIf="data?.type == 'A'"
+        >{{ data?.value?.legalName }}</span
+      >
       <span
         *ngIf="data?.type == 'B'"
         class="text-dark fw-bold codx-textcontent"
@@ -894,4 +909,36 @@
       ></span>
     </div>
   </div>
+</ng-template>
+
+<ng-template #tabQuotations>
+  <ng-container *ngIf="itemSelected.quotationID; else">
+    <codx-quotations-tab-view
+      [funcID]="'CM0202'"
+      [showButton]="false"
+      [typeModel]="'contracts'"
+      [predicates]="'RecID==@0'"
+      [dataValues]="itemSelected.quotationID"
+      [salespersonID]="itemSelected.salespersonID"
+      [consultantID]="itemSelected.consultantID"
+    >
+    </codx-quotations-tab-view>
+  </ng-container>
+  <ng-template #noData>
+    <div class="empty-data">
+      <div class="container h-100">
+        <div class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
+            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+              {{ "SYS011" | mssg | async }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </ng-template>

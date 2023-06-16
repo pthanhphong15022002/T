@@ -61,6 +61,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
     APPLICATION: 'application',
   };
   mssgDeleted:string = "";
+  sysMoreFunc:any = null;
   @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
   @ViewChild("codxATMImages") codxATMImages:AttachmentComponent;
   @ViewChild("codxATM") codxATM:AttachmentComponent;
@@ -104,7 +105,69 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
     this.permissions.push(permisison);
   }
 
+  
+  ngAfterViewInit(): void {
+    //receiver message
+    this.signalR.chat.subscribe((res:any) => {
+      debugger
+      if(res?.action && res?.groupID == this.groupID)
+      {
+        if(res.action === "deletedMessage")
+        {
+          let mssgID = res.mssg;
+          let index = this.arrMessages.findIndex(x => x.recID == mssgID);
+          if(index != -1)
+          {
+            let mssg = JSON.parse(JSON.stringify(this.arrMessages[index]));
+            if(mssg)
+            {
+              mssg.messageType = "5";
+              // this.arrMessages[index].messageType = "5";
+              this.arrMessages[index] = JSON.parse(JSON.stringify(mssg));
+            }
+          }
+        }
+        else
+        {
+          let mssg = res.mssg;
+          this.group.lastMssgID = mssg.recID;
+          this.group.messageType = mssg.messageType;
+          if(res.messageType !== "3")
+          {
+            this.group.message = mssg.message;
+          }
+          this.arrMessages.push(mssg); 
+          setTimeout(()=>{
+            this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
+          },100)
+        }
+        this.dt.detectChanges();
+      }
+    });
+    //vote message
+    this.signalR.voteChat.subscribe((res:any) => {
+      if(res){
+        let vote = res.vote;
+        if(vote.groupID == this.groupID){
+          let mssg = this.arrMessages.find(x => x.recID == vote.mssgID );
+          if(mssg){
+            let index = mssg.votes.findIndex(x => x.createdBy == vote.createdBy);
+            if(index != -1){
+              if(mssg.votes[index].voteType == vote.voteType) // remove
+                this.updateVote(mssg,vote,"remove");
+              else // update
+                this.updateVote(mssg,vote,"update");
+            }
+            else // add
+              this.updateVote(mssg,vote,"add");
+          }
+        }
+      }
+      
+    });
+  }
   getSetting(){
+    // get function
     if (this.funcID) {
       this.cache.functionList(this.funcID)
       .subscribe((func: any) => {
@@ -132,71 +195,25 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
         }
       });
     }
-
-    let valuelist = this.cache.valueList("L1480").subscribe((vll:any) => {
-      if(vll?.datas){
+    // get valuelist vote
+    this.cache.valueList("L1480").subscribe((vll:any) => {
+      if(vll?.datas)
         this.vllL1480 = vll.datas;
-      }
-      valuelist.unsubscribe();
     });
-    let mssgDelete = this.cache.message("CHAT002").subscribe((res:any) => {
+    // get mssage deleted
+    this.cache.message("CHAT002").subscribe((res:any) => {
       this.mssgDeleted = res.defaultName;
-      mssgDelete.unsubscribe();
     });
-  }
-  ngAfterViewInit(): void {
-    //receiver message
-    this.signalR.chat.subscribe((res:any) => {
-      if(res && res.groupID == this.groupID)
-      {
-        let mssg = res.mssg;
-        let action = res.action;
-        if(mssg && action)
-        {
-          if(action === "deletedMessage"){
-            let index = this.arrMessages.findIndex(x => x.recID == mssg);
-            if(index != -1){
-              this.arrMessages[index].messageType = "5";
-            }
-          }
-          else
-          {
-            this.group.lastMssgID = mssg.recID;
-            this.group.messageType = mssg.messageType;
-            if(res.messageType !== "3"){
-              this.group.message = mssg.message;
-            }
-            this.arrMessages.push(mssg); 
-            setTimeout(()=>{
-              this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
-            },100)
-          }
-          this.dt.detectChanges();
-        }
+    // get more funtion hệ thống dùng tạm cho moreFunction chat
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      if(mFuc){
+        this.sysMoreFunc = Array.from<any>(mFuc).filter(x => x.functionID == "SYS02");
       }
     });
-    //vote message
-    this.signalR.voteChat.subscribe((res:any) => {
-      if(res){
-        let vote = res.vote;
-        if(vote.groupID == this.groupID){
-          let mssg = this.arrMessages.find(x => x.recID == vote.mssgID );
-          if(mssg){
-            let index = mssg.votes.findIndex(x => x.createdBy == vote.createdBy);
-            if(index != -1){
-              if(mssg.votes[index].voteType == vote.voteType) // remove
-                this.updateVote(mssg,vote,"remove");
-              else // update
-                this.updateVote(mssg,vote,"update");
-            }
-            else // add
-              this.updateVote(mssg,vote,"add");
-          }
-        }
-      }
-      
-    });
   }
+
+
 
   // CRUD vote
   updateVote(mssg:any,vote:any,type:string){
@@ -594,6 +611,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   }
   //xóa tin nhắn
   deleteMessage(mssg:any){
+    debugger
     this.signalR.sendData("DeletedMessage",this.groupID,mssg.recID);
   }
   // show vote

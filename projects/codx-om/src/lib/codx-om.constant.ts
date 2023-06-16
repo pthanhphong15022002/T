@@ -90,6 +90,9 @@ export const OMCONST = {
     KREditSKRWeight: 'OMT204',
     KRCheckIn: 'OMT205',
     KRTask: 'OMT206',
+    KRChagneAssignTarget: 'OMT207',
+    KRReviewCheckIn:'OMT208',
+
     //SKR
     SKRDetail: 'OMT301',
     SKRAssign: 'OMT302',

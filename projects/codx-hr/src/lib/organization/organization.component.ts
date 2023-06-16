@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -22,6 +23,7 @@ import { PopupAddOrganizationComponent } from './popup-add-organization/popup-ad
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgorganizationComponent extends UIComponent {
   console = console;
@@ -50,7 +52,8 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('templateList') templateList: TemplateRef<any>;
+  @ViewChild('templateTree') templateTree: TemplateRef<any>;
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
@@ -62,25 +65,29 @@ export class OrgorganizationComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.request = new ResourceModel();
     this.request.service = 'HR';
+    this.request.assemblyName = 'ERM.Business.HR';
+    this.request.className = 'OrganizationUnitsBusiness';
+    this.request.method = 'GetDataOrgAsync';
+    this.request.autoLoad = false;
+    this.request.parentIDField = 'ParentID';
     this.views = [
       {
         // id: '18',
         type: ViewType.list,
-        active: true,
+        active: false,
         sameData: true,
         model: {
-          template: this.itemTemplate,
+          template: this.templateList,
         },
       },
       {
         // id: '18',
         type: ViewType.listtree,
-        active: true,
-        sameData: true,
+        active: false,
+        sameData: false,
         request: this.request,
         model: {
-          template: this.itemTemplate,
-          resourceModel: { parentIDField: 'ParentID' },
+          template: this.templateTree,
         },
       },
       {
@@ -93,11 +100,10 @@ export class OrgorganizationComponent extends UIComponent {
           resizable: true,
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
-          // template2: this.tmpMasterDetail,
-          resourceModel: { parentIDField: 'ParentID' },
         },
       },
     ];
+
     this.detectorRef.detectChanges();
   }
 
@@ -255,5 +261,17 @@ export class OrgorganizationComponent extends UIComponent {
   //         this.view.dataService.update(data).subscribe();
   //       }
   //     });
+  // }
+  dataCount: any;
+  // getCount(orgunitID: string) {
+  //   this.api
+  //     .execSv(
+  //       'HR',
+  //       'ERM.Business.HR',
+  //       'OrganizationUnitsBusiness',
+  //       'GetCountEmplyee',
+  //       [orgunitID]
+  //     )
+  //     .subscribe((res: any) => (this.dataCount = res)); 
   // }
 }

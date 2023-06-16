@@ -36,6 +36,19 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('form') form: CodxFormComponent;
 
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'overallInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Giám định y khoa',
+      name: 'hospitalCheck',
+    },
+  ];
+
   constructor(
     private cr: ChangeDetectorRef,
     private injector: Injector,

@@ -30,6 +30,19 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin bản thân',
+      name: 'selfInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Liên hệ',
+      name: 'contactInfo',
+    },
+  ];
+
   constructor(
     private injector: Injector,
     private notitfy: NotificationsService,
@@ -47,7 +60,6 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
-    debugger
     this.formGroup.patchValue(this.data);
     this.formModel.currentData = this.data;
     this.cr.detectChanges();
@@ -183,5 +195,4 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     });
   }
 
-  handleProvinceChange(value) {}
 }
