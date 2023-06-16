@@ -95,6 +95,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     },
   ];
 
+  checkContact: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -124,10 +125,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getTab();
     this.getAutoNumber(this.autoNumber);
-
+    this.checkContact = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'ContactsBusiness',
+        'CheckContactDealAsync',
+        [this.data?.recID]
+      )
+    );
     if (this.action == 'add' || this.action == 'copy') {
       if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
         this.data.address = null;
