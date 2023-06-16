@@ -429,7 +429,7 @@
               ]" [style.left]="item?.progress - 2 + '%'">
 
             </span>
-            <span *ngIf="item?.notiCheckIn" class="icon-notifications noti-checkin text-warning position-absolute "
+            <span *ngIf="item?.notiCheckIn && dataOKRPlans?.status=='2'" class="icon-notifications noti-checkin text-warning position-absolute "
               [style.left]="item?.progress - 3 + '%'">
             </span>
           </div>
