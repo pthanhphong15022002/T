@@ -389,28 +389,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
   }
-  changeRef(e: any) {
-    this.cashpayment[e.field] = e.data;
-    // let length;
-    // var wDef = document.getElementById('ac-column-def');
-    // let element = document.querySelectorAll(
-    //   '.listcash-content .e-float-input input'
-    // );
-    // if (e && e.data) {
-    //   var numberOfChar = e.data.length;
-
-    //   if (((numberOfChar * 7) + 10) > (element[0] as HTMLElement).offsetWidth) {
-    //     length = ((numberOfChar *7)+ 10) + 'px';
-    //     (element[0] as HTMLElement).style.width = length;
-    //     if ((element[0] as HTMLElement).offsetWidth > wDef.offsetWidth) {
-    //       (element[0] as HTMLElement).style.maxWidth =
-    //         wDef.offsetWidth - 10 + 'px';
-    //     }
-    //   }
-    // } else {
-    //   (element[0] as HTMLElement).style.width = '100%';
-    // }
-  }
 
   gridCreated() {
     this.hideFields = [];
@@ -883,7 +861,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ) {
       return;
     }
-    if (this.cashpaymentline.length == 0) {
+    if (this.cashpaymentline.length == 0 && this.settledInvoices.length == 0) {
       this.notification.notifyCode('AC0013');
       return;
     }
