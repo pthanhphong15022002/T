@@ -62,7 +62,7 @@
       </e-tabitems>
     </ejs-tab>
     <div class="row mt-2">
-      <div class="listcash-content">
+      <div class="listcash-content mt-2">
         <ng-container *ngTemplateOutlet="addLine"></ng-container>
       </div>
     </div>
@@ -96,7 +96,7 @@
                   <codx-label *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'"
                     fiedName="ReceiptAmt" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input tabindex="1"
+                  <codx-input tabindex="1" tabindex="1"
                     *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
                     [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
                     (controlBlur)="valueFocusOut($event)"></codx-input>
@@ -111,7 +111,7 @@
                   <div class="form-group">
                     <codx-label fiedName="ReasonID" [formModel]="form.formModel">
                     </codx-label>
-                    <codx-input #cbxReason [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
+                    <codx-input tabindex="2" #cbxReason [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
                       (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -132,7 +132,7 @@
                     <codx-label *ngIf="cashpayment.subType == '5' || cashpayment.subType == '9'" fiedName="ObjectID"
                       [formModel]="form.formModel" default="Đối tượng">
                     </codx-label>
-                    <codx-input #cbxObject [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
+                    <codx-input tabindex="3" #cbxObject [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
                       (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -148,7 +148,7 @@
                   <codx-label *ngIf="cashpayment.subType == '4'" default="Đề nghị thanh toán" fiedName="RefID"
                     [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input field="refID" [formModel]="form.formModel" [crrValue]="cashpayment.refID"
+                  <codx-input tabindex="4" field="refID" [formModel]="form.formModel" [crrValue]="cashpayment.refID"
                     (valueChange)="valueChange($event)">
                   </codx-input>
                   <button type="button" class="btn ac-btn-input" (click)="popupCash()">
@@ -174,14 +174,14 @@
                 </div>
               </div>
               <div
-                [style]="(cashpayment.subType == '1' || cashpayment.subType == '9') ? 'display:inline' : 'display:none'"
+                [style]="(cashpayment.subType != '3' || cashpayment.subType != '4') ? 'display:inline' : 'display:none'"
                 class="col-6 ac-type-1">
                 <div class="form-group">
                   <!-- Người nhận tiền -->
                   <div *ngIf="form.formModel.funcID == 'ACT0410'" class="form-group">
                     <codx-label fiedName="Payee" [formModel]="form.formModel">
                     </codx-label>
-                    <codx-input #cbxPayname [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
+                    <codx-input tabindex="4"  #cbxPayname [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
                       (valueChange)="valueChange($event)"></codx-input>
                   </div>
                   <div *ngIf="form.formModel.funcID == 'ACT0401'" class="form-group">
@@ -198,7 +198,7 @@
                 <div class="form-group mb-0">
                   <codx-label fiedName="Memo" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+                  <codx-input tabindex="5"  [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
                     (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
@@ -216,7 +216,7 @@
                 <div class="form-group">
                   <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                  <codx-input tabindex="6"  [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
                     field="currencyID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
@@ -226,7 +226,7 @@
                 <div class="form-group">
                   <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                  <codx-input tabindex="7"  [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
                     field="exchangeRate" [formModel]="form.formModel" (controlBlur)="valueFocusOut($event)">
                   </codx-input>
                 </div>
@@ -238,7 +238,7 @@
                 <div class="form-group">
                   <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
+                  <codx-input tabindex="8"  [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
                     (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
@@ -247,7 +247,7 @@
                 <div class="form-group">
                   <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
+                  <codx-input tabindex="9"  [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
                     (valueChange)="valueChange($event)" [disabled]="journal?.assignRule != '0'">
                   </codx-input>
                 </div>
@@ -256,7 +256,7 @@
             <div class="form-group">
               <codx-label fiedName="PostedDate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="postedDate" [formModel]="form.formModel"
+              <codx-input tabindex="10"  [Group]="form.formGroup" field="postedDate" [formModel]="form.formModel"
                 (valueChange)="valueChange($event)">
               </codx-input>
             </div>
@@ -269,7 +269,7 @@
 <!-- End: Tab Basic -->
 
 <!-- Start:CashPaymentLine -->
-<ng-template #tabLine>
+<ng-template tabindex="11" #tabLine>
   <ng-container *ngIf="(cashpayment?.subType != '2') && modegrid == '1'">
     <div class="tabline-content position-relative">
       <codx-gridview-v2 columnsGrid="" showRowNumber="true" class="tabLine" #gridCash
@@ -950,7 +950,7 @@
     <ng-container *ngIf="form.formGroup">
       <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
         class="input-circle input-border-0 w-400px mt-1 mb-1">
-        <codx-dropdown-select [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-500px" [isMulti]="false"
+        <codx-dropdown-select [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px" [isMulti]="false"
         type="valuelist" field="subType" [refValue]="'AC063'" [value]="cashpayment.subType" emptyText="Loại phiếu"
         (valueChange)="changeType($event)"></codx-dropdown-select>
         <!-- <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
@@ -986,9 +986,10 @@
         <i class="icon-i-link-45deg om-fs-3 me-1 mt-1"></i>
         <!-- <codx-inplace style="width: fit-content" type="text" [value]="cashpayment.refDocs" field="refDocs"
           emptyText="Nhập chứng từ gốc" (actionEvent)="changeRef($event)"></codx-inplace> -->
-        <codx-input class="fw-bold" [Group]="form.formGroup" field="refDocs" [formModel]="form.formModel"
+        <codx-input style="width: 100%;" class="fw-bold" [Group]="form.formGroup" field="refDocs" [formModel]="form.formModel"
           (valueChange)="changeRef($event)">
         </codx-input>
+        <!-- <span aria-placeholder="nhập" class="input" role="textbox" contenteditable>99</span>  -->
       </div>
     </div>
   </ng-container>

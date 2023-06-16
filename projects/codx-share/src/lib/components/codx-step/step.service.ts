@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogModel, FormModel, NotificationsService, SidebarModel, Util } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, CodxService, DialogModel, FormModel, NotificationsService, SidebarModel, Util } from 'codx-core';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
@@ -8,6 +8,8 @@ import { firstValueFrom } from 'rxjs';
 import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddGroupTaskComponent } from './codx-add-group-task/codx-add-group-task.component';
 import { CodxAddTaskComponent } from './codx-add-stask/codx-add-task.component';
+import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { CodxCalendarService } from '../codx-calendar/codx-calendar.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +19,9 @@ export class StepService {
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private callfc: CallFuncService,
+    private cache: CacheService,
+    private calendarService: CodxCalendarService,
+    private codxService: CodxService,
   ) {}
 
   checkTaskLink(task, step) {
@@ -160,25 +165,18 @@ export class StepService {
     });
   }
 
-  async chooseTypeTask(instanceStep,groupID = null) {
+  async chooseTypeTask(isAddGroup = true) {
       let popupTypeTask = this.callfc.openForm(
         CodxTypeTaskComponent,
         '',
         450,
         580,
+        '',
+        {isShowGroup:isAddGroup},        
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
-      let data;
-      if (dataOutput?.event?.value) {
-        let taskType = dataOutput?.event;
-        if (taskType?.value == 'G') {
-          data = await this.addGroupTask(instanceStep);
-          return data;
-        } else {
-          data = await this.addTask(taskType,instanceStep, groupID); 
-        }
-      }
-      return data;
+      let type = dataOutput?.event ? dataOutput?.event : null;
+      return type;
   }
 
    async addGroupTask(instanceStep:DP_Instances_Steps) {
@@ -199,8 +197,8 @@ export class StepService {
       instanceStep?.startDate;
       taskGroup['indexNo'] = taskBeforeIndex + 1;
     }
-    let taskOutput = await this.openPopupGroup('add', taskGroup, instanceStep);
-    return taskOutput;
+    let groupOutput = await this.openPopupGroup('add', taskGroup, instanceStep);
+    return groupOutput;
   }
 
   async openPopupGroup(action, group, instanceStep) {
@@ -220,7 +218,8 @@ export class StepService {
     );
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
-    return dataPopupOutput;
+    let groupOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
+    return groupOutput;
   }
 
   async addTask(taskType,instanceStep, groupID) {
@@ -266,6 +265,38 @@ export class StepService {
       opt
     );
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
-    return dataPopupOutput;
+    let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
+    return taskOutput;
+  }
+
+  async addBookingCar() {
+    let addCarTitle = await firstValueFrom(this.cache.functionList('EPT21'));
+    let title = addCarTitle ? addCarTitle?.customName?.toString():'';
+      
+    this.calendarService.getFormModel('EPT21').then((res) => {
+      let carFM = res;
+      let carFG = this.codxService.buildFormGroup(carFM?.formName,carFM?.gridViewName)
+      let option = new SidebarModel();
+      // option.FormModel = carFM;
+      // option.Width = '800px';
+      // this.callfc
+      //   .openSide(
+      //     CodxAddBookingCarComponent,
+      //     [carFG?.value, 'SYS01', title, null, null, false],
+      //     option
+      //   )
+      let opt = new DialogModel();
+      opt.FormModel = carFM;
+      let popupBookingCar = this.callfc.openForm(
+        CodxAddBookingCarComponent,
+        '',
+        800,
+        800,
+        '',
+        [carFG?.value, 'SYS01', title, null, null, false],
+        '',
+        opt
+      );
+      });    
   }
 }
