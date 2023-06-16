@@ -196,9 +196,9 @@ export class PopupAddQuotationsComponent implements OnInit {
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {
           if (res.save) {
-              (this.dialog.dataService as CRUDService)
-                .update(res.save)
-                .subscribe();
+            (this.dialog.dataService as CRUDService)
+              .update(res.save)
+              .subscribe();
             this.dialog.close(res.save);
           } else {
             this.dialog.close();
@@ -209,7 +209,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
           this.quotations,
-          this.listQuotationLines
+          this.listQuotationLines,
         ])
         .subscribe((res) => {
           if (res) {
@@ -241,12 +241,10 @@ export class PopupAddQuotationsComponent implements OnInit {
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'EditQuotationsAsync', [
-          [
-            this.quotations,
-            this.quotationLinesAddNew,
-            this.quotationLinesEdit,
-            this.quotationLinesDeleted,
-          ],
+          this.quotations,
+          this.quotationLinesAddNew,
+          this.quotationLinesEdit,
+          this.quotationLinesDeleted,
         ])
         .subscribe((res) => {
           if (res) {
