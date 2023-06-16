@@ -211,7 +211,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Method
   setDefault(o) {
     return this.api.exec('AC', this.className, 'SetDefaultAsync', [
-      this.journalNo,
+      this.journal,
     ]);
   }
 
@@ -478,14 +478,8 @@ export class CashPaymentsComponent extends UIComponent {
     //   });
   }
   loadjounal() {
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.journalNo;
-    options.pageLoading = false;
     this.api
-      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(map((r) => r[0]))
+      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
         this.journal = res[0];
       });
