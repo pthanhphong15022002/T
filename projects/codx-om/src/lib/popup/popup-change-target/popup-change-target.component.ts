@@ -60,7 +60,7 @@ export class PopupChangeTargetComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.getData();
+    this.getData(); 
   }
 
   getData(){
