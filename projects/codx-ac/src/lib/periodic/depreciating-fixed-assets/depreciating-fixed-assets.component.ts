@@ -39,7 +39,7 @@ export class DepreciatingFixedAssetsComponent extends UIComponent{
         let m = res.find((x) => x.functionID == 'ACP10301');
         if (m) this.entityName = m.defaultName;
       }
-    })
+    });
   }
 
   //region Init
@@ -47,8 +47,11 @@ export class DepreciatingFixedAssetsComponent extends UIComponent{
   }
 
   ngAfterViewInit() {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
+    this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACP10300');
+        if (m) this.funcName = m.defaultName;
+      }
     });
     this.views = [
       {

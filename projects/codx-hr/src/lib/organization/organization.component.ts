@@ -263,16 +263,15 @@ export class OrgorganizationComponent extends UIComponent {
   //     });
   // }
   dataCount: any;
-  getCount(orgunitID: string) {
-    this.api
-      .execSv(
-        'HR',
-        'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
-        'GetCountEmplyee',
-        [orgunitID]
-      )
-      .subscribe((res: any) => (this.dataCount = res));
-    // return (this.orgUnitID = this.dataCount);
-  }
+  // getCount(orgunitID: string) {
+  //   this.api
+  //     .execSv(
+  //       'HR',
+  //       'ERM.Business.HR',
+  //       'OrganizationUnitsBusiness',
+  //       'GetCountEmplyee',
+  //       [orgunitID]
+  //     )
+  //     .subscribe((res: any) => (this.dataCount = res)); 
+  // }
 }
