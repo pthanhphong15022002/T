@@ -37,11 +37,11 @@ export class PopupChangeTargetComponent extends UIComponent {
   okrGrv: any;
   quarterVLL: any;
   monthVLL: any;
-  kr: any;
   totalTargets=0;
   disabledTargets=0;
   enabledTargets=0;  
-  newTarget=0;
+  newTarget=0; 
+  targetChecked=0;
   backupTar=[];
   planVLL: any[];
   constructor(
@@ -77,6 +77,7 @@ export class PopupChangeTargetComponent extends UIComponent {
                 {
                   tar.comment='disabled';
                   this.disabledTargets+=1;
+                  this.targetChecked +=tar.target;
                 }
               }
             }        
@@ -141,7 +142,8 @@ export class PopupChangeTargetComponent extends UIComponent {
     //   this.kr.targets.push({ ...this.dataKR?.targets[i] });
     // }
     // this.dialogRef?.close();
-    this.omService.editKR(this.kr).subscribe((res: any) => {
+    this.dataKR.target = this.newTarget + this.targetChecked;
+    this.omService.editKR(this.dataKR).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;
@@ -177,7 +179,7 @@ export class PopupChangeTargetComponent extends UIComponent {
   }
 
   refreshPlanTargets() {
-    if (this.kr.target && this.dataKR?.targets && this.dataKR?.targets.length > 0) {
+    if (this.dataKR.target && this.dataKR?.targets && this.dataKR?.targets.length > 0) {
       for (let i = 0; i < this.dataKR?.targets.length; i++) {
         this.dataKR.targets[i].target = this.backupTar[i]?.target;
       }
