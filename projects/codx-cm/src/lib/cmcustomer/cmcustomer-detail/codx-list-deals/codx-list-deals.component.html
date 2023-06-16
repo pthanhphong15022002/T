@@ -28,7 +28,11 @@
 </ng-template>
 
 <ng-template #deal let-data>
-  <div class="d-flex justify-content-between mb-4">
+  <div
+    (click)="changeContacts(data)"
+    [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
+    class="d-flex justify-content-between align-items-top p-3 border-bottom border-gray-150 user-nav-item"
+  >
     <div class="d-flex flex-column">
       <div
         class="fw-bold fs-6 line-clamp line-clamp-1 mb-3"
@@ -118,7 +122,11 @@
             ></span>
           </div>
         </div>
-        <div class="mb-1" *ngIf="data.status == '1'">
+        <div
+          class="d-flex justify-content-end mb-1"
+          *ngIf="data.status == '1'"
+
+        >
           <codx-vll
             [name]="'DP028'"
             [field]="'Status'"
@@ -130,7 +138,7 @@
           </codx-vll>
         </div>
 
-        <div class="ms-1 d-flex align-items-center mt-1">
+        <div class="ms-1 d-flex justify-content-end align-items-center mt-1">
           <span
             class="icon-date_range icon-16 text-gray-800 me-1"
             [ngbTooltip]="popupEndDate"
