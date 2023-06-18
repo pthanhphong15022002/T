@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import {  CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
@@ -20,6 +20,15 @@ export class PopupAddPaymentComponent {
   listPaymentDelete: CM_ContractsPayments[];
   contractID = null;
   percent = 0;
+  remaining = 0;
+  sumScheduleAmt = 0;
+
+  fmContracts: FormModel = {
+    formName: 'CMContracts',
+    gridViewName: 'grvCMContracts',
+    entityName: 'CM_Contracts',
+    funcID: 'CM02042  ',
+  };
 
   title = 'Lịch thanh toán';
   dialog: DialogRef;
@@ -67,7 +76,7 @@ export class PopupAddPaymentComponent {
   }
 
   valueChangePercent(e) {
-    this.percent = e?.data;
+    this.percent = e?.value;
     this.payment.scheduleAmt = (this.percent*this.contract.contractAmt)/100
   }
 

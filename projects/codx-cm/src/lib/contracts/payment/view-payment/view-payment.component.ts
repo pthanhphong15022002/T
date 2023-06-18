@@ -188,7 +188,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
       '',
-      600,
+      550,
       400,
       '',
       dataInput,
