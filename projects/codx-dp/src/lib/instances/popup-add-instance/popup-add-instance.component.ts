@@ -185,7 +185,7 @@ export class PopupAddInstanceComponent implements OnInit {
         this.instance.processID,
         this.instance.status
       ));
-    // this.action === 'copy' && (await this.getListInstaceStepCopy());
+    this.action === 'copy' && await this.getListInstaceStepCopy();
   }
 
   async getListInstanceStep(recID, processID, status) {
@@ -201,9 +201,10 @@ export class PopupAddInstanceComponent implements OnInit {
   async getListInstaceStepCopy() {
     var datas = [this.oldIdInstance, this.processID, this.instanceNoSetting];
     this.codxDpService.getInstanceStepsCopy(datas).subscribe((res) => {
-      if (res && res) {
+      if (res && res.length > 0) {
         this.listStep = res[0];
         this.instance.instanceNo = res[1];
+        this.changeDetectorRef.detectChanges();
       }
     });
   }

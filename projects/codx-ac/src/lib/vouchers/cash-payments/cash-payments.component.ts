@@ -43,7 +43,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd', icon: 'icon-i-menu-button-wide-fill',text:'Thêm phiếu chi' };
+  button?: ButtonModel = { id: 'btnAdd', icon: 'icon-i-card-heading',text:'Thêm phiếu chi' };
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -136,15 +136,6 @@ export class CashPaymentsComponent extends UIComponent {
     });
     this.views = [
       {
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          template2: this.templateMore,
-          frozenColumns: 1,
-        },
-      },
-      {
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -152,6 +143,15 @@ export class CashPaymentsComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: false,
+        model: {
+          frozenColumns: 1,
+          template2: this.templateMore,
         },
       },
     ];
@@ -170,6 +170,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     //this.view.setRootNode(this.parent?.customName);
+    
     this.detectorRef.detectChanges();
   }
 
@@ -210,7 +211,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Method
   setDefault(o) {
     return this.api.exec('AC', this.className, 'SetDefaultAsync', [
-      this.journalNo,
+      this.journal,
     ]);
   }
 
@@ -246,7 +247,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   edit(e, data) {
     if (data) {
-      this.view.dataService.dataSelected = this.itemSelected ;
+      this.view.dataService.dataSelected = data ;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -477,14 +478,8 @@ export class CashPaymentsComponent extends UIComponent {
     //   });
   }
   loadjounal() {
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.journalNo;
-    options.pageLoading = false;
     this.api
-      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(map((r) => r[0]))
+      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
         this.journal = res[0];
       });

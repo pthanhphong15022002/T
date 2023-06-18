@@ -498,17 +498,19 @@
       <tfoot>
         <tr class="custom-toolbar bg-gray-200 min-w-100px">
           <td>
-            <span class="text-nowrap ms-3" style="float: right"> Tổng cộng </span>
+            <span class="text-nowrap ms-3 codx-label fw-bold" style="float: right" >
+              <codx-label class="label-colon" name="lblTotalView" [formModel]="fmQuotationLines" default="Tổng cộng" ></codx-label>
+            </span>
           </td>
           <td>
-            <span class="text-nowrap ms-3" style="float: right"> - </span>
+            <span class="text-nowrap ms-3 codx-label fw-bold" style="float: right"> - </span>
           </td>
           <td>
-            <span class="text-nowrap ms-3" style="float: right">-</span>
+            <span class="text-nowrap ms-3 codx-label fw-bold" style="float: right">-</span>
           </td>
           <td>
             <span
-              class="text-nowrap ms-3"
+              class="text-nowrap ms-3 codx-label fw-bold"
               style="float: right"
               [innerHTML]="
                 sum('netAmt')
@@ -519,11 +521,11 @@
             </span>
           </td>
           <td>
-            <span class="text-nowrap ms-3" style="float: right"> -</span>
+            <span class="text-nowrap ms-3 codx-label fw-bold" style="float: right"> -</span>
           </td>
           <td>
             <span
-              class="text-nowrap ms-3"
+              class="text-nowrap ms-3 codx-label fw-bold"
               style="float: right"
               [innerHTML]="
                 sum('vatAmt')
