@@ -228,7 +228,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
   }
-  changeDataMF(e:any){
+  changeDataMF(e: any) {
     var bm = e.filter(
       (x: { functionID: string }) =>
         x.functionID == 'ACT042901' ||
@@ -413,15 +413,31 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   gridCreated() {
     this.hideFields = [];
-    if (
-      this.cashpayment.unbounds &&
-      this.cashpayment.unbounds.hideFields &&
-      this.cashpayment.unbounds.hideFields.length
-    ) {
-      this.hideFields = [
-        ...(this.cashpayment.unbounds.hideFields as Array<string>),
-      ];
+    switch (this.action) {
+      case 'add':
+        if (
+          this.cashpayment.unbounds &&
+          this.cashpayment.unbounds.hideFields &&
+          this.cashpayment.unbounds.hideFields.length
+        ) {
+          this.hideFields = [
+            ...(this.cashpayment.unbounds.hideFields as Array<string>),
+          ];
+        }
+        break;
+      case 'edit':
+        if (
+          this.journal.unbounds &&
+          this.journal.unbounds.hideFields &&
+          this.journal.unbounds.hideFields.length
+        ) {
+          this.hideFields = [
+            ...(this.journal.unbounds.hideFields as Array<string>),
+          ];
+        }
+        break;
     }
+
     this.loadVisibleColumn();
     this.loadAccountControl();
     this.predicateControl(this.gridCash.visibleColumns);
@@ -558,7 +574,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.api
             .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
               this.cashpayment,
-              this.journal
+              this.journal,
             ])
             .subscribe((res: any) => {
               if (res) {
@@ -606,7 +622,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.api
           .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
             this.cashpayment,
-            this.journal
+            this.journal,
           ])
           .subscribe((res: any) => {
             if (res) {
@@ -736,47 +752,72 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onAddNew(e: any) {
+    // this.api
+    //   .execAction<any>(this.entityNameLine, [e], 'SaveAsync')
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.hasSaved = true;
+    //       this.loadTotal();
+    //       if (this.cashpayment.totalAmt != 0) {
+    //         if (this.total > this.cashpayment.totalAmt) {
+    //           this.notification.notifyCode('AC0012');
+    //         }
+    //       }
+    //       this.api
+    //         .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
+    //           this.cashpayment,
+    //           this.journal,
+    //         ])
+    //         .subscribe((res: any) => {
+    //         });
+    //     }
+    //   });
+    this.loadTotal();
     this.api
-      .execAction<any>(this.entityNameLine, [e], 'SaveAsync')
-      .subscribe((res) => {
+      .exec('AC', this.classNameLine, 'SaveAsync', [this.cashpayment, e])
+      .subscribe((res: any) => {
         if (res) {
           this.hasSaved = true;
-          this.loadTotal();
           if (this.cashpayment.totalAmt != 0) {
             if (this.total > this.cashpayment.totalAmt) {
               this.notification.notifyCode('AC0012');
             }
           }
-          // this.dialog.dataService.updateDatas.set(
-          //   this.cashpayment['_uuid'],
-          //   this.cashpayment
-          // );
-          // this.dialog.dataService
-          //   .save(null, 0, '', '', false)
-          //   .subscribe((res) => {});
         }
       });
   }
 
   onEdit(e: any) {
+    // this.api
+    //   .execAction<any>(this.entityNameLine, [e], 'UpdateAsync')
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.hasSaved = true;
+    //       this.loadTotal();
+    //       if (this.cashpayment.totalAmt != 0) {
+    //         if (this.total > this.cashpayment.totalAmt) {
+    //           this.notification.notifyCode('AC0012');
+    //         }
+    //       }
+    //       this.api
+    //         .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
+    //           this.cashpayment,
+    //           this.journal,
+    //         ])
+    //         .subscribe((res: any) => {});
+    //     }
+    //   });
+    this.loadTotal();
     this.api
-      .execAction<any>(this.entityNameLine, [e], 'UpdateAsync')
-      .subscribe((res) => {
+      .exec('AC', this.classNameLine, 'UpdateAsync', [this.cashpayment, e])
+      .subscribe((res: any) => {
         if (res) {
           this.hasSaved = true;
-          this.loadTotal();
           if (this.cashpayment.totalAmt != 0) {
             if (this.total > this.cashpayment.totalAmt) {
               this.notification.notifyCode('AC0012');
             }
           }
-          // this.dialog.dataService.updateDatas.set(
-          //   this.cashpayment['_uuid'],
-          //   this.cashpayment
-          // );
-          // this.dialog.dataService
-          //   .save(null, 0, '', '', false)
-          //   .subscribe((res) => {});
         }
       });
   }
@@ -1206,8 +1247,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
         this.journal = res[0];
-        this.hideFields = res[1];
-        this.baseCurr = res[2];
+        this.baseCurr = this.journal.unbounds.baseCurr;
         this.modegrid = this.journal.inputMode;
       });
   }

@@ -729,7 +729,7 @@ export class ProcessStepsComponent
       this.blockClickMoreFunction();
     }
     if (this.listCountPhases <= 0 && evt.id != 'P') {
-      return this.notiService.notify(this.msgBP001);
+      return this.notiService.notifyCode(this.msgBP001);
     }
     if (
       this.listCountActivities <= 0 &&
@@ -737,7 +737,7 @@ export class ProcessStepsComponent
       this.isBlock &&
       evt.id != 'P'
     ) {
-      return this.notiService.notify(this.msgBP002);
+      return this.notiService.notifyCode(this.msgBP002);
     }
 
     this.parentID = '';
@@ -857,7 +857,7 @@ export class ProcessStepsComponent
   clickMenu(data, funcMenu) {
     const isdata = data.items.length;
     if (data.stepType == 'P' && funcMenu.id != 'A' && isdata <= 0) {
-      return this.notiService.notify(this.msgBP001);
+      return this.notiService.notifyCode(this.msgBP001);
     } else {
       this.stepType = funcMenu.id;
       this.parentID =

@@ -184,7 +184,7 @@
       </div>
     </div>
     <div class="row" *ngIf="inventoryJournalLines.length == 0" style="height: 40px;">
-      <table style="table-layout: fixed;" class="table table-row-bordered">
+      <!-- <table style="table-layout: fixed;" class="table table-row-bordered">
         <tfoot style="background-color: whitesmoke;position: sticky;
           bottom: 0;">
           <ng-container *ngFor="let item of gridInventoryJournalLine.visibleColumns">
@@ -198,7 +198,7 @@
             </td>
           </ng-container>
         </tfoot>
-      </table>
+      </table> -->
     </div>
   </ng-container>
   <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">

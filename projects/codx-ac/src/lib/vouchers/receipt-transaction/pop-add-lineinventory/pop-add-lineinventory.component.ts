@@ -122,13 +122,19 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
             this.idiM7.crrValue = null;
             this.inventoryJournalLine.idiM7 = null;
           }
-          this.form.formGroup.patchValue(this.inventoryJournalLine);
+          if(this.form)
+          {
+            this.form.formGroup.patchValue(this.inventoryJournalLine);
+          }
           break;
         case 'idiM4':
-          (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-          this.idiM5.crrValue = null;
-          this.inventoryJournalLine.idiM5 = null;
-          this.form.formGroup.patchValue(this.inventoryJournalLine);
+          if(this.idiM5)
+          {
+            (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM5.crrValue = null;
+            this.inventoryJournalLine.idiM5 = null;
+            this.form.formGroup.patchValue(this.inventoryJournalLine);
+          }
         break;
       }
   }
@@ -275,6 +281,12 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
             {
               this.inventoryJournalLine.itemName = res.itemName;
               this.inventoryJournalLine.umid = res.umid;
+              this.form.formGroup.patchValue(this.inventoryJournalLine);
+            }
+            else
+            {
+              this.inventoryJournalLine.itemName = null;
+              this.inventoryJournalLine.umid = null;
               this.form.formGroup.patchValue(this.inventoryJournalLine);
             }
           });

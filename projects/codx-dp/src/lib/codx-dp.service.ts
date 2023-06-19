@@ -676,7 +676,7 @@ export class CodxDpService {
   /// cance trifnh ki
   cancelSubmit(recID, entityName) {
     return this.api.execSv(
-      'CM',
+      'DP',
       'ERM.Business.Core',
       'DataBusiness',
       'CancelAsync',
