@@ -98,8 +98,8 @@ export class QuotationsTabViewComponent
     private notiServer: NotificationsService,
     private codxShareService: CodxShareService,
     private routerActive: ActivatedRoute,
-    private notiService : NotificationsService,
-    private codxCM : CodxCmService,
+    private notiService: NotificationsService,
+    private codxCM: CodxCmService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -235,6 +235,9 @@ export class QuotationsTabViewComponent
         break;
       case 'CM0202_4':
         this.createNewVersion(data);
+        break;
+      case 'CM0202_5':
+        this.viewDetail(data);
         break;
     }
   }
@@ -501,7 +504,12 @@ export class QuotationsTabViewComponent
                 //this.callfunc.openForm();
               } else if (res2?.eSign == false) {
                 this.codxShareService
-                  .codxCancel('CM',dt?.recID, this.view.formModel.entityName,'')
+                  .codxCancel(
+                    'CM',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    ''
+                  )
                   .subscribe((res3) => {
                     if (res3) {
                       this.itemSelected.status = '0';
