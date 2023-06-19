@@ -27,6 +27,7 @@ import {
 import { CodxBookingService } from '../codx-booking.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { OMCONST } from 'projects/codx-om/src/lib/codx-om.constant';
+import { CodxShareService } from '../../../codx-share.service';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -123,6 +124,7 @@ export class CodxAddBookingCarComponent
     private authService: AuthService,
     private authStore: AuthStore,
     private codxBookingService: CodxBookingService,
+    private codxShareService: CodxShareService,
     private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -985,14 +987,17 @@ export class CodxAddBookingCarComponent
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((res: any) => {
-                  this.codxBookingService
-                    .release(
-                      this.returnData,
-                      res?.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID,
-                      this.returnData?.createdBy
-                    )
+                  this.codxShareService
+                  .codxRelease(
+                    'EP',
+                    this.returnData?.recID,
+                    res?.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID,
+                    this.returnData?.createdBy,
+                    this.returnData?.title,
+                    null
+                  )
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
                         this.notificationsService.notifyCode('ES007');
@@ -1046,15 +1051,18 @@ export class CodxAddBookingCarComponent
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((res: any) => {
-                  this.codxBookingService
-                    .release(
-                      this.returnData,
-                      res?.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID,
-                      this.returnData?.createdBy
-                    )
-                    .subscribe((res) => {
+                  this.codxShareService
+                  .codxRelease(
+                    'EP',
+                    this.returnData?.recID,
+                    res?.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID,
+                    this.returnData?.createdBy,
+                    this.returnData?.title,
+                    null
+                  )
+                    .subscribe((res:any) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
                         this.notificationsService.notifyCode('ES007');
                         this.returnData.approveStatus = '3';

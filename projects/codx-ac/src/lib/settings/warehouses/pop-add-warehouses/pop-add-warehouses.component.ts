@@ -9,7 +9,9 @@ import {
 import {
   CacheService,
   CallFuncService,
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogModel,
   DialogRef,
@@ -32,6 +34,8 @@ import { CodxAcService } from '../../../codx-ac.service';
 export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('provinceID') provinceID: CodxInputComponent;
+  @ViewChild('districtID') districtID: CodxInputComponent;
   headerText: string;
   title: string;
   formModel: FormModel;
@@ -115,6 +119,33 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   //#region Event
   valueChange(e: any) {
     this.warehouses[e.field] = e.data;
+    switch (e.field) 
+      {
+        case 'countryID':
+          if(this.provinceID)
+          {
+            (this.provinceID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.provinceID.crrValue = null;
+            this.warehouses.provinceID = null;
+          }
+          if(this.districtID)
+          {
+            (this.districtID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.districtID.crrValue = null;
+            this.warehouses.districtID = null;
+          }
+          this.form.formGroup.patchValue(this.warehouses);
+          break;
+        case 'provinceID':
+          if(this.districtID)
+          {
+            (this.districtID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.districtID.crrValue = null;
+            this.warehouses.districtID = null;
+          }
+          this.form.formGroup.patchValue(this.warehouses);
+          break;
+      }
   }
   //#endregion
 
@@ -124,13 +155,14 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   openPopupContact() {
+    this.moreFuncName = 'Thêm';
     this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'ACS20501');
         if (m) {
           this.funcName = m.defaultName;
           var obj = {
-            headerText: this.moreFuncName + ' ' + this.funcName,
+            headerText: this.moreFuncName + ' ' + this.funcName.toLowerCase(),
             datacontact: this.objectContact,
           };
           let opt = new DialogModel();
@@ -169,6 +201,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     });
   }
   editobject(data: any) {
+    this.moreFuncName = 'Chỉnh sửa';
     let index = this.objectContact.findIndex(
       (x) => x.contactName == data.contactName && x.phone == data.phone
     );

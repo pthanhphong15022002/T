@@ -74,6 +74,13 @@ menuGeneralContact = {
   subName: 'General contact',
   subText: 'General contact',
 };
+menuInputInfo = {
+  icon: 'icon-reorder',
+  text: 'Thông tin mở rộng',
+  name: 'InputInfo',
+  subName: 'Input information',
+  subText: 'Input information',
+};
 
 //type any
 gridViewSetup: any;
@@ -113,6 +120,7 @@ constructor(
   this.funcID = this.formModel?.funcID;
   this.titleAction = dt?.data?.titleAction;
   this.action = dt?.data?.action;
+  this.lead.processID = '5d4ed88c-0e41-11ee-bec7-988d46c4cbe1';
   this.executeApiCalls();
   if (this.action !== this.actionAdd) {
     this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
@@ -283,6 +291,57 @@ async getAutoNumber(formModel){
       this.lead.leadID = leadID;
     }
   });
+}
+
+async getListInstanceSteps(processId: any){
+//   processId =
+//   this.action === this.actionCopy ? this.lead.processID : processId;
+// var data = [processId, this.lead?.refID, this.action, '1'];
+// this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
+//   if (res && res.length > 0) {
+//     var obj = {
+//       id: processId,
+//       steps: res[0],
+//       permissions: await this.getListPermission(res[1]),
+//       dealId: this.action !== this.actionEdit ? res[2] : this.lead.dealID,
+//     };
+//     var isExist = this.listMemorySteps.some((x) => x.id === processId);
+//     if (!isExist) {
+//       this.listMemorySteps.push(obj);
+//     }
+//     this.listInstanceSteps = res[0];
+//     this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
+//     this.listParticipants = obj.permissions;
+//     if (this.action === this.actionEdit) {
+//       this.owner = this.deal.owner;
+//     } else {
+//       this.deal.endDate = this.HandleEndDate(
+//         this.listInstanceSteps,
+//         this.action,
+//         null
+//       );
+//       this.deal.dealID = res[2];
+//     }
+//     this.dateMax = this.HandleEndDate(
+//       this.listInstanceSteps,
+//       this.action,
+//       this.action != this.actionEdit ? null : this.deal.createdOn
+//     );
+//     this.changeDetectorRef.detectChanges();
+//   }
+// });
+}
+
+removeItemInTab(isRemove: boolean): void {
+  if (isRemove) {
+    if (this.tabInfo.findIndex((x) => x == this.menuInputInfo) == -1) {
+      this.tabInfo.push(this.menuInputInfo);
+    }
+  } else {
+    if (this.tabInfo.findIndex((x) => x == this.menuInputInfo) != -1) {
+      this.tabInfo.pop();
+    }
+  }
 }
 
 // covnert data CM -> data DP

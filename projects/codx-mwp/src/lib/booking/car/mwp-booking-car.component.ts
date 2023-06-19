@@ -1,4 +1,4 @@
-import { BookingService } from './../../services/booking.services';
+
 import {
   Component,
   TemplateRef,
@@ -21,6 +21,7 @@ import { DataRequest } from '@shared/models/data.request';
 import { MWPPopupAddBookingCarComponent } from './popup-add-booking-car/mwp-popup-add-booking-car.component';
 
 import moment from 'moment';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 @Component({
   selector: 'mwp-booking-car',
   templateUrl: 'mwp-booking-car.component.html',
@@ -81,7 +82,7 @@ export class MWPBookingCarComponent extends UIComponent implements AfterViewInit
   driverName='';
   constructor(
     private injector: Injector,
-    private codxEpService: BookingService,
+    private codxEpService: CodxBookingService,
     private callFuncService: CallFuncService,
     private notificationsService: NotificationsService,
     private authService: AuthService

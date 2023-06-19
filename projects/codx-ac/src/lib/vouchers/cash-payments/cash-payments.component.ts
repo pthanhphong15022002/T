@@ -43,7 +43,11 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd', icon: 'icon-i-card-heading',text:'Thêm phiếu chi' };
+  button?: ButtonModel = {
+    id: 'btnAdd',
+    icon: 'icon-i-card-heading',
+    text: 'Thêm phiếu chi',
+  };
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -170,7 +174,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     //this.view.setRootNode(this.parent?.customName);
-    
+
     this.detectorRef.detectChanges();
   }
 
@@ -203,6 +207,12 @@ export class CashPaymentsComponent extends UIComponent {
         break;
       case 'ACT041002':
         this.release(data);
+        break;
+      case 'ACT041009':
+        this.checkValidate(data);
+        break;
+      case 'ACT041003':
+        this.post(data);
         break;
     }
   }
@@ -247,7 +257,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   edit(e, data) {
     if (data) {
-      this.view.dataService.dataSelected = data ;
+      this.view.dataService.dataSelected = data;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -347,41 +357,117 @@ export class CashPaymentsComponent extends UIComponent {
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' ||
-        x.functionID == 'ACT041002' ||
-        x.functionID == 'ACT041004' ||
-        x.functionID == 'ACT041008' ||
-        x.functionID == 'ACT042901'
+        x.functionID == 'ACT041003' || // ghi sổ
+        x.functionID == 'ACT041002' || // gửi duyệt
+        x.functionID == 'ACT041004' || // hủy yêu cầu duyệt
+        x.functionID == 'ACT041008' || // khôi phục
+        x.functionID == 'ACT042901' || // chuyển tiền điện tử
+        x.functionID == 'ACT041010' || // in
+        x.functionID == 'ACT041009' // kiểm tra tính hợp lệ
     );
     if (bm.length > 0) {
       switch (data?.status) {
         case '0':
-        case '2':
-        case '3':
-        case '4':
-          bm.forEach((element) => {
-            element.disabled = true;
-          });
+          if (data.approveStatus == '1') {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041009' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
           break;
         case '1':
-        case '5':
-        case '9':
-          bm.forEach((element) => {
-            if ((element.functionID == 'ACT041003')) {
-              element.disabled = false;
+          if (data.approveStatus == '1' || data.approveStatus == '2') {
+            if (this.journal.approvalControl == '0') {
+              bm.forEach((element) => {
+                if (
+                  element.functionID == 'ACT041003' ||
+                  element.functionID == 'ACT041010'
+                ) {
+                  element.disabled = false;
+                } else {
+                  element.disabled = true;
+                }
+              });
             } else {
-              element.disabled = true;
+              bm.forEach((element) => {
+                if (element.functionID == 'ACT041002') {
+                  element.disabled = false;
+                } else {
+                  element.disabled = true;
+                }
+              });
             }
-          });
+          }
+          break;
+        case '2':
+        case '4':
+          if (data.approveStatus == '0' || data.approveStatus == '4') {
+            bm.forEach((element) => {
+              element.disabled = true;
+            });
+          }
+          break;
+        case '3':
+          if (data.approveStatus == '3') {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041004' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
+          break;
+        case '5':
+          if (data.approveStatus == '5') {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041003' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
           break;
         case '6':
-          bm.forEach((element) => {
-            if ((element.functionID == 'ACT041008')) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
+          if (data.approveStatus == '1' || data.approveStatus == '5') {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041008' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
+          break;
+        case '9':
+          if (data.approveStatus == '1' || data.approveStatus == '5') {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041003' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
           break;
       }
       // check có hay ko duyệt trước khi ghi sổ
@@ -477,6 +563,35 @@ export class CashPaymentsComponent extends UIComponent {
     //       });
     //   });
   }
+
+  checkValidate(data: any) {
+    this.view.dataService.updateDatas.set(
+      data['_uuid'],
+      data
+    );
+    this.view.dataService
+      .save()
+      .subscribe((res :any) => {
+        if (res && res.update.data != null) {
+          this.itemSelected = res.update.data;
+          this.loadDatadetail(this.itemSelected);
+        }
+      });
+    // this.api
+    //   .exec('AC', 'CashPaymentsBusiness', 'UpdateLogicAsync', [
+    //     data
+    //   ])
+    //   .subscribe((res: any) => {
+    //     if (res) {
+          
+    //     }
+    //   });
+  }
+
+  post(data:any){
+    
+  }
+
   loadjounal() {
     this.api
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
@@ -511,13 +626,13 @@ export class CashPaymentsComponent extends UIComponent {
       });
   }
 
-  loadReasonName(data) {
-    this.api
-      .exec('AC', 'CommonBusiness', 'GetReasonName', [data])
-      .subscribe((res: any) => {
-        this.reasonName = res;
-      });
-  }
+  // loadReasonName(data) {
+  //   this.api
+  //     .exec('AC', 'CommonBusiness', 'GetReasonName', [data])
+  //     .subscribe((res: any) => {
+  //       this.reasonName = res;
+  //     });
+  // }
 
   setStyles(color): any {
     let styles = {

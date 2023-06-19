@@ -20,7 +20,7 @@ import {
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'codx-list-contacts',
@@ -60,6 +60,7 @@ export class CodxListContactsComponent implements OnInit {
   currentRecID = '';
   lstConvertContact = [];
   isCheckedAll: boolean = false;
+  id: any;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -78,6 +79,8 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue != null &&
         changes['objectID']?.currentValue?.trim() != ''
       ) {
+        if (changes['objectID']?.currentValue == this.id) return;
+        this.id = changes['objectID']?.currentValue;
         this.getListContacts();
       } else {
         this.loaded = true;
@@ -98,7 +101,6 @@ export class CodxListContactsComponent implements OnInit {
       if (res) {
         this.lstContactEmit.emit(res);
         this.cmSv.contactSubject.next(null);
-
       }
     });
   }
@@ -120,12 +122,12 @@ export class CodxListContactsComponent implements OnInit {
       this.request.funcID = 'CM0102';
       this.className = 'ContactsBusiness';
       this.fetch().subscribe((item) => {
+        this.loaded = true;
         this.listContacts = this.cmSv.bringDefaultContactToFront(item);
         if (this.listContacts != null && this.listContacts.length > 0) {
           this.changeContacts(this.listContacts[0]);
           if (this.isConvertLeadToCus) this.insertFieldCheckbox();
         }
-        this.loaded = true;
       });
     } else {
       this.loadListContact(this.listContacts);
@@ -275,7 +277,7 @@ export class CodxListContactsComponent implements OnInit {
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' && action != 'editRole' ? 700 : 250,
+          action != 'editType' && action != 'editRole' ? 700 : 300,
           '',
           obj,
           '',
@@ -373,8 +375,22 @@ export class CodxListContactsComponent implements OnInit {
       });
   }
 
-  deleteContactToCM(data) {
+  async deleteContactToCM(data) {
     var lstDelete = [];
+    var check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'ContactsBusiness',
+        'CheckContactDealAsync',
+        [data.recID]
+      )
+    );
+    if (check) {
+      this.notiService.notifyCode('CM012');
+      return;
+    }
+
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {

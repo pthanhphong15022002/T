@@ -560,79 +560,9 @@ export class CodxEpService {
   //#endregion
 
   //#region Approval
-  release(
-    booking: any,
-    processID: string,
-    entityName: string,
-    funcID: string,    
-    userID: string,
-  ): Observable<any> {
-    return this.api.execSv(
-      'EP',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'ReleaseAsync',
-      [
-        booking?.recID,
-        processID,
-        entityName,
-        funcID,
-        '<div>' + booking?.title + '</div>',
-        userID
-      ]
-    );
-  }
-  releaseOwner(
-    booking: any,
-    processID: string,
-    entityName: string,
-    funcID: string,
-    owner: string
-  ): Observable<any> {
-    return this.api.execSv(
-      'EP',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'ReleaseAsync',
-      [
-        booking?.recID,
-        processID,
-        entityName,
-        funcID,
-        '<div>' + booking.title + '</div>',
-        owner,
-      ]
-    );
-  }
-  approve(recID: string, status: string, reasonID: string, comment: string) {
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'ApproveAsync',
-      [recID, status, reasonID, comment, '']
-    );
-  }
-
-  undo(recID: string) {
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'UndoAsync',
-      [recID]
-    );
-  }
-
-  cancel(recID: string, comment: string, entityName: string) {
-    return this.api.execSv(
-      'EP',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'CancelAsync',
-      [recID, comment, entityName]
-    );
-  }
+  
+  
+    
 
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(

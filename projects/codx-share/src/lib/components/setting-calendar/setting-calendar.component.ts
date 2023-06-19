@@ -169,7 +169,7 @@ export class SettingCalendarComponent
   }
 
   openCalendarSettings() {
-    this.callfc.openForm(PopupSettingCalendarComponent, '', 1200, 1000, '', [
+    this.callfc.openForm(PopupSettingCalendarComponent, '', 800, 900, '', [
       this.formModel,
       this.calendarID,
     ]);

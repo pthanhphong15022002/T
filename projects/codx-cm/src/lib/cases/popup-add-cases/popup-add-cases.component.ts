@@ -153,6 +153,7 @@ export class PopupAddCasesComponent
     }
 
     if (this.action != this.actionAdd) {
+      this.processID = this.cases.processID;
       this.getListContacts(this.cases?.customerID);
     }
     this.cases.caseType = this.caseType;

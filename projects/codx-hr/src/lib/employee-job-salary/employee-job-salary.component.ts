@@ -1,3 +1,4 @@
+import { share } from 'rxjs';
 import {
   Component,
   Injector,
@@ -22,6 +23,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeJobsalaryComponent } from './popup-employee-jobsalary/popup-employee-jobsalary.component';
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-job-salary',
@@ -78,6 +80,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
@@ -308,13 +311,16 @@ this.cache
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.hrService
-            .release(
-              this.itemDetail.recID,
-              this.processID.processID,
-              this.view.formModel.entityName,
-              this.view.formModel.funcID,
-              '<div> Lương chức danh - ' + this.itemDetail.decisionNo + '</div>'
+          this.codxShareService
+            .codxRelease(
+              'HR',
+              this.itemDetail?.recID,
+              this.processID?.processID,
+              this.view?.formModel?.entityName,
+              this.view?.formModel?.funcID,
+              '',
+              this.itemDetail?.decisionNo,
+              ''
             )
             .subscribe((result) => {
               console.log(result)

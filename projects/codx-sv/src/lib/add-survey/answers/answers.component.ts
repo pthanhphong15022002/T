@@ -90,13 +90,17 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     super(injector);
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['changeModeA']) {
+    debugger
+    if ( changes['recID'] &&
+    changes['recID']?.currentValue != changes['recID']?.previousValue) {
+      this.recID = changes['recID']?.currentValue;
+      this.getRespondents();
     }
   }
 
   onInit(): void {
     //Lấy thông tin danh sách câu trả lời bằng id SV
-    this.getRespondents();
+    
     //this.tabContent.refreshActiveTab();
   }
 
