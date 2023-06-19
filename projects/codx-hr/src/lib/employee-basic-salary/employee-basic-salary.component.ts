@@ -20,6 +20,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -44,6 +45,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   constructor(
     injector: Injector,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
@@ -331,17 +333,16 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+              '',
+              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {

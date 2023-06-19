@@ -32,6 +32,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { ES_SignFile, File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -112,6 +113,7 @@ export class PopupAddSignFileComponent implements OnInit {
     private auth: AuthStore,
     private esService: CodxEsService,
     private codxService: CodxService,
+    private codxShareService: CodxShareService,
     private cr: ChangeDetectorRef,
     private callfuncService: CallFuncService,
     public dmSV: CodxDMService,
@@ -1225,11 +1227,22 @@ export class PopupAddSignFileComponent implements OnInit {
       return;
     }
 
-    this.esService
-      .release(
-        this.data,
+    // this.esService
+    //   .release(
+    //     this.data,
+    //     this.formModelCustom.entityName,
+    //     this.formModelCustom.funcID
+    //   )
+      this.codxShareService
+      .codxRelease(
+        'ES',
+        this.data?.recID,
+        this.data.approveControl == '1'? this.data?.recID: this.data?.processID,        
         this.formModelCustom.entityName,
-        this.formModelCustom.funcID
+        this.formModelCustom.funcID,
+        "",
+        this.data?.title ,
+        this.data?.refType
       )
       .subscribe((res) => {
         if (res?.msgCodeError == null && res?.rowCount > 0) {
