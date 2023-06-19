@@ -360,34 +360,24 @@
       [label]="itemAnswer.answer"
       field="O"
       [crrValue]="itemAnswer.answer"
-      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer, seqNoSession)"
     ></codx-input>
     <div class="d-flex align-items-center " *ngIf="itemAnswer.other">
       <codx-input
         type="radio"
         labelPosition="After"
-        [disabled]="false"
         class="test-check"
         [name]="seqNoSession+itemQuestion?.recID"
-        [label]="'Mục khác:'"
+        [label]="'Khác:'"
         field="O"
-        [checked]="itemAnswer.choose"
+        [crrValue]="'other'"
         (valueChange)="
-          valueChange($event, itemSession, itemQuestion, itemAnswer)
+        checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer , seqNoSession)
         "
         [style.width]="'125px'"
       ></codx-input>
-      <codx-input
-        type="text"
-        class="border-0 h-20px"
-        [crrValue]="itemAnswer.answer"
-        field="O"
-        (valueChange)="
-          valueChange($event, itemSession, itemQuestion, itemAnswer)
-        "
-        [ngClass]="'w-100'"
-      >
-      </codx-input>
+      <input type="text" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="true" class="form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event.target.value, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
+
     </div>
   </div>
   <div class="e-input-group" *ngIf="itemQuestion.answerType == 'C'">

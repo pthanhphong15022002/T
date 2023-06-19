@@ -224,9 +224,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   lstAnswer: any = [];
-  valueChange(e, itemSession, itemQuestion, itemAnswer) {
-    //itemAnswer.choose = true
+  valueChange(e, itemSession, itemQuestion, itemAnswer , seqNoSession = null) {
     debugger
+    //itemAnswer.choose = choose
     if(itemQuestion.answerType == "L")
     {
       this.lstQuestion[itemSession.seqNo].children[
@@ -273,11 +273,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
         debugger
       }
       else
-        this.lstQuestion[itemSession.seqNo].children[
-          itemQuestion.seqNo
-        ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
-      
-      
+        this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[0] = itemAnswer;
+        document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");
     }
 
     if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID)
@@ -324,6 +321,15 @@ export class ReviewComponent extends UIComponent implements OnInit {
     } else return false;
   }
 
+  checkDisabelAnswerOrder(e, itemSession, itemQuestion, itemAnswer , seqNoSession)
+  {
+    itemAnswer.choose = true;
+    this.lstQuestion[itemSession.seqNo].children[
+      itemQuestion.seqNo
+    ].answers[0] = itemAnswer;
+    document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).removeAttribute("disabled");
+  }
+
   getValue(seqNoSession, seqNoQuestion, seqNoAnswer) {
     if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers != null) {
       return this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
@@ -340,21 +346,19 @@ export class ReviewComponent extends UIComponent implements OnInit {
     });
     let respondQuestion: any = [];
     var check = false;
-    debugger
     lstAnswers.forEach((x) => {
       if (x.answerType) {
         let respondResult: any = [];
         x.answers.forEach((y) => {
-          let other = false;
-          if(y.other == 1) other = true; 
           let seqNo = 0;
           if(y.seqNo) seqNo = y.seqNo;
           let answer = '';
-          if(y.answer) answer = y.answer;
+          if(y.other) answer = (document.getElementById('ip-order-'+x.seqNo+x.recID) as HTMLInputElement).value;
+          else if(y.answer) answer = y.answer;
           let objR = {
             seqNo: seqNo,
             answer: answer,
-            other: other,
+            other: y.other,
             columnNo: false,
           };
           respondResult.push(objR);
@@ -365,9 +369,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
             document.getElementById("formError"+x.recID).innerHTML = this.html;
             document.getElementById("formId"+x.recID).className += " border-danger";
           }
-          else
-          {}
-
         });
         if (respondResult) {
           let objQ = {
