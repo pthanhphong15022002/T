@@ -398,6 +398,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   copy(data) {
+    let copyToRecID = data.recID
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -411,6 +412,7 @@ export class QuotationsComponent extends UIComponent {
         data: res,
         action: 'copy',
         headerText: this.titleAction,
+        copyToRecID:copyToRecID
       };
       let option = new DialogModel();
       option.IsFull = true;
