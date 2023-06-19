@@ -277,7 +277,7 @@ export class CodxListContactsComponent implements OnInit {
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' && action != 'editRole' ? 700 : 250,
+          action != 'editType' && action != 'editRole' ? 700 : 300,
           '',
           obj,
           '',
