@@ -5408,16 +5408,17 @@
                 [refValue]="eVaccineGrvSetup.VaccineTypeID.referedValue"
                 (valueChange)="valueChangeFilterVaccineTypeID($event)"
               ></codx-dropdown-select>
-
-              <codx-dropdown-calendar
-                [cssPopup]="'w-550px h-350px'"
-                emptyText="Năm"
-                [firstChange]="false"
-                [displayOption]="ops"
-                [selectedType]="'y'"
-                [cssClass]="'rounded-pill'"
-                (change)="valueChangeYearFilterEVaccine($event)"
-              ></codx-dropdown-calendar>
+              <span class="ms-1">
+                <codx-dropdown-calendar
+                  [cssPopup]="'w-550px h-350px'"
+                  emptyText="Năm"
+                  [firstChange]="false"
+                  [displayOption]="ops"
+                  [selectedType]="'y'"
+                  [cssClass]="'rounded-pill'"
+                  (change)="valueChangeYearFilterEVaccine($event)"
+                ></codx-dropdown-calendar>
+              </span>
               <!-- <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-400px w-500px border'"
                 (change)="valueChangeYearFilterEVaccine($event)"></codx-dropdown-calendar> -->
               <span class="text-gray-400 mx-2">|</span>

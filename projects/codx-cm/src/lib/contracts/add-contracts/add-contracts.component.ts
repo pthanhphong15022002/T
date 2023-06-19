@@ -186,6 +186,7 @@ export class AddContractsComponent implements OnInit {
       // /template: this.columnVatid,
     ];
   }
+
   ngAfterViewInit(){
   }
   // getFormModel() {
@@ -254,6 +255,7 @@ export class AddContractsComponent implements OnInit {
       }
     }
   }
+  
   setValueComboboxQuotation(){
     let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
     if(listQoutation){

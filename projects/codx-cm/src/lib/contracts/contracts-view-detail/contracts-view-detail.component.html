@@ -1,5 +1,5 @@
 <codx-detail-tmp
-  [header]="headerRightTemp"
+  [header]="headerTemp"
   [formModel]="formModel"
   [body]="mainRightTemp"
   [footer]="footerRightTemp"
@@ -9,219 +9,266 @@
   class="overflow-hidden"
 ></codx-detail-tmp>
 
-<ng-template #headerRightTemp>
-  <div class="d-flex align-items-center justify-content-between mb-2">
-    <div class="d-flex align-items-center">
-      <span class="fs-4 fw-bold">{{ contract?.contractName }}</span>
-      <span class="mx-2 text-gray-500">-</span>
-      <span class="fs-6 text-gray-700">{{ contract?.contractID }}</span>
+<ng-template #headerTemp>
+  <div class="d-flex justify-content-between">
+    <div class="flex-grow-1">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <div class="d-flex">
+          <codx-img
+            class="mt-1"
+            [objectId]="contract?.customerID"
+            [imgOn]="contract?.modifiedOn"
+            [objectType]="'CM_Customers'"
+            [referType]="'avt'"
+            [width]="35"
+          >
+          </codx-img>
+          <div class="ms-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-4 fw-bold">{{ contract?.contractName }}</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span
+                class="text-dark fw-bold codx-textcontent fs-4"
+                [innerHTML]="
+                  contract?.customerID
+                    | formatvalue : formModel : 'CustomerID'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <div class="d-flex align-items-center w-50">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="contractDate"
+            [formModel]="formModel"
+          ></codx-label>
+          <span
+            class="text-gray-600"
+            [innerHTML]="
+              contract?.contractDate
+                | formatvalue : formModel : 'ContractDate'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="d-flex align-items-center w-50">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="effectiveFrom"
+            [formModel]="formModel"
+            [setRequire]="false"
+          ></codx-label>
+          <span
+            class="text-gray-600"
+            [innerHTML]="
+              contract?.effectiveFrom
+                | formatvalue : formModel : 'EffectiveFrom'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+      <div class="d-flex align-items-top mb-1">
+        <div class="d-flex align-items-center w-50">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="effectiveTo"
+            [formModel]="formModel"
+          ></codx-label>
+          <span
+            class="text-gray-600"
+            [innerHTML]="
+              contract?.effectiveTo
+                | formatvalue : formModel : 'EffectiveTo'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="d-flex align-items-center w-50">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="extendOn"
+            [formModel]="formModel"
+          ></codx-label>
+          <span
+            class="text-gray-600"
+            [innerHTML]="
+              contract?.extendOn | formatvalue : formModel : 'ExtendOn' | async
+            "
+          ></span>
+        </div>
+      </div>
+      <div class="d-flex align-items-top mb-1">
+        <div class="w-50 d-flex align-items-center">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="dealID"
+            [formModel]="formModel"
+            [setRequire]="false"
+          ></codx-label>
+          <span
+            class="text-gray-700"
+            [innerHTML]="
+              contract?.dealID | formatvalue : formModel : 'DealID' | async
+            "
+          ></span>
+        </div>
+        <div class="w-50 d-flex align-items-center">
+          <div class="me-5 d-flex align-items-center">
+            <codx-label
+              class="label-colon fw-bold text-dark"
+              fiedName="currencyID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <span
+              class="text-warning"
+              [innerHTML]="
+                contract?.currencyID
+                  | formatvalue : formModel : 'CurrencyID'
+                  | async
+              "
+            >
+            </span>
+          </div>
+          <div class="d-flex align-items-center">
+            <codx-label
+              class="label-colon fw-bold text-dark"
+              fiedName="exchangeRate"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <span
+              class="text-gray-700"
+              [innerHTML]="
+                contract?.exchangeRate
+                  | formatvalue : formModel : 'ExchangeRate'
+                  | async
+              "
+            >
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-top mb-1">
+        <div class="w-50 d-flex align-items-center">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="quotationID"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+          <span
+            class="text-gray-700"
+            [innerHTML]="
+              contract?.quotationID
+                | formatvalue : formModel : 'QuotationID'
+                | async
+            "
+          >
+          </span>
+        </div>
+        <!-- Hợp đồng sử dụng -->
+        <div class="w-50 d-flex align-items-center">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="useType"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+          <span
+            class="text-gray-700"
+            [innerHTML]="
+              contract?.useType | formatvalue : formModel : 'UseType' | async
+            "
+          >
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <div class="w-50 d-flex align-items-center">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="orderID"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+          <span
+            class="text-gray-700"
+            [innerHTML]="
+              contract?.orderID | formatvalue : formModel : 'OrderID' | async
+            "
+          ></span>
+        </div>
+        <!-- Loại hợp đồng -->
+        <div class="w-50 d-flex align-items-center">
+          <codx-label
+            class="label-colon fw-bold text-dark"
+            fiedName="contractType"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+          <span
+            class="text-gray-700"
+            [innerHTML]="
+              contract?.contractType
+                | formatvalue : formModel : 'ContractType'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
     </div>
-    <div class="ms-3 d-flex align-items-center">
-      <codx-vll
-        [name]="vllStatus"
-        [field]="'Status'"
-        [value]="contract?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-primary badge-md"
-      >
-      </codx-vll>
-      <div class="me-2">
+    <div class="me-4"> 
+      <div class="d-flex justify-content-end align-items-center my-2">
+        <span class="icon-monetization_on icon-16 me-1 text-warning"></span>
+        <span
+          class="fs-4 fw-bold"
+          [innerHTML]="
+            contract?.contractAmt
+              | formatvalue : formModel : 'ContractAmt'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="d-flex justify-content-end align-items-center my-2">
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="contract?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="me-0 badge badge-primary badge-md"
+        >
+        </codx-vll>
+      </div>
+      <div class="d-flex justify-content-end align-items-center my-2">
+        <span class="icon-av_timer"></span>
+        <span
+          [innerHTML]="
+            contract?.createdOn | formatvalue : formModel : 'CreatedOn' | async
+          "
+        ></span>
+      </div>
+      <div class="d-flex justify-content-end align-items-center my-2">
         <codx-imgs
-          [width]="25"
+          class="float-right"
+          [width]="35"
           [objectId]="contract.createdBy"
           ojectType="AD_Users"
           [numberImages]="1"
         >
         </codx-imgs>
       </div>
-    </div>
-  </div>
-  <div class="d-flex align-items-center mb-1">
-    <div class="d-flex align-items-center w-50">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="contractDate"
-        [formModel]="formModel"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.contractDate
-            | formatvalue : formModel : 'ContractDate'
-            | async
-        "
-      ></span>
-    </div>
-    <div class="d-flex align-items-center w-50">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="effectiveFrom"
-        [formModel]="formModel"
-        [setRequire]="false"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.effectiveFrom
-            | formatvalue : formModel : 'EffectiveFrom'
-            | async
-        "
-      ></span>
-    </div>
-  </div>
-  <div class="d-flex align-items-top mb-1">
-    <div class="d-flex align-items-center w-50">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="effectiveTo"
-        [formModel]="formModel"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.effectiveTo
-            | formatvalue : formModel : 'EffectiveTo'
-            | async
-        "
-      ></span>
-    </div>
-    <div class="d-flex align-items-center w-50">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="extendOn"
-        [formModel]="formModel"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.extendOn | formatvalue : formModel : 'ExtendOn' | async
-        "
-      ></span>
-    </div>
-  </div>
-  <div class="d-flex align-items-top mb-1">
-    <div class="w-50 d-flex align-items-center">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="dealID"
-        [formModel]="formModel"
-        [setRequire]="false"
-      ></codx-label>
-      <span
-        class="text-gray-700"
-        [innerHTML]="
-          contract?.dealID | formatvalue : formModel : 'DealID' | async
-        "
-      ></span>
-    </div>
-    <div class="w-50 d-flex align-items-center">
-      <div class="me-5 d-flex align-items-center">
-        <codx-label
-          class="label-colon fw-bold text-dark"
-          fiedName="currencyID"
-          [formModel]="formModel"
-        >
-        </codx-label>
-        <span
-          class="text-warning"
-          [innerHTML]="
-            contract?.currencyID
-              | formatvalue : formModel : 'CurrencyID'
-              | async
-          "
-        >
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <codx-label
-          class="label-colon fw-bold text-dark"
-          fiedName="exchangeRate"
-          [formModel]="formModel"
-        >
-        </codx-label>
-        <span
-          class="text-gray-700"
-          [innerHTML]="
-            contract?.exchangeRate
-              | formatvalue : formModel : 'ExchangeRate'
-              | async
-          "
-        >
-        </span>
-      </div>
-    </div>
-  </div>
-  <div class="d-flex align-items-top mb-1">
-    <div class="w-50 d-flex align-items-center">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="quotationID"
-        [formModel]="formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
-      <span
-        class="text-gray-700"
-        [innerHTML]="
-          contract?.quotationID
-            | formatvalue : formModel : 'QuotationID'
-            | async
-        "
-      >
-      </span>
-    </div>
-    <!-- Hợp đồng sử dụng -->
-    <div class="w-50 d-flex align-items-center">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="useType"
-        [formModel]="formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
-      <span
-        class="text-gray-700"
-        [innerHTML]="
-          contract?.useType | formatvalue : formModel : 'UseType' | async
-        "
-      >
-      </span>
-    </div>
-  </div>
-  <div class="d-flex align-items-center mb-1">
-    <div class="w-50 d-flex align-items-center">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="orderID"
-        [formModel]="formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
-      <span
-        class="text-gray-700"
-        [innerHTML]="
-          contract?.orderID | formatvalue : formModel : 'OrderID' | async
-        "
-      ></span>
-    </div>
-    <!-- Loại hợp đồng -->
-    <div class="w-50 d-flex align-items-center">
-      <codx-label
-        class="label-colon fw-bold text-dark"
-        fiedName="contractType"
-        [formModel]="formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
-      <span
-        class="text-gray-700"
-        [innerHTML]="
-          contract?.contractType
-            | formatvalue : formModel : 'ContractType'
-            | async
-        "
-      ></span>
     </div>
   </div>
 </ng-template>
