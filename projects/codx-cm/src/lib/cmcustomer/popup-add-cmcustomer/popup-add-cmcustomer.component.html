@@ -47,6 +47,7 @@
   <ng-container *ngIf="form?.formGroup">
     <div>
       <codx-address-cm
+        #codxListAddress
         (lstAddressEmit)="lstAddressEmit($event)"
         (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
         [type]="'formAdd'"
@@ -87,6 +88,16 @@
         </codx-label>
         <div class="row mt-5">
           <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                field="annualRevenue"
+              >
+              </codx-input>
+            </div>
             <div class="form-group">
               <codx-label [formModel]="form.formModel" fiedName="Headcounts">
               </codx-label>
@@ -184,12 +195,12 @@
           </div>
           <div class="col-6">
             <div class="form-group">
-              <codx-label [formModel]="form.formModel" fiedName="CustomerFrom">
+              <codx-label [formModel]="form.formModel" fiedName="Owner">
               </codx-label>
               <codx-input
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
-                field="customerFrom"
+                field="owner"
               >
               </codx-input>
             </div>
@@ -379,6 +390,7 @@
     </ng-container>
     <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
       <div class="row">
+
         <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" fiedName="Headcounts">
           </codx-label>
@@ -705,16 +717,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="annualRevenue"
-        >
-        </codx-input>
-      </div>
+
     </div>
     <div class="col-6">
       <div class="form-group">
@@ -757,6 +760,17 @@
     </div>
   </div>
   <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.address"
+      (valueChange)="valueChangeAdress($event)"
+      field="address"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>
     <codx-input
@@ -775,22 +789,7 @@
     >
     </codx-input>
   </div>
-  <div class="form-group">
-    <div class="d-flex justify-content-between">
-      <div class="me-2">
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="isBlackList"
-        >
-        </codx-input>
-      </div>
-      <div class="w-100">
-        <codx-label [formModel]="form.formModel" fiedName="IsBlackList">
-        </codx-label>
-      </div>
-    </div>
-  </div>
+
 </ng-template>
 <ng-template #tabContact>
   <ng-container>
@@ -811,6 +810,7 @@
           <codx-input
             [field]="'objectType'"
             [crrValue]="data.objectType"
+            [disabled]="checkContact"
             [type]="'valuelist'"
             [refValue]="gridViewSetup?.ObjectType?.referedValue"
             (valueChange)="valueChangeContact($event)"
@@ -825,6 +825,7 @@
             #vllCbx
             [field]="'contactType'"
             id="vllCbx"
+            [disabled]="checkContact"
             [crrValue]="data?.contactType"
             [formModel]="form.formModel"
             [type]="'valuelist'"
@@ -841,6 +842,7 @@
       ></codx-label>
       <codx-input
         [field]="'objectID'"
+        [disabled]="checkContact"
         [crrValue]="data?.objectID"
         type="combobox"
         [refValue]="refValueCbx"
@@ -853,6 +855,7 @@
           <codx-input
             [field]="'isDefault'"
             [crrValue]="data?.isDefault"
+            [disabled]="checkContact"
             type="switch"
             (valueChange)="valueChangeContact($event)"
           ></codx-input>
@@ -1244,16 +1247,6 @@
     </div>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Industries">
-    </codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="industries"
-    >
-    </codx-input>
-  </div>
-  <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -1263,6 +1256,17 @@
     >
     </codx-input>
   </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Industries">
+    </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="industries"
+    >
+    </codx-input>
+  </div>
+
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
     <codx-input
