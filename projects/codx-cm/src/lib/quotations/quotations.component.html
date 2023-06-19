@@ -34,6 +34,12 @@
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
+    [imageId]="data?.customerID"
+    [imageObjType]="'CM_Customers'"
+    [imgOn]="data?.modifiedOn"
+    [imageReferType]="'avt'"
+    [imageWidth]="35"
+    imgCss="me-3"
     [title]="data.quotationName"
     [descTmp]="descTmp"
     [formModel]="view.formModel"
@@ -46,7 +52,8 @@
 <ng-template #descTmp let-data>
   <div class="d-flex align-items-top mb-1">
     <span class="icon-corporate_fare text-gray-700 icon-16 me-2"></span>
-    <span class="text-gray-700"
+    <span
+      class="text-gray-700"
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async
       "
@@ -73,21 +80,19 @@
     </div>
     <div class="d-flex align-items-top justify-content-end me-3">
       <span class="icon-monetization_on icon-16 text-warning me-1"></span>
-        <span
-          class="codx-label me-1"
-          [innerHTML]="
-            data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
-          "
-        >
-        </span>
-        <span
-          class="codx-label"
-          [innerHTML]="
-            data.currencyID
-              | formatvalue : view.formModel : 'currencyID'
-              | async
-          "
-        ></span>
+      <span
+        class="codx-label me-1"
+        [innerHTML]="
+          data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+        "
+      >
+      </span>
+      <span
+        class="codx-label"
+        [innerHTML]="
+          data.currencyID | formatvalue : view.formModel : 'currencyID' | async
+        "
+      ></span>
     </div>
   </div>
   <div class="d-flex justify-content-between align-items-center">
