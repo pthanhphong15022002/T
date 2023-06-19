@@ -3224,15 +3224,20 @@ codx-card-center .card.codx_cardcenter{
 /***/
 .e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {
   min-height: 36px!important;
-  border-left: 0!important;
+  border-left: 3px transparent solid!important;
 }
 
 .input-number input {
   background-color: transparent;
 }
 lib-popup-detail{
-  .conmement-body{
-      height: calc(100vh - 190px);
-      overflow: auto;
+.conmement-body{
+    height: calc(100vh - 190px);
+    overflow: auto;
+}
+}
+lib-calendar-center{
+  #Content-Fillter{
+    display: none;
   }
-  }
+}

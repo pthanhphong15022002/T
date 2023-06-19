@@ -1,9 +1,9 @@
 <codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
-  <div class="bg-white rounded-3 p-3 position-relative">
+  <div class="rounded-3 p-0 position-relative h-100">
     <div class="d-flex justify-content-center">
-      <div class="w-30 min-w-225px mw-450px me-5">
+      <div class="w-30 min-w-225px mw-450px me-5 bg-white">
         <ejs-calendar
           #ejCalendar
           cssClass="width-calendar"
@@ -16,7 +16,7 @@
           (renderDayCell)="onLoad($event)"
         >
         </ejs-calendar>
-        <div class="my-2">
+        <div class="m-3">
           <ejs-dropdownlist
             id="cbxChooseCalendar"
             [dataSource]="calendarTypes"
@@ -35,68 +35,70 @@
             </ng-template>
           </ejs-dropdownlist>
         </div>
-        <ng-container #listParam>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <codx-label
-              fiedName="Calendar"
-              default="Calendar"
-              class="fw-bold"
-            ></codx-label>
-            <button class="btn btn-icon btn-primary me-1">
-              <span
-                class="icon-settings text-white icon-18"
-                (click)="settingCalendar()"
-              ></span>
-            </button>
-          </div>
+        <div class="px-3">
+          <ng-container #listParam>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <codx-label
+                fiedName="Calendar"
+                default="Calendar"
+                class="fw-bold"
+              ></codx-label>
+              <button class="btn btn-icon btn-primary me-1">
+                <span
+                  class="icon-settings text-white icon-18"
+                  (click)="settingCalendar()"
+                ></span>
+              </button>
+            </div>
 
-          <div *ngFor="let param of calendarParams | keyvalue">
-            <div class="d-flex mt-3 align-items-center">
-              <div class="w-5px me-2">
-                <li
-                  [style.background-color]="param?.value.ShowColor"
-                  [style.color]="param?.value.ShowColor"
-                ></li>
-              </div>
-              <div class="show-list-event w-100">
-                <codx-vll
-                  [showText]="true"
-                  [showBgColor]="false"
-                  name="WP006"
-                  [value]="param?.key"
-                />
-              </div>
-              <div
-                class="show-event-check me-2 w-50px d-flex justify-content-end"
-              >
-                <codx-input
-                  type="checkbox"
-                  [field]="param?.key"
-                  [checked]="param?.value.ShowEvent === '1'"
-                  labelPosition="Before"
-                  [disabled]="false"
-                  class="test-check"
-                  (valueChange)="updateSettingValue($event)"
+            <div *ngFor="let param of calendarParams | keyvalue">
+              <div class="d-flex mt-3 align-items-center">
+                <div class="w-5px me-2">
+                  <li
+                    [style.background-color]="param?.value.ShowColor"
+                    [style.color]="param?.value.ShowColor"
+                  ></li>
+                </div>
+                <div class="show-list-event w-100">
+                  <codx-vll
+                    [showText]="true"
+                    [showBgColor]="false"
+                    name="WP006"
+                    [value]="param?.key"
+                  />
+                </div>
+                <div
+                  class="show-event-check me-2 w-50px d-flex justify-content-end"
                 >
-                </codx-input>
+                  <codx-input
+                    type="checkbox"
+                    [field]="param?.key"
+                    [checked]="param?.value.ShowEvent === '1'"
+                    labelPosition="Before"
+                    [disabled]="false"
+                    class="test-check"
+                    (valueChange)="updateSettingValue($event)"
+                  >
+                  </codx-input>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- <div class="d-flex justify-content-around align-items-center mt-3">
-            <button
-              class="btn btn-outline-primary btn-md"
-              (click)="resetParams()"
-            >
-              <span>Reset</span>
-            </button>
-            <button class="btn btn-primary btn-md" (click)="saveParams()">
-              <span>Save</span>
-            </button>
-          </div> -->
-        </ng-container>
+            <!-- <div class="d-flex justify-content-around align-items-center mt-3">
+              <button
+                class="btn btn-outline-primary btn-md"
+                (click)="resetParams()"
+              >
+                <span>Reset</span>
+              </button>
+              <button class="btn btn-primary btn-md" (click)="saveParams()">
+                <span>Save</span>
+              </button>
+            </div> -->
+          </ng-container>
+        </div>
       </div>
-      <div class="position-relative w-100">
+      <div class="position-relative w-100 bg-white">
         <lib-calendar-center
           #calendarCenter
           [resources]="resources"
