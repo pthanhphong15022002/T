@@ -9,7 +9,9 @@ import {
 import {
   CacheService,
   CallFuncService,
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogModel,
   DialogRef,
@@ -32,6 +34,9 @@ import { CodxAcService } from '../../../codx-ac.service';
 export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('provinceID') provinceID: CodxInputComponent;
+  @ViewChild('districtID') districtID: CodxInputComponent;
+  @ViewChild('postalCode') postalCode: CodxInputComponent;
   headerText: string;
   title: string;
   formModel: FormModel;
@@ -115,6 +120,54 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   //#region Event
   valueChange(e: any) {
     this.warehouses[e.field] = e.data;
+    switch (e.field) 
+      {
+        case 'countryID':
+          if(this.provinceID)
+          {
+            (this.provinceID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.provinceID.crrValue = null;
+            this.warehouses.provinceID = null;
+          }
+          if(this.districtID)
+          {
+            (this.districtID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.districtID.crrValue = null;
+            this.warehouses.districtID = null;
+          }
+          if(this.postalCode)
+          {
+            (this.postalCode.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.postalCode.crrValue = null;
+            this.warehouses.postalCode = null;
+          }
+          this.form.formGroup.patchValue(this.warehouses);
+          break;
+        case 'provinceID':
+          if(this.districtID)
+          {
+            (this.districtID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.districtID.crrValue = null;
+            this.warehouses.districtID = null;
+          }
+          if(this.postalCode)
+          {
+            (this.postalCode.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.postalCode.crrValue = null;
+            this.warehouses.postalCode = null;
+          }
+          this.form.formGroup.patchValue(this.warehouses);
+          break;
+        case 'districtID':
+          if(this.postalCode)
+          {
+            (this.postalCode.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.postalCode.crrValue = null;
+            this.warehouses.postalCode = null;
+          }
+          this.form.formGroup.patchValue(this.warehouses);
+          break;
+      }
   }
   //#endregion
 
