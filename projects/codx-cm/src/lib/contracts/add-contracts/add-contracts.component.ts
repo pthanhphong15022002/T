@@ -579,7 +579,7 @@ export class AddContractsComponent implements OnInit {
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
       '',
-      600,
+      550,
       400,
       '',
       dataInput,
