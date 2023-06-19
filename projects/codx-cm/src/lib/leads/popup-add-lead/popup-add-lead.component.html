@@ -234,6 +234,54 @@
 
   </div>
 
+  <div class="row">
+    <!-- <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="ProcessID"
+          [Group]="form.formGroup"
+          default="Quy trình"
+        >
+        </codx-label>
+      <div >
+        <codx-input
+        [formModel]="form.formModel"
+        field="processID"
+        [model]="{ApplyFor: '5'}"
+        [crrValue]="lead?.processID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+
+      </div>
+
+      </div>
+    </div> -->
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="BusinessLineID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+        [formModel]="form.formModel"
+        field="businessLineID"
+        [crrValue]="lead?.businessLineID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+
+
+      </div>
+    </div>
+
+  </div>
+
+
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Note" > </codx-label>
     <codx-input

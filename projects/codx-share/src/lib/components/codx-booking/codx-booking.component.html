@@ -39,8 +39,12 @@
 </ng-template>
 
 <!----------------------------------List---------------------------------->
-<ng-template #subTitleTmp let-data>
-  <div class="">
+<ng-template #titleTmp let-data>
+  <div class="w-100">
+    <div class=" w-100 d-flex flex-row justify-content-between align-items-center">
+      <span class="fw-bold" [innerHTML]="data?.requester"></span>
+      <span class="icon-i-calendar-event icon-18 pe-2 text-primary" *ngIf="data?.resourceType=='6' && data?.refID!=null " ngbTooltip="Văn phòng phẩm đặt kèm phòng họp" ></span>
+    </div>
     <div class="text-gray-600">
       <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
@@ -68,6 +72,7 @@
       </div>
     </div>
     <div class="d-flex align-items-center pt-2">
+      
       <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP022'" [value]="data?.approveStatus"
         class="badge badge-light badge-md fs-7">
       </codx-vll>
@@ -82,8 +87,8 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom p-3" [typeMF]="'hover'"
-    [title]="data?.requester " [subTitleTmp]="subTitleTmp" [icoCss]="
+  <codx-temp-full cardCss="card-template border-bottom p-3" [typeMF]="'hover'" moreFuncCss="me-10"
+     [titleTmp]="titleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     " [imageId]="data?.createdBy" imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="formModel"
     [footer]="footerTmp" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" typeMF="hover"

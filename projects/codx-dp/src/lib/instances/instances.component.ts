@@ -659,8 +659,7 @@ export class InstancesComponent
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
-        const funcIDApplyFor =
-          this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+        const funcIDApplyFor = this.checkFunctionID( this.process.applyFor);
         const applyFor = this.process.applyFor;
         let option = new SidebarModel();
         option.DataService = this.view.dataService;

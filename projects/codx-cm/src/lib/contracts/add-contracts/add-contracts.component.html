@@ -306,12 +306,6 @@
 
 <!-- chi tiết mặt hàng -->
 <ng-template #quotationsTemplate let-data="value">
-  <!-- <view-quotations
-    [quotationLines]="listQuotationsLine"
-    [quotations]="quotations"
-    [fmQuotationLines]="fmQuotationLines"
-    [fmQuotations]="fmQuotations"
-  ></view-quotations> -->
   <codx-quotations-lines
     #viewQuotationsLine
     [transID]="quotations?.recID"

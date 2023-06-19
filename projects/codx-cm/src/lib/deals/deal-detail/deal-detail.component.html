@@ -84,84 +84,83 @@
             </div>
           </div>
           <div class="ms-5 d-flex justify-content-between">
-
             <div class="d-flex flex-column">
-              <div class="d-flex flex-row">            <div class="d-flex align-items-top justify-content-end fs-3">
-                <span
-                  class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
-                ></span>
-                <span
-                  class="fw-bold line-clamp-menu"
-                  *ngIf="dataSelected?.dealValue; else defaultNull"
-                  [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
-                  #dealValue
-                  [innerHTML]="
-                    dataSelected?.dealValue
-                      | formatvalue : formModel : 'dealValue' : dealValue
-                      | async
-                  "
-                ></span>
+              <div class="d-flex flex-row">
+                <div class="d-flex align-items-top justify-content-end fs-3">
+                  <span
+                    class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+                  ></span>
+                  <span
+                    class="fw-bold line-clamp-menu"
+                    *ngIf="dataSelected?.dealValue; else defaultNull"
+                    [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+                    #dealValue
+                    [innerHTML]="
+                      dataSelected?.dealValue
+                        | formatvalue : formModel : 'dealValue' : dealValue
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div
+                  class="d-flex align-items-top justify-content-end ps-10 fs-3"
+                >
+                  <span
+                    class="icon-check_circle text-green icon-16 mt-1 pe-1"
+                  ></span>
+                  <span
+                    *ngIf="dataSelected?.probability; else defaultNull"
+                    class="line-clamp-menu"
+                    [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                    #probability
+                    [innerHTML]="
+                      dataSelected?.probability
+                        | formatvalue : formModel : 'probability' : probability
+                        | async
+                    "
+                  ></span
+                  >%
+                </div>
               </div>
-              <div class="d-flex align-items-top justify-content-end ps-10 fs-3">
-                    <span
-                      class="icon-check_circle text-green icon-16 mt-1 pe-1"
-                    ></span>
-                    <span
-                      *ngIf="dataSelected?.probability; else defaultNull"
-                      class="text-primary line-clamp-menu"
-                      [ngbTooltip]="gridViewSetup['Probability']?.headerText"
-                      #probability
-                      [innerHTML]="
-                        dataSelected?.probability
-                          | formatvalue : formModel : 'probability' : probability
-                          | async
-                      "
-                    ></span
-                    >%
-              </div></div>
               <div class="d-flex justify-content-end">
                 <div
-                *ngIf="dataSelected.status != '1'"
-                [ngStyle]="{
-                  'background-color':
-                    dataSelected.status == '3' ||
-                    dataSelected.status == '4'
-                      ? colorReasonSuccess?.color
-                      : dataSelected.status == '5' ||
-                        dataSelected.status == '6'
-                      ? colorReasonFail?.color
-                      : dataSelected?.steps['backgroundColor']
-                }"
-                class="me-2 badge badge-sm d-flex align-items-center"
-              >
-                <span
-                  [ngClass]="dataSelected?.steps['icon']"
-                  [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                  class="me-1"
-                ></span>
-                <span
-                  class="menu-title fw-bold line-clamp line-clamp-2"
-                  [ngbTooltip]="dataSelected?.currentStepName"
-                  [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                  >{{ dataSelected?.currentStepName }}</span
+                  *ngIf="dataSelected.status != '1'"
+                  [ngStyle]="{
+                    'background-color':
+                      dataSelected.status == '3' || dataSelected.status == '4'
+                        ? colorReasonSuccess?.color
+                        : dataSelected.status == '5' ||
+                          dataSelected.status == '6'
+                        ? colorReasonFail?.color
+                        : dataSelected?.steps['backgroundColor']
+                  }"
+                  class="me-2 badge badge-sm d-flex align-items-center"
                 >
-              </div>
-              <div *ngIf="dataSelected.status == '1'">
-                <codx-vll
-                  [name]="'DP028'"
-                  [field]="'Status'"
-                  [value]="dataSelected?.status"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge badge-light badge-sm"
-                >
-                </codx-vll>
-              </div>
-
+                  <span
+                    [ngClass]="dataSelected?.steps['icon']"
+                    [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                    class="me-1"
+                  ></span>
+                  <span
+                    class="menu-title fw-bold line-clamp line-clamp-2"
+                    [ngbTooltip]="dataSelected?.currentStepName"
+                    [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
+                    >{{ dataSelected?.currentStepName }}</span
+                  >
+                </div>
+                <div *ngIf="dataSelected.status == '1'">
+                  <codx-vll
+                    [name]="'DP028'"
+                    [field]="'Status'"
+                    [value]="dataSelected?.status"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm"
+                  >
+                  </codx-vll>
+                </div>
               </div>
             </div>
-
-
           </div>
         </div>
 
