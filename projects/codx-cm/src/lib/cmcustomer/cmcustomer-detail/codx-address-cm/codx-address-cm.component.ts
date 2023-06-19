@@ -103,22 +103,23 @@ export class CodxAddressCmComponent implements OnInit {
       this.request.entityName = 'BS_AddressBook';
       this.request.funcID = this.funcID;
       this.className = 'AddressBookBusiness';
-      this.fetch().subscribe((item) => {
+      this.fetch().subscribe(async (item) => {
+        this.loaded = true;
+
         this.listAddress = this.cmSv.bringDefaultContactToFront(item);
         if (this.listAddress != null && this.listAddress.length > 0) {
           if (this.isConvertLeadToCus) {
             for (var i = 0; i < this.listAddress.length; i++) {
-              if (!this.listAddress[i].checked) this.listAddress[i].checked = false;
+              if (!this.listAddress[i].checked)
+                this.listAddress[i].checked = false;
             }
           }
           this.changeAddress(this.listAddress[0]);
         }
-        this.loaded = true;
       });
     } else {
       this.loadListAdress(this.listAddress);
       this.loaded = true;
-
     }
   }
 
