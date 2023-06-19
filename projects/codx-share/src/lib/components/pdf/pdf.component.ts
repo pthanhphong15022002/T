@@ -45,6 +45,7 @@ import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signat
 import { SetupShowSignature } from 'projects/codx-es/src/lib/codx-es.model';
 import { environment } from 'src/environments/environment';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { CodxShareService } from '../../codx-share.service';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -60,6 +61,7 @@ export class PdfComponent
     private authStore: AuthStore,
     private esService: CodxEsService,
     private actionCollectionsChanges: IterableDiffers,
+    private codxShareService: CodxShareService,
     private datePipe: DatePipe,
     private notificationsService: NotificationsService
   ) {
@@ -718,13 +720,12 @@ export class PdfComponent
         //   .subscribe((status) => {
         //     resolve(status);
         //   });
-        this.api
-          .execSv(
-            'ES',
-            'ERM.Business.ES',
-            'ApprovalTransBusiness',
-            'ApproveAsync',
-            [this.transRecID, mode, '', comment, '']
+        this.codxShareService
+          .codxApprove(
+            this.transRecID,
+            mode,
+            '',
+            comment,            
           )
           .subscribe((res: any) => {
             if (res?.msgCodeError == null) {

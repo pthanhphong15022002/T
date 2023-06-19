@@ -28,6 +28,7 @@ import {
   Resource,
 } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
+import { CodxShareService } from '../../../codx-share.service';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -142,6 +143,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     injector: Injector,
     private notificationsService: NotificationsService,
     private codxBookingService: CodxBookingService,
+    private codxShareService: CodxShareService,
     private authService: AuthService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -1374,13 +1376,16 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.codxBookingService
         .getProcessByCategoryID(this.categoryID)
         .subscribe((res: any) => {
-          this.codxBookingService
-            .release(
-              this.returnData,
+          this.codxShareService
+            .codxRelease(
+              'EP',
+              this.returnData?.recID,
               res?.processID,
               'EP_Bookings',
               this.formModel.funcID,
-              this.returnData?.createdBy
+              this.returnData?.createdBy,
+              this.returnData?.title,
+              null
             )
             .subscribe((res) => {
               if (res?.msgCodeError == null && res?.rowCount) {

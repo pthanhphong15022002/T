@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-activies-slider',
@@ -35,6 +36,7 @@ export class ActiviesSliderComponent implements OnInit {
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private notiSV:NotificationsService,
+    private codxShareService: CodxShareService,
     private auth:AuthStore,
     private codxService:CodxService,
     private cache:CacheService,
@@ -130,13 +132,13 @@ export class ActiviesSliderComponent implements OnInit {
     if(item.recID && item.transID && status)
     {
       item["blocked"] = true;
-      this.api
-        .execSv(
-          'ES',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'ApproveAsync',
-          [item.transID, status, '', ''])
+      this.codxShareService
+        .codxApprove(
+            item.transID,
+            status,
+            '',
+            ''
+          )
           .subscribe((res: any) => {
           if (!res?.msgCodeError) 
           {

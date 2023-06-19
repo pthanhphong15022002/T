@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEappointionsComponent } from '../employee-profile/popup-eappointions/popup-eappointions.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-appointions',
@@ -68,7 +69,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
     private hrService: CodxHrService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private codxShareService: CodxShareService,
   ) {
     super(inject);
   }
@@ -244,17 +246,16 @@ export class EmployeeAppointionsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.processID.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+              '',
+              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {

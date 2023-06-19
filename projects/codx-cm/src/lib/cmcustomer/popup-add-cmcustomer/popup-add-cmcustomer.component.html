@@ -170,10 +170,7 @@
         <div class="row mt-3">
           <div class="col-6">
             <div class="form-group">
-              <codx-label
-                [formModel]="form.formModel"
-                fiedName="ChannelID"
-              >
+              <codx-label [formModel]="form.formModel" fiedName="ChannelID">
               </codx-label>
               <codx-input
                 [formModel]="form.formModel"
@@ -390,7 +387,6 @@
     </ng-container>
     <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
       <div class="row">
-
         <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" fiedName="Headcounts">
           </codx-label>
@@ -717,7 +713,6 @@
         >
         </codx-input>
       </div>
-
     </div>
     <div class="col-6">
       <div class="form-group">
@@ -789,7 +784,6 @@
     >
     </codx-input>
   </div>
-
 </ng-template>
 <ng-template #tabContact>
   <ng-container>

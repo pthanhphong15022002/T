@@ -44,7 +44,7 @@ export class OrgorganizationComponent extends UIComponent {
   templateActive: number = 0;
   isCorporation: boolean = false;
   request: any = null;
-
+  count: any;
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
   };
@@ -72,7 +72,7 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.parentIDField = 'ParentID';
     this.views = [
       {
-        // id: '18',
+        id: '1',
         type: ViewType.list,
         active: false,
         sameData: true,
@@ -81,7 +81,7 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
       {
-        // id: '18',
+        id: '18',
         type: ViewType.listtree,
         active: false,
         sameData: false,
@@ -91,7 +91,7 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
       {
-        // id: '2',
+        id: '2',
         type: ViewType.tree_masterdetail,
         active: false,
         sameData: false,
@@ -261,17 +261,5 @@ export class OrgorganizationComponent extends UIComponent {
   //         this.view.dataService.update(data).subscribe();
   //       }
   //     });
-  // }
-  dataCount: any;
-  // getCount(orgunitID: string) {
-  //   this.api
-  //     .execSv(
-  //       'HR',
-  //       'ERM.Business.HR',
-  //       'OrganizationUnitsBusiness',
-  //       'GetCountEmplyee',
-  //       [orgunitID]
-  //     )
-  //     .subscribe((res: any) => (this.dataCount = res)); 
   // }
 }

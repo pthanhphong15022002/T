@@ -16,7 +16,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
-import { BookingService } from '../../services/booking.services';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 
 @Component({
   selector: 'mwp-booking-stationery',
@@ -52,7 +52,7 @@ export class MWPBookingStationeryComponent
 
   constructor(
     private injector: Injector,
-    private codxEpService: BookingService,
+    private codxEpService: CodxBookingService,
     private notificationsService: NotificationsService,
     private authService: AuthService
   ) {
