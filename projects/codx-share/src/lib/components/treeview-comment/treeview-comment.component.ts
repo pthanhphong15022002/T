@@ -23,7 +23,6 @@ import { map } from 'rxjs';
 })
 export class TreeviewCommentComponent implements OnInit {
   @Input() data:any = null;
-  @Input() activeParent:boolean = false;
   @Input() funcID:string = "";
   @Input() objectID:string = "";
   @Input() objectType:string = "";
@@ -131,11 +130,6 @@ export class TreeviewCommentComponent implements OnInit {
     this.crrId = "";
     this.dicDatas[event["recID"]] = event;
     this.setNodeTree(event);
-    // bài viết chi tiết - tạo bài viết khi comment lần đầu
-    if(this.activeParent){
-      this.pushCommentEvt.emit(event);
-      this.activeParent = false;
-    }
     this.dt.detectChanges();
   }
   // reply to

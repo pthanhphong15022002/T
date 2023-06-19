@@ -119,12 +119,12 @@ export class CodxListContactsComponent implements OnInit {
       this.request.funcID = 'CM0102';
       this.className = 'ContactsBusiness';
       this.fetch().subscribe((item) => {
+        this.loaded = true;
         this.listContacts = this.cmSv.bringDefaultContactToFront(item);
         if (this.listContacts != null && this.listContacts.length > 0) {
           this.changeContacts(this.listContacts[0]);
           if (this.isConvertLeadToCus) this.insertFieldCheckbox();
         }
-        this.loaded = true;
       });
     } else {
       this.loadListContact(this.listContacts);

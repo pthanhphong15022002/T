@@ -1,0 +1,71 @@
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [dialog]="dialog"
+  [formModel]="formModel"
+>
+</codx-form>
+<ng-template #header>
+  <div class="card-toolbar w-100 d-flex justify-content-end">
+    <div class="float-end">
+      <button type="button" class="btn btn-icon" (click)="onClose()">
+        <i class="icon-close icon-18"></i>
+      </button>
+    </div>
+  </div>
+  <div class="d-flex w-100 justify-content-center">
+    <codx-label [formName]="formModel" default="Lịch sử truy cập"></codx-label>
+  </div>
+</ng-template>
+<ng-template #body>
+  <codx-gridview-v2
+    *ngIf="lstAccessHis.length > 0"
+    #grid
+    [dataSource]="lstAccessHis"
+    [hideMoreFunc]="true"
+    [columnsGrid]="clmnGrid"
+    [autoLoad]="false"
+    rowHeight="40"
+  ></codx-gridview-v2>
+</ng-template>
+
+<!--Region HeaderText -->
+<ng-template #userIDHT>
+  <codx-label [formName]="formModel" default="Mã"></codx-label>
+</ng-template>
+<ng-template #userNameHT>
+  <codx-label [formName]="formModel" default="Tên"></codx-label>
+</ng-template>
+<ng-template #emailHT>
+  <codx-label [formName]="formModel" default="Email"></codx-label>
+</ng-template>
+<ng-template #utcHT
+  ><codx-label [formName]="formModel" default="UTC"></codx-label>
+</ng-template>
+<ng-template #gtmHT
+  ><codx-label [formName]="formModel" default="GMT+7"></codx-label>
+</ng-template>
+<!-- EndRegion -->
+
+<!-- Region Data Template -->
+<ng-template #userIDTmp let-data>
+  <div>{{ data?.UserID }}</div>
+</ng-template>
+<ng-template #userNameTmp let-data>
+  <div>{{ data?.UserName }}</div>
+</ng-template>
+<ng-template #emailTmp let-data>
+  <div>{{ data?.Email }}</div>
+</ng-template>
+<ng-template #utcTmp let-data>
+  <div>
+    {{ data?.Max | date : "dd/MM/yyyy hh:mm:ss a" : "+0000" }}
+  </div>
+</ng-template>
+<ng-template #gtmTmp let-data>
+  <div>
+    {{ data?.Max | date : "dd/MM/yyyy hh:mm:ss a" : "+0700" }}
+  </div>
+</ng-template>
+<!-- EndRegion -->
