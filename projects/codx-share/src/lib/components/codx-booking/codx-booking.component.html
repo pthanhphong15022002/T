@@ -68,6 +68,7 @@
       </div>
     </div>
     <div class="d-flex align-items-center pt-2">
+      <span class="icon-i-calendar-event pe-2 " *ngIf="data?.resourceType=='6' && data?.refID!=null " ngbTooltip="Văn phòng phẩm đặt kèm phòng họp" ></span>
       <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP022'" [value]="data?.approveStatus"
         class="badge badge-light badge-md fs-7">
       </codx-vll>
