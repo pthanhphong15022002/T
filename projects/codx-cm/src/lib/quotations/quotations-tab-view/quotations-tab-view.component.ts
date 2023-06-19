@@ -24,6 +24,7 @@ import { QuotationsComponent } from '../quotations.component';
 import { Observable, finalize, map } from 'rxjs';
 import { PopupAddQuotationsComponent } from '../popup-add-quotations/popup-add-quotations.component';
 import { CodxCmService } from '../../codx-cm.service';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'codx-quotations-tab-view',
@@ -95,9 +96,10 @@ export class QuotationsTabViewComponent
     private inject: Injector,
     private callfunc: CallFuncService,
     private notiServer: NotificationsService,
+    private codxShareService: CodxShareService,
     private routerActive: ActivatedRoute,
-    private notiService : NotificationsService,
-    private codxCM : CodxCmService,
+    private notiService: NotificationsService,
+    private codxCM: CodxCmService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -233,6 +235,9 @@ export class QuotationsTabViewComponent
         break;
       case 'CM0202_4':
         this.createNewVersion(data);
+        break;
+      case 'CM0202_5':
+        this.viewDetail(data);
         break;
     }
   }
@@ -498,8 +503,13 @@ export class QuotationsTabViewComponent
                 // this.cancelAproval(item);
                 //this.callfunc.openForm();
               } else if (res2?.eSign == false) {
-                this.codxCM
-                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                this.codxShareService
+                  .codxCancel(
+                    'CM',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    ''
+                  )
                   .subscribe((res3) => {
                     if (res3) {
                       this.itemSelected.status = '0';

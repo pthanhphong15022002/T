@@ -27,6 +27,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-view-detail',
@@ -37,6 +38,7 @@ import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign
 export class ViewDetailComponent implements OnInit {
   constructor(
     private esService: CodxEsService,
+    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
@@ -643,11 +645,17 @@ export class ViewDetailComponent implements OnInit {
     //   return;
     // }
 
-    this.esService
-      .release(
-        this.itemDetail,
+    
+    this.codxShareService
+      .codxRelease(
+        'ES',
+        this.itemDetail?.recID,
+        this.itemDetail.approveControl == '1'? this.itemDetail?.recID: this.itemDetail?.processID,
         this.formModel.entityName,
-        this.formModel.funcID
+        this.formModel.funcID,
+        "",
+        this.itemDetail.title ,
+        this.itemDetail?.refType
       )
       .subscribe((res) => {
         if (res?.msgCodeError == null && res?.rowCount > 0) {

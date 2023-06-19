@@ -26,6 +26,7 @@ import {
 import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-quotations',
@@ -47,6 +48,8 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateTotalAmt') templateTotalAmt: TemplateRef<any>;
   @ViewChild('templateTotalTaxAmt') templateTotalTaxAmt: TemplateRef<any>;
   @ViewChild('templateCreatedOn') templateCreatedOn: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
+
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -82,10 +85,12 @@ export class QuotationsComponent extends UIComponent {
   titleAction = '';
   dataSource = [];
   isNewVersion = false;
+  popupView: DialogRef;
 
   constructor(
     private inject: Injector,
     private codxCM: CodxCmService,
+    private codxShareService: CodxShareService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private routerActive: ActivatedRoute,
@@ -165,8 +170,8 @@ export class QuotationsComponent extends UIComponent {
           template = this.templateTotalSalesAmt;
           break;
         case 'CreatedOn':
-            template = this.templateCreatedOn;
-            break;
+          template = this.templateCreatedOn;
+          break;
         default:
           break;
       }
@@ -257,6 +262,9 @@ export class QuotationsComponent extends UIComponent {
               res.isblur = true;
             }
             break;
+          case 'CM0202_5':
+            res.disabled = true;
+            break;
         }
       });
     }
@@ -267,6 +275,7 @@ export class QuotationsComponent extends UIComponent {
   }
   clickMF(e, data) {
     this.titleAction = e.text;
+    this.itemSelected = data ;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -493,8 +502,13 @@ export class QuotationsComponent extends UIComponent {
                 // this.cancelAproval(item);
                 //this.callfunc.openForm();
               } else if (res2?.eSign == false) {
-                this.codxCM
-                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                this.codxShareService
+                  .codxCancel(
+                    'CM',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    ''
+                  )
                   .subscribe((res3) => {
                     if (res3) {
                       this.itemSelected.status = '0';
@@ -526,4 +540,21 @@ export class QuotationsComponent extends UIComponent {
     //viet vao day thuan
   }
   // end
+
+  viewDetail(data) {
+    this.itemSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+    this.popupView = this.callfc.openForm(
+      this.popDetail,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
+  }
 }

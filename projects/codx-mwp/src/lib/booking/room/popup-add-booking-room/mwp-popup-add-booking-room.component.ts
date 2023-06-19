@@ -1,4 +1,4 @@
-import { BookingService } from '../../../services/booking.services';
+
 import { Subscriber } from 'rxjs';
 import {
   ChangeDetectorRef,
@@ -30,6 +30,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { APICONSTANT } from '@shared/constant/api-const';
 import { BookingAttendees } from 'projects/codx-ep/src/lib/models/bookingAttendees.model';
 import { Equipments } from 'projects/codx-ep/src/lib/models/equipments.model';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 
 export class Device {
   id;
@@ -140,7 +141,7 @@ export class MWPPopupAddBookingRoomComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
-    private codxEpService: BookingService,
+    private codxEpService: CodxBookingService,
     private authService: AuthService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -185,87 +186,7 @@ export class MWPPopupAddBookingRoomComponent extends UIComponent {
 
   onInit(): void {
     //Lấy giờ làm việc
-    this.codxEpService.getEPRoomSetting().subscribe((setting: any) => {
-      if (setting) {
-        this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
-        if (this.calendarID) {
-          this.codxEpService
-            .getCalendarWeekdays(this.calendarID)
-            .subscribe((cal: any) => {
-              if (cal) {
-                Array.from(cal).forEach((day: any) => {
-                  if (day?.shiftType == '1') {
-                    let tmpstartTime = day?.startTime.split(':');
-                    this.calendarStartTime =
-                      tmpstartTime[0] + ':' + tmpstartTime[1];
-                    if (this.isAdd) {
-                      this.startTime = this.calendarStartTime;
-                    }
-                  } else if (day?.shiftType == '2') {
-                    let tmpEndTime = day?.endTime.split(':');
-                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                    if (this.isAdd) {
-                      this.endTime = this.calendarEndTime;
-                    }
-                  }
-                });
-              }
-            });
-        } 
-        this.changeDetectorRef.detectChanges();
-      } else {
-        this.codxEpService.getEPSetting().subscribe((setting: any) => {
-          if (setting) {
-            this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
-            if (this.calendarID) {
-              this.codxEpService
-                .getCalendarWeekdays(this.calendarID)
-                .subscribe((cal: any) => {
-                  if (cal) {
-                    Array.from(cal).forEach((day: any) => {
-                      if (day?.shiftType == '1') {
-                        let tmpstartTime = day?.startTime.split(':');
-                        this.calendarStartTime =
-                          tmpstartTime[0] + ':' + tmpstartTime[1];
-                        if (this.isAdd) {
-                          this.startTime = this.calendarStartTime;
-                        }
-                      } else if (day?.shiftType == '2') {
-                        let tmpEndTime = day?.endTime.split(':');
-                        this.calendarEndTime =
-                          tmpEndTime[0] + ':' + tmpEndTime[1];
-                        if (this.isAdd) {
-                          this.endTime = this.calendarEndTime;
-                        }
-                      }
-                    });
-                  }
-                });
-            }
-          } else {
-            this.codxEpService.getCalendar().subscribe((res: any) => {
-              if (res) {
-                let tempStartTime = JSON.parse(
-                  res.dataValue
-                )[0]?.StartTime.split(':');
-                this.calendarStartTime =
-                  tempStartTime[0] + ':' + tempStartTime[1];
-                if (this.isAdd) {
-                  this.startTime = this.calendarStartTime;
-                }
-                let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(':');
-                this.calendarEndTime = endTime[0] + ':' + endTime[1];
-                if (this.isAdd) {
-                  this.endTime = this.calendarEndTime;
-                }
-              }
-            });
-          }
-          this.changeDetectorRef.detectChanges();
-        });
-      }
-    });
-      
+   
     //Thêm lấy thời gian hiện tại làm thông tin đặt phòng khi thêm mới
     // if (this.isAdd && this.optionalData!=null) {
     //   let tmpDate = new Date();
@@ -736,31 +657,7 @@ export class MWPPopupAddBookingRoomComponent extends UIComponent {
                 this.formModel.entityName
               )
             ).subscribe((res: any) => {
-              this.codxEpService
-                .release(
-                  this.returnData,
-                  res?.processID,
-                  'EP_Bookings',
-                  this.formModel.funcID,
-                  this.returnData?.createdBy
-                )
-                .subscribe((res) => {
-                  if (res?.msgCodeError == null && res?.rowCount) {
-                    this.notificationsService.notifyCode('ES007');
-                    this.returnData.approveStatus = '3';
-                    this.returnData.status = '3';
-                    this.returnData.write = false;
-                    this.returnData.delete = false;
-                    (this.dialogRef.dataService as CRUDService)
-                      .update(this.returnData)
-                      .subscribe();
-                    this.dialogRef && this.dialogRef.close(this.returnData);
-                  } else {
-                    this.notificationsService.notifyCode(res?.msgCodeError);
-                    // Thêm booking thành công nhưng gửi duyệt thất bại
-                    this.dialogRef && this.dialogRef.close(this.returnData);
-                  }
-                });
+              
             });
             this.dialogRef && this.dialogRef.close(this.returnData);
           } else {

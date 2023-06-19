@@ -903,17 +903,7 @@ export class CodxCmService {
       categoryID
     );
   }
-
-  /// cance trifnh ki
-  cancelSubmit(recID, entityName) {
-    return this.api.execSv(
-      'CM',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'CancelAsync',
-      [recID, '', entityName]
-    );
-  }
+  
 
   updateStatusQuotatitons(data) {
     return this.api.exec<any>(

@@ -73,4 +73,5 @@ export interface IJournal {
   checkImage: boolean;
   inputMode: string;
   postingMode: string;
+  unbounds:any;
 }

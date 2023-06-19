@@ -195,11 +195,10 @@ export class AddNoteComponent implements OnInit {
   }
 
   valueChangeDate(event) {
-    console.log('âfasfaffasfaff')
     if (event?.data && event?.data?.fromDate) {
       this.countValueChange++;
       let date = new Date(event.data.fromDate);
-      let crr = date
+      let crr = date;
       if (crr != this.currentDate.toLocaleDateString()) {
         this.currentDate = crr;
       }
@@ -410,10 +409,12 @@ export class AddNoteComponent implements OnInit {
 
   checkPinWithFormAdd() {
     if (this.checkPin == true) {
-      if (this.countNotePin + 1 > this.maxPinNotes)
+      if (this.countNotePin + 1 > this.maxPinNotes) {
         this.openFormUpdateIsPin(this.note);
-      else this.onCreateNote();
-    } else this.onCreateNote();
+      }
+    } else {
+      this.onCreateNote();
+    }
   }
 
   listFileUploadTemp: any = [];
