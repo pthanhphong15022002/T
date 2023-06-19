@@ -3,6 +3,14 @@
     *ngSwitchCase="tabInformation"
     [ngTemplateOutlet]="information"
   ></some-element>
+  <some-element
+  *ngSwitchCase="tabField"
+  [ngTemplateOutlet]="field"
+></some-element>
+<some-element
+*ngSwitchCase="tabTask"
+[ngTemplateOutlet]="task"
+></some-element>
 
   <some-element *ngSwitchDefault></some-element>
 </container-element>
@@ -318,5 +326,29 @@
       </span>
     </div>
   </div>
+</ng-template>
+
+<ng-template #field>
+  <div class="d-flex flex-column">
+    <ng-container *ngFor="let item of listStep">
+      <codx-fields-detail-temp
+        *ngIf="item?.fields?.length > 0"
+        [dataStep]="item"
+        [showColumnControl]="showColumnControl(item.stepID)"
+        [isUpdate]="isUpdate && item.stepStatus < '2'"
+      >
+      </codx-fields-detail-temp>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #task let-data="value">
+  <step-task
+    [isDataLoading]="isDataLoading"
+    [dataSelected]="dataSelected"
+    [listInstanceStep]="listStep"
+    (continueStep)="continueStep($event)"
+    (saveAssignTask)="saveAssignTask($event)"
+  ></step-task>
 </ng-template>
 

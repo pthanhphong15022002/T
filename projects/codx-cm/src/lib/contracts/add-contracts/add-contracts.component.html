@@ -313,17 +313,17 @@
     [fmQuotations]="fmQuotations"
   ></view-quotations> -->
   <codx-quotations-lines
-      #viewQuotationsLine
-      [transID]="quotations.recID"
-      [exchangeRate]="quotations.exchangeRate"
-      [currencyID]="quotations.currencyID"
-      [listQuotationLines]="listQuotationsLine"
-      [quotationLinesAddNew]="quotationLinesAddNew"
-      [quotationLinesEdit]="quotationLinesEdit"
-      [quotationLinesDeleted]="quotationLinesDeleted"
-      [actionParent]="action"
-      (eventQuotationLines)="eventQuotationLines($event)"
-    ></codx-quotations-lines>
+    #viewQuotationsLine
+    [transID]="quotations?.recID"
+    [exchangeRate]="quotations?.exchangeRate"
+    [currencyID]="quotations?.currencyID"
+    [listQuotationLines]="listQuotationsLine"
+    [quotationLinesAddNew]="quotationLinesAddNew"
+    [quotationLinesEdit]="quotationLinesEdit"
+    [quotationLinesDeleted]="quotationLinesDeleted"
+    [actionParent]="action"
+    (eventQuotationLines)="eventQuotationLines($event)"
+  ></codx-quotations-lines>
 </ng-template>
 
 <!-- phương thức thanh toán -->

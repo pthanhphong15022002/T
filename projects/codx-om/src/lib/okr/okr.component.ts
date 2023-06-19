@@ -517,7 +517,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             for(let kr of ob?.items){
               if(kr?.notiCheckIn) tempValue.krLateCheckIn+=1;
               if(kr?.current > kr?.actual) tempValue.krLateProgress+=1;
-              if(kr?.current == kr?.actual) tempValue.krInProgress+=1;
+              if(kr?.current == kr?.actual && kr?.current >0 && kr?.actual>0) tempValue.krInProgress+=1;
               if(kr?.current < kr?.actual) tempValue.krOverProgress+=1;
               if(kr?.items?.length>0){
                 for(let skr of kr?.items){
@@ -531,9 +531,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           }
         }
       }
-      tempValue.percentOBNotStart = (countNotStartOB/tempValue.totalOB*100).toFixed(1);
-      tempValue.percentOBStarting = (countStartingOB/tempValue.totalOB*100).toFixed(1);
-      tempValue.percentOBDone = (countDoneOB/tempValue.totalOB*100).toFixed(1);
+      tempValue.percentOBNotStart = (countNotStartOB/tempValue?.totalOB*100).toFixed(1);
+      tempValue.percentOBStarting = (countStartingOB/tempValue?.totalOB*100).toFixed(1);
+      tempValue.percentOBDone = (countDoneOB/tempValue?.totalOB*100).toFixed(1);
       this.value= tempValue;
       this.detectorRef.detectChanges();
     }

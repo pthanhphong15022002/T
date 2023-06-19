@@ -62,10 +62,10 @@ export class AddContractsComponent implements OnInit {
   type: 'view' | 'deal' | 'quotation' | 'customer';
   customer: CM_Customers;
   customerID = {};
-  listQuotationsLine: CM_QuotationsLines[];
-  quotationLinesDeleted: CM_QuotationsLines[];
-  quotationLinesEdit: CM_QuotationsLines[];
-  quotationLinesAddNew: CM_QuotationsLines[];
+  listQuotationsLine: CM_QuotationsLines[] = [];
+  quotationLinesDeleted: CM_QuotationsLines[] = [];
+  quotationLinesEdit: CM_QuotationsLines[] = [];
+  quotationLinesAddNew: CM_QuotationsLines[] = [];
   quotations: CM_Quotations;
 
   fmQuotations: FormModel = {
@@ -579,7 +579,7 @@ export class AddContractsComponent implements OnInit {
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
       '',
-      600,
+      550,
       400,
       '',
       dataInput,
@@ -677,6 +677,7 @@ export class AddContractsComponent implements OnInit {
     this.quotationLinesDeleted = e?.quotationLinesDeleted;
     this.loadTotal();
   }
+  
   loadTotal() {
     let totals = 0;
     let totalVAT = 0;
