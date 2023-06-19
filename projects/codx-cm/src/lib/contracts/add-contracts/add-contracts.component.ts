@@ -729,6 +729,7 @@ export class AddContractsComponent implements OnInit {
     );
     if (quotationLine) {
       quotationLine.contractID = this.contracts?.recID;
+      // quotationLine.costPrice = 50000;
       this.listQuotationsLineOfContractAdd.push(quotationLine);
     }
     console.log(quotationLine);
