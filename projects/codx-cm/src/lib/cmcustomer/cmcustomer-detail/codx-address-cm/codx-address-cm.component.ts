@@ -54,7 +54,7 @@ export class CodxAddressCmComponent implements OnInit {
   className = 'AddressBookBusiness';
   method = 'GetListAddressAsync';
   isCheckedAll: boolean = false;
-
+  idOld: any;
   constructor(
     private cmSv: CodxCmService,
     private cache: CacheService,
@@ -70,6 +70,8 @@ export class CodxAddressCmComponent implements OnInit {
         changes['id'].currentValue != null &&
         changes['id']?.currentValue?.trim() != ''
       ) {
+        if (changes['id']?.currentValue == this.idOld) return;
+        this.idOld = changes['id']?.currentValue;
         this.getListAddress();
       }
     } else {
