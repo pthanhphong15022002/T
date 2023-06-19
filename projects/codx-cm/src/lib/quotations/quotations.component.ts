@@ -100,6 +100,7 @@ export class QuotationsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.loadSetting();
   }
 
   onInit(): void {
@@ -109,7 +110,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.loadSetting();
+    // this.loadSetting();
     // this.views = [
     //   {
     //     type: ViewType.listdetail,
