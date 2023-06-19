@@ -2403,21 +2403,7 @@ export class CodxHrService {
     );
   }
 
-  release(
-    recID: string,
-    processID: string,
-    entityName: string,
-    funcID: string,
-    title: string
-  ) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'ReleaseAsync',
-      [recID, processID, entityName, funcID, title]
-    );
-  }
+  
 }
 
 import { Pipe, PipeTransform } from '@angular/core';

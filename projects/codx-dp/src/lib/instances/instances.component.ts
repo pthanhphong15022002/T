@@ -1,3 +1,4 @@
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -238,6 +239,7 @@ export class InstancesComponent
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
+    private codxShareService: CodxShareService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
@@ -2245,20 +2247,16 @@ export class InstancesComponent
     // });
   }
   //Gửi duyệt
-  release(data: any, processID: any) {
-    this.api
-      .execSv(
+  release(data: any, processID: any) {    
+    this.codxShareService.codxRelease(
         this.view.service,
-        'ERM.Business.Core',
-        'DataBusiness',
-        'ReleaseAsync',
-        [
-          data?.recID,
-          processID,
-          this.view.formModel.entityName,
-          this.view.formModel.funcID,
-          '<div>' + data?.title + '</div>',
-        ]
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title ,
+        ''
       )
       .subscribe((res2: any) => {
         if (res2?.msgCodeError)
@@ -2288,8 +2286,8 @@ export class InstancesComponent
                 //trình ký
               } else if (res2?.eSign == false) {
                 //kí duyet
-                this.codxDpService
-                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                this.codxShareService
+                .codxCancel('DP',dt?.recID, this.view.formModel.entityName,'')
                   .subscribe((res3) => {
                     if (res3) {
                       this.dataSelected.approveStatus = '0';

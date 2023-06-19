@@ -1,4 +1,4 @@
-import { BookingService } from './../../../services/booking.services';
+
 import {
   Component,
   ElementRef,
@@ -16,6 +16,7 @@ import { CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, Vie
 
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { MWPBookingRoomComponent } from '../mwp-booking-room.component';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 @Component({
   selector: 'mwp-booking-room-view-detail',
   templateUrl: 'mwp-booking-room-view-detail.component.html',
@@ -50,7 +51,7 @@ export class MWPBookingRoomViewDetailComponent extends UIComponent implements On
 
   constructor(
     private injector: Injector,
-    private codxEpService: BookingService,
+    private codxEpService: CodxBookingService,
     private callFuncService: CallFuncService,
   ) {
     super(injector);

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UIComponent } from 'codx-core';
 import moment from 'moment';
-import { BookingService } from '../../../services/booking.services';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 
 @Component({
   selector: 'mwp-booking-car-view-detail',
@@ -46,7 +46,7 @@ export class MWPBookingCarViewDetailComponent extends UIComponent implements OnC
   tabControl: { name: string; textDefault: string; isActive: boolean; }[];
   constructor(
     private injector: Injector,
-    private codxEpService: BookingService,
+    private codxEpService: CodxBookingService,
   ) {
     super(injector);    
     this.routerRecID = this.router.snapshot.params['id'];

@@ -26,6 +26,7 @@ import {
 import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-quotations',
@@ -86,6 +87,7 @@ export class QuotationsComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private codxCM: CodxCmService,
+    private codxShareService: CodxShareService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private routerActive: ActivatedRoute,
@@ -493,8 +495,8 @@ export class QuotationsComponent extends UIComponent {
                 // this.cancelAproval(item);
                 //this.callfunc.openForm();
               } else if (res2?.eSign == false) {
-                this.codxCM
-                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                this.codxShareService
+                  .codxCancel('CM',dt?.recID, this.view.formModel.entityName,'')
                   .subscribe((res3) => {
                     if (res3) {
                       this.itemSelected.status = '0';
