@@ -160,7 +160,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.arrFieldIsVisible = arrField
             .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
             .map((x: any) => x.fieldName);
-          this.getColumsGrid(res);
+         // this.getColumsGrid(res);
         }
       });
 

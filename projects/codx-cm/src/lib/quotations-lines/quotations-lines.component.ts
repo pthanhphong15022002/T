@@ -114,7 +114,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       listQuotationLines: this.listQuotationLines,
       quotationLinesAddNew: this.quotationLinesAddNew,
       quotationLinesEdit: this.quotationLinesEdit,
-      quotationLinesDeleted: this.quotationLinesDeleted,
+      quotationLinesDeleted: this.quotationLinesDeleted
     };
   }
 
@@ -342,7 +342,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                 if (this.actionParent == 'edit') {
                   this.linesUpdate(data);
                 }
-
                 this.gridQuationsLines.refresh();
                 // this.dialog.dataService.updateDatas.set(
                 //   this.quotations['_uuid'],
@@ -429,6 +428,9 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines.push(data);
                         this.gridQuationsLines.refresh();
                         this.loadTotal();
+                        this.objectOut.quotationLinesAddNew = this.quotationLinesAddNew ;
+                        this.objectOut.listQuotationLines = this.listQuotationLines ;
+
                         this.eventQuotationLines.emit(this.objectOut);
                         this.changeDetector.detectChanges();
                       }
