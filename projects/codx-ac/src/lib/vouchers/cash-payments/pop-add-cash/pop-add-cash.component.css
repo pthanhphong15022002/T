@@ -114,3 +114,18 @@
     
     white-space: nowrap;
 }
+.scroll-ac .e-content::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+}
+.scroll-act .e-content::-webkit-scrollbar-thumb {
+    background: #dee2e6 !important;
+    border-radius: 10px;
+}
+.scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
+    background: grey !important;
+}
+.scroll-ac .e-content::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}

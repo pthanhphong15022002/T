@@ -228,6 +228,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
   }
+  changeDataMF(e:any){
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT042901' ||
+        x.functionID == 'SYS003' ||
+        x.functionID == 'SYS004' ||
+        x.functionID == 'SYS005' ||
+        x.functionID == 'SYS001' ||
+        x.functionID == 'SYS002'
+    );
+    bm.forEach((element) => {
+      element.disabled = true;
+    });
+  }
 
   created(e: any, ele: TabComponent) {
     this.changeType(null, ele);
@@ -544,6 +558,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.api
             .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
               this.cashpayment,
+              this.journal
             ])
             .subscribe((res: any) => {
               if (res) {
@@ -588,25 +603,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
         break;
       case 'edit':
-        this.dialog.dataService.updateDatas.set(
-          this.cashpayment['_uuid'],
-          this.cashpayment
-        );
-        this.dialog.dataService
-          .save(
-            (opt: RequestOption) => {
-              opt.methodName = 'UpdateLogicAsync';
-              opt.data = [this.cashpayment];
-            },
-            0,
-            '',
-            '',
-            false
-          )
-          .subscribe((res) => {
-            if (res && res.update.data != null) {
-              if (res.update.data.unbounds.lineDefault != null) {
-                this.dataLine = res.update.data.unbounds.lineDefault;
+        this.api
+          .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
+            this.cashpayment,
+            this.journal
+          ])
+          .subscribe((res: any) => {
+            if (res) {
+              if (res.unbounds.lineDefault != null) {
+                this.dataLine = res.unbounds.lineDefault;
               }
               this.loadGrid();
             }
@@ -726,7 +731,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //   }
   // }
   editRow(data) {
-    //this.gridCash.gridRef.se;
+    this.gridCash.gridRef.selectRow(Number.parseFloat(data.index));
     this.gridCash.gridRef.startEdit();
   }
 
@@ -912,11 +917,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpayment['_uuid'],
             this.cashpayment
           );
-          var data = { ...this.cashpayment };
-          if (data.status == '0') data.status = '1';
           this.dialog.dataService
             .save((opt: RequestOption) => {
-              opt.data = [data];
+              opt.data = [this.cashpayment];
             })
             .subscribe((res) => {
               if (res && res.update.data != null) {
@@ -930,35 +933,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 this.loading = false;
               }
             });
-        } else {
-          // nếu voucherNo đã tồn tại,
-          // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-          this.journalService.handleVoucherNoAndSave(
-            this.journal,
-            this.cashpayment,
-            'AC',
-            this.dialog.formModel.entityName,
-            this.form,
-            this.hasSaved,
-            () => {
-              this.dialog.dataService
-                .save((opt: RequestOption) => {
-                  opt.data = [this.cashpayment];
-                })
-                .subscribe((res) => {
-                  if (res && res.save.data != null) {
-                    this.loading = false;
-                    this.dialog.close({
-                      update: true,
-                      data: res.save.data,
-                    });
-                    this.dt.detectChanges();
-                  } else {
-                    this.loading = false;
-                  }
-                });
-            }
-          );
         }
         break;
       case 'edit':

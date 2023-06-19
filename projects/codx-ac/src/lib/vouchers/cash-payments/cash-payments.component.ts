@@ -148,7 +148,7 @@ export class CashPaymentsComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
           frozenColumns: 1,
           template2: this.templateMore,
