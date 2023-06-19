@@ -254,6 +254,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines;
                       this.objectOut.quotationLinesAddNew =
                         this.quotationLinesAddNew;
+                      this.objectOut['quotationLineIdNew'] = data?.recID; // thuan thêm để lấy quotationLines mới thêm
                       this.eventQuotationLines.emit(this.objectOut);
                       this.changeDetector.detectChanges();
                     }
