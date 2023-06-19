@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -14,6 +15,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
+import { PopupViewPlanVersionComponent } from '../popup-view-plan-version/popup-view-plan-version.component';
 
 @Component({
   selector: 'lib-popup-view-version',
@@ -21,7 +23,6 @@ import { CodxOmService } from '../../codx-om.service';
   styleUrls: ['./popup-view-version.component.scss'],
 })
 export class PopupViewVersionComponent extends UIComponent {
-  [x: string]: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
   headerText='';
 
@@ -30,7 +31,9 @@ export class PopupViewVersionComponent extends UIComponent {
   funcID: string;
   dataPlan: any;
   okrFM: any;
-
+  versions =[];
+  isAfterRender: boolean;
+  okrGrv: any;
   constructor(
     private injector: Injector,
     private omService: CodxOmService,
@@ -43,18 +46,39 @@ export class PopupViewVersionComponent extends UIComponent {
     this.okrFM = dialogData?.data[1];
     this.okrGrv = dialogData?.data[2];
     this.headerText = dialogData?.data[3];
+    this.funcID = dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
+
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.getData();
+  }
 
   getData(){
     this.omService.getOKRPlansByID(this.dataPlan?.recID).subscribe(res=>{
       if(res){
-        this.dataPlan=res;
+        this.dataPlan=res; 
+        this.versions = this.dataPlan?.versions?.reverse();
+        this.isAfterRender=true;
       }
     })
   }
   onSaveForm() {}
+  showOldVersion(recID:any){
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    dModel.FormModel = this.okrFM?.krFM;
+    let dialogShowKR = this.callfc.openForm(
+      PopupViewPlanVersionComponent,
+      '',
+      null,
+      null,
+      null,
+      [recID,this.funcID,this.okrGrv,this.okrFM],
+      '',
+      dModel
+    );
+  }
 }

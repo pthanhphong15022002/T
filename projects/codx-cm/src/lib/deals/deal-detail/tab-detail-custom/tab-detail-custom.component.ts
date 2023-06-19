@@ -46,9 +46,10 @@ export class TabDetailCustomComponent
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
+  readonly tabTask: string = 'Task';
   readonly tabContact: string = 'Contact';
   readonly tabOpponent: string = 'Opponent';
-  readonly tabTask: string = 'Task';
+
   readonly tabProduct: string = 'Product';
   readonly tabQuotation: string = 'Quotation';
   readonly tabContract: string = 'Contract';

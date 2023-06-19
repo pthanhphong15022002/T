@@ -33,6 +33,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   // @Input() predicates: any;
   @Input() actionParent = 'add';
   @Input() transID: any;
+  @Input() contractID: any;
   @Input() exchangeRate: any;
   @Input() currencyID: any;
 
@@ -69,13 +70,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   crrCustomerID: string;
   objectOut: any;
   titleAdd = 'Thêm'; //sau gọi sys
-  readonly hideColums = [
-    'rowno',
-    'netamt',
-    'salesamt',
-    'vatamt',
-    'discamt'
-  ];
+  readonly hideColums = ['rowno', 'netamt', 'salesamt', 'vatamt', 'discamt'];
 
   constructor(
     private codxCM: CodxCmService,
@@ -160,6 +155,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
 
           data.recID = Util.uid();
           data.transID = this.transID;
+          data.contractID = this.contractID;
           data.write = true;
           data.delete = true;
           data.read = true;
@@ -314,7 +310,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
         )
         .subscribe((res) => {
           var obj = {
-            headerText: this.titleActionLine + f?.customName || f?.description,
+            headerText:
+              this.titleActionLine + ' ' + f?.customName || f?.description,
             quotationsLine: dt,
             listQuotationLines: this.listQuotationLines,
             grvSetup: this.grvSetupQuotationsLines,

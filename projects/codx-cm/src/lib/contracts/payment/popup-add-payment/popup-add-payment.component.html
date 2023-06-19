@@ -23,10 +23,18 @@
 </ng-template>
 
 <ng-template #body>
-  <ng-container
-    [ngTemplateOutlet]="payTemplate"
-    [ngTemplateOutletContext]="{}"
-  ></ng-container>
+  <div class="mb-2">
+    <ng-container
+      [ngTemplateOutlet]="informationTemplate"
+      [ngTemplateOutletContext]="{}"
+    ></ng-container>
+  </div>
+  <div>
+    <ng-container
+      [ngTemplateOutlet]="payTemplate"
+      [ngTemplateOutletContext]="{}"
+    ></ng-container>
+  </div>
 </ng-template>
 
 <ng-template #footer>
@@ -48,10 +56,81 @@
   </div>
 </ng-template>
 
+<ng-template #informationTemplate>
+  <div class="d-flex">
+    <codx-label
+      class="label-colon text-gray-600"
+      fiedName="contractAmt"
+      [formModel]="fmContracts"
+      [setRequire]="false"
+    ></codx-label>
+    <span
+      *ngIf="contract?.contractAmt > 0"
+      class="me-3 text-dark fw-bold"
+      [innerHTML]="
+        contract?.contractAmt
+          | formatvalue : fmContracts : 'ContractAmt'
+          | async
+      "
+    ></span>
+    <span *ngIf="contract?.contractAmt <= 0" class="me-1">0</span>
+    <span
+      class="me-3 text-dark fw-bold"
+      [innerHTML]="
+        contract?.currencyID | formatvalue : fmContracts : 'CurrencyID' | async
+      "
+    ></span>
+    <!-- <span>Số tiền thanh toán: </span> -->
+    <span class="me-2">|</span>
+    <codx-label
+      class="label-colon text-gray-600"
+      fiedName="sumScheduleAmt"
+      [formModel]="fmContracts"
+      [setRequire]="false"
+      default=" Đã hẹn thanh toán"
+    ></codx-label>
+    <span
+      *ngIf="sumScheduleAmt"
+      class="me-3 text-dark fw-bold"
+      [innerHTML]="
+        sumScheduleAmt | formatvalue : fmContracts : 'scheduleAmt' | async
+      "
+    ></span>
+    <span *ngIf="!sumScheduleAmt" class="me-1">0</span>
+    <span
+      class="me-3 text-dark fw-bold"
+      [innerHTML]="
+        contract?.currencyID | formatvalue : fmContracts : 'CurrencyID' | async
+      "
+    ></span>
+  </div>
+  <div class="d-flex">
+    <codx-label
+      class="label-colon text-gray-600"
+      fiedName="remaining"
+      [formModel]="fmContracts"
+      [setRequire]="false"
+      default="Còn lại"
+    ></codx-label>
+    <span
+      *ngIf="remaining"
+      class="me-3 text-dark fw-bold"
+      [innerHTML]="remaining | formatvalue : fmContracts : 'PaidAmt' | async"
+    ></span>
+    <span *ngIf="!remaining" class="me-1">0</span>
+    <span
+      class="me-3 text-dark fw-bold"
+      [innerHTML]="
+        contract?.currencyID | formatvalue : fmContracts : 'CurrencyID' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+
 <ng-template #payTemplate>
-  <div>
+  <div>  
     <div class="row form-group">
-      <div class="" style="width: 10%">
+      <div class="" style="width: 15%">
         <div>
           <codx-label
             [formModel]="dialog.formModel"
@@ -73,7 +152,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="" style="width: 35%">
+      <div class="" style="width: 85%">
         <div>
           <codx-label
             [formModel]="dialog.formModel"
@@ -91,12 +170,43 @@
           </codx-input>
         </div>
       </div>
-      <div class="" style="width: 35%">
+    </div>
+    <div class="row form-group">
+      <div class="" style="width: 50%">
+        <div>
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName=""
+            default="Tỷ lệ thanh toán (%)"
+          ></codx-label>
+        </div>
+        <div class="">
+          <ejs-numerictextbox
+            [value]="percent"
+            format="###'%'"
+            min="0"
+            max="100"
+            (change)="valueChangePercent($event)"
+            disabled="false"
+          ></ejs-numerictextbox>
+          <!-- <codx-input
+            field="scheduleAmt"
+            type="number"
+            format="###'%'"
+            [min]="0"
+            [max]="100"
+            [crrValue]="percent"
+            (valueChange)="valueChangePercent($event)"
+          >
+          </codx-input> -->
+        </div>
+      </div>
+      <div class="" style="width: 50%">
         <div>
           <codx-label
             [formModel]="dialog.formModel"
             fiedName="scheduleAmt"
-            default="Số tiền thanh toán"
+            default="Số tiền hẹn thanh toán"
           ></codx-label>
         </div>
         <div class="">
@@ -112,36 +222,8 @@
           </codx-input>
         </div>
       </div>
-      <div class="" style="width: 20%">
-        <div>
-          <codx-label
-            [formModel]="dialog.formModel"
-            fiedName=""
-            default="Phần trăm"
-          ></codx-label>
-        </div>
-        <div class="">
-          <codx-input
-            field="scheduleAmt"
-            type="number"
-            format="###'%'"
-            [min]="0"
-            [max]="100"
-            [crrValue]="percent"
-            (valueChange)="valueChangePercent($event)"
-          >
-          </codx-input>
-          <!-- <ejs-numerictextbox
-          [value]="percent"
-          format="###'%'"
-          min="0"
-          max="100"
-          (change)="valueChangePercent($event)"
-          disabled="false"
-        ></ejs-numerictextbox> -->
-        </div>
-      </div>
     </div>
+
     <div class="row form-group">
       <div>
         <codx-label

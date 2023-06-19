@@ -1,0 +1,55 @@
+<div class="p-6 h-100 d-flex flex-column justify-content-between" *ngIf="isAfterRender">
+  <div class="modal-header">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-column">
+          <div class="fs-4 fw-bold mb-1" id="modal-basic-title">
+            <codx-label name="lbl" default="Kế hoạch chỉ tiêu"></codx-label>
+          </div>
+          <div class="place-holder">
+            <codx-label name="lblTargetsTitle"
+              default="Thay đổi giá trị mục tiêu theo từng chu kì check-in"></codx-label>
+          </div>
+        </div>
+        <button type="button" class="btn btn-icon btn-white text-hover-primary" aria-label="Close"
+          (click)="dialogRef.close()">
+          <i class="icon-close icon-18"></i>
+        </button>
+      </div>
+      
+    </div>
+  </div>
+  <div class="modal-body h-kr-add2 pt-5">
+    <div class="w-100 d-flex flex-wrap">
+      <div class="d-flex justify-content-between align-items-center w-50 mb-4"
+        *ngFor="let item of dataKR?.targets;let i=index">
+        <span class="col-3 text-dark fw-bold">{{ item?.period | vll: "OM021":"text" | async }}</span>
+        <div class="col-7 ">
+          <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="w-100 border-1 border text-right" [disabled]="item?.comment!=null"
+            (valueChange)="valuePlanTargetChange($event,i)"></codx-inplace>
+        </div>
+        <div class="col-2 ps-2">
+          <span *ngIf="item?.edited" class="icon-i-info-circle text-danger" ngbTooltip="Đã chỉnh sửa"></span>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <div class="w-100 d-flex justify-content-between">
+      <button class="btn btn-outline-primary d-flex flex-row justify-content-center"
+        (click)="refreshPlanTargets()">
+        <span class="icon-airplay btn-text-primary me-2"></span>
+        <codx-label name="lbl" class="fw-normal" default="Khôi phục lại"></codx-label>
+      </button>
+      <div class="d-flex flex-row align-items-center ">
+        <codx-label class="pb-2" name="lblTarget" default="Chỉ tiêu mới"></codx-label>
+        <codx-input class="" [crrValue]="newTarget" type="number" field="newTarget" (valueChange)="changeTarget($event)"></codx-input>
+      </div>
+      <button class="btn btn-primary" (click)="onSaveTarget()">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</div>

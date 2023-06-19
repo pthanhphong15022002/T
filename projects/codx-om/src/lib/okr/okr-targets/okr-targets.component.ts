@@ -37,6 +37,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { PopupViewOKRLinkComponent } from '../../popup/popup-view-okr-link/popup-view-okr-link.component';
 import { PopupCheckInHistoryComponent } from '../../popup/popup-check-in-history/popup-check-in-history.component';
 import { OM_Statistical } from '../../model/okr.model';
+import { PopupChangeTargetComponent } from '../../popup/popup-change-target/popup-change-target.component';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -67,10 +68,9 @@ export class OkrTargetsComponent implements OnInit {
   @Input() currentUser;  
   @Input() reloadedMF=true;
   @Input() value=new OM_Statistical();
-  @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
-    new EventEmitter();
-  @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> =
-    new EventEmitter();
+  @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> = new EventEmitter();
+  @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> = new EventEmitter();
+  @Output('calculateStatistical') calculateStatistical: EventEmitter<any> = new EventEmitter();
   dtStatus = [];
   krTitle = '';
   obTitle = '';
@@ -404,9 +404,19 @@ export class OkrTargetsComponent implements OnInit {
       }
       case OMCONST.MFUNCID.KRCheckIn:
       case OMCONST.MFUNCID.SKRCheckIn: {
-        this.checkIn(kr, e.text);
+        this.checkIn(kr, e?.text,null);
         break;
       }
+      case OMCONST.MFUNCID.KRReviewCheckIn: {
+        this.checkIn(kr, e?.text,'3');
+        break;
+      }
+
+      case OMCONST.MFUNCID.KRChagneAssignTarget: {
+        this.changeAssignTarget(kr, e?.text);
+        break;
+      }
+
       case OMCONST.MFUNCID.KREditSKRWeight: {
         this.editSKRWeight(kr, e?.text);
         break;
@@ -473,7 +483,9 @@ export class OkrTargetsComponent implements OnInit {
             func.functionID == OMCONST.MFUNCID.KRAssign ||
             func.functionID == OMCONST.MFUNCID.SKRAssign ||
             //Thay đổi trọng số
-            func.functionID == OMCONST.MFUNCID.KREditSKRWeight
+            func.functionID == OMCONST.MFUNCID.KREditSKRWeight||
+            //Đánh giá định kì
+            func.functionID == OMCONST.MFUNCID.KRReviewCheckIn
           ) {
             func.disabled = true;
           }
@@ -489,6 +501,8 @@ export class OkrTargetsComponent implements OnInit {
       //   }
       // });
 
+      
+
       //Ẩn sửa trọng số SKR nếu KR ko có SKR
       if (kr?.items == null || kr?.items.length == 0) {
         evt.forEach((func) => {
@@ -502,7 +516,8 @@ export class OkrTargetsComponent implements OnInit {
       evt.forEach((func) => {
         if (
           func.functionID == OMCONST.MFUNCID.KRCheckIn ||
-          func.functionID == OMCONST.MFUNCID.SKRCheckIn
+          func.functionID == OMCONST.MFUNCID.SKRCheckIn ||
+          func.functionID == OMCONST.MFUNCID.KRReviewCheckIn 
         ) {
           if (
             (kr?.items != null && kr?.items.length > 0) ||
@@ -725,9 +740,9 @@ export class OkrTargetsComponent implements OnInit {
               }
             }
           }
-        }
-        
+        }        
       }
+      this.calculateStatistical.emit(null);
     }
   }
   renderKR(kr: any, isAdd: boolean) {
@@ -768,13 +783,13 @@ export class OkrTargetsComponent implements OnInit {
             }
           }
         }        
-      }
+      }      
+      this.calculateStatistical.emit(null);
     }
   }
   renderSKR(skr: any, isAdd: boolean) {
     if (skr != null) {
       if (isAdd) {
-
         for(let group of this.dataOKR){
           if(skr?.okrGroupID==group?.okrGroupID){            
             for (let ob of group.listOKR) {
@@ -819,6 +834,8 @@ export class OkrTargetsComponent implements OnInit {
         }
         
       }
+      
+      this.calculateStatistical.emit(null);
     }
   }
   
@@ -846,8 +863,10 @@ export class OkrTargetsComponent implements OnInit {
           group.listOKR=group?.listOKR.filter((res) => res.recID != ob.recID);
           this.detec.detectChanges();
         }
-      }
+      }      
+      this.calculateStatistical.emit(null);
     }
+
   }
   removeKR(kr: any) {
     if (kr != null) {
@@ -860,13 +879,12 @@ export class OkrTargetsComponent implements OnInit {
             }
           }
         }
-      }
-      
+      }      
+      this.calculateStatistical.emit(null);
     }
   }
   removeSKR(skr: any) {
     if (skr != null) {
-
       for(let group of this.dataOKR){
         if(skr?.okrGroupID==group?.okrGroupID){   
           for (let ob of group?.listOKR) {
@@ -880,9 +898,8 @@ export class OkrTargetsComponent implements OnInit {
             }
           }
         }
-      }
-
-      
+      }      
+      this.calculateStatistical.emit(null);      
     }
   }
 
@@ -973,7 +990,7 @@ export class OkrTargetsComponent implements OnInit {
       this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
     });
   }
-  checkIn(kr: any, popupTitle: any) {
+  checkIn(kr: any, popupTitle: any,type: any) {
     // if (this.dataOKRPlans.status!=OMCONST.VLL.PlanStatus.Ontracking ) {
     //   this.notificationsService.notify(
     //     'Bộ mục tiêu chưa được phát hành',
@@ -1004,7 +1021,7 @@ export class OkrTargetsComponent implements OnInit {
       800,
       500,
       '',
-      [kr, popupTitle, { ...this.groupModel?.checkInsModel }, this.okrFM]
+      [kr, popupTitle, { ...this.groupModel?.checkInsModel }, this.okrFM,type]
     );
     dialogCheckIn.closed.subscribe((res) => {
       if (res?.event && res?.event.length != null) {
@@ -1325,6 +1342,30 @@ export class OkrTargetsComponent implements OnInit {
       });
     }
   }
+
+  changeAssignTarget(data:any,title:any) {
+    if (data != null) {
+
+      let popUpHeight = data?.plan == OMCONST.VLL.Plan.Month ? 500 : 240;
+      let dialogShowHistoryCheckIn = this.callfunc.openForm(
+        PopupChangeTargetComponent,
+        '',
+        650,
+        popUpHeight,
+        null,
+        [data,title]
+      );
+      dialogShowHistoryCheckIn.closed.subscribe((res) => {        
+        if (data?.okrType=='S') {
+          this.renderSKR(res?.event, _isEdit);
+        } else {
+          this.renderKR(res?.event, _isEdit);
+        }
+      });     
+      
+    }
+  }
+
   showTasks(evt: any, data: any) {
     evt.stopPropagation();
     evt.preventDefault();

@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  CallFuncService,
   DialogRef,
   NotificationsService,
   SidebarModel,
@@ -19,6 +20,11 @@ import {
 import { CodxHrService } from './../codx-hr.service';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { getListImg } from 'projects/codx-od/src/lib/function/default.function';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -47,7 +53,7 @@ export class EmployeeContractComponent extends UIComponent {
   currentEmpObj: any = null;
   dialogEditStatus: any;
   statusCbx = true;
-
+  dialog!: DialogRef;
   grvSetup: any;
 
   //#region eContractFuncID
@@ -65,6 +71,9 @@ export class EmployeeContractComponent extends UIComponent {
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
+    private callfunc: CallFuncService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService,
     private notify: NotificationsService
   ) {
     super(inject);
@@ -175,14 +184,26 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   changeDataMf(event, data) {
-    console.log(event);
-    console.log(data);
-    console.log(this.view.formModel);
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
   }
 
   clickEvent(event) {
     this.clickMF(event?.event, event?.data);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data);
+    }
   }
 
   clickMF(event, data) {
@@ -221,6 +242,31 @@ export class EmployeeContractComponent extends UIComponent {
         this.copyValue(event.text, data, 'eContract');
         this.df.detectChanges();
         break;
+
+      default: {
+        this.shareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
+      }
+      //Send email
+      // case 'SYS004': {
+      //   this.dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
+      //   this.dialog.closed.subscribe((x) => {
+      //     console.log(x);
+      //     if (x.event != null) {
+      //       this.itemDetail = x.event[0];
+      //       this.itemDetail.lstUserID = getListImg(x.event[0].relations);
+      //       this.itemDetail.listInformationRel = x.event[1];
+      //     }
+      //   });
+      //   break;
+      // }
     }
   }
 

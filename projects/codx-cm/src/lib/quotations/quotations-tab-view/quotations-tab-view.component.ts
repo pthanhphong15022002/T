@@ -23,6 +23,7 @@ import {
 import { QuotationsComponent } from '../quotations.component';
 import { Observable, finalize, map } from 'rxjs';
 import { PopupAddQuotationsComponent } from '../popup-add-quotations/popup-add-quotations.component';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'codx-quotations-tab-view',
@@ -33,18 +34,24 @@ export class QuotationsTabViewComponent
   extends UIComponent
   implements OnChanges
 {
+  @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
+  @ViewChild('tempHeader') tempHeader?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail?: TemplateRef<any>;
   @Input() funcID: string = 'CM0202';
   @Input() predicates: any; // 'RefType==@0 && RefID==@1';
   @Input() dataValues: any; //= '
   @Input() customerID: string;
   @Input() refType: string;
   @Input() refID: string;
+  @Input() recID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
   @Input() disableRefID = false;
   @Input() disableCusID = false;
   @Input() disableContactsID = false;
-  @Input() typeModel = 'custormmers' || 'deals';
+  @Input() typeModel = 'custormmers' || 'deals' || 'contracts';
   @Input() showButton = false;
 
   service = 'CM';
@@ -52,9 +59,7 @@ export class QuotationsTabViewComponent
   entityName = 'CM_Quotations';
   className = 'QuotationsBusiness';
   methodLoadData = 'GetListQuotationsAsync';
-  @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
-  @ViewChild('tempHeader') tempHeader?: TemplateRef<any>;
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   //test
   moreDefaut = {
@@ -74,18 +79,25 @@ export class QuotationsTabViewComponent
   };
   customerIDCrr = '';
   refIDCrr = '';
+  recIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
 
   quotation: any;
   titleAction: any = '';
+  titleActionAdd: any = '';
   loaded = false;
+  itemSelected: any;
+  popupView: DialogRef;
+  isNewVersion: boolean;
 
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
     private notiServer: NotificationsService,
     private routerActive: ActivatedRoute,
+    private notiService : NotificationsService,
+    private codxCM : CodxCmService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -97,6 +109,13 @@ export class QuotationsTabViewComponent
           this.vllStatus = res['Status'].referedValue;
         }
       });
+
+    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      if (mf) {
+        var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+        if (mfAdd) this.titleActionAdd = mfAdd?.customName;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -113,6 +132,12 @@ export class QuotationsTabViewComponent
           this.refIDCrr = changes['refID'].currentValue;
         } else return;
         break;
+      // case 'contracts':
+      //   if (changes['recID']) {
+      //     if (changes['recID'].currentValue === this.recIDCrr) return;
+      //     this.recIDCrr = changes['recID'].currentValue;
+      //   } else return;
+      //break;
     }
     this.getQuotations();
   }
@@ -157,7 +182,32 @@ export class QuotationsTabViewComponent
   changeItemDetail(e) {}
 
   changeDataMF(e, data) {
-    //  this.qtsComponet.changeDataMF(e, data);
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'CM0202_1':
+            if (data.status != 0 && data.status != 4) {
+              res.disabled = true;
+            }
+            break;
+          case 'CM0202_2':
+            if (data.status != 1) {
+              res.disabled = true;
+            }
+            break;
+          case 'CM0202_3':
+            if (data.status != 2) {
+              res.isblur = true;
+            }
+            break;
+          case 'CM0202_4':
+            if (data.status < 2) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
   }
 
   clickMF(e, data) {
@@ -167,13 +217,23 @@ export class QuotationsTabViewComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
-      // default:
-      //   this.qtsComponet.clickMF(e, data);
+      case 'CM0202_1':
+        this.sendApprover(data);
+        break;
+      case 'CM0202_2':
+        this.rejectApprove(data);
+        break;
+      case 'CM0202_3':
+        this.createContract(data);
+        break;
+      case 'CM0202_4':
+        this.createNewVersion(data);
+        break;
     }
   }
 
@@ -222,7 +282,7 @@ export class QuotationsTabViewComponent
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
       action: action,
-      headerText: this.titleAction,
+      headerText: this.titleActionAdd,
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -245,13 +305,13 @@ export class QuotationsTabViewComponent
     });
   }
 
-  edit(e, data) {
+  edit(data) {
     let quotation = JSON.parse(JSON.stringify(data));
 
     var obj = {
       data: quotation,
       action: 'edit',
-      headerText: e.text,
+      headerText: this.titleAction,
       disableRefID: this.disableRefID,
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
@@ -281,7 +341,7 @@ export class QuotationsTabViewComponent
     });
   }
 
-  copy(e, dataCopy) {
+  copy(dataCopy) {
     //gọi alow copy
     this.getDefault().subscribe((res) => {
       let data = res.data;
@@ -363,4 +423,112 @@ export class QuotationsTabViewComponent
     //   return this.quotation
     // });
   }
+  viewDetail(data) {
+    this.itemSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+    this.popupView = this.callfc.openForm(
+      this.popDetail,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
+  //function More
+  //gửi duyệt
+  sendApprover(dt) {
+    //test
+    dt.status = '1';
+    this.itemSelected.status = '1';
+    this.view.dataService.update(this.itemSelected).subscribe();
+    this.itemSelected = JSON.parse(
+      JSON.stringify(this.view.dataService.dataSelected)
+    );
+  }
+
+  // tạo phiên bản mới
+  createNewVersion(data) {
+    this.isNewVersion = true;
+    let dt = JSON.parse(JSON.stringify(data));
+    switch (dt.status) {
+      case '4':
+      case '2':
+        dt.versionNo =
+          dt.versionNo[0] + (Number.parseInt(dt.versionNo.slice(1)) + 1);
+        dt.revision = 0;
+        dt.versionName = dt.versionNo + '.' + dt.revision;
+        this.copy(dt);
+        break;
+      case '3':
+        dt.status = '0';
+        dt.revision += 1;
+        dt.versionName = dt.versionNo + '.' + dt.revision;
+        this.edit(dt);
+        break;
+    }
+  }
+
+  //huy yêu cầu duyệt
+  rejectApprove(dt) {
+    //test
+    dt.status = '0';
+    this.itemSelected.status = '0';
+    this.view.dataService.update(this.itemSelected).subscribe();
+    this.itemSelected = JSON.parse(
+      JSON.stringify(this.view.dataService.dataSelected)
+    );
+
+    // ES016 - Hủy
+    let processNo;
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        //check truoc ben quy trình có thiết lập chưa ?? cos la lam tiep
+        this.codxCM
+          .getESCategoryByCategoryID(processNo)
+          .subscribe((res2: any) => {
+            if (res2) {
+              //trình ký
+              if (res2?.eSign == true) {
+                // this.cancelAproval(item);
+                //this.callfunc.openForm();
+              } else if (res2?.eSign == false) {
+                this.codxCM
+                  .cancelSubmit(dt?.recID, this.view.formModel.entityName)
+                  .subscribe((res3) => {
+                    if (res3) {
+                      this.itemSelected.status = '0';
+                      this.codxCM
+                        .updateStatusQuotatitons([this.itemSelected.recID, '0'])
+                        .subscribe((res4) => {
+                          if (res4.status == 0) {
+                            this.view.dataService
+                              .update(this.itemSelected)
+                              .subscribe();
+                            this.notiService.notifyCode('SYS007');
+                          } else this.notiService.notifyCode('SYS021');
+                        });
+                    } else this.notiService.notifyCode('SYS021');
+                  });
+              }
+            }
+          });
+      }
+    });
+  }
+
+  //cance ki so
+
+  //end trình ký
+
+  // tạo hợp đồng
+  createContract(dt) {
+    //viet vao day thuan
+  }
+  // end
 }

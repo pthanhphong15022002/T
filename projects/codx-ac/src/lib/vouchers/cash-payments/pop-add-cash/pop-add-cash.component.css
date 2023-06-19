@@ -37,6 +37,9 @@
 .tabset-content .e-content{
     height: calc(100vh - 610px)!important;
  }
+.tabvat-content .e-content{
+    height: calc(100vh - 485px)!important;
+}
 .btn-addline{
     position: absolute;
     right: 0;
@@ -96,8 +99,11 @@
     margin-bottom: 0px !important;
     padding-bottom: 0px !important;
 }
-.input-circle .e-input-group select option:read-only{
-    background-color: white;
+.input-circle button{
+    border: none !important;
+}
+.input-circle button .text-truncate{
+    text-align: left !important;
 }
 .ac-refdoc .e-editable-value{
     margin-top: 5px !important;
@@ -105,6 +111,20 @@
 .listcash-content .e-float-input input{
     padding-left: 5px !important;
     border: none;
-    border-bottom: 1px solid #dee2e6;
+    
     white-space: nowrap;
+}
+.scroll-ac .e-content::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+}
+.scroll-act .e-content::-webkit-scrollbar-thumb {
+    background: #dee2e6 !important;
+    border-radius: 10px;
+}
+.scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
+    background: grey !important;
+}
+.header-table-ac table th{
+    
 }

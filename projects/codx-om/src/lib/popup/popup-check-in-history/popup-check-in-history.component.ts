@@ -76,8 +76,8 @@ export class PopupCheckInHistoryComponent
   getCacheData() {
     this.cache.valueList('OM016').subscribe((res:any)=>{
       if(res){
-        this.statusVLL = res;
-        
+        this.statusVLL = res?.datas;
+
       }
     })
   }
@@ -139,6 +139,23 @@ export class PopupCheckInHistoryComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
+  reCheckIn(){
+    let dialogCheckIn = this.callfc.openForm(
+      PopupCheckInComponent,
+      '',
+      800,
+      500,
+      '',
+      [this.data, "Cập nhật tiến độ", { ...this.groupModel?.checkInsModel }, this.okrFM,'re']
+    );
+    dialogCheckIn.closed.subscribe((res) => {
+      if (res?.event ) {
+        this.getData();
+        this.dataChange=true;
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
   checkIn() {
     // if (this.dataOKRPlans.status!=OMCONST.VLL.PlanStatus.Ontracking ) {
     //   this.notificationsService.notify(
@@ -173,7 +190,7 @@ export class PopupCheckInHistoryComponent
       [this.data, "Cập nhật tiến độ", { ...this.groupModel?.checkInsModel }, this.okrFM]
     );
     dialogCheckIn.closed.subscribe((res) => {
-      if (res?.event && res?.event?.length != null) {
+      if (res?.event ) {
         this.getData();
         this.dataChange=true;
         this.detectorRef.detectChanges();

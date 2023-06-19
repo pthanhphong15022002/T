@@ -1299,11 +1299,27 @@ export class CalendarNotesComponent
   }
 
   redirectToFuncID(item) {
-    let query = {
+    let query: any = {
       predicate: 'RecID=@0',
       dataValue: item.transID,
     };
-    this.codxService.openUrlNewTab(item.functionID, '', query);
+    this.api
+      .exec('SYS', 'SettingValuesBusiness', 'GetParamMyCalendarAsync', [
+        'WPCalendars',
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          for (const prop in res) {
+            if (prop === item.transType) {
+              let param = JSON.parse(res[prop]);
+              if (param && param.View) {
+                query.view = param.View;
+              }
+            }
+          }
+        }
+        this.codxService.openUrlNewTab(item.functionID, '', query);
+      });
   }
 
   curPopup;

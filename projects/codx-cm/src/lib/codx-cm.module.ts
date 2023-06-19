@@ -19,7 +19,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
-import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
+import { CmCustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InformationComponent } from './cmcustomer/cmcustomer-detail/information/information.component';
 import { PopupAddCmCustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
@@ -58,7 +58,6 @@ import { PopupStatusCompetitorComponent } from './deals/deal-detail/codx-tab-dea
 import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns-detail.component';
 import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
-import { ProcessReleaseComponent } from './process-release/process-release.component';
 import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/popup-add-payment.component';
 import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
@@ -75,6 +74,8 @@ import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
+import { ContractsComponent } from './contracts/contracts.component';
+import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
 
 const routes: Routes = [
   {
@@ -90,12 +91,6 @@ const routes: Routes = [
         path: 'deals/:funcID',
         component: DealsComponent,
       },
-
-      // {
-      //   path: 'processrelease/:funcID/:recID',
-      //   component: ProcessReleaseComponent,
-      //   data: { noReuse: true },
-      // },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,
@@ -107,7 +102,7 @@ const routes: Routes = [
       },
       {
         path: 'contracts/:funcID',
-        component: ContractsDetailComponent,
+        component: ContractsComponent,
       },
       {
         path: 'cases/:funcID',
@@ -143,7 +138,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxCmComponent,
     LayoutComponent,
     CmCustomerComponent,
-    CmcustomerDetailComponent,
+    CmCustomerDetailComponent,
     InformationComponent,
     PopupAddCmCustomerComponent,
     PopupAddressComponent,
@@ -168,7 +163,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
-    ContractsDetailComponent,
     CasesComponent,
     CasesDetailComponent,
     PopupAddCasesComponent,
@@ -184,9 +178,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
     ViewQuotationsComponent,
+    ContractsComponent,
     //test
     CodxAsideCustomComponent,
-    ProcessReleaseComponent,
     PopupAddPaymentComponent,
     PopupAddPaymentHistoryComponent,
     PopupViewPaymentHistoryComponent,
@@ -197,7 +191,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     GanttChartComponent,
     StepTaskComponent,
     SettingProcessCmComponent,
-    QuotationsTabViewComponent
+    QuotationsTabViewComponent,
+    ContractsViewDetailComponent,
+    ContractsDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

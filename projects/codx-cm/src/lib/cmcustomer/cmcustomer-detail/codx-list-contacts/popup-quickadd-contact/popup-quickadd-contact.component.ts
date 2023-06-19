@@ -1,6 +1,12 @@
 import { firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../../../../codx-cm.service';
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  ChangeDetectorRef,
+  ViewChild,
+} from '@angular/core';
 import {
   DialogData,
   DialogRef,
@@ -12,6 +18,7 @@ import {
 } from 'codx-core';
 import { CM_Contacts } from '../../../../models/cm_model';
 import { tmpCrm } from '../../../../models/tmpCrm.model';
+import { CodxListContactsComponent } from '../codx-list-contacts.component';
 
 @Component({
   selector: 'lib-popup-quickadd-contact',
@@ -19,6 +26,7 @@ import { tmpCrm } from '../../../../models/tmpCrm.model';
   styleUrls: ['./popup-quickadd-contact.component.css'],
 })
 export class PopupQuickaddContactComponent implements OnInit {
+  @ViewChild('contactTemp') contactTemp: CodxListContactsComponent;
   dialog: any;
   data = new CM_Contacts();
   gridViewSetup: any;
@@ -195,11 +203,10 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.data.objectName = this.objectName;
           if (type == 'save') {
             this.dialog.close(this.data);
-            this.notiService.notifyCode('SYS007');
           } else {
-            this.notiService.notifyCode('SYS007');
             this.deleteContact(this.data);
           }
+          this.notiService.notifyCode('SYS007');
         } else {
           this.dialog.close();
           this.notiService.notifyCode('SYS021');
@@ -213,11 +220,10 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.objectName = this.objectName;
       if (type == 'save') {
         this.dialog.close(this.data);
-        this.notiService.notifyCode('SYS007');
       } else {
-        this.notiService.notifyCode('SYS007');
         this.deleteContact(this.data);
       }
+      this.notiService.notifyCode('SYS007');
     }
   }
 
@@ -279,9 +285,10 @@ export class PopupQuickaddContactComponent implements OnInit {
     } else {
       if (e.field == 'contactType') {
         this.contactType = e?.data;
-      } else if(e.field != 'allowEmail' && e.field != 'allowCall'){
-        this.data[e.field] = e?.data != null && e?.data?.trim() != '' ? e?.data?.trim() : null;
-      }else{
+      } else if (e.field != 'allowEmail' && e.field != 'allowCall') {
+        this.data[e.field] =
+          e?.data != null && e?.data?.trim() != '' ? e?.data?.trim() : null;
+      } else {
         this.data[e.field] = e?.data;
       }
     }
@@ -372,6 +379,9 @@ export class PopupQuickaddContactComponent implements OnInit {
       } else {
         this.isDefault = true;
       }
+      this.cmSv.contactSubject.next(this.listContacts);
+
+      // this.contactTemp.lstContactEmit.emit(this.listContacts);
       this.listContacts = this.cmSv.bringDefaultContactToFront(
         this.listContacts
       );

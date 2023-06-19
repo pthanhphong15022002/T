@@ -25,6 +25,7 @@ import {
   CodxService,
   CacheService,
 } from 'codx-core';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'share-tree-view',
@@ -48,10 +49,17 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   dataTree: any[] = [];
   dialog: any;
   favorite = '';
-  loaded = false ;
+  loaded = false;
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() changeMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
+
+  gridModelTree = new DataRequest();
+  service = 'TM';
+  assemblyName = 'ERM.Business.TM';
+  entityName = 'TM_Tasks';
+  className = 'TaskBusiness';
+  methodLoadData = 'GetTasksAsync';
 
   constructor(
     private api: ApiHttpService,
@@ -68,6 +76,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         this.favorite = x?.favorite;
       });
     }
+  
   }
   //#endregion
 
@@ -75,6 +84,16 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
+    // this.loaded = false ;
+    // this.gridModelTree.formName = this.formModel.formName;
+    // this.gridModelTree.entityName = this.formModel.entityName;
+    // this.gridModelTree.funcID = this.formModel.funcID;
+    // this.gridModelTree.gridViewName = this.formModel.gridViewName;
+    // this.gridModelTree.treeField = 'ParentID';
+    // this.gridModelTree.dataObj = JSON.stringify(this.dataObj);
+    // this.loadData()
+
+    //cu ne
     var gridModel = new DataRequest();
     gridModel.formName = this.formModel.formName;
     gridModel.entityName = this.formModel.entityName;
@@ -82,8 +101,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     gridModel.gridViewName = this.formModel.gridViewName;
     gridModel.treeField = 'ParentID';
     gridModel.dataObj = JSON.stringify(this.dataObj);
-    
-    this.loaded = false ;
+    // gridModel.pageSize = 20;
+    // gridModel.page = 0;
+
+    this.loaded = false;
     this.api
       .execSv<any>(
         'TM',
@@ -101,7 +122,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
             },
           ];
 
-          this.loaded = true ;
+          this.loaded = true;
 
           this.pageTitle.setBreadcrumbs(breadCrumbs);
         }
@@ -125,7 +146,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
           x.disabled = true;
         }
         if (
-          (x.functionID == 'TMT02019') &&
+          x.functionID == 'TMT02019' &&
           data.verifyControl == '0' &&
           data.category == '1'
         ) {
@@ -146,10 +167,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         }
         //an voi ca TMT026
         if (
-          (x.functionID == 'SYS02' ||
-            x.functionID == 'SYS03' ||
-            x.functionID == 'SYS04') 
-         // &&this.formModel?.funcID == 'TMT0206'
+          x.functionID == 'SYS02' ||
+          x.functionID == 'SYS03' ||
+          x.functionID == 'SYS04'
+          // &&this.formModel?.funcID == 'TMT0206'
         ) {
           x.disabled = true;
         }
@@ -205,4 +226,42 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   }
 
   //#endregion
+
+  loadData() {
+    this.loaded = false;
+    this.fetch().subscribe((res) => {
+      if (res) {
+        this.dataTree = res[0];
+        let breadCrumbs = [
+          {
+            title: this.favorite + ' (' + res[1] + ')',
+          },
+        ];
+
+        this.loaded = true;
+
+        this.pageTitle.setBreadcrumbs(breadCrumbs);
+      }
+    });
+  }
+
+  fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.methodLoadData,
+        this.gridModelTree
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
 }

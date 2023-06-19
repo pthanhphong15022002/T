@@ -41,8 +41,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})
-export class DealsComponent
+})export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -466,10 +465,6 @@ export class DealsComponent
     });
 
   }
-
-
-
-
 
   async getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
@@ -1099,11 +1094,11 @@ export class DealsComponent
     var datas = [data.recID];
     this.codxCmService.isCheckDealInUse(datas).subscribe((res)=> {
       if(res[0]) {
-        this.notificationsService.notifyCode('Cơ hội đang được không liên kết với hợp đồng');
+        this.notificationsService.notifyCode('CM015');
         return;
       }
       else if(res[1]) {
-        this.notificationsService.notifyCode('Cơ hội đang được không liên kết với báo giá');
+        this.notificationsService.notifyCode('CM014');
         return;
       }
       else {

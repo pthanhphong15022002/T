@@ -57,12 +57,15 @@ export class AddContractsComponent implements OnInit {
   action = 'add';
   projectID: string;
   tabClicked = '';
-  listClicked = [];
+  listTypeContract = [];
   account: any;
   type: 'view' | 'deal' | 'quotation' | 'customer';
   customer: CM_Customers;
   customerID = {};
-  listQuotationsLine: CM_QuotationsLines[];
+  listQuotationsLine: CM_QuotationsLines[] = [];
+  quotationLinesDeleted: CM_QuotationsLines[] = [];
+  quotationLinesEdit: CM_QuotationsLines[] = [];
+  quotationLinesAddNew: CM_QuotationsLines[] = [];
   quotations: CM_Quotations;
 
   fmQuotations: FormModel = {
@@ -130,6 +133,7 @@ export class AddContractsComponent implements OnInit {
     this.account = dt?.data?.account;
     this.type = dt?.data?.type;
     this.getFormModel();
+    this.listTypeContract = contractService.listTypeContract;
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
@@ -139,32 +143,6 @@ export class AddContractsComponent implements OnInit {
       this.contracts?.delStatus == '1'
         ? true
         : false;
-    this.listClicked = [
-      {
-        name: 'general',
-        textDefault: 'Thông tin chung',
-        icon: 'icon-info',
-        isActive: true,
-      },
-      {
-        name: 'detailItem',
-        textDefault: 'Chi tiết mặt hàng',
-        icon: 'icon-link',
-        isActive: false,
-      },
-      {
-        name: 'pay',
-        textDefault: 'Phương thức và tiến độ thanh toán',
-        icon: 'icon-tune',
-        isActive: false,
-      },
-      {
-        name: 'termsAndRelated',
-        textDefault: 'Điều khoản và hồ sơ liên quan',
-        icon: 'icon-tune',
-        isActive: false,
-      },
-    ];
 
     this.columns = [
       {
@@ -208,6 +186,7 @@ export class AddContractsComponent implements OnInit {
       // /template: this.columnVatid,
     ];
   }
+
   ngAfterViewInit(){
   }
   // getFormModel() {
@@ -276,6 +255,7 @@ export class AddContractsComponent implements OnInit {
       }
     }
   }
+  
   setValueComboboxQuotation(){
     let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
     if(listQoutation){
@@ -288,7 +268,7 @@ export class AddContractsComponent implements OnInit {
 
   changeValueDate(event) {
     this.contracts[event?.field] = new Date(event?.data?.fromDate);
-    if((event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') && this.isLoadDate){
+    if((event?.field == 'effectiveTo' ) && this.isLoadDate){
       const startDate =  new Date(this.contracts['effectiveFrom']);
       const endDate = new Date(this.contracts['effectiveTo']);     
       if (endDate && startDate > endDate){
@@ -601,7 +581,7 @@ export class AddContractsComponent implements OnInit {
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
       '',
-      600,
+      550,
       400,
       '',
       dataInput,
@@ -692,5 +672,32 @@ export class AddContractsComponent implements OnInit {
     });
   }
 
- 
+  eventQuotationLines(e) {
+    this.listQuotationsLine = e?.listQuotationLines;
+    this.quotationLinesAddNew = e?.quotationLinesAddNew;
+    this.quotationLinesEdit = e?.quotationLinesEdit;
+    this.quotationLinesDeleted = e?.quotationLinesDeleted;
+    this.loadTotal();
+  }
+  
+  loadTotal() {
+    let totals = 0;
+    let totalVAT = 0;
+    let totalDis = 0;
+    let totalSales = 0;
+    if (this.listQuotationsLine?.length > 0) {
+      this.listQuotationsLine.forEach((element) => {
+        //tisnh tong tien
+        totalSales += element['salesAmt'] ?? 0;
+        totals += element['netAmt'] ?? 0;
+        totalVAT += element['vatAmt'] ?? 0;
+        totalDis += element['discAmt'] ?? 0;
+      });
+    }
+
+    this.quotations['totalSalesAmt'] = totalSales;
+    this.quotations['totalAmt'] = totals;
+    this.quotations['totalTaxAmt'] = totalVAT;
+    this.quotations['discAmt'] = totalDis;
+  }
 }

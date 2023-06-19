@@ -17,7 +17,10 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -36,13 +39,16 @@ export class ViewDetailContractsComponent implements OnInit {
     APPLICATION: 'application',
   };
   lstFile: any[] = [];
+  userID: any;
 
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,
     private router: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {
     this.user = this.authStore.get();
   }
@@ -62,12 +68,15 @@ export class ViewDetailContractsComponent implements OnInit {
   renderFooter = false;
   isAfterRender = true;
   benefitFuncID = 'HRTEM0403';
+  contractFuncID = 'HRTAppro01';
   benefitFormModel: FormModel;
   benefitFormGroup: FormGroup;
   lstBenefit;
   active = 1;
 
   ngOnInit(): void {
+    this.userID = this.authStore.get().userID;
+
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
@@ -93,20 +102,20 @@ export class ViewDetailContractsComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (
-      changes?.itemDetail &&
-      changes.itemDetail?.previousValue?.recID !=
-        changes.itemDetail?.currentValue?.recID
-    ) {
-      this.hrService
-        .loadDataEContract(changes.itemDetail?.currentValue?.recID)
-        .subscribe((res) => {
-          if (res) {
-            this.itemDetail = res;
-            this.df.detectChanges();
-          }
-        });
-    }
+    // if (
+    //   changes?.itemDetail &&
+    //   changes.itemDetail?.previousValue?.recID !=
+    //     changes.itemDetail?.currentValue?.recID
+    // ) {
+    //   this.hrService
+    //     .loadDataEContract(changes.itemDetail?.currentValue?.recID)
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         this.itemDetail = res;
+    //         this.df.detectChanges();
+    //       }
+    //     });
+    // }
 
     if (this.itemDetail?.benefits) {
       this.lstBenefit = JSON.parse(this.itemDetail.benefits);
@@ -128,8 +137,30 @@ export class ViewDetailContractsComponent implements OnInit {
 
   changeDataMF(e: any, data: any) {
     this.hrService.handleShowHideMF(e, data, this.formModel);
+
+    // this.hrService
+    //   .getFunctionList(this.contractFuncID)
+    //   .subscribe((res: any[]) => {
+    //     if (res[0].runMode == '1') {
+    //       this.shareService.changeMFApproval(e, data);
+    //     }
+    //   });
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
   }
 
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data);
+    }
+  }
   // clickMF(val: any, datas: any = null){
   //   var funcID = val?.functionID;
   //   if (!datas) {

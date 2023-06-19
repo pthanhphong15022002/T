@@ -16,6 +16,8 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxService,
+  DialogModel,
   FormModel,
   NotificationsService,
   SidebarModel,
@@ -46,6 +48,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { FormGroup } from '@angular/forms';
+import { CodxCalendarService } from '../../codx-calendar/codx-calendar.service';
 
 @Component({
   selector: 'codx-step-task',
@@ -119,6 +124,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   };
   titleAction: any = '';
   id: string;
+  carFG: FormGroup;
+  carFM: FormModel;
+  addCarTitle = '';
 
   constructor(
     private callfc: CallFuncService,
@@ -127,7 +135,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private authStore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
-    private stepService: StepService
+    private stepService: StepService,
+    private calendarService: CodxCalendarService,
+    private codxService: CodxService,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -172,12 +182,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.listGroupTask?.splice(index, 0, this.groupTaskAdd);
     }
     if (changes?.taskAdd && this.taskAdd) {
-      let group = this.listGroupTask?.find((group) => group.refID == this.taskAdd?.taskGroupID);
-      if(group){
+      let group = this.listGroupTask?.find(
+        (group) => group.refID == this.taskAdd?.taskGroupID
+      );
+      if (group) {
         if(!group?.task){
           group['task']=[];
         }
-        group['task']?.push(this.taskAdd);
+        group?.task?.push(this.taskAdd);
       }
     }
     if (
@@ -412,7 +424,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
-            if (task.taskType != 'B') break;
+            if (task.taskType != 'B') 
+            res.disabled = true;
+            break;
         }
       });
     }
@@ -520,7 +534,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP20': // tiến độ
             res.isbookmark = true;
-            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)){
+            if (
+              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
+            ) {
               res.disabled = true;
             }
 
@@ -581,6 +597,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'SYS004':
         this.sendMail();
         break;
+      case 'DP27':
+        this.addBookingCar();
+        break;
     }
   }
 
@@ -596,7 +615,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.copyGroupTask(group);
         break;
       case 'DP08': //them task
-        this.chooseTypeTask(group?.refID);
+        this.chooseTypeTask(false,group?.refID);
         break;
       case 'DP12':
         this.viewTask(group, 'G');
@@ -607,14 +626,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //task
-  async chooseTypeTask(groupID = null) {
+  async chooseTypeTask(showTask = true,groupID = null) {
     this.isAddTask = false;
     setTimeout(async () => {
       let popupTypeTask = this.callfc.openForm(
         CodxTypeTaskComponent,
         '',
         450,
-        580
+        580,
+        '',
+        {isShowGroup: showTask},
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
       if (dataOutput?.event?.value) {
@@ -1181,10 +1202,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         option
       );
       dialog.closed.subscribe(async (dataOuput) => {
-        if (dataOuput?.event) {
-          this.handelProgress(data, dataOuput?.event);
+        if (dataOuput?.event?.dataProgress) {
+          this.handelProgress(data, dataOuput?.event?.dataProgress);
         }
-        await this.getStepById();
+        if(dataOuput?.event?.task || dataOuput?.event?.group){
+          await this.getStepById();
+        }
       });
     }
   }
@@ -1277,6 +1300,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
           meeting['idField'] = 'meetingID';
           meeting.meetingName = data?.taskName;
+          meeting.meetingType = '1';
+          meeting.refID = data.recID;
+          meeting.refType = "DP_Instances_Steps_Tasks";
           meeting.meetingType = '1';
           meeting.reminder = Number.isNaN(data.reminders)
             ? 0
@@ -1443,5 +1469,62 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   toggleElemen() {
     this.isShowElement = !this.isShowElement;
+  }
+
+  ngAfterViewInit() {
+    this.cache.functionList('EPT21').subscribe((res) => {
+      if (res) {
+        this.addCarTitle = res?.customName;
+      }
+    });
+    this.calendarService.getFormModel('EPT21').then((res) => {
+      this.carFM = res;
+      this.carFG = this.codxService.buildFormGroup(
+        this.carFM?.formName,
+        this.carFM?.gridViewName
+      );
+    });
+  }
+
+  addBookingCar() {
+    let option = new SidebarModel();
+    option.FormModel = this.carFM;
+    option.Width = '800px';
+    this.callfc
+      .openSide(
+        CodxAddBookingCarComponent,
+        [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
+        option
+      )
+    // let option = new DialogModel();
+    // option.FormModel = this.frmModelInstancesTask;
+    // this.callfc
+    //   .openForm(
+    //     CodxAddBookingCarComponent,
+    //     '',
+    //     600,
+    //     800,
+    //     '',
+    //     null,
+    //     '',
+    //     option
+    //   )
+      // .closed.subscribe((returnData) => {
+      //   if (!this.calendarType) {
+      //     this.calendarType = this.defaultCalendar;
+      //   }
+      //   if (returnData.event) {
+      //     this.api
+      //       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+      //         this.calendarType,
+      //       ])
+      //       .subscribe((res: any) => {
+      //         if (res) {
+      //           this.getDataAfterAddEvent(res);
+      //         }
+      //         this.detectorRef.detectChanges();
+      //       });
+      //   }
+      // });
   }
 }

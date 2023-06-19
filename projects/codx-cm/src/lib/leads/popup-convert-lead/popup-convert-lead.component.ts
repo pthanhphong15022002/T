@@ -115,6 +115,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.nameAvt = this.lead?.leadName;
     this.modifyOnAvt = this.lead?.modifiedOn;
     this.entityName = this.dialog.formModel?.entityName;
+    this.deal.processID = null;
   }
 
   async ngOnInit() {
@@ -304,15 +305,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.notiService.notifyCode(messageCheckFormat);
       return;
     }
-    setTimeout(() => {
-      if (!this.radioChecked && !this.avatarChange) {
-        this.entityName = JSON.parse(JSON.stringify('CM_Customers'));
-        this.recIDAvt = JSON.parse(JSON.stringify(this.recIDAvt));
-        this.nameAvt = JSON.parse(JSON.stringify(this.nameAvt));
-        this.modifyOnAvt = JSON.parse(JSON.stringify(this.modifyOnAvt));
-        this.imageUpload.loadAvatar();
-      }
-    }, 0);
+
     this.onConvert();
   }
 
@@ -348,7 +341,7 @@ export class PopupConvertLeadComponent implements OnInit {
                 this.cmSv.copyFileAvata(
                   this.recIDAvt,
                   this.customer.recID,
-                  this.entityName
+                  'CM_Customers'
                 )
               );
             }
@@ -582,7 +575,7 @@ export class PopupConvertLeadComponent implements OnInit {
   valueChangeCustomer(e) {
     this.customer[e.field] = e?.data;
     if (e.field == 'customerName' && e?.data) {
-      this.recIDAvt = e.data;
+      this.nameAvt = e.data;
     }
   }
   valueTagChange(e) {

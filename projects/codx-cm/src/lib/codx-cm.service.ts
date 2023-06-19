@@ -30,6 +30,10 @@ export class CodxCmService {
   private loadingSubject = new BehaviorSubject<Boolean>(false);
   valueRadio = this.loadingSubject.asObservable();
 
+  contactSubject = new BehaviorSubject<any>(null);
+  // valueContact = this.contactSubject.asObservable();
+
+
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -426,10 +430,20 @@ export class CodxCmService {
     );
   }
   copyFileAvata(idOld, idNew, entityName = null) {
-    return this.api.exec<any>('CM', 'ContactsBusiness', 'CopyAvatarByIdAsync', [
-      idOld,
+    return this.api.exec<any>('DM', 'FileBussiness', 'CoppyFileByIdAsync', [
       idNew,
-      entityName
+      idOld,
+      'avt',
+      entityName,
+    ]);
+  }
+
+  getListFile(funcID, objectID, objectType, referType) {
+    return this.api.exec<any>('DM', 'FileBussiness', 'GetFilesForOutsideAsync', [
+      funcID,
+      objectID,
+      objectType,
+      referType,
     ]);
   }
 
@@ -446,6 +460,40 @@ export class CodxCmService {
       'DP',
       'InstancesBusiness',
       'EditInstanceAsync',
+      data
+    );
+  }
+
+  addDeal(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'AddDealAsync',
+      data
+    );
+  }
+  editDeal(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'EditDealAsync',
+      data
+    );
+  }
+
+  addCases(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'AddCasesAsync',
+      data
+    );
+  }
+  editCases(data:any){
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'EditCasesAsync',
       data
     );
   }
@@ -698,14 +746,13 @@ export class CodxCmService {
     );
   }
 
-  isCheckDealInUse(data){
+  isCheckDealInUse(data) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
       'isCheckDealInUseAsync',
       data
     );
-
   }
 
   autoMoveStageInInstance(data) {
@@ -724,7 +771,6 @@ export class CodxCmService {
       data
     );
   }
-
 
   //#endregion -- Bao
 

@@ -36,6 +36,7 @@ export class PopupEBasicSalariesComponent
   employeeId: string | null;
   isAfterRender = false;
   headerText: ' ';
+  autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
 
   //check where to open the form
@@ -183,6 +184,10 @@ export class PopupEBasicSalariesComponent
         )
         .subscribe((res: any) => {
           if (res) {
+            if (res.key) {
+              this.autoNumField = res.key;
+            }
+
             this.EBasicSalaryObj = res?.data;
 
             this.EBasicSalaryObj.effectedDate = null;
@@ -239,7 +244,7 @@ export class PopupEBasicSalariesComponent
             this.notify.notifyCode('SYS006');
             p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS023');
+          };
         });
     } else {
       this.hrService
@@ -249,7 +254,7 @@ export class PopupEBasicSalariesComponent
             this.notify.notifyCode('SYS007');
             p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
+          };
         });
     }
   }

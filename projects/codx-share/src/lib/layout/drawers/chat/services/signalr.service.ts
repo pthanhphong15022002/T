@@ -67,7 +67,7 @@ export class SignalRService {
             this.chat.emit(data);
             break;
           case 'deletedMessage':
-            this.undoMssg.emit(data);
+            this.chat.emit(data);
             break;
           case 'voteMessage':
             this.voteChat.emit(data);

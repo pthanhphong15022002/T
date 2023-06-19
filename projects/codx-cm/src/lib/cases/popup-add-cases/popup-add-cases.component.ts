@@ -116,6 +116,10 @@ export class PopupAddCasesComponent
   showLabelAttachment: boolean;
   formModelCrr: FormModel = new FormModel();
 
+  // load data form DP
+  isLoading: boolean = false;
+  processID:string = '';
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -133,11 +137,28 @@ export class PopupAddCasesComponent
     this.action = dt?.data?.action;
     this.applyFor = dt?.data?.applyFor;
     this.caseType = dt?.data?.caseType;
+    this.isLoading = dt?.data?.isLoad;
+    this.processID = dt?.data?.processID;
 
     this.cases.status = '1';
-    if (this.action != this.actionAdd) {
+
+  if (this.isLoading) {
+      this.formModel = dt?.data?.formMD;
+      this.caseType = this.applyFor == '2' ? '1': '2';
+      if (this.action != this.actionAdd) {
+        this.cases = dt?.data?.dataCM;
+      }
+    } else {
       this.cases = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    }
+
+    if (this.action != this.actionAdd) {
+      this.processID = this.cases.processID;
       this.getListContacts(this.cases?.customerID);
+    }
+    this.cases.caseType = this.caseType;
+    if (dt?.data.processID) {
+      this.cases.processID = this.processID;
     }
     this.executeApiCalls();
   }
@@ -225,11 +246,12 @@ export class PopupAddCasesComponent
     }
     this.updateDataCases(this.instance, this.cases);
     this.convertDataInstance(this.cases, this.instance);
-    if (this.action !== this.actionEdit) {
-      this.insertInstance();
-    } else {
-      this.editInstance();
-    }
+    // if (this.action !== this.actionEdit) {
+    //   this.insertInstance();
+    // } else {
+    //   this.editInstance();
+    // }
+    this.executeSaveData();
   }
   cbxChange($event, field) {
     if ($event) {
@@ -349,14 +371,46 @@ export class PopupAddCasesComponent
   async executeApiCalls() {
     try {
       await this.getGridView(this.formModel);
-      if (this.action !== this.actionAdd) {
+      if(this.processID) {
         await this.getListInstanceSteps(this.cases.processID);
       }
+
 
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
   }
+
+  async executeSaveData() {
+    try {
+      if (this.isLoading) {
+        if (this.action !== this.actionEdit) {
+          await this.addCasesForDP();
+          await this.insertInstance();
+        } else {
+      //    await this.editDealForDP();
+          await this.editInstance();
+        }
+      } else {
+        if (this.action !== this.actionEdit) {
+          await this.insertInstance();
+          await this.onAdd();
+        } else {
+          await this.editInstance();
+          await this.onEdit();
+        }
+      }
+    } catch (error) {}
+  }
+
+  async addCasesForDP(){
+    var datas = [this.cases];
+    this.codxCmService.addCases(datas).subscribe((cases) => {
+      if (cases) {
+      }
+    });
+  }
+
 
   async getGridView(formModel) {
     this.cache
@@ -432,7 +486,7 @@ export class PopupAddCasesComponent
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
-        this.onAdd();
+        this.isLoading && this.dialog.close(instance);
       }
     });
   }
@@ -440,7 +494,8 @@ export class PopupAddCasesComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
-        this.onEdit();
+        ///this.onEdit();
+        this.isLoading && this.dialog.close(instance);
       }
     });
   }

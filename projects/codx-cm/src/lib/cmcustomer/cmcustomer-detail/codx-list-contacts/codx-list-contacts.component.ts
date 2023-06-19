@@ -20,7 +20,7 @@ import {
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'codx-list-contacts',
@@ -92,6 +92,12 @@ export class CodxListContactsComponent implements OnInit {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
         if (m) this.moreFuncAdd = m.defaultName;
+      }
+    });
+    this.cmSv.contactSubject.subscribe((res) => {
+      if (res) {
+        this.lstContactEmit.emit(res);
+        this.cmSv.contactSubject.next(null);
       }
     });
   }
@@ -340,6 +346,7 @@ export class CodxListContactsComponent implements OnInit {
         );
         dialog.closed.subscribe((e) => {
           this.isButton = true;
+
           if (e && e.event != null) {
             if (e.event?.recID) {
               var index = this.listContacts.findIndex(
@@ -365,8 +372,22 @@ export class CodxListContactsComponent implements OnInit {
       });
   }
 
-  deleteContactToCM(data) {
+  async deleteContactToCM(data) {
     var lstDelete = [];
+    var check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'ContactsBusiness',
+        'CheckContactDealAsync',
+        [data.recID]
+      )
+    );
+    if (check) {
+      this.notiService.notifyCode('CM012');
+      return;
+    }
+
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
@@ -418,7 +439,6 @@ export class CodxListContactsComponent implements OnInit {
       this.isCheckedAll = this.listContacts.every((item) => item.checked);
     }
   }
-
 
   getListContactsByObjectId(objectID) {
     this.loaded = false;

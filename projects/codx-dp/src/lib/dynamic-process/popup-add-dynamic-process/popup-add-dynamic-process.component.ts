@@ -899,7 +899,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (nodes[oldNode] as HTMLElement).classList.remove('active');
         break;
     }
-    if (oldNode > newNode && this.currentTab == this.processTab) {
+    if (oldNode > newNode && this.currentTab == this.processTab && this.action!='edit') {
     } else {
       (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
     }

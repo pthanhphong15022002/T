@@ -139,6 +139,8 @@ export class PopupAddDealComponent
   paramView: any;
   processIdDefault: string = '';
 
+  // load data form DP
+  isLoading: boolean = false;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -150,19 +152,34 @@ export class PopupAddDealComponent
   ) {
     super(inject);
     this.dialog = dialog;
-    this.formModel = dialog.formModel;
+    this.formModel = dialog?.formModel;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
+    this.isLoading = dt?.data?.isLoad;
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
-    this.gridViewSetup = dt?.data.gridViewSetup;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
+
+    //
+    if (this.isLoading) {
+      this.formModel = dt?.data?.formMD;
+
+      if (this.action != this.actionAdd) {
+        // setTimeout(() => {
+
+        // }, 0);
+        this.deal = dt?.data?.dataCM;
+      }
+    } else {
+      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    }
+
     if (dt?.data.processID) {
-      this.deal.processID = dt?.data.processID;
+      this.deal.processID = dt?.data?.processID;
       this.isViewAll = true;
     }
     this.executeApiCalls();
     if (this.action != this.actionAdd) {
-      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
@@ -434,12 +451,22 @@ export class PopupAddDealComponent
 
   async executeSaveData() {
     try {
-      if (this.action !== this.actionEdit) {
-        await this.insertInstance();
-        await this.onAdd();
+      if (this.isLoading) {
+        if (this.action !== this.actionEdit) {
+          await this.addDealForDP();
+          await this.insertInstance();
+        } else {
+          await this.editDealForDP();
+          await this.editInstance();
+        }
       } else {
-        await this.editInstance();
-        await this.onEdit();
+        if (this.action !== this.actionEdit) {
+          await this.insertInstance();
+          await this.onAdd();
+        } else {
+          await this.editInstance();
+          await this.onEdit();
+        }
       }
     } catch (error) {}
   }
@@ -541,9 +568,11 @@ export class PopupAddDealComponent
     if ($event && $event.data) {
       this.deal.businessLineID = $event.data;
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
-      //  $event.component.itemsSelected[0].ProcessID = '';
-        var processId = !$event.component.itemsSelected[0].ProcessID && this.processIdDefault ?  this.processIdDefault  :
-        $event.component.itemsSelected[0].ProcessID;
+        //  $event.component.itemsSelected[0].ProcessID = '';
+        var processId =
+          !$event.component.itemsSelected[0].ProcessID && this.processIdDefault
+            ? this.processIdDefault
+            : $event.component.itemsSelected[0].ProcessID;
         if (processId) {
           this.deal.processID = processId;
           var result = this.checkProcessInList(processId);
@@ -562,10 +591,6 @@ export class PopupAddDealComponent
             this.getListInstanceSteps(processId);
           }
         }
-        //  else {
-        //   this.executeGetDataParamter();
-        // }
-
         this.changeDetectorRef.detectChanges();
       }
     }
@@ -615,6 +640,7 @@ export class PopupAddDealComponent
       this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
     option.className = 'DealsBusiness';
     option.data = datas;
+    option.service = 'CM';
     return true;
   }
 
@@ -628,8 +654,7 @@ export class PopupAddDealComponent
   }
   async executeApiCalls() {
     try {
-      //  await this.getGridView(this.formModel);
-      await this.getListProcess(this.typeForDeal);
+      this.isLoading && (await this.getGridViewSetup(this.formModel.formName, this.formModel.gridViewName));
       if (this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
       }
@@ -656,9 +681,17 @@ export class PopupAddDealComponent
           this.processIdDefault = '1a6d0f15-09d0-11ee-94b3-00155d035517';
           this.deal.processID = this.processIdDefault;
           this.getListInstanceSteps(this.processIdDefault);
-        //  if (dataParam) this.paramView = JSON.parse(dataParam.dataValue);
+          //  if (dataParam) this.paramView = JSON.parse(dataParam.dataValue);
         }
       });
+  }
+
+  async getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   async getBusinessLineByProcessID(processID) {
@@ -690,25 +723,6 @@ export class PopupAddDealComponent
           }
         }
       });
-  }
-  // async getGridView(formModel) {
-  //   this.cache
-  //     .gridViewSetup(formModel.formName, formModel.gridViewName)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.gridViewSetup = res;
-  //       }
-  //     });
-  // }
-  async getListProcess(applyFor) {
-    var processID = this.action !== this.actionEdit ? '' : this.deal.processID;
-    var data = [applyFor, processID];
-    this.codxCmService.getListCbxProcess(data).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listCbxProcess = res[0];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
   }
   async getListInstanceSteps(processId: any) {
     processId =
@@ -753,6 +767,7 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listInstanceSteps, null];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.isLoading && this.dialog.close(instance);
       }
     });
   }
@@ -760,6 +775,32 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+        this.isLoading && this.dialog.close(instance);
+      }
+    });
+  }
+
+  async addDealForDP() {
+    var datas = [this.deal, this.lstContactDeal];
+    this.codxCmService.addDeal(datas).subscribe((deal) => {
+      if (deal) {
+      }
+    });
+  }
+  async editDealForDP() {
+    this.covnertListContact(
+      this.lstContactOld,
+      JSON.parse(JSON.stringify(this.lstContactDeal))
+    );
+    var datas = [
+      this.deal,
+      this.customerIDOld,
+      this.lstContactDeal,
+      this.lstContactAdd,
+      this.lstContactDelete,
+    ];
+    this.codxCmService.editDeal(datas).subscribe((deal) => {
+      if (deal) {
       }
     });
   }
