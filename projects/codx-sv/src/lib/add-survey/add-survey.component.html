@@ -133,7 +133,7 @@
       >
         <codx-label fiedName="Submit" default="Gửi"></codx-label>
       </button> -->
-     <codx-mfunc [formModel]="view?.formModel" (clickMF)="clickMF($event)"></codx-mfunc>
+      <codx-mfunc #mf [formModel]="view?.formModel" (clickMF)="clickMF($event)" (changeDataMF)="changeDataMF($event,dataSV)"></codx-mfunc>
     </div>
   </div>
   <ejs-tab class="ejstab-survey" headerPlacement="Top" (selected)="onSelected($event)">
