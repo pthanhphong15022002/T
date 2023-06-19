@@ -206,7 +206,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           p.emp = this.empObj;
           this.successFlag = true;
           this.dialog && this.dialog.close(p);
-        } else this.notify.notifyCode('SYS023');
+        } 
+        // else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrSevice.UpdateEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
@@ -219,7 +220,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
           // }
-        } else this.notify.notifyCode('SYS021');
+        } 
+        // else this.notify.notifyCode('SYS021');
       });
     }
   }
