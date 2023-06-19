@@ -96,14 +96,19 @@ export class CodxCalendarComponent
     this.myTaskFM = new FormModel();
     this.assignTaskFM = new FormModel();
     this.fields = { text: 'defaultName', value: 'functionID' };
-    this.cacheService.valueList('WP006').subscribe((res) => {
-      res.datas.map((res) => {
-        if (this.calendarParams.hasOwnProperty(res.value)) {
-          this.items.push({ id: res.value, text: res.text });
-        }
-      });
-      console.log('Vll', res);
-      console.log('Speed Dial', this.items);
+    let myInterval = setInterval(() => {
+      if (this.speeddial) {
+        clearInterval(myInterval);
+        this.cacheService.valueList('WP006').subscribe((res) => {
+          for (const data of res.datas) {
+            if (this.calendarParams.hasOwnProperty(data.value)) {
+              this.items.push({ id: data.value, text: data.text });
+            }
+          }
+          this.speeddial.items = this.items;
+          this.speeddial.refresh();
+        });
+      }
     });
   }
 
