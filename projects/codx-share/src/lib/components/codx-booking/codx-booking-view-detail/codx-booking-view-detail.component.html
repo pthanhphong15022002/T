@@ -395,7 +395,7 @@
             <ng-container *ngIf="loadedData">
             <div *ngIf="itemDetail?.bookingItems?.length > 0; else defaulEmpty">
               <div *ngFor="let item of itemDetail?.bookingItems">
-                <div class="d-flex ustify-content-between w-100">
+                <div class="d-flex justify-content-between w-100">
                   <div class="d-flex flex-row">
                     <div class="me-2">
                       <codx-img [objectId]="item?.recID" imageType="circle" width="35" objectType="EP_Resources"
