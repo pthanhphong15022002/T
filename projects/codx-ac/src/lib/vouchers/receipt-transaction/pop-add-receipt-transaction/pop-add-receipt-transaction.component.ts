@@ -915,24 +915,24 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.inventoryJournalLines = [];
   }
 
-  setDataGrid(updateColumn, data) {
-    if (updateColumn) {
-      var arrColumn = [];
-      arrColumn = updateColumn.split(';');
-      if (arrColumn && arrColumn.length) {
-        arrColumn.forEach((e) => {
-          if (e) {
-            let field = Util.camelize(e);
-            this.gridInventoryJournalLine.rowDataSelected[field] = data[field];
-            this.gridInventoryJournalLine.rowDataSelected = {
-              ...data,
-            };
-            this.gridInventoryJournalLine.rowDataSelected.updateColumns = '';
-          }
-        });
-      }
-    }
-  }
+  // setDataGrid(updateColumn, data) {
+  //   if (updateColumn) {
+  //     var arrColumn = [];
+  //     arrColumn = updateColumn.split(';');
+  //     if (arrColumn && arrColumn.length) {
+  //       arrColumn.forEach((e) => {
+  //         if (e) {
+  //           let field = Util.camelize(e);
+  //           this.gridInventoryJournalLine.rowDataSelected[field] = data[field];
+  //           this.gridInventoryJournalLine.rowDataSelected = {
+  //             ...data,
+  //           };
+  //           this.gridInventoryJournalLine.rowDataSelected.updateColumns = '';
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
   
   loadItemID(value) {
     let sArray = [
@@ -1081,7 +1081,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   focusInput() {
     var element = document.querySelectorAll('input');
-    console.log(element[0]);
     (element[0] as HTMLInputElement).focus();
     (element[0] as HTMLInputElement).setSelectionRange(0, 2000);
   }
