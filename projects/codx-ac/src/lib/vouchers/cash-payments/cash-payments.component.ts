@@ -148,7 +148,7 @@ export class CashPaymentsComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
           frozenColumns: 1,
           template2: this.templateMore,
@@ -211,7 +211,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Method
   setDefault(o) {
     return this.api.exec('AC', this.className, 'SetDefaultAsync', [
-      this.journalNo,
+      this.journal,
     ]);
   }
 
@@ -347,41 +347,99 @@ export class CashPaymentsComponent extends UIComponent {
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' ||
-        x.functionID == 'ACT041002' ||
-        x.functionID == 'ACT041004' ||
-        x.functionID == 'ACT041008' ||
-        x.functionID == 'ACT042901'
+        x.functionID == 'ACT041003' || // ghi sổ
+        x.functionID == 'ACT041002' || // gửi duyệt
+        x.functionID == 'ACT041004' || // hủy yêu cầu duyệt 
+        x.functionID == 'ACT041008' || // khôi phục
+        x.functionID == 'ACT042901' || // chuyển tiền điện tử
+        x.functionID == 'ACT041010' || // in
+        x.functionID == 'ACT041009' // kiểm tra tính hợp lệ
     );
     if (bm.length > 0) {
       switch (data?.status) {
         case '0':
-        case '2':
-        case '3':
-        case '4':
-          bm.forEach((element) => {
-            element.disabled = true;
-          });
+          if (data.approveStatus == '1') {
+            bm.forEach((element) => {
+              if ((element.functionID == 'ACT041009') || element.functionID == 'ACT041010') {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
           break;
         case '1':
-        case '5':
-        case '9':
-          bm.forEach((element) => {
-            if ((element.functionID == 'ACT041003')) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
+          if (data.approveStatus == '1' || data.approveStatus == '2') {
+            if (this.journal.approvalControl == '0') {
+              bm.forEach((element) => {
+                if ((element.functionID == 'ACT041003') || element.functionID == 'ACT041010') {
+                  element.disabled = false;
+                } else {
+                  element.disabled = true;
+                }
+              });
+            }else{
+              bm.forEach((element) => {
+                if ((element.functionID == 'ACT041002')) {
+                  element.disabled = false;
+                } else {
+                  element.disabled = true;
+                }
+              });
             }
-          });
+          }
+          break;
+        case '2':
+        case '4':
+          if (data.approveStatus == '0' || data.approveStatus == '4') {
+            bm.forEach((element) => {
+              element.disabled = true;
+            });
+          }
+          break;
+        case '3':
+          if (data.approveStatus == '3') {
+            bm.forEach((element) => {
+              if ((element.functionID == 'ACT041004') || element.functionID == 'ACT041010') {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
+          break;
+        case '5':
+          if (data.approveStatus == '5') {
+            bm.forEach((element) => {
+              if ((element.functionID == 'ACT041003') || element.functionID == 'ACT041010') {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
           break;
         case '6':
-          bm.forEach((element) => {
-            if ((element.functionID == 'ACT041008')) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
+          if (data.approveStatus == '1' || data.approveStatus == '5') {
+            bm.forEach((element) => {
+              if ((element.functionID == 'ACT041008') || element.functionID == 'ACT041010') {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
+          break;
+        case '9':
+          if (data.approveStatus == '1' || data.approveStatus == '5') {
+            bm.forEach((element) => {
+              if ((element.functionID == 'ACT041003') || element.functionID == 'ACT041010') {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
           break;
       }
       // check có hay ko duyệt trước khi ghi sổ
@@ -478,14 +536,8 @@ export class CashPaymentsComponent extends UIComponent {
     //   });
   }
   loadjounal() {
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.journalNo;
-    options.pageLoading = false;
     this.api
-      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(map((r) => r[0]))
+      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
         this.journal = res[0];
       });

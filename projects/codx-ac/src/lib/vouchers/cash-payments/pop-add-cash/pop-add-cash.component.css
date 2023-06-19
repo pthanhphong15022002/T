@@ -114,3 +114,17 @@
     
     white-space: nowrap;
 }
+.scroll-ac .e-content::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+}
+.scroll-act .e-content::-webkit-scrollbar-thumb {
+    background: #dee2e6 !important;
+    border-radius: 10px;
+}
+.scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
+    background: grey !important;
+}
+.header-table-ac table th{
+    
+}

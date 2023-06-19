@@ -271,7 +271,7 @@
 <!-- Start:CashPaymentLine -->
 <ng-template tabindex="11" #tabLine>
   <ng-container *ngIf="(cashpayment?.subType != '2') && modegrid == '1'">
-    <div class="tabline-content position-relative">
+    <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 columnsGrid="" showRowNumber="true" class="tabLine" #gridCash
         [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
         [entityName]="fmCashPaymentsLines.entityName" [editSettings]="editSettings" predicates="TransID=@0"
@@ -878,7 +878,7 @@
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+  <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (changeDataMF)="changeDataMF($event)" (clickMF)="clickMF($event, data)"
     type="view"></codx-mfunc>
 </ng-template>
 <ng-template #morefunction2 let-data>

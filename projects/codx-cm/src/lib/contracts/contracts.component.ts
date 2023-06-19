@@ -434,7 +434,7 @@ export class ContractsComponent extends UIComponent{
     option.FormModel = this.view.formModel;
     let popupTask = this.callfc.openForm(
       PopupAddPaymentComponent,'',
-      600,
+      550,
       400,
       '',
       dataInput,

@@ -90,7 +90,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.route.queryParamMap.subscribe((res:any) => {
       if(res?.params?.predicate && res?.params?.dataValue)
       {
-        this.dataService.setPredicates([res.params.predicate],[res.params.dataValue])
+        this.dataService.setPredicates([res.params.predicate],[res.params.dataValue]);
       }
     });
     // set dataService
