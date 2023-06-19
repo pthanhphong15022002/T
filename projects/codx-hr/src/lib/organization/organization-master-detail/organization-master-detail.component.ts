@@ -28,7 +28,7 @@ export class OrganizationMasterDetailComponent {
   @Input() formModel: FormModel = null;
   employeeManager: any = null;
   totalEmployee: number = 0;
-  columnsGrid: any[] = null;
+  columnsGrid;
   grvSetup: any = {};
   formModelEmp: FormModel = new FormModel();
   @ViewChild('grid') grid: CodxGridviewV2Component;
@@ -101,21 +101,18 @@ export class OrganizationMasterDetailComponent {
           }
         });
     }
+    this.getManager(this.orgUnitID);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
       //Use interval to delay grid
       let ins = setInterval(() => {
         if (this.grid) {
           clearInterval(ins);
-          this.grid.refresh();
+          this.orgUnitID = changes.orgUnitID.currentValue;
           this.getManager(this.orgUnitID);
-          this.dt.detectChanges();
-          // this.grid.dataService
-          //   .setPredicates([], [this.orgUnitID])
-          //   .subscribe((res: any) => {
-          //     this.grid.refresh();
-          //   });
+          this.grid.refresh();
         }
       }, 200);
     }
@@ -138,7 +135,7 @@ export class OrganizationMasterDetailComponent {
           } else {
             this.employeeManager = null;
           }
-          // this.dt.detectChanges();
+          this.dt.detectChanges();
         });
     }
   }

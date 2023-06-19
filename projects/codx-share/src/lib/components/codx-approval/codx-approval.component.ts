@@ -415,13 +415,12 @@ export class CodxApprovalComponent
       if (dialog) {
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
-          this.api
-            .execSv(
-              'ES',
-              'ERM.Business.ES',
-              'ApprovalTransBusiness',
-              'ApproveAsync',
-              [data?.recID, status, oComment.comment, oComment.reasonID]
+          this.codxShareService
+            .codxApprove(
+              data?.recID,
+              status,
+              oComment.comment,
+              oComment.reasonID
             )
             .subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
@@ -437,13 +436,12 @@ export class CodxApprovalComponent
             });
         });
       } else {
-        this.api
-          .execSv(
-            'ES',
-            'ERM.Business.ES',
-            'ApprovalTransBusiness',
-            'ApproveAsync',
-            [data?.recID, status, '', '']
+        this.codxShareService
+          .codxApprove(
+            data?.recID,
+            status,
+            '',
+            '',
           )
           .subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
@@ -462,7 +460,7 @@ export class CodxApprovalComponent
       }
     }
     if (funcID == 'SYS207') {
-      this.esService.undo(data?.recID).subscribe((res) => {
+      this.codxShareService.codxUndo(data?.recID).subscribe((res) => {
         if (res != null) {
           data = res;
           this.view.dataService.update(data).subscribe();

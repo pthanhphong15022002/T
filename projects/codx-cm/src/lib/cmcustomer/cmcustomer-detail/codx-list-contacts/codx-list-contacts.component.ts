@@ -60,6 +60,7 @@ export class CodxListContactsComponent implements OnInit {
   currentRecID = '';
   lstConvertContact = [];
   isCheckedAll: boolean = false;
+  id: any;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -78,6 +79,8 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue != null &&
         changes['objectID']?.currentValue?.trim() != ''
       ) {
+        if (changes['objectID']?.currentValue == this.id) return;
+        this.id = changes['objectID']?.currentValue;
         this.getListContacts();
       } else {
         this.loaded = true;
@@ -274,7 +277,7 @@ export class CodxListContactsComponent implements OnInit {
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' && action != 'editRole' ? 700 : 250,
+          action != 'editType' && action != 'editRole' ? 700 : 300,
           '',
           obj,
           '',

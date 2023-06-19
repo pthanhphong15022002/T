@@ -12,15 +12,28 @@
   *ngIf="isAfterRender"
 >
   <ng-template #header>
-    <div class="d-flex justify-content-between flex-grow-1 mb-3">
-      <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center mt-n8">
+      <codx-temp-full
+        [title]="itemDetail?.title"
+        [icoCss]="
+          'icon-16 es-icon-title rounded-circle me-3 ' + itemDetail?.icon
+        "
+        [icoStyle]="setStyles(itemDetail?.color)"
+        [titleCss]="'fs-3'"
+      >
+      </codx-temp-full>
+    </div>
+    <div class="d-flex justify-content-between flex-grow-1 mb-3 mt-3">
+      <div class="">
         <codx-temp-full
-          [title]="itemDetail?.title"
-          [icoCss]="
-            'icon-14 es-icon-title rounded-circle me-2 ' + itemDetail?.icon
-          "
-          [icoStyle]="setStyles(itemDetail?.color)"
-          [titleCss]="'fs-4'"
+          class="user-center"
+          [title]="itemDetail?.ownerName"
+          [titleCss]="'fs-6'"
+          [subTitle]="itemDetail?.ownerPosition ?? ''"
+          [subTitleCss]="'text-gray-500'"
+          [imageId]="itemDetail?.owner"
+          imageObjType="AD_Users"
+          [imageWidth]="40"
         >
         </codx-temp-full>
       </div>
@@ -32,23 +45,13 @@
           [formModel]="formModel"
           [field]="'ApproveStatus'"
           [value]="itemDetail?.approveStatus"
-          class="badge badge-light badge-square badge-md fs-7"
+          class="badge badge-light badge-square badge-md"
         >
         </codx-vll>
       </div>
     </div>
 
-    <div class="d-flex mb-2">
-      <codx-temp-full
-        class="user-center"
-        [title]="itemDetail?.ownerName"
-        [subTitle]="itemDetail?.ownerPosition ?? ''"
-        [imageId]="itemDetail?.owner"
-        imageObjType="AD_Users"
-        [imageWidth]="40"
-      >
-      </codx-temp-full>
-    </div>
+    
     <div class="d-flex align-item-center mb-2">
       <div class="me-1 icon-apartment icon-16 text-gray-700"></div>
       <div class="d-flex align-items-center me-5">

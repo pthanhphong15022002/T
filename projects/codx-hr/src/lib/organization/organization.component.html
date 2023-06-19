@@ -32,7 +32,7 @@
     [orgUnitID]="orgUnitID"
   ></lib-organization-masterdetail>
 </ng-template>
-<!-- tree orgChart -->
+<!-- tree orgChart
 <ng-template #tmpOrgChart>
   <hr-organization-orgchart
     [view]="view"
@@ -41,7 +41,6 @@
     [orgUnitID]="orgUnitID"
   ></hr-organization-orgchart>
 </ng-template>
-<!-- tree list -->
 <ng-template #tmpList>
   <lib-organization-list
     [view]="view"
@@ -50,6 +49,7 @@
     [orgUnitID]="orgUnitID"
   ></lib-organization-list>
 </ng-template>
+ -->
 
 <!--template sài tạm mode view list -->
 
@@ -233,7 +233,7 @@
         class="badge badge-light badge-md me-2"
       >
       </codx-vll>
-      <div *ngIf="item.parentID" class="text-gray-600 me-2">
+      <div *ngIf="item.parentName" class="text-gray-600 me-2">
         <codx-label
           [formModel]="view.formModel"
           default="Trực thuộc:"
@@ -331,9 +331,7 @@
             </codx-label>
           </span>
           <div class="fs-2 fw-bold mb-2 text-primary number-users">
-            <!-- {{ getCount(item.orgUnitID) }} -->
             {{ item.counts ? item.counts : 0 }}
-            <!-- {{ console.log(opc) }} -->
           </div>
           <ng-container *ngIf="item.staffEmp?.length > 0">
             <ng-container

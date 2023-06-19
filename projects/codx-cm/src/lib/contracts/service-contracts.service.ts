@@ -81,11 +81,20 @@ export class ContractsService {
       data
     );
   }
+  //xem xét xóa
   getQuotationsLinesByTransID(data) {
     return this.api.exec<any>(
       'CM',
       'ContractsBusiness',
       'GetQuotationsLinesByTransIDAsync',
+      data
+    );
+  }
+  getQuotationsLinesInContract(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetQuotationsLinesInContractAsync',
       data
     );
   }

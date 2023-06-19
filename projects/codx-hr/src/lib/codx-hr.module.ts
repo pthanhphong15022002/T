@@ -121,6 +121,8 @@ import { ViewDetailEappointionsComponent } from './employee-appointions/view-det
 import { PopupEquitjobComponent } from './employee-profile/popup-equitjob/popup-equitjob.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { EmployeePolicygenernalComponent } from './employee-policygenernal/employee-policygenernal.component';
+import { PopupPolicygeneralComponent } from './employee-policygenernal/popup-policygeneral/popup-policygeneral.component';
 export const routes: Routes = [
       {
         path: '',
@@ -219,6 +221,10 @@ export const routes: Routes = [
           {
             path: 'eappointions/:funcID',
             component: EmployeeAppointionsComponent
+          },
+          {
+            path: 'policygeneral/:funcID',
+            component: EmployeePolicygenernalComponent
           },
           // {
           //   path: 'employeeinfomation/:funcID',
@@ -387,7 +393,9 @@ const T_Component: Type<any>[] = [
   EmployeeAppointionsComponent,
   PopupAddEmployeeComponent,
   ViewDetailEappointionsComponent,
-  PopupEquitjobComponent
+  PopupEquitjobComponent,
+  EmployeePolicygenernalComponent,
+  PopupPolicygeneralComponent
 ];
 @NgModule({
   imports: [

@@ -594,12 +594,12 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notify('DP037');
+      this.notificationsService.notifyCode('DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notify('DP038');
+      this.notificationsService.notifyCode('DP038');
       this.changeDetectorRef.detectChanges();
       return;
     }

@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-employee-benefit.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -71,6 +72,7 @@ export class EmployeeBenefitComponent extends UIComponent {
     inject: Injector,
     private hrService: CodxHrService,
     private activedRouter: ActivatedRoute,
+    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
   ) {
@@ -201,13 +203,16 @@ export class EmployeeBenefitComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.processID.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Phụ cấp - ' + this.itemDetail.decisionNo + '</div>'
+              '',
+              'Phụ cấp - ' + this.itemDetail.decisionNo ,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {
