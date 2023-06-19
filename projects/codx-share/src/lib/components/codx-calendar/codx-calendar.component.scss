@@ -134,24 +134,23 @@ body.tailwind #selected {
   align-items: center;
   padding: 5px 12px;
   border-radius: 500px;
-  //background-color: rgba(104, 99, 104, 0.1);
   background-color: var(--primary);
   color: var(--white);
-  //box-shadow: 0 0 4px var(--primary-dark);
 }
 
 .e-speeddial-li .itemlist:hover {
   background-color: var(--primary-dark);
 }
-.calendar-btnadd{
+
+.calendar-btnadd {
   .e-btn.e-primary,
   .e-css.e-btn.e-primary {
     background-color: var(--primary);
     border-color: var(--primary);
     color: #fff;
     min-width: 46px;
-    min-height: 46px; 
-    
+    min-height: 46px;
+
     &:hover,
     &:active,
     &:focus {
@@ -161,7 +160,18 @@ body.tailwind #selected {
     }
   }
 }
+
 .e-calendar .e-content.e-month td.e-today span.e-day {
   box-shadow: inset 1px 0 var(--primary), inset 0 1px var(--primary),
     inset -1px 0 var(--primary-dark), inset 0 -1px var(--primary-dark);
+}
+
+.e-speeddial-popup.e-speeddial-bottom.e-speeddial-middle,
+.e-speeddial-popup.e-speeddial-bottom.e-speeddial-linear {
+  bottom: 65px !important;
+}
+
+.e-speeddial-popup.e-speeddial-right.e-speeddial-center,
+.e-speeddial-popup.e-speeddial-right.e-speeddial-linear {
+  right: 0 !important;
 }
