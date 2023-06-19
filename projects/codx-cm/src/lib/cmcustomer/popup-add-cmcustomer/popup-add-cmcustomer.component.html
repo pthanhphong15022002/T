@@ -47,6 +47,7 @@
   <ng-container *ngIf="form?.formGroup">
     <div>
       <codx-address-cm
+        #codxListAddress
         (lstAddressEmit)="lstAddressEmit($event)"
         (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
         [type]="'formAdd'"
@@ -759,6 +760,17 @@
     </div>
   </div>
   <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.address"
+      (valueChange)="valueChangeAdress($event)"
+      field="address"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>
     <codx-input
@@ -1235,16 +1247,6 @@
     </div>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Industries">
-    </codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="industries"
-    >
-    </codx-input>
-  </div>
-  <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -1254,6 +1256,17 @@
     >
     </codx-input>
   </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Industries">
+    </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="industries"
+    >
+    </codx-input>
+  </div>
+
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
     <codx-input

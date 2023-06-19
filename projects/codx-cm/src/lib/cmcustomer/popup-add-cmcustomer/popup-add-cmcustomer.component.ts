@@ -19,6 +19,7 @@ import {
   CRUDService,
   AlertConfirmInputConfig,
   ImageViewerComponent,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -35,6 +36,7 @@ import {
 } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 import { CM_Address } from '../../models/tmpCrm.model';
+import { CodxAddressCmComponent } from '../cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 
 @Component({
   selector: 'lib-popup-add-cmcustomer',
@@ -43,6 +45,8 @@ import { CM_Address } from '../../models/tmpCrm.model';
 })
 export class PopupAddCmCustomerComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
+  @ViewChild('codxListAddress') codxListAddress: CodxAddressCmComponent;
+
   @Output() loadData = new EventEmitter();
 
   @ViewChild('vllCbx') vllCbx;
@@ -66,6 +70,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   listAddress: BS_AddressBook[] = [];
   formModelAddress: FormModel;
   listAddressDelete: BS_AddressBook[] = [];
+  tmpAddress = new BS_AddressBook();
   disableObjectID = true;
   lstContact = [];
   lstContactDeletes = [];
@@ -138,9 +143,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       )
     );
     if (this.action == 'add' || this.action == 'copy') {
-      if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
-        this.data.address = null;
-      }
+      this.data.address = null;
     }
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
@@ -164,7 +167,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (edit) this.moreFuncEdit = edit.customName;
       }
     });
-
   }
 
   setTitle(e: any) {
@@ -257,7 +259,20 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   async ngAfterViewInit() {
     if (this.action == 'edit') {
-      this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
+      this.listAddress = await firstValueFrom(
+        this.cmSv.getListAddress(
+          this.dialog.formModel.entityName,
+          this.data.recID
+        )
+      );
+      if (this.data.address != null && this.data.address.trim() != '') {
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex((x) => x.isDefault == true);
+          if (index != -1) {
+            this.tmpAddress = this.listAddress[index];
+          }
+        }
+      }
     }
   }
 
@@ -477,9 +492,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   hanleSave() {
-    if (this.isAdress) {
-      this.setAddressParAndCompe();
-    }
     if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
     } else {
@@ -487,32 +499,85 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  setAddressParAndCompe() {
-    if (this.data.address != null && this.data.address.trim() != '') {
-      if (this.listAddress != null && this.listAddress.length > 0) {
-        this.listAddress[0].adressName = this.data.address;
+  setAddress(name) {
+    if (name != null && name != '') {
+      if (this.action != 'edit') {
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex((x) => x.isDefault == true);
+          if (index != -1) {
+            this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].isDefault = true;
+          } else {
+            var tmp = new BS_AddressBook();
+            tmp.recID = Util.uid();
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressName = this.data.address;
+            tmp.isDefault = true;
+            this.tmpAddress = tmp;
+            this.listAddress.push(tmp);
+          }
+        } else {
+          var tmp = new BS_AddressBook();
+          tmp.recID = Util.uid();
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressName = this.data.address;
+          tmp.isDefault = true;
+          this.tmpAddress = tmp;
+          this.listAddress.push(tmp);
+        }
       } else {
-        this.listAddress = [];
-        var tmp = new BS_AddressBook();
-        tmp.adressType = '6';
-        tmp.adressName = this.data.address;
-        tmp.isDefault = true;
-        this.listAddress.push(tmp);
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex(
+            (x) => x.recID == this.tmpAddress?.recID && x.isDefault == true
+          );
+          if (index != -1) {
+            this.listAddress[index].adressName = name?.trim();
+          } else {
+            var tmp = new BS_AddressBook();
+            tmp.recID = Util.uid();
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressName = this.data.address;
+            tmp.isDefault = true;
+            this.tmpAddress = tmp;
+            this.listAddress.push(tmp);
+          }
+        } else {
+          var tmp = new BS_AddressBook();
+          tmp.recID = Util.uid();
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressName = this.data.address;
+          tmp.isDefault = true;
+          this.tmpAddress = tmp;
+          this.listAddress.push(tmp);
+        }
       }
     } else {
       if (this.listAddress != null && this.listAddress.length > 0) {
-        this.listAddressDelete.push(this.listAddress[0]);
-        this.listAddress.splice(0, 1);
+        var indexDelete = this.listAddress.findIndex(
+          (x) => x.isDefault == true
+        );
+        if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+          if (indexDelete != -1) {
+            this.listAddress[indexDelete].isDefault = false;
+          }
+        } else {
+          this.listAddressDelete.push(this.listAddress[0]);
+          this.listAddress.splice(indexDelete, 1);
+        }
       }
+    }
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+      this.codxListAddress.loadListAdress(this.listAddress);
     }
   }
 
   valueChangeAdress(e) {
     if (e && e.data) {
-      this.data.address = e.data;
+      this.data.address = e?.data?.trim();
     } else {
       this.data.address = null;
     }
+    this.setAddress(this.data.address);
     if (!this.isAdress) this.isAdress = true;
   }
 
@@ -557,12 +622,25 @@ export class PopupAddCmCustomerComponent implements OnInit {
   lstAddressEmit(e) {
     if (e != null && e.length > 0) {
       this.listAddress = e;
+      var index = this.listAddress.findIndex(x => x.isDefault == true);
+      if(index != -1){
+        this.tmpAddress = this.listAddress[index];
+        this.data.address = this.listAddress[index].adressName;
+      }else{
+        this.data.address = null;
+      }
     }
   }
 
   lstAddressDeleteEmit(e) {
     if (e != null && e.length > 0) {
       this.listAddressDelete = e;
+      var index = this.listAddressDelete.findIndex(x => x.recID == this.tmpAddress.recID && x.isDefault == true);
+      if(index != -1){
+        var tmp = new BS_AddressBook();
+        this.data.address = null;
+        this.tmpAddress = tmp;
+      }
     }
   }
 

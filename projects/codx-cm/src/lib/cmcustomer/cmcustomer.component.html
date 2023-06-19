@@ -220,31 +220,29 @@
       </span>
       <span class="fs-7 text-gray-600">{{ data.address }}</span>
     </div>
-    <div *ngIf="funcID == 'CM0101'">
-      <div class="mb-1 d-flex align-items-center">
-        <span
-          class="icon-corporate_fare icon-16 me-2"
-          [ngbTooltip]="popupCustGroupID"
-          ><ng-template #popupCustGroupID>
-            <codx-label
-              [setRequire]="false"
-              fiedName="CustGroupID"
-              [formModel]="view.formModel"
-            ></codx-label> </ng-template
-        ></span>
-        <span
-          class="fs-7"
-          [innerHTML]="
-            data?.custGroupID
-              | formatvalue : view.formModel : 'CustGroupID'
-              | async
-          "
-        ></span>
-      </div>
+    <div *ngIf="funcID == 'CM0101'" class="mb-1 d-flex align-items-center">
+      <span
+        class="icon-corporate_fare icon-16 me-2"
+        [ngbTooltip]="popupCustGroupID"
+        ><ng-template #popupCustGroupID>
+          <codx-label
+            [setRequire]="false"
+            fiedName="CustGroupID"
+            [formModel]="view.formModel"
+          ></codx-label> </ng-template
+      ></span>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.custGroupID
+            | formatvalue : view.formModel : 'CustGroupID'
+            | async
+        "
+      ></span>
     </div>
     <div
       class="mb-1 d-flex align-items-top"
-      *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries"
+      *ngIf="funcID != 'CM0102' && data.industries"
     >
       <span
         class="icon-work_outline icon-16 me-2 text-gray-700"
