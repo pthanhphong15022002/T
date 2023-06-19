@@ -1,0 +1,54 @@
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+>
+</codx-form>
+<ng-template #header>
+  <div class="card-toolbar w-100 d-flex justify-content-end">
+    <div class="float-end">
+      <button type="button" class="btn btn-icon" (click)="onClose()">
+        <i class="icon-close icon-18"></i>
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #body>
+  <codx-gridview-v2
+    *ngIf="lstAccessHis"
+    #grid
+    [dataSource]="lstAccessHis"
+    [hideMoreFunc]="true"
+    [columnsGrid]="clmnGrid"
+    [autoLoad]="false"
+    rowHeight="40"
+  ></codx-gridview-v2>
+</ng-template>
+
+<!--Region HeaderText -->
+<ng-template #userIDHT>
+  <codx-label [formName]="dialog.formModel" default="Mã"></codx-label>
+</ng-template>
+<ng-template #userNameHT>
+  <codx-label [formName]="dialog.formModel" default="Tên"></codx-label>
+</ng-template>
+<ng-template #emailHT>
+  <codx-label [formName]="dialog.formModel" default="Email"></codx-label>
+</ng-template>
+<ng-template #utcHT
+  ><codx-label [formName]="dialog.formModel" default="UTC"></codx-label>
+</ng-template>
+<ng-template #gtmHT
+  ><codx-label [formName]="dialog.formModel" default="GMT+7"></codx-label>
+</ng-template>
+<!-- EndRegion -->
+
+<!-- Region Data Template -->
+<ng-template #userIDHT> </ng-template>
+<ng-template #userNameHT> </ng-template>
+<ng-template #emailHT> </ng-template>
+<ng-template #utcHT> </ng-template>
+<ng-template #gtmHT> </ng-template>
+<!-- EndRegion -->
