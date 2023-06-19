@@ -271,7 +271,7 @@
 <!-- Start:CashPaymentLine -->
 <ng-template tabindex="11" #tabLine>
   <ng-container *ngIf="(cashpayment?.subType != '2') && modegrid == '1'">
-    <div class="tabline-content scroll-ac position-relative">
+    <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 columnsGrid="" showRowNumber="true" class="tabLine" #gridCash
         [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
         [entityName]="fmCashPaymentsLines.entityName" [editSettings]="editSettings" predicates="TransID=@0"

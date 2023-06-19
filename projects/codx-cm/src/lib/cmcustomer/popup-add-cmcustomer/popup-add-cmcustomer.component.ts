@@ -144,6 +144,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
     );
     if (this.action == 'add' || this.action == 'copy') {
       this.data.address = null;
+      this.data.countryID = null;
+      this.data.provinceID = null;
+      this.data.districtID = null;
+      this.data.regionID = null;
+      this.data.wardID = null;
+
     }
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
