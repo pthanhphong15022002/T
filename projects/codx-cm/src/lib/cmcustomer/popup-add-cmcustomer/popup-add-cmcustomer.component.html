@@ -811,8 +811,7 @@
             [field]="'objectType'"
             [crrValue]="data.objectType"
             [disabled]="checkContact"
-            [type]="'valuelist'"
-            [refValue]="gridViewSetup?.ObjectType?.referedValue"
+            [formModel]="form.formModel"
             (valueChange)="valueChangeContact($event)"
           ></codx-input>
         </div>
@@ -828,8 +827,6 @@
             [disabled]="checkContact"
             [crrValue]="data?.contactType"
             [formModel]="form.formModel"
-            [type]="'valuelist'"
-            [refValue]="gridViewSetup?.ContactType?.referedValue"
             (valueChange)="valueChangeContact($event)"
           ></codx-input>
         </div>
