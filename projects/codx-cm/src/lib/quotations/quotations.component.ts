@@ -50,7 +50,6 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateCreatedOn') templateCreatedOn: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
 
-
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -86,6 +85,7 @@ export class QuotationsComponent extends UIComponent {
   dataSource = [];
   isNewVersion = false;
   popupView: DialogRef;
+  viewType: any;
 
   constructor(
     private inject: Injector,
@@ -234,11 +234,20 @@ export class QuotationsComponent extends UIComponent {
   }
 
   // moreFunc
+  onActions(e) {
+    switch (e.type) {
+      case 'dbClick':
+        if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
+        break;
+    }
+  }
   eventChangeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
-
-  changeDataMF(e, data) {
+  changeDataMFGird(e, data) {
+    this.changeDataMF(e, data, 11);
+  }
+  changeDataMF(e, data, type = 1) {
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
@@ -263,7 +272,9 @@ export class QuotationsComponent extends UIComponent {
             }
             break;
           case 'CM0202_5':
-            res.disabled = true;
+            if (type != 11) {
+              res.disabled = true;
+            } else res.disabled = false;
             break;
         }
       });
@@ -275,7 +286,7 @@ export class QuotationsComponent extends UIComponent {
   }
   clickMF(e, data) {
     this.titleAction = e.text;
-    this.itemSelected = data ;
+    this.itemSelected = data;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -297,6 +308,9 @@ export class QuotationsComponent extends UIComponent {
         break;
       case 'CM0202_4':
         this.createNewVersion(data);
+        break;
+      case 'CM0202_5':
+        this.viewDetail(data);
         break;
     }
   }

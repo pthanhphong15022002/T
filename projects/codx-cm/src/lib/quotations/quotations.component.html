@@ -14,6 +14,7 @@
   [selectedFirst]="true"
   [autoLoad]="true"
   [autoSearch]="true"
+  (onActions)="onActions($event)"
   (selectedChange)="selectedChange($event)"
 ></codx-views>
 <!-- view detail -->
@@ -203,7 +204,7 @@
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
-      (changeDataMF)="changeDataMF($event, data)"
+      (changeDataMF)="changeDataMFGird($event, data)"
       (clickMF)="clickMF($event, data)"
       [isBookMark]="false"
       type="view"
@@ -290,8 +291,8 @@
   </div>
 </ng-template>
 
-<ng-template #popDetail>
-  <codx-form [body]="templateDetail" [dialog]="popupView"> </codx-form>
+<ng-template #popDetail let-popupView>
+  <codx-form [body]="templateDetailGird" [dialog]="popupView"> </codx-form>
   <ng-template #templateDetailGird>
     <lib-quotations-view-detail
     [itemSelected]="itemSelected"
