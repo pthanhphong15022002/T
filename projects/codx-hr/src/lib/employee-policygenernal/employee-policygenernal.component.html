@@ -1,0 +1,91 @@
+<codx-views
+    #view
+    service="HR"
+    assemblyName="ERM.Business.HR"
+    entityName="HR_PolicyGeneral"
+    className="PolicyGeneralBusiness"
+    method="GetAllPolicyGeneralAsync"
+    [views]="views"
+    [autoLoad]="true"
+    idField="recID"
+    [button]="buttonAdd"
+    (buttonClick)="addPolicyGeneral($event)"
+    >
+    <!-- (selectedChange)="changeItemDetail($event)" -->
+
+</codx-views>
+
+<ng-template #templateList let-data>
+    <div class="d-flex align-items-center p-3 border-bottom w-100">
+        <div class="w-25 min-w-350px p-1">
+            <span
+            [innerHTML]="
+            data?.policyType
+              | formatvalue : view.formModel : 'policyType'
+              | async
+          "
+            >
+            </span>
+            <!-- {{data.policyType}} -->
+        </div>
+    
+        <div class="w-25 min-w-250px px-2">
+            <span
+            [innerHTML]="
+            data?.fixedAmt
+              | formatvalue : view.formModel : 'fixedAmt'
+              | async
+          "
+            >
+            </span>
+            <!-- {{data.fixedAmt}} -->
+        </div>
+    
+        <div class="w-25 min-w-200px px-2">
+            <span
+            [innerHTML]="
+            data?.percentage
+              | formatvalue : view.formModel : 'percentage'
+              | async
+          "
+            >
+            </span>
+            <!-- {{data.percentage}} -->
+        </div>
+
+        <div class="w-25 min-w-200px px-2">
+            <i class="icon-calendar_today icon-14 me-1"></i>
+            {{data.activeOn | fmDT}}
+        </div>
+
+        <div class="align-self-center">
+            <div style="height: 35px" class="has-action-menu">
+              <codx-mfunc
+                [formModel]="view.formModel"
+                (clickMF)="clickMF($event, data)"
+                [dataItem]="data"
+                type="hover"
+                >
+                <!-- (changeDataMF)="changeDataMf($event, data)" -->
+              </codx-mfunc>
+            </div>
+          </div>
+      </div>
+</ng-template>
+
+<ng-template #headerTemplate let-data>
+    <div class="d-flex w-100 ps-2 pe-4">
+      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+        <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+      </div>
+      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+        <codx-label name="lblContractType" [default]="'Số tiền'"></codx-label>
+      </div>
+      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+        <codx-label name="lblContractNum" [default]="'Tỷ lệ (%)'"></codx-label>
+      </div>
+      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+        <codx-label name="lblApproveStatus" [default]="'Hiệu lực'"></codx-label>
+        </div>
+    </div>
+  </ng-template>
