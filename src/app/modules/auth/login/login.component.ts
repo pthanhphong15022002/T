@@ -140,8 +140,13 @@ export class LoginComponent implements OnInit, OnDestroy {
               .pipe(
                 map((data) => {
                   if (data && data.userID) {
-                    document.location.href =
-                      this.returnUrl + '&token=' + this.auth.get().token;
+                    this.iParams = UrlUtil.getUrl('i') || '';
+                    if (this.iParams.toLocaleLowerCase() == 'hcs') {
+                      this.shareService.redirect(this.iParams, this.returnUrl);
+                    } else {
+                      document.location.href =
+                        this.returnUrl + '&token=' + this.auth.get().token;
+                    }
                   }
                 })
               )
@@ -432,7 +437,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               .subscribe((data: any) => {
                 this.iParams = UrlUtil.getUrl('i') || '';
 
-                if (this.iParams == 'hcs') {
+                if (this.iParams.toLocaleLowerCase() == 'hcs') {
                   this.shareService.redirect(this.iParams, this.returnUrl);
                 } else if (data && data.userID)
                   this.router.navigate([

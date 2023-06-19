@@ -174,27 +174,25 @@ export class CodxShareService {
     dataService?: any,
     that: any = null
   ) {
-     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
+    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
     switch (funcID) {
-      case 'SYS201' :
-      case 'SYS202' :
-      case 'SYS203' :
-      case 'SYS204' :
-      case 'SYS205' :
-      case 'SYS206' :
-      {
-        if(data?.unbounds?.eSign == true)
-        {
+      case 'SYS201':
+      case 'SYS202':
+      case 'SYS203':
+      case 'SYS204':
+      case 'SYS205':
+      case 'SYS206': {
+        if (data?.unbounds?.eSign == true) {
           let option = new SidebarModel();
           option.Width = '800px';
           option.DataService = dataService;
           option.FormModel = formModel;
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
-  
+
           var listApproveMF = this.getMoreFunction(funcID);
-  
+
           let dialogApprove = this.callfunc.openForm(
             PopupSignForApprovalComponent,
             'Thêm mới',
@@ -219,16 +217,19 @@ export class CodxShareService {
             if (x.event?.result) {
               data.statusApproval = x.event?.mode;
               dataService.update(data).subscribe();
-             
             }
           });
-        }
-        else
-        {
+        } else {
           var status;
-          if (funcID == 'SYS201' || funcID == 'SYS202' || funcID == 'SYS203' || funcID == 'SYS204')  status = '5';
+          if (
+            funcID == 'SYS201' ||
+            funcID == 'SYS202' ||
+            funcID == 'SYS203' ||
+            funcID == 'SYS204'
+          )
+            status = '5';
           else if (funcID == 'SYS205') status = '4';
-          else if (funcID == 'SYS206') status = '2'
+          else if (funcID == 'SYS206') status = '2';
           let dialog = this.beforeApprove(
             status,
             data?.unbounds,
@@ -253,24 +254,25 @@ export class CodxShareService {
                 } else this.notificationsService.notify(res2?.msgCodeError);
               });
             });
-          } 
-          else {
-            this.approval(data?.unbounds?.approvalRecID, status, '', '').subscribe(
-              (res2: any) => {
-                if (!res2?.msgCodeError) {
-                  data.unbounds.statusApproval = status;
-                  dataService.update(data).subscribe();
-                  this.notificationsService.notifyCode('SYS007');
-                  afterSave(data.statusApproval);
-                } else this.notificationsService.notify(res2?.msgCodeError);
-              }
-            );
+          } else {
+            this.approval(
+              data?.unbounds?.approvalRecID,
+              status,
+              '',
+              ''
+            ).subscribe((res2: any) => {
+              if (!res2?.msgCodeError) {
+                data.unbounds.statusApproval = status;
+                dataService.update(data).subscribe();
+                this.notificationsService.notifyCode('SYS007');
+                afterSave(data.statusApproval);
+              } else this.notificationsService.notify(res2?.msgCodeError);
+            });
           }
         }
         break;
       }
-      case 'SYS207' :
-      {
+      case 'SYS207': {
         this.undoApproval(data?.unbounds?.approvalRecID).subscribe((res) => {
           if (res) {
             data.unbounds.statusApproval = res?.status;
@@ -888,7 +890,7 @@ export class CodxShareService {
           .subscribe((token) => {
             let url = `${environment.loginHCS}/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
             if (url != '') {
-              window.open(url, display == '3' ? '_blank' : 'target');
+              window.open(url, display == '3' ? '_blank' : '_self');
             }
           });
         break;
@@ -975,7 +977,6 @@ export class CodxShareService {
       }
     }
   }
- 
 
   getMoreFunction(funcID: any) {
     var listApproveMF = [];

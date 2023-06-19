@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, Input, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
@@ -15,15 +15,17 @@ implements OnInit, AfterViewInit
 @Input() tabClicked: any;
 @Input() dataSelected: any;
 @Input() formModel: any;
+@Output() saveAssign = new EventEmitter<any>();
 titleAction: string = '';
 listStep = [];
 isUpdate = true; //xư lý cho edit trung tuy chinh ko
 listStepsProcess = [];
 listCategory = [];
+isDataLoading = true;
 // titleDefault= "Trường tùy chỉnh"//truyen vay da
 readonly tabInformation: string = 'Information';
-readonly tabContact: string = 'Contact';
-readonly tabAddress: string = 'Address';
+readonly tabField: string = 'Field';
+readonly tabTask: string = 'Task';
 
 fmProcductsLines: FormModel = {
   formName: 'CMProducts',
@@ -36,7 +38,7 @@ editSettings: EditSettingsModel = {
   allowDeleting: true,
 };
 
-constructor(private inject: Injector, private cmService: CodxCmService) {
+constructor(private inject: Injector, private codxCmService: CodxCmService) {
   super(inject);
 
 }
@@ -48,7 +50,8 @@ onInit(): void {
 ngOnChanges(changes: SimpleChanges){
   //nvthuan
   if(changes.dataSelected){
-    this.getListInstanceStep();
+    this.isDataLoading = true;
+   // this.getListInstanceStep();
   }
 }
 
@@ -60,13 +63,37 @@ async executeApiCalls() {
   }
 }
 //nvthuan
+// getListInstanceStep() {
+//   let instanceID = this.dataSelected?.refID;
+//   if (instanceID) {
+//     this.cmService.getStepInstance([instanceID]).subscribe((res) => {
+//       this.listStep = res;
+//     });
+//   }
+// }
+
 getListInstanceStep() {
-  let instanceID = this.dataSelected?.refID;
-  if (instanceID) {
-    this.cmService.getStepInstance([instanceID]).subscribe((res) => {
+  var data = [
+    this.dataSelected?.refID,
+    this.dataSelected?.processID,
+    this.dataSelected?.status,
+  ];
+  this.codxCmService.getStepInstance(data).subscribe((res) => {
+    if(res){
       this.listStep = res;
-    });
+      this.checkCompletedInstance(this.dataSelected?.status);
+    }
+    this.isDataLoading = false;
+  });
+}
+checkCompletedInstance(dealStatus: any) {
+  if (dealStatus == '1' || dealStatus == '2') {
+    this.deleteListReason(this.listStep);
   }
+}
+deleteListReason(listStep: any): void {
+  listStep.pop();
+  listStep.pop();
 }
 
 async getValueList() {
@@ -82,34 +109,6 @@ getNameCategory(categoryId:string) {
 }
 
 
-addContact() {
-  var contact = 'CM0103'; // contact
-  this.cache.functionList(contact).subscribe((fun) => {
-    let option = new SidebarModel();
-    // option.DataService = this.view.dataService;
-    var formMD = new FormModel();
-    formMD.entityName = fun.entityName;
-    formMD.formName = fun.formName;
-    formMD.gridViewName = fun.gridViewName;
-    formMD.funcID = contact;
-    option.FormModel = JSON.parse(JSON.stringify(formMD));
-    option.Width = '800px';
-    option.DataService = null;
-    this.titleAction = ' Bao test';
-    var dialog = this.callfc.openSide(
-      PopupAddCmCustomerComponent,
-      ['add', this.titleAction],
-      option
-    );
-    dialog.closed.subscribe((e) => {
-      //      if (!e?.event) this.view.dataService.clear();
-      // if (e && e.event != null) {
-      //   this.customerDetail.listTab(this.funcID);
-      // }
-    });
-  });
-}
-
 //truong tuy chinh - đang cho bằng 1
 showColumnControl(stepID) {
   if (this.listStepsProcess?.length > 0) {
@@ -120,12 +119,31 @@ showColumnControl(stepID) {
   return 1;
 }
 
+continueStep(event) {
+  let isTaskEnd = event?.isTaskEnd;
+  let step = event?.step;
 
-lstAddressEmit($event) {}
-lstAddressDeleteEmit($event) {}
+  let transferControl = this.dataSelected.steps.transferControl;
+  if(transferControl == '0') return;
 
-addressName($event){
+  // let isShowFromTaskEnd = !this.checkContinueStep(true,step);
+  // let isContinueTaskEnd = isTaskEnd;
+  // let isContinueTaskAll = this.checkContinueStep(false,step);
+  // let isShowFromTaskAll = !isContinueTaskAll;
 
+  // if(transferControl == '1' && isContinueTaskAll){
+  //   isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
+  //   !isShowFromTaskAll && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
+  // }
+
+  // if(transferControl == '2' && isContinueTaskEnd){
+  //   isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
+  //   !isShowFromTaskEnd && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
+  // }
 }
+saveAssignTask(e){
+  // if(e) this.saveAssign.emit(e);
+}
+
 }
 

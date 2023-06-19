@@ -9,12 +9,12 @@
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
   >
-  <ng-template #tooltipDealName>
-    <div class="text-end text-sm-start">
-      <strong>{{ gridViewSetup["DealName"]?.headerText }}</strong
-      >: {{ dataSelected?.dealName }}
-    </div>
-  </ng-template>
+    <ng-template #tooltipDealName>
+      <div class="text-end text-sm-start">
+        <strong>{{ gridViewSetup["DealName"]?.headerText }}</strong
+        >: {{ dataSelected?.dealName }}
+      </div>
+    </ng-template>
     <ng-template #header let-data>
       <div class="d-flex justify-content-between">
         <div class="text-info d-flex align-items-center">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="d-flex align-items-center mb-1">
                   <span
-                    class="text-gray-600 line-clamp-menu "
+                    class="text-gray-600 line-clamp-menu"
                     [ngbTooltip]="tooltipDealName"
                     #dealName
                     [innerHTML]="
@@ -84,39 +84,82 @@
             </div>
           </div>
           <div class="ms-5 d-flex justify-content-between">
-            <div class="d-flex align-items-top justify-content-end fs-3">
-              <span
-                class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
-              ></span>
-              <span
-                class="fw-bold line-clamp-menu"
-                *ngIf="dataSelected?.dealValue; else defaultNull"
-                [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
-                #dealValue
-                [innerHTML]="
-                  dataSelected?.dealValue
-                    | formatvalue : formModel : 'dealValue' : dealValue
-                    | async
-                "
-              ></span>
-            </div>
-            <div class="d-flex align-items-top justify-content-end ps-10 fs-3">
-              <span
-                class="icon-check_circle text-green icon-16 mt-1 pe-1"
-              ></span>
-
-                <span
-                *ngIf="dataSelected?.probability; else defaultNull"
-                  class="text-primary line-clamp-menu"
-                  [ngbTooltip]="gridViewSetup['Probability']?.headerText"
-                  #probability
-                  [innerHTML]="
-                    dataSelected?.probability
-                      | formatvalue : formModel : 'probability' : probability
-                      | async
-                  "
-                ></span
-                >%
+            <div class="d-flex flex-column">
+              <div class="d-flex flex-row">
+                <div class="d-flex align-items-top justify-content-end fs-3">
+                  <span
+                    class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+                  ></span>
+                  <span
+                    class="fw-bold line-clamp-menu"
+                    *ngIf="dataSelected?.dealValue; else defaultNull"
+                    [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+                    #dealValue
+                    [innerHTML]="
+                      dataSelected?.dealValue
+                        | formatvalue : formModel : 'dealValue' : dealValue
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div
+                  class="d-flex align-items-top justify-content-end ps-10 fs-3"
+                >
+                  <span
+                    class="icon-check_circle text-green icon-16 mt-1 pe-1"
+                  ></span>
+                  <span
+                    *ngIf="dataSelected?.probability; else defaultNull"
+                    class="line-clamp-menu"
+                    [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                    #probability
+                    [innerHTML]="
+                      dataSelected?.probability
+                        | formatvalue : formModel : 'probability' : probability
+                        | async
+                    "
+                  ></span
+                  >%
+                </div>
+              </div>
+              <div class="d-flex justify-content-end">
+                <div
+                  *ngIf="dataSelected.status != '1'"
+                  [ngStyle]="{
+                    'background-color':
+                      dataSelected.status == '3' || dataSelected.status == '4'
+                        ? colorReasonSuccess?.color
+                        : dataSelected.status == '5' ||
+                          dataSelected.status == '6'
+                        ? colorReasonFail?.color
+                        : dataSelected?.steps['backgroundColor']
+                  }"
+                  class="me-2 badge badge-sm d-flex align-items-center"
+                >
+                  <span
+                    [ngClass]="dataSelected?.steps['icon']"
+                    [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                    class="me-1"
+                  ></span>
+                  <span
+                    class="menu-title fw-bold line-clamp line-clamp-2"
+                    [ngbTooltip]="dataSelected?.currentStepName"
+                    [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
+                    >{{ dataSelected?.currentStepName }}</span
+                  >
+                </div>
+                <div *ngIf="dataSelected.status == '1'">
+                  <codx-vll
+                    [name]="'DP028'"
+                    [field]="'Status'"
+                    [value]="dataSelected?.status"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm"
+                  >
+                  </codx-vll>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -175,9 +218,7 @@
                   >
                   </codx-tag>
                 </div>
-                <div
-                  class="d-flex flex-wrap align-items-top mb-1"
-                >
+                <div class="d-flex flex-wrap align-items-top mb-1">
                   <div class="d-flex flex-column">
                     <div class="mb-2">
                       <codx-label
@@ -197,31 +238,33 @@
                         </codx-img>
                       </div>
                       <div class="d-flex flex-column">
-
                         <span
-                        class="fw-bold text-dark fs-6 mb-1"
-                        #contactName
-                        [innerHTML]="
-                          dataSelected?.contactName
-                            | formatvalue
-                              : formModel
-                              : 'contactName'
-                              : contactName
-                            | async
-                        "
-                      ></span>
+                          class="fw-bold text-dark fs-6 mb-1"
+                          #contactName
+                          [innerHTML]="
+                            dataSelected?.contactName
+                              | formatvalue
+                                : formModel
+                                : 'contactName'
+                                : contactName
+                              | async
+                          "
+                        ></span>
 
-                        <div >
+                        <div>
                           {{ contactPerson?.contactName }}
                         </div>
-                        <div class="fs-7 text-gray-600 mb-1">
+                        <!-- <div class="fs-7 text-gray-600 mb-1">
                           {{ contactPerson?.jobTitle }}
-                        </div>
+                        </div> -->
                         <div class="fs-7 text-gray-600 mb-1">
                           {{ contactPerson?.role }}
                         </div>
                         <div class="d-flex align-items-start">
-                          <div class="d-flex align-items-center me-5" *ngIf="contactPerson?.mobile">
+                          <div
+                            class="d-flex align-items-center me-5"
+                            *ngIf="contactPerson?.mobile"
+                          >
                             <span
                               class="icon-phone_android text-primary icon-16 me-2"
                             ></span>
@@ -229,7 +272,10 @@
                               contactPerson?.mobile
                             }}</span>
                           </div>
-                          <div class="d-flex align-items-center" *ngIf="contactPerson?.personalEmail">
+                          <div
+                            class="d-flex align-items-center"
+                            *ngIf="contactPerson?.personalEmail"
+                          >
                             <span
                               class="icon-print_disabled icon-16 me-2 text-gray-600"
                             ></span>
@@ -245,45 +291,6 @@
               </div>
               <div class="w-175px min-w-175px d-flex flex-column">
                 <div class="d-flex flex-column">
-                  <div class="d-flex align-items-top justify-content-end mb-2">
-                    <div
-                      *ngIf="dataSelected.status != '1'"
-                      [ngStyle]="{
-                        'background-color':
-                          dataSelected.status == '3' ||
-                          dataSelected.status == '4'
-                            ? colorReasonSuccess?.color
-                            : dataSelected.status == '5' ||
-                              dataSelected.status == '6'
-                            ? colorReasonFail?.color
-                            : dataSelected?.steps['backgroundColor']
-                      }"
-                      class="badge badge-sm d-flex align-items-center"
-                    >
-                      <span
-                        [ngClass]="dataSelected?.steps['icon']"
-                        [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                        class="me-1"
-                      ></span>
-                      <span
-                        class="menu-title fw-bold line-clamp line-clamp-2"
-                        [ngbTooltip]="dataSelected?.currentStepName"
-                        [ngStyle]="{ color: data?.steps['textColor'] }"
-                        >{{ dataSelected?.currentStepName }}</span
-                      >
-                    </div>
-                    <div *ngIf="dataSelected.status == '1'">
-                      <codx-vll
-                        [name]="'DP028'"
-                        [field]="'Status'"
-                        [value]="dataSelected?.status"
-                        [showText]="true"
-                        [showBgColor]="true"
-                        class="badge badge-light badge-sm"
-                      >
-                      </codx-vll>
-                    </div>
-                  </div>
                   <div
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
@@ -352,24 +359,22 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <div class="d-flex flex-column" >
+  <div class="d-flex flex-column">
     <codx-taskbar
-    [listTab]="tabDetail"
-    [change]="dataSelected"
-    (tab)="changeTab($event)"
-    size="18"
-    class="mb-3"
-  ></codx-taskbar>
+      [listTab]="tabDetail"
+      [change]="dataSelected"
+      (tab)="changeTab($event)"
+      size="18"
+      class="mb-3"
+    ></codx-taskbar>
 
-      <codx-tab-deal-detail
+    <codx-tab-deal-detail
       [tabClicked]="tabClicked"
       [dataSelected]="dataSelected"
       [formModel]="formModel"
       (saveAssign)="saveAssign($event)"
     ></codx-tab-deal-detail>
-
   </div>
-
 </ng-template>
 <ng-template #tabs let-data>
   <codx-tabs

@@ -1,7 +1,7 @@
 <ng-container *ngIf="!isViewTemp">
   <div class="h-100 p-3">
     <div class="tabline-content position-relative">
-       <codx-gridview-v2
+      <codx-gridview-v2
         #gridQuationsLines
         class="tabLine"
         service="CM"
@@ -109,7 +109,6 @@
       </div>
 
       <div class="d-flex align-items-center mb-1 me-6">
-        <!-- <span class="icon-i-dot icon-22"></span> -->
         <codx-label
           class="text-dark fw-bold label-colon"
           fiedName="IDIM1"
@@ -134,7 +133,6 @@
       </div>
 
       <div class="d-flex align-items-center mb-1 me-6">
-        <!-- <span class="icon-i-dot icon-22"></span> -->
         <codx-label
           class="text-dark fw-bold label-colon"
           fiedName="IDIM2"
@@ -159,7 +157,6 @@
       </div>
 
       <div class="d-flex align-items-center mb-1 me-6">
-        <!-- <span class="icon-i-dot icon-22"></span> -->
         <codx-label
           class="text-dark fw-bold label-colon"
           fiedName="IDIM3"
@@ -184,7 +181,6 @@
       </div>
 
       <div class="d-flex align-items-center mb-1 me-6">
-        <!-- <span class="icon-i-dot icon-22"></span> -->
         <codx-label
           class="text-dark fw-bold label-colon"
           fiedName="IDIM4"
@@ -298,7 +294,7 @@
       </thead>
       <tbody *ngFor="let item of listQuotationLines">
         <!-- | slice : (page - 1) * pageSize : page * pageSize -->
-        <tr>
+        <tr style="border-bottom: 1px solid !important ; border-bottom-color: #eaf0f7 !important;">
           <td>
             <div class="d-flex align-items-center me-5 mb-1">
               <span
@@ -311,60 +307,35 @@
               ></span>
             </div>
             <div class="d-flex flex-wrap text-nowrap">
-              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
-              <!-- <span class="icon-i-dot icon-22"></span> -->
-              <!-- <codx-label
-                  class="text-dark fw-bold label-colon"
-                  fiedName="IDIM0"
-                  [formModel]="fmQuotationLines"
-                >
-                </codx-label> -->
               <span
+                *ngIf="item?.idiM0"
                 class="text-dark mx-1"
                 [innerHTML]="
                   item.idiM0 | formatvalue : fmQuotationLines : 'idiM0' | async
                 "
-              ></span>
-              <!-- </div> -->
-              |
-              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
-              <!-- <codx-label
-                  class="text-dark fw-bold label-colon"
-                  fiedName="IDIM1"
-                  [formModel]="fmQuotationLines"
-                >
-                </codx-label> -->
+              >
+                <span *ngIf="item?.idiM1 || item?.idiM2 || item?.idiM3">|</span></span>
               <span
+                *ngIf="item?.idiM1"
                 class="text-dark mx-1"
                 [innerHTML]="
                   item.idiM1 | formatvalue : fmQuotationLines : 'idiM1' | async
                 "
-              ></span>
-              <!-- </div> -->
-              |
-              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
-              <!-- <codx-label
-                  class="text-dark fw-bold label-colon"
-                  fiedName="IDIM2"
-                  [formModel]="fmQuotationLines"
-                >
-                </codx-label> -->
+              >
+                <span *ngIf="item?.idiM2 || item?.idiM3">|</span></span
+              >
+
               <span
+                *ngIf="item?.idiM2"
                 class="text-dark mx-1"
                 [innerHTML]="
                   item.idiM2 | formatvalue : fmQuotationLines : 'idiM2' | async
                 "
-              ></span>
-              <!-- </div> -->
-              |
-              <!-- <div class="d-flex align-items-center mb-1 me-6"> -->
-              <!-- <codx-label
-                  class="text-dark fw-bold label-colon"
-                  fiedName="IDIM3"
-                  [formModel]="fmQuotationLines"
-                >
-                </codx-label> -->
+              >
+                <span *ngIf="item?.idiM3">|</span></span
+              >
               <span
+                *ngIf="item?.idiM3"
                 class="text-dark mx-1"
                 [innerHTML]="
                   item.idiM3 | formatvalue : fmQuotationLines : 'idiM3' | async
@@ -486,7 +457,7 @@
           </td>
           <td>
             <span
-              style="float: right"
+              style="float: right; padding-right: 5px"
               class="text-nowrap ms-3"
               [innerHTML]="
                 item?.vatAmt | formatvalue : fmQuotationLines : 'vatAmt' | async
@@ -498,17 +469,36 @@
       <tfoot>
         <tr class="custom-toolbar bg-gray-200 min-w-100px">
           <td>
-            <span class="text-nowrap ms-3" style="float: right"> Tổng cộng </span>
-          </td>
-          <td>
-            <span class="text-nowrap ms-3" style="float: right"> - </span>
-          </td>
-          <td>
-            <span class="text-nowrap ms-3" style="float: right">-</span>
+            <span
+              class="text-nowrap ms-3 codx-label fw-bold fs-6"
+              style="float: right"
+            >
+              <codx-label
+                class="label-colon"
+                name="lblTotalView"
+                [formModel]="fmQuotationLines"
+                default="Tổng cộng"
+              ></codx-label>
+            </span>
           </td>
           <td>
             <span
-              class="text-nowrap ms-3"
+              class="text-nowrap ms-3 codx-label fw-bold fs-6"
+              style="float: right"
+            >
+              -
+            </span>
+          </td>
+          <td>
+            <span
+              class="text-nowrap ms-3 codx-label fw-bold fs-6"
+              style="float: right"
+              >-</span
+            >
+          </td>
+          <td>
+            <span
+              class="text-nowrap ms-3 codx-label fw-bold fs-6"
               style="float: right"
               [innerHTML]="
                 sum('netAmt')
@@ -519,12 +509,17 @@
             </span>
           </td>
           <td>
-            <span class="text-nowrap ms-3" style="float: right"> -</span>
+            <span
+              class="text-nowrap ms-3 codx-label fw-bold fs-6"
+              style="float: right"
+            >
+              -</span
+            >
           </td>
           <td>
             <span
-              class="text-nowrap ms-3"
-              style="float: right"
+              class="text-nowrap codx-label fw-bold fs-6"
+              style="float: right; padding-right: 5px"
               [innerHTML]="
                 sum('vatAmt')
                   | formatvalue : fmQuotationLines : 'vatAmt'

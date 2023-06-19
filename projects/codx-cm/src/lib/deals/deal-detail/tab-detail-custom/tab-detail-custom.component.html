@@ -11,16 +11,16 @@
     [ngTemplateOutlet]="field"
   ></some-element>
   <some-element
+  *ngSwitchCase="tabTask"
+  [ngTemplateOutlet]="task"
+></some-element>
+  <some-element
     *ngSwitchCase="tabContact"
     [ngTemplateOutlet]="contact"
   ></some-element>
   <some-element
     *ngSwitchCase="tabOpponent"
     [ngTemplateOutlet]="opponent"
-  ></some-element>
-  <some-element
-    *ngSwitchCase="tabTask"
-    [ngTemplateOutlet]="task"
   ></some-element>
   <some-element
     *ngSwitchCase="tabQuotation"
@@ -170,6 +170,7 @@
             <div class="text-dark fw-bold codx-textcontent">
               <span
                 #dealValue
+                *ngIf="dataSelected?.dealValue; else defaultNull"
                 [innerHTML]="
                   dataSelected?.dealValue
                     | formatvalue
@@ -224,20 +225,19 @@
                 fiedName="Probability"
               ></codx-label>
             </div>
-            <div class="text-dark fw-bold codx-textcontent">
+            <div class="text-dark fw-bold codx-textcontent d-flex justify-content-start">
               <span
                 #probability
+                *ngIf="dataSelected?.probability; else defaultNull"
                 [innerHTML]="
                   dataSelected?.probability
                     | formatvalue
                       : formModel
                       : 'probability'
                       : probability
-                      : 'CMDeals'
-                      : 'grvCMDeals'
                     | async
                 "
-              ></span>
+              ></span>%
             </div>
           </div>
         </div>
@@ -356,13 +356,17 @@
     [disableRefID]="true"
   >
   </codx-quotations> -->
-  <codx-quotations-tab-view  [typeModel]="'deals'"
+  <codx-quotations-tab-view  
+  [typeModel]="'deals'"
   [showButton]="true"
   [predicates]="'RefID==@0'"
   [dataValues]="dataSelected.recID"
   [refID]="dataSelected.recID"
   [refType]="'CM_Deals'"
-  [disableRefID]="true"></codx-quotations-tab-view>
+  [disableRefID]="true"
+  [disableCusID]="true"
+  [customerID]="dataSelected.customerID"
+  ></codx-quotations-tab-view>
 </ng-template>
 
 <ng-template #contract let-data>
@@ -372,3 +376,4 @@
     [type]="'deal'"
   ></list-contracts>
 </ng-template>
+<ng-template #defaultNull> <p class="p-0 m-0">0</p></ng-template>

@@ -87,7 +87,7 @@
             [formModel]="form.formModel"
             field="processID"
             [model]="{ ApplyFor: applyFor }"
-            [disabled]="actionEdit === action"
+            [disabled]="processID"
             [crrValue]="cases?.processID"
             (valueChange)="cbxProcessChange($event)"
           >
@@ -105,11 +105,12 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <div *ngIf="listCbxContacts.length > 0 && listCbxContacts != null">
+        <div>
           <ejs-combobox
             id="recID"
             [dataSource]="listCbxContacts"
             [fields]="fieldCbxContacts"
+            [enabled]="cases?.customerID"
             [value]="contactID"
             (valueChange)="cbxChange($event, 'contactID')"
           ></ejs-combobox>
@@ -169,7 +170,6 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="severity"
-          [crrValue]="cases?.severity"
           (valueChange)="valueChange($event)"
         >
         </codx-input>

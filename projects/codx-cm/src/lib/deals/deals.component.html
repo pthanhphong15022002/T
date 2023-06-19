@@ -123,10 +123,10 @@
         <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
         <span
           class="fs-7 text-gray-600 line-clamp-menu"
-          #createdOn
-          [ngbTooltip]="gridViewSetup['CreatedOn']?.headerText"
+          #expectedClosed
+          [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
           [innerHTML]="
-            data.createdOn | formatvalue : view.formModel : 'createdOn' | async
+            data.expectedClosed | formatvalue : view.formModel : 'expectedClosed' | async
           "
         ></span>
       </div>
@@ -263,11 +263,11 @@
       <div class="col-4 pe-0 d-flex align-items-center">
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
-          class="text-gray-700 fs-7line-clamp-menu"
-          #createdOn
-          [ngbTooltip]="gridViewSetup['CreatedOn']?.headerText"
+          class="text-gray-700 fs-7 line-clamp-menu"
+          #expectedClosed
+          [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
           [innerHTML]="
-            data.createdOn | formatvalue : view.formModel : 'createdOn' | async
+            data.expectedClosed | formatvalue : view.formModel : 'expectedClosed' | async
           "
         ></span>
       </div>

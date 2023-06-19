@@ -37,6 +37,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { PopupViewOKRLinkComponent } from '../../popup/popup-view-okr-link/popup-view-okr-link.component';
 import { PopupCheckInHistoryComponent } from '../../popup/popup-check-in-history/popup-check-in-history.component';
 import { OM_Statistical } from '../../model/okr.model';
+import { PopupChangeTargetComponent } from '../../popup/popup-change-target/popup-change-target.component';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -412,7 +413,7 @@ export class OkrTargetsComponent implements OnInit {
       }
 
       case OMCONST.MFUNCID.KRChagneAssignTarget: {
-        this.chagneAssignTarget(kr, e?.text);
+        this.changeAssignTarget(kr, e?.text);
         break;
       }
 
@@ -1342,21 +1343,26 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
 
-  chagneAssignTarget(evt:any,data:any) {
-    evt.stopPropagation();
-    evt.preventDefault();    
+  changeAssignTarget(data:any,title:any) {
     if (data != null) {
+
+      let popUpHeight = data?.plan == OMCONST.VLL.Plan.Month ? 500 : 240;
       let dialogShowHistoryCheckIn = this.callfunc.openForm(
-        PopupCheckInHistoryComponent,
+        PopupChangeTargetComponent,
         '',
-        800,
-        850,
+        650,
+        popUpHeight,
         null,
-        [data,this.okrGrv,this.okrFM,this.groupModel]
+        [data,title]
       );
-      dialogShowHistoryCheckIn.closed.subscribe((res) => {
-        this.updateOKRPlans.emit(this.dataOKRPlans?.recID);        
-      });
+      dialogShowHistoryCheckIn.closed.subscribe((res) => {        
+        if (data?.okrType=='S') {
+          this.renderSKR(res?.event, _isEdit);
+        } else {
+          this.renderKR(res?.event, _isEdit);
+        }
+      });     
+      
     }
   }
 

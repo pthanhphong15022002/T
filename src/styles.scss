@@ -172,6 +172,7 @@ codx-view-list-detail {
   img{
     width: auto;
     height: 80px;
+    border-radius: 40px;
   }
 }
 
@@ -663,9 +664,9 @@ codx-view-list-detail .codx-detail-footer {
   border-radius: 0;
 }
 
-.e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
-  padding: 0 2px !important;
-}
+// .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
+//   padding: 0 2px !important; //van
+// }
 .e-tab .e-tab-header .e-toolbar-item.e-active,
 .e-tab .e-tab-header .e-toolbar-item.e-active * {
   color: var(--primary-dark) !important;
@@ -849,7 +850,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 .e-sidebar {
   .codx-tab .tab-content {
     //width: 578px !important;
-    width: 564px !important;
+    min-width: 564px !important;
   }
   
 }
@@ -944,6 +945,7 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
 .dialog-property .extend-main {
   height: calc(100vh - 80px);
   overflow: auto;
+  padding-right: 10px;
 }
 
 .dialog-property .extend-more-content {
@@ -2133,7 +2135,7 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
   padding-left: 5px !important;
   height: 28px !important;
   font-size: 12px !important;
-  width: 120px !important;
+  //width: 120px !important;
   line-height: 28px !important;
   padding-right: 0px !important;
 
@@ -3107,9 +3109,8 @@ codx-toolbar-report{
 .cal-notes .checkbox-list {
   padding: 7px 16px;
 }
-.h-350px.w-550px{
+.h-300px.w-500px{
   codx-calendar .codx-form .card-footer{
-
     padding-top: 0;
   }
   .h-375px{
@@ -3225,3 +3226,13 @@ codx-card-center .card.codx_cardcenter{
   min-height: 36px!important;
   border-left: 0!important;
 }
+
+.input-number input {
+  background-color: transparent;
+}
+lib-popup-detail{
+  .conmement-body{
+      height: calc(100vh - 190px);
+      overflow: auto;
+  }
+  }

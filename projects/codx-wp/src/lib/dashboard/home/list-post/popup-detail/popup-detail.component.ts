@@ -26,17 +26,10 @@ export class PopupDetailComponent implements OnInit {
   dialogRef: any;
   dialogData:any = null;
   parentPost: any = null;
-  chilPost: any = null;
+  childPost: any = null;
   parentID:string ="";
-  fileID:string = "";
-  fileReferType:string = "";
   fileSelected: any = null;
-  imageSrc:any[] = [];
-  index:number = 0;
-  vllL1480:any = null;
-  dVll:any = {};
   data:any = null;
-  activeChildPost:boolean = false;
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -61,80 +54,49 @@ export class PopupDetailComponent implements OnInit {
     if(this.fileSelected)
     {
       this.parentID = this.fileSelected.objectID;
-      this.fileID = this.fileSelected.recID;
-      this.fileReferType = this.fileSelected.referType;
-      this.getParentPost(this.parentID);
-      this.getChilPost(this.fileID);
+      this.getData(this.fileSelected.objectID,this.fileSelected.recID,this.fileSelected.referType);
     }
   }
-  
-  //get parent post by objectID DM_FileInfor 
-  getParentPost(objectID:string) {
-    if(objectID){
-      this.api
+  //get data 
+  getData(recID:string,refID:string,type:string){
+    debugger
+    this.api
       .execSv(
         "WP",
         "ERM.Business.WP",
         "CommentsBusiness",
-        'GetParentPostAsync',
-        [objectID])
-        .subscribe((res: any) => {
+        "GetDataDetailAsync",
+        [recID,refID,type])
+        .subscribe((res:any[]) => {
         if(res) 
         {
-          this.parentPost = JSON.parse(JSON.stringify(res));
+          this.parentPost = res[0];
+          this.childPost = res[1];
           this.dt.detectChanges();
         }
       });
-    }
   }
-  // get child post by recID DM_FileInfor
-  getChilPost(objectID:string){
-    if(objectID){
-      this.api
+  // get child post ref file
+  getChilPost(recID:string,refID:string,type:string){
+    this.api
       .execSv(
         "WP",
         "ERM.Business.WP",
         "CommentsBusiness",
-        'GetChildPostAsync',
-        [objectID])
+        "GetChildPostAsync",
+        [recID,refID,type])
         .subscribe((res:any) => {
-          debugger
-          if(res){
-            this.chilPost = JSON.parse(JSON.stringify(res));
-          }
-          else // chưa có bài viết 
-          {
-            this.chilPost = new Post();
-            this.chilPost.refID = this.fileSelected.recID;
-            if(this.fileSelected.referType == this.FILE_REFERTYPE.IMAGE)
-              this.chilPost.category = "9";
-            else if(this.fileSelected.referType == this.FILE_REFERTYPE.IMAGE)
-              this.chilPost.category = "10";
-            else this.chilPost.category = "11";
-            this.activeChildPost = true;
-          }
+          this.childPost = JSON.parse(JSON.stringify(res));
           this.dt.detectChanges();
       });
-    }
   }
   //change image
   changeImage(file:any){
-    if(file){
-      this.fileID = file.recID;
-      this.fileSelected = file;
-      this.getChilPost(file.recID);
+    debugger
+    if(file)
+    {
+      this.fileSelected = JSON.parse(JSON.stringify(file));;
+      this.getChilPost(this.parentID,file.recID,file.referType);
     }
-  }
-  // create chilPost
-  createdChilPost(){
-    this.api.execSv( 
-      "WP",
-      "ERM.Business.WP",
-      "CommentsBusiness",
-      'InsertChilPostAsync',
-      [this.chilPost])
-      .subscribe((res:any) => {
-        this.activeChildPost = false;
-      });
   }
 }

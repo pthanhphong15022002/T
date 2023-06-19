@@ -92,8 +92,12 @@ export class CalendarCenterComponent
     ) {
       let obj;
       if (event?.data.type === 'Week') {
-        let fromDate = new Date(event.data.fromDate.setDate(event.data.fromDate.getDate() + 1));
-        let toDate = new Date(event.data.toDate.setDate(event.data.toDate.getDate() + 1));
+        let fromDate = new Date(
+          event.data.fromDate.setDate(event.data.fromDate.getDate() + 1)
+        );
+        let toDate = new Date(
+          event.data.toDate.setDate(event.data.toDate.getDate() + 1)
+        );
         obj = {
           fromDate: fromDate,
           toDate: toDate,
