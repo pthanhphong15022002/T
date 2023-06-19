@@ -63,7 +63,7 @@
 </ng-template>
 <ng-template #tmpHistoryCoins let-item>
     <div class="d-flex align-items-start wallet-item rounded-2 p-2 mb-1">
-        <div class="me-3 max-h-40">
+        <div class="me-3 mh-40">
             <ng-container *ngIf="item.transType == '1' || item.transType == '4' ; else fieldTransType">
                 <img class="w-40px" src="/assets/demos/svg/{{ item.refType | vll:'L1422' : 'icon' | async }}">
             </ng-container>
