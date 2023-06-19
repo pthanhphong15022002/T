@@ -28,7 +28,7 @@ import {
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 
 import { MWPPopupAddBookingRoomComponent } from './popup-add-booking-room/mwp-popup-add-booking-room.component';
-import { BookingService } from '../../services/booking.services';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 
 @Component({
   selector: 'mwp-booking-room',
@@ -90,7 +90,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
-    private codxEpService: BookingService,
+    private codxEpService: CodxBookingService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute

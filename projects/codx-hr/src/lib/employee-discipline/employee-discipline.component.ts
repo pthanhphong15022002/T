@@ -18,6 +18,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEDisciplinesComponent } from '../employee-profile/popup-edisciplines/popup-edisciplines.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-discipline',
@@ -62,6 +63,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
     inject: Injector,
     private hrService: CodxHrService,
     private activedRouter: ActivatedRoute,
+    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
   ) {
@@ -300,13 +302,16 @@ export class EmployeeDisciplineComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Kỷ luật - ' + this.itemDetail.decisionNo + '</div>'
+              '',
+              'Kỷ luật - ' + this.itemDetail.decisionNo ,
+              '',
             )
             .subscribe((result) => {
               console.log('ok', result);

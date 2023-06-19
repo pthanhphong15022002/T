@@ -1172,36 +1172,7 @@ export class CodxEsService {
       [content]
     );
   }
-
-  release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'ReleaseAsync',
-      [
-        oSignFile?.recID,
-        oSignFile.approveControl == '1'
-          ? oSignFile?.recID
-          : oSignFile?.processID,
-        entityName,
-        funcID,
-        '<div>' + oSignFile.title + '</div>',
-        "",
-        oSignFile.refType
-      ]
-    );
-  }
-
-  undo(transRecID: string) {
-    return this.api.execSv<any>(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'UndoAsync',
-      [transRecID]
-    );
-  }
+  
 
   getOneApprovalTrans(recID: string) {
     return this.api.execSv<any>(
@@ -1457,16 +1428,7 @@ export class CodxEsService {
     );
   }
 
-  // approveAsync(transID, status, reasonID, comment) {
-  //   let data = [transID, status, reasonID, comment];
-  //   return this.api.execSv(
-  //     'es',
-  //     'ERM.Business.ES',
-  //     'ApprovalTransBusiness',
-  //     'ApproveAsync',
-  //     data
-  //   );
-  // }
+  
   //#endregion
 
   //#region CA

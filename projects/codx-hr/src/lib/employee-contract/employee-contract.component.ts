@@ -69,6 +69,7 @@ export class EmployeeContractComponent extends UIComponent {
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
@@ -363,17 +364,16 @@ export class EmployeeContractComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
-                ' - ' +
-                this.itemDetail.contractNo +
-                '</div>'
+              '',
+              this.view.function.description +' - ' +this.itemDetail.contractNo,
+              '',
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {

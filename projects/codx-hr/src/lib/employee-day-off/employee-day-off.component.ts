@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEdayoffsComponent } from '../employee-profile/popup-edayoffs/popup-edayoffs.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-day-off',
@@ -43,6 +44,7 @@ export class EmployeeDayOffComponent extends UIComponent {
     injector: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
+    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
   ) {
@@ -346,17 +348,16 @@ export class EmployeeDayOffComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+              '' ,
+              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {

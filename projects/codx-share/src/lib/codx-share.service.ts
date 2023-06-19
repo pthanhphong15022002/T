@@ -38,7 +38,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
-
+import { ApproveProcess } from './models/ApproveProcess.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -240,7 +240,7 @@ export class CodxShareService {
           if (dialog) {
             dialog.closed.subscribe((res) => {
               let oComment = res?.event;
-              this.approval(
+              this.codxApprove(
                 data?.unbounds?.approvalRecID,
                 status,
                 oComment.comment,
@@ -255,7 +255,7 @@ export class CodxShareService {
               });
             });
           } else {
-            this.approval(
+            this.codxApprove(
               data?.unbounds?.approvalRecID,
               status,
               '',
@@ -273,7 +273,7 @@ export class CodxShareService {
         break;
       }
       case 'SYS207': {
-        this.undoApproval(data?.unbounds?.approvalRecID).subscribe((res) => {
+        this.codxUndo(data?.unbounds?.approvalRecID).subscribe((res:any) => {
           if (res) {
             data.unbounds.statusApproval = res?.status;
             dataService.update(data).subscribe();
@@ -1017,24 +1017,102 @@ export class CodxShareService {
     return listApproveMF;
   }
 
-  approval(approvalRecID: any, status: any, comment: any, reasonID: any) {
-    return this.api.execSv<any>(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'ApproveAsync',
-      [approvalRecID, status, comment, reasonID]
+  
+  
+    
+  //#region Codx Quy trình duyệt
+  //-------------------------------------------Gửi duyệt--------------------------------------------//
+  codxRelease(
+    module:string,//Tên service
+    recID: any,//RecID nghiệp vụ gốc
+    processID: string,//Mã quy trình duyệt
+    entityName: string,//EntityName nghiệp vụ gốc
+    funcID: string,//FunctionID nghiệp vụ gốc   
+    userID: string,//Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
+    title: string,//Tiêu đề (truyền kiểu chuỗi thường)
+    customEntityName:string,//EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+  ): Observable<any> {
+
+    let approveProcess = new ApproveProcess();
+    approveProcess.recID=recID;
+    approveProcess.processID=processID;
+    approveProcess.userID=userID;
+    approveProcess.entityName=entityName;
+    approveProcess.funcID=funcID;
+    approveProcess.htmlView= '<div>' +title + '</div>';
+    approveProcess.module = module;
+    approveProcess.customEntityName = customEntityName;
+
+    return this.api.execSv(
+      module,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [approveProcess]
     );
   }
-  undoApproval(approvalRecID: any) {
-    return this.api.execSv<any>(
+
+  //-------------------------------------------Hủy yêu cầu duyệt--------------------------------------------//
+  codxCancel(
+    module:string,//Tên service
+    recID: string,//RecID nghiệp vụ gốc
+    entityName: string,//EntityName nghiệp vụ gốc
+    comment: string //ghi chú (ko bắt buộc)
+    ) {
+    let approveProcess = new ApproveProcess();
+    approveProcess.recID=recID;
+    approveProcess.entityName=entityName;
+    approveProcess.module = module;
+    approveProcess.comment = comment;
+
+    return this.api.execSv(
+      module,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'CancelAsync',
+      [approveProcess]
+    );
+  }
+
+  //-------------------------------------------Khôi phục--------------------------------------------//
+  codxUndo(
+    tranRecID: string //RecID của ES_ApprovalTrans hiện hành
+    ) {
+    let approveProcess = new ApproveProcess();
+    approveProcess.tranRecID=tranRecID;
+    return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UndoAsync',
-      [approvalRecID]
+      [approveProcess]
     );
+    
   }
+  //-------------------------------------------Duyệt/Làm lại/Từ chối--------------------------------------------//
+  codxApprove(
+    tranRecID: any,//RecID của ES_ApprovalTrans hiện hành
+    status: string,//Trạng thái 
+    reasonID: string,//Mã lí do (ko bắt buộc)
+    comment: string,//Bình luận (ko bắt buộc)
+  ): Observable<any> {
+    let approveProcess = new ApproveProcess();
+    approveProcess.tranRecID=tranRecID;
+    approveProcess.status=status;
+    approveProcess.reasonID=reasonID;
+    approveProcess.comment=comment;
+
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ApproveAsync',
+      [approveProcess]
+    );
+    
+  }
+  //#endregion Codx Quy trình duyệt
+
 }
 //#region Model
 
