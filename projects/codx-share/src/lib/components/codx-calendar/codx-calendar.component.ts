@@ -96,20 +96,6 @@ export class CodxCalendarComponent
     this.myTaskFM = new FormModel();
     this.assignTaskFM = new FormModel();
     this.fields = { text: 'defaultName', value: 'functionID' };
-    let myInterval = setInterval(() => {
-      if (this.speeddial) {
-        clearInterval(myInterval);
-        this.cacheService.valueList('WP006').subscribe((res) => {
-          for (const data of res.datas) {
-            if (this.calendarParams.hasOwnProperty(data.value)) {
-              this.items.push({ id: data.value, text: data.text });
-            }
-          }
-          this.speeddial.items = this.items;
-          this.speeddial.refresh();
-        });
-      }
-    });
   }
 
   onInit(): void {
@@ -166,6 +152,21 @@ export class CodxCalendarComponent
           this.navigate();
         }
       });
+
+    let myInterval = setInterval(() => {
+      if (this.speeddial) {
+        clearInterval(myInterval);
+        this.cacheService.valueList('WP006').subscribe((res) => {
+          for (const data of res.datas) {
+            if (this.calendarParams.hasOwnProperty(data.value)) {
+              this.items.push({ id: data.value, text: data.text });
+            }
+          }
+          this.speeddial.items = this.items;
+          this.speeddial.refresh();
+        });
+      }
+    });
   }
 
   ngAfterViewInit() {
