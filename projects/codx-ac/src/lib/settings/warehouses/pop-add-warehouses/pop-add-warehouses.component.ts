@@ -36,7 +36,6 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('provinceID') provinceID: CodxInputComponent;
   @ViewChild('districtID') districtID: CodxInputComponent;
-  @ViewChild('postalCode') postalCode: CodxInputComponent;
   headerText: string;
   title: string;
   formModel: FormModel;
@@ -135,12 +134,6 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
             this.districtID.crrValue = null;
             this.warehouses.districtID = null;
           }
-          if(this.postalCode)
-          {
-            (this.postalCode.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.postalCode.crrValue = null;
-            this.warehouses.postalCode = null;
-          }
           this.form.formGroup.patchValue(this.warehouses);
           break;
         case 'provinceID':
@@ -149,21 +142,6 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
             (this.districtID.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
             this.districtID.crrValue = null;
             this.warehouses.districtID = null;
-          }
-          if(this.postalCode)
-          {
-            (this.postalCode.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.postalCode.crrValue = null;
-            this.warehouses.postalCode = null;
-          }
-          this.form.formGroup.patchValue(this.warehouses);
-          break;
-        case 'districtID':
-          if(this.postalCode)
-          {
-            (this.postalCode.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.postalCode.crrValue = null;
-            this.warehouses.postalCode = null;
           }
           this.form.formGroup.patchValue(this.warehouses);
           break;
