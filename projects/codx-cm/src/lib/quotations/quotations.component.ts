@@ -48,7 +48,10 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateTotalAmt') templateTotalAmt: TemplateRef<any>;
   @ViewChild('templateTotalTaxAmt') templateTotalTaxAmt: TemplateRef<any>;
   @ViewChild('templateCreatedOn') templateCreatedOn: TemplateRef<any>;
-  @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail!: TemplateRef<any>;
+  @ViewChild('templateDetailGird') templateDetailGird: TemplateRef<any>;
+
+  
 
   views: Array<ViewModel> = [];
   service = 'CM';

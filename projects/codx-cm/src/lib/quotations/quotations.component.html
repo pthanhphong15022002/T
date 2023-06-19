@@ -291,17 +291,16 @@
   </div>
 </ng-template>
 
-<ng-template #popDetail let-popupView>
+<ng-template #popDetail>
   <codx-form [body]="templateDetailGird" [dialog]="popupView"> </codx-form>
-  <ng-template #templateDetailGird>
-    <lib-quotations-view-detail
+</ng-template>
+<ng-template #templateDetailGird>
+  <lib-quotations-view-detail
     [itemSelected]="itemSelected"
-    [formModel]="view.formModel"
+    [formModel]="formModel"
     (clickMoreFunction)="clickMoreFunction($event)"
     (eventChangeMF)="eventChangeMF($event)"
   >
   </lib-quotations-view-detail>
-  </ng-template>
- 
 </ng-template>
 <!--##### End  #####-->
