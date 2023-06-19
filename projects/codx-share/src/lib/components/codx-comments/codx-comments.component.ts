@@ -130,16 +130,6 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   insertComment(data:any){
     this.data.refID = this.refID;
     this.data.parentID = this.parent.recID;
-    if(!this.data.parentID){
-      this.notifySvr.notifyCode('SYS009',0,this.grvWP['ParentID']['headerText']);
-      this.loading = false;
-      return;
-    }
-    if(!this.data.refID){
-      this.notifySvr.notifyCode('SYS009',0,this.grvWP['RefID']['headerText']);
-      this.loading = false;
-      return;
-    }
     //có đính kèm file
     if(this.file){
       let lstFile = [];
@@ -157,7 +147,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
             'ERM.Business.WP',
             'CommentsBusiness',
             'InsertCommentAsync',
-            [data])
+            [this.parent,data])
           .subscribe((res:any) => {
             if(res)
             {
@@ -188,7 +178,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
         'ERM.Business.WP',
         'CommentsBusiness',
         'InsertCommentAsync',
-        [data])
+        [this.parent,data])
       .subscribe((res:any) => {
         if(res){
           this.data.recID = Util.uid();

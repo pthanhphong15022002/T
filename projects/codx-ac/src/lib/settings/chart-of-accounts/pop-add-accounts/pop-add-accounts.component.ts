@@ -134,7 +134,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     }
   }
   checkSubLGControl(){
-    if(this.chartOfAccounts.subLGControl && this.chartOfAccounts.subLGType == null)
+    if(this.chartOfAccounts.subLGControl && !this.chartOfAccounts.subLGType)
     {
       this.notification.notifyCode(
         'SYS009',
