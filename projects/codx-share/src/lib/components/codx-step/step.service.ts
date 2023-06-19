@@ -297,6 +297,10 @@ export class StepService {
         '',
         opt
       );
+      popupBookingCar.closed.subscribe((e) => {
+        console.log('-------------',e);
+        
+      })
       });    
   }
 }

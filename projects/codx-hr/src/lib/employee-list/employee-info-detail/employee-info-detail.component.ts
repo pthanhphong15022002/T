@@ -1718,6 +1718,27 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     return true;
   }
 
+  // checkIsNewestDate(effectedDate, expiredDate){
+  //   if(effectedDate){
+  //     let eff = new Date(effectedDate).toISOString();
+  //     let date = new Date().toISOString();
+  //     if(expiredDate){
+  //       let expire = new Date(expiredDate).toISOString();
+  //       if(date >= eff && date <= expire){
+  //         return true;
+  //       }
+  //       return false;
+  //     }
+  //     else{
+  //       if(date >= eff){
+  //         return true;
+  //       }
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+
   add(functionID) {
     switch (functionID) {
       case this.eFamiliesFuncID:
