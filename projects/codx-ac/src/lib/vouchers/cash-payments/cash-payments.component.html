@@ -28,6 +28,7 @@
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
+  <ng-container *ngIf="itemSelected">
   <div class="d-flex align-items-center">
     <!-- <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
       <i class="text-white icon-16" [class]="data?.subType | vll : 'AC100' : 'text' | async"></i>
@@ -38,11 +39,12 @@
   </div>
   <div>
     <span *ngIf="journal.multiCurrency == '0'"
-      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalDR.toLocaleString('it-IT')}}</span>
+      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalDR.toLocaleString('it-IT')}}</span>
     <span *ngIf="journal.multiCurrency == '1'"
-      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalDR.toLocaleString('it-IT') +'
+      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalDR.toLocaleString('it-IT') +'
       '+data?.currencyID }}</span>
   </div>
+</ng-container>
 </ng-template>
 <ng-template #descTmp let-data>
   <span placement="bottom" [ngbTooltip]="memo" class="line-clamp fw-bold line-clamp-2 my-1">{{ data?.memo }}</span>
@@ -90,7 +92,7 @@
       <div class="d-flex align-self-center">
         <span class="badge badge-pill badge-primary me-3">
           <span *ngIf="journal.multiCurrency == '0'"
-            class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
+            class="fw-bold">{{itemSelected?.totalDR?.toLocaleString('it-IT')}}</span>
           <span *ngIf="journal.multiCurrency == '1'" class="fw-bold">{{itemSelected?.totalDR?.toLocaleString('it-IT')+'
             '+itemSelected?.currencyID
             }}</span>
