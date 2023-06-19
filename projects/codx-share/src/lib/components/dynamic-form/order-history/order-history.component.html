@@ -1,0 +1,136 @@
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+>
+</codx-form>
+<ng-template #header>
+  <div class="close d-flex w-100 justify-content-end">
+    <button
+      type="button"
+      class="btn btn-light-primary me-4"
+      (click)="closePopup()"
+    >
+      <codx-label formName="" default="X"></codx-label>
+    </button>
+  </div>
+  <div class="d-flex w-100 justify-content-center">
+    <codx-label
+      [formName]="dialog.formModel"
+      default="Danh sách đơn hàng"
+    ></codx-label>
+  </div>
+</ng-template>
+<ng-template #footer> </ng-template>
+
+<ng-template #body>
+  <div class="w-100 h-100 bg-body rounded-2 p-9 scroll-y">
+    <div class="container w-100 h-100 p-0">
+      <codx-listview
+        [service]="'Tenant'"
+        [assemblyName]="'Tenant'"
+        [entityName]="'TN_Orders'"
+        [className]="'OrdersBusiness'"
+        [method]="'GetListPurchaseGridModelAsync'"
+        [predicate]="'CreatedBy=@0 and TenantID=@1'"
+        [dataValue]="data.userID + ';' + data.tenant"
+        [funcId]=""
+        [itemTemplate]="orderTmp"
+      >
+      </codx-listview>
+    </div>
+    <!-- [predicate]="'ResourceType=@0'" -->
+  </div>
+
+  <ng-template #orderTmp let-item>
+    <div class="d-flex w-125 row h-100 p-2">
+      <div class="info col-8 d-flex justify-content-between">
+        <codx-temp-full
+          [typeMF]="'hover'"
+          [titleTmp]="oTitleTmp"
+          typeMF="hover"
+          [dataItem]="item"
+          [hideMF]="false"
+        >
+        </codx-temp-full>
+        <codx-temp-full
+          [typeMF]="'hover'"
+          [titleTmp]="oAmtStt"
+          typeMF="hover"
+          [dataItem]="item"
+        >
+        </codx-temp-full>
+      </div>
+      <div class="moreInfo col-4">
+        <button class="btn btn-outline-primary" (click)="popupOrderInfo(item)">
+          <codx-label name="lblOderInfo" default="Thông tin chi tiết">
+          </codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #oTitleTmp let-order>
+    <div class="row">
+      <div class="col">
+        <div class="text-gray-600">
+          <codx-label
+            fiedName="lblOrderNo"
+            [formModel]="dialog.formModel"
+            [default]="'Đơn hàng: '"
+          >
+          </codx-label>
+          {{ order.orderNo }}
+          <span class="">
+            <codx-vll
+              [name]="grvTNOrders['OrderType']?.referedValue"
+              [value]="order?.orderType"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-square badge-md fs-7 p-2"
+            >
+            </codx-vll>
+          </span>
+        </div>
+        <div class="text-gray-600">
+          <codx-label
+            fiedName="lblPaymentRefNo"
+            [formModel]="dialog.formModel"
+            [default]="'Số giao dịch: ' + order.paymentRefNo ?? ''"
+          >
+          </codx-label>
+        </div>
+        <div class="text-gray-600">
+          <codx-label
+            fiedName="lblpaymentCreatedOn"
+            [formModel]="dialog.formModel"
+            [default]="'Ngày giao dịch: ' + order.paymentCreatedOn ?? ''"
+          >
+          </codx-label>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #oAmtStt let-order>
+    <div>
+      <codx-label
+        [fiedName]="grvTNOrders['CurrentcyID']?.referedValue"
+        [formModel]="dialog.formModel"
+        [default]="order.totalAmt + order.currencyID"
+      >
+      </codx-label>
+    </div>
+    <div class="">
+      <codx-vll
+        [name]="grvTNOrders['Status']?.referedValue"
+        [value]="order?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
+      </codx-vll>
+    </div>
+  </ng-template>
+</ng-template>

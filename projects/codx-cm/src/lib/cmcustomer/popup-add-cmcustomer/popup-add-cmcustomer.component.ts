@@ -144,29 +144,49 @@ export class PopupAddCmCustomerComponent implements OnInit {
     );
     if (this.action == 'add' || this.action == 'copy') {
       this.data.address = null;
+      this.data.countryID = null;
+      this.data.provinceID = null;
+      this.data.districtID = null;
+      this.data.regionID = null;
+      this.data.wardID = null;
     }
+
+    // this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+    //   if (res && res.length) {
+    //     let m = res.find((x) => x.functionID == 'SYS01');
+    //     let edit = res.find((x) => x.functionID == 'SYS03');
+    //     if (m) this.moreFuncAdd = m.customName;
+    //     if (edit) this.moreFuncEdit = edit.customName;
+    //   }
+    // });
+  }
+
+  async ngAfterViewInit() {
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
-    this.cache
-      .gridViewSetup(
+    this.gridViewSetup = await firstValueFrom(
+      this.cache.gridViewSetup(
         this.dialog.formModel.formName,
         this.dialog.formModel.gridViewName
       )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
+    );
+    if (this.action == 'edit') {
+      this.listAddress = await firstValueFrom(
+        this.cmSv.getListAddress(
+          this.dialog.formModel.entityName,
+          this.data.recID
+        )
+      );
+      if (this.data.address != null && this.data.address.trim() != '') {
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex((x) => x.isDefault == true);
+          if (index != -1) {
+            this.tmpAddress = this.listAddress[index];
+          }
         }
-      });
-
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        let edit = res.find((x) => x.functionID == 'SYS03');
-        if (m) this.moreFuncAdd = m.customName;
-        if (edit) this.moreFuncEdit = edit.customName;
       }
-    });
+    }
   }
 
   setTitle(e: any) {
@@ -257,25 +277,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  async ngAfterViewInit() {
-    if (this.action == 'edit') {
-      this.listAddress = await firstValueFrom(
-        this.cmSv.getListAddress(
-          this.dialog.formModel.entityName,
-          this.data.recID
-        )
-      );
-      if (this.data.address != null && this.data.address.trim() != '') {
-        if (this.listAddress != null && this.listAddress.length > 0) {
-          var index = this.listAddress.findIndex((x) => x.isDefault == true);
-          if (index != -1) {
-            this.tmpAddress = this.listAddress[index];
-          }
-        }
-      }
-    }
-  }
-
   getListAddress(entityName, recID) {
     this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
       if (res && res.length > 0) {
@@ -303,6 +304,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.industries = e.data;
     }
   }
+
+  valueChangeAdress(e) {
+    if (e && e.data) {
+      this.data.address = e?.data?.trim();
+    } else {
+      this.data.address = null;
+    }
+    this.setAddress(this.data.address);
+    if (!this.isAdress) this.isAdress = true;
+  }
+
+
   valueChangeContact(e) {
     this.data[e.field] = e?.data;
     if (this.data.objectType && e.field == 'objectType') {
@@ -330,6 +343,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
+  //#region save
   beforeSave(op) {
     var data = [];
     if (this.data?.objectType == null || this.data?.objectType.trim() == '') {
@@ -498,7 +512,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.onUpdate();
     }
   }
-
+  //#endregion
   setAddress(name) {
     if (name != null && name != '') {
       if (this.action != 'edit') {
@@ -571,15 +585,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  valueChangeAdress(e) {
-    if (e && e.data) {
-      this.data.address = e?.data?.trim();
-    } else {
-      this.data.address = null;
-    }
-    this.setAddress(this.data.address);
-    if (!this.isAdress) this.isAdress = true;
-  }
+
 
   checkEmailOrPhone(field, type) {
     if (type == 'E') {
@@ -622,11 +628,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
   lstAddressEmit(e) {
     if (e != null && e.length > 0) {
       this.listAddress = e;
-      var index = this.listAddress.findIndex(x => x.isDefault == true);
-      if(index != -1){
+      var index = this.listAddress.findIndex((x) => x.isDefault == true);
+      if (index != -1) {
         this.tmpAddress = this.listAddress[index];
         this.data.address = this.listAddress[index].adressName;
-      }else{
+      } else {
         this.data.address = null;
       }
     }
@@ -635,8 +641,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
   lstAddressDeleteEmit(e) {
     if (e != null && e.length > 0) {
       this.listAddressDelete = e;
-      var index = this.listAddressDelete.findIndex(x => x.recID == this.tmpAddress.recID && x.isDefault == true);
-      if(index != -1){
+      var index = this.listAddressDelete.findIndex(
+        (x) => x.recID == this.tmpAddress.recID && x.isDefault == true
+      );
+      if (index != -1) {
         var tmp = new BS_AddressBook();
         this.data.address = null;
         this.tmpAddress = tmp;

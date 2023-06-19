@@ -33,8 +33,11 @@ export class PopupOrderDetailComponent extends UIComponent {
   ) {
     super(inJector);
     this.grvTNOrders = dt?.data?.grvView;
-    this.orderFormodel = dt?.data?.formModel;
+    this.cache.gridViewSetup('TNOrders', 'grvTNOrders').subscribe((res) => {
+      this.orderFormodel = res;
+    });
     this.orderRecID = dt?.data?.orderRecID;
+    this.canExtend = dt?.data?.canExtend ?? true;
     this.dialog = dialog;
     console.log('data', dt);
   }
@@ -47,7 +50,7 @@ export class PopupOrderDetailComponent extends UIComponent {
   lstModule;
   dialog;
   clmnGrid;
-
+  canExtend;
   // <!-- Column Name -->
 
   @ViewChild('moduleHT', { static: true }) moduleHT: TemplateRef<any>;
