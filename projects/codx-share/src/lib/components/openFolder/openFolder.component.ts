@@ -14,7 +14,16 @@ import { FileUpload, Permission } from '@shared/models/file.model';
 import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  ViewsComponent,
+} from 'codx-core';
 import * as moment from 'moment';
 import { AttachmentService } from '../attachment/attachment.service';
 
@@ -33,40 +42,41 @@ export class OpenFolderComponent implements OnInit {
   selectId: string;
   closeResult = '';
   onRole = false;
-  folderId = "";
+  folderId = '';
   path: any;
   disableSave = false;
   breadcumb: string[];
   breadcumbLink = [];
   codetitle = 'DM059';
   codetitle2 = 'DM058';
-  titleDialog = "Chọn thư mục";
+  titleDialog = 'Chọn thư mục';
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
-  titleSelect = "Select";
+  titleSelect = 'Select';
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
-  isDM= false;
+  isDM = false;
   @Input() objectType: string;
   @Input() objectId: string;
   @Input() folderType: string;
   @Input() functionID: string;
   @Input() type: string;
-  @Input() popup = "1";
-  @Input() hideBtnSave = "0";
-  @Input() hideUploadBtn = "0";
-  @Input() hideFolder = "0";
-  @Input() hideDes = "0";
-  @Input() formModel :any;
+  @Input() popup = '1';
+  @Input() hideBtnSave = '0';
+  @Input() hideUploadBtn = '0';
+  @Input() hideFolder = '0';
+  @Input() hideDes = '0';
+  @Input() formModel: any;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
   @ViewChild('file') file: ElementRef;
   @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
-  // @Input('openFolder') openFolder: ViewsComponent;  
-  constructor(private changeDetectorRef: ChangeDetectorRef,
+  // @Input('openFolder') openFolder: ViewsComponent;
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     public modalService: NgbModal,
     private auth: AuthStore,
     private folderService: FolderService,
@@ -76,38 +86,33 @@ export class OpenFolderComponent implements OnInit {
     private callfc: CallFuncService,
     private notificationsService: NotificationsService,
     @Optional() data?: DialogData,
-    @Optional() dialog?: DialogRef) {    
+    @Optional() dialog?: DialogRef
+  ) {
     this.user = this.auth.get();
     this.dialog = dialog;
-    if (data != undefined)
-      this.functionID = data?.data[0];    
+    if (data != undefined) this.functionID = data?.data[0];
 
     this.fileUploadList = [];
-    if (this.folderType == null || this.folderType == "")
-      this.folderType = "3";
+    if (this.folderType == null || this.folderType == '') this.folderType = '3';
 
-    if (this.type == null || this.type == "")
-      this.type = "center";
+    if (this.type == null || this.type == '') this.type = 'center';
 
-    if (this.popup == null || this.popup == "")
-      this.popup = "1";
+    if (this.popup == null || this.popup == '') this.popup = '1';
 
-    if (this.hideBtnSave == null || this.hideBtnSave == "")
-      this.hideBtnSave = "0";
+    if (this.hideBtnSave == null || this.hideBtnSave == '')
+      this.hideBtnSave = '0';
   }
-
 
   openPopup() {
     this.fileUploadList = [];
-    if (this.type == "center") {
+    if (this.type == 'center') {
       /* this.callfc.openForm(this.openFile, "Upload tài liệu", 700, null, null, "").subscribe((dialog: Dialog)=>{
         let that = this;
         dialog.close = function(e) {
           return that.closeOpenForm(e);
         }
       });   */
-    }
-    else {
+    } else {
       //this.viewBase.currentView.openSidebarRight();
     }
   }
@@ -116,39 +121,38 @@ export class OpenFolderComponent implements OnInit {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
     this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    
-    if (this.type == "popup") {      
-      this.dialog.close();      
+
+    if (this.type == 'popup') {
+      this.dialog.close();
     }
 
     this.fileUploadList = [];
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.openFormFolder();
-  //  this.getFolderPath();
+    //  this.getFolderPath();
 
-    this.atSV.isSetDisableSave.subscribe(res => {
+    this.atSV.isSetDisableSave.subscribe((res) => {
       this.disableSave = res;
-   //   this.changeDetectorRef.detectChanges();
+      //   this.changeDetectorRef.detectChanges();
     });
 
-    this.cache.message(this.codetitle).subscribe(item => {
+    this.cache.message(this.codetitle).subscribe((item) => {
       if (item != null) {
         this.title = item;
       }
     });
 
-    this.cache.message(this.codetitle2).subscribe(item => {
+    this.cache.message(this.codetitle2).subscribe((item) => {
       if (item != null) {
         this.title2 = item;
       }
     });
 
-    this.atSV.isOpenForm.subscribe(item => {
+    this.atSV.isOpenForm.subscribe((item) => {
       // alert(1);
-      if (item == true)
-        this.openPopup();
+      if (item == true) this.openPopup();
     });
   }
 
@@ -161,8 +165,8 @@ export class OpenFolderComponent implements OnInit {
     this.selectId = id;
     var that = this;
     var list = tree.getBreadCumb(id);
-    var pathFolder = "";
-    var pathID = "";
+    var pathFolder = '';
+    var pathID = '';
 
     var breadcumb = [];
     var breadcumbLink = [];
@@ -174,13 +178,12 @@ export class OpenFolderComponent implements OnInit {
     // else that.dmSV.setDisableSave.next(false);
 
     for (var i = list.length - 1; i >= 0; i--) {
-      if (pathFolder == "") {
+      if (pathFolder == '') {
         pathFolder = list[i].id;
         pathID = list[i].text;
-      }
-      else {
-        pathFolder = pathFolder + ";" + list[i].id;
-        pathID = pathID + ";" + list[i].text;
+      } else {
+        pathFolder = pathFolder + ';' + list[i].id;
+        pathID = pathID + ';' + list[i].text;
       }
       breadcumb.push(list[i].text);
       breadcumbLink.push(list[i].id);
@@ -191,17 +194,21 @@ export class OpenFolderComponent implements OnInit {
 
     this.changeDetectorRef.detectChanges();
     // save to folder cache
-    this.folderService.updateFolderCache(this.listNodeAdd[0].recID, this.functionID, pathFolder, pathID).subscribe(item => {
-
-    });
+    this.folderService
+      .updateFolderCache(
+        this.listNodeAdd[0].recID,
+        this.functionID,
+        pathFolder,
+        pathID
+      )
+      .subscribe((item) => {});
 
     if ($node.data.items && $node.data.items.length <= 0) {
-      this.folderService.getFolders(id).subscribe(async res => {
+      this.folderService.getFolders(id).subscribe(async (res) => {
         tree.addChildNodes($node.data, res[0]);
         that.changeDetectorRef.detectChanges();
       });
-    }
-    else {
+    } else {
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -211,67 +218,77 @@ export class OpenFolderComponent implements OnInit {
   }
 
   getFolderPath() {
-    if (this.folderId == "") {
-      this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-        if (res != null) {
-          this.listRemoteFolder = res;
-          this.atSV.currentNode = '';
-          this.atSV.folderId.next(res[0].folderId);          
-          // update breadcum
-          var breadcumb = [];
-          var breadcumbLink = [];
-          var id = res[0].recID;
-          if (res[0].history != null) {
-            var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-            if (listFolder[0] != null && listFolder[0].folderPath != "") {
-              var list = listFolder[0].folderPath.split(";");
-              var listText = listFolder[0].pathDisk.split(";");
-              id = list[list.length - 1];
+    if (this.folderId == '') {
+      this.folderService
+        .getFoldersByFunctionID(this.functionID)
+        .subscribe(async (res) => {
+          if (res != null) {
+            this.listRemoteFolder = res;
+            this.atSV.currentNode = '';
+            this.atSV.folderId.next(res[0].folderId);
+            // update breadcum
+            var breadcumb = [];
+            var breadcumbLink = [];
+            var id = res[0].recID;
+            if (res[0].history != null) {
+              var listFolder = res[0].history.filter(
+                (x) =>
+                  x.objectType == this.functionID &&
+                  x.objectID == this.user.userID
+              );
+              if (listFolder[0] != null && listFolder[0].folderPath != '') {
+                var list = listFolder[0].folderPath.split(';');
+                var listText = listFolder[0].pathDisk.split(';');
+                id = list[list.length - 1];
 
+                this.folderId = id;
+                this.selectId = id;
+
+                for (var i = 0; i < list.length; i++) {
+                  breadcumb.push(listText[i]);
+                  breadcumbLink.push(list[i]);
+                }
+              }
+            } else {
               this.folderId = id;
               this.selectId = id;
-
-              for (var i = 0; i < list.length; i++) {
-                breadcumb.push(listText[i]);
-                breadcumbLink.push(list[i]);
-              }
+              breadcumb.push(res[0].folderName);
+              breadcumbLink.push(id);
             }
-          }
-          else {
-            this.folderId = id;
-            this.selectId = id;
-            breadcumb.push(res[0].folderName);
-            breadcumbLink.push(id);
-          }
 
-          this.atSV.breadcumb.next(breadcumb);
-          this.atSV.breadcumbLink = breadcumbLink;
-          this.atSV.folderId.next(id);
+            this.atSV.breadcumb.next(breadcumb);
+            this.atSV.breadcumbLink = breadcumbLink;
+            this.atSV.folderId.next(id);
 
-         // this.changeDetectorRef.detectChanges();
-          this.remotePermission = res[0].permissions;
-        }
-      });
+            // this.changeDetectorRef.detectChanges();
+            this.remotePermission = res[0].permissions;
+          }
+        });
     }
   }
 
-  openFormFolder() {   
-    this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-      if (res != null) {
-        this.listRemoteFolder = res;
-        this.listNodeAdd = res;
-        if (res[0].history != null) {
-          var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-          if (listFolder[0] != null && listFolder[0].folderPath != "") {
-            var list = listFolder[0].folderPath.split(";");
-            this.loadChildNode(res[0], 0, list);
+  openFormFolder() {
+    this.folderService
+      .getFoldersByFunctionID(this.functionID)
+      .subscribe(async (res) => {
+        if (res != null) {
+          this.listRemoteFolder = res;
+          this.listNodeAdd = res;
+          if (res[0].history != null) {
+            var listFolder = res[0].history.filter(
+              (x) =>
+                x.objectType == this.functionID &&
+                x.objectID == this.user.userID
+            );
+            if (listFolder[0] != null && listFolder[0].folderPath != '') {
+              var list = listFolder[0].folderPath.split(';');
+              this.loadChildNode(res[0], 0, list);
+            }
           }
+          //  this.changeDetectorRef.detectChanges();
+          this.remotePermission = res[0].permissions;
         }
-      //  this.changeDetectorRef.detectChanges();
-        this.remotePermission = res[0].permissions;
-      }
-    });
-
+      });
 
     /* this.callfc.openForm(this.openFolder, "Chọn thư mục", 400, null, null, "").subscribe((dialog: Dialog)=>{
       let that = this;
@@ -311,86 +328,92 @@ export class OpenFolderComponent implements OnInit {
     }
     this.atSV.fileListAdded = [];
     if (total > 1) {
-      var done = this.fileService.addMultiFile(this.fileUploadList,"",this.formModel?.entityName ,false).toPromise().then(res => {
-        if (res != null) {
-          var newlist = res.filter(x => x.status == 6);
-          var newlistNot = res.filter(x => x.status == -1);
-          var addList = res.filter(x => x.status == 0 || x.status == 9);
+      var done = this.fileService
+        .addMultiFile(
+          this.fileUploadList,
+          '',
+          this.formModel?.entityName,
+          false
+        )
+        .toPromise()
+        .then((res) => {
+          if (res != null) {
+            var newlist = res.filter((x) => x.status == 6);
+            var newlistNot = res.filter((x) => x.status == -1);
+            var addList = res.filter((x) => x.status == 0 || x.status == 9);
 
-          if (addList.length == this.fileUploadList.length) {
-            this.atSV.fileList.next(this.fileUploadList);
-            this.atSV.fileListAdded = addList;
-            this.notificationsService.notify(this.title);
-            this.closePopup();
-            this.fileUploadList = [];
-          }
-          else {
-            var item = newlist[0];
-            var newUploadList = [];
-            //   this.fileUploadList = [];
-            //   this.fileUploadList = addList;
-            // copy list
-            for (var i = 0; i < this.fileUploadList.length; i++) {
-              var file = this.fileUploadList[i];
-              var index = newlist.findIndex(x => x.data.fileName == file.fileName);
-              if (index > -1) {
-                newUploadList.push(Object.assign({}, file));
+            if (addList.length == this.fileUploadList.length) {
+              this.atSV.fileList.next(this.fileUploadList);
+              this.atSV.fileListAdded = addList;
+              this.notificationsService.notify(this.title);
+              this.closePopup();
+              this.fileUploadList = [];
+            } else {
+              var item = newlist[0];
+              var newUploadList = [];
+              //   this.fileUploadList = [];
+              //   this.fileUploadList = addList;
+              // copy list
+              for (var i = 0; i < this.fileUploadList.length; i++) {
+                var file = this.fileUploadList[i];
+                var index = newlist.findIndex(
+                  (x) => x.data.fileName == file.fileName
+                );
+                if (index > -1) {
+                  newUploadList.push(Object.assign({}, file));
+                }
+              }
+              if (newlistNot.length > 0) {
+                this.notificationsService.notify(newlistNot[0].message);
+                //this.closeFileDialog('dms_file');
+                this.closePopup();
+              } else {
+                this.fileUploadList = newUploadList;
+                // this.confirmationDialogService.confirmAll(this.titlemessage, item.message, this.fileUploadList.length > 1 ? true : false).then((confirmed) => {
+                //     if (confirmed == "save_all") {
+                //       for (var i = 0; i < this.fileUploadList.length; i++) {
+                //         this.fileUploadList[i].reWrite = true;
+                //       }
+                //       this.fileService.addMultiFile(this.fileUploadList).toPromise().then(result => {
+                //         var mess = '';
+                //         for (var i = 0; i < result.length; i++) {
+                //           var f = result[i];
+                //           mess = mess + (mess != "" ? "<br/>" : "") + f.message;
+
+                //         }
+                //         this.notificationsService.notify(mess);
+                //         this.fileUploadList = [];
+                //         this.closeFileDialog('dms_file');
+                //       });
+                //     }
+                //     else if (confirmed == "cancel_all") {
+                //       // cancel all
+                //       this.fileUploadList = [];
+                //       this.closeFileDialog('dms_file');
+                //     }
+                //     else if (confirmed) {
+                //       // save 1
+                //       var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                //       this.fileUploadList[index].reWrite = true;
+                //       this.onMultiFileSave();
+                //     }
+                //     else {
+                //       // cancel one
+                //       var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                //       this.fileUploadList.splice(index, 1);//remove element from array
+                //       if (this.fileUploadList.length > 0)
+                //         this.onMultiFileSave();
+                //     }
+                //   });
+                // }
               }
             }
-            if (newlistNot.length > 0) {
-              this.notificationsService.notify(newlistNot[0].message);
-              //this.closeFileDialog('dms_file');
-              this.closePopup();
-            }
-            else {
-              this.fileUploadList = newUploadList;
-              // this.confirmationDialogService.confirmAll(this.titlemessage, item.message, this.fileUploadList.length > 1 ? true : false).then((confirmed) => {
-              //     if (confirmed == "save_all") {
-              //       for (var i = 0; i < this.fileUploadList.length; i++) {
-              //         this.fileUploadList[i].reWrite = true;
-              //       }
-              //       this.fileService.addMultiFile(this.fileUploadList).toPromise().then(result => {
-              //         var mess = '';
-              //         for (var i = 0; i < result.length; i++) {
-              //           var f = result[i];
-              //           mess = mess + (mess != "" ? "<br/>" : "") + f.message;
-
-              //         }
-              //         this.notificationsService.notify(mess);
-              //         this.fileUploadList = [];
-              //         this.closeFileDialog('dms_file');
-              //       });
-              //     }
-              //     else if (confirmed == "cancel_all") {
-              //       // cancel all
-              //       this.fileUploadList = [];
-              //       this.closeFileDialog('dms_file');
-              //     }
-              //     else if (confirmed) {
-              //       // save 1
-              //       var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-              //       this.fileUploadList[index].reWrite = true;
-              //       this.onMultiFileSave();
-              //     }
-              //     else {
-              //       // cancel one
-              //       var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-              //       this.fileUploadList.splice(index, 1);//remove element from array
-              //       if (this.fileUploadList.length > 0)
-              //         this.onMultiFileSave();
-              //     }
-              //   });
-              // }
-            }
           }
-        }
-      });
-    }
-    else if (total == 1) {
+        });
+    } else if (total == 1) {
       this.addFile(this.fileUploadList[0]);
       this.atSV.fileList.next(this.fileUploadList);
-    }
-    else {
+    } else {
       // this.cacheService.message('DM001')
       // this.notificationsService.notifyCode("");
       this.notificationsService.notify(this.title2);
@@ -399,34 +422,34 @@ export class OpenFolderComponent implements OnInit {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem,"" , this.formModel?.entityName ,this.isDM , null ).toPromise();
+    var done = this.fileService
+      .addFile(fileItem, '', this.formModel?.entityName, this.isDM, null)
+      .toPromise();
     if (done) {
-      done.then(item => {
-        if (item.status == 0) {
-          this.notificationsService.notify(item.message);
-          this.fileUploadList[0].recID = item.data.recID;
-          // list.push(Object.assign({}, res));
-          this.atSV.fileListAdded.push(Object.assign({}, item));
-          this.closePopup();
-        }
-        else if (item.status == 6) {
-          // ghi đè
-          fileItem.recID = item.data.recID;
-          this.rewriteFile(this.titlemessage, item.message, fileItem);
-        }
-        else
-          this.notificationsService.notify(item.message);
-
-      }).catch((error) => {
-        console.log("Promise rejected with " + JSON.stringify(error));
-      });
+      done
+        .then((item) => {
+          if (item.status == 0) {
+            this.notificationsService.notify(item.message);
+            this.fileUploadList[0].recID = item.data.recID;
+            // list.push(Object.assign({}, res));
+            this.atSV.fileListAdded.push(Object.assign({}, item));
+            this.closePopup();
+          } else if (item.status == 6) {
+            // ghi đè
+            fileItem.recID = item.data.recID;
+            this.rewriteFile(this.titlemessage, item.message, fileItem);
+          } else this.notificationsService.notify(item.message);
+        })
+        .catch((error) => {
+          console.log('Promise rejected with ' + JSON.stringify(error));
+        });
     }
   }
 
   rewriteFile(title: any, message: any, item: FileUpload) {
     var that = this;
     var config = new AlertConfirmInputConfig();
-    config.type = "YesNo";
+    config.type = 'YesNo';
 
     /*  this.notificationsService.alert(title, message, config).subscribe((res: Dialog)=>{
        let that = this;
@@ -481,18 +504,19 @@ export class OpenFolderComponent implements OnInit {
   }
 
   onDeleteUploaded(file: string) {
-    let index = this.fileUploadList.findIndex(d => d.fileName.toString() === file.toString()); //find index in your array
+    let index = this.fileUploadList.findIndex(
+      (d) => d.fileName.toString() === file.toString()
+    ); //find index in your array
     if (index > -1) {
-      this.fileUploadList.splice(index, 1);//remove element from array
+      this.fileUploadList.splice(index, 1); //remove element from array
       //  this.dmSV.fileUploadList.next(this.fileUploadList);
     }
   }
 
   sortBy() {
     if (this.fileUploadList != null)
-      return this.fileUploadList.sort((a, b) => a.order - b.order)
-    else
-      return null;
+      return this.fileUploadList.sort((a, b) => a.order - b.order);
+    else return null;
   }
 
   selectFolderPath() {
@@ -512,13 +536,13 @@ export class OpenFolderComponent implements OnInit {
     var item2 = '';
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
+      item1 = '<img class="mh-20px" src="../../../assets/codx/dms/folder.svg">';
     else {
-      if (folder.icon.indexOf(".") == -1)
+      if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
       else {
         var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="max-h-18px" src="${path}">`;
+        item1 = `<img class="mh-20px" src="${path}">`;
       }
     }
 
@@ -537,40 +561,40 @@ export class OpenFolderComponent implements OnInit {
   }
 
   getAvatar(filename: string) {
-    if (filename == "" || filename == null)
-      return "";
-    var ext = filename.substring(filename.lastIndexOf('.'), filename.length) || filename;
+    if (filename == '' || filename == null) return '';
+    var ext =
+      filename.substring(filename.lastIndexOf('.'), filename.length) ||
+      filename;
 
     if (ext == null) {
       // alert(1);
-      return "file.svg";
-    }
-    else {
+      return 'file.svg';
+    } else {
       switch (ext) {
-        case ".txt":
-          return "txt.svg";
-        case ".doc":
-        case ".docx":
-          return "doc.svg";
-        case ".7z":
-        case ".rar":
-        case ".zip":
-          return "zip.svg";
-        case ".jpg":
-          return "jpg.svg";
-        case ".mp4":
-          return "mp4.svg";
-        case ".xls":
-        case ".xlsx":
-          return "xls.svg";
-        case ".pdf":
-          return "pdf.svg";
-        case ".png":
-          return "png.svg";
-        case ".js":
-          return "javascript.svg";
+        case '.txt':
+          return 'txt.svg';
+        case '.doc':
+        case '.docx':
+          return 'doc.svg';
+        case '.7z':
+        case '.rar':
+        case '.zip':
+          return 'zip.svg';
+        case '.jpg':
+          return 'jpg.svg';
+        case '.mp4':
+          return 'mp4.svg';
+        case '.xls':
+        case '.xlsx':
+          return 'xls.svg';
+        case '.pdf':
+          return 'pdf.svg';
+        case '.png':
+          return 'png.svg';
+        case '.js':
+          return 'javascript.svg';
         default:
-          return "file.svg";
+          return 'file.svg';
       }
     }
   }
@@ -594,7 +618,7 @@ export class OpenFolderComponent implements OnInit {
       //   }
       //   else this.dmSV.setDisableSave.next(false);
 
-      this.folderService.getFolders(id).subscribe(async item => {
+      this.folderService.getFolders(id).subscribe(async (item) => {
         // that.treeAdd.addChildNodes(parent, res);
         var res = item[0];
         var nodeAdd = new NodeTreeAdd();
@@ -614,35 +638,40 @@ export class OpenFolderComponent implements OnInit {
               currentNode = res[i];
             }
           }
-          if (currentNode != null)
-            that.loadChildNode(currentNode, index, list);
+          if (currentNode != null) that.loadChildNode(currentNode, index, list);
         }
       });
     }
   }
 
   selectFolder() {
-    this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-      if (res != null) {
-        this.listRemoteFolder = res;
-        this.listNodeAdd = res;
-        if (res[0].history != null) {
-          var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-          if (listFolder[0] != null && listFolder[0].folderPath != "") {
-            var list = listFolder[0].folderPath.split(";");
-            this.loadChildNode(res[0], 0, list);
+    this.folderService
+      .getFoldersByFunctionID(this.functionID)
+      .subscribe(async (res) => {
+        if (res != null) {
+          this.listRemoteFolder = res;
+          this.listNodeAdd = res;
+          if (res[0].history != null) {
+            var listFolder = res[0].history.filter(
+              (x) =>
+                x.objectType == this.functionID &&
+                x.objectID == this.user.userID
+            );
+            if (listFolder[0] != null && listFolder[0].folderPath != '') {
+              var list = listFolder[0].folderPath.split(';');
+              this.loadChildNode(res[0], 0, list);
+            }
           }
+          // FolderPath
+          //for (var i = 0; i < res.length; i++) {
+          // this.loadChildNode();
+          // }
+          // this.refreshSelect(res);
+          //   this.loadSelectEventTreeSelect();
+          this.changeDetectorRef.detectChanges();
+          this.remotePermission = res[0].permissions;
         }
-        // FolderPath
-        //for (var i = 0; i < res.length; i++) {
-        // this.loadChildNode();
-        // }
-        // this.refreshSelect(res);
-        //   this.loadSelectEventTreeSelect();
-        this.changeDetectorRef.detectChanges();
-        this.remotePermission = res[0].permissions;
-      }
-    });
+      });
 
     // DM058: Vui lòng chọn file tải lên
     // DM059: Đã thêm file thành công
@@ -704,7 +733,7 @@ export class OpenFolderComponent implements OnInit {
     // } else {
     //   return `with: ${reason}`;
     // }
-    return "";
+    return '';
   }
 
   uploadFile() {
@@ -712,12 +741,13 @@ export class OpenFolderComponent implements OnInit {
   }
 
   async handleFileInput(files: FileList) {
-
     var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
-      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
+      let index = this.fileUploadList.findIndex(
+        (d) => d.fileName.toString() === files[i].name.toString()
+      ); //find index in your array
       if (index == -1) {
         let no = count + i;
         let data: ArrayBuffer;
@@ -727,7 +757,11 @@ export class OpenFolderComponent implements OnInit {
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
         fileUpload.avatar = this.getAvatar(fileUpload.fileName);
-        fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
+        fileUpload.extension =
+          files[i].name.substring(
+            files[i].name.lastIndexOf('.'),
+            files[i].name.length
+          ) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
@@ -742,13 +776,11 @@ export class OpenFolderComponent implements OnInit {
         fileUpload.folderID = this.folderId;
         fileUpload.permissions = this.remotePermission;
         this.fileUploadList.push(Object.assign({}, fileUpload));
-
       }
     }
     this.fileCount.emit(files.length);
     files = null;
-    if (this.file)
-      this.file.nativeElement.value = "";
+    if (this.file) this.file.nativeElement.value = '';
     //  this.dmSV.fileUploadList.next(this.fileUploadList);
     this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
