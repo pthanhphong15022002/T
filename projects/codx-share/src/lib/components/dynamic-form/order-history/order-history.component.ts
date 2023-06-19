@@ -27,6 +27,7 @@ export class OrderHistoryComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.dialog.formModel = new FormModel();
     this.auth = authStore.get();
     this.data = dt.data;
 
@@ -41,7 +42,6 @@ export class OrderHistoryComponent extends UIComponent {
   dialog;
   grvTNOrders;
   auth;
-  orderFormodel: FormModel;
   onInit() {}
   closePopup() {
     this.dialog.close();
@@ -49,7 +49,7 @@ export class OrderHistoryComponent extends UIComponent {
   popupOrderInfo(order) {
     let data = {
       grvView: this.grvTNOrders,
-      formModel: this.orderFormodel,
+      formModel: this.dialog.formModel,
       orderRecID: order.recID,
       canExtend: false,
     };

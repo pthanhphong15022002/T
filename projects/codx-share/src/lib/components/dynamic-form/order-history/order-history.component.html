@@ -17,7 +17,7 @@
       <codx-label formName="" default="X"></codx-label>
     </button>
   </div>
-  <div class="close d-flex w-100 justify-content-center">
+  <div class="d-flex w-100 justify-content-center">
     <codx-label
       [formName]="dialog.formModel"
       default="Danh sách đơn hàng"
@@ -78,7 +78,7 @@
         <div class="text-gray-600">
           <codx-label
             fiedName="lblOrderNo"
-            [formModel]="orderFormodel"
+            [formModel]="dialog.formModel"
             [default]="'Đơn hàng: '"
           >
           </codx-label>
@@ -97,7 +97,7 @@
         <div class="text-gray-600">
           <codx-label
             fiedName="lblPaymentRefNo"
-            [formModel]="orderFormodel"
+            [formModel]="dialog.formModel"
             [default]="'Số giao dịch: ' + order.paymentRefNo ?? ''"
           >
           </codx-label>
@@ -105,7 +105,7 @@
         <div class="text-gray-600">
           <codx-label
             fiedName="lblpaymentCreatedOn"
-            [formModel]="orderFormodel"
+            [formModel]="dialog.formModel"
             [default]="'Ngày giao dịch: ' + order.paymentCreatedOn ?? ''"
           >
           </codx-label>
@@ -117,7 +117,7 @@
     <div>
       <codx-label
         [fiedName]="grvTNOrders['CurrentcyID']?.referedValue"
-        [formModel]="orderFormodel"
+        [formModel]="dialog.formModel"
         [default]="order.totalAmt + order.currencyID"
       >
       </codx-label>

@@ -1,9 +1,10 @@
 <codx-form
   #form
+  *ngIf="formTrackLogs"
   [customToolbar]="header"
   [body]="body"
   [dialog]="dialog"
-  [formModel]="dialog.formModel"
+  [formModel]="formTrackLogs"
 >
 </codx-form>
 <ng-template #header>
@@ -18,13 +19,13 @@
   </div>
   <div class="close d-flex w-100 justify-content-center">
     <codx-label
-      [formName]="dialog.formModel"
-      default="Danh sách truy cập"
+      [formName]="formTrackLogs"
+      default="Lịch sử sử dụng"
     ></codx-label>
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="row d-flex" *ngIf="ready">
+  <div class="row d-flex">
     <codx-gridview-v2
       #grid
       [hideMoreFunc]="true"

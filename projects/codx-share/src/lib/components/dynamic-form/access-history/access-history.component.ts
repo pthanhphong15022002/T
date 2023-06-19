@@ -6,7 +6,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, AuthStore, DialogData, DialogRef } from 'codx-core';
+import {
+  UIComponent,
+  AuthStore,
+  DialogData,
+  DialogRef,
+  FormModel,
+} from 'codx-core';
 import { AD_sprAccessHistory } from '../../../models/report-classes.model';
 
 @Component({
@@ -24,9 +30,10 @@ export class AccessHistoryComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.formModel = new FormModel();
     this.tenantID = dt.data;
-    this.dialog = dialog;
   }
+  formModel: FormModel;
   dialog;
   tenantID;
   clmnGrid;

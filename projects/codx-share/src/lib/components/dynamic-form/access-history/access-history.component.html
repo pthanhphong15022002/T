@@ -3,7 +3,7 @@
   [customToolbar]="header"
   [body]="body"
   [dialog]="dialog"
-  [formModel]="dialog.formModel"
+  [formModel]="formModel"
 >
 </codx-form>
 <ng-template #header>
@@ -14,10 +14,13 @@
       </button>
     </div>
   </div>
+  <div class="d-flex w-100 justify-content-center">
+    <codx-label [formName]="formModel" default="Lịch sử truy cập"></codx-label>
+  </div>
 </ng-template>
 <ng-template #body>
   <codx-gridview-v2
-    *ngIf="lstAccessHis"
+    *ngIf="lstAccessHis.length > 0"
     #grid
     [dataSource]="lstAccessHis"
     [hideMoreFunc]="true"
@@ -29,26 +32,40 @@
 
 <!--Region HeaderText -->
 <ng-template #userIDHT>
-  <codx-label [formName]="dialog.formModel" default="Mã"></codx-label>
+  <codx-label [formName]="formModel" default="Mã"></codx-label>
 </ng-template>
 <ng-template #userNameHT>
-  <codx-label [formName]="dialog.formModel" default="Tên"></codx-label>
+  <codx-label [formName]="formModel" default="Tên"></codx-label>
 </ng-template>
 <ng-template #emailHT>
-  <codx-label [formName]="dialog.formModel" default="Email"></codx-label>
+  <codx-label [formName]="formModel" default="Email"></codx-label>
 </ng-template>
 <ng-template #utcHT
-  ><codx-label [formName]="dialog.formModel" default="UTC"></codx-label>
+  ><codx-label [formName]="formModel" default="UTC"></codx-label>
 </ng-template>
 <ng-template #gtmHT
-  ><codx-label [formName]="dialog.formModel" default="GMT+7"></codx-label>
+  ><codx-label [formName]="formModel" default="GMT+7"></codx-label>
 </ng-template>
 <!-- EndRegion -->
 
 <!-- Region Data Template -->
-<ng-template #userIDHT> </ng-template>
-<ng-template #userNameHT> </ng-template>
-<ng-template #emailHT> </ng-template>
-<ng-template #utcHT> </ng-template>
-<ng-template #gtmHT> </ng-template>
+<ng-template #userIDTmp let-data>
+  <div>{{ data?.UserID }}</div>
+</ng-template>
+<ng-template #userNameTmp let-data>
+  <div>{{ data?.UserName }}</div>
+</ng-template>
+<ng-template #emailTmp let-data>
+  <div>{{ data?.Email }}</div>
+</ng-template>
+<ng-template #utcTmp let-data>
+  <div>
+    {{ data?.Max | date : "dd/MM/yyyy hh:mm:ss a" : "+0000" }}
+  </div>
+</ng-template>
+<ng-template #gtmTmp let-data>
+  <div>
+    {{ data?.Max | date : "dd/MM/yyyy hh:mm:ss a" : "+0700" }}
+  </div>
+</ng-template>
 <!-- EndRegion -->

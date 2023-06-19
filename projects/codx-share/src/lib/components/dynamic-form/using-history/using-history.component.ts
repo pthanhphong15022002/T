@@ -16,11 +16,7 @@ import { report_BG_TrackLogs } from '../../../models/report-classes.model';
   templateUrl: './using-history.component.html',
   styleUrls: ['./using-history.component.scss'],
 })
-export class UsingHistoryComponent
-  extends UIComponent
-  implements AfterViewInit
-{
-  ready: boolean = false;
+export class UsingHistoryComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -38,15 +34,12 @@ export class UsingHistoryComponent
     this.tenantID = dt.data;
     this.cache.gridViewSetup('TrackLogs', 'grvTrackLogs').subscribe((res) => {
       if (res) {
-        this.grvTrackLogs = res;
+        this.formTrackLogs = res;
         console.log('rtacklog', res);
       }
     });
   }
-  ngAfterViewInit(): void {
-    this.ready = true;
-  }
-  grvTrackLogs;
+  formTrackLogs;
   dialog;
   auth;
   tenantID;
