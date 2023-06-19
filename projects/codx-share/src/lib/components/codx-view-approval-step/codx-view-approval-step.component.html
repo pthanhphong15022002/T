@@ -26,7 +26,7 @@
           {{ item?.stepName ?? item?.stepNote }}
         </div>
       </div>
-      <div class="codx-approval-content ms-16">
+      <div class="codx-approval-content ms-12 ps-1">
         <ng-container *ngFor="let approver of item?.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <codx-temp-full
@@ -35,7 +35,7 @@
               "
               [imageId]="approver?.approver"
               [imageObjType]="'AD_Users'"
-              [imageWidth]="35"
+              [imageWidth]="30"
               [title]="
                 approver?.name ??
                 approver?.approverName ??
