@@ -30,6 +30,7 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -99,6 +100,7 @@ export class CashPaymentsComponent extends UIComponent {
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     private acService: CodxAcService,
+    private shareService: CodxShareService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef
   ) {
@@ -396,8 +398,10 @@ export class CashPaymentsComponent extends UIComponent {
               });
             } else {
               bm.forEach((element) => {
-                if (element.functionID == 'ACT041002'||
-                element.functionID == 'ACT041010') {
+                if (
+                  element.functionID == 'ACT041002' ||
+                  element.functionID == 'ACT041010'
+                ) {
                   element.disabled = false;
                 } else {
                   element.disabled = true;
@@ -538,12 +542,38 @@ export class CashPaymentsComponent extends UIComponent {
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {
         this.dataCategory = res;
-        this.acService
-          .release(
+        // this.acService
+        //   .release(
+        //     data.recID,
+        //     this.dataCategory.processID,
+        //     this.view.formModel.entityName,
+        //     this.view.formModel.funcID,
+        //     ''
+        //   )
+        //   .subscribe((result) => {
+        //     if (result?.msgCodeError == null && result?.rowCount) {
+        //       this.notification.notifyCode('ES007');
+        //       data.status = '3';
+        //       data.approveStatus = '3';
+        //       this.api
+        //         .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [data,null])
+        //         .subscribe((res: any) => {
+        //           if (res) {
+        //             this.itemSelected = res;
+        //             this.loadDatadetail(this.itemSelected);
+        //           }
+        //         });
+        //     } else this.notification.notifyCode(result?.msgCodeError);
+        //   });
+        this.shareService
+          .codxRelease(
+            'AC',
             data.recID,
             this.dataCategory.processID,
             this.view.formModel.entityName,
             this.view.formModel.funcID,
+            '',
+            '',
             ''
           )
           .subscribe((result) => {
@@ -552,7 +582,10 @@ export class CashPaymentsComponent extends UIComponent {
               data.status = '3';
               data.approveStatus = '3';
               this.api
-                .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [data,null])
+                .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
+                  data,
+                  null,
+                ])
                 .subscribe((res: any) => {
                   if (res) {
                     this.itemSelected = res;
