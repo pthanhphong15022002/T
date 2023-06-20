@@ -347,6 +347,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValueYesNo();
     this.getValueDayHour();
     if (this.action === 'copy') {
+      this.process.category = "1";
+
       this.listPermissions = [];
       this.listPermissions = JSON.parse(
         JSON.stringify(this.process.permissions)
