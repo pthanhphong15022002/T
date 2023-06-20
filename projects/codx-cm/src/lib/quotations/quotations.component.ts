@@ -256,11 +256,17 @@ export class QuotationsComponent extends UIComponent {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'CM0202_1':
+            if(type==11){
+              res.isbookmark = false
+            }
             if (data.status != 0 && data.status != 4) {
               res.disabled = true;
             }
             break;
           case 'CM0202_2':
+            if(type==11){
+              res.isbookmark = false
+            }
             if (data.status != 1) {
               res.disabled = true;
             }
