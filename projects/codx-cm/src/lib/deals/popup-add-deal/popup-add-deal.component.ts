@@ -60,6 +60,7 @@ export class PopupAddDealComponent
   action: string = '';
   autoName: string = '';
   title: string = '';
+  oldIdInstance: string = '';
 
   // Data struct Opportunity
   deal: CM_Deals = new CM_Deals();
@@ -75,6 +76,7 @@ export class PopupAddDealComponent
   listCustomFile: any[] = [];
   listParticipants: any[] = [];
   listOrgs: any[] = [];
+
 
   // const
   readonly actionAdd: string = 'add';
@@ -162,13 +164,10 @@ export class PopupAddDealComponent
       this.formModel = dt?.data?.formMD;
 
       if (this.action != this.actionAdd) {
-        // setTimeout(() => {
-
-        // }, 0);
         this.deal = dt?.data?.dataCM;
       }
     } else {
-      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+      this.deal = this.action != this.actionAdd? JSON.parse(JSON.stringify(dialog.dataService.dataSelected)): this.deal;
     }
 
     if (dt?.data.processID) {
@@ -184,6 +183,7 @@ export class PopupAddDealComponent
     if (this.action === this.actionCopy) {
       this.deal.owner = null;
       this.deal.salespersonID = null;
+      this.oldIdInstance = this.deal.refID;
     }
   }
 
@@ -761,7 +761,7 @@ export class PopupAddDealComponent
   }
 
   async insertInstance() {
-    var data = [this.instance, this.listInstanceSteps, null];
+    var data = [this.instance, this.listInstanceSteps, this.oldIdInstance ];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.isLoading && this.dialog.close(instance);
