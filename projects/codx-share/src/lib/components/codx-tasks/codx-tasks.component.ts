@@ -467,14 +467,15 @@ export class CodxTasksComponent
           this.views = viewFunc.sort((a, b) => {
             return a.type - b.type;
           });
-          let viewModel ;
-          this.views.forEach((x) => {
-            if (x.type == this.viewMode) {
-              x.active = true;
-              viewModel = x
-            }
-          });
-          this.view.viewChange(viewModel);
+          //Hao da sua core nen cmt lại cai này
+          // let viewModel ;
+          // this.views.forEach((x) => {
+          //   if (x.type == this.viewMode) {
+          //     x.active = true;
+          //     viewModel = x
+          //   }
+          // });
+          // this.view.viewChange(viewModel);
         }
       });
     } else this.views = this.viewsDefault;
