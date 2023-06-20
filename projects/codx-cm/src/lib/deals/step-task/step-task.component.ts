@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 
 @Component({
   selector: 'step-task',
@@ -7,6 +8,8 @@ import { ApiHttpService, CacheService, CallFuncService, NotificationsService } f
   styleUrls: ['./step-task.component.scss']
 })
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
+  @ViewChild('task') task : CodxStepTaskComponent;
+  @Input() typeTask = 1;
   @Input() isDataLoading: any;
   @Input() dataSelected: any;
   @Input() listInstanceStep: any[];
@@ -101,5 +104,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     setTimeout(() => {
       this.indexAddTask = -1;
     },1000);
+  }
+  addTask2(){
+    this.task.chooseTypeTask(false, null);
   }
 }
