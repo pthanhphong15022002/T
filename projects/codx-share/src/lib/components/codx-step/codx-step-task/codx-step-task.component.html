@@ -58,6 +58,15 @@
         class="badge badge-primary badge-sm"
       >
       </codx-vll>
+      <codx-imgs
+        class="me-2 d-flex align-items-center"
+        [width]="25"
+        ojectType="AD_Users"
+        [numberImages]="1"
+        [isToolTip]="true"
+        [objectId]="currentStep?.owner"
+      >
+      </codx-imgs>
       <div
         class="disabled-inline"
         (click)="openPopupUpdateProgress(currentStep, 'P')"

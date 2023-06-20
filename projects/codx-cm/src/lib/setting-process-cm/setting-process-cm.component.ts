@@ -25,6 +25,7 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { CodxDpService } from 'projects/codx-dp/src/public-api';
+import { DP_Processes } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'lib-setting-process-cm',
@@ -55,10 +56,10 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
   }
   onInit() {
     this.cache.functionList(this.funcID).subscribe((fun) => {
-      if(fun){
-       this.title = fun.customName || fun.description;
+      if (fun) {
+        this.title = fun.customName || fun.description;
       }
-    })
+    });
     this.getListProcessGroups();
   }
 
@@ -79,7 +80,19 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
   async viewChanged(e) {
     this.data = await this.getProcessById();
     if (this.data) {
-      this.openPopupEditDynamic();
+      this.openPopupEditDynamic('edit');
+    } else {
+      this.data = new DP_Processes();
+      this.data.recID = Util.uid();
+      this.data.viewMode = '6';
+      this.data.viewModeDetail = 'S';
+      this.data.addFieldsControl = '1';
+      this.data.allowCopy = true;
+      this.data.approveRule = false;
+      this.data.released = false;
+      this.data.status = '1';
+      this.data.showInstanceControl = '2';
+      this.openPopupEditDynamic('add');
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -101,68 +114,66 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
         'GetProcessDefaultAsync',
         [
           this.funcID == 'CMS0301'
-          ? '1'
-          : this.funcID == 'CMS0302'
-          ? '2'
-          : this.funcID == 'CMS0303'
-          ? '3'
-          : this.funcID == 'CMS0304'
-          ? '4'
-          : '5'
+            ? '1'
+            : this.funcID == 'CMS0302'
+            ? '2'
+            : this.funcID == 'CMS0303'
+            ? '3'
+            : this.funcID == 'CMS0304'
+            ? '5'
+            : '4',
         ]
       )
     );
     return data;
   }
 
-  openPopupEditDynamic() {
-    if (this.data) {
-      this.data.applyFor =
-        this.funcID == 'CMS0301'
-          ? '1'
-          : this.funcID == 'CMS0302'
-          ? '2'
-          : this.funcID == 'CMS0303'
-          ? '3'
-          : this.funcID == 'CMS0304'
-          ? '4'
-          : '5';
-      this.data.category = '0';
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      dialogModel.zIndex = 999;
-      let formModel = new FormModel();
-      formModel.entityName = 'DP_Processes';
-      formModel.formName = 'DPProcesses';
-      formModel.gridViewName = 'grvDPProcesses';
-      formModel.funcID = 'DP01';
-      // dialogModel.DataService = this.view?.dataService;
-      dialogModel.FormModel = formModel;
-      this.cache
-        .gridViewSetup('DPProcesses', 'grvDPProcesses')
-        .subscribe((res) => {
-          if (res) {
-            var obj = {
-              action: 'edit',
-              titleAction: this.title,
-              gridViewSetup: res,
-              lstGroup: this.lstGroup,
-              systemProcess: true,
-              data: this.data,
-            };
-            var dialog = this.callfc.openForm(
-              PopupAddDynamicProcessComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {});
-          }
-        });
-    }
+  openPopupEditDynamic(action) {
+    this.data.applyFor =
+      this.funcID == 'CMS0301'
+        ? '1'
+        : this.funcID == 'CMS0302'
+        ? '2'
+        : this.funcID == 'CMS0303'
+        ? '3'
+        : this.funcID == 'CMS0304'
+        ? '5'
+        : '4';
+    this.data.category = '0';
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    let formModel = new FormModel();
+    formModel.entityName = 'DP_Processes';
+    formModel.formName = 'DPProcesses';
+    formModel.gridViewName = 'grvDPProcesses';
+    formModel.funcID = 'DP01';
+    // dialogModel.DataService = this.view?.dataService;
+    dialogModel.FormModel = formModel;
+    this.cache
+      .gridViewSetup('DPProcesses', 'grvDPProcesses')
+      .subscribe((res) => {
+        if (res) {
+          var obj = {
+            action: action,
+            titleAction: this.title,
+            gridViewSetup: res,
+            lstGroup: this.lstGroup,
+            systemProcess: true,
+            data: this.data,
+          };
+          var dialog = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            this.widthWin,
+            this.heightWin,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialog.closed.subscribe((e) => {});
+        }
+      });
   }
 }

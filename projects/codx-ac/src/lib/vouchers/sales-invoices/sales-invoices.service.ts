@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
-  DataRequest,
-  FormModel,
+  FormModel
 } from 'codx-core';
 import { tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
-import { Item } from '../../settings/items/interfaces/Item.interface';
 
 @Injectable({
   providedIn: 'root',
