@@ -68,23 +68,11 @@
     ></ng-container>
   </main>
 </div>
+
 <div *ngIf="typeTask == 2">
-  <div class="list-contracts po">
-    <button
-      type="button"
-      class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
-      (click)="addTask2()"
-    >
-      <i class="icon-18 icon-more text-light"></i>
-      <codx-label class="fw-bold" [formModel]="" fiedName="btnAddContract" [default]="'Thêm công việc'"></codx-label>
-    </button>
-    <div>
-      <codx-step-task
-        #task
-      ></codx-step-task>
-    </div>
-  </div>
+  <task></task>
 </div>
+
 <ng-template #taskTem>
   <div *ngIf="isDataLoading || !type">
     <div *ngFor="let step of [1, 2, 3]">

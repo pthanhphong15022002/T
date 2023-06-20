@@ -82,8 +82,7 @@ export class CodxListContactsComponent implements OnInit {
         if (changes['objectID']?.currentValue == this.id) return;
         this.id = changes['objectID']?.currentValue;
         this.getListContacts();
-      } else {
-        this.loaded = true;
+        if (!this.loaded) this.loaded = true;
       }
     }
   }
@@ -394,30 +393,34 @@ export class CodxListContactsComponent implements OnInit {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        if (this.type == 'formDetail') {
-          this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
-            if (res) {
-              // this.getListContactByObjectID(this.objectID);
-              this.listContacts = this.cmSv.bringDefaultContactToFront(
-                this.cmSv.loadList(data, this.listContacts, 'delete')
-              );
+      if (x.event && x.event?.status) {
+        if (x?.event?.status == 'Y') {
+          if (this.type == 'formDetail') {
+            this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
+              if (res) {
+                // this.getListContactByObjectID(this.objectID);
+                this.listContacts = this.cmSv.bringDefaultContactToFront(
+                  this.cmSv.loadList(data, this.listContacts, 'delete')
+                );
+                this.changeContacts(this.listContacts[0]);
+                this.contactEvent.emit(data);
+
+                this.notiService.notifyCode('SYS008');
+                this.changeDetectorRef.detectChanges();
+              }
+            });
+          } else {
+            var index = this.listContacts.findIndex(
+              (x) => x.recID == data.recID
+            );
+            if (index != -1) {
+              this.contactEvent.emit({ data: data, action: 'delete' });
+              this.listContacts.splice(index, 1);
+              lstDelete.push(data);
               this.changeContacts(this.listContacts[0]);
-              this.contactEvent.emit(data);
 
-              this.notiService.notifyCode('SYS008');
-              this.changeDetectorRef.detectChanges();
+              this.lstContactDeleteEmit.emit(lstDelete);
             }
-          });
-        } else {
-          var index = this.listContacts.findIndex((x) => x.recID == data.recID);
-          if (index != -1) {
-            this.contactEvent.emit({ data: data, action: 'delete' });
-            this.listContacts.splice(index, 1);
-            lstDelete.push(data);
-            this.changeContacts(this.listContacts[0]);
-
-            this.lstContactDeleteEmit.emit(lstDelete);
           }
         }
       }
