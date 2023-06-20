@@ -248,7 +248,11 @@ export class CodxAddTaskComponent implements OnInit {
           taskID: this.stepsTasks['recID'],
         });
     });
-    this.participant = listRole;
+    if(this.typeTask?.value === 'M' || this.typeTask?.value === 'B'){
+      this.participant = listRole;
+    }else{
+      this.owner = listRole;
+    }
   }
 
   onDeleteOwner(objectID, data) {
