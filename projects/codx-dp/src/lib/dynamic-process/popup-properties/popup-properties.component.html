@@ -59,11 +59,12 @@
                   <codx-label
                     fiedName="CreatedBy"
                     [formModel]="form.formModel"
+                    [setRequire]="false"
                     default="Người tạo:"
                   >
                   </codx-label>
                 </span>
-                <span class="text-dark" style="margin-left: 10px">
+                <span class="text-dark fw-bold" style="margin-left: 10px">
                   <div>{{ userName }}</div>
                 </span>
               </div>
@@ -84,13 +85,18 @@
                 ></span>
               </div>
             </div>
-            <div class="d-flex flex-wrap mb-1">
+            <div class="d-flex flex-wrap mb-1" *ngIf="lstO != null && lstO.length > 0">
               <div class="d-flex align-items-center me-4">
                 <span
                   class="fw-bold text-dark"
                   style="margin-right: 10px !important"
                 >
-                  <codx-label name="lblSupervisor" [default]="'Người giám sát'">
+                  <codx-label
+                    class="label-colon text-gray-600 codx-textlabel"
+                    name="lblSupervisor"
+                    [formModel]="form.formModel"
+                    [default]="'Người giám sát'"
+                  >
                   </codx-label>
                 </span>
                 <ng-container *ngFor="let item of lstO; index as i">
@@ -129,10 +135,11 @@
                 </ng-container>
               </div>
             </div>
-            <div class="d-flex flex-wrap mb-1">
+            <div class="d-flex flex-wrap mb-1" *ngIf="lstP != null && lstP.length > 0">
               <div class="d-flex align-items-center me-4">
                 <span class="fw-bold text-dark">
                   <codx-label
+                    class="label-colon text-gray-600 codx-textlabel"
                     name="lblParticipants"
                     [default]="'Người tham gia'"
                     style="margin-right: 10px !important"
@@ -175,13 +182,17 @@
                 </ng-container>
               </div>
             </div>
-            <div class="d-flex flex-wrap mb-1">
+            <div class="d-flex flex-wrap mb-1" *ngIf="lstF != null && lstF.length > 0">
               <div class="d-flex align-items-center me-4">
                 <span
                   class="fw-bold text-dark"
                   style="margin-right: 10px !important"
                 >
-                  <codx-label name="lblFollowers" [default]="'Người theo dõi'">
+                  <codx-label
+                    name="lblFollowers"
+                    [default]="'Người theo dõi'"
+                    class="label-colon text-gray-600 codx-textlabel"
+                  >
                   </codx-label>
                 </span>
                 <ng-container *ngFor="let item of lstF; index as i">

@@ -1,1 +1,195 @@
-<p>popup-policygeneral works!</p>
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body]="body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="policyGeneralObj"
+    *ngIf="isAfterRender"
+>
+</codx-form>
+
+<ng-template #body>
+    <div class="form-group row mt-5">
+            <codx-label
+                fiedName="PolicyType"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="policyType"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+    </div>
+
+    <div class="form-group row">
+        <codx-label
+            fiedName="PolicyID"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+            field="policyID"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+</div>
+
+<div class="form-group row">
+    <codx-label
+        fiedName="PolicyName"
+        [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+        field="policyName"
+        [formModel]="formModel"
+        [Group]="formGroup"
+    ></codx-input>
+</div>
+
+<div class="form-group row">
+    <div class="col-4">
+        <codx-label
+            fiedName="ActiveOn"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+            field="activeOn"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+    <div class="col-4">
+        <codx-label
+            fiedName="ExpiredOn"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+            field="expiredOn"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+    <div class="col-4">
+        <codx-label
+            fiedName="Stop"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+            field="stop"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+</div>
+
+<div class="form-group row">
+    <codx-label
+        fiedName="Note"
+        [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+        field="note"
+        [formModel]="formModel"
+        [Group]="formGroup"
+    ></codx-input>
+</div>
+
+<div class="form-group row">
+    <codx-label
+        [default]="'Quy định'"
+        [name]="'lblRule'"
+        [formModel]="formModel"
+    ></codx-label>
+</div>
+
+<div class="form-group row">
+    <div class="col-6 d-flex flex-column">
+        <codx-label
+            fiedName="FixedAmt"
+            [formModel]="formModel"
+        ></codx-label>
+        <span>{{grvSetup.FixedAmt.description}}</span>
+    </div>
+    <div class="col-6">
+        <codx-input
+            field="fixedAmt"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-6 d-flex flex-column">
+        <codx-label
+            fiedName="FixedAmtPerHour"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-label
+            [name]="'FixedAmtPerHourDes'"
+            [default]="grvSetup.FixedAmtPerHour.description"
+            [formModel]="formModel"
+    ></codx-label>
+    </div>
+    <div class="col-6">
+        <codx-input
+            field="fixedAmtPerHour"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-6 d-flex flex-column">
+        <codx-label
+            fiedName="Percentage"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-label
+        [name]="'PercentageDes'"
+        [default]="grvSetup.Percentage.description"
+        [formModel]="formModel"
+></codx-label>
+    </div>
+    <div class="col-6">
+        <codx-input
+            field="percentage"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-6 d-flex flex-column">
+        <codx-label
+            fiedName="PercentageOn"
+            [formModel]="formModel"
+        ></codx-label>
+
+        <codx-label
+        [name]="'PercentageOnDes'"
+        [default]="grvSetup.PercentageOn.description"
+        [formModel]="formModel"
+></codx-label>
+    </div>
+    <div class="col-6">
+        <codx-input
+            field="percentageOn"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+</div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
