@@ -176,7 +176,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = this.funcID == 'DP01';
+    this.showButtonAdd = this.funcID == 'DP01' || this.funcID == 'DP0101'; 
   }
 
   //chang data

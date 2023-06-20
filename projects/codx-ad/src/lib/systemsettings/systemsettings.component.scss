@@ -11,17 +11,8 @@
     margin: 0 auto;
 }
 
-.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
-    border: 0 !important;
-    background-color: var(--gray-200);
-}
 
 
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
-    background: transparent;
-    border: 0;
-    color: var(--primary) !important;
-}
 
 .e-tab .e-tab-header::before {
     border-color: transparent;
@@ -51,17 +42,6 @@ lib-systemsettings .e-tab .e-tab-header.e-vertical:before {
 }
 
 /* van */
-
-.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
-    background-color: var(--primary-lighter);
-    border: 0 !important;
-}
-
-
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
-    background-color: var(--primary-lightest);
-}
-
 
 .e-toolbar-items {
     margin-top: 10px !important;

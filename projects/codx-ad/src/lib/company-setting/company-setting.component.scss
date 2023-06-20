@@ -194,14 +194,6 @@ lib-company-setting .e-tab .e-tab-header::before {
 
 }
 
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
-  border: 0 !important;
-}
-
-.e-tab .e-tab-header .e-toolbar-item {
-  height: 38px;
-  min-height: 38px;
-}
 
 lib-company-setting .e-tab .e-tab-header.e-vertical:before {
   display: none;
@@ -209,15 +201,11 @@ lib-company-setting .e-tab .e-tab-header.e-vertical:before {
 
 /* van */
 
-.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
-  background-color: var(--primary-lighter);
-  border: 0 !important;
-}
+// .e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
+//   background-color: var(--primary-lighter);
+//   border: 0 !important;
+// }
 
-
-.e-tab .e-tab-header .e-toolbar-item:hover {
-  background-color: var(--primary-lightest);
-}
 
 
 lib-company-setting .e-toolbar-items {
@@ -241,4 +229,10 @@ lib-company-setting .e-toolbar-items {
 
 .list-app .h-125px.min-h-125px:hover {
   background-color: var(--gray-100);
+}
+.his-order .e-content{
+  width: 100%;
+  .e-list-parent.e-ul {
+    width: 100%;
+  }
 }
