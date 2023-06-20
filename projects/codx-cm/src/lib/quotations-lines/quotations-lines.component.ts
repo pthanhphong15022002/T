@@ -114,12 +114,23 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       listQuotationLines: this.listQuotationLines,
       quotationLinesAddNew: this.quotationLinesAddNew,
       quotationLinesEdit: this.quotationLinesEdit,
-      quotationLinesDeleted: this.quotationLinesDeleted,
+      quotationLinesDeleted: this.quotationLinesDeleted
     };
   }
 
   //#region  CRUD
   // region QuotationLines
+  async changeDataMFQuotationLines(event) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa
+          case 'SYS03': //sửa
+          case 'SYS04': //copy
+        }
+      });
+    }
+  }
   clickMFQuotationLines(e, data) {
     this.titleActionLine = e.text;
     switch (e.functionID) {
@@ -254,6 +265,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines;
                       this.objectOut.quotationLinesAddNew =
                         this.quotationLinesAddNew;
+                      this.objectOut['quotationLineIdNew'] = data?.recID; // thuan thêm để lấy quotationLines mới thêm
                       this.eventQuotationLines.emit(this.objectOut);
                       this.changeDetector.detectChanges();
                     }
@@ -341,7 +353,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                 if (this.actionParent == 'edit') {
                   this.linesUpdate(data);
                 }
-
                 this.gridQuationsLines.refresh();
                 // this.dialog.dataService.updateDatas.set(
                 //   this.quotations['_uuid'],
@@ -428,6 +439,9 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines.push(data);
                         this.gridQuationsLines.refresh();
                         this.loadTotal();
+                        this.objectOut.quotationLinesAddNew = this.quotationLinesAddNew ;
+                        this.objectOut.listQuotationLines = this.listQuotationLines ;
+
                         this.eventQuotationLines.emit(this.objectOut);
                         this.changeDetector.detectChanges();
                       }
@@ -462,7 +476,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   quotationsLineChanged(e) {
     if (!e.field || !e.data) return;
     let lineCrr = e.data;
-
     switch (e.field) {
       case 'itemID':
         this.loadItem(e.value, lineCrr);

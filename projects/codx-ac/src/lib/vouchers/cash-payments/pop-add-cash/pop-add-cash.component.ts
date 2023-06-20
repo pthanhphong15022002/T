@@ -985,9 +985,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.form,
           this.action === 'edit',
           () => {
-            if (this.cashpayment.status == '0') {
-              this.cashpayment.status = '1';
-            }
             this.dialog.dataService.updateDatas.set(
               this.cashpayment['_uuid'],
               this.cashpayment

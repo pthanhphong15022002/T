@@ -710,4 +710,12 @@ export class CM_Leads {
   processID: string;
   convertedOn: string;
   dealID: string;
+  endDate: Date;
+  startDate: Date;
+  refID: string;
+  refNo:string;
+  refType:string;
+  closedBy:string;
+  closedOn:Date;
+  closed:boolean
 }

@@ -121,6 +121,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   viewsDefault: any;
   gridViewSetup: any;
   functionModule:any;
+  nameModule: string = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -147,7 +148,8 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.functionModule =  f.module;
-        this.executeApiCallFunctionID(f.formName,f.gridViewName);
+      this.nameModule = f.customName;
+      this.executeApiCallFunctionID(f.formName,f.gridViewName);
     });
     this.detectorRef.detectChanges();
   }
@@ -1094,11 +1096,11 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     var datas = [data.recID];
     this.codxCmService.isCheckDealInUse(datas).subscribe((res)=> {
       if(res[0]) {
-        this.notificationsService.notifyCode('CM015');
+        this.notificationsService.notifyCode('CM014' ,0,""+this.nameModule+"");
         return;
       }
       else if(res[1]) {
-        this.notificationsService.notifyCode('CM014');
+        this.notificationsService.notifyCode('CM015' ,0,""+this.nameModule+"");
         return;
       }
       else {
@@ -1120,7 +1122,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedDealAsync';
-    opt.data = [itemSelected.recID];
+    opt.data = [itemSelected.recID,null];
     return true;
   }
   //#endregion

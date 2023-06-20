@@ -19,7 +19,6 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { NameByIdPipe } from '../../../pipes/nameById.pipe';
-import { Item } from '../../../settings/items/interfaces/Item.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SalesInvoiceService } from '../sales-invoices.service';
 
@@ -45,8 +44,8 @@ export class PopupAddSalesInvoicesLineComponent
   @ViewChild('idiM6') idiM6: CodxInputComponent;
   @ViewChild('idiM7') idiM7: CodxInputComponent;
 
-  salesInvoicesLine: ISalesInvoicesLine = {} as ISalesInvoicesLine;
-  salesInvoicesLines: ISalesInvoicesLine[] = [];
+  line: ISalesInvoicesLine = {} as ISalesInvoicesLine;
+  lines: ISalesInvoicesLine[] = [];
   index: number;
   isEdit: boolean = false;
   gvs: any;
@@ -72,8 +71,8 @@ export class PopupAddSalesInvoicesLineComponent
     this.vats = this.salesInvoiceService.vats;
 
     this.dataService = dialogRef.dataService;
-    this.salesInvoicesLine = this.dataService.dataSelected;
-    this.transID = this.salesInvoicesLine.transID;
+    this.line = this.dataService.dataSelected;
+    this.transID = this.line.transID;
 
     this.isEdit = dialogData.data.formType === 'edit';
     this.index = dialogData.data.index;
@@ -156,9 +155,14 @@ export class PopupAddSalesInvoicesLineComponent
   ngAfterViewInit(): void {}
   //#endregion
 
+  // var cacheDIM={};
   //#region Event
   onInputChange(e) {
-    console.log(e);
+    console.log("onInputChange", e);
+
+    if (!e.data) {
+      return;
+    }
 
     if (e.field === 'itemID') {
       this.form.formGroup.controls.idiM0.reset();
@@ -179,14 +183,6 @@ export class PopupAddSalesInvoicesLineComponent
         [];
       (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data =
         [];
-
-      this.form.formGroup.controls.umid.reset();
-      const item: Item = this.salesInvoiceService.items.find(
-        (i) => i.itemID === this.salesInvoicesLine.itemID
-      );
-      this.form.formGroup.patchValue({
-        umid: item.umid,
-      });
     }
 
     if (e.field === 'idiM4') {
@@ -195,28 +191,33 @@ export class PopupAddSalesInvoicesLineComponent
         [];
     }
 
-    if (['costPrice', 'quantity'].includes(e.field)) {
-      this.form.formGroup.patchValue({
-        netAmt:
-          this.salesInvoicesLine.costPrice * this.salesInvoicesLine.quantity,
-      });
-    }
+    const postFields: string[] = [
+      'itemID',
+      'costPrice',
+      'quantity',
+      'netAmt',
+      'vatid',
+      'vatAmt',
+      'lineType',
+      'umid',
+      'idiM1',
+    ];
+    if (postFields.includes(e.field)) {
+      this.api
+        .exec('SM', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
+          e.field,
+          this.line,
+        ])
+        .subscribe((line) => {
+          console.log(line);
 
-    if (e.field === 'vatid') {
-      const taxRate: number = this.nameByIdPipe.transform(
-        this.vats,
-        'VATID',
-        'TaxRate',
-        this.salesInvoicesLine.vatid
-      );
-      this.form.formGroup.patchValue({
-        vatAmt: taxRate * this.salesInvoicesLine.netAmt,
-      });
+          this.form.formGroup.patchValue(line);
+        });
     }
   }
 
   onClickSave(closeAfterSave: boolean) {
-    console.log(this.salesInvoicesLine);
+    console.log(this.line);
 
     if (
       !this.acService.validateFormData(this.form.formGroup, this.gvs, [
@@ -230,31 +231,26 @@ export class PopupAddSalesInvoicesLineComponent
 
     this.dataService.save().subscribe((res: any) => {
       if (res.save.data || res.update.data) {
-        this.salesInvoicesLines.push({ ...this.salesInvoicesLine });
+        this.lines.push({ ...this.line });
         this.index++;
 
         if (closeAfterSave) {
-          this.dialogRef.close(
-            !this.isEdit ? this.salesInvoicesLines : this.salesInvoicesLine
-          );
+          this.dialogRef.close(!this.isEdit ? this.lines : this.line);
         } else {
           this.dataService.addNew().subscribe((res: ISalesInvoicesLine) => {
             console.log(res);
 
             res.rowNo = this.index + 1;
             res.transID = this.transID;
-            this.salesInvoicesLine.recID = res.recID; // wtf ???
+            this.line.recID = res.recID; // wtf ???
 
             this.form.formGroup.patchValue(res);
 
             // after implementing addNew(), both this.dataService.dataSelected and this.dataService.addDatas
             // no longer point to the object referenced by this.salesInvoicesLine,
             // so I reassign it here
-            this.dataService.dataSelected = this.salesInvoicesLine;
-            this.dataService.addDatas.set(
-              this.salesInvoicesLine.recID,
-              this.salesInvoicesLine
-            );
+            this.dataService.dataSelected = this.line;
+            this.dataService.addDatas.set(this.line.recID, this.line);
           });
         }
       }

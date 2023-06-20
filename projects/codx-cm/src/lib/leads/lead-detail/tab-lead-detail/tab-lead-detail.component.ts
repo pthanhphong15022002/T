@@ -51,7 +51,7 @@ ngOnChanges(changes: SimpleChanges){
   //nvthuan
   if(changes.dataSelected){
     this.isDataLoading = true;
-   // this.getListInstanceStep();
+    this.getListInstanceStep();
   }
 }
 

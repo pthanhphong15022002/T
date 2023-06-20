@@ -10,7 +10,7 @@
         class="fs-3 fw-bold"
         [formModel]="dialog.formModel"
         fiedName=""
-        default="Thêm hợp đồng"
+        [default]="headerTest"
       ></codx-label>
     </div>
     <div class="d-flex align-items-center">
@@ -309,7 +309,7 @@
   <codx-quotations-lines
     #viewQuotationsLine
     [transID]="quotations?.recID"
-    [exchangeRate]="quotations?.exchangeRate"
+    [exchangeRate]="1"
     [currencyID]="quotations?.currencyID"
     [listQuotationLines]="listQuotationsLine"
     [quotationLinesAddNew]="quotationLinesAddNew"

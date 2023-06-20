@@ -1,4 +1,5 @@
 import { Util } from "codx-core";
+import { DP_Processes_Permission, DP_Processes_Ratings, DP_Steps } from "projects/codx-dp/src/lib/models/models";
 
 export class tmpInstances {
   recID: string  = Util.uid(); ;

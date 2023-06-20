@@ -69,22 +69,27 @@
       ></span>
       </div>
     </div>
-    <div
-      class="text-gray-600 mb-2 line-clamp line-clamp-2"
-      #note
-      [ngbTooltip]="gridViewSetup['Note']?.headerText"
-      [innerHTML]="
-      data?.note
-          | formatvalue
-            : formModel
-            : 'note'
-            : note
-            : 'CMLeads'
-            : 'grvCMLeads'
-          | async
-      "
-    ></div>
-    <div class="d-flex justify-content-between align-items-center w-100">
+    <div class="d-flex justify-content-start mb-1 w-100">
+      <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
+      <div>
+        <span
+        class="text-gray-600 fs-7"
+        #businessLineID
+        [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+        [innerHTML]="
+        data?.businessLineID
+            | formatvalue
+              : formModel
+              : 'businessLineID'
+              : businessLineID
+              : 'CMLeads'
+              : 'grvCMLeads'
+            | async
+        "
+      ></span>
+      </div>
+    </div>
+    <!-- <div class="d-flex justify-content-between align-items-center w-100">
       <div class="w-100">
         <span class="badge badge-sm badge-light-primary"
         #status
@@ -128,7 +133,69 @@
         </div>
       </div>
 
+    </div> -->
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-end codx-badge">
+        <div class="me-2 badge badge-light-primary"></div>
+        <div
+          *ngIf="data.status != '1'"
+          [ngStyle]="{
+            'background-color':
+              data.status == '3' || data.status == '4'
+                ? colorReasonSuccess?.color
+                : data.status == '5' || data.status == '6'
+                ? colorReasonFail?.color
+                : data?.steps['backgroundColor']
+          }"
+          class="me-2 badge badge-sm d-flex align-items-center"
+        >
+          <span
+            [ngClass]="data?.steps['icon']"
+            [ngStyle]="{ color: data?.steps['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span
+            class="menu-title fw-bold line-clamp line-clamp-2"
+            [ngbTooltip]="data?.currentStepName"
+            [ngStyle]="{ color: data?.steps['textColor'] }"
+            >{{ data?.currentStepName }}</span
+          >
+        </div>
+        <div *ngIf="data.status == '1'">
+          <codx-vll
+            [name]="'DP028'"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+        </div>
+        <div class="d-flex align-items-center text-gray-600">
+          <span class="icon-16 icon-av_timer me-1"></span>
+          <span
+            class="text-gray-700 line-clamp-menu"
+            [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
+            #endDate
+            [innerHTML]="
+              data?.endDate | formatvalue : view.formModel : 'endDate' | async
+            "
+          ></span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-1">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data?.owner"
+          objectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
     </div>
+
   </div>
 
 </ng-template>
@@ -154,6 +221,8 @@
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
     [gridViewSetup]="gridViewSetup"
+    [colorReasonSuccess]="colorReasonSuccess"
+    [colorReasonFail]="colorReasonFail"
     [funcID]="funcID"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
