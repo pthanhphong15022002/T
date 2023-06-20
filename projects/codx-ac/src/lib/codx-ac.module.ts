@@ -48,7 +48,6 @@ import { TableLineDetailComponent } from './vouchers/sales-invoices/components/t
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
-import { PopupPermissionComponent } from './journals/popup-permission/popup-permission/popup-permission.component';
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
 import { DepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/depreciating-fixed-assets.component';
@@ -56,6 +55,7 @@ import { PopAddDepreciatingFixedAssetsComponent } from './periodic/depreciating-
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { PopUpVatComponent } from './vouchers/cash-payments/pop-up-vat/pop-up-vat.component';
+import { PopupPermissionComponent } from './journals/popup-permission/popup-permission.component';
 
 export const routes: Routes = [
   {

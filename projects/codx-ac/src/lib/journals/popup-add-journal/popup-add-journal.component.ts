@@ -26,7 +26,7 @@ import { IJournal } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 import { JournalService } from '../journals.service';
 import { MultiSelectPopupComponent } from '../multi-select-popup/multi-select-popup.component';
-import { PopupPermissionComponent } from '../popup-permission/popup-permission/popup-permission.component';
+import { PopupPermissionComponent } from '../popup-permission/popup-permission.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -517,6 +517,7 @@ export class PopupAddJournalComponent
   }
 
   onClickOpenPermissionPopup(): void {
+    return;
     this.callfc.openForm(
       PopupPermissionComponent,
       'This param is not working',
