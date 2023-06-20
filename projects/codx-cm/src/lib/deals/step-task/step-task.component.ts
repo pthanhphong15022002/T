@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, FormModel, NotificationsService,} from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 
 @Component({
@@ -23,6 +23,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   listInstanceStepShow = [];
   isShowElement = true;
   indexAddTask: number;
+  taskType;
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
@@ -104,8 +105,5 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     setTimeout(() => {
       this.indexAddTask = -1;
     },1000);
-  }
-  addTask2(){
-    this.task.chooseTypeTask(false, null);
   }
 }

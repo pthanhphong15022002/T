@@ -67,6 +67,7 @@ export class CodxAddTaskComponent implements OnInit {
   isTaskDefault = false;
   startDateParent: Date;
   endDateParent: Date;
+  isSave = true;
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -98,18 +99,19 @@ export class CodxAddTaskComponent implements OnInit {
     this.stepsTasks = dt?.data?.dataTask;
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.groupTaskID = dt?.data?.groupTaskID;
+    this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
   }
 
   ngOnInit(): void {
     this.roles = this.stepsTasks['roles'] || [];
-    this.startDateParent = new Date(this.step['startDate']);
-    this.endDateParent = new Date(this.step['endDate']);
-    if(!this.stepsTasks['taskGroupID']){
-      this.stepsTasks['startDate'] = this.startDateParent;
+    this.startDateParent = new Date(this.step?.startDate || new Date);
+    this.endDateParent = new Date(this.step?.endDate || null);
+    if(!this.stepsTasks?.taskGroupID){
+      this.stepsTasks.startDate = this.startDateParent;
     }
     this.getFormModel();
-    if (this.stepsTasks['parentID']) {
-      this.litsParentID = this.stepsTasks['parentID'].split(';');
+    if (this.stepsTasks?.parentID) {
+      this.litsParentID = this.stepsTasks?.parentID.split(';');
     }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     this.participant = this.roles?.filter((role) => role.roleType === 'P');
@@ -172,44 +174,47 @@ export class CodxAddTaskComponent implements OnInit {
   }
   changeValueDate(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
-    if(this.isLoadDate){
+    if(this.step){
+      if(this.isLoadDate){
+        this.isLoadDate = !this.isLoadDate;
+        return;
+      }
+      const startDate =  new Date(this.stepsTasks['startDate']);
+      const endDate = new Date(this.stepsTasks['endDate']);
+     
+      if (endDate && startDate > endDate){
+        this.isSaveTimeTask = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('DP019');
+        this.stepsTasks['durationHour'] = 0;
+        this.stepsTasks['durationDay'] = 0;
+        return;
+      } else {
+        this.isSaveTimeTask = true;
+      }
+  
+      if (endDate > this.endDateParent) {
+        this.isSaveTimeGroup = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('DP020');
+        this.stepsTasks['durationHour'] = 0;
+        this.stepsTasks['durationDay'] = 0;
+        return;
+      }else{
+        this.isSaveTimeGroup = true;
+      }
+      
+      if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
+        this.isSaveTimeGroup = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('DP020');
+        this.stepsTasks['durationHour'] = 0;
+        this.stepsTasks['durationDay'] = 0;
+        return;
+      }else{
+        this.isSaveTimeGroup = true;
+      }
       this.isLoadDate = !this.isLoadDate;
-      return;
-    }
-    const startDate =  new Date(this.stepsTasks['startDate']);
-    const endDate = new Date(this.stepsTasks['endDate']);
-   
-    if (endDate && startDate > endDate){
-      this.isSaveTimeTask = false;
-      this.isLoadDate = !this.isLoadDate;
-      this.notiService.notifyCode('DP019');
-      this.stepsTasks['durationHour'] = 0;
-      this.stepsTasks['durationDay'] = 0;
-      return;
-    } else {
-      this.isSaveTimeTask = true;
-    }
-
-    if (endDate > this.endDateParent) {
-      this.isSaveTimeGroup = false;
-      this.isLoadDate = !this.isLoadDate;
-      this.notiService.notifyCode('DP020');
-      this.stepsTasks['durationHour'] = 0;
-      this.stepsTasks['durationDay'] = 0;
-      return;
-    }else{
-      this.isSaveTimeGroup = true;
-    }
-    
-    if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
-      this.isSaveTimeGroup = false;
-      this.isLoadDate = !this.isLoadDate;
-      this.notiService.notifyCode('DP020');
-      this.stepsTasks['durationHour'] = 0;
-      this.stepsTasks['durationDay'] = 0;
-      return;
-    }else{
-      this.isSaveTimeGroup = true;
     }
     if(this.stepsTasks['startDate'] && this.stepsTasks['endDate']){
       const endDate = new Date(this.stepsTasks['endDate']);
@@ -232,7 +237,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks['durationHour'] = 0;
       this.stepsTasks['durationDay'] = 0;
     }
-    this.isLoadDate = !this.isLoadDate;
   }
 
   changeRoler(e, type) {    
@@ -308,16 +312,21 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
   addTask(task){
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'AddTaskStepAsync',
-      task
-    ).subscribe(res => {
-      if(res){        
-        this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
-      }
-    });
+    if(this.isSave){
+      this.api.exec<any>(
+        'DP',
+        'InstanceStepsBusiness',
+        'AddTaskStepAsync',
+        task
+      ).subscribe(res => {
+        if(res){        
+          this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
+        }
+      });
+    }else{
+      this.dialog.close(task);
+    }
+    
   }
   editTask(task){
     this.api.exec<any>(
