@@ -187,7 +187,7 @@ export class LeadsComponent
     this.request.className = 'LeadsBusiness';
     this.request.method = 'GetListLeadsAsync';
     this.request.idField = 'recID';
-    // this.request.dataObj = this.dataObj;
+    this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
