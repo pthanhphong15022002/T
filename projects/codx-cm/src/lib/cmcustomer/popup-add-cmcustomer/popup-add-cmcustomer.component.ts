@@ -445,6 +445,15 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.count > 0) {
       return;
     }
+
+    if(this.data?.taxCode != null && this.data?.taxCode.trim() != ''){
+      var check = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','IsExitCoincideTaxCodeAsync',[this.data?.recID, this.data?.taxCode, this.dialog?.formModel?.entityName]));
+      if(check){
+        this.notiService.notifyCode('Trùng mã số thuế');
+        return;
+      }
+    }
+
     if (this.funcID == 'CM0102') {
       if (this.data.mobile != null && this.data.mobile.trim() != '') {
         if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;

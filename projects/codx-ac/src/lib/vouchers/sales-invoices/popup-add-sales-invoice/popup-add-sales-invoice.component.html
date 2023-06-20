@@ -5,7 +5,7 @@
   [formModel]="dialogRef.formModel"
   [dialog]="dialogRef"
   [customToolbar]="customToolbar"
-  [data]="salesInvoice"
+  [data]="master"
   class="ac-dialog"
 >
 </codx-form>
@@ -410,7 +410,7 @@
                 [allowFiltering]="true"
                 [allowSorting]="true"
                 [autoLoad]="false"
-                [dataSource]="salesInvoicesLines"
+                [dataSource]="lines"
                 [height]="gridHeight"
                 (cellChanged)="onCellChange($event)"
                 (created)="onCreate($event, false)"
@@ -422,7 +422,7 @@
                 <lib-table-line-detail
                   #tableLineDetail
                   [gvs]="gvsSalesInvoicesLines"
-                  [transID]="salesInvoice.recID"
+                  [transID]="master.recID"
                   [hiddenFields]="hiddenFields"
                   [hasMF]="true"
                   [dataService]="detailService"
@@ -465,7 +465,7 @@
           [formModel]="form.formModel"
           class="fw-bold"
         ></codx-label
-        >:&nbsp;{{ salesInvoice.orderNo }}
+        >:&nbsp;{{ master.orderNo }}
       </div>
     </div>
   </div>
@@ -479,7 +479,7 @@
     <codx-tabs
       [entityName]="form.formModel.entityName"
       [formModel]="form.formModel"
-      [objectID]="salesInvoice?.recID"
+      [objectID]="master?.recID"
       [funcID]="form.formModel.funcID"
       [TabControl]="tabs"
     ></codx-tabs>
@@ -504,7 +504,7 @@
         <codx-vll
           [formModel]="form.formModel"
           field="Status"
-          [value]="salesInvoice.status"
+          [value]="master.status"
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-md"
@@ -545,7 +545,7 @@
       <button
         class="btn btn-md btn-danger"
         (click)="onDiscard()"
-        *ngIf="masterService.hasSaved && salesInvoice.status == '0'"
+        *ngIf="masterService.hasSaved && master.status == '0'"
       >
         <codx-label
           class="fs-6 fw-normal"
