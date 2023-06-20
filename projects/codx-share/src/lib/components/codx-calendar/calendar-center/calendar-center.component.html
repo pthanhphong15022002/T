@@ -14,59 +14,63 @@
 </ng-template>
 
 <ng-template #contentTmp let-data>
-  <ng-container #tmpTM_Tasks *ngIf="data?.transType == 'TM_MyTasks'">
+  <ng-container #tmpTM_Tasks *ngIf="data?.transType === 'TM_MyTasks'">
     <codx-view-detail-little
       [recID]="data?.transID"
       [service]="'TM'"
     ></codx-view-detail-little>
   </ng-container>
 
-  <ng-container #tmpTM_Tasks *ngIf="data?.transType == 'TM_AssignTasks'">
+  <ng-container #tmpTM_Tasks *ngIf="data?.transType === 'TM_AssignTasks'">
     <codx-view-detail-little
       [recID]="data?.transID"
       [service]="'TM'"
     ></codx-view-detail-little>
   </ng-container>
 
-  <ng-container #EP_BookingCars *ngIf="data?.transType == 'EP_BookingCars'">
+  <ng-container #EP_BookingCars *ngIf="data?.transType === 'EP_BookingCars'">
     <codx-booking-car-schedule-content
       [recID]="data?.transID"
     ></codx-booking-car-schedule-content>
   </ng-container>
 
-  <ng-container #EP_BookingRooms *ngIf="data?.transType == 'EP_BookingRooms'">
+  <ng-container #EP_BookingRooms *ngIf="data?.transType === 'EP_BookingRooms'">
     <codx-booking-room-schedule-content
       [recID]="data?.transID"
     ></codx-booking-room-schedule-content>
   </ng-container>
 
-  <ng-container #tmpCO_Meetings *ngIf="data?.transType == 'CO_Meetings'">
+  <ng-container #tmpCO_Meetings *ngIf="data?.transType === 'CO_Meetings'">
     <codx-view-detail-little
       [recID]="data?.transID"
       [service]="'CO'"
     ></codx-view-detail-little>
   </ng-container>
 
-  <ng-container #WP_Notes *ngIf="data?.transType == 'WP_Notes'">
+  <ng-container #WP_Notes *ngIf="data?.transType === 'WP_Notes'">
     <div class="checkbox-list">
-      <div *ngIf="data.noteType == 'text'">
-        <div *ngIf="data.isPin == true || data.isPin == '1'" class="active">
+      <div *ngIf="data.noteType === 'text'">
+        <div *ngIf="data.isPin === true || data.isPin === '1'" class="active">
           <span class="icon-push_pin icon-16" type="button"></span>
         </div>
-        <div class="d-flex flex-column note-option">
-          <span [innerHTML]="data.memo"></span>
+        <div class="d-flex flex-column note-option" >
+          <span class="text-break" [innerHTML]="data.memo"></span>
         </div>
       </div>
       <div *ngIf="data.noteType != 'text'">
-        <div *ngIf="data.isPin == true || data.isPin == '1'" class="active">
+        <div *ngIf="data.isPin === true || data.isPin === '1'" class="active">
           <span class="icon-push_pin icon-16" type="button"></span>
         </div>
         <div class="d-flex flex-column note-option">
           <div *ngFor="let itemList of data.checkList; index as i">
-            <div *ngIf="itemList.status == null">
+            <div *ngIf="itemList.status === null">
               <div class="my-2 note-list">
                 <ul>
-                  <li>{{ itemList.listNote }}</li>
+                  <li
+                    class="text-break"
+                  >
+                    {{ itemList.listNote }}
+                  </li>
                 </ul>
               </div>
             </div>
@@ -79,7 +83,7 @@
                   label="{{ itemList.listNote }}"
                   [disabled]="false"
                   [checked]="
-                    itemList?.status == 'true' || itemList?.status == '1'
+                    itemList?.status === 'true' || itemList?.status === '1'
                   "
                   labelPosition="After"
                   class="test-check"
@@ -98,7 +102,7 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <!-- <ng-container *ngIf="data.transType == 'EP_BookingCars'">
+  <!-- <ng-container *ngIf="data.transType === 'EP_BookingCars'">
     <div class="d-flex flex-column w-100">
       <span class="d-flex flex-start"
         >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
@@ -112,9 +116,9 @@
   </ng-container> -->
   <ng-container
     *ngIf="
-      data.transType == 'TM_MyTasks' ||
-      data.transType == 'TM_AssignTasks' ||
-      data.transType == 'CO_Meetings' ||
+      data.transType === 'TM_MyTasks' ||
+      data.transType === 'TM_AssignTasks' ||
+      data.transType === 'CO_Meetings' ||
       data.transType === 'EP_BookingCars' ||
       data.transType === 'EP_BookingRooms'
     "
@@ -130,7 +134,7 @@
       >
     </div>
   </ng-container>
-  <ng-container *ngIf="data.transType == 'WP_Notes'">
+  <ng-container *ngIf="data.transType === 'WP_Notes'">
     <codx-label
       default="Ghi chú cá nhân"
       fiedName="lblMyNote"

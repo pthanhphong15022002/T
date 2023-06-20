@@ -46,7 +46,7 @@ export class DP_Processes {
   viewModeDetail: string;
   autoName: string;
   steps: DP_Steps[] = [];
-  approveRule :boolean = false ;
+  approveRule: boolean = false;
 
   icon: string;
   released: boolean;
@@ -59,7 +59,6 @@ export class DP_Processes {
   assign: boolean = true;
   delete: boolean = true;
   deleted: boolean = false;
-
 }
 
 export class DP_Processes_Permission {
@@ -125,7 +124,7 @@ export class DP_Steps {
   taskControl: string;
   leadtimeControl: boolean = true;
   durationControl: boolean = true;
-  startControl: string = '1'; // update bit to string
+  startControl: string = '1'; // update boolean to string
   reScheduleTasks: boolean = true;
   options: string; // json
   roles: DP_Steps_Roles[] = []; // objects
@@ -305,7 +304,7 @@ export class DP_Instances {
   tags: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
-  approveStatus :string
+  approveStatus: string;
 }
 export class DP_Instances_Permissions {
   recID: string;
@@ -375,7 +374,7 @@ export class DP_Instances_Steps {
   iconColor: String;
   progressTaskGroupControl: boolean = false;
   progressStepControl: boolean = false;
-  note : string;
+  note: string;
 }
 
 export class DP_Instances_Steps_Roles {
@@ -539,4 +538,68 @@ export class TabModel {
   textDefault: string;
   template?: any;
   isActive: boolean = false;
+}
+
+export class DP_Activities {
+  recID: string;
+  instanceID: string;
+  stepID: string;
+  indexNo: number;
+  taskType: string;
+  taskName: string;
+  taskGroupID: string;
+  parentID: string;
+  reference: string;
+  durationDay: number;
+  durationHour: number;
+  numbererval: string;
+  startDate: Date;
+  endDate: Date;
+  progress: number;
+  actualStart: Date;
+  actualEnd: Date;
+  actualHours: number;
+  statusCodeID: string;
+  status: string;
+  reminders: string;
+  reminderBy: string;
+  dependOnTasks: string;
+  dependRule: string;
+  assignControl: string;
+  requireCompleted: boolean;
+  memo: string;
+  createTask: boolean;
+  createTaskControl: string;
+  lastUpdate: Date;
+  comment: string;
+  attachments: number;
+  comments: number;
+  assigned: string;
+  actionStatus: string;
+  note: string;
+  callType: string;
+  isOnline: boolean;
+  isTaskDefault: boolean;
+  refID: string;
+  roles: DP_Activities_Roles[];
+  owner: string;
+  bUID: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
+export class DP_Activities_Roles {
+  recID: string;
+  taskType: string;
+  taskID: string;
+  roleType: string;
+  objectType: string;
+  objectName: string;
+  objectID: string;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
 }
