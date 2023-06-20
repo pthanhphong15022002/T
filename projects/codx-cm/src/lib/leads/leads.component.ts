@@ -54,6 +54,8 @@ export class LeadsComponent
   itemFields: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
+  @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
@@ -103,7 +105,7 @@ export class LeadsComponent
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';
-  funcIDCrr:any;
+  funcIDCrr: any;
   gridViewSetup: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
@@ -119,23 +121,31 @@ export class LeadsComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+    this.dataObj = {processID :'5d4ed88c-0e41-11ee-bec7-988d46c4cbe1'}
     this.executeApiCalls();
-
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    this.request = new ResourceModel();
-    this.request.service = 'CM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'LeadsBusiness';
-    this.request.method = 'GetListLeadsAsync';
-    this.request.idField = 'recID';
-
+    // this.request = new ResourceModel();
+    // this.request.service = 'CM';
+    // this.request.assemblyName = 'CM';
+    // this.request.className = 'LeadsBusiness';
+    // this.request.method = 'GetListLeadsAsync';
+    // this.request.idField = 'recID';
+    this.afterLoad();
     this.button = {
       id: this.btnAdd,
     };
 
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        this.funcID = param.funcID;
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.listdetail,
@@ -145,20 +155,42 @@ export class LeadsComponent
           panelRightRef: this.templateDetail,
         },
       },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        toolbarTemplate: this.footerButton,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
+      },
     ];
+  }
+  afterLoad() {
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'LeadsBusiness';
+    this.request.method = 'GetListLeadsAsync';
+    this.request.idField = 'recID';
+    // this.request.dataObj = this.dataObj;
 
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
-      }
-    });
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
   }
 
   async executeApiCalls() {
     try {
       await this.getFuncID(this.funcID);
       await this.getColorReason();
-
     } catch (error) {}
   }
 
@@ -176,30 +208,23 @@ export class LeadsComponent
     });
   }
 
-  async getGridViewSetup(formName,gridViewName){
-     this.cache
-    .gridViewSetup(formName, gridViewName)
-    .subscribe((res) => {
-      if(res) {
+  async getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
         this.gridViewSetup = res;
       }
     });
   }
-  async getFuncID(funcID){
+  async getFuncID(funcID) {
     this.cache.functionList(funcID).subscribe((f) => {
-      if(f){
+      if (f) {
         this.funcIDCrr = f;
-        this.getGridViewSetup(this.funcIDCrr.formName,this.funcIDCrr.gridViewName);
+        this.getGridViewSetup(
+          this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName
+        );
       }
     });
-  }
-
-
-
-
-  ngAfterViewInit(): void {
-    this.crrFuncID = this.funcID;
-    this.changeDetectorRef.detectChanges();
   }
 
   onLoading(e) {}
@@ -289,7 +314,6 @@ export class LeadsComponent
     this.changeDataMF(e.e, e.data);
   }
 
-
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
@@ -360,7 +384,7 @@ export class LeadsComponent
       titleAction: action === 'add' ? 'Thêm tiềm năng' : 'Sao chép tiềm năng',
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
-      applyFor:'5'
+      applyFor: '5',
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -369,8 +393,8 @@ export class LeadsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-         e.event.modifiedOn = new Date();
-         this.view.dataService.update(e.event).subscribe();
+        e.event.modifiedOn = new Date();
+        this.view.dataService.update(e.event).subscribe();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -397,7 +421,7 @@ export class LeadsComponent
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa tiềm năng',
-          applyFor:'5'
+          applyFor: '5',
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -441,21 +465,21 @@ export class LeadsComponent
 
     // });
     this.view.dataService.dataSelected = data;
-      this.view.dataService
-        .delete([this.view.dataService.dataSelected], true, (opt) =>
-          this.beforeDel(opt)
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.onAction.next({ type: 'delete', data: data });
-          }
-        });
-      this.changeDetectorRef.detectChanges();
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    this.changeDetectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedLeadAsync';
-    opt.data = [itemSelected.recID,null];
+    opt.data = [itemSelected.recID, null];
     return true;
   }
   //#endregion
