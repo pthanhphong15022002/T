@@ -628,7 +628,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.lstFuncJobInfo = this.lstFuncID.filter(
               (p) => p.parentID == this.jobInfoFuncID
             );
-            console.log('ds function tt cv', this.lstFuncID);
             
             this.lstFuncSalaryBenefit = this.lstFuncID.filter(
               (p) => p.parentID == this.salaryBenefitInfoFuncID
@@ -688,7 +687,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.crrIndex = this.listEmp.findIndex(
               (x: any) => this.employeeID == x['EmployeeID']
             )};
-            console.log('index hien tai', this.crrIndex);
             }
       }
     });
@@ -3737,10 +3735,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   nextEmp() {
     if (this.listEmp) {
-      console.log('vi tri hien tai', this.crrIndex)
-      console.log('vi tri tim trong mang', this.listEmp.findIndex(
-        (x: any) => this.employeeID == x['EmployeeID']
-      ))
+      // console.log('vi tri tim trong mang', this.listEmp.findIndex(
+      //   (x: any) => this.employeeID == x['EmployeeID']
+      // ))
       this.crrIndex += 1;
       if(this.crrIndex == this.listEmp.length - 1){
         let requestNewEmpPage = new DataRequest();

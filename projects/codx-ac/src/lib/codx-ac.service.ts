@@ -302,21 +302,6 @@ export class CodxAcService {
       [entityName]
     );
   }
-  release(
-    recID: string,
-    processID: string,
-    entityName: string,
-    funcID: string,
-    title: string
-  ) {
-    return this.api.execSv<any>(
-      'AC',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'ReleaseAsync',
-      [recID, processID, entityName, funcID, title]
-    );
-  }
   setPopupSize(dialog: any, width: any, height: any) {
     dialog.dialog.properties.height = width;
     dialog.dialog.properties.width = height;

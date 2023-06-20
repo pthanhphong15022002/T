@@ -107,7 +107,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'searching/:funcID',
+        path: 'inquery/:funcID',
         component: SearchingComponent,
         data: { noReuse: true },
       },

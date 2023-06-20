@@ -12,7 +12,7 @@
   <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
     [icoCss]="'w-35px symbol h-35px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + (data?.subType | vll : 'AC100' : 'text' | async)"
     [icoStyle]="setStyles((data?.subType | vll : 'AC100' : 'color' | async))" cardCss="card-template border-bottom p-3"
-    [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2" [dataItem]="data" [status]="data?.status"
+    [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2" [dataItem]="data" [status]="itemSelected?.status"
     [date]="data?.voucherDate" [icoDateCss]="'icon-access_alarm'"
     [resources]="data?.createdBy != undefined ? data?.createdBy : ''" [resourceObjType]="'AD_Users'"
     [statusVll]="'AC040'" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
@@ -28,6 +28,7 @@
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
+  <ng-container *ngIf="itemSelected">
   <div class="d-flex align-items-center">
     <!-- <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
       <i class="text-white icon-16" [class]="data?.subType | vll : 'AC100' : 'text' | async"></i>
@@ -38,11 +39,12 @@
   </div>
   <div>
     <span *ngIf="journal.multiCurrency == '0'"
-      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalDR.toLocaleString('it-IT')}}</span>
+      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalDR.toLocaleString('it-IT')}}</span>
     <span *ngIf="journal.multiCurrency == '1'"
-      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalDR.toLocaleString('it-IT') +'
+      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalDR.toLocaleString('it-IT') +'
       '+data?.currencyID }}</span>
   </div>
+</ng-container>
 </ng-template>
 <ng-template #descTmp let-data>
   <span placement="bottom" [ngbTooltip]="memo" class="line-clamp fw-bold line-clamp-2 my-1">{{ data?.memo }}</span>
@@ -90,7 +92,7 @@
       <div class="d-flex align-self-center">
         <span class="badge badge-pill badge-primary me-3">
           <span *ngIf="journal.multiCurrency == '0'"
-            class="fw-bold">{{itemSelected?.totalAmt?.toLocaleString('it-IT')}}</span>
+            class="fw-bold">{{itemSelected?.totalDR?.toLocaleString('it-IT')}}</span>
           <span *ngIf="journal.multiCurrency == '1'" class="fw-bold">{{itemSelected?.totalDR?.toLocaleString('it-IT')+'
             '+itemSelected?.currencyID
             }}</span>

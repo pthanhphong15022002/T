@@ -2135,7 +2135,7 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
   padding-left: 5px !important;
   height: 28px !important;
   font-size: 12px !important;
-  width: 120px !important;
+  //width: 120px !important;
   line-height: 28px !important;
   padding-right: 0px !important;
 
@@ -3109,9 +3109,8 @@ codx-toolbar-report{
 .cal-notes .checkbox-list {
   padding: 7px 16px;
 }
-.h-350px.w-550px{
+.h-300px.w-500px{
   codx-calendar .codx-form .card-footer{
-
     padding-top: 0;
   }
   .h-375px{
@@ -3225,5 +3224,20 @@ codx-card-center .card.codx_cardcenter{
 /***/
 .e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {
   min-height: 36px!important;
-  border-left: 0!important;
+  border-left: 3px transparent solid!important;
+}
+
+.input-number input {
+  background-color: transparent;
+}
+lib-popup-detail{
+.conmement-body{
+    height: calc(100vh - 190px);
+    overflow: auto;
+}
+}
+lib-calendar-center{
+  #Content-Fillter{
+    display: none;
+  }
 }

@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { AuthStore, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, CallFuncService, CodxMoreFunctionComponent, DialogModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
 import { SV_Questions } from '../models/SV_Questions';
 import { SV_Surveys } from '../models/SV_Surveys';
@@ -17,6 +17,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileUpload } from '@shared/models/file.model';
 import { environment } from 'src/environments/environment';
+import { CopylinkComponent } from '../copylink/copylink.component';
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
@@ -24,6 +25,7 @@ import { environment } from 'src/environments/environment';
   encapsulation: ViewEncapsulation.None,
 })
 export class AddSurveyComponent extends UIComponent {
+  dataSV: any;
   isModeAdd = true;
   funcID = '';
   functionList: any;
@@ -45,6 +47,7 @@ export class AddSurveyComponent extends UIComponent {
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
+  @ViewChild('mf') mfTmp?: CodxMoreFunctionComponent;
   constructor(
     private injector: Injector, 
     private SvService: CodxSvService,
@@ -53,6 +56,7 @@ export class AddSurveyComponent extends UIComponent {
     private dmSV: CodxDMService,
     private change: ChangeDetectorRef,
     private notifySvr: NotificationsService,
+    private callfunc: CallFuncService
   ) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
@@ -72,7 +76,10 @@ export class AddSurveyComponent extends UIComponent {
   getSV()
   {
     this.SvService.getSV(this.recID).subscribe((item :any)=>{
-      if(item) this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
+      if(item) {
+        this.dataSV = item;
+        this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
+      }
       else this.title = this.titleNull;
     })
   }
@@ -134,9 +141,22 @@ export class AddSurveyComponent extends UIComponent {
       //Copy link
       case "SVT0101":
         {
-          var url = location.host + "/" + this.user.tenant +  "/forms?funcID=" + this.funcID +"&recID=" + this.recID;
-          navigator.clipboard.writeText(url);
-          this.notifySvr.notifyCode("SYS041");
+          var option = new DialogModel();
+          option.FormModel = this.view.formModel;
+          this.callfunc.openForm(
+            CopylinkComponent,
+            "",
+            700, 
+            280, 
+            "" , 
+            {
+              "headerText" : e?.data?.customName,
+              "funcID": this.funcID,
+              "recID": this.recID
+            },
+            "",
+            option
+          );
           break;
         }
       //Đóng khảo sát 
@@ -152,8 +172,44 @@ export class AddSurveyComponent extends UIComponent {
           })
           break;
         }
+      //Phát hành
+      case "SVT0100":
+        {
+          var obj2 = 
+          {
+            stop: false,
+            status: '5',
+          }
+          this.SvService.updateSV(this.recID,obj2).subscribe(item=>{
+            if(item) 
+            {
+              if(this.mfTmp?.arrMf)
+              {
+                var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
+                ph[0].disabled = true;
+              }
+              this.change.detectChanges();
+              this.notifySvr.notifyCode("SV001");
+            }
+            else this.notifySvr.notifyCode("SV002");
+          })
+          break;
+        }
     }
-  } 
+  }
+  
+  changeDataMF(e:any , data:any)
+  {
+    if(data?.status == "5")
+    {
+      var release = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'SVT0100'
+      );
+  
+      if(release && release[0]) release[0].disabled = true;
+    }
+  }
   // add() {
   //   var dataAnswerTemp = [
   //     {
@@ -252,7 +308,7 @@ export class AddSurveyComponent extends UIComponent {
     //     })
     //   })
     // ).subscribe();
-    this.codxService.navigate('SVT01');
+    this.codxService.navigate('SVT01',"",null,null,true);
   }
 
   review() {

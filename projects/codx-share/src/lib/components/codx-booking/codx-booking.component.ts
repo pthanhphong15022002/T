@@ -1,3 +1,4 @@
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import {
   Component,
   TemplateRef,
@@ -106,6 +107,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   curUser: import("codx-core").UserModel;
   constructor(
     injector: Injector,
+    private codxShareService: CodxShareService,
     private codxBookingService: CodxBookingService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
@@ -711,15 +713,18 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.codxBookingService
           .getProcessByCategoryID(this.categoryIDProcess)
           .subscribe((res: any) => {
-            this.codxBookingService
-              .release(
-                data,
-                res?.processID,
-                'EP_Bookings',
-                this.funcID,
-                data?.createdBy
-              )
-              .subscribe((res) => {
+            this.codxShareService
+            .codxRelease(
+              'EP',
+              data?.recID,
+              res?.processID,
+              'EP_Bookings',
+              this.formModel.funcID,
+              data?.createdBy,
+              data?.title,
+              null
+            )
+              .subscribe((res:any) => {
                 if (res?.msgCodeError == null && res?.rowCount) {
                   this.notificationsService.notifyCode('ES007');
                   data.approveStatus = EPCONST.A_STATUS.Released;
@@ -756,8 +761,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.curUser?.userID == data?.createdBy ||
       this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
-      this.codxBookingService
-        .cancel(data?.recID, '', this.formModel.entityName)
+      this.codxShareService
+        .codxCancel('EP',data?.recID, this.formModel.entityName, '')
         .subscribe((res: any) => {
           if (res && res?.msgCodeError == null) {
             this.notificationsService.notifyCode(EPCONST.MES_CODE.Success); //đã hủy gửi duyệt
@@ -1043,8 +1048,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         .subscribe((trans: any) => {
           trans.map((item: any) => {
             if (item?.stepType === 'I') {
-              this.codxBookingService
-                .approve(
+              this.codxShareService
+                .codxApprove(
                   item?.recID, 
                   this.allocateStatus,
                   '',

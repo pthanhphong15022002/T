@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEAwardsComponent } from '../employee-profile/popup-eawards/popup-eawards.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-awards',
@@ -44,6 +45,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   constructor(
     injector: Injector,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
@@ -342,17 +344,16 @@ export class EmployeeAwardsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+              '',
+              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              '',
             )
             .subscribe((result) => {
               // console.log('ok', result);

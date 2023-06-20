@@ -121,24 +121,42 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   ) {}
   ngAfterViewInit(): void {
     this.tabControl = [
-      { name: 'History', textDefault: 'Lịch sử', isActive: true ,icon: "icon-i-clock-history" },
-      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false,icon: "icon-i-paperclip"  },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false,icon: "icon-i-chat-right" }
+      {
+        name: 'History',
+        textDefault: 'Lịch sử',
+        isActive: true,
+        icon: 'icon-i-clock-history',
+      },
+      {
+        name: 'Attachment',
+        textDefault: 'Đính kèm',
+        isActive: false,
+        icon: 'icon-i-paperclip',
+      },
+      {
+        name: 'Comment',
+        textDefault: 'Bình luận',
+        isActive: false,
+        icon: 'icon-i-chat-right',
+      },
     ];
-    if (this.view?.funcID == 'ODT41' || (this.view?.funcID == 'ODT51' && this.dataItem?.dispatchType == '3') || this.xd)
+    if (
+      this.view?.funcID == 'ODT41' ||
+      (this.view?.funcID == 'ODT51' && this.dataItem?.dispatchType == '3') ||
+      this.xd
+    )
       this.tabControl.push({
         name: 'Approve',
         textDefault: 'Xét duyệt',
         isActive: false,
       });
 
-    if(this.view?.funcID != 'ODT41')
-    {
+    if (this.view?.funcID != 'ODT41') {
       this.tabControl.push({
         name: 'AssignTo',
         textDefault: 'Giao việc',
         isActive: false,
-        icon: "icon-i-clipboard-check"
+        icon: 'icon-i-clipboard-check',
       });
     }
   }
@@ -823,20 +841,32 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT3007':
       case 'ODT5107':
       case 'ODT5208': {
-        this.api.execSv("DM","DM","FileBussiness","GetFilesForOutsideAsync",["",datas?.recID,this.formModel.entityName,"source"]).subscribe((item:any)=>{
-          
-          if(item && item.length > 0)
-          {
-            this.dialog = this.callfunc.openForm(UpdateVersionComponent, '', 800, 600,"",[this.formModel,item]);
-            this.dialog.closed.subscribe((x) => {
-              if (x.event != null) {
-                this.data = x.event[0];
-                this.data.lstUserID = getListImg(x.event[0].relations);
-                this.data.listInformationRel = x.event[1];
-              }
-            });
-          }
-        })
+        this.api
+          .execSv('DM', 'DM', 'FileBussiness', 'GetFilesForOutsideAsync', [
+            '',
+            datas?.recID,
+            this.formModel.entityName,
+            'source',
+          ])
+          .subscribe((item: any) => {
+            if (item && item.length > 0) {
+              this.dialog = this.callfunc.openForm(
+                UpdateVersionComponent,
+                '',
+                800,
+                600,
+                '',
+                [this.formModel, item]
+              );
+              this.dialog.closed.subscribe((x) => {
+                if (x.event != null) {
+                  this.data = x.event[0];
+                  this.data.lstUserID = getListImg(x.event[0].relations);
+                  this.data.listInformationRel = x.event[1];
+                }
+              });
+            }
+          });
         break;
       }
       //Chuyển vào thư mục
@@ -1029,15 +1059,13 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                 this.cancelAproval(item);
                                 //this.callfunc.openForm();
                               } else if (res2?.eSign == false) {
-                                this.api
-                                  .execSv(
-                                    'OD',
-                                    'ERM.Business.Core',
-                                    'DataBusiness',
-                                    'CancelAsync',
-                                    [item?.recID, '', this.formModel.entityName]
-                                  )
-                                  .subscribe((res3) => {
+                                this.shareService.codxCancel(
+                                  'OD',
+                                  item?.recID, 
+                                  this.formModel.entityName,
+                                  '',
+                                )
+                                .subscribe((res3) => {
                                     if (res3) {
                                       this.data.status = '3';
                                       this.data.approveStatus = '1';
@@ -1266,7 +1294,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           this.formModel,
           this.view.dataService,
           this
-        )
+        );
         // this.shareService.defaultMoreFunc(
         //   val,
         //   datas,
@@ -1296,7 +1324,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     else this.notifySvr.notify('Bạn không có quyền thực hiện chức năng này.');
     return false;
   }
-  
+
   //Thu hồi quyền
   recall(id: any) {
     this.odService.recallRelation(id).subscribe((item) => {
@@ -1428,10 +1456,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    
-    if ((relationType == '1') || (this.formModel.funcID == "ODT41" && relationType == '2')) {
-      if (this.formModel.funcID == 'ODT31') 
-      {
+    if (
+      relationType == '1' ||
+      (this.formModel.funcID == 'ODT41' && relationType == '2')
+    ) {
+      if (this.formModel.funcID == 'ODT31') {
         var text = this.ms020?.customName;
         if (!text) text = '';
         return Util.stringFormat(
@@ -1439,7 +1468,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           this.fmTextValuelist(relationType, '6'),
           agencyName
         );
-      } 
+      }
       return 'Gửi đến ' + agencyName;
     }
 
@@ -1456,24 +1485,19 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.view.dataService.data[index] = data;
   }
   changeDataMF(e: any, data: any) {
-    var funcList = this.codxODService.loadFunctionList(this.view.formModel.funcID);
-    if(isObservable(funcList))
-    {
-      funcList.subscribe(fc=>{
-        this.changeDataMFBefore(e,data,fc);
-      })
-    }
-    else this.changeDataMFBefore(e,data,funcList);
-   
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
   }
-  changeDataMFBefore(e: any, data: any , fc:any)
-  {
-    if(fc.runMode == "1")
-    {
-      this.shareService.changeMFApproval(e,data);
-    }
-    else
-    {
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data);
+    } else {
       //Bookmark
       var bm = e.filter(
         (x: { functionID: string }) =>
@@ -1501,7 +1525,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         if (bm[0]) bm[0].disabled = false;
       }
       if (
-        (this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51') &&
+        (this.formModel.funcID == 'ODT41' ||
+          this.formModel.funcID == 'ODT51') &&
         data?.status != '1' &&
         data?.status != '2' &&
         data?.approveStatus != '2' &&
@@ -1510,7 +1535,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       ) {
       }
 
-      if (this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51') {
+      if (
+        this.formModel.funcID == 'ODT41' ||
+        this.formModel.funcID == 'ODT51'
+      ) {
         if (
           data?.status != '1' &&
           data?.status != '2' &&
@@ -1538,7 +1566,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
           var approvel = e.filter(
             (x: { functionID: string }) =>
-              x.functionID == 'ODT212' || x.functionID == 'ODT3012' || x.functionID == 'ODT5112'
+              x.functionID == 'ODT212' ||
+              x.functionID == 'ODT3012' ||
+              x.functionID == 'ODT5112'
           );
           for (var i = 0; i < approvel.length; i++) {
             approvel[i].disabled = false;
@@ -1613,7 +1643,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       );
       if (approvelCL[0]) approvelCL[0].disabled = true;
       //Trả lại
-      if (data?.status == '4' ) {
+      if (data?.status == '4') {
         var approvel = e.filter(
           (x: { functionID: string }) =>
             x.functionID == 'ODT113' || x.functionID == 'ODT5213'
@@ -1625,19 +1655,16 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   //Gửi duyệt
   release(data: any, processID: any) {
-    this.api
-      .execSv(
+    this.shareService
+      .codxRelease(
         this.view.service,
-        'ERM.Business.Core',
-        'DataBusiness',
-        'ReleaseAsync',
-        [
-          data?.recID,
-          processID,
-          this.view.formModel.entityName,
-          this.formModel.funcID,
-          '<div>' + data?.title + '</div>',
-        ]
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.formModel.funcID,
+        '',
+        '<div>' + data?.title + '</div>',
+        ''
       )
       .subscribe((res2: any) => {
         if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
@@ -1677,7 +1704,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     dataSave.agencyID = dataSave.departmentID;
     dataSave.agencyName = '';
     dataSave.departmentID = departmentID;
-    this.odService.saveDispatch(this.dataRq, dataSave,true).subscribe();
+    this.odService.saveDispatch(this.dataRq, dataSave, true).subscribe();
   }
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
