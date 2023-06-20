@@ -51,8 +51,6 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('popDetail') popDetail!: TemplateRef<any>;
   @ViewChild('templateDetailGird') templateDetailGird: TemplateRef<any>;
 
-  
-
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -89,6 +87,7 @@ export class QuotationsComponent extends UIComponent {
   isNewVersion = false;
   popupView: DialogRef;
   viewType: any;
+  paramDefault: any;
 
   constructor(
     private inject: Injector,
@@ -134,6 +133,12 @@ export class QuotationsComponent extends UIComponent {
   }
 
   async loadSetting() {
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) this.paramDefault = JSON.parse(dataParam.dataValue);
+      }
+    });
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
     );
@@ -254,8 +259,8 @@ export class QuotationsComponent extends UIComponent {
   changeDataMF(e, data, type = 1) {
     if (e != null && data != null) {
       e.forEach((res) => {
-        if(type==11){
-          res.isbookmark = false
+        if (type == 11) {
+          res.isbookmark = false;
         }
         switch (res.functionID) {
           case 'CM0202_1':
@@ -401,7 +406,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   copy(data) {
-    let copyToRecID = data.recID
+    let copyToRecID = data.recID;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -415,7 +420,7 @@ export class QuotationsComponent extends UIComponent {
         data: res,
         action: 'copy',
         headerText: this.titleAction,
-        copyToRecID:copyToRecID
+        copyToRecID: copyToRecID,
       };
       let option = new DialogModel();
       option.IsFull = true;
