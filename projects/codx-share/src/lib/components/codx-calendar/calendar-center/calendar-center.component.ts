@@ -120,8 +120,31 @@ export class CalendarCenterComponent
       this.calendar_center = (this.viewBase?.currentView as any)?.schedule;
       if (this.calendar_center) {
         clearInterval(myInterval);
+        for (const data of dataSource) {
+          if (
+            data.transType === 'TM_AssignTasks' ||
+            data.transType === 'TM_MyTasks'
+          ) {
+            let tempStartDate = new Date(data.startDate);
+            let tempEndDate = new Date(data.endDate);
+            data.startDate = new Date(
+              tempStartDate.getFullYear(),
+              tempStartDate.getMonth(),
+              tempStartDate.getDate(),
+              tempStartDate.getHours(),
+              tempStartDate.getMinutes()
+            ).toString();
+            data.endDate = new Date(
+              tempEndDate.getFullYear(),
+              tempEndDate.getMonth(),
+              tempEndDate.getDate(),
+              tempEndDate.getHours(),
+              tempEndDate.getMinutes()
+            ).toString();
+          }
+        }
         this.calendar_center.dataSource = dataSource;
-        this.calendar_center.setEventSettings();
+        this.calendar_center?.setEventSettings();
         this.detectorRef.detectChanges();
       }
     });
