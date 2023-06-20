@@ -40,7 +40,6 @@ export class CodxAddTaskComponent implements OnInit {
   vllShare = 'BP021';
   linkQuesiton = 'http://';
   listGroup = [];
-  formModelMenu: FormModel;
   recIdEmail = '';
   isNewEmails = true;
   stepsTasks: DP_Instances_Steps_Tasks;
