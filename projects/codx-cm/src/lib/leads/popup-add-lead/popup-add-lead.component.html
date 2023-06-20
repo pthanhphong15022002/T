@@ -176,7 +176,6 @@
       <div class="form-group">
         <codx-label
           fiedName="AnnualRevenue"
-          default="doanh thu hàng năm"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -253,7 +252,6 @@
         (valueChange)="valueChange($event)"
       >
       </codx-input>
-
       </div>
 
       </div>
@@ -262,19 +260,19 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="BusinessLineID"
+          fiedName="EndDate"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
         </codx-label>
         <codx-input
-        [formModel]="form.formModel"
-        field="businessLineID"
-        [crrValue]="lead?.businessLineID"
-        (valueChange)="valueChange($event)"
+        type="datetime"
+        field="endDate"
+        format="d"
+        [crrValue]="lead?.endDate"
+        (valueChange)="valueChangeDate($event)"
       >
       </codx-input>
-
 
       </div>
     </div>
@@ -350,6 +348,13 @@
       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
+
+  <ng-template #tabInputInfo>
+    <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"
+    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
 </ng-container>
 
 <ng-template #dataIsEmpty>
@@ -404,13 +409,17 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <codx-input
+        <!-- <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="owner"
         (valueChange)="valueChange($event)"
       >
-      </codx-input>
+      </codx-input> -->
+      <ejs-combobox [dataSource]="listParticipants"
+      (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+      [placeholder]="gridViewSetup?.Owner?.description"
+      [allowFiltering]='true' [value]="owner"></ejs-combobox>
       </div>
     </div>
     <div class="col-6">
@@ -517,8 +526,6 @@
           </codx-input>
         </div>
       </div>
-
-
     </div>
     <div class="row">
       <div class="col-6">
@@ -538,8 +545,27 @@
           </codx-input>
         </div>
       </div>
-
-
     </div>
+</ng-template>
 
+<ng-template #tabCustomFieldDetail let-form>
+  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty ">
+    <ng-container *ngFor="let step of listInstanceSteps">
+      <ng-container *ngIf="step?.fields?.length > 0">
+        <ng-container *ngFor="let item of step.fields">
+          <div class="form-group">
+            <codx-input-custom-field
+              [customField]="item"
+              [checkValid]="false"
+              [objectId]="item.recID"
+              [objectType]="'DP_Instances'"
+              [formModel]="dialog.formModel"
+              (valueChangeCustom)="valueChangeCustom($event)"
+            >
+            </codx-input-custom-field>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
 </ng-template>

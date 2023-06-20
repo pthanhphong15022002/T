@@ -105,6 +105,8 @@ export class LeadsComponent
   oldIdLead: string = '';
   funcIDCrr:any;
   gridViewSetup: any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -155,8 +157,23 @@ export class LeadsComponent
   async executeApiCalls() {
     try {
       await this.getFuncID(this.funcID);
+      await this.getColorReason();
 
     } catch (error) {}
+  }
+
+  async getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
   }
 
   async getGridViewSetup(formName,gridViewName){
@@ -343,6 +360,7 @@ export class LeadsComponent
       titleAction: action === 'add' ? 'Thêm tiềm năng' : 'Sao chép tiềm năng',
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
+      applyFor:'5'
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -379,6 +397,7 @@ export class LeadsComponent
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa tiềm năng',
+          applyFor:'5'
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -436,7 +455,7 @@ export class LeadsComponent
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedLeadAsync';
-    opt.data = [itemSelected.recID];
+    opt.data = [itemSelected.recID,null];
     return true;
   }
   //#endregion

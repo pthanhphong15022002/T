@@ -39,7 +39,7 @@ export class TabDetailCustomComponent
   // @Output() contactEvent = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
-  isUpdate = true; //xư lý cho edit trung tuy chinh ko
+  // isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
   listContract: CM_Contacts[];

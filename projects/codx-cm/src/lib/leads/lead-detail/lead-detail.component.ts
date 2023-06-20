@@ -17,7 +17,8 @@ export class LeadDetailComponent  implements OnInit {
   @Input() funcID: any; //
   @Input() gridViewSetup: any;
   @Input() dataObj?: any;
-
+  @Input() colorReasonSuccess: any;
+  @Input() colorReasonFail: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
@@ -66,7 +67,7 @@ export class LeadDetailComponent  implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
-      this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+      this.dataSelected = this.dataSelected;
       this.afterLoad();
     }
   }

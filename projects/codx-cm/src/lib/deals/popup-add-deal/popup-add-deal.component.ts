@@ -81,10 +81,7 @@ export class PopupAddDealComponent
   readonly actionCopy: string = 'copy';
   readonly actionEdit: string = 'edit';
   readonly typeForDeal: string = '1';
-  readonly fieldCbxProcess = { text: 'processName', value: 'recID' };
-  readonly fieldCbxCampaigns = { text: 'campaignName', value: 'recID' };
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
-  readonly fieldCbxChannels = { text: 'channelName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   // Tab control
@@ -727,7 +724,7 @@ export class PopupAddDealComponent
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.deal.processID : processId;
-    var data = [processId, this.deal?.refID, this.action, '1'];
+      var data = [processId, this.deal?.refID, this.action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
