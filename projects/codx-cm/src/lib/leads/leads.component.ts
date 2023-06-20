@@ -131,7 +131,7 @@ export class LeadsComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    this.dataObj = {processID :'5d4ed88c-0e41-11ee-bec7-988d46c4cbe1'}
+    this.dataObj = {processID :'5d4ed88c-0e41-11ee-bec7-988d46c4cbe1'} /// truyền mặc định tạm
     this.executeApiCalls();
   }
   ngOnChanges(changes: SimpleChanges): void {}
