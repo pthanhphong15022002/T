@@ -26,7 +26,7 @@
       </codx-label>
     </div>
     <codx-input field="taskGroupID" [formModel]="form.formModel" [Group]="form.formGroup"
-      (valueChange)="cbxChange($event)" [disabled]="readOnly">
+      (valueChange)="cbxChange($event)" [disabled]="readOnly || action=='edit'">
     </codx-input>
   </div>
   <div class="row mx-0">
