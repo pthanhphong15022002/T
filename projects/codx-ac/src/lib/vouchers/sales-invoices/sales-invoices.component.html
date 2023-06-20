@@ -46,7 +46,17 @@
 </ng-template>
 
 <ng-template #desc2Tmp let-data>
-  <span class="text-gray-500">{{ data?.memo }}</span>
+  <span
+    class="text-gray-500"
+    style="
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    "
+    >{{ data?.memo }}</span
+  >
 </ng-template>
 
 <ng-template #titleTmp let-data>
