@@ -40,7 +40,6 @@ export class CodxAddTaskComponent implements OnInit {
   vllShare = 'BP021';
   linkQuesiton = 'http://';
   listGroup = [];
-  formModelMenu: FormModel;
   recIdEmail = '';
   isNewEmails = true;
   stepsTasks: DP_Instances_Steps_Tasks;
@@ -249,7 +248,11 @@ export class CodxAddTaskComponent implements OnInit {
           taskID: this.stepsTasks['recID'],
         });
     });
-    this.participant = listRole;
+    if(this.typeTask?.value === 'M' || this.typeTask?.value === 'B'){
+      this.participant = listRole;
+    }else{
+      this.owner = listRole;
+    }
   }
 
   onDeleteOwner(objectID, data) {

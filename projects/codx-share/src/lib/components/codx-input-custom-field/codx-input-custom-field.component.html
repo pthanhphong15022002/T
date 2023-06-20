@@ -180,11 +180,11 @@
     </ngb-rating>
   </ng-container>
 
-  <ng-container *ngIf="customField.dataType == 'A' && customField?.dataValue">
+  <ng-container *ngIf="customField.dataType == 'A'">
     <codx-attachment
       #attachment
-      [objectId]="customField?.dataValue.split(';')[0]"
-      [objectType]="customField?.dataValue.split(';')[1]"
+      [objectId]="objectId"
+      [objectType]="objectType"
       hideFolder="1"
       hideImageUpload="0"
       hideImageThumb="0"

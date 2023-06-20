@@ -239,11 +239,11 @@ export class PopupAddLeadComponent
     instance.instanceNo = lead.leadID;
     instance.owner = this.owner;
     instance.processID = lead.processID;
-    instance.stepID = lead.currentStep;
+    instance.stepID = lead.stepID;
   }
   updateDateDeal(instance: tmpInstances, lead: CM_Leads) {
     if (this.action !== this.actionEdit) {
-      lead.currentStep = this.listInstanceSteps[0].stepID;
+      lead.stepID = this.listInstanceSteps[0].stepID;
       lead.nextStep = this.listInstanceSteps[1].stepID;
       lead.status = '1';
       lead.refID = instance.recID;
