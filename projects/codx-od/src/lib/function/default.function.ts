@@ -79,7 +79,7 @@ function convertHtmlAgency(agencyName: any , headerText: any) {
   var divE = document.createElement('div');
   divE.classList.add("d-flex");
   if(agencyName)
-    divE.innerHTML = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-apartment icon-16 text-gray-600"></span><span class="ms-1">' + agencyName + '</span></div>';
+    divE.innerHTML = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1">' + agencyName + '</span></div>';
   else
   {
     divE.classList.add("text-gray-400")
@@ -93,7 +93,7 @@ function convertHtmlAgency2(agencyName,txtLstAgency:any)
     return '<div><span class="tex-gray-300">Tên công ty</span></div>';
   var desc = '<div class="d-flex">';
   if(agencyName)
-    desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-18"></span><span class="ms-1 fs-6 fw-bold">' +agencyName+'</span></div>';
+    desc += '<div class="d-flex align-items-center me-2"><span class="icon-i-building icon-18"></span><span class="ms-1 fs-6 fw-bold">' +agencyName+'</span></div>';
   if(txtLstAgency)
     desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div>';
   return desc + '</div>';
