@@ -330,7 +330,7 @@ export class JournalsComponent extends UIComponent {
   delete(data): void {
     this.journalService.hasVouchers(data).subscribe((hasVouchers) => {
       if (hasVouchers) {
-        this.notiService.notifyCode('AC0002', 0, `"${data.journalName}"`);
+        this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
         return;
       }
 

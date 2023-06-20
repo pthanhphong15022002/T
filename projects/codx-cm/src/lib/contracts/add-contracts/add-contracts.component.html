@@ -10,7 +10,7 @@
         class="fs-3 fw-bold"
         [formModel]="dialog.formModel"
         fiedName=""
-        default="Thêm hợp đồng"
+        [default]="headerTest"
       ></codx-label>
     </div>
     <div class="d-flex align-items-center">
@@ -316,6 +316,7 @@
     [quotationLinesEdit]="quotationLinesEdit"
     [quotationLinesDeleted]="quotationLinesDeleted"
     [actionParent]="action"
+    [isSetMoreFunc]="true"
     (eventQuotationLines)="eventQuotationLines($event)"
   ></codx-quotations-lines>
 </ng-template>
