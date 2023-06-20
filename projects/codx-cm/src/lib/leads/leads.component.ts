@@ -31,6 +31,10 @@ import { CM_Customers } from '../models/cm_model';
 import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from './popup-convert-lead/popup-convert-lead.component';
 import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.component';
+import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
+import { LeadDetailComponent } from './lead-detail/lead-detail.component';
+import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 
 @Component({
   selector: 'lib-leads',
@@ -58,6 +62,9 @@ export class LeadsComponent
   @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+
+
+  @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -109,6 +116,9 @@ export class LeadsComponent
   gridViewSetup: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
+
+  readonly applyForLead: string = '5';
+
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -249,45 +259,97 @@ export class LeadsComponent
     this.clickMF(e.e, e.data);
   }
 
+
+
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      if (!data?.roles?.isOnwer) {
-        for (let more of $event) {
-          switch (more.functionID) {
-            default:
-              more.disabled = true;
-          }
+      for (let eventItem of $event) {
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        if (mappingFunction) {
+          mappingFunction(eventItem, data);
         }
       }
-
-      // else {
-      //     for (let more of $event) {
-      //       switch (more.functionID) {
-      //         case 'SYS03':
-      //         case 'SYS04':
-      //         case 'SYS02':
-      //         case 'CM0201_2':
-      //           more.isblur = false;
-      //           break;
-      //         default:
-      //           more.isblur = true;
-      //       }
-      //     }
-      // }
     }
   }
-  // checkMoreReason(data, isUseReason) {
-  //   if (data.status != '2' || isUseReason) {
-  //     return true;
-  //   }
-  //   if (data.closed) {
-  //     return true;
-  //   }
-  //   if (!data.permissionMoveInstances) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+
+  getRoleMoreFunction(type) {
+    var functionMappings;
+    var isDisabled = (eventItem, data) => {
+      if ((data.closed && data.status != '1') || data.status == '1' || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isDelete = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isCopy = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true ;
+      }
+    };
+    var isEdit = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isClosed = (eventItem, data) => {
+      eventItem.disabled = data.closed || data.status == '1' || this.checkMoreReason(data);
+    };
+    var isOpened = (eventItem, data) => {
+      eventItem.disabled = !data.closed || data.status == '1' || this.checkMoreReason(data);
+    };
+    var isStartDay = (eventItem, data) => {
+      eventItem.disabled = data.status != '1';
+    };
+
+    var isConvertLead = (eventItem, data) => {
+      eventItem.disabled = false
+    };
+
+    var isMergeLead = (eventItem, data) => {
+      eventItem.disabled = false
+    };
+
+
+    functionMappings = {
+      CM0205_1: isConvertLead, // convertLead
+      CM0205_2: isMergeLead, // mergeLead
+      CM0205_3: isDisabled,
+      CM0205_4: isStartDay, // startyDay
+      CM0205_5: isDisabled, // success
+      CM0205_6: isDisabled, // fail
+      CM0205_7: isDisabled,
+      CM0205_8: isClosed,
+      CM0205_9: isDisabled,
+      CM0205_10: isClosed, // close lead
+      CM0205_11: isOpened, // open lead
+      SYS101: isDisabled,
+      SYS103: isEdit,
+      SYS03: isEdit,
+      SYS104: isCopy,
+      SYS04: isCopy,
+      SYS102: isDelete,
+      SYS02: isDelete,
+    };
+
+    return functionMappings[type];
+  }
+
+  checkMoreReason(tmpPermission) {
+    if (
+      !tmpPermission.roleMore.isReasonSuccess &&
+      !tmpPermission.roleMore.isReasonFail &&
+      !tmpPermission.roleMore.isMoveStage
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+
 
   clickMF(e, data) {
     this.dataSelected = data;
@@ -308,8 +370,37 @@ export class LeadsComponent
       case 'CM0205_2':
         this.mergeLead(data);
         break;
+      case 'CM0205_4':
+        this.startDay(data);
+        break;
+      // Close deal
+      case 'CM0205_10':
+        this.openOrCloseLead(data, true);
+        break;
+      // Open deal
+      case 'CM0205_11':
+        this.openOrCloseLead(data, false);
+        break;
+      case  'CM0205_3':
+        this.moveStage(data);
+        break;
+      case 'CM0205_5':
+        this.moveReason(data, true);
+        break;
+      case  'CM0205_6':
+        this.moveReason(data, false);
+        break;
+      case  'CM0205_9':
+        this.moveReason(data, false);
+        break;
+      // case 'CM0201_7':
+      //   this.popupOwnerRoles(data);
+      //   break;
     }
   }
+
+
+
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
@@ -343,17 +434,7 @@ export class LeadsComponent
 
   //#region CRUD
   add() {
-    switch (this.funcID) {
-      case 'CM0205': {
-        //statements;
-        this.addLead();
-        break;
-      }
-      default: {
-        //statements;
-        break;
-      }
-    }
+    this.addLead();
   }
 
   addLead() {
@@ -384,7 +465,7 @@ export class LeadsComponent
       titleAction: action === 'add' ? 'Thêm tiềm năng' : 'Sao chép tiềm năng',
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
-      applyFor: '5',
+      applyFor: this.applyForLead
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -421,7 +502,7 @@ export class LeadsComponent
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa tiềm năng',
-          applyFor: '5',
+          applyFor:this.applyForLead
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -574,6 +655,238 @@ export class LeadsComponent
     });
   }
   //#endregion
+
+  startDay(data) {
+    this.notificationsService
+      .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          var datas = [data.recID];
+          this.codxCmService.startLead(datas).subscribe((res) => {
+            if (res) {
+              this.dataSelected = res[0];
+              this.notificationsService.notifyCode('SYS007');
+              this.view.dataService.update(this.dataSelected).subscribe();
+              // if (this.kanban) this.kanban.updateCard(this.dataSelected);
+            }
+            this.detectorRef.detectChanges();
+          });
+
+        }
+      });
+  }
+
+
+  openOrCloseLead(data, check) {
+    var datas = [data.recID, data.processID, check];
+    this.notificationsService
+      .alertCode('DP018',null ,this.titleAction , "'"+data.leadName + "'")
+      .subscribe((info) => {
+        if (info.event.status == 'Y') {
+          this.codxCmService.openOrClosedLead(datas).subscribe((res) => {
+            if (res) {
+              data.closed = check ? true : false;
+              data.closedOn = check ? new Date() : data.ClosedOn;
+              data.ModifiedOn = new Date();
+              this.dataSelected = data;
+              this.view.dataService.update(data).subscribe();
+              this.notificationsService.notifyCode(check ? 'DP016' : 'DP017',0,"'"+data.leadName+"'");
+              if (data.showInstanceControl === '1') {
+                this.view.dataService.update(this.dataSelected).subscribe();
+              }
+              if (
+                data.showInstanceControl === '0' ||
+                data.showInstanceControl === '2'
+              ) {
+                this.view.dataService.remove(this.dataSelected).subscribe();
+                this.dataSelected = this.view.dataService.data[0];
+                this.view.dataService.onAction.next({
+                  type: 'delete',
+                  data: data,
+                });
+              }
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+  }
+
+
+  moveStage(data: any) {
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      this.cache
+        .gridViewSetup(fun.formName, fun.gridViewName)
+        .subscribe((grvSt) => {
+          var formMD = new FormModel();
+          formMD.funcID = fun.functionID;
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          var stepReason = {
+            isUseFail: false,
+            isUseSuccess: false,
+          };
+          var dataCM = {
+            refID: data?.refID,
+            processID: data?.processID,
+            stepID: data?.stepID,
+            nextStep: data?.nextStep,
+          };
+          var obj = {
+            stepName: data?.currentStepName,
+            formModel: formMD,
+            deal: data,
+            stepReason: stepReason,
+            headerTitle: this.titleAction,
+            applyFor: this.applyForLead,
+            dataCM: dataCM,
+          };
+          var dialogMoveStage = this.callfc.openForm(
+            PopupMoveStageComponent,
+            '',
+            850,
+            900,
+            '',
+            obj
+          );
+          dialogMoveStage.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              var instance = e.event.instance;
+              var index =
+                e.event.listStep.findIndex(
+                  (x) =>
+                    x.stepID === instance.stepID &&
+                    !x.isSuccessStep &&
+                    !x.isFailStep
+                ) + 1;
+              var nextStep = '';
+              if (index != -1) {
+                if (index != e.event.listStep.length) {
+                  var listStep = e.event.listStep;
+                  nextStep = listStep[index]?.stepID;
+                }
+              }
+
+              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              this.codxCmService.moveStageLead(dataUpdate).subscribe((res) => {
+                if (res) {
+                  data = res[0];
+                  this.view.dataService.update(data).subscribe();
+                  this.detailViewLead.dataSelected = data;
+
+                  if (e.event.isReason != null) {
+                    this.moveReason(data, e.event.isReason);
+                  }
+                  this.detectorRef.detectChanges();
+                }
+              });
+            }
+          });
+        });
+    });
+  }
+
+  moveReason(data: any, isMoveSuccess: boolean) {
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
+    this.cache.functionList(functionID).subscribe((fun) => {
+      this.openFormReason(data, fun, isMoveSuccess);
+    });
+  }
+
+  openFormReason(data, fun, isMoveSuccess) {
+    var formMD = new FormModel();
+    formMD.funcID = fun.functionID;
+    formMD.entityName = fun.entityName;
+    formMD.formName = fun.formName;
+    formMD.gridViewName = fun.gridViewName;
+    var dataCM = {
+      refID: data?.refID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+      nextStep: data?.nextStep,
+    };
+    var obj = {
+      headerTitle: fun.defaultName,
+      formModel: formMD,
+      isReason: isMoveSuccess,
+      applyFor: this.applyForLead,
+      dataCM: dataCM,
+      stepName: data.currentStepName,
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupMoveReasonComponent,
+      '',
+      800,
+      600,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        data = this.updateReasonLead(e.event?.instance, data);
+        var datas = [data];
+        this.codxCmService.moveLeadReason(datas).subscribe((res) => {
+          if (res) {
+            data = res[0];
+            this.view.dataService.update(data).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+        // }
+      }
+    });
+  }
+  updateReasonLead(instance: any, lead: any) {
+    lead.status = instance.status;
+    lead.stepID = instance.stepID;
+    lead.nextStep = '';
+    return lead;
+  }
+
+  popupOwnerRoles(data) {
+    this.dataSelected = data;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      var formMD = new FormModel();
+      let dialogModel = new DialogModel();
+      formMD.funcID = fun.functionID;
+      formMD.entityName = fun.entityName;
+      formMD.formName = fun.formName;
+      formMD.gridViewName = fun.gridViewName;
+      dialogModel.zIndex = 999;
+      dialogModel.FormModel = formMD;
+      var dataCM = {
+        refID: data?.refID,
+        processID: data?.processID,
+        stepID: data?.stepID,
+      };
+      var dialog = this.callfc.openForm(
+        PopupEditOwnerstepComponent,
+        '',
+        500,
+        280,
+        '',
+        [null, this.titleAction, data,this.applyForLead, dataCM],
+        '',
+        dialogModel
+      );
+      dialog.closed.subscribe((e) => {
+        if (e && e?.event != null) {
+          this.notificationsService.notifyCode('SYS007');
+          this.detectorRef.detectChanges();
+        }
+      });
+    });
+  }
+
+
 
   //#region event
   selectedChange(data) {
