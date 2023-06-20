@@ -89,7 +89,7 @@
         </ng-container>
       </ng-template>
       <ng-template #nodata>
-        <div (click)="openFile(item)" class="cursor-pointer d-flex justify-content-between align-items-center w-100">
+        <div class="cursor-pointer d-flex justify-content-between align-items-center w-100">
           <div class="has-action-menu-1 d-flex align-items-center w-100">
             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
             <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex align-items-center cursor-pointer">
@@ -162,13 +162,13 @@
           </ng-container>
           <ng-template #simple>
             <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"
-              title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})" [descLine]="1">
+              title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})" [descLine]="1" (click)="openFile(item)">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
             <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"
               title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
-              subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1">
+              subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1" (click)="openFile(item)">
             </codx-temp-full>
             <div *ngIf="isReferType && item.referType == 'source'" class="div-icon-source"><i class="icon-14 icon-i-lock-fill"></i></div>
           </ng-template>

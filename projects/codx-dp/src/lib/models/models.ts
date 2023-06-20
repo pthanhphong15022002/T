@@ -53,6 +53,13 @@ export class DP_Processes {
   releasedName: string;
   module: string;
   function: string;
+  read: boolean = true;
+  create: boolean = true;
+  write: boolean = true;
+  assign: boolean = true;
+  delete: boolean = true;
+  deleted: boolean = false;
+
 }
 
 export class DP_Processes_Permission {

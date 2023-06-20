@@ -347,6 +347,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValueYesNo();
     this.getValueDayHour();
     if (this.action === 'copy') {
+      this.process.category = "1";
+
       this.listPermissions = [];
       this.listPermissions = JSON.parse(
         JSON.stringify(this.process.permissions)
@@ -393,8 +395,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.getAvatar(this.process);
       this.instanceNoSetting = this.process.instanceNoSetting;
     } else if (this.action == 'add') {
-      this.process.autoName =
-        this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
+      this.process.autoName = this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
       this.setDefaultOwner();
       // this.step.owner = this.user.userID;
       // this.process.instanceNoSetting = this.process.processNo;
@@ -409,6 +410,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefaultCF = fun.customName || fun.description;
     });
+
+    this.process.category = this.systemProcess ? '0' : '1';
 
     this.getGrvStep();
     this.getGrvStepReason();
@@ -530,7 +533,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handlerSave() {
+    this.addStepsBeforeSave();
     if (this.action == 'add' || this.action == 'copy') {
+      if (this.process.applyFor != '0') {
+        this.setAutoName(this.process.applyFor);
+      }
       this.onAdd();
     } else if (this.action == 'edit') {
       this.onUpdate();
@@ -538,14 +545,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   beforeSave(op) {
-    this.addStepsBeforeSave();
     var data = [];
     op.className = 'ProcessesBusiness';
     if (this.action == 'add' || this.action == 'copy') {
-      if (this.process.applyFor != '0') {
-        this.setAutoName(this.process.applyFor);
-      }
-
       op.methodName = 'AddProcessAsync';
       data = [this.process, this.recIDCategory];
     } else {
@@ -612,25 +614,49 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   onAdd() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
-        this.attachment?.clearData();
-        this.imageAvatar.clearData();
-        if (res) {
-          this.dialog.close(res.save);
-          this.dpService.upDataApprovalStep(
-            this.listStepApprover,
-            this.listStepApproverDelete
-          );
-          // } else {
-          //   this.dialog.close();
-          //   //xoa Aprover
-          //   if (this.recIDCategory) {
-          //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
-          //   }
-        }
-      });
+    if (!this.systemProcess) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option), 0)
+        .subscribe((res) => {
+          this.attachment?.clearData();
+          this.imageAvatar.clearData();
+          if (res) {
+            this.dialog.close(res.save);
+            this.dpService.upDataApprovalStep(
+              this.listStepApprover,
+              this.listStepApproverDelete
+            );
+            // } else {
+            //   this.dialog.close();
+            //   //xoa Aprover
+            //   if (this.recIDCategory) {
+            //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+            //   }
+          }
+        });
+    } else {
+      var data = [this.process, this.recIDCategory];
+
+      this.api
+        .execSv<any>(
+          'DP',
+          'ERM.Business.DP',
+          'ProcessesBusiness',
+          'AddProcessAsync',
+          data
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.dpService.upDataApprovalStep(
+              this.listStepApprover,
+              this.listStepApproverDelete
+            );
+            this.codxService.navigate('', `shared/settings/CMS`);
+            this.dialog.close(res);
+            this.notiService.notifyCode('SYS006');
+          }
+        });
+    }
   }
 
   onUpdate() {
@@ -668,7 +694,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
     } else {
-      this.addStepsBeforeSave();
       const listStepDrop = this.convertListStepDrop();
       var data = [
         this.process,
@@ -690,7 +715,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            console.log(res);
             this.dpService.upDataApprovalStep(
               this.listStepApprover,
               this.listStepApproverDelete
@@ -899,7 +923,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (nodes[oldNode] as HTMLElement).classList.remove('active');
         break;
     }
-    if (oldNode > newNode && this.currentTab == this.processTab && this.action!='edit') {
+    if (
+      oldNode > newNode &&
+      this.currentTab == this.processTab &&
+      this.action != 'edit'
+    ) {
     } else {
       (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
     }

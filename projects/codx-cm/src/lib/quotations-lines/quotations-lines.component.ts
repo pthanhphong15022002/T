@@ -120,6 +120,17 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
 
   //#region  CRUD
   // region QuotationLines
+  async changeDataMFQuotationLines(event) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa
+          case 'SYS03': //sửa
+          case 'SYS04': //copy
+        }
+      });
+    }
+  }
   clickMFQuotationLines(e, data) {
     this.titleActionLine = e.text;
     switch (e.functionID) {
@@ -465,7 +476,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   quotationsLineChanged(e) {
     if (!e.field || !e.data) return;
     let lineCrr = e.data;
-
     switch (e.field) {
       case 'itemID':
         this.loadItem(e.value, lineCrr);
