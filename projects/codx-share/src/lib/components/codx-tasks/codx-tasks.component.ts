@@ -95,8 +95,6 @@ export class CodxTasksComponent
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
 
-  
-
   @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
@@ -191,7 +189,7 @@ export class CodxTasksComponent
   // progressThickness: number = 10;
   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
   HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
-  listTaskGoals = [] ;
+  listTaskGoals = [];
 
   constructor(
     inject: Injector,
@@ -467,8 +465,16 @@ export class CodxTasksComponent
             }
           });
           this.views = viewFunc.sort((a, b) => {
-            return b.id - a.id;
+            return a.type - b.type;
           });
+          let viewModel ;
+          this.views.forEach((x) => {
+            if (x.type == this.viewMode) {
+              x.active = true;
+              viewModel = x
+            }
+          });
+          this.view.viewChange(viewModel);
         }
       });
     } else this.views = this.viewsDefault;
@@ -1030,7 +1036,8 @@ export class CodxTasksComponent
             this.notiService.notifyCode('TM009');
 
             if (kanban) kanban.updateCard(taskAction);
-            if(this.itemSelected.status=="90") this.detail.getDataHistoryProgress(this.itemSelected.recID)
+            if (this.itemSelected.status == '90')
+              this.detail.getDataHistoryProgress(this.itemSelected.recID);
           } else this.notiService.notifyCode('SYS021');
         });
     }
@@ -1071,7 +1078,8 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
-        if(this.itemSelected.status=="90") this.detail.getDataHistoryProgress(this.itemSelected.recID)
+        if (this.itemSelected.status == '90')
+          this.detail.getDataHistoryProgress(this.itemSelected.recID);
       } else {
         if (kanban) kanban.updateCard(taskAction);
       }
@@ -1082,7 +1090,6 @@ export class CodxTasksComponent
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
     this.viewCrr = evt?.view?.type;
-
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views) {
@@ -2163,9 +2170,9 @@ export class CodxTasksComponent
   }
 
   openPopupTodoList(taskID) {
-    this.tmSv.getListTaskGoad(taskID).subscribe(res=>{
-      if(res && res.length >0) {
-        this.listTaskGoals = res
+    this.tmSv.getListTaskGoad(taskID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.listTaskGoals = res;
         let option = new DialogModel();
         //option.zIndex = 999;
         let popup = this.callfc.openForm(
@@ -2179,6 +2186,6 @@ export class CodxTasksComponent
           option
         );
       }
-    })
+    });
   }
 }
