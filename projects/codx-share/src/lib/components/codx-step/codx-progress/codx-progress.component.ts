@@ -47,7 +47,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.type = dt?.data?.type;
     this.step = dt?.data?.step;
     this.dataSource = dt?.data?.data;
-    this.isSave = dt?.data?.isSave || true;
+    this.isSave = dt?.data?.isSave;
   }
 
   async ngOnInit() {

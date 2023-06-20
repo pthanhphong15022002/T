@@ -78,6 +78,7 @@ export class AddContractsComponent implements OnInit {
   quotationLinesEdit: CM_QuotationsLines[] = [];
   quotationLinesAddNew: CM_QuotationsLines[] = [];
   quotations: CM_Quotations;
+  headerTest = '';
 
   fmQuotations: FormModel = {
     formName: 'CMQuotations',
@@ -143,8 +144,14 @@ export class AddContractsComponent implements OnInit {
     this.contractsInput = dt?.data?.contract;
     this.account = dt?.data?.account;
     this.type = dt?.data?.type;
+    this.headerTest = dt?.data?.actionName;
     this.getFormModel();
     this.listTypeContract = contractService.listTypeContract;
+    this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
+     if(f){
+      this.headerTest = this.headerTest + ' ' + f?.defaultName;
+     }
+    })
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);

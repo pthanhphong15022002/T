@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
-  DataRequest,
-  FormModel,
+  FormModel
 } from 'codx-core';
 import { tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
-import { Item } from '../../settings/items/interfaces/Item.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +20,6 @@ export class SalesInvoiceService {
   };
   gvsSalesInvoicesLines: any;
   vats: any[];
-  items: Item[];
 
   constructor(
     private apiService: ApiHttpService,
@@ -41,13 +38,6 @@ export class SalesInvoiceService {
     this.acService
       .loadComboboxData('VATCodesAC', 'BS')
       .subscribe((res) => (this.vats = res));
-
-    const options = new DataRequest();
-    options.entityName = 'IV_Items';
-    options.pageLoading = false;
-    this.acService.loadDataAsync('IV', options).subscribe((res) => {
-      this.items = res;
-    });
   }
 
   deleteLinesByTransID(transId: string): void {

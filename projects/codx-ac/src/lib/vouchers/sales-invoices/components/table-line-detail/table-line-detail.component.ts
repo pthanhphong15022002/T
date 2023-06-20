@@ -58,7 +58,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
         field: 'itemID',
         headerText: this.gvs?.ItemID?.headerText ?? 'Mặt hàng',
         template: this.columnItemID,
-        width: 500,
+        width: 430,
       },
       {
         field: 'quantity',
@@ -67,25 +67,20 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
         width: 90,
       },
       {
-        field: 'costPrice',
-        headerText: this.gvs?.CostPrice?.headerText ?? 'Đơn giá',
+        field: 'salesPrice',
+        headerText: this.gvs?.SalesPrice?.headerText ?? 'Đơn giá',
         width: 90,
       },
       {
         field: 'netAmt',
         headerText: this.gvs?.NetAmt?.headerText ?? 'Thành tiền',
-        width: 90,
+        width: 100,
       },
       {
         field: 'vatid',
         headerText: this.gvs?.VATID?.headerText ?? 'Thuế suất',
         template: this.columnVatid,
         width: 100,
-      },
-      {
-        field: 'vatAmt',
-        headerText: this.gvs?.VATAmt?.headerText ?? 'Tiền thuế',
-        width: 90,
       },
     ];
   }

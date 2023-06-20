@@ -43,8 +43,8 @@ export class PopupAddSalesInvoiceComponent
   @ViewChild('grid') grid: CodxGridviewV2Component;
   @ViewChild('tableLineDetail') tableLineDetail: TableLineDetailComponent;
 
-  salesInvoice: ISalesInvoice = {} as ISalesInvoice;
-  salesInvoicesLines: ISalesInvoicesLine[] = [];
+  master: ISalesInvoice = {} as ISalesInvoice;
+  lines: ISalesInvoicesLine[] = [];
   masterService: CRUDService;
   detailService: CRUDService;
   formTitle: string;
@@ -87,7 +87,7 @@ export class PopupAddSalesInvoiceComponent
     this.formTitle = dialogData.data.formTitle;
     this.isEdit = dialogData.data.formType === 'edit';
     this.masterService.hasSaved = this.isEdit;
-    this.salesInvoice = this.dialogRef.dataService?.dataSelected;
+    this.master = this.dialogRef.dataService?.dataSelected;
 
     this.isReturnInvoice = dialogRef.formModel.funcID === 'ACT0701';
 
@@ -105,34 +105,31 @@ export class PopupAddSalesInvoiceComponent
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
-    this.journalService
-      .getJournal(this.salesInvoice.journalNo)
-      .subscribe((res) => {
-        this.journal = res?.dataValue
-          ? { ...res, ...JSON.parse(res.dataValue) }
-          : res;
+    this.journalService.getJournal(this.master.journalNo).subscribe((res) => {
+      this.journal = res?.dataValue
+        ? { ...res, ...JSON.parse(res.dataValue) }
+        : res;
 
-        this.editSettings.mode =
-          this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
+      this.editSettings.mode =
+        this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
 
-        if (this.journal.assignRule === '2') {
-          this.ignoredFields.push('VoucherNo');
-        }
+      if (this.journal.assignRule === '2') {
+        this.ignoredFields.push('VoucherNo');
+      }
 
-        this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-      });
+      this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+    });
 
     if (this.isEdit) {
       const salesInvoicesLinesOptions = new DataRequest();
       salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
       salesInvoicesLinesOptions.predicates = 'TransID=@0';
-      salesInvoicesLinesOptions.dataValues = this.salesInvoice.recID;
+      salesInvoicesLinesOptions.dataValues = this.master.recID;
       salesInvoicesLinesOptions.pageLoading = false;
       this.acService
         .loadDataAsync('SM', salesInvoicesLinesOptions)
         .subscribe(
-          (res) =>
-            (this.salesInvoicesLines = res.sort((a, b) => a.rowNo - b.rowNo))
+          (res) => (this.lines = res.sort((a, b) => a.rowNo - b.rowNo))
         );
     }
 
@@ -151,8 +148,8 @@ export class PopupAddSalesInvoiceComponent
 
   //#region Event
   onClickSave(closeAfterSave: boolean): void {
-    console.log(this.salesInvoice);
-    console.log(this.salesInvoicesLines);
+    console.log(this.master);
+    console.log(this.lines);
 
     if (
       !this.acService.validateFormData(
@@ -167,7 +164,7 @@ export class PopupAddSalesInvoiceComponent
 
     this.journalService.handleVoucherNoAndSave(
       this.journal,
-      this.salesInvoice,
+      this.master,
       'SM',
       'SM_SalesInvoices',
       this.form,
@@ -182,13 +179,11 @@ export class PopupAddSalesInvoiceComponent
 
   onDiscard(): void {
     this.masterService
-      .delete([this.salesInvoice], true, null, '', 'AC0010', null, null, false)
+      .delete([this.master], true, null, '', 'AC0010', null, null, false)
       .subscribe((res: any) => {
         console.log({ res });
         if (!res.error) {
-          this.salesInvoiceService.deleteLinesByTransID(
-            this.salesInvoice.recID
-          );
+          this.salesInvoiceService.deleteLinesByTransID(this.master.recID);
 
           this.resetForm();
         }
@@ -197,12 +192,6 @@ export class PopupAddSalesInvoiceComponent
 
   onInputChange(e): void {
     console.log('onInputChange', e);
-
-    if (e.field === 'objectID') {
-      this.form.formGroup.patchValue({
-        objectName: e.component.itemsSelected[0]?.ObjectName,
-      });
-    }
 
     const postFields: string[] = [
       'objectID',
@@ -215,7 +204,7 @@ export class PopupAddSalesInvoiceComponent
       this.api
         .exec('SM', 'SalesInvoicesBusiness', 'ValueChangeAsync', [
           e.field,
-          this.salesInvoice,
+          this.master,
         ])
         .subscribe((res) => {
           console.log(res);
@@ -286,14 +275,11 @@ export class PopupAddSalesInvoiceComponent
     }
 
     if (this.masterService.hasSaved) {
-      this.masterService.updateDatas.set(
-        this.salesInvoice.recID,
-        this.salesInvoice
-      );
+      this.masterService.updateDatas.set(this.master.recID, this.master);
     }
     this.journalService.handleVoucherNoAndSave(
       this.journal,
-      this.salesInvoice,
+      this.master,
       'SM',
       'SM_SalesInvoices',
       this.form,
@@ -327,13 +313,10 @@ export class PopupAddSalesInvoiceComponent
 
   //#region Method
   save(closeAfterSave: boolean): void {
-    this.salesInvoice.status = '1';
+    this.master.status = '1';
 
     if (this.masterService.hasSaved) {
-      this.masterService.updateDatas.set(
-        this.salesInvoice.recID,
-        this.salesInvoice
-      );
+      this.masterService.updateDatas.set(this.master.recID, this.master);
     }
 
     this.masterService.save().subscribe((res: any) => {
@@ -361,13 +344,13 @@ export class PopupAddSalesInvoiceComponent
                 'SM',
                 'SalesInvoicesLinesBusiness',
                 'GetDefaultAsync',
-                [this.salesInvoice]
+                [this.master]
               )
             )
             .subscribe((res: ISalesInvoicesLine) => {
               console.log(res);
 
-              let index = this.salesInvoicesLines.length;
+              let index = this.lines.length;
               res.rowNo = index + 1;
 
               if (this.editSettings.mode === 'Normal') {
@@ -426,9 +409,9 @@ export class PopupAddSalesInvoiceComponent
     this.detailService.copy().subscribe((res: ISalesInvoicesLine) => {
       console.log(res);
 
-      let index = this.salesInvoicesLines.length;
+      let index = this.lines.length;
       res.rowNo = index + 1;
-      res.transID = this.salesInvoice.recID;
+      res.transID = this.master.recID;
 
       this.grid.addRow(res, index);
     });
@@ -438,13 +421,13 @@ export class PopupAddSalesInvoiceComponent
     this.masterService
       .addNew(() =>
         this.api.exec('SM', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
-          this.salesInvoice.journalNo,
+          this.master.journalNo,
         ])
       )
       .subscribe((res: ISalesInvoice) => {
         console.log(res);
-        this.salesInvoice.recID = res.recID;
-        this.salesInvoice.status = res.status;
+        this.master.recID = res.recID;
+        this.master.status = res.status;
         this.form.formGroup.patchValue(res);
 
         this.masterService.hasSaved = false;
@@ -452,13 +435,10 @@ export class PopupAddSalesInvoiceComponent
         // after implementing addNew(), both this.masterService.dataSelected and this.masterService.addDatas
         // no longer point to the object referenced by this.salesInvoice,
         // so I reassign it here
-        this.masterService.dataSelected = this.salesInvoice;
-        this.masterService.addDatas.set(
-          this.salesInvoice.recID,
-          this.salesInvoice
-        );
+        this.masterService.dataSelected = this.master;
+        this.masterService.addDatas.set(this.master.recID, this.master);
 
-        this.salesInvoicesLines = [];
+        this.lines = [];
       });
   }
   //#endregion

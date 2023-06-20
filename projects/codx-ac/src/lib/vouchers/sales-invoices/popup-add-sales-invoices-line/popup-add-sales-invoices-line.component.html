@@ -5,7 +5,7 @@
   [footer]="footer"
   [dialog]="dialogRef"
   [formModel]="dialogRef.formModel"
-  [data]="salesInvoicesLine"
+  [data]="line"
 >
 </codx-form>
 
@@ -45,6 +45,7 @@
         field="idiM0"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="!line.itemID"
       ></codx-input>
     </div>
     <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM1')">
@@ -54,6 +55,8 @@
         field="idiM1"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
+        [disabled]="!line.itemID"
       ></codx-input>
     </div>
 
@@ -64,6 +67,7 @@
         field="idiM2"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="!line.itemID"
       ></codx-input>
     </div>
     <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM3')">
@@ -73,6 +77,7 @@
         field="idiM3"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="!line.itemID"
       ></codx-input>
     </div>
 
@@ -82,6 +87,7 @@
         field="umid"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
       ></codx-input>
     </div>
     <div class="col-8 form-group" *ngIf="!hiddenFields.includes('IDIM4')">
@@ -145,6 +151,7 @@
         field="lineType"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="onInputChange($event)"
       ></codx-input>
     </div>
 
@@ -154,7 +161,7 @@
         field="quantity"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
-        (valueChange)="onInputChange($event)"
+        (controlBlur)="onInputChange($event)"
       ></codx-input>
     </div>
     <div class="col-4 form-group">
@@ -166,7 +173,7 @@
         field="costPrice"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
-        (valueChange)="onInputChange($event)"
+        (controlBlur)="onInputChange($event)"
       ></codx-input>
     </div>
     <div class="col-4 form-group">
@@ -175,6 +182,7 @@
         field="netAmt"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (controlBlur)="onInputChange($event)"
       ></codx-input>
     </div>
 
@@ -201,6 +209,7 @@
         field="vatAmt"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (controlBlur)="onInputChange($event)"
       ></codx-input>
     </div>
 
