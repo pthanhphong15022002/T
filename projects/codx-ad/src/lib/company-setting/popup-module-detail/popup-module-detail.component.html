@@ -10,7 +10,8 @@
 </codx-form>
 
 <ng-template #header>
-  <div class="card-toolbar w-100 d-flex justify-content-end">
+  <div class="w-100 d-flex justify-content-between">
+    <div></div>
     <div class="float-end">
       <button type="button" class="btn btn-icon" (click)="closePopup()">
         <i class="icon-close icon-18"></i>
@@ -20,7 +21,7 @@
 
   <div class="mt-n3 fs-body">
     <codx-temp-full
-      cardCss="card-template"
+      cardCss="card-template img-40px"
       [typeMF]="'hover'"
       [title]="module.boughtModule.moduleName"
       [desc]="module.boughtModule.description"
