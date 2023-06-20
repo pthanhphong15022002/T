@@ -1271,6 +1271,7 @@
               <div class="d-flex align-items-center">
                 <button
                   [ngbTooltip]="titleAdd"
+                  placement="top left bottom right"
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary ms-2"
                   (click)="
@@ -1279,17 +1280,20 @@
                 >
                   <i class="icon-add icon-18"></i>
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  #p="ngbPopover"
-                  [ngbPopover]="popperHandelSetting"
-                  (mouseenter)="popoverSelectView(p, item)"
-                  placement="bottom right top left"
-                  [popoverClass]
-                >
-                  <i class="icon-settings icon-18"></i>
-                </button>
+                <span [ngbTooltip]="toolTipSetting">
+                  <button
+                    type="button"
+                    class="btn btn-icon btn-sm btn-light-primary ms-2"
+                    #p="ngbPopover"
+                    [ngbPopover]="popperHandelSetting"
+                    (mouseenter)="popoverSelectView(p, item)"
+                    autoClose="outside"
+                    placement="bottom right top left"
+                  >
+                    <i class="icon-settings icon-18"></i>
+                  </button>
+                </span>
+
                 <button
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary ms-2"
