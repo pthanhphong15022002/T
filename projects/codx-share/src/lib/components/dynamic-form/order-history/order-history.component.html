@@ -46,8 +46,8 @@
   </div>
 
   <ng-template #orderTmp let-item>
-    <div class="d-flex w-125 row h-100 p-2">
-      <div class="info col-8 d-flex justify-content-between">
+    <div class="d-flex justify-content-between border-1 rounded-2 w-100 h-125px p-3 mb-3">
+      <div class="info d-flex justify-content-between w-100">
         <codx-temp-full
           [typeMF]="'hover'"
           [titleTmp]="oTitleTmp"
@@ -64,7 +64,7 @@
         >
         </codx-temp-full>
       </div>
-      <div class="moreInfo col-4">
+      <div class="moreInfo w-150px min-w-150px">
         <button class="btn btn-outline-primary" (click)="popupOrderInfo(item)">
           <codx-label name="lblOderInfo" default="Thông tin chi tiết">
           </codx-label>
