@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="typeTask == 1">
   <header class="d-flex align-items-center justify-content-between search p-2">
     <div class="left d-flex align-items-center">
       <div>
@@ -25,7 +25,14 @@
       </div>
     </div>
     <div class="right d-flex align-items-center">
-      <div (click)="addTask()" class="d-flex align-items-center me-4">
+      <div
+        (click)="addTask()"
+        class="d-flex align-items-center me-4 cursor-pointer"
+        #popoverDetails="ngbPopover"
+        [ngbPopover]="'Thêm công việc'"
+        (mouseenter)="popoverDetails.open()"
+        (mouseleave)="popoverDetails.close()"
+      >
         <i *ngIf="isShowElement" class="icon-22 icon-add_task text-primary"></i>
       </div>
       <!-- <codx-valuelist
@@ -33,7 +40,7 @@
          [name]="'DP034'"
          (valueChange)="changeValue($event)"
       ></codx-valuelist> -->
-      <div  *ngIf="type == 'G'" class="me-4">
+      <div *ngIf="type == 'G'" class="me-4">
         <codx-input
           type="valuelist"
           [crrValue]="crrViewGant"
@@ -42,101 +49,160 @@
         ></codx-input>
       </div>
       <codx-input
-          field="viewModeDetail"
-          type="valuelist"
-          [crrValue]="type"
-          [refValue]="'DP034'"
-          (valueChange)="changeValue($event)"
+        field="viewModeDetail"
+        type="valuelist"
+        [crrValue]="type"
+        [refValue]="'DP034'"
+        (valueChange)="changeValue($event)"
       ></codx-input>
     </div>
   </header>
   <main>
-   <ng-container
+    <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"
-   ></ng-container>
-   <ng-container
+    ></ng-container>
+    <ng-container
       *ngIf="type == 'G'"
       [ngTemplateOutlet]="ganttChart"
-   ></ng-container>
+    ></ng-container>
   </main>
 </div>
 
+<div *ngIf="typeTask == 2">
+  <task></task>
+</div>
+
 <ng-template #taskTem>
-   <div *ngIf="isDataLoading || !type">
-      <div *ngFor="let step of [1, 2, 3]">
-        <div class="d-flex align-items-center w-100">
-          <ngx-skeleton-loader
-            appearance="circle"
-            [theme]="{ width: '60px', height: '60px' }"
-          >
-          </ngx-skeleton-loader>
-          <ngx-skeleton-loader
-            style="width: 100%"
-            [theme]="{
+  <div *ngIf="isDataLoading || !type">
+    <div *ngFor="let step of [1, 2, 3]">
+      <div class="d-flex align-items-center w-100">
+        <ngx-skeleton-loader
+          appearance="circle"
+          [theme]="{ width: '60px', height: '60px' }"
+        >
+        </ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
                      width: '100%',
                      'border-radius': '5px',
                      height: '60px',
                      'margin': '0px',
                    }"
-          ></ngx-skeleton-loader>
-        </div>
-        <div style="padding-left: 70px; width: 100%">
-          <ngx-skeleton-loader
-            style="width: 100%"
-            [theme]="{
+        ></ngx-skeleton-loader>
+      </div>
+      <div style="padding-left: 70px; width: 100%">
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
                      width: '100%',
                      'border-radius': '10px',
                      height: '100px',
                      'margin': '0px',
                    }"
-          ></ngx-skeleton-loader>
-          <ngx-skeleton-loader
-            style="width: 100%"
-            [theme]="{
+        ></ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
                      width: '100%',
                      'border-radius': '10px',
                      height: '100px',
                      'margin': '0px',
                    }"
-          ></ngx-skeleton-loader>
+        ></ngx-skeleton-loader>
+      </div>
+      <hr class="m-0 p-0" />
+    </div>
+  </div>
+  <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
+    <div
+      *ngFor="let step of listInstanceStepShow; let i = index"
+      class="list-step ps-4"
+    >
+      <codx-step-task
+        *ngIf="!step?.isSuccessStep && !step?.isFailStep"
+        [dataSources]="step"
+        [isShowButton]="false"
+        [isShowMore]="true"
+        [isDeepCopy]="false"
+        [isShowStep]="true"
+        [isStart]="dataSelected?.status == '2'"
+        [isClose]="dataSelected?.closed"
+        [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+        [isShowElement]="isShowElement"
+        [isAddTask]="i == indexAddTask"
+        (continueStep)="handelContinueStep($event, step)"
+        (saveAssign)="handelSaveAssignTask($event)"
+      ></codx-step-task>
+      <hr *ngIf="!step?.isSuccessStep && !step?.isFailStep" />
+      <!-- thành công thất bại  -->
+      <div *ngIf="step?.isSuccessStep">
+        <div class="d-flex align-items-center text-success">
+          <span class="icon-check icon-18 icon-step"></span>
+          <span
+            class="line-clamp line-clamp-2 fs-5 ms-2 text-success"
+            [ngStyle]="{ color: 'gray', 'font-weight': '400' }"
+          >
+            {{ step.stepName || "" }}</span
+          >
         </div>
-        <hr class="m-0 p-0" />
+        <div style="margin-left: 50px;">
+          <div>
+            <codx-label
+              class="fs-5"
+              [formModel]=""
+              fiedName="delTermID"
+              default="Lý do thành công"
+            ></codx-label>
+          </div>
+          <ul *ngIf="step?.reasons?.length > 0">
+            <li *ngFor="let reason of step.reasons">
+              <span class="fs-6">{{ reason?.reasonName }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div *ngIf="step?.isFailStep">
+        <div class="d-flex align-items-center text-danger">
+          <span class="icon-close icon-18 icon-step"></span>
+          <span
+            class="line-clamp line-clamp-2 fs-5 ms-2 text-danger"
+            [ngStyle]="{ color: 'gray', 'font-weight': '400' }"
+          >
+            {{ step?.stepName || "" }}</span
+          >
+        </div>
+        <div style="margin-left: 50px;">
+          <codx-label
+            class="fs-5"
+            [formModel]=""
+            fiedName="delTermID"
+            default="Lý do thất bại"
+          ></codx-label>
+          <ul *ngIf="step?.reasons?.length > 0">
+            <li *ngFor="let reason of step.reasons">
+              <span class="fs-6">{{ reason?.reasonName }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
-      <div *ngFor="let step of listInstanceStepShow; let i = index" class="list-step ps-4">
-        <codx-step-task
-          [dataSources]="step"
-          [isShowButton]="false"
-          [isShowMore]="true"
-          [isDeepCopy]="false"
-          [isShowStep]="true"
-          [isStart]="dataSelected?.status == '2'"
-          [isClose]="dataSelected?.closed"
-          [isRoleAll]="dataSelected?.roles?.isOnwer || false"
-          [isShowElement]="isShowElement"
-          [isAddTask]="i == indexAddTask"
-          (continueStep)="handelContinueStep($event, step)"
-          (saveAssign)="handelSaveAssignTask($event)"
-        ></codx-step-task>
-        <hr/>
-      </div>
-    </div>
-    <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
-      <codx-no-data></codx-no-data>
-    </div>
+  </div>
+  <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
+    <codx-no-data></codx-no-data>
+  </div>
 </ng-template>
 
 <ng-template #ganttChart>
-   <div class="w-100 h-100" id="tabGantt">
-     <codx-step-chart
+  <div class="w-100 h-100" id="tabGantt">
+    <codx-step-chart
       [listInstanceStep]="listInstanceStep"
       [isShowTypeTime]="false"
       [typeTime]="typeTime"
       [instance]="dataSelected"
       [listSteps]="listInstanceStepShow"
       [isRoleAll]="dataSelected?.roles?.isOnwer || false"
-     ></codx-step-chart>
-   </div>
- </ng-template>
+    ></codx-step-chart>
+  </div>
+</ng-template>

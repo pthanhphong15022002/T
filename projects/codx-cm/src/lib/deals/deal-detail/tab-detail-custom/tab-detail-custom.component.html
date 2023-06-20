@@ -333,7 +333,7 @@
         *ngIf="item?.fields?.length > 0"
         [dataStep]="item"
         [showColumnControl]="showColumnControl(item.stepID)"
-        [isUpdate]="isUpdate && item.stepStatus < '2'"
+        [isUpdate]="dataSelected.status == '1' || dataSelected.status == '2' "
       >
       </codx-fields-detail-temp>
     </ng-container>
@@ -356,7 +356,7 @@
     [disableRefID]="true"
   >
   </codx-quotations> -->
-  <codx-quotations-tab-view  
+  <codx-quotations-tab-view
   [typeModel]="'deals'"
   [showButton]="true"
   [predicates]="'RefID==@0'"

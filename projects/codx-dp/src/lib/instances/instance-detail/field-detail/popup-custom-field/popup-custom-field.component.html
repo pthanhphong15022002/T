@@ -1,13 +1,24 @@
-<codx-form #form [headerText]="titleHeader" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
-  [formModel]="dialog.formModel" [data]="fiels" [openMore]="false"></codx-form>
+<codx-form
+  #form
+  [headerText]="titleHeader"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [data]="fiels"
+  [openMore]="false"
+></codx-form>
 <ng-template #body>
   <ng-container *ngFor="let item of fiels">
     <div class="form-group">
-      <codx-input-custom-field  [customField]="item"
-      [objectId]="item.recID"
-      [objectType]="'DP_Instances_Steps'"
-      [formModel]="dialog.formModel"
-      (valueChangeCustom)="valueChangeCustom($event)" ></codx-input-custom-field>
+      <codx-input-custom-field
+        [customField]="item"
+        [objectId]="item.recID"
+        [objectType]="'DP_Instances_Steps_Fields'"
+        [formModel]="dialog.formModel"
+        (valueChangeCustom)="valueChangeCustom($event)"
+      ></codx-input-custom-field>
     </div>
   </ng-container>
 </ng-template>
@@ -16,4 +27,3 @@
     <codx-label name="Save" formName="" default="Lưu"></codx-label>
   </button>
 </ng-template>
-

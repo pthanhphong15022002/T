@@ -111,9 +111,17 @@
         assemblyName="ERM.Business.HR"
         [className]="'OrganizationUnitsBusiness'"
         [hideMoreFunc]="true"
+
         [method]="'GetEmployeesMasterDetailAsync'"
         [dataValues]="orgUnitID"
         [emptyTemplate]="emptyDataTemplate"
+        [autoLoad]="false"
+        [showRowNumber]="true"
+        [autoFitColumns]="false"
+        [allowResizing]="false"
+        [allowFiltering]="false"
+        [allowSorting]="false"
+        idField="employeeID"
         height="100%"
       ></codx-gridview-v2>
     </div>

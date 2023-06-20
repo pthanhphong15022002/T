@@ -369,7 +369,7 @@
               [customField]="item"
               [checkValid]="false"
               [objectId]="item.recID"
-              [objectType]="'DP_Instances'"
+              [objectType]="'DP_Instances_Steps_Fields'"
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
             >
@@ -401,7 +401,7 @@
     [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
-  <ng-template #tabInputInfo *ngIf="false">
+  <ng-template #tabInputInfo>
     <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"
     [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>

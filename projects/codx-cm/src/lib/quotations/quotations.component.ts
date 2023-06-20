@@ -48,6 +48,10 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateTotalAmt') templateTotalAmt: TemplateRef<any>;
   @ViewChild('templateTotalTaxAmt') templateTotalTaxAmt: TemplateRef<any>;
   @ViewChild('templateCreatedOn') templateCreatedOn: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail!: TemplateRef<any>;
+  @ViewChild('templateDetailGird') templateDetailGird: TemplateRef<any>;
+
+  
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -83,6 +87,8 @@ export class QuotationsComponent extends UIComponent {
   titleAction = '';
   dataSource = [];
   isNewVersion = false;
+  popupView: DialogRef;
+  viewType: any;
 
   constructor(
     private inject: Injector,
@@ -94,6 +100,7 @@ export class QuotationsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.loadSetting();
   }
 
   onInit(): void {
@@ -103,7 +110,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.loadSetting();
+    // this.loadSetting();
     // this.views = [
     //   {
     //     type: ViewType.listdetail,
@@ -167,8 +174,8 @@ export class QuotationsComponent extends UIComponent {
           template = this.templateTotalSalesAmt;
           break;
         case 'CreatedOn':
-            template = this.templateCreatedOn;
-            break;
+          template = this.templateCreatedOn;
+          break;
         default:
           break;
       }
@@ -231,13 +238,25 @@ export class QuotationsComponent extends UIComponent {
   }
 
   // moreFunc
+  onActions(e) {
+    switch (e.type) {
+      case 'dbClick':
+        if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
+        break;
+    }
+  }
   eventChangeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
-
-  changeDataMF(e, data) {
+  changeDataMFGird(e, data) {
+    this.changeDataMF(e, data, 11);
+  }
+  changeDataMF(e, data, type = 1) {
     if (e != null && data != null) {
       e.forEach((res) => {
+        if(type==11){
+          res.isbookmark = false
+        }
         switch (res.functionID) {
           case 'CM0202_1':
             if (data.status != 0 && data.status != 4) {
@@ -259,6 +278,11 @@ export class QuotationsComponent extends UIComponent {
               res.isblur = true;
             }
             break;
+          case 'CM0202_5':
+            if (type != 11) {
+              res.disabled = true;
+            } else res.disabled = false;
+            break;
         }
       });
     }
@@ -269,6 +293,7 @@ export class QuotationsComponent extends UIComponent {
   }
   clickMF(e, data) {
     this.titleAction = e.text;
+    this.itemSelected = data;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -290,6 +315,9 @@ export class QuotationsComponent extends UIComponent {
         break;
       case 'CM0202_4':
         this.createNewVersion(data);
+        break;
+      case 'CM0202_5':
+        this.viewDetail(data);
         break;
     }
   }
@@ -373,6 +401,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   copy(data) {
+    let copyToRecID = data.recID
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -386,6 +415,7 @@ export class QuotationsComponent extends UIComponent {
         data: res,
         action: 'copy',
         headerText: this.titleAction,
+        copyToRecID:copyToRecID
       };
       let option = new DialogModel();
       option.IsFull = true;
@@ -496,7 +526,12 @@ export class QuotationsComponent extends UIComponent {
                 //this.callfunc.openForm();
               } else if (res2?.eSign == false) {
                 this.codxShareService
-                  .codxCancel('CM',dt?.recID, this.view.formModel.entityName,'')
+                  .codxCancel(
+                    'CM',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    ''
+                  )
                   .subscribe((res3) => {
                     if (res3) {
                       this.itemSelected.status = '0';
@@ -528,4 +563,21 @@ export class QuotationsComponent extends UIComponent {
     //viet vao day thuan
   }
   // end
+
+  viewDetail(data) {
+    this.itemSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+    this.popupView = this.callfc.openForm(
+      this.popDetail,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
+  }
 }

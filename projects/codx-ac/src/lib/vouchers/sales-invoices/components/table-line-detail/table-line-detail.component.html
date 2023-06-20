@@ -16,29 +16,47 @@
 ></codx-gridview-v2>
 
 <ng-template #columnItemID let-data>
-  <div class="py-2">
-    <div
-      class="fw-bold"
-      [innerHTML]="
-        data.itemID | formatvalue : fmSalesInvoicesLines : 'ItemID' | async
-      "
-    ></div>
+  <div class="py-1 d-flex flex-column gap-2">
+    <div class="fw-bold">{{ data.itemName }}</div>
     <div>
-      <ng-container *ngFor="let i of [0, 1, 2, 3]; last as isLast">
-        <codx-label
-          [fiedName]="'idiM' + i"
-          [formModel]="fmSalesInvoicesLines"
-        ></codx-label
-        >:&nbsp;
+      <codx-label
+        fiedName="idiM3"
+        [formModel]="fmSalesInvoicesLines"
+      ></codx-label
+      >:&nbsp;
+      <span *ngFor="let i of [0, 1, 2, 3]; last as isLast" class="text-gray-600">
         <span
+          *ngIf="data['idiM' + i]"
           [innerHTML]="
             data['idiM' + i]
               | formatvalue : fmSalesInvoicesLines : 'idiM' + i
               | async
           "
         ></span>
-        <ng-container *ngIf="!isLast"> &nbsp;|&nbsp; </ng-container>
-      </ng-container>
+        <ng-container *ngIf="!isLast && data['idiM' + (i + 1)]"
+          >,&nbsp;</ng-container
+        >
+      </span>
+    </div>
+    <div>
+      <codx-label
+        fiedName="idiM4"
+        [formModel]="fmSalesInvoicesLines"
+      ></codx-label
+      >:&nbsp;
+      <span *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast" class="text-gray-600">
+        <span
+          *ngIf="data['idiM' + i]"
+          [innerHTML]="
+            data['idiM' + i]
+              | formatvalue : fmSalesInvoicesLines : 'idiM' + i
+              | async
+          "
+        ></span>
+        <ng-container *ngIf="!isLast && data['idiM' + (i + 1)]"
+          >,&nbsp;</ng-container
+        >
+      </span>
     </div>
 
     <codx-vll
@@ -47,27 +65,9 @@
       [value]="data.lineType"
       [showText]="true"
       [showBgColor]="true"
-      class="badge badge-primary mt-2"
+      class="badge badge-primary align-self-start"
     >
     </codx-vll>
-    <ng-container
-      *ngFor="let i of [5, 6, 7, 8, 9]; last as isLast; first as isFirst"
-    >
-      <ng-container *ngIf="isFirst"> &nbsp;|&nbsp; </ng-container>
-      <codx-label
-        [fiedName]="'idiM' + i"
-        [formModel]="fmSalesInvoicesLines"
-      ></codx-label
-      >:&nbsp;
-      <span
-        [innerHTML]="
-          data['idiM' + i]
-            | formatvalue : fmSalesInvoicesLines : 'idiM' + i
-            | async
-        "
-      ></span>
-      <ng-container *ngIf="!isLast"> &nbsp;|&nbsp; </ng-container>
-    </ng-container>
   </div>
 </ng-template>
 
@@ -76,7 +76,7 @@
 </ng-template>
 
 <ng-template #columnVatid let-data>
-  {{ vats | nameById : "VATID" : "TaxRate" : data.vatid }}
+  {{ vats | nameById : "VATID" : "TaxRate" : data.vatid }} | {{ data.vatAmt }}
 </ng-template>
 
 <ng-template #more let-data>

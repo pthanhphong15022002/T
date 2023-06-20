@@ -56,12 +56,12 @@ import { CodxCalendarService } from '../../codx-calendar/codx-calendar.service';
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
   styleUrls: ['./codx-step-task.component.scss'],
-  animations: [
-    trigger('fadeInOut', [
-      state('void', style({ opacity: 0 })),
-      transition(':enter, :leave', [animate(500, style({ opacity: 1 }))]),
-    ]),
-  ],
+  // animations: [
+  //   trigger('fadeInOut', [
+  //     state('void', style({ opacity: 0 })),
+  //     transition(':enter, :leave', [animate(500, style({ opacity: 1 }))]),
+  //   ]),
+  // ],
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;

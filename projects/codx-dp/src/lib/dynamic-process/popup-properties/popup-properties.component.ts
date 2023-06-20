@@ -79,7 +79,7 @@ export class PopupPropertiesComponent implements OnInit {
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
     this.getAvatar(this.process);
-    this.getUserName(this.process.createdBy);
+    this.getUserName(this.process?.createdBy);
   }
 
   ngOnInit(): void {
@@ -88,7 +88,7 @@ export class PopupPropertiesComponent implements OnInit {
 
   getUserName(id){
     this.dpSv.getUserByID(id).subscribe(res=>{
-      this.userName = res.userName;
+      this.userName = res?.userName;
     })
   }
 

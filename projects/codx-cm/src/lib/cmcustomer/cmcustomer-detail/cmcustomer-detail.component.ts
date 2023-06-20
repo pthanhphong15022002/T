@@ -269,6 +269,12 @@ export class CmCustomerDetailComponent implements OnInit {
           icon: 'icon-shopping_bag',
           isActive: false,
         },
+        {
+          name: 'task',
+          textDefault: 'Công việc',
+          icon: 'icon-more',
+          isActive: false,
+        },
       ];
     } else if (funcID == 'CM0102') {
       this.tabDetail = [

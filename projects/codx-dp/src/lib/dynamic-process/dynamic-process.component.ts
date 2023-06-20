@@ -176,7 +176,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = this.funcID == 'DP01';
+    this.showButtonAdd = this.funcID == 'DP01' || this.funcID == 'DP0101'; 
   }
 
   //chang data
@@ -660,13 +660,13 @@ export class DynamicProcessComponent
             }
             break;
           case 'DP01016':
-            res.disabled = data.released ? true : false;
+            if (data.category === '0' || data.released) res.disabled = true;
             break;
           case 'DP01017':
-            res.disabled = data.released ? false : true;
+            if (data.category === '0' || !data.released) res.disabled = true;
             break;
           case 'DP01018':
-            res.disabled = data.released ? false : true;
+            if (data.category === '0' || !data.released) res.disabled = true;
             break;
         }
       });
