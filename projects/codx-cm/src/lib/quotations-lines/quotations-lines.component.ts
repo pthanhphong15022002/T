@@ -130,7 +130,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           case 'SYS03': //sửa
           case 'SYS04': //copy
           case 'SYS02': //xóa
-            if(this.isSetMoreFunc && quotationLine?.transID){
+            if(!(this.isSetMoreFunc && quotationLine?.transID)){
               res.isblur = true;
             }
             break;

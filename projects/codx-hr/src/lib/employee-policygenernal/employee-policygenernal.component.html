@@ -17,7 +17,7 @@
 
 <ng-template #templateList let-data>
     <div class="d-flex align-items-center p-3 border-bottom w-100">
-        <div class="w-25 min-w-350px p-1">
+        <div class="w-25 min-w-400px p-1">
             <span
             [innerHTML]="
             data?.policyType
@@ -29,7 +29,7 @@
             <!-- {{data.policyType}} -->
         </div>
     
-        <div class="w-25 min-w-250px px-2">
+        <div class="w-25 min-w-150px px-2">
             <span
             [innerHTML]="
             data?.fixedAmt
@@ -41,7 +41,7 @@
             <!-- {{data.fixedAmt}} -->
         </div>
     
-        <div class="w-25 min-w-200px px-2">
+        <div class="w-25 min-w-100px px-2">
             <span
             [innerHTML]="
             data?.percentage
@@ -75,16 +75,16 @@
 
 <ng-template #headerTemplate let-data>
     <div class="d-flex w-100 ps-2 pe-4">
-      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+      <div class="w-25 min-w-400px p-3 fw-bold text-dark">
         <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
       </div>
-      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+      <div class="w-25 min-w-150px p-3 fw-bold text-dark">
         <codx-label name="lblContractType" [default]="'Số tiền'"></codx-label>
       </div>
-      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+      <div class="w-25 min-w-100px p-3 fw-bold text-dark">
         <codx-label name="lblContractNum" [default]="'Tỷ lệ (%)'"></codx-label>
       </div>
-      <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+      <div class="w-25 min-w-200px p-3 fw-bold text-dark">
         <codx-label name="lblApproveStatus" [default]="'Hiệu lực'"></codx-label>
         </div>
     </div>
