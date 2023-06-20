@@ -688,7 +688,7 @@ export class CM_Leads {
   mobile: string;
   status: string;
   statusCode: string;
-  currentStep: string;
+  stepID: string;
   nextStep: string;
   lastUpdated: Date;
   note: string;

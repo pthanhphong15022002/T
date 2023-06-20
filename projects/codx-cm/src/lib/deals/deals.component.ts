@@ -840,33 +840,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var instance = e.event?.instance;
-        // var instanceMove = e.event?.instanceMove;
-        // if (instanceMove) {
-        //   var dealOld = JSON.parse(JSON.stringify(data));
-        //   var dealNew = JSON.parse(JSON.stringify(data));
-        //   dealOld = this.updateReasonDeal(e.event?.instance, dealOld);
-        //   dealNew = this.convertDataInstance(
-        //     dealNew,
-        //     instanceMove,
-        //     e.event?.nextStep
-        //   );
-        //   var datas = [dealOld, dealNew];
-        //   this.codxCmService.moveDealReason(datas).subscribe((res) => {
-        //     if (res) {
-        //       data = res[0];
-        //       this.view.dataService.dataSelected = data;
-        //       this.view.dataService
-        //         .update(this.view.dataService.dataSelected)
-        //         .subscribe();
-        //       this.view.dataService.add(res[1], 0).subscribe((res) => {});
-        //       this.detectorRef.detectChanges();
-        //     }
-        //   });
-        // } else {
         data = this.updateReasonDeal(e.event?.instance, data);
-        var datas = [data, data.customerID];
-        this.codxCmService.updateDeal(datas).subscribe((res) => {
+        var datas = [data];
+        this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
             data = res[0];
             this.view.dataService.update(data).subscribe();
@@ -977,17 +953,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
   //#region CRUD
   add() {
-    // switch (this.funcID) {
-    //   case 'CM0201': {
-    //statements;
     this.addDeal();
-    //     break;
-    //   }
-    //   default: {
-    //     //statements;
-    //     break;
-    //   }
-    // }
   }
 
   addDeal() {
