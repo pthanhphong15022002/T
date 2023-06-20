@@ -254,6 +254,9 @@ export class QuotationsComponent extends UIComponent {
   changeDataMF(e, data, type = 1) {
     if (e != null && data != null) {
       e.forEach((res) => {
+        if(type==11){
+          res.isbookmark = false
+        }
         switch (res.functionID) {
           case 'CM0202_1':
             if (data.status != 0 && data.status != 4) {

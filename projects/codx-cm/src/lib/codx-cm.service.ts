@@ -79,10 +79,10 @@ export class CodxCmService {
     );
   }
 
-  getOneCustomer(recID, funcID) {
+  getOneCustomer(recID, entityName) {
     return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
       recID,
-      funcID,
+      entityName
     ]);
   }
 
@@ -903,7 +903,7 @@ export class CodxCmService {
       categoryID
     );
   }
-  
+
 
   updateStatusQuotatitons(data) {
     return this.api.exec<any>(
