@@ -405,9 +405,9 @@
               field="applyFor"
               type="valuelist"
               [crrValue]="process.applyFor"
-              [refValue]="gridViewSetup?.ApplyFor?.referedValue"
+              [refValue]="process.applyFor != '5' ? gridViewSetup?.ApplyFor?.referedValue : 'DP002'"
               (valueChange)="valueChange($event)"
-              [disabled]="action == 'edit'"
+              [disabled]="action == 'edit' || systemProcess"
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >
             </codx-input>
