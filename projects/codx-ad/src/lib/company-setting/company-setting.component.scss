@@ -230,3 +230,9 @@ lib-company-setting .e-toolbar-items {
 .list-app .h-125px.min-h-125px:hover {
   background-color: var(--gray-100);
 }
+.his-order .e-content{
+  width: 100%;
+  .e-list-parent.e-ul {
+    width: 100%;
+  }
+}
