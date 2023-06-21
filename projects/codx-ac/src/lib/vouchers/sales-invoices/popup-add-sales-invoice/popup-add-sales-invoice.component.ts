@@ -270,6 +270,7 @@ export class PopupAddSalesInvoiceComponent
           console.log(line);
 
           this.grid.rowDataSelected = line;
+          line[e.idx] = line;
           console.log(this.detailService);
         });
     }

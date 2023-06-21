@@ -258,6 +258,15 @@
           ></codx-label>
         </span>
       </div> -->
+      <!-- <div class="menu-item" *ngIf="user && user.tenant == 'default'">
+        <span (click)="createTemplate()" class="menu-link px-5">
+          <codx-label
+            fiedName="lblTemplate"
+            [formModel]="formModel"
+            default="create template"
+          ></codx-label>
+        </span>
+      </div> -->
       <div class="menu-item">
         <a (click)="logout()" class="menu-link px-5 cursor-pointer">
           <codx-label
