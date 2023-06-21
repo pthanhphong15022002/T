@@ -138,6 +138,23 @@
                 >&nbsp;{{ data?.totalInstance ?? 0 }}</span
               >
             </div>
+            <div class="me-2 mt-1" *ngIf="data?.released">
+              <span
+                class="icon-new_releases text-primary cursor-pointer icon-16"
+                [ngbTooltip]="popupRelease"
+
+                placement="right"
+                ><ng-template #popupRelease>
+                  <codx-label
+                    name="lblRelease"
+                    [formModel]="view.formModel"
+                    [default]="
+                      'Cho phép phát hành quy trình'
+                    "
+                  ></codx-label> </ng-template
+              ></span
+              >
+            </div>
             <div class="ms-auto">
               <codx-imgs
                 [width]="25"
@@ -480,7 +497,7 @@
         field="module"
         [crrValue]="processRelease?.module"
         (valueChange)="changeValue($event, processRelease)"
-     
+
       >
       </codx-input>
     </div>
@@ -494,7 +511,7 @@
         field="function"
         [crrValue]="processRelease?.function"
         (valueChange)="changeValue($event, processRelease)"
-       
+
       >
       </codx-input>
     </div>

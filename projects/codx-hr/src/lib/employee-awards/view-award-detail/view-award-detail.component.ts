@@ -3,9 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -13,15 +11,10 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
-  DialogRef,
-  NotificationsService,
-  UIComponent,
-  ViewModel,
   ViewsComponent,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-view-award-detail',
@@ -85,7 +78,6 @@ export class ViewAwardDetailComponent {
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Thảo Luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
-      // { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     ];
   }
   // ngOnChanges() {

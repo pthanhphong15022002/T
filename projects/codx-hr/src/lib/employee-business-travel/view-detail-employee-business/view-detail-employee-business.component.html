@@ -10,34 +10,47 @@
   class="h-100 dt-es-view"
 >
   <ng-template #titleTmp>
-    <div class="w-100">
-      <h3>
-        {{ itemDetail?.emp?.employeeName }}
-      </h3>
-      <div class="d-flex gap-10 align-items-center">
-        <div
+    <div class="d-flex flex-column ms-1 w-100">
+      <div class="mb-2 d-flex">
+        <span class="text-dark fs-5-sm fw-bold me-3">
+          {{ itemDetail?.emp?.employeeName }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center text-gray-600 mb-1">
+        <span
+          class="me-4 fw-bold text-dark"
           [innerHTML]="
             itemDetail?.emp?.positionID
-              | formatvalue : view.formModel : 'positionID'
+              | formatvalue : formModel : 'positionID'
               | async
           "
-        ></div>
-        <div *ngIf="itemDetail?.emp?.email" class="d-flex">
-          <i class="icon-email me-2"></i>
+          >' '</span
+        >
+        <span
+          class="me-4 d-flex align-items-center"
+          *ngIf="itemDetail?.emp?.email"
+        >
+          <i class="icon-email icon-16 me-2"></i>
           {{ itemDetail?.emp?.email }}
-        </div>
-        <div *ngIf="itemDetail?.emp?.mobile" class="d-flex">
-          <i class="icon-phone_android me-2"></i>
+        </span>
+        <span
+          class="me-3 d-flex align-items-center"
+          *ngIf="itemDetail?.emp?.mobile"
+        >
+          <i class="icon-phone_android icon-16 me-2"></i>
           {{ itemDetail?.emp?.mobile }}
-        </div>
+        </span>
       </div>
-      <span
-        [innerHTML]="
-          itemDetail?.emp.orgUnitID
-            | formatvalue : view.formModel : 'orgUnitID'
-            | async
-        "
-      ></span>
+      <!-- 2 -->
+      <div class="text-gray-600 fs-7">
+        <span
+          [innerHTML]="
+            itemDetail?.emp?.orgUnitID
+              | formatvalue : formModel : 'orgUnitID'
+              | async
+          "
+        ></span>
+      </div>
     </div>
   </ng-template>
 
@@ -50,12 +63,12 @@
         [imageId]="itemDetail?.emp?.employeeID"
         imageObjType="'HR_Employees'"
         [referType]="'avt'"
-        [imageWidth]="80"
+        [imageWidth]="50"
         [titleTmp]="titleTmp"
       >
       </codx-temp-full>
     </div>
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-2 flex-wrap">
       <codx-label
         fiedName="kowID"
         [formModel]="formModel"
@@ -103,7 +116,7 @@
       >
       </span>
     </div>
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-2 flex-wrap">
       <codx-label
         [setRequire]="false"
         fiedName="beginDate"
@@ -143,7 +156,7 @@
       </span>
     </div>
 
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-2 flex-wrap">
       <codx-label
         fiedName="businessPlace"
         [formModel]="formModel"
@@ -190,7 +203,6 @@
       >
       </span>
     </div>
-
     <codx-label
       class="text-primary fw-bold"
       default="Thông tin thêm"
