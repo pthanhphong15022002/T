@@ -104,6 +104,7 @@ export class InstancesComponent
   resourceKanban?: ResourceModel;
   dataObj: any;
   vllStatus = 'DP028';
+  vllApprover = 'DP043';
   instanceID: string;
   dialog: any;
   moreFunc: any;
@@ -274,6 +275,8 @@ export class InstancesComponent
         if (grv) {
           this.grvSetup = grv;
           this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
+          this.vllApprover =
+            grv['ApproveStatus'].referedValue ?? this.vllStatus;
           this.cache.valueList(this.vllStatus).subscribe((res) => {
             if (res && res.datas) {
               this.dataVll = res.datas;
@@ -439,7 +442,7 @@ export class InstancesComponent
   add() {
     // if(this.process.applyFor == '0') {
     this.view.dataService.addNew().subscribe((res) => {
-      const funcIDApplyFor = this.checkFunctionID( this.process.applyFor);
+      const funcIDApplyFor = this.checkFunctionID(this.process.applyFor);
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -468,7 +471,7 @@ export class InstancesComponent
                 : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
-            if(this.process.applyFor == '0') {
+            if (this.process.applyFor == '0') {
               if (!this.process.instanceNoSetting) {
                 this.codxDpService
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
@@ -486,24 +489,23 @@ export class InstancesComponent
                   });
               } else {
                 this.codxDpService
-                .getAutoNumberByInstanceNoSetting(
-                  this.process.instanceNoSetting
-                )
-                .subscribe((isNo) => {
-                  if (isNo) {
-                    this.view.dataService.dataSelected.instanceNo = isNo;
-                    this.openPopUpAdd(
-                      applyFor,
-                      formMD,
-                      option,
-                      'add',
-                      this.listSteps
-                    );
-                  }
-                });
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    if (isNo) {
+                      this.view.dataService.dataSelected.instanceNo = isNo;
+                      this.openPopUpAdd(
+                        applyFor,
+                        formMD,
+                        option,
+                        'add',
+                        this.listSteps
+                      );
+                    }
+                  });
               }
-            }
-            else {
+            } else {
               this.openPopUpAdd(
                 applyFor,
                 formMD,
@@ -512,7 +514,6 @@ export class InstancesComponent
                 this.listSteps
               );
             }
-
           });
       });
     });
@@ -555,25 +556,18 @@ export class InstancesComponent
                   : '550px';
               option.zIndex = 1001;
 
-
-
               if (applyFor != '0') {
-                var datas = [
-                  this.oldIdInstance,
-                  applyFor,
-                ];
+                var datas = [this.oldIdInstance, applyFor];
                 this.codxDpService.getOneDeal(datas).subscribe((dataCM) => {
                   if (dataCM && dataCM[0]) {
                     this.dataCM = dataCM[0];
-                    this.dataCM.reCID =  Util.uid();
+                    this.dataCM.reCID = Util.uid();
                     this.openPopUpAdd(applyFor, formMD, option, 'copy', null);
                   }
                 });
               } else {
                 this.openPopUpAdd(applyFor, formMD, option, 'copy', null);
               }
-
-
             }
           });
       });
@@ -597,7 +591,7 @@ export class InstancesComponent
       instanceNoSetting: this.process.instanceNoSetting,
       dataCM: this.dataCM,
     };
-    let dialogCustomField = this.checkPopupInCM(applyFor,obj,option);
+    let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
         var data = e.event;
@@ -635,7 +629,7 @@ export class InstancesComponent
       isLoad: applyFor != '0',
       dataCM: this.dataCM,
     };
-    let dialogEditInstance = this.checkPopupInCM(applyFor,obj,option);
+    let dialogEditInstance = this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
@@ -661,7 +655,7 @@ export class InstancesComponent
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
-        const funcIDApplyFor = this.checkFunctionID( this.process.applyFor);
+        const funcIDApplyFor = this.checkFunctionID(this.process.applyFor);
         const applyFor = this.process.applyFor;
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -1565,28 +1559,24 @@ export class InstancesComponent
   }
 
   delete(data: any) {
-    if(this.process.applyFor == '1') {
-      var datas = [null,data.recID];
-      this.codxDpService.isCheckDealInUse(datas).subscribe((res)=> {
-        if(res[0]) {
+    if (this.process.applyFor == '1') {
+      var datas = [null, data.recID];
+      this.codxDpService.isCheckDealInUse(datas).subscribe((res) => {
+        if (res[0]) {
           this.notificationsService.notifyCode('CM015');
           return;
-        }
-        else if(res[1]) {
+        } else if (res[1]) {
           this.notificationsService.notifyCode('CM014');
           return;
-        }
-        else {
+        } else {
           this.deleteInstance(data);
         }
       });
-    }
-    else {
+    } else {
       this.deleteInstance(data);
     }
     this.changeDetectorRef.detectChanges();
   }
-
 
   deleteInstance(data) {
     this.view.dataService.dataSelected = data;
@@ -2248,14 +2238,15 @@ export class InstancesComponent
   }
   //Gửi duyệt
   release(data: any, processID: any) {
-    this.codxShareService.codxRelease(
+    this.codxShareService
+      .codxRelease(
         this.view.service,
         data?.recID,
         processID,
         this.view.formModel.entityName,
         this.view.formModel.funcID,
         '',
-        data?.title ,
+        data?.title,
         ''
       )
       .subscribe((res2: any) => {
@@ -2287,7 +2278,12 @@ export class InstancesComponent
               } else if (res2?.eSign == false) {
                 //kí duyet
                 this.codxShareService
-                .codxCancel('DP',dt?.recID, this.view.formModel.entityName,'')
+                  .codxCancel(
+                    'DP',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    ''
+                  )
                   .subscribe((res3) => {
                     if (res3) {
                       this.dataSelected.approveStatus = '0';
@@ -2354,35 +2350,28 @@ export class InstancesComponent
     return this.dataVll?.filter((vl) => vl.value == stt)[0]?.text;
   }
 
-
-  checkPopupInCM(applyFor,obj,option){
+  checkPopupInCM(applyFor, obj, option) {
     if (applyFor == '0') {
-      return this.callfc.openSide( PopupAddInstanceComponent, obj,option);
+      return this.callfc.openSide(PopupAddInstanceComponent, obj, option);
     } else if (applyFor == '1') {
-      return  this.callfc.openSide( PopupAddDealComponent,obj, option);
-    }
-    else if (applyFor == '2' || applyFor == '3') {
-
-      return  this.callfc.openSide( PopupAddCasesComponent,obj, option);
+      return this.callfc.openSide(PopupAddDealComponent, obj, option);
+    } else if (applyFor == '2' || applyFor == '3') {
+      return this.callfc.openSide(PopupAddCasesComponent, obj, option);
     }
     return null;
   }
 
-
-  checkFunctionID(applyFor){
-    if(applyFor == '0') {
+  checkFunctionID(applyFor) {
+    if (applyFor == '0') {
       return this.funcID;
     }
-    if(applyFor == '1') {
+    if (applyFor == '1') {
       return 'CM0201';
-    }
-    else if(applyFor == '2') {
+    } else if (applyFor == '2') {
       return 'CM0401';
-    }
-    else if(applyFor == '3') {
+    } else if (applyFor == '3') {
       return 'CM0402';
     }
     return null;
-
   }
 }

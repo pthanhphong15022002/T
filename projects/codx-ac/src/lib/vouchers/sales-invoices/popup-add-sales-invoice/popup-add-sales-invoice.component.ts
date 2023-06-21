@@ -220,6 +220,8 @@ export class PopupAddSalesInvoiceComponent
   }
 
   onCreate(e, isUsingColumnTemplate): void {
+    console.log(this.grid);
+
     setTimeout(() => {
       const bodyHeight: number =
         document.querySelector<HTMLElement>('.card-body')?.offsetHeight;
@@ -233,7 +235,7 @@ export class PopupAddSalesInvoiceComponent
         document.querySelector<HTMLElement>('.e-gridheader')?.offsetHeight;
       const sumRowHeight: number =
         document.querySelector<HTMLElement>('.e-summaryrow')?.offsetHeight ?? 0;
-      const wierdHeight: number = isUsingColumnTemplate ? 54 : 27;
+      const weirdHeight: number = isUsingColumnTemplate ? 54 : 27;
 
       this.gridHeight =
         bodyHeight -
@@ -242,7 +244,7 @@ export class PopupAddSalesInvoiceComponent
         tabHeight -
         thHeight -
         sumRowHeight -
-        wierdHeight;
+        weirdHeight;
     }, 500);
   }
 
@@ -269,9 +271,7 @@ export class PopupAddSalesInvoiceComponent
         .subscribe((line) => {
           console.log(line);
 
-          this.grid.rowDataSelected = line;
-          line[e.idx] = line;
-          console.log(this.detailService);
+          this.lines[e.idx] = Object.assign(this.lines[e.idx], line);
         });
     }
   }

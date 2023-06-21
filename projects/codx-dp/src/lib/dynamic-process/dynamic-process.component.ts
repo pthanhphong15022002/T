@@ -176,7 +176,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = this.funcID == 'DP01' || this.funcID == 'DP0101'; 
+    this.showButtonAdd = this.funcID == 'DP01' || this.funcID == 'DP0101';
   }
 
   //chang data
@@ -616,6 +616,15 @@ export class DynamicProcessComponent
           case 'DP02012':
           case 'DP02022':
           case 'DP02032':
+            if (
+              data.category === '0' ||
+              !data.write ||
+              this.funcID == 'DP0203' ||
+              this.funcID === 'DP04'
+            ) {
+              res.disabled = true;
+            }
+            break;
           case 'SYS03':
             if (
               !data.write ||
@@ -920,7 +929,7 @@ export class DynamicProcessComponent
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
-    data = value;
+    this.processName = value;
   }
 
   changeValue(event, data) {

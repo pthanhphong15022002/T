@@ -1,5 +1,5 @@
-<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="entityName"
-  (buttonClick)="toolBarClick($event)">
+<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" service="AC" [entityName]="entityName"
+  (buttonClick)="toolBarClick($event)" (onInit)="setEntityName()">
 </codx-views>
 <ng-template #templateMore let-data>
     <div>

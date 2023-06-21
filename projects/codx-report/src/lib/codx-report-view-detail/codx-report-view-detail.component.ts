@@ -86,7 +86,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           let funcID = event.url.split('/').pop();
           this.funcID = funcID;
           this.pageTitle.setBreadcrumbs([]);
-          this.layout.setLogo('');
           this.layout.showIconBack = true;
           this.pageTitle.setTitle('');
           this.pageTitle.setSubTitle('')
@@ -98,6 +97,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           this.pageTitle.setTitle(this.rootFunction.customName);
           this.pageTitle.setSubTitle(this.rootFunction.customName);
           this.pageTitle.setBreadcrumbs([]);
+          this.setBreadCrumb(this.funcItem,true)
         }
         this.changeDetectorRef.detectChanges();
       }
@@ -109,7 +109,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.funcID = this.router.snapshot.params['funcID'];
     this.viewBase.moreFuncs = this.moreFc;
     this.pageTitle.setBreadcrumbs([]);
-    this.layout.setLogo('');
 
     if(this.funcID){
       this.getReport(this.funcID);

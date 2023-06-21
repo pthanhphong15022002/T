@@ -375,31 +375,44 @@
 </codx-detail-tmp>
 
 <ng-template #titleTmp>
-  <div class="d-flex flex-column ms-1">
-    <div class="text-dark fs-5 fw-bold">
-      {{ itemDetail?.emp?.employeeName }}
+  <div class="d-flex flex-column ms-1 w-100">
+    <div class="mb-2 d-flex">
+      <span class="text-dark fs-5-sm fw-bold me-3">
+        {{ itemDetail?.emp?.employeeName }}
+      </span>
     </div>
-    <div class="text-gray-600 fs-7">
+    <div class="d-flex align-items-center text-gray-600 mb-1">
       <span
-        class="me-3"
+        class="me-4 fw-bold text-dark"
         [innerHTML]="
-          itemDetail.positionID | formatvalue : formModel : 'positionID' | async
+          itemDetail?.emp?.positionID
+            | formatvalue : formModel : 'positionID'
+            | async
         "
         >' '</span
       >
-      <span class="me-3" *ngIf="itemDetail?.emp?.email">
-        <i class="icon-email"></i>
+      <span
+        class="me-4 d-flex align-items-center"
+        *ngIf="itemDetail?.emp?.email"
+      >
+        <i class="icon-email icon-16 me-2"></i>
         {{ itemDetail?.emp?.email }}
       </span>
-      <span class="me-3" *ngIf="itemDetail?.emp?.mobile">
-        <i class="icon-phone_android"></i>
+      <span
+        class="me-3 d-flex align-items-center"
+        *ngIf="itemDetail?.emp?.mobile"
+      >
+        <i class="icon-phone_android icon-16 me-2"></i>
         {{ itemDetail?.emp?.mobile }}
       </span>
     </div>
-    <div class="justify-content-between text-dark">
+    <!-- 2 -->
+    <div class="text-gray-600 fs-7">
       <span
         [innerHTML]="
-          itemDetail?.orgUnitID | formatvalue : formModel : 'orgUnitID' | async
+          itemDetail?.emp?.orgUnitID
+            | formatvalue : formModel : 'orgUnitID'
+            | async
         "
       ></span>
     </div>
