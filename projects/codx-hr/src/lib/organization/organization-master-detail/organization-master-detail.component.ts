@@ -23,7 +23,7 @@ import {
   templateUrl: './organization-master-detail.component.html',
   styleUrls: ['./organization-master-detail.component.css'],
   // encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationMasterDetailComponent {
   console = console;
