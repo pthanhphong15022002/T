@@ -1,4 +1,4 @@
-<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" service="AC" [entityName]="'AC_RunPeriodic'"
+<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" service="AC" [entityName]="entityName"
   (buttonClick)="toolBarClick($event)" (onAfterInit)="setEntityName()">
 </codx-views>
 <ng-template #templateMore let-data>
@@ -11,7 +11,7 @@
 <ng-template #itemTemplate let-data>
   <codx-card-center
     cardCss="dp-card-process border rounded-2 h-100"
-    [resourceObjType]="'AC_RunPeriodic'"
+    [resourceObjType]="entityName"
     [rootData]="data"
     [dataItem]="data"
     [formModel]="view.formModel"
