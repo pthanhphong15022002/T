@@ -33,7 +33,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   templateUrl: './quotations.component.html',
   styleUrls: ['./quotations.component.css'],
 })
-export class QuotationsComponent extends UIComponent {
+export class QuotationsComponent extends UIComponent implements OnInit {
   @Input() funcID: string;
   @Input() customerID: string;
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
@@ -99,13 +99,14 @@ export class QuotationsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.loadSetting();
+    // this.loadSetting();
   }
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
+    this.loadSetting();
   }
 
   ngAfterViewInit() {

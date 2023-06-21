@@ -23,7 +23,7 @@ import { PopupAddOrganizationComponent } from './popup-add-organization/popup-ad
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  // encapsulation: ViewEncapsulation.None,
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgorganizationComponent extends UIComponent {

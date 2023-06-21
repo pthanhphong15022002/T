@@ -117,11 +117,10 @@ export class CashPaymentsComponent extends UIComponent {
       this.journalNo = params?.journalNo;
       if (params?.parent) {
         this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) this.parent = res;
+          if (res) {
+            this.view.setRootNode(res?.customName);
+          }
         });
-      }
-      if (this.parent) {
-        this.view.setRootNode(this.parent?.customName);
       }
     });
     this.cache.companySetting().subscribe((res) => {
@@ -210,6 +209,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'ACT041002':
         this.release(data);
         break;
+      case 'ACT041004':
+        this.cancelRelease(data);
+        break;
       case 'ACT041009':
         this.checkValidate(data);
         break;
@@ -251,6 +253,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
+              this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -283,6 +286,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
+              this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -370,10 +374,22 @@ export class CashPaymentsComponent extends UIComponent {
     if (bm.length > 0) {
       switch (data?.status) {
         case '0':
-          if (data.approveStatus == '1') {
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '1':
+          if (this.journal.approvalControl == '0') {
             bm.forEach((element) => {
               if (
-                element.functionID == 'ACT041009' ||
+                element.functionID == 'ACT041003' ||
                 element.functionID == 'ACT041010'
               ) {
                 element.disabled = false;
@@ -381,98 +397,72 @@ export class CashPaymentsComponent extends UIComponent {
                 element.disabled = true;
               }
             });
-          }
-          break;
-        case '1':
-          if (data.approveStatus == '1' || data.approveStatus == '2') {
-            if (this.journal.approvalControl == '0') {
-              bm.forEach((element) => {
-                if (
-                  element.functionID == 'ACT041003' ||
-                  element.functionID == 'ACT041010'
-                ) {
-                  element.disabled = false;
-                } else {
-                  element.disabled = true;
-                }
-              });
-            } else {
-              bm.forEach((element) => {
-                if (
-                  element.functionID == 'ACT041002' ||
-                  element.functionID == 'ACT041010'
-                ) {
-                  element.disabled = false;
-                } else {
-                  element.disabled = true;
-                }
-              });
-            }
+          } else {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041002' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
           }
           break;
         case '2':
         case '4':
-          if (data.approveStatus == '0' || data.approveStatus == '4') {
-            bm.forEach((element) => {
-              element.disabled = true;
-            });
-          }
+          bm.forEach((element) => {
+            element.disabled = true;
+          });
           break;
         case '3':
-          if (data.approveStatus == '3') {
-            bm.forEach((element) => {
-              if (
-                element.functionID == 'ACT041004' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041004' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
           break;
         case '5':
-          if (data.approveStatus == '5') {
-            bm.forEach((element) => {
-              if (
-                element.functionID == 'ACT041003' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
           break;
         case '6':
-          if (data.approveStatus == '1' || data.approveStatus == '5') {
-            bm.forEach((element) => {
-              if (
-                element.functionID == 'ACT041008' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041008' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
           break;
         case '9':
-          if (data.approveStatus == '1' || data.approveStatus == '5') {
-            bm.forEach((element) => {
-              if (
-                element.functionID == 'ACT041003' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
           break;
       }
       // check có hay ko duyệt trước khi ghi sổ
@@ -542,29 +532,6 @@ export class CashPaymentsComponent extends UIComponent {
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {
         this.dataCategory = res;
-        // this.acService
-        //   .release(
-        //     data.recID,
-        //     this.dataCategory.processID,
-        //     this.view.formModel.entityName,
-        //     this.view.formModel.funcID,
-        //     ''
-        //   )
-        //   .subscribe((result) => {
-        //     if (result?.msgCodeError == null && result?.rowCount) {
-        //       this.notification.notifyCode('ES007');
-        //       data.status = '3';
-        //       data.approveStatus = '3';
-        //       this.api
-        //         .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [data,null])
-        //         .subscribe((res: any) => {
-        //           if (res) {
-        //             this.itemSelected = res;
-        //             this.loadDatadetail(this.itemSelected);
-        //           }
-        //         });
-        //     } else this.notification.notifyCode(result?.msgCodeError);
-        //   });
         this.shareService
           .codxRelease(
             'AC',
@@ -580,20 +547,27 @@ export class CashPaymentsComponent extends UIComponent {
             if (result?.msgCodeError == null && result?.rowCount) {
               this.notification.notifyCode('ES007');
               data.status = '3';
-              data.approveStatus = '3';
-              this.api
-                .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
-                  data,
-                  null,
-                ])
-                .subscribe((res: any) => {
-                  if (res) {
-                    this.itemSelected = res;
-                    this.loadDatadetail(this.itemSelected);
-                  }
-                });
+              this.itemSelected = { ...data };
+              this.loadDatadetail(this.itemSelected);
+              this.view.dataService.update(data).subscribe((res) => {});
+              this.detectorRef.detectChanges();
             } else this.notification.notifyCode(result?.msgCodeError);
           });
+      });
+  }
+
+  cancelRelease(data: any) {
+    this.shareService
+      .codxCancel('AC', data?.recID, this.view.formModel.entityName, '')
+      .subscribe((result: any) => {
+        if (result && result?.msgCodeError == null) {
+          this.notification.notifyCode('SYS034');
+          data.status = '1';
+          this.itemSelected = { ...data };
+          this.loadDatadetail(this.itemSelected);
+          this.view.dataService.update(data).subscribe((res) => {});
+          this.detectorRef.detectChanges();
+        } else this.notification.notifyCode(result?.msgCodeError);
       });
   }
 
@@ -603,17 +577,9 @@ export class CashPaymentsComponent extends UIComponent {
       if (res && res.update.data != null) {
         this.itemSelected = res.update.data;
         this.loadDatadetail(this.itemSelected);
+        this.view.dataService.update(this.itemSelected).subscribe();
       }
     });
-    // this.api
-    //   .exec('AC', 'CashPaymentsBusiness', 'UpdateLogicAsync', [
-    //     data
-    //   ])
-    //   .subscribe((res: any) => {
-    //     if (res) {
-
-    //     }
-    //   });
   }
 
   post(data: any) {
