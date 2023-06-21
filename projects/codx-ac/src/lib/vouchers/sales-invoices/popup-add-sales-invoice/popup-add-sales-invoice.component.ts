@@ -220,7 +220,7 @@ export class PopupAddSalesInvoiceComponent
   }
 
   onCreate(e, isUsingColumnTemplate): void {
-    // console.log(this.grid.visibleColumns);
+    console.log(this.grid);
 
     setTimeout(() => {
       const bodyHeight: number =
