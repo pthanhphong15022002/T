@@ -65,12 +65,10 @@
                 </codx-img>
               </div>
               <div class="d-flex flex-column">
-                <div class="fw-bold text-dark fs-3 mb-1">
+                <div class="text-gray-700 fs-6 mb-1">
                   {{ dataSelected.customerName }}
                 </div>
-                <div class="d-flex align-items-center mb-1">
-                  <span
-                    class="text-gray-600 line-clamp-menu"
+                <div class="fw-bold text-dark fs-4"
                     [ngbTooltip]="tooltipDealName"
                     #dealName
                     [innerHTML]="
@@ -78,8 +76,7 @@
                         | formatvalue : formModel : 'dealName' : dealName
                         | async
                     "
-                  ></span>
-                </div>
+                  ></div>
               </div>
             </div>
           </div>
