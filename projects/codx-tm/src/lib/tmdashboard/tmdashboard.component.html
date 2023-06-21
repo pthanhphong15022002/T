@@ -297,7 +297,7 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="8" title="Hiệu suất làm việc">
-    <!-- <ejs-circulargauge class="w-100 h-100" centerY="50%" align="center">
+    <ejs-circulargauge class="w-100 h-100" centerY="50%" align="center">
       <e-axes>
         <e-axis
           minimum="0"
@@ -339,7 +339,7 @@
           </e-ranges>
           <e-pointers>
             <e-pointer
-              [value]="70"
+              [value]="toFixed((myDBData.doneHours / myDBData.workHours) * 100)"
               pointerWidth="20"
               type="RangeBar"
               radius="50%"
@@ -348,7 +348,7 @@
           </e-pointers>
         </e-axis>
       </e-axes>
-    </ejs-circulargauge> -->
+    </ejs-circulargauge>
   </div>
 </ng-template>
 
@@ -359,7 +359,9 @@
         Tổng thời gian hoàn thành thực tế
       </div>
       <div class="d-flex justify-content-center align-items-center">
-        <div class="fw-bold" style="font-size: 1.75vw">116</div>
+        <div class="fw-bold" style="font-size: 1.75vw">
+          {{ myDBData.doneHours ?? 0 }}
+        </div>
         <div class="ms-2" style="font-size: 0.75vw">giờ</div>
       </div>
     </div>
@@ -373,7 +375,9 @@
         Tổng thời gian làm việc
       </div>
       <div class="d-flex justify-content-center align-items-center">
-        <div class="fw-bold" style="font-size: 1.75vw">176</div>
+        <div class="fw-bold" style="font-size: 1.75vw">
+          {{ myDBData.workHours ?? 0 }}
+        </div>
         <div class="ms-2" style="font-size: 0.75vw">giờ</div>
       </div>
     </div>
@@ -492,9 +496,10 @@
     title="Thống kê công việc hoàn thành và số giờ thực hiện"
   >
     <ejs-chart
-      class="w-100 h-100"
       style="display: block"
       align="center"
+      width="100%"
+      height="100%"
       [id]="newGuid()"
       [tooltip]="{ enable: true }"
     >
@@ -739,17 +744,20 @@
         </div>
       </div>
       <div class="my-5">
-        <div class="mx-2 my-5" *ngFor="let emp of teamDBData.topEmpByDoneTasks">
+        <div
+          class="mx-2 my-5"
+          *ngFor="let data of teamDBData.topEmpByDoneTasks"
+        >
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between align-items-center">
               <codx-img
-                *ngIf="emp.employee.userID"
+                *ngIf="data.employee.userID"
                 [objectType]="'AD_Users'"
-                [objectId]="emp.employee.userID"
+                [objectId]="data.employee.userID"
               ></codx-img>
               <div class="ms-2">
-                <div class="text-dark">{{ emp.employee.employeeName }}</div>
-                <div>{{ emp.employee.organizationName }}</div>
+                <div class="text-dark">{{ data.employee.employeeName }}</div>
+                <div>{{ data.employee.organizationName }}</div>
               </div>
             </div>
             <div class="progress-container">
@@ -757,7 +765,9 @@
                 <div
                   class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                 >
-                  <span class="fs-6 fw-bold">{{ emp.percentage }}%</span>
+                  <span class="fw-bold" style="font-size: 0.5vw"
+                    >{{ data.percentage }}%</span
+                  >
                 </div>
                 <ejs-progressbar
                   #annotation1
@@ -765,9 +775,9 @@
                   [type]="'Circular'"
                   [maximum]="100"
                   [minimum]="0"
-                  [value]="emp.percentage"
-                  [width]="'70'"
-                  [height]="'70'"
+                  [value]="data.percentage"
+                  [width]="'75'"
+                  [height]="'75'"
                   [trackThickness]="10"
                   [progressThickness]="10"
                   [progressColor]="'#FF4500'"
@@ -786,16 +796,25 @@
 <ng-template #team_dashboard>
   <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
     <div class="topchart-group mt-3">
-      <div class="topchart-item d-flex align-items-center justify-content-end">
-        <div class="fw-bold me-2">123</div>
-        <div
-          class="topchart-user"
-          style="background-color: #1d1dcc; width: 87%; color: #fff"
-        >
-          <span>Lê Phạm Hoài Thương</span>
+      <div
+        *ngFor="let data of teamDBData?.topEmpByQtyTasks"
+        class="topchart-item d-flex align-items-center justify-content-end"
+      >
+        <div *ngIf="+data?.percentage > 0">
+          <div class="fw-bold me-2">
+            {{ data?.quantity }}
+          </div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="data?.percentage + '%'"
+            [title]="data?.employee?.employeeName"
+          >
+            <span>{{ data?.employee?.employeeName }}</span>
+          </div>
         </div>
       </div>
-      <div class="topchart-item d-flex align-items-center justify-content-end">
+      <!-- <div class="topchart-item d-flex align-items-center justify-content-end">
         <div class="fw-bold me-2">65</div>
         <div
           class="topchart-user"
@@ -812,7 +831,7 @@
         >
           <span>Nguyễn Thị Bích Vân</span>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </ng-template>
@@ -1198,16 +1217,25 @@
 <ng-template #assign_dashboard>
   <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
     <div class="topchart-group mt-3">
-      <div class="topchart-item d-flex align-items-center justify-content-end">
-        <div class="fw-bold me-2">123</div>
-        <div
-          class="topchart-user"
-          style="background-color: #1d1dcc; width: 87%; color: #fff"
-        >
-          <span>Lê Phạm Hoài Thương</span>
+      <div
+        *ngFor="let data of assignDBData?.topEmpByQtyTasks"
+        class="topchart-item d-flex align-items-center justify-content-end"
+      >
+        <div *ngIf="+data?.percentage > 0">
+          <div class="fw-bold me-2">
+            {{ data?.quantity }}
+          </div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="data?.percentage + '%'"
+            [title]="data?.employee?.employeeName"
+          >
+            <span>{{ data?.employee?.employeeName }}</span>
+          </div>
         </div>
       </div>
-      <div class="topchart-item d-flex align-items-center justify-content-end">
+      <!-- <div class="topchart-item d-flex align-items-center justify-content-end">
         <div class="fw-bold me-2">65</div>
         <div
           class="topchart-user"
@@ -1224,7 +1252,7 @@
         >
           <span>Nguyễn Thị Bích Vân</span>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </ng-template>
@@ -1275,94 +1303,20 @@
         </div>
       </div>
       <div class="my-5">
-        <div class="mx-2 my-5">
+        <div
+          class="mx-2 my-5"
+          *ngFor="let data of assignDBData.topEmpByDoneTasks"
+        >
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between align-items-center">
               <codx-img
-                objectType="AD_Users"
-                [objectId]="'2303080005'"
-              ></codx-img>
-              <div class="ms-2">
-                <div class="text-dark">Phan Mẫn Nhi</div>
-                <div>Phát triển sản phẩm</div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center">
-              <div class="progress-container">
-                <div class="progress-container-align position-relative">
-                  <div
-                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
-                  >
-                    <span class="fs-6 fw-bold">80%</span>
-                  </div>
-                  <ejs-progressbar
-                    #annotation1
-                    [id]="newGuid()"
-                    [type]="'Circular'"
-                    [maximum]="100"
-                    [minimum]="0"
-                    [value]="80"
-                    [width]="'70'"
-                    [height]="'70'"
-                    [trackThickness]="10"
-                    [progressThickness]="10"
-                    [progressColor]="'#FF4500'"
-                    [animation]="animation"
-                  >
-                  </ejs-progressbar>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mx-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between align-items-center">
-              <codx-img
-                objectType="AD_Users"
-                [objectId]="'2303080005'"
-              ></codx-img>
-              <div class="ms-2">
-                <div class="text-dark">Phan Mẫn Nhi</div>
-                <div>Phát triển sản phẩm</div>
-              </div>
-            </div>
-            <div class="progress-container">
-              <div class="progress-container-align position-relative">
-                <div
-                  class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
-                >
-                  <span class="fs-6 fw-bold">80%</span>
-                </div>
-                <ejs-progressbar
-                  #annotation1
-                  [id]="newGuid()"
-                  [type]="'Circular'"
-                  [maximum]="100"
-                  [minimum]="0"
-                  [value]="80"
-                  [width]="'70'"
-                  [height]="'70'"
-                  [trackThickness]="10"
-                  [progressThickness]="10"
-                  [progressColor]="'#FF4500'"
-                  [animation]="animation"
-                >
-                </ejs-progressbar>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mx-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between align-items-center">
-              <codx-img
+                *ngIf="data.employee.userID"
                 [objectType]="'AD_Users'"
-                [objectId]="'2303080005'"
+                [objectId]="data.employee.userID"
               ></codx-img>
               <div class="ms-2">
-                <div class="fw-bold">Phan Mẫn Nhi</div>
-                <div>Phát triển sản phẩm</div>
+                <div class="text-dark">{{ data.employee.employeeName }}</div>
+                <div>{{ data.employee.organizationName }}</div>
               </div>
             </div>
             <div class="progress-container">
@@ -1370,7 +1324,9 @@
                 <div
                   class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                 >
-                  <span class="fs-6 fw-bold">80%</span>
+                  <span class="fw-bold" style="font-size: 0.5vw"
+                    >{{ data.percentage }}%</span
+                  >
                 </div>
                 <ejs-progressbar
                   #annotation1
@@ -1378,9 +1334,9 @@
                   [type]="'Circular'"
                   [maximum]="100"
                   [minimum]="0"
-                  [value]="80"
-                  [width]="'70'"
-                  [height]="'70'"
+                  [value]="data.percentage"
+                  [width]="'75'"
+                  [height]="'75'"
                   [trackThickness]="10"
                   [progressThickness]="10"
                   [progressColor]="'#FF4500'"
