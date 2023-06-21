@@ -105,17 +105,17 @@ export class OrganizationMasterDetailComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
-      //Use interval to delay grid
-      let ins = setInterval(() => {
-        if (this.grid) {
-          clearInterval(ins);
-          this.orgUnitID = changes.orgUnitID.currentValue;
-          this.getManager(this.orgUnitID);
-          this.grid.refresh();
-        }
-      }, 200);
-    }
+    // if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
+    //Use interval to delay grid
+    let ins = setInterval(() => {
+      if (this.grid) {
+        clearInterval(ins);
+        this.orgUnitID = changes.orgUnitID.currentValue;
+        this.getManager(this.orgUnitID);
+        this.grid.refresh();
+      }
+    }, 200);
+    // }
   }
 
   // get employee manager by orgUnitID

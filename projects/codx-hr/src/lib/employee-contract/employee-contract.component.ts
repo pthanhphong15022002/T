@@ -55,6 +55,7 @@ export class EmployeeContractComponent extends UIComponent {
   statusCbx = true;
   dialog!: DialogRef;
   grvSetup: any;
+  runModeCheck: boolean = false;
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01';
@@ -186,7 +187,7 @@ export class EmployeeContractComponent extends UIComponent {
 
   changeDataMf(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
-
+    this.runModeCheck = true;
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
     );
@@ -203,6 +204,7 @@ export class EmployeeContractComponent extends UIComponent {
 
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
+      this.runModeCheck = true;
       this.shareService.changeMFApproval(e, data);
     }
   }
@@ -372,8 +374,10 @@ export class EmployeeContractComponent extends UIComponent {
               this.view.formModel.entityName,
               this.view.formModel.funcID,
               '',
-              this.view.function.description +' - ' +this.itemDetail.contractNo,
-              '',
+              this.view.function.description +
+                ' - ' +
+                this.itemDetail.contractNo,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {
