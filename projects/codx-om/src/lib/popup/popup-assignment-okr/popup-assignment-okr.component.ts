@@ -82,6 +82,9 @@ export class PopupAssignmentOKRComponent
   okrPlanRecID: any;
   offset: string;
   activeTab: string;
+  cbbOrgData:any;
+  cbbPosData:any;
+  cbbEmpData:any;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -233,6 +236,9 @@ export class PopupAssignmentOKRComponent
     this.tabControl[1].disabled=false;
     this.tabControl[2].disabled=false;
     this.tabControl[0].disabled=false;
+    this.cbbOrgData=null;
+    this.cbbPosData=null;    
+    this.cbbEmpData=null;
     this.detectorRef.detectChanges();
   }
   orgTypeToObjectType(orgUnitType:string){
@@ -246,6 +252,7 @@ export class PopupAssignmentOKRComponent
   cbxOrgChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
       this.assignmentOKR.objectID = evt.data;
+      this.cbbOrgData=evt?.data;
       this.codxOmService.getManagerByOrgUnitID(this.assignmentOKR.objectID).subscribe((ownerInfo:any) => {
           if (ownerInfo) {
             this.assignTo(ownerInfo);            
@@ -262,6 +269,7 @@ export class PopupAssignmentOKRComponent
   cbxPosChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
       this.assignmentOKR.objectID = evt.data;
+      this.cbbPosData=evt?.data;
       this.codxOmService.getEmployeesByPositionID(this.assignmentOKR?.objectID).subscribe((res:any) => {
           if (res) {
             this.codxOmService.getEmployeesByEmpID(res[0]?.employeeID).subscribe((ownerInfo) => {
@@ -282,6 +290,7 @@ export class PopupAssignmentOKRComponent
   cbxEmpChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
       this.assignmentOKR.objectID = evt.data;
+      this.cbbEmpData=evt?.data;
       this.codxOmService.getEmployeesByEmpID(this.assignmentOKR.objectID).subscribe((ownerInfo) => {
           if (ownerInfo) {
             this.assignTo(ownerInfo);
