@@ -182,37 +182,19 @@
   <codx-temp-full
     style="width: 100%"
     [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
-    [imageId]="data?.customerID"
+    [imageId]="data?.recId"
     [imgOn]="data?.modifiedOn"
     [imageReferType]="'avt'"
     [imageWidth]="35"
     imgCss="me-3"
-    [title]="data?.customerName"
+    [title]="data?.leadName"
     [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmpCard"
+    [hideMF]="false"
   >
   </codx-temp-full>
-  <!-- <ng-template #tooltipDealName>
-    <div class="text-end text-sm-start">
-      <strong>{{ gridViewSetup["DealName"]?.headerText }}</strong
-      >: {{ data?.dealName }}
-    </div>
-  </ng-template> -->
   <ng-template #descTmpCard>
-    <!-- <div class="'d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-start mb-1">
-        <i class="icon-subtitles icon-16 me-2"></i>
-        <span
-          class="text-gray-700 line-clamp line-clamp-2"
-          #dealName
-          [ngbTooltip]="tooltipDealName"
-          [innerHTML]="
-            data?.dealName
-              | formatvalue : formModel : 'dealName' : dealName
-              | async
-          "
-        ></span>
-      </div>
+    <div class="'d-flex flex-column w-100">
       <div class="d-flex justify-content-start mb-1 w-100">
         <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
         <span
@@ -227,50 +209,12 @@
         ></span>
       </div>
     </div>
-  </ng-template> -->
+  </ng-template>
 </ng-template>
 
 <ng-template #footerKanban let-data>
-  <!-- <div class="d-flex flex-column">
-    <div class="d-flex justify-content-between mt-2">
-      <div class="">
-        <span class="icon-monetization_on icon-16 text-warning me-2"></span>
-        <span
-          class="text-gray-700 line-clamp-menu"
-          [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
-          #dealValue
-          [innerHTML]="
-            data?.dealValue | formatvalue : view.formModel : 'dealValue' | async
-          "
-        ></span>
-      </div>
-      <div class="d-flex justify-content-end">
-        <span class="icon-i-check-all icon-16 text-green me-2"></span>
-        <span
-          [innerHTML]="
-            data?.probability
-              | formatvalue : view.formModel : 'probability'
-              | async
-          "
-        ></span
-        ><span *ngIf="data?.probability">%</span>
-      </div>
-    </div>
+  <div class="d-flex flex-column">
     <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
-        <span
-          class="fs-7 text-gray-600 line-clamp-menu"
-          #expectedClosed
-          [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
-          [innerHTML]="
-            data.expectedClosed
-              | formatvalue : view.formModel : 'expectedClosed'
-              | async
-          "
-        ></span>
-      </div>
-
       <div class="d-flex justify-content-end align-items-center">
         <span class="me-1">
           <span class="icon-16 icon-av_timer me-1"></span>
@@ -292,7 +236,7 @@
         </codx-imgs>
       </div>
     </div>
-  </div> -->
+  </div>
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
