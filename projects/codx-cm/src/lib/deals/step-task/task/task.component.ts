@@ -204,12 +204,18 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
     });
   }
 
-  copyTask(task){
-
+  async copyTask(task){
+    let taskOutput = await this.openPopupTask('add', task);
+    if (taskOutput?.event) {
+      
+    }
   }
 
-  editTask(task){
-
+  async editTask(task){
+    let taskOutput = await this.openPopupTask('add', task);
+    if (taskOutput?.event) {
+      
+    }
   }
 
   async chooseTypeTask() {

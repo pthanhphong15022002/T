@@ -24,13 +24,17 @@
 
 .notify-popup .codx-form>.card-header {
   background-color: var(--white);
+  .card-toolbar{
+    z-index: 9999;
+    position: relative;
+  }
 }
 
 .notify-popup .codx-form>.card-header>div:first-child {
   display: flex !important;
   justify-content: end !important;
   padding-right: 10px;
-  z-index: 9999;
+ 
 }
 
 .notify-popup .codx-form>.card-header::after {
@@ -88,7 +92,9 @@
   }
   .card-body{
     margin-top: -54px;
-    z-index: 999;
+    z-index: 99;
+    margin-left: 60px;
+    margin-right: 60px;
   }
   .codx-form > .card-header::before{
     background: none;
