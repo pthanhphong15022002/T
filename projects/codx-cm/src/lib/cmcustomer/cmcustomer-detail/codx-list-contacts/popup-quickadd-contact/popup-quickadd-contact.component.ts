@@ -41,7 +41,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   objectName: any;
   listContacts = [];
   nameDefault: any;
-  radioChecked = true;
+  radioCheckedContact = true;
   fieldContact = { text: 'contactName', value: 'recID' };
   lstContactCbx = [];
   contactID: any;
@@ -75,9 +75,9 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
   async ngOnInit() {
     if (this.action != 'add') {
-      this.radioChecked = false;
+      this.radioCheckedContact = false;
     }
-    if (this.radioChecked) {
+    if (this.radioCheckedContact) {
       this.action = 'edit';
       if (this.actionOld == 'add') this.default();
       this.lstContactCbx = await this.loadContact();
@@ -116,7 +116,7 @@ export class PopupQuickaddContactComponent implements OnInit {
             (contact2) => contact2.recID === contact1.recID
           )
       );
-    } else if (this.objectType == '4' && this.type == 'formDetail') {
+    } else if (this.objectType == '4') {
       lst = lst.filter(
         (contact1) =>
           !this.listContacts.some(
@@ -173,27 +173,39 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.dialog.formModel.funcID,
       this.dialog.formModel.entityName,
     ];
-
-    this.cmSv.quickAddContacts(data).subscribe((res) => {
-      if (res) {
-        this.data = res;
-        this.data.isDefault = this.isDefault;
-        this.data.contactType = this.contactType;
-        this.data.objectID = this.recIDCm;
-        this.data.objectType = this.objectType;
-        this.data.objectName = this.objectName;
-        if (type == 'save') {
-          this.dialog.close(this.data);
+    if (this.type == 'formDetail' || (this.type == 'formAdd' && this.objectType != '4')) {
+      this.cmSv.quickAddContacts(data).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          this.data.isDefault = this.isDefault;
+          this.data.contactType = this.contactType;
+          this.data.objectID = this.recIDCm;
+          this.data.objectType = this.objectType;
+          this.data.objectName = this.objectName;
+          if (type == 'save') {
+            this.dialog.close(this.data);
+          } else {
+            this.deleteContact(this.data);
+          }
           this.notiService.notifyCode('SYS006');
         } else {
-          this.deleteContact(this.data);
-          this.notiService.notifyCode('SYS006');
+          this.dialog.close();
+          this.notiService.notifyCode('SYS023');
         }
+      });
+    } else {
+      this.data.recID = Util.uid();
+      this.data.isDefault = this.isDefault;
+      this.data.contactType = this.contactType;
+      this.data.objectID = this.recIDCm;
+      this.data.objectType = this.objectType;
+      this.data.objectName = this.objectName;
+      if (type == 'save') {
+        this.dialog.close(this.data);
       } else {
-        this.dialog.close();
-        this.notiService.notifyCode('SYS023');
+        this.deleteContact(this.data);
       }
-    });
+    }
   }
 
   onEdit(type) {
@@ -321,7 +333,7 @@ export class PopupQuickaddContactComponent implements OnInit {
 
   async changeRadio(e) {
     if (e.field === 'yes' && e.component.checked === true) {
-      this.radioChecked = true;
+      this.radioCheckedContact = true;
       this.contactID = null;
       this.default();
       this.action = 'edit';
@@ -329,7 +341,7 @@ export class PopupQuickaddContactComponent implements OnInit {
         this.lstContactCbx = await this.loadContact();
       }
     } else if (e.field === 'no' && e.component.checked === true) {
-      this.radioChecked = false;
+      this.radioCheckedContact = false;
       this.default();
       this.data = new CM_Contacts();
       this.action = this.actionOld;
@@ -346,7 +358,7 @@ export class PopupQuickaddContactComponent implements OnInit {
           );
           if (find != -1) {
             this.data = JSON.parse(JSON.stringify(this.lstContactCbx[find]));
-            if (this.objectType == '4' && this.type == 'formDetail') {
+            if (this.objectType == '4') {
               this.data.recID = Util.uid();
               this.data.refID = this.contactID;
               this.data.contactID = null;
@@ -360,7 +372,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   deleteContact(data) {
     if (data != null) {
       var index = -1;
-      if (this.objectType == '4' && this.type == 'formDetail') {
+      if (this.objectType == '4') {
         index = this.lstContactCbx.findIndex((x) => x.recID == data?.refID);
       } else {
         index = this.lstContactCbx.findIndex((x) => x.recID == data?.recID);
