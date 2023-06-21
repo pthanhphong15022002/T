@@ -226,23 +226,7 @@ export class PopupAddKRComponent extends UIComponent {
 
     if (this.kr.targets?.length == 0 || this.kr.targets == null) {
       this.calculatorTarget(this.kr?.plan);
-      this.onSaveTarget();
-    } else {
-      this.kr.targets = [];
-      for (let i = 0; i < this.editTargets.length; i++) {
-        this.kr.targets.push({ ...this.editTargets[i] });
-      }
-    }
-    // this.fGroupAddKR.patchValue(this.kr);
-    //   if (this.fGroupAddKR.invalid == true) {
-    //   this.codxOmService.notifyInvalid(
-    //     this.fGroupAddKR,
-    //     this.formModel
-    //   );
-    //   return;
-    // }
-    //tính lại Targets cho KR
-
+    } 
     if (
       this.funcType == OMCONST.MFUNCID.Add ||
       this.funcType == OMCONST.MFUNCID.Copy
