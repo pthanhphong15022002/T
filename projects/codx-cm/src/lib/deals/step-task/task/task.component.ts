@@ -305,8 +305,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
-    }
-    this.api
+      this.api
       .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
         this.activitie,
       ])
@@ -317,6 +316,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.detectorRef.detectChanges();
         }
       });
+    }
   }
 
   copyData(datacopy, data) {
