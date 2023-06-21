@@ -1,12 +1,12 @@
 <ng-container *ngIf="data">
     <div class="d-flex align-items-center justify-content-between mt-1 mb-2">
-        <div class="d-flex align-items-center ms-1 text-hover-underline" (click)="showVotes(data)">
+        <div class="d-flex align-items-center ms-1" (click)="showVotes(data)">
             <ng-container *ngIf="data.totalVote > 0">
                 <div class="flex align-items-center">
                     <div *ngFor="let votedType of data.listVoteType">
                         <a *ngIf="dVll[votedType]?.icon">
                             <img src="assets/themes/wp/default/img/{{dVll[votedType]?.icon}}"
-                                style="width: 15px; height: 15x;">
+                                style="width: 16px; height: 16x;">
                         </a>
                     </div>
                 </div>

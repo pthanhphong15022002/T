@@ -443,7 +443,7 @@
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"
       [customerID]="customerID"
-      (contactEvent)="contactEventDeal($event)"
+      (lstContactEmit)="lstContactEmit($event)"
       [objectType]="'4'"
       [objectName]="deal?.dealName"
       [hidenMF]="false"

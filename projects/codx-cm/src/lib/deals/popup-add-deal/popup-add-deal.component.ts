@@ -227,8 +227,14 @@ export class PopupAddDealComponent
     }
   }
   lstContactEmit(e) {
-    this.lstContactCustomer = e;
+    this.lstContactDeal = e;
+    // if (!this.isCheckContact) this.isCheckContact = true;
   }
+
+  lstContactDeleteEmit(e){
+    this.lstContactDelete = e;
+  }
+
   objectConvertDeal(e) {
     if (e.e == true) {
       if (e.data) {

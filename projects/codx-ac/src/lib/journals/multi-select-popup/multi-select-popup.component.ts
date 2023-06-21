@@ -3,6 +3,7 @@ import {
   CodxFormComponent,
   DialogData,
   DialogRef,
+  FormModel,
   UIComponent,
 } from 'codx-core';
 import { Observable } from 'rxjs';

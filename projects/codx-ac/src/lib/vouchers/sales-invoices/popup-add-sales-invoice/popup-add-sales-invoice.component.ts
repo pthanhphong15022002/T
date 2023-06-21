@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  HostListener,
   Injector,
   Optional,
   ViewChild,
@@ -47,12 +46,14 @@ export class PopupAddSalesInvoiceComponent
   lines: ISalesInvoicesLine[] = [];
   masterService: CRUDService;
   detailService: CRUDService;
+  gvsSalesInvoices: any;
+  gvsSalesInvoicesLines: any;
+  fmSalesInvoicesLines: FormModel;
+
   formTitle: string;
   isEdit: boolean = false;
   voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
-  gvsSalesInvoices: any;
-  gvsSalesInvoicesLines: any;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
   tabs: TabModel[] = [
@@ -67,7 +68,6 @@ export class PopupAddSalesInvoiceComponent
     allowDeleting: true,
     mode: 'Normal',
   };
-  fmSalesInvoicesLines: FormModel;
   isReturnInvoice: boolean;
   gridHeight: number;
 
@@ -193,6 +193,10 @@ export class PopupAddSalesInvoiceComponent
   onInputChange(e): void {
     console.log('onInputChange', e);
 
+    if (!e.data) {
+      return;
+    }
+
     const postFields: string[] = [
       'objectID',
       'currencyID',
@@ -206,15 +210,18 @@ export class PopupAddSalesInvoiceComponent
           e.field,
           this.master,
         ])
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           console.log(res);
 
+          this.master = Object.assign(this.master, res);
           this.form.formGroup.patchValue(res);
         });
     }
   }
 
   onCreate(e, isUsingColumnTemplate): void {
+    console.log(this.grid);
+
     setTimeout(() => {
       const bodyHeight: number =
         document.querySelector<HTMLElement>('.card-body')?.offsetHeight;
@@ -228,7 +235,7 @@ export class PopupAddSalesInvoiceComponent
         document.querySelector<HTMLElement>('.e-gridheader')?.offsetHeight;
       const sumRowHeight: number =
         document.querySelector<HTMLElement>('.e-summaryrow')?.offsetHeight ?? 0;
-      const wierdHeight: number = isUsingColumnTemplate ? 54 : 27;
+      const weirdHeight: number = isUsingColumnTemplate ? 54 : 27;
 
       this.gridHeight =
         bodyHeight -
@@ -237,12 +244,36 @@ export class PopupAddSalesInvoiceComponent
         tabHeight -
         thHeight -
         sumRowHeight -
-        wierdHeight;
+        weirdHeight;
     }, 500);
   }
 
   onCellChange(e): void {
     console.log('onCellChange', e);
+
+    const postFields: string[] = [
+      'itemID',
+      'costPrice',
+      'quantity',
+      'netAmt',
+      'vatid',
+      'vatAmt',
+      'lineType',
+      'umid',
+      'idiM1',
+    ];
+    if (postFields.includes(e.field)) {
+      this.api
+        .exec('SM', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
+          e.field,
+          e.data,
+        ])
+        .subscribe((line) => {
+          console.log(line);
+
+          this.lines[e.idx] = Object.assign(this.lines[e.idx], line);
+        });
+    }
   }
 
   onClickMF(e, data) {

@@ -115,16 +115,20 @@
 
     <div class="w-20 min-w-200px px-2">
       <div class="d-flex">
-        <codx-vll
-          [formModel]="view.formModel"
-          [field]="'Status'"
-          [value]="runModeCheck ? data?.unbounds?.statusApproval : data?.status"
-          [showText]="true"
-          [showIcon]="false"
-          [showBgColor]="true"
-          ngClass="badge badge-sm"
-        >
-        </codx-vll>
+        <ng-container *ngIf="flagChangeMF">
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="
+              runModeCheck ? data?.unbounds?.statusApproval : data?.status
+            "
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+            ngClass="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
         <div
           *ngIf="data?.isCurrent && !data?.isExpire"
           #popOver="ngbPopover"
@@ -318,15 +322,18 @@
       </div>
 
       <div class="mt-1">
-        <codx-vll
-          class="badge badge-sm badge-light-primary me-3"
-          [name]="'HRS102'"
-          [value]="runModeCheck ? data?.unbounds?.statusApproval : data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-        >
-        </codx-vll>
-
+        <ng-container *ngIf="flagChangeMF">
+          <codx-vll
+            class="badge badge-sm badge-light-primary me-3"
+            [name]="'HRS102'"
+            [value]="
+              runModeCheck ? data?.unbounds?.statusApproval : data?.status
+            "
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </ng-container>
         <span class="me-4" [ngbTooltip]="grvSetup?.SignedDate?.headerText">
           {{ data?.signedDate | fmDT }}
         </span>

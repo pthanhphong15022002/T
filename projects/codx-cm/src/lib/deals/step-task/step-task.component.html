@@ -135,56 +135,63 @@
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
       ></codx-step-task>
-      <hr *ngIf="!step?.isSuccessStep && !step?.isFailStep" />
-      <!-- thành công thất bại  -->
-      <div *ngIf="step?.isSuccessStep">
-        <div class="d-flex align-items-center text-success">
-          <span class="icon-check icon-18 icon-step"></span>
-          <span
-            class="line-clamp line-clamp-2 fs-5 ms-2 text-success"
-            [ngStyle]="{ color: 'gray', 'font-weight': '400' }"
-          >
-            {{ step.stepName || "" }}</span
-          >
-        </div>
-        <div style="margin-left: 50px;">
-          <div>
+      <div *ngIf="step?.isFailStep || step?.isSuccessStep">
+        <div >
+          <div class="d-flex justify-content-start">
+            <div
+              [ngStyle]="{
+                'background-color': getReasonValue(step?.isSuccessStep)?.color
+              }"
+              class="me-2 badge badge-sm d-flex align-items-center"
+            >
+              <i
+                [class]="getReasonValue(step?.isSuccessStep)?.icon"
+                class="icon-18 icon-step"
+                [ngStyle]="{ color: getReasonValue(step?.isSuccessStep)?.textColor }"
+              >
+              </i>
+              <span
+                class="line-clamp line-clamp-2 fs-5 ms-2"
+                [ngStyle]="{ color: getReasonValue(step?.isSuccessStep)?.textColor }"
+              >
+                {{ step?.stepName || "" }}
+              </span>
+            </div>
+            <div></div>
+            <div class="ms-auto">
+              <div class="group-button">
+                <button class="button-custom" (click)="openPopupReason()">
+                  <span
+                    [ngClass]="
+                      dataSelected?.closed
+                        ? ''
+                        : 'icon-edit icon-20 text-primary-600 py-2'
+                    "
+                    style="font-weight: 500"
+                  ></span>
+                </button>
+                <button class="button-custom">
+                  <span
+                    class="icon-expand_less icon-20 text-primary-600 py-2"
+                    style="font-weight: 500"
+                  ></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-left: 50px">
             <codx-label
               class="fs-5"
-              [formModel]=""
-              fiedName="delTermID"
-              default="Lý do thành công"
+              fiedName="titleReason"
+              [default]="getNameReason(step?.isSuccessStep)"
             ></codx-label>
+            <ul *ngIf="listStepReason?.length > 0">
+              <li *ngFor="let reason of listStepReason">
+                <span class="fs-6">{{ reason?.reasonName }}</span>
+              </li>
+            </ul>
           </div>
-          <ul *ngIf="step?.reasons?.length > 0">
-            <li *ngFor="let reason of step.reasons">
-              <span class="fs-6">{{ reason?.reasonName }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div *ngIf="step?.isFailStep">
-        <div class="d-flex align-items-center text-danger">
-          <span class="icon-close icon-18 icon-step"></span>
-          <span
-            class="line-clamp line-clamp-2 fs-5 ms-2 text-danger"
-            [ngStyle]="{ color: 'gray', 'font-weight': '400' }"
-          >
-            {{ step?.stepName || "" }}</span
-          >
-        </div>
-        <div style="margin-left: 50px;">
-          <codx-label
-            class="fs-5"
-            [formModel]=""
-            fiedName="delTermID"
-            default="Lý do thất bại"
-          ></codx-label>
-          <ul *ngIf="step?.reasons?.length > 0">
-            <li *ngFor="let reason of step.reasons">
-              <span class="fs-6">{{ reason?.reasonName }}</span>
-            </li>
-          </ul>
         </div>
       </div>
     </div>
@@ -205,4 +212,51 @@
       [isRoleAll]="dataSelected?.roles?.isOnwer || false"
     ></codx-step-chart>
   </div>
+</ng-template>
+
+<ng-template #viewReason let-dialog="dialogPopupReason">
+  <codx-form
+    [headerText]="titleReason"
+    [body]="bodyFormReName"
+    [footer]="footerFormReName"
+    [dialog]="dialogPopupReason"
+  >
+  </codx-form>
+</ng-template>
+<ng-template #bodyFormReName>
+  <div
+    class="form-group mt-3"
+    *ngIf="
+      listStepReason?.length > 0 && listStepReason !== null;
+      else dataIsEmpty
+    "
+  >
+    <div *ngFor="let item of listStepReason">
+      <div class="form-check py-2">
+        <input
+          class="form-check-input rounded-circle"
+          type="checkbox"
+          (change)="checkValue($event, item)"
+        />
+        <span class="form-check-label">
+          {{ item?.reasonName }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerFormReName>
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="onSaveReason()"
+    [disabled]="listReasonsClick.length < 0 && !listReasonsClick"
+  >
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #dataIsEmpty>
+  <codx-no-data></codx-no-data>
 </ng-template>
