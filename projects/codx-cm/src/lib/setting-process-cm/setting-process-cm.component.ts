@@ -140,6 +140,15 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
         ? '5'
         : '4';
     this.data.category = '0';
+    this.data.processName = this.funcID == 'CMS0301'
+    ? '[SYS_CRM] Cơ hội'
+    : this.funcID == 'CMS0302'
+    ? '[SYS_CRM] Sự cố'
+    : this.funcID == 'CMS0303'
+    ? '[SYS_CRM] Yêu cầu'
+    : this.funcID == 'CMS0304'
+    ? '[SYS_CRM] Tiềm năng'
+    : '[SYS_CRM] Hợp đồng';
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     dialogModel.zIndex = 999;

@@ -90,6 +90,10 @@ export const routes: Routes = [
         component: CodxReportViewDetailComponent,
       },
       {
+        path: 'tmdashboard/:funcID',
+        component: TMDashboardComponent,
+      },
+      {
         path: 'tasks/:funcID',
         component: TasksComponent,
       },
@@ -106,24 +110,6 @@ export const routes: Routes = [
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
       },
-      // {
-      //   path: 'reports',
-      //   component: ReportsComponent,
-      //   children: [
-      //     {
-      //       path: ':funcID',
-      //       component: HomeReportComponent,
-      //     },
-      //     {
-      //       path: 'taskdaily/:funcID',
-      //       component: TaskDailyComponent,
-      //     },
-      //     {
-      //       path: 'taskbyprojects/:funcID',
-      //       component: TaskByProjectsComponent,
-      //     },
-      //   ],
-      // },
       {
         path: 'taskdaily/:funcID',
         component: TaskDailyComponent,
@@ -186,24 +172,6 @@ export const routes: Routes = [
         path: 'sprintdetails/:funcID',
         component: SprintDetailsComponent,
       },
-    ],
-  },
-  {
-    path: '',
-    component: LayoutNoToolbarComponent,
-    children: [
-      {
-        path: 'tmdashboard/:funcID',
-        component: TMDashboardComponent,
-      },
-      // {
-      //   path: 'teamdashboard/:funcID',
-      //   component: TMDashboardComponent,
-      // },
-      // {
-      //   path: 'assigndashboard/:funcID',
-      //   component: TMDashboardComponent,
-      // },
     ],
   },
 ];

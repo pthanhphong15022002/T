@@ -1,13 +1,18 @@
 <div class="list-contracts po">
-   <button
-     type="button"
-     class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
-     (click)="chooseTypeTask()"
-   >
-     <i class="icon-18 icon-more text-light"></i>
-     <codx-label class="fw-bold" [formModel]="" fiedName="btnAddContract" [default]="'Thêm công việc'"></codx-label>
-   </button>
-   <div>
+  <button
+    type="button"
+    class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
+    (click)="chooseTypeTask()"
+  >
+    <i class="icon-18 icon-more text-light"></i>
+    <codx-label
+      class="fw-bold"
+      [formModel]=""
+      fiedName="btnAddContract"
+      [default]="'Thêm công việc'"
+    ></codx-label>
+  </button>
+  <div *ngIf="!isNoData">
     <ng-container *ngFor="let task of listActivitie">
       <div
         cdkDrag
@@ -16,9 +21,7 @@
         [cdkDragDisabled]="true"
         class="drap-drop"
       >
-        <div
-          class="d-flex align-items-center justify-content-between"
-        >
+        <div class="d-flex align-items-center justify-content-between">
           <div style="flex-grow: 1" class="has-action-menu">
             <ng-container
               [ngTemplateOutlet]="taskTemplate"
@@ -45,13 +48,21 @@
         </div>
       </div>
     </ng-container>
-   </div>
- </div>
+  </div>
+  <div *ngIf="isNoData">
+    <div>
+      <codx-no-data></codx-no-data>
+    </div>
+  </div>
+</div>
 
- <ng-template #taskTemplate let-data="value">
+<ng-template #taskTemplate let-data="value">
   <div class="d-flex justify-content-start align-items-center has-action-menu">
     <!-- icon task -->
-    <div class="icon-container me-3" [ngStyle]="getColor(data?.task)">
+    <div
+      class="icon-container me-3 d-flex justify-content-center align-items-center"
+      [ngStyle]="getColor(data?.task)"
+    >
       <span
         class="icon-18 text-primary-600"
         [ngClass]="getIconTask(data?.task)"
@@ -61,20 +72,16 @@
       <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1">
         <span>{{ data?.task?.taskName }}</span>
       </div>
-      <div class="text-gray-600" >
-        <codx-label
-          class="title"
-          fiedName="updateTime"
-          default="Cập nhật:"
-         
-        >
+      <div class="text-gray-600">
+        <codx-label class="title" fiedName="updateTime" default="Cập nhật:">
         </codx-label>
         <span
-          >{{
+          [innerHTML]="
             data?.task?.modifiedOn || data?.task?.createdOn
-              | date : dateTimeFomat
-          }}
-        </span>
+              | formatvalue : grvMoreFunction : 'ModifiedOn'
+              | async
+          "
+        ></span>
       </div>
     </div>
     <codx-mfunc
@@ -82,6 +89,8 @@
       [isBookMark]="true"
       [dataItem]="moreDefaut"
       [type]="'hover'"
+      (clickMF)="clickMFTask($event, data?.task)"
+      (changeDataMF)="changeDataMFTask($event, data?.task)"
     >
     </codx-mfunc>
   </div>
@@ -89,31 +98,27 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <!-- <div *ngIf="data?.value?.startDate && data?.value?.endDate">
-      <span
-        class="fs-7"
-        [innerHTML]="
-          data?.value?.startDate
-            | formatvalue : view.formModel : 'ContractType'
-            | async
-        "
-      ></span>
-      <span
-        class="fs-7"
-        [innerHTML]="
-          itemSelected?.contractType
-            | formatvalue : view.formModel : 'ContractType'
-            | async
-        "
-      ></span>
-    </div> -->
-    <span
-      class="date text-nowrap"
+    <div
+      class="date text-nowrap mx-2"
       *ngIf="data?.value?.startDate && data?.value?.endDate"
     >
-      {{ data?.value?.startDate | date : dateFomat }} -
-      {{ data?.value?.endDate | date : dateFomat }}</span
-    >
+      <span
+        [innerHTML]="
+          data?.value?.startDate
+            | formatvalue : grvMoreFunction : 'StartDate'
+            | async
+        "
+      ></span>
+      <span class="mx-1">-</span>
+      <span
+        [innerHTML]="
+          data?.value?.endDate
+            | formatvalue : grvMoreFunction : 'EndDate'
+            | async
+        "
+      ></span>
+    </div>
+
     <span class="d-flex align-items-center">
       <codx-imgs
         class="me-2 d-flex align-items-center"
@@ -126,9 +131,7 @@
       >
       </codx-imgs>
     </span>
-    <div
-      class="disabled-inline"
-    >
+    <div class="disabled-inline">
       <codx-progressbar
         [progress]="data?.value?.progress"
         #p="ngbPopover"
@@ -136,17 +139,6 @@
         (mouseenter)="p.open()"
         (mouseleave)="p.close()"
       ></codx-progressbar>
-    </div>
-    <div class="notify" style="min-width: 40px">
-      <codx-attachment-temp
-        [objectID]="data?.value.refID"
-        [hideMoreF]="0"
-        [viewType]="'4'"
-        [hideDelete]="1"
-      ></codx-attachment-temp>
-    </div>
-    <div class="notify" style="min-width: 40px">
-      <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
     </div>
   </div>
 </ng-template>

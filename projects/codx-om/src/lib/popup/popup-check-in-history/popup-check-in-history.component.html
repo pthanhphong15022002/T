@@ -112,7 +112,7 @@
                     </span>
                     <span>
                       <ejs-progressbar [id]="item?.recID" [type]="'Circular'" [maximum]="100" [minimum]="0"
-                        [value]="item?.cummulated != null ? item?.cummulated: 0" [width]="'45'" [height]="'45'"
+                        [value]="item?.cummulated != null ? item?.cummulated/data?.target*100: 0" [width]="'45'" [height]="'45'"
                         [trackThickness]="3" [progressThickness]="3" [progressColor]="'#FF0000'">
                       </ejs-progressbar>
                     </span>

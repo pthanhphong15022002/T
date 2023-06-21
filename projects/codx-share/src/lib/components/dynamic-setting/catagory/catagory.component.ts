@@ -370,6 +370,10 @@ export class CatagoryComponent implements OnInit {
                 dialogModel
               )
               .closed.subscribe(({ event }) => {
+                if (!event) {
+                  return;
+                }
+
                 dataValue[value] = event;
                 var dt = this.settingValue.find(
                   (x) =>

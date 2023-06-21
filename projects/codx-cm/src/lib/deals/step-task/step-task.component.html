@@ -135,18 +135,29 @@
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
       ></codx-step-task>
-      <hr *ngIf="!step?.isSuccessStep && !step?.isFailStep" />
-      <!-- thành công thất bại  -->
-      <div *ngIf="step?.isSuccessStep">
-        <div class="d-flex align-items-center text-success">
-          <span class="icon-check icon-18 icon-step"></span>
-          <span
+      <div  *ngIf="step?.isFailStep || step?.isSuccessStep">
+      <hr *ngIf="step?.isFailStep || step?.isSuccessStep">
+        <div class="d-flex justify-content-start" *ngIf="step?.isFailStep || step?.isSuccessStep">
+          <div> <span class="icon-check icon-18 icon-step"></span></div>
+          <div>
+            <span
             class="line-clamp line-clamp-2 fs-5 ms-2 text-success"
             [ngStyle]="{ color: 'gray', 'font-weight': '400' }"
           >
             {{ step.stepName || "" }}</span
           >
+
+          </div>
+          <div class="ms-auto">
+            Chọn lại lý do thành công
+          </div>
         </div>
+
+
+        <!-- <div class="d-flex align-items-center text-success">
+
+
+        </div> -->
         <div style="margin-left: 50px;">
           <div>
             <codx-label
@@ -163,7 +174,7 @@
           </ul>
         </div>
       </div>
-      <div *ngIf="step?.isFailStep">
+      <!-- <div *ngIf="step?.isFailStep">
         <div class="d-flex align-items-center text-danger">
           <span class="icon-close icon-18 icon-step"></span>
           <span
@@ -186,7 +197,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
