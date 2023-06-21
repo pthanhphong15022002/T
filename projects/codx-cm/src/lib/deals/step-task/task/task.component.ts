@@ -194,6 +194,8 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
           [task?.recID]
         ).subscribe(res =>{
           if(res){
+            let index = this.listActivitie?.findIndex(activitie => activitie.recID == task.recID);
+            this.listActivitie?.splice(index,1);
             this.notiService.notifyCode('SYS008');
             this.detectorRef.detectChanges();
           }
