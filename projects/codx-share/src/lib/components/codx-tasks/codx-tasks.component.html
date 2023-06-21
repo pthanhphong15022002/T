@@ -139,7 +139,12 @@
     <div class="d-flex justify-content-between align-items-top mt-3">
       <div class="d-flex align-items-center me-2 codx-badge">
         <ng-container *ngIf="setting?.processBar">
-          <div class="control-section">
+          <div
+            class="control-section"
+            placement="top left right bottom"
+            ngbTooltip="{{ data.percentage + ' %' }}"
+            container="body"
+          >
             <div class="row">
               <div class="col-lg-3 col-md-3 col-3">
                 <div id="">
@@ -152,11 +157,13 @@
                     [width]="width"
                     [height]="height"
                     [animation]="animation"
+                    [trackThickness]="trackThickness"
+                    [progressThickness]="progressThickness"
                   >
-                    <e-progressbar-annotations>
+                    <!-- <e-progressbar-annotations>
                       <e-progressbar-annotation [content]="getHtml(data)">
                       </e-progressbar-annotation>
-                    </e-progressbar-annotations>
+                    </e-progressbar-annotations> -->
                   </ejs-progressbar>
                 </div>
               </div>
@@ -181,7 +188,10 @@
               >{{ data?.todo }}</span
             >
           </div> -->
-          <codx-task-goal-temp [taskID]="data.taskID" [countData]="data?.todo"></codx-task-goal-temp>
+          <codx-task-goal-temp
+            [taskID]="data.taskID"
+            [countData]="data?.todo"
+          ></codx-task-goal-temp>
           <codx-attachment-temp
             [objectID]="data?.recID"
             [formModel]="view.formModel"
