@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, FormModel, NotificationsService,} from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 
@@ -24,17 +24,23 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   isShowElement = true;
   indexAddTask: number;
   taskType;
+  titleReason: string;
+  stepNameSuccess: any;
+  stepNameFail: any;
+  stepNameReason: any;
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     this.cache.valueList('DP028').subscribe(res => {
       if(res?.datas){
         this.status = res?.datas;
       }
     })
+    this.promiseAll()
   }
 
   ngOnInit(): void {
@@ -63,10 +69,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         'GetViewModeDetailByProcessIDAsync',
         this.dataSelected?.processID
       ).subscribe(res => {
-        this.type = res ? res : 'S';        
+        this.type = res ? res : 'S';
       })
     }
-    
   }
 
   changeValue(e){
@@ -86,7 +91,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.isShowElement = true;
     }
   }
-  
 
   handelContinueStep(event, step){
     this.continueStep.emit({isTaskEnd: event, step: step})
@@ -106,4 +110,42 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.indexAddTask = -1;
     },1000);
   }
+
+  async promiseAll(){
+
+  }
+
+  async getValueListReason(dataChange) {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.stepNameSuccess = item?.text;
+          } else if (item.value === 'F') {
+            this.stepNameFail = item?.text;
+          } else if (item.value === 'R') {
+            this.stepNameReason = item?.text;
+          }
+        }
+        this.titleReason = dataChange.currentValue?.isSuccessStep
+          ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+          : dataChange.currentValue?.isFailStep
+          ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+          : '';
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  joinTwoString(valueFrist, valueTwo) {
+    valueTwo = this.LowercaseFirstPipe(valueTwo);
+    if (!valueFrist || !valueTwo) return '';
+    return valueFrist + ' ' + valueTwo;
+  }
+
+  LowercaseFirstPipe(value) {
+    if (!value) return '';
+    return value.charAt(0).toLowerCase() + value.slice(1);
+  }
+
+
 }
