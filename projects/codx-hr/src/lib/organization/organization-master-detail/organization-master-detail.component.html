@@ -101,8 +101,8 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="columnsGrid">
-    <div id="detail" class="h-100">
+  <ng-container *ngIf="columnsGrid && columnsGrid.length">
+    <div class="h-100">
       <codx-gridview-v2
         #grid
         [formModel]="formModelEmp"
@@ -114,6 +114,13 @@
         [method]="'GetEmployeesMasterDetailAsync'"
         [dataValues]="orgUnitID"
         [emptyTemplate]="emptyDataTemplate"
+        [autoLoad]="false"
+        [showRowNumber]="true"
+        [autoFitColumns]="false"
+        [allowResizing]="false"
+        [allowFiltering]="false"
+        [allowSorting]="false"
+        idField="employeeID"
         height="100%"
       ></codx-gridview-v2>
     </div>

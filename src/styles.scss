@@ -110,8 +110,8 @@ codx-view-list-detail {
   font-size: 1.15rem !important;
 }
 .fs-6 {
-  //font-size: var(--fs-6) !important;
-  font-size: 13.5px!important;
+  font-size: var(--fs-6) !important;
+  //font-size: 13.5px!important;
 }
 /** custom bootstrap  **/
 .rounded-4 {
@@ -3240,4 +3240,39 @@ lib-calendar-center{
   #Content-Fillter{
     display: none;
   }
+}
+lib-layoutonlyheader{
+  #Content-Fillter{
+    display: none;
+  }
+  
+  .e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {
+    min-height: 36px!important;
+    border-left: 0px!important;
+  }
+  .e-tab .e-tab-header.e-vertical .e-toolbar-item{
+    border: 0 !important;
+  }
+  .e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
+      background-color: var(--primary-lighter);
+      border: 0 !important;
+  }
+  .e-tab .e-tab-header .e-toolbar-item:hover {
+    background-color: var(--primary-lightest);
+  }
+  .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
+    background: transparent;
+    border: 0;
+    color: var(--primary) !important;
+    background-color: var(--primary-lightest);
+}
+  .e-tab .e-tab-header.e-vertical .e-toolbar-item .e-tab-wrap {
+    padding: 0;
+}
+}
+
+
+
+.img-40px img{
+  width: 40px;
 }

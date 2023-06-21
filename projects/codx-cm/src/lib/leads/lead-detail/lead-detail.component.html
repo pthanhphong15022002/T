@@ -5,7 +5,7 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="dataSelected.status == '5' ? true : false"
+    [hideMF]="false"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
@@ -79,42 +79,19 @@
                 </div>
               </div>
               <div class="d-flex justify-content-end">
-                <div
-                  *ngIf="dataSelected.status != '1'"
-                  [ngStyle]="{
-                    'background-color':
-                      dataSelected.status == '3' || dataSelected.status == '4'
-                        ? colorReasonSuccess?.color
-                        : dataSelected.status == '5' ||
-                          dataSelected.status == '6'
-                        ? colorReasonFail?.color
-                        : dataSelected?.steps['backgroundColor']
-                  }"
-                  class="me-2 badge badge-sm d-flex align-items-center"
-                >
-                  <span
-                    [ngClass]="dataSelected?.steps['icon']"
-                    [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                    class="me-1"
-                  ></span>
-                  <span
-                    class="menu-title fw-bold line-clamp line-clamp-2"
-                    [ngbTooltip]="dataSelected?.currentStepName"
-                    [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                    >{{ dataSelected?.currentStepName }}</span
-                  >
-                </div>
-                <div *ngIf="dataSelected.status == '1'">
-                  <codx-vll
-                    [name]="'DP028'"
-                    [field]="'Status'"
-                    [value]="dataSelected?.status"
-                    [showText]="true"
-                    [showBgColor]="true"
-                    class="badge badge-light badge-sm"
-                  >
-                  </codx-vll>
-                </div>
+                <span
+                class="text-gray-600 line-clamp-menu"
+                #endDate
+                [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
+                [innerHTML]="
+                  dataSelected?.endDate
+                    | formatvalue
+                      : formModel
+                      : 'endDate'
+                      : endDate
+                    | async
+                "
+              ></span>
               </div>
             </div>
           </div>
@@ -221,19 +198,44 @@
                   <div
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
+                    <div
+                    *ngIf="dataSelected.status != '1'"
+                    [ngStyle]="{
+                      'background-color':
+                        dataSelected.status == '3' || dataSelected.status == '4'
+                          ? colorReasonSuccess?.color
+                          : dataSelected.status == '5' ||
+                            dataSelected.status == '6'
+                          ? colorReasonFail?.color
+                          : dataSelected?.steps['backgroundColor']
+                    }"
+                    class="me-2 badge badge-sm d-flex align-items-center"
+                  >
                     <span
-                      class="text-gray-600 line-clamp-menu"
-                      #endDate
-                      [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
-                      [innerHTML]="
-                        dataSelected?.endDate
-                          | formatvalue
-                            : formModel
-                            : 'endDate'
-                            : endDate
-                          | async
-                      "
+                      [ngClass]="dataSelected?.steps['icon']"
+                      [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                      class="me-1"
                     ></span>
+                    <span
+                      class="menu-title fw-bold line-clamp line-clamp-2"
+                      [ngbTooltip]="dataSelected?.currentStepName"
+                      [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
+                      >{{ dataSelected?.currentStepName }}</span
+                    >
+                  </div>
+                  <div *ngIf="dataSelected.status == '1'">
+                    <codx-vll
+                      [name]="'DP028'"
+                      [field]="'Status'"
+                      [value]="dataSelected?.status"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-sm"
+                    >
+                    </codx-vll>
+                  </div>
+
+
                   </div>
                   <div class="d-flex flex-column align-items-top" style="margin-top: 2.25rem !important;">
                     <div class="d-flex justify-content-end">

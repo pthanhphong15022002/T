@@ -4,7 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="formModelMenu"
+  [formModel]="dialog?.formModel"
   [data]="stepsTasks"
   [openMore]="false"
 ></codx-form>
@@ -47,7 +47,7 @@
 <ng-template #body>
   <div class="card-form">
     <!-- Link group -->
-    <div class="form-group">
+    <div class="form-group" *ngIf="step">
       <div class="d-flex align-items-top">
         <codx-label
           class="text-primary me-2"
@@ -61,6 +61,7 @@
     </div>
     <!--End Link group -->
     <div
+      *ngIf="step"
       class="form-group d-flex justify-content-between align-item-center w-100"
     >
       <div class="step-name w-100">
