@@ -12,7 +12,7 @@
 
 <ng-template #body>
   <div class="card-add popup-sales h-100">
-    <ejs-tab class="section1">
+    <ejs-tab class="section1" [height]="275">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -591,6 +591,7 @@
       field="objectName"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
+      [disabled]="true"
     ></codx-input>
   </div>
 

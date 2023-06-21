@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, FormModel, NotificationsService, SidebarModel, Util } from 'codx-core';
 import { DP_Activities, DP_Activities_Roles, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-add-stask/codx-add-task.component';
@@ -19,6 +19,8 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   listTaskType = [];
   grvMoreFunction: FormModel;
+  isNoData = false;
+  titleAction = '';
 
   moreDefaut = {
     share: true,
@@ -32,12 +34,15 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
     private callFunc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private detectorRef: ChangeDetectorRef,
   ) {
     
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    
+    if(changes?.customerID){
+      this.getActivities();
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -60,8 +65,10 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
       'GetActivitiesAsync',
       [this.customerID]
     ).subscribe(res =>{
-      if(res){
+      if(res?.length > 0){
        this.listActivitie = res;
+      }else{
+        this.isNoData = true;
       }
     })   
   }
@@ -83,7 +90,7 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
 
   getColor(task) {
     let color = this.listTaskType?.find((x) => x.value === task.taskType);
-    return { 'background-color': color?.color };
+    return { 'color': color?.color };
   }
 
   getRole(task, type) {
@@ -92,8 +99,120 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
     return type == 'ID' ? role?.objectID : role?.objectName;
   }
 
+  async changeDataMFTask(event, task) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02': //xóa
+            break;
+          case 'SYS03': //sửa           
+            break;
+          case 'SYS04': //copy
+            break;
+          case 'SYS003': //đính kèm file         
+            break;
+          case 'DP20': // tiến độ
+            break;
+          case 'DP13': //giao việc
+            if (
+              !(task?.createTask)
+            ) {
+              res.isblur = true;
+            }
+            break;
+          case 'DP12':
+            res.disabled = true;
+            break;
+          case 'DP08':
+            res.disabled = true;
+            break;
+          //tajo cuoc hop
+          case 'DP24':
+            if (task.taskType != 'M') res.disabled = true;
+            break;
+          case 'DP25':
+          case 'DP20':
+          case 'DP26':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
+            break;
+          case 'DP27': // đặt xe
+            if (task.taskType != 'B') 
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+
+  clickMFTask(e: any, task?: any) {
+    this.titleAction = e.text;
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteTask(task);
+        break;
+      case 'SYS03': //edit
+        this.editTask(task);
+        break;
+      case 'SYS04': //copy
+        this.copyTask(task);
+        // this.addTask(groupTask);
+        break;
+      // case 'DP07': // view
+      //   this.viewTask(task, task?.taskType || 'T');
+      //   break;
+      // case 'DP13': //giao viec
+      //   this.assignTask(e.data, task);
+      //   break;
+      // case 'DP20': // tien do
+      //   this.openPopupUpdateProgress(task, 'T');
+      //   break;
+      // case 'DP24': // tạo lịch họp
+      //   this.createMeeting(task);
+      //   break;
+      // case 'SYS004':
+      //   this.sendMail();
+      //   break;
+      // case 'DP27':
+      //   this.addBookingCar();
+      //   break;
+    }
+  }
+  deleteTask(task){
+    if(!task?.recID){
+      return;
+    }
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.api.exec<any>(
+          'DP',
+          'InstanceStepsBusiness',
+          'DeleteActivitiesAsync',
+          [task?.recID]
+        ).subscribe(res =>{
+          if(res){
+            let index = this.listActivitie?.findIndex(activitie => activitie.recID == task.recID);
+            this.listActivitie?.splice(index,1);
+            this.notiService.notifyCode('SYS008');
+            this.detectorRef.detectChanges();
+          }
+        })   
+      }
+    });
+  }
+
+  copyTask(task){
+
+  }
+
+  editTask(task){
+
+  }
+
   async chooseTypeTask() {
-    setTimeout(async () => {
       let popupTypeTask = this.callFunc.openForm(
         CodxTypeTaskComponent,
         '',
@@ -107,13 +226,13 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
         this.taskType = dataOutput?.event;
         this.addTask();
       }
-    }, 0);
   }
   async addTask() {
     let task = new DP_Instances_Steps_Tasks();
     task['progress'] = 0;
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
+    task['taskType'] = this.taskType?.value;
 
     let taskOutput = await this.openPopupTask('add', task);
     if (taskOutput?.event) {

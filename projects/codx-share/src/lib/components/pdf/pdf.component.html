@@ -713,11 +713,11 @@
                           > -->
                             <codx-input
                               class="me-4 date-Type"
-                              name="date-Type"
+                              [name]="area.recID"
                               type="radio"
                               [checked]="!useSignDate"
                               labelPosition="After"
-                              (valueChange)="changeUseCreatedDate()"
+                              (click)="changeDateType(false)"
                             >
                             </codx-input>
                             <codx-label
@@ -728,11 +728,11 @@
                             </codx-label>
                             <codx-input
                               class="me-4 date-Type"
-                              name="date-Type"
+                              [name]="area.recID"
                               type="radio"
                               [checked]="useSignDate"
+                              (click)="changeDateType(true)"
                               labelPosition="After"
-                              (valueChange)="changeUseSignDate()"
                             >
                             </codx-input>
                             <codx-label

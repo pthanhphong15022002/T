@@ -196,7 +196,7 @@
     [body]="footer"
     [formModel]="view.formModel"
     [footer]="footer"
-    [titleCss]="'fw-bold fs-6'"
+    [titleCss]="'text-gray-700 mb-1 fw-normal'"
     [hideMF]="!data?.roles?.isOnwer"
     [dataItem]="data"
   >
@@ -213,7 +213,7 @@
   <div class="d-flex flex-column w-100">
     <div class="mb-1">
       <span
-        class="text-gray-700 line-clamp line-clamp-2"
+        class="text-dark fs-5-sm fw-bold line-clamp line-clamp-2"
         [ngbTooltip]="tooltipDealName"
         #dealName
         [innerHTML]="

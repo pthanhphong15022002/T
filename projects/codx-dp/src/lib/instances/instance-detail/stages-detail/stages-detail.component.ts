@@ -899,19 +899,22 @@ export class StagesDetailComponent implements OnInit {
     }
   }
   onSaveReason() {
-    var data = [
-      this.instance.recID,
-      this.dataStep.stepID,
-      this.listReasonsClick,
-    ];
-    this.dpService.updateListReason(data).subscribe((res) => {
-      if (res) {
-        this.dataStep.reasons = this.listReasonsClick;
-        this.dialogPopupReason.close();
-        this.notiService.notifyCode('SYS007');
-        return;
-      }
-    });
+    if(this.listReasonsClick.length > 0 && this.listReasonsClick)
+    {
+      var data = [
+        this.instance.recID,
+        this.dataStep.stepID,
+        this.listReasonsClick,
+      ];
+      this.dpService.updateListReason(data).subscribe((res) => {
+        if (res) {
+          this.dataStep.reasons = this.listReasonsClick;
+          this.dialogPopupReason.close();
+          this.notiService.notifyCode('SYS007');
+          return;
+        }
+      });
+    }
   }
   deleteReason(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
