@@ -264,7 +264,7 @@ export class PopupAssignmentOKRComponent
       this.assignmentOKR.objectID = evt.data;
       this.codxOmService.getEmployeesByPositionID(this.assignmentOKR?.objectID).subscribe((res:any) => {
           if (res) {
-            this.codxOmService.getEmployeesByEmpID(res?.employeeID).subscribe((ownerInfo) => {
+            this.codxOmService.getEmployeesByEmpID(res[0]?.employeeID).subscribe((ownerInfo) => {
               if (ownerInfo) {
                 this.assignTo(ownerInfo);
                 this.assignmentOKR.objectType=OMCONST.VLL.OKRLevel.POSITION;
