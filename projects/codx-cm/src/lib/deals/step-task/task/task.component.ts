@@ -22,7 +22,10 @@ import {
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-add-stask/codx-add-task.component';
+import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -54,7 +57,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private callFunc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
-    private detectorRef: ChangeDetectorRef
+    private detectorRef: ChangeDetectorRef,
+    private stepService: StepService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -160,7 +164,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  clickMFTask(e: any, task?: any) {
+  async clickMFTask(e: any, task?: any) {
     this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS02':
@@ -171,26 +175,25 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         break;
       case 'SYS04': //copy
         this.copyTask(task);
-        // this.addTask(groupTask);
         break;
-      // case 'DP07': // view
-      //   this.viewTask(task, task?.taskType || 'T');
-      //   break;
+      case 'DP07': // view
+        this.viewTask(task, task?.taskType || 'T');
+        break;
       // case 'DP13': //giao viec
       //   this.assignTask(e.data, task);
       //   break;
-      // case 'DP20': // tien do
-      //   this.openPopupUpdateProgress(task, 'T');
-      //   break;
+      case 'DP20': // tien do
+        this.openPopupUpdateProgress(task, 'T');
+        break;
       // case 'DP24': // tạo lịch họp
       //   this.createMeeting(task);
       //   break;
       // case 'SYS004':
       //   this.sendMail();
       //   break;
-      // case 'DP27':
-      //   this.addBookingCar();
-      //   break;
+      case 'DP27':
+        await this.stepService.addBookingCar()
+        break;
     }
   }
   getTypeTask(task) {
@@ -256,10 +259,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         ])
         .subscribe((res) => {
           if (res) {
-            let index = this.listActivitie?.findIndex((activitie) => activitie.recID == res.recID);
+            let index = this.listActivitie?.findIndex(
+              (activitie) => activitie.recID == res.recID
+            );
             this.listActivitie?.splice(index, 1, res);
             console.log(res);
-            
+
             this.notiService.notifyCode('SYS007');
             this.detectorRef.detectChanges();
           }
@@ -355,5 +360,111 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     );
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
+  }
+
+  async openPopupUpdateProgress(task, type) {
+    let dataInput = {
+      data: task,
+      type,
+      step: null,
+      isSave: false,
+      isUpdateParent: false,
+    };
+    let popupTask = this.callFunc.openForm(
+      UpdateProgressComponent,
+      '',
+      550,
+      400,
+      '',
+      dataInput
+    );
+
+    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    if (dataPopupOutput?.event) {
+      let data = {
+        recID: dataPopupOutput?.event?.taskID,
+        note: dataPopupOutput?.event?.note,
+        progress: dataPopupOutput?.event?.progressTask,
+        actualEnd: dataPopupOutput?.event?.actualEnd,
+      }
+      this.api
+        .exec<any>(
+          'DP',
+          'InstanceStepsBusiness',
+          'UpdateProgressActivitiesAsync',
+          data
+        )
+        .subscribe((res) => {
+          if(res){
+            task.progress = dataPopupOutput?.event?.progressTask;
+            this.listActivitie;
+            this.notiService.notifyCode('SYS007');
+          }
+        });
+    }
+    return dataPopupOutput;
+  }
+
+  viewTask(data, type) {
+    if (data) {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      //a thao laasy refID
+      let listRefIDAssign = '';
+      switch (type) {
+        case 'T':
+          listRefIDAssign = data.recID;
+          break;
+        case 'G':
+          if (data.task?.length > 0) {
+            let arrRecIDTask = data.task.map((x) => x.recID);
+            listRefIDAssign = arrRecIDTask.join(';');
+          }
+          break;
+        case 'P':
+          if (data.taskGroup?.length > 0) {
+            if (data.taskGroup?.task?.length > 0) {
+              let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
+              if (listRefIDAssign && listRefIDAssign.trim() != '')
+                listRefIDAssign += ';' + arrRecIDTask.join(';');
+              else listRefIDAssign = arrRecIDTask.split(';');
+            }
+            //thieu cong task ngooai mai hoir thuan de xets
+          }
+          break;
+      }
+
+      let listData = {
+        type,
+        value: data,
+        step: null,
+        isRoleAll: true,
+        isUpdate: true,
+        isOnlyView: true,
+        isUpdateProgressGroup: false,
+        listRefIDAssign: listRefIDAssign,
+        instanceStep: null,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callFunc.openSide(
+        CodxViewTaskComponent,
+        listData,
+        option
+      );
+      dialog.closed.subscribe(async (dataOuput) => {
+        // if (dataOuput?.event?.dataProgress) {
+        //   this.handelProgress(data, dataOuput?.event?.dataProgress);
+        // }
+        // if(dataOuput?.event?.task || dataOuput?.event?.group){
+        //   await this.getStepById();
+        // }
+      });
+    }
   }
 }

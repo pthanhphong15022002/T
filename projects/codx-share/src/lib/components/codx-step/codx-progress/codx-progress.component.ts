@@ -20,6 +20,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   @Input() isUpdate = true; // true: hiện form cho update
   @Input() dataAll: any; // gantchart
   @Input() step: any; // No gantchart
+  @Input() isUpdateParent = true; // No gantchart
   @Output() valueChange = new EventEmitter<any>();
 
   note = '';
@@ -48,6 +49,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.step = dt?.data?.step;
     this.dataSource = dt?.data?.data;
     this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+    this.isUpdateParent = dt?.data?.isUpdateParent == undefined ? this.isUpdateParent : dt?.data?.isUpdateParent;
   }
 
   async ngOnInit() {
@@ -169,25 +171,28 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   }
 
   async handeleUpdate() {
+    let isUpdate = false;
     if (this.type === 'P') {
       this.updateProgress();
     } else if (this.type === 'G') {
       const check = await this.beforeUpdate('DP031'); // hỏi có cập nhật step
       if (check == undefined) return;
-      let isUpdate = check == "Y" ? true : false;
+      isUpdate = check == "Y" ? true : false;
       this.updateProgress(isUpdate);
     } else {
-      const check = await this.beforeUpdate('DP028');// hỏi có cập nhật step và group
-      if (check == undefined) return;
-      let isUpdate = check == "Y" ? true : false;
+      if(this.isUpdateParent){
+        const check = await this.beforeUpdate('DP028');// hỏi có cập nhật step và group
+        if (check == undefined) return;
+        isUpdate = check == "Y" ? true : false;
+      }
       this.updateProgress(isUpdate);
     }
   }
 
   updateProgress(isUpdate = false) {
     let dataSave = new Progress();
-    dataSave.stepID = this.step['recID'];
-    dataSave.recID = this.dataSource['recID'];
+    dataSave.stepID = this.step?.recID;
+    dataSave.recID = this.dataSource?.recID;
     dataSave.progress = this.progressData;
     dataSave.note = this.note;
     dataSave.actualEnd = this.actualEnd;
@@ -218,9 +223,9 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
       dataOutput.groupTaskID = this.dataSource['recID'];
       dataOutput.stepID = this.step['recID'];
     }else{
-      dataOutput.groupTaskID = this.dataSource['taskGroupID'];
-      dataOutput.taskID = this.dataSource['recID'];
-      dataOutput.stepID = this.step['recID'];
+      dataOutput.groupTaskID = this.dataSource?.taskGroupID;
+      dataOutput.taskID = this.dataSource?.recID;
+      dataOutput.stepID = this.step?.recID;
       dataOutput.progressTask = this.progressData;
       if (isUpdate) {
         this.progressGroupTask(dataOutput);
