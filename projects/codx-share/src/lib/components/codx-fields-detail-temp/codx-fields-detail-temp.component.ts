@@ -47,6 +47,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   };
   elmIDCrr: any;
   dataValueOld: any;
+  moreFuncNameEdit = '';
 
   constructor(
     private callfc: CallFuncService,
@@ -67,6 +68,12 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   
     this.cache.valueList('DP0274').subscribe((res) => {
       if (res) this.dtFormatDate = res.datas;
+    });
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let edit = res.find((x) => x.functionID == 'SYS03');
+        if (edit) this.moreFuncNameEdit = edit.customName;
+      }
     });
   }
 

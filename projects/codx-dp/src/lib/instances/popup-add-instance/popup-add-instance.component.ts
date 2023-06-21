@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -17,6 +18,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  Util,
 } from 'codx-core';
 import moment from 'moment';
 import { CodxDpService } from '../../codx-dp.service';
@@ -109,7 +111,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog = dialog;
     this.action = dt?.data?.action;
     this.isApplyFor = dt?.data?.applyFor;
-    this.listStep = dt?.data?.listSteps;
+    this.listStep = this.updateIdFile(dt?.data?.listSteps);
     this.titleAction = dt?.data?.titleAction;
     this.formModelCrr = dt?.data?.formMD;
     this.autoName = dt?.data?.autoName;
@@ -185,7 +187,7 @@ export class PopupAddInstanceComponent implements OnInit {
         this.instance.processID,
         this.instance.status
       ));
-    this.action === 'copy' && await this.getListInstaceStepCopy();
+    this.action === 'copy' && (await this.getListInstaceStepCopy());
   }
 
   async getListInstanceStep(recID, processID, status) {
@@ -409,5 +411,21 @@ export class PopupAddInstanceComponent implements OnInit {
         this.positionName = res.positionName;
       }
     });
+  }
+
+  updateIdFile(listStep) {
+    if (listStep?.length > 0 && listStep) {
+      for (let item of listStep) {
+        if (item.fields.length > 0 && item.fields) {
+          var listFieldFiled = item.fields.filter((x) => x.dataType === 'A');
+          if (listFieldFiled.length > 0 && listFieldFiled) {
+            for (let fieldFile of listFieldFiled) {
+              fieldFile.recID = Util.uid();
+            }
+          }
+        }
+      }
+    }
+    return listStep;
   }
 }

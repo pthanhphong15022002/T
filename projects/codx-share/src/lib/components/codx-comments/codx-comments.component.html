@@ -1,6 +1,6 @@
 <div class="position-relative my-3">
     <ng-container *ngIf="new;else view">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-top">
             <div class="me-2 w-35px">
                 <codx-img [objectId]="user.userID" [objectName]="user.userName" [referType]="'avt'" objectType="AD_Users" [width]="35"></codx-img>
             </div>
@@ -38,7 +38,7 @@
                     (fileCount)="selectFile($event)">
                 </codx-attachment>
                 <ng-container *ngIf="file">
-                    <div class="d-flex position-relative">
+                    <div class="d-flex position-relative w-fit-content" style="width: fit-content;">
                         <div class="my-3 cursor-pointer">
                             <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
                                 <img [src]="file.source" alt="" class="w-100 h-100px rounded" >

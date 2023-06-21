@@ -365,20 +365,15 @@ export class CasesComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      this.getMore($event, data);
-    }
-  }
-
-  getMore($event, data) {
-    for (let eventItem of $event) {
-      const functionID = eventItem.functionID;
-      const mappingFunction = this.getRoleMoreFunction(functionID);
-      if (mappingFunction) {
-        mappingFunction(eventItem, data);
+      for (let eventItem of $event) {
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        if (mappingFunction) {
+          mappingFunction(eventItem, data);
+        }
       }
     }
   }
-
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
@@ -616,72 +611,72 @@ export class CasesComponent
     });
   }
   openFormReason(data, fun, isMoveSuccess) {
-    var formMD = new FormModel();
-    formMD.funcID = fun.functionID;
-    formMD.entityName = fun.entityName;
-    formMD.formName = fun.formName;
-    formMD.gridViewName = fun.gridViewName;
-    var dataCM = {
-      refID: data?.refID,
-      processID: data?.processID,
-      stepID: data?.stepID,
-      nextStep: data?.nextStep,
-    };
-    var obj = {
-      headerTitle: fun.defaultName,
-      formModel: formMD,
-      isReason: isMoveSuccess,
-      applyFor: this.applyFor,
-      dataCM: dataCM,
-      stepName: data.currentStepName,
-    };
+    // var formMD = new FormModel();
+    // formMD.funcID = fun.functionID;
+    // formMD.entityName = fun.entityName;
+    // formMD.formName = fun.formName;
+    // formMD.gridViewName = fun.gridViewName;
+    // var dataCM = {
+    //   refID: data?.refID,
+    //   processID: data?.processID,
+    //   stepID: data?.stepID,
+    //   nextStep: data?.nextStep,
+    // };
+    // var obj = {
+    //   headerTitle: fun.defaultName,
+    //   formModel: formMD,
+    //   isReason: isMoveSuccess,
+    //   applyFor: this.applyFor,
+    //   dataCM: dataCM,
+    //   stepName: data.currentStepName,
+    // };
 
-    var dialogRevision = this.callfc.openForm(
-      PopupMoveReasonComponent,
-      '',
-      800,
-      600,
-      '',
-      obj
-    );
-    dialogRevision.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        var instance = e.event?.instance;
-        var instanceMove = e.event?.instanceMove;
-        if (instanceMove) {
-          var dealOld = JSON.parse(JSON.stringify(data));
-          var dealNew = JSON.parse(JSON.stringify(data));
-          dealOld = this.updateReasonCases(instance, dealOld);
-          dealNew = this.convertDataInstance(
-            dealNew,
-            instanceMove,
-            e.event?.nextStep
-          );
-          var datas = [dealOld, dealNew];
-          this.codxCmService.moveDealReason(datas).subscribe((res) => {
-            if (res) {
-              data = res[0];
-              this.view.dataService.dataSelected = data;
-              this.view.dataService
-                .update(this.view.dataService.dataSelected)
-                .subscribe();
-              this.view.dataService.add(res[1], 0).subscribe((res) => {});
-              this.detectorRef.detectChanges();
-            }
-          });
-        } else {
-          data = this.updateReasonCases(instance, data);
-          var datas = [data, data.customerID];
-          this.codxCmService.updateDeal(datas).subscribe((res) => {
-            if (res) {
-              data = res[0];
-              this.view.dataService.update(data).subscribe();
-              this.detectorRef.detectChanges();
-            }
-          });
-        }
-      }
-    });
+    // var dialogRevision = this.callfc.openForm(
+    //   PopupMoveReasonComponent,
+    //   '',
+    //   800,
+    //   600,
+    //   '',
+    //   obj
+    // );
+    // dialogRevision.closed.subscribe((e) => {
+    //   if (e && e.event != null) {
+    //     var instance = e.event?.instance;
+    //     var instanceMove = e.event?.instanceMove;
+    //     if (instanceMove) {
+    //       var dealOld = JSON.parse(JSON.stringify(data));
+    //       var dealNew = JSON.parse(JSON.stringify(data));
+    //       dealOld = this.updateReasonCases(instance, dealOld);
+    //       dealNew = this.convertDataInstance(
+    //         dealNew,
+    //         instanceMove,
+    //         e.event?.nextStep
+    //       );
+    //       var datas = [dealOld, dealNew];
+    //       this.codxCmService.moveDealReason(datas).subscribe((res) => {
+    //         if (res) {
+    //           data = res[0];
+    //           this.view.dataService.dataSelected = data;
+    //           this.view.dataService
+    //             .update(this.view.dataService.dataSelected)
+    //             .subscribe();
+    //           this.view.dataService.add(res[1], 0).subscribe((res) => {});
+    //           this.detectorRef.detectChanges();
+    //         }
+    //       });
+    //     } else {
+    //       data = this.updateReasonCases(instance, data);
+    //       var datas = [data, data.customerID];
+    //       this.codxCmService.updateDeal(datas).subscribe((res) => {
+    //         if (res) {
+    //           data = res[0];
+    //           this.view.dataService.update(data).subscribe();
+    //           this.detectorRef.detectChanges();
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
   }
   updateReasonCases(instance: any, cases: any) {
     cases.status = instance.status;

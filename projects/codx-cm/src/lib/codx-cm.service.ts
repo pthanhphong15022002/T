@@ -530,6 +530,14 @@ export class CodxCmService {
       data
     );
   }
+  openOrClosedLead(data: any) {
+    return this.api.exec<any>(
+      'CM',
+      'LeadsBusiness',
+      'OpenOrClosedLeadAsync',
+      data
+    );
+  }
   getListChannels() {
     return this.api.exec<any>('CM', 'ChannelsBusiness', 'GetListChannelsAsync');
   }
@@ -698,6 +706,16 @@ export class CodxCmService {
       data
     );
   }
+  startLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'StartLeadAsync',
+      data
+    );
+  }
+
   moveStageDeal(data) {
     return this.api.execSv<any>(
       'CM',
@@ -717,6 +735,15 @@ export class CodxCmService {
       data
     );
   }
+  moveStageLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveStageLeadAsync',
+      data
+    );
+  }
 
   updateDeal(data) {
     return this.api.execSv<any>(
@@ -727,6 +754,24 @@ export class CodxCmService {
       data
     );
   }
+  updateLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'EditDealAsync',
+      data
+    );
+  }
+  // moveDealReason(data) {
+  //   return this.api.execSv<any>(
+  //     'CM',
+  //     'ERM.Business.CM',
+  //     'DealsBusiness',
+  //     'MoveDealReasonAsync',
+  //     data
+  //   );
+  // }
   moveDealReason(data) {
     return this.api.execSv<any>(
       'CM',
@@ -736,6 +781,17 @@ export class CodxCmService {
       data
     );
   }
+
+  moveLeadReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveLeadReasonAsync',
+      data
+    );
+  }
+
 
   getIdBusinessLineByProcessID(data) {
     return this.api.exec<any>(

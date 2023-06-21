@@ -76,7 +76,7 @@
 </ng-template>
 
 <ng-template #columnVatid let-data>
-  {{ vats | nameById : "VATID" : "TaxRate" : data.vatid }} | {{ data.vatAmt }}
+  {{ vats | nameById : "VATID" : "TaxRate" : data.vatid }}% | {{ data.vatAmt }}
 </ng-template>
 
 <ng-template #more let-data>

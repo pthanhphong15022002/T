@@ -361,10 +361,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       );
     });
   }
-  ChangeDataMF(event, data) {
-    console.log(event);
-    console.log(data);
-    console.log(this.view.formModel);
+  ChangeDataMF(event, data) { 
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
   }
 

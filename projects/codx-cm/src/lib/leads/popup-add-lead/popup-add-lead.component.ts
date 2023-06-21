@@ -130,6 +130,7 @@ export class PopupAddLeadComponent
   listIndustries: any[] = [];
   applyFor: string = '';
   isLoading: boolean = false;
+  oldIdInstance: string = '';
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -155,6 +156,7 @@ export class PopupAddLeadComponent
     if (this.action === this.actionCopy) {
       this.leadId = dt?.data?.leadIdOld;
       this.contactId = dt?.data?.contactIdOld;
+      this.oldIdInstance = this.lead.refID;
     } else {
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
@@ -239,11 +241,11 @@ export class PopupAddLeadComponent
     instance.instanceNo = lead.leadID;
     instance.owner = this.owner;
     instance.processID = lead.processID;
-    instance.stepID = lead.currentStep;
+    instance.stepID = lead.stepID;
   }
   updateDateDeal(instance: tmpInstances, lead: CM_Leads) {
     if (this.action !== this.actionEdit) {
-      lead.currentStep = this.listInstanceSteps[0].stepID;
+      lead.stepID = this.listInstanceSteps[0].stepID;
       lead.nextStep = this.listInstanceSteps[1].stepID;
       lead.status = '1';
       lead.refID = instance.recID;
@@ -294,7 +296,7 @@ export class PopupAddLeadComponent
   }
 
   async insertInstance() {
-    var data = [this.instance, this.listInstanceSteps, null];
+    var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.isLoading && this.dialog.close(instance);

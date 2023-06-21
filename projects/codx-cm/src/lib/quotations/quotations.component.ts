@@ -33,7 +33,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   templateUrl: './quotations.component.html',
   styleUrls: ['./quotations.component.css'],
 })
-export class QuotationsComponent extends UIComponent {
+export class QuotationsComponent extends UIComponent implements OnInit {
   @Input() funcID: string;
   @Input() customerID: string;
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
@@ -50,8 +50,6 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('templateCreatedOn') templateCreatedOn: TemplateRef<any>;
   @ViewChild('popDetail') popDetail!: TemplateRef<any>;
   @ViewChild('templateDetailGird') templateDetailGird: TemplateRef<any>;
-
-  
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -89,6 +87,7 @@ export class QuotationsComponent extends UIComponent {
   isNewVersion = false;
   popupView: DialogRef;
   viewType: any;
+  paramDefault: any;
 
   constructor(
     private inject: Injector,
@@ -100,13 +99,14 @@ export class QuotationsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.loadSetting();
+    // this.loadSetting();
   }
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
+    this.loadSetting();
   }
 
   ngAfterViewInit() {
@@ -134,6 +134,12 @@ export class QuotationsComponent extends UIComponent {
   }
 
   async loadSetting() {
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) this.paramDefault = JSON.parse(dataParam.dataValue);
+      }
+    });
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
     );
@@ -254,8 +260,8 @@ export class QuotationsComponent extends UIComponent {
   changeDataMF(e, data, type = 1) {
     if (e != null && data != null) {
       e.forEach((res) => {
-        if(type==11){
-          res.isbookmark = false
+        if (type == 11) {
+          res.isbookmark = false;
         }
         switch (res.functionID) {
           case 'CM0202_1':
@@ -401,7 +407,7 @@ export class QuotationsComponent extends UIComponent {
   }
 
   copy(data) {
-    let copyToRecID = data.recID
+    let copyToRecID = data.recID;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -415,7 +421,7 @@ export class QuotationsComponent extends UIComponent {
         data: res,
         action: 'copy',
         headerText: this.titleAction,
-        copyToRecID:copyToRecID
+        copyToRecID: copyToRecID,
       };
       let option = new DialogModel();
       option.IsFull = true;
