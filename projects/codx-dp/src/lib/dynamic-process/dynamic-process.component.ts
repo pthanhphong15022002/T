@@ -929,7 +929,7 @@ export class DynamicProcessComponent
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
-    data = value;
+    this.processName = value;
   }
 
   changeValue(event, data) {

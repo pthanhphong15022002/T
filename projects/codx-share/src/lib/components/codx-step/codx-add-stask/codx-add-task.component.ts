@@ -149,6 +149,7 @@ export class CodxAddTaskComponent implements OnInit {
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
+
   valueChangeCombobox(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
@@ -169,9 +170,11 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
     }
   }
+
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
+
   changeValueDate(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
     if(this.step){
@@ -311,6 +314,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.editTask(task);
     }
   }
+
   addTask(task){
     if(this.isSave){
       this.api.exec<any>(
@@ -328,17 +332,23 @@ export class CodxAddTaskComponent implements OnInit {
     }
     
   }
+
   editTask(task){
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'UpdateTaskStepAsync',
-      task
-    ).subscribe(res => {
-      if(res){        
-        this.dialog.close({ task:res, progressGroup: null, progressStep: null });
-      }
-    });
+    if(this.isSave){
+      this.api.exec<any>(
+        'DP',
+        'InstanceStepsBusiness',
+        'UpdateTaskStepAsync',
+        task
+      ).subscribe(res => {
+        if(res){        
+          this.dialog.close({ task:res, progressGroup: null, progressStep: null });
+        }
+      });
+    }else{
+      this.dialog.close(task);
+    }
+   
   }
 
   handelMail() {
