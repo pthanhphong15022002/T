@@ -741,7 +741,7 @@ export class InstancesComponent
     this.notificationsService
       .alertCode('DP018', null, "'" + this.titleAction + "'")
       .subscribe((info) => {
-        if (info.event.status == 'Y') {
+        if (info?.event?.status == 'Y') {
           this.codxDpService
             .openOrClosedInstance(data.recID, check)
             .subscribe((res) => {

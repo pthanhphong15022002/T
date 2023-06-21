@@ -732,6 +732,7 @@ export class InstanceDetailComponent implements OnInit {
       var reasonInstance = new DP_Instances_Steps_Reasons();
       reasonInstance.processID = this.dataSelect.processID;
       reasonInstance.stepID = item.stepID;
+      reasonInstance.instanceID = this.dataSelect.recID
       reasonInstance.reasonName = item.reasonName;
       reasonInstance.reasonType = item.reasonType;
       reasonInstance.createdBy = item.createdBy;
