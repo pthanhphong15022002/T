@@ -388,7 +388,7 @@
             <codx-input
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
-              [disabled]="systemProcess"
+              [disabled]="systemProcess || process?.category == '0' ? true : false"
               type="text"
               [crrValue]="process.processName"
               (valueChange)="valueChange($event)"

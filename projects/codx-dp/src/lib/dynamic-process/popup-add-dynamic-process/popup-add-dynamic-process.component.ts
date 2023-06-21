@@ -351,7 +351,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValueDayHour();
     if (this.action === 'copy') {
       this.process.category = '1';
-
       this.listPermissions = [];
       this.listPermissions = JSON.parse(
         JSON.stringify(this.process.permissions)
@@ -419,7 +418,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
 
-    this.process.category = this.systemProcess ? '0' : '1';
+
 
     this.getGrvStep();
     this.getGrvStepReason();
