@@ -300,6 +300,16 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       });
   }
 
+  createTemplate() {
+    this.api
+      .callSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'CreateTemplateAsync', [
+        'HRS0211',
+      ])
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
