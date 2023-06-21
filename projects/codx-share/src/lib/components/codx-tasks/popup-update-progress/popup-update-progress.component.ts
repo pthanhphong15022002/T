@@ -36,7 +36,8 @@ export class PopupUpdateProgressComponent implements OnInit {
   percentage100 = false;
   submitted = false;
   crrpercentage = 0;
-  isSave = false ;
+  crrChange = 0;
+  isSave = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -53,7 +54,8 @@ export class PopupUpdateProgressComponent implements OnInit {
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc.customName;
     this.task.percentage = this.task?.percentage?.toFixed(2);
-    this.crrpercentage = this.task.percentage;
+    this.crrpercentage = JSON.parse(JSON.stringify(this.task.percentage ?? 0));
+    this.crrChange = this.task.percentage ?? 0;
   }
 
   ngOnInit(): void {
@@ -67,7 +69,10 @@ export class PopupUpdateProgressComponent implements OnInit {
     } else if (data?.data) {
       this.task.percentage = data?.data?.toFixed(2);
       if (this.task.percentage == 100) this.percentage100 = true;
-      else this.percentage100 = false;
+      else {
+        this.percentage100 = false;
+        this.crrChange = this.task.percentage;
+      }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -77,7 +82,7 @@ export class PopupUpdateProgressComponent implements OnInit {
       this.percentage100 = true;
     } else {
       this.percentage100 = false;
-      this.task.percentage = this.crrpercentage;
+      this.task.percentage = this.crrChange;
     }
   }
   valueChangComment(e) {
@@ -94,8 +99,8 @@ export class PopupUpdateProgressComponent implements OnInit {
     } else this.actionUpdatePercentage();
   }
   actionUpdatePercentage() {
-    if(this.isSave) return ;
-    this.isSave=true ;
+    if (this.isSave) return;
+    this.isSave = true;
     this.tmSv
       .updateProgressTask(
         this.funcID,
