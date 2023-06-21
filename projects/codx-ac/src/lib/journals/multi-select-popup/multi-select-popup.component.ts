@@ -3,6 +3,7 @@ import {
   CodxFormComponent,
   DialogData,
   DialogRef,
+  FormModel,
   UIComponent,
 } from 'codx-core';
 import { Observable } from 'rxjs';
@@ -21,6 +22,7 @@ export class MultiSelectPopupComponent extends UIComponent {
   showAll: boolean = false;
   formTitle$: Observable<string>;
   dimControls$: Observable<any[]>;
+  formModel: FormModel;
 
   constructor(
     injector: Injector,
@@ -32,6 +34,7 @@ export class MultiSelectPopupComponent extends UIComponent {
 
     this.selectedOptions = dialogData.data.selectedOptions?.split(';') ?? [];
     this.showAll = dialogData.data.showAll;
+    this.formModel = new FormModel();
   }
 
   //#endregion

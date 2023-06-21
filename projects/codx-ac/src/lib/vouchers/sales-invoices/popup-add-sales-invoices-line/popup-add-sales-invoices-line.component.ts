@@ -211,6 +211,7 @@ export class PopupAddSalesInvoicesLineComponent
         .subscribe((line) => {
           console.log(line);
 
+          this.line = Object.assign(this.line, line);
           this.form.formGroup.patchValue(line);
         });
     }
