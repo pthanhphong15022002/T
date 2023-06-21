@@ -30,7 +30,6 @@ export class PopupAssignmentOKRComponent
 {
   views: Array<ViewModel> | any = [];
   @ViewChild('body') body: TemplateRef<any>;
-  @ViewChild('assignTab') assignTab: any;
   dialogRef: DialogRef;
   title = '';
   okrName = '';
@@ -48,7 +47,30 @@ export class PopupAssignmentOKRComponent
   typeKR = OMCONST.VLL.OKRType.KResult;
   typeOB = OMCONST.VLL.OKRType.Obj;
   cbbOrg = [];
-  //fields: Object = { text: 'orgUnitName', value: 'orgUnitID' };
+  tabControl = [
+    {
+      name: 'OrgUnit',
+      textDefault: 'Sơ đồ tổ chức',
+      isActive: true,
+      icon: 'icon-i-diagram-3-fill',
+      disabled:false,
+    },
+    {
+      name: 'Position',
+      textDefault: 'Cấp trực tiếp',
+      isActive: false,
+      icon: 'icon-groups',
+      disabled:false,
+    },
+    {
+      name: 'Employee',
+      textDefault: 'Nhân viên',
+      isActive: false,
+      icon: 'icon-account_circle',
+      disabled:false,
+    },
+    
+  ];
   assignmentOKR: any;
   distributeFromType: any;
   owner: any;
@@ -58,6 +80,8 @@ export class PopupAssignmentOKRComponent
   statusVLL :any
   okrPlan: any;
   okrPlanRecID: any;
+  offset: string;
+  activeTab: string;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -96,6 +120,7 @@ export class PopupAssignmentOKRComponent
   }
 
   onInit(): void {
+    this.loadTabView();
     this.getCacheData();
     this.getOKRAssign();
   }
@@ -114,7 +139,10 @@ export class PopupAssignmentOKRComponent
       }
     })
   }
-
+  loadTabView() {
+    this.offset = '0px';
+    this.detectorRef.detectChanges();
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
@@ -127,11 +155,29 @@ export class PopupAssignmentOKRComponent
           if (links && links.length > 0) {
             this.assignmentOKR = links[0];
             this.detectorRef.detectChanges();
-            this.isAdd = false;              
-                     
+            this.isAdd = false;
+            if(this.assignmentOKR?.objectType==OMCONST.VLL.OKRLevel.DEPT || this.assignmentOKR?.objectType==OMCONST.VLL.OKRLevel.ORG){              
+              this.tabControl[0].isActive=true;
+              this.tabControl[1].disabled=true;
+              this.tabControl[2].disabled=true;  
+              this.activeTab="OrgUnit";
+              this.detectorRef.detectChanges();
+            }
+            else if(this.assignmentOKR?.objectType==OMCONST.VLL.OKRLevel.POSITION){              
+              this.tabControl[0].disabled=true;this.tabControl[0].isActive=false;
+              this.tabControl[1].isActive=true;
+              this.tabControl[2].disabled=true;  
+              this.activeTab="Position";
+              this.detectorRef.detectChanges();
+            }
+            else if(this.assignmentOKR?.objectType==OMCONST.VLL.OKRLevel.PERS){
+              this.tabControl[0].disabled=true;this.tabControl[0].isActive=false;
+              this.tabControl[1].disabled=true;
+              this.tabControl[2].isActive=true;  
+              this.activeTab="Employee";
+              this.detectorRef.detectChanges();
+            }
             this.isAfterRender = true;
-            this.assignTab.items[1].disabled=true;
-            this.assignTab.items[2].disabled=true;  
           } else {
             this.assignmentOKR.okrName = this.dataOKR?.okrName;
             this.assignmentOKR.umid = this.dataOKR?.umid;
@@ -142,9 +188,13 @@ export class PopupAssignmentOKRComponent
             this.isAdd = true;
             this.detectorRef.detectChanges();
             this.isAfterRender = true;
+            this.activeTab = 'OrgUnit';
           }
         });
         
+      }
+      else{        
+        this.activeTab = 'OrgUnit';
       }
     });
   }
@@ -155,14 +205,17 @@ export class PopupAssignmentOKRComponent
     switch (event) {
     }
   }
-  // valueTypeChange(event) {
-  //   if (event?.field == this.typeKR) {
-  //     this.distributeToType = OMCONST.VLL.OKRType.KResult;
-  //   } else if (event?.field == this.typeOB) {
-  //     this.distributeToType = OMCONST.VLL.OKRType.Obj;
-  //   }
-  //   this.detectorRef.detectChanges();
-  // }
+  clickMenu(item) {
+    if(item?.disabled) return;
+    this.activeTab = item.name;
+    for (let i = 0; i < this.tabControl.length; i++) {
+      if (this.tabControl[i].isActive == true) {
+        this.tabControl[i].isActive = false;
+      }
+    }
+    item.isActive = true;
+    this.detectorRef.detectChanges();
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
@@ -177,9 +230,9 @@ export class PopupAssignmentOKRComponent
   }
   deleteOrg() {
     this.assignmentOKR.objectID=null;
-    this.assignTab.items[1].disabled=false;
-    this.assignTab.items[2].disabled=false;
-    this.assignTab.items[0].disabled=false;
+    this.tabControl[1].disabled=false;
+    this.tabControl[2].disabled=false;
+    this.tabControl[0].disabled=false;
     this.detectorRef.detectChanges();
   }
   orgTypeToObjectType(orgUnitType:string){
@@ -200,8 +253,8 @@ export class PopupAssignmentOKRComponent
           }
         });
 
-      this.assignTab.items[1].disabled=true;
-      this.assignTab.items[2].disabled=true;
+      this.tabControl[1].disabled=true;
+      this.tabControl[2].disabled=true;
       this.detectorRef.detectChanges();
     }
   }
@@ -221,8 +274,8 @@ export class PopupAssignmentOKRComponent
           }
         });
         
-      this.assignTab.items[0].disabled=true;
-      this.assignTab.items[2].disabled=true;
+      this.tabControl[0].disabled=true;
+      this.tabControl[2].disabled=true;
       this.detectorRef.detectChanges();
     }
   }
@@ -236,8 +289,8 @@ export class PopupAssignmentOKRComponent
           }
         });
 
-        this.assignTab.items[1].disabled=true;
-        this.assignTab.items[0].disabled=true;
+        this.tabControl[1].disabled=true;
+        this.tabControl[0].disabled=true;
       this.detectorRef.detectChanges();
     }
   }
