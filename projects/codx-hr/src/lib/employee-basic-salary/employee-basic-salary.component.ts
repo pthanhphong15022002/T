@@ -93,7 +93,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -103,7 +103,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,
@@ -341,7 +341,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
               this.view.formModel.entityName,
               this.view.formModel.funcID,
               '',
-              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo,
               ''
             )
             .subscribe((result) => {

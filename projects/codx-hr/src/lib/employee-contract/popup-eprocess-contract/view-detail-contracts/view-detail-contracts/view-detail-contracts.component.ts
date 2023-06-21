@@ -29,6 +29,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./view-detail-contracts.component.css'],
 })
 export class ViewDetailContractsComponent implements OnInit {
+  console = console;
   //Using render file
   services: string = 'DM';
   assemblyName: string = 'ERM.Business.DM';
