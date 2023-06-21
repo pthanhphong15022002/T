@@ -56,22 +56,19 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.isDataLoading;
-    this.listInstanceStep;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.listInstanceStep){
       this.listInstanceStepShow = this.listInstanceStep;
-    }
-    if (changes.dataSelected) {
-      this.dataSelected = changes.dataSelected?.currentValue;
-      this.type = this.dataSelected.viewModeDetail;
-
       if(this.dataSelected.status != '1' && this.dataSelected.status != '2') {
         this.stepIdReason = this.listInstanceStep[this.listInstanceStep.length - 1].stepID
         this.listStepReason =this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
       }
+    }
+    if (changes.dataSelected) {
+      this.dataSelected = changes.dataSelected?.currentValue;
+      this.type = this.dataSelected.viewModeDetail;
     }
   }
 

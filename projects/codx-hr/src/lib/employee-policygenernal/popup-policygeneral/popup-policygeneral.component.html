@@ -109,7 +109,7 @@
             fiedName="FixedAmt"
             [formModel]="formModel"
         ></codx-label>
-        <span>{{grvSetup.FixedAmt.description}}</span>
+        <span>{{grvSetup.FixedAmt.headerNote}}</span>
     </div>
     <div class="col-6">
         <codx-input
@@ -128,7 +128,7 @@
         ></codx-label>
         <codx-label
             [name]="'FixedAmtPerHourDes'"
-            [default]="grvSetup.FixedAmtPerHour.description"
+            [default]="grvSetup.FixedAmtPerHour.headerNote"
             [formModel]="formModel"
     ></codx-label>
     </div>
@@ -149,7 +149,7 @@
         ></codx-label>
         <codx-label
         [name]="'PercentageDes'"
-        [default]="grvSetup.Percentage.description"
+        [default]="grvSetup.Percentage.headerNote"
         [formModel]="formModel"
 ></codx-label>
     </div>
@@ -171,7 +171,7 @@
 
         <codx-label
         [name]="'PercentageOnDes'"
-        [default]="grvSetup.PercentageOn.description"
+        [default]="grvSetup.PercentageOn.headerNote"
         [formModel]="formModel"
 ></codx-label>
     </div>
@@ -183,6 +183,56 @@
         ></codx-input>
     </div>
 </div>
+
+<div class="form-group row">
+    <div class="col-6 d-flex flex-column">
+        <codx-label
+            fiedName="HasIncludeBenefits"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-label
+        [name]="'HasIncludeBenefits'"
+        [default]="grvSetup.HasIncludeBenefits.headerNote"
+        [formModel]="formModel"
+></codx-label>
+    </div>
+    <div class="col-6 d-flex flex-row">
+        <codx-input
+            field="hasIncludeBenefits"
+            [formModel]="formModel"
+            [Group]="formGroup"
+            (valueChange)="ValChangeHasBenefit($event)"
+        ></codx-input>
+        <button
+        class="btn btn-icon"
+        [ngClass]="policyGeneralObj.hasIncludeBenefits? 'text-dark':'text-gray-400'"
+        (click)="onClickOpenCbxBenefit()"
+      >
+        <i class="icon-edit-one icon-18"></i>
+      </button>
+    </div>
+</div>
+    <span *ngFor="let benefit of lstBenefit">
+      <span
+      class="badge badge-success border-0"
+      [innerHTML]="
+      benefit?.benefitID
+          | formatvalue : benefitFormModel : 'benefitID'
+          | async"
+    ></span>
+        <!-- <span class="badge badge-success border-0">{{benefit}}</span> -->
+    </span>
+
+    <codx-combobox-popup
+    *ngIf="!isHidden && policyGeneralObj.hasIncludeBenefits"
+    [comboboxName]="'HRBenefits'"
+    [multiple]="true"
+    [width]="600"
+    [height]="500"
+    [value]="policyGeneralObj.includeBenefits"
+    (clickSave)="onClickHideComboboxPopup($event)"
+    >
+    </codx-combobox-popup>
 </ng-template>
 
 <ng-template #footer>
