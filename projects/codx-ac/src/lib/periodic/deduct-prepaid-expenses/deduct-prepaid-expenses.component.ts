@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModel, CallFuncService, DataRequest, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { PopAddUpdateTheLedgerComponent } from './pop-add-update-the-ledger/pop-add-update-the-ledger.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { PopAddDeductPrepaidExpensesComponent } from './pop-add-deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses.component';
 
 @Component({
-  selector: 'lib-update-the-ledger',
-  templateUrl: './update-the-ledger.component.html',
-  styleUrls: ['./update-the-ledger.component.css']
+  selector: 'lib-deduct-prepaid-expenses',
+  templateUrl: './deduct-prepaid-expenses.component.html',
+  styleUrls: ['./deduct-prepaid-expenses.component.css']
 })
-export class UpdateTheLedgerComponent extends UIComponent{
+export class DeductPrepaidExpensesComponent extends UIComponent{
   
   views: Array<ViewModel> = [];
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
@@ -17,7 +17,7 @@ export class UpdateTheLedgerComponent extends UIComponent{
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
-  funcID: any = 'ACP10201';
+  funcID: any;
   entityName: any;
   mfFormName: any = 'UpdateTheLedger';
   mfGrvName: any = 'grvUpdateTheLedger';
@@ -36,7 +36,7 @@ export class UpdateTheLedgerComponent extends UIComponent{
     this.dialog = dialog;
     this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
       if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACP10101');
+        let m = res.find((x) => x.functionID == 'ACP10501');
         if (m) this.entityName = m.defaultName;
       }
     });
@@ -49,7 +49,7 @@ export class UpdateTheLedgerComponent extends UIComponent{
   ngAfterViewInit() {
     this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
       if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACP10100');
+        let m = res.find((x) => x.functionID == 'ACP10500');
         if (m) this.funcName = m.defaultName;
       }
     });
@@ -119,7 +119,7 @@ export class UpdateTheLedgerComponent extends UIComponent{
         option.FormModel = this.view.formModel;
         option.Width =  '550px';
         this.dialog = this.callfunc.openSide(
-          PopAddUpdateTheLedgerComponent,
+          PopAddDeductPrepaidExpensesComponent,
           obj,
           option,
           this.view.funcID
@@ -143,7 +143,7 @@ export class UpdateTheLedgerComponent extends UIComponent{
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(
-          PopAddUpdateTheLedgerComponent,
+          PopAddDeductPrepaidExpensesComponent,
           obj,
           option
         );
@@ -166,7 +166,7 @@ export class UpdateTheLedgerComponent extends UIComponent{
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(
-          PopAddUpdateTheLedgerComponent,
+          PopAddDeductPrepaidExpensesComponent,
           obj,
           option
         );
@@ -205,11 +205,6 @@ export class UpdateTheLedgerComponent extends UIComponent{
     );
   }
 
-  setEntityName()
-  {
-    this.view.entityName = this.entityName;
-  }
-
   getDate(date: any){
     var newDate = new Date(date);
     var day, month, year;
@@ -231,3 +226,4 @@ export class UpdateTheLedgerComponent extends UIComponent{
   //endRegion Function
 
 }
+

@@ -205,6 +205,11 @@ export class RunPeriodicComponent extends UIComponent{
     );
   }
 
+  setEntityName()
+  {
+    this.view.entityName = this.entityName;
+  }
+
   getDate(date: any){
     var newDate = new Date(date);
     var day, month, year;
