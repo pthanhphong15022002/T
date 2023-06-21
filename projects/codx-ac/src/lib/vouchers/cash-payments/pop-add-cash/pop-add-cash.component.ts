@@ -747,10 +747,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.notification.notifyCode('AC0012');
             }
           }
-          if (res.unbounds.lineDefault != null) {
-            this.dataLine = res.unbounds.lineDefault;
-          }
-          this.loadGrid();
+          // if (res.unbounds.lineDefault != null) {
+          //   this.dataLine = res.unbounds.lineDefault;
+          // }
+          // this.loadGrid();
         }
       });
   }
@@ -769,6 +769,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         }
       });
+  }
+
+  eventAction(e:any){
+    
   }
 
   setDefault(o) {
