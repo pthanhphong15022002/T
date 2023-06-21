@@ -90,15 +90,20 @@ export class PopupQuickaddContactComponent implements OnInit {
   async loadContact() {
     var options = new DataRequest();
     options.entityName = 'CM_Contacts';
-    if (this.objectType == '4' && this.type == 'formDetail') {
+    if (this.objectType == '4') {
       options.predicates = 'ObjectID==@0';
-      options.dataValues = this.customerID;
+      options.dataValues =
+        this.customerID != null && this.customerID?.trim() != ''
+          ? this.customerID
+          : Util.uid();
+
       this.action = this.actionOld;
     } else {
       options.predicates = 'ObjectID==null && ObjectName==null';
     }
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
+
     if (lst != null) lst = this.checkListContact(lst);
     return lst;
   }
@@ -264,8 +269,10 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.notiService
             .alertCode('CM005', null, "'" + this.nameDefault + "'")
             .subscribe((x) => {
-              if (x.event.status == 'Y') {
-                this.beforeSave(type);
+              if (x.event && x.event?.status) {
+                if (x.event.status == 'Y') {
+                  this.beforeSave(type);
+                }
               }
             });
         } else {

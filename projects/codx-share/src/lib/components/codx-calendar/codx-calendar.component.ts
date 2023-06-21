@@ -334,6 +334,7 @@ export class CodxCalendarComponent
             this.ejCalendar.refresh();
             this.ejCalendar.value = this.FDdate;
           }
+
           this.calendarService.calendarData$.next(this.calendarTempData);
 
           this.api

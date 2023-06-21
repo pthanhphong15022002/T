@@ -149,7 +149,8 @@ export class PopupAddCasesComponent
         this.cases = dt?.data?.dataCM;
       }
     } else {
-      this.cases = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+      this.cases = this.action != this.actionAdd? JSON.parse(JSON.stringify(dialog.dataService.dataSelected)):this.cases;
+
     }
 
     if (this.action != this.actionAdd) {

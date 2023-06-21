@@ -76,6 +76,7 @@ import { SettingProcessCmComponent } from './setting-process-cm/setting-process-
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
+import { TaskComponent } from './deals/step-task/task/task.component';
 
 const routes: Routes = [
   {
@@ -194,6 +195,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     QuotationsTabViewComponent,
     ContractsViewDetailComponent,
     ContractsDetailComponent,
+    TaskComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

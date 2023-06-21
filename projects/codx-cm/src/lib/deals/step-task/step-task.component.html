@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="typeTask == 1">
   <header class="d-flex align-items-center justify-content-between search p-2">
     <div class="left d-flex align-items-center">
       <div>
@@ -69,6 +69,10 @@
   </main>
 </div>
 
+<div *ngIf="typeTask == 2">
+  <task [customerID]="customerID"></task>
+</div>
+
 <ng-template #taskTem>
   <div *ngIf="isDataLoading || !type">
     <div *ngFor="let step of [1, 2, 3]">
@@ -117,6 +121,7 @@
       class="list-step ps-4"
     >
       <codx-step-task
+        *ngIf="!step?.isSuccessStep && !step?.isFailStep"
         [dataSources]="step"
         [isShowButton]="false"
         [isShowMore]="true"
@@ -130,7 +135,58 @@
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
       ></codx-step-task>
-      <hr />
+      <hr *ngIf="!step?.isSuccessStep && !step?.isFailStep" />
+      <!-- thành công thất bại  -->
+      <div *ngIf="step?.isSuccessStep">
+        <div class="d-flex align-items-center text-success">
+          <span class="icon-check icon-18 icon-step"></span>
+          <span
+            class="line-clamp line-clamp-2 fs-5 ms-2 text-success"
+            [ngStyle]="{ color: 'gray', 'font-weight': '400' }"
+          >
+            {{ step.stepName || "" }}</span
+          >
+        </div>
+        <div style="margin-left: 50px;">
+          <div>
+            <codx-label
+              class="fs-5"
+              [formModel]=""
+              fiedName="delTermID"
+              default="Lý do thành công"
+            ></codx-label>
+          </div>
+          <ul *ngIf="step?.reasons?.length > 0">
+            <li *ngFor="let reason of step.reasons">
+              <span class="fs-6">{{ reason?.reasonName }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div *ngIf="step?.isFailStep">
+        <div class="d-flex align-items-center text-danger">
+          <span class="icon-close icon-18 icon-step"></span>
+          <span
+            class="line-clamp line-clamp-2 fs-5 ms-2 text-danger"
+            [ngStyle]="{ color: 'gray', 'font-weight': '400' }"
+          >
+            {{ step?.stepName || "" }}</span
+          >
+        </div>
+        <div style="margin-left: 50px;">
+          <codx-label
+            class="fs-5"
+            [formModel]=""
+            fiedName="delTermID"
+            default="Lý do thất bại"
+          ></codx-label>
+          <ul *ngIf="step?.reasons?.length > 0">
+            <li *ngFor="let reason of step.reasons">
+              <span class="fs-6">{{ reason?.reasonName }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
   <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
