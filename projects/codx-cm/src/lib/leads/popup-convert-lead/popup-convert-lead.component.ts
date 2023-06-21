@@ -98,6 +98,7 @@ export class PopupConvertLeadComponent implements OnInit {
   nameAvt: any;
   modifyOnAvt: Date;
   entityName: any;
+  isCheckContact: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -311,14 +312,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async onConvert() {
     var data = [];
-    data = [
-      this.lead.recID,
-      this.customer,
-      this.deal,
-      this.lstContactCustomer,
-      this.lstContactDeal,
-      this.lstContactDelete,
-    ];
+    data = [this.lead.recID, this.customer, this.deal, this.isCheckContact ? this.lstContactDeal : null];
     await this.api
       .execSv<any>(
         'CM',
@@ -629,66 +623,66 @@ export class PopupConvertLeadComponent implements OnInit {
   }
   //#region Contact
 
-  objectConvert(e) {
-    if (e.e == true) {
-      if (e?.data != null) {
-        var tmpContact = new CM_Contacts();
-        tmpContact = JSON.parse(JSON.stringify(e.data));
-        tmpContact.recID = Util.uid();
-        tmpContact.refID = e.data.recID;
-        tmpContact.checked = false;
-        if (!this.lstContactCustomer.some((x) => x.refID == tmpContact.refID)) {
-          var check = this.lstContactCustomer.findIndex(
-            (x) => x.isDefault == true
-          );
-          if (tmpContact.isDefault == true) {
-            if (check != -1) {
-              var nameDefault = this.lstContactCustomer.find(
-                (x) => x.isDefault
-              )?.contactName;
-              var config = new AlertConfirmInputConfig();
-              config.type = 'YesNo';
-              this.notiService
-                .alertCode('CM005', null, "'" + nameDefault + "'")
-                .subscribe((x) => {
-                  if (x.event.status == 'Y') {
-                    this.lstContactCustomer[check].isDefault = false;
-                  } else {
-                    tmpContact.isDefault = false;
-                  }
-                  this.lstContactCustomer.push(Object.assign({}, tmpContact));
-                  this.codxListContact.loadListContact(this.lstContactCustomer);
-                  this.changeDetectorRef.detectChanges();
-                });
-            } else {
-              this.lstContactCustomer.push(Object.assign({}, tmpContact));
-              this.codxListContact.loadListContact(this.lstContactCustomer);
-            }
-          } else {
-            this.lstContactCustomer.push(Object.assign({}, tmpContact));
-            this.codxListContact.loadListContact(this.lstContactCustomer);
-          }
-        }
-      }
-    } else {
-      var index = this.lstContactCustomer.findIndex(
-        (x) => x.refID == e?.data?.recID
-      );
-      if (index != -1) {
-        var indexDeal = this.lstContactDeal.findIndex(
-          (x) => this.lstContactCustomer[index].recID == x.refID
-        );
-        this.lstContactCustomer[index].refID = null;
-        this.lstContactCustomer.splice(index, 1);
-        this.codxListContact.loadListContact(this.lstContactCustomer);
+  // objectConvert(e) {
+  //   if (e.e == true) {
+  //     if (e?.data != null) {
+  //       var tmpContact = new CM_Contacts();
+  //       tmpContact = JSON.parse(JSON.stringify(e.data));
+  //       tmpContact.recID = Util.uid();
+  //       tmpContact.refID = e.data.recID;
+  //       tmpContact.checked = false;
+  //       if (!this.lstContactCustomer.some((x) => x.refID == tmpContact.refID)) {
+  //         var check = this.lstContactCustomer.findIndex(
+  //           (x) => x.isDefault == true
+  //         );
+  //         if (tmpContact.isDefault == true) {
+  //           if (check != -1) {
+  //             var nameDefault = this.lstContactCustomer.find(
+  //               (x) => x.isDefault
+  //             )?.contactName;
+  //             var config = new AlertConfirmInputConfig();
+  //             config.type = 'YesNo';
+  //             this.notiService
+  //               .alertCode('CM005', null, "'" + nameDefault + "'")
+  //               .subscribe((x) => {
+  //                 if (x.event.status == 'Y') {
+  //                   this.lstContactCustomer[check].isDefault = false;
+  //                 } else {
+  //                   tmpContact.isDefault = false;
+  //                 }
+  //                 this.lstContactCustomer.push(Object.assign({}, tmpContact));
+  //                 this.codxListContact.loadListContact(this.lstContactCustomer);
+  //                 this.changeDetectorRef.detectChanges();
+  //               });
+  //           } else {
+  //             this.lstContactCustomer.push(Object.assign({}, tmpContact));
+  //             this.codxListContact.loadListContact(this.lstContactCustomer);
+  //           }
+  //         } else {
+  //           this.lstContactCustomer.push(Object.assign({}, tmpContact));
+  //           this.codxListContact.loadListContact(this.lstContactCustomer);
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     var index = this.lstContactCustomer.findIndex(
+  //       (x) => x.refID == e?.data?.recID
+  //     );
+  //     if (index != -1) {
+  //       var indexDeal = this.lstContactDeal.findIndex(
+  //         (x) => this.lstContactCustomer[index].recID == x.refID
+  //       );
+  //       this.lstContactCustomer[index].refID = null;
+  //       this.lstContactCustomer.splice(index, 1);
+  //       this.codxListContact.loadListContact(this.lstContactCustomer);
 
-        if (indexDeal != -1) {
-          this.lstContactDeal.splice(indexDeal, 1);
-        }
-      }
-    }
-    this.changeDetectorRef.detectChanges();
-  }
+  //       if (indexDeal != -1) {
+  //         this.lstContactDeal.splice(indexDeal, 1);
+  //       }
+  //     }
+  //   }
+  //   this.changeDetectorRef.detectChanges();
+  // }
 
   objectConvertDeal(e) {
     if (e.e == true) {
@@ -746,28 +740,29 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   contactEventDeal(e) {
-    if (e.data) {
-      var findIndex = this.lstContactCustomer.findIndex(
-        (x) => x.recID == e.data?.refID
+    if (e) {
+      var tmp = new CM_Contacts();
+      tmp = JSON.parse(JSON.stringify(e));
+      tmp.recID = Util.uid();
+      tmp.refID = e?.recID;
+      tmp.objectType = '4';
+      tmp.isDefault = false;
+      var indexCus = this.lstContactCustomer.findIndex(
+        (x) => x.recID == e?.recID
       );
-      if (e.action == 'edit') {
-        if (findIndex != -1) {
-          var isDefault = this.lstContactCustomer[findIndex].isDefault;
-          this.lstContactCustomer[findIndex] = JSON.parse(
-            JSON.stringify(e.data)
-          );
-          this.lstContactCustomer[findIndex].recID = e.data.refID;
-          this.lstContactCustomer[findIndex].role = null;
-          this.lstContactCustomer[findIndex].isDefault = isDefault;
-          this.codxListContact.loadListContact(this.lstContactCustomer);
-        }
+
+      if (!this.lstContactDeal.some((x) => x.refID == e?.recID)) {
+        this.lstContactDeal.push(tmp);
+        // this.codxConvert.loadListContact(this.lstContactDeal);
       }
+
       this.changeDetectorRef.detectChanges();
     }
   }
 
   lstContactEmit(e) {
-    this.lstContactCustomer = e;
+    this.lstContactDeal = e;
+    if (!this.isCheckContact) this.isCheckContact = true;
   }
 
   popupEditRoleDeal(tmp, data) {
