@@ -181,6 +181,11 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
       //   break;
     }
   }
+  getTypeTask(task){
+    this.taskType = this.listTaskType.find(
+      (type) => type.value == task?.taskType
+    );
+  }
   deleteTask(task){
     if(!task?.recID){
       return;
@@ -205,6 +210,7 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
   }
 
   async copyTask(task){
+    this.getTypeTask(task);
     let taskOutput = await this.openPopupTask('add', task);
     if (taskOutput?.event) {
       
@@ -212,6 +218,7 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
   }
 
   async editTask(task){
+    this.getTypeTask(task);
     let taskOutput = await this.openPopupTask('add', task);
     if (taskOutput?.event) {
       
