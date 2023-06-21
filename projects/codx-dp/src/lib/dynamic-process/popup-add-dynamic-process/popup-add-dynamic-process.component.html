@@ -2578,7 +2578,7 @@
       <div class="main-body p-6">
         <div *ngIf="stepSuccess.reasons?.length > 0">
           <div *ngFor="let item of stepSuccess?.reasons" class="pb-2">
-            <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+            <ul class="text-left drap-drop mb-1 has-action-menu">
               <li>
                 <div *ngIf="stepSuccess.isUsed; else other_content">
                   {{ item?.reasonName }}
@@ -2792,7 +2792,7 @@
     >
       <div class="main-body p-6">
         <div *ngFor="let item of stepFail?.reasons" class="pb-2">
-          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+          <ul class="text-left drap-drop mb-1 has-action-menu">
             <li>
               <div *ngIf="stepFail?.isUsed; else other_fail">
                 {{ item?.reasonName }}
