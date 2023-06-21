@@ -1,6 +1,26 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, FormModel, NotificationsService, SidebarModel, Util } from 'codx-core';
-import { DP_Activities, DP_Activities_Roles, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  FormModel,
+  NotificationsService,
+  SidebarModel,
+  Util,
+} from 'codx-core';
+import {
+  DP_Activities,
+  DP_Activities_Roles,
+  DP_Instances_Steps_Tasks,
+} from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-add-stask/codx-add-task.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { firstValueFrom } from 'rxjs';
@@ -8,9 +28,9 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
-  styleUrls: ['./task.component.scss']
+  styleUrls: ['./task.component.scss'],
 })
-export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
+export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
@@ -34,13 +54,11 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
     private callFunc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
-    private detectorRef: ChangeDetectorRef,
-  ) {
-    
-  }
+    private detectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.customerID){
+    if (changes?.customerID) {
       this.getActivities();
     }
   }
@@ -54,23 +72,20 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
     });
   }
 
-  ngAfterViewInit(): void {
-    
-  }
+  ngAfterViewInit(): void {}
 
   getActivities(): void {
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'GetActivitiesAsync',
-      [this.customerID]
-    ).subscribe(res =>{
-      if(res?.length > 0){
-       this.listActivitie = res;
-      }else{
-        this.isNoData = true;
-      }
-    })   
+    this.api
+      .exec<any>('DP', 'InstanceStepsBusiness', 'GetActivitiesAsync', [
+        this.customerID,
+      ])
+      .subscribe((res) => {
+        if (res?.length > 0) {
+          this.listActivitie = res;
+        } else {
+          this.isNoData = true;
+        }
+      });
   }
 
   async getFormModel(functionID) {
@@ -90,7 +105,7 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
 
   getColor(task) {
     let color = this.listTaskType?.find((x) => x.value === task.taskType);
-    return { 'color': color?.color };
+    return { color: color?.color };
   }
 
   getRole(task, type) {
@@ -105,18 +120,16 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
         switch (res.functionID) {
           case 'SYS02': //xóa
             break;
-          case 'SYS03': //sửa           
+          case 'SYS03': //sửa
             break;
           case 'SYS04': //copy
             break;
-          case 'SYS003': //đính kèm file         
+          case 'SYS003': //đính kèm file
             break;
           case 'DP20': // tiến độ
             break;
           case 'DP13': //giao việc
-            if (
-              !(task?.createTask)
-            ) {
+            if (!task?.createTask) {
               res.isblur = true;
             }
             break;
@@ -140,8 +153,7 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
-            if (task.taskType != 'B') 
-            res.disabled = true;
+            if (task.taskType != 'B') res.disabled = true;
             break;
         }
       });
@@ -181,65 +193,96 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
       //   break;
     }
   }
-  getTypeTask(task){
+  getTypeTask(task) {
     this.taskType = this.listTaskType.find(
       (type) => type.value == task?.taskType
     );
   }
-  deleteTask(task){
-    if(!task?.recID){
+  deleteTask(task) {
+    if (!task?.recID) {
       return;
     }
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        this.api.exec<any>(
-          'DP',
-          'InstanceStepsBusiness',
-          'DeleteActivitiesAsync',
-          [task?.recID]
-        ).subscribe(res =>{
-          if(res){
-            let index = this.listActivitie?.findIndex(activitie => activitie.recID == task.recID);
-            this.listActivitie?.splice(index,1);
-            this.notiService.notifyCode('SYS008');
-            this.detectorRef.detectChanges();
-          }
-        })   
+        this.api
+          .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
+            task?.recID,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              let index = this.listActivitie?.findIndex(
+                (activitie) => activitie.recID == task.recID
+              );
+              this.listActivitie?.splice(index, 1);
+              this.notiService.notifyCode('SYS008');
+              this.detectorRef.detectChanges();
+            }
+          });
       }
     });
   }
 
-  async copyTask(task){
+  async copyTask(task) {
     this.getTypeTask(task);
-    let taskOutput = await this.openPopupTask('add', task);
+    let taskOutput = await this.openPopupTask('copy', task);
     if (taskOutput?.event) {
-      
+      if (!taskOutput?.event?.objectID) {
+        task['objectID'] = this.customerID;
+      }
+      this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+          taskOutput?.event,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.listActivitie.push(res);
+            this.notiService.notifyCode('SYS006');
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
 
-  async editTask(task){
+  async editTask(task) {
     this.getTypeTask(task);
-    let taskOutput = await this.openPopupTask('add', task);
+    let taskOutput = await this.openPopupTask('edit', task);
     if (taskOutput?.event) {
-      
+      if (!taskOutput?.event?.objectID) {
+        task['objectID'] = this.customerID;
+      }
+      this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
+          taskOutput?.event,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            let index = this.listActivitie?.findIndex((activitie) => activitie.recID == res.recID);
+            this.listActivitie?.splice(index, 1, res);
+            console.log(res);
+            
+            this.notiService.notifyCode('SYS007');
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
 
   async chooseTypeTask() {
-      let popupTypeTask = this.callFunc.openForm(
-        CodxTypeTaskComponent,
-        '',
-        450,
-        580,
-        '',
-        {isShowGroup: false},
-      );
-      let dataOutput = await firstValueFrom(popupTypeTask.closed);
-      if (dataOutput?.event?.value) {
-        this.taskType = dataOutput?.event;
-        this.addTask();
-      }
+    let popupTypeTask = this.callFunc.openForm(
+      CodxTypeTaskComponent,
+      '',
+      450,
+      580,
+      '',
+      { isShowGroup: false }
+    );
+    let dataOutput = await firstValueFrom(popupTypeTask.closed);
+    if (dataOutput?.event?.value) {
+      this.taskType = dataOutput?.event;
+      this.addTask();
+    }
   }
+
   async addTask() {
     let task = new DP_Instances_Steps_Tasks();
     task['progress'] = 0;
@@ -253,31 +296,32 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
       this.copyData(data, this.activitie);
       let rolesTask = data?.roles;
       let roles: DP_Activities_Roles[] = [];
-      if(rolesTask?.length > 0){
-        rolesTask.forEach(element => {
-          let role = new DP_Activities_Roles;
+      if (rolesTask?.length > 0) {
+        rolesTask.forEach((element) => {
+          let role = new DP_Activities_Roles();
           this.copyData(element, role);
           roles.push(role);
         });
-      } 
-      this.activitie.roles = roles;   
-      this.activitie.objectID = this.customerID;  
-    }
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'AddActivitiesAsync',
-      [this.activitie]
-    ).subscribe(res =>{
-      if(res){
-       this.listActivitie.push(res);
       }
-    })   
+      this.activitie.roles = roles;
+      this.activitie.objectID = this.customerID;
+    }
+    this.api
+      .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+        this.activitie,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.listActivitie.push(res);
+          this.notiService.notifyCode('SYS006');
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
-  copyData(datacopy,data){
-    if(datacopy && data){
-      for(let key in datacopy){
+  copyData(datacopy, data) {
+    if (datacopy && data) {
+      for (let key in datacopy) {
         data[key] = datacopy[key];
       }
     }
@@ -293,7 +337,7 @@ export class TaskComponent implements OnInit , AfterViewInit, OnChanges{
       listTask: null,
       isEditTimeDefault: null,
       groupTaskID, // trường hợp chọn thêm từ nhóm
-      isSave: false
+      isSave: false,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',

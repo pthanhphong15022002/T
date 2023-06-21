@@ -828,6 +828,23 @@ export class CodxCmService {
     );
   }
 
+  getListReasonByProcessId(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListReasonByProcessIdAsync',
+      data
+    );
+  }
+  updateListReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateReasonStepAsync',
+      data
+    );
+  }
+
   //#endregion -- Bao
 
   //contracts -- nvthuan

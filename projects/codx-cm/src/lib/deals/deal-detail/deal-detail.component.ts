@@ -222,7 +222,7 @@ export class DealDetailComponent implements OnInit {
 
   getContactPerson($event){
     if($event) {
-      this.contactPerson = $event?.isDefault ? $event: null  ;
+      this.contactPerson = $event?.isDefault ? $event: null;
       this.changeDetectorRef.detectChanges();
     }
   }
