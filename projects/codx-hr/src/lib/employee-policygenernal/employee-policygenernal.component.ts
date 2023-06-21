@@ -100,7 +100,15 @@ export class EmployeePolicygenernalComponent extends UIComponent {
         break;
 
       case 'SYS02': //delete
-      this.DeletePolicyGeneral(data);
+      this.view.dataService.delete([data]).subscribe();
+
+      // this.DeletePolicyGeneral(data).subscribe((res) => {
+      //   debugger
+      //   if(res == true){
+      //     this.notify.notifyCode('SYS008');
+      //   }
+      // });
+
         break;
 
       case 'SYS04': //copy
@@ -140,7 +148,7 @@ export class EmployeePolicygenernalComponent extends UIComponent {
       {
         actionType: actionType,
         dataObj: data,
-        headerText: actionHeaderText,
+        headerText: actionHeaderText + " " + this.view.function.description,
         funcID: this.view.funcID,
       },
       option

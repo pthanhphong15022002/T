@@ -19,8 +19,8 @@ export class DeductPrepaidExpensesComponent extends UIComponent{
   dialog!: DialogRef;
   funcID: any;
   entityName: any;
-  mfFormName: any = 'UpdateTheLedger';
-  mfGrvName: any = 'grvUpdateTheLedger';
+  mfFormName: any = 'DeductPrepaidExpenses';
+  mfGrvName: any = 'grvDeductPrepaidExpenses';
   funcName: any;
   headerText: any;
   
@@ -203,6 +203,11 @@ export class DeductPrepaidExpensesComponent extends UIComponent{
       [gridModel, data.recID],
       null
     );
+  }
+
+  setEntityName()
+  {
+    this.view.entityName = this.entityName;
   }
 
   getDate(date: any){

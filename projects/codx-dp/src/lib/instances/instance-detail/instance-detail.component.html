@@ -164,10 +164,10 @@
           </div>
           <div class="d-flex justify-content-end me-3 mt-2">
             <div class="d-flex align-items-center w-100 h-30px">
-              <div class="ms-2" *ngIf="dataSelect.approveStatus > 2">
+              <div class="ms-2" *ngIf="dataSelect.approveStatus != 1">
                 <codx-vll
                   [name]="vllApprover"
-                  [field]="'Status'"
+                  [field]="'ApproveStatus'"
                   [value]="dataSelect.approveStatus"
                   [showText]="true"
                   [showBgColor]="true"

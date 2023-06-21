@@ -3,9 +3,8 @@ import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
-import { RunPeriodic } from '../../../models/RunPeriodic.model';
 import { Paras } from '../../../models/Paras.model';
-import { UpdateTheLedger } from '../../../models/UpdateTheLedger.model';
+import { DeductPrepaidExpenses } from '../../../models/DeductPrepaidExpenses.model';
 
 @Component({
   selector: 'lib-pop-add-deduct-prepaid-expenses',
@@ -23,7 +22,7 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
 
   dialog!: DialogRef;
   authStore: AuthStore;
-  updateTheLedger: UpdateTheLedger;
+  deductPrepaidExpenses: DeductPrepaidExpenses;
   Paras: Paras;
   gridViewSetup: any;
   validate: any = 0;
@@ -43,15 +42,16 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
     this.dialog = dialog;
     this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
-    this.updateTheLedger = dialog.dataService!.dataSelected;
-    if(this.updateTheLedger.paras != null)
+    this.deductPrepaidExpenses = dialog.dataService!.dataSelected;
+    if(this.deductPrepaidExpenses.paras != null)
     {
-      this.Paras = JSON.parse(this.updateTheLedger.paras);
-      this.updateTheLedger.journalNo = this.Paras.journalNo;
+      this.Paras = JSON.parse(this.deductPrepaidExpenses.paras);
+      this.deductPrepaidExpenses.calcGroupID = this.Paras.calcGroupID;
+      this.deductPrepaidExpenses.buid = this.Paras.buid;
     }
     this.formType = dialogData.data?.formType;
     this.cache
-      .gridViewSetup('UpdateTheLedger', 'grvUpdateTheLedger')
+      .gridViewSetup('DeductPrepaidExpenses', 'grvDeductPrepaidExpenses')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -67,8 +67,8 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
   }
 
   ngAfterViewInit() {
-    this.setFromDateToDate(this.updateTheLedger.runDate);
-    this.form.formGroup.patchValue(this.updateTheLedger);
+    this.setFromDateToDate(this.deductPrepaidExpenses.runDate);
+    this.form.formGroup.patchValue(this.deductPrepaidExpenses);
   }
 
   //#endregion
@@ -88,14 +88,17 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
     switch(e.field)
     {
       case 'runDate':
-        this.updateTheLedger.runDate = e.data;
+        this.deductPrepaidExpenses.runDate = e.data;
         this.setFromDateToDate(e.data);
         break;
       case 'memo':
-        this.updateTheLedger.memo = e.data;
+        this.deductPrepaidExpenses.memo = e.data;
         break;
-      case 'journalNo':
-        this.updateTheLedger.journalNo = e.data;
+      case 'calcGroupID':
+        this.deductPrepaidExpenses.calcGroupID = e.data;
+        break;
+      case 'buid':
+        this.deductPrepaidExpenses.buid = e.data;
         break;
     }
   }
@@ -108,7 +111,7 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.updateTheLedger.status = 1;
+        this.deductPrepaidExpenses.status = 1;
         this.setParas();
         this.dialog.dataService
           .save(null, 0, '', 'SYS006', true)
@@ -120,8 +123,8 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
           });
       }
       if (this.formType == 'edit') {
-        if(this.updateTheLedger.status == 0)
-          this.updateTheLedger.status = 1;
+        if(this.deductPrepaidExpenses.status == 0)
+          this.deductPrepaidExpenses.status = 1;
         this.setParas();
         this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
           if (res && res.update.data != null) {
@@ -144,16 +147,16 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.updateTheLedger.status = 1;
+        this.deductPrepaidExpenses.status = 1;
         this.setParas();
         this.dialog.dataService
           .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
             if (res.save) {
               this.dialog.dataService.addNew().subscribe((res) => {
-                this.updateTheLedger = this.dialog.dataService!.dataSelected;
+                this.deductPrepaidExpenses = this.dialog.dataService!.dataSelected;
                 this.onClearParas();
-                this.form.formGroup.patchValue(this.updateTheLedger);
+                this.form.formGroup.patchValue(this.deductPrepaidExpenses);
               });
             }
           });
@@ -163,19 +166,20 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
 
   onClearParas(){
     this.Paras = new Paras();
-    this.updateTheLedger.journalNo = null;
+    this.deductPrepaidExpenses.calcGroupID = null;
+    this.deductPrepaidExpenses.buid = null;
   }
 
   checkUpdateTheLedgerValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.updateTheLedger);
+    var keymodel = Object.keys(this.deductPrepaidExpenses);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
-              this.updateTheLedger[keymodel[i]] == null ||
-              String(this.updateTheLedger[keymodel[i]]).match(/^ *$/) !== null
+              this.deductPrepaidExpenses[keymodel[i]] == null ||
+              String(this.deductPrepaidExpenses[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -192,15 +196,16 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
 
   setFromDateToDate(runDate: any)
   {
-      this.updateTheLedger.toDate = runDate;
+      this.deductPrepaidExpenses.toDate = runDate;
       let result = new Date(runDate);
       result.setDate(1);
-      this.updateTheLedger.fromDate = result;
+      this.deductPrepaidExpenses.fromDate = result;
   }
 
   setParas(){
-    this.Paras.journalNo = this.updateTheLedger.journalNo;
-    this.updateTheLedger.paras = JSON.stringify(this.Paras);
+    this.Paras.calcGroupID = this.deductPrepaidExpenses.calcGroupID;
+    this.Paras.buid = this.deductPrepaidExpenses.buid;
+    this.deductPrepaidExpenses.paras = JSON.stringify(this.Paras);
   }
   //endRegion Function
 }
