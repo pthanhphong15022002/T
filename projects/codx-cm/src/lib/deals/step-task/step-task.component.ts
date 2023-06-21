@@ -10,6 +10,7 @@ import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/co
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('task') task : CodxStepTaskComponent;
   @Input() typeTask = 1;
+  @Input() customerID = 1;
   @Input() isDataLoading: any;
   @Input() dataSelected: any;
   @Input() listInstanceStep: any[];

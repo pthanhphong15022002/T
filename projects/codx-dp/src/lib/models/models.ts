@@ -543,6 +543,7 @@ export class TabModel {
 export class DP_Activities {
   recID: string;
   instanceID: string;
+  objectID: string;
   stepID: string;
   indexNo: number;
   taskType: string;
