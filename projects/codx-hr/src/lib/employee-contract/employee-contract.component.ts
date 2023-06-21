@@ -187,7 +187,6 @@ export class EmployeeContractComponent extends UIComponent {
 
   changeDataMf(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
-    this.runModeCheck = true;
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
     );

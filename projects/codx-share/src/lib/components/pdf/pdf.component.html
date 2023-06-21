@@ -717,7 +717,7 @@
                               type="radio"
                               [checked]="!useSignDate"
                               labelPosition="After"
-                              (valueChange)="changeUseCreatedDate()"
+                              (click)="changeDateType(false)"
                             >
                             </codx-input>
                             <codx-label
@@ -731,8 +731,8 @@
                               name="date-Type"
                               type="radio"
                               [checked]="useSignDate"
+                              (click)="changeDateType(true)"
                               labelPosition="After"
-                              (valueChange)="changeUseSignDate()"
                             >
                             </codx-input>
                             <codx-label
