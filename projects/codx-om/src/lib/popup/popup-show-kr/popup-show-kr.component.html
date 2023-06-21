@@ -38,11 +38,9 @@
             <a (click)="clickMenu(item)" [class]=" 'tab-item text-dark fw-bold d-flex align-items-center justify-content-center' + ' ' + (item.isActive ? 'tab-active' : '') ">              
               <span [class]=" item?.icon"></span>
               <span class="ms-2">
-                <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
-                  >
+                <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault">
                 </codx-label>
-              </span>
-              
+              </span>              
             </a>
           </ng-container>
         </div>

@@ -721,12 +721,7 @@ export class PdfComponent
         //     resolve(status);
         //   });
         this.codxShareService
-          .codxApprove(
-            this.transRecID,
-            mode,
-            '',
-            comment,            
-          )
+          .codxApprove(this.transRecID, mode, '', comment)
           .subscribe((res: any) => {
             if (res?.msgCodeError == null) {
               resolve(true);
@@ -819,7 +814,6 @@ export class PdfComponent
           this.curPage - 1,
         rotate: -this.rotate,
         fileRotate: -this.rotate,
-
       },
       stepNo: stepNo,
       fontStyle: type == 'text' ? konva.fontFamily() : '',
@@ -1515,14 +1509,16 @@ export class PdfComponent
 
   //change
   useSignDate: boolean = true;
-  changeUseSignDate() {
-    this.curSignDateType = this.lstSignDateType[1];
-  }
 
-  changeUseCreatedDate() {
-    this.curSignDateType = this.lstSignDateType[0];
+  changeDateType(isSignDate: boolean) {
+    this.useSignDate = isSignDate;
+    if (isSignDate) {
+      this.curSignDateType = this.lstSignDateType[1];
+    } else {
+      this.curSignDateType = this.lstSignDateType[0];
+    }
+    this.detectorRef.detectChanges();
   }
-
   // changeConfirmState(e: any) {
   //   this.checkedConfirm = e.data;
   //   this.confirmChange.emit(e.data);
@@ -1530,7 +1526,6 @@ export class PdfComponent
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
-    debugger;
     let userID = this.oApprovalTrans.approver;
     // if (userID == this.curSignerType) {
     //   userID = this.lstSigners.find((x) => x.roleType == userID)?.authorID;
@@ -1687,6 +1682,7 @@ export class PdfComponent
     // switch (type.toString()) {
     let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea?.attrs?.name);
     let textContent = '';
+    let style = 'normal';
     let curArea = this.lstAreas.find((area) => area.recID == recID);
     if (curArea == null) return;
     if (this.imgConfig.includes(type)) {
@@ -1741,7 +1737,6 @@ export class PdfComponent
         textContent = this.curSignDateType;
       }
       let transformable = this.curSelectedArea.draggable();
-      let style = 'normal';
       if (this.isBold && this.isItalic) {
         style.replace('normal', '');
         style = 'bold italic';
@@ -1753,22 +1748,24 @@ export class PdfComponent
         style = 'italic';
       }
 
-      this.curSelectedArea.attrs.fontStyle = style;
-      this.curSelectedArea.attrs.textDecoration = this.isUnd
-        ? 'line-through'
-        : '';
+      // this.curSelectedArea.attrs.fontStyle = style;
+      // this.curSelectedArea.attrs.textDecoration = this.isUnd
+      //   ? 'line-through'
+      //   : '';
       let position = this.curSelectedArea.getPosition();
       let textArea = new Konva.Text({
         text: textContent,
         fontSize: this.curAnnotFontSize,
         fontFamily: this.curAnnotFontStyle,
+        fontStyle: style,
+        textDecoration: this.isUnd ? 'underline' : '',
         x: position.x,
         y: position.y,
         draggable: transformable,
         name: JSON.stringify(tmpName),
         id: recID,
         align: 'left',
-        rotation: curArea.location.fileRotate,
+        rotation: curArea.location.fileRotate + this.rotate,
       });
       textArea.scale(this.curSelectedArea.scale());
       this.curSelectedArea.destroy();
@@ -1816,8 +1813,7 @@ export class PdfComponent
       fontStyle: this.imgConfig.includes(type) ? '' : this.curAnnotFontStyle,
       fontFormat: this.imgConfig.includes(type)
         ? ''
-        : this.curAnnotFontStyle + this.curSelectedArea.attrs?.textDecoration ??
-          '',
+        : style + ' ' + this.curSelectedArea.attrs?.textDecoration ?? '',
       fontSize: this.imgConfig.includes(type) ? '' : this.curAnnotFontSize,
       signatureType: 2,
       comment: '',

@@ -44,27 +44,8 @@
   >
   </codx-temp-full>
 </ng-template>
-<ng-template #descTmp let-data>  <div class="d-flex flex-column w-100">
-    <div class="d-flex justify-content-start mb-1 w-100">
-      <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
-      <div>
-        <span
-          class="text-gray-600 fs-7"
-          #businessLineID
-          [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
-          [innerHTML]="
-            data?.businessLineID
-              | formatvalue
-                : formModel
-                : 'businessLineID'
-                : businessLineID
-                : 'CMLeads'
-                : 'grvCMLeads'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
+<ng-template #descTmp let-data>
+  <div class="d-flex flex-column w-100">
     <div class="d-flex justify-content-start mb-1 w-100">
       <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
       <div>

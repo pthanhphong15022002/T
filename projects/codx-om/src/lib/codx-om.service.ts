@@ -691,6 +691,16 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Lấy một Data Phân bổ 
+  getDataDistribute(recID: string ,orgUnitID :string ) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetDataDistributeAsync',
+      [recID,orgUnitID]
+    );
+  }
   //Lấy một OKR theo ID
   getOKRByID(recID: string) {
     return this.api.execSv(

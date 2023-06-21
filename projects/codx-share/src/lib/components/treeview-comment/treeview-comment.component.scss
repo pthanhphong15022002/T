@@ -114,5 +114,12 @@
     padding-right: 20px;
 }
 .conmement-header{
-    height: 40px;
+    //height: 40px;
+
+    .remove-file{
+        position: absolute;
+        top: 15px;
+        right: 5px;
+        z-index: 999;
+    }
 }
