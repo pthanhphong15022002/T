@@ -451,8 +451,8 @@
 </ng-template>
 
 <ng-template #footerFormReName>
-  <button type="button" class="btn btn-primary" (click)="onSaveReason()">
-    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  <button type="button" class="btn btn-primary" (click)="onSaveReason()" [disabled]="listReasonsClick.length > 0 && listReasonsClick">
+    <codx-label fiedName="lblSave" default="Lưu" ></codx-label>
   </button>
 </ng-template>
 <ng-template #popperMemo>
