@@ -78,7 +78,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
       },
       {
         field: 'vatid',
-        headerText: this.gvs?.VATID?.headerText ?? 'Thuế suất',
+        headerText: this.gvs?.VATID?.headerText ?? 'Thuế GTGT',
         template: this.columnVatid,
         width: 100,
       },

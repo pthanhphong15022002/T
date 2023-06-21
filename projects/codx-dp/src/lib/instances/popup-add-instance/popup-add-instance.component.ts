@@ -195,7 +195,7 @@ export class PopupAddInstanceComponent implements OnInit {
       .GetStepsByInstanceIDAsync([recID, processID, status])
       .subscribe(async (res) => {
         if (res && res?.length > 0) {
-          this.listStep =JSON.parse(JSON.stringify(res));
+          this.listStep = JSON.parse(JSON.stringify(res));
         }
       });
   }
@@ -418,8 +418,10 @@ export class PopupAddInstanceComponent implements OnInit {
       for (let item of listStep) {
         if (item.fields.length > 0 && item.fields) {
           var listFieldFiled = item.fields.filter((x) => x.dataType === 'A');
-          for (let fieldFile of listFieldFiled) {
-            fieldFile.recID = Util.uid();
+          if (listFieldFiled.length > 0 && listFieldFiled) {
+            for (let fieldFile of listFieldFiled) {
+              fieldFile.recID = Util.uid();
+            }
           }
         }
       }

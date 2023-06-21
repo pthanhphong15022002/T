@@ -300,11 +300,20 @@
     </div>
     <div class="mt-5">
       <div class="text-dark text-primary fw-bold fs-6 mb-3">
-        <codx-label default="Mô tả nhu cầu"></codx-label>
+        <codx-label fiedName="Memo"                 [setRequire]="false"
+        [formModel]="formModel" ></codx-label>
       </div>
-      <span class="py-2">
-        {{ dataSelected.memo }}
-      </span>
+      <span
+      #memo
+      [innerHTML]="
+      dataSelected.memo
+          | formatvalue
+            : formModel
+            : 'memo'
+            : memo
+          | async
+      "
+    ></span>
     </div>
   </div>
 </ng-template>

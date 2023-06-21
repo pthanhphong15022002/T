@@ -1,10 +1,12 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import {
@@ -20,6 +22,8 @@ import {
   selector: 'lib-organization-masterdetail',
   templateUrl: './organization-master-detail.component.html',
   styleUrls: ['./organization-master-detail.component.css'],
+  // encapsulation: ViewEncapsulation.None,
+  //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationMasterDetailComponent {
   console = console;
@@ -105,17 +109,17 @@ export class OrganizationMasterDetailComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
-      //Use interval to delay grid
-      let ins = setInterval(() => {
-        if (this.grid) {
-          clearInterval(ins);
-          this.orgUnitID = changes.orgUnitID.currentValue;
-          this.getManager(this.orgUnitID);
-          this.grid.refresh();
-        }
-      }, 200);
-    }
+    // if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
+    //Use interval to delay grid
+    let ins = setInterval(() => {
+      if (this.grid) {
+        clearInterval(ins);
+        this.orgUnitID = changes.orgUnitID.currentValue;
+        this.getManager(this.orgUnitID);
+        this.grid.refresh();
+      }
+    }, 200);
+    // }
   }
 
   // get employee manager by orgUnitID

@@ -11,6 +11,7 @@ import {
   ButtonModel,
   CRUDService,
   CodxTreeviewComponent,
+  RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -22,8 +23,8 @@ import { PopupAddOrganizationComponent } from './popup-add-organization/popup-ad
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // encapsulation: ViewEncapsulation.None,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgorganizationComponent extends UIComponent {
   console = console;
@@ -127,10 +128,25 @@ export class OrgorganizationComponent extends UIComponent {
       }
     }
   }
+
+  //Call api delete
+  beforeDelete(opt: RequestOption, id) {
+    opt.methodName = 'DeleteEOrgChartAsync';
+    opt.className = 'OrganizationUnitsBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = id;
+    return true;
+  }
+
   // delete data
   deleteData(data: any) {
     if (data) {
-      this.view.dataService.delete([data]).subscribe();
+      this.view.dataService
+        .delete([data], true, (option: RequestOption) =>
+          this.beforeDelete(option, data.orgUnitID)
+        )
+        .subscribe();
     }
   }
   // edit data
@@ -235,7 +251,7 @@ export class OrgorganizationComponent extends UIComponent {
           );
           popup.closed.subscribe((res: any) => {
             if (res.event) {
-              this.view.dataService.add(res.event).subscribe();
+              this.view.dataService.add(res.event, 0).subscribe();
             }
           });
         }
