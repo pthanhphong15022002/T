@@ -30,6 +30,7 @@
   display: flex !important;
   justify-content: end !important;
   padding-right: 10px;
+  z-index: 9999;
 }
 
 .notify-popup .codx-form>.card-header::after {
