@@ -115,7 +115,7 @@
             <span class="">
               <input type="text" #lblRole name="lblRole" matInput autofocus [value]="data?.role" [disabled]="type == 'formDetail' ? true : false"
                 (blur)="updateRole(lblRole.value, data.recID)"
-                (keydown.enter)="updateRole(lblRole.value, data.recID)" class="form-control"
+                (keydown.enter)="updateRole(lblRole.value, data.recID)" class="form-control no-border text-gray-600"
                 placeholder="{{ placeholder }}" />
             </span>
           </div>

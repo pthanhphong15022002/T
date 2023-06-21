@@ -115,7 +115,7 @@ export class CodxListContactsComponent implements OnInit {
     if(this.objectType == "4"){
       this.cache.gridViewSetup('CMContacts', 'grvCMContacts').subscribe(res =>{
         if(res){
-          this.placeholder = res?.Role?.description;
+          this.placeholder = res?.Role?.description ?? this.placeholder;
         }
       })
     }
