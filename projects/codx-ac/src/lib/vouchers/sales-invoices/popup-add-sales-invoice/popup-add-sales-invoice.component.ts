@@ -56,6 +56,7 @@ export class PopupAddSalesInvoiceComponent
   journal: IJournal;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
+  expanded: boolean = false;
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
