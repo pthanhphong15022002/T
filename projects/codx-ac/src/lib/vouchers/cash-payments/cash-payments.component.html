@@ -54,7 +54,7 @@
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <div *ngIf="data?.objectName" class="d-flex align-items-center mb-1">
-    <img src="../assets/themes/ac/default/img/company.svg" class="w-15px h-15px me-2" />
+    <!-- <img src="../assets/themes/ac/default/img/company.svg" class="w-15px h-15px me-2" /> -->
     <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1 mt-1">{{data?.objectName}}</span>
   </div>
 </ng-template>
@@ -62,8 +62,8 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex align-items-center ac-cashID mt-n8 mb-2">
       <div [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)"
-        class="w-35px symbol h-35px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-        <i class="text-white" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
+        class="w-25px symbol h-25px d-flex justify-content-center align-items-center rounded-circle me-2">
+        <i class="text-white icon-14" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
         {{ itemSelected?.voucherNo }}
@@ -82,7 +82,7 @@
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex align-items-center">
         <!-- <span class="me-2 icon-corporate_fare text-primary icon-20"></span> -->
-        <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" />
+        <!-- <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" /> -->
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" #objectName [innerHTML]="
             itemSelected?.objectName
               | formatvalue : view.formModel : 'objectName' : objectName
@@ -105,7 +105,7 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="d-flex align-items-center">
-        <img src="../assets/themes/ac/default/img/person.svg" class="w-16px h-16px me-2" />
+        <!-- <img src="../assets/themes/ac/default/img/person.svg" class="w-16px h-16px me-2" /> -->
         <span class="fw-bold me-2">Người nhận tiền: </span>
         <span *ngIf="this.view.funcID == 'ACT0410'" #payee [innerHTML]="
             itemSelected?.payee
@@ -125,7 +125,7 @@
       </div>
     </div>
     <div class="d-flex align-items-top mb-1">
-      <img src="../assets/themes/ac/default/img/financial-book.svg" class="w-16px h-16px me-2" />
+      <!-- <img src="../assets/themes/ac/default/img/financial-book.svg" class="w-16px h-16px me-2" /> -->
       <span class="fw-bold text-nowrap me-2">{{'1'| vll : 'AC091' : 'text' | async}}: </span>
       <span #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
@@ -133,7 +133,7 @@
         *ngIf="itemSelected?.cashBookID != '' && itemSelected?.cashBookID != null">&nbsp;-&nbsp;{{cashbookName}}</span>
     </div>
     <div class="d-flex align-items-top mb-1">
-      <img src="../assets/themes/ac/default/img/payment.svg" class="w-16px h-16px me-2" />
+      <!-- <img src="../assets/themes/ac/default/img/payment.svg" class="w-16px h-16px me-2" /> -->
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
       </codx-label>
       <span #reasonID class="text-gray-600" [innerHTML]="
@@ -149,7 +149,7 @@
     </div>
     <div class="d-flex align-items-top mb-1">
       <!-- <span class="icon-brush icon-16 me-2"></span> -->
-      <img src="../assets/themes/ac/default/img/notes.svg" class="w-16px h-16px me-2" />
+      <!-- <img src="../assets/themes/ac/default/img/notes.svg" class="w-16px h-16px me-2" /> -->
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
       <span #memo class="text-gray-600" [innerHTML]="
