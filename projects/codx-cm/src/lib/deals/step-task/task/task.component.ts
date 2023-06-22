@@ -38,12 +38,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
   taskType;
-  dateFomat = 'dd/MM/yyyy';
-  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   listTaskType = [];
   grvMoreFunction: FormModel;
   isNoData = false;
-  titleAction = '';
+  titleName = '';
 
   moreDefaut = {
     share: true,
@@ -165,7 +163,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async clickMFTask(e: any, task?: any) {
-    this.titleAction = e.text;
+    this.titleName = e.text;
     switch (e.functionID) {
       case 'SYS02':
         this.deleteTask(task);
@@ -227,11 +225,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   async copyTask(task) {
     this.getTypeTask(task);
+    task['objectID'] = this.customerID;
+    task['id'] = null;
     let taskOutput = await this.openPopupTask('copy', task);
     if (taskOutput?.event) {
-      if (!taskOutput?.event?.objectID) {
-        task['objectID'] = this.customerID;
-      }
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
           taskOutput?.event,
@@ -335,6 +332,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   async openPopupTask(action, dataTask, groupTaskID = null) {
     let dataInput = {
       action,
+      titleName: this.titleName,
       taskType: this.taskType,
       step: null,
       listGroup: null,
