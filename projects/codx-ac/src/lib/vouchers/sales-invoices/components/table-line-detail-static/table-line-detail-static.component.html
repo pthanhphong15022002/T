@@ -87,19 +87,19 @@
           </td>
           <td class="text-end pe-5">
             <div class="d-flex flex-column pt-1 gap-1">
-              <div>{{ line.salesPrice }}</div>
+              <div>{{ line.salesPrice | currency : "" : "" }}</div>
               <div>&nbsp;</div>
             </div>
           </td>
           <td class="text-end pe-5">
             <div class="d-flex flex-column pt-1 gap-1">
-              <div>{{ line.netAmt }}</div>
+              <div>{{ line.netAmt | currency : "" : "" }}</div>
               <div>&nbsp;</div>
             </div>
           </td>
           <td class="text-end pe-5">
             <div class="d-flex flex-column pt-1 gap-1">
-              <div>{{ line.vatAmt }}</div>
+              <div>{{ line.vatAmt | currency : "" : "" }}</div>
               <div
                 *ngIf="
                   vats | nameById : 'VATID' : 'TaxRate' : line.vatid as taxRate;
@@ -124,10 +124,16 @@
               default="Tổng cộng"
             ></codx-label>
           </th>
-          <th class="text-end pe-5">{{ totalRow.totalQuantity }}</th>
+          <th class="text-end pe-5">
+            {{ totalRow.totalQuantity | currency : "" : "" }}
+          </th>
           <th></th>
-          <th class="text-end pe-5">{{ totalRow.totalNetAmt }}</th>
-          <th class="text-end pe-5">{{ totalRow.totalVatAmt }}</th>
+          <th class="text-end pe-5">
+            {{ totalRow.totalNetAmt | currency : "" : "" }}
+          </th>
+          <th class="text-end pe-5">
+            {{ totalRow.totalVatAmt | currency : "" : "" }}
+          </th>
         </tr>
       </tfoot>
     </ng-container>
