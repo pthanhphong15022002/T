@@ -427,9 +427,37 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             if (task.taskType != 'B') 
             res.disabled = true;
             break;
+            case 'DP28': // Cập nhật
+            if (['B', 'M'].includes(task.taskType)) {
+              this.convertMoreFunctions(event, res, task.taskType);
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP29': // Hủy
+            if (['B', 'M'].includes(task.taskType)) {
+              this.convertMoreFunctions(event, res, task.taskType);
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP30': //Khôi phục
+            if (['B', 'M'].includes(task.taskType)) {
+              this.convertMoreFunctions(event, res, task.taskType);
+            } else {
+              res.disabled = true;
+            }
+            break;
         }
       });
     }
+  }
+
+  convertMoreFunctions(listMore, more, type) {
+    let functionID = type == 'B' ? 'DP27' : 'DP24';
+    let moreFind = listMore?.find((m) => m.functionID == functionID);
+    let text = more?.text + ' ' + moreFind?.text?.toString()?.toLowerCase();
+    more.text = text;
   }
 
   async changeDataMFGroupTask(event, group) {
