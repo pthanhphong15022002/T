@@ -332,6 +332,10 @@ export class CM_Contacts {
   modifiedBy: string;
   checked: boolean;
   role: string;
+  assign: boolean = true;
+  delete: boolean = true;
+  write: boolean = true;
+  share: boolean = true;
 }
 export class BS_AddressBook {
   recID: string;
@@ -688,7 +692,7 @@ export class CM_Leads {
   mobile: string;
   status: string;
   statusCode: string;
-  currentStep: string;
+  stepID: string;
   nextStep: string;
   lastUpdated: Date;
   note: string;
@@ -713,9 +717,9 @@ export class CM_Leads {
   endDate: Date;
   startDate: Date;
   refID: string;
-  refNo:string;
-  refType:string;
-  closedBy:string;
-  closedOn:Date;
-  closed:boolean
+  refNo: string;
+  refType: string;
+  closedBy: string;
+  closedOn: Date;
+  closed: boolean;
 }

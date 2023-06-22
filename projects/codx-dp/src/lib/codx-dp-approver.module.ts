@@ -14,14 +14,11 @@ const routes: Routes = [
         component: ApprovalsComponent,
       },
     ],
-  }
+  },
 ];
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-  ]
+  imports: [CommonModule, RouterModule.forChild(routes)],
 })
-export class ApprovelModule { }
+export class ApprovelDpModule {}

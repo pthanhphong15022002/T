@@ -315,7 +315,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (!this.isAdress) this.isAdress = true;
   }
 
-
   valueChangeContact(e) {
     this.data[e.field] = e?.data;
     if (this.data.objectType && e.field == 'objectType') {
@@ -446,10 +445,22 @@ export class PopupAddCmCustomerComponent implements OnInit {
       return;
     }
 
-    if(this.data?.taxCode != null && this.data?.taxCode.trim() != ''){
-      var check = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','IsExitCoincideTaxCodeAsync',[this.data?.recID, this.data?.taxCode, this.dialog?.formModel?.entityName]));
-      if(check){
-        this.notiService.notifyCode('Trùng mã số thuế');
+    if (this.data?.taxCode != null && this.data?.taxCode.trim() != '') {
+      var check = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'CustomersBusiness',
+          'IsExitCoincideTaxCodeAsync',
+          [
+            this.data?.recID,
+            this.data?.taxCode,
+            this.dialog?.formModel?.entityName,
+          ]
+        )
+      );
+      if (check) {
+        this.notiService.notifyCode('CM016');
         return;
       }
     }
@@ -496,8 +507,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
             var config = new AlertConfirmInputConfig();
             config.type = 'YesNo';
             this.notiService.alertCode('CM001').subscribe((x) => {
-              if (x.event.status == 'Y') {
-                this.hanleSave();
+              if (x?.event && x.event?.status) {
+                if (x.event.status == 'Y') {
+                  this.hanleSave();
+                }
               }
             });
           } else {
@@ -593,8 +606,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.codxListAddress.loadListAdress(this.listAddress);
     }
   }
-
-
 
   checkEmailOrPhone(field, type) {
     if (type == 'E') {

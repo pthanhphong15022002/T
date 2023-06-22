@@ -66,6 +66,8 @@ export class EmployeePolicygenernalComponent extends UIComponent {
         },
       },
     ];
+    console.log('view ne', this.view);
+    
   }
 
   ngAfterViewChecked() {
@@ -94,9 +96,19 @@ export class EmployeePolicygenernalComponent extends UIComponent {
   clickMF(event, data){
     switch(event.functionID){
       case 'SYS03': //add
+      this.HandlePolicyGeneral(event.text, this.ActionEdit, data);
         break;
 
       case 'SYS02': //delete
+      this.view.dataService.delete([data]).subscribe();
+
+      // this.DeletePolicyGeneral(data).subscribe((res) => {
+      //   debugger
+      //   if(res == true){
+      //     this.notify.notifyCode('SYS008');
+      //   }
+      // });
+
         break;
 
       case 'SYS04': //copy
@@ -116,17 +128,27 @@ export class EmployeePolicygenernalComponent extends UIComponent {
     });
   }
 
+  DeletePolicyGeneral(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyGeneralBusiness',
+      'DeletePolicyGeneralAsync',
+      data.policyID
+    );
+  }
+
   HandlePolicyGeneral(actionHeaderText, actionType: string, data: any){
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '850px';
+    option.Width = '550px';
     let dialg = this.callfc.openSide(
       PopupPolicygeneralComponent,
       {
         actionType: actionType,
         dataObj: data,
-        headerText: actionHeaderText,
+        headerText: actionHeaderText + " " + this.view.function.description,
         funcID: this.view.funcID,
       },
       option

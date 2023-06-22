@@ -29,6 +29,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./view-detail-contracts.component.css'],
 })
 export class ViewDetailContractsComponent implements OnInit {
+  console = console;
   //Using render file
   services: string = 'DM';
   assemblyName: string = 'ERM.Business.DM';
@@ -124,16 +125,6 @@ export class ViewDetailContractsComponent implements OnInit {
     this.lstFile = [];
     this.getFileDataAsync(this.itemDetail?.recID);
   }
-
-  // ngAfterViewInit(): void {
-  //   this.tabControl = [
-  //     { name: 'History', textDefault: 'Lịch sử', isActive: true },
-  //     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-  //     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-  //     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
-  //   ];
-
-  // }
 
   changeDataMF(e: any, data: any) {
     this.hrService.handleShowHideMF(e, data, this.formModel);

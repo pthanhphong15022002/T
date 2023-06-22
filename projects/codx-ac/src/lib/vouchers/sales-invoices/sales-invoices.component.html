@@ -40,28 +40,22 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <div class="fs-6 fw-bold mt-1">
+  <div class="fw-bold mt-1">
     {{ data.objectName }}
   </div>
 </ng-template>
 
 <ng-template #desc2Tmp let-data>
-  <span
-    class="text-gray-500"
-    style="
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    "
-    >{{ data?.memo }}</span
-  >
+  <span class="text-gray-500 mt-1 line-clamp line-clamp-2">{{
+    data?.memo
+  }}</span>
 </ng-template>
 
 <ng-template #titleTmp let-data>
-  <span class="fw-bold">{{ data.voucherNo }}</span>
-  <span class="fw-bold">{{ data.totalAmt | currency : "VND" : "code" }}</span>
+  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
+  <span class="fw-bold fs-6">{{
+    data.totalAmt | currency : data.currencyID : "code"
+  }}</span>
 </ng-template>
 
 <ng-template #siderFooter let-data>
@@ -110,26 +104,36 @@
 <ng-template #header>
   <div class="d-flex align-items-center ac-cashID mt-n8">
     <div
-      class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3"
+      class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-2"
     >
-      <i class="icon-i-file-earmark-text text-white icon-16"></i>
+      <i class="icon-i-file-earmark-text text-white icon-14"></i>
     </div>
     <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
       {{ selectedData?.voucherNo }}
     </span>
+
+    <div class="d-flex mt-1 ms-5">
+      <codx-label
+        fiedName="lblVoucherDate"
+        [formModel]="view.formModel"
+        default="Ngày chứng từ"
+        class="fw-bold label-colon"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          selectedData?.voucherDate
+            | formatvalue : view.formModel : 'voucherDate'
+            | async
+        "
+      ></span>
+    </div>
   </div>
 
-  <div class="d-flex align-items-center justify-content-between mt-3 mb-2">
-    <span
-      class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase"
-      [innerHTML]="
-        selectedData?.objectID
-          | formatvalue : view.formModel : 'objectID'
-          | async
-      "
-    >
-    </span>
-
+  <div class="d-flex align-items-center justify-content-between mt-2 mb-1">
+    <span class="fw-bold line-clamp line-clamp-1 fs-4">{{
+      selectedData?.objectName
+    }}</span>
     <codx-vll
       [formModel]="view.formModel"
       field="Status"
@@ -145,33 +149,46 @@
 <ng-template #body>
   <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-top me-5 mb-1">
-        <span class="icon-customize icon-16 me-2"></span>
+      <div class="d-flex align-items-top me-5 mb-5px">
         <codx-label
-          fiedName="voucherDate"
+          fiedName="invoiceNo"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
         ></codx-label>
         <span
           class="text-gray-600"
           [innerHTML]="
-            selectedData?.voucherDate
-              | formatvalue : view.formModel : 'voucherDate'
+            selectedData?.invoiceNo
+              | formatvalue : view.formModel : 'invoiceNo'
               | async
           "
         ></span>
       </div>
-      <div class="d-flex align-items-top me-5 mb-1">
-        <span class="icon-i-credit-card icon-16 me-2"></span>
+      <div class="d-flex align-items-top me-5 mb-5px">
         <codx-label
-          fiedName="pmtMethodID"
+          fiedName="invoiceDate"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
         ></codx-label>
         <span
           [innerHTML]="
-            selectedData.pmtMethodID
-              | formatvalue : view.formModel : 'pmtMethodID'
+            selectedData.invoiceDate
+              | formatvalue : view.formModel : 'invoiceDate'
+              | async
+          "
+          class="text-gray-600"
+        ></span>
+      </div>
+      <div class="d-flex align-items-top me-5 mb-5px">
+        <codx-label
+          fiedName="invoiceDueDate"
+          [formModel]="view.formModel"
+          class="fw-bold label-colon"
+        ></codx-label>
+        <span
+          [innerHTML]="
+            selectedData.invoiceDueDate
+              | formatvalue : view.formModel : 'invoiceDueDate'
               | async
           "
           class="text-gray-600"
@@ -181,66 +198,28 @@
 
     <span class="badge badge-pill badge-primary me-3">
       <span class="fw-bold fs-6">{{
-        selectedData.totalAmt | currency : "VND" : "code"
+        selectedData.totalAmt | currency : selectedData?.currencyID : "code"
       }}</span>
     </span>
   </div>
 
   <div class="d-flex flex-wrap">
-    <div class="d-flex align-items-top me-5 mb-1">
-      <span class="icon-edit-one icon-16 me-2"></span>
+    <div class="d-flex align-items-top me-5 mb-5px">
       <codx-label
-        fiedName="pmtTermID"
+        fiedName="pmtMethodID"
         [formModel]="view.formModel"
         class="fw-bold label-colon"
       ></codx-label>
       <span
         class="text-gray-600"
         [innerHTML]="
-          selectedData?.pmtTermID
-            | formatvalue : view.formModel : 'pmtTermID'
+          selectedData?.pmtMethodID
+            | formatvalue : view.formModel : 'pmtMethodID'
             | async
         "
       ></span>
     </div>
-    <div class="d-flex align-items-top me-5 mb-1">
-      <span class="icon-customize icon-16 me-2"></span>
-      <codx-label
-        fiedName="invoiceDueDate"
-        [formModel]="view.formModel"
-        class="fw-bold label-colon"
-      ></codx-label>
-      <span
-        [innerHTML]="
-          selectedData.invoiceDueDate
-            | formatvalue : view.formModel : 'invoiceDueDate'
-            | async
-        "
-        class="text-gray-600"
-      ></span>
-    </div>
-  </div>
-
-  <div class="d-flex flex-wrap">
-    <div class="d-flex align-items-top me-5 mb-1">
-      <span class="icon-assignment icon-16 me-2"></span>
-      <codx-label
-        fiedName="contractNo"
-        [formModel]="view.formModel"
-        class="fw-bold label-colon"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          selectedData?.contractNo
-            | formatvalue : view.formModel : 'contractNo'
-            | async
-        "
-      ></span>
-    </div>
-
-    <div class="d-flex align-items-top me-5 mb-1">
-      <span class="icon-i-person-fill icon-16 me-2"></span>
+    <div class="d-flex align-items-top me-5 mb-5px">
       <codx-label
         fiedName="salespersonID"
         [formModel]="view.formModel"
@@ -248,25 +227,8 @@
       ></codx-label>
       <span
         [innerHTML]="
-          selectedData?.salespersonID
+          selectedData.salespersonID
             | formatvalue : view.formModel : 'salespersonID'
-            | async
-        "
-        class="text-gray-600"
-      ></span>
-    </div>
-
-    <div class="d-flex align-items-top me-5 mb-1">
-      <span class="icon-i-box icon-16 me-2"></span>
-      <codx-label
-        fiedName="warehouse"
-        [formModel]="view.formModel"
-        class="fw-bold label-colon"
-      ></codx-label>
-      <span
-        [innerHTML]="
-          selectedData.warehouse
-            | formatvalue : view.formModel : 'warehouse'
             | async
         "
         class="text-gray-600"
@@ -274,8 +236,7 @@
     </div>
   </div>
 
-  <div class="me-5 mb-1">
-    <span class="icon-brush icon-16 me-2"></span>
+  <div class="me-5 mb-5px line-clamp line-clamp-1">
     <codx-label
       fiedName="memo"
       [formModel]="view.formModel"
@@ -304,11 +265,10 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <lib-table-line-detail
-            [transID]="selectedData.recID"
-            [gvs]="salesInvoiceService.gvsSalesInvoicesLines"
-            [height]="300"
-          ></lib-table-line-detail>
+          <lib-table-line-detail-static
+            [salesInvoicesLines]="salesInvoicesLines"
+            [loading]="loading"
+          ></lib-table-line-detail-static>
         </ng-template>
       </e-tabitem>
     </e-tabitems>

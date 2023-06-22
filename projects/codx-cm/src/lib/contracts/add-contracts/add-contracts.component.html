@@ -316,6 +316,7 @@
     [quotationLinesEdit]="quotationLinesEdit"
     [quotationLinesDeleted]="quotationLinesDeleted"
     [actionParent]="action"
+    [isSetMoreFunc]="true"
     (eventQuotationLines)="eventQuotationLines($event)"
   ></codx-quotations-lines>
 </ng-template>
@@ -436,8 +437,6 @@
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delPhone"
-                type="number"
-                [min]="0"
                 (valueChange)="valueChangeText($event)"
                 [crrValue]="contracts?.delPhone"
               >
@@ -1191,7 +1190,7 @@
                 [formModel]="dialog.formModel"
                 field="pmtStatus"
                 (valueChange)="valueChangeCombobox($event)"
-                [crrValue]="contracts?.paymentStatus"
+                [crrValue]="contracts?.pmtStatus"
               >
               </codx-input>
             </div>

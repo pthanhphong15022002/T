@@ -22,9 +22,6 @@
 </ng-template>
 <ng-template #titleTmp let-data>
   <div class="d-flex align-items-center">
-    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
-      <i class="icon-i-file-earmark-text text-white icon-16"></i>
-    </div>
     <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
       data?.voucherNo
       }}</span>
@@ -34,19 +31,19 @@
       '+data?.currencyID }}</span>
   </div>
 </ng-template>
-<ng-template #desc2Tmp let-data>
+<ng-template #descTmp let-data>
   <span #objectID [innerHTML]="
             data?.objectID
               | formatvalue : view.formModel : 'objectID' : objectID
               | async
-          " class="text-gray-500 line-clamp line-clamp-1"></span>
+          " class="line-clamp line-clamp-1 fs-7 mt-1"></span>
 </ng-template>
-<ng-template #descTmp let-data>
-  <span [ngbTooltip]="data?.memo" class="line-clamp line-clamp-2 fs-6 mt-1">{{ data?.memo }}</span>
+<ng-template #desc2Tmp let-data>
+  <span [ngbTooltip]="data?.memo" class="line-clamp line-clamp-2 fs-7 mt-1">{{ data?.memo }}</span>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-3">
+    <div class="d-flex align-items-center ac-cashID mt-n8 mb-2">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
         <i class="icon-i-file-earmark-text text-white icon-16"></i>
       </div>

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, inject } from '@angular/core';
-import { CallFuncService, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
+import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
 
 @Component({
   selector: 'lib-popup-policygeneral',
@@ -11,12 +12,24 @@ export class PopupPolicygeneralComponent
   extends UIComponent
   implements OnInit
 {
+  idField = 'PolicyID';
   ActionAdd = 'add'
   ActionEdit = 'edit'
   ActionCopy = 'copy'
+  dialog: DialogRef;
+  grvSetup
+  headerText: '';
+  actionType;
   formModel: any;
+  benefitFormModel: any;
+  isHidden = true;
+  policyGeneralObj: any;
   formGroup: any;
   funcID
+  benefitFuncID = 'HRTEM0403'
+  isAfterRender = false;
+  fieldHeaderTexts: object;
+  lstBenefit: any = [];
   
   constructor(
     private injector: Injector,
@@ -24,14 +37,31 @@ export class PopupPolicygeneralComponent
     private notify: NotificationsService,
     private df: ChangeDetectorRef,
     private hrSevice: CodxHrService,
+    public override api: ApiHttpService,
     private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ){
     super(injector);
+    this.dialog = dialog;
+    this.headerText = data?.data?.headerText;
+    this.funcID = data?.data?.funcID;
+    this.policyGeneralObj = data?.data?.dataObj;
+    console.log('data input', this.policyGeneralObj);
+    this.actionType = data?.data?.actionType;
   }
 
   onInit(): void {
+    if(!this.benefitFormModel){
+      this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
+        if(formModel){
+          console.log('benefit form model', formModel);
+          
+          this.benefitFormModel = formModel;
+        }
+      })
+    }
+
     if(!this.formModel){
       this.hrSevice.getFormModel(this.funcID).then((formModel) => {
         if(formModel){
@@ -60,11 +90,133 @@ export class PopupPolicygeneralComponent
   }
 
   initForm(){
+    this.hrSevice.getHeaderText(this.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    })
 
+    this.cache
+    .gridViewSetup(
+      this.formModel.formName,
+      this.formModel.gridViewName
+    )
+    .subscribe((res) => {
+      this.grvSetup = res;
+      console.log('grv setup ne', this.grvSetup);
+    });
+
+    if (this.actionType == this.ActionAdd) {
+      this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.policyGeneralObj = res?.data;
+            if (this.policyGeneralObj?.activeOn == '0001-01-01T00:00:00') {
+              this.policyGeneralObj.activeOn = null;
+            }
+            this.formModel.currentData = this.policyGeneralObj;
+            this.formGroup.patchValue(this.policyGeneralObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === this.ActionEdit || this.actionType === this.ActionCopy) {
+        if (this.policyGeneralObj?.activeOn == '0001-01-01T00:00:00') {
+          this.policyGeneralObj.activeOn = null;
+        }
+        this.formGroup.patchValue(this.policyGeneralObj);
+        this.formModel.currentData = this.policyGeneralObj;
+        if(this.policyGeneralObj.includeBenefits){
+          this.lstBenefit = this.policyGeneralObj.includeBenefits.split(';');
+        }
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    }
   }
 
   onSaveForm(){
-    
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if(this.policyGeneralObj.expiredOn && this.policyGeneralObj.activeOn){
+      if (this.policyGeneralObj.expiredOn < this.policyGeneralObj.activeOn) {
+        this.hrSevice.notifyInvalidFromTo(
+          'expiredOn',
+          'activeOn',
+          this.formModel
+          )
+          return;
+        }
+    }
+
+    if (this.actionType === 'add' || this.actionType === 'copy') {
+      this.AddPolicyGeneral().subscribe((p) => {
+        if (p != null) {
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(p);
+        }
+        //  else this.notify.notifyCode('SYS023');
+      });
+    } else {
+      this.UpdatePolicyGeneral()
+        .subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS007');
+            this.dialog && this.dialog.close(p);
+          } 
+          // else this.notify.notifyCode('SYS021');
+        });
+    }
   }
 
+  ValChangeHasBenefit(event){
+    let hasBenefit = event.data;
+    if(hasBenefit == false){
+      this.lstBenefit = null;
+      this.policyGeneralObj.includeBenefits = null;
+    }
+  }
+
+  AddPolicyGeneral(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyGeneralBusiness',
+      'AddPolicyGeneralAsync',
+      this.formModel.currentData
+    );
+  }
+
+  UpdatePolicyGeneral(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyGeneralBusiness',
+      'UpdatePolicyGeneralAsync',
+      this.formModel.currentData
+    );
+  }
+
+  onClickHideComboboxPopup(e): void {
+    this.policyGeneralObj.includeBenefits = e.id;
+    this.isHidden = true;
+    // for(let i = 0; i < e.dataSelected.length; i++){
+    //   this.lstBenefit.push(e.dataSelected[i].BenefitName);
+    // }
+    this.lstBenefit = this.policyGeneralObj.includeBenefits.split(';')
+    this.detectorRef.detectChanges();
+  }
+
+  onClickOpenCbxBenefit(){
+    if(this.policyGeneralObj.hasIncludeBenefits){
+      this.isHidden = false;
+    }
+  }
 }

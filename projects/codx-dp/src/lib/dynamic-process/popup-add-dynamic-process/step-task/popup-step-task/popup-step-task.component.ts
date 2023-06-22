@@ -89,7 +89,7 @@ export class PopupJobComponent implements OnInit {
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.typeTask;
     this.step = dt?.data?.step;
-    this.listGroupTask = dt?.data?.listGroup;
+    this.listGroupTask = dt?.data?.listGroup || [];
 
     this.stepID = this.step?.recID;
     this.stepName = this.step?.stepName;

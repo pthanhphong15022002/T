@@ -65,12 +65,10 @@
                 </codx-img>
               </div>
               <div class="d-flex flex-column">
-                <div class="fw-bold text-dark fs-3 mb-1">
+                <div class="text-gray-700 fs-6 mb-1">
                   {{ dataSelected.customerName }}
                 </div>
-                <div class="d-flex align-items-center mb-1">
-                  <span
-                    class="text-gray-600 line-clamp-menu"
+                <div class="fw-bold text-dark fs-4"
                     [ngbTooltip]="tooltipDealName"
                     #dealName
                     [innerHTML]="
@@ -78,8 +76,7 @@
                         | formatvalue : formModel : 'dealName' : dealName
                         | async
                     "
-                  ></span>
-                </div>
+                  ></div>
               </div>
             </div>
           </div>
@@ -123,42 +120,19 @@
                 </div>
               </div>
               <div class="d-flex justify-content-end">
-                <div
-                  *ngIf="dataSelected.status != '1'"
-                  [ngStyle]="{
-                    'background-color':
-                      dataSelected.status == '3' || dataSelected.status == '4'
-                        ? colorReasonSuccess?.color
-                        : dataSelected.status == '5' ||
-                          dataSelected.status == '6'
-                        ? colorReasonFail?.color
-                        : dataSelected?.steps['backgroundColor']
-                  }"
-                  class="me-2 badge badge-sm d-flex align-items-center"
-                >
-                  <span
-                    [ngClass]="dataSelected?.steps['icon']"
-                    [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                    class="me-1"
-                  ></span>
-                  <span
-                    class="menu-title fw-bold line-clamp line-clamp-2"
-                    [ngbTooltip]="dataSelected?.currentStepName"
-                    [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                    >{{ dataSelected?.currentStepName }}</span
-                  >
-                </div>
-                <div *ngIf="dataSelected.status == '1'">
-                  <codx-vll
-                    [name]="'DP028'"
-                    [field]="'Status'"
-                    [value]="dataSelected?.status"
-                    [showText]="true"
-                    [showBgColor]="true"
-                    class="badge badge-light badge-sm"
-                  >
-                  </codx-vll>
-                </div>
+                <span
+                  class="text-gray-600 line-clamp-menu"
+                  #expectedClosed
+                  [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
+                  [innerHTML]="
+                    dataSelected?.expectedClosed
+                      | formatvalue
+                        : formModel
+                        : 'expectedClosed'
+                        : expectedClosed
+                      | async
+                  "
+                ></span>
               </div>
             </div>
           </div>
@@ -168,7 +142,7 @@
           <div class="w-100 d-flex flex-column">
             <div class="d-flex align-items-top justify-content-between">
               <div class="w-100 d-flex flex-column">
-                <div class="d-flex align-items-top mb-2">
+                <div class="d-flex align-items-top mb-1">
                   <codx-label
                     fiedName="Industries"
                     class="text-dark fw-bold me-2 label-colon"
@@ -189,7 +163,7 @@
                     "
                   ></span>
                 </div>
-                <div class="d-flex align-items-top justify-content-start mb-2">
+                <div class="d-flex align-items-top justify-content-start mb-1">
                   <codx-label
                     default="Nhu cầu:"
                     class="text-dark fw-bold me-2 text-nowrap"
@@ -227,12 +201,21 @@
                       ></codx-label>
                     </div>
                     <div class="d-flex align-items-start">
-                      <div class="me-3">
+                      <div class="me-3" *ngIf="contactPerson">
                         <codx-img
                           [objectId]="contactPerson?.recID"
                           [objectName]="contactPerson?.contactName"
                           [imgOn]="contactPerson?.modifiedOn"
                           [objectType]="'CM_Contacts'"
+                          [width]="60"
+                        >
+                        </codx-img>
+                      </div>
+                      <div class="me-3" *ngIf="!contactPerson">
+                        <codx-img
+                          [objectId]="null"
+                          [objectName]="null"
+                          [imgOn]="null"
                           [width]="60"
                         >
                         </codx-img>
@@ -291,21 +274,48 @@
                   <div
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
-                    <span
-                      class="text-gray-600 line-clamp-menu"
-                      #expectedClosed
-                      [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
-                      [innerHTML]="
-                        dataSelected?.expectedClosed
-                          | formatvalue
-                            : formModel
-                            : 'expectedClosed'
-                            : expectedClosed
-                          | async
-                      "
-                    ></span>
+                    <div
+                      *ngIf="dataSelected.status != '1'"
+                      [ngStyle]="{
+                        'background-color':
+                          dataSelected.status == '3' ||
+                          dataSelected.status == '4'
+                            ? colorReasonSuccess?.color
+                            : dataSelected.status == '5' ||
+                              dataSelected.status == '6'
+                            ? colorReasonFail?.color
+                            : dataSelected?.steps['backgroundColor']
+                      }"
+                      class="me-2 badge badge-sm d-flex align-items-center"
+                    >
+                      <span
+                        [ngClass]="dataSelected?.steps['icon']"
+                        [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                        class="me-1"
+                      ></span>
+                      <span
+                        class="menu-title fw-bold line-clamp line-clamp-2"
+                        [ngbTooltip]="dataSelected?.currentStepName"
+                        [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
+                        >{{ dataSelected?.currentStepName }}</span
+                      >
+                    </div>
+                    <div *ngIf="dataSelected.status == '1'">
+                      <codx-vll
+                        [name]="'DP028'"
+                        [field]="'Status'"
+                        [value]="dataSelected?.status"
+                        [showText]="true"
+                        [showBgColor]="true"
+                        class="badge badge-light badge-sm"
+                      >
+                      </codx-vll>
+                    </div>
                   </div>
-                  <div class="d-flex flex-column align-items-top mt-3">
+                  <div
+                    class="d-flex flex-column align-items-top"
+                    style="margin-top: 2.25rem !important"
+                  >
                     <div class="d-flex justify-content-end">
                       <codx-label
                         default="Bán hàng/Tư vấn"

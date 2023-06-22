@@ -353,6 +353,13 @@
               >
               </ng-container>
             </ng-container>
+            <ng-container *ngIf="name == 'task'">
+              <ng-container
+                [ngTemplateOutlet]="taskTemplate"
+                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+              >
+              </ng-container>
+            </ng-container>
           </div>
         </ng-template>
       </ng-template>
@@ -415,4 +422,10 @@
     [listContract]="listContract"
     [type]="'customer'"
   ></list-contracts>
+</ng-template>
+<ng-template #taskTemplate let-data>
+  <step-task
+    [typeTask]="2"
+    [customerID]="dataSelected?.recID"
+  ></step-task>
 </ng-template>

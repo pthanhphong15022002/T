@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  HostListener,
   Injector,
   Optional,
   ViewChild,
@@ -47,14 +46,17 @@ export class PopupAddSalesInvoiceComponent
   lines: ISalesInvoicesLine[] = [];
   masterService: CRUDService;
   detailService: CRUDService;
+  gvsSalesInvoices: any;
+  gvsSalesInvoicesLines: any;
+  fmSalesInvoicesLines: FormModel;
+
   formTitle: string;
   isEdit: boolean = false;
   voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
-  gvsSalesInvoices: any;
-  gvsSalesInvoicesLines: any;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
+  expanded: boolean = false;
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -67,7 +69,6 @@ export class PopupAddSalesInvoiceComponent
     allowDeleting: true,
     mode: 'Normal',
   };
-  fmSalesInvoicesLines: FormModel;
   isReturnInvoice: boolean;
   gridHeight: number;
 
@@ -193,6 +194,10 @@ export class PopupAddSalesInvoiceComponent
   onInputChange(e): void {
     console.log('onInputChange', e);
 
+    if (!e.data) {
+      return;
+    }
+
     const postFields: string[] = [
       'objectID',
       'currencyID',
@@ -206,15 +211,18 @@ export class PopupAddSalesInvoiceComponent
           e.field,
           this.master,
         ])
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           console.log(res);
 
+          this.master = Object.assign(this.master, res);
           this.form.formGroup.patchValue(res);
         });
     }
   }
 
   onCreate(e, isUsingColumnTemplate): void {
+    console.log(this.grid);
+
     setTimeout(() => {
       const bodyHeight: number =
         document.querySelector<HTMLElement>('.card-body')?.offsetHeight;
@@ -228,7 +236,7 @@ export class PopupAddSalesInvoiceComponent
         document.querySelector<HTMLElement>('.e-gridheader')?.offsetHeight;
       const sumRowHeight: number =
         document.querySelector<HTMLElement>('.e-summaryrow')?.offsetHeight ?? 0;
-      const wierdHeight: number = isUsingColumnTemplate ? 54 : 27;
+      const weirdHeight: number = isUsingColumnTemplate ? 54 : 27;
 
       this.gridHeight =
         bodyHeight -
@@ -237,12 +245,72 @@ export class PopupAddSalesInvoiceComponent
         tabHeight -
         thHeight -
         sumRowHeight -
-        wierdHeight;
+        weirdHeight;
     }, 500);
+
+    // cache problem ❌
+    let toggleFields: string[] = [
+      ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
+      ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
+    ];
+    for (const c of this.grid.columnsGrid) {
+      if (toggleFields.includes(c.fieldName)) {
+        c.isVisible = true;
+        this.grid.visibleColumns.push(c);
+      }
+    }
+    this.grid.hideColumns(this.hiddenFields);
+
+    for (const v of this.grid.visibleColumns) {
+      if (v.fieldName === 'DIM1') {
+        if (['1', '2'].includes(this.journal.diM1Control)) {
+          v.predicate = '@0.Contains(DepartmentID)';
+          v.dataValue = `[${this.journal.diM1}]`;
+        }
+      }
+
+      if (v.fieldName === 'DIM2') {
+        if (['1', '2'].includes(this.journal.diM2Control)) {
+          v.predicate = '@0.Contains(CostCenterID)';
+          v.dataValue = `[${this.journal.diM2}]`;
+        }
+      }
+
+      if (v.fieldName === 'DIM3') {
+        if (['1', '2'].includes(this.journal.diM3Control)) {
+          v.predicate = '@0.Contains(CostItemID)';
+          v.dataValue = `[${this.journal.diM3}]`;
+        }
+      }
+    }
   }
 
   onCellChange(e): void {
     console.log('onCellChange', e);
+
+    const postFields: string[] = [
+      'itemID',
+      'costPrice',
+      'quantity',
+      'netAmt',
+      'vatid',
+      'vatAmt',
+      'lineType',
+      'umid',
+      'idiM1',
+    ];
+    if (postFields.includes(e.field)) {
+      this.api
+        .exec('SM', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
+          e.field,
+          e.data,
+        ])
+        .subscribe((line) => {
+          console.log(line);
+
+          this.lines[e.idx] = Object.assign(this.lines[e.idx], line);
+        });
+    }
   }
 
   onClickMF(e, data) {

@@ -369,7 +369,7 @@
               [customField]="item"
               [checkValid]="false"
               [objectId]="item.recID"
-              [objectType]="'DP_Instances'"
+              [objectType]="'DP_Instances_Steps_Fields'"
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
             >
@@ -422,7 +422,7 @@
 </ng-template>
 
 <ng-template #contact>
-  <ng-container>
+  <!-- <ng-container>
     <div class="d-flex flex-column mb-1">
       <div class="title text-primary fs-4 fw-bold">
         <codx-label
@@ -457,25 +457,27 @@
       [type]="'formAdd'"
       [lstContactRef]="lstContactDeal"
     ></codx-list-contacts>
-  </ng-container>
+  </ng-container> -->
   <ng-container>
-    <div class="title text-primary fs-4 fw-bold">
+    <!-- <div class="title text-primary fs-4 fw-bold">
       <codx-label
         [formModel]="formModel"
         name="lblListContactDeal"
         default="Danh sách người liên hệ sử dụng cho cơ hội"
       ></codx-label>
-    </div>
+    </div> -->
     <codx-list-contacts
       #loadContactDeal
       [selectAll]="false"
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"
-      (contactEvent)="contactEventDeal($event)"
+      [customerID]="customerID"
+      (lstContactEmit)="lstContactEmit($event)"
+      (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
       [objectType]="'4'"
       [objectName]="deal?.dealName"
-      [hidenMF]="true"
+      [hidenMF]="false"
       [type]="'formAdd'"
     ></codx-list-contacts>
   </ng-container>

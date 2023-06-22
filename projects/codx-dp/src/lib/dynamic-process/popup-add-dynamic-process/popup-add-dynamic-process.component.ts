@@ -306,6 +306,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listStepApproverDelete = [];
   viewApproverStep: any;
   languages: any;
+  toolTipSetting: any = '';
+  poper: any;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -347,6 +350,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValueYesNo();
     this.getValueDayHour();
     if (this.action === 'copy') {
+      this.process.category = '1';
       this.listPermissions = [];
       this.listPermissions = JSON.parse(
         JSON.stringify(this.process.permissions)
@@ -393,6 +397,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.getAvatar(this.process);
       this.instanceNoSetting = this.process.instanceNoSetting;
     } else if (this.action == 'add') {
+      if(this.lstGroup != null && this.lstGroup.length > 0){
+        this.process.groupID = this.lstGroup[0].groupID;
+      }
       this.process.autoName = this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
       this.setDefaultOwner();
       // this.step.owner = this.user.userID;
@@ -406,10 +413,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
     this.cache.functionList('DPT03').subscribe((fun) => {
-      if (fun) this.titleDefaultCF = fun.customName || fun.description;
+      if (fun) {
+        this.titleDefaultCF = fun.customName || fun.description;
+      }
     });
 
-    this.process.category = this.systemProcess ? '0' : '1';
+
 
     this.getGrvStep();
     this.getGrvStepReason();
@@ -2279,8 +2288,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   popoverSelectView(p, data) {
+    if (this.poper && this.poper.isOpen()) this.poper.close();
     this.stepOfFields = data;
     p.open();
+    this.poper = p;
   }
   selectView(showColumnControl) {
     this.stepList.forEach((x) => {
@@ -3641,6 +3652,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetupStep = res;
+          this.toolTipSetting =
+            this.gridViewSetupStep['ShowColumnControl'].headerText ??
+            'Setting Show Column';
         }
       });
   }
@@ -4227,4 +4241,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //  });
   // }
+
+  clickPopover(e, p, item) {
+    this.popoverSelectView(p, item);
+  }
 }

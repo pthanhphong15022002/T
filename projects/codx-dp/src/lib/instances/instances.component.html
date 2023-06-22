@@ -85,6 +85,17 @@
           class="badge badge-light badge-sm line-clamp-vll"
         >
         </codx-vll>
+        <ng-container *ngIf="data.approveStatus != 1">
+          <codx-vll
+            [name]="vllApprover"
+            [field]="'ApproveStatus'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm line-clamp-vll"
+          >
+          </codx-vll>
+        </ng-container>
       </div>
       <div class="d-flex justify-content-end">
         <div
@@ -182,7 +193,6 @@
 <ng-template #detailPopupClick>
   <codx-instance-detail
     #detailViewPopup
-    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelect]="dataSelected"
     (moreFunctionEvent)="clickMoreFunc($event)"
@@ -201,6 +211,7 @@
     [colorSuccesss]="colorReasonSuccess?.color"
     [colorFail]="colorReasonFail?.color"
     [reasonStepsObject]="reasonStepsObject"
+    [vllApprover]="vllApprover"
   >
   </codx-instance-detail>
 </ng-template>
@@ -311,6 +322,22 @@
         </ng-container>
       </div>
       <div
+        class="d-flex align-items-center text-gray-600 ms-2"
+        *ngIf="data.approveStatus != 1"
+      >
+        <codx-vll
+          [name]="vllApprover"
+          [field]="'ApproveStatus'"
+          [value]="data.approveStatus"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm line-clamp-vll"
+        >
+        </codx-vll>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div
         class="d-flex align-items-center text-gray-600"
         #pEdDT="ngbPopover"
         [ngbPopover]="popperEndDate"
@@ -335,27 +362,27 @@
           "
         ></span>
       </div>
-    </div>
-    <div class="d-flex justify-content-center">
-      <div *ngIf="data.ownerStepInstances">
-        <codx-imgs
-          [isToolTip]="true"
-          [width]="25"
-          [objectId]="data.ownerStepInstances"
-          ojectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
-      </div>
-      <div *ngIf="data.ownerStepInstances == null">
-        <codx-imgs
-          [isToolTip]="true"
-          [width]="25"
-          [objectId]="data?.owner"
-          ojectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
+      <div class="ms-1">
+        <div *ngIf="data.ownerStepInstances">
+          <codx-imgs
+            [isToolTip]="true"
+            [width]="25"
+            [objectId]="data.ownerStepInstances"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
+        <div *ngIf="data.ownerStepInstances == null">
+          <codx-imgs
+            [isToolTip]="true"
+            [width]="25"
+            [objectId]="data?.owner"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
       </div>
     </div>
   </div>
@@ -365,7 +392,6 @@
 <ng-template #templateDetail>
   <codx-instance-detail
     #detailViewInstance
-    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelect]="dataSelected"
     (moreFunctionEvent)="clickMoreFunc($event)"
