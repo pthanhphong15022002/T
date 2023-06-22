@@ -150,7 +150,6 @@ export class CodxViewFilesComponent implements OnInit {
 
   // click filed
   clickViewDetail(file: any) {
-    debugger
     this.selectFile.emit(file);
   }
   
