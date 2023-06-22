@@ -106,14 +106,13 @@
     <div
       class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-2"
     >
-      <i class="icon-i-file-earmark-text text-white icon-16"></i>
+      <i class="icon-i-file-earmark-text text-white icon-14"></i>
     </div>
     <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
       {{ selectedData?.voucherNo }}
     </span>
 
     <div class="d-flex mt-1 ms-5">
-      <span class="icon-customize icon-16 me-2"></span>
       <codx-label
         fiedName="voucherDate"
         [formModel]="view.formModel"
@@ -130,11 +129,8 @@
     </div>
   </div>
 
-  <div class="d-flex align-items-center justify-content-between mt-3 mb-2">
-    <span class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase">
-      {{ selectedData?.objectName }}
-    </span>
-
+  <div class="d-flex align-items-center justify-content-between mt-2 mb-1">
+    <span class="fw-bold line-clamp line-clamp-1 fs-4">{{selectedData?.objectName}}</span>
     <codx-vll
       [formModel]="view.formModel"
       field="Status"
@@ -150,8 +146,7 @@
 <ng-template #body>
   <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-top me-5 mb-1">
-        <span class="icon-customize icon-16 me-2"></span>
+      <div class="d-flex align-items-top me-5 mb-5px">
         <codx-label
           fiedName="invoiceNo"
           [formModel]="view.formModel"
@@ -166,8 +161,7 @@
           "
         ></span>
       </div>
-      <div class="d-flex align-items-top me-5 mb-1">
-        <span class="icon-i-credit-card icon-16 me-2"></span>
+      <div class="d-flex align-items-top me-5 mb-5px">
         <codx-label
           fiedName="invoiceDate"
           [formModel]="view.formModel"
@@ -182,8 +176,7 @@
           class="text-gray-600"
         ></span>
       </div>
-      <div class="d-flex align-items-top me-5 mb-1">
-        <span class="icon-i-credit-card icon-16 me-2"></span>
+      <div class="d-flex align-items-top me-5 mb-5px">
         <codx-label
           fiedName="invoiceDueDate"
           [formModel]="view.formModel"
@@ -208,8 +201,7 @@
   </div>
 
   <div class="d-flex flex-wrap">
-    <div class="d-flex align-items-top me-5 mb-1">
-      <span class="icon-edit-one icon-16 me-2"></span>
+    <div class="d-flex align-items-top me-5 mb-5px">
       <codx-label
         fiedName="pmtMethodID"
         [formModel]="view.formModel"
@@ -224,8 +216,7 @@
         "
       ></span>
     </div>
-    <div class="d-flex align-items-top me-5 mb-1">
-      <span class="icon-customize icon-16 me-2"></span>
+    <div class="d-flex align-items-top me-5 mb-5px">
       <codx-label
         fiedName="salespersonID"
         [formModel]="view.formModel"
@@ -242,8 +233,7 @@
     </div>
   </div>
 
-  <div class="me-5 mb-1 line-clamp line-clamp-2">
-    <span class="icon-brush icon-16 me-2"></span>
+  <div class="me-5 mb-5px line-clamp line-clamp-2">
     <codx-label
       fiedName="memo"
       [formModel]="view.formModel"

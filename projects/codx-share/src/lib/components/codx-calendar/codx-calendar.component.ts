@@ -12,6 +12,7 @@ import {
   CacheService,
   DialogModel,
   FormModel,
+  NotificationsService,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -35,6 +36,7 @@ import {
   SpeedDialItemEventArgs,
   SpeedDialItemModel,
 } from '@syncfusion/ej2-angular-buttons';
+import { CodxAddBookingRoomComponent } from '../codx-booking/codx-add-booking-room/codx-add-booking-room.component';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -55,7 +57,7 @@ export class CodxCalendarComponent
   request?: ResourceModel;
   views: Array<ViewModel> = [];
   calendarParams = {};
-  dateChange;
+  dateChange = new Date();
   FDdate = new Date();
   lstDOWeek = [];
   typeNavigate = 'Month';
@@ -67,6 +69,10 @@ export class CodxCalendarComponent
   calendarType: string;
   calendarTypes = [];
   resources = [];
+
+  roomFM: FormModel;
+  roomFG: FormGroup;
+  addRoomTitle = '';
 
   carFM: FormModel;
   carFG: FormGroup;
@@ -85,12 +91,16 @@ export class CodxCalendarComponent
 
   items: SpeedDialItemModel[] = [];
 
+  isUpdated = false;
+
   constructor(
     injector: Injector,
     private calendarService: CodxCalendarService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private notificationsService: NotificationsService
   ) {
     super(injector);
+    this.roomFM = new FormModel();
     this.carFM = new FormModel();
     this.meetingFM = new FormModel();
     this.myTaskFM = new FormModel();
@@ -181,6 +191,20 @@ export class CodxCalendarComponent
       },
     ];
 
+    this.calendarService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
+      this.roomFM = res;
+      this.roomFG = this.codxService.buildFormGroup(
+        this.roomFM?.formName,
+        this.roomFM?.gridViewName
+      );
+    });
+
+    this.cache.functionList(EPCONST.FUNCID.R_Bookings).subscribe((res) => {
+      if (res) {
+        this.addRoomTitle = res?.customName?.toString();
+      }
+    });
+
     this.calendarService.getFormModel(EPCONST.FUNCID.C_Bookings).then((res) => {
       this.carFM = res;
       this.carFG = this.codxService.buildFormGroup(
@@ -252,9 +276,14 @@ export class CodxCalendarComponent
       if (res?.fromDate === 'Invalid Date' && res?.toDate === 'Invalid Date')
         return;
       if (res?.fromDate && res?.toDate) {
-        if (res?.type) this.typeNavigate = res.type;
-        if (this.typeNavigate === 'Year') this.dateChange = this.FDdate;
-        else this.dateChange = res.fromDate;
+        if (res?.type) {
+          this.typeNavigate = res.type;
+        }
+        if (this.typeNavigate === 'Year') {
+          this.dateChange = this.FDdate;
+        } else {
+          this.dateChange = res.fromDate;
+        }
         if (this.typeNavigate === 'Year' && res.type === undefined) {
           this.dateChange = res?.toDate;
           return;
@@ -281,7 +310,10 @@ export class CodxCalendarComponent
       if (
         this.typeNavigate === 'Day' ||
         this.typeNavigate === 'Week' ||
-        this.typeNavigate === 'WorkWeek'
+        this.typeNavigate === 'WorkWeek' ||
+        this.typeNavigate === 'Month' ||
+        this.typeNavigate === 'Agenda' ||
+        this.typeNavigate === 'MonthAgenda'
       ) {
         this.changeNewMonth(args);
       }
@@ -302,60 +334,103 @@ export class CodxCalendarComponent
   }
 
   updateSettingValue(e) {
-    let transType = e.field;
-    let value = e.data;
+    if (!this.isUpdated) {
+      let transType = e.field;
+      let value = e.data;
 
-    if (value === false) value = '0';
-    else value = '1';
+      if (value === false) value = '0';
+      else value = '1';
 
-    this.api
-      .exec<any>(
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'AddUpdateByUserIDAsync',
-        ['WPCalendars', transType, value]
-      )
-      .subscribe((res) => {
-        if (res) {
-          if (value === '0') {
-            this.calendarTempData = this.calendarTempData.filter((x) => {
-              return x.transType !== transType;
-            });
-          }
-          if (value === '1') {
-            this.calendarTempData.push(
-              ...this.calendarData.filter((x) => {
-                return x.transType === transType;
-              })
-            );
-          }
+      // this.api
+      //   .exec<any>(
+      //     'ERM.Business.SYS',
+      //     'SettingValuesBusiness',
+      //     'AddUpdateByUserIDAsync',
+      //     ['WPCalendars', transType, value]
+      //   )
+      //   .subscribe((res) => {
+      //     if (res) {
+      //       if (value === '0') {
+      //         this.calendarTempData = this.calendarTempData.filter((x) => {
+      //           return x.transType !== transType;
+      //         });
+      //       }
+      //       if (value === '1') {
+      //         this.calendarTempData.push(
+      //           ...this.calendarData.filter((x) => {
+      //             return x.transType === transType;
+      //           })
+      //         );
+      //       }
 
-          if (this.ejCalendar) {
-            this.ejCalendar.refresh();
-            this.ejCalendar.value = this.FDdate;
-          }
+      //       if (this.ejCalendar) {
+      //         this.ejCalendar.refresh();
+      //         this.ejCalendar.value = this.FDdate;
+      //       }
 
-          this.calendarService.calendarData$.next(this.calendarTempData);
+      //       this.calendarService.calendarData$.next(this.calendarTempData);
 
-          this.api
-            .execSv(
-              'SYS',
-              'ERM.Business.SYS',
-              'SettingValuesBusiness',
-              'GetParamMyCalendarAsync',
-              'WPCalendars'
-            )
-            .subscribe((res: any) => {
-              if (res) {
-                for (const prop in res) {
-                  if (res.hasOwnProperty(prop)) {
-                    this.calendarParams[prop] = JSON.parse(res[prop]);
-                  }
-                }
-              }
-            });
-        }
-      });
+      //       this.api
+      //         .execSv(
+      //           'SYS',
+      //           'ERM.Business.SYS',
+      //           'SettingValuesBusiness',
+      //           'GetParamMyCalendarAsync',
+      //           'WPCalendars'
+      //         )
+      //         .subscribe((res: any) => {
+      //           if (res) {
+      //             for (const prop in res) {
+      //               if (res.hasOwnProperty(prop)) {
+      //                 this.calendarParams[prop] = JSON.parse(res[prop]);
+      //               }
+      //             }
+      //           }
+      //         });
+      //     }
+      //   });
+      this.calendarParams[transType].ShowEvent = value;
+      if (value === '0') {
+        this.calendarTempData = this.calendarTempData.filter((x) => {
+          return x.transType !== transType;
+        });
+      }
+      if (value === '1') {
+        this.calendarTempData.push(
+          ...this.calendarData.filter((x) => {
+            return x.transType === transType;
+          })
+        );
+      }
+
+      if (this.ejCalendar) {
+        this.ejCalendar.refresh();
+        this.ejCalendar.value = this.FDdate;
+      }
+
+      this.calendarService.calendarData$.next(this.calendarTempData);
+
+      // this.api
+      //   .execSv(
+      //     'SYS',
+      //     'ERM.Business.SYS',
+      //     'SettingValuesBusiness',
+      //     'GetParamMyCalendarAsync',
+      //     'WPCalendars'
+      //   )
+      //   .subscribe((res: any) => {
+      //     if (res) {
+      //       for (const prop in res) {
+      //         if (res.hasOwnProperty(prop)) {
+      //           this.calendarParams[prop] = JSON.parse(res[prop]);
+      //         }
+      //       }
+      //     }
+      //   });
+      this.isUpdated = true;
+    } else {
+      this.isUpdated = false;
+    }
   }
 
   filterCalendar() {}
@@ -440,27 +515,39 @@ export class CodxCalendarComponent
   addEvent(args: SpeedDialItemEventArgs) {
     let transType = args.item.id;
 
-    switch (transType) {
-      case 'EP_BookingCars':
-        this.addBookingCar();
-        break;
+    this.calendarService
+      .checkPermission(transType, '')
+      .subscribe((res: boolean) => {
+        if (res) {
+          switch (transType) {
+            case 'EP_BookingCars':
+              this.addBookingCar();
+              break;
 
-      case 'WP_Notes':
-        this.addNote();
-        break;
+            case 'EP_BookingRooms':
+              this.addBookingRoom();
+              break;
 
-      case 'CO_Meetings':
-        this.addMeeting();
-        break;
+            case 'WP_Notes':
+              this.addNote();
+              break;
 
-      case 'TM_MyTasks':
-        this.addMyTask();
-        break;
+            case 'CO_Meetings':
+              this.addMeeting();
+              break;
 
-      case 'TM_AssignTasks':
-        this.addAssignTask();
-        break;
-    }
+            case 'TM_MyTasks':
+              this.addMyTask();
+              break;
+
+            case 'TM_AssignTasks':
+              this.addAssignTask();
+              break;
+          }
+        } else {
+          this.notificationsService.notifyCode('SYS032');
+        }
+      });
   }
 
   addBookingCar() {
@@ -471,6 +558,35 @@ export class CodxCalendarComponent
       .openSide(
         CodxAddBookingCarComponent,
         [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
+        option
+      )
+      .closed.subscribe((returnData) => {
+        if (!this.calendarType) {
+          this.calendarType = this.defaultCalendar;
+        }
+        if (returnData.event) {
+          this.api
+            .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+              this.calendarType,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                this.getDataAfterAddEvent(res);
+              }
+              this.detectorRef.detectChanges();
+            });
+        }
+      });
+  }
+
+  addBookingRoom() {
+    let option = new SidebarModel();
+    option.FormModel = this.roomFM;
+    option.Width = '800px';
+    this.callfc
+      .openSide(
+        CodxAddBookingRoomComponent,
+        [this.roomFG?.value, 'SYS01', this.addRoomTitle, null, null, false],
         option
       )
       .closed.subscribe((returnData) => {

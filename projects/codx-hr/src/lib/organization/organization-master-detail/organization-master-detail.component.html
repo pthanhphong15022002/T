@@ -147,26 +147,23 @@
 </ng-template>
 <ng-template #templateBirthday let-item>
   <div>
-    <span
-      *ngIf="item.birthday"
-      [innerHTML]="
-        item.birthday | formatvalue : formModelEmp : 'Birthday' | async
-      "
-    ></span>
+    <ng-container *ngIf="item.birthday; else noBirthday">
+      <span class="text-gray-700">{{ item.birthday | fmDT }}</span>
+    </ng-container>
+    <ng-template #noBirthday>
+      <span class="place-holder">{{ grvSetup["Birthday"].headerText }}</span>
+    </ng-template>
   </div>
 </ng-template>
 <ng-template #templatePhone let-item>
-  <div>
-    <span
-      *ngIf="item.phone"
-      [innerHTML]="item.phone | formatvalue : formModelEmp : 'Phone' | async"
-    ></span>
-  </div>
+  <span
+    [innerHTML]="item.phone | formatvalue : formModelEmp : 'Phone' | async"
+    class="text-gray-700"
+  ></span>
 </ng-template>
 <ng-template #templateEmail let-item>
   <div>
     <span
-      *ngIf="item.email"
       [innerHTML]="item.email | formatvalue : formModelEmp : 'Email' | async"
     ></span>
   </div>

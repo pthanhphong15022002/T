@@ -13,3 +13,16 @@ export class tmpInstances {
   owner: string;
   startDate: Date
 }
+
+export class tmpInstancesStepsReasons {
+  recID: string = Util.uid();
+  processID: string;
+  instanceID: string;
+  stepID: string;
+  reasonName: string;
+  reasonType: string;
+  createdOn: Date = new Date();
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}

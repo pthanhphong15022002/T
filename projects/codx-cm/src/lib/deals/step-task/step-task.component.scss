@@ -7,3 +7,15 @@
    padding: 5px;
    font-weight: 600;
 }
+.button-custom {
+  border: none;
+  outline: none;
+  background: none;
+  color: #0077b1;
+
+  span {
+    font-weight: 400;
+  }
+}
+
+
