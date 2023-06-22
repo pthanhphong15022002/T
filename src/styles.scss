@@ -3280,6 +3280,12 @@ lib-layoutonlyheader{
   width: 40px;
 }
 
+.text-ellipsis{
+  text-overflow: ellipsis;  
+  white-space: nowrap;
+  display: block;
+}
+
 /* bỏ css trong core
 ::-webkit-scrollbar-thumb {
   background-color: #e4e6ed !important;
