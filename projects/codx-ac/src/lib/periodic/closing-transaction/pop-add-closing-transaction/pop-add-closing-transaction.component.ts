@@ -4,14 +4,14 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Paras } from '../../../models/Paras.model';
-import { DeductInterestExpenses } from '../../../models/DeductInterestExpenses.model';
+import { ClosingTransaction } from '../../../models/ClosingTransaction.model';
 
 @Component({
-  selector: 'lib-pop-add-deduct-interest-expenses',
-  templateUrl: './pop-add-deduct-interest-expenses.component.html',
-  styleUrls: ['./pop-add-deduct-interest-expenses.component.css']
+  selector: 'lib-pop-add-closing-transaction',
+  templateUrl: './pop-add-closing-transaction.component.html',
+  styleUrls: ['./pop-add-closing-transaction.component.css']
 })
-export class PopAddDeductInterestExpensesComponent extends UIComponent implements OnInit{
+export class PopAddClosingTransactionComponent extends UIComponent implements OnInit{
 
   //region Constructor
 
@@ -22,7 +22,7 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
 
   dialog!: DialogRef;
   authStore: AuthStore;
-  deductInterestExpenses: DeductInterestExpenses;
+  closingTransaction: ClosingTransaction;
   Paras: Paras;
   gridViewSetup: any;
   validate: any = 0;
@@ -42,15 +42,17 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
     this.dialog = dialog;
     this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
-    this.deductInterestExpenses = dialog.dataService!.dataSelected;
-    if(this.deductInterestExpenses.paras != null)
+    this.closingTransaction = dialog.dataService!.dataSelected;
+    if(this.closingTransaction.paras != null)
     {
-      this.Paras = JSON.parse(this.deductInterestExpenses.paras);
-      this.deductInterestExpenses.loanContractID = this.Paras.loanContractID;
+      this.Paras = JSON.parse(this.closingTransaction.paras);
+      this.closingTransaction.alloMethod = this.Paras.alloMethod;
+      this.closingTransaction.alloGroupID = this.Paras.alloGroupID;
+      this.closingTransaction.alloEntryID = this.Paras.alloEntryID;
     }
     this.formType = dialogData.data?.formType;
     this.cache
-      .gridViewSetup('DeductInterestExpenses', 'grvDeductInterestExpenses')
+      .gridViewSetup('ClosingTransaction', 'grvClosingTransaction')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -66,8 +68,8 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
   }
 
   ngAfterViewInit() {
-    this.setFromDateToDate(this.deductInterestExpenses.runDate);
-    this.form.formGroup.patchValue(this.deductInterestExpenses);
+    this.setFromDateToDate(this.closingTransaction.runDate);
+    this.form.formGroup.patchValue(this.closingTransaction);
   }
 
   //#endregion
@@ -87,14 +89,20 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
     switch(e.field)
     {
       case 'runDate':
-        this.deductInterestExpenses.runDate = e.data;
+        this.closingTransaction.runDate = e.data;
         this.setFromDateToDate(e.data);
         break;
       case 'memo':
-        this.deductInterestExpenses.memo = e.data;
+        this.closingTransaction.memo = e.data;
         break;
-      case 'loanContractID':
-        this.deductInterestExpenses.loanContractID = e.data;
+      case 'alloMethod':
+        this.closingTransaction.alloMethod = e.data;
+        break;
+      case 'alloGroupID':
+        this.closingTransaction.alloGroupID = e.data;
+        break;
+      case 'alloEntryID':
+        this.closingTransaction.alloEntryID = e.data;
         break;
     }
   }
@@ -107,7 +115,7 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.deductInterestExpenses.status = 1;
+        this.closingTransaction.status = 1;
         this.setParas();
         this.dialog.dataService
           .save(null, 0, '', 'SYS006', true)
@@ -119,8 +127,8 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
           });
       }
       if (this.formType == 'edit') {
-        if(this.deductInterestExpenses.status == 0)
-          this.deductInterestExpenses.status = 1;
+        if(this.closingTransaction.status == 0)
+          this.closingTransaction.status = 1;
         this.setParas();
         this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
           if (res && res.update.data != null) {
@@ -143,16 +151,16 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.deductInterestExpenses.status = 1;
+        this.closingTransaction.status = 1;
         this.setParas();
         this.dialog.dataService
           .save(null, 0, '', 'SYS006', true)
           .subscribe((res) => {
             if (res.save) {
               this.dialog.dataService.addNew().subscribe((res) => {
-                this.deductInterestExpenses = this.dialog.dataService!.dataSelected;
+                this.closingTransaction = this.dialog.dataService!.dataSelected;
                 this.onClearParas();
-                this.form.formGroup.patchValue(this.deductInterestExpenses);
+                this.form.formGroup.patchValue(this.closingTransaction);
               });
             }
           });
@@ -162,19 +170,21 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
 
   onClearParas(){
     this.Paras = new Paras();
-    this.deductInterestExpenses.loanContractID = null;
+    this.closingTransaction.alloMethod = null;
+    this.closingTransaction.alloGroupID = null;
+    this.closingTransaction.alloEntryID = null;
   }
 
   checkUpdateTheLedgerValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.deductInterestExpenses);
+    var keymodel = Object.keys(this.closingTransaction);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
-              this.deductInterestExpenses[keymodel[i]] == null ||
-              String(this.deductInterestExpenses[keymodel[i]]).match(/^ *$/) !== null
+              this.closingTransaction[keymodel[i]] == null ||
+              String(this.closingTransaction[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -191,15 +201,17 @@ export class PopAddDeductInterestExpensesComponent extends UIComponent implement
 
   setFromDateToDate(runDate: any)
   {
-      this.deductInterestExpenses.toDate = runDate;
+      this.closingTransaction.toDate = runDate;
       let result = new Date(runDate);
       result.setDate(1);
-      this.deductInterestExpenses.fromDate = result;
+      this.closingTransaction.fromDate = result;
   }
 
   setParas(){
-    this.Paras.calcGroupID = this.deductInterestExpenses.loanContractID;
-    this.deductInterestExpenses.paras = JSON.stringify(this.Paras);
+    this.Paras.alloMethod = this.closingTransaction.alloMethod;
+    this.Paras.alloGroupID = this.closingTransaction.alloGroupID;
+    this.Paras.alloEntryID = this.closingTransaction.alloEntryID;
+    this.closingTransaction.paras = JSON.stringify(this.Paras);
   }
   //endRegion Function
 }
