@@ -38,12 +38,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
   taskType;
-  dateFomat = 'dd/MM/yyyy';
-  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   listTaskType = [];
   grvMoreFunction: FormModel;
   isNoData = false;
   titleAction = '';
+
+  tileName = '';
 
   moreDefaut = {
     share: true,
@@ -227,11 +227,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   async copyTask(task) {
     this.getTypeTask(task);
+    task['objectID'] = this.customerID;
+    task['id'] = null;
     let taskOutput = await this.openPopupTask('copy', task);
     if (taskOutput?.event) {
-      if (!taskOutput?.event?.objectID) {
-        task['objectID'] = this.customerID;
-      }
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
           taskOutput?.event,
