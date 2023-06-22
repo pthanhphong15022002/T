@@ -38,6 +38,15 @@ export class StepService {
     private codxService: CodxService
   ) {}
 
+  capitalizeFirstLetter(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  isValidPhoneNumber(phoneNumber) {
+    var phonePattern = /^(09|03|07|08|05)\d{8}$/;
+    return phonePattern.test(phoneNumber);
+  }
+
   checkTaskLink(task, step) {
     let check = true;
     let tasks = step?.tasks;
