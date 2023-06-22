@@ -537,10 +537,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       return;
     }
     this.typeSet = type;
-    this.addRow();
+    this.addRow('2');
   }
 
-  addRow() {
+  addRow(type:any) {
     if (
       !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
     ) {
@@ -559,7 +559,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 if (res.unbounds.lineDefault != null) {
                   this.dataLine = res.unbounds.lineDefault;
                 }
-                this.loadGrid();
+                if (type == '1') {
+                  this.loadGrid();
+                }else{
+                  this.popupSettledInvoices(this.typeSet);
+                } 
               }
             });
         } else {
@@ -588,8 +592,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     if (this.cashpayment.unbounds.lineDefault != null) {
                       this.dataLine = this.cashpayment.unbounds.lineDefault;
                     }
-                    this.loadGrid();
                     this.hasSaved = true;
+                    if (type == '1') {
+                      this.loadGrid();
+                    }else{
+                      this.popupSettledInvoices(this.typeSet);
+                    }    
                   }
                 });
             }
@@ -607,7 +615,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               if (res.unbounds.lineDefault != null) {
                 this.dataLine = res.unbounds.lineDefault;
               }
-              this.loadGrid();
+              if (type == '1') {
+                this.loadGrid();
+              }else{
+                this.popupSettledInvoices(this.typeSet);
+              }   
             }
           });
         break;
@@ -1100,29 +1112,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadGrid() {
     let idx;
-    if (this.cashpayment.subType != '2') {
-      switch (this.modegrid) {
-        case '1':
-          idx = this.gridCash.dataSource.length;
-          this.dataLine.rowNo = idx + 1;
-          this.requireFields = this.dataLine.unbounds
-            .requireFields as Array<string>;
-          this.lockFields = this.dataLine.unbounds.lockFields as Array<string>;
-          this.requireGrid();
-          this.lockGrid();
-          //this.gridCash.endEdit();
-          this.gridCash.addRow(this.dataLine, idx);
-          break;
-        case '2':
-          idx = this.cashpaymentline.length;
-          this.dataLine.rowNo = idx + 1;
+    switch (this.modegrid) {
+      case '1':
+        idx = this.gridCash.dataSource.length;
+        this.dataLine.rowNo = idx + 1;
+        this.requireFields = this.dataLine.unbounds
+          .requireFields as Array<string>;
+        this.lockFields = this.dataLine.unbounds.lockFields as Array<string>;
+        this.requireGrid();
+        this.lockGrid();
+        //this.gridCash.endEdit();
+        this.gridCash.addRow(this.dataLine, idx);
+        break;
+      case '2':
+        idx = this.cashpaymentline.length;
+        this.dataLine.rowNo = idx + 1;
 
-          //rename -> popupLine
-          this.popupLine(this.dataLine);
-          break;
-      }
-    } else {
-      this.popupSettledInvoices(this.typeSet);
+        //rename -> popupLine
+        this.popupLine(this.dataLine);
+        break;
     }
   }
   //Viet tăt ten ctrl 3 ky tu vd: gridview -> grv;label ->lbl,
@@ -1491,7 +1499,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         return;
       }
       if (document.activeElement.className == 'e-tab-wrap') {
-        this.addRow();
+        if (this.cashpayment.subType != '2') {
+          this.addRow('1');
+        }
       }
     }
   }

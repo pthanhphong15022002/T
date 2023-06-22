@@ -282,7 +282,7 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div>
-            <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+            <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
@@ -845,7 +845,7 @@
 
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabsettledInvoices>
-  <ng-container *ngIf="(cashpayment?.subType == '2')">
+  <ng-container *ngIf="(cashpayment?.subType == '2' || cashpayment?.subType == '9')">
     <div class="tabline-content scroll-ac header-table-ac position-relative"
     *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '9'">
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
