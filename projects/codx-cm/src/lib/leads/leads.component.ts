@@ -108,7 +108,7 @@ export class LeadsComponent
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = true;
+  hideMoreFC = false;
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';

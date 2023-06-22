@@ -60,6 +60,8 @@ import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools
 import { PopAddAllocateToolsComponent } from './periodic/allocate-tools/pop-add-allocate-tools/pop-add-allocate-tools.component';
 import { DeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/deduct-prepaid-expenses.component';
 import { PopAddDeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses.component';
+import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/deduct-interest-expenses.component';
+import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
 
 export const routes: Routes = [
   {
@@ -165,6 +167,11 @@ export const routes: Routes = [
         component: DeductPrepaidExpensesComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'deductinterestexpenses/:funcID',
+        component: DeductInterestExpensesComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
@@ -223,6 +230,8 @@ export const routes: Routes = [
     PopAddAllocateToolsComponent,
     DeductPrepaidExpensesComponent,
     PopAddDeductPrepaidExpensesComponent,
+    DeductInterestExpensesComponent,
+    PopAddDeductInterestExpensesComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
