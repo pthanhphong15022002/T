@@ -109,21 +109,22 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   checkListContact(lst = []) {
-    if (this.type == 'formAdd') {
-      lst = lst.filter(
-        (contact1) =>
-          !this.listContacts.some(
-            (contact2) => contact2.recID === contact1.recID
-          )
-      );
-    } else if (this.objectType == '4') {
+    if (this.objectType == '4') {
       lst = lst.filter(
         (contact1) =>
           !this.listContacts.some(
             (contact2) => contact2.refID === contact1.recID
           )
       );
+    } else {
+      lst = lst.filter(
+        (contact1) =>
+          !this.listContacts.some(
+            (contact2) => contact2.recID === contact1.recID
+          )
+      );
     }
+
     return lst;
   }
 
@@ -173,7 +174,13 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.dialog.formModel.funcID,
       this.dialog.formModel.entityName,
     ];
-    if (this.type == 'formDetail' || (this.type == 'formAdd' && this.objectType != '4')) {
+    if(this.data?.role == null || this.data?.role?.trim() == ''){
+      this.data.role = null;
+    }
+    if (
+      this.type == 'formDetail' ||
+      (this.type == 'formAdd' && this.objectType != '4')
+    ) {
       this.cmSv.quickAddContacts(data).subscribe((res) => {
         if (res) {
           this.data = res;
@@ -200,6 +207,10 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.objectID = this.recIDCm;
       this.data.objectType = this.objectType;
       this.data.objectName = this.objectName;
+      this.data.assign = true;
+			this.data.delete = true;
+			this.data.write = true;
+			this.data.share = true;
       if (type == 'save') {
         this.dialog.close(this.data);
       } else {

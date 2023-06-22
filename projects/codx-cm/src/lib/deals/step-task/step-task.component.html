@@ -186,11 +186,22 @@
               fiedName="titleReason"
               [default]="getNameReason(step?.isSuccessStep)"
             ></codx-label>
-            <ul *ngIf="listStepReason?.length > 0">
-              <li *ngFor="let reason of listStepReason">
-                <span class="fs-6">{{ reason?.reasonName }}</span>
-              </li>
-            </ul>
+
+            <ng-container *ngFor="let item of listStepReason" class="pb-2">
+              <ul class="text-left drap-drop mb-1 has-action-menu">
+                <li>
+                  {{ item.reasonName }}
+                  <codx-mfunc
+                    [formModel]="formModel"
+                    [dataItem]="moreDefaut"
+                    (changeDataMF)="changeReasonMF($event)"
+                    (clickMF)="clickMFReason($event, item)"
+                    [type]="'hover'"
+                  >
+                  </codx-mfunc>
+                </li>
+              </ul>
+            </ng-container>
           </div>
         </div>
       </div>

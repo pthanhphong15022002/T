@@ -83,6 +83,8 @@ export class CodxListContactsComponent implements OnInit {
         if (changes['objectID']?.currentValue == this.id) return;
         this.id = changes['objectID']?.currentValue;
         this.getListContacts();
+      }else{
+        if(!this.loaded) this.loaded = true;
       }
     }
   }
@@ -383,6 +385,9 @@ export class CodxListContactsComponent implements OnInit {
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
+              if(this.objectType == '4'){
+                this.placeholder = JSON.parse(JSON.stringify(this.placeholder));
+              }
               this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }
@@ -436,7 +441,7 @@ export class CodxListContactsComponent implements OnInit {
                 );
                 this.changeContacts(this.listContacts[0]);
                 this.contactEvent.emit(data);
-
+                this.lstContactEmit.emit(this.listContacts);
                 this.notiService.notifyCode('SYS008');
                 this.changeDetectorRef.detectChanges();
               }
@@ -450,6 +455,7 @@ export class CodxListContactsComponent implements OnInit {
               this.listContacts.splice(index, 1);
               lstDelete.push(data);
               this.changeContacts(this.listContacts[0]);
+              this.lstContactEmit.emit(this.listContacts);
 
               this.lstContactDeleteEmit.emit(lstDelete);
             }

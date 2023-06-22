@@ -9,4 +9,5 @@ export class Paras {
     journalNo: any;
     calcGroupID: any;
     buid: any;
+    loanContractID: any;
   }

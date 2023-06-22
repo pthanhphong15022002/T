@@ -12,6 +12,7 @@ import {
 import { Observable, Subject, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
 import { IJournal } from './interfaces/IJournal.interface';
+import { HiddenFieldName as HiddenFieldName } from './models/HiddenFieldName.model';
 
 @Injectable({
   providedIn: 'root',
@@ -116,15 +117,18 @@ export class JournalService {
     }
   }
 
-  getHiddenFields(journal: IJournal): string[] {
+  getHiddenFields(
+    journal: IJournal,
+    hiddenFieldName = new HiddenFieldName()
+  ): string[] {
     let hiddenFields: string[] = [];
 
     if (journal?.drAcctControl == '9') {
-      hiddenFields.push('DRAcctID');
+      hiddenFields.push(hiddenFieldName.drAcctControl);
     }
 
     if (journal?.crAcctControl == '9') {
-      hiddenFields.push('CRAcctID');
+      hiddenFields.push(hiddenFieldName.crAcctControl);
     }
 
     if (journal?.diM1Control == '9') {
@@ -140,11 +144,14 @@ export class JournalService {
     }
 
     if (journal?.projectControl == '0') {
-      hiddenFields.push('ProjectID');
+      hiddenFields.push(hiddenFieldName.projectControl);
     }
 
     if (journal?.assetControl == '0') {
-      hiddenFields.push('AssetID');
+      hiddenFields.push(hiddenFieldName.assetControl);
+    }
+
+    if (journal?.loanControl === '0') {
     }
 
     const idimControls: string[] = journal?.idimControl?.split(';');
