@@ -192,7 +192,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       //   this.sendMail();
       //   break;
       case 'DP27':
-        await this.stepService.addBookingCar()
+        await this.stepService.addBookingCar(true)
         break;
     }
   }
