@@ -1916,7 +1916,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
-    debugger
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
       // dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[

@@ -1,0 +1,17 @@
+<codx-form 
+    headerText="Gợi ý tìm kiếm"
+    [dialog]="dialog"
+    [body]="body"
+>
+</codx-form>
+
+<ng-template #body>
+    <div class="row h-100">
+        <div class="col-3 border-end d-flex flex-column">
+            <div *ngFor="let item of vllSV005" [id]="'sv-sg-'+item?.value" class="cursor-pointer border-top py-4 bg-search-sug px-2" (click)="selectedGroupType(item?.value)">
+                <span class="fw-bold">{{item?.default}}</span>
+              </div>
+        </div>
+        <div class="col-9"></div>
+    </div>
+</ng-template>
