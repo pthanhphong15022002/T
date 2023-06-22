@@ -119,6 +119,7 @@ export class CodxAddBookingCarComponent
   cardTransInfo: any;
   categoryID: any;
   isEP=true;
+  customAttendees=[];
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -138,6 +139,7 @@ export class CodxAddBookingCarComponent
       this.viewOnly=true;
     }    
     this.isEP = dialogData?.data[5]==false ? dialogData?.data[5] : true;
+    this.customAttendees = dialogData?.data[6];
     this.user = this.authStore.get();
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
@@ -393,6 +395,27 @@ export class CodxAddBookingCarComponent
               });
           }
           this.detectorRef.detectChanges();
+        }
+        else if(this.funcType == _addMF && this.customAttendees?.length>0){
+          Array.from(this.customAttendees).forEach((people:any)=>{
+            let tmpResource = new BookingAttendees();
+            tmpResource.userID = people?.objectID;
+            tmpResource.userName = people?.objectName;
+            tmpResource.roleType = people?.roleType;
+            tmpResource.optional = false;
+            this.listRoles.forEach((element) => {
+              if (element.value == tmpResource.roleType) {
+                tmpResource.icon = element.icon;
+                tmpResource.roleName = element.text;
+              }
+            });
+            if (tmpResource.userID == this.authService.userValue.userID) {
+              this.curUser = tmpResource;
+              this.resources.push(this.curUser);
+            } else {
+              this.resources.push(tmpResource);
+            }
+          })
         }
       }
     });
