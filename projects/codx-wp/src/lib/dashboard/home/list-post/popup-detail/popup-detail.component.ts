@@ -11,6 +11,7 @@ import { Post } from '@shared/models/post';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 import { ImageViewerComponent2 } from 'projects/codx-share/src/lib/components/ImageViewer2/imageViewer2.component';
+import { TreeviewCommentComponent } from 'projects/codx-share/src/lib/components/treeview-comment/treeview-comment.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { environment } from 'src/environments/environment';
 
@@ -36,6 +37,7 @@ export class PopupDetailComponent implements OnInit {
     APPLICATION: 'application',
   };
   @ViewChild("codxImageViewer") codxImageViewer:ImageViewerComponent2;
+  @ViewChild("codxTreeComment") codxTreeComment:TreeviewCommentComponent;
   constructor(
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
@@ -59,7 +61,6 @@ export class PopupDetailComponent implements OnInit {
   }
   //get data 
   getData(recID:string,refID:string,type:string){
-    debugger
     this.api
       .execSv(
         "WP",
@@ -87,12 +88,14 @@ export class PopupDetailComponent implements OnInit {
         [recID,refID,type])
         .subscribe((res:any) => {
           this.childPost = JSON.parse(JSON.stringify(res));
+          this.codxTreeComment.data = this.childPost;
+          if(this.childPost.totalComment > 0)
+            this.codxTreeComment.showComments();
           this.dt.detectChanges();
       });
   }
   //change image
   changeImage(file:any){
-    debugger
     if(file)
     {
       this.fileSelected = JSON.parse(JSON.stringify(file));;

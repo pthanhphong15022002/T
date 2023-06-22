@@ -626,10 +626,10 @@ export class PopupAddDealComponent
     if (this.action !== this.actionEdit) {
       datas = [this.deal, this.lstContactDeal];
     } else {
-      this.covnertListContact(
-        this.lstContactOld,
-        JSON.parse(JSON.stringify(this.lstContactDeal))
-      );
+      // this.covnertListContact(
+      //   this.lstContactOld,
+      //   JSON.parse(JSON.stringify(this.lstContactDeal))
+      // );
       datas = [
         this.deal,
         this.customerIDOld,
@@ -790,10 +790,10 @@ export class PopupAddDealComponent
     });
   }
   async editDealForDP() {
-    this.covnertListContact(
-      this.lstContactOld,
-      JSON.parse(JSON.stringify(this.lstContactDeal))
-    );
+    // this.covnertListContact(
+    //   this.lstContactOld,
+    //   JSON.parse(JSON.stringify(this.lstContactDeal))
+    // );
     var datas = [
       this.deal,
       this.customerIDOld,
