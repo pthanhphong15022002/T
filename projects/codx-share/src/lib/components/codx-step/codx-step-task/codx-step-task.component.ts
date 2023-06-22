@@ -12,6 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
@@ -137,7 +138,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private stepService: StepService,
     private calendarService: CodxCalendarService,
-    private codxService: CodxService,
+    private codxService: CodxService
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -186,8 +187,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         (group) => group.refID == this.taskAdd?.taskGroupID
       );
       if (group) {
-        if(!group?.task){
-          group['task']=[];
+        if (!group?.task) {
+          group['task'] = [];
         }
         group?.task?.push(this.taskAdd);
       }
@@ -424,10 +425,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
-            if (task.taskType != 'B')
-            res.disabled = true;
+            if (task.taskType != 'B') res.disabled = true;
             break;
-            case 'DP28': // Cập nhật
+          case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
             } else {
@@ -625,6 +625,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP28':
         this.editMeeting(task);
         break;
+      case 'DP29':
+        this.deleteMeeting(task);
+        break;
       case 'SYS004':
         this.sendMail();
         break;
@@ -646,7 +649,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.copyGroupTask(group);
         break;
       case 'DP08': //them task
-        this.chooseTypeTask(false,group?.refID);
+        this.chooseTypeTask(false, group?.refID);
         break;
       case 'DP12':
         this.viewTask(group, 'G');
@@ -657,7 +660,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //task
-  async chooseTypeTask(showTask = true,groupID = null) {
+  async chooseTypeTask(showTask = true, groupID = null) {
     this.isAddTask = false;
     setTimeout(async () => {
       let popupTypeTask = this.callfc.openForm(
@@ -666,7 +669,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         450,
         580,
         '',
-        {isShowGroup: showTask},
+        { isShowGroup: showTask }
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
       if (dataOutput?.event?.value) {
@@ -1237,7 +1240,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (dataOuput?.event?.dataProgress) {
           this.handelProgress(data, dataOuput?.event?.dataProgress);
         }
-        if(dataOuput?.event?.task || dataOuput?.event?.group){
+        if (dataOuput?.event?.task || dataOuput?.event?.group) {
           await this.getStepById();
         }
       });
@@ -1334,7 +1337,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           meeting.meetingName = data?.taskName;
           meeting.meetingType = '1';
           meeting.refID = data.recID;
-          meeting.refType = "DP_Instances_Steps_Tasks";
+          meeting.refType = 'DP_Instances_Steps_Tasks';
           meeting.meetingType = '1';
           meeting.reminder = Number.isNaN(data.reminders)
             ? 0
@@ -1404,9 +1407,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       });
   }
 
-  async editMeeting(data){
-    var meeting = await firstValueFrom(this.api.execSv('CO', 'ERM.Business.CO','MeetingsBusiness','GetMeetingByStepTaskAsync',[data.recID, 'DP_Instances_Steps_Tasks']));
-    if(meeting != null){
+  async editMeeting(data) {
+    var meeting = await firstValueFrom(
+      this.api.execSv<any>(
+        'CO',
+        'ERM.Business.CO',
+        'MeetingsBusiness',
+        'GetMeetingByStepTaskAsync',
+        [data.recID, 'DP_Instances_Steps_Tasks']
+      )
+    );
+    if (meeting != null) {
       let option = new SidebarModel();
       option.Width = '800px';
       option.zIndex = 1011;
@@ -1448,6 +1459,43 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           });
         }
       });
+    }
+  }
+
+  async deleteMeeting(data) {
+    var meeting: any;
+    meeting = await firstValueFrom(
+      this.api.execSv(
+        'CO',
+        'ERM.Business.CO',
+        'MeetingsBusiness',
+        'GetMeetingByStepTaskAsync',
+        [data.recID, 'DP_Instances_Steps_Tasks']
+      )
+    );
+    if (meeting != null) {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notiService.alertCode('SYS030').subscribe((x) => {
+        if (x?.event?.status == 'Y') {
+          this.api
+          .execSv<any>(
+            'CO',
+            'ERM.Business.CO',
+            'MeetingsBusiness',
+            'DeleteMeetingsAsync',
+            [meeting.meetingID]
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.notiService.notify(
+                'loại cuộc họp thành công ! - Cần messes từ Khanh!!'
+              );
+            }
+          });
+        }
+      });
+
     }
   }
 
@@ -1569,12 +1617,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let option = new SidebarModel();
     option.FormModel = this.carFM;
     option.Width = '800px';
-    this.callfc
-      .openSide(
-        CodxAddBookingCarComponent,
-        [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
-        option
-      )
+    this.callfc.openSide(
+      CodxAddBookingCarComponent,
+      [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
+      option
+    );
     // let option = new DialogModel();
     // option.FormModel = this.frmModelInstancesTask;
     // this.callfc
@@ -1588,22 +1635,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     //     '',
     //     option
     //   )
-      // .closed.subscribe((returnData) => {
-      //   if (!this.calendarType) {
-      //     this.calendarType = this.defaultCalendar;
-      //   }
-      //   if (returnData.event) {
-      //     this.api
-      //       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-      //         this.calendarType,
-      //       ])
-      //       .subscribe((res: any) => {
-      //         if (res) {
-      //           this.getDataAfterAddEvent(res);
-      //         }
-      //         this.detectorRef.detectChanges();
-      //       });
-      //   }
-      // });
+    // .closed.subscribe((returnData) => {
+    //   if (!this.calendarType) {
+    //     this.calendarType = this.defaultCalendar;
+    //   }
+    //   if (returnData.event) {
+    //     this.api
+    //       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+    //         this.calendarType,
+    //       ])
+    //       .subscribe((res: any) => {
+    //         if (res) {
+    //           this.getDataAfterAddEvent(res);
+    //         }
+    //         this.detectorRef.detectChanges();
+    //       });
+    //   }
+    // });
   }
 }
