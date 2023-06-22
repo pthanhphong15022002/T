@@ -805,6 +805,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async openPopupTask(action, dataTask, groupTaskID = null) {
     let dataInput = {
       action,
+      titleName: this.titleAction,
       taskType: this.taskType,
       step: this.currentStep,
       listGroup: this.listGroupTask,
