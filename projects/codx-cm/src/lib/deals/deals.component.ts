@@ -125,7 +125,6 @@ export class DealsComponent
   nameModule: string = '';
   paramDefault: any;
   currencyIDDefault: any;
-  codxCM: any;
   exchangeRateDefault: any;
   constructor(
     private inject: Injector,
@@ -153,7 +152,7 @@ export class DealsComponent
             this.paramDefault['DefaultCurrency'] ?? 'VND';
           if (this.currencyIDDefault != 'VND') {
             let day = new Date();
-            this.codxCM
+            this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
                 if (res && res != 0) this.exchangeRateDefault = res;
@@ -248,7 +247,8 @@ export class DealsComponent
       return;
     }
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+    if (this.viewCrr == 6)
+      this.kanban = (this.view?.currentView as any)?.kanban;
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
       this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -313,6 +313,7 @@ export class DealsComponent
                     false
                   );
                   kanban.refresh();
+                  this.kanban = kanban;
                 });
             }
 
@@ -1188,6 +1189,10 @@ export class DealsComponent
   }
 
   getTotalDealColums(stepID) {
-    return 0;
+    let totalCol = 0;
+    if (this.kanban) {
+      debugger;
+    }
+    return totalCol;
   }
 }

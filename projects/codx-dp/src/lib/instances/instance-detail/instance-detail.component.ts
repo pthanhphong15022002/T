@@ -65,7 +65,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() colorSuccesss: any;
   // View deatail Of approrver
   @Input() isViewApprover = false;
-  @Input() hideFooter = true;
+  @Input() hideFooter = false;
   @Input() hideMF = false;
 
   @Output() progressEvent = new EventEmitter<object>();
