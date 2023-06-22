@@ -74,11 +74,9 @@ erm-quick-links-inner .dropdown-menu {
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem !important;
-  height: 0.6rem !important;
+  height: 0.5rem !important;
 }
-// ::-webkit-scrollbar-thumb {
-//   background-color: #183395 !important;
-// }
+
 
 .border-gray-200 {
   border-color: var(--gray-200) !important;
@@ -913,7 +911,7 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
 }
 
 .breadcrum-box div::-webkit-scrollbar {
-  height: 6px;
+  height: 5px;
 }
 
 .dms-footer-r {
@@ -3169,11 +3167,11 @@ codx-view-list-detail .instance-select .nav-link {
     width: 0rem !important;
   }
 }
-codx-wrapper.hover-scroll-overlay-y {
-  &::-webkit-scrollbar {
-    width: 0rem !important;
-  }
-}
+// codx-wrapper.hover-scroll-overlay-y {
+//   &::-webkit-scrollbar {
+//     width: 0rem !important;
+//   }
+// }
 
 
 /*********** ipad ************/
@@ -3222,6 +3220,7 @@ codx-card-center .card.codx_cardcenter{
   }
   &.width-0{
     box-shadow: none;
+    border-color:transparent!important ;
   }
 }
 .card-body.fillter-card-body{
@@ -3294,16 +3293,17 @@ lib-layoutonlyheader{
   display: block;
 }
 
-/* bỏ css trong core
+/* bỏ css trong core */
 ::-webkit-scrollbar-thumb {
-  background-color: #e4e6ed !important;
+  background-color: #e7e8ec !important;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #cdced4 !important;
+  background-color: #cdcdd3 !important;
 }
 
-.aside ::-webkit-scrollbar-thumb {
-  background-color: #ffffff24 !important;
-}
-*/
+
+
+// .aside ::-webkit-scrollbar-thumb {
+//   background-color: #ffffff24 !important;
+// }
+
