@@ -424,7 +424,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
-            if (task.taskType != 'B') 
+            if (task.taskType != 'B')
             res.disabled = true;
             break;
         }
@@ -593,6 +593,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'DP24': // tạo lịch họp
         this.createMeeting(task);
+        break;
+      case 'DP28':
+        this.editMeeting(task);
         break;
       case 'SYS004':
         this.sendMail();
@@ -1371,6 +1374,53 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           });
         }
       });
+  }
+
+  async editMeeting(data){
+    var meeting = await firstValueFrom(this.api.execSv('CO', 'ERM.Business.CO','MeetingsBusiness','GetMeetingByStepTaskAsync',[data.recID, 'DP_Instances_Steps_Tasks']));
+    if(meeting != null){
+      let option = new SidebarModel();
+      option.Width = '800px';
+      option.zIndex = 1011;
+      let formModel = new FormModel();
+      this.cache.functionList('TMT0501').subscribe((f) => {
+        if (f) {
+          this.cache.gridView(f.gridViewName).subscribe((res) => {
+            this.cache
+              .gridViewSetup(f.formName, f.gridViewName)
+              .subscribe((grvSetup) => {
+                if (grvSetup) {
+                  formModel.funcID = 'TMT0501';
+                  formModel.entityName = f.entityName;
+                  formModel.formName = f.formName;
+                  formModel.gridViewName = f.gridViewName;
+                  option.FormModel = formModel;
+                  option.Width = '800px';
+                  let obj = {
+                    action: 'edit',
+                    titleAction: this.titleAction,
+                    disabledProject: true,
+                    data: meeting,
+                    isOtherModule: true,
+                  };
+                  let dialog = this.callfc.openSide(
+                    PopupAddMeetingComponent,
+                    obj,
+                    option
+                  );
+                  dialog.closed.subscribe((e) => {
+                    if (e?.event) {
+                      this.notiService.notify(
+                        'Edit cuộc họp thành công ! - Cần messes từ Khanh!!'
+                      );
+                    }
+                  });
+                }
+              });
+          });
+        }
+      });
+    }
   }
 
   //get userID cuộc họp
