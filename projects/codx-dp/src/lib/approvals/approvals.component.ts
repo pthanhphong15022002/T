@@ -2,11 +2,22 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  Injector,
   OnChanges,
   OnInit,
   SimpleChanges,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  ButtonModel,
+  CacheService,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { ActivatedRoute } from '@angular/router';
 import { LayoutComponent } from '../_layout/layout.component';
@@ -16,9 +27,13 @@ import { LayoutComponent } from '../_layout/layout.component';
   templateUrl: './approvals.component.html',
   styleUrls: ['./approvals.component.css'],
 })
-export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
-  // extractContent = extractContent;
-  // convertHtmlAgency = convertHtmlAgency2;
+export class ApprovalsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit, OnChanges
+{
+  //list view
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   data: any;
   funcID: any;
   // lstDtDis: any;
@@ -29,20 +44,33 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   userID: any;
   transID = '28666dd2-2a40-4777-837e-12fb9ef5b956';
   approveStatus = '0';
+  dataValues = '';
+
+  //modele aprove
+  service = 'DP';
+  assemblyName = 'DP';
+  className = 'InstancesBusiness';
+  method = 'GetListApprovalAsync';
+  idField = 'recID';
+  views: Array<ViewModel> = [];
+  button: ButtonModel = {
+    id: 'btnAdd',
+  };
+  itemSelected: any;
 
   constructor(
-    private cache: CacheService,
+    inject: Injector,
     private codxDP: CodxDpService,
-    private router: ActivatedRoute,
     private authStore: AuthStore,
     private layoutDP: LayoutComponent,
-    private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService
+    private changeDetectorRef: ChangeDetectorRef
   ) {
+    super(inject);
     this.userID = this.authStore.get().userID;
   }
   ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {
+
+  onInit(): void {
     this.layoutDP.hidenNameProcess();
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncID'];
@@ -51,7 +79,19 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.panelRight,
+        },
+      },
+    ];
+  }
 
   getGridViewSetup(funcID: any, id: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
@@ -65,7 +105,7 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   getData(id) {
-    //id la cua noi dung instance
+    ////id la cua noi dung instance
     this.api
       .exec<any>('DP', 'InstancesBusiness', 'GetInstancesDetailByRecIDAsync', [
         id,
@@ -87,5 +127,15 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
     //   );
     //   if (index >= 0) this.data.listInformationRel[index].view = '3';
     // }
+  }
+  selectedChange(e) {
+    let recID = '';
+    if (e?.data) {
+      recID = e.data.recID;
+      this.itemSelected = e?.data;
+    } else if (e?.recID) {
+      recID = e.recID;
+      this.itemSelected = e;
+    }
   }
 }

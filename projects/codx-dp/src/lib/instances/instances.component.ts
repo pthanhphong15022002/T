@@ -741,7 +741,7 @@ export class InstancesComponent
     this.notificationsService
       .alertCode('DP018', null, "'" + this.titleAction + "'")
       .subscribe((info) => {
-        if (info.event.status == 'Y') {
+        if (info?.event?.status == 'Y') {
           this.codxDpService
             .openOrClosedInstance(data.recID, check)
             .subscribe((res) => {
@@ -1127,10 +1127,7 @@ export class InstancesComponent
       return;
     }
     if (data.closed) {
-      this.notificationsService.notify(
-        'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
+      this.notificationsService.notify('DP038');
       return;
     }
 
@@ -1139,12 +1136,14 @@ export class InstancesComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notifyCode('DP037');
+      this.notificationsService.notifyCode('DP038',  0,
+      '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
     }
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notifyCode('DP038');
+      this.notificationsService.notifyCode('DP037',  0,
+      '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
     }

@@ -53,7 +53,7 @@ export class PopAddAllocateToolsComponent extends UIComponent implements OnInit{
     }
     this.formType = dialogData.data?.formType;
     this.cache
-      .gridViewSetup('UpdateTheLedger', 'grvUpdateTheLedger')
+      .gridViewSetup('AllocatingTools', 'grvAllocatingTools')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;

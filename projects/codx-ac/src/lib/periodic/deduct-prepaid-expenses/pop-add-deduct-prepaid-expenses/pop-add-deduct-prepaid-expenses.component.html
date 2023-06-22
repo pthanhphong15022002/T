@@ -1,5 +1,5 @@
 <codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
-  [dialog]="dialog" [data]="updateTheLedger" [customToolbar]="subToolbar" [openMore]="false">
+  [dialog]="dialog" [data]="deductPrepaidExpenses" [customToolbar]="subToolbar" [openMore]="false">
 </codx-form>
 
 <!-- Start: Sub header -->
@@ -72,12 +72,18 @@
 <ng-template #tabParameters>
   <ng-container *ngIf="form?.formGroup">
     <div class="mt-5">
-        <div #noteRef class="form-group">
-            <codx-label fiedName="JournalNo" [formModel]="form.formModel">
-            </codx-label>
-            <codx-input [Group]="form.formGroup" field="journalNo" [formModel]="form.formModel" (valueChange)="valuechange($event)">
-            </codx-input>
-        </div>
+      <div #noteRef class="form-group">
+        <codx-label fiedName="CalcGroupID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [Group]="form.formGroup" field="calcGroupID" [formModel]="form.formModel" (valueChange)="valuechange($event)">
+        </codx-input>
+      </div>
+      <div #noteRef class="form-group">
+        <codx-label fiedName="BUID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [Group]="form.formGroup" field="buid" [formModel]="form.formModel" (valueChange)="valuechange($event)">
+        </codx-input>
+      </div>
     </div>
   </ng-container>
 </ng-template>

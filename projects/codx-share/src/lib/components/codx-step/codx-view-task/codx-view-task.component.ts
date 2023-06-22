@@ -120,11 +120,11 @@ export class CodxViewTaskComponent implements OnInit {
       .subscribe(async (res) => {
         if (res) {
           this.instanceStep = res;
-          await this.setDataView();
-          this.settingData();
           this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
           // this.checkRole();
         }
+        await this.setDataView();
+        this.settingData();
       });
     }else{
       await this.setDataView();
@@ -154,15 +154,20 @@ export class CodxViewTaskComponent implements OnInit {
     if (this.type == 'P') {
       this.dataView = this.instanceStep;
     } else if (this.type == 'G') {
-      let groupView = this.instanceStep.taskGroups.find(
-        (group) => group.recID == this.dataInput.recID
+      let groupView = this.instanceStep?.taskGroups?.find(
+        (group) => group.recID == this.dataInput?.recID
       );
       this.dataView = groupView;
     } else {
-      let taskView = this.instanceStep.tasks.find(
+      let taskView = this.instanceStep?.tasks?.find(
         (task) => task.recID == this.dataInput.recID
       );
-      this.dataView = taskView;
+      if(taskView){
+        this.dataView = taskView;
+      }else{
+        this.dataView = this.dataInput;
+      }
+      
     }
   }
 
@@ -170,7 +175,7 @@ export class CodxViewTaskComponent implements OnInit {
     if (this.type == 'T' && this.dataView?.parentID) {
       this.instanceStep?.tasks?.forEach((task) => {
         if (this.dataView?.parentID?.includes(task.refID)) {
-          this.listDataLink.push(task);
+          this.listDataLink?.push(task);
         }
       });
     }
