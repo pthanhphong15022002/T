@@ -59,10 +59,9 @@ export class CustomersComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1,
         },
       },
     ];

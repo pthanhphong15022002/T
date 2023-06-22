@@ -62,6 +62,8 @@ import { DeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expens
 import { PopAddDeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses.component';
 import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/deduct-interest-expenses.component';
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
+import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
+import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
 
 export const routes: Routes = [
   {
@@ -172,6 +174,11 @@ export const routes: Routes = [
         component: DeductInterestExpensesComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'closingtransaction/:funcID',
+        component: ClosingTransactionComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
@@ -232,6 +239,8 @@ export const routes: Routes = [
     PopAddDeductPrepaidExpensesComponent,
     DeductInterestExpensesComponent,
     PopAddDeductInterestExpensesComponent,
+    ClosingTransactionComponent,
+    PopAddClosingTransactionComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
