@@ -3213,8 +3213,16 @@ codx-card-center .card.codx_cardcenter{
 .role-group ejs-listview .e-ul > li .d-flex.user-card {
   border-bottom: 1px var(--gray-150) solid;
 }
-#Content-Fillter .e-tab .e-tab-header .e-tab-wrap{
-  min-width: auto;
+#Content-Fillter{ 
+  .e-tab .e-tab-header .e-tab-wrap{
+    min-width: auto;
+  }
+  &.width-20{
+    width: 28%;
+  }
+  &.width-0{
+    box-shadow: none;
+  }
 }
 .card-body.fillter-card-body{
   padding-left: 0!important;
