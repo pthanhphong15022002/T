@@ -120,8 +120,8 @@
     >
       <ng-template #itemTemplate let-items="">
         <div
-          *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
           class="itemlist"
+          *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
         >
           <span class="text">{{ items.text }}</span>
         </div>

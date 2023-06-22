@@ -3,6 +3,7 @@ import {
   CodxFormComponent,
   DialogData,
   DialogRef,
+  FormModel,
   UIComponent,
 } from 'codx-core';
 import { Observable } from 'rxjs';
@@ -57,7 +58,7 @@ export class MultiSelectPopupComponent extends UIComponent {
           map((data) =>
             data.datas
               .filter((d) =>
-                this.showAll ? true : settingValues.includes(d.value)
+                this.showAll ? true : settingValues?.includes(d.value)
               )
               .map((d) => ({
                 value: d.value,

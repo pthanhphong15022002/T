@@ -39,7 +39,7 @@ export class TabDetailCustomComponent
   // @Output() contactEvent = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
-  isUpdate = true; //xư lý cho edit trung tuy chinh ko
+  // isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
   listContract: CM_Contacts[];
@@ -88,6 +88,7 @@ export class TabDetailCustomComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
       this.isDataLoading = true;
+      this.dataSelected = this.dataSelected;
       if(this.tabClicked === this.tabContact )
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);

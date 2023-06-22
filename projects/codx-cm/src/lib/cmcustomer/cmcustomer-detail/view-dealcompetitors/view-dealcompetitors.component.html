@@ -39,7 +39,7 @@
     [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
     class="d-flex justify-content-between align-items-top p-3 border-bottom border-gray-150 user-nav-item"
   >
-    <div class="col-4 d-flex justify-content-start">
+    <div class="d-flex justify-content-start w-225px min-w-225px">
       <div class="d-flex flex-column">
         <div
           class="align-items-start text-dark fw-bold line-clamp line-clamp-1"
@@ -58,107 +58,103 @@
             ></span>
           </ng-template>
         </div>
-        <div class="row mb-1">
-          <div class="col-6">
-            <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-between mb-1">
+          <div class="d-flex justify-content-start w-50 me-2">
+            <span [ngbTooltip]="popupDealValue" class="icon-money icon-16 me-1">
+              <ng-template #popupDealValue>
+                <codx-label
+                  fiedName="DealValue"
+                  [formModel]="fromModelDeal"
+                ></codx-label>
+              </ng-template>
+            </span>
+            <span
+              class="ms-1 text-dark fw-bold"
+              [innerHTML]="
+                data?.dealValue
+                  | formatvalue : fromModelDeal : 'DealValue'
+                  | async
+              "
+            ></span>
+          </div>
+          <div class="d-flex justify-content-end w-50">
+            <span
+              class="icon-offline_pin icon-16 me-1"
+              [ngbTooltip]="popupProbability"
+            >
+              <ng-template #popupProbability>
+                <codx-label
+                  fiedName="Probability"
+                  [formModel]="fromModelDeal"
+                ></codx-label>
+              </ng-template>
+            </span>
+            <span
+              class="text-dark fw-bold"
+              [innerHTML]="
+                data?.probability
+                  | formatvalue : fromModelDeal : 'Probability'
+                  | async
+              "
+            ></span
+            ><span class="text-dark fw-bold">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-start w-125px min-w-125px" *ngIf="getStep(data?.stepID)">
+      <div class="d-flex flex-column">
+        <div class="d-flex align-items-center justify-content-end mb-1">
+          <div
+            *ngIf="data.status != '1'"
+            [ngStyle]="{
+              'background-color':
+                data.status == '3' || data.status == '4'
+                  ? colorReasonSuccess?.color
+                  : data.status == '5' || data.status == '6'
+                  ? colorReasonFail?.color
+                  : getStep(data?.stepID)?.backgroundColor
+            }"
+            class="badge badge-sm d-flex align-items-center"
+          >
+            <span
+              [ngClass]="getStep(data?.stepID)?.icon"
+              [ngStyle]="{ color: getStep(data?.stepID)?.iconColor }"
+              class="me-1"
+            ></span>
+            <div
+              [ngbPopover]="getStep(data?.stepID)?.stepName"
+              #pStep="ngbPopover"
+              [openDelay]="500"
+              (mouseenter)="pStep.open()"
+              (mouseleave)="pStep.close()"
+              placement="left bottom right top"
+            >
               <span
-                [ngbTooltip]="popupDealValue"
-                class="icon-money icon-16 me-1"
-              >
-                <ng-template #popupDealValue>
-                  <codx-label
-                    fiedName="DealValue"
-                    [formModel]="fromModelDeal"
-                  ></codx-label>
-                </ng-template>
-              </span>
-              <span
-                class="ms-1 text-dark fw-bold"
-                [innerHTML]="
-                  data?.dealValue
-                    | formatvalue : fromModelDeal : 'DealValue'
-                    | async
-                "
+                class="line-clamp line-clamp-1"
+                [ngStyle]="{ color: getStep(data?.stepID)?.textColor }"
+                [innerHTML]="getStep(data?.stepID)?.stepName"
               ></span>
             </div>
           </div>
-          <div class="col-6">
-            <div class="d-flex justify-content-end">
-              <span
-                class="icon-offline_pin icon-16 me-2"
-                [ngbTooltip]="popupProbability"
-              >
-                <ng-template #popupProbability>
-                  <codx-label
-                    fiedName="Probability"
-                    [formModel]="fromModelDeal"
-                  ></codx-label>
-                </ng-template>
-              </span>
-              <span
-                class="text-dark fw-bold"
-                [innerHTML]="
-                  data?.probability
-                    | formatvalue : fromModelDeal : 'Probability'
-                    | async
-                "
-              ></span
-              ><span class="text-dark fw-bold">%</span>
-            </div>
+          <div
+            class="d-flex justify-content-end mb-1"
+            *ngIf="data.status == '1'"
+          >
+            <codx-vll
+              [name]="'DP028'"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-2 ms-1" *ngIf="getStep(data?.stepID)">
-      <div
-        style="width: 150px; border-radius: 20px"
-        class="d-flex align-items-center mb-1"
-        *ngIf="data.statusStep != '1'"
-        [ngStyle]="{
-          'background-color':
-            data.statusStepStep == '3' || data.statusStep == '4'
-              ? colorReasonSuccess?.color
-              : data.statusStep == '5' || data.statusStep == '6'
-              ? colorReasonFail?.color
-              : getStep(data?.stepID)?.backgroundColor
-        }"
-      >
-        <span
-          [ngClass]="getStep(data?.stepID)?.icon"
-          [ngStyle]="{ color: getStep(data?.stepID)?.iconColor }"
-          class="ms-2 me-1"
-        ></span>
-        <div
-          [ngbPopover]="getStep(data?.stepID)?.stepName"
-          #pStep="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="pStep.open()"
-          (mouseleave)="pStep.close()"
-          placement="left bottom right top"
-        >
-          <span
-            class="line-clamp line-clamp-1"
-            [ngStyle]="{ color: getStep(data?.stepID)?.textColor }"
-            [innerHTML]="getStep(data?.stepID)?.stepName"
-          ></span>
-        </div>
-      </div>
-      <div
-        *ngIf="data.statusStep == '1'"
-        style="width: 150px; border-radius: 20px"
-      >
-        <codx-vll
-          [name]="'DP028'"
-          [field]="'StatusStep'"
-          [value]="data?.statusStep"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-sm"
-        >
-        </codx-vll>
-      </div>
-    </div>
-    <div class="d-flex col-3 ustify-content-between align-items-start">
+    <div class="d-flex w-225px min-w-225px ustify-content-between align-items-start">
       <span
         class="icon-star_purple500 icon-16 me-1"
         [ngbTooltip]="popupIconStreng"
@@ -179,7 +175,7 @@
         "
       ></span>
     </div>
-    <div class="col-3 d-flex align-items-start">
+    <div class="w-225px min-w-225px d-flex align-items-start">
       <span
         class="icon-star_border_purple500 icon-16 me-1"
         [ngbTooltip]="popupIconWeaknesses"

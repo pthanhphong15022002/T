@@ -111,8 +111,13 @@
           <div class="mb-1" *ngIf="data?.jobTitle">
             <span class="text-gray-600">{{ data.jobTitle }}</span>
           </div>
-          <div *ngIf="data?.role">
-            <span class="text-gray-600">{{ data?.role }}</span>
+          <div *ngIf="objectType == '4'">
+            <span class="">
+              <input type="text" #lblRole name="lblRole" matInput autofocus [value]="data?.role" [disabled]="type == 'formDetail' ? true : false"
+                (blur)="updateRole(lblRole.value, data.recID)"
+                (keydown.enter)="updateRole(lblRole.value, data.recID)" class="form-control no-border text-gray-600"
+                placeholder="{{ placeholder }}" />
+            </span>
           </div>
           <!-- <div class="" *ngIf="data.isDefault">
             <codx-label
@@ -193,7 +198,7 @@
     </div>
     <div class="action-menu-od w-100px">
       <codx-mfunc
-        [hidden]="hidenMF && objectType != '4' ? true : false"
+        [hidden]="hidenMF"
         [formModel]="formModelContact"
         [isBookMark]="true"
         [dataItem]="data"

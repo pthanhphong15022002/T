@@ -96,6 +96,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   grvSetupQuotations: any;
   grvSetupQuotationsLines: any;
   crrCustomerID: string;
+  copyToRecID: any;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -123,19 +124,24 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.disableRefID = dt?.data?.disableRefID;
     this.disableCusID = dt?.data?.disableCusID;
     this.disableContactsID = dt?.data?.disableContactsID;
+    this.copyToRecID = dt?.data?.copyToRecID;
     this.listQuotationLines = [];
 
     if (this.action == 'edit' || this.action == 'copy') {
-      this.codxCM
-        .getQuotationsLinesByTransID(this.quotations.recID)
-        .subscribe((res) => {
-          if (res) {
-            this.listQuotationLines = res;
-            if (this.action == 'copy') {
-              this.listQuotationLines.forEach((x) => (x.recID = Util.uid()));
-            }
+      let tranID =
+        this.action == 'edit' ? this.quotations.recID : this.copyToRecID;
+      this.codxCM.getQuotationsLinesByTransID(tranID).subscribe((res) => {
+        if (res) {
+          this.listQuotationLines = res;
+          if (this.action == 'copy') {
+            this.listQuotationLines.forEach((x) => {
+              x.recID = Util.uid();
+              x.Id = null;
+              x.transID = this.quotations.recID;
+            });
           }
-        });
+        }
+      });
     }
     this.loadDefault();
   }
@@ -157,7 +163,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.arrFieldIsVisible = arrField
             .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
             .map((x: any) => x.fieldName);
-          this.getColumsGrid(res);
+          // this.getColumsGrid(res);
         }
       });
 

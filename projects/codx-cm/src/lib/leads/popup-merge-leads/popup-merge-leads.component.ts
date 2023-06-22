@@ -77,7 +77,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   recIDAvt: any;
   nameContact: any;
   modifyOnContact: Date;
-
+  data: any;
+  isDate: boolean = false;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -90,10 +91,19 @@ export class PopupMergeLeadsComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.title = dt?.data?.title;
-    this.leadOne = JSON.parse(JSON.stringify(dt?.data?.data));
-    this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
+    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
   }
   async ngOnInit() {
+    this.isDate = false;
+    this.changeAvata = false;
+    this.changeAvataContact = false;
+    setTimeout(() => {
+      this.leadOne = JSON.parse(JSON.stringify(this.data));
+      this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
+    }, 0);
+  }
+
+  async ngAfterViewInit() {
     this.leadNew.recID = Util.uid();
     this.leadNew.contactID = Util.uid();
     this.leadTwo.recID = null;
@@ -108,12 +118,6 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
     this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
     this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
-
-    this.changeAvata = false;
-    this.changeAvataContact = false;
-  }
-
-  async ngAfterViewInit() {
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
       this.lstAddressOne = await this.getListAddress(
@@ -393,7 +397,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
   valueDateChange(e) {
     if (e != null) {
-      this.leadNew.establishDate = e?.data?.fromDate;
+      if (this.leadNew.establishDate != e?.data?.fromDate)
+        this.leadNew.establishDate = e?.data?.fromDate;
     }
   }
 

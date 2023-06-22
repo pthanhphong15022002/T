@@ -431,6 +431,7 @@ export class OkrTargetsComponent implements OnInit {
       case OMCONST.MFUNCID.SKRAssign:
       case OMCONST.MFUNCID.KRAssign: {
         this.assignmentOKR(kr, e.text);
+        //this.distributeOKR(kr, e?.text);
         break;
       }
       //Giao việc
@@ -850,6 +851,7 @@ export class OkrTargetsComponent implements OnInit {
     oldOKR.actual = newOKR?.actual;
     oldOKR.current = newOKR?.current;
     oldOKR.rangeDate = newOKR?.rangeDate;
+    oldOKR.personIncharge = newOKR?.personIncharge;
     oldOKR.rangeDateText = this.getRangeDate(newOKR?.rangeDate);
     if (newOKR?.okrTasks != null && newOKR?.okrTasks.length > 0) {
       oldOKR.okrTasks = newOKR?.okrTasks;
@@ -1274,6 +1276,11 @@ export class OkrTargetsComponent implements OnInit {
       '',
       dModel
     );
+    dialogDisKR.closed.subscribe((res) => {
+      if (res?.event) {
+        this.updateOKRPlans.emit(this.dataOKRPlans?.recID);
+      }
+    });
   }
   assignmentOKR(okr: any, title: any) {
     let dModel = new DialogModel();
@@ -1284,12 +1291,12 @@ export class OkrTargetsComponent implements OnInit {
       400,
       null,
       [
-        okr.okrName,
-        okr.recID,
-        okr.okrType,
+        okr?.okrName,
+        okr?.recID,
+        okr?.okrType,
         this.funcID,
         title,
-        this.dataOKRPlans.recID,
+        this.dataOKRPlans?.recID,
       ],
       '',
       dModel

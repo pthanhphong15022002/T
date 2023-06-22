@@ -172,9 +172,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     this.sortModel = data?.data?.sortModel;
     this.formModel = data?.data?.formModel;
     this.hasFilter = data?.data?.hasFilter;
-
-    console.log('sortModel nhan vao', this.sortModel);
-    
+    // console.log('sortModel nhan vao', this.sortModel);
   }
 
   //Get grid view setup
@@ -579,8 +577,6 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         }
       }
       if(lstResult.length > 0){
-        console.log('ds kq ne', lstResult);
-        
         if(this.funcID == this.eBasicSalaryFuncID || this.funcID == this.eContractFuncID){
           this.dialogRef.close(lstResult[0])
         }
@@ -932,7 +928,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       this.filterEBenefitPredicates += ') ';
-      console.log('truong hop 1', this.filterEBenefitPredicates);
+      // console.log('truong hop 1', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
@@ -956,7 +952,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       }
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += ') ';
-      console.log('truong hop 2', this.filterEBenefitPredicates);
+      // console.log('truong hop 2', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
@@ -975,14 +971,14 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         .subscribe((res) =>{
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
         });
-      console.log('truong hop 3', this.filterEBenefitPredicates);
+      // console.log('truong hop 3', this.filterEBenefitPredicates);
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
       (this.startDateEBenefitFilterValue == undefined ||
         this.startDateEBenefitFilterValue == null)
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}")`;
-      console.log('truong hop 4', this.filterEBenefitPredicates);
+      // console.log('truong hop 4', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
         .setPredicates([this.filterEBenefitPredicates], [''])
         .subscribe((res) =>{

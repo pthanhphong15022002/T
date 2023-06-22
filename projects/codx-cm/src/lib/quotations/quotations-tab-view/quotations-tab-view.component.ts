@@ -98,8 +98,8 @@ export class QuotationsTabViewComponent
     private notiServer: NotificationsService,
     private codxShareService: CodxShareService,
     private routerActive: ActivatedRoute,
-    private notiService : NotificationsService,
-    private codxCM : CodxCmService,
+    private notiService: NotificationsService,
+    private codxCM: CodxCmService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -236,6 +236,9 @@ export class QuotationsTabViewComponent
       case 'CM0202_4':
         this.createNewVersion(data);
         break;
+      case 'CM0202_5':
+        this.viewDetail(data);
+        break;
     }
   }
 
@@ -264,7 +267,7 @@ export class QuotationsTabViewComponent
     });
   }
 
-  openPopup(res, action) {
+  openPopup(res, action,copyToRecID=null) {
     res.status = res.status ?? '0';
     res.customerID = res.customerID ?? this.customerID;
     res.refType = res.refType ?? this.refType;
@@ -285,6 +288,7 @@ export class QuotationsTabViewComponent
       disableContactsID: this.disableContactsID,
       action: action,
       headerText: this.titleActionAdd,
+      copyToRecID : copyToRecID
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -303,6 +307,7 @@ export class QuotationsTabViewComponent
     dialog.closed.subscribe((e) => {
       if (e?.event) {
         this.listQuotations.push(e.event);
+        if (this.isNewVersion) this.isNewVersion = false;
       }
     });
   }
@@ -345,6 +350,7 @@ export class QuotationsTabViewComponent
 
   copy(dataCopy) {
     //gọi alow copy
+    let copyToRecID = dataCopy?.recID;
     this.getDefault().subscribe((res) => {
       let data = res.data;
       data['_uuid'] = data['quotationsID'] ?? Util.uid();
@@ -370,9 +376,9 @@ export class QuotationsTabViewComponent
           )
           .subscribe((id) => {
             res.quotationID = id;
-            this.openPopup(this.quotation, 'copy');
+            this.openPopup(this.quotation, 'copy',copyToRecID);
           });
-      } else this.openPopup(this.quotation, 'copy');
+      } else this.openPopup(this.quotation, 'copy',copyToRecID);
     });
   }
 
@@ -501,7 +507,12 @@ export class QuotationsTabViewComponent
                 //this.callfunc.openForm();
               } else if (res2?.eSign == false) {
                 this.codxShareService
-                  .codxCancel('CM',dt?.recID, this.view.formModel.entityName,'')
+                  .codxCancel(
+                    'CM',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    ''
+                  )
                   .subscribe((res3) => {
                     if (res3) {
                       this.itemSelected.status = '0';

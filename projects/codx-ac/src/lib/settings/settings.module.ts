@@ -89,7 +89,7 @@ var routes: Routes = [
         component: InventoryComponent,
       },
       {
-        path: 'itempostingaccounts/:funcID',
+        path: 'postingaccounts/:funcID',
         component: ItempostingaccountsComponent,
       },
       {

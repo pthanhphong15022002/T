@@ -60,6 +60,7 @@ export class PopupAddDealComponent
   action: string = '';
   autoName: string = '';
   title: string = '';
+  oldIdInstance: string = '';
 
   // Data struct Opportunity
   deal: CM_Deals = new CM_Deals();
@@ -76,15 +77,13 @@ export class PopupAddDealComponent
   listParticipants: any[] = [];
   listOrgs: any[] = [];
 
+
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
   readonly actionEdit: string = 'edit';
   readonly typeForDeal: string = '1';
-  readonly fieldCbxProcess = { text: 'processName', value: 'recID' };
-  readonly fieldCbxCampaigns = { text: 'campaignName', value: 'recID' };
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
-  readonly fieldCbxChannels = { text: 'channelName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   // Tab control
@@ -165,13 +164,10 @@ export class PopupAddDealComponent
       this.formModel = dt?.data?.formMD;
 
       if (this.action != this.actionAdd) {
-        // setTimeout(() => {
-
-        // }, 0);
         this.deal = dt?.data?.dataCM;
       }
     } else {
-      this.deal = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+      this.deal = this.action != this.actionAdd? JSON.parse(JSON.stringify(dialog.dataService.dataSelected)): this.deal;
     }
 
     if (dt?.data.processID) {
@@ -187,6 +183,7 @@ export class PopupAddDealComponent
     if (this.action === this.actionCopy) {
       this.deal.owner = null;
       this.deal.salespersonID = null;
+      this.oldIdInstance = this.deal.refID;
     }
   }
 
@@ -230,8 +227,14 @@ export class PopupAddDealComponent
     }
   }
   lstContactEmit(e) {
-    this.lstContactCustomer = e;
+    this.lstContactDeal = e;
+    // if (!this.isCheckContact) this.isCheckContact = true;
   }
+
+  lstContactDeleteEmit(e){
+    this.lstContactDelete = e;
+  }
+
   objectConvertDeal(e) {
     if (e.e == true) {
       if (e.data) {
@@ -623,15 +626,14 @@ export class PopupAddDealComponent
     if (this.action !== this.actionEdit) {
       datas = [this.deal, this.lstContactDeal];
     } else {
-      this.covnertListContact(
-        this.lstContactOld,
-        JSON.parse(JSON.stringify(this.lstContactDeal))
-      );
+      // this.covnertListContact(
+      //   this.lstContactOld,
+      //   JSON.parse(JSON.stringify(this.lstContactDeal))
+      // );
       datas = [
         this.deal,
         this.customerIDOld,
         this.lstContactDeal,
-        this.lstContactAdd,
         this.lstContactDelete,
       ];
     }
@@ -727,7 +729,7 @@ export class PopupAddDealComponent
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.deal.processID : processId;
-    var data = [processId, this.deal?.refID, this.action, '1'];
+      var data = [processId, this.deal?.refID, this.action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
@@ -764,7 +766,7 @@ export class PopupAddDealComponent
   }
 
   async insertInstance() {
-    var data = [this.instance, this.listInstanceSteps, null];
+    var data = [this.instance, this.listInstanceSteps, this.oldIdInstance ];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.isLoading && this.dialog.close(instance);
@@ -788,10 +790,10 @@ export class PopupAddDealComponent
     });
   }
   async editDealForDP() {
-    this.covnertListContact(
-      this.lstContactOld,
-      JSON.parse(JSON.stringify(this.lstContactDeal))
-    );
+    // this.covnertListContact(
+    //   this.lstContactOld,
+    //   JSON.parse(JSON.stringify(this.lstContactDeal))
+    // );
     var datas = [
       this.deal,
       this.customerIDOld,

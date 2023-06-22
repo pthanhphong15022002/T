@@ -39,11 +39,11 @@
       <div class="d-flex align-items-top">
         <span class="me-3 w-15px mt-n3">
           <codx-input
-            name="customer-1"
+            name="contact-1"
             type="radio"
             style="width: 100%"
             field="yes"
-            [checked]="radioChecked ?? false"
+            [checked]="radioCheckedContact ?? false"
             (valueChange)="changeRadio($event)"
           ></codx-input>
         </span>
@@ -64,11 +64,11 @@
       <div class="d-flex align-items-start">
         <span class="me-3 w-15px mt-n3">
           <codx-input
-            name="customer-2"
+            name="contact-2"
             type="radio"
             style="width: 100%"
             field="no"
-            [checked]="!radioChecked ?? false"
+            [checked]="!radioCheckedContact ?? false"
             (valueChange)="changeRadio($event)"
           ></codx-input>
         </span>
@@ -86,7 +86,7 @@
   <div
     class="mt-5"
     *ngIf="
-      radioChecked && actionOld == 'add';
+      radioCheckedContact && actionOld == 'add';
       then systemCustomer;
       else addCustomer
     "

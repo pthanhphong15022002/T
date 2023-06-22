@@ -72,6 +72,7 @@ export class ContractsComponent extends UIComponent{
   methodLoadData = 'GetListContractsAsync';
 
   isAddContract = true;
+  actionName = ''
 
   fmQuotations: FormModel = {
     formName: 'CMQuotations',
@@ -193,6 +194,7 @@ export class ContractsComponent extends UIComponent{
   }
 
   click(e) {
+    this.actionName = e?.text;
     switch (e.id) {
       case 'btnAdd':
         if(this.isAddContract){
@@ -246,6 +248,7 @@ export class ContractsComponent extends UIComponent{
     this.clickMF(e.e, e.data);
   }
   clickMF(e, data) {
+    this.actionName = e.text;
     switch (e.functionID) {
       case 'SYS02':
         this.deleteContract(data);
@@ -287,8 +290,6 @@ export class ContractsComponent extends UIComponent{
   }
 
   async addContractAdjourn(data: CM_Contracts){
-    console.log('-------------',this.view.formModel);
-    
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
       contracts.contractType = '2';
@@ -368,6 +369,7 @@ export class ContractsComponent extends UIComponent{
       contract: contract || null,
       account: this.account,
       type: 'view',
+      actionName: this.actionName || '',
     }
     let option = new DialogModel();
     option.IsFull = true;

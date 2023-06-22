@@ -1,5 +1,5 @@
 <codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="entityName"
-  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo"
+  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" [autoLoad]="true"
   (selectedChange)="changeItemDetail($event)">
 </codx-views>
 <ng-template #templateMore let-data>
@@ -39,9 +39,9 @@
   </div>
   <div>
     <span *ngIf="journal.multiCurrency == '0'"
-      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalDR.toLocaleString('it-IT')}}</span>
+      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalDR.toLocaleString('it-IT')}}</span>
     <span *ngIf="journal.multiCurrency == '1'"
-      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{itemSelected?.totalDR.toLocaleString('it-IT') +'
+      class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalDR.toLocaleString('it-IT') +'
       '+data?.currencyID }}</span>
   </div>
 </ng-container>

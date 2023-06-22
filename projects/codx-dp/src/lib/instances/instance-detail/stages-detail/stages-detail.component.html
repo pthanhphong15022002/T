@@ -143,6 +143,7 @@
       <div class="d-flex align-items-center me-6">
         <codx-label
           name="lblOwnerStepProcess"
+          [formModel]="formModel"
           default="Người phụ trách giai đoạn:"
           class="me-2 fw-bold"
         ></codx-label>
@@ -159,6 +160,7 @@
         <div *ngIf="!ownerStepProcess">
           <codx-label
             name="lblOwnerStepProcess"
+            [formModel]="formModel"
             default="Người phụ trách giai đoạn"
             class="text-gray-400 font-italic fw-normal"
           ></codx-label>
@@ -167,6 +169,7 @@
       <div class="d-flex align-items-center me-6">
         <codx-label
           name="lblOwner"
+          [formModel]="formModel"
           default="Người phụ trách nhiệm vụ tại giai đoạn:"
           class="me-2 fw-bold"
         ></codx-label>
@@ -183,6 +186,7 @@
         <div *ngIf="!dataStep.owner">
           <codx-label
             name="lblOwner"
+            [formModel]="formModel"
             default="Người phụ trách nhiệm vụ tại giai đoạn"
             class="text-gray-400 font-italic fw-normal"
           ></codx-label>
@@ -193,6 +197,7 @@
         <codx-label
           class="me-2 fw-bold"
           name="lblInvolved"
+          [formModel]="formModel"
           default="Người liên
           quan:"
         ></codx-label>
@@ -209,6 +214,7 @@
         <div *ngIf="lstIDInvo == null || lstIDInvo == ''">
           <codx-label
             name="lblInvolved"
+            [formModel]="formModel"
             default="Người liên
           quan"
             class="text-gray-400 font-italic fw-normal"
@@ -398,7 +404,7 @@
     <div id="step-reason" class="main" [ngClass]="'show-main'">
       <div class="main-body my-3 me-5" *ngIf="dataStep?.reasons.length > 0">
         <ng-container *ngFor="let item of dataStep?.reasons" class="pb-2">
-          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+          <ul class="text-left drap-drop mb-1 has-action-menu">
             <li>
               {{ item.reasonName }}
               <codx-mfunc
@@ -451,27 +457,13 @@
 </ng-template>
 
 <ng-template #footerFormReName>
-  <button type="button" class="btn btn-primary" (click)="onSaveReason()">
-    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  <button type="button" class="btn btn-primary" (click)="onSaveReason()"     [disabled]="listReasonsClick.length < 0 && !listReasonsClick">
+    <codx-label fiedName="lblSave" default="Lưu" ></codx-label>
   </button>
 </ng-template>
 <ng-template #popperMemo>
   <div [innerHTML]="dataStep?.memo"></div>
 </ng-template>
 <ng-template #dataIsEmpty>
-  <div class="empty-data">
-    <div class="container h-100">
-      <div class="list-empty card card-flush h-100">
-        <div class="d-flex flex-column flex-center justify-content-center">
-          <img
-            src="../assets/themes/sys/default/img/DataEmpty.svg"
-            class="w-200px"
-          />
-          <div class="fs-5 text-dark fw-bold mt-2 text-center">
-            {{ "SYS011" | mssg | async }}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<codx-no-data></codx-no-data>
 </ng-template>

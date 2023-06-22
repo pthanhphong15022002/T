@@ -7,4 +7,7 @@ export class Paras {
     assetGroupID: any;
     assetID: any;
     journalNo: any;
+    calcGroupID: any;
+    buid: any;
+    loanContractID: any;
   }

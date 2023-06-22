@@ -164,6 +164,17 @@
           </div>
           <div class="d-flex justify-content-end me-3 mt-2">
             <div class="d-flex align-items-center w-100 h-30px">
+              <div class="ms-2" *ngIf="dataSelect.approveStatus != 1">
+                <codx-vll
+                  [name]="vllApprover"
+                  [field]="'ApproveStatus'"
+                  [value]="dataSelect.approveStatus"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-sm line-clamp-vll"
+                >
+                </codx-vll>
+              </div>
               <div class="d-flex flex-column">
                 <div
                   class="badge badge-md d-flex align-items-center p-2"
@@ -179,27 +190,34 @@
                   <span
                     [ngClass]="stepValue['icon']"
                     [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-1 icon-16"
+                    class="me-1"
                   ></span>
                   <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                     stepName
                   }}</span>
                 </div>
-              </div>             
-                <div class="d-flex align-items-center mx-2" *ngIf="dataSelect.owner">
-                  <codx-imgs
-                    class="d-flex align-items-center"
-                    [isToolTip]="true"
-                    [width]="25"
-                    [objectId]="dataSelect.owner"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
-                  >
-                  </codx-imgs>
-                </div>           
-              <div class="mt-1">
-                <codx-progressbar [progress]="progress" [stype]="2" [size]="34"></codx-progressbar>
-               </div>
+              </div>
+              <div
+                class="d-flex align-items-center mx-2"
+                *ngIf="dataSelect.owner"
+              >
+                <codx-imgs
+                  class="d-flex align-items-center"
+                  [isToolTip]="true"
+                  [width]="25"
+                  [objectId]="dataSelect.owner"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
+              </div>
+              <div class="ms-2">
+                <codx-progressbar
+                  [progress]="progress"
+                  [stype]="2"
+                  [size]="34"
+                ></codx-progressbar>
+              </div>
             </div>
           </div>
         </div>
@@ -331,7 +349,8 @@
                   [isUpdate]="
                     dataSelect.write &&
                     !dataSelect.closed &&
-                    (dataSelect.status == '1' || dataSelect.status == '2') && dataSelect?.approveStatus !='3'
+                    (dataSelect.status == '1' || dataSelect.status == '2') &&
+                    dataSelect?.approveStatus != '3'
                   "
                   [currentElmID]="currentElmID"
                   (inputElmIDCF)="inputElmIDCustomField($event)"

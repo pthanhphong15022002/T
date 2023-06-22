@@ -21,6 +21,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddQuotationsLinesComponent } from './popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { CM_QuotationsLines } from '../models/cm_model';
 
 @Component({
   selector: 'codx-quotations-lines',
@@ -46,6 +47,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() showButtonAdd = true; //
   @Input() hideMoreFunc = '0'; //chua dung
   @Output() eventQuotationLines = new EventEmitter<any>();
+
+  @Input() isSetMoreFunc = false; //thuan them de set quotation của contract
 
   fmQuotationLines: FormModel = {
     formName: 'CMQuotationsLines',
@@ -114,12 +117,27 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       listQuotationLines: this.listQuotationLines,
       quotationLinesAddNew: this.quotationLinesAddNew,
       quotationLinesEdit: this.quotationLinesEdit,
-      quotationLinesDeleted: this.quotationLinesDeleted,
+      quotationLinesDeleted: this.quotationLinesDeleted
     };
   }
 
   //#region  CRUD
   // region QuotationLines
+  async changeDataMFQuotationLines(event, quotationLine?: CM_QuotationsLines) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS03': //sửa
+          case 'SYS04': //copy
+          case 'SYS02': //xóa
+            if(!(this.isSetMoreFunc && quotationLine?.transID)){
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
   clickMFQuotationLines(e, data) {
     this.titleActionLine = e.text;
     switch (e.functionID) {
@@ -254,6 +272,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines;
                       this.objectOut.quotationLinesAddNew =
                         this.quotationLinesAddNew;
+                      this.objectOut['quotationLineIdNew'] = data?.recID; // thuan thêm để lấy quotationLines mới thêm
                       this.eventQuotationLines.emit(this.objectOut);
                       this.changeDetector.detectChanges();
                     }
@@ -341,7 +360,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                 if (this.actionParent == 'edit') {
                   this.linesUpdate(data);
                 }
-
                 this.gridQuationsLines.refresh();
                 // this.dialog.dataService.updateDatas.set(
                 //   this.quotations['_uuid'],
@@ -428,6 +446,9 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines.push(data);
                         this.gridQuationsLines.refresh();
                         this.loadTotal();
+                        this.objectOut.quotationLinesAddNew = this.quotationLinesAddNew ;
+                        this.objectOut.listQuotationLines = this.listQuotationLines ;
+
                         this.eventQuotationLines.emit(this.objectOut);
                         this.changeDetector.detectChanges();
                       }
@@ -462,7 +483,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   quotationsLineChanged(e) {
     if (!e.field || !e.data) return;
     let lineCrr = e.data;
-
     switch (e.field) {
       case 'itemID':
         this.loadItem(e.value, lineCrr);

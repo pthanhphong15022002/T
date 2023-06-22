@@ -339,6 +339,7 @@
               </codx-quotations> -->
               <codx-quotations-tab-view
                 [funcID]="'CM0202'"
+                [showButton]='true'
                 [customerID]="dataSelected.recID"
                 [predicates]="'CustomerID==@0'"
                 [dataValues]="dataSelected.recID"
@@ -348,6 +349,13 @@
             <ng-container *ngIf="name == 'Contract'">
               <ng-container
                 [ngTemplateOutlet]="contract"
+                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+              >
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="name == 'task'">
+              <ng-container
+                [ngTemplateOutlet]="taskTemplate"
                 [ngTemplateOutletContext]="{ $implicit: dataSelected }"
               >
               </ng-container>
@@ -414,4 +422,10 @@
     [listContract]="listContract"
     [type]="'customer'"
   ></list-contracts>
+</ng-template>
+<ng-template #taskTemplate let-data>
+  <step-task
+    [typeTask]="2"
+    [customerID]="dataSelected?.recID"
+  ></step-task>
 </ng-template>

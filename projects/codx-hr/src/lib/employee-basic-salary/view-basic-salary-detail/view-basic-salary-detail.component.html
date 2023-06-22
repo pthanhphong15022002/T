@@ -21,8 +21,49 @@
       >
         <!-- info view -->
         <ng-template #title>
-          <div class="d-flex flex-column">
-            <!-- emp info -->
+          <div class="d-flex flex-column ms-1 w-100">
+            <div class="mb-2 d-flex">
+              <span class="text-dark fs-5-sm fw-bold me-3">
+                {{ itemDetail?.emp?.employeeName }}
+              </span>
+            </div>
+            <div class="d-flex align-items-center text-gray-600 mb-1">
+              <span
+                class="me-4 fw-bold text-dark"
+                [innerHTML]="
+                  itemDetail?.emp?.positionID
+                    | formatvalue : formModel : 'positionID'
+                    | async
+                "
+                >' '</span
+              >
+              <span
+                class="me-4 d-flex align-items-center"
+                *ngIf="itemDetail?.emp?.email"
+              >
+                <i class="icon-email icon-16 me-2"></i>
+                {{ itemDetail?.emp?.email }}
+              </span>
+              <span
+                class="me-3 d-flex align-items-center"
+                *ngIf="itemDetail?.emp?.mobile"
+              >
+                <i class="icon-phone_android icon-16 me-2"></i>
+                {{ itemDetail?.emp?.mobile }}
+              </span>
+            </div>
+            <!-- 2 -->
+            <div class="text-gray-600 fs-7">
+              <span
+                [innerHTML]="
+                  itemDetail?.emp?.orgUnitID
+                    | formatvalue : formModel : 'orgUnitID'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <!-- <div class="d-flex flex-column">
             <div class="d-flex align-items-center mb-2">
               <span class="fs-5 fw-bold text-dark me-1">{{
                 itemDetail?.emp?.employeeName
@@ -58,7 +99,7 @@
                 "
               ></span>
             </div>
-          </div>
+          </div> -->
         </ng-template>
         <!-- end -->
       </codx-temp-full>

@@ -1,4 +1,4 @@
-<!-- <view-details-dp-approval [data]="data" [formModel]="formModel" [transID]="transID" [approveStatus]="approveStatus"></view-details-dp-approval> -->
+<!-- <ng-template #panelRightRef> -->
 <codx-detail-tmp
   [header]="header"
   [dataItem]="data"
@@ -187,7 +187,10 @@
                   [ngClass]="{ 'text-primary': active === 1 }"
                 ></i
                 ><span>
-                  <codx-label name="StepsApprover" default="Quy trình duyệt"></codx-label>
+                  <codx-label
+                    name="StepsApprover"
+                    default="Quy trình duyệt"
+                  ></codx-label>
                 </span>
               </div>
             </a>
@@ -217,3 +220,19 @@
     </div>
   </ng-template>
 </codx-detail-tmp>
+<!-- </ng-template> -->
+<!-- <ng-template #panelRightRef let-data>
+  <codx-temp-full></codx-temp-full>
+</ng-template>
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  (selectedChange)="selectedChange($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  [idField]="idField"
+></codx-views> -->

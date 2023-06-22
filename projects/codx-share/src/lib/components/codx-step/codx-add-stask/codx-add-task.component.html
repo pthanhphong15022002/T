@@ -4,7 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="formModelMenu"
+  [formModel]="dialog?.formModel"
   [data]="stepsTasks"
   [openMore]="false"
 ></codx-form>
@@ -47,7 +47,7 @@
 <ng-template #body>
   <div class="card-form">
     <!-- Link group -->
-    <div class="form-group">
+    <div class="form-group" *ngIf="step">
       <div class="d-flex align-items-top">
         <codx-label
           class="text-primary me-2"
@@ -61,6 +61,7 @@
     </div>
     <!--End Link group -->
     <div
+      *ngIf="step"
       class="form-group d-flex justify-content-between align-item-center w-100"
     >
       <div class="step-name w-100">
@@ -87,7 +88,6 @@
     <!-- Ten Cong Viec -->
     <div
       class="form-group d-flex justify-content-between align-item-center w-100"
-      *ngIf="typeTask?.value != 'Q'"
     >
       <!-- name -->
       <div class="step-name w-100" [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''">
@@ -224,7 +224,7 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="typeTask?.value == 'Q'">
+    <!-- <div class="form-group" *ngIf="typeTask?.value == 'Q'">
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label name="Reference" default="Tên khảo sát"></codx-label>
         <a class="d-flex justify-content-end align-items-center cursor-pointer">
@@ -243,7 +243,7 @@
       >
       </codx-input>
       <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
-    </div>
+    </div> -->
 
     <div class="form-group">
       <div class="d-flex justify-content-between row">
