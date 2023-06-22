@@ -61,6 +61,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() moreFunc: any;
   // @Input() reloadData = false;
   @Input() stepStart: any;
+  @Input() vllApprover = 'DP043';
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   @Output() saveDatasInstance = new EventEmitter<any>();
@@ -390,7 +391,7 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpTeps = JSON.parse(JSON.stringify(data));;
+        this.tmpTeps = JSON.parse(JSON.stringify(data));
         this.outStepInstance.emit({ data: this.tmpTeps });
         this.stepValue = {
           textColor: data.textColor,
@@ -731,6 +732,7 @@ export class InstanceDetailComponent implements OnInit {
       var reasonInstance = new DP_Instances_Steps_Reasons();
       reasonInstance.processID = this.dataSelect.processID;
       reasonInstance.stepID = item.stepID;
+      reasonInstance.instanceID = this.dataSelect.recID
       reasonInstance.reasonName = item.reasonName;
       reasonInstance.reasonType = item.reasonType;
       reasonInstance.createdBy = item.createdBy;

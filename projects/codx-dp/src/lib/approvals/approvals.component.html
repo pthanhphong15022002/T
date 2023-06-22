@@ -1,118 +1,122 @@
-<!-- <view-details-dp-approval [data]="data" [formModel]="formModel" [transID]="transID" [approveStatus]="approveStatus"></view-details-dp-approval> -->
-<codx-detail-tmp
-  [header]="header"
-  [dataItem]="data"
-  [formModel]="formModel"
-  [body]="body"
-  [hideMF]="true"
-  class="h-100"
->
-  <ng-template #header>
-    <div class="d-flex justify-content-between mt-4 align-items-end">
-      <div class="container_detail mt-2">
-        <div class="d-flex justify-content-between">
-          <h3 class="mb-0">
-            {{ data?.title }}
-          </h3>
-        </div>
-        <div class="d-flex flex-column">
-          <div class="d-flex mt-2">
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  [setRequire]="false"
-                  fiedName="CreatedBy"
-                  [formModel]="formModel"
-                  [default]="'Người tạo nhiệm vụ'"
-                >
-                </codx-label>
+<ng-template #panelRightRef>
+  <codx-detail-tmp
+    [header]="header"
+    [dataItem]="data"
+    [formModel]="formModel"
+    [body]="body"
+    [hideMF]="true"
+    class="h-100"
+  >
+    <ng-template #header>
+      <div class="d-flex justify-content-between mt-4 align-items-end">
+        <div class="container_detail mt-2">
+          <div class="d-flex justify-content-between">
+            <h3 class="mb-0">
+              {{ data?.title }}
+            </h3>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="d-flex mt-2">
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    [setRequire]="false"
+                    fiedName="CreatedBy"
+                    [formModel]="formModel"
+                    [default]="'Người tạo nhiệm vụ'"
+                  >
+                  </codx-label>
+                </div>
+                <div>
+                  <codx-img
+                    [isToolTip]="true"
+                    [width]="25"
+                    [objectId]="data.createdBy"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                  >
+                  </codx-img>
+                </div>
               </div>
-              <div>
-                <codx-img
-                  [isToolTip]="true"
-                  [width]="25"
-                  [objectId]="data.createdBy"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
-                >
-                </codx-img>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    [setRequire]="false"
+                    fiedName="CreatedOn"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark fw-bold"
+                  [innerHTML]="
+                    data.createdOn
+                      | formatvalue : formModel : 'CreatedOn'
+                      | async
+                  "
+                ></div>
               </div>
-            </div>
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  [setRequire]="false"
-                  fiedName="CreatedOn"
-                  [formModel]="formModel"
-                >
-                </codx-label>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    fiedName="StartDate"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark fw-bold"
+                  [innerHTML]="
+                    data.startDate
+                      | formatvalue : formModel : 'StartDate'
+                      | async
+                  "
+                ></div>
               </div>
-              <div
-                class="text-dark fw-bold"
-                [innerHTML]="
-                  data.createdOn | formatvalue : formModel : 'CreatedOn' | async
-                "
-              ></div>
-            </div>
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  fiedName="StartDate"
-                  [formModel]="formModel"
-                >
-                </codx-label>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    fiedName="EndDate"
+                    [setRequire]="false"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark fw-bold"
+                  [innerHTML]="
+                    (data.status != '1' ? data.endDate : null)
+                      | formatvalue : formModel : 'EndDate'
+                      | async
+                  "
+                ></div>
               </div>
-              <div
-                class="text-dark fw-bold"
-                [innerHTML]="
-                  data.startDate | formatvalue : formModel : 'StartDate' | async
-                "
-              ></div>
-            </div>
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  fiedName="EndDate"
-                  [setRequire]="false"
-                  [formModel]="formModel"
-                >
-                </codx-label>
-              </div>
-              <div
-                class="text-dark fw-bold"
-                [innerHTML]="
-                  (data.status != '1' ? data.endDate : null)
-                    | formatvalue : formModel : 'EndDate'
-                    | async
-                "
-              ></div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <ng-container *ngIf="data">
-      <h5>File gửi trình ký chưa xử lý</h5>
-      <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
-      <codx-thumbnail
-        [files]="data?.files"
-        displayThumb="simple"
-        [hideDelete]="'1'"
-        [hideMoreF]="'0'"
-        (viewFile)="handleViewFile($event)"
-        [permissions]="data?.relations"
-      >
-      </codx-thumbnail>
-    </ng-container>
-  </ng-template>
-  <ng-template #body>
-    <div class="tab-horizone h-od-tab h-100">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-        <!-- <li [ngbNavItem]="1">
+      <ng-container *ngIf="data">
+        <h5>File gửi trình ký chưa xử lý</h5>
+        <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
+        <codx-thumbnail
+          [files]="data?.files"
+          displayThumb="simple"
+          [hideDelete]="'1'"
+          [hideMoreF]="'0'"
+          (viewFile)="handleViewFile($event)"
+          [permissions]="data?.relations"
+        >
+        </codx-thumbnail>
+      </ng-container>
+    </ng-template>
+    <ng-template #body>
+      <div class="tab-horizone h-od-tab h-100">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+          <!-- <li [ngbNavItem]="1">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <i class="fa-solid fa-user-tag me-2 mt-1"
@@ -178,31 +182,34 @@
             </ng-container>
           </ng-template>
         </li> -->
-        <ng-container>
-          <li [ngbNavItem]="1">
-            <a ngbNavLink>
-              <div class="d-flex align-item-center">
-                <i
-                  class="icon-people_alt me-2"
-                  [ngClass]="{ 'text-primary': active === 1 }"
-                ></i
-                ><span>
-                  <codx-label name="StepsApprover" default="Quy trình duyệt"></codx-label>
-                </span>
-              </div>
-            </a>
-            <ng-template ngbNavContent>
-              <ng-container>
-                <codx-view-approval-step
-                  [transID]="transID"
-                  [approveStatus]="approveStatus"
-                >
-                </codx-view-approval-step>
-              </ng-container>
-            </ng-template>
-          </li>
-        </ng-container>
-        <!-- <li [ngbNavItem]="3">
+          <ng-container>
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>
+                <div class="d-flex align-item-center">
+                  <i
+                    class="icon-people_alt me-2"
+                    [ngClass]="{ 'text-primary': active === 1 }"
+                  ></i
+                  ><span>
+                    <codx-label
+                      name="StepsApprover"
+                      default="Quy trình duyệt"
+                    ></codx-label>
+                  </span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-container>
+                  <codx-view-approval-step
+                    [transID]="transID"
+                    [approveStatus]="approveStatus"
+                  >
+                  </codx-view-approval-step>
+                </ng-container>
+              </ng-template>
+            </li>
+          </ng-container>
+          <!-- <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <i class="icon-info me-2" [ngClass]="{ 'text-primary': active === 3 }"></i><span>Chi tiết</span>
@@ -212,8 +219,24 @@
             <ng-container *ngTemplateOutlet="defaulEmpt"></ng-container>
           </ng-template>
         </li> -->
-      </ul>
-      <div [ngbNavOutlet]="nav" class="pt-5"></div>
-    </div>
-  </ng-template>
-</codx-detail-tmp>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="pt-5"></div>
+      </div>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-template>
+<!-- <ng-template #panelRightRef let-data>
+  <codx-temp-full></codx-temp-full>
+</ng-template>
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  (selectedChange)="selectedChange($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  [idField]="idField"
+></codx-views> -->

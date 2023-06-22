@@ -196,8 +196,8 @@
               <e-item prefixIcon="e-icons icon-skip_next" id="lastPage">
               </e-item>
 
-              <e-item (click)="removeCA()" prefixIcon="e-icons icon-article">
-              </e-item>
+              <!-- <e-item (click)="removeCA()" prefixIcon="e-icons icon-article">
+              </e-item> -->
             </e-items>
           </ejs-toolbar>
         </div>
@@ -273,6 +273,8 @@
                 align="Left"
               ></e-item>
               <e-item
+              *ngIf="isApprover && isEditable"
+
                 (click)="clickHighlightText()"
                 prefixIcon="e-icons e-style"
                 tooltipText="Highlight"
@@ -280,15 +282,28 @@
                 align="Left"
               ></e-item>
               <e-item
+              *ngIf="isApprover && isEditable"
+
                 (click)="changeEditMode()"
                 prefixIcon="e-icons e-repeat"
                 tooltipText="Edit"
                 showTextOn="Overflow"
                 align="Left"
               ></e-item>
-              <!-- <e-item (click)="changeRemoveHLAMode()"
-                prefixIcon="e-erase btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
-              </e-item> -->
+              <e-item
+              *ngIf="isApprover && isEditable"
+
+                (click)="changeRemoveHLAMode()"
+                prefixIcon="e-erase e-icons"
+              >
+              </e-item>
+              <e-item
+              *ngIf="isApprover && isEditable"
+                prefixIcon="e-icons e-circle-check"
+                (click)="confirmHighlightText(false)"
+              >
+              </e-item>
+
               <e-item
                 *ngIf="isEditable"
                 [prefixIcon]="
