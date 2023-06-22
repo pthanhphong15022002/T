@@ -40,15 +40,17 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
-    icon: 'icon-i-card-heading',
+    icon: 'icon-i-file-earmark-plus',
     text: 'Thêm phiếu chi',
   };
+  isRead:any = false;
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -95,6 +97,11 @@ export class CashPaymentsComponent extends UIComponent {
   ];
   parent: any;
   authStore: AuthStore;
+  fmAccTrans: FormModel = {
+    formName: 'AcctTrans',
+    gridViewName: 'grvAcctTrans',
+    entityName: 'AC_AcctTrans',
+  };
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -148,6 +155,15 @@ export class CashPaymentsComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+
+        model: {
+          template: this.listTemplate,
         },
       },
       {
@@ -253,7 +269,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(this.itemSelected).subscribe();
+              //this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -286,7 +302,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(this.itemSelected).subscribe();
+              //this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -465,28 +481,6 @@ export class CashPaymentsComponent extends UIComponent {
           });
           break;
       }
-      // check có hay ko duyệt trước khi ghi sổ
-      // if (data?.status == '1') {
-      //   if (this.approval == '0') {
-      //     bm.forEach((element) => {
-      //       element.disabled = true;
-      //     });
-      //   } else {
-      //     bm[1].disabled = true;
-      //     bm[2].disabled = true;
-      //   }
-      // }
-      // //Chờ duyệt
-      // if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
-      //   bm[1].disabled = true;
-      //   bm[0].disabled = true;
-      // }
-      // //hủy duyệt
-      // if (data?.approveStatus == '4' || data?.status == '0') {
-      //   for (var i = 0; i < bm.length; i++) {
-      //     bm[i].disabled = true;
-      //   }
-      // }
     }
   }
 
@@ -507,7 +501,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     switch (data.subType) {
-      case '5':
+      case '9':
       case '2':
         this.api
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
@@ -523,8 +517,6 @@ export class CashPaymentsComponent extends UIComponent {
         this.acctTrans = res;
         this.loadTotal();
       });
-    this.loadCashbookName(this.itemSelected);
-    // this.loadReasonName(this.itemSelected);
   }
 
   release(data: any) {
@@ -562,11 +554,16 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
-          data.status = '1';
-          this.itemSelected = { ...data };
-          this.loadDatadetail(this.itemSelected);
-          this.view.dataService.update(data).subscribe((res) => {});
-          this.detectorRef.detectChanges();
+          this.api
+            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [data,'1'])
+            .subscribe((res: any) => {
+              if (res) {
+                this.itemSelected = { ...res };
+                this.loadDatadetail(this.itemSelected);
+                this.view.dataService.update(data).subscribe((res) => {});
+                this.detectorRef.detectChanges();
+              }
+            });
         } else this.notification.notifyCode(result?.msgCodeError);
       });
   }
@@ -606,8 +603,12 @@ export class CashPaymentsComponent extends UIComponent {
         totaloff = totaloff + this.acctTrans[index].transAmt;
       }
     }
-    this.totalacct = totalacct.toLocaleString('it-IT');
-    this.totaloff = totaloff.toLocaleString('it-IT');
+    this.totalacct = totalacct;
+    this.totaloff = totaloff;
+  }
+
+  loadTotalSet(){
+
   }
 
   loadCashbookName(data) {
@@ -649,5 +650,17 @@ export class CashPaymentsComponent extends UIComponent {
       return false;
     }
   }
+  // checkRead(){
+  //   var eMaxText = document.getElementById('max-dots');
+  //   var eText = document.getElementById('dots');
+  //   if (eMaxText && eText) {
+  //     if (eText.offsetWidth > (eMaxText.offsetWidth - 100)) {
+  //       this.isRead = true;
+  //     }else{
+  //       this.isRead = false;
+  //     }
+  //   }
+      
+  // }
   //#endregion
 }

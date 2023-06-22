@@ -41,8 +41,9 @@
 
 <ng-template #descTmp let-data>
   <div class="d-flex align-items-top mb-1">
+    <span class="icon-corporate_fare me-1"></span>
     <span
-        class="text-dark fw-bold codx-textcontent"
+        class="text-dark codx-textcontent line-clamp line-clamp-1"
         [innerHTML]="
           data?.customerID
             | formatvalue : view.formModel : 'CustomerID'
@@ -53,49 +54,59 @@
 </ng-template>
 
 <ng-template #footerTmp let-data>
-  <div class="d-flex justify-content-between align-items-center mb-1">
-    <div class="d-flex justify-content-end align-items-center">
-      <span class="icon-monetization_on icon-16 me-1 text-warning"></span>
-      <span
-        class="fs-4 fw-bold"
+  <div style="margin-left: 45px;">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+      <div class="d-flex justify-content-end align-items-center">
+        <span class="icon-monetization_on icon-18 me-1 text-warning mb-1"></span>
+        <span
+          class="fs-5 fw-bold"
+          [innerHTML]="
+            data?.contractAmt
+              | formatvalue : view.formModel : 'ContractAmt'
+              | async
+          "
+        ></span>
+        <span
+        class="fs-5 fw-bold ms-1"
         [innerHTML]="
-          data?.contractAmt
-            | formatvalue : view.formModel : 'ContractAmt'
+          data?.currencyID
+            | formatvalue : view.formModel : 'CurrencyID'
             | async
         "
       ></span>
-    </div>
-  </div>
-  <div class="d-flex justify-content-between align-items-center">
-    <div>
-      <codx-vll
-        [name]="vllStatus"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-primary badge-sm"
-      >
-      </codx-vll>
-    </div>
-    <div class="d-flex align-items-center">
-      <div class="d-flex align-items-center me-2">
-        <span class="icon-16 icon-av_timer me-1 text-gray-600"></span>
-        <span
-          class="text-gray-700"
-          [innerHTML]="
-            data?.createdOn | formatvalue : view.formModel : 'CreatedOn' | async
-          "
-        ></span>
       </div>
-      <div class="h-25px">
-        <codx-imgs
-          [width]="25"
-          [objectId]="data.createdBy"
-          ojectType="AD_Users"
-          [numberImages]="1"
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-primary badge-sm"
         >
-        </codx-imgs>
+        </codx-vll>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center me-2">
+          <span class="icon-16 icon-av_timer me-1 text-gray-600"></span>
+          <span
+            class="text-gray-700"
+            [innerHTML]="
+              data?.createdOn | formatvalue : view.formModel : 'CreatedOn' | async
+            "
+          ></span>
+        </div>
+        <div class="h-25px">
+          <codx-imgs
+            [width]="25"
+            [objectId]="data.createdBy"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
       </div>
     </div>
   </div>
