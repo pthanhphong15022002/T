@@ -6,15 +6,13 @@
   }
   .step-number {
     z-index: 2;
+    border-color: var(--primary)!important;
+    color: var(--primary);
   }
   codx-view-list-detail .codx-detail-footer {
     z-index: 10;
   }
-  .step-title {
-    // text-transform: uppercase;
-  }
-  .symbol-vllicon {
-  }
+
   .symbol-vllicon .btn.select-icon {
     display: flex;
     flex-direction: row;

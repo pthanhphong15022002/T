@@ -1,0 +1,23 @@
+export class DeductInterestExpenses{
+    recID
+    runType
+    runDate
+    runMode
+    periodID
+    fromDate
+    toDate
+    memo
+    memo2
+    status
+    paras
+    completed
+    errorLog
+    autoCreated
+    owner
+    buid
+    createdOn
+    createdBy
+    modifiedOn
+    modifiedBy
+    loanContractID
+}

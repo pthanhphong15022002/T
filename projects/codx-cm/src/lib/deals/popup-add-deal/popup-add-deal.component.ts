@@ -634,7 +634,6 @@ export class PopupAddDealComponent
         this.deal,
         this.customerIDOld,
         this.lstContactDeal,
-        this.lstContactAdd,
         this.lstContactDelete,
       ];
     }
