@@ -184,8 +184,10 @@ export class EmployeeContractComponent extends UIComponent {
       }
     });
   }
+  flagChangeMF: boolean = false;
 
   changeDataMf(event, data) {
+    this.flagChangeMF = true;
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID

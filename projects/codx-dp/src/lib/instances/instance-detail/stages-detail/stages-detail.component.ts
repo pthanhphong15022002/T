@@ -903,7 +903,7 @@ export class StagesDetailComponent implements OnInit {
     {
       var data = [
         this.instance.recID,
-        this.dataStep.stepID,
+          this.dataStep.stepID,
         this.listReasonsClick,
       ];
       this.dpService.updateListReason(data).subscribe((res) => {

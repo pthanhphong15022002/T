@@ -115,7 +115,7 @@ export class CodxListContactsComponent implements OnInit {
     if(this.objectType == "4"){
       this.cache.gridViewSetup('CMContacts', 'grvCMContacts').subscribe(res =>{
         if(res){
-          this.placeholder = res?.Role?.description;
+          this.placeholder = res?.Role?.description ?? this.placeholder;
         }
       })
     }
@@ -247,7 +247,6 @@ export class CodxListContactsComponent implements OnInit {
             break;
           case 'SYS02':
             if (
-              (this.hidenMF && this.objectType == '4') ||
               this.objectType == '1' ||
               this.objectType == '3'
             )

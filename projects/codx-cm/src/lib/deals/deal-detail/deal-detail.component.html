@@ -201,12 +201,21 @@
                       ></codx-label>
                     </div>
                     <div class="d-flex align-items-start">
-                      <div class="me-3">
+                      <div class="me-3" *ngIf="contactPerson">
                         <codx-img
                           [objectId]="contactPerson?.recID"
                           [objectName]="contactPerson?.contactName"
                           [imgOn]="contactPerson?.modifiedOn"
                           [objectType]="'CM_Contacts'"
+                          [width]="60"
+                        >
+                        </codx-img>
+                      </div>
+                      <div class="me-3" *ngIf="!contactPerson">
+                        <codx-img
+                          [objectId]="null"
+                          [objectName]="null"
+                          [imgOn]="null"
                           [width]="60"
                         >
                         </codx-img>
