@@ -8,6 +8,7 @@ import {
   AuthStore,
   DialogData,
   DialogRef,
+  FormModel,
 } from 'codx-core';
 import { report_BG_TrackLogs } from '../../../models/report-classes.model';
 
@@ -32,14 +33,16 @@ export class UsingHistoryComponent extends UIComponent {
     this.dialog = dialog;
     this.auth = authStore.get();
     this.tenantID = dt.data;
-    this.cache.gridViewSetup('TrackLogs', 'grvTrackLogs').subscribe((res) => {
-      if (res) {
-        this.formTrackLogs = res;
-        console.log('rtacklog', res);
-      }
-    });
+    this.formTrackLogs.formName = 'TrackLogs';
+    this.formTrackLogs.gridViewName = 'grvTrackLogs';
+    // this.cache.gridViewSetup('TrackLogs', 'grvTrackLogs').subscribe((res) => {
+    //   if (res) {
+    //     this.formTrackLogs = res;
+    //     console.log('rtacklog', res);
+    //   }
+    // });
   }
-  formTrackLogs;
+  formTrackLogs: FormModel = new FormModel();
   dialog;
   auth;
   tenantID;

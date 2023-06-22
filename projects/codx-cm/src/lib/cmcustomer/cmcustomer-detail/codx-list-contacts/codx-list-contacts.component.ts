@@ -61,6 +61,7 @@ export class CodxListContactsComponent implements OnInit {
   lstConvertContact = [];
   isCheckedAll: boolean = false;
   id: any;
+  placeholder = 'Nhập vai trò...';
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -82,7 +83,8 @@ export class CodxListContactsComponent implements OnInit {
         if (changes['objectID']?.currentValue == this.id) return;
         this.id = changes['objectID']?.currentValue;
         this.getListContacts();
-        if (!this.loaded) this.loaded = true;
+      }else{
+        if(!this.loaded) this.loaded = true;
       }
     }
   }
@@ -99,9 +101,27 @@ export class CodxListContactsComponent implements OnInit {
     this.cmSv.contactSubject.subscribe((res) => {
       if (res) {
         this.lstContactEmit.emit(res);
+        if (res != null && res.length > 0) {
+          var index = res.findIndex((x) => x.isDefault);
+          if (index != -1) {
+            this.contactEvent.emit(res[index]);
+          } else {
+            this.contactEvent.emit(null);
+          }
+        }
+        // this.listContacts.push(Object.assign({}, res));
+        // this.lstContactEmit.emit(this.listContacts);
         this.cmSv.contactSubject.next(null);
       }
     });
+    if(this.objectType == "4"){
+      this.cache.gridViewSetup('CMContacts', 'grvCMContacts').subscribe(res =>{
+        if(res){
+          this.placeholder = res?.Role?.description ?? this.placeholder;
+        }
+      })
+    }
+
   }
 
   loadListContact(lstContact) {
@@ -121,12 +141,12 @@ export class CodxListContactsComponent implements OnInit {
       this.request.funcID = 'CM0102';
       this.className = 'ContactsBusiness';
       this.fetch().subscribe((item) => {
-        this.loaded = true;
         this.listContacts = this.cmSv.bringDefaultContactToFront(item);
         if (this.listContacts != null && this.listContacts.length > 0) {
           this.changeContacts(this.listContacts[0]);
           if (this.isConvertLeadToCus) this.insertFieldCheckbox();
         }
+        this.loaded = true;
       });
     } else {
       this.loadListContact(this.listContacts);
@@ -229,7 +249,6 @@ export class CodxListContactsComponent implements OnInit {
             break;
           case 'SYS02':
             if (
-              (this.hidenMF && this.objectType == '4') ||
               this.objectType == '1' ||
               this.objectType == '3'
             )
@@ -366,12 +385,30 @@ export class CodxListContactsComponent implements OnInit {
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
+              if(this.objectType == '4'){
+                this.placeholder = JSON.parse(JSON.stringify(this.placeholder));
+              }
               this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }
           }
         });
       });
+  }
+
+  updateRole(event: string, recID) {
+    var index = -1;
+    if (event == '' || event.trim() == '') {
+      index = -1;
+      return;
+    }
+    index = this.listContacts.findIndex(x => x.recID == recID);
+    if(index != -1){
+      this.listContacts[index].role = event?.trim();
+      this.lstContactEmit.emit(this.listContacts);
+    }
+
+    this.changeDetectorRef.detectChanges();
   }
 
   async deleteContactToCM(data) {
@@ -404,7 +441,7 @@ export class CodxListContactsComponent implements OnInit {
                 );
                 this.changeContacts(this.listContacts[0]);
                 this.contactEvent.emit(data);
-
+                this.lstContactEmit.emit(this.listContacts);
                 this.notiService.notifyCode('SYS008');
                 this.changeDetectorRef.detectChanges();
               }
@@ -418,6 +455,7 @@ export class CodxListContactsComponent implements OnInit {
               this.listContacts.splice(index, 1);
               lstDelete.push(data);
               this.changeContacts(this.listContacts[0]);
+              this.lstContactEmit.emit(this.listContacts);
 
               this.lstContactDeleteEmit.emit(lstDelete);
             }

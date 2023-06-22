@@ -41,11 +41,6 @@ import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/co
 })
 export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
-  @Input() dataService: CRUDService;
-  @Output() progressEvent = new EventEmitter<object>();
-  @Output() moreFunctionEvent = new EventEmitter<any>();
-  @Output() outStepInstance = new EventEmitter<any>();
-  @Output() changeMF = new EventEmitter<any>();
   @Input() stepName: string;
   @Input() progress = '0';
   @Input() dataSelect: any;
@@ -61,12 +56,23 @@ export class InstanceDetailComponent implements OnInit {
   @Input() moreFunc: any;
   // @Input() reloadData = false;
   @Input() stepStart: any;
+  @Input() vllApprover = 'DP043';
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   @Output() saveDatasInstance = new EventEmitter<any>();
   @Input() lstStepProcess = [];
   @Input() colorFail: any;
   @Input() colorSuccesss: any;
+  // View deatail Of approrver
+  @Input() isViewApprover = false;
+  @Input() hideFooter = false;
+  @Input() hideMF = false;
+
+  @Output() progressEvent = new EventEmitter<object>();
+  @Output() moreFunctionEvent = new EventEmitter<any>();
+  @Output() outStepInstance = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
+
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -390,7 +396,7 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpTeps = JSON.parse(JSON.stringify(data));;
+        this.tmpTeps = JSON.parse(JSON.stringify(data));
         this.outStepInstance.emit({ data: this.tmpTeps });
         this.stepValue = {
           textColor: data.textColor,
@@ -444,14 +450,6 @@ export class InstanceDetailComponent implements OnInit {
     return ins;
   }
 
-  // getStepsByProcessID(recID){
-  //   this.dpSv.getStepsByProcessID(recID).subscribe((res) => {
-  //     if (res != null || res.length > 0) {
-  //       this.listSteps = res;
-  //     }
-  //   });
-  // }
-
   cbxChange(e) {
     this.viewModelDetail = e?.data;
   }
@@ -463,33 +461,14 @@ export class InstanceDetailComponent implements OnInit {
       lstStepCbx: this.listStepInstance,
     });
   }
-  // changeDataMFUpData(){
-  //   if(this.moreFuncCrr)
-  //   this.changeDataMF(this.moreFuncCrr,this.dataSelect)
-  // }
 
   changeDataMF(e, data) {
-    //  if (this.viewsCurrent == 'k-')
-    //  this.moreFuncCrr = JSON.parse(JSON.stringify(e));
     this.changeMF.emit({
       e: e,
       data: data,
       listStepCbx: this.listSteps,
       isStart: this.isStart,
     });
-    // console.log(e);
-    // if (e) {
-    //   e.forEach((element) => {
-    //     if (
-    //       element.functionID == 'SYS002' ||
-    //       element.functionID == 'SYS001' ||
-    //       element.functionID == 'SYS004' ||
-    //       element.functionID == 'SYS003' ||
-    //       element.functionID == 'SYS005'
-    //     )
-    //       element.disabled = true;
-    //   });
-    // }
   }
   clickStage($event) {
     if ($event) {
@@ -731,6 +710,7 @@ export class InstanceDetailComponent implements OnInit {
       var reasonInstance = new DP_Instances_Steps_Reasons();
       reasonInstance.processID = this.dataSelect.processID;
       reasonInstance.stepID = item.stepID;
+      reasonInstance.instanceID = this.dataSelect.recID;
       reasonInstance.reasonName = item.reasonName;
       reasonInstance.reasonType = item.reasonType;
       reasonInstance.createdBy = item.createdBy;

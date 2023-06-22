@@ -88,6 +88,7 @@ export class TabDetailCustomComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
       this.isDataLoading = true;
+      this.dataSelected = this.dataSelected;
       if(this.tabClicked === this.tabContact )
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);

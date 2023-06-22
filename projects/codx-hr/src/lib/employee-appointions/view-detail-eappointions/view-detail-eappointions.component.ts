@@ -3,9 +3,7 @@ import {
   EventEmitter,
   Input,
   Output,
-  SimpleChanges,
   ViewChild,
-  OnInit,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -24,7 +22,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './view-detail-eappointions.component.html',
   styleUrls: ['./view-detail-eappointions.component.css'],
 })
-export class ViewDetailEappointionsComponent implements OnInit {
+export class ViewDetailEappointionsComponent {
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
@@ -39,8 +37,7 @@ export class ViewDetailEappointionsComponent implements OnInit {
   renderFooter = false;
   isAfterRender = true;
   appointionsFuncID = 'HRTApp02';
-  benefitFormModel: FormModel;
-  benefitFormGroup: FormGroup;
+
   lstBenefit;
   active = 1;
   console = console;
@@ -64,24 +61,6 @@ export class ViewDetailEappointionsComponent implements OnInit {
     private api: ApiHttpService
   ) {
     this.user = this.authStore.get();
-  }
-
-  ngOnInit(): void {
-    this.hrService.getFormModel(this.appointionsFuncID).then((formModel) => {
-      if (formModel) {
-        this.benefitFormModel = formModel;
-        this.hrService
-          .getFormGroup(
-            this.benefitFormModel.formName,
-            this.benefitFormModel.gridViewName
-          )
-          .then((fg) => {
-            if (fg) {
-              this.benefitFormGroup = fg;
-            }
-          });
-      }
-    });
   }
 
   ngOnChanges() {

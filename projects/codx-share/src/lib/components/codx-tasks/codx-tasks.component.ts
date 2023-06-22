@@ -171,8 +171,8 @@ export class CodxTasksComponent
   type: string = 'Circular';
   // startAngle: number = 0;
   // endAngle: number = 0;
-  width: string = '55';
-  height: string = '55';
+  width: string = '40';
+  height: string = '40';
   min: number = 0;
   max: number = 100;
   color = '#005DC7';
@@ -184,10 +184,10 @@ export class CodxTasksComponent
   // innerRadius2: string = '72';
 
   // theme: string = 'Material';
-  // trackThickness: number = 80;
+  trackThickness: number = 2;
   // cornerRadius: string = 'Round';
-  // progressThickness: number = 10;
-  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  progressThickness: number = 2;
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 200 };
   HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
   listTaskGoals = [];
 

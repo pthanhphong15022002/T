@@ -9,10 +9,7 @@ export class CodxCalendarService {
   dateChange$ = new BehaviorSubject<any>(null);
   calendarData$ = new BehaviorSubject<any>(null);
 
-  constructor(
-    private api: ApiHttpService,
-    private cache: CacheService,
-    ) {}
+  constructor(private api: ApiHttpService, private cache: CacheService) {}
 
   getParams(formName, fieldName) {
     return this.api.exec<any>(
@@ -37,5 +34,14 @@ export class CodxCalendarService {
         resolve(formModel);
       });
     });
+  }
+
+  checkPermission(entityName: string, functionID: string) {
+    return this.api.exec(
+      'ERM.Business.CO',
+      'CalendarsBusiness',
+      'GetUserPermissionAsync',
+      [entityName, functionID]
+    );
   }
 }
