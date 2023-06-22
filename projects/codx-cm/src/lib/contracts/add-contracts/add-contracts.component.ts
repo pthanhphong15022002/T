@@ -37,6 +37,7 @@ import { ContractsService } from '../service-contracts.service';
 import { PopupViewPaymentHistoryComponent } from '../payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
 import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-history/popup-add-payment-history.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'add-contracts',
@@ -125,6 +126,7 @@ export class AddContractsComponent implements OnInit {
   view = [];
   customerIdOld = null;
   isLoadDate = true;
+  checkPhone = true;
 
   constructor(
     private cache: CacheService,
@@ -135,6 +137,7 @@ export class AddContractsComponent implements OnInit {
     private contractService: ContractsService,
     private changeDetector: ChangeDetectorRef,
     private api: ApiHttpService,
+    private stepService: StepService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -148,10 +151,10 @@ export class AddContractsComponent implements OnInit {
     this.getFormModel();
     this.listTypeContract = contractService.listTypeContract;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
-     if(f){
-      this.headerTest = this.headerTest + ' ' + f?.defaultName;
-     }
-    })
+      if (f) {
+        this.headerTest = this.headerTest + ' ' + f?.defaultName;
+      }
+    });
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
@@ -218,6 +221,47 @@ export class AddContractsComponent implements OnInit {
   //       }
   //     });
   // }
+
+  setDataContract(data) {
+    if (this.action == 'add') {
+      this.contracts = data;
+      this.contracts.recID = Util.uid();
+      this.contracts.projectID = this.projectID;
+      this.contracts.contractDate = new Date();
+      this.contracts.status = '0';
+      this.contracts.effectiveFrom = new Date();
+      this.contracts.useType = '1';
+      this.contracts.pmtMethodID = 'ATM';
+      this.contracts.pmtStatus = '1';
+      this.contracts.delStatus = '1';
+      this.contracts.contractID = 'HD-' + (Math.random()*10000000000).toFixed(0);
+
+      this.contracts.contractType = this.contracts.contractType
+        ? this.contracts.contractType
+        : '1';
+      this.contracts.pmtStatus = this.contracts.pmtStatus
+        ? this.contracts.pmtStatus
+        : '0';
+      this.setCOntractByDataOutput();
+    }
+    if (this.action == 'edit') {
+      this.contracts = data;
+      // this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsLinesInContract(
+        this.contracts?.recID,
+        this.contracts?.quotationID
+      );
+      this.getPayMentByContractID(this.contracts?.recID);
+    }
+    if (this.action == 'copy') {
+      this.contracts = data;
+      this.contracts.recID = Util.uid();
+      delete this.contracts['id'];
+      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getPayMentByContractID(this.contracts?.recID);
+    }
+  }
+
   getFormModel() {
     this.cache
       .gridViewSetup(
@@ -236,6 +280,19 @@ export class AddContractsComponent implements OnInit {
 
   valueChangeText(event) {
     this.contracts[event?.field] = event?.data;
+    if (event?.field == 'contractName') {
+      this.contracts[event?.field] = this.stepService.capitalizeFirstLetter(
+        event?.data
+      );
+    }
+    if (event?.field == 'delPhone' && this.checkPhone) {
+      let isPhone = this.stepService.isValidPhoneNumber(event?.data);
+      if (!isPhone) {
+        this.notiService.notifyCode('RS030');
+        this.checkPhone = !this.checkPhone;
+        return;
+      }
+    }
   }
 
   valueChangeCombobox(event) {
@@ -323,36 +380,6 @@ export class AddContractsComponent implements OnInit {
         map((p) => JSON.parse(p[0])),
         tap((p) => console.log(p))
       );
-  }
-
-  setDataContract(data) {
-    if (this.action == 'add') {
-      this.contracts = data;
-      this.contracts.recID = Util.uid();
-      this.contracts.projectID = this.projectID;
-      this.contracts.contractDate = new Date();
-      this.contracts.status = '0';
-      this.contracts.contractType = this.contracts.contractType
-        ? this.contracts.contractType
-        : '1';
-      this.contracts.pmtStatus = this.contracts.pmtStatus
-        ? this.contracts.pmtStatus
-        : '0';
-      this.setCOntractByDataOutput();
-    }
-    if (this.action == 'edit') {
-      this.contracts = data;
-      // this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
-      this.getQuotationsLinesInContract(this.contracts?.recID, this.contracts?.quotationID);
-      this.getPayMentByContractID(this.contracts?.recID);
-    }
-    if (this.action == 'copy') {
-      this.contracts = data;
-      this.contracts.recID = Util.uid();
-      delete this.contracts['id'];
-      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
-      this.getPayMentByContractID(this.contracts?.recID);
-    }
   }
 
   setCOntractByDataOutput() {
@@ -472,6 +499,12 @@ export class AddContractsComponent implements OnInit {
         0,
         '"' + message.join(', ') + ' " '
       );
+    } else if (
+      this.contracts?.delPhone &&
+      !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
+    ) {
+      this.notiService.notifyCode('RS030');
+      return;
     } else {
       switch (this.action) {
         case 'add':

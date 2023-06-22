@@ -36,8 +36,6 @@ export class ApprovalsComponent
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   data: any;
   funcID: any;
-  // lstDtDis: any;
-  // gridViewSetup: any;
   formModel: any;
   active = 1;
   referType = 'source';
@@ -46,6 +44,8 @@ export class ApprovalsComponent
   approveStatus = '0';
   dataValues = '';
   recIDAprrover: any;
+  listStepsProcess: any = [];
+  tabInstances = [];
 
   //modele aprove
   // service = 'DP';
@@ -80,6 +80,23 @@ export class ApprovalsComponent
             gridViewName: fuc?.gridViewName,
           };
         });
+    });
+    this.cache.valueList('DP034').subscribe((res) => {
+      if (res && res.datas) {
+        let defaultTab = {
+          viewModelDetail: '',
+          textDefault: 'Quy trình duyệt',
+          icon: 'icon-people_alt',
+        };
+        this.tabInstances.push(defaultTab);
+        res.datas.forEach((element) => {
+          var tab = {};
+          tab['viewModelDetail'] = element?.value;
+          tab['textDefault'] = element?.text;
+          tab['icon'] = element?.icon;
+          this.tabInstances.push(tab);
+        });
+      }
     });
   }
   ngOnChanges(changes: SimpleChanges): void {}
@@ -128,7 +145,8 @@ export class ApprovalsComponent
       .subscribe((res) => {
         if (res) {
           this.data = res[0];
-          this.transID = res[1];
+          // this.transID = res[1];
+          this.listStepsProcess = res[2];
           this.approveStatus = this.data?.approveStatus ?? '0';
           this.changeDetectorRef.detectChanges();
         }

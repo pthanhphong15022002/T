@@ -39,6 +39,7 @@ import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { ApproveProcess } from './models/ApproveProcess.model';
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
@@ -64,7 +65,8 @@ export class CodxShareService {
     private fb: FormBuilder,
     private dmSV: CodxDMService,
     private fileService: FileService,
-    private signalRSV: SignalRService
+    private signalRSV: SignalRService,
+    private httpClient: HttpClient
   ) {
     this.user = this.auth.get();
   }
@@ -273,7 +275,7 @@ export class CodxShareService {
         break;
       }
       case 'SYS207': {
-        this.codxUndo(data?.unbounds?.approvalRecID).subscribe((res:any) => {
+        this.codxUndo(data?.unbounds?.approvalRecID).subscribe((res: any) => {
           if (res) {
             data.unbounds.statusApproval = res?.status;
             dataService.update(data).subscribe();
@@ -872,11 +874,12 @@ export class CodxShareService {
         this.user.userID
       );
     }
+    this.redirect('HCS', '', '', true);
     this.authService.logout('');
     // document.location.reload();
   }
 
-  redirect(type, returnUrl, display = '') {
+  redirect(type, returnUrl, display = '', isLogout = false) {
     switch (type.toUpperCase()) {
       case 'HCS': {
         this.api
@@ -888,9 +891,17 @@ export class CodxShareService {
             []
           )
           .subscribe((token) => {
-            let url = `${environment.loginHCS}/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
-            if (url != '') {
-              window.open(url, display == '3' ? '_blank' : '_self');
+            let url = '';
+            if (isLogout) {
+              url = `${environment.loginHCS}/LogoutUser.aspx?tklid=${token}`;
+              this.httpClient.get<any>(url).subscribe((reponse) => {
+                console.log('log out', reponse);
+              });
+            } else {
+              url = `${environment.loginHCS}/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
+              if (url != '') {
+                window.open(url, display == '3' ? '_blank' : '_self');
+              }
             }
           });
         break;
@@ -1017,29 +1028,25 @@ export class CodxShareService {
     return listApproveMF;
   }
 
-  
-  
-    
   //#region Codx Quy trình duyệt
   //-------------------------------------------Gửi duyệt--------------------------------------------//
   codxRelease(
-    module:string,//Tên service
-    recID: any,//RecID nghiệp vụ gốc
-    processID: string,//Mã quy trình duyệt
-    entityName: string,//EntityName nghiệp vụ gốc
-    funcID: string,//FunctionID nghiệp vụ gốc   
-    userID: string,//Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
-    title: string,//Tiêu đề (truyền kiểu chuỗi thường)
-    customEntityName:string,//EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+    module: string, //Tên service
+    recID: any, //RecID nghiệp vụ gốc
+    processID: string, //Mã quy trình duyệt
+    entityName: string, //EntityName nghiệp vụ gốc
+    funcID: string, //FunctionID nghiệp vụ gốc
+    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
+    title: string, //Tiêu đề (truyền kiểu chuỗi thường)
+    customEntityName: string //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
   ): Observable<any> {
-
     let approveProcess = new ApproveProcess();
-    approveProcess.recID=recID;
-    approveProcess.processID=processID;
-    approveProcess.userID=userID;
-    approveProcess.entityName=entityName;
-    approveProcess.funcID=funcID;
-    approveProcess.htmlView= '<div>' +title + '</div>';
+    approveProcess.recID = recID;
+    approveProcess.processID = processID;
+    approveProcess.userID = userID;
+    approveProcess.entityName = entityName;
+    approveProcess.funcID = funcID;
+    approveProcess.htmlView = '<div>' + title + '</div>';
     approveProcess.module = module;
     approveProcess.customEntityName = customEntityName;
 
@@ -1054,14 +1061,14 @@ export class CodxShareService {
 
   //-------------------------------------------Hủy yêu cầu duyệt--------------------------------------------//
   codxCancel(
-    module:string,//Tên service
-    recID: string,//RecID nghiệp vụ gốc
-    entityName: string,//EntityName nghiệp vụ gốc
+    module: string, //Tên service
+    recID: string, //RecID nghiệp vụ gốc
+    entityName: string, //EntityName nghiệp vụ gốc
     comment: string //ghi chú (ko bắt buộc)
-    ) {
+  ) {
     let approveProcess = new ApproveProcess();
-    approveProcess.recID=recID;
-    approveProcess.entityName=entityName;
+    approveProcess.recID = recID;
+    approveProcess.entityName = entityName;
     approveProcess.module = module;
     approveProcess.comment = comment;
 
@@ -1077,9 +1084,9 @@ export class CodxShareService {
   //-------------------------------------------Khôi phục--------------------------------------------//
   codxUndo(
     tranRecID: string //RecID của ES_ApprovalTrans hiện hành
-    ) {
+  ) {
     let approveProcess = new ApproveProcess();
-    approveProcess.tranRecID=tranRecID;
+    approveProcess.tranRecID = tranRecID;
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -1087,20 +1094,19 @@ export class CodxShareService {
       'UndoAsync',
       [approveProcess]
     );
-    
   }
   //-------------------------------------------Duyệt/Làm lại/Từ chối--------------------------------------------//
   codxApprove(
-    tranRecID: any,//RecID của ES_ApprovalTrans hiện hành
-    status: string,//Trạng thái 
-    reasonID: string,//Mã lí do (ko bắt buộc)
-    comment: string,//Bình luận (ko bắt buộc)
+    tranRecID: any, //RecID của ES_ApprovalTrans hiện hành
+    status: string, //Trạng thái
+    reasonID: string, //Mã lí do (ko bắt buộc)
+    comment: string //Bình luận (ko bắt buộc)
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
-    approveProcess.tranRecID=tranRecID;
-    approveProcess.status=status;
-    approveProcess.reasonID=reasonID;
-    approveProcess.comment=comment;
+    approveProcess.tranRecID = tranRecID;
+    approveProcess.status = status;
+    approveProcess.reasonID = reasonID;
+    approveProcess.comment = comment;
 
     return this.api.execSv(
       'ES',
@@ -1109,10 +1115,8 @@ export class CodxShareService {
       'ApproveAsync',
       [approveProcess]
     );
-    
   }
   //#endregion Codx Quy trình duyệt
-
 }
 //#region Model
 

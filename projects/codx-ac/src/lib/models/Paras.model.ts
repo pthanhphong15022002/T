@@ -10,4 +10,7 @@ export class Paras {
     calcGroupID: any;
     buid: any;
     loanContractID: any;
+    alloMethod: any;
+    alloGroupID: any;
+    alloEntryID: any;
   }

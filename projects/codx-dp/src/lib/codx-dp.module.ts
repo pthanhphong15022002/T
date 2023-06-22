@@ -70,7 +70,7 @@ const routes: Routes = [
         path: 'approvals/:funcID',
         loadChildren: () =>
           import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
-            (m) => m.ApprovelModule
+            (m) => m.ApprovelDpModule
           ),
         data: { noReuse: true },
       },

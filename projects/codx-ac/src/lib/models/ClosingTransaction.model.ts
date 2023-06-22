@@ -1,4 +1,4 @@
-export class DeductInterestExpenses{
+export class ClosingTransaction{
     recID: any;
     runType: any;
     runDate: any;
@@ -11,6 +11,7 @@ export class DeductInterestExpenses{
     status: any;
     paras: any;
     completed: any;
+    alloMethod: any;
     errorLog: any;
     autoCreated: any;
     owner: any;
@@ -19,5 +20,6 @@ export class DeductInterestExpenses{
     createdBy: any;
     modifiedOn: any;
     modifiedBy: any;
-    loanContractID: any;
+    alloGroupID: any;
+    alloEntryID: any;
 }

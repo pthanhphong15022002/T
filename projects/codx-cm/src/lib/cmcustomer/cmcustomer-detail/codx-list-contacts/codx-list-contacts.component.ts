@@ -83,6 +83,8 @@ export class CodxListContactsComponent implements OnInit {
         if (changes['objectID']?.currentValue == this.id) return;
         this.id = changes['objectID']?.currentValue;
         this.getListContacts();
+      }else{
+        if(!this.loaded) this.loaded = true;
       }
     }
   }
