@@ -404,9 +404,9 @@ export class CodxAddBookingCarComponent
             tmpResource.roleType = people?.roleType;
             tmpResource.optional = false;
             this.listRoles.forEach((element) => {
-              if (element.value == tmpResource.roleType) {
-                tmpResource.icon = element.icon;
-                tmpResource.roleName = element.text;
+              if (element?.value == tmpResource?.roleType) {
+                tmpResource.icon = element?.icon;
+                tmpResource.roleName = element?.text;
               }
             });
             if (tmpResource.userID == this.authService.userValue.userID) {
