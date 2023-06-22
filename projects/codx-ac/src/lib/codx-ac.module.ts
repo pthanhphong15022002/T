@@ -8,6 +8,8 @@ import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CoreModule } from '../../../../src/core/core.module';
@@ -21,9 +23,18 @@ import { Group067Component } from './journals/components/group067/group067.compo
 import { JournalsComponent } from './journals/journals.component';
 import { MultiSelectPopupComponent } from './journals/multi-select-popup/multi-select-popup.component';
 import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
+import { PopupPermissionComponent } from './journals/popup-permission/popup-permission.component';
+import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools.component';
+import { PopAddAllocateToolsComponent } from './periodic/allocate-tools/pop-add-allocate-tools/pop-add-allocate-tools.component';
+import { DeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/deduct-prepaid-expenses.component';
+import { PopAddDeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses.component';
+import { DepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/depreciating-fixed-assets.component';
+import { PopAddDepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/pop-add-depreciating-fixed-assets/pop-add-depreciating-fixed-assets.component';
 import { PeriodicComponent } from './periodic/periodic.component';
 import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-periodic/pop-add-run-periodic.component';
 import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
+import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
+import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { NameByIdPipe } from './pipes/nameById.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { VoucherComponent } from './popup/voucher/voucher.component';
@@ -33,6 +44,7 @@ import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.co
 import { PopAddCashComponent } from './vouchers/cash-payments/pop-add-cash/pop-add-cash.component';
 import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
 import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
+import { PopUpVatComponent } from './vouchers/cash-payments/pop-up-vat/pop-up-vat.component';
 import { CashReceiptsComponent } from './vouchers/cash-receipts/cash-receipts.component';
 import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 import { PopAddReceiptsComponent } from './vouchers/cash-receipts/pop-add-receipts/pop-add-receipts.component';
@@ -44,22 +56,11 @@ import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchasei
 import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
 import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
+import { TableLineDetailStaticComponent } from './vouchers/sales-invoices/components/table-line-detail-static/table-line-detail-static.component';
 import { TableLineDetailComponent } from './vouchers/sales-invoices/components/table-line-detail/table-line-detail.component';
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
-import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
-import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
-import { DepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/depreciating-fixed-assets.component';
-import { PopAddDepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/pop-add-depreciating-fixed-assets/pop-add-depreciating-fixed-assets.component';
-import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
-import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
-import { PopUpVatComponent } from './vouchers/cash-payments/pop-up-vat/pop-up-vat.component';
-import { PopupPermissionComponent } from './journals/popup-permission/popup-permission.component';
-import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools.component';
-import { PopAddAllocateToolsComponent } from './periodic/allocate-tools/pop-add-allocate-tools/pop-add-allocate-tools.component';
-import { DeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/deduct-prepaid-expenses.component';
-import { PopAddDeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses/pop-add-deduct-prepaid-expenses.component';
 import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/deduct-interest-expenses.component';
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
 import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
@@ -241,6 +242,7 @@ export const routes: Routes = [
     PopAddDeductInterestExpensesComponent,
     ClosingTransactionComponent,
     PopAddClosingTransactionComponent,
+    TableLineDetailStaticComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

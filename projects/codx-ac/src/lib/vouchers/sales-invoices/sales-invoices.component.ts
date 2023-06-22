@@ -49,6 +49,7 @@ export class SalesInvoicesComponent
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   parent: any;
+  loading: boolean = false;
 
   constructor(
     inject: Injector,
@@ -115,6 +116,20 @@ export class SalesInvoicesComponent
     }
 
     this.selectedData = e.data.data ?? e.data;
+
+    this.loading = true;
+    this.salesInvoicesLines = [];
+    const salesInvoicesLinesOptions = new DataRequest();
+    salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
+    salesInvoicesLinesOptions.predicates = 'TransID=@0';
+    salesInvoicesLinesOptions.dataValues = this.selectedData.recID;
+    salesInvoicesLinesOptions.pageLoading = false;
+    this.acService
+      .loadDataAsync('SM', salesInvoicesLinesOptions)
+      .subscribe((res: ISalesInvoicesLine[]) => {
+        this.salesInvoicesLines = res;
+        this.loading = false;
+      });
   }
 
   onClickAdd(e): void {
