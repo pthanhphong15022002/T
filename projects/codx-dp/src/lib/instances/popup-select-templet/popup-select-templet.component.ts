@@ -185,17 +185,18 @@ export class PopupSelectTempletComponent implements OnInit {
   }
   //Gửi duyệt
   release(data: any, processID: any) {
-    
-    this.codxShareService.codxRelease(
+    debugger;
+    this.codxShareService
+      .codxRelease(
         'DP',
         data?.recID,
         processID,
         this.formModel.entityName,
         this.formModel.funcID,
         '',
-        data?.title ,
+        data?.title,
         ''
-    )
+      )
       .subscribe((res2: any) => {
         if (res2?.msgCodeError)
           this.notificationsService.notify(res2?.msgCodeError);

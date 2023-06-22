@@ -24,7 +24,10 @@
         [formModel]="fmSalesInvoicesLines"
       ></codx-label
       >:&nbsp;
-      <span *ngFor="let i of [0, 1, 2, 3]; last as isLast" class="text-gray-600">
+      <span
+        *ngFor="let i of [0, 1, 2, 3]; last as isLast"
+        class="text-gray-600"
+      >
         <span
           *ngIf="data['idiM' + i]"
           [innerHTML]="
@@ -44,7 +47,10 @@
         [formModel]="fmSalesInvoicesLines"
       ></codx-label
       >:&nbsp;
-      <span *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast" class="text-gray-600">
+      <span
+        *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast"
+        class="text-gray-600"
+      >
         <span
           *ngIf="data['idiM' + i]"
           [innerHTML]="
@@ -60,6 +66,7 @@
     </div>
 
     <codx-vll
+      *ngIf="data.lineType === '2'"
       [formModel]="fmSalesInvoicesLines"
       field="LineType"
       [value]="data.lineType"
@@ -76,7 +83,8 @@
 </ng-template>
 
 <ng-template #columnVatid let-data>
-  {{ (vats | nameById : "VATID" : "TaxRate" : data.vatid) * 100 }}% | {{ data.vatAmt }}
+  {{ (vats | nameById : "VATID" : "TaxRate" : data.vatid) * 100 }}% |
+  {{ data.vatAmt }}
 </ng-template>
 
 <ng-template #more let-data>
