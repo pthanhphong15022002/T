@@ -383,6 +383,9 @@ export class CodxListContactsComponent implements OnInit {
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
+              if(this.objectType == '4'){
+                this.placeholder = JSON.parse(JSON.stringify(this.placeholder));
+              }
               this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }

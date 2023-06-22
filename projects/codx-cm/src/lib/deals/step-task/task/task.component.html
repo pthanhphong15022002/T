@@ -131,7 +131,7 @@
       >
       </codx-imgs>
     </span>
-    <div class="disabled-inline">
+    <div class="disabled-inline cursor-pointer" (click)="openPopupUpdateProgress(data?.value, 'T')">
       <codx-progressbar
         [progress]="data?.value?.progress"
         #p="ngbPopover"

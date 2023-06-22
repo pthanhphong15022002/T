@@ -88,56 +88,55 @@
       </div>
     </div>
     <div class="d-flex align-items-top ms-4">
-      <div class="d-flex flex-column min-w-125px">
-        <div
-          style="width: 150px; border-radius: 20px"
-          class="d-flex align-items-center mb-1"
-          *ngIf="data.status != '1'"
-          [ngStyle]="{
-            'background-color':
-              data.status == '3' || data.status == '4'
-                ? colorReasonSuccess?.color
-                : data.status == '5' || data.status == '6'
-                ? colorReasonFail?.color
-                : getStep(data?.stepID)?.backgroundColor
-          }"
-        >
-          <span
-            [ngClass]="getStep(data?.stepID)?.icon"
-            [ngStyle]="{ color: getStep(data?.stepID)?.iconColor }"
-            class="ms-2 me-1"
-          ></span>
+      <div class="d-flex flex-column w-125px min-w-125px">
+        <div class="d-flex align-items-center justify-content-end mb-1">
           <div
-            [ngbPopover]="getStep(data?.stepID)?.stepName"
-            #pStep="ngbPopover"
-            [openDelay]="500"
-            (mouseenter)="pStep.open()"
-            (mouseleave)="pStep.close()"
-            placement="left bottom right top"
+            *ngIf="data.status != '1'"
+            [ngStyle]="{
+              'background-color':
+                data.status == '3' || data.status == '4'
+                  ? colorReasonSuccess?.color
+                  : data.status == '5' || data.status == '6'
+                  ? colorReasonFail?.color
+                  : getStep(data?.stepID)?.backgroundColor
+            }"
+            class="badge badge-sm d-flex align-items-center"
           >
             <span
-              class="line-clamp line-clamp-1"
-              [ngStyle]="{ color: getStep(data?.stepID)?.textColor }"
-              [innerHTML]="getStep(data?.stepID)?.stepName"
+              [ngClass]="getStep(data?.stepID)?.icon"
+              [ngStyle]="{ color: getStep(data?.stepID)?.iconColor }"
+              class="me-1"
             ></span>
+            <div
+              [ngbPopover]="getStep(data?.stepID)?.stepName"
+              #pStep="ngbPopover"
+              [openDelay]="500"
+              (mouseenter)="pStep.open()"
+              (mouseleave)="pStep.close()"
+              placement="left bottom right top"
+            >
+              <span
+                class="line-clamp line-clamp-1"
+                [ngStyle]="{ color: getStep(data?.stepID)?.textColor }"
+                [innerHTML]="getStep(data?.stepID)?.stepName"
+              ></span>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-end mb-1"
+            *ngIf="data.status == '1'"
+          >
+            <codx-vll
+              [name]="'DP028'"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
           </div>
         </div>
-        <div
-          class="d-flex justify-content-end mb-1"
-          *ngIf="data.status == '1'"
-
-        >
-          <codx-vll
-            [name]="'DP028'"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-        </div>
-
         <div class="ms-1 d-flex justify-content-end align-items-center mt-1">
           <span
             class="icon-date_range icon-16 text-gray-800 me-1"
@@ -156,6 +155,7 @@
           ></span>
         </div>
       </div>
+
       <div class="ms-5" *ngIf="data.owner">
         <codx-imgs
           [isToolTip]="true"

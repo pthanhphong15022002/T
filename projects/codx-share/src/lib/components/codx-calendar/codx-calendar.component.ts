@@ -36,6 +36,7 @@ import {
   SpeedDialItemEventArgs,
   SpeedDialItemModel,
 } from '@syncfusion/ej2-angular-buttons';
+import { CodxAddBookingRoomComponent } from '../codx-booking/codx-add-booking-room/codx-add-booking-room.component';
 
 @Component({
   selector: 'app-codx-calendar',
@@ -69,6 +70,10 @@ export class CodxCalendarComponent
   calendarTypes = [];
   resources = [];
 
+  roomFM: FormModel;
+  roomFG: FormGroup;
+  addRoomTitle = '';
+
   carFM: FormModel;
   carFG: FormGroup;
   addCarTitle = '';
@@ -95,6 +100,7 @@ export class CodxCalendarComponent
     private notificationsService: NotificationsService
   ) {
     super(injector);
+    this.roomFM = new FormModel();
     this.carFM = new FormModel();
     this.meetingFM = new FormModel();
     this.myTaskFM = new FormModel();
@@ -184,6 +190,20 @@ export class CodxCalendarComponent
         },
       },
     ];
+
+    this.calendarService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
+      this.roomFM = res;
+      this.roomFG = this.codxService.buildFormGroup(
+        this.roomFM?.formName,
+        this.roomFM?.gridViewName
+      );
+    });
+
+    this.cache.functionList(EPCONST.FUNCID.R_Bookings).subscribe((res) => {
+      if (res) {
+        this.addRoomTitle = res?.customName?.toString();
+      }
+    });
 
     this.calendarService.getFormModel(EPCONST.FUNCID.C_Bookings).then((res) => {
       this.carFM = res;
@@ -504,6 +524,10 @@ export class CodxCalendarComponent
               this.addBookingCar();
               break;
 
+            case 'EP_BookingRooms':
+              this.addBookingRoom();
+              break;
+
             case 'WP_Notes':
               this.addNote();
               break;
@@ -534,6 +558,35 @@ export class CodxCalendarComponent
       .openSide(
         CodxAddBookingCarComponent,
         [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
+        option
+      )
+      .closed.subscribe((returnData) => {
+        if (!this.calendarType) {
+          this.calendarType = this.defaultCalendar;
+        }
+        if (returnData.event) {
+          this.api
+            .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+              this.calendarType,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                this.getDataAfterAddEvent(res);
+              }
+              this.detectorRef.detectChanges();
+            });
+        }
+      });
+  }
+
+  addBookingRoom() {
+    let option = new SidebarModel();
+    option.FormModel = this.roomFM;
+    option.Width = '800px';
+    this.callfc
+      .openSide(
+        CodxAddBookingRoomComponent,
+        [this.roomFG?.value, 'SYS01', this.addRoomTitle, null, null, false],
         option
       )
       .closed.subscribe((returnData) => {

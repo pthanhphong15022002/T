@@ -255,11 +255,23 @@ export class CodxAddTaskComponent implements OnInit {
           taskID: this.stepsTasks['recID'],
         });
     });
-    if(this.typeTask?.value === 'M' || this.typeTask?.value === 'B'){
+    if(type == 'P'){
       this.participant = listRole;
-    }else{
+      this.removeRoleDuplicate();
+    }else if(type == "O"){
       this.owner = listRole;
+      this.removeRoleDuplicate();
     }
+  }
+
+  removeRoleDuplicate(){
+    let roleTypeO = this.owner[0];
+      if(roleTypeO){
+        let index = this.participant?.findIndex(p => p.objectID == roleTypeO?.objectID);
+        if(index >= 0){
+          this.participant?.splice(index,1);
+        }
+      }
   }
 
   onDeleteOwner(objectID, data) {
