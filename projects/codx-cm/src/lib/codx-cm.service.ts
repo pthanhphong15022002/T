@@ -844,6 +844,14 @@ export class CodxCmService {
       data
     );
   }
+  deleteListReason(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteReasonStepAsync',
+      data
+    );
+  }
 
   //#endregion -- Bao
 
