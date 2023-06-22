@@ -655,23 +655,21 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   valueStartTimeChange(event: any) {
-    if (this.startTime != event.data.fromDate) {
       this.startTime = event.data.fromDate;
       this.fullDayChangeWithTime();
       // this.isFullDay = false;
       this.setDate();
       this.changDetec.detectChanges();
-    }
+
   }
 
   valueEndTimeChange(event: any) {
-    if (this.endTime != event.data.fromDate) {
       this.endTime = event.data.toDate;
       this.fullDayChangeWithTime();
       // this.isFullDay = false;
       this.setDate();
       this.changDetec.detectChanges();
-    }
+
   }
 
   setDate() {
