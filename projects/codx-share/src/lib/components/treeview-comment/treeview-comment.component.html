@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-    <div class="isHiden border-top" [class.isShow]="isShowComment">
+    <div class="isHiden border-top" [class.isShow]="data.isShowComment">
         <div class="conmement-header">
             <codx-comments 
                 [parent]="data"
@@ -79,7 +79,7 @@
                     <ng-container *ngTemplateOutlet="cmt1; context: { $implicit: cm }"></ng-container>
                 </ng-container>
             </ng-container>
-            <ng-container *ngIf="data.totalComment > 0 && !data.full">
+            <ng-container *ngIf="data.listComment?.length > 0 && data.full == false">
                 <div class="ms-16">
                     <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(data)">
                         <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
