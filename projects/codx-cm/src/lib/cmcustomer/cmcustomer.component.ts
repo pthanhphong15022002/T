@@ -546,7 +546,20 @@ export class CmCustomerComponent
     });
   }
 
-  deleteContactToCM(data) {
+  async deleteContactToCM(data) {
+    var check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'ContactsBusiness',
+        'CheckContactDealAsync',
+        [data.recID]
+      )
+    );
+    if (check) {
+      this.notiService.notifyCode('CM012');
+      return;
+    }
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {

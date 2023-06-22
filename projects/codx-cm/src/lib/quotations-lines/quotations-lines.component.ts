@@ -117,7 +117,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       listQuotationLines: this.listQuotationLines,
       quotationLinesAddNew: this.quotationLinesAddNew,
       quotationLinesEdit: this.quotationLinesEdit,
-      quotationLinesDeleted: this.quotationLinesDeleted
+      quotationLinesDeleted: this.quotationLinesDeleted,
     };
   }
 
@@ -130,7 +130,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           case 'SYS03': //sửa
           case 'SYS04': //copy
           case 'SYS02': //xóa
-            if(!(this.isSetMoreFunc && quotationLine?.transID)){
+            if (!(this.isSetMoreFunc && quotationLine?.transID)) {
               res.isblur = true;
             }
             break;
@@ -241,6 +241,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                   var obj = {
                     headerText:
                       this.titleAdd +
+                      ' ' +
                       customName.charAt(0).toLowerCase() +
                       customName.slice(1),
                     quotationsLine: data,
@@ -446,8 +447,10 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines.push(data);
                         this.gridQuationsLines.refresh();
                         this.loadTotal();
-                        this.objectOut.quotationLinesAddNew = this.quotationLinesAddNew ;
-                        this.objectOut.listQuotationLines = this.listQuotationLines ;
+                        this.objectOut.quotationLinesAddNew =
+                          this.quotationLinesAddNew;
+                        this.objectOut.listQuotationLines =
+                          this.listQuotationLines;
 
                         this.eventQuotationLines.emit(this.objectOut);
                         this.changeDetector.detectChanges();

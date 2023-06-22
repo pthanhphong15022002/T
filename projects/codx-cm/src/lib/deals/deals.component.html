@@ -61,7 +61,6 @@
   </ng-template>
   <ng-template #descTmpCard>
     <div class="'d-flex flex-column w-100">
-
       <div class="d-flex align-items-center justify-content-start mb-1">
         <i class="icon-subtitles icon-16 me-2"></i>
         <span
@@ -126,7 +125,9 @@
           #expectedClosed
           [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
           [innerHTML]="
-            data.expectedClosed | formatvalue : view.formModel : 'expectedClosed' | async
+            data.expectedClosed
+              | formatvalue : view.formModel : 'expectedClosed'
+              | async
           "
         ></span>
       </div>
@@ -156,21 +157,44 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-  <div
-    class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
-    [id]="data?.keyField"
-  >
-    <div class="line-colums d-flex">
+  <div class="d-flex flex-column">
+    <div
+      class="d-flex align-items-center justify-content-between cursor-pointer w-100"
+      [id]="data?.keyField"
+    >
+      <div class="line-colums d-flex">
+        <span
+          [ngClass]="getPropertiesHeader(data, 'icon')"
+          [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+          style="font-size: 18px"
+          class="me-3"
+        >
+        </span>
+        <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+          {{ data.headerText }}
+        </span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center line-colums">
       <span
-        [ngClass]="getPropertiesHeader(data, 'icon')"
-        [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
-        style="font-size: 18px"
-        class="me-3"
-      >
-      </span>
-      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
-        {{ data.headerText }}
-      </span>
+        class="icon-monetization_on icon-16 text-warning me-2"
+        [ngbTooltip]="'Tổng tiền dự kiến'"
+        container="body"
+      ></span>
+      <span
+        class="text-gray-700 line-clamp-menu"
+        [ngbTooltip]="
+          getTotalDealColums(data?.keyField) + ' ' + currencyIDDefault
+        "
+        [innerHTML]="
+          getTotalDealColums(data?.keyField) != 0
+            ? (getTotalDealColums(data?.keyField)
+              | formatvalue : view.formModel : 'dealValue'
+              | async)
+            : 0
+        "
+      ></span>
+      <span class="text-gray-700 me-1" [innerHTML]="currencyIDDefault"></span>
     </div>
   </div>
 </ng-template>
@@ -267,7 +291,9 @@
           #expectedClosed
           [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
           [innerHTML]="
-            data.expectedClosed | formatvalue : view.formModel : 'expectedClosed' | async
+            data.expectedClosed
+              | formatvalue : view.formModel : 'expectedClosed'
+              | async
           "
         ></span>
       </div>

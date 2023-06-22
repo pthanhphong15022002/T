@@ -1,0 +1,155 @@
+<div class="table-responsive h-100" style="max-height: 370px">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col" *ngFor="let th of ths" [class]="th.class">
+          <codx-label
+            [fiedName]="th.field"
+            [default]="th.headerText"
+            [formModel]="fmSalesInvoicesLines"
+          ></codx-label>
+        </th>
+      </tr>
+    </thead>
+
+    <ng-container *ngIf="salesInvoicesLines?.length > 0">
+      <tbody>
+        <tr *ngFor="let line of salesInvoicesLines; index as i">
+          <th style="width: 30px">{{ i + 1 }}</th>
+          <td>
+            <div class="py-1 d-flex flex-column gap-1">
+              <div class="fw-bold">{{ line.itemName }}</div>
+              <div>
+                <codx-label
+                  fiedName="idiM3"
+                  [formModel]="fmSalesInvoicesLines"
+                  class="label-colon"
+                ></codx-label>
+                <span
+                  *ngFor="let i of [0, 1, 2, 3]; last as isLast"
+                  class="text-gray-500"
+                >
+                  <span
+                    *ngIf="line['idiM' + i]"
+                    [innerHTML]="
+                      line['idiM' + i]
+                        | formatvalue : fmSalesInvoicesLines : 'idiM' + i
+                        | async
+                    "
+                  ></span>
+                  <ng-container *ngIf="!isLast && line['idiM' + (i + 1)]"
+                    >,&nbsp;</ng-container
+                  >
+                </span>
+              </div>
+              <div class="d-flex flex-wrap">
+                <codx-label
+                  fiedName="lblIdiM4"
+                  [formModel]="fmSalesInvoicesLines"
+                  default="Kho"
+                  class="label-colon"
+                ></codx-label>
+                <span
+                  *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast"
+                  class="text-gray-500"
+                >
+                  <span
+                    *ngIf="line['idiM' + i]"
+                    [innerHTML]="
+                      line['idiM' + i]
+                        | formatvalue : fmSalesInvoicesLines : 'idiM' + i
+                        | async
+                    "
+                  ></span>
+                  <ng-container *ngIf="!isLast && line['idiM' + (i + 1)]"
+                    >,&nbsp;</ng-container
+                  >
+                </span>
+              </div>
+
+              <codx-vll
+                *ngIf="line.lineType !== '1'"
+                [formModel]="fmSalesInvoicesLines"
+                field="LineType"
+                [value]="line.lineType"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-primary align-self-start"
+              >
+              </codx-vll>
+            </div>
+          </td>
+          <td class="text-end pe-5">
+            <div class="d-flex flex-column pt-1 gap-1">
+              <div>{{ line.quantity }}</div>
+              <div>{{ line.umid }}</div>
+            </div>
+          </td>
+          <td class="text-end pe-5">
+            <div class="d-flex flex-column pt-1 gap-1">
+              <div>{{ line.salesPrice }}</div>
+              <div>&nbsp;</div>
+            </div>
+          </td>
+          <td class="text-end pe-5">
+            <div class="d-flex flex-column pt-1 gap-1">
+              <div>{{ line.netAmt }}</div>
+              <div>&nbsp;</div>
+            </div>
+          </td>
+          <td class="text-end pe-5">
+            <div class="d-flex flex-column pt-1 gap-1">
+              <div>{{ line.vatAmt }}</div>
+              <div
+                *ngIf="
+                  vats | nameById : 'VATID' : 'TaxRate' : line.vatid as taxRate;
+                  else taxRate
+                "
+              >
+                {{ taxRate * 100 }}%
+              </div>
+              <ng-template #taxRate>-</ng-template>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th></th>
+          <th class="text-end pe-5">
+            <codx-label
+              fiedName="lblTotal"
+              [formModel]="fmSalesInvoicesLines"
+              default="Tổng cộng"
+            ></codx-label>
+          </th>
+          <th class="text-end pe-5">{{ totalRow.totalQuantity }}</th>
+          <th></th>
+          <th class="text-end pe-5">{{ totalRow.totalNetAmt }}</th>
+          <th class="text-end pe-5">{{ totalRow.totalVatAmt }}</th>
+        </tr>
+      </tfoot>
+    </ng-container>
+  </table>
+</div>
+
+<div
+  *ngIf="loading"
+  class="d-flex flex-column align-items-center justify-content-center"
+  style="height: 300px"
+>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div
+  class="d-flex flex-column align-items-center mt-7"
+  *ngIf="salesInvoicesLines?.length === 0 && loading === false"
+>
+  <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+  <div class="fw-bold mt-1">
+    {{ "SYS011" | mssg | async }}
+  </div>
+</div>

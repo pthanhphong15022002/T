@@ -124,7 +124,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.disabledProject = dt?.data?.disabledProject;
     this.listPermissions = dt?.data?.listPermissions;
     this.preside = dt?.data?.preside; // người chủ trì, không hiểu please not edit !
-    this.reminder = this.meeting.reminder
+    this.reminder = this.meeting.reminder;
     if (this.preside) this.defaultRoleA = this.preside;
 
     this.cache
@@ -368,12 +368,24 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   onUpdate() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        this.attachment?.clearData();
-        this.dialog.close();
-      });
+    if (!this.isOtherModule) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option))
+        .subscribe((res) => {
+          this.attachment?.clearData();
+          this.dialog.close();
+        });
+    } else {
+      this.api
+        .exec('CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', [
+          this.meeting,
+          this.lstDelete,
+        ])
+        .subscribe((res) => {
+          this.attachment?.clearData();
+          this.dialog.close();
+        });
+    }
   }
   ///cần 1 đống mess Code
   async onSave() {
@@ -655,21 +667,19 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   valueStartTimeChange(event: any) {
-      this.startTime = event.data.fromDate;
-      this.fullDayChangeWithTime();
-      // this.isFullDay = false;
-      this.setDate();
-      this.changDetec.detectChanges();
-
+    this.startTime = event.data.fromDate;
+    this.fullDayChangeWithTime();
+    // this.isFullDay = false;
+    this.setDate();
+    this.changDetec.detectChanges();
   }
 
   valueEndTimeChange(event: any) {
-      this.endTime = event.data.toDate;
-      this.fullDayChangeWithTime();
-      // this.isFullDay = false;
-      this.setDate();
-      this.changDetec.detectChanges();
-
+    this.endTime = event.data.toDate;
+    this.fullDayChangeWithTime();
+    // this.isFullDay = false;
+    this.setDate();
+    this.changDetec.detectChanges();
   }
 
   setDate() {
