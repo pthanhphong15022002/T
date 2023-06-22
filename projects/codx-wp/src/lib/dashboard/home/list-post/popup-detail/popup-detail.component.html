@@ -43,6 +43,8 @@
                             <span [innerHTML]="parentPost.shareName"></span>
                         </ng-container>
                     </div>
+                    <div class="mt-2" *ngIf="parentPost.contents" [innerHTML]="parentPost.contents | safe: 'html'">
+                    </div>
                 </div>
             </div>
             
@@ -51,11 +53,13 @@
         <ng-container *ngIf="childPost">
             <div>
                 <treeview-comment 
+                    #codxTreeComment
                     [funcID]="'WP'" 
                     [fromModel]="dialogRef.formModel" 
                     [objectType]="'WP_Comments'"
                     [data]="childPost" 
-                    [objectID]="childPost.recID">
+                    [objectID]="childPost.recID"
+                    [showComment]="true">
                 </treeview-comment>
             </div>
         </ng-container>

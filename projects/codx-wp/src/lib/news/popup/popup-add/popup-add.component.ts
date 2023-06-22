@@ -7,6 +7,7 @@ import moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { map } from 'rxjs';
+import { Base64 } from '@syncfusion/ej2-angular-documenteditor';
 
 @Component({
   selector: 'lib-popup-add',
@@ -437,5 +438,11 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
+
+  //check base 64
+  removeBase64(){
+    let strUrl = "";
+    let isBase64 = Base64
+  }
   
 }

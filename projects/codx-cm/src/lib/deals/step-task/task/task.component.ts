@@ -38,12 +38,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
   taskType;
-  dateFomat = 'dd/MM/yyyy';
-  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   listTaskType = [];
   grvMoreFunction: FormModel;
   isNoData = false;
-  titleAction = '';
+  titleName = '';
 
   moreDefaut = {
     share: true,
@@ -58,7 +56,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
-    private stepService: StepService,
+    private stepService: StepService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -159,13 +157,41 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'DP27': // đặt xe
             if (task.taskType != 'B') res.disabled = true;
             break;
+          case 'DP28': // Cập nhật
+            if (['B', 'M'].includes(task.taskType)) {
+              this.convertMoreFunctions(event, res, task.taskType);
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP29': // Hủy
+            if (['B', 'M'].includes(task.taskType)) {
+              this.convertMoreFunctions(event, res, task.taskType);
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP30': //Khôi phục
+            if (['B', 'M'].includes(task.taskType)) {
+              this.convertMoreFunctions(event, res, task.taskType);
+            } else {
+              res.disabled = true;
+            }
+            break;
         }
       });
     }
   }
 
+  convertMoreFunctions(listMore, more, type) {
+    let functionID = type == 'B' ? 'DP27' : 'DP24';
+    let moreFind = listMore?.find((m) => m.functionID == functionID);
+    let text = more?.text + ' ' + moreFind?.text?.toString()?.toLowerCase();
+    more.text = text;
+  }
+
   async clickMFTask(e: any, task?: any) {
-    this.titleAction = e.text;
+    this.titleName = e.text;
     switch (e.functionID) {
       case 'SYS02':
         this.deleteTask(task);
@@ -192,7 +218,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       //   this.sendMail();
       //   break;
       case 'DP27':
-        await this.stepService.addBookingCar()
+        await this.stepService.addBookingCar(true);
         break;
     }
   }
@@ -227,11 +253,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   async copyTask(task) {
     this.getTypeTask(task);
+    task['objectID'] = this.customerID;
+    task['id'] = null;
     let taskOutput = await this.openPopupTask('copy', task);
     if (taskOutput?.event) {
-      if (!taskOutput?.event?.objectID) {
-        task['objectID'] = this.customerID;
-      }
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
           taskOutput?.event,
@@ -311,16 +336,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
       this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
-        this.activitie,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.listActivitie.push(res);
-          this.notiService.notifyCode('SYS006');
-          this.detectorRef.detectChanges();
-        }
-      });
+        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+          this.activitie,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.listActivitie.push(res);
+            this.notiService.notifyCode('SYS006');
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
 
@@ -335,6 +360,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   async openPopupTask(action, dataTask, groupTaskID = null) {
     let dataInput = {
       action,
+      titleName: this.titleName,
       taskType: this.taskType,
       step: null,
       listGroup: null,
@@ -386,7 +412,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         note: dataPopupOutput?.event?.note,
         progress: dataPopupOutput?.event?.progressTask,
         actualEnd: dataPopupOutput?.event?.actualEnd,
-      }
+      };
       this.api
         .exec<any>(
           'DP',
@@ -395,7 +421,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           data
         )
         .subscribe((res) => {
-          if(res){
+          if (res) {
             task.progress = dataPopupOutput?.event?.progressTask;
             this.listActivitie;
             this.notiService.notifyCode('SYS007');
