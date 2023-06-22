@@ -41,7 +41,8 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})export class DealsComponent
+})
+export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -120,8 +121,12 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   viewCrr: any;
   viewsDefault: any;
   gridViewSetup: any;
-  functionModule:any;
+  functionModule: any;
   nameModule: string = '';
+  paramDefault: any;
+  currencyIDDefault: any;
+  codxCM: any;
+  exchangeRateDefault: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -138,6 +143,29 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
+    ///lay tien mac dinh
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) {
+          this.paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyIDDefault =
+            this.paramDefault['DefaultCurrency'] ?? 'VND';
+          if (this.currencyIDDefault != 'VND') {
+            let day = new Date();
+            this.codxCM
+              .getExchangeRate(this.currencyIDDefault, day)
+              .subscribe((res) => {
+                if (res && res != 0) this.exchangeRateDefault = res;
+                else {
+                  this.currencyIDDefault = 'VND';
+                  this.exchangeRateDefault = 1;
+                }
+              });
+          }
+        }
+      }
+    });
   }
 
   onInit(): void {
@@ -147,9 +175,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     };
 
     this.cache.functionList(this.funcID).subscribe((f) => {
-      this.functionModule =  f.module;
+      this.functionModule = f.module;
       this.nameModule = f.customName;
-      this.executeApiCallFunctionID(f.formName,f.gridViewName);
+      this.executeApiCallFunctionID(f.formName, f.gridViewName);
     });
     this.detectorRef.detectChanges();
   }
@@ -249,7 +277,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
                 v.request.dataObj = this.dataObj;
                 v.request2.dataObj = this.dataObj;
               }
-              if (!(this.funcID == 'CM0201' && v.type == '6')) this.views.push(v);else viewOut = true;
+              if (!(this.funcID == 'CM0201' && v.type == '6'))
+                this.views.push(v);
+              else viewOut = true;
             });
             if (!this.views.some((x) => x.active)) {
               if (idxActive != -1) this.views[idxActive].active = true;
@@ -442,30 +472,26 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     } catch (error) {}
   }
 
-  async executeApiCallFunctionID(formName,gridViewName) {
+  async executeApiCallFunctionID(formName, gridViewName) {
     try {
-      await this.getMoreFunction(formName,gridViewName);
-      await this.getGridViewSetup(formName,gridViewName);
+      await this.getMoreFunction(formName, gridViewName);
+      await this.getGridViewSetup(formName, gridViewName);
     } catch (error) {}
   }
 
-
-  async getMoreFunction(formName,gridViewName){
+  async getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
         this.moreFuncInstance = res;
       }
     });
   }
-  async getGridViewSetup(formName,gridViewName){    this.cache
-    .gridViewSetup(formName, gridViewName)
-    .subscribe((res) => {
-      if(res) {
+  async getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
         this.gridViewSetup = res;
       }
-
     });
-
   }
 
   async getColorReason() {
@@ -777,7 +803,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   openOrCloseDeal(data, check) {
     var datas = [data.recID, data.processID, check];
     this.notificationsService
-      .alertCode('DP018',null ,this.titleAction , "'"+data.dealName + "'")
+      .alertCode('DP018', null, this.titleAction, "'" + data.dealName + "'")
       .subscribe((info) => {
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
@@ -787,7 +813,11 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
               data.ModifiedOn = new Date();
               this.dataSelected = data;
               this.view.dataService.update(data).subscribe();
-              this.notificationsService.notifyCode(check ? 'DP016' : 'DP017',0,"'"+data.dealName+"'");
+              this.notificationsService.notifyCode(
+                check ? 'DP016' : 'DP017',
+                0,
+                "'" + data.dealName + "'"
+              );
               if (data.showInstanceControl === '1') {
                 this.view.dataService.update(this.dataSelected).subscribe();
               }
@@ -980,7 +1010,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
       processID: this.processID,
       gridViewSetup: this.gridViewSetup,
-      functionModule: this.functionModule
+      functionModule: this.functionModule,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1017,7 +1047,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa cơ hội',
-          gridViewSetup:this.gridViewSetup
+          gridViewSetup: this.gridViewSetup,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
@@ -1060,16 +1090,22 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
   delete(data: any) {
     var datas = [data.recID];
-    this.codxCmService.isCheckDealInUse(datas).subscribe((res)=> {
-      if(res[0]) {
-        this.notificationsService.notifyCode('CM014' ,0,""+this.nameModule+"");
+    this.codxCmService.isCheckDealInUse(datas).subscribe((res) => {
+      if (res[0]) {
+        this.notificationsService.notifyCode(
+          'CM014',
+          0,
+          '' + this.nameModule + ''
+        );
         return;
-      }
-      else if(res[1]) {
-        this.notificationsService.notifyCode('CM015' ,0,""+this.nameModule+"");
+      } else if (res[1]) {
+        this.notificationsService.notifyCode(
+          'CM015',
+          0,
+          '' + this.nameModule + ''
+        );
         return;
-      }
-      else {
+      } else {
         this.view.dataService.dataSelected = data;
         this.view.dataService
           .delete([this.view.dataService.dataSelected], true, (opt) =>
@@ -1077,18 +1113,20 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
           )
           .subscribe((res) => {
             if (res) {
-              this.view.dataService.onAction.next({ type: 'delete', data: data });
+              this.view.dataService.onAction.next({
+                type: 'delete',
+                data: data,
+              });
             }
           });
         this.changeDetectorRef.detectChanges();
       }
-    })
-
+    });
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedDealAsync';
-    opt.data = [itemSelected.recID,null];
+    opt.data = [itemSelected.recID, null];
     return true;
   }
   //#endregion
@@ -1100,8 +1138,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   }
   //#endregion
 
-
-  autoMoveStage($event){
+  autoMoveStage($event) {
     if ($event && $event != null) {
       this.view.dataService.update($event).subscribe();
       this.detailViewDeal.dataSelected = JSON.parse(
@@ -1148,5 +1185,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     //       );
     //     }
     //   });
+  }
+
+  getTotalDealColums(stepID) {
+    return 0;
   }
 }
