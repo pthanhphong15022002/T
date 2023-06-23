@@ -65,7 +65,7 @@
 
   </div>
   <div class="row">
-    <div class="col-6">
+    <div class="col-12">
       <div class="form-group">
         <codx-label
           fiedName="DealName"
@@ -85,7 +85,7 @@
       </div>
     </div>
 
-    <div class="col-6" *ngIf="listCbxProcess.length > 0 && listCbxProcess != null">
+    <!-- <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
@@ -94,7 +94,7 @@
           default="Quy trình"
         >
         </codx-label>
-      <div *ngIf="deal?.processID">
+      <div >
         <codx-input
         [formModel]="form.formModel"
         field="processID"
@@ -107,7 +107,7 @@
       </div>
 
       </div>
-    </div>
+    </div> -->
 
   </div>
   <div class="row">
@@ -369,7 +369,7 @@
               [customField]="item"
               [checkValid]="false"
               [objectId]="item.recID"
-              [objectType]="'DP_Instances'"
+              [objectType]="'DP_Instances_Steps_Fields'"
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
             >
@@ -401,7 +401,7 @@
     [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
-  <ng-template #tabInputInfo *ngIf="false">
+  <ng-template #tabInputInfo>
     <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"
     [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
@@ -423,77 +423,19 @@
 
 <ng-template #contact>
   <ng-container>
-    <div class="d-flex flex-column mb-1">
-      <div class="title text-primary fs-4 fw-bold">
-        <codx-label
-          [formModel]="formModel"
-          name="lblListContactCustomer"
-          default="Danh sách người liên hệ từ khách hàng"
-        ></codx-label>
-      </div>
-      <div class="text-gray-600">
-        <codx-label
-          name="lblCheckContactToDeal"
-          [formModel]="formModel"
-          default="Chọn liên hệ muốn thêm vào cơ hội"
-        >
-        </codx-label>
-      </div>
-    </div>
-
-    <codx-list-contacts
-      #codxListContact
-      [selectAll]="false"
-      [funcID]="'CM0101'"
-      [objectID]="customerID"
-      [listContacts]="lstContactCustomer"
-      [objectType]="'1'"
-      [objectName]="customerName"
-      [isConvertLeadToCus]="true"
-      (contactEvent)="contactEvent($event)"
-      (lstContactEmit)="lstContactEmit($event)"
-      (objectConvert)="objectConvertDeal($event)"
-      [hidenMF]="false"
-      [type]="'formAdd'"
-      [lstContactRef]="lstContactDeal"
-    ></codx-list-contacts>
-  </ng-container>
-  <ng-container>
-    <div class="title text-primary fs-4 fw-bold">
-      <codx-label
-        [formModel]="formModel"
-        name="lblListContactDeal"
-        default="Danh sách người liên hệ sử dụng cho cơ hội"
-      ></codx-label>
-    </div>
     <codx-list-contacts
       #loadContactDeal
       [selectAll]="false"
       [funcID]="'CM0201'"
       [objectID]="deal?.recID"
       [listContacts]="lstContactDeal"
-      (contactEvent)="contactEventDeal($event)"
+      [customerID]="customerID"
+      (lstContactEmit)="lstContactEmit($event)"
+      (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
       [objectType]="'4'"
       [objectName]="deal?.dealName"
-      [hidenMF]="true"
+      [hidenMF]="false"
       [type]="'formAdd'"
     ></codx-list-contacts>
   </ng-container>
-
 </ng-template>
-
-<!-- <ng-container *ngIf="addFieldsControl == '2'"> </ng-container>
-
-<ng-template #tabGeneralInfoDetail let-form> </ng-template> -->
-
-<!-- <codx-form
-  #form
-  [headerText]="titleAction"
-  [subHeader]="subHeader"
-  [body]="body"
-  [openMore]="true"
-  [dialog]="dialog"
-  [formModel]="formModel"
-  [footer]="footer"
-  [data]=""
-></codx-form> -->

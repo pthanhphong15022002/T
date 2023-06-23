@@ -3,10 +3,13 @@
     padding-left: 0px !important;
 }
 .tabline-content .e-content{
-    height: calc(100vh - 650px)!important;
+    height: calc(100vh - 545px)!important;
  }
  .tabset-content .e-content{
      height: calc(100vh - 610px)!important;
+  }
+  .table-content{
+    height: calc(100vh - 500px)!important;
   }
  .btn-addline{
      position: absolute;
@@ -19,4 +22,11 @@
  .add-cash #gridViewV2.e-grid .e-summarycell {
      border-width: 0;
  }
+ .ac-ng-overlay .ngx-overlay{
+    background-color: whitesmoke !important;
+}
+.ac-ng-overlay .ngx-overlay img{
+    width: 35% !important;
+    height: auto !important;
+}
  

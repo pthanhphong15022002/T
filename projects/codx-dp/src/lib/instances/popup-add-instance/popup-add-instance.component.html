@@ -95,10 +95,9 @@
     >
     </codx-label>
     <codx-input
+      type="text"
       field="instanceNo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      (valueChange)="valueChange($event)"
+      [crrValue]="instance?.instanceNo"
       [disabled]="true"
     >
     </codx-input>
@@ -324,7 +323,7 @@
               [customField]="item"
               [checkValid]="false"
               [objectId]="item.recID"
-              [objectType]="'DP_Instances_Steps'"
+              [objectType]="'DP_Instances_Steps_Fields'"
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
             >

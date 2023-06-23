@@ -24,18 +24,32 @@
   <ng-template #body>
     <div class="form-group row mt-5">
       <div class="col-6">
-        <span
+        <!-- <span
           [innerHTML]="benefitObj?.status | formatvalue : formModel : 'status' | async"
         >
-        </span>
+        </span> -->
+        
+        <codx-vll
+        *ngIf="benefitObj?.status"
+        [formModel]="formModel"
+        [field]="'Status'"
+        [value]="benefitObj?.status"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+        ngClass="badge badge-sm badge-light"
+      >
+      </codx-vll>
       </div>
       <div class="col-6">
+        <span class="me-2">
         <codx-input
           [disabled]="'true'"
           field="isCurrent"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
+      </span>
         <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
       </div>
     </div>
@@ -165,6 +179,7 @@
         field="signerID"
         [formModel]="formModel"
         [Group]="formGroup"
+      (valueChange)="handleSelectEmp($event)"
       ></codx-input>
     </div>
 

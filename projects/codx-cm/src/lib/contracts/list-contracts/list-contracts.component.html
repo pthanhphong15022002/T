@@ -1,12 +1,12 @@
-<div class="list-contracts">
-  <div class="d-flex justify-content-end p-2 bg-gray-100 mb-3">
-    <button type="button" class="btn btn-sm btn-primary" (click)="addContract()">
-      <i class="icon-add icon-16 ms-n1"></i>
-      <codx-label
-        [default]="'Thêm'"
-      ></codx-label>
-    </button>
-  </div>
+<div class="list-contracts po">
+  <button
+    type="button"
+    class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
+    (click)="addContract()"
+  >
+    <i class="icon-18 icon-sticky_note_2 text-light"></i>
+    <codx-label class="fw-bold" [formModel]="formModel" fiedName="btnAddContract" [default]="'Thêm hợp đồng'"></codx-label>
+  </button>
   <div>
     <ng-container
       [ngTemplateOutlet]="contractsTemplate"
@@ -16,7 +16,10 @@
 </div>
 
 <ng-template #contractsTemplate let-data="value">
-  <div *ngFor="let contract of listContract; let i = index" class="has-action-menu px-5">
+  <div
+    *ngFor="let contract of listContract; let i = index"
+    class="has-action-menu px-5"
+  >
     <div class="row">
       <div class="col-1 d-flex justify-content-center align-items-center">
         {{ i + 1 }}
@@ -29,32 +32,33 @@
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
         <i class="icon-money"></i>
-        <span class="fw-bold">{{contract?.contractAmt}}</span>
+        <span class="fw-bold">{{ contract?.contractAmt }}</span>
         <span
-        class="fs-7 ms-2"
-        [innerHTML]="
-        contract?.currencyID
-            | formatvalue : formModel : 'CurrencyID'
-            | async
-        "
-      ></span>
+          class="fs-7 ms-2"
+          [innerHTML]="
+            contract?.currencyID
+              | formatvalue : formModel : 'CurrencyID'
+              | async
+          "
+        ></span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="text-gray-600">{{ contract?.effectiveTo | date : dateFomat }}</span>
+        <span class="text-gray-600">{{
+          contract?.effectiveTo | date : dateFomat
+        }}</span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
-        <span
-          class="badge badge-sm badge-light-primary">Chờ duyệt</span>
+        <span class="badge badge-sm badge-light-primary">Chờ duyệt</span>
       </div>
     </div>
     <codx-mfunc
-    [type]="'hover'"
-    [dataItem]="moreDefaut"
-    [formModel]="frmModelInstancesTask"
-    (changeDataMF)="changeDataMFTask($event)"
-    (clickMF)="clickMF($event, contract)"
-  >
-  </codx-mfunc>
+      [type]="'hover'"
+      [dataItem]="moreDefaut"
+      [formModel]="formModel"
+      (changeDataMF)="changeDataMFTask($event)"
+      (clickMF)="clickMF($event, contract)"
+    >
+    </codx-mfunc>
     <hr />
   </div>
 </ng-template>

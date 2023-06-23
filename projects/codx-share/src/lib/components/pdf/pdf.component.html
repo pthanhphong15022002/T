@@ -273,6 +273,8 @@
                 align="Left"
               ></e-item>
               <e-item
+              *ngIf="isApprover && isEditable"
+
                 (click)="clickHighlightText()"
                 prefixIcon="e-icons e-style"
                 tooltipText="Highlight"
@@ -280,15 +282,28 @@
                 align="Left"
               ></e-item>
               <e-item
+              *ngIf="isApprover && isEditable"
+
                 (click)="changeEditMode()"
                 prefixIcon="e-icons e-repeat"
                 tooltipText="Edit"
                 showTextOn="Overflow"
                 align="Left"
               ></e-item>
-              <!-- <e-item (click)="changeRemoveHLAMode()"
-                prefixIcon="e-erase btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
-              </e-item> -->
+              <e-item
+              *ngIf="isApprover && isEditable"
+
+                (click)="changeRemoveHLAMode()"
+                prefixIcon="e-erase e-icons"
+              >
+              </e-item>
+              <e-item
+              *ngIf="isApprover && isEditable"
+                prefixIcon="e-icons e-circle-check"
+                (click)="confirmHighlightText(false)"
+              >
+              </e-item>
+
               <e-item
                 *ngIf="isEditable"
                 [prefixIcon]="
@@ -298,6 +313,10 @@
                 "
                 (click)="changeShowActionsState()"
               ></e-item>
+              <e-item id="pageRotateCcw" prefixIcon="e-icons e-transform-left">
+              </e-item>
+              <e-item id="pageRotateCw" prefixIcon="e-icons e-transform-right">
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -310,8 +329,8 @@
         [src]="curFileUrl"
         [(zoom)]="zoomValue"
         [(page)]="curPage"
-        [handTool]="showHand"
-        [showHandToolButton]="showHand"
+        [handTool]="false"
+        [showHandToolButton]="false"
         [useBrowserLocale]="true"
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
@@ -326,6 +345,8 @@
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
         (textLayerRendered)="getTextLayerInfo($event)"
+        [(rotation)]="rotate"
+        (rotationChange)="changeRotation($event)"
       >
       </ngx-extended-pdf-viewer>
 
@@ -707,11 +728,11 @@
                           > -->
                             <codx-input
                               class="me-4 date-Type"
-                              name="date-Type"
+                              [name]="area.recID"
                               type="radio"
                               [checked]="!useSignDate"
                               labelPosition="After"
-                              (valueChange)="changeUseCreatedDate()"
+                              (click)="changeDateType(false)"
                             >
                             </codx-input>
                             <codx-label
@@ -722,11 +743,11 @@
                             </codx-label>
                             <codx-input
                               class="me-4 date-Type"
-                              name="date-Type"
+                              [name]="area.recID"
                               type="radio"
                               [checked]="useSignDate"
+                              (click)="changeDateType(true)"
                               labelPosition="After"
-                              (valueChange)="changeUseSignDate()"
                             >
                             </codx-input>
                             <codx-label
@@ -943,7 +964,7 @@
             <ng-template #content>
               <!-- <ejs-toolbar>
                 <e-items>
-                 // <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item> 
+                 // <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item>
                 </e-items>
               </ejs-toolbar> -->
               <div class="" *ngIf="lstKey.length">

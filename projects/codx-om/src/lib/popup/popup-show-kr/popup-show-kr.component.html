@@ -2,16 +2,18 @@
 <div class="h-100 w-100">
   <div class="h-100 w-100 px-5 py-5 bg-gray-100 ">
     <div class="w-100 h-100 d-flex flex-column">
-      <div class="w-100 h-100px rounded-3 bg-body scroll-y ">
-        <div class=" mx-5 mt-5 d-flex align-items-center justify-content-between">
-          <div class="col-1">
-            <span class="icon-arrow_back hover-primary cursor-pointer" (click)="closeDialog()"></span>
+      <div class="">
+        <div class=" mx-5 mt-3 mb-2 d-flex align-items-top justify-content-between">
+          <div class="w-50px">
+            <button type="button" class="btn btn-icon btn-light-primary" (click)="closeDialog()">
+              <i class="icon-arrow_back icon-20"></i>
+            </button>
           </div>
-          <div class=" text-center">
+          <div class="w-100 text-center">
             <span class="fw-bold fs-3"
               [innerHTML]="dataKR?.okrName | formatvalue : okrFM?.obFM : 'okrName' | async"></span>
           </div>
-          <div class="d-flex align-items-center justify-content-end col-1">
+          <div class="w-150px min-w-150px h-30px d-flex align-items-center justify-content-end">
             <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)"
               [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
               <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
@@ -36,11 +38,9 @@
             <a (click)="clickMenu(item)" [class]=" 'tab-item text-dark fw-bold d-flex align-items-center justify-content-center' + ' ' + (item.isActive ? 'tab-active' : '') ">              
               <span [class]=" item?.icon"></span>
               <span class="ms-2">
-                <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
-                  >
+                <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault">
                 </codx-label>
-              </span>
-              
+              </span>              
             </a>
           </ng-container>
         </div>
@@ -154,8 +154,13 @@
         </button>
       </div>
 
-      <div class="px-10">
-        <div class="d-flex flex-column flex-grow-1 justify-content-between w-100" *ngFor="
+      <div class="px-10" *ngIf="dataKR!=null">
+        <popup-check-in-history [okrFM]="okrFM" [okrGrv]="okrGrv" [oldData]="dataKR" [groupModel]="groupModel" [isPopup]="false"></popup-check-in-history>
+      </div>
+    </ng-container>
+  </div>
+    <ng-template>
+      <div class="d-flex flex-column flex-grow-1 justify-content-between w-100" *ngFor="
           let item of dataKR?.checkIns;
           let index = index;
           let count = count
@@ -246,10 +251,7 @@
             </div>
           </div>
         </div>
-      </div>
-    </ng-container>
-  </div>
-    
+    </ng-template>
 
 </ng-template>
 <ng-template #templateLinks>

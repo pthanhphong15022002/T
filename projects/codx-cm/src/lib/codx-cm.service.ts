@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LayoutModel } from '@syncfusion/ej2-angular-diagrams';
 import {
   ApiHttpService,
   CacheService,
@@ -26,12 +27,30 @@ export class CodxCmService {
   titleAction: any;
   childMenuClick = new BehaviorSubject<any>(null);
   childMenuDefault = new BehaviorSubject<any>(null);
+  private loadingSubject = new BehaviorSubject<Boolean>(false);
+  valueRadio = this.loadingSubject.asObservable();
+
+  contactSubject = new BehaviorSubject<any>(null);
+  // valueContact = this.contactSubject.asObservable();
+
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     private cache: CacheService,
     private notification: NotificationsService
   ) {}
+
+  openLoadding(): void {
+    setTimeout(() => {
+      this.loadingSubject.next(true);
+    });
+  }
+
+  closeLoadding(): void {
+    setTimeout(() => {
+      this.loadingSubject.next(false);
+    });
+  }
 
   quickAddContacts(data) {
     return this.api.exec<any>(
@@ -59,10 +78,10 @@ export class CodxCmService {
     );
   }
 
-  getOneCustomer(recID, funcID) {
+  getOneCustomer(recID, entityName) {
     return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
       recID,
-      funcID,
+      entityName,
     ]);
   }
 
@@ -409,11 +428,22 @@ export class CodxCmService {
       data
     );
   }
-  copyFileAvata(idOld, idNew) {
-    return this.api.exec<any>('CM', 'ContactsBusiness', 'CopyAvatarByIdAsync', [
-      idOld,
+  copyFileAvata(idOld, idNew, entityName = null) {
+    return this.api.exec<any>('DM', 'FileBussiness', 'CoppyFileByIdAsync', [
       idNew,
+      idOld,
+      'avt',
+      entityName,
     ]);
+  }
+
+  getListFile(funcID, objectID, objectType, referType) {
+    return this.api.exec<any>(
+      'DM',
+      'FileBussiness',
+      'GetFilesForOutsideAsync',
+      [funcID, objectID, objectType, referType]
+    );
   }
 
   addInstance(data: any) {
@@ -431,6 +461,20 @@ export class CodxCmService {
       'EditInstanceAsync',
       data
     );
+  }
+
+  addDeal(data: any) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync', data);
+  }
+  editDeal(data: any) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'EditDealAsync', data);
+  }
+
+  addCases(data: any) {
+    return this.api.exec<any>('CM', 'CasesBusiness', 'AddCasesAsync', data);
+  }
+  editCases(data: any) {
+    return this.api.exec<any>('CM', 'CasesBusiness', 'EditCasesAsync', data);
   }
 
   getListCbxCampaigns() {
@@ -462,6 +506,14 @@ export class CodxCmService {
       'CM',
       'CasesBusiness',
       'OpenOrClosedCasesAsync',
+      data
+    );
+  }
+  openOrClosedLead(data: any) {
+    return this.api.exec<any>(
+      'CM',
+      'LeadsBusiness',
+      'OpenOrClosedLeadAsync',
       data
     );
   }
@@ -604,7 +656,6 @@ export class CodxCmService {
     );
   }
 
-
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
       'SYS',
@@ -634,6 +685,16 @@ export class CodxCmService {
       data
     );
   }
+  startLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'StartLeadAsync',
+      data
+    );
+  }
+
   moveStageDeal(data) {
     return this.api.execSv<any>(
       'CM',
@@ -653,6 +714,15 @@ export class CodxCmService {
       data
     );
   }
+  moveStageLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveStageLeadAsync',
+      data
+    );
+  }
 
   updateDeal(data) {
     return this.api.execSv<any>(
@@ -663,6 +733,24 @@ export class CodxCmService {
       data
     );
   }
+  updateLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'EditDealAsync',
+      data
+    );
+  }
+  // moveDealReason(data) {
+  //   return this.api.execSv<any>(
+  //     'CM',
+  //     'ERM.Business.CM',
+  //     'DealsBusiness',
+  //     'MoveDealReasonAsync',
+  //     data
+  //   );
+  // }
   moveDealReason(data) {
     return this.api.execSv<any>(
       'CM',
@@ -673,6 +761,15 @@ export class CodxCmService {
     );
   }
 
+  moveLeadReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveLeadReasonAsync',
+      data
+    );
+  }
 
   getIdBusinessLineByProcessID(data) {
     return this.api.exec<any>(
@@ -683,11 +780,62 @@ export class CodxCmService {
     );
   }
 
-  getListContactByLeadID(data) {
+  isCheckDealInUse(data) {
     return this.api.exec<any>(
       'CM',
-      'ContactsBusiness',
-      'GetListContactByLeadIDAsync',
+      'DealsBusiness',
+      'isCheckDealInUseAsync',
+      data
+    );
+  }
+
+  autoMoveStageInInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AutoMoveStageAsync',
+      data
+    );
+  }
+  autoMoveStageInDeal(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'AutoMoveStageDealAsync',
+      data
+    );
+  }
+
+  getListReasonByProcessId(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListReasonByProcessIdAsync',
+      data
+    );
+  }
+  updateListReason(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateReasonStepAsync',
+      data
+    );
+  }
+  deleteListReason(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteReasonStepAsync',
+      data
+    );
+  }
+
+  getListProcessDefault(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessDefaultAsync',
       data
     );
   }
@@ -824,15 +972,14 @@ export class CodxCmService {
     );
   }
 
-  /// cance trifnh ki
-  cancelSubmit(recID, entityName) {
-    return this.api.execSv(
-      'CM',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'CancelAsync',
-      [recID, '', entityName]
-    );
+  getProcess(recID) {
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', recID);
+  }
+  updateApproveStatus(className, recID, status) {
+    return this.api.exec<any>('CM', className, 'UpdateApproveStatusAsync', [
+      recID,
+      status,
+    ]);
   }
 
   updateStatusQuotatitons(data) {

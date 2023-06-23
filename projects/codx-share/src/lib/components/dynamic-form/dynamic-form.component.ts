@@ -14,12 +14,17 @@ import {
   LayoutService,
   NotificationsService,
   FormModel,
+  AuthStore,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from '../codx-tabs/model/tabControl.model';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+
+import { OrderHistoryComponent } from './order-history/order-history.component';
+import { UsingHistoryComponent } from './using-history/using-history.component';
+import { AccessHistoryComponent } from './access-history/access-history.component';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -44,15 +49,18 @@ export class DynamicFormComponent extends UIComponent {
   dataSelected: any;
   function: any = {};
   tabs: TabModel[] = [];
+  authStore;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
     private route: ActivatedRoute,
     private layout: LayoutService,
-    private notifySvr: NotificationsService
+    private notifySvr: NotificationsService,
+    private userStore: AuthStore
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.authStore = userStore.get();
   }
 
   onInit(): void {
@@ -74,7 +82,7 @@ export class DynamicFormComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.grid,
-        sameData: true,
+        sameData: false,
         active: true,
         model: {
           //resources: this.columnsGrid,
@@ -93,8 +101,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   changeDataMF(e: any, data) {
-    console.log('event', e);
-    console.log('data', data);
     if (data.isSystem) {
       let delMF = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
@@ -122,52 +128,114 @@ export class DynamicFormComponent extends UIComponent {
         break;
       //Quy trình chi tiết của OD
       case 'ODS2101':
-        this.openFormEditCategory(data,evt)
+        this.openFormEditCategory(data, evt);
         break;
+      //Danh sách sử dụng
+
+      case 'TNT0013': {
+        this.openFormUsingHistory(data, evt); //done
+        break;
+      }
+      //Danh sách đơn hàng
+      case 'TNT0014': {
+        this.openFormOrderHistory(data, evt); //done
+        break;
+      }
+      //Lịch sử truy cập TN
+      case 'TNT0011': {
+        // this.openFormOrderHistory(data, evt); //done
+        this.openFormAccessHistory(data, evt); //done
+        break;
+      }
       default:
         break;
     }
   }
 
+  //Form lịch sử đơn hàng
+  openFormOrderHistory(data, evt) {
+    let sendData = {
+      tenant: data.tenantID,
+      userID: data.createdBy,
+    };
+    let orderDialog = this.callfc.openForm(
+      OrderHistoryComponent,
+      '',
+      650,
+      900,
+      '',
+      sendData
+    );
+  }
+
+  //Form lịch sử sử dụng
+  openFormUsingHistory(data, e) {
+    let usingForm = this.callfc.openForm(
+      UsingHistoryComponent,
+      '',
+      900,
+      900,
+      '',
+      data.tenantID
+    );
+  }
+
+  //Form lịch sử truy cập TN
+  openFormAccessHistory(data: any, e: any) {
+    let usingForm = this.callfc.openForm(
+      AccessHistoryComponent,
+      '',
+      900,
+      900,
+      '',
+      data.tenantID
+    );
+  }
 
   //Form chỉnh sửa quy trình duyệt OD
-  openFormEditCategory(data:any , e:any)
-  {
-    this.api.execSv("ES","ES","CategoriesBusiness","GetByCategoryIDAsync",data?.categoryID).subscribe(item=>{
-      if(item)
-      {
-        this.viewBase.dataService.dataSelected = item;
-        let option = new SidebarModel();
-        option.Width = '550px';
-        option.DataService = this.viewBase?.dataService;
-        option.FormModel = new FormModel()
-        option.FormModel.entityName = "ES_Categories";
-        option.FormModel.entityPer  = "ES_ODCategoriesApproval";
-        option.FormModel.formName   = "ODCategoriesApproval";
-        option.FormModel.funcID     = "ODS24";
-        option.FormModel.gridViewName = "grvODCategoriesApproval";
-        option.FormModel.userPermission = this.viewBase?.formModel?.userPermission;
-        let popupEdit = this.callfunc.openSide(
-          PopupAddCategoryComponent,
-          {
-            disableCategoryID: '1',
-            data: item,
-            isAdd: false,
-            headerText: e?.data?.customName,
-          },
-          option
-        );
-        popupEdit.closed.subscribe((res) => {
-          if (res?.event == null) {
-            //this.viewBase.dataService.dataSelected = evt.data;
-            //this.viewBase.dataService.clear();
-          } else {
-            //this.viewBase.dataService.update(res.event).subscribe();
-          }
-        });
-      }
-    })
-   
+  openFormEditCategory(data: any, e: any) {
+    this.api
+      .execSv(
+        'ES',
+        'ES',
+        'CategoriesBusiness',
+        'GetByCategoryIDAsync',
+        data?.categoryID
+      )
+      .subscribe((item) => {
+        if (item) {
+          this.viewBase.dataService.dataSelected = item;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = new FormModel();
+          option.FormModel.entityName = 'ES_Categories';
+          option.FormModel.entityPer = 'ES_ODCategoriesApproval';
+          option.FormModel.formName = 'ODCategoriesApproval';
+          option.FormModel.funcID = 'ODS24';
+          option.FormModel.gridViewName = 'grvODCategoriesApproval';
+          option.FormModel.userPermission =
+            this.viewBase?.formModel?.userPermission;
+          let popupEdit = this.callfunc.openSide(
+            PopupAddCategoryComponent,
+            {
+              disableCategoryID: '1',
+              data: item,
+              isAdd: false,
+              headerText: e?.data?.customName,
+            },
+            option
+          );
+          popupEdit.closed.subscribe((res) => {
+            if (res?.event == null) {
+              //this.viewBase.dataService.dataSelected = evt.data;
+              //this.viewBase.dataService.clear();
+            } else {
+              //this.viewBase.dataService.update(res.event).subscribe();
+            }
+          });
+        }
+      });
   }
 
   click(evt: ButtonModel) {

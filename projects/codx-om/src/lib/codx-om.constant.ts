@@ -50,24 +50,32 @@ export const OMCONST = {
     PlanWeightCOMP:'OMT013',
     SharesPlanCOMP:'OMT014',
     PermissionCOMP:'OMT015',
+    UpdateVerPlanCOMP:'OMT016',
+    ShowVerPlanCOMP:'OMT017',
     //Plan
     ReleasePlanDEPT:'OMT021',
     UnReleasePlanDEPT:'OMT022',
     PlanWeightDEPT:'OMT023',
     SharesPlanDEPT:'OMT024',
     PermissionDEPT:'OMT025',
+    UpdateVerPlanDEPT:'OMT026',
+    ShowVerPlanDEPT:'OMT027',
     //Plan
     ReleasePlanORG:'OMT031',
     UnReleasePlanORG:'OMT032',
     PlanWeightORG:'OMT033',
     SharesPlanORG:'OMT034',
     PermissionORG:'OMT035',
+    UpdateVerPlanORG:'OMT036',
+    ShowVerPlanORG:'OMT037',
     //Plan
     ReleasePlanPER:'OMT041',
     UnReleasePlanPER:'OMT042',
     PlanWeightPER:'OMT043',
     SharesPlanPER:'OMT044',
     PermissionPER:'OMT045',
+    UpdateVerPlanPER:'OMT046',
+    ShowVerPlanPER:'OMT047',
     
     //OB
     OBDetail: 'OMT101',
@@ -82,6 +90,9 @@ export const OMCONST = {
     KREditSKRWeight: 'OMT204',
     KRCheckIn: 'OMT205',
     KRTask: 'OMT206',
+    KRChagneAssignTarget: 'OMT207',
+    KRReviewCheckIn:'OMT208',
+
     //SKR
     SKRDetail: 'OMT301',
     SKRAssign: 'OMT302',
@@ -102,6 +113,7 @@ export const OMCONST = {
       DEPT: '3',
       ORG: '5',
       PERS: '9',
+      POSITION: '7',
     },
 
     Plan: {
@@ -128,14 +140,6 @@ export const OMCONST = {
     Type2:'2',
     Type3:'3',
     Type4:'4',
-  },
-  OBJECT_TYPE:{
-    EMP:'1',
-    ORG:'2',
-    DEPT:'3',
-    DIVI:'4',
-    COMP:'5',
-    USER:'U',
   },
   ASSET_URL:'./assets/themes/om/default/img/'
   //region format

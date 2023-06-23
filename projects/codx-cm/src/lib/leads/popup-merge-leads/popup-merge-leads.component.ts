@@ -77,7 +77,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   recIDAvt: any;
   nameContact: any;
   modifyOnContact: Date;
-
+  data: any;
+  isDate: boolean = false;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -90,12 +91,22 @@ export class PopupMergeLeadsComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.title = dt?.data?.title;
-    this.leadOne = JSON.parse(JSON.stringify(dt?.data?.data));
-    this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
+    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
   }
   async ngOnInit() {
+    this.isDate = false;
+    this.changeAvata = false;
+    this.changeAvataContact = false;
+
+  }
+
+  async ngAfterViewInit() {
+    this.leadOne = JSON.parse(JSON.stringify(this.data));
+    this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
     this.leadNew.recID = Util.uid();
     this.leadNew.contactID = Util.uid();
+    this.leadTwo.recID = null;
+    this.leadThree.recID = null;
     this.recIDLead = this.leadOne?.recID;
     this.recIDAvt = this.leadOne?.contactID;
     this.nameContact = this.leadOne.contactName;
@@ -106,12 +117,6 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
     this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
     this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
-
-    this.changeAvata = false;
-    this.changeAvataContact = false;
-  }
-
-  async ngAfterViewInit() {
     if (this.leadOne) {
       this.lstContactOne = await this.getContacts(this.leadOne?.recID);
       this.lstAddressOne = await this.getListAddress(
@@ -145,7 +150,7 @@ export class PopupMergeLeadsComponent implements OnInit {
     options.predicates =
       'Status!=@0 and RecID!=@1 and RecID!=@2 and IsDuplicated==false';
     options.dataValues =
-      '5' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
+      '7' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     lst =
@@ -158,7 +163,9 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
 
   //#region  Save
-  onMerge() {
+  async onMerge() {
+    this.gridViewSetup.ProcessID.isRequire = false;
+
     this.countValidate = this.cmSv.checkValidate(
       this.gridViewSetup,
       this.leadNew
@@ -178,7 +185,6 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.noti.notifyCode('CM008');
       return;
     }
-
     var data = [
       this.leadNew,
       this.leadOne?.recID,
@@ -186,7 +192,20 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.leadThree?.recID,
       this.changeAvata == false ? this.recIDLead : null,
     ];
-
+    if (this.changeAvata) {
+      await firstValueFrom(
+        this.imageAvatar.updateFileDirectReload(this.leadNew?.recID)
+      );
+    }
+    if (this.changeAvataContact) {
+      await firstValueFrom(
+        this.imageAvatarContact.updateFileDirectReload(this.leadNew?.contactID)
+      );
+    } else {
+      await firstValueFrom(
+        this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
+      );
+    }
     this.api
       .execSv<any>(
         'CM',
@@ -197,46 +216,21 @@ export class PopupMergeLeadsComponent implements OnInit {
       )
       .subscribe(async (res) => {
         if (res) {
-          if (this.changeAvata) {
-            await firstValueFrom(
-              this.imageAvatar.updateFileDirectReload(res?.recID)
-            );
-            if (this.changeAvataContact) {
-              await firstValueFrom(
-                this.imageAvatarContact.updateFileDirectReload(res?.contactID)
-              );
-            } else {
-              this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID);
-            }
-            this.dialog.close([
-              res,
-              this.leadOne,
-              this.leadTwo,
-              this.leadThree,
-            ]);
-            this.noti.notifyCode('SYS034');
-          } else {
-            // await firstValueFrom(
-            //   this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
-            // );
-            if (this.changeAvataContact) {
-              await firstValueFrom(
-                this.imageAvatarContact.updateFileDirectReload(res?.contactID)
-              );
-            } else {
-              await firstValueFrom(
-                this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
-              );
-            }
-            this.dialog.close([
-              res,
-              this.leadOne,
-              this.leadTwo,
-              this.leadThree,
-            ]);
-
-            this.noti.notifyCode('SYS034');
-          }
+          var lstObjectIdFile = [];
+          lstObjectIdFile = this.getListIdFile();
+          var lstRef = [];
+          lstRef.push('avt');
+          await firstValueFrom(
+            this.api.execSv<any>(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'CopyListFilesFromListObjectIDToObjectIDAsync',
+              [this.leadNew?.recID, lstObjectIdFile, lstRef]
+            )
+          );
+          this.dialog.close([res, this.leadOne, this.leadTwo, this.leadThree]);
+          this.noti.notifyCode('SYS034');
         }
       });
   }
@@ -275,6 +269,29 @@ export class PopupMergeLeadsComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  getListIdFile() {
+    var lstID = [];
+
+    if (this.leadOne?.recID != null) {
+      lstID.push(this.leadOne.recID);
+    }
+    if (this.leadTwo?.recID != null) {
+      lstID.push(this.leadTwo.recID);
+    }
+    if (this.leadThree?.recID != null) {
+      lstID.push(this.leadThree.recID);
+    }
+
+    return lstID;
+  }
+
+  async getListFile(objectID, objectType) {
+    var lst = await firstValueFrom(
+      this.cmSv.getListFile('CM0205', objectID, objectType, '')
+    );
+    return lst ? lst : [];
   }
   //#endregion
   async cbxLeadChange(e, type) {
@@ -365,7 +382,8 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
   valueDateChange(e) {
     if (e != null) {
-      this.leadNew.establishDate = e?.data?.fromDate;
+      if (this.leadNew.establishDate != e?.data?.fromDate)
+        this.leadNew.establishDate = e?.data?.fromDate;
     }
   }
 
@@ -532,31 +550,34 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.channelID = this.leadThree?.channelID;
         }
         break;
-      case 'customerResource':
-        if (e.field === 'customerResource1' && e.component.checked === true) {
-          this.leadNew.customerResource = this.leadOne?.customerResource;
-        } else if (
-          e.field === 'customerResource2' &&
-          e.component.checked === true
-        ) {
-          this.leadNew.customerResource = this.leadTwo?.customerResource;
+      case 'channelID':
+        if (e.field === 'channelID1' && e.component.checked === true) {
+          this.leadNew.channelID = this.leadOne?.channelID;
+        } else if (e.field === 'channelID2' && e.component.checked === true) {
+          this.leadNew.channelID = this.leadTwo?.channelID;
         } else {
-          this.leadNew.customerResource = this.leadThree?.customerResource;
+          this.leadNew.channelID = this.leadThree?.channelID;
         }
         break;
       case 'salespersonID':
         if (e.field === 'salespersonID1' && e.component.checked === true) {
           this.leadNew.salespersonID = this.leadOne?.salespersonID;
-          this.leadNew.owner = this.leadOne?.salespersonID;
         } else if (
           e.field === 'salespersonID2' &&
           e.component.checked === true
         ) {
           this.leadNew.salespersonID = this.leadTwo?.salespersonID;
-          this.leadNew.owner = this.leadTwo?.salespersonID;
         } else {
           this.leadNew.salespersonID = this.leadThree?.salespersonID;
-          this.leadNew.owner = this.leadThree?.salespersonID;
+        }
+        break;
+      case 'owner':
+        if (e.field === 'owner1' && e.component.checked === true) {
+          this.leadNew.owner = this.leadOne?.owner;
+        } else if (e.field === 'owner2' && e.component.checked === true) {
+          this.leadNew.owner = this.leadTwo?.owner;
+        } else {
+          this.leadNew.owner = this.leadThree?.owner;
         }
         break;
       case 'consultantID':
@@ -571,16 +592,16 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.consultantID = this.leadThree?.consultantID;
         }
         break;
-      case 'businesslineID':
-        if (e.field === 'businesslineID1' && e.component.checked === true) {
-          this.leadNew.businesslineID = this.leadOne?.businesslineID;
+      case 'businessLineID':
+        if (e.field === 'businessLineID1' && e.component.checked === true) {
+          this.leadNew.businessLineID = this.leadOne?.businessLineID;
         } else if (
-          e.field === 'businesslineID2' &&
+          e.field === 'businessLineID2' &&
           e.component.checked === true
         ) {
-          this.leadNew.businesslineID = this.leadTwo?.businesslineID;
+          this.leadNew.businessLineID = this.leadTwo?.businessLineID;
         } else {
-          this.leadNew.businesslineID = this.leadThree?.businesslineID;
+          this.leadNew.businessLineID = this.leadThree?.businessLineID;
         }
         break;
       case 'avataContact':
@@ -596,15 +617,17 @@ export class PopupMergeLeadsComponent implements OnInit {
           e.field === 'avataContact2' &&
           e.component.checked === true
         ) {
-          this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.recID));
-          this.nameContact = JSON.parse(JSON.stringify(this.leadTwo?.leadName));
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadTwo?.contactID));
+          this.nameContact = JSON.parse(
+            JSON.stringify(this.leadTwo?.contactName)
+          );
           this.modifyOnContact = JSON.parse(
             JSON.stringify(this.leadOne?.modifiedOn)
           );
         } else {
-          this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.recID));
+          this.recIDAvt = JSON.parse(JSON.stringify(this.leadThree?.contactID));
           this.nameContact = JSON.parse(
-            JSON.stringify(this.leadThree?.leadName)
+            JSON.stringify(this.leadThree?.contactName)
           );
           this.modifyOnContact = JSON.parse(
             JSON.stringify(this.leadOne?.modifiedOn)

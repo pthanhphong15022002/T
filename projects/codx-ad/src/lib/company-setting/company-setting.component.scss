@@ -194,14 +194,6 @@ lib-company-setting .e-tab .e-tab-header::before {
 
 }
 
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
-  border: 0 !important;
-}
-
-.e-tab .e-tab-header .e-toolbar-item {
-  height: 38px;
-  min-height: 38px;
-}
 
 lib-company-setting .e-tab .e-tab-header.e-vertical:before {
   display: none;
@@ -209,24 +201,21 @@ lib-company-setting .e-tab .e-tab-header.e-vertical:before {
 
 /* van */
 
-.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
-  background-color: var(--primary-lighter);
-  border: 0 !important;
-}
+// .e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
+//   background-color: var(--primary-lighter);
+//   border: 0 !important;
+// }
 
 
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
-  background-color: var(--primary-lightest);
-}
 
-
-.e-toolbar-items {
+lib-company-setting .e-toolbar-items {
   margin-top: 10px !important;
 }
 
 .e-toolbar-items .e-toolbar-item {
-  margin-bottom: 6px !important;
-  min-height: 34px !important;
+  margin-bottom: 2px !important;
+  min-height: 38px !important;
+      padding: 6px 10px!important;
 }
 
 .memory-store .e-control-wrapper.e-slider-container.e-horizontal {
@@ -240,4 +229,10 @@ lib-company-setting .e-tab .e-tab-header.e-vertical:before {
 
 .list-app .h-125px.min-h-125px:hover {
   background-color: var(--gray-100);
+}
+.his-order .e-content{
+  width: 100%;
+  .e-list-parent.e-ul {
+    width: 100%;
+  }
 }

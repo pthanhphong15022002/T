@@ -2,13 +2,10 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { CodxHrService } from '../codx-hr.service';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
@@ -20,8 +17,9 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { FormGroup } from '@angular/forms';
+import { CodxHrService } from '../codx-hr.service';
 import { PopupEdayoffsComponent } from '../employee-profile/popup-edayoffs/popup-edayoffs.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-day-off',
@@ -46,11 +44,11 @@ export class EmployeeDayOffComponent extends UIComponent {
     injector: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
+    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
   ) {
     super(injector);
-    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
   }
 
   service = 'HR';
@@ -72,9 +70,7 @@ export class EmployeeDayOffComponent extends UIComponent {
   actionUpdateApproved = 'HRTPro09AU5';
   actionUpdateClosed = 'HRTPro09AU9'; // đóng
 
-  funcID: string;
   grvSetup: any;
-  // genderGrvSetup: any;
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
@@ -91,21 +87,24 @@ export class EmployeeDayOffComponent extends UIComponent {
   currentEmpObj: any;
   eDayOff: any;
 
-  //Initviews
-  onInit() {
-    this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
-      if (res) {
-        this.grvSetup = res;
-      }
+  GetGvSetup() {
+    let funID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
     });
-    // this.cache
-    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-    //   .subscribe((res) => {
-    //     this.genderGrvSetup = res?.Gender;
-    //   });
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
+  }
+
+  onInit() {
+    this.GetGvSetup();
+    // this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
+    //   if (res) {
+    //     this.grvSetup = res;
+    //   }
+    // });
   }
 
   ngAfterViewInit(): void {
@@ -122,7 +121,7 @@ export class EmployeeDayOffComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,
@@ -144,8 +143,6 @@ export class EmployeeDayOffComponent extends UIComponent {
     }
   }
 
-  handleAction(event) {}
-  onMoreMulti(event) {}
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
@@ -208,18 +205,9 @@ export class EmployeeDayOffComponent extends UIComponent {
   changeDataMF(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
-  clickEvent(event, data) {
+  clickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
-
-  // dateCompare(beginDate, endDate) {
-  //   if (beginDate && endDate) {
-  //     let date1 = new Date(beginDate);
-  //     let date2 = new Date(endDate);
-  //     return date1 <=date2;
-  //   }
-  //   return false;
-  // }
 
   //add/edit/copy/delete
   handlerEDayOffs(actionHeaderText: string, actionType: string, data: any) {
@@ -247,14 +235,12 @@ export class EmployeeDayOffComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
     });
@@ -295,16 +281,16 @@ export class EmployeeDayOffComponent extends UIComponent {
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
-      850,
-      550,
+      500,
+      350,
       null,
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event).subscribe((res) => {});
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
   closeUpdateStatusForm(dialog: DialogRef) {
@@ -329,7 +315,7 @@ export class EmployeeDayOffComponent extends UIComponent {
               null,
               'EDayOffsBusiness'
             )
-            .subscribe((res) => {});
+            .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -362,28 +348,31 @@ export class EmployeeDayOffComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+              '' ,
+              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
-                this.hrService.UpdateEmployeeDayOffInfo((res) => {
-                  if (res) {
-                    this.view?.dataService?.update(this.itemDetail).subscribe();
-                  }
-                });
+                this.hrService
+                  .UpdateEmployeeDayOffInfo(this.itemDetail)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
               } else this.notify.notifyCode(result?.msgCodeError);
             });
         }

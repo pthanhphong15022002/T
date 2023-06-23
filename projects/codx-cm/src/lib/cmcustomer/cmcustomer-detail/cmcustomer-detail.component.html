@@ -14,7 +14,16 @@
         <div class="d-flex align-items-center justify-content-between mb-1">
           <div *ngIf="funcID == 'CM0101'">
             <div class="d-flex align-items-center mb-1">
-              <span class="icon-corporate_fare icon-18 text-gray-700 me-2"></span>
+              <span
+                [ngbTooltip]="popupCustGroupID"
+                class="icon-corporate_fare icon-18 text-gray-700 me-2"
+                ><ng-template #popupCustGroupID>
+                  <codx-label
+                    [setRequire]="false"
+                    fiedName="CustGroupID"
+                    [formModel]="formModel"
+                  ></codx-label> </ng-template
+              ></span>
               <span
                 class="text-dark fs-6 fw-bold"
                 [innerHTML]="
@@ -75,12 +84,23 @@
                       *ngIf="dataSelected?.mobile"
                     >
                       <span
+                        [ngbTooltip]="popupAllowCall"
                         [ngClass]="
                           dataSelected?.allowCall
                             ? 'icon-phone_android text-primary'
                             : 'icon-phonelink_erase'
                         "
                         class="icon-16 me-2 text-gray-700"
+                        ><ng-template #popupAllowCall>
+                          <codx-label
+                            name="lblAllowCall"
+                            [formModel]="formModel"
+                            [default]="
+                              data?.allowCall
+                                ? 'Cho phép điện thoại'
+                                : 'Không cho phép điện thoại'
+                            "
+                          ></codx-label> </ng-template
                       ></span>
                       <span
                         [ngClass]="
@@ -95,12 +115,23 @@
                       *ngIf="dataSelected?.personalEmail"
                     >
                       <span
+                        [ngbTooltip]="popupAllowEmail"
                         [ngClass]="
                           dataSelected?.allowEmail
                             ? 'icon-email text-primary'
                             : 'icon-print_disabled'
                         "
                         class="icon-16 me-2 text-gray-700"
+                        ><ng-template #popupAllowEmail>
+                          <codx-label
+                            name="lblAllowEmail"
+                            [formModel]="formModel"
+                            [default]="
+                              data?.allowEmail
+                                ? 'Cho phép gửi mail'
+                                : 'Không cho phép gửi mail'
+                            "
+                          ></codx-label> </ng-template
                       ></span>
                       <span
                         [ngClass]="
@@ -116,11 +147,16 @@
                     *ngIf="addressNameCM != null && addressNameCM.trim() != ''"
                   >
                     <span
+                      [ngbTooltip]="popupAddress"
                       class="icon-location_on icon-16 me-2 text-gray-600"
-                    ></span>
-                    <span class="text-gray-600">{{
-                      addressNameCM
-                    }}</span>
+                      ><ng-template #popupAddress>
+                        <codx-label
+                          fiedName="Address"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </ng-template>
+                    </span>
+                    <span class="text-gray-600">{{ addressNameCM }}</span>
                   </div>
                 </div>
                 <div class="d-flex flex-column align-items-start">
@@ -128,7 +164,16 @@
                     class="d-flex justify-content-end w-100 mb-3"
                     *ngIf="dataSelected.isBlackList"
                   >
-                    <span class="icon-do_disturb_alt text-gray-700"></span>
+                    <span
+                      class="icon-do_disturb_alt text-gray-700"
+                      [ngbTooltip]="popupIsBlackList"
+                      ><ng-template #popupIsBlackList>
+                        <codx-label
+                          fiedName="IsBlackList"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </ng-template>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -139,10 +184,7 @@
               funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''
             "
           >
-            <div
-              class="w-100 mt-1"
-              *ngIf="dataSelected.industries"
-            >
+            <div class="w-100 mt-1" *ngIf="dataSelected.industries">
               <codx-label
                 style="white-space: nowrap"
                 class="fw-bold text-primary"
@@ -249,7 +291,7 @@
                 </ng-container>
               </div> -->
               <codx-list-contacts
-              [selectAll]="false"
+                [selectAll]="false"
                 [funcID]="funcID"
                 [objectID]="dataSelected.recID"
                 [objectType]="funcID == 'CM0101' ? '1' : '3'"
@@ -287,18 +329,33 @@
               <ng-container [ngTemplateOutlet]="product"> </ng-container>
             </ng-container>
             <ng-container *ngIf="name == 'Quotations'">
-              <codx-quotations
-              [funcID]="'CM0202'"
-              [customerID]="dataSelected.recID"
-              [predicates]="'CustomerID==@0'"
-              [dataValues]="dataSelected.recID"
-              [disableCusID]="true"
-            >
-            </codx-quotations>
+              <!-- <codx-quotations
+                [funcID]="'CM0202'"
+                [customerID]="dataSelected.recID"
+                [predicates]="'CustomerID==@0'"
+                [dataValues]="dataSelected.recID"
+                [disableCusID]="true"
+              >
+              </codx-quotations> -->
+              <codx-quotations-tab-view
+                [funcID]="'CM0202'"
+                [showButton]='true'
+                [customerID]="dataSelected.recID"
+                [predicates]="'CustomerID==@0'"
+                [dataValues]="dataSelected.recID"
+                [disableCusID]="true"
+              ></codx-quotations-tab-view>
             </ng-container>
             <ng-container *ngIf="name == 'Contract'">
               <ng-container
                 [ngTemplateOutlet]="contract"
+                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+              >
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="name == 'task'">
+              <ng-container
+                [ngTemplateOutlet]="taskTemplate"
                 [ngTemplateOutletContext]="{ $implicit: dataSelected }"
               >
               </ng-container>
@@ -365,4 +422,10 @@
     [listContract]="listContract"
     [type]="'customer'"
   ></list-contracts>
+</ng-template>
+<ng-template #taskTemplate let-data>
+  <step-task
+    [typeTask]="2"
+    [customerID]="dataSelected?.recID"
+  ></step-task>
 </ng-template>

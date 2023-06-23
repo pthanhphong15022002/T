@@ -20,6 +20,7 @@ const _EPStationeryParameters = 'EPStationeryParameters';
 import { CodxBookingService } from '../codx-booking.service';
 import { BookingItems, GridModels } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
+import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
   selector: 'codx-add-booking-stationery',
@@ -79,6 +80,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     private injector: Injector,
     private auth: AuthStore,
     private codxBookingService: CodxBookingService,
+    private codxShareService: CodxShareService,
     private notificationsService: NotificationsService,
     @Optional() dialogRef: DialogRef,
     @Optional() dialogData: DialogData
@@ -103,8 +105,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
         this.radioPersonalCheck = false;
         this.radioGroupCheck = true;
       }
-    }
-    else{
+    } else {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
     }
@@ -152,11 +153,9 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           }
         }
       });
-    this.cache
-      .gridViewSetup("Stationery", "grvStationery")
-      .subscribe((gv) => {
-        this.grvStationery = gv;
-      });
+    this.cache.gridViewSetup('Stationery', 'grvStationery').subscribe((gv) => {
+      this.grvStationery = gv;
+    });
 
     this.initForm();
 
@@ -215,6 +214,12 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
               'issueStatus',
               new FormControl('1')
             );
+
+            this.cache.getCompany(this.user.userID).subscribe((res) => {
+              this.dialogAddBookingStationery.patchValue({
+                orgUnitID: res.orgUnitID,
+              });
+            });
 
             this.detectorRef.detectChanges();
           }
@@ -416,7 +421,8 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.data.title = this.dialogAddBookingStationery.value.reasonID;
     this.data.approval = this.approvalRule;
     this.data.resourceType = this.dialogAddBookingStationery.value.resourceType;
-    this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus?? '1';
+    this.data.issueStatus =
+      this.dialogAddBookingStationery.value.issueStatus ?? '1';
     if (this.approvalRule == '0' && approval) {
       this.data.approveStatus = '5';
     }
@@ -456,15 +462,18 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((category: any) => {
                   this.returnData.forEach((item) => {
-                    this.codxBookingService
-                      .release(
-                        item,
-                        category.processID,
+                    this.codxShareService
+                      .codxRelease(
+                        'EP',
+                        item?.recID,
+                        res?.processID,
                         'EP_Bookings',
                         this.formModel.funcID,
-                        item?.createdBy
+                        item?.createdBy,
+                        item?.title,
+                        null
                       )
-                      .subscribe((res) => {
+                      .subscribe((res:any) => {
                         if (res?.msgCodeError == null && res?.rowCount >= 0) {
                           this.notificationsService.notifyCode('ES007');
                           item.approveStatus = '3';

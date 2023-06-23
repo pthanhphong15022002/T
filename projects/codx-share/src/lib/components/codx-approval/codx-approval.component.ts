@@ -161,12 +161,9 @@ export class CodxApprovalComponent
           var params = fuc?.url.split('/');
           if (
             r &&
-            params[1] != null &&
-            params[1] != '' &&
-            fuc?.functionID != null &&
-            fuc?.functionID != '' &&
-            this.dataItem?.transID != null &&
-            this.dataItem?.transID != ''
+            params[1] &&
+            fuc?.functionID &&
+            this.dataItem?.transID
           ) {
             var url =
               r +
@@ -235,7 +232,8 @@ export class CodxApprovalComponent
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') 
+        {
           list[i].disabled = true;
           if (value.status == '5' || value.status == '2' || value.status == '4')
             list[i].disabled = true;
@@ -254,7 +252,8 @@ export class CodxApprovalComponent
           ) {
             list[i].disabled = false;
           }
-        } else if (
+        } 
+        else if (
           value.status == '5' ||
           value.status == '2' ||
           value.status == '4'
@@ -262,9 +261,28 @@ export class CodxApprovalComponent
           list[i].disabled = true;
       }
       this.listApproveMF = list.filter(
-        (p) => p.data.functionID == 'SYS208' || p.disabled == false
+        (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
       );
 
+      if(datas?.eSign)
+      {
+        var listDis = data.filter(
+          (x) =>
+            x.functionID == 'SYS202' ||
+            x.functionID == 'SYS203' ||
+            x.functionID == 'SYS204' ||
+            x.functionID == 'SYS205' ||
+            x.functionID == 'SYS206' ||
+            x.functionID == 'SYS201'
+            
+        );
+        for (var i = 0; i < listDis.length; i++) {
+          listDis[i].disabled = true;
+        }
+
+        var sys200 = data.filter(x=>x.functionID == "SYS200");
+        sys200[0].disabled = false;
+      }
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
@@ -298,6 +316,7 @@ export class CodxApprovalComponent
           this.detectorRef.detectChanges();
         });
     }
+    this.detectorRef.detectChanges();
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
@@ -310,7 +329,8 @@ export class CodxApprovalComponent
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||
         funcID == 'SYS203' ||
-        funcID == 'SYS202'
+        funcID == 'SYS202' ||
+        funcID == 'SYS200'
       ) {
         let option = new SidebarModel();
         option.Width = '800px';
@@ -395,13 +415,12 @@ export class CodxApprovalComponent
       if (dialog) {
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
-          this.api
-            .execSv(
-              'ES',
-              'ERM.Business.ES',
-              'ApprovalTransBusiness',
-              'ApproveAsync',
-              [data?.recID, status, oComment.comment, oComment.reasonID]
+          this.codxShareService
+            .codxApprove(
+              data?.recID,
+              status,
+              oComment.comment,
+              oComment.reasonID
             )
             .subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
@@ -417,13 +436,12 @@ export class CodxApprovalComponent
             });
         });
       } else {
-        this.api
-          .execSv(
-            'ES',
-            'ERM.Business.ES',
-            'ApprovalTransBusiness',
-            'ApproveAsync',
-            [data?.recID, status, '', '']
+        this.codxShareService
+          .codxApprove(
+            data?.recID,
+            status,
+            '',
+            '',
           )
           .subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
@@ -442,7 +460,7 @@ export class CodxApprovalComponent
       }
     }
     if (funcID == 'SYS207') {
-      this.esService.undo(data?.recID).subscribe((res) => {
+      this.codxShareService.codxUndo(data?.recID).subscribe((res) => {
         if (res != null) {
           data = res;
           this.view.dataService.update(data).subscribe();

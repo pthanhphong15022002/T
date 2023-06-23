@@ -21,13 +21,24 @@
 </ng-template>
 
 <ng-template #header>
-  <div class="offcanvas-header w-100">
-    <div
+  <div class="offcanvas-header w-100 ">
+    <div class="d-flex justify-content-end">
+      <div>
+        <codx-mfunc
+            [formModel]="grvMoreFunction"
+            [isBookMark]="false"
+            [dataItem]="moreDefaut"
+            (changeDataMF)="changeDataMFStep($event)"
+            (clickMF)="clickMFStep($event)"
+          ></codx-mfunc>
+      </div>
+      <div
       class="btn-extand d-flex align-items-center"
       [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'"
     >
       <ng-container *ngIf="!hideExtend">
-        <span [style.marginLeft]="'52%'">
+        <!-- <span [style.marginLeft]="'52%'"> -->
+        <span >
           <codx-label fiedName="InfoExpand" default="Thông tin mở rộng">
           </codx-label>
         </span>
@@ -46,6 +57,7 @@
         </span>
         <span class="icon-login icon-20 ext_button"></span>
       </a>
+    </div>
     </div>
   </div>
 </ng-template>
@@ -143,7 +155,7 @@
       </div>
       <div class="ms-2">
         <span class="fs-4 fw-bold text-dark">{{
-          dataView?.taskName || dataView?.taskGroupName
+          dataView?.taskName || dataView?.taskGroupName || dataView?.stepName
         }}</span>
         <ng-container [ngTemplateOutlet]="describe"></ng-container>
       </div>
@@ -214,6 +226,8 @@
         [isShowFile]="false"
         [isShowComment]="false"
         [isViewStep]="true"
+        [groupTaskAdd]="groupTaskAdd"
+        [taskAdd]="taskAdd"
         (saveAssign)="saveAssign($event)"
       ></codx-step-task>
     </div>
@@ -313,12 +327,12 @@
 
 <ng-template #showOwner>
   <!-- Chủ quy trình -->
-  <div class="d-flex align-items-center" *ngIf="type == 'M'">
+  <div class="d-flex align-items-center" *ngIf="type == 'M' || type == 'B'">
     <codx-label
       class="fs-5 me-4"
       fiedName="roles"
       [formModel]="frmModel"
-      [default]="'Người phụ trách/chủ trì:'"
+      [default]="type == 'M' ? 'Người phụ trách/chủ trì:' : 'Người đi công tác:'"
       style="font-weight: 500"
     >
     </codx-label>
@@ -331,7 +345,7 @@
     </div>
   </div>
 
-  <div class="d-flex align-items-center" *ngIf="type != 'M'">
+  <div class="d-flex align-items-center" *ngIf="type != 'M' && type != 'B'">
     <codx-label
       class="fs-5 font-weight-normal me-4"
       fiedName="roles"
@@ -349,12 +363,12 @@
   </div>
 
   <!-- Người tham gia -->
-  <div class="d-flex mt-4" *ngIf="type == 'M'">
+  <div class="d-flex mt-4" *ngIf="type == 'M' || type == 'B'">
     <codx-label
       class="fs-5 font-weight-normal me-4"
       fiedName="roles"
       [formModel]="frmModel"
-      default="Người tham gia:"
+      [default]="type == 'M' ? 'Người tham gia:' : 'Người đi cùng:'"
       style="min-width: 160px; font-weight: 500"
     >
     </codx-label>

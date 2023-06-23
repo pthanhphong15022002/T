@@ -36,6 +36,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   dataForm2;
   actionType: string;
   isSaved: boolean = false;
+  fieldHeaderTexts
   trainCourseObj;
   dataVllSupplier: any;
   fromDateFormat;
@@ -48,6 +49,24 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
+
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin đào tạo',
+      name: 'trainInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chứng chỉ',
+      name: 'certificateInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Hợp đồng đào tạo',
+      name: 'contractInfo',
+    },
+  ];
 
   constructor(
     private injector: Injector,
@@ -156,6 +175,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     } else {
       this.initForm();
     }
+    this.hrService.getHeaderText(this.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    })
   }
 
   swipeToRightTab(e) {
@@ -169,10 +191,51 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       trainFromDate: new Date(),
       trainToDate: new Date(),
     });
+
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
+
+    let ddd = new Date();
+    if(this.trainCourseObj.issuedDate > ddd.toISOString()){
+      this.notify.notifyCode('HR014',0, this.fieldHeaderTexts['IssuedDate']);
+      return;
+    }
+
+    if(this.trainCourseObj.trainTo && this.trainCourseObj.trainFrom){
+      if (Number(this.trainCourseObj.trainTo) < Number(this.trainCourseObj.trainFrom)) {
+        this.hrService.notifyInvalidFromTo(
+          'TrainTo',
+          'TrainFrom',
+          this.formModel
+          )
+          return;
+      }
+    }
+
+    if(this.trainCourseObj.expiredDate && this.trainCourseObj.effectedDate){
+      if (this.trainCourseObj.expiredDate < this.trainCourseObj.effectedDate) {
+        this.hrService.notifyInvalidFromTo(
+          'ExpiredDate',
+          'EffectedDate',
+          this.formModel
+          )
+          return;
+        }
+    }
+
+    if(this.trainCourseObj.contractTo && this.trainCourseObj.contractFrom){
+      if (this.trainCourseObj.contractTo < this.trainCourseObj.contractFrom) {
+        this.hrService.notifyInvalidFromTo(
+          'ContractTo',
+          'ContractFrom',
+          this.formModel
+          )
+          return;
+        }
+    }
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .addETraincourse(this.trainCourseObj, this.funcID)

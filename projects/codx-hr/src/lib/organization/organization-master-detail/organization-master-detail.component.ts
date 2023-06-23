@@ -1,44 +1,39 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
-  OnInit,
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-
-import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
 import {
   ApiHttpService,
   CacheService,
   CallFuncService,
   CodxGridviewV2Component,
-  CRUDService,
   FormModel,
-  SidebarModel,
   ViewsComponent,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-organization-masterdetail',
   templateUrl: './organization-master-detail.component.html',
   styleUrls: ['./organization-master-detail.component.css'],
+  // encapsulation: ViewEncapsulation.None,
+  //changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
+export class OrganizationMasterDetailComponent {
   console = console;
   @Input() orgUnitID: string = '';
   @Input() view: ViewsComponent = null;
   @Input() formModel: FormModel = null;
   employeeManager: any = null;
   totalEmployee: number = 0;
-  columnsGrid: any[] = null;
+  columnsGrid;
   grvSetup: any = {};
-  funcID: string;
   formModelEmp: FormModel = new FormModel();
   @ViewChild('grid') grid: CodxGridviewV2Component;
   @ViewChild('templateName') templateName: TemplateRef<any>;
@@ -53,19 +48,10 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private cache: CacheService,
     private callFC: CallFuncService,
-    private hrService: CodxHrService,
-    private activedRouter: ActivatedRoute,
     private dt: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
-
-    // this.hrService.getFormModel(this.funcID).then((res) => {
-    //   this.appointionFormModel = res;
-    // });
     if (!this.columnsGrid) {
       this.formModelEmp.formName = 'Employees';
       this.formModelEmp.gridViewName = 'grvEmployees';
@@ -119,18 +105,21 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
           }
         });
     }
+    this.getManager(this.orgUnitID);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
-      this.getManager(this.orgUnitID);
+    // if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
+    //Use interval to delay grid
+    let ins = setInterval(() => {
       if (this.grid) {
-        this.grid.dataService
-          .setPredicates([], [this.orgUnitID])
-          .subscribe((res: any) => {
-            this.grid.refresh();
-          });
+        clearInterval(ins);
+        this.orgUnitID = changes.orgUnitID.currentValue;
+        this.getManager(this.orgUnitID);
+        this.grid.refresh();
       }
-    }
+    }, 200);
+    // }
   }
 
   // get employee manager by orgUnitID
@@ -156,48 +145,48 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
   }
 
   // click moreFC
-  clickMF(event: any, data: any) {
-    if (event) {
-      switch (event.functionID) {
-        case 'SYS02': //delete
-          break;
-        case 'SYS03': // edit
-          this.editData(data, event);
-          break;
-        case 'SYS04': // copy
-          break;
-        default:
-          break;
-      }
-    }
-  }
+  // clickMF(event: any, data: any) {
+  //   if (event) {
+  //     switch (event.functionID) {
+  //       case 'SYS02': //delete
+  //         break;
+  //       case 'SYS03': // edit
+  //         this.editData(data, event);
+  //         break;
+  //       case 'SYS04': // copy
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+  // }
   //delete data
-  editData(data, event) {
-    if (this.grid) {
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.grid.dataService;
-      option.FormModel = this.formModel;
-      let object = {
-        data: data,
-        action: event,
-        funcID: this.formModel.funcID,
-        isModeAdd: false,
-      };
-      let popup = this.callFC.openSide(
-        PopupAddOrganizationComponent,
-        object,
-        option,
-        this.formModel.funcID
-      );
-      popup.closed.subscribe((res: any) => {
-        if (res.event) {
-          let org = res.event[0];
-          let tmpOrg = res.event[1];
-          (this.grid.dataService as CRUDService).update(tmpOrg).subscribe();
-          this.view.dataService.add(org).subscribe();
-        }
-      });
-    }
-  }
+  // editData(data, event) {
+  //   if (this.grid) {
+  //     let option = new SidebarModel();
+  //     option.Width = '550px';
+  //     option.DataService = this.grid.dataService;
+  //     option.FormModel = this.formModel;
+  //     let object = {
+  //       data: data,
+  //       action: event,
+  //       funcID: this.formModel.funcID,
+  //       isModeAdd: false,
+  //     };
+  //     let popup = this.callFC.openSide(
+  //       PopupAddOrganizationComponent,
+  //       object,
+  //       option,
+  //       this.formModel.funcID
+  //     );
+  //     popup.closed.subscribe((res: any) => {
+  //       if (res.event) {
+  //         let org = res.event[0];
+  //         let tmpOrg = res.event[1];
+  //         (this.grid.dataService as CRUDService).update(tmpOrg).subscribe();
+  //         this.view.dataService.add(org).subscribe();
+  //       }
+  //     });
+  //   }
+  // }
 }

@@ -172,9 +172,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     this.sortModel = data?.data?.sortModel;
     this.formModel = data?.data?.formModel;
     this.hasFilter = data?.data?.hasFilter;
-
-    console.log('sortModel nhan vao', this.sortModel);
-    
+    // console.log('sortModel nhan vao', this.sortModel);
   }
 
   //Get grid view setup
@@ -200,17 +198,17 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
   checkIsNewestDate(effectedDate, expiredDate){
     if(effectedDate){
-      let eff = new Date(effectedDate).toISOString();
-      let date = new Date().toISOString();
+      let eff = new Date(effectedDate).toLocaleDateString();
+      let date = new Date().toLocaleDateString();
       if(expiredDate){
-        let expire = new Date(expiredDate).toISOString();
-        if(date >= eff && date <= expire){
+        let expire = new Date(expiredDate).toLocaleDateString();
+        if(new Date(date) >= new Date(eff) && new Date(date) <= new Date(expire)){
           return true;
         }
         return false;
       }
       else{
-        if(date >= eff){
+        if(new Date(date) >= new Date(eff)){
           return true;
         }
         return false;
@@ -218,6 +216,27 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     }
     return true;
   }
+
+  // checkIsNewestDate(effectedDate, expiredDate){
+  //   if(effectedDate){
+  //     let eff = new Date(effectedDate).toISOString();
+  //     let date = new Date().toISOString();
+  //     if(expiredDate){
+  //       let expire = new Date(expiredDate).toISOString();
+  //       if(date >= eff && date <= expire){
+  //         return true;
+  //       }
+  //       return false;
+  //     }
+  //     else{
+  //       if(date >= eff){
+  //         return true;
+  //       }
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
 
   onInit(): void {
     //#region columnGrid EPassport - Hộ chiếu
@@ -244,7 +263,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         ];
         if (this.funcID == this.ePassportFuncID) {
           this.columnGrid = this.passportColumnGrid;
-          this.filter = this.filterPassport;
+          this.filter = null;
           //Get row count
           this.getRowCount();
         }
@@ -558,8 +577,6 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         }
       }
       if(lstResult.length > 0){
-        console.log('ds kq ne', lstResult);
-        
         if(this.funcID == this.eBasicSalaryFuncID || this.funcID == this.eContractFuncID){
           this.dialogRef.close(lstResult[0])
         }
@@ -911,7 +928,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       this.filterEBenefitPredicates += ') ';
-      console.log('truong hop 1', this.filterEBenefitPredicates);
+      // console.log('truong hop 1', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
@@ -935,7 +952,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       }
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += ') ';
-      console.log('truong hop 2', this.filterEBenefitPredicates);
+      // console.log('truong hop 2', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
@@ -954,14 +971,14 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         .subscribe((res) =>{
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
         });
-      console.log('truong hop 3', this.filterEBenefitPredicates);
+      // console.log('truong hop 3', this.filterEBenefitPredicates);
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
       (this.startDateEBenefitFilterValue == undefined ||
         this.startDateEBenefitFilterValue == null)
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}")`;
-      console.log('truong hop 4', this.filterEBenefitPredicates);
+      // console.log('truong hop 4', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
         .setPredicates([this.filterEBenefitPredicates], [''])
         .subscribe((res) =>{

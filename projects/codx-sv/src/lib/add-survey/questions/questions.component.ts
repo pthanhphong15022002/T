@@ -1201,7 +1201,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addCard(itemActive, seqNoSession = null, category) {
-    debugger
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
@@ -1572,6 +1571,10 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
             };
             data.answers.push(dataAnswerC);
           }
+          else
+          {
+            itemQuestion.answers[0].answer = "Hàng 1"
+          }
         }
 
       //Lọc câu hỏi "khác"
@@ -1610,9 +1613,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     dataTemp.push(dataAnswerTemp);
     this.amountOfRow += 2;
     this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
-    console.log(
-      'check addAnswerR',
-      this.questions[seqNoSession].children[seqNoQuestion].answers
+    
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveData(
+      this.questions[seqNoSession].children[seqNoQuestion],
+      false
     );
   }
 
@@ -1632,6 +1637,12 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     };
     dataTemp.push(dataAnswerTemp);
     this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
+    
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveData(
+      this.questions[seqNoSession].children[seqNoQuestion],
+      false
+    );
   }
 
   deleteAnswerRC(seqNoSession, seqNoQuestion, itemAnswer, answerType) {
@@ -1905,7 +1916,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
-    debugger
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
       // dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[

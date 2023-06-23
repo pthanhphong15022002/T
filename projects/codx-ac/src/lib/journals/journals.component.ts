@@ -10,7 +10,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
 import { NameByIdPipe } from '../pipes/nameById.pipe';
 import { IJournalPermission } from './interfaces/IJournalPermission.interface';
@@ -46,6 +46,7 @@ export class JournalsComponent extends UIComponent {
   vll86 = [];
   vll85 = [];
   func = [];
+  vllJournalTypes064: any[] = [];
 
   randomSubject = new BehaviorSubject<number>(Math.random());
   nameByIdPipe = new NameByIdPipe();
@@ -79,6 +80,15 @@ export class JournalsComponent extends UIComponent {
         this.vll85 = res.datas;
       }
     });
+    this.cache
+      .valueList('AC064')
+      .pipe(
+        tap((t) => console.log('AC064', t)),
+        map((d) => d.datas)
+      )
+      .subscribe((res) => {
+        this.vllJournalTypes064 = res;
+      });
 
     // dùng tạm, chỉnh sau 😐
     // get data for permission column
@@ -320,7 +330,7 @@ export class JournalsComponent extends UIComponent {
   delete(data): void {
     this.journalService.hasVouchers(data).subscribe((hasVouchers) => {
       if (hasVouchers) {
-        this.notiService.notifyCode('AC0002', 0, `"${data.journalName}"`);
+        this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
         return;
       }
 

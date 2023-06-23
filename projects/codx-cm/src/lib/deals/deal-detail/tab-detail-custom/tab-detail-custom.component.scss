@@ -13,3 +13,23 @@
 .custom-icon-button:hover .icons {
   color: var(--primary-active);
 }
+
+::ng-deep{
+  #tabGantt .e-gantt .e-gantt-chart .e-timeline-header-container {
+    background: #fff;
+    border-bottom-color: #dee2e6;
+    border-bottom-width: 1px;
+    border-right-color: #dee2e6;
+    border-left-color: #dee2e6;
+    color: #212529;
+    min-height: 65px;
+    height: unset;
+}
+}
+
+.main-right{
+  // flex: 1;
+  height: 50vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

@@ -1,7 +1,20 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, Util } from 'codx-core';
-import { BehaviorSubject, Observable, Subject, firstValueFrom } from 'rxjs';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  DataRequest,
+  Util,
+} from 'codx-core';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  firstValueFrom,
+  map,
+  tap,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -654,12 +667,12 @@ export class CodxDpService {
     return arr3;
   }
 
-  updateOwnerStepAsync(step,startControl) {
+  updateOwnerStepAsync(step, startControl) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
       'UpdateOwnerStepAsync',
-      [step,startControl]
+      [step, startControl]
     );
   }
 
@@ -676,7 +689,7 @@ export class CodxDpService {
   /// cance trifnh ki
   cancelSubmit(recID, entityName) {
     return this.api.execSv(
-      'CM',
+      'DP',
       'ERM.Business.Core',
       'DataBusiness',
       'CancelAsync',
@@ -684,12 +697,13 @@ export class CodxDpService {
     );
   }
 
-  updateApproverStatus(data){
+  updateApproverStatus(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'UpdateApproverStatusByRecIDAsync',
-      data)
+      data
+    );
   }
   //delete ApproverStep DeleteByTransIDAsync
   removeApprovalStep(tranID) {
@@ -801,6 +815,26 @@ export class CodxDpService {
       'InstancesBusiness',
       'GetListPermissionInCMAsync',
       data
+    );
+  }
+
+  getOneDeal(data) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneDealAsync', data);
+  }
+  isCheckDealInUse(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'isCheckDealInUseAsync',
+      data
+    );
+  }
+  getInstancesDetailByRecID(recID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetInstancesDetailByRecIDAsync',
+      [recID]
     );
   }
 }

@@ -2,11 +2,22 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  Injector,
   OnChanges,
   OnInit,
   SimpleChanges,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  ButtonModel,
+  CacheService,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { ActivatedRoute } from '@angular/router';
 import { LayoutComponent } from '../_layout/layout.component';
@@ -16,44 +27,105 @@ import { LayoutComponent } from '../_layout/layout.component';
   templateUrl: './approvals.component.html',
   styleUrls: ['./approvals.component.css'],
 })
-export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
-  // extractContent = extractContent;
-  // convertHtmlAgency = convertHtmlAgency2;
+export class ApprovalsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit, OnChanges
+{
+  //list view
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   data: any;
   funcID: any;
-  // lstDtDis: any;
-  // gridViewSetup: any;
   formModel: any;
   active = 1;
   referType = 'source';
   userID: any;
-  transID = '28666dd2-2a40-4777-837e-12fb9ef5b956';
+  transID: any;
   approveStatus = '0';
+  dataValues = '';
+  recIDAprrover: any;
+  listStepsProcess: any = [];
+  tabInstances = [];
+
+  //modele aprove
+  // service = 'DP';
+  // assemblyName = 'DP';
+  // className = 'InstancesBusiness';
+  // method = 'GetListApprovalAsync';
+  // idField = 'recID';
+  // views: Array<ViewModel> = [];
+  // button: ButtonModel = {
+  //   id: 'btnAdd',
+  // };
+  // itemSelected: any;
 
   constructor(
-    private cache: CacheService,
+    inject: Injector,
     private codxDP: CodxDpService,
-    private router: ActivatedRoute,
     private authStore: AuthStore,
     private layoutDP: LayoutComponent,
-    private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService
+    private changeDetectorRef: ChangeDetectorRef
   ) {
+    super(inject);
     this.userID = this.authStore.get().userID;
-  }
-  ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {
-    this.layoutDP.hidenNameProcess();
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncID'];
-      if (params['id']) this.getGridViewSetup(this.funcID, params['id']);
-      this.getData(params['id']);
+      this.recIDAprrover = params['id'];
+      if (this.funcID)
+        this.cache.functionList(this.funcID).subscribe((fuc) => {
+          this.formModel = {
+            entityName: fuc?.entityName,
+            formName: fuc?.formName,
+            funcID: this.funcID,
+            gridViewName: fuc?.gridViewName,
+          };
+        });
+    });
+    this.cache.valueList('DP034').subscribe((res) => {
+      if (res && res.datas) {
+        let defaultTab = {
+          viewModelDetail: '',
+          textDefault: 'Quy trình duyệt',
+          icon: 'icon-people_alt',
+        };
+        this.tabInstances.push(defaultTab);
+        res.datas.forEach((element) => {
+          var tab = {};
+          tab['viewModelDetail'] = element?.value;
+          tab['textDefault'] = element?.text;
+          tab['icon'] = element?.icon;
+          this.tabInstances.push(tab);
+        });
+      }
+    });
+  }
+  ngOnChanges(changes: SimpleChanges): void {}
+
+  onInit(): void {
+    this.layoutDP.hidenNameProcess();
+    this.router.params.subscribe((params) => {
+      this.recIDAprrover = params['id'];
+      if (this.recIDAprrover) {
+        this.getData(this.recIDAprrover);
+      }
     });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    // this.views = [
+    //   {
+    //     type: ViewType.listdetail,
+    //     sameData: true,
+    //     active: true,
+    //     model: {
+    //       template: this.itemTemplate,
+    //       panelRightRef: this.panelRight,
+    //     },
+    //   },
+    // ];
+  }
 
-  getGridViewSetup(funcID: any, id: any) {
+  getGridViewSetup(funcID: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
       this.formModel = {
         entityName: fuc?.entityName,
@@ -65,7 +137,7 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   getData(id) {
-    //id la cua noi dung instance
+    ////id la cua noi dung instance
     this.api
       .exec<any>('DP', 'InstancesBusiness', 'GetInstancesDetailByRecIDAsync', [
         id,
@@ -73,7 +145,8 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res) {
           this.data = res[0];
-          this.transID = res[1];
+          // this.transID = res[1];
+          this.listStepsProcess = res[2];
           this.approveStatus = this.data?.approveStatus ?? '0';
           this.changeDetectorRef.detectChanges();
         }
@@ -88,4 +161,15 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
     //   if (index >= 0) this.data.listInformationRel[index].view = '3';
     // }
   }
+
+  // selectedChange(e) {
+  //   let recID = '';
+  //   if (e?.data) {
+  //     recID = e.data.recID;
+  //     this.itemSelected = e?.data;
+  //   } else if (e?.recID) {
+  //     recID = e.recID;
+  //     this.itemSelected = e;
+  //   }
+  // }
 }

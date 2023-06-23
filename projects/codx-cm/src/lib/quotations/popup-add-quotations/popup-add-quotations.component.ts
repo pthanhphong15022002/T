@@ -39,6 +39,7 @@ import { CM_Contacts } from '../../models/tmpCrm.model';
 import { TempComponent } from 'codx-core/lib/templates/base-temp/base.component';
 import { firstValueFrom, map } from 'rxjs';
 import { DateTimePickerAllModule } from '@syncfusion/ej2-angular-calendars';
+import { QuotationsLinesComponent } from '../../quotations-lines/quotations-lines.component';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -56,6 +57,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('tabObj') tabObj: TabComponent;
 
   @ViewChild('itemTemp') itemTemp: TemplateRef<any>;
+  @ViewChild('viewQuotationsLine') viewQuotationsLine: QuotationsLinesComponent;
 
   quotations: CM_Quotations;
   action = 'add';
@@ -94,6 +96,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   grvSetupQuotations: any;
   grvSetupQuotationsLines: any;
   crrCustomerID: string;
+  copyToRecID: any;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -121,19 +124,24 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.disableRefID = dt?.data?.disableRefID;
     this.disableCusID = dt?.data?.disableCusID;
     this.disableContactsID = dt?.data?.disableContactsID;
+    this.copyToRecID = dt?.data?.copyToRecID;
     this.listQuotationLines = [];
 
     if (this.action == 'edit' || this.action == 'copy') {
-      this.codxCM
-        .getQuotationsLinesByTransID(this.quotations.recID)
-        .subscribe((res) => {
-          if (res) {
-            this.listQuotationLines = res;
-            if (this.action == 'copy') {
-              this.listQuotationLines.forEach((x) => (x.recID = Util.uid()));
-            }
+      let tranID =
+        this.action == 'edit' ? this.quotations.recID : this.copyToRecID;
+      this.codxCM.getQuotationsLinesByTransID(tranID).subscribe((res) => {
+        if (res) {
+          this.listQuotationLines = res;
+          if (this.action == 'copy') {
+            this.listQuotationLines.forEach((x) => {
+              x.recID = Util.uid();
+              x.Id = null;
+              x.transID = this.quotations.recID;
+            });
           }
-        });
+        }
+      });
     }
     this.loadDefault();
   }
@@ -155,7 +163,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.arrFieldIsVisible = arrField
             .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
             .map((x: any) => x.fieldName);
-          this.getColumsGrid(res);
+          // this.getColumsGrid(res);
         }
       });
 
@@ -206,7 +214,8 @@ export class PopupAddQuotationsComponent implements OnInit {
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
-          [this.quotations, this.listQuotationLines],
+          this.quotations,
+          this.listQuotationLines,
         ])
         .subscribe((res) => {
           if (res) {
@@ -238,12 +247,10 @@ export class PopupAddQuotationsComponent implements OnInit {
     } else {
       this.api
         .exec<any>('CM', 'QuotationsBusiness', 'EditQuotationsAsync', [
-          [
-            this.quotations,
-            this.quotationLinesAddNew,
-            this.quotationLinesEdit,
-            this.quotationLinesDeleted,
-          ],
+          this.quotations,
+          this.quotationLinesAddNew,
+          this.quotationLinesEdit,
+          this.quotationLinesDeleted,
         ])
         .subscribe((res) => {
           if (res) {
@@ -265,10 +272,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     );
     if (count > 0) return;
     if (!(this.listQuotationLines?.length > 0)) {
-      this.notiService.notify(
-        'Thêm danh sách sản phẩm để hoàn thành báo giá - Chờ Khanh thêm messeger !',
-        '3'
-      );
+      this.notiService.notifyCode('CM013');
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {
@@ -776,6 +780,8 @@ export class PopupAddQuotationsComponent implements OnInit {
             ql['currencyID'] = this.quotations.currencyID;
             ql['exchangeRate'] = this.quotations.exchangeRate;
 
+            ql['salesPrice'] =
+              (ql['salesPrice'] * exchangeRateOld) / exchangeRateNew;
             ql['costPrice'] =
               (ql['costPrice'] * exchangeRateOld) / exchangeRateNew;
             ql['discAmt'] = (ql['discAmt'] * exchangeRateOld) / exchangeRateNew;
@@ -784,11 +790,12 @@ export class PopupAddQuotationsComponent implements OnInit {
             ql['vatBase'] = (ql['vatBase'] * exchangeRateOld) / exchangeRateNew;
             ql['vatAmt'] = (ql['vatAmt'] * exchangeRateOld) / exchangeRateNew;
             ql['netAmt'] = (ql['netAmt'] * exchangeRateOld) / exchangeRateNew;
+
             if (this.action == 'edit') {
               this.linesUpdate(ql);
             }
           });
-          this.gridQuationsLines.refresh();
+          this.viewQuotationsLine.gridQuationsLines.refresh();
         }
       });
   }
@@ -832,7 +839,7 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.listQuotationLines.push(lineCrr);
     }
     this.loadTotal();
-    this.gridQuationsLines.refresh();
+    this.viewQuotationsLine.gridQuationsLines.refresh();
   }
 
   checkLines(lineCrr) {

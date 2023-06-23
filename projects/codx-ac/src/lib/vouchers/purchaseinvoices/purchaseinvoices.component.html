@@ -44,7 +44,7 @@
         {{ itemSelected?.voucherNo }}
       </span>
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-2 mt-3">
+    <div class="d-flex justify-content-between flex-grow-1 mb-1 mt-2">
       <div class="d-flex align-items-center">
         <span class="me-2 icon-apartment icon-16"></span>
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase">{{itemSelected?.invoiceName}}</span>
@@ -86,7 +86,7 @@
       </div>
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-customize icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
+        <codx-label [setRequire]="false" class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
         </codx-label>
         <span #voucherDate class="text-gray-600"
           [innerHTML]="itemSelected?.voucherDate | formatvalue : view.formModel : 'voucherDate' : voucherDate | async"></span>
@@ -176,15 +176,15 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="purchaseInvoicesLines">
-    <div class="table-responsive mt-2">
+    <div class="table-purchaseInvoices table-responsive mt-2">
       <table class="table table-hover table-row-bordered">
-        <thead style="position: sticky; top: 0">
+        <thead style="position: sticky; top: 0; background-color: white;">
           <tr class="border-bottom">
             <th class="w-50 min-w-350px">
               <div class="d-flex">
                 <!-- <i class="icon-i-box icon-16 me-2"></i> -->
                 <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="ItemID"
-                  [formModel]="fmPurchaseInvoicesLines">
+                  [formModel]="fmPurchaseInvoicesLines" [setRequire]="false">
                 </codx-label>
               </div>
             </th>
@@ -230,7 +230,7 @@
             </th>
           </tr>
         </thead>
-        <tbody *ngFor="let item of purchaseInvoicesLines | slice : (page - 1) * pageSize : page * pageSize">
+        <tbody *ngFor="let item of purchaseInvoicesLines">
           <tr>
             <td>
               <div class="d-flex align-items-center me-5 mb-1">
@@ -380,15 +380,38 @@
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="purchaseInvoicesLines.length > 0" class="bg-light" style="position: sticky;
+          bottom: 0;">
+          <td></td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="fw-bold line-clamp line-clamp-1">{{totalQuantity.toLocaleString('it-IT')}}</span>
+            </div>
+          </td>
+          <td></td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="fw-bold line-clamp line-clamp-1">{{totalAmt.toLocaleString('it-IT')}}</span>
+            </div>
+          </td>
+          <td></td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="fw-bold line-clamp line-clamp-1">{{totalVat.toLocaleString('it-IT')}}</span>
+            </div>
+          </td>
+        </tfoot>
       </table>
-    </div>
-  </ng-container>
-  <div *ngIf="purchaseInvoicesLines.length > 0" class="container w-90 h-90">
-    <div class="list-empty card card-flush h-100 mt-3">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-          [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
+      <div *ngIf="purchaseInvoicesLines.length == 0" class="container w-90 h-90">
+        <div class="list-empty card card-flush h-100 mt-20">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+              {{ "SYS011" | mssg | async }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </ng-template>

@@ -26,7 +26,7 @@ import { IJournal } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 import { JournalService } from '../journals.service';
 import { MultiSelectPopupComponent } from '../multi-select-popup/multi-select-popup.component';
-import { PopupSetupTransactionLimitComponent } from '../popup-setup-transaction-limit/popup-setup-transaction-limit.component';
+import { PopupPermissionComponent } from '../popup-permission/popup-permission.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -42,7 +42,6 @@ const irrPropNames: string[] = [
   'idimControl',
   'vatType',
 ];
-
 @Component({
   selector: 'lib-popup-add-journal',
   templateUrl: './popup-add-journal.component.html',
@@ -82,6 +81,7 @@ export class PopupAddJournalComponent
   isEdit: boolean = false;
   hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
+  arrowColorStyle: string;
 
   isHidden: boolean = true;
   isMultiple: boolean = true;
@@ -286,6 +286,12 @@ export class PopupAddJournalComponent
 
   ngAfterViewInit(): void {
     this.formTitle = this.dialogData.data?.formTitle;
+
+    setTimeout(() => {
+      let moreInfoLabel: Element = document.getElementById('moreInfo');
+      let arrowColor: string = window.getComputedStyle(moreInfoLabel).color;
+      this.arrowColorStyle = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${arrowColor}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>")`;
+    });
   }
   //#endregion
 
@@ -490,34 +496,6 @@ export class PopupAddJournalComponent
     });
   }
 
-  onClickOpenTransactionLimitSetup(): void {
-    const options = new DialogModel();
-    options.FormModel = this.form.formModel;
-
-    this.callfc
-      .openForm(
-        PopupSetupTransactionLimitComponent,
-        'This param is not working',
-        550,
-        250,
-        '',
-        {
-          journal: { ...this.journal },
-          gvs: this.gvs,
-        },
-        '',
-        options
-      )
-      .closed.subscribe(({ event }) => {
-        console.log(event);
-        if (event) {
-          this.journal.transLimit = event.transLimit;
-          this.journal.transControl = event.transControl;
-          this.journal.transConfirmUser = event.transConfirmUser;
-        }
-      });
-  }
-
   onClickOpenComboboxPopup(
     comboboxName: string,
     comboboxValue: string,
@@ -536,6 +514,16 @@ export class PopupAddJournalComponent
     this.comboboxValue = comboboxValue;
     this.propName = propName;
     this.isHidden = false;
+  }
+
+  onClickOpenPermissionPopup(): void {
+    return;
+    this.callfc.openForm(
+      PopupPermissionComponent,
+      'This param is not working',
+      950,
+      650
+    );
   }
 
   onClickHideComboboxPopup(e): void {
@@ -581,6 +569,8 @@ export class PopupAddJournalComponent
         {
           autoNoCode: this.journal.journalNo,
           description: this.dialogRef.formModel?.entityName,
+          disableAssignRule: true,
+          autoAssignRule: this.journal.assignRule,
         }
       )
       .closed.subscribe((res) => {

@@ -6,10 +6,10 @@
       [formModel]="formModel"
       [body]="body"
       [dataItem]="dataSelect"
-      [hideMF]="false"
+      [hideMF]="hideMF"
+      [footer]="!hideFooter ? tabs : null"
       (changeDataMF)="changeDataMF($event, dataSelect)"
       (clickMF)="clickMF($event, dataSelect)"
-      [footer]="tabs"
     >
       <ng-template #header>
         <div class="d-flex justify-content-between align-items-top">
@@ -163,10 +163,21 @@
             </div>
           </div>
           <div class="d-flex justify-content-end me-3 mt-2">
-            <div class="d-flex align-items-center w-100 h-25px">
+            <div class="d-flex align-items-center w-100 h-30px">
+              <div class="ms-2" *ngIf="dataSelect.approveStatus != 1">
+                <codx-vll
+                  [name]="vllApprover"
+                  [field]="'ApproveStatus'"
+                  [value]="dataSelect.approveStatus"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-sm line-clamp-vll"
+                >
+                </codx-vll>
+              </div>
               <div class="d-flex flex-column">
                 <div
-                  class="badge badge-sm d-flex align-items-center p-2"
+                  class="badge badge-md d-flex align-items-center p-2"
                   [ngStyle]="{
                     'background-color':
                       dataSelect.status == '3' || dataSelect.status == '4'
@@ -185,24 +196,44 @@
                     stepName
                   }}</span>
                 </div>
-              </div>             
-                <div class="d-flex align-items-center mx-2" *ngIf="dataSelect.owner">
-                  <codx-imgs
-                    class="d-flex align-items-center"
-                    [isToolTip]="true"
-                    [width]="25"
-                    [objectId]="dataSelect.owner"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
-                  >
-                  </codx-imgs>
-                </div>           
-              <div class="mt-1">
-                <codx-progressbar [progress]="progress" [stype]="2" [size]="34"></codx-progressbar>
-               </div>
+              </div>
+              <div
+                class="d-flex align-items-center mx-2"
+                *ngIf="dataSelect.owner"
+              >
+                <codx-imgs
+                  class="d-flex align-items-center"
+                  [isToolTip]="true"
+                  [width]="25"
+                  [objectId]="dataSelect.owner"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
+              </div>
+              <div class="ms-2">
+                <codx-progressbar
+                  [progress]="progress"
+                  [stype]="2"
+                  [size]="34"
+                ></codx-progressbar>
+              </div>
             </div>
           </div>
         </div>
+        <ng-container *ngIf="isViewApprover">
+          <h5>File gửi trình ký chưa xử lý</h5>
+          <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
+          <!-- <codx-thumbnail
+            [files]="data?.files"
+            displayThumb="simple"
+            [hideDelete]="'1'"
+            [hideMoreF]="'0'"
+            (viewFile)="handleViewFile($event)"
+            [permissions]="data?.relations"
+          >
+          </codx-thumbnail> -->
+        </ng-container>
       </ng-template>
       <ng-template #body>
         <div class="d-flex tab-header">
@@ -331,7 +362,8 @@
                   [isUpdate]="
                     dataSelect.write &&
                     !dataSelect.closed &&
-                    (dataSelect.status == '1' || dataSelect.status == '2') && dataSelect?.approveStatus !='3'
+                    (dataSelect.status == '1' || dataSelect.status == '2') &&
+                    dataSelect?.approveStatus != '3'
                   "
                   [currentElmID]="currentElmID"
                   (inputElmIDCF)="inputElmIDCustomField($event)"

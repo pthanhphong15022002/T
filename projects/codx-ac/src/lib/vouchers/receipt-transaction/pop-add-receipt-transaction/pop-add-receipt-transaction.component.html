@@ -1,7 +1,6 @@
 <codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
   [dialog]="dialog" [data]="inventoryJournal" [customToolbar]="subToolbar" [openMore]="false">
 </codx-form>
-
 <!-- Start: Sub header -->
 <ng-template #subHeader>
   <ng-container *ngIf="form?.formGroup"> </ng-container>
@@ -185,10 +184,10 @@
       </div>
     </div>
     <div class="row" *ngIf="inventoryJournalLines.length == 0" style="height: 40px;">
-      <table style="table-layout: fixed;" class="table table-row-bordered">
+      <!-- <table style="table-layout: fixed;" class="table table-row-bordered">
         <tfoot style="background-color: whitesmoke;position: sticky;
           bottom: 0;">
-          <ng-container *ngFor="let item of visibleColumns">
+          <ng-container *ngFor="let item of gridInventoryJournalLine.visibleColumns">
             <td class="w-10" *ngIf="item.summaryBottom == '1'">
               <div class="d-flex align-items-center">
                 <span style="font-size: 14px;" class="sum-content fw-bold">Tổng cộng: </span>
@@ -199,7 +198,7 @@
             </td>
           </ng-container>
         </tfoot>
-      </table>
+      </table> -->
     </div>
   </ng-container>
   <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">
@@ -236,7 +235,6 @@
         </thead>
         <tbody class="border-bottom" *ngFor="
             let item of inventoryJournalLines
-              | slice : (page - 1) * pageSize : page * pageSize
           ">
           <tr>
             <td class="text-center fw-bold">
@@ -409,29 +407,18 @@
           </tr>
         </tbody>
       </table>
+      <div #btnRef class="btn-addline" style=" top: -38px; ">
+        <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+          <i class="icon-playlist_add icon-16"></i>
+          <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+        </button>
+      </div>
     </div>  
   </ng-container>
   <div *ngIf="modeGrid == 2" class="d-flex flex-wrap justify-content-between mt-6">
     <div class="d-flex align-items-center mb-1 bg-light me-5">
       <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
-      <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total + ' ' + inventoryJournal.currencyID }}</span>
-    </div>
-    <div *ngIf="inventoryJournalLines.length > 0 && modeGrid == 2" class="d-flex justify-content-end">
-      <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-        [collectionSize]="inventoryJournalLines.length"></ngb-pagination>
-    </div>
-  </div>
-  <div *ngIf="modeGrid == 2"  class="container w-90 h-90">
-    <div style="background: none" class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center mt-2">
-        <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"
-          class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="addRow()">
-          <i class="icon-i-file-earmark-plus icon-18"></i>
-        </div>
-        <ng-template #popContent>
-          <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
-        </ng-template>
-      </div>
+      <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total.toLocaleString('it-IT') + ' ' + inventoryJournal.currencyID }}</span>
     </div>
   </div>
 </ng-template>

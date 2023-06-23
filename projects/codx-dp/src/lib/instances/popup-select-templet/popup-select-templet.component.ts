@@ -10,6 +10,7 @@ import {
 } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
 import { CodxDpService } from '../../codx-dp.service';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-popup-select-templet',
@@ -46,6 +47,7 @@ export class PopupSelectTempletComponent implements OnInit {
   constructor(
     private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
+    private codxShareService: CodxShareService,
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -183,14 +185,18 @@ export class PopupSelectTempletComponent implements OnInit {
   }
   //Gửi duyệt
   release(data: any, processID: any) {
-    this.api
-      .execSv('DP', 'ERM.Business.Core', 'DataBusiness', 'ReleaseAsync', [
+    debugger;
+    this.codxShareService
+      .codxRelease(
+        'DP',
         data?.recID,
         processID,
         this.formModel.entityName,
         this.formModel.funcID,
-        '<div>' + data?.title + '</div>',
-      ])
+        '',
+        data?.title,
+        ''
+      )
       .subscribe((res2: any) => {
         if (res2?.msgCodeError)
           this.notificationsService.notify(res2?.msgCodeError);

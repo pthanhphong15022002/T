@@ -10,17 +10,16 @@ import { FormGroup } from '@angular/forms';
 import {
   ButtonModel,
   DialogRef,
-  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
-  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-employee-business.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-business-travel',
@@ -43,9 +42,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   method = 'LoadDataEBTravelsAsync';
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
-  eBusinessTravelHeader;
   currentEmpObj: any = null;
   grvSetup: any;
 
@@ -72,33 +69,26 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     inject: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
+    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
   ) {
     super(inject);
-    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
+  }
+
+  GetGvSetup() {
+    let funID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
+    });
   }
 
   onInit(): void {
-    //Load headertext from grid view setup database
-    this.cache
-      .gridViewSetup('EBusinessTravels', 'grvEBusinessTravels')
-      .subscribe((res) => {
-        if (res) {
-          this.grvSetup = res;
-        }
-      });
-
-    //Load data field gender from database
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
-
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
+    this.GetGvSetup();
   }
 
   ngAfterViewInit(): void {
@@ -115,18 +105,13 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
         },
       },
     ];
-
-    //Get Header text when view detail
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
-      this.eBusinessTravelHeader = res;
-    });
   }
 
   //Open, push data to modal
@@ -151,16 +136,13 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
     });
   }
 
@@ -243,16 +225,16 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
-      850,
-      550,
+      500,
+      350,
       null,
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.view.dataService.update(res.event[0]).subscribe();
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
 
@@ -263,16 +245,18 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.processID.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Công tác - ' + this.itemDetail.decisionNo + '</div>'
+              '',
+              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              ''
             )
             .subscribe((result) => {
-              console.log(result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -280,7 +264,6 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
                 this.hrService
                   .EditEBusinessTravelMoreFunc(this.itemDetail)
                   .subscribe((res) => {
-                    console.log('Result after send edit' + res);
                     if (res) {
                       this.view?.dataService
                         ?.update(this.itemDetail)
@@ -390,7 +373,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  clickEvent(event, data) {
+  clickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
 

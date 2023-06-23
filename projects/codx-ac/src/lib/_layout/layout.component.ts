@@ -1,4 +1,10 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { AsideComponent, CodxService } from 'codx-core';
 import {
   CallFuncService,
@@ -13,14 +19,15 @@ import { CodxAcService } from '../codx-ac.service';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css'],
+  styleUrls: ['./layout.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
   constructor(
     inject: Injector,
     private callfc: CallFuncService,
-    private codxAC: CodxAcService,
+    private codxAC: CodxAcService
   ) {
     super(inject);
 
@@ -35,8 +42,8 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
     this.dialog.closed.subscribe();
   }
-  childMenuClick(e){
-    if(e &&e?.recID){
+  childMenuClick(e) {
+    if (e && e?.recID) {
       this.codxAC.childMenuClick.next(e.recID);
     }
   }

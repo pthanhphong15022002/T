@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -11,13 +12,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
-import { UIComponent, FormModel, SidebarModel } from 'codx-core';
+import { UIComponent, FormModel, SidebarModel, NotificationsService, AlertConfirmInputConfig } from 'codx-core';
 import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../../../codx-cm.service';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { DealsComponent } from '../../deals.component';
 import { DealDetailComponent } from '../deal-detail.component';
 import { CodxListContactsComponent } from '../../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CM_Contacts } from '../../../models/cm_model';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -37,17 +39,18 @@ export class TabDetailCustomComponent
   // @Output() contactEvent = new EventEmitter<any>();
   titleAction: string = '';
   listStep = [];
-  isUpdate = true; //xư lý cho edit trung tuy chinh ko
+  // isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
+  listContract: CM_Contacts[];
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
+  readonly tabTask: string = 'Task';
   readonly tabContact: string = 'Contact';
   readonly tabOpponent: string = 'Opponent';
-  readonly tabTask: string = 'Task';
+
   readonly tabProduct: string = 'Product';
-  readonly tabGanttChart: string = 'GanttChart';
   readonly tabQuotation: string = 'Quotation';
   readonly tabContract: string = 'Contract';
 
@@ -63,13 +66,15 @@ export class TabDetailCustomComponent
   };
 
   recIdOld: string = '';
+  isDataLoading = true;
 
   constructor(
     private inject: Injector,
     private codxCmService: CodxCmService,
     private changeDetec: ChangeDetectorRef,
     private dealComponent: DealsComponent,
-    private dealDetailComponent: DealDetailComponent
+    private dealDetailComponent: DealDetailComponent,
+    private notificationsService: NotificationsService,
   ) {
     super(inject);
   }
@@ -80,14 +85,29 @@ export class TabDetailCustomComponent
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
-      if(this.tabClicked == 'Contact' )
+      this.isDataLoading = true;
+      this.dataSelected = this.dataSelected;
+      if(this.tabClicked === this.tabContact )
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
       }
       this.getListInstanceStep();
+      this.getContractByDeaID();
     }
   }
 
+  async getContractByDeaID() {
+    if (this.dataSelected?.recID) {
+      var data = [this.dataSelected?.recID];
+      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
+        if (res) {
+          this.listContract = res;
+        } else {
+          this.listContract = [];
+        }
+      });
+    }
+  }
   async executeApiCalls() {
     try {
       await this.getValueList();
@@ -103,8 +123,11 @@ export class TabDetailCustomComponent
       this.dataSelected?.status,
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
-      this.listStep = res;
-      this.checkCompletedInstance(this.dataSelected?.status);
+      if(res){
+        this.listStep = res;
+        this.checkCompletedInstance(this.dataSelected?.status);
+      }
+      this.isDataLoading = false;
     });
   }
 
@@ -131,33 +154,6 @@ export class TabDetailCustomComponent
     return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
   }
 
-  addContact() {
-    var contact = 'CM0103'; // contact
-    this.cache.functionList(contact).subscribe((fun) => {
-      let option = new SidebarModel();
-      // option.DataService = this.view.dataService;
-      var formMD = new FormModel();
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      formMD.funcID = contact;
-      option.FormModel = JSON.parse(JSON.stringify(formMD));
-      option.Width = '800px';
-      option.DataService = null;
-      this.titleAction = ' Bao test';
-      var dialog = this.callfc.openSide(
-        PopupAddCmCustomerComponent,
-        ['add', this.titleAction],
-        option
-      );
-      dialog.closed.subscribe((e) => {
-        //      if (!e?.event) this.view.dataService.clear();
-        // if (e && e.event != null) {
-        //   this.customerDetail.listTab(this.funcID);
-        // }
-      });
-    });
-  }
 
   //truong tuy chinh - đang cho bằng 1
   showColumnControl(stepID) {
@@ -169,31 +165,27 @@ export class TabDetailCustomComponent
     return 1;
   }
 
-  continueStep(isTaskEnd, step) {
+  continueStep(event) {
+    let isTaskEnd = event?.isTaskEnd;
+    let step = event?.step;
+
     let transferControl = this.dataSelected.steps.transferControl;
     if(transferControl == '0') return;
 
-    let isShowFromTaskAll = false;
     let isShowFromTaskEnd = !this.checkContinueStep(true,step);
     let isContinueTaskEnd = isTaskEnd;
     let isContinueTaskAll = this.checkContinueStep(false,step);
-    let dataInstance = {
-      listStep: this.listStep,
-      isAuto: {
-        isShowFromTaskAll,
-        isShowFromTaskEnd,
-        isContinueTaskEnd,
-        isContinueTaskAll,
-      },
-    };
+    let isShowFromTaskAll = !isContinueTaskAll;
 
     if(transferControl == '1' && isContinueTaskAll){
-      this.dealComponent.moveStage(this.dataSelected);
+      isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
+      !isShowFromTaskAll && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
     }
+
     if(transferControl == '2' && isContinueTaskEnd){
-      this.dealComponent.moveStage(this.dataSelected);
+      isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
+      !isShowFromTaskEnd && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
     }
-//    this.serviceInstance.autoMoveStage(dataInstance);
   }
 
   checkContinueStep(isDefault,step) {
@@ -222,4 +214,94 @@ export class TabDetailCustomComponent
       this.dealDetailComponent.getContactPerson($event.data);
     }
   }
+
+  completedAllTasks(instanceSteps):boolean {
+    var isCheckOnwer = instanceSteps?.owner ? false : true;
+    if(isCheckOnwer) {
+      return false;
+    }
+    var isCheckFields = this.checkFieldsIEmpty(instanceSteps.fields);
+    if(isCheckFields) {
+      return false;
+    }
+    return true;
+  }
+
+  checkFieldsIEmpty(fields) {
+    return fields.some((x) => !x.dataValue && x.isRequired);
+  }
+
+
+  handleMoveStage(isStopAuto,stepID) {
+
+   if (!isStopAuto) {
+    this.dealComponent.moveStage(this.dataSelected);
+    } else {
+
+      let index = this.listStep.findIndex(x=>x.stepID === stepID);
+      let isUpdate = false;
+      let nextStep;
+      if(index != -1) {
+        nextStep = this.listStep.findIndex(x=>x.stepID == this.listStep[index+1].stepID);
+        if(nextStep != -1) {
+          isUpdate = true;
+        }
+      }
+      if(isUpdate) {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            this.listStep[nextStep].stepStatus = '1';
+            this.listStep[nextStep].actualStart = new Date();
+             this.listStep[index].stepStatus = '3';
+             if(this.listStep[index].actualEnd !== null) {
+              this.listStep[index].actualEnd = new Date();
+             }
+
+             var listInstanceStep = [];
+             listInstanceStep.push(this.listStep[index]);
+             listInstanceStep.push(this.listStep[nextStep]);
+             var nextStepDeal = this.listStep.find(x=>x.stepID == this.listStep[nextStep+1].stepID);
+             this.dataSelected.stepID = this.listStep[nextStep].stepID
+             if(nextStepDeal){
+              this.dataSelected.nextStep = nextStepDeal.stepID;
+             }
+             else {
+              this.dataSelected.nextStep = null;
+             }
+
+             this.promiseAll(listInstanceStep);
+          }
+        });
+      }
+
+
+    }
+  }
+
+ async promiseAll(listInstanceStep){
+   try {
+    await this.updateMoveStageInstance(listInstanceStep);
+    await this.updateMoveStageDeal();
+   }
+   catch (err) {}
+  }
+
+  async updateMoveStageInstance(listInstanceStep){
+    var data = [listInstanceStep, this.dataSelected.processID];
+    this.codxCmService.autoMoveStageInInstance(data).subscribe((res) => {
+    });
+  }
+
+  async updateMoveStageDeal(){
+     var data = [this.dataSelected];
+    this.codxCmService.autoMoveStageInDeal(data).subscribe((res) => {
+      if(res[0] && res){
+        this.dataSelected = res[0];
+        this.dealComponent.autoMoveStage(this.dataSelected);
+      }
+    });
+  }
+
 }

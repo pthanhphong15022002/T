@@ -21,7 +21,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
+import { CmCustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
 import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
@@ -52,7 +52,7 @@ export class CmCustomerComponent
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('customerDetail') customerDetail: CmcustomerDetailComponent;
+  @ViewChild('customerDetail') customerDetail: CmCustomerDetailComponent;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
@@ -155,13 +155,22 @@ export class CmCustomerComponent
   }
 
   afterLoad() {
-    this.cache.functionList(this.funcID).subscribe((fun) => {
+    // this.entityName =
+    //   this.funcID == 'CM0101'
+    //     ? 'CM_Customers'
+    //     : this.funcID == 'CM0102'
+    //     ? 'CM_Contacts'
+    //     : this.funcID == 'CM0103'
+    //     ? 'CM_Partners'
+    //     : 'CM_Competitors';
+    this.cache.functionList(this.funcID).subscribe(async (fun) => {
       var formMD = new FormModel();
-      this.entityName = JSON.parse(JSON.stringify(fun.entityName));
-      formMD.entityName = JSON.parse(JSON.stringify(fun.entityName));
-      formMD.formName = JSON.parse(JSON.stringify(fun.formName));
-      formMD.gridViewName = JSON.parse(JSON.stringify(fun.gridViewName));
-      this.view.formModel = formMD;
+      this.entityName = JSON.parse(JSON.stringify(fun?.entityName));
+      // formMD.entityName = JSON.parse(JSON.stringify(fun?.entityName));
+      // formMD.formName = JSON.parse(JSON.stringify(fun?.formName));
+      // formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
+      // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
+      // this.view.formModel = formMD;
     });
     this.detectorRef.detectChanges();
   }
@@ -401,17 +410,12 @@ export class CmCustomerComponent
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
                 e.event.modifiedOn = new Date();
+                this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e.event).subscribe();
-                this.dataSelected = JSON.parse(
-                  JSON.stringify(this.view.dataService.data[0])
-                );
-                // this.customerDetail.getListContactByObjectID(
-                //   this.dataSelected?.recID
+                // this.dataSelected = JSON.parse(
+                //   JSON.stringify(this.view.dataService.data[0])
                 // );
-                this.customerDetail.getListAddress(
-                  this.entityName,
-                  this.dataSelected?.recID
-                );
+
                 this.detectorRef.detectChanges();
               }
             });
@@ -542,7 +546,20 @@ export class CmCustomerComponent
     });
   }
 
-  deleteContactToCM(data) {
+  async deleteContactToCM(data) {
+    var check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'ContactsBusiness',
+        'CheckContactDealAsync',
+        [data.recID]
+      )
+    );
+    if (check) {
+      this.notiService.notifyCode('CM012');
+      return;
+    }
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {

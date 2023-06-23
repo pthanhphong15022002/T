@@ -147,6 +147,18 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.data.fromDate = this.fromdateVal;
     this.data.toDate = this.todateVal;
 
+    //Xu li validate thong tin from-to
+    if(this.data.toDate && this.data.fromDate){
+      if (this.data.toDate < this.data.fromDate) {
+        this.hrService.notifyInvalidFromTo(
+          'ToDate',
+          'FromDate',
+          this.formModel
+          )
+          return;
+        }
+    }
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeExperienceInfo(this.data).subscribe((p) => {
         if (p != null) {

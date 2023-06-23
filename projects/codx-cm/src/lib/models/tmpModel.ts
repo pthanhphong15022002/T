@@ -1,4 +1,5 @@
 import { Util } from "codx-core";
+import { DP_Processes_Permission, DP_Processes_Ratings, DP_Steps } from "projects/codx-dp/src/lib/models/models";
 
 export class tmpInstances {
   recID: string  = Util.uid(); ;
@@ -11,4 +12,17 @@ export class tmpInstances {
   endDate: Date;
   owner: string;
   startDate: Date
+}
+
+export class tmpInstancesStepsReasons {
+  recID: string = Util.uid();
+  processID: string;
+  instanceID: string;
+  stepID: string;
+  reasonName: string;
+  reasonType: string;
+  createdOn: Date = new Date();
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
 }

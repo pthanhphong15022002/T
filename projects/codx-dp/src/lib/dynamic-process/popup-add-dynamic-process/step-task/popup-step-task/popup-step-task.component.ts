@@ -37,7 +37,7 @@ export class PopupJobComponent implements OnInit {
   REQUIRE = ['taskName', 'roles', 'dependRule'];
   title = '';
   dialog!: DialogRef;
-  taskType = '';
+  typeTask;
   vllShare = 'DP0331';
   stepName = '';
   taskGroupName = '';
@@ -47,13 +47,13 @@ export class PopupJobComponent implements OnInit {
   owner: DP_Steps_Tasks_Roles[] = [];
   recIdEmail = '';
   isNewEmails = true;
-  taskGroupList = [];
+  listGroupTask = [];
   stepsTasks: DP_Steps_Tasks;
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
   tasksItem = '';
   stepID = '';
-  status = 'add';
+  action = 'add';
   taskList: DP_Steps_Tasks[] = [];
   show = false;
   dataCombobox = [];
@@ -86,36 +86,36 @@ export class PopupJobComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.status = dt?.data[0];
-    this.taskType = dt?.data[1];
-    this.step = dt?.data[2];
-    this.taskGroupList = dt?.data[3];
+    this.action = dt?.data?.action;
+    this.typeTask = dt?.data?.typeTask;
+    this.step = dt?.data?.step;
+    this.listGroupTask = dt?.data?.listGroup || [];
+
     this.stepID = this.step?.recID;
     this.stepName = this.step?.stepName;
     this.dialog = dialog;
-    if (this.status == 'add') {
+    if (this.action == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
-      this.stepsTasks['taskType'] = this.taskType;
+      this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['stepID'] = this.stepID;
-      this.stepsTasks['taskGroupID'] = dt?.data[6];
-    } else if (this.status == 'copy') {
-      this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
-      this.taskType = this.stepsTasks.taskType;
+      this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
+    } else if (this.action == 'copy') {
+      this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();
       this.showLabelAttachment = true;
     } else {
-      this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
-      this.taskType = this.stepsTasks.taskType;
+      this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.showLabelAttachment = true;
     }
-    this.taskList = dt?.data[5];
-    this.taskGroupID = dt?.data[6];
-    this.listFileTask = dt?.data[7];
+    this.taskList = dt?.data?.listTask;
+    this.taskGroupID = dt?.data?.groupTaskID;
+    this.listFileTask = dt?.data?.listFileTask;
     this.user = this.authStore.get();
   }
   async ngOnInit() {
-    this.getTypeTask();
+    // this.getTypeTask();
     this.getFormModel();
+
     this.roles = this.stepsTasks['roles'];
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     this.participant = this.roles?.filter((role) => role.roleType === 'P');
@@ -123,7 +123,7 @@ export class PopupJobComponent implements OnInit {
     this.litsParentID = this.stepsTasks['parentID']
       ? this.stepsTasks['parentID']?.split(';')
       : [];
-    let group = this.taskGroupList?.find(
+    let group = this.listGroupTask?.find(
       (x) => x.recID === this.stepsTasks?.taskGroupID
     );
     let listTaskConvert = group?.recID
@@ -162,16 +162,6 @@ export class PopupJobComponent implements OnInit {
     return taskLinks;
   }
 
-  getTypeTask() {
-    this.cache.valueList('DP035').subscribe((res) => {
-      if (res.datas) {
-        this.listJobType = res.datas;
-        let type = this.listJobType.find((x) => x.value === this.taskType);
-        this.title = type['text'];
-      }
-    });
-  }
-
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
@@ -184,39 +174,43 @@ export class PopupJobComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  changeOwner(e) {
-    let owner = e?.map((x) => {
-      return {
-        ...x,
-        roleType: 'O',
-      };
-    });
-    this.owner = owner;
-  }
+  // changeOwner(e) {
+  //   let owner = e?.map((x) => {
+  //     return {
+  //       ...x,
+  //       roleType: 'O',
+  //     };
+  //   });
+  //   this.owner = owner;
+  // }
 
-  changeRoler(e) {    
+  changeRoler(e, roleType) {    
     if (!e || e?.length == 0) return;
     let listUser = e || [];
     let listRole = [];
-    listUser.forEach((element) => {
-        listRole.push({
-          objectID: element.objectID,
-          objectName: element.objectName,
-          objectType: element.objectType,
-          roleType: this.taskType == "M" ? "P" : "O",
-          taskID: this.stepsTasks['recID'],
-        });
-    });
-    if(this.taskType == "M"){
-      this.participant = listRole;
-    }else{
+    for(let role of listUser){
+      if(roleType == 'P' && this.owner.some(ownerFind => ownerFind.objectID == role.objectID)){
+        continue;
+      }
+      listRole.push({
+        objectID: role.objectID,
+        objectName: role.objectName,
+        objectType: role.objectType,
+        roleType: roleType,
+        taskID: this.stepsTasks['recID'],
+      });
+    }
+    if(roleType == 'O'){
       this.owner = listRole;
+    }
+    if(roleType == 'P'){
+      this.participant =  listRole;
     }
   }
 
   async changeCombobox(value, key) {
     this.stepsTasks[key] = value;
-    let group = this.taskGroupList.find((x) => x.recID === value);
+    let group = this.listGroupTask.find((x) => x.recID === value);
     this.taskGroupName = group['taskGroupName'];
     let taskLink = group?.recID
       ? JSON.parse(JSON.stringify(group['task']))
@@ -392,7 +386,7 @@ export class PopupJobComponent implements OnInit {
     let task = this.stepsTasks;
     // if task thuộc group thì kiểm tra trong group nếu không thuộc group kiểm tra với step
     if (task['taskGroupID']) {
-      let groupTask = this.taskGroupList.find((x) => x.recID == task['taskGroupID']);
+      let groupTask = this.listGroupTask.find((x) => x.recID == task['taskGroupID']);
       if (task['dependRule'] != '1' || !task['parentID'].trim() || groupTask['task'].length === 0) {
         //No parentID
         this.checkSave(groupTask);
@@ -409,11 +403,11 @@ export class PopupJobComponent implements OnInit {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = this.stepsTasks['durationDay'] || 0;
               this.step['durationHour'] = this.stepsTasks['durationHour'] || 0;
-              this.dialog.close({ data: this.stepsTasks, status: this.status });
+              this.dialog.close({ data: this.stepsTasks, status: this.action });
             } 
           });
         } else {
-          this.dialog.close({ data: this.stepsTasks, status: this.status });
+          this.dialog.close({ data: this.stepsTasks, status: this.action });
         }
       } else {
         // tính thời gian dựa vào công việc liên quan rồi mới so sánh
@@ -429,11 +423,11 @@ export class PopupJobComponent implements OnInit {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = Math.floor(maxtime / 24 || 0);
               this.step['durationHour'] = maxtime % 24 || 0;
-              this.dialog.close({ data: this.stepsTasks, status: this.status });
+              this.dialog.close({ data: this.stepsTasks, status: this.action });
             }
           });
         } else {
-          this.dialog.close({ data: this.stepsTasks, status: this.status });
+          this.dialog.close({ data: this.stepsTasks, status: this.action });
         }
       }
     }
@@ -443,7 +437,7 @@ export class PopupJobComponent implements OnInit {
     let time = timeInput ? timeInput : this.getHour(this.stepsTasks);
     if (this.getHour(groupTask) >= time) {
       // nếu thời gian ko vượt quá thời gian cho phép lưu => không ảnh hưởng đến step
-      this.dialog.close({ data: this.stepsTasks, status: this.status });
+      this.dialog.close({ data: this.stepsTasks, status: this.action });
     } else {
       // nếu vượt quá thì hỏi ý kiến
       this.notiService.alertCode('DP010').subscribe((x) => {
@@ -461,7 +455,7 @@ export class PopupJobComponent implements OnInit {
             this.step['durationDay'] = Math.floor(sumGroup / 24);
             this.step['durationHour'] = sumGroup % 24;
           }
-          this.dialog.close({ data: this.stepsTasks, status: this.status });
+          this.dialog.close({ data: this.stepsTasks, status: this.action });
         }
       });
     }
@@ -476,15 +470,15 @@ export class PopupJobComponent implements OnInit {
 
   sumHourGroupTask(index?: number) {
     let sum = 0;
-    if (this.taskGroupList?.length > 0) {
+    if (this.listGroupTask?.length > 0) {
       if (index >= 0) {
-        for (let group of this.taskGroupList) {
+        for (let group of this.listGroupTask) {
           if (Number(group['indexNo']) < index) {
             sum += this.getHour(group);
           }
         }
       } else {
-        sum = this.taskGroupList.reduce((sumHour, group) => {
+        sum = this.listGroupTask.reduce((sumHour, group) => {
           return (sumHour += this.getHour(group));
         }, 0);
       }
@@ -497,7 +491,7 @@ export class PopupJobComponent implements OnInit {
     if(!tasks || tasks?.length <= 0) return this.getHour(task);
     let listTask = JSON.parse(JSON.stringify(tasks));
     let maxTime = 0;
-    if(this.status === 'edit'){
+    if(this.action === 'edit'){
       let index = listTask?.findIndex(t => t.recID == task.recID);
       if(index >=0){
         listTask?.splice(index,1,task);
@@ -520,7 +514,7 @@ export class PopupJobComponent implements OnInit {
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
       let maxTime = this.getHour(task);
       if(task.taskGroupID && !isGroup){
-        let groupFind = this.taskGroupList?.find(group => group['recID'] == task.taskGroupID);
+        let groupFind = this.listGroupTask?.find(group => group['recID'] == task.taskGroupID);
         if(groupFind){
           let time = this.sumHourGroupTask(groupFind?.indexNo) || 0
           maxTime += time;

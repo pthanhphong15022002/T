@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -17,6 +18,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  Util,
 } from 'codx-core';
 import moment from 'moment';
 import { CodxDpService } from '../../codx-dp.service';
@@ -87,13 +89,15 @@ export class PopupAddInstanceComponent implements OnInit {
   positionName = '';
   owner = '';
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
-  acction: string = 'add';
+  actionAdd: string = 'add';
   oldEndDate: Date;
   endDate: Date;
   oldIdInstance: string;
   user: any;
   autoName: string = '';
   listCustomFile = [];
+  instanceNoSetting: any;
+  processID: string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -107,13 +111,17 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog = dialog;
     this.action = dt?.data?.action;
     this.isApplyFor = dt?.data?.applyFor;
-    this.listStep = dt?.data?.listSteps;
+    this.listStep = this.updateIdFile(dt?.data?.listSteps);
     this.titleAction = dt?.data?.titleAction;
     this.formModelCrr = dt?.data?.formMD;
     this.autoName = dt?.data?.autoName;
     this.endDate = new Date(dt?.data?.endDate);
     this.addFieldsControl = dt?.data?.addFieldsControl;
+    this.instanceNoSetting = dt?.data?.instanceNoSetting;
+    this.processID = dt?.data?.processID;
+    this.oldIdInstance = dt?.data?.oldIdInstance;
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.promiseAll();
     this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.autoName = dt?.data?.autoName;
@@ -131,10 +139,6 @@ export class PopupAddInstanceComponent implements OnInit {
       } else {
         this.owner = '';
       }
-    }
-
-    if (this.action === 'copy') {
-      this.oldIdInstance = dt?.data?.oldIdInstance;
     }
     this.cache
       .gridViewSetup(
@@ -175,6 +179,37 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   buttonClick(e: any) {}
+
+  async promiseAll() {
+    this.action === 'edit' &&
+      (await this.getListInstanceStep(
+        this.instance.recID,
+        this.instance.processID,
+        this.instance.status
+      ));
+    this.action === 'copy' && (await this.getListInstaceStepCopy());
+  }
+
+  async getListInstanceStep(recID, processID, status) {
+    this.codxDpService
+      .GetStepsByInstanceIDAsync([recID, processID, status])
+      .subscribe(async (res) => {
+        if (res && res?.length > 0) {
+          this.listStep = JSON.parse(JSON.stringify(res));
+        }
+      });
+  }
+
+  async getListInstaceStepCopy() {
+    var datas = [this.oldIdInstance, this.processID, this.instanceNoSetting];
+    this.codxDpService.getInstanceStepsCopy(datas).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.listStep = res[0];
+        this.instance.instanceNo = res[1];
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
 
   setTitle(e: any) {
     if (this.autoName) {
@@ -267,13 +302,12 @@ export class PopupAddInstanceComponent implements OnInit {
         '"' + this.gridViewSetup['Owner']?.headerText + '"'
       );
       return;
-    }
-
-    else if (this.checkEndDayInstance(this.instance?.endDate, this.endDate)) {
+    } else if (this.checkEndDayInstance(this.instance?.endDate, this.endDate)) {
       this.notificationsService.notifyCode(
         'DP032',
         0,
-        '"' + this.gridViewSetup['EndDate']?.headerText + '"', '"' + this.dateMessage + '"'
+        '"' + this.gridViewSetup['EndDate']?.headerText + '"',
+        '"' + this.dateMessage + '"'
       );
       return;
     }
@@ -377,5 +411,21 @@ export class PopupAddInstanceComponent implements OnInit {
         this.positionName = res.positionName;
       }
     });
+  }
+
+  updateIdFile(listStep) {
+    if (listStep?.length > 0 && listStep) {
+      for (let item of listStep) {
+        if (item.fields.length > 0 && item.fields) {
+          var listFieldFiled = item.fields.filter((x) => x.dataType === 'A');
+          if (listFieldFiled.length > 0 && listFieldFiled) {
+            for (let fieldFile of listFieldFiled) {
+              fieldFile.recID = Util.uid();
+            }
+          }
+        }
+      }
+    }
+    return listStep;
   }
 }

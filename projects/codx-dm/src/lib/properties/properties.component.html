@@ -282,7 +282,7 @@
                 </div>
                 <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}" [attr.disabled]="hideExtend ? true : null"
                     *ngIf="fileEditing != null"
-                    class="extend-more pl-5 w-350px min-w-350px dm-tab-properties ms-3 border-left">
+                    class="extend-more pl-5 w-350px min-w-350px dm-tab-properties ms-1 border-left">
                     <ejs-tab>
                         <e-tabitems>
                             <e-tabitem>
@@ -298,7 +298,7 @@
                                                     <div class="d-flex history-item pb-4 line-hor"
                                                         (click)="dbView(his,fileEditing)">
                                                         <img *ngIf="his.extension != null && his.extension != ''"
-                                                            alt="{{his.fileName}}" class="max-h-20px me-2"
+                                                            alt="{{his.fileName}}" class="mh-20px me-2"
                                                             src="../../../assets/codx/dms/{{getAvatar(his.extension)}}">
                                                         <div class="d-flex flex-column flex-grow-1">
                                                             <div class="d-flex justify-content-between">

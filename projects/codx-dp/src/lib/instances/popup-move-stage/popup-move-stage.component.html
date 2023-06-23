@@ -57,6 +57,31 @@
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
+
+    <div class="form-group" *ngIf="fieldsNull?.length > 0">
+      <div>
+        <div class="w-100 fs-6 text-primary fw-bold mt-4">
+          <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
+          default="Trường tùy chỉnh">
+        </codx-label>
+        </div>
+        <div class="pt-3 row">
+            <ng-container *ngFor="let item of fieldsNull">
+              <div class="col-6">
+                <codx-input-custom-field
+                  [customField]="item"
+                  [checkValid]="true"
+                  [objectId]="item.recID"
+                  [objectType]="'DP_Instances_Steps_Fields'"
+                  [formModel]="dialog.formModel"
+                  (valueChangeCustom)="valueChangeCustom($event)"
+                >
+                </codx-input-custom-field>
+              </div>
+            </ng-container>
+        </div>
+      </div>
+    </div>
     <div class="form-group mb-0" *ngIf="checkListDoneIsNull(listTaskDone,listTaskGroupDone)">
       <div>
         <div class="w-100 fs-6 text-primary fw-bold">
@@ -79,32 +104,6 @@
         </div>
       </div>
     </div>
-
-    <div class="form-group" *ngIf="fieldsNull?.length > 0">
-      <div>
-        <div class="w-100 fs-6 text-primary fw-bold">
-          <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
-          default="Trường tùy chỉnh">
-        </codx-label>
-        </div>
-        <div class="pt-3 row">
-            <ng-container *ngFor="let item of fieldsNull">
-              <div class="col-6">
-                <codx-input-custom-field
-                  [customField]="item"
-                  [checkValid]="true"
-                  [objectId]="item.recID"
-                  [objectType]="'DP_Instances'"
-                  [formModel]="dialog.formModel"
-                  (valueChangeCustom)="valueChangeCustom($event)"
-                >
-                </codx-input-custom-field>
-              </div>
-            </ng-container>
-        </div>
-      </div>
-    </div>
-
   </div>
 </ng-template>
 

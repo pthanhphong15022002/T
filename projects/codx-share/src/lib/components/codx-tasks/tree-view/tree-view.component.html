@@ -86,7 +86,7 @@
             placement="top right bottom"
           ></span>
           <span
-            class="priority mb-1 max-h-70px"
+            class="priority mb-1 mh-70px"
             [class]="item?.priority | vll : vllPriority : 'icon' | async"
             [style.color]="
               item?.priority | vll : vllPriority : 'textColor' | async
@@ -100,7 +100,7 @@
           ></span>
         </div>
         <div class="w-125px min-w-125px d-flex align-items-center">
-          <div
+          <!-- <div
             [class]="
               'd-flex align-items-center me-3' +
               ' ' +
@@ -133,7 +133,22 @@
             <span>
               {{ item?.attachments }}
             </span>
-          </div>
+          </div> -->
+          <span class="me-3">
+            <codx-comment-temp [objectID]="item.recID"></codx-comment-temp>
+          </span>
+          <codx-task-goal-temp
+            [taskID]="item.taskID"
+            [countData]="item?.todo"
+            [viewType]="2"
+          ></codx-task-goal-temp>
+          <span class="me-3">
+            <codx-attachment-temp
+              [objectID]="item.recID"
+              [formModel]="formModel"
+              referType="source"
+            ></codx-attachment-temp>
+          </span>
         </div>
         <div class="w-50px min-w-50px pe-6">
           <div class="d-flex flex-column justify-content-start">

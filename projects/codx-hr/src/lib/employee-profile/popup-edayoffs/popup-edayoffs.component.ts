@@ -189,7 +189,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       delete this.dayoffObj.recID;
     }
     if (!this.dateCompare(this.dayoffObj.beginDate, this.dayoffObj.endDate)) {
-      this.hrSevice.notifyInvalidFromTo('BeginDate', 'EndDate', this.formModel);
+      this.hrSevice.notifyInvalidFromTo('EndDate', 'BeginDate', this.formModel);
       return;
     }
 
@@ -206,7 +206,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           p.emp = this.empObj;
           this.successFlag = true;
           this.dialog && this.dialog.close(p);
-        } else this.notify.notifyCode('SYS023');
+        } 
+        // else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrSevice.UpdateEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
@@ -219,7 +220,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
           // }
-        } else this.notify.notifyCode('SYS021');
+        } 
+        // else this.notify.notifyCode('SYS021');
       });
     }
   }
@@ -434,9 +436,5 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         }
       }
     }
-  }
-
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }

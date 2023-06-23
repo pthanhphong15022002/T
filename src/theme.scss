@@ -24,6 +24,10 @@
 
   --bs-border-color:#e1e6e7;
   --bs-green:rgb(22, 182, 49);
+
+  --speeddialVertDist: 98px;
+
+  --primary: #3699ff;
 }
 
 /*** css for theme********/
@@ -252,9 +256,9 @@
     background-color: var(--bg-body);
   }
 
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-thumb) !important;
-  }
+  // ::-webkit-scrollbar-thumb {
+  //   background-color: var(--scrollbar-thumb) !important;
+  // }
 
   codx-header.header.align-items-stretch {
     .btn.btn-active-light-primary {
@@ -425,7 +429,11 @@
     background-color: var(--primary-lighter);
     color: var(--text-dark);
   }
-
+  dropdown-content{
+    .e-listview .e-list-item:hover {
+      background-color: transparent;
+    }
+  }
   div#newfeed {
     ejs-listview {
       background-color: transparent;
@@ -784,3 +792,4 @@
   color: var(--bs-green);
 }
 /// end 22/12/2022
+

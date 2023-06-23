@@ -1,10 +1,10 @@
 <div class="position-relative my-3">
     <ng-container *ngIf="new;else view">
-        <div class="row">
-            <div class="col-1">
+        <div class="d-flex align-items-top">
+            <div class="me-2 w-35px">
                 <codx-img [objectId]="user.userID" [objectName]="user.userName" [referType]="'avt'" objectType="AD_Users" [width]="35"></codx-img>
             </div>
-            <div class="col-11">
+            <div class="w-100">
                 <div class="d-flex align-items-center">
                     <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComment()">
                         <codx-input 
@@ -38,7 +38,7 @@
                     (fileCount)="selectFile($event)">
                 </codx-attachment>
                 <ng-container *ngIf="file">
-                    <div class="d-flex position-relative">
+                    <div class="d-flex position-relative w-fit-content" style="width: fit-content;">
                         <div class="my-3 cursor-pointer">
                             <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
                                 <img [src]="file.source" alt="" class="w-100 h-100px rounded" >
@@ -125,10 +125,10 @@
                 </ng-container>
                 <ng-container *ngIf="data.totalVote > 0">
                     <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
-                        <div *ngFor="let vote of data.votes">
+                        <div *ngFor="let voteType of data.listVoteType">
                             <codx-vll 
                                 name="L1480" 
-                                [value]="vote.voteType" 
+                                [value]="voteType" 
                                 [path]="'assets/themes/wp/default/img/'"
                                 [showIcon]="true" 
                                 [icoCss]="'w-15px h-15px'">

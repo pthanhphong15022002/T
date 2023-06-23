@@ -457,6 +457,7 @@ export class PopupAddPostComponent implements OnInit {
         ['WPParameters']
       ).subscribe((res: any) => {
         if (res) {
+          debugger
           let _param = JSON.parse(res);
           //default mode coppy
           if (_param["CopyFormat"] === '1') this.copyFormat = 'keepFormat';
@@ -466,7 +467,13 @@ export class PopupAddPostComponent implements OnInit {
           if(_param["ExcludeApproval"]) {
             let lstAppro = _param["ExcludeApproval"].split(";");
             if(Array.isArray(lstAppro)){
-              this.isApproval = Array.from<string>(lstAppro).indexOf(this.user.userID) != -1 ? false : true;
+              Array.from(lstAppro).forEach((x:string) => {
+                if(x.toLowerCase() == this.user.userID.toLowerCase()){
+                 this.isApproval = false;
+                 return; 
+                }
+              });
+              // this.isApproval = Array.from<string>(lstAppro).indexOf(this.user.userID) != -1 ? false : true;
             }
           };
         }

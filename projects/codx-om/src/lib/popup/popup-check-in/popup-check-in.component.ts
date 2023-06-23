@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
+  AuthStore,
   DialogData,
   DialogRef,
   FormModel,
@@ -19,6 +20,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
+import { OKRComponent } from '../../okr/okr.component';
 
 @Component({
   selector: 'popup-check-in',
@@ -31,7 +33,6 @@ export class PopupCheckInComponent
 {
   views: Array<ViewModel> | any = [];
   @ViewChild('attachment') attachment: AttachmentComponent;
-
   dialogRef: DialogRef;
   headerText: string;
 
@@ -41,23 +42,32 @@ export class PopupCheckInComponent
   dataKR: any;
   formModel = new FormModel();
   grView: any;
-  checkIns: any;
   okrFM: any;
+  curUser: any;
+  data: any;
+  checkType: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
+    private authStore: AuthStore,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.oldDataKR = dialogData.data[0];
-    this.checkIns = dialogData.data[2];
-    this.checkIns.status = new Date(this.oldDataKR?.nextCheckIn)< new Date()? '1' :'2';
-    this.okrFM = dialogData.data[2];
+    this.headerText = dialogData?.data[1];
+    this.data = dialogData.data[2];
+    this.okrFM = dialogData.data[3];
+    this.checkType = dialogData.data[4];
+    this.data.status = new Date(this.oldDataKR?.nextCheckIn)< new Date()? '2' :'1';
+    if(this.checkType =='3'){
+      this.data.status='3'
+    }
+    this.data.createdOn = new Date();
+    this.curUser = authStore.get();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -94,7 +104,7 @@ export class PopupCheckInComponent
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
   getCurrentKR() {
-    this.codxOmService.getOKRByID(this.oldDataKR.recID).subscribe((krModel) => {
+    this.codxOmService.getOKRByID(this.oldDataKR?.recID).subscribe((krModel) => {
       if (krModel) {
         this.dataKR = krModel;
         this.isAfterRender = true;
@@ -106,7 +116,7 @@ export class PopupCheckInComponent
   //---------------------------------------------------------------------------------//
   valueChange(evt: any) {
     if (evt?.field && evt?.data != null) {
-      this.checkIns[evt?.field] = evt?.data;
+      this.data[evt?.field] = evt?.data;
       this.detectorRef.detectChanges();
     }
   }
@@ -129,8 +139,9 @@ export class PopupCheckInComponent
     //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
     //   return;
     // }
+    this.data.checkIn= this.dataKR.nextCheckIn;
     if (
-      this.checkIns?.cummulated < this.dataKR?.actual &&
+      this.data?.cummulated < this.dataKR?.actual &&
       this.dataKR.checkInMode == '1'
     ) {
       this.notificationsService.notify(
@@ -139,24 +150,33 @@ export class PopupCheckInComponent
       return;
     }
     if (this.dataKR.checkInMode == '1') {
-      this.checkIns.value = this.checkIns?.cummulated - this.dataKR?.actual;
+      this.data.value = this.data?.cummulated - this.dataKR?.actual;
     } else {
-      this.checkIns.cummulated = this.checkIns.value + this.dataKR?.actual;
+      this.data.cummulated = this.data.value + this.dataKR?.actual;
     }
+    // if(this.dataKR.frequence !='D'&&this.dataKR.frequence !='M'&&this.dataKR.frequence !='W'){
+    //   this.data.checkInType
+    // }
     this.codxOmService
-    .checkInKR(this.dataKR.recID, this.checkIns)
+    .checkInKR(this.dataKR.recID, this.data)
     .subscribe((res: any) => {
-      if (res) {
-        this.codxOmService
+      if (res ) {        
+        this.notificationsService.notifyCode('SYS034');
+        if(res?.status=='3') {
+          this.dialogRef && this.dialogRef.close(res);
+        }
+        else{
+          this.codxOmService
           .calculatorProgressOfPlan([this.dataKR?.transID])
           .subscribe((listPlan: any) => {
             if (listPlan != null) {
+              
               this.dialogRef && this.dialogRef.close(listPlan);
             } else {
               this.dialogRef && this.dialogRef.close(res);
             }
           });
-        this.notificationsService.notifyCode('SYS034');
+        }        
       }
     });
   }

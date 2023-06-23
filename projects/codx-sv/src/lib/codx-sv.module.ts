@@ -29,6 +29,8 @@ import { QuestionsComponent } from './add-survey/questions/questions.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ReviewComponent } from './add-survey/review/review.component';
 import { NgxCaptureModule } from 'ngx-capture';
+import { CopylinkComponent } from './copylink/copylink.component';
+import { SearchSuggestionsComponent } from './home/search-suggestions/search-suggestions.component';
 export const routes: Routes = [
   {
     path: '',
@@ -69,6 +71,8 @@ const Component: Type<any>[] = [
   AnswersComponent,
   QuestionsComponent,
   ReviewComponent,
+  CopylinkComponent,
+  SearchSuggestionsComponent
 ];
 
 @NgModule({

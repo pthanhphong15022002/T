@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  CallFuncService,
   DialogRef,
   NotificationsService,
   SidebarModel,
@@ -19,6 +20,11 @@ import {
 import { CodxHrService } from './../codx-hr.service';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { getListImg } from 'projects/codx-od/src/lib/function/default.function';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -47,9 +53,9 @@ export class EmployeeContractComponent extends UIComponent {
   currentEmpObj: any = null;
   dialogEditStatus: any;
   statusCbx = true;
-
-  //genderGrvSetup: any
+  dialog!: DialogRef;
   grvSetup: any;
+  runModeCheck: boolean = false;
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01';
@@ -64,8 +70,12 @@ export class EmployeeContractComponent extends UIComponent {
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
+    private callfunc: CallFuncService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService,
     private notify: NotificationsService
   ) {
     super(inject);
@@ -136,14 +146,16 @@ export class EmployeeContractComponent extends UIComponent {
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
-      850,
-      550,
+      500,
+      350,
       null,
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe();
+        //Render new data when update new status on view detail
+        this.df.detectChanges();
       }
     });
   }
@@ -172,12 +184,30 @@ export class EmployeeContractComponent extends UIComponent {
       }
     });
   }
+  flagChangeMF: boolean = false;
+
   changeDataMf(event, data) {
+    this.flagChangeMF = true;
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
   }
 
   clickEvent(event) {
     this.clickMF(event?.event, event?.data);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.shareService.changeMFApproval(e, data);
+    }
   }
 
   clickMF(event, data) {
@@ -216,6 +246,31 @@ export class EmployeeContractComponent extends UIComponent {
         this.copyValue(event.text, data, 'eContract');
         this.df.detectChanges();
         break;
+
+      default: {
+        this.shareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
+      }
+      //Send email
+      // case 'SYS004': {
+      //   this.dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
+      //   this.dialog.closed.subscribe((x) => {
+      //     console.log(x);
+      //     if (x.event != null) {
+      //       this.itemDetail = x.event[0];
+      //       this.itemDetail.lstUserID = getListImg(x.event[0].relations);
+      //       this.itemDetail.listInformationRel = x.event[1];
+      //     }
+      //   });
+      //   break;
+      // }
     }
   }
 
@@ -241,17 +296,14 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event, 0).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.update(res.event).subscribe();
         }
+        this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
     });
   }
 
@@ -268,7 +320,6 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   addContract(evt) {
-    // this.currentEmpObj = this.itemDetail.emp;
     if (evt.id == 'btnAdd') {
       this.HandleEContractInfo(
         evt.text + ' ' + this.view.function.description,
@@ -316,20 +367,20 @@ export class EmployeeContractComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
+              '',
+              this.view.function.description +
                 ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+                this.itemDetail.contractNo,
+              ''
             )
             .subscribe((result) => {
-              console.log(result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -338,7 +389,6 @@ export class EmployeeContractComponent extends UIComponent {
                   .editEContract(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
-                      console.log(res);
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();

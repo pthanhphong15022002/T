@@ -1,18 +1,37 @@
 <codx-form
   #form
-  [headerText]="title"
-  subHeaderText=""
-  [subHeader]="subHeader"
+  [customToolbar]="header"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="formModelMenu"
+  [formModel]="dialog?.formModel"
   [data]="stepsTasks"
   [openMore]="false"
 ></codx-form>
 
+<ng-template #header>
+  <div class="pt-2 px-2 w-100">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <div class="d-flex align-items-center w-100 job">
+        <span
+            class="icon-18 me-2 circle"
+            [ngClass]="typeTask?.icon"
+            [ngStyle]="{'color' : (typeTask?.color || 'gray'), 'border': '2px solid'}"
+          ></span>
+          <span class="fs-4 fw-bold">{{titleName}}</span>
+      </div>
+      <button
+        class="button-close d-flex "
+        style="border: none; outline: none; background: none"
+        (click)="dialog.close()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
+    </div>
+  </div>
+</ng-template>
 <ng-template #subHeader>
-  <div class="ms-4" *ngIf="taskType == 'A'">
+  <div class="ms-4" *ngIf="typeTask?.value == 'A'">
     <codx-input
       class="me-2"
       type="colorpicker"
@@ -28,7 +47,7 @@
 <ng-template #body>
   <div class="card-form">
     <!-- Link group -->
-    <div class="form-group">
+    <div class="form-group" *ngIf="step">
       <div class="d-flex align-items-top">
         <codx-label
           class="text-primary me-2"
@@ -42,6 +61,7 @@
     </div>
     <!--End Link group -->
     <div
+      *ngIf="step"
       class="form-group d-flex justify-content-between align-item-center w-100"
     >
       <div class="step-name w-100">
@@ -68,10 +88,9 @@
     <!-- Ten Cong Viec -->
     <div
       class="form-group d-flex justify-content-between align-item-center w-100"
-      *ngIf="taskType != 'Q'"
     >
       <!-- name -->
-      <div class="step-name w-100" [ngClass]="taskType === 'P' ? 'me-4' : ''">
+      <div class="step-name w-100" [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''">
         <div>
           <codx-label
             fiedName="taskName"
@@ -92,7 +111,7 @@
       </div>
       <!--End name -->
       <!-- Cuoc goi -->
-      <div *ngIf="taskType === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
+      <div *ngIf="typeTask?.value === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
         <div>
           <codx-label
             fiedName="callType"
@@ -114,7 +133,7 @@
       <!--end Cuoc goi -->
 
       <!-- Cuoc hop -->
-      <div *ngIf="taskType === 'M'" style="flex-basis: 25%" class="">
+      <div *ngIf="typeTask?.value === 'M'" style="flex-basis: 25%" class="">
         <div class="d-flex justify-content-end">
           <codx-label
             fiedName="isOnline"
@@ -138,8 +157,8 @@
       <!-- End cuoc hop -->
       <!-- Gui mail -->
       <!-- TODO: mail chưa có tài liệu -->
-      <div
-        *ngIf="taskType === 'E' || taskType === 'Q'"
+      <!-- <div
+        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
         class=""
         style="flex-basis: 10%"
       >
@@ -147,13 +166,13 @@
           <codx-label></codx-label>
         </div>
         <div
-          *ngIf="taskType === 'E'"
+          *ngIf="typeTask?.value === 'E'"
           class="d-flex justify-content-end"
           style="margin-top: 2px"
         >
           <button
             class="button-mail"
-            *ngIf="taskType == 'E'"
+            *ngIf="typeTask?.value == 'E'"
             (click)="handelMail()"
             [disabled]="stepsTasks?.isTaskDefault"
           >
@@ -162,7 +181,7 @@
             ></span>
           </button>
         </div>
-      </div>
+      </div> -->
       <!-- End gui mail -->
     </div>
     <!--End ten Cong Viec -->
@@ -205,7 +224,7 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="taskType == 'Q'">
+    <!-- <div class="form-group" *ngIf="typeTask?.value == 'Q'">
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label name="Reference" default="Tên khảo sát"></codx-label>
         <a class="d-flex justify-content-end align-items-center cursor-pointer">
@@ -224,7 +243,7 @@
       >
       </codx-input>
       <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
-    </div>
+    </div> -->
 
     <div class="form-group">
       <div class="d-flex justify-content-between row">
@@ -284,22 +303,71 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="taskType === 'M'">
+    <div class="form-group">
       <codx-role
+        *ngIf="typeTask?.value != 'M' && typeTask?.value != 'B' "
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]=" 'Người tham gia'"
+        [default]="'Vai trò/bộ phận thực hiện'"
+        [dataSource]="owner"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event,'O')"
+        [vllShare]="'DP0331'"
+        [multiple]="false"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-role>
+    </div>
+
+    <div class="form-group">
+      <codx-role
+        *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="typeTask?.value === 'M'? 'Người chủ trì' : 'Người đi công tác'"
+        [dataSource]="owner"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event,'O')"
+        [multiple]="false"
+        [type]="'user'"
+      ></codx-role>
+    </div>
+
+    <div class="form-group">
+      <codx-role
+        *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
         [dataSource]="participant"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, participant, 'P')"
+        (valueList)="changeRoler($event,'P')"
+        [vllShare]="'DP0331'"
+        [multiple]="true"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-role>
+    </div>
+
+    <!-- <div class="form-group" *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'">
+      <codx-role
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
+        [dataSource]="participant"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event, 'P')"
         [vllShare]="'DP0331'"
         [multiple]="true"
         [listCombobox]="listCombobox"
         [type]="'all'"
         [disabled]="stepsTasks?.isTaskDefault"
       ></codx-role>
-    </div>
+    </div> -->
 
     <div class="form-group">
       <div>
@@ -337,7 +405,7 @@
         <codx-label
         class="ms-3 mb-3"
           name="lblAlert"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           default="Tạo task trong phân hệ quản lý công việc"
         >
         </codx-label>
@@ -353,7 +421,7 @@
         <div class="fw-bold text-primary">
           <codx-label
             name="lblAttachments"
-            [formModel]="form.formModel"
+            [formModel]="dialog.formModel"
             default="Tài liệu đính kèm"
           >
           </codx-label>

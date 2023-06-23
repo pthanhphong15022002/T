@@ -20,6 +20,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -44,6 +45,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   constructor(
     injector: Injector,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
@@ -91,7 +93,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -101,7 +103,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,
@@ -188,7 +190,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     }
   }
 
-  changeDataMF(event, data) {
+  changeDataMF(event, data): void {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
 
@@ -201,16 +203,16 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
-      850,
-      550,
+      500,
+      350,
       null,
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.view.dataService.update(res.event).subscribe();
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
   handlerEBasicSalaries(
@@ -238,17 +240,14 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe((res) => {});
-          this.df.detectChanges();
+          this.view.dataService.update(res.event).subscribe();
         }
+        this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
     });
   }
   beforeDelete(opt: RequestOption, data) {
@@ -285,17 +284,17 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
-          res[0].emp = this.currentEmpObj;
+          res.emp = this.currentEmpObj;
           this.hrService
             .addBGTrackLog(
-              res[0].recID,
+              res.recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
               null,
               'EBasicSalariesBusiness'
             )
-            .subscribe((res) => {});
+            .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -334,29 +333,36 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
+              '',
+              this.view.function.description +
                 ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+                this.itemDetail.decisionNo,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
-                this.hrService.UpdateEmployeeBasicSalariesInfo((res) => {
-                  if (res) {
-                    this.view?.dataService?.update(this.itemDetail).subscribe();
-                  }
-                });
-              } else this.notify.notifyCode(result?.msgCodeError);
+                this.hrService
+                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else {
+                this.notify.notifyCode(result?.msgCodeError);
+              }
             });
         }
       });

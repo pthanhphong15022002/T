@@ -56,6 +56,8 @@ export class ContractsDetailComponent extends UIComponent{
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
 
+  @ViewChild('tabQuotations')tabQuotations: TemplateRef<any>;
+
   listPayment: CM_ContractsPayments[] = [];
   listPaymentHistory: CM_ContractsPayments[] = [];
   listQuotationsLine: CM_QuotationsLines[];
@@ -129,8 +131,8 @@ export class ContractsDetailComponent extends UIComponent{
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
-    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    // { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
+    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   constructor(
     private inject: Injector,
@@ -188,6 +190,9 @@ export class ContractsDetailComponent extends UIComponent{
         },
       },
     ];
+    let quotations = { name: 'Quotations', textDefault: 'Báo giá', isActive: false, icon : 'icon-monetization_on',template: this.tabQuotations};
+    this.tabControl.push(quotations) ;
+    this.tabControl.push({ name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null })
   }
 
   changeTab(e){
@@ -289,6 +294,8 @@ export class ContractsDetailComponent extends UIComponent{
   }
 
   async addContractAdjourn(data: CM_Contracts){
+    console.log('-------------',this.view.formModel);
+    
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
       contracts.contractType = '2';
@@ -429,12 +436,12 @@ export class ContractsDetailComponent extends UIComponent{
     };
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupTask = this.callfc.openForm(
       PopupAddPaymentComponent,'',
-      600,
+      550,
       400,
       '',
       dataInput,

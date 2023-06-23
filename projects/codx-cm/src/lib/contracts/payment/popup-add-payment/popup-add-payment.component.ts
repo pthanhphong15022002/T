@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import {  CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
@@ -20,6 +20,15 @@ export class PopupAddPaymentComponent {
   listPaymentDelete: CM_ContractsPayments[];
   contractID = null;
   percent = 0;
+  remaining = 0;
+  sumScheduleAmt = 0;
+
+  fmContracts: FormModel = {
+    formName: 'CMContracts',
+    gridViewName: 'grvCMContracts',
+    entityName: 'CM_Contracts',
+    funcID: 'CM02042  ',
+  };
 
   title = 'Lịch thanh toán';
   dialog: DialogRef;
@@ -43,6 +52,11 @@ export class PopupAddPaymentComponent {
 
   ngOnInit(): void {
     this.setDataInput();
+    this.sumScheduleAmt = this.listPayment?.reduce((sum, item)  => {
+      return sum + item?.scheduleAmt || 0;
+    },0)
+    this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
+    this.percent = (this.payment.scheduleAmt/this.contract?.contractAmt)*100;
   }
 
   setPayment() {
@@ -67,8 +81,8 @@ export class PopupAddPaymentComponent {
   }
 
   valueChangePercent(e) {
-    this.percent = e?.data;
-    this.payment.scheduleAmt = (this.percent*this.contract.contractAmt)/100
+    this.percent = e?.value;
+    this.payment.scheduleAmt = Number(((this.percent*this.contract.contractAmt)/100).toFixed(0));
   }
 
 
@@ -79,7 +93,9 @@ export class PopupAddPaymentComponent {
       this.payment[event?.field] = this.contract.contractAmt;
     }
     if(event?.field == 'scheduleAmt'){
-      this.percent = (this.payment.scheduleAmt/this.contract.contractAmt)*100;
+      this.percent = (this.payment.scheduleAmt/this.contract?.contractAmt)*100;
+      this.sumScheduleAmt += event?.data;
+      this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
     }
     
   }

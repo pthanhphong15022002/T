@@ -22,9 +22,6 @@
 </ng-template>
 <ng-template #titleTmp let-data>
   <div class="d-flex align-items-center">
-    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
-      <i class="icon-i-file-earmark-text text-white icon-16"></i>
-    </div>
     <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
       data?.voucherNo
       }}</span>
@@ -34,19 +31,19 @@
       '+data?.currencyID }}</span>
   </div>
 </ng-template>
-<ng-template #desc2Tmp let-data>
+<ng-template #descTmp let-data>
   <span #objectID [innerHTML]="
             data?.objectID
               | formatvalue : view.formModel : 'objectID' : objectID
               | async
-          " class="text-gray-500 line-clamp line-clamp-1"></span>
+          " class="line-clamp line-clamp-1 fs-7 mt-1"></span>
 </ng-template>
-<ng-template #descTmp let-data>
-  <span [ngbTooltip]="data?.memo" class="line-clamp line-clamp-2 fs-6 mt-1">{{ data?.memo }}</span>
+<ng-template #desc2Tmp let-data>
+  <span [ngbTooltip]="data?.memo" class="line-clamp line-clamp-2 fs-7 mt-1">{{ data?.memo }}</span>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-3">
+    <div class="d-flex align-items-center ac-cashID mt-n8 mb-2">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
         <i class="icon-i-file-earmark-text text-white icon-16"></i>
       </div>
@@ -177,9 +174,9 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="inventoryJournalLines">
-    <div class="table-responsive mt-2">
+    <div class="table-inventoryJournals table-responsive mt-2">
       <table class="table table-hover table-row-bordered">
-        <thead style="position: sticky; top: 0">
+        <thead style="position: sticky; top: 0; background-color: white;">
           <tr class="border-bottom">
             <th class="w-50 min-w-350px">
               <div class="d-flex">
@@ -215,7 +212,7 @@
             </th>
           </tr>
         </thead>
-        <tbody *ngFor="let item of inventoryJournalLines | slice : (page - 1) * pageSize : page * pageSize">
+        <tbody *ngFor="let item of inventoryJournalLines">
           <tr>
             <td>
               <div class="d-flex align-items-center me-5 mb-1">
@@ -351,15 +348,32 @@
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="inventoryJournalLines.length > 0" class="bg-light" style="position: sticky;
+          bottom: 0;">
+          <td></td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="fw-bold line-clamp line-clamp-1">{{totalQuantity.toLocaleString('it-IT')}}</span>
+            </div>
+          </td>
+          <td></td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="fw-bold line-clamp line-clamp-1">{{totalAmt.toLocaleString('it-IT')}}</span>
+            </div>
+          </td>
+        </tfoot>
       </table>
-    </div>
-  </ng-container>
-  <div *ngIf="inventoryJournalLines.length > 0" class="container w-90 h-90">
-    <div class="list-empty card card-flush h-100 mt-3">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-          [collectionSize]="inventoryJournalLines.length"></ngb-pagination>
+      <div *ngIf="inventoryJournalLines.length == 0" class="container w-90 h-90">
+        <div class="list-empty card card-flush h-100 mt-20">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+              {{ "SYS011" | mssg | async }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </ng-template>

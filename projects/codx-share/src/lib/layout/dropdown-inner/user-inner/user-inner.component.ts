@@ -55,6 +55,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   functionList: any;
   formModel: any;
   modifiedOn = new Date();
+  sysSetting;
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -78,6 +79,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
           gridViewName: this.functionList.gridViewName,
         };
       }
+    });
+    this.cache.systemSetting().subscribe((res) => {
+      console.log('systemSet', res);
+      this.sysSetting = res;
     });
   }
 
@@ -256,8 +261,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       });
   }
 
-  createIndex()
-  {
+  createIndex() {
     this.callSV.openForm(CodxCreateIndexComponent, 'Create Index', 700, 700);
   }
 
@@ -290,6 +294,16 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       .callSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'ReplaceStringAsync', [
         '',
         null,
+      ])
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+
+  createTemplate() {
+    this.api
+      .callSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'CreateTemplateAsync', [
+        'HRS0211',
       ])
       .subscribe((res) => {
         console.log(res);

@@ -1,0 +1,417 @@
+<codx-form [headerText]="headerText" [dialog]="dialogRef"
+    [bodyCss]="'bgEDEDED pt-5'" [body]="body" >
+</codx-form>
+<ng-template #body>
+  <div class="w-100 bg-white om-show-plan">
+    <div class="h-100 container mx-auto">  
+      <!--Content Statistical-->
+      <div class="d-flex align-items-start justify-content-between " >
+        <div class="col-4 px-3 py-3 h-100 om-statistical">
+          <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
+            <codx-label class="fs-3 fw-bold" name="lblTotal" default="Tổng hợp"></codx-label>
+            <div class="flex-grow-1 d-flex flex-row  align-items-center ">
+              <div class="d-flex align-items-center justify-content-center col-6">
+                <div class="progress-container-align position-relative">
+                  <span class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                    <span>
+                      <span class="fs-1 fw-bold text-success plan-progress-color">{{ value?.percentOBDone }}</span>
+                      <span class="fs-4 text-success plan-progress-color">%</span>
+                    </span>
+                  </span>
+                  <ejs-progressbar id="plan-progress" [type]="'Circular'" [maximum]="100" [minimum]="0"
+                    [value]="value?.percentOBDone" [width]="'110px'" [height]="'110px'"
+                    [trackThickness]="10" [progressThickness]="10" [progressColor]="'#08ad9d'">
+                    <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
+                  </ejs-progressbar>
+                </div>
+              </div>
+              <div class=" d-flex flex-column col-6">
+                <div class="pb-2 d-flex flex-row">
+                  <span class="fs-6 fw-bold text-secondary">{{value?.percentOBNotStart+'%'}}</span>
+                  <codx-label class=" ps-2 fs-6 fw-bold" name="lblObjectNotStart" default="Chưa bắt đầu"></codx-label>
+                </div>
+                <div class="pb-2 d-flex flex-row">
+                  <span class="fs-6 fw-bold blue-primary" >{{value?.percentOBStarting+'%'}}</span>
+                  <codx-label class="ps-2 fs-6 fw-bold " name="lblObjectStarting" default="Đang thực hiện"></codx-label>
+                </div>
+                <div class=" d-flex flex-row">
+                  <span class="fs-6 fw-bold plan-progress-color" >{{value?.percentOBDone+'%'}}</span>
+                  <codx-label class="ps-2 fs-6 fw-bold" name="lblObjectDone" default="Đã hoàn tất"></codx-label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-4 px-3 py-3 h-100 om-statistical">
+          <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
+            <codx-label class="fs-3 fw-bold" name="lblObject" default="Mục tiêu"></codx-label>
+            <div class="flex-grow-1 d-flex flex-column">
+              <div class="flex-row d-flex ">
+                <div class="d-flex flex-column pt-4 col-6 ps-3">
+                  <span class="fs-2 fw-bold">{{value?.totalOB}}</span>
+                  <codx-label class="fs-6 fw-bold" name="lblTotalObject" default="Tổng số mục tiêu"></codx-label>
+                </div>
+                <div class="d-flex flex-column pt-4 col-6 ps-3">
+                  <span class="fs-2 fw-bold">{{value?.totalHighOB}}</span>
+                  <codx-label class="fs-6 fw-bold " name="lblImportantObject" default="Mục tiêu quan trọng"></codx-label>
+                </div>
+              </div>
+              <div class="flex-row d-flex ">
+                <div class="d-flex flex-column pt-4 col-6 ps-3">
+                  <span class="fs-2 fw-bold">{{value?.obDone}}</span>
+                  <codx-label class="fs-6 fw-bold" name="lblObjectFinished" default="Đã hoàn tất"></codx-label>
+                </div>
+                <div class="d-flex flex-column pt-4 col-6 ps-3">
+                  <span class="fs-2 fw-bold">{{value?.highOBDone}}</span>
+                  <codx-label class="fs-6 fw-bold" name="lblImportantObjectFinished"
+                    default="Mục tiêu quan trọng hoàn tất"></codx-label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-4 px-3 py-3 h-100 om-statistical">
+          <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
+            <codx-label class="fs-3 fw-bold" name="lblKeyResult" default="Tiến độ kết quả thực hiện"></codx-label>
+            <div class="flex-grow-1 d-flex flex-column">
+              <div class="flex-row d-flex ">
+                <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                  <span [inlineSVG]="'assets/themes/om/default/img/OM_DB_Overdue.svg'"></span>
+                  <div class=" ps-2 d-flex flex-column ">
+                    <codx-label class="fs-6 fw-bold" name="lblLateCheckIn" default="Trễ hạn cập nhật"></codx-label>
+                    <span class="fs-2 fw-bold">{{value?.krLateCheckIn}}</span>
+                  </div>
+                </div>
+                <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                  <span [inlineSVG]="'assets/themes/om/default/img/OM_BD_Delay.svg'"></span>
+                  <div class=" ps-2 d-flex flex-column ">
+                    <codx-label class="fs-6 fw-bold" name="lblLateTarget" default="Trễ tiến độ"></codx-label>
+                    <span class="fs-2 fw-bold">{{value?.krLateProgress}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-row d-flex">
+  
+                <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                  <span [inlineSVG]="'assets/themes/om/default/img/OM_DB_OnSchedule.svg'"></span>
+                  <div class=" ps-2 d-flex flex-column ">
+                    <codx-label class="fs-6 fw-bold" name="lblInProgress" default="Đúng tiến độ"></codx-label>
+                    <span class="fs-2 fw-bold">{{value?.krInProgress}}</span>
+                  </div>
+                </div>
+  
+                <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+                  <span [inlineSVG]="'assets/themes/om/default/img/OM_DB_OverSchedule.svg'"></span>
+                  <div class=" ps-2 d-flex flex-column ">
+                    <codx-label class="fs-6 fw-bold" name="lblOverProgress" default="Vượt tiến độ"></codx-label>
+                    <span class="fs-2 fw-bold">{{value?.krOverProgress}}</span>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Title OKR -->
+      <div class="d-flex align-items-center justify-content-end" #titleOKR *ngIf="isAfterRender">
+        <div class="d-flex align-items-center justify-content-end">
+          <div class="ms-2 me-2">
+            <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+              (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed == true">
+              <i class="icon-i-arrows-collapse me-2"></i>
+              <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
+            </div>
+            <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+              (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed == false">
+              <i class="icon-i-arrows-expand me-2"></i>
+              <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <div *ngIf="this.totalOB >0 ; else defaultEmpty">
+        <div *ngFor="let item of dataOKR">
+          <div *ngIf="item?.listOKR?.length>0">
+            <span *ngIf="item?.okrGroupName!=null" class="fs-5 fw-bold">{{item?.okrGroupName}}</span>
+            <span *ngIf="item?.okrGroupName==null && dataOKR?.length>1" class="fs-5 fw-bold text-gray-500"><codx-label
+                name="lblGroupID" [default]="'Mục tiêu chiến lược'" [formModel]="formModel"></codx-label></span>
+            <div class="okr-treeview">
+              <codx-treeview [id]="'tree'+ item?.okrGroupID" #treeView [itemTemplate]="templateTreeView"
+                [data]="item?.listOKR" [enableCheck]="false" idField="recID" parentIdField="parentID" [autoLoad]="false"
+                [isOutput]="true" [isLoadChild]="true" 
+                class="overflow-auto h-100">
+              </codx-treeview>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #templateTreeView let-item>
+    <!--OB node-->
+    <div class="d-flex align-items-center flex-column justify-content-between" (click)="clickTreeNode($event)"
+      *ngIf="item?.okrType == 'O'">
+      <div class="w-100 ob-background d-flex justify-content-between">
+        <div class="d-flex align-items-center okr-treegroup col-10">
+          <!-- <span class="ms-5 me-3" [inlineSVG]="okrVll?.ob?.icon"></span> -->
+          <div class="progress-container" [ngbTooltip]="'Tiến độ'">
+            <div class="progress-container-align position-relative" *ngIf="item != null">
+              <span class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                <span>
+                  <span class="fs-8 fw-bold">{{ item?.progress }}</span>
+                  <span class="fs-10">%</span>
+                </span>
+              </span>
+              <ejs-progressbar [id]="item?.guidID" [type]="'Circular'" [maximum]="100" [minimum]="0"
+                [value]="item?.progress != null ? item?.progress : 0" [width]="'60'" [height]="'60'" [trackThickness]="5"
+                [progressThickness]="3" [progressColor]="'#FF0000'">
+                <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
+              </ejs-progressbar>
+            </div>
+          </div>
+          <span class="ob-kr fs-5-sm fw-bold me-6" >{{
+            item?.okrName
+            }}</span>
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-stack">
+              <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
+                [headerText]="okrGrv.krGrv?.category?.headerText" [showHeaderText]="true"
+                [ngbTooltip]="okrGrv.krGrv?.category?.headerText" [value]="item?.category"
+                class="me-2 badge badge-light badge-md fs-7">
+              </codx-vll>
+              <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
+                [headerText]="okrGrv.krGrv?.confidence?.headerText" [showHeaderText]="true"
+                [ngbTooltip]="okrGrv.krGrv?.confidence?.headerText" [value]="item?.confidence"
+                class="me-2 badge badge-light badge-md fs-7">
+              </codx-vll>
+            </div>
+          </div>
+        </div>
+  
+        <div class="d-flex align-items-center justify-content-end col-2 ps-5">
+          <!-- <div class="position-relative" ngbTooltip="Người chịu trách nhiệm">
+            <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
+            <span *ngIf="item?.hasAssign != null"
+              class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
+              <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
+            </span>
+          </div> -->
+          <div class="d-flex ps-9 align-items-center">
+            <!-- <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"></div>
+            <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
+              (click)="showTasks($event, item)">
+              <span class="icon-i-clipboard-check text-hover-primary icon-20 text-gray-400"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+                *ngIf="item?.okrTasks != null && item?.okrTasks.length > 0"
+                [ngClass]="item?.okrTasks && item?.okrTasks.length > 0 ? '' : ''">{{ item?.okrTasks ?
+                item?.okrTasks?.length : 0 }}</span>
+            </div>
+            <codx-comment-temp [objectID]="item?.recID" [viewType]="3" ngbTooltip="Bình luận"></codx-comment-temp> -->
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!--KR node-->
+    <div class="d-flex align-items-center py-2 kr-background justify-content-between okr-treenode w-100"
+      (click)="clickTreeNode($event)" *ngIf="item?.okrType == 'R' || item?.okrType == 'S'">
+      <div class="d-flex align-items-start col-5">
+        <!-- <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span> -->
+        <!-- <span class="okr-node border-3px rounded-circle border pe-1 "
+          [ngClass]="item?.okrType==krType?'border-warning':'border-primary'"></span> -->
+        <span class="icon-brightness_1 icon-14 mt-1 d-flex align-items-center"
+          [ngClass]="item?.okrType == 'R' ? 'text-warning' : 'text-info'"></span>
+        <span class="ps-4 d-flex flex-column">
+          <span class="ob-kr text-dark fw-bold mb-1" >
+            {{ item?.okrName }}
+          </span>
+          <div class="d-flex flex-wrap fs-7">
+            <div class="d-flex align-items-center">
+              <span class="text-gray-500 me-1">{{
+                okrGrv?.krGrv?.target?.headerText + ":"
+                }}</span>
+              <span *ngIf="item?.umid == '%'" class="me-1" [innerHTML]="
+                  item?.target | formatvalue : okrFM?.krFM : 'progress' | async
+                "></span>
+              <span *ngIf="item?.umid != '%'" class="me-1" [innerHTML]="
+                  item?.target | formatvalue : okrFM?.krFM : 'target' | async
+                "></span>
+              <span [innerHTML]="item?.umName"></span>
+            </div>
+            <span class="mx-2 text-gray-400">|</span>
+            <div class="d-flex align-items-center">
+              <span class="text-gray-500 me-1">{{
+                okrGrv?.krGrv?.current?.headerText + ":"
+                }}</span>
+              <span *ngIf="item?.umid == '%'&& item?.current>0" class="me-1" [innerHTML]="
+                  item?.current | formatvalue : okrFM?.krFM : 'progress' | async
+                "></span>
+              <span *ngIf="item?.umid != '%'&& item?.current>0" class="me-1" [innerHTML]="
+                  item?.current | formatvalue : okrFM?.krFM : 'target' | async
+                "></span>
+                <span *ngIf=" item?.current==0" class="me-1" [innerHTML]="
+                item?.current 
+              "></span>
+              <span [innerHTML]="item?.umName"></span>
+            </div>
+            <span class="mx-2 text-gray-400">|</span>
+            <div class="d-flex align-items-center">
+              <span class="text-gray-500 me-1">{{
+                okrGrv?.krGrv?.actual?.headerText + ":"
+                }}</span>
+              <span *ngIf="item?.umid == '%' && item?.actual>0" class="me-1" [innerHTML]="
+                  item?.actual | formatvalue : okrFM?.krFM : 'progress' | async
+                "></span>
+              <span *ngIf="item?.umid != '%' && item?.actual>0" class="me-1" [innerHTML]="
+                  item?.actual | formatvalue : okrFM?.krFM : 'target' | async
+                "></span>
+              <span *ngIf=" item?.actual==0" class="me-1" [innerHTML]="
+                item?.actual 
+              "></span>
+                
+              <span [innerHTML]="item?.umName"></span>
+            </div>
+          </div>
+          <div *ngIf="item?.personIncharge!=null" class="d-flex align-items-center">
+            <!-- <span class="text-gray-500 me-1">{{
+              okrGrv?.krGrv?.personIncharge?.headerText + ":"
+              }}</span> -->
+            <codx-label class="text-gray-500 me-1" name="lblPersonIncharge" default="Người phụ trách:"></codx-label>
+            <span class="me-1" [innerHTML]="
+                item?.personIncharge | formatvalue : okrFM?.krFM : 'owner' | async
+              "></span>
+          </div>
+        </span>
+      </div>
+  
+      <div class="d-flex align-items-center justify-content-end col-7 ps-5">
+        <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText"
+          [ngbTooltip]="'Kế hoạch chỉ tiêu: ' + item?.rangeDateText"></span>
+        <div class="position-relative col-3" ngbTooltip="Người chịu trách nhiệm" >        
+          <!-- Phân bổ-->
+  
+          <div *ngIf="item?.hasAssign != null && item?.okrLink?.length>=2" class="d-flex flex-row">
+            <span class="position-relative">
+              <codx-img [width]="30" [objectId]="item?.okrLink[0]?.owner" [objectType]="'AD_Users'"></codx-img>
+              <span
+                class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
+  
+                <span class="icon-16 text-primary"
+                  [ngClass]="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[0]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
+              </span>
+            </span>
+            <span class="position-relative ps-2">
+              <codx-img [width]="30" [objectId]="item?.okrLink[1]?.owner" [objectType]="'AD_Users'"></codx-img>
+              <span
+                class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
+  
+                <span class="icon-16 text-primary"
+                  [ngClass]="item?.okrLink[1]?.objectType =='1' || item?.okrLink[1]?.objectType =='3' || item?.okrLink[1]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[1]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
+              </span>
+            </span>
+            <span class="ps-2" *ngIf="item?.okrLink?.length > 2">
+              <div class="symbol-group-badge ">
+                <span class="symbol symbol-30px symbol-circle">
+                  <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ item?.okrLink?.length - 2
+                    }}</span>
+                </span>
+              </div>
+            </span>
+          </div>
+  
+          <!-- Phân công-->
+          <div *ngIf="item?.hasAssign != null && item?.okrLink?.length==1" class="d-flex flex-row">
+            <codx-img [width]="30" [objectId]="item?.okrLink[0]?.owner" [objectType]="'AD_Users'"></codx-img>
+            <span
+              class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center">
+              <span class="icon-16 text-primary"
+                [ngClass]="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[0]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
+            </span>
+            <span class="ps-3 d-flex align-items-center">
+              <span *ngIf="item?.okrLink[0]?.objectType =='9'"
+                [innerHTML]="item?.okrLink[0]?.owner | formatvalue : okrFM?.krFM : 'owner' | async"></span>
+              <span
+                *ngIf="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5'"
+                [innerHTML]="item?.okrLink[0]?.orgUnitName "></span>
+              <span *ngIf="item?.okrLink[0]?.objectType =='7'" [innerHTML]="item?.okrLink[0]?.positionName"></span>
+            </span>
+          </div>
+          <!-- mặc định-->
+          <div *ngIf="item?.hasAssign == null" class="d-flex flex-row">
+            <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
+            <span class="ps-3 d-flex align-items-center"
+              [innerHTML]=" item?.owner | formatvalue : okrFM?.krFM : 'owner' | async "></span>
+          </div>
+  
+        </div>
+        <div class="d-flex ps-9 align-items-center justify-content-center">
+          <div class="d-flex flex-row align-items-center kr-process w-150px me-7 pb-2" [ngbTooltip]="'Tiến độ'">
+            <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
+              <div class="rounded-4 h-5px" [ngClass]="
+                  item?.actual >= item?.current ? 'bg-success' : 'bg-danger'
+                " role="progressbar" [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100"></div>
+              <span class="progress-node border-2px position-absolute rounded-circle border me-1" [ngClass]="[
+                  item?.actual >= item?.current
+                    ? 'border-success'
+                    : 'border-danger'
+                ]" [style.left]="item?.progress - 2 + '%'">
+  
+              </span>
+              <span *ngIf="item?.notiCheckIn" class="icon-notifications noti-checkin text-warning position-absolute "
+                [style.left]="item?.progress - 3 + '%'">
+              </span>
+            </div>
+            <span class="ps-4">
+              <span class="mb-1" *ngIf="item?.progress != 0" [innerHTML]="
+              (item?.progress
+                | formatvalue : okrFM?.krFM : 'progress'
+                | async) + '%'
+            "></span>
+              <span class="mb-1" *ngIf="item?.progress == 0" [innerHTML]="item?.progress + '%'"></span>
+            </span>
+  
+          </div>
+          <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Lịch sử cập nhật">
+            <span class="icon-i-clock-history text-hover-primary icon-20 text-gray-400"></span>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+              *ngIf="item?.okrTasks != null && item?.okrTasks.length > 0"
+              [ngClass]="item?.okrTasks && item?.okrTasks.length > 0 ? '' : ''">{{ item?.okrTasks ? item?.okrTasks?.length
+              : 0 }}</span>
+          </div>
+  
+          <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
+           >
+            <span class="icon-i-clipboard-check text-hover-primary icon-20 text-gray-400"></span>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+              *ngIf="item?.okrTasks != null && item?.okrTasks.length > 0"
+              [ngClass]="item?.okrTasks && item?.okrTasks.length > 0 ? '' : ''">{{ item?.okrTasks ? item?.okrTasks?.length
+              : 0 }}</span>
+          </div>
+          <codx-comment-temp [objectID]="item?.recID" [viewType]="3" ngbTooltip="Bình luận"></codx-comment-temp>
+          
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+<ng-template #defaultEmpty>
+  <div class="container h-100 ">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center  pt-10">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

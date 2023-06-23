@@ -52,7 +52,7 @@
           ></path>
         </g>
       </svg>
-      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title" (valueChange)="onChangeTitle($event)" [ngbTooltip]="title"></codx-input>
+      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title" [field]="'title'" (valueChange)="valueChange($event)" [ngbTooltip]="title"></codx-input>
       <span class="icon-bookmarks icon-20"></span>
       <ng-container  *ngIf="signal == 'saving' , else saving">
         <codx-label
@@ -73,7 +73,7 @@
      
     </div>
     <div class="justify-content-end d-flex align-items-center">
-      <span
+      <!-- <span
         class="btn btn-icon btn-white w-36px h-30px ms-2"
         [ngbPopover]="customUI"
         triggers="mouseenter:mouseleave"
@@ -87,22 +87,29 @@
           fiedName="CustomUI"
           default="Tùy chỉnh giao diện"
         ></codx-label>
-      </ng-template>
+      </ng-template> -->
 
       <span
-        class="btn btn-icon btn-white w-36px h-30px ms-2"
+        class="btn btn-icon btn-white w-36px h-30px mx-2"
         [ngbPopover]="show"
         triggers="mouseenter:mouseleave"
         placement="bottom"
         [autoClose]="'outside'"
         (click)="review()"
       >
-        <i class="icon icon-remove_red_eye icon-22"></i>
+        <i class="icon-i-eye icon-22"></i>
       </span>
       <ng-template #show>
         <codx-label fiedName="Show" default="Xem trước"></codx-label>
       </ng-template>
-      <span
+
+      <div class="d-flex align-items-center mx-2 mt-1px">
+        <codx-input type="checkbox" class="me-2" [crrValue]="dataSV?.isSystem"  [field]="'isSystem'" (valueChange)="valueChange($event)"></codx-input>
+        <codx-label default="Lưu thành mẫu"></codx-label>
+      </div>
+
+     
+      <!-- <span
         class="btn btn-icon btn-white w-36px h-30px ms-2"
         [ngbPopover]="undo"
         triggers="mouseenter:mouseleave"
@@ -125,7 +132,7 @@
       </span>
       <ng-template #redo>
         <codx-label fiedName="Redo" default="Làm lại"></codx-label>
-      </ng-template>
+      </ng-template> -->
       <!-- <button
         type="button"
         class="btn btn-primary btn-submit ms-2"
@@ -133,7 +140,7 @@
       >
         <codx-label fiedName="Submit" default="Gửi"></codx-label>
       </button> -->
-     <codx-mfunc [formModel]="view?.formModel" (clickMF)="clickMF($event)"></codx-mfunc>
+      <codx-mfunc #mf [formModel]="view?.formModel" (clickMF)="clickMF($event)" (changeDataMF)="changeDataMF($event,dataSV)"></codx-mfunc>
     </div>
   </div>
   <ejs-tab class="ejstab-survey" headerPlacement="Top" (selected)="onSelected($event)">
@@ -203,7 +210,7 @@
           </div>
         </ng-template>
         <ng-template #content class="pd-t-20">
-          <app-setting ></app-setting>
+          <app-setting [formModel]="view.formModel" [data]="dataSV"></app-setting>
         </ng-template>
       </e-tabitem>
     </e-tabitems>

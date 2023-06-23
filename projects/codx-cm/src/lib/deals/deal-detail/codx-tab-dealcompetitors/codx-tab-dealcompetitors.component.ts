@@ -246,7 +246,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
         var dialog = this.callFc.openForm(
           PopupAddDealcompetitorComponent,
           '',
-          500,
+          800,
           600,
           '',
           obj,
@@ -262,11 +262,8 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
                 ) &&
                 this.getCompetitorName(e?.event?.competitorID) == null
               ) {
-                this.api
-                  .exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
-                    e?.event?.competitorID,
-                    'CM0104',
-                  ])
+                this.cmSv
+                  .getOneCustomer(e?.event?.competitorID, 'CM_Competitors')
                   .subscribe((res) => {
                     if (res) {
                       var address = res?.address;
@@ -301,20 +298,22 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.cmSv.deleteDealCompetitorAsync(data?.recID).subscribe((res) => {
-          if (res) {
-            this.lstDealCompetitors = this.cmSv.loadList(
-              data,
-              this.lstDealCompetitors,
-              'delete'
-            );
-            this.changeComeptitor(0);
+      if (x.event && x.event?.status) {
+        if (x?.event?.status == 'Y') {
+          this.cmSv.deleteDealCompetitorAsync(data?.recID).subscribe((res) => {
+            if (res) {
+              this.lstDealCompetitors = this.cmSv.loadList(
+                data,
+                this.lstDealCompetitors,
+                'delete'
+              );
+              this.changeComeptitor(0);
 
-            this.notiService.notifyCode('SYS008');
-            this.changeDetectorRef.detectChanges();
-          }
-        });
+              this.notiService.notifyCode('SYS008');
+              this.changeDetectorRef.detectChanges();
+            }
+          });
+        }
       }
     });
   }

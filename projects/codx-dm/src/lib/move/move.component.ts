@@ -1,9 +1,29 @@
 import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Host,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  AuthStore,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  TenantService,
+  ViewsComponent,
+} from 'codx-core';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
@@ -16,7 +36,7 @@ import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
   selector: 'move',
   templateUrl: './move.component.html',
   styleUrls: ['./move.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoveComponent implements OnInit {
   @Input() listFolders: any;
@@ -24,7 +44,7 @@ export class MoveComponent implements OnInit {
   @Input() formModel: any;
   @Input() type: any;
   //listFolders: FolderInfo[];
- // listFiles: FileInfo[];
+  // listFiles: FileInfo[];
   selection = 0;
   listNodeMove: FileUpload[] = [];
   //listNodeMove: any;
@@ -32,14 +52,14 @@ export class MoveComponent implements OnInit {
   count: number;
   tenant: string;
   oldFolderId: string;
-  _propertyName: string = "";
-  fullName: string = "";
-  id: string = "";
-  ext: string = "";
+  _propertyName: string = '';
+  fullName: string = '';
+  id: string = '';
+  ext: string = '';
   user: any;
   item: FolderInfo;
   totalRating: number;
-  totalViews: number;  
+  totalViews: number;
   //type1: string;
   //data: any;
   //Mustache = require('mustache');
@@ -47,30 +67,30 @@ export class MoveComponent implements OnInit {
   loaded: boolean;
   loadedFile: boolean;
   loadedFolder: boolean;
-  setting: any;  
+  setting: any;
   title = 'Thông báo';
   titleFullName = 'Nhập lại tên mới';
-  titleSave = "Lưu";
+  titleSave = 'Lưu';
   mess = '. Bạn có muốn ghi đè';
-  titleMessage = "Tên bắt buộc.";
-  titleRequired = "Tên bắt buộc.";
+  titleMessage = 'Tên bắt buộc.';
+  titleRequired = 'Tên bắt buộc.';
   titleDialog = 'Di chuyển/Sao chép tới';
   titleCopyTo = 'Copy to';
   titleMove = 'Move';
   path: string;
   disableSave = false;
   dialog: any;
-  data: FileInfo;  
+  data: FileInfo;
   objectType: string;
   copy = false;
   selectId: string;
   interval: ItemInterval[];
-//   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
-  @ViewChild('view') view!: ViewsComponent; 
-  
+  //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+  @ViewChild('view') view!: ViewsComponent;
+
   @Output() eventShow = new EventEmitter<boolean>();
   checkFolderName: any;
-  constructor(  
+  constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
     private folderService: FolderService,
@@ -80,56 +100,56 @@ export class MoveComponent implements OnInit {
     private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
-   // private confirmationDialogService: ConfirmationDialogService,
+    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
-    ) {
-      this.dialog = dialog;
-   //   this.titleDialog = data.data.title;
-      this.objectType = data.data[0];
-      this.data = data.data[1];
-      this.id = this.data.recID;
-     // this.titleDialog = data.data[2];
-      this.copy = data.data[3];
-      if (this.data != null) {
-        if (this.objectType == "file") {
-          this.fullName = this.data.fileName;
-        }
-        else 
-          this.fullName = this.data.folderName;
-      }
-   // this.dmSV.confirmationDialogService = confirmationDialogService;
+  ) {
+    this.dialog = dialog;
+    //   this.titleDialog = data.data.title;
+    this.objectType = data.data[0];
+    this.data = data.data[1];
+    this.id = this.data.recID;
+    // this.titleDialog = data.data[2];
+    this.copy = data.data[3];
+    if (this.data != null) {
+      if (this.objectType == 'file') {
+        this.fullName = this.data.fileName;
+      } else this.fullName = this.data.folderName;
+    }
+    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
-  ngOnInit(): void {   
-    this.user = this.auth.get();     
-    this.folderService.options.funcID = this.dmSV.idMenuActive; 
-    this.folderService.getFolders("").subscribe(async res => {    
-      if (res != null) {
-        this.listNodeMove = res[0].filter(item => item.read && item.recID.toString() != this.id);      
-        this.selection = 0; 
+  ngOnInit(): void {
+    this.user = this.auth.get();
+    this.folderService.options.funcID = this.dmSV.idMenuActive;
+    this.folderService.getFolders('').subscribe(async (res) => {
+      if (res) {
+        this.listNodeMove = res[0].filter(
+          (item) => item.read && item.recID.toString() != this.id
+        );
+        this.selection = 0;
         this.changeDetectorRef.detectChanges();
-      }        
+      }
     });
   }
 
-  onSaveRightChanged($event, ctrl) { 
-    switch(ctrl) {
-      case "copyto":
+  onSaveRightChanged($event, ctrl) {
+    switch (ctrl) {
+      case 'copyto':
         this.selection = 0;
         break;
-      case "move":
+      case 'move':
         this.selection = 1;
         break;
     }
-    this.changeDetectorRef.detectChanges();    
+    this.changeDetectorRef.detectChanges();
   }
 
   radioChange(event) {
-   // $("#subjstree").jstree("hide_node", this.id);
+    // $("#subjstree").jstree("hide_node", this.id);
     // hide node
     // if (this.selection == 1) {
     //   $("#subjstree").jstree("hide_node", this.id);
@@ -143,7 +163,7 @@ export class MoveComponent implements OnInit {
     return this.disableSave;
   }
 
- /*  CheckFolderName() {     
+  /*  CheckFolderName() {     
     if (this.fullName === "")
       return "1";  
     else
@@ -171,29 +191,28 @@ export class MoveComponent implements OnInit {
         break;
     }
   } */
- 
+
   displayThumbnail(id, pathDisk) {
     var that = this;
-    if (this.interval == null)
-      this.interval = [];
+    if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(() => {
-      that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
-        if (item != null && item != "") {
-          let index = files.findIndex(d => d.recID.toString() === id);
+      that.fileService.getThumbnail(id, pathDisk).subscribe((item) => {
+        if (item != null && item != '') {
+          let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
             files[index].thumbnail = item;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
           }
-          let indexInterval = this.interval.findIndex(d => d.id === id);
+          let indexInterval = this.interval.findIndex((d) => d.id === id);
           if (indexInterval > -1) {
             clearInterval(this.interval[indexInterval].instant);
             this.interval.splice(indexInterval, 1);
           }
         }
-      })
+      });
     }, 3000);
 
     var interval = new ItemInterval();
@@ -204,173 +223,198 @@ export class MoveComponent implements OnInit {
 
   SaveData() {
     var that = this;
-    if (this.fullName === "") {
+    if (this.fullName === '') {
       this.changeDetectorRef.detectChanges();
-      return;      
+      return;
     }
 
     if (this.objectType == 'file') {
-      // doi ten file   
+      // doi ten file
       if (this.copy) {
-        this.fileService.copyFile(that.id, that.fullName, "").subscribe(async res => {
-          if (res.status == 0) {
-            var files = that.dmSV.listFiles;
-            if (files == null) files = [];
-            res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
-            files.push(Object.assign({}, res.data));
-            this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
-            that.displayThumbnail(res.data.recID, res.data.pathDisk);
-            this.modalService.dismissAll();
-          }
-          else {       
-            this.titleMessage = res.message;
-            this.errorshow = true;
-          }
-
-          if (res.status == 6) 
-          {         
-            var config = new AlertConfirmInputConfig();
-            config.type = "YesNo";
-            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-              if(x.event.status == "Y") {
-                that.fileService.copyFile(that.id, that.fullName, "", 0, 1).subscribe(async item => {
-                  if (item.status == 0) {
-                    var files = that.dmSV.listFiles;
-                    if (files == null) files = [];
-
-                    let index = files.findIndex(d => d.recID.toString() === item.data.recID);
-                    if (index != -1) {
-                      item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//"../../../assets/img/loader.gif";
-                      files[index] = item.data;
-                      that.displayThumbnail(item.data.recID, item.data.pathDisk);
-                      that.dmSV.listFiles = files;
-                    }
-                    this.dmSV.ChangeData.next(true);
-                    this.changeDetectorRef.detectChanges();  
-                    this.dialog.close();                  
-                  }
-                  that.notificationsService.notify(item.message);
-                });
-              }
-            });         
-          }
-        });
-      }
-      else {
-        // rename
-        this.fileService.renameFile(that.id, that.fullName).subscribe(async res => {
-          if (res.status == 0) {
-            var files = that.dmSV.listFiles;
-            let index = files.findIndex(d => d.recID.toString() === this.id);
-            if (index != -1) {
-              files[index].fileName = this.fullName;
+        this.fileService
+          .copyFile(that.id, that.fullName, '')
+          .subscribe(async (res) => {
+            if (res.status == 0) {
+              var files = that.dmSV.listFiles;
+              if (files == null) files = [];
+              res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                res.data.extension
+              )}`; //"../../../assets/img/loader.gif";
+              files.push(Object.assign({}, res.data));
+              this.dmSV.listFiles = files;
+              that.displayThumbnail(res.data.recID, res.data.pathDisk);
+              this.modalService.dismissAll();
+            } else {
+              this.titleMessage = res.message;
+              this.errorshow = true;
             }
-            this.dmSV.listFiles = files;
+
+            if (res.status == 6) {
+              var config = new AlertConfirmInputConfig();
+              config.type = 'YesNo';
+              this.notificationsService
+                .alert(this.title, res.message, config)
+                .closed.subscribe((x) => {
+                  if (x.event.status == 'Y') {
+                    that.fileService
+                      .copyFile(that.id, that.fullName, '', 0, 1)
+                      .subscribe(async (item) => {
+                        if (item.status == 0) {
+                          var files = that.dmSV.listFiles;
+                          if (files == null) files = [];
+
+                          let index = files.findIndex(
+                            (d) => d.recID.toString() === item.data.recID
+                          );
+                          if (index != -1) {
+                            item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                              item.data.extension
+                            )}`; //"../../../assets/img/loader.gif";
+                            files[index] = item.data;
+                            that.displayThumbnail(
+                              item.data.recID,
+                              item.data.pathDisk
+                            );
+                            that.dmSV.listFiles = files;
+                          }
+                          this.dmSV.ChangeData.next(true);
+                          this.changeDetectorRef.detectChanges();
+                          this.dialog.close();
+                        }
+                        that.notificationsService.notify(item.message);
+                      });
+                  }
+                });
+            }
+          });
+      } else {
+        // rename
+        this.fileService
+          .renameFile(that.id, that.fullName)
+          .subscribe(async (res) => {
+            if (res.status == 0) {
+              var files = that.dmSV.listFiles;
+              let index = files.findIndex(
+                (d) => d.recID.toString() === this.id
+              );
+              if (index != -1) {
+                files[index].fileName = this.fullName;
+              }
+              this.dmSV.listFiles = files;
+              this.dmSV.ChangeData.next(true);
+              this.dialog.close();
+            } else {
+              this.titleMessage = res.message;
+              this.errorshow = true;
+            }
+
+            if (res.status == 6) {
+              var config = new AlertConfirmInputConfig();
+              config.type = 'YesNo';
+              this.notificationsService
+                .alert(this.title, res.message, config)
+                .closed.subscribe((x) => {
+                  that.fileService
+                    .renameFile(that.id, res.data.fileName)
+                    .subscribe(async (item) => {
+                      if (item.status == 0) {
+                        var files = that.dmSV.listFiles;
+                        let index = files.findIndex(
+                          (d) => d.recID.toString() === this.id
+                        );
+                        if (index != -1) {
+                          files[index].fileName = item.data.fileName;
+                        }
+                        that.dmSV.listFiles = files;
+                        this.dmSV.ChangeData.next(true);
+                        that.modalService.dismissAll();
+                        that.changeDetectorRef.detectChanges();
+                      }
+                      that.notificationsService.notify(item.message);
+                    });
+                });
+            } else {
+              this.notificationsService.notify(res.message);
+              this.dialog.close();
+            }
+          });
+      }
+    } else {
+      this.folderService
+        .renameFolder(that.id, that.fullName)
+        .subscribe(async (res) => {
+          if (res.status == 0) {
+            let folder = new FolderInfo();
+            folder.recID = that.id;
+            folder.folderName = that.fullName;
+            //    that.dmSV.nodeChange.next(folder);
+            var folders = that.dmSV.listFolder;
+            //folders.forEach(item => )
+            let index = folders.findIndex(
+              (d) => d.recID.toString() === that.id
+            );
+            if (index != -1) {
+              folders[index].folderName = that.fullName;
+              this.dmSV.nodeChange.next(folders[index]);
+            }
+            this.dmSV.listFolder = folders;
             this.dmSV.ChangeData.next(true);
-            this.dialog.close();         
-          }
-          else {          
+            this.changeDetectorRef.detectChanges();
+            this.dialog.close();
+            // this.modalService.dismissAll();
+          } else {
+            //   $('#fullName').addClass('form-control is-invalid');
+            //    $('#fullName').focus();
             this.titleMessage = res.message;
             this.errorshow = true;
           }
 
-          if (res.status == 6) {     
+          // thu muc da cc
+          if (res.status == 2) {
+            that.fullName = res.data.folderName;
             var config = new AlertConfirmInputConfig();
-            config.type = "YesNo";
-            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-              that.fileService.renameFile(that.id, res.data.fileName).subscribe(async item => {
-                if (item.status == 0) {
-                  var files = that.dmSV.listFiles;
-                  let index = files.findIndex(d => d.recID.toString() === this.id);
-                  if (index != -1) {
-                    files[index].fileName = item.data.fileName;
-                  }
-                  that.dmSV.listFiles = files;
-                  this.dmSV.ChangeData.next(true);
-                  that.modalService.dismissAll();
-                  that.changeDetectorRef.detectChanges();
-                }
-                that.notificationsService.notify(item.message);
+            config.type = 'YesNo';
+            this.notificationsService
+              .alert(this.title, res.message, config)
+              .closed.subscribe((x) => {
+                var id = '';
+                this.folderService
+                  .copyFolder(that.id, res.data.folderName, '', 1, 1)
+                  .subscribe(async (item) => {
+                    if (item.status == 0) {
+                      // id = item.data.recID;
+                      //  that.dmSV.isTree = false;
+                      this.dmSV.currentNode = '';
+                      this.dmSV.folderId.next(item.data.parentId);
+                      var folders = this.dmSV.listFolder;
+                      let index = folders.findIndex(
+                        (d) => d.recID.toString() === that.id
+                      );
+                      if (index > -1) {
+                        folders[index] = item.data;
+                        that.dmSV.nodeChange.next(folders[index]);
+                      }
+                      this.dmSV.listFolder = folders;
+                      this.dmSV.ChangeData.next(true);
+                      //  that.modalService.dismissAll();
+                      this.changeDetectorRef.detectChanges();
+                      this.dialog.close();
+                    } else {
+                      that.titleMessage = item.message;
+                      that.errorshow = true;
+                      that.notificationsService.notify(item.message);
+                    }
+                  });
               });
-            });
-          }
-          else {
+          } else {
             this.notificationsService.notify(res.message);
-            this.dialog.close();         
+            this.dialog.close();
+            //  this.modalService.dismissAll();
           }
         });
-      }
-    }
-    else {
-      this.folderService.renameFolder(that.id, that.fullName).subscribe(async res => {
-        if (res.status == 0) {
-          let folder = new FolderInfo();
-          folder.recID = that.id;
-          folder.folderName = that.fullName;
-          //    that.dmSV.nodeChange.next(folder);
-          var folders = that.dmSV.listFolder;
-          //folders.forEach(item => )
-          let index = folders.findIndex(d => d.recID.toString() === that.id);
-          if (index != -1) {
-            folders[index].folderName = that.fullName;
-            this.dmSV.nodeChange.next(folders[index]);
-          }
-          this.dmSV.listFolder = folders;
-          this.dmSV.ChangeData.next(true);
-          this.changeDetectorRef.detectChanges();
-          this.dialog.close();
-         // this.modalService.dismissAll();
-        }
-        else {
-       //   $('#fullName').addClass('form-control is-invalid');
-      //    $('#fullName').focus();
-          this.titleMessage = res.message;
-          this.errorshow = true;
-        }
-
-        // thu muc da cc 
-        if (res.status == 2) {
-          that.fullName = res.data.folderName;
-          var config = new AlertConfirmInputConfig();
-          config.type = "YesNo";
-          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-            var id = '';
-            this.folderService.copyFolder(that.id, res.data.folderName, "", 1, 1).subscribe(async item => {
-              if (item.status == 0) {
-                // id = item.data.recID; 
-              //  that.dmSV.isTree = false;
-                this.dmSV.currentNode = '';
-                this.dmSV.folderId.next(item.data.parentId);
-                var folders = this.dmSV.listFolder;
-                let index = folders.findIndex(d => d.recID.toString() === that.id);
-                if (index > -1) {
-                  folders[index] = item.data;
-                  that.dmSV.nodeChange.next(folders[index]);
-                }
-                this.dmSV.listFolder = folders;                    
-                this.dmSV.ChangeData.next(true);
-              //  that.modalService.dismissAll();                      
-                this.changeDetectorRef.detectChanges();
-                this.dialog.close();
-              }
-              else {
-                that.titleMessage = item.message;
-                that.errorshow = true;
-                that.notificationsService.notify(item.message);
-              }
-            });
-          });
-        }
-        else {
-          this.notificationsService.notify(res.message);
-          this.dialog.close();
-        //  this.modalService.dismissAll();
-        }
-      });
     }
   }
- 
+
   // setFullHtmlNode(folder, text) {
   //   var item1 = '';
   //   var item2 = '';
@@ -396,161 +440,182 @@ export class MoveComponent implements OnInit {
 
   //   return fullText;
   // }
-  
+
   onSelectionAddChanged($node, tree) {
     var id = $node.data.recID;
-    this.selectId = id;       
+    this.selectId = id;
     if ($node.data.items && $node.data.items.length <= 0) {
-      this.folderService.getFolders(id).subscribe(async res => {
-        tree.addChildNodes($node.data, res[0]);
+      this.folderService.getFolders(id).subscribe(async (res) => {
+        var data = res[0].filter(
+          (item) => item.read && item.recID.toString() != this.id
+        );
+        tree.addChildNodes($node.data, data);
         this.changeDetectorRef.detectChanges();
       });
-    }    
+    }
   }
 
   CopyDataTo() {
     var that = this;
     if (this.objectType == 'file') {
-      this.fileService.copyFile(this.id, this.fullName, that.selectId, this.selection).subscribe(async res => {
-        if (res.status == 0) {
-          let list = that.dmSV.listFiles;
-          if (list == null) list = [];
-          // move
-          if (that.selection == 1) {
-            let index = list.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
-            if (index > -1) {
-              list.splice(index, 1);//remove element from array             
-              that.dmSV.listFiles = list;
-              this.dmSV.ChangeDataView.next(true);
-              that.changeDetectorRef.detectChanges();
-            }
-          }
-          else {
-            if (res.data.folderId == that.id) {
-              list.push(Object.assign({}, res.data));
-              that.dmSV.listFiles = list;
-              that.changeDetectorRef.detectChanges();
-            }
-          }          
-          //that.dmSV.ChangeData.next(true);
-          this.dialog.close();
-        }
-        else {      
-          //that.notificationsService.notify(res.message);
-          that.errorshow = true;
-        }
-
-        if (res.status == 6) {
-          //  let newNameMessage = this.renamemessage.replace("{0}", res.data.fileName);
-          var config = new AlertConfirmInputConfig();
-          config.type = "YesNo"/* "checkBox" */;
-          res.message = res.message + this.mess;
-          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
-            if(x.event.status == "Y") {
-              that.fileService.copyFile(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
-                if (item.status == 0) {
-                  let files = that.dmSV.listFiles;
-                  if (files == null) files = [];
-
-                  if (that.selection == 1) {
-                    let index = files.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
-                    if (index > -1) {
-                      files.splice(index, 1);//remove element from array             
-                      that.dmSV.listFiles = files;
-                      that.changeDetectorRef.detectChanges();
-                    }
-                  }
-                  else {
-                    if (item.data.folderId == that.selectId) {
-                      files.push(Object.assign({}, item.data));
-                      that.dmSV.listFiles = files;
-                      that.changeDetectorRef.detectChanges();
-                    }
-                  }
-                  this.dmSV.ChangeData.next(true);
-                  this.dialog.close();                  
-                }
-                this.notificationsService.notify(item.message);
-              });
-            }
-          });
-        }
-        else {
-          that.notificationsService.notify(res.message);
-        }        
-      });
-    }
-    else {
-      this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 2).subscribe(async res => {
-        if (res.status == 0) {
-          var list = that.dmSV.listFolder;
-          if (list == null)
-            list = [];
-          // move
-          if (that.selection == 1) {
-            // let list = this.dmSV.listFolder.getValue();
-            this.dmSV.nodeDeleted.next(that.id);           
-            let index = list.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
-            if (index > -1) {
-              list.splice(index, 1);//remove element from array
-              that.dmSV.listFolder = list;
-              that.changeDetectorRef.detectChanges();
-            }
-          }
-          this.dmSV.addFolder.next(res.data); // them node con
-          that.dmSV.ChangeData.next(true);
-          that.changeDetectorRef.detectChanges();
-          that.dialog.close();         
-        }
-        else {        
-          //that.notificationsService.notify(res.message);
-          that.errorshow = true;
-        }
-        // thu muc da ce 
-        if (res.status == 2) {
-
-          var config = new AlertConfirmInputConfig();
-          config.type = "YesNo";
-          
-          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
-            if(x.event.status == "Y") {
-              this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
-                if (item.status == 0) {
-                  that.dmSV.isTree = false;
-                  this.dmSV.currentNode = '';
-                  this.dmSV.folderId.next(item.data.recID);
-                  //var folders = this.dmSV.listFolder;
-                  //let index = folders.findIndex(d => d.recID.toString() === that.id);
-                  if(that.selection == 1)
-                  {
-                    that.dmSV.nodeDeleted.next(that.id);
-                  }
-                  //that.dmSV.listFolder = folders;
-                  that.dmSV.ChangeData.next(true);
-                  // that.dmSV.nodeSelect.next(item.data);
-                  // this.dmSV.changeData(folders, null, that.dmSV.getFolderId());
-                  that.changeDetectorRef.detectChanges();
-                  //this.modalService.dismissAll();
-                  that.dialog.close();
-                }
-                else {
-                //  $('#fullNameMove').addClass('form-control is-invalid');
-                //  $('#fullNameMove').focus();
-                //  that.message = item.message;
-                  that.errorshow = true;
-                }
+      this.fileService
+        .copyFile(this.id, this.fullName, that.selectId, this.selection)
+        .subscribe(async (res) => {
+          if (res.status == 0) {
+            let list = that.dmSV.listFiles;
+            if (list == null) list = [];
+            // move
+            if (that.selection == 1) {
+              let index = list.findIndex(
+                (d) => d.recID.toString() === that.id.toString()
+              ); //find index in your array
+              if (index > -1) {
+                list.splice(index, 1); //remove element from array
+                that.dmSV.listFiles = list;
+                this.dmSV.ChangeDataView.next(true);
                 that.changeDetectorRef.detectChanges();
-                that.notificationsService.notify(item.message);
-              });
+              }
+            } else {
+              if (res.data.folderId == that.id) {
+                list.push(Object.assign({}, res.data));
+                that.dmSV.listFiles = list;
+                that.changeDetectorRef.detectChanges();
+              }
             }
-          });
+            //that.dmSV.ChangeData.next(true);
+            this.dialog.close();
+          } else {
+            //that.notificationsService.notify(res.message);
+            that.errorshow = true;
+          }
 
-        }
-        else {
-          that.notificationsService.notify(res.message);
-          that.dialog.close();
-        }
-      });
+          if (res.status == 6) {
+            //  let newNameMessage = this.renamemessage.replace("{0}", res.data.fileName);
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo' /* "checkBox" */;
+            res.message = res.message + this.mess;
+            this.notificationsService
+              .alert(this.title, res.message, config)
+              .closed.subscribe((x) => {
+                if (x.event.status == 'Y') {
+                  that.fileService
+                    .copyFile(
+                      that.id,
+                      that.fullName,
+                      that.selectId,
+                      that.selection,
+                      1
+                    )
+                    .subscribe(async (item) => {
+                      if (item.status == 0) {
+                        let files = that.dmSV.listFiles;
+                        if (files == null) files = [];
+
+                        if (that.selection == 1) {
+                          let index = files.findIndex(
+                            (d) => d.recID.toString() === that.id.toString()
+                          ); //find index in your array
+                          if (index > -1) {
+                            files.splice(index, 1); //remove element from array
+                            that.dmSV.listFiles = files;
+                            that.changeDetectorRef.detectChanges();
+                          }
+                        } else {
+                          if (item.data.folderId == that.selectId) {
+                            files.push(Object.assign({}, item.data));
+                            that.dmSV.listFiles = files;
+                            that.changeDetectorRef.detectChanges();
+                          }
+                        }
+                        this.dmSV.ChangeData.next(true);
+                        this.dialog.close();
+                      }
+                      this.notificationsService.notify(item.message);
+                    });
+                }
+              });
+          } else {
+            that.notificationsService.notify(res.message);
+          }
+        });
+    } else {
+      this.folderService
+        .copyFolder(that.id, that.fullName, that.selectId, that.selection, 2)
+        .subscribe(async (res) => {
+          if (res.status == 0) {
+            var list = that.dmSV.listFolder;
+            if (list == null) list = [];
+            // move
+            if (that.selection == 1) {
+              // let list = this.dmSV.listFolder.getValue();
+              this.dmSV.nodeDeleted.next(that.id);
+              let index = list.findIndex(
+                (d) => d.recID.toString() === that.id.toString()
+              ); //find index in your array
+              if (index > -1) {
+                list.splice(index, 1); //remove element from array
+                that.dmSV.listFolder = list;
+                that.changeDetectorRef.detectChanges();
+              }
+            }
+            this.dmSV.addFolder.next(res.data); // them node con
+            that.dmSV.ChangeData.next(true);
+            that.changeDetectorRef.detectChanges();
+            that.dialog.close();
+          } else {
+            //that.notificationsService.notify(res.message);
+            that.errorshow = true;
+          }
+          // thu muc da ce
+          if (res.status == 2) {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+
+            this.notificationsService
+              .alert(this.title, res.message, config)
+              .closed.subscribe((x) => {
+                if (x.event.status == 'Y') {
+                  this.folderService
+                    .copyFolder(
+                      that.id,
+                      that.fullName,
+                      that.selectId,
+                      that.selection,
+                      1
+                    )
+                    .subscribe(async (item) => {
+                      if (item.status == 0) {
+                        that.dmSV.isTree = false;
+                        this.dmSV.currentNode = '';
+                        this.dmSV.folderId.next(item.data.recID);
+                        //var folders = this.dmSV.listFolder;
+                        //let index = folders.findIndex(d => d.recID.toString() === that.id);
+                        if (that.selection == 1) {
+                          that.dmSV.nodeDeleted.next(that.id);
+                        }
+                        //that.dmSV.listFolder = folders;
+                        that.dmSV.ChangeData.next(true);
+                        // that.dmSV.nodeSelect.next(item.data);
+                        // this.dmSV.changeData(folders, null, that.dmSV.getFolderId());
+                        that.changeDetectorRef.detectChanges();
+                        //this.modalService.dismissAll();
+                        that.dialog.close();
+                      } else {
+                        //  $('#fullNameMove').addClass('form-control is-invalid');
+                        //  $('#fullNameMove').focus();
+                        //  that.message = item.message;
+                        that.errorshow = true;
+                      }
+                      that.changeDetectorRef.detectChanges();
+                      that.notificationsService.notify(item.message);
+                    });
+                }
+              });
+          } else {
+            that.notificationsService.notify(res.message);
+            that.dialog.close();
+          }
+        });
     }
   }
 }

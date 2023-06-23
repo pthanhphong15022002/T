@@ -1,5 +1,5 @@
 <codx-form #form [body]="body" [footer]="footer" [formModel]="dialogRef.formModel" [dialog]="dialogRef"
-  [customToolbar]="customToolbar" [data]="salesInvoice" class="ac-dialog">
+  [customToolbar]="customToolbar" [data]="master" class="ac-dialog">
 </codx-form>
 
 <ng-template #body>
@@ -39,13 +39,14 @@
                     <div class="col-6 form-group">
                       <codx-label fiedName="exchangeRate" [formModel]="form.formModel"></codx-label>
                       <codx-input field="exchangeRate" [formModel]="form.formModel" [Group]="form.formGroup"
-                        [disabled]="journal?.multiCurrency === '0'"></codx-input>
+                        [disabled]="journal?.multiCurrency === '0'" (controlBlur)="onInputChange($event)"></codx-input>
                     </div>
                   </div>
 
                   <div class="form-group">
                     <codx-label fiedName="voucherDate" [formModel]="form.formModel"></codx-label>
-                    <codx-input field="voucherDate" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+                    <codx-input field="voucherDate" [formModel]="form.formModel" [Group]="form.formGroup"
+                      (valueChange)="onInputChange($event)"></codx-input>
                   </div>
 
                   <div class="form-group">
@@ -227,11 +228,11 @@
                 [formName]="fmSalesInvoicesLines.formName" [gridViewName]="fmSalesInvoicesLines.gridViewName"
                 [entityName]="fmSalesInvoicesLines.entityName" service="SM" [templateMore]="more"
                 [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true" [autoLoad]="false"
-                [dataSource]="salesInvoicesLines" [height]="gridHeight" (cellChanged)="onCellChange($event)"
+                [dataSource]="lines" [height]="gridHeight" (cellChanged)="onCellChange($event)"
                 (created)="onCreate($event, false)" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)"
                 (eventAction)="onFocusOut($event)"></codx-gridview-v2>
               <ng-template #dialogMode>
-                <lib-table-line-detail #tableLineDetail [gvs]="gvsSalesInvoicesLines" [transID]="salesInvoice.recID"
+                <lib-table-line-detail #tableLineDetail [gvs]="gvsSalesInvoicesLines" [transID]="master.recID"
                   [hiddenFields]="hiddenFields" [hasMF]="true" [dataService]="detailService" [height]="gridHeight"
                   (create)="onCreate($event, true)"></lib-table-line-detail>
               </ng-template>
@@ -254,19 +255,19 @@
       </div>
 
       <div class="col-7">
-        <codx-label fiedName="orderNo" [formModel]="form.formModel" class="fw-bold"></codx-label>:&nbsp;{{
-        salesInvoice.orderNo }}
+        <codx-label fiedName="orderNo" [formModel]="form.formModel" class="fw-bold label-colon"></codx-label>{{
+        master.orderNo }}
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #footer>
-  <div class="ac-dialog-footer">
-    <div class="btn btn-white btn-icon tab-action">
+  <div class="codx-detail-footer dialog-footer" [ngClass]="expanded ? 'expand' : 'collape'">
+    <div class="btn btn-white btn-icon tab-action" (click)="expanded = !expanded">
       <span class="icon-unfold_more icon-20"></span>
     </div>
-    <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="salesInvoice?.recID"
+    <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="master?.recID"
       [funcID]="form.formModel.funcID" [TabControl]="tabs"></codx-tabs>
   </div>
 </ng-template>
@@ -281,7 +282,7 @@
         {{ formTitle }}
       </div>
       <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-        <codx-vll [formModel]="form.formModel" field="Status" [value]="salesInvoice.status" [showText]="true"
+        <codx-vll [formModel]="form.formModel" field="Status" [value]="master.status" [showText]="true"
           [showBgColor]="true" class="badge badge-light badge-md">
         </codx-vll>
       </div>
@@ -299,7 +300,7 @@
       </button>
 
       <button class="btn btn-md btn-danger" (click)="onDiscard()"
-        *ngIf="masterService.hasSaved && salesInvoice.status == '0'">
+        *ngIf="masterService.hasSaved && master.status == '0'">
         <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" [formModel]="form.formModel"
           default="Hủy bỏ"></codx-label>
       </button>
@@ -317,14 +318,14 @@
 </ng-template>
 
 <ng-template #salesInvoiceTemplate>
-  <div class="col-6 form-group">
-    <codx-label fiedName="objectID" [formModel]="form.formModel" default="Khách hàng"></codx-label>
+  <div class="col-4 form-group">
+    <codx-label fiedName="objectID" [formModel]="form.formModel"></codx-label>
     <codx-input field="objectID" [formModel]="form.formModel" [Group]="form.formGroup"
       (valueChange)="onInputChange($event)"></codx-input>
   </div>
-  <div class="col-6 form-group">
-    <codx-label fiedName="objectName" [formModel]="form.formModel" default="Tên khách"></codx-label>
-    <codx-input field="objectName" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+  <div class="col-8 form-group">
+    <codx-label fiedName="objectName" [formModel]="form.formModel"></codx-label>
+    <codx-input field="objectName" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="true"></codx-input>
   </div>
 
   <div class="col-3 form-group">
@@ -350,7 +351,8 @@
   </div>
   <div class="col-3 form-group">
     <codx-label fiedName="salespersonID" [formModel]="form.formModel"></codx-label>
-    <codx-input field="salespersonID" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+    <codx-input field="salespersonID" [formModel]="form.formModel" [Group]="form.formGroup"
+      (valueChange)="onInputChange($event)"></codx-input>
   </div>
   <div class="col-3 form-group">
     <codx-label fiedName="supervisorID" [formModel]="form.formModel"></codx-label>
@@ -375,7 +377,8 @@
 
   <div class="col-4 form-group">
     <codx-label fiedName="salespersonID" [formModel]="form.formModel"></codx-label>
-    <codx-input field="salespersonID" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+    <codx-input field="salespersonID" [formModel]="form.formModel" [Group]="form.formGroup"
+      (valueChange)="onInputChange($event)"></codx-input>
   </div>
   <div class="col-4 form-group">
     <codx-label fiedName="warehouse" [formModel]="form.formModel"></codx-label>

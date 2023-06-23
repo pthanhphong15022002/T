@@ -337,13 +337,13 @@ export class CodxOmService {
       [userID]
     );
   }
-  getEmployee(userID:any) {
+  getEmployee(empID:any) {
     return this.api.execSv(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetEmployeeInforAsync',
-      [userID]
+      [empID]
     );
   }
 
@@ -471,7 +471,15 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------KR--------------------------------------------//
   //---------------------------------------------------------------------------------//
-  
+  updatePlanVersion(recID: any,version :any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'UpdatePlanVersionAsync',
+      [recID,version]
+    );
+  }
   calculatorProgressOfPlan(listRecID: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -634,6 +642,15 @@ export class CodxOmService {
       recID
     );
   }
+  getOKRByPlanID(recID: string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetOKRByPlanIDAsync',
+      recID
+    );
+  }
   //Lấy danh sách phụ thuộc OKR
   getListAssign(recID: string) {
     return this.api.execSv(
@@ -674,6 +691,16 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Lấy một Data Phân bổ 
+  getDataDistribute(recID: string ,orgUnitID :string ) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetDataDistributeAsync',
+      [recID,orgUnitID]
+    );
+  }
   //Lấy một OKR theo ID
   getOKRByID(recID: string) {
     return this.api.execSv(
@@ -682,6 +709,16 @@ export class CodxOmService {
       OMCONST.BUSINESS.OKR,
       'GetOKRByIDAsync',
       [recID]
+    );
+  }
+  //Duyệt checkIn
+  approveCheckIn(recID: string,status:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'ApproveCheckInKRAsync',
+      [recID,status]
     );
   }
   //Lấy ds OKR_Links theo OKR RecID

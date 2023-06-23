@@ -172,27 +172,22 @@ var lvFileClientAPI = {
                     let count = 0;
                     //let id = setInterval(frame, 2000);
                     let elem =  document.getElementById("circle"+fileName);
-                    // elem.style.setProperty("--percent",percent.toString());
-                    let id = setInterval(() => {
-                        if(!isPaused && percent <=100)
-                        {
-                            if(percent >= 100)
+                    if(elem)
+                    {
+                        // elem.style.setProperty("--percent",percent.toString());
+                        let id = setInterval(() => {
+                            if(!isPaused && percent <=100)
                             {
-                              clearInterval(id);
+                                if(percent >= 100) clearInterval(id);
+                                else if(count >= percent) isPaused = true;
+                                else count += 1;
                             }
-                            else if(count >= percent)
-                            {
-                                isPaused = true;
-                            }
-                            else 
-                            {
-                              count += 1;
+                            
+                        }, 2000)
 
-                            }
-                        }
-                        
-                      }, 2000)
-                    elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
+                        elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
+                    }
+                   
                     // function frame() {
                     //     if(percent == 100)  clearInterval(id);
                     //     elem.style.setProperty("--percent",percent.toString());
@@ -209,7 +204,7 @@ var lvFileClientAPI = {
             });
             //clearInterval(id)
             let elem2 =  document.getElementById("id-tf-"+fileName);
-            elem2.classList.remove("opacity-50");
+            if(elem2) elem2.classList.remove("opacity-50");
             return response;
 
             // var fetcher = await fetch(url, {

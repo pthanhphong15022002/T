@@ -10,12 +10,9 @@
 >
   <ng-template #body>
     <div *ngIf="isUseEmployee" class="form-group row mt-5">
-      <div class="col-6">
+      <div class="col-10">
         <div class="d-flex">
-          <div
-            class="d-flex flex-column position-relative"
-            (click)="clickOpenPopup(codxInput)"
-          >
+          <div class="d-flex flex-column position-relative">
             <codx-img
               [width]="35"
               class="me-3"
@@ -29,20 +26,6 @@
               [objectType]="'HR_Employees'"
             >
             </codx-img>
-            <codx-vll
-              [showText]="true"
-              [showBgColor]="true"
-              class="text-primary bi bi-pencil badge badge-primary badge-sm position-absolute"
-              [ngStyle]="{
-                background: 'aliceblue',
-                width: '30px',
-                fontSize: '10px',
-                cursor: 'pointer',
-                right: '-5px',
-                bottom: '-5px'
-              }"
-            >
-            </codx-vll>
           </div>
           <div class="d-flex flex-column">
             <div>
@@ -75,10 +58,9 @@
           </div>
         </div>
       </div>
-      <div class="col-6 d-none">
-        <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
+      <div class="col-2 d-flex justify-content-end">
         <codx-input
-          #codxInput
+          [showInput]="false"
           field="employeeID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -92,7 +74,7 @@
       <div class="col-6">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
         <codx-input
-          [disabled]="decisionNoDisable"
+          [disabled]="autoNumField === 'DecisionNo'"
           field="decisionNo"
           [formModel]="formModel"
           [Group]="formGroup"

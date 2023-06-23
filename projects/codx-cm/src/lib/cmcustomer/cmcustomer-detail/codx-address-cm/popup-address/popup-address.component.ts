@@ -80,7 +80,10 @@ export class PopupAddressComponent implements OnInit {
       }
       this.data.recID = Guid.newGuid();
     }
-    if (this.action == 'edit') this.setNameAdress();
+    if (this.action == 'edit') {
+      this.setNameAdress();
+      this.checkAddressName = !!this.data.adressName;
+    }
   }
 
   setNameAdress() {
@@ -160,8 +163,10 @@ export class PopupAddressComponent implements OnInit {
             var config = new AlertConfirmInputConfig();
             config.type = 'YesNo';
             this.notiService.alertCode('CM001').subscribe((x) => {
-              if (x.event.status == 'Y') {
-                this.onSaveHanle();
+              if (x.event && x.event?.status) {
+                if (x.event.status == 'Y') {
+                  this.onSaveHanle();
+                }
               }
             });
           } else {
@@ -255,7 +260,7 @@ export class PopupAddressComponent implements OnInit {
     this.isDefault = e.data;
   }
   valueChange(e) {
-    this.data[e.field] = e?.data;
+    this.data[e.field] = e?.data?.trim();
     if (e.data) {
       switch (e.field) {
         case 'adressName':
@@ -306,7 +311,6 @@ export class PopupAddressComponent implements OnInit {
 
   checkAdressName() {
     this.checkAddressName = !!this.data.adressName;
-
   }
 
   checkEventListen() {

@@ -41,6 +41,7 @@
     [showMoreFunc]="showMoreFunc"
     [user]="user"
     (clickMoreFunction)="receiveMF($event)"
+    (changeMoreFunction)="receiveChangeMF($event)"
     (viewTask)="viewTask($event)"
     [popoverSelected]="popoverDataSelected"
     (hoverPopover)="hoverPopover($event)"
@@ -138,8 +139,13 @@
     <div class="d-flex justify-content-between align-items-top mt-3">
       <div class="d-flex align-items-center me-2 codx-badge">
         <ng-container *ngIf="setting?.processBar">
-          <div class="control-section">
-            <div class="row" style="">
+          <div
+            class="control-section me-2"
+            placement="top left right bottom"
+            ngbTooltip="{{ data.percentage + ' %' }}"
+            container="body"
+          >
+            <div class="row">
               <div class="col-lg-3 col-md-3 col-3">
                 <div id="">
                   <ejs-progressbar
@@ -151,11 +157,13 @@
                     [width]="width"
                     [height]="height"
                     [animation]="animation"
+                    [trackThickness]="trackThickness"
+                    [progressThickness]="progressThickness"
                   >
-                  <e-progressbar-annotations>
-                    <e-progressbar-annotation [content]="getHtml(data)">
-                    </e-progressbar-annotation>
-                  </e-progressbar-annotations>
+                    <!-- <e-progressbar-annotations>
+                      <e-progressbar-annotation [content]="getHtml(data)">
+                      </e-progressbar-annotation>
+                    </e-progressbar-annotations> -->
                   </ejs-progressbar>
                 </div>
               </div>
@@ -166,22 +174,29 @@
           <codx-comment-temp
             [objectID]="data.recID"
             [viewType]="3"
-            [openViewPopup]="false"
+            [openViewPopup]="true"
           ></codx-comment-temp>
 
-          <div class="d-flex align-items-center position-relative me-4">
+          <!-- <div
+            class="d-flex align-items-center position-relative me-4"
+            (click)="openPopupTodoList(data.taskID)"
+          >
             <span class="icon-i-check2-square icon-18 text-gray-400"></span>
             <span
               *ngIf="data?.todo > 0"
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
               >{{ data?.todo }}</span
             >
-          </div>
+          </div> -->
+          <codx-task-goal-temp
+            [taskID]="data.taskID"
+            [countData]="data?.todo"
+          ></codx-task-goal-temp>
           <codx-attachment-temp
             [objectID]="data?.recID"
             [formModel]="view.formModel"
             [viewType]="3"
-            [openViewPopup]="false"
+            [openViewPopup]="true"
           ></codx-attachment-temp>
         </ng-container>
       </div>
@@ -224,7 +239,10 @@
       </div>
     </div>
     <!--end::Item-->
-    <div class="w-100 m-3 flex-column text-center">
+    <div
+      class="w-100 m-3 flex-column text-center"
+      *ngIf="data.memo || data.memo2"
+    >
       <div class="justify-content-between">
         <div></div>
         <div
@@ -748,6 +766,34 @@
         default="Đã quá hạn!"
       ></codx-label>
     </span>
+  </ng-template>
+</ng-template>
+
+<ng-template #popupToDoList let-dialog>
+  <codx-form
+    [body]="body"
+    [dialog]="dialog"
+    headerText="Danh sách công việc cần làm"
+  >
+  </codx-form>
+  <ng-template #body>
+    <div class="checkbox-list mt-2 ms-6 text-dark">
+      <ng-container *ngFor="let item of listTaskGoals">
+        <div class="mb-2">
+          <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
+            [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
+          <codx-input
+            type="checkbox"
+            class="me-2"
+            [crrValue]="item.status == '90'"
+            [disabled]="true"
+          ></codx-input>
+          <span class="text-gray-700">
+            {{ item.memo }}
+          </span>
+        </div>
+      </ng-container>
+    </div>
   </ng-template>
 </ng-template>
 

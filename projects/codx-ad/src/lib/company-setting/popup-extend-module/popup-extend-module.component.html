@@ -1,4 +1,13 @@
-<div *ngIf="lstModule" class="container w-100 h-100 p-2">
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+>
+</codx-form>
+<ng-template #header>
   <div class="row header">
     <div class="close d-flex justify-content-end">
       <button
@@ -29,39 +38,45 @@
     >
     </codx-temp-full>
   </div>
+</ng-template>
 
-  <div class="grvModule">
-    <div class="title d-flex justify-content-between row">
-      <div class="space col-4"></div>
-      <div class="title-name col-4 d-flex justify-content-center">
-        <h1>
-          <codx-label name="lblBill" default="Đơn hàng"></codx-label>
-        </h1>
+<ng-template #body>
+  <div *ngIf="lstModule" class="container w-100 h-100 p-2">
+    <div class="grvModule">
+      <div class="title d-flex justify-content-between row">
+        <div class="space col-4"></div>
+        <div class="title-name col-4 d-flex justify-content-center">
+          <h1>
+            <codx-label name="lblBill" default="Đơn hàng"></codx-label>
+          </h1>
+        </div>
+        <div class="months d-flex align-items-center col-4">
+          <codx-input
+            type="valuelist"
+            field=""
+            refValue="TN001"
+            [crrValue]="months"
+            (valueChange)="changeMonths($event)"
+            [showInput]="false"
+          >
+          </codx-input>
+          /
+          <codx-vll
+            [name]="grvTNOrders['Interval']?.referedValue"
+            [value]="'1'"
+            [showText]="true"
+            [showBgColor]="false"
+          >
+            <!-- class="badge badge-light badge-square badge-md fs-7 p-2" -->
+          </codx-vll>
+        </div>
       </div>
-      <div class="months d-flex align-items-center col-4">
-        <codx-input
-          type="valuelist"
-          field=""
-          refValue="TN001"
-          [crrValue]="months"
-          (valueChange)="changeMonths($event)"
-          [showInput]="false"
-        >
-        </codx-input>
-        /
-        <codx-vll
-          [name]="grvTNOrders['Interval']?.referedValue"
-          [value]="'1'"
-          [showText]="true"
-          [showBgColor]="false"
-        >
-          <!-- class="badge badge-light badge-square badge-md fs-7 p-2" -->
-        </codx-vll>
-      </div>
+      <ng-container [ngTemplateOutlet]="gridModules"> </ng-container>
     </div>
-    <ng-container [ngTemplateOutlet]="gridModules"> </ng-container>
   </div>
+</ng-template>
 
+<ng-template #footer>
   <div class="buttons d-flex justify-content-end">
     <div class="install">
       <button type="button" class="btn btn-primary me-4" (click)="closePopup()">
@@ -69,8 +84,7 @@
       </button>
     </div>
   </div>
-</div>
-
+</ng-template>
 <ng-template #moduleOperatorDescTmp let-module>
   <div class="d-flex" *ngIf="module.price != null">
     <codx-label name="lblPriceForOperator" default="Nhân viên nghiệp vụ: ">

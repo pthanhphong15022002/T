@@ -22,6 +22,7 @@ import { CM_Contracts } from '../../models/cm_model';
 export class QuotationsViewDetailComponent implements OnChanges {
   @ViewChild('contract')contract: TemplateRef<any>;
   @Input() itemSelected: any;
+  @Input() hideMF: any = false;
   @Input() formModel: FormModel;
   @Input() vllStatus = 'CRM012';
   @Output() clickMoreFunction = new EventEmitter<any>();
@@ -106,7 +107,7 @@ export class QuotationsViewDetailComponent implements OnChanges {
   ngAfterViewInit(): void {
     let index = this.tabControl.findIndex(item => item.name == 'Contract');
     if(index >= 0){
-      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
+      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false,icon :'icon-sticky_note_2' ,template: this.contract};
       this.tabControl.splice(index,1,contract)
     }
   }

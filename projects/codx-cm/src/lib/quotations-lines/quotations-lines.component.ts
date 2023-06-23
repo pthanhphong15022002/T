@@ -21,6 +21,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddQuotationsLinesComponent } from './popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { CM_QuotationsLines } from '../models/cm_model';
 
 @Component({
   selector: 'codx-quotations-lines',
@@ -33,6 +34,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   // @Input() predicates: any;
   @Input() actionParent = 'add';
   @Input() transID: any;
+  @Input() contractID: any;
   @Input() exchangeRate: any;
   @Input() currencyID: any;
 
@@ -40,10 +42,13 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() quotationLinesAddNew = [];
   @Input() quotationLinesEdit = [];
   @Input() quotationLinesDeleted = [];
-
+  //mac dinh thuộc tính
+  @Input() isViewTemp = false;
+  @Input() showButtonAdd = true; //
+  @Input() hideMoreFunc = '0'; //chua dung
   @Output() eventQuotationLines = new EventEmitter<any>();
-  // @Output() eventEdit = new EventEmitter<any>();
-  // @Output() eventDeleted = new EventEmitter<any>();
+
+  @Input() isSetMoreFunc = false; //thuan them de set quotation của contract
 
   fmQuotationLines: FormModel = {
     formName: 'CMQuotationsLines',
@@ -67,6 +72,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   grvSetupQuotationsLines: any;
   crrCustomerID: string;
   objectOut: any;
+  titleAdd = 'Thêm'; //sau gọi sys
+  readonly hideColums = ['rowno', 'netamt', 'salesamt', 'vatamt', 'discamt'];
 
   constructor(
     private codxCM: CodxCmService,
@@ -92,8 +99,19 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  ngAfterViewInit(): void {}
-  
+  ngAfterViewInit(): void {
+    if (this.gridQuationsLines?.visibleColumns?.length > 0) {
+      this.gridQuationsLines.visibleColumns.forEach((e, index) => {
+        if (
+          e?.fieldName &&
+          this.hideColums.some((x) => x == e?.fieldName.toLowerCase())
+        ) {
+          e.allowEdit = false;
+        }
+      });
+    }
+  }
+
   ngOnInit(): void {
     this.objectOut = {
       listQuotationLines: this.listQuotationLines,
@@ -105,6 +123,21 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
 
   //#region  CRUD
   // region QuotationLines
+  async changeDataMFQuotationLines(event, quotationLine?: CM_QuotationsLines) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS03': //sửa
+          case 'SYS04': //copy
+          case 'SYS02': //xóa
+            if (this.isSetMoreFunc && quotationLine?.transID) {
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
+  }
   clickMFQuotationLines(e, data) {
     this.titleActionLine = e.text;
     switch (e.functionID) {
@@ -125,10 +158,43 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     this.genData(idx);
   }
   addRow() {
-    this.addPopup(); //tam add popup
-    // let idx = this.gridQuationsLines.dataSource?.length;
-    // let data = this.genData(idx);
-    // this.gridQuationsLines.addRow(data, idx); //add row gridview
+    // this.addPopup(); //tam add popup
+
+    let idx = this.listQuotationLines?.length ?? 0;
+    this.codxCM
+      .getDefault(
+        'CM',
+        this.fmQuotationLines.funcID,
+        this.fmQuotationLines.entityName
+      )
+      .subscribe((dt) => {
+        if (dt && dt.data) {
+          let data = dt.data; //ddooi tuong
+
+          data.recID = Util.uid();
+          data.transID = this.transID;
+          data.contractID = this.contractID;
+          data.write = true;
+          data.delete = true;
+          data.read = true;
+          data.rowNo = idx + 1;
+
+          //add tam do loi
+          data.salesAmt = data.salesAmt ?? 0;
+          data.quantity = data.quantity ?? 0;
+          data.discPct = data.discPct ?? 0;
+          data.discAmt = data.discAmt ?? 0;
+          data.vatBase = data.vatBase ?? 0;
+          data.vatAmt = data.vatAmt ?? 0;
+          data.vatRate = data.vatRate ?? 0;
+          data.exchangeRate = this.exchangeRate;
+          data.currencyID = this.currencyID;
+          data.transID = this.transID;
+          this.listQuotationLines.push(data);
+          // this.gridQuationsLines.addRow(data, idx); //add row gridview
+          this.gridQuationsLines.refresh();
+        }
+      });
   }
 
   genData(idx) {
@@ -171,8 +237,13 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                   this.fmQuotationLines.gridViewName
                 )
                 .subscribe((res) => {
+                  let customName = f.customName || f.description;
                   var obj = {
-                    headerText: 'Thêm sản phẩm báo giá',
+                    headerText:
+                      this.titleAdd +
+                      ' ' +
+                      customName.charAt(0).toLowerCase() +
+                      customName.slice(1),
                     quotationsLine: data,
                     listQuotationLines: this.listQuotationLines,
                     grvSetup: this.grvSetupQuotationsLines,
@@ -184,8 +255,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                   let dialogQuotations = this.callFC.openForm(
                     PopupAddQuotationsLinesComponent,
                     '',
-                    650,
-                    850,
+                    1000,
+                    700,
                     '',
                     obj,
                     '',
@@ -202,6 +273,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines;
                       this.objectOut.quotationLinesAddNew =
                         this.quotationLinesAddNew;
+                      this.objectOut['quotationLineIdNew'] = data?.recID; // thuan thêm để lấy quotationLines mới thêm
                       this.eventQuotationLines.emit(this.objectOut);
                       this.changeDetector.detectChanges();
                     }
@@ -258,7 +330,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
         )
         .subscribe((res) => {
           var obj = {
-            headerText: this.titleActionLine + f?.customName || f?.description,
+            headerText:
+              this.titleActionLine + ' ' + f?.customName || f?.description,
             quotationsLine: dt,
             listQuotationLines: this.listQuotationLines,
             grvSetup: this.grvSetupQuotationsLines,
@@ -270,8 +343,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           let dialogQuotations = this.callFC.openForm(
             PopupAddQuotationsLinesComponent,
             '',
-            650,
-            570,
+            1000,
+            700,
             '',
             obj,
             '',
@@ -288,7 +361,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                 if (this.actionParent == 'edit') {
                   this.linesUpdate(data);
                 }
-
                 this.gridQuationsLines.refresh();
                 // this.dialog.dataService.updateDatas.set(
                 //   this.quotations['_uuid'],
@@ -360,8 +432,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                   let dialogQuotations = this.callFC.openForm(
                     PopupAddQuotationsLinesComponent,
                     '',
-                    650,
-                    570,
+                    1000,
+                    700,
                     '',
                     obj,
                     '',
@@ -375,6 +447,11 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                         this.listQuotationLines.push(data);
                         this.gridQuationsLines.refresh();
                         this.loadTotal();
+                        this.objectOut.quotationLinesAddNew =
+                          this.quotationLinesAddNew;
+                        this.objectOut.listQuotationLines =
+                          this.listQuotationLines;
+
                         this.eventQuotationLines.emit(this.objectOut);
                         this.changeDetector.detectChanges();
                       }
@@ -409,7 +486,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   quotationsLineChanged(e) {
     if (!e.field || !e.data) return;
     let lineCrr = e.data;
-
     switch (e.field) {
       case 'itemID':
         this.loadItem(e.value, lineCrr);
@@ -450,9 +526,13 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       if (items) {
         lineCrr['onhand'] = items.quantity;
         lineCrr['idiM4'] = items.warehouseID; // kho
-        lineCrr['costPrice'] = items.costPrice; // gia von
         lineCrr['umid'] = items.umid; // don vi tinh
         lineCrr['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
+        lineCrr['salesPrice'] = items.costPrice;
+        let priceDefaut =
+          items.costPrice / (this.exchangeRate != 0 ? this.exchangeRate : 1); // gia von
+        lineCrr['costPrice'] = priceDefaut;
+        lineCrr['salesPrice'] = priceDefaut;
       }
       this.loadDataLines(lineCrr);
       // this.form.formGroup.patchValue(this.quotationsLine);
@@ -542,5 +622,21 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     //     this.gridQuationsLines.refresh();
     //   }
     // });
+  }
+  onAddNew(e) {
+    debugger;
+  }
+
+  onEdit(e) {
+    debugger;
+  }
+
+  sum(field) {
+    let sum = 0;
+    this.listQuotationLines.forEach((e) => {
+      sum += e[field];
+    });
+
+    return sum;
   }
 }

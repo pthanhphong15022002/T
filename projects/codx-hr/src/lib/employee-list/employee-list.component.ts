@@ -64,55 +64,7 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    // this.columnsGrid = [
-    //   {
-    //     formName: 'employees',
-    //     gridViewName: 'grvEmployee',
-    //     fieldName: 'employeeID',
-    //     controlName: 'lblEmployeeID',
-    //     headerText: 'Nhân viên',
-    //     width: 350,
-    //     template: this.colEmployee,
-    //   },
-    //   {
-    //     formName: 'employees',
-    //     gridViewName: 'grvEmployee',
-    //     controlName: 'LblEmail',
-    //     fieldName: 'email',
-    //     headerText: 'Liên hệ',
-    //     width: 200,
-    //     template: this.colContact,
-    //   },
-    //   {
-    //     formName: 'employees',
-    //     gridViewName: 'grvEmployee',
-    //     controlName: 'lblBirthday',
-    //     fieldName: 'birthday',
-    //     headerText: 'Thông tin cá nhân',
-    //     width: 200,
-    //     template: this.colPersonal,
-    //   },
-    //   {
-    //     formName: 'employees',
-    //     gridViewName: 'grvEmployee',
-    //     controlName: 'lblStatus',
-    //     fieldName: 'status',
-    //     headerText: 'Tình trạng',
-    //     width: 200,
-    //     template: this.colStatus,
-    //   },
-    // ];
     this.views = [
-      // {
-      //   id: '1',
-      //   type: ViewType.grid,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     resources: this.columnsGrid,
-      //     hideMoreFunc: true,
-      //   },
-      // },
       {
         id: '1',
         type: ViewType.list,
@@ -231,27 +183,32 @@ export class EmployeeListComponent extends UIComponent {
     if (data) {
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
-      this.view.dataService.dataSelected = data;
-      this.view.dataService.copy().subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width = '800px';
-        let popup = this.callfc.openSide(
-          PopupAddEmployeeComponent,
-          {
-            action: 'copy',
-            text: moreFunc.defaultName ?? moreFunc.text,
-            data: res,
-          },
-          option
-        );
-        popup.closed.subscribe((e) => {
-          if (e.event) {
-            (this.view.dataService as CRUDService).add(e.event).subscribe();
-          }
-        });
-      });
+      this.api
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
+          this.view.dataService.dataSelected = res? res : this.itemSelected;
+          this.view.dataService.copy().subscribe((res: any) => {
+            let option = new SidebarModel();
+            option.DataService = this.view.dataService;
+            option.FormModel = this.view.formModel;
+            option.Width = '800px';
+            let popup = this.callfc.openSide(
+              PopupAddEmployeeComponent,
+              {
+                action: 'copy',
+                text: moreFunc.defaultName ?? moreFunc.text,
+                data: res,
+              },
+              option
+            );
+            popup.closed.subscribe((e) => {
+              if (e.event) {
+                (this.view.dataService as CRUDService).add(e.event).subscribe();
+              }
+            });
+          });
+
+        })
+
     }
   }
 
@@ -330,13 +287,13 @@ export class EmployeeListComponent extends UIComponent {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
       let queryParams = {
         employeeID: data.employeeID,
-        page: this.view.dataService.page,
+        page: this.view.dataService.page + 1,
         totalPage: this.view.dataService.pageCount
       };
       let state = {
-        data: this.view.dataService.data.map(function(obj){
-          return{EmployeeID:obj.employeeID};
-          }),
+        data: this.view.dataService.data.map(function (obj) {
+          return { EmployeeID: obj.employeeID };
+        }),
         request: this.view.dataService.request,
       };
       this.codxService.navigate('', func?.url, queryParams, state, true);

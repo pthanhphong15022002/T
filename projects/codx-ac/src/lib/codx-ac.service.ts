@@ -4,6 +4,7 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxComboboxComponent,
   DataRequest,
   FormModel,
   NotificationsService,
@@ -74,8 +75,15 @@ export class CodxAcService {
     let newMemo = '';
     let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
     for (let i = 0; i < sortTrans.length; i++) {
-      if (i == sortTrans.length - 1) newMemo += sortTrans[i].value;
-      else newMemo += sortTrans[i].value + ' - ';
+      if (sortTrans[i].value != null) {
+      }
+      if (i == sortTrans.length - 1 && sortTrans[i].value != null) {
+        newMemo += sortTrans[i].value;
+      } else {
+        if (sortTrans[i].value != null) {
+          newMemo += sortTrans[i].value + ' - ';
+        }
+      }
     }
     return newMemo;
   }
@@ -87,39 +95,61 @@ export class CodxAcService {
     irregularGvsPropNames: string[] = [],
     ignoredFields: string[] = []
   ): boolean {
-    console.log(formGroup);
-    console.log(gridViewSetup);
-
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
 
     const controls = formGroup.controls;
     let isValid: boolean = true;
+    var keepgoing = true;
     for (const propName in controls) {
-      if (ignoredFields.includes(propName.toLowerCase())) {
-        continue;
-      }
+      if (keepgoing) {
+        if (ignoredFields.includes(propName.toLowerCase())) {
+          continue;
+        }
 
-      if (controls[propName].invalid) {
-        console.log('invalid', { propName });
+        if (controls[propName].invalid) {
+          const gvsPropName =
+            irregularGvsPropNames.find(
+              (i) => i.toLowerCase() === propName.toLowerCase()
+            ) ?? this.toPascalCase(propName);
 
-        const gvsPropName =
-          irregularGvsPropNames.find(
-            (i) => i.toLowerCase() === propName.toLowerCase()
-          ) ?? this.toPascalCase(propName);
-
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          `"${gridViewSetup[gvsPropName]?.headerText}"`
-        );
-
-        isValid = false;
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            `"${gridViewSetup[gvsPropName]?.headerText}"`
+          );
+          var element = document.querySelectorAll('codx-input');
+          for (let index = 0; index < element.length; index++) {
+            var input = window.ng.getComponent(
+              element[index]
+            ) as CodxComboboxComponent;
+            if (input.ControlName == propName) {
+              var focus = element[index].getElementsByTagName('input')[0];
+              focus.select();
+              focus.focus();
+            }
+          }
+          isValid = false;
+          keepgoing = false;
+        }
       }
     }
 
     return isValid;
   }
 
+  CheckExistAccount(
+    data: any,
+  ): boolean {
+    let result: boolean = true;
+    this.api
+    .exec('AC', 'CashPaymentsBusiness', 'CheckExistAccount', [
+      data,
+    ])
+    .subscribe((res: any) => {
+      result = res;
+    })
+    return result;
+  }
   /** @param irregularDataPropNames Use irregularDataPropNames in case unable to transform some gvs prop names to data prop names respectively. */
   validateFormDataUsingGvs(
     gridViewSetup: any,
@@ -225,7 +255,8 @@ export class CodxAcService {
       )
       .pipe(
         tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0]))
+        map((p) => JSON.parse(p[0])),
+        tap((p) => console.log(p))
       );
   }
 
@@ -291,21 +322,6 @@ export class CodxAcService {
       'CategoriesBusiness',
       'GetCategoryByEntityNameAsync',
       [entityName]
-    );
-  }
-  release(
-    recID: string,
-    processID: string,
-    entityName: string,
-    funcID: string,
-    title: string
-  ) {
-    return this.api.execSv<any>(
-      'AC',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'ReleaseAsync',
-      [recID, processID, entityName, funcID, title]
     );
   }
   setPopupSize(dialog: any, width: any, height: any) {

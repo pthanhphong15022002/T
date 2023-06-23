@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-employee-benefit.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -37,12 +38,10 @@ export class EmployeeBenefitComponent extends UIComponent {
 
   //Get data
   views: Array<ViewModel> = [];
-  funcID: string;
   method = 'GetEBenefitListAsync';
   grvSetup: any;
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm',
   };
   formGroup: FormGroup;
 
@@ -56,8 +55,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   dialogEditStatus: any;
   dataCategory;
   cmtStatus: string = '';
-  genderGrvSetup: any;
-  eBenefitHeader;
+  // genderGrvSetup: any;
   processID;
 
   //#region Update modal Status
@@ -74,29 +72,26 @@ export class EmployeeBenefitComponent extends UIComponent {
     inject: Injector,
     private hrService: CodxHrService,
     private activedRouter: ActivatedRoute,
+    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
   ) {
     super(inject);
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
+
+  GetGvSetup() {
+    let funID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
+    });
   }
 
   onInit(): void {
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
-
-    this.cache.gridViewSetup('EBenefits', 'grvEBenefits').subscribe((res) => {
-      if (res) {
-        this.grvSetup = res;
-      }
-    });
-
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
+    this.GetGvSetup();
   }
 
   ngAfterViewInit(): void {
@@ -113,18 +108,13 @@ export class EmployeeBenefitComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
         },
       },
     ];
-
-    //Get Header text when view detail
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
-      this.eBenefitHeader = res;
-    });
   }
 
   //Set form group data when open Modal dialog
@@ -193,16 +183,16 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
-      850,
-      550,
+      500,
+      350,
       null,
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.view.dataService.update(res.event[0]).subscribe();
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
     });
   }
 
@@ -213,13 +203,16 @@ export class EmployeeBenefitComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.hrService
-            .release(
+          this.codxShareService
+            .codxRelease(
+              'HR',
               this.itemDetail.recID,
               this.processID.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> Phụ cấp - ' + this.itemDetail.decisionNo + '</div>'
+              '',
+              'Phụ cấp - ' + this.itemDetail.decisionNo ,
+              ''
             )
             .subscribe((result) => {
               if (result?.msgCodeError == null && result?.rowCount) {
@@ -348,14 +341,12 @@ export class EmployeeBenefitComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
-          this.df.detectChanges();
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event[0]).subscribe((res) => {});
-          this.df.detectChanges();
         }
+        this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
     });
@@ -385,7 +376,7 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  clickEvent(event, data) {
+  clickEvent(event) {
     this.clickMF(event?.event, event?.data);
   }
 

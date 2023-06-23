@@ -37,6 +37,7 @@ import { ContractsService } from '../service-contracts.service';
 import { PopupViewPaymentHistoryComponent } from '../payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
 import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-history/popup-add-payment-history.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'add-contracts',
@@ -49,7 +50,16 @@ export class AddContractsComponent implements OnInit {
   @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('test') test: any;
-  REQUIRE = ['contractName', 'contractID', 'useType','contractType','pmtMethodID','pmtStatus','delModeID','delStatus'];
+  REQUIRE = [
+    'contractName',
+    'contractID',
+    'useType',
+    'contractType',
+    'pmtMethodID',
+    'pmtStatus',
+    'delModeID',
+    'delStatus',
+  ];
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
   dialog!: DialogRef;
@@ -57,13 +67,19 @@ export class AddContractsComponent implements OnInit {
   action = 'add';
   projectID: string;
   tabClicked = '';
-  listClicked = [];
+  listTypeContract = [];
   account: any;
   type: 'view' | 'deal' | 'quotation' | 'customer';
   customer: CM_Customers;
   customerID = {};
-  listQuotationsLine: CM_QuotationsLines[];
+  listQuotationsLineOfContractAdd: CM_QuotationsLines[] = [];
+  listQuotationsLineOfContract: CM_QuotationsLines[] = [];
+  listQuotationsLine: CM_QuotationsLines[] = [];
+  quotationLinesDeleted: CM_QuotationsLines[] = [];
+  quotationLinesEdit: CM_QuotationsLines[] = [];
+  quotationLinesAddNew: CM_QuotationsLines[] = [];
   quotations: CM_Quotations;
+  headerTest = '';
 
   fmQuotations: FormModel = {
     formName: 'CMQuotations',
@@ -110,6 +126,7 @@ export class AddContractsComponent implements OnInit {
   view = [];
   customerIdOld = null;
   isLoadDate = true;
+  checkPhone = true;
 
   constructor(
     private cache: CacheService,
@@ -120,6 +137,7 @@ export class AddContractsComponent implements OnInit {
     private contractService: ContractsService,
     private changeDetector: ChangeDetectorRef,
     private api: ApiHttpService,
+    private stepService: StepService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -129,7 +147,14 @@ export class AddContractsComponent implements OnInit {
     this.contractsInput = dt?.data?.contract;
     this.account = dt?.data?.account;
     this.type = dt?.data?.type;
+    this.headerTest = dt?.data?.actionName;
     this.getFormModel();
+    this.listTypeContract = contractService.listTypeContract;
+    this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
+      if (f) {
+        this.headerTest = this.headerTest + ' ' + f?.defaultName;
+      }
+    });
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
@@ -139,32 +164,6 @@ export class AddContractsComponent implements OnInit {
       this.contracts?.delStatus == '1'
         ? true
         : false;
-    this.listClicked = [
-      {
-        name: 'general',
-        textDefault: 'Thông tin chung',
-        icon: 'icon-info',
-        isActive: true,
-      },
-      {
-        name: 'detailItem',
-        textDefault: 'Chi tiết mặt hàng',
-        icon: 'icon-link',
-        isActive: false,
-      },
-      {
-        name: 'pay',
-        textDefault: 'Phương thức và tiến độ thanh toán',
-        icon: 'icon-tune',
-        isActive: false,
-      },
-      {
-        name: 'termsAndRelated',
-        textDefault: 'Điều khoản và hồ sơ liên quan',
-        icon: 'icon-tune',
-        isActive: false,
-      },
-    ];
 
     this.columns = [
       {
@@ -208,8 +207,8 @@ export class AddContractsComponent implements OnInit {
       // /template: this.columnVatid,
     ];
   }
-  ngAfterViewInit(){
-  }
+
+  ngAfterViewInit() {}
   // getFormModel() {
   //   this.cache
   //     .gridViewSetup(
@@ -222,6 +221,47 @@ export class AddContractsComponent implements OnInit {
   //       }
   //     });
   // }
+
+  setDataContract(data) {
+    if (this.action == 'add') {
+      this.contracts = data;
+      this.contracts.recID = Util.uid();
+      this.contracts.projectID = this.projectID;
+      this.contracts.contractDate = new Date();
+      this.contracts.status = '0';
+      this.contracts.effectiveFrom = new Date();
+      this.contracts.useType = '1';
+      this.contracts.pmtMethodID = 'ATM';
+      this.contracts.pmtStatus = '1';
+      this.contracts.delStatus = '1';
+      this.contracts.contractID = 'HD-' + (Math.random()*10000000000).toFixed(0);
+
+      this.contracts.contractType = this.contracts.contractType
+        ? this.contracts.contractType
+        : '1';
+      this.contracts.pmtStatus = this.contracts.pmtStatus
+        ? this.contracts.pmtStatus
+        : '0';
+      this.setCOntractByDataOutput();
+    }
+    if (this.action == 'edit') {
+      this.contracts = data;
+      // this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsLinesInContract(
+        this.contracts?.recID,
+        this.contracts?.quotationID
+      );
+      this.getPayMentByContractID(this.contracts?.recID);
+    }
+    if (this.action == 'copy') {
+      this.contracts = data;
+      this.contracts.recID = Util.uid();
+      delete this.contracts['id'];
+      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getPayMentByContractID(this.contracts?.recID);
+    }
+  }
+
   getFormModel() {
     this.cache
       .gridViewSetup(
@@ -240,6 +280,19 @@ export class AddContractsComponent implements OnInit {
 
   valueChangeText(event) {
     this.contracts[event?.field] = event?.data;
+    if (event?.field == 'contractName') {
+      this.contracts[event?.field] = this.stepService.capitalizeFirstLetter(
+        event?.data
+      );
+    }
+    if (event?.field == 'delPhone' && this.checkPhone) {
+      let isPhone = this.stepService.isValidPhoneNumber(event?.data);
+      if (!isPhone) {
+        this.notiService.notifyCode('RS030');
+        this.checkPhone = !this.checkPhone;
+        return;
+      }
+    }
   }
 
   valueChangeCombobox(event) {
@@ -247,13 +300,13 @@ export class AddContractsComponent implements OnInit {
     if (event?.field == 'dealID' && event?.data) {
       this.getCustomerByDealID(event?.data);
       this.setValueComboboxQuotation();
-      if(!this.contracts.customerID){
+      if (!this.contracts.customerID) {
       }
     }
     if (event?.field == 'quotationID' && event?.data) {
       this.getDataByQuotationID(event?.data);
       this.setValueComboboxDeal();
-      if(!this.contracts.customerID){
+      if (!this.contracts.customerID) {
       }
     }
     if (event?.field == 'customerID' && event?.data) {
@@ -267,39 +320,45 @@ export class AddContractsComponent implements OnInit {
     }
   }
 
-  setValueComboboxDeal(){
+  setValueComboboxDeal() {
     let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
-    if(listDeal){
-      if(this.customerIdOld != this.contracts.customerID){
-          this.contracts.dealID = null;
-          this.inputDeal.ComponentCurrent.dataService.data = [];
+    if (listDeal) {
+      if (this.customerIdOld != this.contracts.customerID) {
+        this.contracts.dealID = null;
+        this.inputDeal.ComponentCurrent.dataService.data = [];
       }
     }
   }
-  setValueComboboxQuotation(){
+
+  setValueComboboxQuotation() {
     let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
-    if(listQoutation){
-      if(this.customerIdOld != this.contracts.customerID){
+    if (listQoutation) {
+      if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.quotationID = null;
         this.inputQuotation.ComponentCurrent.dataService.data = [];
-    }
+      }
     }
   }
 
   changeValueDate(event) {
     this.contracts[event?.field] = new Date(event?.data?.fromDate);
-    if((event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') && this.isLoadDate){
-      const startDate =  new Date(this.contracts['effectiveFrom']);
-      const endDate = new Date(this.contracts['effectiveTo']);     
-      if (endDate && startDate > endDate){
+    if (event?.field == 'effectiveTo' && this.isLoadDate) {
+      const startDate = new Date(this.contracts['effectiveFrom']);
+      const endDate = new Date(this.contracts['effectiveTo']);
+      if (endDate && startDate > endDate) {
         // this.isSaveTimeTask = false;
         this.isLoadDate = !this.isLoadDate;
-        this.notiService.notifyCode('CM010',0, this.view['effectiveTo'], this.view['effectiveFrom']);
+        this.notiService.notifyCode(
+          'CM010',
+          0,
+          this.view['effectiveTo'],
+          this.view['effectiveFrom']
+        );
         return;
       } else {
         // this.isSaveTimeTask = true;
       }
-    }else{
+    } else {
       this.isLoadDate = !this.isLoadDate;
     }
   }
@@ -321,31 +380,6 @@ export class AddContractsComponent implements OnInit {
         map((p) => JSON.parse(p[0])),
         tap((p) => console.log(p))
       );
-  }
-
-  setDataContract(data) {
-    if (this.action == 'add') {
-      this.contracts = data;  
-      this.contracts.recID = Util.uid();
-      this.contracts.projectID = this.projectID;
-      this.contracts.contractDate = new Date();
-      this.contracts.status = '0';
-      this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
-      this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
-      this.setCOntractByDataOutput();
-    }
-    if (this.action == 'edit') {
-      this.contracts = data;
-      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
-      this.getPayMentByContractID(this.contracts?.recID);
-    }
-    if (this.action == 'copy') {
-      this.contracts = data;
-      this.contracts.recID = Util.uid();
-      delete this.contracts['id'];
-      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
-      this.getPayMentByContractID(this.contracts?.recID);
-    }
   }
 
   setCOntractByDataOutput() {
@@ -380,9 +414,16 @@ export class AddContractsComponent implements OnInit {
     this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
       if (res) {
         this.quotations = res[0];
-        this.listQuotationsLine = res[1];
       }
     });
+  }
+
+  getQuotationsLinesInContract(contractID, quotationID) {
+    this.contractService
+      .getQuotationsLinesInContract([contractID || null, quotationID || null])
+      .subscribe((res) => {
+        this.listQuotationsLine = res?.length > 0 ? res : [];
+      });
   }
 
   getPayMentByContractID(contractID) {
@@ -400,12 +441,18 @@ export class AddContractsComponent implements OnInit {
   }
 
   getDataByQuotationID(recID) {
+    this.listQuotationsLineOfContract = this.listQuotationsLine.filter(
+      (quotationsLine) => quotationsLine?.contractID
+    );
     this.contractService.getDataByTransID(recID).subscribe((res) => {
       if (res) {
         let quotation = res[0];
         let quotationsLine = res[1];
         let customer = res[2];
-        this.listQuotationsLine = quotationsLine;
+        this.listQuotationsLine = [
+          ...this.listQuotationsLineOfContract,
+          ...quotationsLine,
+        ];
         this.quotations = quotation;
         this.setDataContractCombobox(customer);
         this.contracts.dealID = quotation?.refID;
@@ -421,7 +468,7 @@ export class AddContractsComponent implements OnInit {
 
   setDataContractCombobox(customer) {
     this.customerIdOld = this.contracts.customerID;
-    this.customer = customer; 
+    this.customer = customer;
     this.customerID = { customerID: customer?.recID };
     this.contracts.customerID = customer?.recID;
     this.contracts.taxCode = customer?.taxCode;
@@ -437,13 +484,28 @@ export class AddContractsComponent implements OnInit {
   handleSaveContract() {
     let message = [];
     for (let key of this.REQUIRE) {
-      if((typeof this.contracts[key] === 'string' && !this.contracts[key].trim()) || !this.contracts[key] || this.contracts[key]?.length === 0) {
+      if (
+        (typeof this.contracts[key] === 'string' &&
+          !this.contracts[key].trim()) ||
+        !this.contracts[key] ||
+        this.contracts[key]?.length === 0
+      ) {
         message.push(this.view[key]);
       }
     }
     if (message.length > 0) {
-      this.notiService.notifyCode('SYS009', 0,'"' + message.join(', ') + ' " ');
-    }else{
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + message.join(', ') + ' " '
+      );
+    } else if (
+      this.contracts?.delPhone &&
+      !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
+    ) {
+      this.notiService.notifyCode('RS030');
+      return;
+    } else {
       switch (this.action) {
         case 'add':
         case 'copy':
@@ -454,14 +516,17 @@ export class AddContractsComponent implements OnInit {
           break;
       }
     }
-    
   }
 
   beforeSave(op: RequestOption) {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddContractsAsync';
-      data = [this.contracts, this.listPaymentAdd];
+      data = [
+        this.contracts,
+        this.listPaymentAdd,
+        this.listQuotationsLineOfContractAdd,
+      ];
     }
     if (this.action == 'edit') {
       op.methodName = 'UpdateContractAsync';
@@ -470,6 +535,7 @@ export class AddContractsComponent implements OnInit {
         this.listPaymentAdd,
         this.listPaymentEdit,
         this.listPaymentDelete,
+        this.listQuotationsLineOfContractAdd,
       ];
     }
     op.data = data;
@@ -492,11 +558,13 @@ export class AddContractsComponent implements OnInit {
           // this.changeDetector.detectChanges();
         });
     } else {
-      this.cmService.addContracts([this.contracts, this.listPaymentAdd]).subscribe((res) => {
-        if (res) {
-          this.dialog.close({ contract: res, action: this.action });
-        }
-      });
+      this.cmService
+        .addContracts([this.contracts, this.listPaymentAdd])
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close({ contract: res, action: this.action });
+          }
+        });
     }
     // console.log(this.contracts);
   }
@@ -596,12 +664,12 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.FormModel = this.fmContractsPayments;
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
       '',
-      600,
+      550,
       400,
       '',
       dataInput,
@@ -610,7 +678,7 @@ export class AddContractsComponent implements OnInit {
     );
 
     popupPayment.closed.subscribe((res) => {
-      if(res){
+      if (res) {
         this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
       }
     });
@@ -636,7 +704,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.FormModel = this.fmContractsPaymentsHistory;
     let popupPayHistory = this.callfunc.openForm(
       PopupViewPaymentHistoryComponent,
@@ -670,7 +738,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.FormModel = formModel;
 
     let popupPaymentHistory = this.callfunc.openForm(
@@ -685,12 +753,47 @@ export class AddContractsComponent implements OnInit {
     );
 
     popupPaymentHistory.closed.subscribe((res) => {
-      if(res){
+      if (res) {
         this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
       }
-      
     });
   }
 
- 
+  eventQuotationLines(e) {
+    this.listQuotationsLine = e?.listQuotationLines;
+    this.quotationLinesAddNew = e?.quotationLinesAddNew;
+    this.quotationLinesEdit = e?.quotationLinesEdit;
+    this.quotationLinesDeleted = e?.quotationLinesDeleted;
+    let quotationLine = this.quotationLinesAddNew.find(
+      (quotationLine) => quotationLine.recID == e?.quotationLineIdNew
+    );
+    if (quotationLine) {
+      quotationLine.contractID = this.contracts?.recID;
+      // quotationLine.costPrice = 50000;
+      this.listQuotationsLineOfContractAdd.push(quotationLine);
+    }
+    console.log(quotationLine);
+    this.loadTotal();
+  }
+
+  loadTotal() {
+    let totals = 0;
+    let totalVAT = 0;
+    let totalDis = 0;
+    let totalSales = 0;
+    if (this.listQuotationsLine?.length > 0) {
+      this.listQuotationsLine.forEach((element) => {
+        //tisnh tong tien
+        totalSales += element['salesAmt'] ?? 0;
+        totals += element['netAmt'] ?? 0;
+        totalVAT += element['vatAmt'] ?? 0;
+        totalDis += element['discAmt'] ?? 0;
+      });
+    }
+
+    this.quotations['totalSalesAmt'] = totalSales;
+    this.quotations['totalAmt'] = totals;
+    this.quotations['totalTaxAmt'] = totalVAT;
+    this.quotations['discAmt'] = totalDis;
+  }
 }

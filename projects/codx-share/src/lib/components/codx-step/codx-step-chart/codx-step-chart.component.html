@@ -1,6 +1,6 @@
 <div class="w-100 d-flex justify-content-end mb-4">
 	<!-- tùy chọn thời gian -->
-	<span class="input-sm">
+	<span class="input-sm" *ngIf="isShowTypeTime">
 	  <codx-input
 		type="valuelist"
 		[crrValue]="crrViewGant"

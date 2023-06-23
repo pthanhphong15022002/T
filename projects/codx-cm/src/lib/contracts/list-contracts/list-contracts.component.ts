@@ -29,8 +29,16 @@ export class ListContractsComponent implements OnInit, OnChanges {
     download: true,
     delete: true,
   };
-  formModel = new FormModel;
   projectID:'';
+
+  formModel: FormModel = {
+      entityName: "CM_Contracts",
+      entityPer: "CM_Contracts",
+      formName: "CMContracts",
+      funcID: "CM0204",
+      gridViewName: "grvCMContracts"
+
+  }
 
   constructor(
     private cache: CacheService,

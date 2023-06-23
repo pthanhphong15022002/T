@@ -14,6 +14,7 @@ import {
   AuthStore,
   ButtonModel,
   DataRequest,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
@@ -92,6 +93,7 @@ export class CodxTasksComponent
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
+  @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
 
   @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
@@ -169,8 +171,8 @@ export class CodxTasksComponent
   type: string = 'Circular';
   // startAngle: number = 0;
   // endAngle: number = 0;
-  width: string = '55';
-  height: string = '55';
+  width: string = '40';
+  height: string = '40';
   min: number = 0;
   max: number = 100;
   color = '#005DC7';
@@ -182,11 +184,12 @@ export class CodxTasksComponent
   // innerRadius2: string = '72';
 
   // theme: string = 'Material';
-  // trackThickness: number = 80;
+  trackThickness: number = 2;
   // cornerRadius: string = 'Round';
-  // progressThickness: number = 10;
-  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  progressThickness: number = 2;
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 200 };
   HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
+  listTaskGoals = [];
 
   constructor(
     inject: Injector,
@@ -462,8 +465,17 @@ export class CodxTasksComponent
             }
           });
           this.views = viewFunc.sort((a, b) => {
-            return b.id - a.id;
+            return a.type - b.type;
           });
+          //Hao da sua core nen cmt lại cai này
+          // let viewModel ;
+          // this.views.forEach((x) => {
+          //   if (x.type == this.viewMode) {
+          //     x.active = true;
+          //     viewModel = x
+          //   }
+          // });
+          // this.view.viewChange(viewModel);
         }
       });
     } else this.views = this.viewsDefault;
@@ -1025,6 +1037,8 @@ export class CodxTasksComponent
             this.notiService.notifyCode('TM009');
 
             if (kanban) kanban.updateCard(taskAction);
+            if (this.itemSelected.status == '90')
+              this.detail.getDataHistoryProgress(this.itemSelected.recID);
           } else this.notiService.notifyCode('SYS021');
         });
     }
@@ -1065,6 +1079,8 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
+        if (this.itemSelected.status == '90')
+          this.detail.getDataHistoryProgress(this.itemSelected.recID);
       } else {
         if (kanban) kanban.updateCard(taskAction);
       }
@@ -1075,7 +1091,6 @@ export class CodxTasksComponent
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
     this.viewCrr = evt?.view?.type;
-
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views) {
@@ -1189,6 +1204,9 @@ export class CodxTasksComponent
 
   receiveMF(e: any) {
     this.clickMF(e.e, e?.data);
+  }
+  receiveChangeMF(e) {
+    this.changeDataMF(e.e, e?.data);
   }
 
   getParam(callback = null) {
@@ -1494,6 +1512,7 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
+        this.detail.getDataHistoryProgress(this.itemSelected.recID);
       }
       this.detectorRef.detectChanges();
     });
@@ -1733,97 +1752,163 @@ export class CodxTasksComponent
 
   changeDataMF(e, data) {
     if (e) {
-      // e.forEach((x) => {
-      //   switch (x.functionID) {
-      //     //tắt duyệt confirm
-      //     case 'TMT02016':
-      //     case 'TMT02017':
-      //       if (data.confirmStatus != '1') x.disabled = true;
-      //       break;
-      //     case 'TMT02019':
-      //     case 'TMT02027':
-      //       if (data.verifyControl == '0' && data.category == '1')
-      //         x.disabled = true;
-      //         break;
-      //   }
-      // });
-
+      // sua ngay 08/06/2023
       e.forEach((x) => {
-        //tắt duyệt confirm
-        if (
-          (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          data.confirmStatus != '1'
-        ) {
-          x.disabled = true;
+        switch (x.functionID) {
+          //tắt duyệt confirm
+          case 'TMT02016':
+          case 'TMT02017':
+            if (data.confirmStatus != '1') x.disabled = true;
+            break;
+          //an gia hạn cong viec
+          case 'TMT02019':
+          case 'TMT02027':
+            if (
+              (data.verifyControl == '0' &&
+                (data.category == '1' ||
+                  (data.owner == data.createdBy && data.category == '2'))) ||
+              data.status == '80' ||
+              data.status == '90' ||
+              data.extendControl == '0'
+            )
+              x.disabled = true;
+            break;
+          //tắt duyệt confirm
+          case 'TMT02016':
+          case 'TMT02017':
+            if (data.confirmStatus != '1') x.disabled = true;
+            break;
+          //tắt duyệt xác nhận:
+          case 'TMT04032':
+          case 'TMT04031':
+            if (data.verifyStatus != '1') x.disabled = true;
+            break;
+          //tắt duyệt đánh giá
+          case 'TMT04021':
+          case 'TMT04022':
+          case 'TMT04023':
+            if (data.approveStatus != '3') x.disabled = true;
+            break;
+          //an giao viec
+          case 'TMT02015':
+          case 'TMT02025':
+            if (data.status == '90' || data.status == '80') x.disabled = true;
+            break;
+          case 'SYS005':
+            x.disabled = true;
+            break;
+          //an cap nhat tien do khi hoan tat
+          case 'TMT02018':
+          case 'TMT02026':
+          case 'TMT02035':
+            if (data.status == '90' || data.status == '80') x.disabled = true;
+            break;
+          //an voi ca TMT026
+          case 'SYS02':
+          case 'SYS03':
+            if (
+              this.funcID == 'TMT0402' ||
+              this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0206' ||
+              this.funcID == 'MWP0063' ||
+              ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
+                data.category == '1' &&
+                data.createdBy != this.user?.userID &&
+                !this.user?.administrator)
+            )
+              x.disabled = true;
+            break;
+          case 'SYS04':
+            if (
+              this.funcID == 'TMT0206' ||
+              this.funcID == 'MWP0063' ||
+              this.funcID == 'TMT0402' ||
+              this.funcID == 'TMT0401'
+            )
+              x.disabled = true;
+            break;
         }
-        if (
-          (x.functionID == 'TMT02019' ||  x.functionID == 'TMT02027')&&
-          data.verifyControl == '0' &&
-          data.category == '1'
-        ) {
-          x.disabled = true;
-        }
-        //tắt duyệt xác nhận
-        if (
-          (x.functionID == 'TMT04032' || x.functionID == 'TMT04031') &&
-          data.verifyStatus != '1'
-        ) {
-          x.disabled = true;
-        }
-        //tắt duyệt đánh giá
-        if (
-          (x.functionID == 'TMT04021' ||
-            x.functionID == 'TMT04022' ||
-            x.functionID == 'TMT04023') &&
-          data.approveStatus != '3'
-        ) {
-          x.disabled = true;
-        }
-        //an giao viec
-        if (x.functionID == 'SYS005') {
-          x.disabled = true;
-        }
-        if (
-          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
-          data.status == '90'
-        ) {
-          x.disabled = true;
-        }
-        //an cap nhat tien do khi hoan tat
-        if (
-          (x.functionID == 'TMT02018' ||
-            x.functionID == 'TMT02026' ||
-            x.functionID == 'TMT02035') &&
-          data.status == '90'
-        ) {
-          x.disabled = true;
-        }
-        //an voi ca TMT026
-        if (
-          (x.functionID == 'SYS02' ||
-            x.functionID == 'SYS03' ||
-            x.functionID == 'SYS04') &&
-          (this.funcID == 'TMT0206' || this.funcID == 'MWP0063') // Hảo sửa k hiện more function 3/1/2023 => ok lỗi do anh đặt điều kiện sai nên a bật lại :v
-        ) {
-          x.disabled = true;
-        }
-        //an voi ca TMT03011
-        if (
-          (this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
-          data.category == '1' &&
-          data.createdBy != this.user?.userID &&
-          !this.user?.administrator &&
-          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
-        ) {
-          x.disabled = true;
-        }
-        //an gia hạn cong viec
-        if (
-          (x.functionID == 'TMT02019' || x.functionID == 'TMT02027' ) &&
-          (data.status == '80' || data.status == '90' || data.extendControl=="0")
-        )
-          x.disabled = true;
       });
+
+      //cu chua clean
+      // e.forEach((x) => {
+      //   //tắt duyệt confirm
+      //   if (
+      //     (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
+      //     data.confirmStatus != '1'
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   if (
+      //     (x.functionID == 'TMT02019' || x.functionID == 'TMT02027') &&
+      //     data.verifyControl == '0' &&
+      //     data.category == '1'
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   //tắt duyệt xác nhận
+      //   if (
+      //     (x.functionID == 'TMT04032' || x.functionID == 'TMT04031') &&
+      //     data.verifyStatus != '1'
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   //tắt duyệt đánh giá
+      //   if (
+      //     (x.functionID == 'TMT04021' ||
+      //       x.functionID == 'TMT04022' ||
+      //       x.functionID == 'TMT04023') &&
+      //     data.approveStatus != '3'
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   //an giao viec
+      //   if (x.functionID == 'SYS005') {
+      //     x.disabled = true;
+      //   }
+      //   if (
+      //     (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+      //     data.status == '90'
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   //an cap nhat tien do khi hoan tat
+      //   if (
+      //     (x.functionID == 'TMT02018' ||
+      //       x.functionID == 'TMT02026' ||
+      //       x.functionID == 'TMT02035') &&
+      //     (data.status == '90' || data.status == '80')
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   //an voi ca TMT026
+      //   if (
+      //     (x.functionID == 'SYS02' ||
+      //       x.functionID == 'SYS03' ||
+      //       x.functionID == 'SYS04') &&
+      //     (this.funcID == 'TMT0206' || this.funcID == 'MWP0063') // Hảo sửa k hiện more function 3/1/2023 => ok lỗi do anh đặt điều kiện sai nên a bật lại :v
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   //an voi ca TMT03011
+      //   if (
+      //     (this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
+      //     data.category == '1' &&
+      //     data.createdBy != this.user?.userID &&
+      //     !this.user?.administrator &&
+      //     (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+      //   ) {
+      //     x.disabled = true;
+      //   }
+      //   //an gia hạn cong viec
+      //   if (
+      //     (x.functionID == 'TMT02019' || x.functionID == 'TMT02027') &&
+      //     (data.status == '80' ||
+      //       data.status == '90' ||
+      //       data.extendControl == '0')
+      //   )
+      //     x.disabled = true;
+      // });
     }
   }
 
@@ -2083,5 +2168,25 @@ export class CodxTasksComponent
   }
   genData(por) {
     return Number.parseInt(por) ?? 0;
+  }
+
+  openPopupTodoList(taskID) {
+    this.tmSv.getListTaskGoad(taskID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.listTaskGoals = res;
+        let option = new DialogModel();
+        //option.zIndex = 999;
+        let popup = this.callfc.openForm(
+          this.popupToDoList,
+          '',
+          400,
+          500,
+          '',
+          null,
+          '',
+          option
+        );
+      }
+    });
   }
 }

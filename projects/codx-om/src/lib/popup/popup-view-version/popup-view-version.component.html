@@ -1,46 +1,68 @@
-<codx-form
+<codx-form #form
   [headerText]="headerText"
   [dialog]="dialogRef"
-  [bodyCss]="'bgEDEDED okr-add-body'"
+  [bodyCss]="''"
   [body]="body"
   [footer]="footer"
-></codx-form>
+  *ngIf="isAfterRender"
+>
 
 <ng-template #body>
-  <div *ngFor="let version of versions">
-    <div class="px-4 py-2">
-      <div class="d-flex justify-content-between">
-        <div>
-          <div class="d-flex align-item-center">
-            <div class="icon-restore"></div>
-            <div class="ms-2">Phiên bản: V2.0</div>
+  <div *ngIf="dataPlan?.versions?.length>0 && versions?.length>0 ;else defaultEmpty ">
+    <div *ngFor="let version of versions">
+      <div class="px-4 pb-4">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="d-flex align-item-center">
+              <div class="icon-restore"></div>
+              <div class="ms-2 d-flex flex-row">
+                <codx-label name="lblPlanVersion" default="Phiên bản:" [formModel]="form?.formModel"></codx-label> 
+                <span class="ps-2">{{version?.versionName}} </span>
+              </div>
+            </div>
+            <div class="">
+              <codx-label name="lblPlanVersion" default="Người cập nhật:" [formModel]="form?.formModel"></codx-label> 
+              <span class="ps-2 text-primary" [innerHTML]="version?.createdBy | formatvalue : okrFM?.krFM : 'owner' | async "></span>
+            </div>
+            <div class="ps-3">
+              {{version?.comment}}
+            </div>
+            <span role="button" (click)="showOldVersion(version?.planID)"><codx-label class="text-primary" name="lblViewDetail" default="Xem chi tiết"></codx-label></span>
           </div>
-          <div style="margin-left: 24px; color: #3799ff">
-            Cập nhật bởi, Lê Phạm Hoài Thương | 1 ngày trước
+          <div>
+            <codx-label name="lblActivedOn" default="Hiệu lực" [formModel]="form?.formModel"></codx-label> 
+            <div>{{ version?.activedOn| fmDT : "dmy" }}</div>
           </div>
-          <div style="margin-left: 24px">
-            Bổ sung thêm một số bước công việc
-          </div>
-        </div>
-        <div>
-          <div>Hiệu lực</div>
-          <div>01/01/2022</div>
         </div>
       </div>
     </div>
   </div>
+  
 </ng-template>
+</codx-form>
 
 <ng-template #footer>
   <div class="d-flex flex-column mb-4">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">
+      <!-- <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label
           name="lblSave"
           default="Lưu"
           [formModel]="formModel"
         ></codx-label>
-      </button>
+      </button> -->
+    </div>
+  </div>
+</ng-template>
+<ng-template #defaultEmpty>
+  <div class="container h-100 ">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center  pt-10">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>

@@ -35,13 +35,11 @@ export class CodxAddTaskComponent implements OnInit {
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   dialog!: DialogRef;
-  title = '';
-  taskType = '';
+  typeTask ;
   isEditTimeDefault = false;
   vllShare = 'BP021';
   linkQuesiton = 'http://';
   listGroup = [];
-  formModelMenu: FormModel;
   recIdEmail = '';
   isNewEmails = true;
   stepsTasks: DP_Instances_Steps_Tasks;
@@ -64,11 +62,13 @@ export class CodxAddTaskComponent implements OnInit {
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
   groupTask;
+  titleName = '';
   
   isLoadDate = false;
   isTaskDefault = false;
   startDateParent: Date;
   endDateParent: Date;
+  isSave = true;
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -93,39 +93,36 @@ export class CodxAddTaskComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.action = dt?.data?.action;
-    this.title = dt?.data?.taskType?.text;
-    this.taskType = dt?.data?.taskType?.value;
+    this.typeTask = dt?.data?.taskType;
     this.step = dt?.data?.step;
     this.listGroup = dt?.data?.listGroup;
     this.listTask = dt?.data?.listTask;
     this.stepsTasks = dt?.data?.dataTask;
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.groupTaskID = dt?.data?.groupTaskID;
+    this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+    this.titleName = dt?.data?.titleName || '';
   }
 
   ngOnInit(): void {
+    this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
     this.roles = this.stepsTasks['roles'] || [];
-    this.startDateParent = new Date(this.step['startDate']);
-    this.endDateParent = new Date(this.step['endDate']);
-    if(!this.stepsTasks['taskGroupID']){
-      this.stepsTasks['startDate'] = this.startDateParent;
+    this.startDateParent = new Date(this.step?.startDate || new Date);
+    this.endDateParent = new Date(this.step?.endDate || null);
+    if(!this.stepsTasks?.taskGroupID){
+      this.stepsTasks.startDate = this.startDateParent;
     }
     this.getFormModel();
-    if (this.stepsTasks['parentID']) {
-      this.litsParentID = this.stepsTasks['parentID'].split(';');
+    if (this.stepsTasks?.parentID) {
+      this.litsParentID = this.stepsTasks?.parentID.split(';');
     }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     this.participant = this.roles?.filter((role) => role.roleType === 'P');
-    // if(this.taskType == "M"){
-    // }else{
-    //   let role = new DP_Instances_Steps_Tasks_Roles();
-    //   this.setRole(role);
-    //   this.participant = [role]
-    // }
     if(this.action == 'add'){
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
       this.owner = [role]
+      this.stepsTasks.owner = this.owner?.[0].objectID;
     }
   }
 
@@ -156,6 +153,7 @@ export class CodxAddTaskComponent implements OnInit {
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
+
   valueChangeCombobox(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
@@ -176,49 +174,54 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
     }
   }
+
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
+
   changeValueDate(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
-    if(this.isLoadDate){
+    if(this.step){
+      if(this.isLoadDate){
+        this.isLoadDate = !this.isLoadDate;
+        return;
+      }
+      const startDate =  new Date(this.stepsTasks['startDate']);
+      const endDate = new Date(this.stepsTasks['endDate']);
+     
+      if (endDate && startDate > endDate){
+        this.isSaveTimeTask = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('DP019');
+        this.stepsTasks['durationHour'] = 0;
+        this.stepsTasks['durationDay'] = 0;
+        return;
+      } else {
+        this.isSaveTimeTask = true;
+      }
+  
+      if (endDate > this.endDateParent) {
+        this.isSaveTimeGroup = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('DP020');
+        this.stepsTasks['durationHour'] = 0;
+        this.stepsTasks['durationDay'] = 0;
+        return;
+      }else{
+        this.isSaveTimeGroup = true;
+      }
+      
+      if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
+        this.isSaveTimeGroup = false;
+        this.isLoadDate = !this.isLoadDate;
+        this.notiService.notifyCode('DP020');
+        this.stepsTasks['durationHour'] = 0;
+        this.stepsTasks['durationDay'] = 0;
+        return;
+      }else{
+        this.isSaveTimeGroup = true;
+      }
       this.isLoadDate = !this.isLoadDate;
-      return;
-    }
-    const startDate =  new Date(this.stepsTasks['startDate']);
-    const endDate = new Date(this.stepsTasks['endDate']);
-   
-    if (endDate && startDate > endDate){
-      this.isSaveTimeTask = false;
-      this.isLoadDate = !this.isLoadDate;
-      this.notiService.notifyCode('DP019');
-      this.stepsTasks['durationHour'] = 0;
-      this.stepsTasks['durationDay'] = 0;
-      return;
-    } else {
-      this.isSaveTimeTask = true;
-    }
-
-    if (endDate > this.endDateParent) {
-      this.isSaveTimeGroup = false;
-      this.isLoadDate = !this.isLoadDate;
-      this.notiService.notifyCode('DP020');
-      this.stepsTasks['durationHour'] = 0;
-      this.stepsTasks['durationDay'] = 0;
-      return;
-    }else{
-      this.isSaveTimeGroup = true;
-    }
-    
-    if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
-      this.isSaveTimeGroup = false;
-      this.isLoadDate = !this.isLoadDate;
-      this.notiService.notifyCode('DP020');
-      this.stepsTasks['durationHour'] = 0;
-      this.stepsTasks['durationDay'] = 0;
-      return;
-    }else{
-      this.isSaveTimeGroup = true;
     }
     if(this.stepsTasks['startDate'] && this.stepsTasks['endDate']){
       const endDate = new Date(this.stepsTasks['endDate']);
@@ -241,10 +244,9 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks['durationHour'] = 0;
       this.stepsTasks['durationDay'] = 0;
     }
-    this.isLoadDate = !this.isLoadDate;
   }
 
-  changeRoler(e, datas, type) {    
+  changeRoler(e, type) {    
     if (!e || e?.length == 0) return;
     let listUser = e || [];
     let listRole = [];
@@ -257,7 +259,24 @@ export class CodxAddTaskComponent implements OnInit {
           taskID: this.stepsTasks['recID'],
         });
     });
-    this.participant = listRole;
+    if(type == 'P'){
+      this.participant = listRole;
+      this.removeRoleDuplicate();
+    }else if(type == "O"){
+      this.owner = listRole;
+      this.stepsTasks['owner']= this.owner?.[0]?.objectID;
+      this.removeRoleDuplicate();
+    }
+  }
+
+  removeRoleDuplicate(){
+    let roleTypeO = this.owner[0];
+      if(roleTypeO){
+        let index = this.participant?.findIndex(p => p.objectID == roleTypeO?.objectID);
+        if(index >= 0){
+          this.participant?.splice(index,1);
+        }
+      }
   }
 
   onDeleteOwner(objectID, data) {
@@ -312,29 +331,41 @@ export class CodxAddTaskComponent implements OnInit {
       this.editTask(task);
     }
   }
+
   addTask(task){
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'AddTaskStepAsync',
-      task
-    ).subscribe(res => {
-      if(res){        
-        this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
-      }
-    });
+    if(this.isSave){
+      this.api.exec<any>(
+        'DP',
+        'InstanceStepsBusiness',
+        'AddTaskStepAsync',
+        task
+      ).subscribe(res => {
+        if(res){        
+          this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
+        }
+      });
+    }else{
+      this.dialog.close(task);
+    }
+    
   }
+
   editTask(task){
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'UpdateTaskStepAsync',
-      task
-    ).subscribe(res => {
-      if(res){        
-        this.dialog.close({ task:res, progressGroup: null, progressStep: null });
-      }
-    });
+    if(this.isSave){
+      this.api.exec<any>(
+        'DP',
+        'InstanceStepsBusiness',
+        'UpdateTaskStepAsync',
+        task
+      ).subscribe(res => {
+        if(res){        
+          this.dialog.close({ task:res, progressGroup: null, progressStep: null });
+        }
+      });
+    }else{
+      this.dialog.close(task);
+    }
+   
   }
 
   handelMail() {

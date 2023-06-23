@@ -19,59 +19,100 @@
     [formModel]="formModel"
     [body]="body"
     [footer]="footer"
+    [hideMF]="hideMF"
     (clickMF)="clickMF($event, itemSelected)"
     (changeDataMF)="changeDataMF($event, itemSelected)"
     [dataItem]="itemSelected"
   >
     <ng-template #header>
-      <div class="d-flex align-items-top justify-content-between mb-1">
-        <div class="d-flex align-items-center w-100">
-          <span
-            class="fw-bold text-dark fs-5"
-            [innerHTML]="
-              itemSelected.quotationName
-                | formatvalue : formModel : 'quotationName'
-                | async
-            "
-          ></span>
-          <span class="icon-i-dot icon-22 text-gray-700"></span>
-          <span class="fs-5 text-gray-600"
-            [innerHTML]="
-              itemSelected.quotationID
-                | formatvalue : formModel : 'quotationID'
-                | async
-            "
-          ></span>
-        </div>
-        <div class="d-flex align-items-center justify-content-end ms-5">
-          <span>
-            <codx-vll
-            *ngIf="vllStatus"
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="itemSelected?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-          </span>
-          <codx-imgs
-            [width]="25"
-            [objectId]="itemSelected.createdBy"
-            ojectType="AD_Users"
-            [numberImages]="1"
-          >
-          </codx-imgs>
+      <div class="container_detail mt-1">
+        <div class="d-flex justify-content-between mb-2">
+          <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-start">
+              <div class="me-4">
+                <codx-img
+                  [objectId]="itemSelected?.customerID"
+                  [imgOn]="itemSelected?.modifiedOn"
+                  [objectType]="'CM_Customers'"
+                  [referType]="'avt'"
+                  [width]="35"
+                >
+                </codx-img>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="fw-bold text-dark fs-3 mb-1">
+                  <span
+                    [innerHTML]="
+                      itemSelected?.customerID
+                        | formatvalue : formModel : 'customerID'
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <span
+                    class="text-gray-600 line-clamp-menu"
+                    [ngbTooltip]="itemSelected?.quotationName"
+                    [innerHTML]="
+                      itemSelected?.quotationName
+                        | formatvalue : formModel : 'quotationName'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ms-5 d-flex justify-content-between">
+            <div class="d-flex flex-column">
+              <div class="d-flex flex-row">
+                <div class="d-flex align-items-top justify-content-end fs-3">
+                  <span
+                    class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+                  ></span>
+                  <span
+                    class="fw-bold me-1"
+                    #dealValue
+                    [innerHTML]="
+                      itemSelected?.totalAmt
+                        | formatvalue : formModel : 'totalAmt'
+                        | async
+                    "
+                  ></span>
+                  <span
+                    class="fw-bold"
+                    #dealValue
+                    [innerHTML]="
+                      itemSelected?.currencyID
+                        | formatvalue : formModel : 'currencyID'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+              <div class="d-flex align-items-top justify-content-end fs-3">
+                <codx-vll
+                  *ngIf="vllStatus"
+                  [name]="vllStatus"
+                  [field]="'Status'"
+                  [value]="itemSelected?.status"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-sm"
+                >
+                </codx-vll>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </ng-template>
     <ng-template #body>
-      <div class="container_detail mt-2">
+      <div class="container_detail mt-3">
         <div class="d-flex justify-content-between">
-          <div class="d-flex flex-column w-100">
-            <div class="d-flex align-items-center mb-2">
-              <div class="me-5 d-flex align-items-center">
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-wrap align-items-center">
+              <div class="me-4 d-flex align-items-center mb-1">
                 <span class="fw-bold text-dark">
                   <codx-label
                     class="label-colon"
@@ -79,7 +120,8 @@
                     [formModel]="formModel"
                   ></codx-label
                 ></span>
-                <span class="text-gray-700"
+                <span
+                  class="text-gray-700"
                   [innerHTML]="
                     itemSelected?.versionName
                       | formatvalue : formModel : 'versionName'
@@ -87,199 +129,170 @@
                   "
                 ></span>
               </div>
-              <div class="me-5 d-flex align-items-center">
+              <div class="me-4 d-flex align-items-center mb-1">
                 <span class="fw-bold text-dark">
                   <codx-label
                     class="label-colon"
-                    fiedName="CreatedOn"
+                    fiedName="QuotationID"
                     [formModel]="formModel"
                   ></codx-label
                 ></span>
-                <span class="text-gray-700"
+                <span
+                  class="text-gray-700"
                   [innerHTML]="
-                    itemSelected?.createdOn
-                      | formatvalue : formModel : 'createdOn'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="fw-bold text-dark">
-                  <codx-label
-                    class="label-colon"
-                    fiedName="Deadline"
-                    [formModel]="formModel"
-                  ></codx-label
-                ></span>
-                <span class="text-gray-700"
-                  [innerHTML]="
-                    itemSelected?.deadline
-                      | formatvalue : formModel : 'deadline'
+                    itemSelected.quotationID
+                      | formatvalue : formModel : 'quotationID'
                       | async
                   "
                 ></span>
               </div>
             </div>
-            
-            <div class="d-flex flex-column">
-              <div class="d-flex align-items-center mb-1">
-                <span class="fw-bold text-dark text-nowrap">
-                  <codx-label
-                    class="label-colon"
-                    fiedName="RefID"
-                    [formModel]="formModel"
-                  ></codx-label
-                ></span>
-                <span class="text-gray-700"
-                  [innerHTML]="
-                    itemSelected?.refID
-                      | formatvalue : formModel : 'refID'
-                      | async
-                  "
-                ></span>
-              </div>
-              <div class="d-flex align-items-center mb-1">
-                <span class="text-dark fw-bold text-nowrap">
-                  <codx-label
-                    class="label-colon"
-                    fiedName="CustomerID"
-                    [formModel]="formModel"
-                  ></codx-label
-                ></span>
-                <span
-                  class="icon-corporate_fare text-primary icon-16 me-2"
-                ></span>
-                <span
-                  [innerHTML]="
-                    itemSelected?.customerID
-                      | formatvalue : formModel : 'customerID'
-                      | async
-                  "
-                ></span>
-              </div>
+          </div>
 
-            </div>
+          <div class="d-flex me-2">
+            <span class="icon-16 icon-av_timer me-1"></span>
+            <span
+              class="text-gray-700"
+              [innerHTML]="
+                itemSelected.deadline
+                  | formatvalue : formModel : 'deadline'
+                  | async
+              "
+            ></span>
           </div>
-          <div class="d-flex flex-column w-150px min-w-150px">
-            
-            <div class="d-flex align-items-center"></div>
-            <div class="d-flex justify-content-end align-items-center mb-1">
-              <span class="text-dark fw-bold">
-                <codx-label
-                  class="label-colon"
-                  fiedName="CurrencyID"
-                  [formModel]="formModel"
-                ></codx-label
-              ></span>
-              <span class="text-gray-700"
-                [innerHTML]="
-                  itemSelected?.currencyID
-                    | formatvalue : formModel : 'currencyID'
-                    | async
-                "
-              ></span>
-            </div>
-            <div class="d-flex justify-content-end align-items-center mb-1">
-              <span class="text-dark fw-bold">
-                <codx-label
-                  class="label-colon"
-                  fiedName="ExchangeRate"
-                  [formModel]="formModel"
-                ></codx-label
-              ></span>
-              <span class="text-gray-700"
-                [innerHTML]="
-                  itemSelected?.exchangeRate
-                    | formatvalue : formModel : 'exchangeRate'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-          
         </div>
-
-        <div *ngIf="contact" class="d-flex flex-grow-1 mt-2 mb-2">
-          <div class="me-3">
-            <codx-img
-              [referType]="'avt'"
-              [width]="40"
-              [objectId]="itemSelected?.contactID"
-              objectType="CM_Contacts"
-              [imgOn]="contact?.modifiedOn"
-              [objectName]="contact?.contactName"
-            >
-            </codx-img>
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-top justify-content-between mb-1">
+            <div class="d-flex align-items-center mb-1">
+              <span class="fw-bold text-dark text-nowrap">
+                <codx-label
+                  class="label-colon"
+                  fiedName="RefID"
+                  [formModel]="formModel"
+                ></codx-label
+              ></span>
+              <span
+                class="text-gray-700"
+                [innerHTML]="
+                  itemSelected?.refID
+                    | formatvalue : formModel : 'refID'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
-          <div class="d-flex flex-column flex-grow-1">
-            <div class="d-flex justify-content-between">
-              <div class="d-flex flex-column">
-                <div class="fw-bold fs-6 text-dark mb-1">
-                  <span
-                    #contactName
-                    [innerHTML]="
-                      contact?.contactName
-                        | formatvalue
-                          : formModel
-                          : 'contactName'
-                          : contactName
-                          : 'CMContacts'
-                          : 'grvCmContacts'
-                        | async
-                    "
-                  ></span>
-                </div>
-                
-                <ng-container>
-                  <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center me-5">
-                      <span
-                        class="icon-phone_android icon-16 text-gray-600 me-1"
-                      ></span>
-                      <div div class="text-gray-700">
-                        <span
-                          #phone
-                          [innerHTML]="
-                            contact?.mobile
-                              | formatvalue
-                                : formModel
-                                : 'mobile'
-                                : phone
-                                : 'CMContacts'
-                                : 'grvCmContacts'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <span
-                        class="icon-email icon-16 text-gray-600 me-1"
-                      ></span>
-                      <div class="text-gray-700">
-                        <span
-                          #email
-                          [innerHTML]="
-                            contact?.personalEmail
-                              | formatvalue
-                                : formModel
-                                : 'personalEmail'
-                                : email
-                                : 'CMContacts'
-                                : 'grvCmContacts'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
+        </div>
+        <div class="d-flex align-items-top justify-content-between mb-1">
+          <div>
+            <div class="text-dark fw-bold text-nowrap">
+              <codx-label
+                class="label-colon"
+                fiedName="contactID"
+                [formModel]="formModel"
+                [setRequire]="false"
+              ></codx-label>
+            </div>
+            <div *ngIf="contact" class="d-flex flex-grow-1 mt-2 mb-2">
+              <div class="me-3">
+                <codx-img
+                  [referType]="'avt'"
+                  [width]="40"
+                  [objectId]="itemSelected?.contactID"
+                  objectType="CM_Contacts"
+                  [imgOn]="contact?.modifiedOn"
+                  [objectName]="contact?.contactName"
+                >
+                </codx-img>
               </div>
+              <div class="d-flex flex-column flex-grow-1">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex flex-column">
+                    <div class="fw-bold fs-6 text-dark mb-1">
+                      <span
+                        #contactName
+                        [innerHTML]="
+                          contact?.contactName
+                            | formatvalue
+                              : formModel
+                              : 'contactName'
+                              : contactName
+                              : 'CMContacts'
+                              : 'grvCmContacts'
+                            | async
+                        "
+                      ></span>
+                    </div>
+
+                    <ng-container>
+                      <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center me-5">
+                          <span
+                            class="icon-phone_android icon-16 text-gray-600 me-1"
+                          ></span>
+                          <div div class="text-gray-700">
+                            <span
+                              #phone
+                              [innerHTML]="
+                                contact?.mobile
+                                  | formatvalue
+                                    : formModel
+                                    : 'mobile'
+                                    : phone
+                                    : 'CMContacts'
+                                    : 'grvCmContacts'
+                                  | async
+                              "
+                            ></span>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <span
+                            class="icon-email icon-16 text-gray-600 me-1"
+                          ></span>
+                          <div class="text-gray-700">
+                            <span
+                              #email
+                              [innerHTML]="
+                                contact?.personalEmail
+                                  | formatvalue
+                                    : formModel
+                                    : 'personalEmail'
+                                    : email
+                                    : 'CMContacts'
+                                    : 'grvCmContacts'
+                                  | async
+                              "
+                            ></span>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="text-dark fw-bold text-nowrap">
+              <codx-label
+                class="label-colon"
+                fiedName="createdBy"
+                [formModel]="formModel"
+                [setRequire]="false"
+              ></codx-label>
+            </div>
+            <div>
+              <codx-imgs
+                [width]="35"
+                [objectId]="itemSelected.createdBy"
+                ojectType="AD_Users"
+                [numberImages]="1"
+              >
+              </codx-imgs>
             </div>
           </div>
         </div>
       </div>
-
       <div class="mt-5 mb-2 text-primary fs-6 fw-bold">
         <codx-label
           name="lblTaskName"
@@ -288,27 +301,13 @@
         >
         </codx-label>
       </div>
+      <codx-quotations-lines
+        #viewQuotationsLine
+        [listQuotationLines]="dataSource"
+        [isViewTemp]="true"
+      ></codx-quotations-lines>
 
-      <codx-gridview-v2
-        #gridQuationsLines
-        service="CM"
-        [formName]="fmQuotationLines.formName"
-        [gridViewName]="fmQuotationLines.gridViewName"
-        [entityName]="fmQuotationLines.entityName"
-        [hideMoreFunc]="'1'"
-        [contentEditable]="false"
-        [allowFiltering]="true"
-        [allowSorting]="true"
-        [dataSource]="dataSource"
-        [autoLoad]="false"
-        rowHeight="40"
-        [height]="'auto'"
-        predicates="TransID=@0"
-        [dataValues]="itemSelected.recID"
-      ></codx-gridview-v2>
-
-      <div #tabsNote class="mt-3"> 
-        <!-- d-flex justify-content-between -->
+      <div #tabsNote class="mt-3">
         <div class="form-group w-100">
           <codx-label fiedName="Memo" [formModel]="formModel"></codx-label>
           <div
@@ -316,123 +315,14 @@
             *ngIf="itemSelected?.memo"
             [innerHTML]="sanitizer.bypassSecurityTrustHtml(itemSelected?.memo)"
           ></div>
-          <div class="text-gray-700 mb-1"
+          <div
+            class="text-gray-700 mb-1"
             *ngIf="!itemSelected?.memo"
             [innerHTML]="
               itemSelected?.memo | formatvalue : formModel : 'memo' | async
             "
           ></div>
         </div>
-        <!-- <div class="w-300px min-w-300px ms-6">
-          <div class="d-flex align-items-center">
-            <div class="fw-bold text-dark">
-              <codx-label
-                class="label-colon"
-                fiedName="TotalAmt"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div class="d-flex align-items-center text-gray-700">
-              <span
-                class="me-1"
-                [innerHTML]="
-                itemSelected.totalSalesAmt
-                    | formatvalue : formModel : 'totalSalesAmt'
-                    | async
-                "
-              ></span>
-              <span
-                class="codx-label"
-                [innerHTML]="
-                itemSelected.currencyID
-                    | formatvalue : formModel : 'currencyID'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-          <div class="d-flex align-items-center">
-            <div class="fw-bold text-dark">
-              <codx-label
-                class="label-colon"
-                fiedName="DiscAmt"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div class="d-flex align-items-center text-gray-700">
-              <span
-                class="me-1"
-                [innerHTML]="
-                itemSelected.discAmt
-                    | formatvalue : formModel : 'DiscAmt'
-                    | async
-                "
-              ></span>
-              <span
-                class="codx-label"
-                [innerHTML]="
-                itemSelected.currencyID
-                    | formatvalue : formModel : 'currencyID'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-          <div class="d-flex align-items-center">
-            <div class="fw-bold text-dark">
-              <codx-label
-                class="label-colon"
-                fiedName="totalTaxAmt"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div class="d-flex align-items-center text-gray-700">
-              <span
-                class="me-1"
-                [innerHTML]="
-                itemSelected?.totalTaxAmt
-                    | formatvalue : formModel : 'totalTaxAmt'
-                    | async
-                "
-              ></span>
-              <span
-                class="codx-label"
-                [innerHTML]="
-                itemSelected.currencyID
-                    | formatvalue : formModel : 'currencyID'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-          <div class="d-flex align-items-center">
-            <div class="fw-bold text-dark">
-              <codx-label
-                class="label-colon text-danger"
-                fiedName="TotalAmt"
-                [formModel]="formModel"
-              ></codx-label>
-            </div>
-            <div class="d-flex align-items-center">
-              <span
-                class="me-3"
-                [innerHTML]="
-                itemSelected.totalAmt
-                    | formatvalue : formModel : 'TotalAmt'
-                    | async
-                "
-              ></span>
-              <span
-                class="codx-label"
-                [innerHTML]="
-                itemSelected.currencyID
-                    | formatvalue : formModel : 'currencyID'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-        </div> -->
       </div>
     </ng-template>
 
@@ -452,6 +342,8 @@
   <list-contracts
     [quotationID]="itemSelected?.recID"
     [listContract]="listContract"
-    [type]="'quotation'">
-  ></list-contracts>
+    [type]="'quotation'"
+  >
+    </list-contracts
+  >
 </ng-template>

@@ -88,6 +88,7 @@ export class PopupAddKRComponent extends UIComponent {
     ) {
       this.typePlan = this.oldKR.plan;
     }
+    
     this.curUser = authStore.get();
     this.oldPlan = this.kr?.plan;
   }
@@ -225,23 +226,7 @@ export class PopupAddKRComponent extends UIComponent {
 
     if (this.kr.targets?.length == 0 || this.kr.targets == null) {
       this.calculatorTarget(this.kr?.plan);
-      this.onSaveTarget();
-    } else {
-      this.kr.targets = [];
-      for (let i = 0; i < this.editTargets.length; i++) {
-        this.kr.targets.push({ ...this.editTargets[i] });
-      }
-    }
-    // this.fGroupAddKR.patchValue(this.kr);
-    //   if (this.fGroupAddKR.invalid == true) {
-    //   this.codxOmService.notifyInvalid(
-    //     this.fGroupAddKR,
-    //     this.formModel
-    //   );
-    //   return;
-    // }
-    //tính lại Targets cho KR
-
+    } 
     if (
       this.funcType == OMCONST.MFUNCID.Add ||
       this.funcType == OMCONST.MFUNCID.Copy
@@ -314,7 +299,7 @@ export class PopupAddKRComponent extends UIComponent {
 
   calculatorTarget(planType: any) {
     if (this.kr?.target && this.kr?.plan) {
-      this.editTargets = [];
+      this.kr.targets = [];
       this.planVLL = [];
       if (planType == OMCONST.VLL.Plan.Month) {
         this.planVLL = this.monthVLL?.datas;
@@ -331,7 +316,7 @@ export class PopupAddKRComponent extends UIComponent {
           tmpTarget.okrid = this.kr?.recID;
           tmpTarget.target = this.kr.target / this.planVLL.length;
           tmpTarget.edited = false;
-          this.editTargets.push(tmpTarget);
+          this.kr.targets.push(tmpTarget);
         }
         this.detectorRef.detectChanges();
       }
@@ -339,10 +324,6 @@ export class PopupAddKRComponent extends UIComponent {
   }
 
   closeEditTargets(dialog: any) {
-    // this.kr.targets = [];
-    // for (let i = 0; i < this.editTargets.length; i++) {
-    //   this.kr.targets.push({ ...this.editTargets[i] });
-    // }
     dialog.close();
   }
 
@@ -352,6 +333,7 @@ export class PopupAddKRComponent extends UIComponent {
     } else {
       this.kr = { ...this.groupModel?.krModel };
     }
+    this.kr.checkInControl ="0"
     this.kr.transID = this.okrPlan?.recID;
   }
   fullTargets(planVLL: any, targets: any, plan: string) {
@@ -375,12 +357,7 @@ export class PopupAddKRComponent extends UIComponent {
       this.kr?.plan == OMCONST.VLL.Plan.Month
         ? this.monthVLL?.datas
         : this.quarterVLL?.datas;
-    if (this.kr.targets != null && this.kr.targets.length > 0) {
-      this.editTargets = [];
-      for (let i = 0; i < this.kr.targets.length; i++) {
-        this.editTargets.push({ ...this.kr.targets[i] });
-      }
-    }
+    
   }
   afterOpenCopyForm(krModel: any) {
     this.afterOpenAddForm();
@@ -422,19 +399,16 @@ export class PopupAddKRComponent extends UIComponent {
   openPopupTarget(template: any) {
     if (
       this.kr?.target == 0 ||
-      this.kr?.target == null ||
       this.kr?.plan == null
     ) {
       this.notificationsService.notifyCode('OM003');
       return;
     } else if (
       this.kr.targets == null ||
-      this.editTargets == null ||
-      this.editTargets.length == 0
+      this.kr.targets.length == 0
     ) {
       this.calculatorTarget(this.kr?.plan);
     }
-
     
     if(this.kr?.targets && this.kr.targets?.length > 0){
       this.editTargets = [];
@@ -442,8 +416,8 @@ export class PopupAddKRComponent extends UIComponent {
         this.editTargets.push({ ...this.kr.targets[i] });
       }
     }    
-    let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 580 : 220;
-    this.dialogTargets = this.callfc.openForm(template, '', 650, 500, null);
+    let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 500 : 240;
+    this.dialogTargets = this.callfc.openForm(template, '', 650, popUpHeight, null);
     this.detectorRef.detectChanges();
   }
   onSaveTarget() {

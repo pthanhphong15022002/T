@@ -59,7 +59,7 @@
     ></span> -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-5px">
-        <span class="icon-description icon-16 text-gray-500 me-2"></span>
+        <span class="icon-i-card-text icon-16 text-gray-500 me-2"></span>
         <div
           class="text-dark"
           [innerHTML]="
@@ -135,7 +135,7 @@
     ></span> -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-5px">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="icon-i-card-text icon-16 text-gray-500 me-2"></span>
         <span class="text-dark">
           <span
             [innerHTML]="
@@ -156,7 +156,7 @@
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span
             [innerHTML]="
@@ -185,7 +185,7 @@
   <div class="has-action-menu">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-5px">
-        <span class="icon-event icon-16 text-primary me-2"></span>
+        <span class="icon-category icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span
             [innerHTML]="
@@ -197,7 +197,7 @@
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger me-2"></span>
+        <span class="icon-i-card-text icon-16 text-gray-500 me-2"></span>
         <span class="text-dark">
           <span
           >{{data.workingForm}}</span>
@@ -235,7 +235,7 @@
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="icon-category icon-16 text-gray-500 me-2"></span>
         <span class="text-dark">
           <span
             [innerHTML]="
@@ -274,7 +274,7 @@
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-email icon-16 text-gray-500 me-2"></span>
+        <span class="icon-home_work icon-16 text-gray-500 me-2"></span>
         <span class="text-dark">
           <span
             [innerHTML]="
@@ -398,14 +398,16 @@
               | async
           "
         ></span>
-        <span class="mx-2">-</span>
-        <span
-          [innerHTML]="
-            data?.expiredDate
-              | formatvalue : formModel : 'expiredDate'
-              | async
-          "
-        ></span>
+        <span *ngIf="data?.expiredDate">
+          <span class="mx-2">-</span>
+          <span
+            [innerHTML]="
+              data?.expiredDate
+                | formatvalue : formModel : 'expiredDate'
+                | async
+            "
+          ></span>
+        </span>
       </div>
     </div>
     <codx-mfunc
@@ -484,14 +486,16 @@
           | async
       "
     ></span>
-    <span class="mx-2"> - </span>
-    <span
-      [innerHTML]="
-        data?.expiredDate
-          | formatvalue : formModel : 'expiredDate'
-          | async
-      "
-    ></span>
+    <span *ngIf="data?.expiredDate">
+      <span class="mx-2"> - </span>
+      <span
+        [innerHTML]="
+          data?.expiredDate
+            | formatvalue : formModel : 'expiredDate'
+            | async
+        "
+      ></span>
+    </span>
     <codx-mfunc
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
@@ -698,7 +702,7 @@
 <!-- #endregion -->
 
 
-<ng-template #filterPassport>
+<!-- <ng-template #filterPassport>
     <div class="d-flex align-items-center">
         <span class="ms-2" *ngIf="hasFilter">
           <codx-dropdown-select
@@ -712,7 +716,7 @@
         </span>
         <span class="ms-2">
           <codx-dropdown-calendar
-            [cssPopup]="'w-600px h-400px'"
+            [cssPopup]="'w-550px h-350px'"
             emptyText="Chọn năm"
             [firstChange]="false"
             [displayOption]="ops"
@@ -721,7 +725,7 @@
           ></codx-dropdown-calendar>
         </span>
       </div> 
-</ng-template>
+</ng-template> -->
 
 <ng-template #filterBenefit>
     <div class="d-flex align-items-center fs-body">

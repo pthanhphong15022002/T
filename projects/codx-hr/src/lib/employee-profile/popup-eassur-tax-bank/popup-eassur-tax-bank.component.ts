@@ -64,11 +64,24 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {}
 
   onSaveForm() {
+    console.log('du lieu chuan bi luu', this.data);
+    
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       return;
     }
-    debugger
+
+    //Validate input BHXH date
+    if(this.data.hiCardTo && this.data.hiCardFrom){
+      if (this.data.hiCardTo < this.data.hiCardFrom) {
+        this.hrService.notifyInvalidFromTo(
+          'HICardTo',
+          'HICardFrom',
+          this.formModel
+          )
+          return;
+        }
+    }
 
     let ddd = new Date();
     if(this.data.pitIssuedOn > ddd.toISOString()){
@@ -83,7 +96,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
 
 
     this.hrService
-      .saveEmployeeSelfInfo(this.data)
+      .saveEmployeeAssureTaxBankInfo(this.data)
       .subscribe((p) => {
         if (p != null) {
           this.notify.notifyCode('SYS007');

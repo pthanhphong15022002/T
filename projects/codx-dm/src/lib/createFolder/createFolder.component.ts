@@ -270,11 +270,12 @@ export class CreateFolderComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger
     this.user = this.auth.get();
     this.dialog = dialog;
     this.titleDialog = data.data.title;
     this.id = data.data.id ?? this.dmSV.folderID;
-    this.propertiesFolder = data.data.readonly;
+    this.propertiesFolder = data?.data?.readonly;
     if (data.data.id) this.edit = true;
     this.openForm();
     // if (this.fileEditing  == null) {
@@ -417,8 +418,6 @@ export class CreateFolderComponent implements OnInit {
           this.fileEditing = new FileUpload();
           this.fileEditing.folderID = res.recID;
           this.fileEditing.permissions = res.permissions;
-
-          
           var check = this.fileEditing.permissions.filter(x=>x.objectType == "1")
           if(check.length == 0)
           {
@@ -442,9 +441,6 @@ export class CreateFolderComponent implements OnInit {
             perm.assign = true;
             this.fileEditing.permissions.push(perm);
           }
-          
-        
-          
           this.startDate = null;
           this.endDate = null;
           if (this.parentFolder != null) {
@@ -453,7 +449,7 @@ export class CreateFolderComponent implements OnInit {
               JSON.stringify(this.parentFolder.permissions)
             );
           }
-          this.checkPermission();
+          this.checkPermission(res);
           // this.fileEditing.permissions = this.addPermissionForRoot(
           //   this.fileEditing.permissions
           // );
@@ -607,11 +603,11 @@ export class CreateFolderComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  checkPermission() {
+  checkPermission(res:any=null) {
     //this.isSystem = false;
     this.readRight = this.dmSV.parentRead;
     this.createRight = this.dmSV.parentCreate;
-    this.updateRight = this.dmSV.parentUpdate;
+    this.updateRight = res ? res.create : this.dmSV.parentUpdate;
     this.shareRight = this.dmSV.parentShare;
     this.deleteRight = this.dmSV.parentDelete;
     this.downloadRight = this.dmSV.parentDownload;

@@ -45,6 +45,7 @@ import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signat
 import { SetupShowSignature } from 'projects/codx-es/src/lib/codx-es.model';
 import { environment } from 'src/environments/environment';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { CodxShareService } from '../../codx-share.service';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -60,6 +61,7 @@ export class PdfComponent
     private authStore: AuthStore,
     private esService: CodxEsService,
     private actionCollectionsChanges: IterableDiffers,
+    private codxShareService: CodxShareService,
     private datePipe: DatePipe,
     private notificationsService: NotificationsService
   ) {
@@ -117,6 +119,9 @@ export class PdfComponent
   vcHeight = 0;
   vcTop = 0;
   vcLeft = 0;
+  rotate = 0;
+  rotateEnable = false;
+
   contextMenu: any;
   needAddKonva = null;
   tr: Konva.Transformer;
@@ -274,12 +279,12 @@ export class PdfComponent
     // }
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
-        this.signPerRow = res.SignPerRow;
-        this.align = res.Align;
-        this.direction = res.Direction;
-        this.areaControl = res.AreaControl == '1';
-        this.isAwait = res.Await == '1';
-        this.labels = res.Label.filter((label) => {
+        this.signPerRow = res?.SignPerRow;
+        this.align = res?.Align;
+        this.direction = res?.Direction;
+        this.areaControl = res?.AreaControl == '1';
+        this.isAwait = res?.Await == '1';
+        this.labels = res?.Label?.filter((label) => {
           return label.Language == this.user.language;
         });
         this.detectorRef.detectChanges();
@@ -395,7 +400,7 @@ export class PdfComponent
       this.detectorRef.detectChanges();
     }
     this.tr = new Konva.Transformer({
-      rotateEnabled: false,
+      rotateEnabled: this.rotateEnable,
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -539,7 +544,7 @@ export class PdfComponent
     this.curSelectedCA.opacity(0);
     this.tr?.draggable(false);
     this.tr?.resizeEnabled(false);
-    this.tr?.rotateEnabled(false);
+    this.tr?.rotateEnabled(this.rotateEnable);
     this.tr?.nodes([this.curSelectedCA]);
     layer?.add(this.tr);
     layer?.draw();
@@ -715,14 +720,8 @@ export class PdfComponent
         //   .subscribe((status) => {
         //     resolve(status);
         //   });
-        this.api
-          .execSv(
-            'ES',
-            'ERM.Business.ES',
-            'ApprovalTransBusiness',
-            'ApproveAsync',
-            [this.transRecID, mode, '', comment, '']
-          )
+        this.codxShareService
+          .codxApprove(this.transRecID, mode, '', comment)
           .subscribe((res: any) => {
             if (res?.msgCodeError == null) {
               resolve(true);
@@ -810,7 +809,11 @@ export class PdfComponent
         left: x / this.xScale,
         width: w / this.xScale,
         height: h / this.yScale,
-        pageNumber: Number(konva?.parent?.id().replace('layer', '')) - 1,
+        pageNumber:
+          Number(konva?.parent?.id().replace('layer', '')) - 1 ??
+          this.curPage - 1,
+        rotate: -this.rotate,
+        fileRotate: -this.rotate,
       },
       stepNo: stepNo,
       fontStyle: type == 'text' ? konva.fontFamily() : '',
@@ -836,12 +839,13 @@ export class PdfComponent
           if (res) {
             konva?.id(res);
             konva?.off('dragend');
-            konva?.on('dragend transformend', (e: any) => {
+            konva?.on('dragend transformend  ', (e: any) => {
               this.addDragResizeEevent(
                 tmpArea,
                 e.type,
                 konva?.getPosition(),
-                konva?.scale()
+                konva?.scale(),
+                konva.attrs.rotation
               );
             });
             konva.draw();
@@ -1125,13 +1129,14 @@ export class PdfComponent
             let attrs = this.needAddKonva.attrs;
             let name: tmpAreaName = JSON.parse(attrs.name);
 
-            let transformable =
-              this.isEditable == false
-                ? false
-                : this.signerInfo.allowEdit == false
-                ? false
-                : true;
-            this.tr?.rotateEnabled(false);
+            let transformable = false;
+            if (this.isEditable && !this.isApprover) {
+              transformable = true;
+            } else {
+              transformable = this.signerInfo.allowEdit; //== false ? false : true;
+            }
+
+            this.tr?.rotateEnabled(this.rotateEnable);
             this.tr?.draggable(transformable);
             this.tr?.enabledAnchors(
               !transformable
@@ -1153,28 +1158,8 @@ export class PdfComponent
             this.needAddKonva.on('dragend', (dragEnd) => {
               if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
                 if (this.needAddKonva) {
-                  // let curLayer = stage?.children[0]?.children;
-                  // let signed = curLayer.filter((child) => {
-                  //   if (child != this.tr) {
-                  //     let childName: tmpAreaName = JSON.parse(
-                  //       child?.attrs?.name
-                  //     );
-
-                  //     let sameLable = childName.LabelType == name.LabelType;
-                  //     let isUnique = this.imgConfig.includes(
-                  //       childName.LabelType.toString()
-                  //     );
-                  //     let sameSigner = childName.Signer == name.Signer;
-                  //     let sameStepNo = childName.StepNo == name.StepNo;
-                  //     return sameLable && sameSigner && isUnique && sameStepNo;
-                  //   }
-                  //   return undefined;
-                  // });
                   this.holding = 0;
-                  // if (
-                  //   !this.imgConfig.includes(name.LabelType.toString()) ||
-                  //   signed?.length == 1
-                  // ) {
+
                   switch (name.Type) {
                     case 'text': {
                       this.saveNewToDB(
@@ -1274,21 +1259,7 @@ export class PdfComponent
     }
   }
 
-  getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {
-    // if (txtLayer?.source.textLayerDiv?.nextElementSibling != null) {
-    //   (
-    //     txtLayer?.source.textLayerDiv?.nextElementSibling as HTMLElement
-    //   ).style.zIndex = '-1';
-    // }
-    // if (txtLayer.pageNumber == this.pageMax) {
-    //   txtLayer?.source.textDivs.forEach((div) => {
-    //     if (Number(div.style.top.replace('px', '')) > this.maxTop) {
-    //       this.maxTop = Number(div.style.top.replace('px', ''));
-    //       this.maxTopDiv = div;
-    //     }
-    //   });
-    // }
-  }
+  getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {}
   //create area
   /*
     type = 'text' || 'img' || 'group'
@@ -1316,8 +1287,11 @@ export class PdfComponent
     tmpArea: tmpSignArea,
     event,
     newPos?: { x: number; y: number },
-    newScale?: { x: number; y: number }
+    newScale?: { x: number; y: number },
+    rotate?: number
   ) {
+    console.log('rotate resize', rotate);
+
     switch (event) {
       case 'dragend': {
         tmpArea.location.top =
@@ -1330,7 +1304,12 @@ export class PdfComponent
       case 'transformend': {
         tmpArea.location.width = newScale.x;
         tmpArea.location.height = newScale.y;
-
+        tmpArea.location.top =
+          (newPos ? newPos.y : tmpArea.location.top) / this.yScale;
+        tmpArea.location.left =
+          (newPos ? newPos.x : tmpArea.location.left) / this.xScale;
+        tmpArea.location.fileRotate = -this.rotate;
+        tmpArea.location.rotate = rotate - this.rotate;
         break;
       }
     }
@@ -1358,9 +1337,41 @@ export class PdfComponent
     };
     let recID = Guid.newGuid();
 
+    let imgX = Number(area?.location?.left ?? 0) * this.xScale;
+    let imgY = Number(area?.location?.top ?? 0) * this.yScale;
+
+    let deg = this.rotate + area?.location?.fileRotate ?? 0;
+    if (deg < 0) {
+      deg += 360;
+    }
+    let x_ = imgX;
+
+    //ngx quay theo chieu kim dong ho
+    switch (deg) {
+      case 0: {
+        break;
+      }
+      case 90: {
+        imgX = this.pageW - imgY;
+        imgY = x_;
+        break;
+      }
+      case 180: {
+        imgX = this.pageW - imgX;
+        imgY = this.pageH - imgY;
+        break;
+      }
+
+      case 270: {
+        imgX = imgY;
+        imgY = this.pageH - x_;
+        break;
+      }
+    }
+
     switch (type) {
       case 'text':
-        var textArea = new Konva.Text({
+        let textArea = new Konva.Text({
           text: url,
           fontSize: 14,
           fontFamily: 'Arial',
@@ -1384,6 +1395,7 @@ export class PdfComponent
             x: area.location.width * this.xScale,
             y: area.location.height * this.yScale,
           });
+          textArea.rotate(area.location.fileRotate + this.rotate);
           textArea.fontSize(area.fontSize);
           textArea.fontStyle(
             area.fontFormat.replace('line-through', '').replace('underline', '')
@@ -1394,17 +1406,18 @@ export class PdfComponent
 
           textArea.textDecoration(decorate);
           textArea.fontFamily(area.fontStyle);
-          let txtX = Number(area.location.left) * this.xScale;
-          let txtY = Number(area.location.top) * this.yScale;
-          textArea.x(txtX);
-          textArea.y(txtY);
+
+          textArea.x(imgX);
+          textArea.y(imgY);
+
           this.lstLayer.get(area.location.pageNumber + 1).add(textArea);
-          textArea.on('dragend transformend', (e: any) => {
+          textArea.on('dragend transformend  ', (e: any) => {
             this.addDragResizeEevent(
               area,
               e.type,
               textArea.getPosition(),
-              textArea.scale()
+              textArea.scale(),
+              textArea.attrs.rotation
             );
           });
 
@@ -1464,20 +1477,22 @@ export class PdfComponent
             }
             imgArea.id(area.recID);
             imgArea.draggable(!area.allowEditAreas ? false : !area.isLock);
+            imgArea.rotate(area.location.rotate + this.rotate);
+
             imgArea.scale({
               x: +area.location.width * this.xScale,
               y: +area.location.height * this.yScale,
             });
-            let imgX = Number(area.location.left) * this.xScale;
-            let imgY = Number(area.location.top) * this.yScale;
+
             imgArea.x(imgX);
             imgArea.y(imgY);
-            imgArea.on('dragend transformend', (e: any) => {
+            imgArea.on('dragend transformend  ', (e: any) => {
               this.addDragResizeEevent(
                 area,
                 e.type,
                 imgArea.getPosition(),
-                imgArea.scale()
+                imgArea.scale(),
+                imgArea.attrs.rotation
               );
             });
             this.lstLayer.get(area.location.pageNumber + 1).add(imgArea);
@@ -1494,14 +1509,16 @@ export class PdfComponent
 
   //change
   useSignDate: boolean = true;
-  changeUseSignDate() {
-    this.curSignDateType = this.lstSignDateType[1];
-  }
 
-  changeUseCreatedDate() {
-    this.curSignDateType = this.lstSignDateType[0];
+  changeDateType(isSignDate: boolean) {
+    this.useSignDate = isSignDate;
+    if (isSignDate) {
+      this.curSignDateType = this.lstSignDateType[1];
+    } else {
+      this.curSignDateType = this.lstSignDateType[0];
+    }
+    this.detectorRef.detectChanges();
   }
-
   // changeConfirmState(e: any) {
   //   this.checkedConfirm = e.data;
   //   this.confirmChange.emit(e.data);
@@ -1509,7 +1526,6 @@ export class PdfComponent
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
-    debugger
     let userID = this.oApprovalTrans.approver;
     // if (userID == this.curSignerType) {
     //   userID = this.lstSigners.find((x) => x.roleType == userID)?.authorID;
@@ -1666,8 +1682,9 @@ export class PdfComponent
     // switch (type.toString()) {
     let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea?.attrs?.name);
     let textContent = '';
+    let style = 'normal';
     let curArea = this.lstAreas.find((area) => area.recID == recID);
-
+    if (curArea == null) return;
     if (this.imgConfig.includes(type)) {
       if (!newUrl) return;
       else {
@@ -1698,6 +1715,7 @@ export class PdfComponent
             id: curArea.recID,
             draggable: true,
             name: this.curSelectedArea.name(),
+            fileRotate: curArea.location.fileRotate,
           });
           imgArea?.scale(this.curSelectedArea.scale());
           this.curSelectedArea.destroy();
@@ -1719,7 +1737,6 @@ export class PdfComponent
         textContent = this.curSignDateType;
       }
       let transformable = this.curSelectedArea.draggable();
-      let style = 'normal';
       if (this.isBold && this.isItalic) {
         style.replace('normal', '');
         style = 'bold italic';
@@ -1731,21 +1748,24 @@ export class PdfComponent
         style = 'italic';
       }
 
-      this.curSelectedArea.attrs.fontStyle = style;
-      this.curSelectedArea.attrs.textDecoration = this.isUnd
-        ? 'line-through'
-        : '';
+      // this.curSelectedArea.attrs.fontStyle = style;
+      // this.curSelectedArea.attrs.textDecoration = this.isUnd
+      //   ? 'line-through'
+      //   : '';
       let position = this.curSelectedArea.getPosition();
-      var textArea = new Konva.Text({
+      let textArea = new Konva.Text({
         text: textContent,
         fontSize: this.curAnnotFontSize,
         fontFamily: this.curAnnotFontStyle,
+        fontStyle: style,
+        textDecoration: this.isUnd ? 'underline' : '',
         x: position.x,
         y: position.y,
         draggable: transformable,
         name: JSON.stringify(tmpName),
         id: recID,
         align: 'left',
+        rotation: curArea.location.fileRotate + this.rotate,
       });
       textArea.scale(this.curSelectedArea.scale());
       this.curSelectedArea.destroy();
@@ -1786,13 +1806,14 @@ export class PdfComponent
         width: w / this.xScale,
         height: h / this.yScale,
         pageNumber: curArea?.location.pageNumber,
+        fileRotate: curArea.location.fileRotate,
+        rotate: curArea.location.rotate,
       },
       stepNo: tmpName.StepNo,
       fontStyle: this.imgConfig.includes(type) ? '' : this.curAnnotFontStyle,
       fontFormat: this.imgConfig.includes(type)
         ? ''
-        : this.curAnnotFontStyle + this.curSelectedArea.attrs?.textDecoration ??
-          '',
+        : style + ' ' + this.curSelectedArea.attrs?.textDecoration ?? '',
       fontSize: this.imgConfig.includes(type) ? '' : this.curAnnotFontSize,
       signatureType: 2,
       comment: '',
@@ -1823,6 +1844,10 @@ export class PdfComponent
 
   changeQRRenderState(e) {
     this.renderQRAllPage = !this.renderQRAllPage;
+  }
+
+  changeRotation(e) {
+    console.log('rotate', e);
   }
 
   addSignature(setupShowForm) {
@@ -2246,6 +2271,7 @@ export class PdfComponent
             x: unsignIdx[idx],
             y: this.maxTop + row * 100 + 10,
             align: 'left',
+            rotation: this.rotate,
           });
           textArea.scale({
             x: this.xScale,
@@ -2256,7 +2282,6 @@ export class PdfComponent
           let x = textArea.position().x;
           let w = this.xScale;
           let h = this.yScale;
-
           let tmpArea: tmpSignArea = {
             signer: person.authorID,
             labelType: 'S1',
@@ -2271,6 +2296,8 @@ export class PdfComponent
               width: w / this.xScale,
               height: h / this.yScale,
               pageNumber: this.curPage - 1,
+              fileRotate: -this.rotate,
+              rotate: -this.rotate,
             },
             stepNo: person.stepNo,
             fontStyle: 'Arial',
@@ -2290,12 +2317,13 @@ export class PdfComponent
               if (res) {
                 textArea?.id(res);
                 textArea?.off('dragend');
-                textArea?.on('dragend transformend', (e: any) => {
+                textArea?.on('dragend transformend ', (e: any) => {
                   this.addDragResizeEevent(
                     tmpArea,
                     e.type,
                     textArea?.getPosition(),
-                    textArea?.scale()
+                    textArea?.scale(),
+                    textArea.attrs.rotation
                   );
                 });
                 textArea.draw();
@@ -2338,6 +2366,7 @@ export class PdfComponent
               id: recID,
               name: JSON.stringify(tmpName),
               draggable: transformable,
+              rotation: this.rotate,
             });
             imgArea.scale({ x: this.xScale, y: this.yScale });
 
@@ -2361,6 +2390,8 @@ export class PdfComponent
                 width: w / this.xScale,
                 height: h / this.yScale,
                 pageNumber: this.curPage - 1,
+                fileRotate: -this.rotate,
+                rotate: -this.rotate,
               },
               stepNo: person.stepNo,
               fontStyle: '',
@@ -2380,12 +2411,13 @@ export class PdfComponent
                 if (res) {
                   imgArea?.id(res);
                   imgArea?.off('dragend');
-                  imgArea?.on('dragend transformend', (e: any) => {
+                  imgArea?.on('dragend transformend  ', (e: any) => {
                     this.addDragResizeEevent(
                       tmpArea,
                       e.type,
                       imgArea?.getPosition(),
-                      imgArea?.scale()
+                      imgArea?.scale(),
+                      imgArea.attrs.rotation
                     );
                   });
                   imgArea.draw();
@@ -2700,73 +2732,13 @@ export class PdfComponent
           10,
           res
         );
-
-        // let rerenderPages = document.querySelectorAll('.canvasWrapper>canvas');
-        // let times = Object.keys(res).length;
-        // const pdfViewer: IPDFViewerApplication = (window as any)
-        //   .PDFViewerApplication;
-        // const src = this.curFileUrl;
-        // console.log(pdfViewer, 'PDFViewerApplication.cleanup caught exception');
-
-        // if (
-        //   pdfViewer != null &&
-        //   pdfViewer.pdfViewer != null &&
-        //   pdfViewer.pdfDocument != null &&
-        //   pdfViewer.pdfThumbnailViewer != null
-        // ) {
-        //   pdfViewer.cleanup = () => {
-        //     try {
-        //       pdfViewer.pdfViewer.cleanup();
-        //       pdfViewer.pdfThumbnailViewer.cleanup();
-        //       if (
-        //         pdfViewer.pdfViewer.renderer !== 'svg' &&
-        //         pdfViewer.pdfDocument != null
-        //       ) {
-        //         pdfViewer.pdfDocument.cleanup().catch((e: any) => {
-        //           console.error(
-        //             'PDFViewerApplication.pdfDocument.cleanup caught exception',
-        //             src,
-        //             e
-        //           );
-        //         });
-        //       }
-        //       console.info('[PDFViewerApplication] cleanup success', src);
-        //     } catch (e) {
-        //       console.log(e, 'PDFViewerApplication.cleanup caught exception');
-        //     }
-        //   };
-        // }
-
-        // for (const [pageNo, pageInfo] of Object.entries(res)) {
-        //   let canvas = Array.from(rerenderPages).find(
-        //     (page: HTMLCanvasElement) => {
-        //       return (
-        //         page.parentElement?.parentElement?.getAttribute(
-        //           'data-page-number'
-        //         ) == pageNo
-        //       );
-        //     }
-        //   );
-        //   if (canvas) {
-        //     let ctx = (canvas as HTMLCanvasElement).getContext('2d');
-        //     let tmpImg = document.createElement('img') as HTMLImageElement;
-        //     tmpImg.src = 'data:image/png;base64,' + pageInfo.base64;
-        //     tmpImg.onload = () => {
-        //       ctx.drawImage(tmpImg, 0, 0);
-        //       times--;
-        //       if (times == 0) {
-        //         this.getListHighlights();
-        //       }
-        //     };
-        //   }
-        // }
       });
   }
 
   clickHighlightText() {
-    var selection = window.getSelection().getRangeAt(0);
+    let selection = window.getSelection().getRangeAt(0);
 
-    var rects = selection.getClientRects();
+    let rects = selection.getClientRects();
     if (rects.length == 0) return;
     let lstTextLayer = document.getElementsByClassName('textLayer');
 
@@ -2837,9 +2809,22 @@ export class PdfComponent
 
   addComment() {}
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    // for(let [key, value] of this.saveQueue.entries()){
+    //   clearTimeout(this.saveQueue?.get(tmpArea.recID));
+    //   this.saveQueue?.delete(this.saveQueue?.get(tmpArea.recID));
+    //   this.saveQueue.set(
+    //     tmpArea.recID,
+    //     setTimeout(
+    //       this.saveToDB.bind(this),
+    //       this.saveAfterX,
+    //       tmpArea,
+    //       tmpArea.recID
+    //     )
+    // );
+    // }
+  }
   change(event, type) {
-    console.log(type + ' input change', event);
     if (event?.keyCode == 32) {
       event.stopPropagation();
     }
@@ -2858,7 +2843,7 @@ class Guid {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
       function (c) {
-        var r = (Math.random() * 16) | 0,
+        let r = (Math.random() * 16) | 0,
           v = c == 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(16);
       }

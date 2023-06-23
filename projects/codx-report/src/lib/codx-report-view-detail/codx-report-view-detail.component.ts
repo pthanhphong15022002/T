@@ -25,6 +25,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   @Input() dataValue:any="";
   @Input() print:any="false";
   _paramString:any="";
+  _labelString:any="";
   orgReportList:any=[];
   moreFc: any = [
     {
@@ -85,7 +86,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           let funcID = event.url.split('/').pop();
           this.funcID = funcID;
           this.pageTitle.setBreadcrumbs([]);
-          this.layout.setLogo('');
           this.layout.showIconBack = true;
           this.pageTitle.setTitle('');
           this.pageTitle.setSubTitle('')
@@ -97,6 +97,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           this.pageTitle.setTitle(this.rootFunction.customName);
           this.pageTitle.setSubTitle(this.rootFunction.customName);
           this.pageTitle.setBreadcrumbs([]);
+          this.setBreadCrumb(this.funcItem,true)
         }
         this.changeDetectorRef.detectChanges();
       }
@@ -108,7 +109,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.funcID = this.router.snapshot.params['funcID'];
     this.viewBase.moreFuncs = this.moreFc;
     this.pageTitle.setBreadcrumbs([]);
-    this.layout.setLogo('');
 
     if(this.funcID){
       this.getReport(this.funcID);
@@ -162,27 +162,19 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     //   this.dataValue = e[0].dataValues;
     // }
     let objParam:any = {};
+    let objLabel:any={};
     if(e[1]){
       for(let key in e[1]){
-        // if(key.includes('Date')){
-        //   objParam['fromDate'] = e[1][key].fromDate;
-        //   objParam['toDate'] = e[1][key].toDate;
-        // }
-        // else{
-        //   objParam[key] = e[1][key]
-        // }
         objParam[key] = e[1][key]
       }
-      // let parameters = this.funcItem.parameters;
-      // if(parameters){
-      //   parameters.forEach((e:any) => {
-      //     if(e.defaultValue){
-      //       objParam[e.mappingName] = e.defaultValue;
-      //     }
-      //   });
-      // }
 
       this._paramString = JSON.stringify(objParam);
+    }
+    if(e[2]){
+      for(let key in e[2]){
+        objLabel[key] = e[2][key];
+      }
+      this._labelString = JSON.stringify(objLabel);
     }
   }
 

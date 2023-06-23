@@ -90,7 +90,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.route.queryParamMap.subscribe((res:any) => {
       if(res?.params?.predicate && res?.params?.dataValue)
       {
-        this.dataService.setPredicates([res.params.predicate],[res.params.dataValue])
+        this.dataService.setPredicates([res.params.predicate],[res.params.dataValue]);
       }
     });
     // set dataService
@@ -334,7 +334,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   //click xem thêm 
   clickReadMore(item){
-    debugger
     item.isShortContent = false;
     this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","GetContentAsync",[item.recID])
     .subscribe((res:string) => {
@@ -351,11 +350,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   dataSelected:any = null;
-
   @ViewChild("tmpCBBShare") CBBShare:TemplateRef<any>;
   // open cbb share
   openCBBShare(data){
-    debugger
     if(data.write){
       this.dataSelected = JSON.parse(JSON.stringify(data));
       if (this.CBBShare){
@@ -365,7 +362,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   //change mode share
   changePermission(event:any){
-    debugger
     if(event)
     {
       let arrPermisison = Array.from<any>(event);

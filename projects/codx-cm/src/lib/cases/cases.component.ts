@@ -106,9 +106,12 @@ export class CasesComponent
   processID: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
-  caseType:string;
-  applyFor:string;
+  caseType: string;
+  applyFor: string;
   formModelCrr: FormModel = new FormModel();
+  funCrr: any;
+  viewsDefault: any;
+  viewCrr: any;
 
   constructor(
     private inject: Injector,
@@ -121,40 +124,71 @@ export class CasesComponent
     super(inject);
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-      this.checkFunction(this.funcID);
     }
 
     this.executeApiCalls();
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
-    // Get API
-    // this.getListCustomer();
   }
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (!this.funcID) {
-  //     this.funcID = this.activedRouter.snapshot.params['funcID'];
-  //     this.checkFunction(this.funcID);
-  //   }
-  //   if (changes['dataObj']) {
-  //     this.dataObj = changes['dataObj'].currentValue;
-  //     if (this.processID != this.dataObj?.processID) {
-  //       this.processID = this.dataObj?.processID;
-  //       this.reloadData();
-  //     }
-  //   }
-  // }
 
   onInit(): void {
     //test no chosse
     this.button = {
       id: this.btnAdd,
     };
-    // if (!this.funcID) {
-    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // }
+    this.afterLoad();
+  }
+
+  ngAfterViewInit(): void {
+    this.viewsDefault = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        toolbarTemplate: this.footerButton,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
+      },
+    ];
+    this.cache.viewSettings(this.funcID).subscribe((views) => {
+      this.viewsDefault.forEach((v, index) => {
+        let idx = views.findIndex((x) => x.view == v.type);
+        if (idx != -1) {
+          v.hide = false;
+          if (views[idx].isDefault) v.action = true;
+          else v.active = false;
+        } else {
+          v.hide = true;
+          v.active = false;
+        }
+        if (
+          !(
+            (this.funcID == 'CM0401' || this.funcID == 'CM0402') &&
+            v.type == '6'
+          )
+        )
+          this.views.push(v);
+      });
+      this.changeDetectorRef.detectChanges();
+    });
+
+  }
+
+  afterLoad() {
+    this.checkFunction(this.funcID);
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
@@ -169,46 +203,6 @@ export class CasesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-  }
-  ngAfterViewInit(): void {
-    if (this.funcID != 'CM0401' && this.funcID != 'CM0402') {
-      this.views = [
-        {
-          type: ViewType.listdetail,
-          sameData: true,
-          model: {
-            template: this.itemTemplate,
-            panelRightRef: this.templateDetail,
-          },
-        },
-        {
-          type: ViewType.kanban,
-          active: false,
-          sameData: false,
-          request: this.request,
-          request2: this.resourceKanban,
-          toolbarTemplate: this.footerButton,
-          model: {
-            template: this.cardKanban,
-            template2: this.viewColumKaban,
-            setColorHeader: true,
-          },
-        },
-      ];
-    } else
-      this.views = [
-        {
-          type: ViewType.listdetail,
-          sameData: true,
-          model: {
-            template: this.itemTemplate,
-            panelRightRef: this.templateDetail,
-          },
-        },
-
-      ];
-    // this.reloadData();
-    this.changeDetectorRef.detectChanges();
   }
 
   reloadData() {
@@ -247,7 +241,6 @@ export class CasesComponent
     //         kanban.refresh();
     //       });
     //   }
-
     //   if (this.processID)
     //     (this.view?.dataService as CRUDService)
     //       .setPredicates(['ProcessID==@0'], [this.processID])
@@ -275,7 +268,92 @@ export class CasesComponent
     });
   }
 
-  changeView(e) {}
+  changeView(e) {
+    this.viewCrr = e?.view?.type;
+    if (!this.funCrr) {
+      this.funCrr = this.funcID;
+      return;
+    }
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    if (this.funCrr != this.funcID) {
+      this.funCrr = this.funcID;
+      this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+      if (this.processID) this.dataObj = { processID: this.processID };
+      if (this.crrFuncID != this.funcID) {
+        this.cache.viewSettings(this.funcID).subscribe((views) => {
+          if (views) {
+            this.afterLoad();
+            this.crrFuncID = this.funcID;
+            this.views = [];
+            let idxActive = -1;
+            let viewOut = false;
+            this.viewsDefault.forEach((v, index) => {
+              let idx = views.findIndex((x) => x.view == v.type);
+              if (idx != -1) {
+                v.hide = false;
+                if (v.type != this.viewCrr) v.active = false;
+                else v.active = true;
+                if (views[idx].isDefault) idxActive = index;
+              } else {
+                v.hide = true;
+                v.active = false;
+                if (this.viewCrr == v.type) viewOut = true;
+              }
+              if (v.type == 6) {
+                v.request.dataObj = this.dataObj;
+                v.request2.dataObj = this.dataObj;
+              }
+              if (
+                !(
+                  (this.funcID == 'CM0401' || this.funcID == 'CM0402') &&
+                  v.type == '6'
+                )
+              )
+                this.views.push(v);
+              else viewOut = true;
+            });
+            if (!this.views.some((x) => x.active)) {
+              if (idxActive != -1) this.views[idxActive].active = true;
+              else this.views[0].active = true;
+
+              let viewModel =
+                idxActive != -1 ? this.views[idxActive] : this.views[0];
+              this.view.viewActiveType = viewModel.type;
+              this.view.viewChange(viewModel);
+              if (viewOut) this.view.load();
+            }
+            if ((this.view?.currentView as any)?.kanban) {
+              let kanban = (this.view?.currentView as any)?.kanban;
+              let settingKanban = kanban.kanbanSetting;
+              settingKanban.isChangeColumn = true;
+              settingKanban.formName = this.view?.formModel?.formName;
+              settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+              this.api
+                .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+                  settingKanban,
+                  this.dataObj,
+                ])
+                .subscribe((resource) => {
+                  if (resource?.columns && resource?.columns.length)
+                    kanban.columns = resource.columns;
+                  kanban.kanbanSetting.isChangeColumn = false;
+                  kanban.dataObj = this.dataObj;
+                  kanban.loadDataSource(
+                    kanban.columns,
+                    kanban.kanbanSetting?.swimlaneSettings,
+                    false
+                  );
+                  kanban.refresh();
+                });
+            }
+
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    }
+  }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -287,24 +365,34 @@ export class CasesComponent
   }
   changeDataMF($event, data) {
     if ($event != null && data != null) {
-      this.getMore($event, data);
-    }
-  }
-
-  getMore($event, data) {
-    for (let eventItem of $event) {
-      const functionID = eventItem.functionID;
-      const mappingFunction = this.getRoleMoreFunction(functionID);
-      if (mappingFunction) {
-        mappingFunction(eventItem, data);
+      for (let eventItem of $event) {
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        if (mappingFunction) {
+          mappingFunction(eventItem, data);
+        }
       }
     }
   }
-
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if (data.closed || data.status == '1') {
+      if ((data.closed && data.status != '1') || data.status == '1') {
+        eventItem.disabled = true;
+      }
+    };
+    var isDelete = (eventItem, data) => {
+      if (data.closed) {
+        eventItem.disabled = true;
+      }
+    };
+    var isCopy = (eventItem, data) => {
+      if (data.closed) {
+        eventItem.disabled = true;
+      }
+    };
+    var isEdit = (eventItem, data) => {
+      if (data.closed) {
         eventItem.disabled = true;
       }
     };
@@ -327,12 +415,12 @@ export class CasesComponent
         CM0401_8: isClosed,
         CM0401_9: isOpened,
         SYS101: isDisabled,
-        SYS103: isDisabled,
-        SYS03: isDisabled,
-        SYS104: isDisabled,
-        SYS04: isDisabled,
-        SYS102: isDisabled,
-        SYS02: isDisabled,
+        SYS103: isEdit,
+        SYS03: isEdit,
+        SYS104: isCopy,
+        SYS04: isCopy,
+        SYS102: isDelete,
+        SYS02: isDelete,
       };
     } else {
     }
@@ -523,72 +611,72 @@ export class CasesComponent
     });
   }
   openFormReason(data, fun, isMoveSuccess) {
-    var formMD = new FormModel();
-    formMD.funcID = fun.functionID;
-    formMD.entityName = fun.entityName;
-    formMD.formName = fun.formName;
-    formMD.gridViewName = fun.gridViewName;
-    var dataCM = {
-      refID: data?.refID,
-      processID: data?.processID,
-      stepID: data?.stepID,
-      nextStep: data?.nextStep,
-    };
-    var obj = {
-      headerTitle: fun.defaultName,
-      formModel: formMD,
-      isReason: isMoveSuccess,
-      applyFor: this.applyFor,
-      dataCM: dataCM,
-      stepName: data.currentStepName,
-    };
+    // var formMD = new FormModel();
+    // formMD.funcID = fun.functionID;
+    // formMD.entityName = fun.entityName;
+    // formMD.formName = fun.formName;
+    // formMD.gridViewName = fun.gridViewName;
+    // var dataCM = {
+    //   refID: data?.refID,
+    //   processID: data?.processID,
+    //   stepID: data?.stepID,
+    //   nextStep: data?.nextStep,
+    // };
+    // var obj = {
+    //   headerTitle: fun.defaultName,
+    //   formModel: formMD,
+    //   isReason: isMoveSuccess,
+    //   applyFor: this.applyFor,
+    //   dataCM: dataCM,
+    //   stepName: data.currentStepName,
+    // };
 
-    var dialogRevision = this.callfc.openForm(
-      PopupMoveReasonComponent,
-      '',
-      800,
-      600,
-      '',
-      obj
-    );
-    dialogRevision.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        var instance = e.event?.instance;
-        var instanceMove = e.event?.instanceMove;
-        if (instanceMove) {
-          var dealOld = JSON.parse(JSON.stringify(data));
-          var dealNew = JSON.parse(JSON.stringify(data));
-          dealOld = this.updateReasonCases(instance, dealOld);
-          dealNew = this.convertDataInstance(
-            dealNew,
-            instanceMove,
-            e.event?.nextStep
-          );
-          var datas = [dealOld, dealNew];
-          this.codxCmService.moveDealReason(datas).subscribe((res) => {
-            if (res) {
-              data = res[0];
-              this.view.dataService.dataSelected = data;
-              this.view.dataService
-                .update(this.view.dataService.dataSelected)
-                .subscribe();
-              this.view.dataService.add(res[1], 0).subscribe((res) => {});
-              this.detectorRef.detectChanges();
-            }
-          });
-        } else {
-          data = this.updateReasonCases(instance, data);
-          var datas = [data, data.customerID];
-          this.codxCmService.updateDeal(datas).subscribe((res) => {
-            if (res) {
-              data = res[0];
-              this.view.dataService.update(data).subscribe();
-              this.detectorRef.detectChanges();
-            }
-          });
-        }
-      }
-    });
+    // var dialogRevision = this.callfc.openForm(
+    //   PopupMoveReasonComponent,
+    //   '',
+    //   800,
+    //   600,
+    //   '',
+    //   obj
+    // );
+    // dialogRevision.closed.subscribe((e) => {
+    //   if (e && e.event != null) {
+    //     var instance = e.event?.instance;
+    //     var instanceMove = e.event?.instanceMove;
+    //     if (instanceMove) {
+    //       var dealOld = JSON.parse(JSON.stringify(data));
+    //       var dealNew = JSON.parse(JSON.stringify(data));
+    //       dealOld = this.updateReasonCases(instance, dealOld);
+    //       dealNew = this.convertDataInstance(
+    //         dealNew,
+    //         instanceMove,
+    //         e.event?.nextStep
+    //       );
+    //       var datas = [dealOld, dealNew];
+    //       this.codxCmService.moveDealReason(datas).subscribe((res) => {
+    //         if (res) {
+    //           data = res[0];
+    //           this.view.dataService.dataSelected = data;
+    //           this.view.dataService
+    //             .update(this.view.dataService.dataSelected)
+    //             .subscribe();
+    //           this.view.dataService.add(res[1], 0).subscribe((res) => {});
+    //           this.detectorRef.detectChanges();
+    //         }
+    //       });
+    //     } else {
+    //       data = this.updateReasonCases(instance, data);
+    //       var datas = [data, data.customerID];
+    //       this.codxCmService.updateDeal(datas).subscribe((res) => {
+    //         if (res) {
+    //           data = res[0];
+    //           this.view.dataService.update(data).subscribe();
+    //           this.detectorRef.detectChanges();
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
   }
   updateReasonCases(instance: any, cases: any) {
     cases.status = instance.status;
@@ -757,6 +845,7 @@ export class CasesComponent
       caseType: this.caseType,
       applyFor: this.applyFor,
       titleAction: this.titleAction,
+      processID:this.processID,
     };
     let dialogCustomcases = this.callfc.openSide(
       PopupAddCasesComponent,
@@ -874,21 +963,19 @@ export class CasesComponent
     popup.closed.subscribe((e) => {});
   }
 
-  async checkFunction(funcID:any){
-   await this.cache.functionList(funcID).subscribe((fun) => {
+  async checkFunction(funcID: any) {
+    await this.cache.functionList(funcID).subscribe((fun) => {
       this.formModelCrr.funcID = fun.functionID;
       this.formModelCrr.entityName = fun.entityName;
       this.formModelCrr.formName = fun.formName;
       this.formModelCrr.gridViewName = fun.gridViewName;
-      if(this.formModelCrr.formName === 'CMCases') {
+      if (this.formModelCrr.formName === 'CMCases') {
         this.caseType = '1';
         this.applyFor = '2';
-      }
-      else if(this.formModelCrr.formName === 'CMRequests') {
+      } else if (this.formModelCrr.formName === 'CMRequests') {
         this.caseType = '2';
         this.applyFor = '3';
-      };
+      }
     });
-
   }
 }

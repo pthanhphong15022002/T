@@ -50,7 +50,6 @@ import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/co
 import { PopupEditOwnerstepComponent } from './instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { PopupSelectTempletComponent } from './instances/popup-select-templet/popup-select-templet.component';
 
-
 const routes: Routes = [
   {
     path: '',
@@ -71,10 +70,15 @@ const routes: Routes = [
         path: 'approvals/:funcID',
         loadChildren: () =>
           import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
-            (m) => m.ApprovelModule
+            (m) => m.ApprovelDpModule
           ),
         data: { noReuse: true },
       },
+      // {
+      //   path: 'approvals/:funcID',
+      //   data: { noReuse: true },
+      //   component: ApprovalsComponent,
+      // },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -134,7 +138,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     InputNumberDurationComponent,
     ApprovalsComponent,
     PopupEditOwnerstepComponent,
-    PopupSelectTempletComponent
+    PopupSelectTempletComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

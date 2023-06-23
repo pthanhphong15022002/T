@@ -78,7 +78,7 @@
           </a>
         </div>
 
-        <div class="menu-item">
+        <div *ngIf="sysSetting?.loginType != '8'" class="menu-item">
           <a (click)="changePass()" class="menu-link px-5">
             <codx-label
               fiedName="lblChangePass"
@@ -255,6 +255,15 @@
             fiedName="lblFormat"
             [formModel]="formModel"
             default="Format"
+          ></codx-label>
+        </span>
+      </div> -->
+      <!-- <div class="menu-item" *ngIf="user && user.tenant == 'default'">
+        <span (click)="createTemplate()" class="menu-link px-5">
+          <codx-label
+            fiedName="lblTemplate"
+            [formModel]="formModel"
+            default="create template"
           ></codx-label>
         </span>
       </div> -->

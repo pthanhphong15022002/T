@@ -27,6 +27,7 @@ import {
 import { CodxBookingService } from '../codx-booking.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { OMCONST } from 'projects/codx-om/src/lib/codx-om.constant';
+import { CodxShareService } from '../../../codx-share.service';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -118,11 +119,13 @@ export class CodxAddBookingCarComponent
   cardTransInfo: any;
   categoryID: any;
   isEP=true;
+  customAttendees=[];
   constructor(
     private injector: Injector,
     private authService: AuthService,
     private authStore: AuthStore,
     private codxBookingService: CodxBookingService,
+    private codxShareService: CodxShareService,
     private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -136,6 +139,7 @@ export class CodxAddBookingCarComponent
       this.viewOnly=true;
     }    
     this.isEP = dialogData?.data[5]==false ? dialogData?.data[5] : true;
+    this.customAttendees = dialogData?.data[6];
     this.user = this.authStore.get();
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
@@ -391,6 +395,27 @@ export class CodxAddBookingCarComponent
               });
           }
           this.detectorRef.detectChanges();
+        }
+        else if(this.funcType == _addMF && this.customAttendees?.length>0){
+          Array.from(this.customAttendees).forEach((people:any)=>{
+            let tmpResource = new BookingAttendees();
+            tmpResource.userID = people?.objectID;
+            tmpResource.userName = people?.objectName;
+            tmpResource.roleType = people?.roleType;
+            tmpResource.optional = false;
+            this.listRoles.forEach((element) => {
+              if (element?.value == tmpResource?.roleType) {
+                tmpResource.icon = element?.icon;
+                tmpResource.roleName = element?.text;
+              }
+            });
+            if (tmpResource.userID == this.authService.userValue.userID) {
+              this.curUser = tmpResource;
+              this.resources.push(this.curUser);
+            } else {
+              this.resources.push(tmpResource);
+            }
+          })
         }
       }
     });
@@ -985,14 +1010,17 @@ export class CodxAddBookingCarComponent
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((res: any) => {
-                  this.codxBookingService
-                    .release(
-                      this.returnData,
-                      res?.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID,
-                      this.returnData?.createdBy
-                    )
+                  this.codxShareService
+                  .codxRelease(
+                    'EP',
+                    this.returnData?.recID,
+                    res?.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID,
+                    this.returnData?.createdBy,
+                    this.returnData?.title,
+                    null
+                  )
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
                         this.notificationsService.notifyCode('ES007');
@@ -1046,15 +1074,18 @@ export class CodxAddBookingCarComponent
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((res: any) => {
-                  this.codxBookingService
-                    .release(
-                      this.returnData,
-                      res?.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID,
-                      this.returnData?.createdBy
-                    )
-                    .subscribe((res) => {
+                  this.codxShareService
+                  .codxRelease(
+                    'EP',
+                    this.returnData?.recID,
+                    res?.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID,
+                    this.returnData?.createdBy,
+                    this.returnData?.title,
+                    null
+                  )
+                    .subscribe((res:any) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
                         this.notificationsService.notifyCode('ES007');
                         this.returnData.approveStatus = '3';

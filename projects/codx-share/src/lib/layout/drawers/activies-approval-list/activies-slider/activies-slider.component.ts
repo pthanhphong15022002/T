@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-activies-slider',
@@ -35,6 +36,7 @@ export class ActiviesSliderComponent implements OnInit {
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private notiSV:NotificationsService,
+    private codxShareService: CodxShareService,
     private auth:AuthStore,
     private codxService:CodxService,
     private cache:CacheService,
@@ -49,15 +51,14 @@ export class ActiviesSliderComponent implements OnInit {
   ngOnInit(): void {
     this.getDataAsync();
     this.cache.valueList("SYS055").subscribe(vll => {
-      if(vll){
+      if(vll)
+      {
         this.datas = vll.datas;
         let _defaultVLL  = vll.datas.find(x => x.value == "");
-        if(_defaultVLL){
+        if(_defaultVLL)
           this.valueSelected = _defaultVLL;
-        }
-        else{
+        else
           this.valueSelected = vll.datas[0];
-        }
       }
     });
   }
@@ -131,13 +132,13 @@ export class ActiviesSliderComponent implements OnInit {
     if(item.recID && item.transID && status)
     {
       item["blocked"] = true;
-      this.api
-        .execSv(
-          'ES',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'ApproveAsync',
-          [item.transID, status, '', ''])
+      this.codxShareService
+        .codxApprove(
+            item.transID,
+            status,
+            '',
+            ''
+          )
           .subscribe((res: any) => {
           if (!res?.msgCodeError) 
           {
@@ -159,8 +160,8 @@ export class ActiviesSliderComponent implements OnInit {
     }
   }
   setStyles(value){
-    let vll = this.datas.find(x => x.value === value);
-    if(!vll) vll = this.datas.find(x => x.value === "");
+    let vll = this.datas.find(x => x.value == value);
+    if(!vll) vll = this.datas.find(x => x.value == "");
     let styles = {
       backgroundColor: vll.color ,
       color: vll.textColor,

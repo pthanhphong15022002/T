@@ -20,7 +20,7 @@ import {
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'codx-list-contacts',
@@ -60,6 +60,8 @@ export class CodxListContactsComponent implements OnInit {
   currentRecID = '';
   lstConvertContact = [];
   isCheckedAll: boolean = false;
+  id: any;
+  placeholder = 'Nhập vai trò...';
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -78,9 +80,11 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue != null &&
         changes['objectID']?.currentValue?.trim() != ''
       ) {
+        if (changes['objectID']?.currentValue == this.id) return;
+        this.id = changes['objectID']?.currentValue;
         this.getListContacts();
-      } else {
-        this.loaded = true;
+      }else{
+        if(!this.loaded) this.loaded = true;
       }
     }
   }
@@ -94,6 +98,30 @@ export class CodxListContactsComponent implements OnInit {
         if (m) this.moreFuncAdd = m.defaultName;
       }
     });
+    this.cmSv.contactSubject.subscribe((res) => {
+      if (res) {
+        this.lstContactEmit.emit(res);
+        if (res != null && res.length > 0) {
+          var index = res.findIndex((x) => x.isDefault);
+          if (index != -1) {
+            this.contactEvent.emit(res[index]);
+          } else {
+            this.contactEvent.emit(null);
+          }
+        }
+        // this.listContacts.push(Object.assign({}, res));
+        // this.lstContactEmit.emit(this.listContacts);
+        this.cmSv.contactSubject.next(null);
+      }
+    });
+    if(this.objectType == "4"){
+      this.cache.gridViewSetup('CMContacts', 'grvCMContacts').subscribe(res =>{
+        if(res){
+          this.placeholder = res?.Role?.description ?? this.placeholder;
+        }
+      })
+    }
+
   }
 
   loadListContact(lstContact) {
@@ -221,7 +249,6 @@ export class CodxListContactsComponent implements OnInit {
             break;
           case 'SYS02':
             if (
-              (this.hidenMF && this.objectType == '4') ||
               this.objectType == '1' ||
               this.objectType == '3'
             )
@@ -268,7 +295,7 @@ export class CodxListContactsComponent implements OnInit {
           PopupQuickaddContactComponent,
           '',
           500,
-          action != 'editType' && action != 'editRole' ? 700 : 250,
+          action != 'editType' && action != 'editRole' ? 700 : 300,
           '',
           obj,
           '',
@@ -340,6 +367,7 @@ export class CodxListContactsComponent implements OnInit {
         );
         dialog.closed.subscribe((e) => {
           this.isButton = true;
+
           if (e && e.event != null) {
             if (e.event?.recID) {
               var index = this.listContacts.findIndex(
@@ -357,6 +385,9 @@ export class CodxListContactsComponent implements OnInit {
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
+              if(this.objectType == '4'){
+                this.placeholder = JSON.parse(JSON.stringify(this.placeholder));
+              }
               this.changeContacts(this.listContacts[index]);
               this.changeDetectorRef.detectChanges();
             }
@@ -365,35 +396,69 @@ export class CodxListContactsComponent implements OnInit {
       });
   }
 
-  deleteContactToCM(data) {
+  updateRole(event: string, recID) {
+    var index = -1;
+    if (event == '' || event.trim() == '') {
+      index = -1;
+      return;
+    }
+    index = this.listContacts.findIndex(x => x.recID == recID);
+    if(index != -1){
+      this.listContacts[index].role = event?.trim();
+      this.lstContactEmit.emit(this.listContacts);
+    }
+
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async deleteContactToCM(data) {
     var lstDelete = [];
+    var check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'ContactsBusiness',
+        'CheckContactDealAsync',
+        [data.recID]
+      )
+    );
+    if (check) {
+      this.notiService.notifyCode('CM012');
+      return;
+    }
+
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        if (this.type == 'formDetail') {
-          this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
-            if (res) {
-              // this.getListContactByObjectID(this.objectID);
-              this.listContacts = this.cmSv.bringDefaultContactToFront(
-                this.cmSv.loadList(data, this.listContacts, 'delete')
-              );
+      if (x.event && x.event?.status) {
+        if (x?.event?.status == 'Y') {
+          if (this.type == 'formDetail') {
+            this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
+              if (res) {
+                // this.getListContactByObjectID(this.objectID);
+                this.listContacts = this.cmSv.bringDefaultContactToFront(
+                  this.cmSv.loadList(data, this.listContacts, 'delete')
+                );
+                this.changeContacts(this.listContacts[0]);
+                this.contactEvent.emit(data);
+                this.lstContactEmit.emit(this.listContacts);
+                this.notiService.notifyCode('SYS008');
+                this.changeDetectorRef.detectChanges();
+              }
+            });
+          } else {
+            var index = this.listContacts.findIndex(
+              (x) => x.recID == data.recID
+            );
+            if (index != -1) {
+              this.contactEvent.emit({ data: data, action: 'delete' });
+              this.listContacts.splice(index, 1);
+              lstDelete.push(data);
               this.changeContacts(this.listContacts[0]);
-              this.contactEvent.emit(data);
+              this.lstContactEmit.emit(this.listContacts);
 
-              this.notiService.notifyCode('SYS008');
-              this.changeDetectorRef.detectChanges();
+              this.lstContactDeleteEmit.emit(lstDelete);
             }
-          });
-        } else {
-          var index = this.listContacts.findIndex((x) => x.recID == data.recID);
-          if (index != -1) {
-            this.contactEvent.emit({ data: data, action: 'delete' });
-            this.listContacts.splice(index, 1);
-            lstDelete.push(data);
-            this.changeContacts(this.listContacts[0]);
-
-            this.lstContactDeleteEmit.emit(lstDelete);
           }
         }
       }
@@ -418,7 +483,6 @@ export class CodxListContactsComponent implements OnInit {
       this.isCheckedAll = this.listContacts.every((item) => item.checked);
     }
   }
-
 
   getListContactsByObjectId(objectID) {
     this.loaded = false;

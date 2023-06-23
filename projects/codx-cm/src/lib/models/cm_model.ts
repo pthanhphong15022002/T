@@ -66,8 +66,8 @@ export class CM_Quotations {
   deadline: Date;
   memo: string;
   totalAmt: number;
-  totalTaxAmt:number
-  totalSalesAmt:number
+  totalTaxAmt: number;
+  totalSalesAmt: number;
   discPct: number;
   discAmt: number;
   tags: string;
@@ -91,6 +91,7 @@ export class CM_Quotations {
 export class CM_QuotationsLines {
   recID: string;
   transID: string;
+  contractID: string;
   rowNo: number;
   lineType: string;
   lineStatus: string;
@@ -110,9 +111,9 @@ export class CM_QuotationsLines {
   cWQty: number;
   cWOnhand: number;
   onhand: number;
-  currencyID :string
+  currencyID: string;
   costPrice: number;
-  exchangeRate :number
+  exchangeRate: number;
   costAmt: number;
   stdPrice: number;
   salesPrice: number;
@@ -127,7 +128,7 @@ export class CM_QuotationsLines {
   exciseTaxPct: number;
   exciseTaxAmt: number;
   vATID: string;
-  vatRate :number
+  vatRate: number;
   vatBase: number;
   vatAmt: number;
   refType: string;
@@ -142,11 +143,11 @@ export class CM_QuotationsLines {
 }
 
 export class CM_Deals {
-  recID: string;
+  recID: string =  Util.uid();
   dealID: string;
   dealName: string;
   dealName2: string;
-  category: string = "1";
+  category: string = '1';
   customerID: string;
   channelID: string;
   campaignID: string;
@@ -156,7 +157,7 @@ export class CM_Deals {
   dealValue: number = 0;
   probability: number = 0;
   expectedClosed: Date;
-  status: string = "1";
+  status: string = '1';
   statusCodeID: string;
   stepID: string;
   nextStep: string;
@@ -331,6 +332,10 @@ export class CM_Contacts {
   modifiedBy: string;
   checked: boolean;
   role: string;
+  assign: boolean = true;
+  delete: boolean = true;
+  write: boolean = true;
+  share: boolean = true;
 }
 export class BS_AddressBook {
   recID: string;
@@ -381,7 +386,6 @@ export class BS_AddressBook {
   delete: boolean = true;
   write: boolean = true;
   share: boolean = true;
-
 }
 export class CM_ContractsPayments {
   recID: string = Util.uid(); //Mã thanh toán
@@ -486,10 +490,10 @@ export class CM_Contracts {
   modifiedBy: string; //Người chỉnh sửa
 
   contactName: string; //Người đại diện -- thiếu
-  pmtDeadline:Date;// Hạn thanh toán
-  delDeadline: Date;// Hạn giao hàng
+  pmtDeadline: Date; // Hạn thanh toán
+  delDeadline: Date; // Hạn giao hàng
 
-  delActualDate: Date;// Ngày giao hàng
+  delActualDate: Date; // Ngày giao hàng
   delAddress: string; // Địa chỉ giao hàng
   delPhone: string;
   delContactID: string; // Liên hệ giao hàng
@@ -536,6 +540,7 @@ export class CM_Cases {
   severity: string;
   priority: string;
   occuredOn: Date;
+  detectedOn: Date;
   occuredPlace: string;
   reality: string;
   memo: string;
@@ -653,14 +658,14 @@ export class CM_Competitors {
 }
 
 export class CM_Leads {
-  recID: string;
+  recID: string = Util.uid();
   leadID: string;
   leadName: string;
   leadName2: string;
   category: string;
   channelID: string;
   campaignID: string;
-  businesslineID: string;
+  businessLineID: string;
   memo: string;
   companyName: string;
   tags: string;
@@ -687,14 +692,14 @@ export class CM_Leads {
   mobile: string;
   status: string;
   statusCode: string;
-  currentStep: string;
+  stepID: string;
   nextStep: string;
   lastUpdated: Date;
   note: string;
   attachments: number;
   comments: number;
   isDuplicated: boolean;
-  contactID: string;
+  contactID: string = Util.uid();
   customerID: string;
   salespersonID: string;
   consultantID: string;
@@ -706,5 +711,15 @@ export class CM_Leads {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-
+  processID: string;
+  convertedOn: string;
+  dealID: string;
+  endDate: Date;
+  startDate: Date;
+  refID: string;
+  refNo: string;
+  refType: string;
+  closedBy: string;
+  closedOn: Date;
+  closed: boolean;
 }

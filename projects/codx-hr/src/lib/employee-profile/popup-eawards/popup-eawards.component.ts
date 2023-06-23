@@ -34,6 +34,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   valueYear;
   isAfterRender = false;
   defaultAwardDate: string = '0001-01-01T00:00:00';
+  autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -55,11 +56,9 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.fromListView = data?.data?.fromListView;
     this.formModel = this.dialog.formModel;
     this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
-    if(this.awardObj){
-      this.valueYear = this.awardObj.inYear
+    if (this.awardObj) {
+      this.valueYear = this.awardObj.inYear;
     }
-    debugger
-    console.log('khen thuong truyen vao', this.awardObj);
     if (this.awardObj?.employeeID && this.fromListView) {
       this.employId = this.awardObj?.employeeID;
     } else {
@@ -165,6 +164,10 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            if (res.key) {
+              this.autoNumField = res.key;
+            }
+
             this.awardObj = res?.data;
             if (this.awardObj.awardDate.toString() == this.defaultAwardDate)
               this.awardObj.awardDate = null;
@@ -318,8 +321,5 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
       }
       this.cr.detectChanges();
     }
-  }
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }

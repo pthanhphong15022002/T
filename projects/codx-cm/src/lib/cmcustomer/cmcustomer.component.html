@@ -140,20 +140,42 @@
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <div class="d-flex justify-content-end" *ngIf="data.isBlackList">
-    <span class="icon-do_disturb_alt icon-16 text-gray-700"></span>
+    <span
+      class="icon-do_disturb_alt icon-16 text-gray-700"
+      [ngbTooltip]="popupIsBlackList"
+      ><ng-template #popupIsBlackList>
+        <codx-label
+          fiedName="IsBlackList"
+          [formModel]="view.formModel"
+        ></codx-label> </ng-template
+    ></span>
   </div>
 </ng-template>
 
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column">
-    <div class="mb-1 d-flex align-items-center" *ngIf="funcID == 'CM0102' && data?.mobile">
+    <div
+      class="mb-1 d-flex align-items-center"
+      *ngIf="funcID == 'CM0102' && data?.mobile"
+    >
       <span
+        [ngbTooltip]="popupAllowCall"
         [ngClass]="
           data.allowCall
             ? 'icon-phone_android text-primary'
             : 'icon-phonelink_erase'
         "
         class="icon-16 me-2"
+        ><ng-template #popupAllowCall>
+          <codx-label
+            name="lblAllowCall"
+            [formModel]="view.formModel"
+            [default]="
+              data?.allowCall
+                ? 'Cho phép điện thoại'
+                : 'Không cho phép điện thoại'
+            "
+          ></codx-label> </ng-template
       ></span>
       <span
         [ngClass]="data.allowCall ? 'text-primary' : ''"
@@ -161,55 +183,91 @@
         >{{ data.mobile }}</span
       >
     </div>
-    <div class="mb-1 d-flex align-items-center" *ngIf="funcID == 'CM0102' && data?.personalEmail">
+    <div
+      class="mb-1 d-flex align-items-center"
+      *ngIf="funcID == 'CM0102' && data?.personalEmail"
+    >
       <span
+        [ngbTooltip]="popupAllowEmail"
         [ngClass]="
           data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
         "
         class="icon-16 me-2 text-gray-900"
+        ><ng-template #popupAllowEmail>
+          <codx-label
+            name="lblAllowEmail"
+            [formModel]="view.formModel"
+            [default]="
+              data?.allowEmail ? 'Cho phép gửi mail' : 'Không cho phép gửi mail'
+            "
+          ></codx-label> </ng-template
       ></span>
-      <span
-        [ngClass]="data.allowEmail ? 'text-primary' : ''"
-        >{{ data.personalEmail }}</span
-      >
+      <span [ngClass]="data.allowEmail ? 'text-primary' : ''">{{
+        data.personalEmail
+      }}</span>
     </div>
     <div class="mb-1 d-flex align-items-top" *ngIf="data.address">
-      <span class="icon-location_on icon-16 me-2 text-gray-700"></span>
+      <span
+        class="icon-location_on icon-16 me-2 text-gray-700"
+        [ngbTooltip]="popupAddress"
+      >
+        <ng-template #popupAddress>
+          <codx-label
+            fiedName="Address"
+            [formModel]="view.formModel"
+          ></codx-label>
+        </ng-template>
+      </span>
       <span class="fs-7 text-gray-600">{{ data.address }}</span>
     </div>
-    <div *ngIf="funcID == 'CM0101'">
-      <div class="mb-1 d-flex align-items-center">
-        <span class="icon-corporate_fare icon-16 me-2"></span>
-        <span class="fs-7"
-          [innerHTML]="
-            data?.custGroupID
-              | formatvalue : view.formModel : 'CustGroupID'
-              | async
-          "
-        ></span>
-      </div>
+    <div *ngIf="funcID == 'CM0101'" class="mb-1 d-flex align-items-center">
+      <span
+        class="icon-corporate_fare icon-16 me-2"
+        [ngbTooltip]="popupCustGroupID"
+        ><ng-template #popupCustGroupID>
+          <codx-label
+            [setRequire]="false"
+            fiedName="CustGroupID"
+            [formModel]="view.formModel"
+          ></codx-label> </ng-template
+      ></span>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.custGroupID
+            | formatvalue : view.formModel : 'CustGroupID'
+            | async
+        "
+      ></span>
     </div>
     <div
       class="mb-1 d-flex align-items-top"
-      *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries"
+      *ngIf="funcID != 'CM0102' && data.industries"
     >
-      <span class="icon-work_outline icon-16 me-2 text-gray-700"></span>
-      <span class="">
       <span
-        *ngFor="let item of data?.industries.split(';'); index as i"
-
-          >
-            <span
-              [innerHTML]="
-                item | formatvalue : view.formModel : 'Industries' | async
-              "
-            ></span
-            ><span class="me-1" *ngIf="i < data?.industries.split(';').length - 1"
-              >, </span
-            >
-            <!-- {{ dataSelected?.segmentID }} -->
+        class="icon-work_outline icon-16 me-2 text-gray-700"
+        [ngbTooltip]="popupIndustries"
+      >
+        <ng-template #popupIndustries>
+          <codx-label
+            fiedName="Industries"
+            [formModel]="view.formModel"
+          ></codx-label>
+        </ng-template>
       </span>
-    </span>
+      <span class="">
+        <span *ngFor="let item of data?.industries.split(';'); index as i">
+          <span
+            [innerHTML]="
+              item | formatvalue : view.formModel : 'Industries' | async
+            "
+          ></span
+          ><span class="me-1" *ngIf="i < data?.industries.split(';').length - 1"
+            >,
+          </span>
+          <!-- {{ dataSelected?.segmentID }} -->
+        </span>
+      </span>
     </div>
   </div>
 </ng-template>
@@ -218,7 +276,8 @@
     <span class="me-3 text-gray-700">{{
       data?.createdOn | date : "dd/MM/yyyy"
     }}</span>
-    <codx-imgs class="h-25px"
+    <codx-imgs
+      class="h-25px"
       [isToolTip]="true"
       [width]="25"
       [objectId]="data.createdBy"

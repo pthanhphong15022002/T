@@ -4,35 +4,36 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CRUDService,
-  CodxFormDynamicComponent,
   CodxTreeviewComponent,
+  RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
-import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  // encapsulation: ViewEncapsulation.None,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgorganizationComponent extends UIComponent {
+  console = console;
   views: Array<ViewModel> = [];
   button: ButtonModel;
   orgUnitID: string = '';
   parentID: string = '';
   detailComponent: any;
   dataSource: any[] = [];
-  dataCard: any = new Array();
   treeComponent?: CodxTreeviewComponent;
   currentView: any;
   currView?: TemplateRef<any>;
@@ -43,66 +44,75 @@ export class OrgorganizationComponent extends UIComponent {
   dataService: CRUDService = null;
   templateActive: number = 0;
   isCorporation: boolean = false;
+  request: any = null;
+  viewActive: string = '';
+  count: any;
+  buttonAdd: ButtonModel = {
+    id: 'btnAdd',
+  };
+  flagLoaded: boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('templateList') templateList: TemplateRef<any>;
+  @ViewChild('templateTree') templateTree: TemplateRef<any>;
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
   constructor(inject: Injector, private activedRouter: ActivatedRoute) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  onInit(): void {
-    // if (!this.funcID) {
-    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // }
-
-    this.router.params.subscribe((params) => {
-      if (params['funcID']) {
-        this.funcID = params['funcID'];
-        if (!this.funcID.includes('WP')) {
-          this.button = {
-            id: 'btnAdd',
-          };
-        }
-      }
-    });
-  }
-
+  onInit(): void {}
   ngAfterViewInit(): void {
+    this.request = new ResourceModel();
+    this.request.service = 'HR';
+    this.request.assemblyName = 'ERM.Business.HR';
+    this.request.className = 'OrganizationUnitsBusiness';
+    this.request.method = 'GetDataOrgAsync';
+    this.request.autoLoad = false;
+    this.request.parentIDField = 'ParentID';
     this.views = [
       {
-        // id: '1',
+        id: '1',
         type: ViewType.list,
         active: true,
         sameData: true,
         model: {
-          template: this.itemTemplate,
+          template: this.templateList,
         },
       },
       {
-        // id: '2',
+        id: '2',
+        type: ViewType.listtree,
+        active: false,
+        sameData: false,
+        request: this.request,
+        model: {
+          template: this.templateTree,
+          resourceModel: { parentIDField: 'ParentID' },
+        },
+      },
+      {
+        id: '3',
         type: ViewType.tree_masterdetail,
-        active: true,
-        sameData: true,
+        active: false,
+        sameData: false,
+        request: this.request,
         model: {
           resizable: true,
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
-          // template2: this.tmpMasterDetail,
-          resourceModel: { parentIDField: 'ParentID' },
         },
       },
     ];
+
     this.detectorRef.detectChanges();
   }
 
   //loadEmployList
-  loadEmployList(h, orgUnitID: string, abc) {}
+  // loadEmployList(h, orgUnitID: string, abc) {}
   // click moreFC
   clickMF(event: any, data: any) {
     if (event) {
@@ -121,11 +131,26 @@ export class OrgorganizationComponent extends UIComponent {
       }
     }
   }
+
+  //Call api delete
+  beforeDelete(opt: RequestOption, id) {
+    opt.methodName = 'DeleteEOrgChartAsync';
+    opt.className = 'OrganizationUnitsBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = id;
+    return true;
+  }
+
   // delete data
   deleteData(data: any) {
     if (data) {
-      // this.view.dataService.delete([data], true).subscribe();
-      this.view.dataService.delete([data]).subscribe(() => {});
+      this.view.dataService
+        .delete([data], true, (option: RequestOption) =>
+          this.beforeDelete(option, data.orgUnitID)
+        )
+        .subscribe();
+      this.flagLoaded = true;
     }
   }
   // edit data
@@ -151,6 +176,7 @@ export class OrgorganizationComponent extends UIComponent {
       popup.closed.subscribe((res: any) => {
         if (res.event) {
           this.view.dataService.update(res.event).subscribe();
+          this.flagLoaded = true;
         }
       });
     }
@@ -187,19 +213,22 @@ export class OrgorganizationComponent extends UIComponent {
     }
   }
   // change view
-  changeView(evt: any) {
-    // this.currView = null;
-    // if (evt.view) {
-    //   this.templateActive = evt.view.type;
-    //   this.currView = evt.view.model.template2;
-    // }
-    // this.detectorRef.detectChanges();
-  }
+  // changeView(evt: any) {
+  // this.currView = null;
+  // if (evt.view) {
+  //   this.templateActive = evt.view.type;
+  //   this.currView = evt.view.model.template2;
+  // }
+  // this.detectorRef.detectChanges();
+  // }
   // selected change
   onSelectionChanged(evt: any) {
-    var data = evt.data || evt;
-    if (data && this.orgUnitID !== data.orgUnitID) {
+    if (this.view) {
+      // let viewActive = this.view.views.find((e) => e.active == true);
+      // if (viewActive?.id == '1') return;
+      var data = evt.data || evt;
       this.orgUnitID = data.orgUnitID;
+      // this.detectorRef.detectChanges();
     }
   }
   // button add toolbar
@@ -228,6 +257,7 @@ export class OrgorganizationComponent extends UIComponent {
           popup.closed.subscribe((res: any) => {
             if (res.event) {
               this.view.dataService.add(res.event).subscribe();
+              this.flagLoaded = true;
             }
           });
         }
@@ -235,23 +265,56 @@ export class OrgorganizationComponent extends UIComponent {
     }
   }
 
-  // convert org to tmp
-  getOrgInfor(data) {
-    this.api
-      .execSv(
-        'HR',
-        'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
-        'GetOrgInforAsync',
-        [data.orgUnitID]
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          data.parentName = res.parentName;
-          data.employeeManager = res.employeeManager;
-          data.positionName = res.positionName;
-          this.view.dataService.update(data).subscribe();
-        }
-      });
+  viewChanged(event: any) {
+    //Prevent load data when click same id and check update data when CRUD or not
+    if (this.viewActive !== event.view.id) {
+      // if (this.viewActive !== event.view.id && this.flagLoaded) {
+      // console.log(this.view.currentView.dataService.data);
+
+      if (event?.view?.id === '1') {
+        this.view.dataService.data = [];
+        this.view.dataService.parentIdField = '';
+      } else {
+        this.view.dataService.parentIdField = 'ParentID';
+      }
+
+      //Set data to update mode view tree list
+      if (
+        this.view.currentView.dataService &&
+        this.view.currentView.dataService.currentComponent
+      ) {
+        this.view.currentView.dataService.data = [];
+        this.view.currentView.dataService.currentComponent.dicDatas = {};
+      }
+
+      //check update data when CRUD or not
+      // this.flagLoaded = false;
+
+      this.view.dataService.page = 0;
+
+      //Prevent load data when click same id
+      this.viewActive = event.view.id;
+      this.view.currentView.dataService.load().subscribe();
+    }
   }
+
+  // convert org to tmp
+  // getOrgInfor(data) {
+  //   this.api
+  //     .execSv(
+  //       'HR',
+  //       'ERM.Business.HR',
+  //       'OrganizationUnitsBusiness',
+  //       'GetOrgInforAsync',
+  //       [data.orgUnitID]
+  //     )
+  //     .subscribe((res: any) => {
+  //       if (res) {
+  //         data.parentName = res.parentName;
+  //         data.employeeManager = res.employeeManager;
+  //         data.positionName = res.positionName;
+  //         this.view.dataService.update(data).subscribe();
+  //       }
+  //     });
+  // }
 }

@@ -360,34 +360,24 @@
       [label]="itemAnswer.answer"
       field="O"
       [crrValue]="itemAnswer.answer"
-      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer, seqNoSession)"
     ></codx-input>
     <div class="d-flex align-items-center " *ngIf="itemAnswer.other">
       <codx-input
         type="radio"
         labelPosition="After"
-        [disabled]="false"
         class="test-check"
         [name]="seqNoSession+itemQuestion?.recID"
-        [label]="'Mục khác:'"
+        [label]="'Khác:'"
         field="O"
-        [checked]="itemAnswer.choose"
+        [crrValue]="'other'"
         (valueChange)="
-          valueChange($event, itemSession, itemQuestion, itemAnswer)
+        checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer , seqNoSession)
         "
         [style.width]="'125px'"
       ></codx-input>
-      <codx-input
-        type="text"
-        class="border-0 h-20px"
-        [crrValue]="itemAnswer.answer"
-        field="O"
-        (valueChange)="
-          valueChange($event, itemSession, itemQuestion, itemAnswer)
-        "
-        [ngClass]="'w-100'"
-      >
-      </codx-input>
+      <input type="text" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="true" class="form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event.target.value, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
+
     </div>
   </div>
   <div class="e-input-group" *ngIf="itemQuestion.answerType == 'C'">
@@ -626,7 +616,7 @@
     </div>
   </div>
   <div *ngIf="(itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') ; else tmpL">
-    <table>
+    <table class="w-100">
       <tr>
         <th scope="col" class="w-20"></th>
         <th
@@ -636,18 +626,19 @@
           <span>{{ itemC.answer }}</span>
         </th>
       </tr>
-      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers)">
+      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers) ; let i = index" [attr.data-index]="i">
         <td>
           {{ itemR.answer }}
         </td>
-        <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">
+        <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers) ; let x = index" [attr.data-index]="x">
           <codx-input
             *ngIf="itemQuestion.answerType == 'O2'"
             type="radio"
             labelPosition="After"
             [disabled]="false"
             class="test-check"
-            name="group"
+            [name]="'group'+itemQuestion.recID+i"
+            (valueChange)="valueChange($event, itemSession, itemQuestion, itemC)"
           ></codx-input>
           <codx-input
             *ngIf="itemQuestion.answerType == 'C2'"

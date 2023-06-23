@@ -65,11 +65,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   VATType: any;
   detailActive = 1;
   countDetail = 0;
-  pageCount: any;
   journal: IJournal;
   hasSaved: any = false;
   isSaveMaster: any = false;
-  visibleColumns: Array<any> = [];
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
@@ -101,8 +99,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   ];
   columnGrids = [];
   keymodel: any = [];
-  page: any = 1;
-  pageSize = 5;
   modegrid: any;
   lsVatCode: any;
   journals: any;
@@ -140,6 +136,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseinvoices);
     this.loadTotal();
+    setTimeout(() => {
+      this.focusInput();
+    }, 500);
   }
   //#endregion
 
@@ -193,13 +192,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.vatinvoices[e.field] = e.data;
   }
   gridCreated(e, grid) {
-    this.visibleColumns = this.gridPurchaseInvoicesLine.visibleColumns;
     this.gridPurchaseInvoicesLine.hideColumns(this.lockFields);
   }
 
   onDoubleClick(data)
   {
-    this.loadPredicate(this.visibleColumns, data.rowData);
+    this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, data.rowData);
   }
 
   expandTab() {}
@@ -285,7 +283,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   close() {
-    this.dialog.close();
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.purchaseinvoices,
+      });
+    } else {
+      this.dialog.close();
+    }
   }
 
   onDiscard(){
@@ -381,7 +386,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               {
                 this.purchaseInvoicesLines.push(dataline);
               }
-              this.loadPageCount();
               this.hasSaved = true;
               this.isSaveMaster = true;
               this.loadTotal();
@@ -406,7 +410,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               idx = this.gridPurchaseInvoicesLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridPurchaseInvoicesLine.addRow(res, idx);
-              this.loadPredicate(this.visibleColumns, res);
+              this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, res);
               break;
             case '2':
               idx = this.purchaseInvoicesLines.length;
@@ -434,10 +438,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.gridPurchaseInvoicesLine.addRow(res, idx);
-              setTimeout(() => {
-                this.gridPurchaseInvoicesLine.updateRow(idx, res);
-              }, 500);
-              
+              this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, res);
               break;
             case '2':
               idx = this.purchaseInvoicesLines.length;
@@ -514,7 +515,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       case '1':
         this.gridPurchaseInvoicesLine.gridRef.selectRow(Number(data.index));
         this.gridPurchaseInvoicesLine.gridRef.startEdit();
-        this.loadPredicate(this.visibleColumns, data)
+        this.loadPredicate(this.gridPurchaseInvoicesLine.visibleColumns, data)
         break;
       case '2':
         let index = this.purchaseInvoicesLines.findIndex(
@@ -591,7 +592,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             for (let i = 0; i < this.purchaseInvoicesLines.length; i++) {
               this.purchaseInvoicesLines[i].rowNo = i + 1;
             }
-            this.loadPageCount();
             break;
         }
         this.api
@@ -741,10 +741,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     });
   }
 
-  loadPageCount() {
-    this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
-  }
-
   searchName(e) {
     var filter, table, tr, td, i, txtValue, mySearch, myBtn;
     filter = e.toUpperCase();
@@ -836,6 +832,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           }
         }
       }
+  }
+
+  checkTransLimit(){
+    if(this.journal.transLimit && this.purchaseinvoices.totalAmt > this.journal.transLimit)
+    {
+      this.notification.notifyCode('AC0016');
+      this.validate++ ;
+    }
   }
 
   detaiClick(e) {
@@ -1026,7 +1030,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             }
           });
       }
-      });
+    });
   }
 
   getTaxRate(vatCodeID: any){
@@ -1079,7 +1083,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         .subscribe(() => {});
     }
   }
-  
+
   onSaveMaster()
   {
     this.checkValidate();
@@ -1109,6 +1113,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
 
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -1184,7 +1189,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                   this.updateVAT();
                   this.dialog.close({
                     update: true,
-                    data: res.update,
+                    data: res.update.data,
                   });
                   this.dt.detectChanges();
                 }
@@ -1198,6 +1203,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onSaveAdd(){
     this.checkValidate();
+    this.checkTransLimit();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -1259,6 +1265,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
+  focusInput() {
+    var element = document.querySelectorAll('input');
+    console.log(element[0]);
+    (element[0] as HTMLInputElement).focus();
+    (element[0] as HTMLInputElement).setSelectionRange(0, 2000);
+  }
   
   //#endregion
 }

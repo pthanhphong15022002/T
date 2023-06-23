@@ -143,7 +143,6 @@ export class DynamicProcessComponent
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private activedRouter: ActivatedRoute,
-    private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private layoutDP: LayoutComponent,
@@ -177,7 +176,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = this.funcID == 'DP01';
+    this.showButtonAdd = this.funcID == 'DP01' || this.funcID == 'DP0101';
   }
 
   //chang data
@@ -367,7 +366,7 @@ export class DynamicProcessComponent
               this.oldIdProccess,
               this.view.dataService.dataSelected.recID,
             ];
-            this.codxDpService.copyAvatarById(data).subscribe((res) => {
+            this.dpService.copyAvatarById(data).subscribe((res) => {
               this.openFormCopyProccess(obj, dialogModel);
             });
           });
@@ -617,6 +616,15 @@ export class DynamicProcessComponent
           case 'DP02012':
           case 'DP02022':
           case 'DP02032':
+            if (
+              data.category === '0' ||
+              !data.write ||
+              this.funcID == 'DP0203' ||
+              this.funcID === 'DP04'
+            ) {
+              res.disabled = true;
+            }
+            break;
           case 'SYS03':
             if (
               !data.write ||
@@ -644,6 +652,7 @@ export class DynamicProcessComponent
           //   break;
           case 'SYS02': // xoa
             if (
+              data.category === '0' ||
               !data.delete ||
               data.deleted ||
               this.funcID == 'DP0203' ||
@@ -660,13 +669,13 @@ export class DynamicProcessComponent
             }
             break;
           case 'DP01016':
-            res.disabled = data.released ? true : false;
+            if (data.category === '0' || data.released) res.disabled = true;
             break;
           case 'DP01017':
-            res.disabled = data.released ? false : true;
+            if (data.category === '0' || !data.released) res.disabled = true;
             break;
           case 'DP01018':
-            res.disabled = data.released ? false : true;
+            if (data.category === '0' || !data.released) res.disabled = true;
             break;
         }
       });
@@ -920,7 +929,7 @@ export class DynamicProcessComponent
     if (typeof event?.data === 'string') {
       value = value.trim();
     }
-    data = value;
+    this.processName = value;
   }
 
   changeValue(event, data) {
@@ -1030,7 +1039,7 @@ export class DynamicProcessComponent
   }
   //setting trình kí
   settingSubmit(categoryID) {
-    this.codxDpService
+    this.dpService
       .getESCategoryByCategoryID(categoryID)
       .subscribe((item: any) => {
         if (item) {
@@ -1051,8 +1060,8 @@ export class DynamicProcessComponent
                     let option = new SidebarModel();
                     option.Width = '550px';
                     option.FormModel = formES;
-                    var dataService = new DataService(this.inject);
-                    dataService.dataSelected = item;
+                    // var dataService = new DataService(this.inject);
+                    // dataService.dataSelected = item;
                     let popupEditES = this.callfc.openSide(
                       PopupAddCategoryComponent,
                       {
@@ -1066,7 +1075,7 @@ export class DynamicProcessComponent
                     );
 
                     popupEditES.closed.subscribe((res) => {
-                      if (!res?.event) {
+                      if (res?.event) {
                       }
                     });
                   });

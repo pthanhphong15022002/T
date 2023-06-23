@@ -388,24 +388,9 @@
             <codx-input
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
+              [disabled]="systemProcess || process?.category == '0' ? true : false"
               type="text"
               [crrValue]="process.processName"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group margin-form">
-            <div>
-              <codx-label fiedName="AutoName" [formModel]="dialog.formModel">
-              </codx-label>
-            </div>
-            <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
-            </codx-input> -->
-            <codx-input
-              field="autoName"
-              type="text"
-              [crrValue]="process.autoName"
-              [placeholder]="gridViewSetup['AutoName']?.description"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -421,10 +406,30 @@
               field="applyFor"
               type="valuelist"
               [crrValue]="process.applyFor"
-              [refValue]="gridViewSetup?.ApplyFor?.referedValue"
+              [refValue]="
+                process.applyFor != '5'
+                  ? gridViewSetup?.ApplyFor?.referedValue
+                  : 'DP002'
+              "
               (valueChange)="valueChange($event)"
-              [disabled]="action == 'edit'"
+              [disabled]="action == 'edit' || systemProcess"
               [placeholder]="gridViewSetup['ApplyFor']?.description"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group margin-form" *ngIf="process.applyFor == '0'">
+            <div>
+              <codx-label fiedName="AutoName" [formModel]="dialog.formModel">
+              </codx-label>
+            </div>
+            <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
+            </codx-input> -->
+            <codx-input
+              field="autoName"
+              type="text"
+              [crrValue]="process.autoName"
+              [placeholder]="gridViewSetup['AutoName']?.description"
+              (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>
@@ -1266,6 +1271,8 @@
               </div>
               <div class="d-flex align-items-center">
                 <button
+                  [ngbTooltip]="titleAdd"
+                  placement="top left bottom right"
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary ms-2"
                   (click)="
@@ -1274,17 +1281,20 @@
                 >
                   <i class="icon-add icon-18"></i>
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  #p="ngbPopover"
-                  [ngbPopover]="popperHandelSetting"
-                  (mouseenter)="popoverSelectView(p, item)"
-                  placement="bottom right top left"
-                  [popoverClass]
-                >
-                  <i class="icon-settings icon-18"></i>
-                </button>
+                <span [ngbTooltip]="toolTipSetting">
+                  <button
+                    type="button"
+                    class="btn btn-icon btn-sm btn-light-primary ms-2"
+                    #p="ngbPopover"
+                    [ngbPopover]="popperHandelSetting"
+                    (mouseenter)="popoverSelectView(p, item)"
+                    autoClose="outside"
+                    placement="bottom right top left"
+                  >
+                    <i class="icon-settings icon-18"></i>
+                  </button>
+                </span>
+
                 <button
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary ms-2"
@@ -1964,13 +1974,6 @@
           <div class="d-flex align-items-center ms-5">
             <button
               type="button"
-              class="btn btn-icon btn-sm btn-light-primary"
-              (click)="openTaskGroup()"
-            >
-              <i class="icon-add icon-16"></i>
-            </button>
-            <button
-              type="button"
               class="btn btn-icon btn-sm btn-light-primary ms-2"
               (click)="openTypeJob()"
             >
@@ -2192,19 +2195,6 @@
         </div>
       </div>
       <div class="d-flex justify-content-center mt-3">
-        <button
-          type="button"
-          class="btn btn-outline-primary me-2"
-          (click)="openTaskGroup()"
-        >
-          <i class="icon-add icon-18 text-primary"></i>
-          <codx-label
-            [name]="'lblAddGroup'"
-            [formName]="'DPStepsFields'"
-            [gridViewName]="'grvDPStepsFields'"
-            [default]="'Thêm nhóm công việc'"
-          ></codx-label>
-        </button>
         <button
           type="button"
           class="btn btn-outline-primary"
@@ -2521,7 +2511,7 @@
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
               [value]="moveProccessIsNull(stepSuccess?.newProcessID)"
-              [enabled]="process.applyFor != '1' "
+              [enabled]="process.applyFor != '1'"
               [readonly]="stepSuccess.isUsed ? false : true"
             >
             </ejs-combobox>
@@ -2589,7 +2579,7 @@
       <div class="main-body p-6">
         <div *ngIf="stepSuccess.reasons?.length > 0">
           <div *ngFor="let item of stepSuccess?.reasons" class="pb-2">
-            <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+            <ul class="text-left drap-drop mb-1 has-action-menu">
               <li>
                 <div *ngIf="stepSuccess.isUsed; else other_content">
                   {{ item?.reasonName }}
@@ -2737,7 +2727,7 @@
               [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
-              [enabled]="process.applyFor != '1' "
+              [enabled]="process.applyFor != '1'"
               [value]="moveProccessIsNull(stepFail?.newProcessID)"
             ></ejs-combobox>
             <codx-label
@@ -2803,7 +2793,7 @@
     >
       <div class="main-body p-6">
         <div *ngFor="let item of stepFail?.reasons" class="pb-2">
-          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+          <ul class="text-left drap-drop mb-1 has-action-menu">
             <li>
               <div *ngIf="stepFail?.isUsed; else other_fail">
                 {{ item?.reasonName }}
@@ -3153,7 +3143,7 @@
                 default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
               >
               </codx-label>
-               <span class="text-danger">*</span>
+              <span class="text-danger">*</span>
             </div>
             <div class="text-gray-600">
               <codx-label
@@ -3161,7 +3151,6 @@
                 theo"
               >
               </codx-label>
-
             </div>
           </div>
           <div class="col-6">

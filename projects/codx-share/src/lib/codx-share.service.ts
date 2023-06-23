@@ -38,7 +38,8 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
-
+import { ApproveProcess } from './models/ApproveProcess.model';
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
@@ -50,8 +51,6 @@ export class CodxShareService {
   settingValue = new BehaviorSubject<any>(null);
   public caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
-  childMenuClick = new BehaviorSubject<any>(null);
-  childMenuDefault = new BehaviorSubject<any>(null);
   //
   user;
   //
@@ -66,7 +65,8 @@ export class CodxShareService {
     private fb: FormBuilder,
     private dmSV: CodxDMService,
     private fileService: FileService,
-    private signalRSV: SignalRService
+    private signalRSV: SignalRService,
+    private httpClient: HttpClient
   ) {
     this.user = this.auth.get();
   }
@@ -176,8 +176,113 @@ export class CodxShareService {
     dataService?: any,
     that: any = null
   ) {
+    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
     switch (funcID) {
+      case 'SYS201':
+      case 'SYS202':
+      case 'SYS203':
+      case 'SYS204':
+      case 'SYS205':
+      case 'SYS206': {
+        if (data?.unbounds?.eSign == true) {
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = dataService;
+          option.FormModel = formModel;
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+
+          var listApproveMF = this.getMoreFunction(funcID);
+
+          let dialogApprove = this.callfunc.openForm(
+            PopupSignForApprovalComponent,
+            'Thêm mới',
+            700,
+            650,
+            formModel.funcID,
+            {
+              funcID: 'EST021',
+              sfRecID: data?.unbounds?.transID,
+              title: data?.unbounds?.htmlView,
+              status: data?.unbounds?.statusApproval,
+              stepType: data?.unbounds?.stepType,
+              stepNo: data?.unbounds?.stepNo,
+              transRecID: data?.unbounds?.approvalRecID,
+              oTrans: data?.unbounds,
+              lstMF: listApproveMF,
+            },
+            '',
+            dialogModel
+          );
+          dialogApprove.closed.subscribe((x) => {
+            if (x.event?.result) {
+              data.statusApproval = x.event?.mode;
+              dataService.update(data).subscribe();
+            }
+          });
+        } else {
+          var status;
+          if (
+            funcID == 'SYS201' ||
+            funcID == 'SYS202' ||
+            funcID == 'SYS203' ||
+            funcID == 'SYS204'
+          )
+            status = '5';
+          else if (funcID == 'SYS205') status = '4';
+          else if (funcID == 'SYS206') status = '2';
+          let dialog = this.beforeApprove(
+            status,
+            data?.unbounds,
+            formModel.funcID,
+            val?.text,
+            formModel
+          );
+          if (dialog) {
+            dialog.closed.subscribe((res) => {
+              let oComment = res?.event;
+              this.codxApprove(
+                data?.unbounds?.approvalRecID,
+                status,
+                oComment.comment,
+                oComment.reasonID
+              ).subscribe((res2: any) => {
+                if (!res2?.msgCodeError) {
+                  data.unbounds.statusApproval = status;
+                  dataService.update(data).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                  //afterSave(data.statusApproval);
+                } else this.notificationsService.notify(res2?.msgCodeError);
+              });
+            });
+          } else {
+            this.codxApprove(
+              data?.unbounds?.approvalRecID,
+              status,
+              '',
+              ''
+            ).subscribe((res2: any) => {
+              if (!res2?.msgCodeError) {
+                data.unbounds.statusApproval = status;
+                dataService.update(data).subscribe();
+                this.notificationsService.notifyCode('SYS007');
+                afterSave(data.statusApproval);
+              } else this.notificationsService.notify(res2?.msgCodeError);
+            });
+          }
+        }
+        break;
+      }
+      case 'SYS207': {
+        this.codxUndo(data?.unbounds?.approvalRecID).subscribe((res: any) => {
+          if (res) {
+            data.unbounds.statusApproval = res?.status;
+            dataService.update(data).subscribe();
+            //this.notificationsService.notifyCode('SYS007');
+          }
+        });
+      }
     }
   }
 
@@ -769,11 +874,12 @@ export class CodxShareService {
         this.user.userID
       );
     }
+    this.redirect('HCS', '', '', true);
     this.authService.logout('');
     // document.location.reload();
   }
 
-  redirect(type, returnUrl, display = '') {
+  redirect(type, returnUrl, display = '', isLogout = false) {
     switch (type.toUpperCase()) {
       case 'HCS': {
         this.api
@@ -785,9 +891,17 @@ export class CodxShareService {
             []
           )
           .subscribe((token) => {
-            let url = `${environment.loginHCS}/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
-            if (url != '') {
-              window.open(url, display == '3' ? '_blank' : 'target');
+            let url = '';
+            if (isLogout) {
+              url = `${environment.loginHCS}/LogoutUser.aspx?tklid=${token}`;
+              this.httpClient.get<any>(url).subscribe((reponse) => {
+                console.log('log out', reponse);
+              });
+            } else {
+              url = `${environment.loginHCS}/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
+              if (url != '') {
+                window.open(url, display == '3' ? '_blank' : '_self');
+              }
             }
           });
         break;
@@ -874,145 +988,6 @@ export class CodxShareService {
       }
     }
   }
-  clickMFApproval(
-    e: any,
-    data: any,
-    dataService: any,
-    formModel: any,
-    afterSave: any
-  ) {
-    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
-    var funcID = e?.functionID;
-    if (data.eSign == true) {
-      //Kys
-      if (
-        funcID == 'SYS201' ||
-        funcID == 'SYS205' ||
-        funcID == 'SYS206' ||
-        funcID == 'SYS204' ||
-        funcID == 'SYS203' ||
-        funcID == 'SYS202'
-      ) {
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = dataService;
-        option.FormModel = formModel;
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-
-        var listApproveMF = this.getMoreFunction(funcID);
-
-        let dialogApprove = this.callfunc.openForm(
-          PopupSignForApprovalComponent,
-          'Thêm mới',
-          700,
-          650,
-          formModel.funcID,
-          {
-            funcID: 'EST021',
-            sfRecID: data.transID,
-            title: data.htmlView,
-            status: data.statusApproval,
-            stepType: data.stepType,
-            stepNo: data.stepNo,
-            transRecID: data.approvalRecID,
-            oTrans: data,
-            lstMF: listApproveMF,
-          },
-          '',
-          dialogModel
-        );
-        dialogApprove.closed.subscribe((x) => {
-          if (x.event?.result) {
-            data.statusApproval = x.event?.mode;
-            dataService.update(data).subscribe();
-            //  this.esService.setupChange.next(true);
-            //  this.esService.isStatusChange.subscribe((res) => {
-            //    if (res != null) {
-            //      if (res.toString() == '2') {
-            //        this.view.dataService.remove(data).subscribe();
-            //      } else {
-            //        data.status = res;
-            //        this.view.dataService.update(data).subscribe();
-            //      }
-            //    }
-            //  });
-          }
-
-          /*return {
-              result: true,
-              mode: 1
-            }
-  
-            mode: 1. Ký
-                2. Từ chối
-                3. Làm lại */
-        });
-      }
-
-      //hoan tat
-      // else if (funcID == 'SYS204') {
-
-      // }
-    } else {
-      var status;
-      if (
-        funcID == 'SYS201' ||
-        funcID == 'SYS202' ||
-        funcID == 'SYS203' ||
-        funcID == 'SYS204'
-      )
-        status = '5';
-      else if (funcID == 'SYS205') status = '4';
-      else if (funcID == 'SYS206') status = '2';
-
-      let dialog = this.beforeApprove(
-        status,
-        data,
-        formModel.funcID,
-        e?.text,
-        formModel
-      );
-      if (dialog) {
-        dialog.closed.subscribe((res) => {
-          let oComment = res?.event;
-          this.approval(
-            data?.approvalRecID,
-            status,
-            oComment.comment,
-            oComment.reasonID
-          ).subscribe((res2: any) => {
-            if (!res2?.msgCodeError) {
-              data.statusApproval = status;
-              dataService.update(data).subscribe();
-              this.notificationsService.notifyCode('SYS007');
-              afterSave(data.statusApproval);
-            } else this.notificationsService.notify(res2?.msgCodeError);
-          });
-        });
-      } else {
-        this.approval(data?.approvalRecID, status, '', '').subscribe(
-          (res2: any) => {
-            if (!res2?.msgCodeError) {
-              data.statusApproval = status;
-              dataService.update(data).subscribe();
-              this.notificationsService.notifyCode('SYS007');
-              afterSave(data.statusApproval);
-            } else this.notificationsService.notify(res2?.msgCodeError);
-          }
-        );
-      }
-    }
-    if (funcID == 'SYS207') {
-      this.undoApproval(data.approvalRecID).subscribe((res) => {
-        if (res) {
-          data.statusApproval = res?.status;
-          dataService.update(data).subscribe();
-          //this.notificationsService.notifyCode('SYS007');
-        }
-      });
-    }
-  }
 
   getMoreFunction(funcID: any) {
     var listApproveMF = [];
@@ -1053,24 +1028,95 @@ export class CodxShareService {
     return listApproveMF;
   }
 
-  approval(approvalRecID: any, status: any, comment: any, reasonID: any) {
-    return this.api.execSv<any>(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'ApproveAsync',
-      [approvalRecID, status, comment, reasonID]
+  //#region Codx Quy trình duyệt
+  //-------------------------------------------Gửi duyệt--------------------------------------------//
+  codxRelease(
+    module: string, //Tên service
+    recID: any, //RecID nghiệp vụ gốc
+    processID: string, //Mã quy trình duyệt
+    entityName: string, //EntityName nghiệp vụ gốc
+    funcID: string, //FunctionID nghiệp vụ gốc
+    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
+    title: string, //Tiêu đề (truyền kiểu chuỗi thường)
+    customEntityName: string //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+  ): Observable<any> {
+    let approveProcess = new ApproveProcess();
+    approveProcess.recID = recID;
+    approveProcess.processID = processID;
+    approveProcess.userID = userID;
+    approveProcess.entityName = entityName;
+    approveProcess.funcID = funcID;
+    approveProcess.htmlView = '<div>' + title + '</div>';
+    approveProcess.module = module;
+    approveProcess.customEntityName = customEntityName;
+
+    return this.api.execSv(
+      module,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [approveProcess]
     );
   }
-  undoApproval(approvalRecID: any) {
-    return this.api.execSv<any>(
+
+  //-------------------------------------------Hủy yêu cầu duyệt--------------------------------------------//
+  codxCancel(
+    module: string, //Tên service
+    recID: string, //RecID nghiệp vụ gốc
+    entityName: string, //EntityName nghiệp vụ gốc
+    comment: string //ghi chú (ko bắt buộc)
+  ) {
+    let approveProcess = new ApproveProcess();
+    approveProcess.recID = recID;
+    approveProcess.entityName = entityName;
+    approveProcess.module = module;
+    approveProcess.comment = comment;
+
+    return this.api.execSv(
+      module,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'CancelAsync',
+      [approveProcess]
+    );
+  }
+
+  //-------------------------------------------Khôi phục--------------------------------------------//
+  codxUndo(
+    tranRecID: string //RecID của ES_ApprovalTrans hiện hành
+  ) {
+    let approveProcess = new ApproveProcess();
+    approveProcess.tranRecID = tranRecID;
+    return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UndoAsync',
-      [approvalRecID]
+      [approveProcess]
     );
   }
+  //-------------------------------------------Duyệt/Làm lại/Từ chối--------------------------------------------//
+  codxApprove(
+    tranRecID: any, //RecID của ES_ApprovalTrans hiện hành
+    status: string, //Trạng thái
+    reasonID: string, //Mã lí do (ko bắt buộc)
+    comment: string //Bình luận (ko bắt buộc)
+  ): Observable<any> {
+    let approveProcess = new ApproveProcess();
+    approveProcess.tranRecID = tranRecID;
+    approveProcess.status = status;
+    approveProcess.reasonID = reasonID;
+    approveProcess.comment = comment;
+
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ApproveAsync',
+      [approveProcess]
+    );
+  }
+  //#endregion Codx Quy trình duyệt
 }
 //#region Model
 

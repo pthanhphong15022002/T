@@ -62,9 +62,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
       this.data.parentID = this.parent.recID;
     }
     else
-    {
       this.getFileByObjectID();
-    }
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
         this.vllL1480 = res.datas;
@@ -122,30 +120,16 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
       this.loading = true;
       //update
       if(this.isEdit)
-      {
         this.updateComment(this.data);
-      }
       //insert
       else
-      {
         this.insertComment(this.data);
-      }
     }
   }
   // insert comments
   insertComment(data:any){
     this.data.refID = this.refID;
     this.data.parentID = this.parent.recID;
-    if(!this.data.parentID){
-      this.notifySvr.notifyCode('SYS009',0,this.grvWP['ParentID']['headerText']);
-      this.loading = false;
-      return;
-    }
-    if(!this.data.refID){
-      this.notifySvr.notifyCode('SYS009',0,this.grvWP['RefID']['headerText']);
-      this.loading = false;
-      return;
-    }
     //có đính kèm file
     if(this.file){
       let lstFile = [];
@@ -163,7 +147,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
             'ERM.Business.WP',
             'CommentsBusiness',
             'InsertCommentAsync',
-            [data])
+            [this.parent,data])
           .subscribe((res:any) => {
             if(res)
             {
@@ -194,7 +178,7 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
         'ERM.Business.WP',
         'CommentsBusiness',
         'InsertCommentAsync',
-        [data])
+        [this.parent,data])
       .subscribe((res:any) => {
         if(res){
           this.data.recID = Util.uid();

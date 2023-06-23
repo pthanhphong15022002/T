@@ -30,6 +30,7 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -39,11 +40,17 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel = {
+    id: 'btnAdd',
+    icon: 'icon-i-file-earmark-plus',
+    text: 'Thêm phiếu chi',
+  };
+  isRead:any = false;
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -56,8 +63,10 @@ export class CashPaymentsComponent extends UIComponent {
   dataCategory: any;
   journal: IJournal;
   approval: any;
-  totalacct: any;
-  totaloff: any;
+  totalacct: any = 0;
+  totaloff: any = 0;
+  totalsettledAmt: any = 0;
+  totalbalAmt: any = 0;
   className: any;
   classNameLine: any;
   entityName: any;
@@ -66,6 +75,7 @@ export class CashPaymentsComponent extends UIComponent {
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
+  loading:any = false;
   arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -90,11 +100,17 @@ export class CashPaymentsComponent extends UIComponent {
   ];
   parent: any;
   authStore: AuthStore;
+  fmAccTrans: FormModel = {
+    formName: 'AcctTrans',
+    gridViewName: 'grvAcctTrans',
+    entityName: 'AC_AcctTrans',
+  };
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     private acService: CodxAcService,
+    private shareService: CodxShareService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef
   ) {
@@ -111,13 +127,11 @@ export class CashPaymentsComponent extends UIComponent {
       this.journalNo = params?.journalNo;
       if (params?.parent) {
         this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) this.parent = res;
+          if (res) {
+            this.view.setRootNode(res?.customName);
+          }
         });
       }
-      if (this.parent) {
-        this.view.setRootNode(this.parent?.customName);
-      }
-      
     });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
@@ -137,15 +151,6 @@ export class CashPaymentsComponent extends UIComponent {
     });
     this.views = [
       {
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          template2: this.templateMore,
-          frozenColumns: 1,
-        },
-      },
-      {
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -153,6 +158,24 @@ export class CashPaymentsComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+
+        model: {
+          template: this.listTemplate,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: true,
+        model: {
+          frozenColumns: 1,
+          template2: this.templateMore,
         },
       },
     ];
@@ -171,6 +194,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     //this.view.setRootNode(this.parent?.customName);
+
     this.detectorRef.detectChanges();
   }
 
@@ -204,6 +228,15 @@ export class CashPaymentsComponent extends UIComponent {
       case 'ACT041002':
         this.release(data);
         break;
+      case 'ACT041004':
+        this.cancelRelease(data);
+        break;
+      case 'ACT041009':
+        this.checkValidate(data);
+        break;
+      case 'ACT041003':
+        this.post(data);
+        break;
     }
   }
   //#endregion
@@ -211,7 +244,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Method
   setDefault(o) {
     return this.api.exec('AC', this.className, 'SetDefaultAsync', [
-      this.journalNo,
+      this.journal,
     ]);
   }
 
@@ -239,6 +272,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
+              //this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -247,7 +281,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   edit(e, data) {
     if (data) {
-      this.view.dataService.dataSelected = { ...data };
+      this.view.dataService.dataSelected = data;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -271,6 +305,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
+              //this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -347,32 +382,107 @@ export class CashPaymentsComponent extends UIComponent {
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' ||
-        x.functionID == 'ACT041002' ||
-        x.functionID == 'ACT041004'
+        x.functionID == 'ACT041003' || // ghi sổ
+        x.functionID == 'ACT041002' || // gửi duyệt
+        x.functionID == 'ACT041004' || // hủy yêu cầu duyệt
+        x.functionID == 'ACT041008' || // khôi phục
+        x.functionID == 'ACT042901' || // chuyển tiền điện tử
+        x.functionID == 'ACT041010' || // in
+        x.functionID == 'ACT041009' // kiểm tra tính hợp lệ
     );
     if (bm.length > 0) {
-      // check có hay ko duyệt trước khi ghi sổ
-      if (data?.status == '1') {
-        if (this.approval == '0') {
+      switch (data?.status) {
+        case '0':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '1':
+          if (this.journal.approvalControl == '0') {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041003' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041002' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
+          break;
+        case '2':
+        case '4':
           bm.forEach((element) => {
             element.disabled = true;
           });
-        } else {
-          bm[1].disabled = true;
-          bm[2].disabled = true;
-        }
-      }
-      //Chờ duyệt
-      if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
-        bm[1].disabled = true;
-        bm[0].disabled = true;
-      }
-      //hủy duyệt
-      if (data?.approveStatus == '4' || data?.status == '0') {
-        for (var i = 0; i < bm.length; i++) {
-          bm[i].disabled = true;
-        }
+          break;
+        case '3':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041004' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '5':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '6':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041008' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '9':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
       }
     }
   }
@@ -394,110 +504,113 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     switch (data.subType) {
+      case '9':
       case '2':
         this.api
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.settledInvoices = res;
-            //this.loadTotal();
-          });
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-            this.loadTotal();
-          });
-        break;
-      default:
-        this.api
-          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
-            this.acctTrans = res;
-            this.loadTotal();
+            this.loadTotalSet();
           });
         break;
     }
-    this.loadCashbookName(this.itemSelected);
-    this.loadReasonName(this.itemSelected);
+    this.api
+      .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.acctTrans = res;
+        this.loadTotal();
+      });
   }
 
   release(data: any) {
-    // this.acService
-    //   .getCategoryByEntityName(this.view.formModel.entityName)
-    //   .subscribe((res) => {
-    //     this.dataCategory = res;
-    //     this.acService
-    //       .release(
-    //         data.recID,
-    //         this.dataCategory.processID,
-    //         this.view.formModel.entityName,
-    //         this.view.formModel.funcID,
-    //         ''
-    //       )
-    //       .subscribe((result) => {
-    //         if (result?.msgCodeError == null && result?.rowCount) {
-    //           this.notification.notifyCode('ES007');
-    //           data.status = '3';
-    //           this.dialog.dataService
-    //             .save((opt: RequestOption) => {
-    //               opt.methodName = 'UpdateAsync';
-    //               opt.className = 'CashPaymentsBusiness';
-    //               opt.assemblyName = 'AC';
-    //               opt.service = 'AC';
-    //               opt.data = [data];
-    //               return true;
-    //             })
-    //             .subscribe((res) => {});
-    //         } else this.notification.notifyCode(result?.msgCodeError);
-    //       });
-    //   });
+    this.acService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        this.dataCategory = res;
+        this.shareService
+          .codxRelease(
+            'AC',
+            data.recID,
+            this.dataCategory.processID,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            '',
+            '',
+            ''
+          )
+          .subscribe((result) => {
+            if (result?.msgCodeError == null && result?.rowCount) {
+              this.notification.notifyCode('ES007');
+              data.status = '3';
+              this.itemSelected = { ...data };
+              this.loadDatadetail(this.itemSelected);
+              this.view.dataService.update(data).subscribe((res) => {});
+              this.detectorRef.detectChanges();
+            } else this.notification.notifyCode(result?.msgCodeError);
+          });
+      });
   }
-  loadjounal() {
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.journalNo;
-    options.pageLoading = false;
+
+  cancelRelease(data: any) {
+    this.shareService
+      .codxCancel('AC', data?.recID, this.view.formModel.entityName, '')
+      .subscribe((result: any) => {
+        if (result && result?.msgCodeError == null) {
+          this.notification.notifyCode('SYS034');
+          this.api
+            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [data,'1'])
+            .subscribe((res: any) => {
+              if (res) {
+                this.itemSelected = res;
+                this.loadDatadetail(this.itemSelected);
+                this.view.dataService.update(this.itemSelected).subscribe((res) => {});
+                this.detectorRef.detectChanges();
+              }
+            });
+        } else this.notification.notifyCode(result?.msgCodeError);
+      });
+  }
+
+  checkValidate(data: any) {
+    this.view.dataService.updateDatas.set(data['_uuid'], data);
+    this.view.dataService.save().subscribe((res: any) => {
+      if (res && res.update.data != null) {
+        this.itemSelected = res.update.data;
+        this.loadDatadetail(this.itemSelected);
+        this.view.dataService.update(this.itemSelected).subscribe();
+      }
+    });
+  }
+
+  post(data: any) {
     this.api
-      .execSv<any>('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(map((r) => r[0]))
+      .exec('AC', 'CashPaymentsBusiness', 'PostAsync', [data])
+      .subscribe((res: any) => {});
+  }
+
+  loadjounal() {
+    this.api
+      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
         this.journal = res[0];
       });
   }
 
   loadTotal() {
-    var totalacct = 0;
-    var totaloff = 0;
     for (let index = 0; index < this.acctTrans.length; index++) {
       if (!this.acctTrans[index].crediting) {
-        totalacct = totalacct + this.acctTrans[index].transAmt;
+        this.totalacct = this.totalacct + this.acctTrans[index].transAmt;
       } else {
-        totaloff = totaloff + this.acctTrans[index].transAmt;
+        this.totaloff = this.totaloff + this.acctTrans[index].transAmt;
       }
     }
-    this.totalacct = totalacct.toLocaleString('it-IT');
-    this.totaloff = totaloff.toLocaleString('it-IT');
   }
 
-  loadCashbookName(data) {
-    this.api
-      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        for (let index = 0; index < res.length; index++) {
-          if (res[index].cashBookID == data.cashBookID) {
-            this.cashbookName = res[index].cashBookName;
-          }
-        }
-      });
-  }
-
-  loadReasonName(data) {
-    this.api
-      .exec('AC', 'CommonBusiness', 'GetReasonName', [data])
-      .subscribe((res: any) => {
-        this.reasonName = res;
-      });
+  loadTotalSet(){
+    for (let index = 0; index < this.settledInvoices.length; index++) {
+      this.totalbalAmt = this.totalbalAmt + this.settledInvoices[index].balAmt;
+      this.totalsettledAmt = this.totalsettledAmt + this.settledInvoices[index].settledAmt;
+    }
   }
 
   setStyles(color): any {
@@ -519,5 +632,17 @@ export class CashPaymentsComponent extends UIComponent {
       return false;
     }
   }
+  // checkRead(){
+  //   var eMaxText = document.getElementById('max-dots');
+  //   var eText = document.getElementById('dots');
+  //   if (eMaxText && eText) {
+  //     if (eText.offsetWidth > (eMaxText.offsetWidth - 100)) {
+  //       this.isRead = true;
+  //     }else{
+  //       this.isRead = false;
+  //     }
+  //   }
+      
+  // }
   //#endregion
 }

@@ -54,7 +54,7 @@ export class CodxAddressCmComponent implements OnInit {
   className = 'AddressBookBusiness';
   method = 'GetListAddressAsync';
   isCheckedAll: boolean = false;
-
+  idOld: any;
   constructor(
     private cmSv: CodxCmService,
     private cache: CacheService,
@@ -70,10 +70,12 @@ export class CodxAddressCmComponent implements OnInit {
         changes['id'].currentValue != null &&
         changes['id']?.currentValue?.trim() != ''
       ) {
+        if (changes['id']?.currentValue == this.idOld) return;
+        this.idOld = changes['id']?.currentValue;
         this.getListAddress();
+      }else{
+        if(!this.loaded) this.loaded = true;
       }
-    } else {
-      this.loaded = true;
     }
   }
 
@@ -103,22 +105,23 @@ export class CodxAddressCmComponent implements OnInit {
       this.request.entityName = 'BS_AddressBook';
       this.request.funcID = this.funcID;
       this.className = 'AddressBookBusiness';
-      this.fetch().subscribe((item) => {
+      this.fetch().subscribe(async (item) => {
+        this.loaded = true;
+
         this.listAddress = this.cmSv.bringDefaultContactToFront(item);
         if (this.listAddress != null && this.listAddress.length > 0) {
           if (this.isConvertLeadToCus) {
             for (var i = 0; i < this.listAddress.length; i++) {
-              if (!this.listAddress[i].checked) this.listAddress[i].checked = false;
+              if (!this.listAddress[i].checked)
+                this.listAddress[i].checked = false;
             }
           }
           this.changeAddress(this.listAddress[0]);
         }
-        this.loaded = true;
       });
     } else {
       this.loadListAdress(this.listAddress);
       this.loaded = true;
-
     }
   }
 

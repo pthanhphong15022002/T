@@ -285,7 +285,6 @@ export class PopupEmployeeBusinessComponent
       this.notitfy.notifyCode('HR011');
       return;
     }
-
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.data.contractTypeID = '1';
 
@@ -304,9 +303,5 @@ export class PopupEmployeeBusinessComponent
       });
     }
     // this.cr.detectChanges();
-  }
-
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }

@@ -1,8 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
-import { ApiHttpService, CacheService, DataRequest, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  DataRequest,
+  FormModel,
+} from 'codx-core';
 import { X } from '@angular/cdk/keycodes';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'codx-view-dealcompetitors',
@@ -33,12 +38,22 @@ export class ViewDealcompetitorsComponent implements OnInit {
   method = 'GetListDealAndDealCompetitorAsync';
   colorReasonSuccess: any;
   colorReasonFail: any;
-  constructor(private cache: CacheService, private cmSv: CodxCmService, private api: ApiHttpService) {}
+  currentRecID = '';
+  gridViewSetup: any;
+  constructor(
+    private cache: CacheService,
+    private cmSv: CodxCmService,
+    private api: ApiHttpService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
-  async ngOnInit(){
+  async ngOnInit() {
     this.getListDealAndDealCompetitor();
     this.fromModelDealCompetitor = await this.cmSv.getFormModel('CM02011');
     this.fromModelDeal = await this.cmSv.getFormModel('CM0201');
+    this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.fromModelDeal?.formName, this.fromModelDeal?.gridViewName));
+
+    this.getColorReason();
   }
 
   getListDealAndDealCompetitor() {
@@ -50,6 +65,9 @@ export class ViewDealcompetitorsComponent implements OnInit {
     this.className = 'DealsBusiness';
     this.fetch().subscribe((item) => {
       this.lstDealCompetitor = item;
+      if (this.lstDealCompetitor != null && this.lstDealCompetitor.length > 0) {
+        this.changeContacts(this.lstDealCompetitor[0]);
+      }
       var lstRef = this.lstDealCompetitor.map((x) => x.refID);
       var lstSteps = this.lstDealCompetitor.map((x) => x.stepID);
       if (lstRef != null && lstRef.length > 0)
@@ -77,7 +95,10 @@ export class ViewDealcompetitorsComponent implements OnInit {
         })
       );
   }
-
+  changeContacts(item) {
+    this.currentRecID = item.recID;
+    this.changeDetectorRef.detectChanges();
+  }
   getStepsByListID(lstStepID, lstIns) {
     this.cmSv.getStepsByListID(lstStepID, lstIns).subscribe((res) => {
       if (res && res.length > 0) {

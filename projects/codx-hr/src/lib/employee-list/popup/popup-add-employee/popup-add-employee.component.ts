@@ -18,6 +18,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'hr-popup-add-employee',
@@ -56,6 +57,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   trainFieldID: string = '';
   trainLevel: string = '';
+  funcID: string = '';
   // orgNote: string = '';
   constructor(
     private api: ApiHttpService,
@@ -63,6 +65,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     private cache: CacheService,
     private fileSV: FilesService,
     private dt: ChangeDetectorRef,
+    private routerActive: ActivatedRoute,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -71,12 +74,28 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
+    this.funcID = this.routerActive.snapshot.params['funcID'];
     if (this.dialogRef.dataService.keyField === 'EmployeeID') {
       this.employeeIDDisable = true;
     } else this.employeeIDDisable = false;
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
+    if (this.action === 'edit') {
+      this.api
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetEmployeeInfoByIDAsync',
+          [this.data.employeeID]
+        ).subscribe(res => {
+          if (res) {
+            this.data = res;
+            this.form.formGroup.patchValue(this.data);
+          }
+        })
+    }
     // this.getOrgNote();
   }
 
@@ -161,7 +180,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           break;
         case 'trainLevel':
           if (this.data[field]) {
-            this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field]).text;
+            this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
             if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
@@ -172,7 +191,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           break;
         case 'trainFieldID':
           if (this.data[field]) {
-            this.trainFieldID = event.component.dataService.data.find((x) => x.TrainFieldID == this.data[field]).TrainFieldName;
+            this.trainFieldID = event.component.dataService?.data?.find((x) => x.TrainFieldID == this.data[field])?.TrainFieldName;
             if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
@@ -275,12 +294,9 @@ export class PopupAddEmployeeComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
-            this.codxImg
-              .updateFileDirectReload(res.employeeID)
-              .subscribe((res2: any) => {
-                this.notifySV.notifyCode('SYS006');
-              });
+            this.codxModifiedOn = new Date();
             this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+            this.notifySV.notifyCode('SYS006');
             this.dialogRef.close(res);
           } else {
             this.notifySV.notifyCode('SYS023');
@@ -288,6 +304,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
         });
     }
+
   }
   //update data
   update(data: any) {
@@ -301,7 +318,10 @@ export class PopupAddEmployeeComponent implements OnInit {
           [data]
         )
         .subscribe((res: any) => {
-          this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+          if (res) {
+            this.codxModifiedOn = new Date();
+            this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+          }
           this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
           this.dialogRef.close(res ? res : null);
         });
@@ -311,7 +331,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   //
   changeAvatar(event: any) {
     this.codxModifiedOn = new Date();
-    //this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+    this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
   // getOrgNote() {
   //   if (this.data['orgUnitID']) {

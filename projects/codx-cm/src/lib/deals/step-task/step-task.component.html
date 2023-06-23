@@ -1,0 +1,273 @@
+<div *ngIf="typeTask == 1">
+  <header class="d-flex align-items-center justify-content-between search p-2">
+    <div class="left d-flex align-items-center">
+      <div>
+        <codx-dropdown-select
+          cssPopup="h-350px w-300px"
+          [isMulti]="true"
+          type="valuelist"
+          [emptyText]="'Tình trạng'"
+          field="status"
+          [refValue]="'DP032'"
+          (valueChange)="changeValueDropdownSelect($event)"
+        ></codx-dropdown-select>
+      </div>
+      <div class="ms-4">
+        <codx-dropdown-select
+          cssPopup="h-250px w-300px"
+          [isMulti]="false"
+          type="valuelist"
+          [emptyText]="'Colapse'"
+          field="show"
+          [refValue]="'DP046'"
+          (valueChange)="changeValueDropdownSelect($event)"
+        ></codx-dropdown-select>
+      </div>
+    </div>
+    <div class="right d-flex align-items-center">
+      <div
+        (click)="addTask()"
+        class="d-flex align-items-center me-4 cursor-pointer"
+        #popoverDetails="ngbPopover"
+        [ngbPopover]="'Thêm công việc'"
+        (mouseenter)="popoverDetails.open()"
+        (mouseleave)="popoverDetails.close()"
+      >
+        <i *ngIf="isShowElement" class="icon-22 icon-add_task text-primary"></i>
+      </div>
+      <!-- <codx-valuelist
+         [valueSelected]="type"
+         [name]="'DP034'"
+         (valueChange)="changeValue($event)"
+      ></codx-valuelist> -->
+      <div *ngIf="type == 'G'" class="me-4">
+        <codx-input
+          type="valuelist"
+          [crrValue]="crrViewGant"
+          [refValue]="vllViewGannt"
+          (valueChange)="changeViewTimeGant($event)"
+        ></codx-input>
+      </div>
+      <codx-input
+        field="viewModeDetail"
+        type="valuelist"
+        [crrValue]="type"
+        [refValue]="'DP034'"
+        (valueChange)="changeValue($event)"
+      ></codx-input>
+    </div>
+  </header>
+  <main>
+    <ng-container
+      *ngIf="type == 'S'"
+      [ngTemplateOutlet]="taskTem"
+    ></ng-container>
+    <ng-container
+      *ngIf="type == 'G'"
+      [ngTemplateOutlet]="ganttChart"
+    ></ng-container>
+  </main>
+</div>
+
+<div *ngIf="typeTask == 2">
+  <task [customerID]="customerID"></task>
+</div>
+
+<ng-template #taskTem>
+  <div *ngIf="isDataLoading || !type">
+    <div *ngFor="let step of [1, 2, 3]">
+      <div class="d-flex align-items-center w-100">
+        <ngx-skeleton-loader
+          appearance="circle"
+          [theme]="{ width: '60px', height: '60px' }"
+        >
+        </ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+                     width: '100%',
+                     'border-radius': '5px',
+                     height: '60px',
+                     'margin': '0px',
+                   }"
+        ></ngx-skeleton-loader>
+      </div>
+      <div style="padding-left: 70px; width: 100%">
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+                     width: '100%',
+                     'border-radius': '10px',
+                     height: '100px',
+                     'margin': '0px',
+                   }"
+        ></ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+                     width: '100%',
+                     'border-radius': '10px',
+                     height: '100px',
+                     'margin': '0px',
+                   }"
+        ></ngx-skeleton-loader>
+      </div>
+      <hr class="m-0 p-0" />
+    </div>
+  </div>
+  <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
+    <div
+      *ngFor="let step of listInstanceStepShow; let i = index"
+      class="list-step ps-4"
+    >
+      <codx-step-task
+        *ngIf="!step?.isSuccessStep && !step?.isFailStep"
+        [dataSources]="step"
+        [isShowButton]="false"
+        [isShowMore]="true"
+        [isDeepCopy]="false"
+        [isShowStep]="true"
+        [isStart]="dataSelected?.status == '2'"
+        [isClose]="dataSelected?.closed"
+        [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+        [isShowElement]="isShowElement"
+        [isAddTask]="i == indexAddTask"
+        (continueStep)="handelContinueStep($event, step)"
+        (saveAssign)="handelSaveAssignTask($event)"
+      ></codx-step-task>
+      <div *ngIf="step?.isFailStep || step?.isSuccessStep">
+        <div >
+          <div class="d-flex justify-content-start">
+            <div
+              [ngStyle]="{
+                'background-color': getReasonValue(step?.isSuccessStep)?.color
+              }"
+              class="me-2 badge badge-sm d-flex align-items-center"
+            >
+              <i
+                [class]="getReasonValue(step?.isSuccessStep)?.icon"
+                class="icon-18 icon-step"
+                [ngStyle]="{ color: getReasonValue(step?.isSuccessStep)?.textColor }"
+              >
+              </i>
+              <span
+                class="line-clamp line-clamp-2 fs-5 ms-2"
+                [ngStyle]="{ color: getReasonValue(step?.isSuccessStep)?.textColor }"
+              >
+                {{ step?.stepName || "" }}
+              </span>
+            </div>
+            <div></div>
+            <div class="ms-auto">
+              <div class="group-button">
+                <button class="button-custom" (click)="openPopupReason()">
+                  <span
+                    [ngClass]="
+                      dataSelected?.closed
+                        ? ''
+                        : 'icon-edit icon-20 text-primary-600 py-2'
+                    "
+                    style="font-weight: 500"
+                  ></span>
+                </button>
+                <button class="button-custom">
+                  <span
+                    class="icon-expand_less icon-20 text-primary-600 py-2"
+                    style="font-weight: 500"
+                  ></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-left: 50px">
+            <codx-label
+              class="fs-5"
+              fiedName="titleReason"
+              [default]="getNameReason(step?.isSuccessStep)"
+            ></codx-label>
+
+            <ng-container *ngFor="let item of listStepReason" class="pb-2">
+              <ul class="text-left drap-drop mb-1 has-action-menu">
+                <li>
+                  {{ item.reasonName }}
+                  <codx-mfunc
+                    [formModel]="formModel"
+                    [dataItem]="moreDefaut"
+                    (changeDataMF)="changeReasonMF($event)"
+                    (clickMF)="clickMFReason($event, item)"
+                    [type]="'hover'"
+                  >
+                  </codx-mfunc>
+                </li>
+              </ul>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
+    <codx-no-data></codx-no-data>
+  </div>
+</ng-template>
+
+<ng-template #ganttChart>
+  <div class="w-100 h-100" id="tabGantt">
+    <codx-step-chart
+      [listInstanceStep]="listInstanceStep"
+      [isShowTypeTime]="false"
+      [typeTime]="typeTime"
+      [instance]="dataSelected"
+      [listSteps]="listInstanceStepShow"
+      [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+    ></codx-step-chart>
+  </div>
+</ng-template>
+
+<ng-template #viewReason let-dialog="dialogPopupReason">
+  <codx-form
+    [headerText]="titleReason"
+    [body]="bodyFormReName"
+    [footer]="footerFormReName"
+    [dialog]="dialogPopupReason"
+  >
+  </codx-form>
+</ng-template>
+<ng-template #bodyFormReName>
+  <div
+    class="form-group mt-3"
+    *ngIf="
+      listStepReason?.length > 0 && listStepReason !== null;
+      else dataIsEmpty
+    "
+  >
+    <div *ngFor="let item of listStepReason">
+      <div class="form-check py-2">
+        <input
+          class="form-check-input rounded-circle"
+          type="checkbox"
+          (change)="checkValue($event, item)"
+        />
+        <span class="form-check-label">
+          {{ item?.reasonName }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerFormReName>
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="onSaveReason()"
+    [disabled]="listReasonsClick.length < 0 && !listReasonsClick"
+  >
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #dataIsEmpty>
+  <codx-no-data></codx-no-data>
+</ng-template>

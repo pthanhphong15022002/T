@@ -28,17 +28,27 @@
 </ng-template>
 
 <ng-template #deal let-data>
-  <div class="d-flex justify-content-between mb-4">
+  <div
+    (click)="changeContacts(data)"
+    [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
+    class="d-flex justify-content-between align-items-top p-3 border-bottom border-gray-150 user-nav-item"
+  >
     <div class="d-flex flex-column">
       <div
-        class="fw-bold fs-6 line-clamp line-clamp-1 mb-2"
+        class="fw-bold fs-6 line-clamp line-clamp-1 mb-3"
         [innerHTML]="
           data.dealName | formatvalue : formModel : 'DealName' | async
         "
       ></div>
       <div class="d-flex flex-wrap align-items-top me-4 mb-1">
         <div class="me-3 d-flex justify-content-start me-6">
-          <span class="icon-money icon-16 me-1"></span>
+          <span class="icon-money icon-16 me-1" [ngbTooltip]="popupDealValue">
+            <ng-template #popupDealValue>
+              <codx-label
+                fiedName="DealValue"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <codx-label
             class="label-colon text-gray-600"
             [formModel]="formModel"
@@ -52,7 +62,16 @@
           ></span>
         </div>
         <div class="d-flex align-items-center">
-          <span class="icon-offline_pin icon-16 me-2"></span>
+          <span
+            class="icon-offline_pin icon-16 me-2"
+            [ngbTooltip]="popupProbability"
+          >
+            <ng-template #popupProbability>
+              <codx-label
+                fiedName="Probability"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <codx-label
             class="label-colon text-gray-600 me-1"
             [formModel]="formModel"
@@ -68,55 +87,67 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-top">
-      <div class="d-flex flex-column">
-        <div
-          style="width: 150px; border-radius: 20px"
-          class="d-flex align-items-center mb-1"
-          *ngIf="data.status != '1'"
-          [ngStyle]="{
-            'background-color':
-              data.status == '3' || data.status == '4'
-                ? colorReasonSuccess?.color
-                : data.status == '5' || data.status == '6'
-                ? colorReasonFail?.color
-                : getStep(data?.stepID)['backgroundColor']
-          }"
-        >
-          <span
-            [ngClass]="getStep(data?.stepID)['icon']"
-            [ngStyle]="{ color: getStep(data?.stepID)['iconColor'] }"
-            class="ms-2 me-1"
-          ></span>
+    <div class="d-flex align-items-top ms-4">
+      <div class="d-flex flex-column w-130px min-w-130px">
+        <div class="d-flex align-items-center justify-content-end mb-1">
           <div
-            [ngbPopover]="getStep(data?.stepID)?.stepName"
-            #pStep="ngbPopover"
-            [openDelay]="500"
-            (mouseenter)="pStep.open()"
-            (mouseleave)="pStep.close()"
-            placement="left bottom right top"
+            *ngIf="data.status != '1'"
+            style="border-radius: 23px; padding: 0px 8px 0px;"
+            [ngStyle]="{
+              'background-color':
+                data.status == '3' || data.status == '4'
+                  ? colorReasonSuccess?.color
+                  : data.status == '5' || data.status == '6'
+                  ? colorReasonFail?.color
+                  : getStep(data?.stepID)?.backgroundColor
+            }"
+            class="d-flex align-items-center"
           >
             <span
-              class="line-clamp line-clamp-1"
-              [ngStyle]="{ color: getStep(data?.stepID)['textColor'] }"
-              [innerHTML]="getStep(data?.stepID)?.stepName"
+              [ngClass]="getStep(data?.stepID)?.icon"
+              [ngStyle]="{ color: getStep(data?.stepID)?.iconColor }"
+              class="me-1"
             ></span>
+            <div
+              [ngbPopover]="getStep(data?.stepID)?.stepName"
+              #pStep="ngbPopover"
+              [openDelay]="500"
+              (mouseenter)="pStep.open()"
+              (mouseleave)="pStep.close()"
+              placement="left bottom right top"
+            >
+              <span
+                class="line-clamp line-clamp-1"
+                [ngStyle]="{ color: getStep(data?.stepID)?.textColor }"
+                [innerHTML]="getStep(data?.stepID)?.stepName"
+              ></span>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-end mb-1"
+            *ngIf="data.status == '1'"
+          >
+            <codx-vll
+              [name]="gridViewSetup?.Status?.referedValue"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
           </div>
         </div>
-        <div *ngIf="data.status == '1'">
-          <codx-vll
-            [name]="'DP028'"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-        </div>
-
-        <div class="ms-1 d-flex align-items-center mt-1">
-          <span class="icon-money icon-16 text-gray-800 me-1"></span>
+        <div class="ms-1 d-flex justify-content-end align-items-center mt-1">
+          <span
+            class="icon-date_range icon-16 text-gray-800 me-1"
+            [ngbTooltip]="popupEndDate"
+            ><ng-template #popupEndDate>
+              <codx-label
+                fiedName="EndDate"
+                [formModel]="formModel"
+              ></codx-label> </ng-template
+          ></span>
           <span
             class="text-gray-700"
             [innerHTML]="
@@ -125,7 +156,8 @@
           ></span>
         </div>
       </div>
-      <div class="ms-3" *ngIf="data.owner">
+
+      <div class="ms-5" *ngIf="data.owner">
         <codx-imgs
           [isToolTip]="true"
           [width]="30"

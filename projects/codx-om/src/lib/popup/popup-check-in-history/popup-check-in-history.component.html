@@ -1,0 +1,175 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center flex-grow-1 px-5 pt-5" *ngIf="isPopup">
+    <div class="d-flex flex-column">
+      <div class="fw-bold fs-4 pb-1">
+        <codx-label name="lblCheckInHistoryView" default="Lịch sử cập nhật tiến độ"></codx-label>
+      </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-icon" aria-label="Close" (click)="close()">
+      <span class="icon-close icon-18"></span>
+    </button>
+  </div>
+
+  <div class=" ps-5 w-100 d-flex flex-wrap pb-5" *ngIf="isPopup">
+    <span class="fs-6">{{data?.okrName}}
+    </span>
+  </div>
+  <div class=" ps-5 w-100 d-flex flex-wrap pb-5" *ngIf="isPopup && statusVLL?.length >0">
+    <div *ngFor="let v of statusVLL ">
+      <span class="ps-4">
+        <span class="icon-i-arrow-down-left-circle-fill icon-10" [style]="'color: ' + v?.textColor + ';'"></span> 
+        <span class="ps-2">{{v?.text  }} </span> 
+      </span>
+    </div>
+  </div>
+  <div class="w-100 overflow-auto " [ngClass]="isPopup ? 'mxh-750px' :''">
+    <div class="px-5 py-5 d-flex flex-column justify-content-between align-items-between">
+      <div class="d-flex flex-row mnh-50px">
+        <div class="d-flex flex-column align-items-center justify-content-between col-1">
+
+          <div class="om-step-number border border-2 border-secondary">
+          </div>
+          <span *ngIf="checkIns?.length>0;" style="width: 1px" class="flex-grow-1 border om-dot"></span>
+        </div>
+
+        <div class="d-flex flex-column pe-5 col-3">
+          <div class="d-flex flex-row">
+            <codx-label name="Kế hoạch:"></codx-label>
+            <span class="ps-2 fw-bold">
+              {{ data?.nextCheckIn | fmDT : "dmy" }}
+            </span>
+          </div>
+        </div>
+        <div class="ps-5 pb-5" *ngIf="isPopup">
+          <button type="button" (click)="checkIn()"
+            [disabled]="curUser?.userID == data?.owner && data?.hasAssign==null && data?.kRs==0 ? false : true "
+            class="me-2 btn btn-outline-primary">
+            <codx-label name="lblCheckIn" default="Cập nhật tiến độ"></codx-label>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="checkIns?.length>0; else defaulEmpty">
+        <div class=" d-flex flex-column flex-grow-1 justify-content-between " *ngFor="
+        let item of checkIns;
+        let index = index;
+        let count = count
+      ">
+          <div class="d-flex flex-column">            
+
+            <div class="d-flex flex-row">
+              <div class="d-flex flex-column align-items-center justify-content-between col-1">
+                <div class="om-step-number border border-2"
+                  [ngClass]="item?.status =='0'? 'border-info': item?.status =='1'? 'border-success': item?.status =='2'? 'border-danger': 'border-warning'">
+                </div>
+                <span *ngIf="count - index != 1" style="width: 1px" class="flex-grow-1 border om-dot"></span>
+              </div>
+
+              <div class="d-flex flex-column pe-5 col-3">
+
+                <div class="d-flex flex-row">
+                  <codx-label name="Kế hoạch:"></codx-label>
+                  <span class="ps-2 fw-bold">
+                    {{ item?.checkIn | fmDT : "dmy" }}
+                  </span>
+                </div>
+                <div class="d-flex flex-row">
+                  <codx-label name="Thực tế:"></codx-label>
+                  <span class="ps-2 fw-bold">
+                    {{ item?.createdOn | fmDT : "dmy" }}
+                  </span>
+                </div>
+                <span>
+                  <codx-vll [name]="'OM025'" [value]="item?.approveStatus" [showText]="true" [showBgColor]="true"
+                    class="badge badge-light badge-sm">
+                  </codx-vll>
+                  <span type="button" *ngIf="item?.approveStatus=='4' && item?.createdBy == curUser?.userID" 
+                    class="me-2 badge badge-primary badge-sm border-0">
+                    <codx-label name="lblCheckIn" default="Cập nhật lại"></codx-label>
+                  </span>
+
+                </span>
+              </div>
+
+              <div class="w-100">
+                <div class="ps-5 d-flex flex-row flex-grow-1 justify-content-between pb-5">
+                  <div class="d-flex align-items-center">
+                    <codx-img [objectId]="item?.createdBy" objectType="AD_Users" [width]="40" imageType="circle">
+                    </codx-img>
+                    <div class="ps-2">
+                      <span [innerHTML]="item?.createdBy | formatvalue : okrFM?.krFM : 'owner' | async "></span>
+                      <div class="text-black-50">
+                        {{ item?.positionName }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row align-items-center">
+                    <codx-label name="lblCheckInValue" default="Giá trị cập nhật:"></codx-label>
+                    <span class="fs-6 fw-bold">
+                      {{ item?.value }}
+                    </span>
+                    <span class="fs-6 fw-bold pe-5 ">
+                      {{ data?.umName }}
+                    </span>
+                    <span>
+                      <ejs-progressbar [id]="item?.recID" [type]="'Circular'" [maximum]="100" [minimum]="0"
+                        [value]="item?.cummulated != null ? item?.cummulated/data?.target*100: 0" [width]="'45'" [height]="'45'"
+                        [trackThickness]="3" [progressThickness]="3" [progressColor]="'#FF0000'">
+                      </ejs-progressbar>
+                    </span>
+                    <span class="fs-6 fw-bold pe-5 ">
+                      {{ percentCumulate(item?.cummulated/data?.target*100)}}{{'%'}}
+                    </span>
+                  </div>
+                </div>
+                <div class="d-flex flex-column justify-content-between flex-grow-1 pb-5">
+                  <div *ngIf="item?.comment!=null && item?.comment!=''" class="pb-5  px-3 py-3 w-100 bg-light">
+                    {{item?.comment}}</div>
+                  <div>
+                    <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
+                hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
+                (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
+              </codx-attachment>-->
+                  </div>
+                  <div
+                    class=" pt-3 px-3 py-3 border rounded-3 w-100 d-flex flex-row justify-content-between align-items-center "
+                    *ngIf="data?.checkInControl !='0'&& item?.approveStatus == '3' && curUser?.userID == item?.approver">
+                    <div>
+                      <codx-label name="lblCheckInApprover" default="Người duyệt:"> </codx-label>
+                      <span class="ps-2 fw-bold"
+                        [innerHTML]="item?.approver | formatvalue : okrFM?.krFM : 'owner' | async "></span>
+                    </div>
+                    <div>
+                      <button type="button" (click)="approve(item,'5')" class="me-2 btn btn-outline-success">
+                        <codx-label name="lblCheckIn" default="Duyệt"></codx-label>
+                      </button>
+                      <button type="button" (click)="approve(item,'4')" class="me-2 btn btn-outline-danger">
+                        <codx-label name="lblCheckIn" default="Từ chối"></codx-label>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<ng-template #defaulEmpty>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <div class="fw-bold pt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

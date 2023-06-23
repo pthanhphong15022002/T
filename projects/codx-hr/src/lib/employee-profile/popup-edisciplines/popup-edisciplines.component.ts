@@ -37,6 +37,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: '';
   defaultDisciplineDate: string = '0001-01-01T00:00:00';
+  autoNumField: string;
 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -85,6 +86,10 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            if (res.key) {
+              this.autoNumField = res.key;
+            }
+
             this.disciplineObj = res?.data;
             if (
               this.disciplineObj.disciplineDate.toString() ==
@@ -298,9 +303,5 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       }
       this.cr.detectChanges();
     }
-  }
-
-  clickOpenPopup(codxInput) {
-    codxInput.elRef.nativeElement.querySelector('button').click();
   }
 }

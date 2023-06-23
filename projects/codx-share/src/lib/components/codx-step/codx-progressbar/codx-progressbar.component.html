@@ -1,5 +1,5 @@
 
-<div id="annotation" [ngClass]="class">
+<div id="annotation" [ngClass]="class" style="margin: -8px;">
   <ejs-progressbar
     #annotation
     *ngIf="stype == 1"
@@ -13,6 +13,8 @@
     [animation]="animation"
     [startAngle]="startAngle"
     [endAngle]="endAngle"
+    [trackThickness]="3"
+    [progressThickness]="3"
   >
     <e-progressbar-annotations>
       <e-progressbar-annotation [content]="HTMLProgress">

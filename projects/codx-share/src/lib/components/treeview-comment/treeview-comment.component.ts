@@ -23,11 +23,12 @@ import { map } from 'rxjs';
 })
 export class TreeviewCommentComponent implements OnInit {
   @Input() data:any = null;
-  @Input() activeParent:boolean = false;
   @Input() funcID:string = "";
   @Input() objectID:string = "";
   @Input() objectType:string = "";
   @Input() formModel:FormModel = null;
+  @Input() showComment:boolean = false;
+
   @Output() pushCommentEvt = new EventEmitter;
   @Output() voteCommentEvt = new EventEmitter;
   @ViewChild('codxATM') codxATM :AttachmentComponent;
@@ -57,6 +58,8 @@ export class TreeviewCommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.getValueIcon();
+    if(this.showComment)
+      this.showComments();
   }
   
   // get vll icon
@@ -78,22 +81,27 @@ export class TreeviewCommentComponent implements OnInit {
   // get comment
   getCommentsAsync(data:any){ 
     if(!Array.isArray(data.listComment))
-    {
       data.listComment = [];
-    }
+    if(data.pageIndex && data.totalPage && data.totalPage < data.pageIndex)
+      return;
+    let pageIndex = data.pageIndex == null ? 1 : data.pageIndex + 1;
+    data.pageIndex = pageIndex;
     this.api.execSv(
     "WP",
     "ERM.Business.WP",
     "CommentsBusiness",
     "GetCommentsAsync",
-    [data.recID,data.pageIndex == null ? 0 : data.pageIndex + 1])
+    [data.recID,pageIndex])
     .subscribe((res:any[]) => {
       if(Array.isArray(res[0]))
       {
         data.listComment = data.listComment.concat(res[0]);
-        data.pageIndex++;
+        if(!data.totalPage)
+          data.totalPage = Math.ceil(res[1]/5);
       }
-      data.full = data.listComment.length == res[1];
+      // data.full = data.listComment.length == res[1];
+      data.load = false;
+      data.full = data.totalPage == data.pageIndex;
     });
   }
   // click show votes
@@ -115,19 +123,14 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // send comment
   sendComment(event:any,data:any = null){
+    debugger
     this.data.totalComment += 1;
     event.showReply = false;
-    if(data){
+    if(data)
       data.showReply = false;
-    }
     this.crrId = "";
     this.dicDatas[event["recID"]] = event;
     this.setNodeTree(event);
-    // bài viết chi tiết - tạo bài viết khi comment lần đầu
-    if(this.activeParent){
-      this.pushCommentEvt.emit(event);
-      this.activeParent = false;
-    }
     this.dt.detectChanges();
   }
   // reply to
@@ -136,7 +139,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // votes post
   votePost(data: any, voteType = null) {
-    debugger
     if(data && voteType){
       this.api.execSv(
         "WP",
@@ -166,10 +168,10 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
-  isShowComment : boolean = false;
   // click show comment
   showComments() {
-    this.isShowComment = !this.isShowComment;
+    debugger
+    this.data.isShowComment = this.data.isShowComment ? !this.data.isShowComment : true;
     if(!this.data.load){
       this.data.load = true;
       this.getCommentsAsync(this.data);
@@ -189,10 +191,7 @@ export class TreeviewCommentComponent implements OnInit {
     if (parent)
       this.addNode(parent, newNode, id);
     else
-    {
       this.addNode(null, newNode, id);
-
-    }
     this.dt.detectChanges();
   }
   // add tree
@@ -201,9 +200,9 @@ export class TreeviewCommentComponent implements OnInit {
     let node = null;
     if(dataNode)
     {
-      if(!dataNode.listComment || dataNode.listComment.length == 0){
+      if(!dataNode.listComment || dataNode.listComment.length == 0)
         dataNode.listComment = [];
-      }
+      
       else
       {
         node =  dataNode.listComment.find((e:any) => {
@@ -216,15 +215,12 @@ export class TreeviewCommentComponent implements OnInit {
         dataNode[idx] = newNode;
       }
       else 
-      {
         dataNode.listComment.unshift(newNode);
-      }
     }
     else 
     {
-      if(!Array.isArray(this.data.listComment)){
+      if(!Array.isArray(this.data.listComment))
         this.data.listComment = [];
-      }
       this.data.listComment.unshift(newNode);
     }
     this.dt.detectChanges();   

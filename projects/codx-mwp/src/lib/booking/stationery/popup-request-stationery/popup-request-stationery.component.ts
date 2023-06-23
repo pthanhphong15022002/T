@@ -21,7 +21,7 @@ import {
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { BookingService } from '../../../services/booking.services';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 @Component({
   selector: 'popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -82,7 +82,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private auth: AuthStore,
-    private epService: BookingService,
+    private epService: CodxBookingService,
     private notificationsService: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
@@ -111,15 +111,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.epService.getStationeryGroup().subscribe((res) => {
       this.groupStationery = res;
     });
-
-    this.epService
-      .getParams('EPStationeryParameters', 'NagetivePhysical')
-      .subscribe((res: any) => {
-        let dataValue = res[0].dataValue;
-        let json = JSON.parse(dataValue);
-        this.nagetivePhysical = json.NagetivePhysical;
-      });
-
+    
     this.cache.functionList('EP8S21').subscribe((res) => {
       if (res) {
         this.cache
@@ -323,31 +315,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
               .getCategoryByEntityName(this.formModel.entityName)
               .subscribe((category: any) => {
                 this.returnData.forEach((item) => {
-                  this.epService
-                    .release(
-                      item,
-                      category.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID,
-                      item?.createdBy
-                    )
-                    .subscribe((res) => {
-                      if (res?.msgCodeError == null && res?.rowCount >= 0) {
-                        this.notificationsService.notifyCode('ES007');
-                        item.approveStatus = '3';
-                        item.status = '3';
-                        item.write = false;
-                        item.delete = false;
-                        (this.dialog.dataService as CRUDService)
-                          .update(item)
-                          .subscribe();
-                        this.dialog && this.dialog.close();
-                      } else {
-                        this.notificationsService.notifyCode(res?.msgCodeError);
-                        // Thêm booking thành công nhưng gửi duyệt thất bại
-                        this.dialog && this.dialog.close();
-                      }
-                    });
+                  
                 });
               });
             this.dialog && this.dialog.close();

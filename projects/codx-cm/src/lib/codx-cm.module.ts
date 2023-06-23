@@ -19,7 +19,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
-import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
+import { CmCustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InformationComponent } from './cmcustomer/cmcustomer-detail/information/information.component';
 import { PopupAddCmCustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
@@ -29,7 +29,6 @@ import { PopupListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-
 import { PopupQuickaddContactComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
-import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 import { DealsComponent } from './deals/deals.component';
 import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
 import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
@@ -46,7 +45,7 @@ import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/vie
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
 import { NoDataComponent } from './contracts/component/no-data/no-data.component';
-import { ContractsDetailComponent} from './contracts/contracts-detail/contracts-detail.component';
+import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
@@ -59,7 +58,6 @@ import { PopupStatusCompetitorComponent } from './deals/deal-detail/codx-tab-dea
 import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns-detail.component';
 import { PopupConvertLeadComponent } from './leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxAsideCustomComponent } from './_layout/codx-aside-custom/codx-aside-custom.component';
-import { ProcessReleaseComponent } from './process-release/process-release.component';
 import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/popup-add-payment.component';
 import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
@@ -72,6 +70,13 @@ import { CasesDetailComponent } from './cases/case-detail/cases-detail.component
 import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
 import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
+import { StepTaskComponent } from './deals/step-task/step-task.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
+import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
+import { ContractsComponent } from './contracts/contracts.component';
+import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
+import { TaskComponent } from './deals/step-task/task/task.component';
 
 const routes: Routes = [
   {
@@ -81,21 +86,11 @@ const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
+        data: { noReuse: true },
       },
       {
         path: 'deals/:funcID',
         component: DealsComponent,
-      },
-
-      // {
-      //   path: 'processrelease/:funcID',
-      //   component: ProcessReleaseComponent,
-      // },
-
-      {
-        path: 'processrelease/:funcID/:recID',
-        component: ProcessReleaseComponent,
-        data: { noReuse: true },
       },
       {
         path: 'marketings/:funcID',
@@ -108,7 +103,7 @@ const routes: Routes = [
       },
       {
         path: 'contracts/:funcID',
-        component: ContractsDetailComponent,
+        component: ContractsComponent,
       },
       {
         path: 'cases/:funcID',
@@ -124,6 +119,17 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'setting/settingprocess/:funcID',
+        component: SettingProcessCmComponent,
+        data: { noReuse: true },
+      },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];
@@ -133,7 +139,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxCmComponent,
     LayoutComponent,
     CmCustomerComponent,
-    CmcustomerDetailComponent,
+    CmCustomerDetailComponent,
     InformationComponent,
     PopupAddCmCustomerComponent,
     PopupAddressComponent,
@@ -158,7 +164,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
     NoDataComponent,
-    ContractsDetailComponent,
     CasesComponent,
     CasesDetailComponent,
     PopupAddCasesComponent,
@@ -174,9 +179,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
     ViewQuotationsComponent,
+    ContractsComponent,
     //test
     CodxAsideCustomComponent,
-    ProcessReleaseComponent,
     PopupAddPaymentComponent,
     PopupAddPaymentHistoryComponent,
     PopupViewPaymentHistoryComponent,
@@ -185,6 +190,12 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupRemoveAddContactComponent,
     ViewPaymentComponent,
     GanttChartComponent,
+    StepTaskComponent,
+    SettingProcessCmComponent,
+    QuotationsTabViewComponent,
+    ContractsViewDetailComponent,
+    ContractsDetailComponent,
+    TaskComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -200,7 +211,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
-    CodxDpModule,
   ],
   exports: [RouterModule, ListContractsComponent],
   providers: [AccumulationTooltipService],
