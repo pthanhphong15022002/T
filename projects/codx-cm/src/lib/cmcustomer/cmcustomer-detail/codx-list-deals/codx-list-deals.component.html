@@ -127,7 +127,7 @@
             *ngIf="data.status == '1'"
           >
             <codx-vll
-              [name]="'DP028'"
+              [name]="gridViewSetup?.Status?.referedValue"
               [field]="'Status'"
               [value]="data?.status"
               [showText]="true"
