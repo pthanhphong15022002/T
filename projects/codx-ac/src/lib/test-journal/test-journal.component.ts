@@ -15,6 +15,7 @@ import { UIComponent, ViewModel, ViewType } from 'codx-core';
 })
 export class TestJournalComponent extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
+  data = { currencyID: 'VN' };
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   constructor(private injector: Injector, private change: ChangeDetectorRef) {
     super(injector);

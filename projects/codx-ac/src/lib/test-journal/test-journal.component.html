@@ -1,6 +1,13 @@
-<codx-views #view [views]="views" funcID="ACT" [autoLoad]="false">
+<codx-views #view [views]="views" funcID="ACT" [autoLoad]="false" [data]="data">
 </codx-views>
 
 <ng-template #panelLeftRef>
-    faksjfkasjfkajfs
+    <codx-form #form [body]="body" [formModel]="view.formModel" class="ac-dialog">
+    </codx-form>
+
+    <ng-template #body>
+        <codx-label fiedName="currencyID" [formModel]="view.formModel" default="test default"
+            class="fw-bold label-colon"></codx-label>
+        <codx-input field="aRAcctID" [formModel]="view.formModel" [Group]="form.formGroup"></codx-input>
+    </ng-template>
 </ng-template>
