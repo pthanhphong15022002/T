@@ -10,7 +10,6 @@ export class LayloutJournalComponent extends LayoutBaseComponent {
   constructor(inject: Injector) {
     super(inject);
     this.module = 'AC';
-    this.layoutModel.asideDisplay = false;
     this.layoutModel.toolbarDisplay = false;
   }
 

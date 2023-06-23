@@ -256,6 +256,7 @@ export const routes: Routes = [
     PopAddClosingTransactionComponent,
     TableLineDetailStaticComponent,
     TestJournalComponent,
+    LayloutJournalComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -134,6 +134,7 @@ export class SalesInvoicesComponent
 
     this.selectedData = e.data.data ?? e.data;
 
+    this.expanding = false;
     this.loading = true;
     this.salesInvoicesLines = [];
     const salesInvoicesLinesOptions = new DataRequest();
