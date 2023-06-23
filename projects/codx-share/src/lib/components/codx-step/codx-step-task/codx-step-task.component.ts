@@ -1424,8 +1424,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                               // }
                             }
                           }
-                          this.notiService.notify(
-                            'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+                          this.notiService.notifyCode(
+                            'E0322',
+                            0,
+                            '"' + this.titleAction + '"'
                           );
                           this.changeDetectorRef.detectChanges();
                         }
@@ -1481,8 +1483,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                   );
                   dialog.closed.subscribe((e) => {
                     if (e?.event) {
-                      this.notiService.notify(
-                        'Edit cuộc họp thành công ! - Cần messes từ Khanh!!'
+                      this.notiService.notifyCode(
+                        'E0322',
+                        0,
+                        '"' + this.titleAction + '"'
                       );
                     }
                   });
@@ -1520,8 +1524,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             )
             .subscribe((res) => {
               if (res) {
-                this.notiService.notify(
-                  'loại cuộc họp thành công ! - Cần messes từ Khanh!!'
+                this.notiService.notifyCode(
+                  'E0322',
+                  0,
+                  '"' + this.titleAction + '"'
                 );
               }
             });
