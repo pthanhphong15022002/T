@@ -58,7 +58,7 @@
   </ng-container>
 </ng-template>
 <ng-template #descTmp let-data>
-  <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 my-1">{{ data?.memo }}</span>
+  <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
   <ng-template #memo>
     <span class="text-gray-600">{{data?.memo}}</span>
   </ng-template>
@@ -194,14 +194,14 @@
             | async
         "></span>
     </div>
-    <div class="card-add mt-3" #cardbodyRef>
+    <div class="card-add mt-1" #cardbodyRef>
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
           <e-tabitem>
             <ng-template #headerText>
-              <div #cashRef class="d-flex align-items-top me-2 mt-2">
-                <i class="icon-i-file-earmark-spreadsheet icon-18 me-2"></i>
+              <div #cashRef class="d-flex align-items-top me-2">
+                <i class="icon-i-file-earmark-spreadsheet icon-16 me-2"></i>
                 <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="view.formModel"
                   default="Hạch toán"></codx-label>
               </div>
@@ -213,7 +213,7 @@
           <e-tabitem *ngIf="itemSelected.subType == '2' || itemSelected.subType == '9'">
             <ng-template #headerText>
               <div #cashRef class="d-flex align-items-top me-2 mt-2">
-                <i class="icon-format_list_bulleted icon-18 me-2"></i>
+                <i class="icon-format_list_bulleted icon-16 me-2"></i>
                 <codx-label class="fw-bold fs-6" fiedName="lblDetail2" [formModel]="view.formModel"
                   default="Thông tin hóa đơn"></codx-label>
               </div>
@@ -225,7 +225,7 @@
           <e-tabitem *ngIf="itemSelected.subType == '9'">
             <ng-template #headerText>
               <div #cashRef class="d-flex align-items-top me-2 mt-2">
-                <i class="icon-i-graph-up icon-18 me-2"></i>
+                <i class="icon-i-graph-up icon-16 me-2"></i>
                 <codx-label class="fw-bold fs-6" fiedName="lblDetail3" [formModel]="view.formModel"
                   default="Hóa đơn GTGT"></codx-label>
               </div>
@@ -967,7 +967,7 @@
   <div class="col-4">
     <div class="d-flex align-items-center mb-1">
       <img style="width: 18px;height: 18px;" src="../assets/themes/ac/default/img/memo.svg" class="me-2" />
-      <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 my-1">{{ data?.memo }}</span>
+      <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
     </div>
     <ng-template #memo>
       <span class="text-gray-600">{{data?.memo}}</span>
