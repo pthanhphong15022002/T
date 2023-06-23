@@ -143,7 +143,7 @@ export class CM_QuotationsLines {
 }
 
 export class CM_Deals {
-  recID: string;
+  recID: string =  Util.uid();
   dealID: string;
   dealName: string;
   dealName2: string;

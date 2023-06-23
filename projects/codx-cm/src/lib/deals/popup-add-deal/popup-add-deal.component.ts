@@ -159,7 +159,6 @@ export class PopupAddDealComponent
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
 
-    //
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
 
@@ -571,7 +570,6 @@ export class PopupAddDealComponent
     if ($event && $event.data) {
       this.deal.businessLineID = $event.data;
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
-        //  $event.component.itemsSelected[0].ProcessID = '';
         var processId =
           !$event.component.itemsSelected[0].ProcessID && this.processIdDefault
             ? this.processIdDefault
@@ -680,6 +678,7 @@ export class PopupAddDealComponent
           let dataParam = res.filter(
             (x) => x.category == '4' && !x.transType
           )[0];
+          debugger;
           this.processIdDefault = '1a6d0f15-09d0-11ee-94b3-00155d035517';
           this.deal.processID = this.processIdDefault;
           this.getListInstanceSteps(this.processIdDefault);

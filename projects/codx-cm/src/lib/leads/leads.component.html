@@ -16,6 +16,7 @@
   (selectedChange)="selectedChange($event)"
   (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
+  (onActions)="onActions($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
 
@@ -68,7 +69,7 @@
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
-        <div
+        <!-- <div
           *ngIf="data.status != '1'"
           [ngStyle]="{
             'background-color':
@@ -94,7 +95,7 @@
         </div>
         <div *ngIf="data.status == '1'">
           <codx-vll
-            [name]="'DP028'"
+            [name]="'CRM037'"
             [field]="'Status'"
             [value]="data?.status"
             [showText]="true"
@@ -102,7 +103,18 @@
             class="badge badge-light badge-sm"
           >
           </codx-vll>
-        </div>
+        </div> -->
+
+        <codx-vll
+        [name]="'CRM037'"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
+
         <div class="d-flex align-items-center text-gray-600">
           <!-- <span class="icon-16 icon-av_timer me-1"></span> -->
           <span

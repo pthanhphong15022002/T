@@ -198,7 +198,7 @@
                   <div
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
-                    <div
+                    <!-- <div
                     *ngIf="dataSelected.status != '1'"
                     [ngStyle]="{
                       'background-color':
@@ -233,7 +233,17 @@
                       class="badge badge-light badge-sm"
                     >
                     </codx-vll>
-                  </div>
+                  </div> -->
+
+                  <codx-vll
+                  [name]="'CRM037'"
+                  [field]="'Status'"
+                  [value]="dataSelected?.status"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-sm"
+                >
+                </codx-vll>
 
 
                   </div>

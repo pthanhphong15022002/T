@@ -750,7 +750,7 @@ export class InstancesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+                this.notificationsService.notifyCode(check ? 'DP016' : 'DP017',0,"'"+data.title+"'");
                 if (this.process.showInstanceControl === '1') {
                   this.view.dataService.update(this.dataSelected).subscribe();
                 }
