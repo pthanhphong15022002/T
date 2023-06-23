@@ -6,6 +6,7 @@
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="formModel"
+
 ></codx-form>
 
 <ng-template #subHeader>
@@ -26,7 +27,7 @@
     </div>
     <codx-input
       field="memo"
-      type="textarea"
+      [formModel]="form.formModel"
       [crrValue]="reasonStep?.memo"
       (valueChange)="valueChange($event)"
     >
