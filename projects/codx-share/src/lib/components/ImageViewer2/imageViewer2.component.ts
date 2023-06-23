@@ -12,8 +12,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ApiHttpService, DialogRef } from 'codx-core';
-import ImageViewer from 'iv-viewer';
-import {FullScreenViewer} from 'iv-viewer';
+import { log } from 'console';
+import {ImageViewer,FullScreenViewer} from 'iv-viewer';
 import { environment } from 'src/environments/environment';
 @Component({
     selector: 'codx-image-viewer',
@@ -21,14 +21,18 @@ import { environment } from 'src/environments/environment';
     styleUrls:['./imageViewer2.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
+
 export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     @HostBinding('class') get class() {
         return "w-100 h-100";
       }
-    @Input() dialog:DialogRef;
     BASE_64_IMAGE = 'data:image/png;base64,';
     BASE_64_PNG = `${this.BASE_64_IMAGE} `;
     ROTACAO_PADRAO_GRAUS = 90;
+    option = {
+        a : 0
+    }
+    @Input() dialog:DialogRef;
     @Input() idContainer;
     @Input() rotate = true;
     @Input() download = true;
@@ -42,8 +46,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     images: any[] = [];
     @Input() fileID:string = "";
     @Input() objectID: string = "";
-
-
 
     @Input() primaryColor = '#0176bd';
     @Input() buttonsColor = 'white';
@@ -83,6 +85,14 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
+    }
+    onKeypress(e:any){
+        if(e.code=='ArrowRight'){
+            this.proximaImagem();
+        }
+        if(e.code=='ArrowLeft'){
+            this.imagemAnterior();
+        }
     }
 
     // get file by objectID

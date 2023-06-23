@@ -193,7 +193,6 @@
 <ng-template #detailPopupClick>
   <codx-instance-detail
     #detailViewPopup
-    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelect]="dataSelected"
     (moreFunctionEvent)="clickMoreFunc($event)"
@@ -393,7 +392,6 @@
 <ng-template #templateDetail>
   <codx-instance-detail
     #detailViewInstance
-    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelect]="dataSelected"
     (moreFunctionEvent)="clickMoreFunc($event)"

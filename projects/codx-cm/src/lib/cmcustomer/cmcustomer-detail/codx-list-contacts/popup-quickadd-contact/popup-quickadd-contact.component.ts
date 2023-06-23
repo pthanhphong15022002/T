@@ -207,6 +207,10 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.objectID = this.recIDCm;
       this.data.objectType = this.objectType;
       this.data.objectName = this.objectName;
+      this.data.assign = true;
+			this.data.delete = true;
+			this.data.write = true;
+			this.data.share = true;
       if (type == 'save') {
         this.dialog.close(this.data);
       } else {

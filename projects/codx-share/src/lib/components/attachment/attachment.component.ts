@@ -1599,7 +1599,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           this.atSV.fileListAdded.push(Object.assign({}, item));
           this.data.push(Object.assign({}, item.data));
           this.dmSV.updateHDD.next(item.messageHddUsed);
-          this.notificationsService.notify(item.message);
+          if(this.showMessage == "1") this.notificationsService.notify(item.message);
           this.changeDetectorRef.detectChanges();
         } else if (item.status == 6) {
           // ghi đè
@@ -3228,7 +3228,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var type = files[i].type.toLowerCase();
         fileUpload.fileName = files[i].name;
 
-        debugger;
         //Lấy avatar mặc định theo định dạng file
         //Image
         if (type_image.includes(type)) fileUpload.avatar = data;

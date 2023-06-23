@@ -166,9 +166,17 @@ export class AddSurveyComponent extends UIComponent {
           {
             title: this.title,
             stop: true,
+            expiredOn: new Date()
           }
           this.SvService.updateSV(this.recID,obj).subscribe(item=>{
-
+            if(item) {
+              var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
+              var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0100");
+              dks[0].disabled = true;
+              ph[0].disabled = false;
+              this.notifySvr.notifyCode("SV003");
+            }
+            else this.notifySvr.notifyCode("SV004");
           })
           break;
         }
@@ -179,6 +187,7 @@ export class AddSurveyComponent extends UIComponent {
           {
             stop: false,
             status: '5',
+            startedOn: new Date()
           }
           this.SvService.updateSV(this.recID,obj2).subscribe(item=>{
             if(item) 
@@ -186,7 +195,9 @@ export class AddSurveyComponent extends UIComponent {
               if(this.mfTmp?.arrMf)
               {
                 var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
+                var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0104");
                 ph[0].disabled = true;
+                dks[0].disabled = false;
               }
               this.change.detectChanges();
               this.notifySvr.notifyCode("SV001");
@@ -200,14 +211,28 @@ export class AddSurveyComponent extends UIComponent {
   
   changeDataMF(e:any , data:any)
   {
+    
     if(data?.status == "5")
     {
       var release = e.filter(
         (x: { functionID: string }) =>
           x.functionID == 'SVT0100'
       );
-  
+      var close = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'SVT0104'
+      );
       if(release && release[0]) release[0].disabled = true;
+      if(close && close[0]) close[0].disabled = false;
+    }
+    else
+    {
+      var close = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'SVT0104'
+      );
+  
+      if(close && close[0]) close[0].disabled = true;
     }
   }
   // add() {
@@ -318,14 +343,12 @@ export class AddSurveyComponent extends UIComponent {
     });
   }
 
-  onChangeTitle(e:any)
+  valueChange(e:any)
   {
-    var obj = 
-    {
-      title : e?.data
-    }
-    this.title = e?.data;
-    this.SvService.updateSV(this.recID,obj).subscribe();
+    if(e?.field == "title") this.title = e?.data;
+    this.dataSV[e?.field] = e?.data;
+    this.SvService.signalSave.next('saving');
+    this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{ if(item) this.SvService.signalSave.next('done');});
   }
 
   updateSV()

@@ -83,6 +83,8 @@ export class CodxListContactsComponent implements OnInit {
         if (changes['objectID']?.currentValue == this.id) return;
         this.id = changes['objectID']?.currentValue;
         this.getListContacts();
+      }else{
+        if(!this.loaded) this.loaded = true;
       }
     }
   }
@@ -439,7 +441,7 @@ export class CodxListContactsComponent implements OnInit {
                 );
                 this.changeContacts(this.listContacts[0]);
                 this.contactEvent.emit(data);
-
+                this.lstContactEmit.emit(this.listContacts);
                 this.notiService.notifyCode('SYS008');
                 this.changeDetectorRef.detectChanges();
               }
@@ -453,6 +455,7 @@ export class CodxListContactsComponent implements OnInit {
               this.listContacts.splice(index, 1);
               lstDelete.push(data);
               this.changeContacts(this.listContacts[0]);
+              this.lstContactEmit.emit(this.listContacts);
 
               this.lstContactDeleteEmit.emit(lstDelete);
             }
