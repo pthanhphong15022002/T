@@ -849,7 +849,7 @@
     <div class="tabline-content scroll-ac header-table-ac position-relative"
     *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '9'">
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
-      entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="noEditSetting" [allowFiltering]="true"
+      entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35" [allowFiltering]="true"
       [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
       [dataSource]="settledInvoices" (created)="gridCreatedSet()" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>
