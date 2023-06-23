@@ -13,6 +13,7 @@ export class SearchSuggestionsComponent implements OnInit {
   dialog:any;
   vllSV005:any;
   formModel:any;
+  dataFilter:any;
 
   constructor(
     private svService : CodxSvService,
@@ -28,7 +29,6 @@ export class SearchSuggestionsComponent implements OnInit {
     this.getVll();
   }
 
-  
   getVll()
   {
     var tags = this.svService.loadTags(this.formModel?.entityName) as any;
@@ -63,6 +63,17 @@ export class SearchSuggestionsComponent implements OnInit {
     for(var i =0 ; i < elements.length ; i++)
     {
       elements[i].classList.remove("sv-sg-active");
+    }
+  }
+
+  filter(groupType:any,tagName:any)
+  {
+    var data = 
+    {
+      groupType : groupType,
+      tagName: tagName,
+      page:1,
+      pageSize: 20
     }
   }
 }

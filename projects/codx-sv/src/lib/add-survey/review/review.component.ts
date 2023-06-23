@@ -20,7 +20,9 @@ import { SV_Respondents } from '../../models/SV_Respondents';
   providers: [RteService, MultiSelectService],
 })
 export class ReviewComponent extends UIComponent implements OnInit {
-
+  avatar:any;
+  primaryColor:any;
+  backgroudColor:any;
   @HostBinding('class.h-100') someField: boolean = false;
   en = environment;
   respondents: SV_Respondents = new SV_Respondents();
@@ -107,7 +109,10 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.recID,
       ])
       .subscribe((res: any) => {
-        if(res && res[2]) this.survey = res[2];
+        if(res && res[2]) {
+          this.survey = res[2];
+          this.getAvatar(this.survey);
+        }
         if (res && res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
           if (this.questions) {
@@ -138,6 +143,17 @@ export class ReviewComponent extends UIComponent implements OnInit {
       });
   }
 
+  getAvatar(data:any)
+  {
+    if(data && data.settings) {
+      data.settings = JSON.parse(data.settings);
+      if(data?.settings?.image) this.avatar = data?.settings?.image;
+      if(data?.settings?.primaryColor) this.primaryColor = data?.settings?.primaryColor;
+      if(data?.settings?.backgroudColor) {
+        this.backgroudColor = data?.settings?.backgroudColor;
+      }
+    }
+  }
   getDataAnswer(lstData) {
     if (lstData) {
       let objAnswer = {
@@ -225,7 +241,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
 
   lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer , seqNoSession = null) {
-    debugger
     //itemAnswer.choose = choose
     if(itemQuestion.answerType == "L")
     {
@@ -270,7 +285,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       }
       else if(e.field == 'O2')
       {
-        debugger
+        
       }
       else
         this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[0] = itemAnswer;
@@ -339,6 +354,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {
+    
+    if(this.survey?.status != "5") return ;
+
     this.checkRequired();
     let lstAnswers = [];
     this.lstQuestion.forEach((y) => {

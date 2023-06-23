@@ -31,6 +31,7 @@ import { ReviewComponent } from './add-survey/review/review.component';
 import { NgxCaptureModule } from 'ngx-capture';
 import { CopylinkComponent } from './copylink/copylink.component';
 import { SearchSuggestionsComponent } from './home/search-suggestions/search-suggestions.component';
+import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 export const routes: Routes = [
   {
     path: '',
@@ -89,6 +90,7 @@ const Component: Type<any>[] = [
     FormsModule,
     ChartAllModule,
     NgxCaptureModule,
+    AccordionModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],

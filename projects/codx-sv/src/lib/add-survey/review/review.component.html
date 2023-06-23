@@ -1,6 +1,10 @@
-<div class="page-questions pt-5" id="page-questions">
+<div class="page-questions pt-5" id="page-questions" [style.backgroundColor]="backgroudColor">
   <div class="d-flex w-100 justify-content-center">
     <div class="d-flex flex-column">
+      <ng-container *ngIf="avatar">
+        <div class="KHCwJ dYYAhb w-100" [ngStyle]="{'background-image': 'url(' + avatar + ')'}">
+        </div>
+      </ng-container>
       <div class="box">
         <ng-container *ngIf="survey?.stop ;else elseStop">
           <div class="card-survey">
@@ -34,6 +38,7 @@
                         ? 'content-wrapper b-t b-l-session'
                         : 'content-wrapper b-t'
                     "
+                    [style.borderTopColor]="primaryColor"
                   >
                     <form
                       id="formSession"
@@ -293,7 +298,9 @@
                   *ngIf="itemSession.seqNo == questions.length - 1"
                   type="button"
                   class="btn btn-submit text-white"
+                  [disabled]="survey?.status != '5' ? true : false"
                   (click)="onSubmit()"
+                  [style.backgroundColor]="primaryColor"
                 >
                   <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
                 </button>
