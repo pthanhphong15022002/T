@@ -526,9 +526,13 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       if (items) {
         lineCrr['onhand'] = items.quantity;
         lineCrr['idiM4'] = items.warehouseID; // kho
-        lineCrr['costPrice'] = items.costPrice; // gia von
         lineCrr['umid'] = items.umid; // don vi tinh
         lineCrr['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
+        lineCrr['salesPrice'] = items.costPrice;
+        let priceDefaut =
+          items.costPrice / (this.exchangeRate != 0 ? this.exchangeRate : 1); // gia von
+        lineCrr['costPrice'] = priceDefaut;
+        lineCrr['salesPrice'] = priceDefaut;
       }
       this.loadDataLines(lineCrr);
       // this.form.formGroup.patchValue(this.quotationsLine);

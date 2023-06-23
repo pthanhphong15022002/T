@@ -735,7 +735,7 @@ export class InstancesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+                this.notificationsService.notifyCode(check ? 'DP016' : 'DP017',0,"'"+data.title+"'");
                 if (this.process.showInstanceControl === '1') {
                   this.view.dataService.update(this.dataSelected).subscribe();
                 }
@@ -850,7 +850,7 @@ export class InstancesComponent
                 break;
               //an khi aprover rule
               case 'DP17':
-                if (!data.write || data.closed) {
+                if (!data.write || data.closed || data.approveStatus == '5') {
                   res.disabled = true;
                 } else if (!this.process?.approveRule) {
                   res.isblur = true;

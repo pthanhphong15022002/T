@@ -52,6 +52,11 @@ export class PopupAddPaymentComponent {
 
   ngOnInit(): void {
     this.setDataInput();
+    this.sumScheduleAmt = this.listPayment?.reduce((sum, item)  => {
+      return sum + item?.scheduleAmt || 0;
+    },0)
+    this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
+    this.percent = (this.payment.scheduleAmt/this.contract?.contractAmt)*100;
   }
 
   setPayment() {
@@ -77,7 +82,7 @@ export class PopupAddPaymentComponent {
 
   valueChangePercent(e) {
     this.percent = e?.value;
-    this.payment.scheduleAmt = (this.percent*this.contract.contractAmt)/100
+    this.payment.scheduleAmt = Number(((this.percent*this.contract.contractAmt)/100).toFixed(0));
   }
 
 
@@ -88,7 +93,9 @@ export class PopupAddPaymentComponent {
       this.payment[event?.field] = this.contract.contractAmt;
     }
     if(event?.field == 'scheduleAmt'){
-      this.percent = (this.payment.scheduleAmt/this.contract.contractAmt)*100;
+      this.percent = (this.payment.scheduleAmt/this.contract?.contractAmt)*100;
+      this.sumScheduleAmt += event?.data;
+      this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
     }
     
   }
