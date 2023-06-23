@@ -112,6 +112,11 @@ export class CasesComponent
   funCrr: any;
   viewsDefault: any;
   viewCrr: any;
+  crrStepID: any;
+  stepIdClick: any;
+  dataDrop: any;
+  dataColums: any = [];
+  moreFuncCase: any;
 
   constructor(
     private inject: Injector,
@@ -202,49 +207,6 @@ export class CasesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-  }
-
-  reloadData() {
-    // if (this.view) {
-    //   this.dataSelected = null;
-    //   this.view.dataService.predicates = null;
-    //   this.view.dataService.dataValues = null;
-    //   this.view.dataObj = this.dataObj;
-    //   this.view?.views?.forEach((x) => {
-    //     if (x.type == 6) {
-    //       x.request.dataObj = this.dataObj;
-    //       x.request2.dataObj = this.dataObj;
-    //     }
-    //   });
-    //   if ((this.view?.currentView as any)?.kanban) {
-    //     let kanban = (this.view?.currentView as any)?.kanban;
-    //     let settingKanban = kanban.kanbanSetting;
-    //     settingKanban.isChangeColumn = true;
-    //     settingKanban.formName = this.view?.formModel?.formName;
-    //     settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-    //     this.api
-    //       .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-    //         settingKanban,
-    //         this.dataObj,
-    //       ])
-    //       .subscribe((resource) => {
-    //         if (resource?.columns && resource?.columns.length)
-    //           kanban.columns = resource.columns;
-    //         kanban.kanbanSetting.isChangeColumn = false;
-    //         kanban.dataObj = this.dataObj;
-    //         kanban.loadDataSource(
-    //           kanban.columns,
-    //           kanban.kanbanSetting?.swimlaneSettings,
-    //           false
-    //         );
-    //         kanban.refresh();
-    //       });
-    //   }
-    //   if (this.processID)
-    //     (this.view?.dataService as CRUDService)
-    //       .setPredicates(['ProcessID==@0'], [this.processID])
-    //       .subscribe();
-    // }
   }
 
   async executeApiCalls() {
@@ -673,7 +635,12 @@ export class CasesComponent
     //         }
     //       });
     //     }
+    //   } else {
+    //   if (this.kanban) {
+    //     this.dataSelected.stepID = this.crrStepID;
+    //     this.kanban.updateCard(this.dataSelected);
     //   }
+    // }
     // });
   }
   updateReasonCases(instance: any, cases: any) {
@@ -796,23 +763,121 @@ export class CasesComponent
 
   onActions(e) {
     switch (e.type) {
-      // case 'drop':
-      //   this.dataDrop = e.data;
-      //   this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
-      //   // xử lý data chuyển công đoạn
-      //   if (this.crrStepID != this.dataDrop.stepID)
-      //     this.dropcasess(this.dataDrop);
+      case 'drop':
+        this.dataDrop = e.data;
+        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+        // xử lý data chuyển công đoạn
+        if (this.crrStepID != this.dataDrop.stepID)
+          this.dropCases(this.dataDrop);
 
-      //   break;
-      // case 'drag':
-      //   ///bắt data khi kéo
-      //   this.crrStepID = e?.data?.stepID;
+        break;
+      case 'drag':
+        ///bắt data khi kéo
+        this.crrStepID = e?.data?.stepID;
 
-      //   break;
+        break;
       case 'dbClick':
         //xư lý dbClick
         this.viewDetail(e.data);
         break;
+    }
+  }
+
+  getMoreFunction(formName, gridViewName) {
+    this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.moreFuncCase = res;
+      }
+    });
+  }
+
+  dropCases(data) {
+    data.stepID = this.crrStepID;
+    // if (!data.edit) {
+    //   this.notificationsService.notifyCode('SYS032');
+    //   return;
+    // }
+    // if (data.closed) {
+    //   this.notificationsService.notify(
+    //     'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
+    //     '2'
+    //   );
+    //   return;
+    // }
+
+    // if (this.moreFuncInstance?.length == 0) {
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status == '1') {
+    //   this.notificationsService.notifyCode('DP038');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status != '1' && data.status != '2') {
+    //   this.notificationsService.notifyCode('DP037');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+
+    // Alo Bao bat dk chặn
+    if (
+      this.kanban &&
+      this.kanban.columns?.length > 0 &&
+      this.dataColums?.length == 0
+    )
+      this.dataColums = this.kanban.columns;
+
+    if (this.dataColums.length > 0) {
+      var idx = this.dataColums.findIndex(
+        (x) => x.dataColums.recID == this.stepIdClick
+      );
+      if (idx != -1) {
+        var stepCrr = this.dataColums[idx].dataColums;
+        if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
+          idx = this.moreFuncCase.findIndex(
+            (x) => x.functionID == 'CM0401_1' || x.functionID == 'CM0402_1'
+          );
+          if (idx != -1) {
+            // if (this.checkMoreReason(data)) {
+            //   this.notificationsService.notifyCode('SYS032');
+            //   return;
+            // }
+            this.titleAction = this.moreFuncCase[idx].text;
+            this.moveStage(data);
+          }
+        } else {
+          if (stepCrr?.isSuccessStep) {
+            idx = this.moreFuncCase.findIndex(
+              (x) => x.functionID == 'CM0401_3' || x.functionID == 'CM0402_3'
+            );
+            if (idx != -1) {
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
+              this.titleAction = this.moreFuncCase[idx].text;
+              this.moveReason(data, true);
+            }
+          } else {
+            idx = this.moreFuncCase.findIndex(
+              (x) => x.functionID == 'CM0401_4' || x.functionID == 'CM0402_4'
+            );
+            if (idx != -1) {
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
+              this.titleAction = this.moreFuncCase[idx].text;
+              this.moveReason(data, false);
+            }
+          }
+        }
+      }
+      // else {
+      //  // data.stepID = this.crrStepID;
+      //   this.changeDetectorRef.detectChanges();
+      // }
     }
   }
 
@@ -974,6 +1039,7 @@ export class CasesComponent
         this.caseType = '2';
         this.applyFor = '3';
       }
+      this.getMoreFunction(fun.formName, fun.gridViewName);
     });
   }
 }
