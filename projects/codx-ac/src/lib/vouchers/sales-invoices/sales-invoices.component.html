@@ -236,18 +236,40 @@
     </div>
   </div>
 
-  <div class="me-5 mb-5px line-clamp line-clamp-1">
+  <div #memoDiv class="me-5 mb-5px" [ngClass]="!expanding ? 'd-flex' : ''">
+    <span #memoContent [class]="!expanding ? 'text-truncate' : ''">
+      <codx-label
+        fiedName="memo"
+        [formModel]="view.formModel"
+        class="fw-bold label-colon"
+      ></codx-label>
+      <span
+        [innerHTML]="
+          selectedData?.memo | formatvalue : view.formModel : 'memo' | async
+        "
+        class="text-gray-600"
+      ></span>
+    </span>
     <codx-label
-      fiedName="memo"
+      #showMoreBtn
+      *ngIf="!expanding"
+      fieldName="lblMore"
       [formModel]="view.formModel"
-      class="fw-bold label-colon"
+      default="&nbsp;More"
+      class="text-primary"
+      [ngClass]="isMoreBtnHidden ? 'd-none' : ''"
+      role="button"
+      (click)="expanding = !expanding"
     ></codx-label>
-    <span
-      [innerHTML]="
-        selectedData?.memo | formatvalue : view.formModel : 'memo' | async
-      "
-      class="text-gray-600"
-    ></span>
+    <codx-label
+      *ngIf="expanding"
+      fieldName="lblLess"
+      [formModel]="view.formModel"
+      default="&nbsp;Less"
+      class="text-primary"
+      role="button"
+      (click)="onClickShowLess()"
+    ></codx-label>
   </div>
 
   <ejs-tab class="mt-5">

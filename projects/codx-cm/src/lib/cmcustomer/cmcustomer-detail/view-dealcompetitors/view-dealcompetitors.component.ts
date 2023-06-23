@@ -7,7 +7,7 @@ import {
   FormModel,
 } from 'codx-core';
 import { X } from '@angular/cdk/keycodes';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'codx-view-dealcompetitors',
@@ -39,6 +39,7 @@ export class ViewDealcompetitorsComponent implements OnInit {
   colorReasonSuccess: any;
   colorReasonFail: any;
   currentRecID = '';
+  gridViewSetup: any;
   constructor(
     private cache: CacheService,
     private cmSv: CodxCmService,
@@ -50,6 +51,8 @@ export class ViewDealcompetitorsComponent implements OnInit {
     this.getListDealAndDealCompetitor();
     this.fromModelDealCompetitor = await this.cmSv.getFormModel('CM02011');
     this.fromModelDeal = await this.cmSv.getFormModel('CM0201');
+    this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.fromModelDeal?.formName, this.fromModelDeal?.gridViewName));
+
     this.getColorReason();
   }
 

@@ -664,7 +664,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.FormModel = this.fmContractsPayments;
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
@@ -704,7 +704,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.FormModel = this.fmContractsPaymentsHistory;
     let popupPayHistory = this.callfunc.openForm(
       PopupViewPaymentHistoryComponent,
@@ -738,7 +738,7 @@ export class AddContractsComponent implements OnInit {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.FormModel = formModel;
 
     let popupPaymentHistory = this.callfunc.openForm(

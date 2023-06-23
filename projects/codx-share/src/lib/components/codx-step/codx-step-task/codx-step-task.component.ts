@@ -411,9 +411,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP08':
             res.disabled = true;
             break;
-          //tajo cuoc hop
-          case 'DP24':
-            if (task.taskType != 'M') res.disabled = true;
+          case 'DP24': //Tạo cuộc họp
+            if (task.taskType != 'M' || task?.actionStatus == '2')
+              res.disabled = true;
             break;
           case 'DP25':
           case 'DP20':
@@ -430,6 +430,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task.taskType == 'M' && task?.actionStatus != '2')
+                res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -437,6 +439,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP29': // Hủy
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task.taskType == 'M' && task?.actionStatus != '2')
+                res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -444,6 +448,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP30': //Khôi phục
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task.taskType == 'M') res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -714,7 +719,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       this.currentStep?.tasks?.push(data.task);
       this.currentStep['progress'] = data?.progressStep;
-      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -1393,9 +1397,27 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       );
                       dialog.closed.subscribe((e) => {
                         if (e?.event) {
-                          this.notiService.notify(
-                            'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+                          if (this.listGroupTask?.length > 0) {                   
+                            let group = this.listGroupTask.find((g) => g.refID == data?.taskGroupID);
+                            if (group) {
+                              let indexTask = group?.task?.findIndex((taskFind) => taskFind.recID == data.recID);
+                              if (indexTask != -1) {
+                                group.task[indexTask].actionStatus = '2';
+                                let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
+                                group.task?.splice(indexTask,1,taskConvert);
+                                let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
+                                if(taskFind){
+                                  taskFind['actionStatus'] = '2';
+                                }
+                              }
+                            }
+                          }
+                          this.notiService.notifyCode(
+                            'E0322',
+                            0,
+                            '"' + this.titleAction + '"'
                           );
+                          this.changeDetectorRef.detectChanges();
                         }
                       });
                     }
@@ -1449,8 +1471,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                   );
                   dialog.closed.subscribe((e) => {
                     if (e?.event) {
-                      this.notiService.notify(
-                        'Edit cuộc họp thành công ! - Cần messes từ Khanh!!'
+                      this.notiService.notifyCode(
+                        'E0322',
+                        0,
+                        '"' + this.titleAction + '"'
                       );
                     }
                   });
@@ -1461,6 +1485,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       });
     }
   }
+
 
   async deleteMeeting(data) {
     var meeting: any;
@@ -1479,23 +1504,39 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.notiService.alertCode('SYS030').subscribe((x) => {
         if (x?.event?.status == 'Y') {
           this.api
-          .execSv<any>(
-            'CO',
-            'ERM.Business.CO',
-            'MeetingsBusiness',
-            'DeleteMeetingsAsync',
-            [meeting.meetingID]
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.notiService.notify(
-                'loại cuộc họp thành công ! - Cần messes từ Khanh!!'
-              );
-            }
-          });
+            .execSv<any>(
+              'CO',
+              'ERM.Business.CO',
+              'MeetingsBusiness',
+              'DeleteMeetingsAsync',
+              [meeting.meetingID]
+            )
+            .subscribe((res) => {
+              if (res) {
+                if (this.listGroupTask?.length > 0) {                   
+                  let group = this.listGroupTask.find((g) => g.refID == data?.taskGroupID);
+                  if (group) {
+                    let indexTask = group?.task?.findIndex((taskFind) => taskFind.recID == data.recID);
+                    if (indexTask != -1) {
+                      group.task[indexTask].actionStatus = '2';
+                      let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
+                      group.task?.splice(indexTask,1,taskConvert);
+                      let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
+                      if(taskFind){
+                        taskFind['actionStatus'] = '0';
+                      }
+                    }
+                  }
+                }
+                this.notiService.notifyCode(
+                  'E0322',
+                  0,
+                  '"' + this.titleAction + '"'
+                );
+              }
+            });
         }
       });
-
     }
   }
 

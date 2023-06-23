@@ -11,7 +11,7 @@
         <ng-container *ngComponentOutlet="filter"></ng-container>
     </ng-container> -->
 
-    <div class="card-body p-0 mt-3" 
+    <div class="card-body p-0 employee-all mt-1" 
     *ngIf="formModel && columnGrid; else emptyDataTemplate"
     >
       <!-- <codx-gridview
@@ -42,6 +42,7 @@
       [predicates]="'EmployeeID=@0'"
       [dataValues]="employeeId"
       [emptyTemplate]="emptyDataTemplate"
+      rowHeight="40"
     ></codx-gridview-v2>
     </div>
   </ng-template>
@@ -110,7 +111,7 @@
             "
           ></span>
         </span>
-        <codx-mfunc
+        <codx-mfunc class="mt-n3"
           [formModel]="formModel"
           (clickMF)="clickMF($event, data, funcID)"
           type="hover"
@@ -325,7 +326,7 @@
         placement="right"
         [ngbPopover]="popNewest"
         [style.color]="'#0078FF'"
-        class="icon-bookmark icon-18 ms-auto"
+        class="icon-bookmark icon-16 me-2"
       >
 
       </div>
@@ -410,7 +411,7 @@
         </span>
       </div>
     </div>
-    <codx-mfunc
+    <codx-mfunc class="mt-n3"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -441,7 +442,7 @@
     placement="right"
     [ngbPopover]="popNewest"
     [style.color]="'#0078FF'"
-    class="icon-bookmark icon-18 ms-auto"
+    class="icon-bookmark icon-16 me-2"
   >
 </span>
 
@@ -496,7 +497,7 @@
         "
       ></span>
     </span>
-    <codx-mfunc
+    <codx-mfunc class="mt-n3"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -581,7 +582,7 @@
         placement="right"
         [ngbPopover]="popNewest"
         [style.color]="'#0078FF'"
-        class="icon-bookmark icon-18"
+        class="icon-bookmark icon-16 me-2"
       >
     </span>
         <span class="fw-bolder">

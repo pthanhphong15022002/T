@@ -70,12 +70,13 @@
             [Group]="formGroup"
         ></codx-input>
     </div>
-    <div class="col-4">
+    <div class="col-4 d-flex flex-column">
         <codx-label
             fiedName="Stop"
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+            class="mt-3"
             field="stop"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -199,6 +200,7 @@
     </div>
     <div class="col-6 d-flex flex-row">
         <codx-input
+            class="mt-2"
             field="hasIncludeBenefits"
             [formModel]="formModel"
             [Group]="formGroup"
