@@ -10,7 +10,7 @@ const routes: Routes = [
     component: CodxApprovalComponent,
     children: [
       {
-        path: '/:FuncID/:id',
+        path: 'khanh/:FuncID/:id',
         component: ApprovalCmComponent,
       },
     ],

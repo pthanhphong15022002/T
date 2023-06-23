@@ -3,6 +3,6 @@
 }
 
 .table-cashpayment table{
-    max-height: calc(100vh - 385px)!important;
+    height: calc(100vh - 385px)!important;
 
 }

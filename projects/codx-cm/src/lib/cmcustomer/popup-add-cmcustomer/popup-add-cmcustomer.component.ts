@@ -385,11 +385,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       .subscribe(async (res) => {
         if (res) {
           var recID = res?.save?.recID;
-          if (this.avatarChange) {
-            await firstValueFrom(
-              this.imageUpload.updateFileDirectReload(recID)
-            );
-          }
+
           this.dialog.close([res.save]);
         }
       });
@@ -408,11 +404,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-          if (this.avatarChange) {
-            await firstValueFrom(
-              this.imageUpload.updateFileDirectReload(recID)
-            );
-          }
+
           this.dialog.close(res.update);
         }
       });
@@ -527,7 +519,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  hanleSave() {
+  async hanleSave() {
+    if (this.avatarChange) {
+      await firstValueFrom(
+        this.imageUpload.updateFileDirectReload(this.data?.recID)
+      );
+    }
     if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
     } else {

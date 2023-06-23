@@ -97,13 +97,12 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.isDate = false;
     this.changeAvata = false;
     this.changeAvataContact = false;
-    setTimeout(() => {
-      this.leadOne = JSON.parse(JSON.stringify(this.data));
-      this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
-    }, 0);
+
   }
 
   async ngAfterViewInit() {
+    this.leadOne = JSON.parse(JSON.stringify(this.data));
+    this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
     this.leadNew.recID = Util.uid();
     this.leadNew.contactID = Util.uid();
     this.leadTwo.recID = null;
@@ -151,7 +150,7 @@ export class PopupMergeLeadsComponent implements OnInit {
     options.predicates =
       'Status!=@0 and RecID!=@1 and RecID!=@2 and IsDuplicated==false';
     options.dataValues =
-      '5' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
+      '7' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     lst =
@@ -164,7 +163,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
 
   //#region  Save
-  onMerge() {
+  async onMerge() {
     this.gridViewSetup.ProcessID.isRequire = false;
 
     this.countValidate = this.cmSv.checkValidate(
@@ -193,7 +192,20 @@ export class PopupMergeLeadsComponent implements OnInit {
       this.leadThree?.recID,
       this.changeAvata == false ? this.recIDLead : null,
     ];
-
+    if (this.changeAvata) {
+      await firstValueFrom(
+        this.imageAvatar.updateFileDirectReload(this.leadNew?.recID)
+      );
+    }
+    if (this.changeAvataContact) {
+      await firstValueFrom(
+        this.imageAvatarContact.updateFileDirectReload(this.leadNew?.contactID)
+      );
+    } else {
+      await firstValueFrom(
+        this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
+      );
+    }
     this.api
       .execSv<any>(
         'CM',
@@ -204,33 +216,6 @@ export class PopupMergeLeadsComponent implements OnInit {
       )
       .subscribe(async (res) => {
         if (res) {
-          if (this.changeAvata) {
-            await firstValueFrom(
-              this.imageAvatar.updateFileDirectReload(res?.recID)
-            );
-            if (this.changeAvataContact) {
-              await firstValueFrom(
-                this.imageAvatarContact.updateFileDirectReload(res?.contactID)
-              );
-            } else {
-              await firstValueFrom(
-                this.cmSv.copyFileAvata(this.recIDAvt, this.leadNew.contactID)
-              );
-            }
-          } else {
-            // await firstValueFrom(
-            //   this.cmSv.copyFileAvata(this.recIDLead, this.leadNew.recID)
-            // );
-            if (this.changeAvataContact) {
-              await firstValueFrom(
-                this.imageAvatarContact.updateFileDirectReload(res?.contactID)
-              );
-            } else {
-              await firstValueFrom(
-                this.cmSv.copyFileAvata(this.recIDAvt, res?.contactID)
-              );
-            }
-          }
           var lstObjectIdFile = [];
           lstObjectIdFile = this.getListIdFile();
           var lstRef = [];
@@ -289,13 +274,13 @@ export class PopupMergeLeadsComponent implements OnInit {
   getListIdFile() {
     var lstID = [];
 
-    if (this.leadOne.recID != null) {
+    if (this.leadOne?.recID != null) {
       lstID.push(this.leadOne.recID);
     }
-    if (this.leadTwo.recID != null) {
+    if (this.leadTwo?.recID != null) {
       lstID.push(this.leadTwo.recID);
     }
-    if (this.leadThree.recID != null) {
+    if (this.leadThree?.recID != null) {
       lstID.push(this.leadThree.recID);
     }
 
