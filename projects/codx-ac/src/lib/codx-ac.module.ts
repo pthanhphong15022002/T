@@ -65,6 +65,8 @@ import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expe
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
 import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
 import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
+import { LayloutJournalComponent } from './laylout-journal/laylout-journal.component';
+import { TestJournalComponent } from './test-journal/test-journal.component';
 
 export const routes: Routes = [
   {
@@ -184,6 +186,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'test',
+    component: LayloutJournalComponent,
+    children: [
+      {
+        path: '',
+        component: TestJournalComponent,
+      },
+    ],
+  },
+  {
     path: '',
     loadChildren: () =>
       import('./settings/settings.module').then((m) => m.SettingsModule),
@@ -243,6 +255,7 @@ export const routes: Routes = [
     ClosingTransactionComponent,
     PopAddClosingTransactionComponent,
     TableLineDetailStaticComponent,
+    TestJournalComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

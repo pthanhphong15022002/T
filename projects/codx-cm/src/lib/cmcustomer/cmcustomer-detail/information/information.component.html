@@ -308,7 +308,10 @@
             "
           ></div>
         </div>
-
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
         <div
           class="mb-3 d-flex align-items-top"
         >
@@ -329,10 +332,6 @@
             "
           ></div>
         </div>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="d-flex flex-column">
         <div
           class="mb-3 d-flex align-items-top"
         >
@@ -469,25 +468,6 @@
             [innerHTML]="
               dataSelected?.segmentID
                 | formatvalue : formModel : 'SegmentID'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="CustomerFrom"
-              [formModel]="formModel"
-            ></codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected.customerFrom
-                | formatvalue : formModel : 'CustomerFrom'
                 | async
             "
           ></div>
@@ -1137,6 +1117,11 @@
             "
           ></div>
         </div>
+
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
         <div
           class="mb-3 d-flex align-items-top"
         >
@@ -1157,10 +1142,6 @@
             "
           ></div>
         </div>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="d-flex flex-column">
         <div
           class="mb-3 d-flex align-items-top"
         >
