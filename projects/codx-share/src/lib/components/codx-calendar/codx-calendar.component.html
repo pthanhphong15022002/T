@@ -119,10 +119,7 @@
       (clicked)="addEvent($event)"
     >
       <ng-template #itemTemplate let-items="">
-        <div
-          class="itemlist"
-          *ngIf="this.calendarParams[items?.id].ShowEvent === '1'"
-        >
+        <div class="itemlist">
           <span class="text">{{ items.text }}</span>
         </div>
       </ng-template>

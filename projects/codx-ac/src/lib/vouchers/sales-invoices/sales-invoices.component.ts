@@ -1,6 +1,8 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
   Component,
+  ElementRef,
   Injector,
   TemplateRef,
   ViewChild,
@@ -27,12 +29,15 @@ import { SalesInvoiceService } from './sales-invoices.service';
 })
 export class SalesInvoicesComponent
   extends UIComponent
-  implements AfterViewInit
+  implements AfterViewInit, AfterViewChecked
 {
   //#region Constructor
   @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
   @ViewChild('sider') sider?: TemplateRef<any>;
   @ViewChild('content') content?: TemplateRef<any>;
+  @ViewChild('memoDiv', { read: ElementRef }) memoDiv: ElementRef;
+  @ViewChild('memoContent', { read: ElementRef }) memoContent: ElementRef;
+  @ViewChild('showMoreBtn', { read: ElementRef }) showMoreBtn: ElementRef;
 
   views: Array<ViewModel> = [];
   btnAdd = {
@@ -50,6 +55,9 @@ export class SalesInvoicesComponent
   ];
   parent: any;
   loading: boolean = false;
+
+  isMoreBtnHidden: boolean = false;
+  expanding: boolean = false;
 
   constructor(
     inject: Injector,
@@ -100,6 +108,15 @@ export class SalesInvoicesComponent
       this.functionName = this.acService.toCamelCase(res.defaultName);
     });
     this.view.setRootNode(this.parent?.customName);
+  }
+
+  ngAfterViewChecked(): void {
+    const memoDivWidth: number = this.memoDiv?.nativeElement.offsetWidth;
+    const memoContentWidth: number =
+      this.memoContent?.nativeElement.offsetWidth;
+    const MoreBtnWidth: number = this.showMoreBtn?.nativeElement.offsetWidth;
+
+    this.isMoreBtnHidden = memoContentWidth + MoreBtnWidth < memoDivWidth;
   }
 
   ngOnDestroy() {
@@ -174,6 +191,11 @@ export class SalesInvoicesComponent
         this.export(data);
         break;
     }
+  }
+
+  onClickShowLess(): void {
+    this.expanding = !this.expanding;
+    this.detectorRef.detectChanges();
   }
   //#endregion
 

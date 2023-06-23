@@ -8,9 +8,12 @@ import { isObservable } from 'rxjs';
   styleUrls: ['./search-suggestions.component.scss']
 })
 export class SearchSuggestionsComponent implements OnInit {
+  
+  tags:any;
   dialog:any;
-  vllSV003:any;
   vllSV005:any;
+  formModel:any;
+
   constructor(
     private svService : CodxSvService,
     @Optional() dt?: DialogData,
@@ -18,6 +21,7 @@ export class SearchSuggestionsComponent implements OnInit {
   ) 
   { 
     this.dialog = dialog;
+    this.formModel = dt?.data?.formModel
   }
   ngOnInit(): void {
     //Lấy vll
@@ -27,13 +31,13 @@ export class SearchSuggestionsComponent implements OnInit {
   
   getVll()
   {
-    var vllSV003 = this.svService.loadValuelist("SV003");
+    var tags = this.svService.loadTags(this.formModel?.entityName) as any;
 
-    if(isObservable(vllSV003))
+    if(isObservable(tags))
     {
-      vllSV003.subscribe(item=>{if(item) this.vllSV003 = item})
+      tags.subscribe((item:any)=>{if(item) this.tags = item?.datas})
     }
-    else this.vllSV003 = vllSV003;
+    else this.tags = tags?.datas;
 
     
     var vllSV005 =  this.svService.loadValuelist("SV005") as any;
@@ -44,6 +48,7 @@ export class SearchSuggestionsComponent implements OnInit {
       })
     }
     else this.vllSV005 = vllSV005.datas;
+
 
   }
 
