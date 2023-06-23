@@ -1397,31 +1397,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       );
                       dialog.closed.subscribe((e) => {
                         if (e?.event) {
-                          var lst = [];
-                          if (
-                            this.listGroupTask != null &&
-                            this.listGroupTask.length > 0
-                          ) {
-                            lst = this.listGroupTask;
-                            let group = this.listGroupTask.find(
-                              (g) => g.refID == data?.taskGroupID
-                            );
-                            if (group != null) {
-                              let index = group?.task?.findIndex(
-                                (taskFind) => taskFind.recID == data.recID
-                              );
-                              if (index != -1) {
-                                group.task[index].actionStatus = '2';
+                          if (this.listGroupTask?.length > 0) {                   
+                            let group = this.listGroupTask.find((g) => g.refID == data?.taskGroupID);
+                            if (group) {
+                              let indexTask = group?.task?.findIndex((taskFind) => taskFind.recID == data.recID);
+                              if (indexTask != -1) {
+                                group.task[indexTask].actionStatus = '2';
+                                let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
+                                group.task?.splice(indexTask,1,taskConvert);
+                                let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
+                                if(taskFind){
+                                  taskFind['actionStatus'] = '2';
+                                }
                               }
-                              // var tasks = group?.task;
-                              // if (tasks != null && tasks.length > 0) {
-                              //   var index = tasks.findIndex(
-                              //     (x) => x.recID == data?.recID
-                              //   );
-                              //   if (index != -1) {
-                              //     tasks[index].actionStatus = '2';
-                              //   }
-                              // }
                             }
                           }
                           this.notiService.notifyCode(
@@ -1498,6 +1486,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
+
   async deleteMeeting(data) {
     var meeting: any;
     meeting = await firstValueFrom(
@@ -1524,6 +1513,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             )
             .subscribe((res) => {
               if (res) {
+                if (this.listGroupTask?.length > 0) {                   
+                  let group = this.listGroupTask.find((g) => g.refID == data?.taskGroupID);
+                  if (group) {
+                    let indexTask = group?.task?.findIndex((taskFind) => taskFind.recID == data.recID);
+                    if (indexTask != -1) {
+                      group.task[indexTask].actionStatus = '2';
+                      let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
+                      group.task?.splice(indexTask,1,taskConvert);
+                      let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
+                      if(taskFind){
+                        taskFind['actionStatus'] = '0';
+                      }
+                    }
+                  }
+                }
                 this.notiService.notifyCode(
                   'E0322',
                   0,
