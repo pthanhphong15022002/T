@@ -122,9 +122,9 @@ export class CasesComponent
     private notificationsService: NotificationsService
   ) {
     super(inject);
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
+    // if (!this.funcID) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
 
     this.executeApiCalls();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -155,7 +155,7 @@ export class CasesComponent
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
@@ -184,7 +184,6 @@ export class CasesComponent
       });
       this.changeDetectorRef.detectChanges();
     });
-
   }
 
   afterLoad() {
@@ -630,7 +629,6 @@ export class CasesComponent
     //   dataCM: dataCM,
     //   stepName: data.currentStepName,
     // };
-
     // var dialogRevision = this.callfc.openForm(
     //   PopupMoveReasonComponent,
     //   '',
@@ -845,7 +843,7 @@ export class CasesComponent
       caseType: this.caseType,
       applyFor: this.applyFor,
       titleAction: this.titleAction,
-      processID:this.processID,
+      processID: this.processID,
     };
     let dialogCustomcases = this.callfc.openSide(
       PopupAddCasesComponent,

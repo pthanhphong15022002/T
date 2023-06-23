@@ -113,6 +113,14 @@ const routes: Routes = [
         path: 'leads/:funcID',
         component: LeadsComponent,
       },
+      // {
+      //   path: 'approvals/:funcID',
+      //   loadChildren: () =>
+      //     import('projects/codx-cm/src/lib/codx-cm-approval.module').then(
+      //       (m) => m.ApprovelCmModule
+      //     ),
+      //   data: { noReuse: true },
+      // },
       {
         path: '**',
         redirectTo: 'error/404',
