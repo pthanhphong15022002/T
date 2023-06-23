@@ -6,7 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { UIComponent, ViewModel, ViewType, CacheService } from 'codx-core';
 
 @Component({
   selector: 'lib-test-journal',
@@ -15,12 +15,28 @@ import { UIComponent, ViewModel, ViewType } from 'codx-core';
 })
 export class TestJournalComponent extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
-  data = { currencyID: 'VN' };
+  vll85: Array<any> = [];
+  vll86: Array<any> = [];
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  constructor(private injector: Injector, private change: ChangeDetectorRef) {
+  constructor(
+    private injector: Injector,
+    private change: ChangeDetectorRef,
+    cache: CacheService
+  ) {
     super(injector);
   }
-  override onInit(): void {}
+  override onInit(): void {
+    this.cache.valueList('AC085').subscribe((res) => {
+      if (res) {
+        this.vll85 = res.datas;
+      }
+    });
+    this.cache.valueList('AC086').subscribe((res) => {
+      if (res) {
+        this.vll86 = res.datas;
+      }
+    });
+  }
   ngAfterViewInit() {
     this.views = [
       {
