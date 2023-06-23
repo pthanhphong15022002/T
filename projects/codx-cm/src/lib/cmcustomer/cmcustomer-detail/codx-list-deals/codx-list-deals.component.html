@@ -88,10 +88,11 @@
       </div>
     </div>
     <div class="d-flex align-items-top ms-4">
-      <div class="d-flex flex-column w-125px min-w-125px">
+      <div class="d-flex flex-column w-130px min-w-130px">
         <div class="d-flex align-items-center justify-content-end mb-1">
           <div
             *ngIf="data.status != '1'"
+            style="border-radius: 23px; padding: 0px 8px 0px;"
             [ngStyle]="{
               'background-color':
                 data.status == '3' || data.status == '4'
@@ -100,7 +101,7 @@
                   ? colorReasonFail?.color
                   : getStep(data?.stepID)?.backgroundColor
             }"
-            class="badge badge-sm d-flex align-items-center"
+            class="d-flex align-items-center"
           >
             <span
               [ngClass]="getStep(data?.stepID)?.icon"

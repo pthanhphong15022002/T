@@ -412,7 +412,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP24': //Tạo cuộc họp
-            if (task.taskType != 'M' || task?.actionStatus == '2') res.disabled = true;
+            if (task.taskType != 'M' || task?.actionStatus == '2')
+              res.disabled = true;
             break;
           case 'DP25':
           case 'DP20':
@@ -429,7 +430,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
-              if (task.taskType == 'M' && task?.actionStatus != '2') res.disabled = true;
+              if (task.taskType == 'M' && task?.actionStatus != '2')
+                res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -437,7 +439,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP29': // Hủy
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
-              if (task.taskType == 'M' && task?.actionStatus != '2') res.disabled = true;
+              if (task.taskType == 'M' && task?.actionStatus != '2')
+                res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -1394,9 +1397,39 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       );
                       dialog.closed.subscribe((e) => {
                         if (e?.event) {
-                          this.notiService.notify(
-                            'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
+                          var lst = [];
+                          if (
+                            this.listGroupTask != null &&
+                            this.listGroupTask.length > 0
+                          ) {
+                            lst = this.listGroupTask;
+                            let group = this.listGroupTask.find(
+                              (g) => g.refID == data?.taskGroupID
+                            );
+                            if (group != null) {
+                              let index = group?.task?.findIndex(
+                                (taskFind) => taskFind.recID == data.recID
+                              );
+                              if (index != -1) {
+                                group.task[index].actionStatus = '2';
+                              }
+                              // var tasks = group?.task;
+                              // if (tasks != null && tasks.length > 0) {
+                              //   var index = tasks.findIndex(
+                              //     (x) => x.recID == data?.recID
+                              //   );
+                              //   if (index != -1) {
+                              //     tasks[index].actionStatus = '2';
+                              //   }
+                              // }
+                            }
+                          }
+                          this.notiService.notifyCode(
+                            'E0322',
+                            0,
+                            '"' + this.titleAction + '"'
                           );
+                          this.changeDetectorRef.detectChanges();
                         }
                       });
                     }
@@ -1450,8 +1483,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                   );
                   dialog.closed.subscribe((e) => {
                     if (e?.event) {
-                      this.notiService.notify(
-                        'Edit cuộc họp thành công ! - Cần messes từ Khanh!!'
+                      this.notiService.notifyCode(
+                        'E0322',
+                        0,
+                        '"' + this.titleAction + '"'
                       );
                     }
                   });
@@ -1480,23 +1515,24 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.notiService.alertCode('SYS030').subscribe((x) => {
         if (x?.event?.status == 'Y') {
           this.api
-          .execSv<any>(
-            'CO',
-            'ERM.Business.CO',
-            'MeetingsBusiness',
-            'DeleteMeetingsAsync',
-            [meeting.meetingID]
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.notiService.notify(
-                'loại cuộc họp thành công ! - Cần messes từ Khanh!!'
-              );
-            }
-          });
+            .execSv<any>(
+              'CO',
+              'ERM.Business.CO',
+              'MeetingsBusiness',
+              'DeleteMeetingsAsync',
+              [meeting.meetingID]
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.notiService.notifyCode(
+                  'E0322',
+                  0,
+                  '"' + this.titleAction + '"'
+                );
+              }
+            });
         }
       });
-
     }
   }
 

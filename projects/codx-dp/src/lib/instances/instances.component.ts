@@ -2169,8 +2169,8 @@ export class InstancesComponent
     //     processID
     //   )
     //   .subscribe((res2: any) => {
-    let dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
     //trình ký
     if (this.esCategory?.eSign == true) {
       //   let signFile = new ES_SignFile();
