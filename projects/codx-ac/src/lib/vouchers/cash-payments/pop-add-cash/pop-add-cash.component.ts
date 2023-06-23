@@ -1033,7 +1033,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.notification.notifyCode('AC0013');
       return;
     }
-    this.cashpayment.unbounds.isAddNew = false;
     this.loading = true;
     if (this.hasSaved) {
       this.dialog.dataService.updateDatas.set(
@@ -1046,6 +1045,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res && res.update.data != null) {
+            this.loading = false;
             this.clearCashpayment();
             this.dialog.dataService.clear();
             this.dialog.dataService
@@ -1053,46 +1053,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 this.cashpayment = res;
                 this.form.formGroup.patchValue(this.cashpayment);
-                this.hasSaved = false;
-                this.loading = false;
               });
+            this.dt.detectChanges();
           } else {
-            this.cashpayment.unbounds.isAddNew = true;
             this.loading = false;
           }
         });
-    } else {
-      // nếu voucherNo đã tồn tại,
-      // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-      this.journalService.handleVoucherNoAndSave(
-        this.journal,
-        this.cashpayment,
-        'AC',
-        'AC_CashPayments',
-        this.form,
-        this.action === 'edit',
-        () => {
-          this.dialog.dataService
-            .save((opt: RequestOption) => {
-              opt.data = [this.cashpayment];
-            })
-            .subscribe((res) => {
-              if (res && res.save.data != null) {
-                this.clearCashpayment();
-                this.dialog.dataService.clear();
-                this.dialog.dataService
-                  .addNew((o) => this.setDefault(o))
-                  .subscribe((res) => {
-                    this.cashpayment = res;
-                    this.form.formGroup.patchValue(this.cashpayment);
-                  });
-              } else {
-                this.cashpayment.unbounds.isAddNew = true;
-                this.loading = false;
-              }
-            });
-        }
-      );
     }
   }
 
