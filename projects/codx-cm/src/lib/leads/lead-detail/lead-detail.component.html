@@ -225,7 +225,7 @@
                   </div>
                   <div *ngIf="dataSelected.status == '1' || dataSelected.status == '7'">
                     <codx-vll
-                      [name]="'CRM037'"
+                      [name]="gridViewSetup?.Status?.referedValue"
                       [field]="'Status'"
                       [value]="dataSelected?.status"
                       [showText]="true"
