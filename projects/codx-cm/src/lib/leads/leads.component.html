@@ -16,6 +16,7 @@
   (selectedChange)="selectedChange($event)"
   (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
+  (onActions)="onActions($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
 
@@ -34,7 +35,7 @@
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [hideMF]="!data?.roles?.isOnwer "
+    [hideMF]="data?.status == '7' || !data?.roles?.isOnwer "
     [title]="data?.leadName"
     [descTmp]="descTmp"
     [formModel]="view.formModel"
@@ -69,7 +70,7 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <div
-          *ngIf="data.status != '1'"
+          *ngIf="data.status != '1' && data.status != '7'"
           [ngStyle]="{
             'background-color':
               data.status == '3' || data.status == '4'
@@ -92,9 +93,9 @@
             >{{ data?.currentStepName }}</span
           >
         </div>
-        <div *ngIf="data.status == '1'">
+        <div *ngIf="data.status == '1' || data.status == '7'">
           <codx-vll
-            [name]="'DP028'"
+            [name]="gridViewSetup?.Status?.referedValue"
             [field]="'Status'"
             [value]="data?.status"
             [showText]="true"
@@ -103,6 +104,17 @@
           >
           </codx-vll>
         </div>
+
+        <codx-vll
+        [name]="'CRM037'"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
+
         <div class="d-flex align-items-center text-gray-600">
           <!-- <span class="icon-16 icon-av_timer me-1"></span> -->
           <span
@@ -162,7 +174,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
-    [hideMF]="hideMoreFC"
+    [hideMF]="data?.status == '7' || hideMoreFC"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
@@ -189,7 +201,7 @@
     [title]="data?.leadName"
     [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmpCard"
-    [hideMF]="false"
+    [hideMF]="data?.status == '7'"
   >
   </codx-temp-full>
   <ng-template #descTmpCard>
