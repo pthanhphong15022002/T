@@ -25,6 +25,7 @@ import {
   CodxInputComponent,
   DataRequest,
   DialogModel,
+  CodxFormComponent,
 } from 'codx-core';
 import { CM_Contacts, CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
@@ -49,6 +50,7 @@ export class PopupAddDealComponent
   tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   CodxListContactsComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   // setting values in system
   dialog: DialogRef;
@@ -140,6 +142,7 @@ export class PopupAddDealComponent
 
   // load data form DP
   isLoading: boolean = false;
+  currencyIDOld: string;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -159,7 +162,6 @@ export class PopupAddDealComponent
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
 
-    //
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
 
@@ -200,6 +202,9 @@ export class PopupAddDealComponent
           this.customerName = $event.component.itemsSelected[0].CustomerName;
           this.getListContactByObjectID(this.customerID);
         }
+      }
+      if ($event.field == 'currencyID') {
+        this.loadExchangeRate();
       }
     }
   }
@@ -571,7 +576,6 @@ export class PopupAddDealComponent
     if ($event && $event.data) {
       this.deal.businessLineID = $event.data;
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
-        //  $event.component.itemsSelected[0].ProcessID = '';
         var processId =
           !$event.component.itemsSelected[0].ProcessID && this.processIdDefault
             ? this.processIdDefault
@@ -680,6 +684,7 @@ export class PopupAddDealComponent
           let dataParam = res.filter(
             (x) => x.category == '4' && !x.transType
           )[0];
+          debugger;
           this.processIdDefault = '1a6d0f15-09d0-11ee-94b3-00155d035517';
           this.deal.processID = this.processIdDefault;
           this.getListInstanceSteps(this.processIdDefault);
@@ -998,5 +1003,30 @@ export class PopupAddDealComponent
       }
       this.changeDetectorRef.detectChanges();
     }
+  }
+
+  loadExchangeRate() {
+    let day = this.deal.createdOn ?? new Date();
+    if(this.deal.currencyID) {
+      this.codxCmService
+      .getExchangeRate(this.deal.currencyID, day)
+      .subscribe((res) => {
+        let exchangeRateNew = res?.exchRate ?? 0;
+        if (exchangeRateNew == 0) {
+          this.notificationsService.notify(
+            'Tỷ giá tiền tệ "' +
+              this.deal.currencyID +
+              '" chưa thiết lập xin hay chọn lại !',
+            '3'
+          );
+          this.form.formGroup.patchValue(this.deal);
+          return;
+        }
+        else {
+          this.deal.exchangeRate = exchangeRateNew;
+        }
+      });
+    }
+
   }
 }

@@ -680,6 +680,16 @@
     >
     </codx-input>
   </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.address"
+      (valueChange)="valueChangeAdress($event)"
+      field="address"
+    >
+    </codx-input>
+  </div>
   <div class="row">
     <div class="col-6">
       <div class="form-group">
@@ -754,16 +764,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      [crrValue]="data?.address"
-      (valueChange)="valueChangeAdress($event)"
-      field="address"
-    >
-    </codx-input>
-  </div>
+
 
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
@@ -965,6 +966,16 @@
         </codx-input>
       </div>
     </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        [crrValue]="data?.address"
+        (valueChange)="valueChangeAdress($event)"
+        field="address"
+      >
+      </codx-input>
+    </div>
     <div class="row">
       <div class="col-6 form-group">
         <codx-label [formModel]="dialog.formModel" fiedName="Gender">
@@ -1071,16 +1082,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group">
-      <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [crrValue]="data?.address"
-        (valueChange)="valueChangeAdress($event)"
-        field="address"
-      >
-      </codx-input>
-    </div>
+
     <div class="form-group">
       <codx-label [formModel]="form.formModel" [fiedName]="'Memo'">
       </codx-label>
@@ -1124,6 +1126,7 @@
         </codx-input>
       </div>
     </div>
+
     <div class="col-6">
       <div class="form-group">
         <div style="height: 122px">
@@ -1152,6 +1155,16 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.address"
+      (valueChange)="valueChangeAdress($event)"
+      field="address"
+    >
+    </codx-input>
   </div>
   <div class="row">
     <div class="col-6 form-group">
@@ -1247,16 +1260,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      [crrValue]="data?.address"
-      (valueChange)="valueChangeAdress($event)"
-      field="address"
-    >
-    </codx-input>
-  </div>
+
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>

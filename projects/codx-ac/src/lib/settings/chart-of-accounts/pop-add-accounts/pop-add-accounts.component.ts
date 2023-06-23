@@ -19,7 +19,7 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { ChartOfAccounts } from '../../../models/ChartOfAccounts.model';
+import { Accounts} from '../../../models/Accounts.model';
 import { CodxAcService } from '../../../codx-ac.service';
 
 @Component({
@@ -31,7 +31,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   dialog!: DialogRef;
-  chartOfAccounts: ChartOfAccounts;
+  Accounts: Accounts;
   headerText: any;
   title: any;
   formType: any;
@@ -56,22 +56,27 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.chartOfAccounts = dialog.dataService!.dataSelected;
+    this.Accounts = dialog.dataService!.dataSelected;
     if (this.formType == 'add') {
-      this.chartOfAccounts.detail = true;
+      this.Accounts.detail = true;
     }
     this.cache
-      .gridViewSetup('ChartOfAccounts', 'grvAccountsAC')
+      .gridViewSetup(dialog.formModel.formName, dialog.formModel.gridViewName)
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
         }
       });
-    if (this.chartOfAccounts.accountID != null) {
-      if (this.chartOfAccounts.loanControl) {
-        this.chartOfAccounts.loanControl = '1';
+    if (this.Accounts.accountID != null) {
+      if (this.Accounts.loanControl) {
+        this.Accounts.loanControl = '1';
       } else {
-        this.chartOfAccounts.loanControl = '0';
+        this.Accounts.loanControl = '0';
+      }
+      if (this.Accounts.postDetail == '1') {
+        this.Accounts.postDetail = true;
+      } else {
+        this.Accounts.postDetail = false;
       }
     }
   }
@@ -81,19 +86,19 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.form.formGroup.patchValue(this.chartOfAccounts);
+    this.form.formGroup.patchValue(this.Accounts);
   }
   //#endregion
 
   //#region Event
   valueChange(e: any) {
-    this.chartOfAccounts[e.field] = e.data;
+    this.Accounts[e.field] = e.data;
   }
   valueChangeloan(e: any) {
     if (e.data == '0') {
-      this.chartOfAccounts[e.field] = false;
+      this.Accounts[e.field] = false;
     } else {
-      this.chartOfAccounts[e.field] = true;
+      this.Accounts[e.field] = true;
     }
   }
   //#endregion
@@ -103,38 +108,20 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     this.title = this.headerText;
     this.dt.detectChanges();
   }
-  checkValidate() {
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.chartOfAccounts);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.chartOfAccounts[keymodel[i]] == null ||
-              String(this.chartOfAccounts[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
-  checkLoancontrol() {
-    if (this.chartOfAccounts.loanControl == '0') {
-      this.chartOfAccounts.loanControl = false;
+  checkcontrol() {
+    if (this.Accounts.loanControl == '0') {
+      this.Accounts.loanControl = false;
     } else {
-      this.chartOfAccounts.loanControl = true;
+      this.Accounts.loanControl = true;
+    }
+    if (this.Accounts.postDetail == true) {
+      this.Accounts.postDetail = '1';
+    }else{
+      this.Accounts.postDetail = '0';
     }
   }
   checkSubLGControl(){
-    if(this.chartOfAccounts.subLGControl && !this.chartOfAccounts.subLGType)
+    if(this.Accounts.subLGControl && !this.Accounts.subLGType)
     {
       this.notification.notifyCode(
         'SYS009',
@@ -159,10 +146,10 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       return;
     }
     if (this.formType == 'add' || this.formType == 'copy') {
-      this.checkLoancontrol();
+      this.checkcontrol();
       this.dialog.dataService
         .save((opt: RequestOption) => {
-          opt.data = [this.chartOfAccounts];
+          opt.data = [this.Accounts];
         })
         .subscribe((res) => {
           if (res && !res.save.error) {
@@ -171,18 +158,18 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
             this.notification.notifyCode(
               'SYS031',
               0,
-              '"' + this.chartOfAccounts.accountID + '"'
+              '"' + this.Accounts.accountID + '"'
             );
             return;
           }
         });
     }
     if (this.formType == 'edit') {
-      this.checkLoancontrol();
+      this.checkcontrol();
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'UpdateAsync';
-          opt.data = [this.chartOfAccounts];
+          opt.data = [this.Accounts];
         })
         .subscribe((res) => {
           if (res.save || res.update) {

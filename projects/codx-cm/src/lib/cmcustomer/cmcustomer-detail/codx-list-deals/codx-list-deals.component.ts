@@ -6,7 +6,7 @@ import {
   DataRequest,
   FormModel,
 } from 'codx-core';
-import { Observable, finalize, map, pipe } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map, pipe } from 'rxjs';
 
 @Component({
   selector: 'codx-list-deals',
@@ -29,7 +29,7 @@ export class CodxListDealsComponent implements OnInit {
   colorReasonSuccess: any;
   colorReasonFail: any;
   currentRecID = '';
-
+  gridViewSetup: any;
   constructor(
     private cache: CacheService,
     private cmSv: CodxCmService,
@@ -45,6 +45,7 @@ export class CodxListDealsComponent implements OnInit {
   async ngOnInit() {
     this.getListDealsByCustomerID();
     this.formModel = await this.cmSv.getFormModel('CM0201');
+    this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName));
     this.getColorReason();
   }
 

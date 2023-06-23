@@ -1,3 +1,4 @@
+import { Double } from '@syncfusion/ej2-angular-charts';
 import { Util } from 'codx-core';
 
 export class CM_Products {
@@ -143,7 +144,7 @@ export class CM_QuotationsLines {
 }
 
 export class CM_Deals {
-  recID: string;
+  recID: string =  Util.uid();
   dealID: string;
   dealName: string;
   dealName2: string;
@@ -186,6 +187,8 @@ export class CM_Deals {
   modifiedBy: string;
   boolean;
   note: string;
+  currencyID:string;
+  exchangeRate:number;
 }
 
 export class CM_Permissions {

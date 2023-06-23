@@ -1,0 +1,12 @@
+<codx-views #view [views]="views" funcID="ACT" [autoLoad]="false">
+</codx-views>
+
+<ng-template #panelLeftRef>
+    <div class="container">
+        <ul>
+            <li *ngFor="let item of vll85">
+                {{item.text}}
+            </li>
+        </ul>
+    </div>
+</ng-template>

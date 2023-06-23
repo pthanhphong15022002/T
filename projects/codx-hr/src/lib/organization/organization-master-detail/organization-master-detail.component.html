@@ -1,61 +1,63 @@
 <!-- <ng-container *ngIf="columnsGrid"> -->
-<div class="container mt-4 h-100">
+<div class="container mt-2 h-100">
   <ng-container>
-    <div class="d-flex align-items-center mb-2">
-      <codx-img
-        [width]="50"
-        [objectId]="employeeManager?.employeeID"
-        [objectName]="employeeManager?.employeeName"
-        [objectType]="'HR_Employees'"
-        [imageType]="'circle'"
-      >
-      </codx-img>
-      <div class="d-flex w-100 justify-content-between p-4">
-        <div>
-          <div>
+    <div class="d-flex align-items-top p-3">
+      <div class="me-5">
+        <codx-img
+          [width]="50"
+          [objectId]="employeeManager?.employeeID"
+          [objectName]="employeeManager?.employeeName"
+          [objectType]="'HR_Employees'"
+          [imageType]="'circle'"
+        >
+        </codx-img>
+      </div>
+      <div class="d-flex align-items-top w-100 justify-content-between">
+        <div class="d-flex flex-column">
+          <div class="mb-1">
             <ng-container
               *ngIf="employeeManager?.employeeName; else lblEmployeeName"
             >
-              <span class="fw-bolder fs-4">{{
+              <span class="fw-bold text-dark fs-5">{{
                 employeeManager.employeeName
               }}</span>
             </ng-container>
             <ng-template #lblEmployeeName>
               <codx-label
-                [className]="'fw-bolder fs-4'"
+                [className]="'fw-bold text-dark fs-5'"
                 [formModel]="formModel"
                 name="lblEmployeeName"
                 default="Tên nhân viên"
               ></codx-label>
             </ng-template>
           </div>
-          <div>
+          <div class="mb-1">
             <ng-container
               *ngIf="employeeManager?.positionName; else lblPositionName"
             >
-              <span class="text-dark-400">{{
+              <span class="text-gray-500">{{
                 employeeManager.positionName
               }}</span>
             </ng-container>
             <ng-template #lblPositionName>
               <codx-label
-                [className]="'text-dark-400'"
+                [className]="'text-gray-500'"
                 [formModel]="formModel"
                 name="lblPositionName"
                 default="Chức vụ"
               ></codx-label>
             </ng-template>
-            <span class="ms-2 me-2">|</span>
+            <span class="ms-2 me-2 text-gray-500">|</span>
             <ng-container
               *ngIf="employeeManager?.orgUnitName; else lblOrgUnitName"
             >
-              <span class="text-dark-400">{{
+              <span class="text-gray-700">{{
                 employeeManager.orgUnitName
               }}</span>
             </ng-container>
             <ng-template #lblOrgUnitName>
               <codx-label
-                [className]="'text-dark-400'"
+                [className]="'text-gray-700'"
                 [formModel]="formModel"
                 name="lblOrgUnitName"
                 default="Phòng ban"
@@ -64,11 +66,11 @@
           </div>
           <div>
             <ng-container *ngIf="employeeManager?.phone; else lblPhone">
-              <span class="text-dark-400">{{ employeeManager?.phone }}</span>
+              <span class="text-gray-700">{{ employeeManager?.phone }}</span>
             </ng-container>
             <ng-template #lblPhone>
               <codx-label
-                [className]="'text-dark-400'"
+                [className]="'text-gray-700'"
                 [formModel]="formModel"
                 name="lblEmployeePhone"
                 default="SĐT"
@@ -76,11 +78,11 @@
             </ng-template>
             <span class="mx-2">|</span>
             <ng-container *ngIf="employeeManager?.email; else lblEmail">
-              <span class="text-dark-400">{{ employeeManager.email }}</span>
+              <span class="text-gray-700">{{ employeeManager.email }}</span>
             </ng-container>
             <ng-template #lblEmail>
               <codx-label
-                [className]="'text-dark-400'"
+                [className]="'text-gray-700'"
                 [formModel]="formModel"
                 name="lblEmail"
                 default="Email"
@@ -88,10 +90,10 @@
             </ng-template>
           </div>
         </div>
-        <div class="w-10 text-center">
-          <p class="h1 text-primary">{{ grid?.dataService?.rowCount }}</p>
+        <div class="w-150px text-center">
+          <div class="fs-1 fw-bold text-primary mb-1">{{ grid?.dataService?.rowCount }}</div>
           <codx-label
-            class="text-gray-700"
+            class="text-gray-600"
             [formModel]="formModel"
             name="lblTotalEmployee"
             default="Tổng số nhân viên"
@@ -102,7 +104,7 @@
   </ng-container>
 
   <ng-container *ngIf="columnsGrid && columnsGrid.length">
-    <div class="h-100">
+    <div class="h-100 org-gridview">
       <codx-gridview-v2
         #grid
         [formModel]="formModelEmp"
@@ -121,7 +123,8 @@
         [allowFiltering]="false"
         [allowSorting]="false"
         idField="employeeID"
-        height="100%"
+        rowHeight="35"
+        height="auto"
       ></codx-gridview-v2>
     </div>
   </ng-container>
@@ -131,8 +134,8 @@
 <ng-template #templateName let-item>
   <div>
     <codx-temp-full
-      [imgCss]="'me-2'"
-      cardCss="card-template px-2 pt-4 pb-2"
+      [imgCss]="'me-3'"
+      cardCss="card-template py-2"
       [imageId]="item.employeeID"
       imageObjType="HR_Employees"
       [title]="item.employeeName"

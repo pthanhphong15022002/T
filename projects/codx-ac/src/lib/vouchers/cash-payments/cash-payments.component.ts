@@ -31,6 +31,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -44,6 +45,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
+  @ViewChild('tabObj') tabObj: TabComponent;
   dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -63,8 +65,10 @@ export class CashPaymentsComponent extends UIComponent {
   dataCategory: any;
   journal: IJournal;
   approval: any;
-  totalacct: any;
-  totaloff: any;
+  totalacct: any = 0;
+  totaloff: any = 0;
+  totalsettledAmt: any = 0;
+  totalbalAmt: any = 0;
   className: any;
   classNameLine: any;
   entityName: any;
@@ -73,6 +77,7 @@ export class CashPaymentsComponent extends UIComponent {
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
+  loading:any = false;
   arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -507,7 +512,7 @@ export class CashPaymentsComponent extends UIComponent {
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.settledInvoices = res;
-            //this.loadTotal();
+            this.loadTotalSet();
           });
         break;
     }
@@ -517,6 +522,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.acctTrans = res;
         this.loadTotal();
       });
+    this.changeTab(data.subType);
   }
 
   release(data: any) {
@@ -558,9 +564,9 @@ export class CashPaymentsComponent extends UIComponent {
             .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [data,'1'])
             .subscribe((res: any) => {
               if (res) {
-                this.itemSelected = { ...res };
+                this.itemSelected = res;
                 this.loadDatadetail(this.itemSelected);
-                this.view.dataService.update(data).subscribe((res) => {});
+                this.view.dataService.update(this.itemSelected).subscribe((res) => {});
                 this.detectorRef.detectChanges();
               }
             });
@@ -594,42 +600,25 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   loadTotal() {
-    var totalacct = 0;
-    var totaloff = 0;
+    this.totalacct = 0;
+    this.totaloff = 0;
     for (let index = 0; index < this.acctTrans.length; index++) {
       if (!this.acctTrans[index].crediting) {
-        totalacct = totalacct + this.acctTrans[index].transAmt;
+        this.totalacct = this.totalacct + this.acctTrans[index].transAmt;
       } else {
-        totaloff = totaloff + this.acctTrans[index].transAmt;
+        this.totaloff = this.totaloff + this.acctTrans[index].transAmt;
       }
     }
-    this.totalacct = totalacct;
-    this.totaloff = totaloff;
   }
 
   loadTotalSet(){
-
+    this.totalbalAmt = 0;
+    this.totalsettledAmt = 0;
+    for (let index = 0; index < this.settledInvoices.length; index++) {
+      this.totalbalAmt = this.totalbalAmt + this.settledInvoices[index].balAmt;
+      this.totalsettledAmt = this.totalsettledAmt + this.settledInvoices[index].settledAmt;
+    }
   }
-
-  loadCashbookName(data) {
-    this.api
-      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        for (let index = 0; index < res.length; index++) {
-          if (res[index].cashBookID == data.cashBookID) {
-            this.cashbookName = res[index].cashBookName;
-          }
-        }
-      });
-  }
-
-  // loadReasonName(data) {
-  //   this.api
-  //     .exec('AC', 'CommonBusiness', 'GetReasonName', [data])
-  //     .subscribe((res: any) => {
-  //       this.reasonName = res;
-  //     });
-  // }
 
   setStyles(color): any {
     let styles = {
@@ -648,6 +637,34 @@ export class CashPaymentsComponent extends UIComponent {
       return true;
     } else {
       return false;
+    }
+  }
+  select(e) {
+    if (e.isSwiped) {
+      e.cancel = true;
+    }
+  }
+  created(e: any, ele: TabComponent) {
+    this.changeTab(this.itemSelected.subType, ele);
+  }
+  changeTab(e?: any, ele?: TabComponent){
+    ele = this.tabObj;
+    ele.hideTab(0, false);
+    switch (e) {
+      case '1':
+      case '3':
+      case '4':
+        ele.hideTab(1, true);
+        ele.hideTab(2, true);
+        break;
+      case '2':
+        ele.hideTab(1, false);
+        ele.hideTab(2, true);
+        break;
+      case '9':
+        ele.hideTab(1, false);
+        ele.hideTab(2, false);
+        break;
     }
   }
   // checkRead(){
