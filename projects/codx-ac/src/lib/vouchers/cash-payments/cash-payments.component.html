@@ -13,7 +13,7 @@
     [icoCss]="'w-35px symbol h-35px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + (data?.subType | vll : 'AC100' : 'text' | async)"
     [icoStyle]="setStyles((data?.subType | vll : 'AC100' : 'color' | async))" cardCss="card-template border-bottom p-3"
     [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2" [dataItem]="data" [status]="data?.status"
-    [date]="data?.voucherDate" [icoDateCss]="'icon-access_alarm'"
+    [date]="data?.voucherDate" [icoDateCss]="'icon-i-calendar2'"
     [resources]="data?.createdBy != undefined ? data?.createdBy : ''" [resourceObjType]="'AD_Users'"
     [statusVll]="'AC040'" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)" (clickMF)="clickMF($event, data)">
@@ -58,7 +58,7 @@
   </ng-container>
 </ng-template>
 <ng-template #descTmp let-data>
-  <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 my-1">{{ data?.memo }}</span>
+  <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
   <ng-template #memo>
     <span class="text-gray-600">{{data?.memo}}</span>
   </ng-template>
@@ -81,7 +81,7 @@
         {{ itemSelected?.voucherNo }}
       </span>
       <div class="d-flex align-items-center me-3">
-        <span class="icon-access_alarm icon-18 me-1"></span>
+        <span class="icon-i-calendar2 icon-16 me-1"></span>
         <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="view.formModel">
         </codx-label>
         <span #voucherDate [innerHTML]="
@@ -194,14 +194,14 @@
             | async
         "></span>
     </div>
-    <div class="card-add mt-3" #cardbodyRef>
+    <div class="card-add mt-1" #cardbodyRef>
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
           <e-tabitem>
             <ng-template #headerText>
-              <div #cashRef class="d-flex align-items-top me-2 mt-2">
-                <i class="icon-i-file-earmark-spreadsheet icon-18 me-2"></i>
+              <div #cashRef class="d-flex align-items-top me-2">
+                <i class="icon-i-file-earmark-spreadsheet icon-16 me-2"></i>
                 <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="view.formModel"
                   default="Hạch toán"></codx-label>
               </div>
@@ -213,7 +213,7 @@
           <e-tabitem *ngIf="itemSelected.subType == '2' || itemSelected.subType == '9'">
             <ng-template #headerText>
               <div #cashRef class="d-flex align-items-top me-2 mt-2">
-                <i class="icon-format_list_bulleted icon-18 me-2"></i>
+                <i class="icon-format_list_bulleted icon-16 me-2"></i>
                 <codx-label class="fw-bold fs-6" fiedName="lblDetail2" [formModel]="view.formModel"
                   default="Thông tin hóa đơn"></codx-label>
               </div>
@@ -225,7 +225,7 @@
           <e-tabitem *ngIf="itemSelected.subType == '9'">
             <ng-template #headerText>
               <div #cashRef class="d-flex align-items-top me-2 mt-2">
-                <i class="icon-i-graph-up icon-18 me-2"></i>
+                <i class="icon-i-graph-up icon-16 me-2"></i>
                 <codx-label class="fw-bold fs-6" fiedName="lblDetail3" [formModel]="view.formModel"
                   default="Hóa đơn GTGT"></codx-label>
               </div>
@@ -689,21 +689,20 @@
           bottom: 0;">
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td></td>  
           <td>
-            0
-            <!-- <div class="d-flex align-items-center">
-              <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalacct
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
-            </div> -->
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="fw-bold line-clamp line-clamp-1" #balAmt [innerHTML]="totalbalAmt
+                    | formatvalue : fmSettledInvoices : 'balAmt' : balAmt | async"></span>
+            </div>
           </td>
           <td>
-            <!-- <div class="d-flex align-items-center">
-              <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaloff
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
-            </div> -->
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="totalsettledAmt
+                    | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
+            </div>
           </td>
+          <td></td>
         </tfoot>
       </table>
       <div *ngIf="settledInvoices.length == 0" class="container w-90 h-90">
@@ -893,7 +892,7 @@
       <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-3">{{
         data?.voucherNo
         }}</span>
-      <img style="width: 18px;height: 18px;" src="../assets/themes/ac/default/img/clock.svg" class=" me-2" />
+      <img style="width: 18px;height: 18px;" src="../assets/themes/ac/default/img/calendar.svg" class=" me-2" />
       <span class="text-gray-600 line-clamp line-clamp-1 mt-1" #voucherDate [innerHTML]="
         data?.voucherDate
                   | formatvalue : view.formModel : 'voucherDate' : voucherDate
@@ -968,7 +967,7 @@
   <div class="col-4">
     <div class="d-flex align-items-center mb-1">
       <img style="width: 18px;height: 18px;" src="../assets/themes/ac/default/img/memo.svg" class="me-2" />
-      <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 my-1">{{ data?.memo }}</span>
+      <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
     </div>
     <ng-template #memo>
       <span class="text-gray-600">{{data?.memo}}</span>

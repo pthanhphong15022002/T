@@ -117,9 +117,7 @@ export class CodxAcService {
             0,
             `"${gridViewSetup[gvsPropName]?.headerText}"`
           );
-          var element = document
-            .querySelector('.tab-basic')
-            .querySelectorAll('codx-input');
+          var element = document.querySelectorAll('codx-input');
           for (let index = 0; index < element.length; index++) {
             var input = window.ng.getComponent(
               element[index]
@@ -139,6 +137,19 @@ export class CodxAcService {
     return isValid;
   }
 
+  CheckExistAccount(
+    data: any,
+  ): boolean {
+    let result: boolean = true;
+    this.api
+    .exec('AC', 'CashPaymentsBusiness', 'CheckExistAccount', [
+      data,
+    ])
+    .subscribe((res: any) => {
+      result = res;
+    })
+    return result;
+  }
   /** @param irregularDataPropNames Use irregularDataPropNames in case unable to transform some gvs prop names to data prop names respectively. */
   validateFormDataUsingGvs(
     gridViewSetup: any,

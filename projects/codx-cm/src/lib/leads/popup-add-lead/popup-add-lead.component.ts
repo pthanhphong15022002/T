@@ -146,7 +146,7 @@ export class PopupAddLeadComponent
     this.funcID = this.formModel?.funcID;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
-    this.lead.processID = '5d4ed88c-0e41-11ee-bec7-988d46c4cbe1';
+    this.lead.processID = dt?.data?.processId;
     this.applyFor = dt?.data?.applyFor;
     this.executeApiCalls();
     if (this.action !== this.actionAdd) {

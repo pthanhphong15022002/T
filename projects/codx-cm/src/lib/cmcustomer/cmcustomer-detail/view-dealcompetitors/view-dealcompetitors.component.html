@@ -106,16 +106,17 @@
       <div class="d-flex flex-column">
         <div class="d-flex align-items-center justify-content-end mb-1">
           <div
-            *ngIf="data.status != '1'"
+            *ngIf="data.statusStep != '1'"
+            style="border-radius: 23px; padding: 0px 8px 0px;"
             [ngStyle]="{
               'background-color':
-                data.status == '3' || data.status == '4'
+                data.statusStep == '3' || data.statusStep == '4'
                   ? colorReasonSuccess?.color
-                  : data.status == '5' || data.status == '6'
+                  : data.statusStep == '5' || data.statusStep == '6'
                   ? colorReasonFail?.color
                   : getStep(data?.stepID)?.backgroundColor
             }"
-            class="badge badge-sm d-flex align-items-center"
+            class="d-flex align-items-center"
           >
             <span
               [ngClass]="getStep(data?.stepID)?.icon"
@@ -139,12 +140,12 @@
           </div>
           <div
             class="d-flex justify-content-end mb-1"
-            *ngIf="data.status == '1'"
+            *ngIf="data.statusStep == '1'"
           >
             <codx-vll
-              [name]="'DP028'"
+              [name]="gridViewSetup?.Status?.referedValue"
               [field]="'Status'"
-              [value]="data?.status"
+              [value]="data?.statusStep"
               [showText]="true"
               [showBgColor]="true"
               class="badge badge-light badge-sm"

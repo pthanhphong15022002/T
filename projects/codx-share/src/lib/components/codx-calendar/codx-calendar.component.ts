@@ -518,7 +518,7 @@ export class CodxCalendarComponent
     this.calendarService
       .checkPermission(transType, '')
       .subscribe((res: boolean) => {
-        if (res) {
+        if (res && res === true) {
           switch (transType) {
             case 'EP_BookingCars':
               this.addBookingCar();
