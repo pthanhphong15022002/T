@@ -436,7 +436,7 @@ export class ContractsDetailComponent extends UIComponent{
     };
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupTask = this.callfc.openForm(

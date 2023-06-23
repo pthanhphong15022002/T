@@ -479,6 +479,7 @@ export class DP_Instances_Steps_Tasks {
   callType: boolean;
   isOnline: boolean;
   isTaskDefault: boolean;
+  actionStatus: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {

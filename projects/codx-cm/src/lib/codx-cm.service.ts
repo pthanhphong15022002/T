@@ -853,6 +853,15 @@ export class CodxCmService {
     );
   }
 
+  getListProcessDefault(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessDefaultAsync',
+      data
+    );
+  }
+
   //#endregion -- Bao
 
   //contracts -- nvthuan

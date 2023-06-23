@@ -16,6 +16,7 @@
   (selectedChange)="selectedChange($event)"
   (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
+  (onActions)="onActions($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
 
@@ -103,6 +104,7 @@
           >
           </codx-vll>
         </div>
+
         <div class="d-flex align-items-center text-gray-600">
           <!-- <span class="icon-16 icon-av_timer me-1"></span> -->
           <span
