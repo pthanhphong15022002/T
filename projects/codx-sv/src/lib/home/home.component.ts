@@ -217,6 +217,6 @@ export class HomeComponent extends UIComponent implements OnInit {
   //Mở form gợi ý tìm kiếm
   openFormSuggestion()
   {
-    this.callfc.openForm(SearchSuggestionsComponent,"",1000,700);
+    this.callfc.openForm(SearchSuggestionsComponent,"",1000,700,"",{"formModel":this.view.formModel});
   }
 }

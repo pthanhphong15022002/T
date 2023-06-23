@@ -1,4 +1,4 @@
-export class ChartOfAccounts {
+export class Accounts {
   accountID: any;
   accountName: any;
   accountName2: any;
@@ -19,6 +19,7 @@ export class ChartOfAccounts {
   assetControl: any;
   PostControl: any;
   budgetControl: any;
+  postDetail:any;
   balControl: any;
   vATControl: any;
   dIM1: any;

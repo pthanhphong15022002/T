@@ -411,9 +411,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP08':
             res.disabled = true;
             break;
-          //tajo cuoc hop
-          case 'DP24':
-            if (task.taskType != 'M') res.disabled = true;
+          case 'DP24': //Tạo cuộc họp
+            if (task.taskType != 'M' || task?.actionStatus == '2') res.disabled = true;
             break;
           case 'DP25':
           case 'DP20':
@@ -430,6 +429,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task.taskType == 'M' && task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -437,6 +437,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP29': // Hủy
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task.taskType == 'M' && task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -444,6 +445,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP30': //Khôi phục
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task.taskType == 'M') res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -714,7 +716,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       this.currentStep?.tasks?.push(data.task);
       this.currentStep['progress'] = data?.progressStep;
-      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -1393,9 +1394,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       );
                       dialog.closed.subscribe((e) => {
                         if (e?.event) {
+                          if(this.listGroupTask != null && this.listGroupTask.length > 0){
+                            var tasks = this.listGroupTask.filter(x => (x.task != null && x.task.length > 0)).map(x => x.task);
+                            if(tasks != null && tasks.length > 0){
+                              tasks.forEach(rex => {
+                                if(rex?.recID == data?.recID){
+                                  data.actionStatus = '2';
+                                }
+                              })
+                            }
+                          }
                           this.notiService.notify(
                             'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
                           );
+                          this.changeDetectorRef.detectChanges();
                         }
                       });
                     }

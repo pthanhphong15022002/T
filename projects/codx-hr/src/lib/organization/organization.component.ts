@@ -150,6 +150,7 @@ export class OrgorganizationComponent extends UIComponent {
           this.beforeDelete(option, data.orgUnitID)
         )
         .subscribe();
+      this.flagLoaded = true;
     }
   }
   // edit data
@@ -175,6 +176,7 @@ export class OrgorganizationComponent extends UIComponent {
       popup.closed.subscribe((res: any) => {
         if (res.event) {
           this.view.dataService.update(res.event).subscribe();
+          this.flagLoaded = true;
         }
       });
     }
@@ -255,6 +257,7 @@ export class OrgorganizationComponent extends UIComponent {
           popup.closed.subscribe((res: any) => {
             if (res.event) {
               this.view.dataService.add(res.event).subscribe();
+              this.flagLoaded = true;
             }
           });
         }
@@ -263,14 +266,19 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   viewChanged(event: any) {
-    //Prevent load data when click same id
+    //Prevent load data when click same id and check update data when CRUD or not
     if (this.viewActive !== event.view.id) {
+      // if (this.viewActive !== event.view.id && this.flagLoaded) {
+      // console.log(this.view.currentView.dataService.data);
+
       if (event?.view?.id === '1') {
         this.view.dataService.data = [];
         this.view.dataService.parentIdField = '';
       } else {
         this.view.dataService.parentIdField = 'ParentID';
       }
+
+      //Set data to update mode view tree list
       if (
         this.view.currentView.dataService &&
         this.view.currentView.dataService.currentComponent
@@ -279,11 +287,14 @@ export class OrgorganizationComponent extends UIComponent {
         this.view.currentView.dataService.currentComponent.dicDatas = {};
       }
 
+      //check update data when CRUD or not
+      // this.flagLoaded = false;
+
       this.view.dataService.page = 0;
 
       //Prevent load data when click same id
       this.viewActive = event.view.id;
-      this.view.currentView.dataService.load().subscribe((res: any) => {});
+      this.view.currentView.dataService.load().subscribe();
     }
   }
 

@@ -99,6 +99,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   settledInvoices: Array<any> = [];
   settledInvoicesDelete: Array<any> = [];
   hideFields: Array<any> = [];
+  hideFieldsSet: Array<any> = [];
   requireFields = [];
   lockFields = [];
   pageCount: any;
@@ -343,7 +344,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (e.component.dataService.currentComponent.previousItemData) {
               this.oldValue =
                 e.component.dataService.currentComponent.previousItemData.ReasonID;
-            }else{
+            } else {
               this.oldValue = e.component.itemsSelected[0].ReasonID;
             }
             break;
@@ -354,7 +355,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (e.component.dataService.currentComponent.previousItemData) {
               this.oldValue =
                 e.component.dataService.currentComponent.previousItemData.ObjectID;
-            }else{
+            } else {
               this.oldValue = e.component.itemsSelected[0].ObjectID;
             }
             break;
@@ -364,7 +365,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             e.field,
             this.cashpayment,
             this.cashpaymentline,
-            this.oldValue
+            this.oldValue,
           ])
           .subscribe((res) => {
             if (res) {
@@ -447,7 +448,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.hideColumns(this.hideFields);
   }
 
-  gridCreatedSet() {}
+  gridCreatedSet() {
+    this.hideFieldsSet = [];
+    var arr = ['BalAmt2', 'SettledAmt2', 'SettledDisc2'];
+    arr.forEach((fieldName) => {
+      let i = this.gridSet.columnsGrid.findIndex(
+        (x) => x.fieldName == fieldName
+      );
+      if (i > -1) {
+        this.gridSet.columnsGrid[i].isVisible = true;
+        this.gridSet.visibleColumns.push(this.gridSet.columnsGrid[i]);
+      }
+    });
+    if (this.cashpayment.currencyID == this.baseCurr) {
+      this.hideFieldsSet.push('BalAmt2');
+      this.hideFieldsSet.push('SettledAmt2');
+      this.hideFieldsSet.push('SettledDisc2');
+    }
+    this.gridSet.hideColumns(this.hideFieldsSet);
+  }
 
   lineChanged(e: any) {
     const field = [
@@ -480,6 +499,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 this.lockFields = res.lockField;
                 this.requireGrid();
                 this.lockGrid();
+                break;
+              case 'dr':
+              case 'cr':
+                if (this.journal.brigdeAcctControl == '2') {
+                  this.requireFields = res.requireFields;
+                  this.lockFields = res.lockField;
+                  this.requireGrid();
+                  this.lockGrid();
+                }
                 break;
             }
             this.setDataGrid(res.line.updateColumns, res.line);
@@ -540,7 +568,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.addRow('2');
   }
 
-  addRow(type:any) {
+  addRow(type: any) {
     if (
       !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
     ) {
@@ -561,9 +589,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 }
                 if (type == '1') {
                   this.loadGrid();
-                }else{
+                } else {
                   this.popupSettledInvoices(this.typeSet);
-                } 
+                }
               }
             });
         } else {
@@ -595,9 +623,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     this.hasSaved = true;
                     if (type == '1') {
                       this.loadGrid();
-                    }else{
+                    } else {
                       this.popupSettledInvoices(this.typeSet);
-                    }    
+                    }
                   }
                 });
             }
@@ -617,9 +645,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               }
               if (type == '1') {
                 this.loadGrid();
-              }else{
+              } else {
                 this.popupSettledInvoices(this.typeSet);
-              }   
+              }
             }
           });
         break;
@@ -1264,7 +1292,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         });
         this.cashpayment.totalDR = this.total;
       }
-    }else{
+    } else {
       if (this.settledInvoices.length > 0) {
         this.settledInvoices.forEach((element) => {
           this.total = this.total + element.settledAmt;
@@ -1272,7 +1300,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.cashpayment.totalDR = this.total;
       }
     }
-    
   }
 
   expand() {
@@ -1411,27 +1438,27 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadFormat(){
+  loadFormat() {
     if (this.cashpayment.currencyID == this.baseCurr) {
-      var arr = ['DR','CR'];
-      arr.forEach(field => {
+      var arr = ['DR', 'CR'];
+      arr.forEach((field) => {
         let i = this.gridCash.columnsGrid.findIndex(
           (x) => x.fieldName == field
         );
         if (i > -1) {
           this.gridCash.columnsGrid[i].dataFormat = 'B';
         }
-      });   
-    }else{
-      var arr = ['DR2','CR2','TaxAmt2'];
-      arr.forEach(field => {
+      });
+    } else {
+      var arr = ['DR2', 'CR2', 'TaxAmt2'];
+      arr.forEach((field) => {
         let i = this.gridCash.columnsGrid.findIndex(
           (x) => x.fieldName == field
         );
         if (i > -1) {
           this.gridCash.columnsGrid[i].dataFormat = 'S';
         }
-      });   
+      });
     }
   }
 

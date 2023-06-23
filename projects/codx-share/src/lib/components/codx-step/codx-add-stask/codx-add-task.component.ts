@@ -122,6 +122,7 @@ export class CodxAddTaskComponent implements OnInit {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
       this.owner = [role]
+      this.stepsTasks.owner = this.owner?.[0].objectID;
     }
   }
 
@@ -263,6 +264,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.removeRoleDuplicate();
     }else if(type == "O"){
       this.owner = listRole;
+      this.stepsTasks['owner']= this.owner?.[0]?.objectID;
       this.removeRoleDuplicate();
     }
   }

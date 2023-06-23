@@ -117,9 +117,7 @@ export class CodxAcService {
             0,
             `"${gridViewSetup[gvsPropName]?.headerText}"`
           );
-          var element = document
-            .querySelector('.tab-basic')
-            .querySelectorAll('codx-input');
+          var element = document.querySelectorAll('codx-input');
           for (let index = 0; index < element.length; index++) {
             var input = window.ng.getComponent(
               element[index]
