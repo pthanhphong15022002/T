@@ -1405,8 +1405,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                                 group.task[indexTask].actionStatus = '2';
                                 let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
                                 group.task?.splice(indexTask,1,taskConvert);
+                                let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
+                                if(taskFind){
+                                  taskFind['actionStatus'] = '2';
+                                }
                               }
-
                             }
                           }
                           this.notiService.notifyCode(
@@ -1483,6 +1486,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
+
   async deleteMeeting(data) {
     var meeting: any;
     meeting = await firstValueFrom(
@@ -1509,6 +1513,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             )
             .subscribe((res) => {
               if (res) {
+                if (this.listGroupTask?.length > 0) {                   
+                  let group = this.listGroupTask.find((g) => g.refID == data?.taskGroupID);
+                  if (group) {
+                    let indexTask = group?.task?.findIndex((taskFind) => taskFind.recID == data.recID);
+                    if (indexTask != -1) {
+                      group.task[indexTask].actionStatus = '2';
+                      let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
+                      group.task?.splice(indexTask,1,taskConvert);
+                      let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
+                      if(taskFind){
+                        taskFind['actionStatus'] = '0';
+                      }
+                    }
+                  }
+                }
                 this.notiService.notifyCode(
                   'E0322',
                   0,
