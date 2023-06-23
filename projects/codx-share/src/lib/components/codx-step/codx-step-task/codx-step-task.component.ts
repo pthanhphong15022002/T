@@ -1394,9 +1394,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       );
                       dialog.closed.subscribe((e) => {
                         if (e?.event) {
+                          if(this.listGroupTask != null && this.listGroupTask.length > 0){
+                            var tasks = this.listGroupTask.filter(x => (x.task != null && x.task.length > 0)).map(x => x.task);
+                            if(tasks != null && tasks.length > 0){
+                              tasks.forEach(rex => {
+                                if(rex?.recID == data?.recID){
+                                  data.actionStatus = '2';
+                                }
+                              })
+                            }
+                          }
                           this.notiService.notify(
                             'Tạo cuộc họp thành công ! - Cần messes từ Khanh!!'
                           );
+                          this.changeDetectorRef.detectChanges();
                         }
                       });
                     }
