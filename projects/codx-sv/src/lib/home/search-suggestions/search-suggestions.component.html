@@ -7,11 +7,26 @@
 
 <ng-template #body>
     <div class="row h-100">
-        <div class="col-3 border-end d-flex flex-column">
-            <div *ngFor="let item of vllSV005" [id]="'sv-sg-'+item?.value" class="cursor-pointer border-top py-4 bg-search-sug px-2" (click)="selectedGroupType(item?.value)">
-                <span class="fw-bold">{{item?.default}}</span>
+        <div class="col-3 border-end d-flex flex-column p-0">
+            <div *ngFor="let item of vllSV005" 
+                [id]="'sv-sg-'+item?.value" 
+                class="cursor-pointer border-top py-4 bg-search-sug px-2" 
+                (click)="selectedGroupType(item?.value)"
+            >
+                    <span class="fw-bold">{{item?.default}}</span>
               </div>
         </div>
-        <div class="col-9"></div>
+        <div class="col-9">
+            <div class="d-flex align-items-center">
+                <codx-label class="fw-bold" default="Tags" fiedName="lblSVTagsSearch" [formName]="'SVTagsSearch'"></codx-label><span class="me-2">:</span>
+                <div class="d-flex align-items-center justify-content-center h-20px rounded-pill me-2 cursor-pointer"
+                    *ngFor="let item of tags" 
+                    [style.backgroundColor]="item?.color"
+                >
+                    <span class="p-3 text-white">{{item?.default}}</span>
+                </div>
+            </div>
+
+        </div>
     </div>
 </ng-template>

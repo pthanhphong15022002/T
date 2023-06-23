@@ -183,7 +183,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 2001;
+    option.zIndex = 1021;
     option.FormModel = this.fmContractsPayments;
     let popupPayment = this.callfunc.openForm(
       PopupAddPaymentComponent,
@@ -222,7 +222,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 1021;
     option.FormModel = this.fmContractsPaymentsHistory;
     let popupPayHistory = this.callfunc.openForm(
       PopupViewPaymentHistoryComponent,
@@ -257,7 +257,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
 
     let option = new DialogModel();
     option.IsFull = false;
-    option.zIndex = 1001;
+    option.zIndex = 1021;
     option.FormModel = formModel;
 
     let popupPaymentHistory = this.callfunc.openForm(
@@ -274,6 +274,14 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     popupPaymentHistory.closed.subscribe((res) => {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
     });
+  }
+
+  async changeDataMFTask(event) {
+    console.log(event);
+    
+      event.forEach((res) => {
+
+      });
   }
 
   // gridCreated() {
