@@ -47,9 +47,10 @@ import { GroupShareComponent } from './journals/components/group-share/group-sha
 import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
 import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-periodic/pop-add-run-periodic.component';
 import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
-import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { TestJournalComponent } from './test-journal/test-journal.component';
+import { LayloutJournalComponent } from './laylout-journal/laylout-journal.component';
 
 export const routes: Routes = [
   {
@@ -135,6 +136,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'test',
+    component: LayloutJournalComponent,
+    children: [
+      {
+        path: '',
+        component: TestJournalComponent,
+      },
+    ],
+  },
+  {
     path: '',
     loadChildren: () =>
       import('./settings/settings.module').then((m) => m.SettingsModule),
@@ -179,7 +190,9 @@ export const routes: Routes = [
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
     PopUpCashComponent,
-    ReplacePipe
+    ReplacePipe,
+    TestJournalComponent,
+    LayloutJournalComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
@@ -198,7 +211,6 @@ export const routes: Routes = [
     DragDropModule,
     CoreModule,
     NgxUiLoaderModule,
-    
   ],
 })
 export class AcModule {}
