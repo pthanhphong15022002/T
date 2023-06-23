@@ -412,7 +412,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP24': //Tạo cuộc họp
-            if (task.taskType != 'M' && task?.actionStatus == '3') res.disabled = true;
+            if (task.taskType != 'M' || task?.actionStatus == '2') res.disabled = true;
             break;
           case 'DP25':
           case 'DP20':
@@ -429,7 +429,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
-              if (task.taskType == 'M' && task?.actionStatus != '3') res.disabled = true;
+              if (task.taskType == 'M' && task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -437,7 +437,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP29': // Hủy
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
-              if (task.taskType == 'M' && task?.actionStatus != '3') res.disabled = true;
+              if (task.taskType == 'M' && task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
