@@ -102,6 +102,8 @@ export class DealsComponent
 
   titleAction = '';
   vllPriority = 'TM005';
+  vllApprove = '';
+  vllStatus = '';
   crrFuncID = '';
   viewMode = 2;
   // const set value
@@ -493,6 +495,8 @@ export class DealsComponent
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        this.vllStatus = this.gridViewSetup['Status'].referedValue;
+        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
       }
     });
   }
@@ -1256,13 +1260,13 @@ export class DealsComponent
   }
 
   //Huy duyet
-  cancelApprover(dt, processNo) {
+  cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
         this.codxCmService.getProcess(dt.processID).subscribe((process) => {
           if (process) {
             this.codxCmService
-              .getESCategoryByCategoryID(processNo)
+              .getESCategoryByCategoryID(process.processNo)
               .subscribe((res2: any) => {
                 if (res2) {
                   if (res2?.eSign == true) {

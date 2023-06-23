@@ -975,6 +975,15 @@ export class CodxCmService {
   getProcess(recID) {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', recID);
   }
+  //get
+  getDeals(recID) {
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsBusiness',
+      'GetDealsByRefIDAsysnc',
+      recID
+    );
+  }
   updateApproveStatus(className, recID, status) {
     return this.api.exec<any>('CM', className, 'UpdateApproveStatusAsync', [
       recID,

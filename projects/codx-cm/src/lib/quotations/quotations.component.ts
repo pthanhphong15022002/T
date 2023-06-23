@@ -98,6 +98,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private routerActive: ActivatedRoute,
+    private codxCmService: CodxCmService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -329,10 +330,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.copy(data);
         break;
       case 'CM0202_1':
-        this.sendApprover(data);
+        this.approvalTrans(data);
         break;
       case 'CM0202_2':
-        this.rejectApprove(data);
+        this.cancelApprover(data);
         break;
       case 'CM0202_3':
         this.createContract(data);
@@ -604,4 +605,111 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       option
     );
   }
+
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    this.codxCmService.getDeals(dt.refID).subscribe((deals) => {
+      if (deals) {
+        this.codxCmService.getProcess(deals.processID).subscribe((process) => {
+          if (process) {
+            this.codxCmService
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res) => {
+                if (res.eSign) {
+                  //kys soos
+                } else {
+                  this.release(dt, res.processID);
+                }
+              });
+          } else {
+            this.notiService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      } else {
+        this.notiService.notify(
+          'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+          '3'
+        );
+      }
+    });
+  }
+  //Gửi duyệt
+  release(data: any, processID: any) {
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+        else {
+          this.itemSelected.approveStatus = '3';
+          this.view.dataService.update(this.itemSelected).subscribe();
+          // if (this.kanban) this.kanban.updateCard(this.itemSelected);
+          this.codxCmService
+            .updateApproveStatus('DealsBusiness', data?.recID, '3')
+            .subscribe();
+          this.notiService.notifyCode('ES007');
+        }
+      });
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+          if (process) {
+            this.codxCmService
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        dt?.recID,
+                        this.view.formModel.entityName,
+                        ''
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          this.itemSelected.approveStatus = '0';
+                          this.codxCmService
+                            .updateApproveStatus(
+                              'QuotationsBusiness',
+                              dt?.recID,
+                              '0'
+                            )
+                            .subscribe();
+                          this.notiService.notifyCode('SYS007');
+                        } else this.notiService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+          } else {
+            this.notiService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      }
+    });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
 }
