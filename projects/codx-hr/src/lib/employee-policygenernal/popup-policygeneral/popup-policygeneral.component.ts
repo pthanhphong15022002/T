@@ -45,8 +45,10 @@ export class PopupPolicygeneralComponent
     super(injector);
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
+    console.log('header text nhan vao', this.headerText);
+    
     this.funcID = data?.data?.funcID;
-    this.policyGeneralObj = data?.data?.dataObj;
+    this.policyGeneralObj =  JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('data input', this.policyGeneralObj);
     this.actionType = data?.data?.actionType;
   }
@@ -132,6 +134,7 @@ export class PopupPolicygeneralComponent
         this.formModel.currentData = this.policyGeneralObj;
         if(this.policyGeneralObj.includeBenefits){
           this.lstBenefit = this.policyGeneralObj.includeBenefits.split(';');
+          console.log('lst benefit ne', this.lstBenefit);
         }
         this.cr.detectChanges();
         this.isAfterRender = true;
@@ -143,6 +146,15 @@ export class PopupPolicygeneralComponent
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
+    }
+    if( this.policyGeneralObj.hasIncludeBenefits == false){
+        this.policyGeneralObj.includeBenefits = null;
+    }
+    else{
+      if(this.policyGeneralObj.includeBenefits == null || this.policyGeneralObj.includeBenefits == ""){
+        this.notify.notifyCode('HR018');
+        return;
+      }
     }
 
     if(this.policyGeneralObj.expiredOn && this.policyGeneralObj.activeOn){
@@ -167,6 +179,7 @@ export class PopupPolicygeneralComponent
     } else {
       this.UpdatePolicyGeneral()
         .subscribe((p) => {
+          debugger
           if (p != null) {
             this.notify.notifyCode('SYS007');
             this.dialog && this.dialog.close(p);
@@ -178,9 +191,10 @@ export class PopupPolicygeneralComponent
 
   ValChangeHasBenefit(event){
     let hasBenefit = event.data;
+
     if(hasBenefit == false){
-      this.lstBenefit = null;
-      this.policyGeneralObj.includeBenefits = null;
+      this.policyGeneralObj.hasIncludeBenefits = false;
+      this.isHidden = true;
     }
   }
 
@@ -205,12 +219,25 @@ export class PopupPolicygeneralComponent
   }
 
   onClickHideComboboxPopup(e): void {
-    this.policyGeneralObj.includeBenefits = e.id;
+    if(e == null){
+      this.isHidden = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.policyGeneralObj.includeBenefits = e.id;
+    }
+    else{
+      this.policyGeneralObj.includeBenefits = null;
+    }
     this.isHidden = true;
-    // for(let i = 0; i < e.dataSelected.length; i++){
-    //   this.lstBenefit.push(e.dataSelected[i].BenefitName);
-    // }
-    this.lstBenefit = this.policyGeneralObj.includeBenefits.split(';')
+
+    if(this.policyGeneralObj.includeBenefits){
+      this.lstBenefit = this.policyGeneralObj.includeBenefits.split(';')
+    }
+    else{
+      this.lstBenefit = [];
+    }
     this.detectorRef.detectChanges();
   }
 
