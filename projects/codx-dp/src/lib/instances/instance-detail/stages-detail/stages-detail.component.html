@@ -143,6 +143,7 @@
       <div class="d-flex align-items-center me-6">
         <codx-label
           name="lblOwnerStepProcess"
+          [formModel]="formModel"
           default="Người phụ trách giai đoạn:"
           class="me-2 fw-bold"
         ></codx-label>
@@ -159,6 +160,7 @@
         <div *ngIf="!ownerStepProcess">
           <codx-label
             name="lblOwnerStepProcess"
+            [formModel]="formModel"
             default="Người phụ trách giai đoạn"
             class="text-gray-400 font-italic fw-normal"
           ></codx-label>
@@ -167,6 +169,7 @@
       <div class="d-flex align-items-center me-6">
         <codx-label
           name="lblOwner"
+          [formModel]="formModel"
           default="Người phụ trách nhiệm vụ tại giai đoạn:"
           class="me-2 fw-bold"
         ></codx-label>
@@ -183,6 +186,7 @@
         <div *ngIf="!dataStep.owner">
           <codx-label
             name="lblOwner"
+            [formModel]="formModel"
             default="Người phụ trách nhiệm vụ tại giai đoạn"
             class="text-gray-400 font-italic fw-normal"
           ></codx-label>
@@ -193,6 +197,7 @@
         <codx-label
           class="me-2 fw-bold"
           name="lblInvolved"
+          [formModel]="formModel"
           default="Người liên
           quan:"
         ></codx-label>
@@ -209,6 +214,7 @@
         <div *ngIf="lstIDInvo == null || lstIDInvo == ''">
           <codx-label
             name="lblInvolved"
+            [formModel]="formModel"
             default="Người liên
           quan"
             class="text-gray-400 font-italic fw-normal"

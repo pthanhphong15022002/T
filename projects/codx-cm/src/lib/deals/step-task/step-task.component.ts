@@ -42,6 +42,20 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   listStepSuccess:tmpInstancesStepsReasons[] = [];
   listStepFail:tmpInstancesStepsReasons[] = [];
   stepIdReason: string ='';
+
+  formModel: FormModel = {
+    entityName: 'DP_Instances_Steps_Reasons',
+    formName: 'DPInstancesStepsReasons',
+    gridViewName: 'grvDPInstancesStepsReasons',
+  };
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
@@ -242,6 +256,58 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       });
     }
   }
+  changeReasonMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02':
+          case 'SYS102':
+            if (this.dataSelected.closed) {
+              res.disabled = true;
+            }
+            break;
+          default:
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+  clickMFReason($event, data) {
+    switch ($event.functionID) {
+      case 'SYS02':
+        this.deleteReason(data);
+        break;
+      default:
+        break;
+    }
+  }
+  deleteReason(data) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x?.event && x.event?.status == 'Y') {
+        this.onDeleteReason(data);
+      } else {
+        return;
+      }
+    });
+  }
+  onDeleteReason(dataReason) {
+    var data = [this.dataSelected.refID, this.dataSelected.stepID, dataReason.recID];
+    this.codxCmService.deleteListReason(data).subscribe((res) => {
+      if (res) {
+        let idx = this.listStepReason.findIndex(
+          (x) => x.recID === dataReason.recID
+        );
+        if (idx >= 0) this.listStepReason.splice(idx, 1);
+        this.notiService.notifyCode('SYS008');
+        return;
+      }
+    });
+  }
+
+  //#region Kanban
+
+  //#endregion
 
 
 }

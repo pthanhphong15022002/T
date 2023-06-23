@@ -62,7 +62,7 @@
       </e-tabitems>
     </ejs-tab>
     <div class="row mt-2">
-      <div class="listcash-content mt-2">
+      <div class="listcash-content mt-1">
         <ng-container *ngTemplateOutlet="addLine"></ng-container>
       </div>
     </div>
@@ -277,12 +277,12 @@
         [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting" predicates="TransID=@0"
         [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction" [dataValues]="form.data.recID"
         [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" (created)="gridCreated()" rowHeight="35"
-        (onAddNew)="onAddNew($event)" (eventAction)="eventAction($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        (onAddNew)="onAddNew($event)" [autoAddRow]="true" (eventAction)="eventAction($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div>
-            <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+            <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
@@ -845,14 +845,15 @@
 
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabsettledInvoices>
-  <div class="h-100 tabline-content position-relative"
+  <ng-container *ngIf="(cashpayment?.subType == '2' || cashpayment?.subType == '9')">
+    <div class="tabline-content scroll-ac header-table-ac position-relative"
     *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '9'">
     <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="noEditSetting" [allowFiltering]="true"
       [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
       [dataSource]="settledInvoices" (created)="gridCreatedSet()" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>
-    <div #btnRef class="btn-addline">
+    <div class="btn-addline">
       <div class="d-flex align-items-center">
         <div *ngIf="action != 'edit'">
           <button class="btn btn-sm btn-light-primary" (click)="settlement(0)">
@@ -873,6 +874,7 @@
   </div>
   <div class="row" *ngIf="settledInvoices.length == 0" style="height: 30px;background-color: whitesmoke;">
   </div>
+  </ng-container>
 </ng-template>
 <!-- End: VoucherLineRefs -->
 
@@ -961,7 +963,7 @@
     <ng-container *ngIf="form.formGroup">
       <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
         class="input-circle input-border-0 w-400px mt-1 mb-1">
-        <codx-dropdown-select [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px" [isMulti]="false"
+        <codx-dropdown-select [isToolbar]="false" [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px" [isMulti]="false"
         type="valuelist" field="subType" [refValue]="'AC063'" [value]="cashpayment.subType" emptyText="Loại phiếu"
         (valueChange)="changeType($event)"></codx-dropdown-select>
         <!-- <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
@@ -995,7 +997,7 @@
       <div id="ac-column-def" class="d-flex align-items-center cursor-pointer w-fit ac-refdoc">
 
         <!-- <i class="icon-i-link-45deg om-fs-3 me-1 mt-1"></i> -->
-        <img src="../assets/themes/ac/default/img/attachment.svg" class="w-25px h-25px me-2" />
+        <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
         <!-- <codx-inplace style="width: fit-content" type="text" [value]="cashpayment.refDocs" field="refDocs"
           emptyText="Nhập chứng từ gốc" (actionEvent)="changeRef($event)"></codx-inplace> -->
         <codx-input style="width: 100%;" class="fw-bold" [Group]="form.formGroup" field="refDocs" [formModel]="form.formModel"

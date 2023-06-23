@@ -4,6 +4,7 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxComboboxComponent,
   DataRequest,
   FormModel,
   NotificationsService,
@@ -75,16 +76,14 @@ export class CodxAcService {
     let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
     for (let i = 0; i < sortTrans.length; i++) {
       if (sortTrans[i].value != null) {
-        
       }
-      if (i == sortTrans.length - 1 && sortTrans[i].value != null){
+      if (i == sortTrans.length - 1 && sortTrans[i].value != null) {
         newMemo += sortTrans[i].value;
-      }else{
+      } else {
         if (sortTrans[i].value != null) {
           newMemo += sortTrans[i].value + ' - ';
         }
       }
-      
     }
     return newMemo;
   }
@@ -96,33 +95,44 @@ export class CodxAcService {
     irregularGvsPropNames: string[] = [],
     ignoredFields: string[] = []
   ): boolean {
-    console.log(formGroup);
-    console.log(gridViewSetup);
-
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
 
     const controls = formGroup.controls;
     let isValid: boolean = true;
+    var keepgoing = true;
     for (const propName in controls) {
-      if (ignoredFields.includes(propName.toLowerCase())) {
-        continue;
-      }
+      if (keepgoing) {
+        if (ignoredFields.includes(propName.toLowerCase())) {
+          continue;
+        }
 
-      if (controls[propName].invalid) {
-        console.log('invalid', { propName });
+        if (controls[propName].invalid) {
+          const gvsPropName =
+            irregularGvsPropNames.find(
+              (i) => i.toLowerCase() === propName.toLowerCase()
+            ) ?? this.toPascalCase(propName);
 
-        const gvsPropName =
-          irregularGvsPropNames.find(
-            (i) => i.toLowerCase() === propName.toLowerCase()
-          ) ?? this.toPascalCase(propName);
-
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          `"${gridViewSetup[gvsPropName]?.headerText}"`
-        );
-
-        isValid = false;
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            `"${gridViewSetup[gvsPropName]?.headerText}"`
+          );
+          var element = document
+            .querySelector('.tab-basic')
+            .querySelectorAll('codx-input');
+          for (let index = 0; index < element.length; index++) {
+            var input = window.ng.getComponent(
+              element[index]
+            ) as CodxComboboxComponent;
+            if (input.ControlName == propName) {
+              var focus = element[index].getElementsByTagName('input')[0];
+              focus.select();
+              focus.focus();
+            }
+          }
+          isValid = false;
+          keepgoing = false;
+        }
       }
     }
 
@@ -234,7 +244,8 @@ export class CodxAcService {
       )
       .pipe(
         tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0]))
+        map((p) => JSON.parse(p[0])),
+        tap((p) => console.log(p))
       );
   }
 

@@ -116,17 +116,21 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       if (items) {
         this.quotationsLine['onhand'] = items.quantity;
         this.quotationsLine['idiM4'] = items.warehouseID; // kho
-        this.quotationsLine['costPrice'] =
+
+        this.quotationsLine['umid'] = items.umid; // don vi tinh
+        this.quotationsLine['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
+        // this.quotationsLine['idiM0'] = items.idiM0;
+        // this.quotationsLine['idiM1'] = items.idiM1;
+        // this.quotationsLine['idiM2'] = items.idiM2;
+        // this.quotationsLine['idiM3'] = items.idiM3;
+
+        let priceDefaut =
           items.costPrice /
           (this.quotationsLine.exchangeRate != 0
             ? this.quotationsLine.exchangeRate
             : 1); // gia von chai ti giá
-        this.quotationsLine['umid'] = items.umid; // don vi tinh
-        this.quotationsLine['quantity'] = items.minSettledQty; //so luong mua nhieu nhat
-        this.quotationsLine['idiM0'] = items.minSettledQty;
-        this.quotationsLine['idiM1'] = items.minSettledQty;
-        this.quotationsLine['idiM2'] = items.minSettledQty;
-        this.quotationsLine['idiM3'] = items.minSettledQty;
+        this.quotationsLine['costPrice'] = priceDefaut;
+        this.quotationsLine['salesPrice'] = priceDefaut;
       }
       (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data =
         [];
@@ -151,7 +155,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
       this.quotationsLine.idiM4 = null;
 
       this.quotationsLine['salesAmt'] = 0;
-      this.quotationsLine['salesPrice'] = 0;
+      // this.quotationsLine['salesPrice'] = 0;
       this.quotationsLine['vatAmt'] = 0;
       this.quotationsLine['discPct'] = 0;
       this.quotationsLine['discAmt'] = 0;

@@ -136,8 +136,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   listUserID = [];
   guestControl: any;
   viewOnly = false;
-  onSaving=false;
-  isEP=true;
+  onSaving = false;
+  isEP = true;
   categoryID: any;
   constructor(
     injector: Injector,
@@ -159,7 +159,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     this.optionalData = dialogData?.data[3];
     if (dialogData?.data[4] != null && dialogData?.data[4] == true) {
       this.viewOnly = true;
-    }    
+    }
+    this.isEP = dialogData?.data[5] == false ? dialogData?.data[5] : true;
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
@@ -356,21 +357,28 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.guestControl = roomSetting_1?.GuestControl;
         }
       });
-    
-      this.codxBookingService
+
+    this.codxBookingService
       .getDataValueOfSettingAsync(_EPParameters, null, '4')
       .subscribe((res: string) => {
         if (res) {
           let roomSetting_4 = JSON.parse(res);
           if (roomSetting_4 != null && roomSetting_4.length > 0) {
-            let setting= roomSetting_4.filter((x:any) => x.Category == EPCONST.ENTITY.R_Bookings);
-            if(setting!=null){
-              this.approvalRule = setting[0]?.ApprovalRule !=null? setting[0]?.ApprovalRule :'1';
-              this.categoryID=setting[0]?.CategoryID !=null? setting[0]?.CategoryID:EPCONST.ES_CategoryID.Room;
-            }
-            else{
-              this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
-              this.categoryID=EPCONST.ES_CategoryID.Room;
+            let setting = roomSetting_4.filter(
+              (x: any) => x.Category == EPCONST.ENTITY.R_Bookings
+            );
+            if (setting != null) {
+              this.approvalRule =
+                setting[0]?.ApprovalRule != null
+                  ? setting[0]?.ApprovalRule
+                  : '1';
+              this.categoryID =
+                setting[0]?.CategoryID != null
+                  ? setting[0]?.CategoryID
+                  : EPCONST.ES_CategoryID.Room;
+            } else {
+              this.approvalRule = '1'; //Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
+              this.categoryID = EPCONST.ES_CategoryID.Room;
             }
           }
         }
@@ -417,15 +425,14 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                 }
               });
           }
-          if( this.data?.attendees !=null && this.data?.resources!=null){
-
-            this.guestNumber = this.data?.attendees - this.data?.resources.length;
-            if(this.guestNumber<0){              
-              this.guestNumber=0;
+          if (this.data?.attendees != null && this.data?.resources != null) {
+            this.guestNumber =
+              this.data?.attendees - this.data?.resources.length;
+            if (this.guestNumber < 0) {
+              this.guestNumber = 0;
             }
-          }
-          else{
-            this.guestNumber=0;
+          } else {
+            this.guestNumber = 0;
           }
           this.detectorRef.detectChanges();
         }
@@ -503,12 +510,10 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         });
         if (tempAttender?.userID != this.data?.createdBy) {
           this.resources.push(tempAttender);
-        }
-        else if (tempAttender?.userID == this.data?.createdBy) {
+        } else if (tempAttender?.userID == this.data?.createdBy) {
           this.curUser = tempAttender;
           this.resources.push(tempAttender);
         }
-
       });
     }
   }
@@ -593,8 +598,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   guestChange(evt: any) {
     if (evt?.data != null) {
       this.guestNumber = evt?.data;
-      if(this.guestNumber<0){
-        this.guestNumber=0;
+      if (this.guestNumber < 0) {
+        this.guestNumber = 0;
       }
       this.attendeesNumber = this.resources.length + this.guestNumber;
       this.changeDetectorRef.detectChanges();
@@ -779,7 +784,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           });
           this.resources = this.filterArray(this.resources);
           this.data.attendees = this.resources.length;
-          this.attendeesNumber =this.data.attendees+this.guestNumber;
+          this.attendeesNumber = this.data.attendees + this.guestNumber;
           this.detectorRef.detectChanges();
         }
       });
@@ -966,30 +971,30 @@ export class CodxAddBookingRoomComponent extends UIComponent {
 
   onSaveForm(approval: boolean = false) {
     if (!this.onSaving) {
-      this.onSaving=true;
+      this.onSaving = true;
       if (this.funcType == _addMF) {
         this.data.requester = this.authService?.userValue?.userName;
       }
       if (!this.bookingOnCheck()) {
         this.notificationsService.notifyCode('EP001');
-        this.onSaving=false;
+        this.onSaving = false;
         return;
       }
       if (this.data.startDate < new Date()) {
         if (this.dueDateControl != true || this.dueDateControl != '1') {
           this.notificationsService.notifyCode('EP001');
-          this.onSaving=false;
+          this.onSaving = false;
           return;
         }
       }
       if (!this.validateStartEndTime(this.startTime, this.endTime)) {
         this.notificationsService.notifyCode('EP002');
-        this.onSaving=false;
+        this.onSaving = false;
         return;
       }
       if (this.data.startDate >= this.data.endDate) {
         this.notificationsService.notifyCode('EP002');
-        this.onSaving=false;
+        this.onSaving = false;
         return;
       }
       this.form?.formGroup.patchValue(this.data);
@@ -1062,14 +1067,14 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         .subscribe((result) => {
           if (result == '1') {
             this.notificationsService.notifyCode('EP009');
-            this.onSaving=false;
+            this.onSaving = false;
             return;
           } else if (result == '2') {
             this.notificationsService.alertCode('EP017').subscribe((x) => {
-              if (x.event?.status == 'Y') {                
+              if (x.event?.status == 'Y') {
                 this.checkOnlineUrlAndCapacity(approval);
               } else {
-                this.onSaving=false;
+                this.onSaving = false;
                 return;
               }
             });
@@ -1094,7 +1099,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           if (this.attendeesNumber > this.roomCapacity) {
             this.notificationsService.alertCode('EP004').subscribe((x) => {
               if (x.event?.status == 'Y') {
-                this.attendeesValidateStep(approval);                
+                this.attendeesValidateStep(approval);
               } else {
                 this.onSaving = false;
                 return;
@@ -1103,7 +1108,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           } else {
             this.attendeesValidateStep(approval);
           }
-          
         } else {
           this.onSaving = false;
           return;
@@ -1285,33 +1289,33 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       if (selectResource) {
         this.roomCapacity = selectResource[0].capacity;
         this.data.resourceID = evt;
-          this.tmplstDevice = [];
-          if (
-            selectResource[0]?.equipments &&
-            selectResource[0]?.equipments.length > 0
-          ) {
-            selectResource[0].equipments.forEach((item) => {
-              let tmpDevice = new Device();
-              tmpDevice.id = item.equipmentID;
-              if (this.tmplstDeviceEdit.length > 0) {
-                this.tmplstDeviceEdit.forEach((oldItem) => {
-                  if (oldItem.id == tmpDevice.id) {
-                    tmpDevice.isSelected = oldItem.isSelected;
-                    tmpDevice.createdOn = oldItem.createdOn;
-                    tmpDevice.createdBy = oldItem.createdBy;
-                  }
-                });
-              }
-              this.vllDevices.forEach((vlItem) => {
-                if (tmpDevice.id == vlItem.value) {
-                  tmpDevice.text = vlItem.text;
-                  tmpDevice.icon = vlItem.icon;
+        this.tmplstDevice = [];
+        if (
+          selectResource[0]?.equipments &&
+          selectResource[0]?.equipments.length > 0
+        ) {
+          selectResource[0].equipments.forEach((item) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = item.equipmentID;
+            if (this.tmplstDeviceEdit.length > 0) {
+              this.tmplstDeviceEdit.forEach((oldItem) => {
+                if (oldItem.id == tmpDevice.id) {
+                  tmpDevice.isSelected = oldItem.isSelected;
+                  tmpDevice.createdOn = oldItem.createdOn;
+                  tmpDevice.createdBy = oldItem.createdBy;
                 }
               });
-              this.tmplstDevice.push(tmpDevice);
+            }
+            this.vllDevices.forEach((vlItem) => {
+              if (tmpDevice.id == vlItem.value) {
+                tmpDevice.text = vlItem.text;
+                tmpDevice.icon = vlItem.icon;
+              }
             });
-          }
-        if (this.data?.resourceID != evt || this.tmplstDevice.length ==0) {
+            this.tmplstDevice.push(tmpDevice);
+          });
+        }
+        if (this.data?.resourceID != evt || this.tmplstDevice.length == 0) {
           //
         }
       }
@@ -1323,54 +1327,127 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   startSave(approval) {
-    this.dialogRef.dataService
-      .save(
-        (opt: RequestOption) => this.beforeSave(opt),
-        0,
-        null,
-        null,
-        !approval
-      )
-      .subscribe(async (res) => {
-        if (res.save || res.update) {
-          if (!res.save) {
-            this.returnData = res.update;
-          } else {
-            this.returnData = res.save;
-          }
-          if (this.returnData?.recID && this.returnData?.attachments > 0) {
-            if (
-              this.attachment.fileUploadList &&
-              this.attachment.fileUploadList.length > 0
-            ) {
-              this.attachment.addPermissions = this.listFilePermission;
-              this.attachment.objectId = this.returnData?.recID;
-              (await this.attachment.saveFilesObservable()).subscribe(
-                (item2: any) => {
-                  if (item2?.status == 0) {
-                    this.fileAdded(item2);
+    if (!this.isEP) {
+      this.startSaveNotEP(approval);
+    } else {
+      this.dialogRef.dataService
+        .save(
+          (opt: RequestOption) => this.beforeSave(opt),
+          0,
+          null,
+          null,
+          !approval
+        )
+        .subscribe(async (res) => {
+          if (res.save || res.update) {
+            if (!res.save) {
+              this.returnData = res.update;
+            } else {
+              this.returnData = res.save;
+            }
+            if (this.returnData?.recID && this.returnData?.attachments > 0) {
+              if (
+                this.attachment.fileUploadList &&
+                this.attachment.fileUploadList.length > 0
+              ) {
+                this.attachment.addPermissions = this.listFilePermission;
+                this.attachment.objectId = this.returnData?.recID;
+                (await this.attachment.saveFilesObservable()).subscribe(
+                  (item2: any) => {
+                    if (item2?.status == 0) {
+                      this.fileAdded(item2);
+                    }
+                    if (approval) {
+                      this.startRelease();
+                    } else {
+                      this.dialogRef && this.dialogRef.close(this.returnData);
+                    }
                   }
-                  if (approval) {
-                    this.startRelease();
-                  } else {
-                    this.dialogRef && this.dialogRef.close(this.returnData);
-                  }
-                }
-              );
+                );
+              }
+            } else {
+              if (approval) {
+                this.startRelease();
+              } else {
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              }
             }
           } else {
-            if (approval) {
-              this.startRelease();
+            this.onSaving = false;
+            return;
+          }
+        });
+    }
+  }
+
+  startSaveNotEP(approval) {
+    let isAdd = this.funcType == _addMF ? true : false;
+    this.codxBookingService
+      .addEditBooking(
+        this.data,
+        isAdd,
+        this.tmpAttendeesList,
+        this.tmplstStationery
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.returnData = res;
+          if (approval) {
+            if (this.approvalRule != '0') {
+              this.codxBookingService
+                .getProcessByCategoryID(this.categoryID)
+                .subscribe((res: any) => {
+                  this.codxShareService
+                    .codxRelease(
+                      'EP',
+                      this.returnData?.recID,
+                      res?.processID,
+                      'EP_Bookings',
+                      this.formModel.funcID,
+                      this.returnData?.createdBy,
+                      this.returnData?.title,
+                      null
+                    )
+                    .subscribe((res: any) => {
+                      if (res?.msgCodeError == null && res?.rowCount) {
+                        this.notificationsService.notifyCode('ES007');
+                        this.returnData.approveStatus = '3';
+                        this.returnData.write = false;
+                        this.returnData.delete = false;
+                        (this.dialogRef.dataService as CRUDService)
+                          .update(this.returnData)
+                          .subscribe();
+                        this.dialogRef && this.dialogRef.close(this.returnData);
+                      } else {
+                        this.notificationsService.notifyCode(res?.msgCodeError);
+                        // Thêm booking thành công nhưng gửi duyệt thất bại
+                        this.dialogRef && this.dialogRef.close(this.returnData);
+                      }
+                    });
+                });
             } else {
+              this.notificationsService.notifyCode('ES007');
+              this.codxBookingService
+                .afterApprovedManual(
+                  this.formModel.entityName,
+                  this.returnData.recID,
+                  '5'
+                )
+                .subscribe();
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
+
+            this.dialogRef && this.dialogRef.close(this.returnData);
+          } else {
+            this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
-          this.onSaving=false;
+          this.onSaving = false;
           return;
         }
       });
   }
+
   startRelease() {
     if (this.approvalRule != '0') {
       this.codxBookingService
@@ -1489,7 +1566,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   openPopupLink() {
     let dlLink = this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
     dlLink.closed.subscribe((res: any) => {
-      if (res?.event?.attendee !=null && res?.event?.owner !=null) {
+      if (res?.event?.attendee != null && res?.event?.owner != null) {
         this.data.onlineUrl = res?.event?.attendee;
         this.data.onlineUrl2 = res?.event?.owner;
         this.detectorRef.detectChanges();

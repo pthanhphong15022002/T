@@ -56,6 +56,7 @@ export class PopupAddSalesInvoiceComponent
   journal: IJournal;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
+  expanded: boolean = false;
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -246,6 +247,42 @@ export class PopupAddSalesInvoiceComponent
         sumRowHeight -
         weirdHeight;
     }, 500);
+
+    // cache problem ❌
+    let toggleFields: string[] = [
+      ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
+      ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
+    ];
+    for (const c of this.grid.columnsGrid) {
+      if (toggleFields.includes(c.fieldName)) {
+        c.isVisible = true;
+        this.grid.visibleColumns.push(c);
+      }
+    }
+    this.grid.hideColumns(this.hiddenFields);
+
+    for (const v of this.grid.visibleColumns) {
+      if (v.fieldName === 'DIM1') {
+        if (['1', '2'].includes(this.journal.diM1Control)) {
+          v.predicate = '@0.Contains(DepartmentID)';
+          v.dataValue = `[${this.journal.diM1}]`;
+        }
+      }
+
+      if (v.fieldName === 'DIM2') {
+        if (['1', '2'].includes(this.journal.diM2Control)) {
+          v.predicate = '@0.Contains(CostCenterID)';
+          v.dataValue = `[${this.journal.diM2}]`;
+        }
+      }
+
+      if (v.fieldName === 'DIM3') {
+        if (['1', '2'].includes(this.journal.diM3Control)) {
+          v.predicate = '@0.Contains(CostItemID)';
+          v.dataValue = `[${this.journal.diM3}]`;
+        }
+      }
+    }
   }
 
   onCellChange(e): void {

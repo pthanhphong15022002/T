@@ -463,17 +463,23 @@
         <codx-label
           fiedName="orderNo"
           [formModel]="form.formModel"
-          class="fw-bold"
+          class="fw-bold label-colon"
         ></codx-label
-        >:&nbsp;{{ master.orderNo }}
+        >{{ master.orderNo }}
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #footer>
-  <div class="ac-dialog-footer">
-    <div class="btn btn-white btn-icon tab-action">
+  <div
+    class="codx-detail-footer dialog-footer"
+    [ngClass]="expanded ? 'expand' : 'collape'"
+  >
+    <div
+      class="btn btn-white btn-icon tab-action"
+      (click)="expanded = !expanded"
+    >
       <span class="icon-unfold_more icon-20"></span>
     </div>
     <codx-tabs
