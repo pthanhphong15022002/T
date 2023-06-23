@@ -218,8 +218,8 @@ export class PopupMoveReasonComponent implements OnInit {
     }
   }
   valueChange($event){
-    if($event){
-      this.reasonStep.memo = $event.data;
+    if ($event) {
+      this.reasonStep[$event.field] = $event.data;
     }
   }
 
