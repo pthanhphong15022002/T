@@ -1306,6 +1306,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         (x) => x.fieldName == fieldName
       );
       if (idx > -1) {
+        visibleColumns[idx].predicate = '';
+        visibleColumns[idx].dataValue = '';
         switch (fieldName) {
           case 'AccountID':
             if (
@@ -1395,12 +1397,30 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.hideFields.push('DR2');
         this.hideFields.push('TaxAmt2');
       }
+      let i = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'AccountID'
+      );
+      if (i > -1) {
+        this.gridCash.columnsGrid[i].headerText = 'TK nợ';
+      }
+      let idx = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'OffsetAcctID'
+      );
+      if (idx > -1) {
+        this.gridCash.columnsGrid[idx].isRequire = true;
+      }
     } else {
       let i = this.gridCash.columnsGrid.findIndex(
         (x) => x.fieldName == 'AccountID'
       );
       if (i > -1) {
         this.gridCash.columnsGrid[i].headerText = 'TK';
+      }
+      let idx = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'OffsetAcctID'
+      );
+      if (idx > -1) {
+        this.gridCash.columnsGrid[idx].isRequire = false;
       }
       this.hideFields.push('OffsetAcctID');
       if (this.cashpayment.currencyID == this.baseCurr) {
@@ -1439,6 +1459,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var arr = [
       'TaxAmt2',
       'DR2',
+      'CR',
       'CR2',
       'SubControl',
       'DIM1',
@@ -1449,6 +1470,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'AssetGroupID',
       'ObjectID',
       'SettlementRule',
+      'OffsetAcctID',
     ];
     arr.forEach((fieldName) => {
       let i = this.gridCash.columnsGrid.findIndex(
@@ -1487,23 +1509,5 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //   console.log(this.focus);
   // }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key == 'Tab') {
-      if (
-        !this.acService.validateFormData(
-          this.form.formGroup,
-          this.gridViewSetup
-        )
-      ) {
-        return;
-      }
-      if (document.activeElement.className == 'e-tab-wrap') {
-        if (this.cashpayment.subType != '2') {
-          this.addRow('1');
-        }
-      }
-    }
-  }
   //#endregion
 }

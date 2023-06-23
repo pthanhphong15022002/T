@@ -3292,10 +3292,13 @@ lib-layoutonlyheader{
 .codx-detail-body{
   .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
     padding: 0 2px;
-    border: 1px aqua solid;
+
   }
 }
 
+.e-grid .e-rowcell{
+  border-color: var(--gray-150);
+}
 /* bỏ css trong core */
 ::-webkit-scrollbar-thumb {
   background-color: #e7e8ec !important;

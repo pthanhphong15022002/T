@@ -301,7 +301,7 @@ export class InstancesComponent
         type: ViewType.listdetail,
         active: true,
         sameData: true,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
@@ -313,7 +313,7 @@ export class InstancesComponent
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
@@ -735,7 +735,11 @@ export class InstancesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.notificationsService.notifyCode(check ? 'DP016' : 'DP017',0,"'"+data.title+"'");
+                this.notificationsService.notifyCode(
+                  check ? 'DP016' : 'DP017',
+                  0,
+                  "'" + data.title + "'"
+                );
                 if (this.process.showInstanceControl === '1') {
                   this.view.dataService.update(this.dataSelected).subscribe();
                 }
@@ -1536,6 +1540,12 @@ export class InstancesComponent
         }
 
         this.detectorRef.detectChanges();
+      } else {
+        if (this.kanban) {
+          this.dataSelected.stepID = this.crrStepID;
+          this.kanban.updateCard(this.dataSelected);
+          this.detectorRef.detectChanges();
+        }
       }
     });
   }

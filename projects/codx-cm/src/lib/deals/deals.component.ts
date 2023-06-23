@@ -116,7 +116,7 @@ export class DealsComponent
   dataDrop: any;
   stepIdClick: any;
   crrStepID: any;
-  dataColums: any;
+  dataColums: any = [];
   moreFuncInstance: any;
   funCrr: any;
   viewCrr: any;
@@ -138,10 +138,10 @@ export class DealsComponent
   ) {
     super(inject);
     this.executeApiCalls();
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
-
+    // if (!this.funcID) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
+    debugger;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     ///lay tien mac dinh
@@ -199,7 +199,7 @@ export class DealsComponent
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
@@ -611,37 +611,38 @@ export class DealsComponent
 
   dropDeals(data) {
     data.stepID = this.crrStepID;
-    if (!data.edit) {
-      this.notificationsService.notifyCode('SYS032');
-      return;
-    }
-    if (data.closed) {
-      this.notificationsService.notify(
-        'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
-      return;
-    }
+    // if (!data.edit) {
+    //   this.notificationsService.notifyCode('SYS032');
+    //   return;
+    // }
+    // if (data.closed) {
+    //   this.notificationsService.notify(
+    //     'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
+    //     '2'
+    //   );
+    //   return;
+    // }
 
-    if (this.moreFuncInstance?.length == 0) {
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
-    if (data.status == '1') {
-      this.notificationsService.notifyCode('DP038');
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
-    if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notifyCode('DP037');
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
+    // if (this.moreFuncInstance?.length == 0) {
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status == '1') {
+    //   this.notificationsService.notifyCode('DP038');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status != '1' && data.status != '2') {
+    //   this.notificationsService.notifyCode('DP037');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
 
+    // Alo Bao bat dk chặng
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
-      this.dataColums.length == 0
+      this.dataColums?.length == 0
     )
       this.dataColums = this.kanban.columns;
 
@@ -656,10 +657,10 @@ export class DealsComponent
             (x) => x.functionID == 'CM0201_1'
           );
           if (idx != -1) {
-            if (this.checkMoreReason(data)) {
-              this.notificationsService.notifyCode('SYS032');
-              return;
-            }
+            // if (this.checkMoreReason(data)) {
+            //   this.notificationsService.notifyCode('SYS032');
+            //   return;
+            // }
             this.titleAction = this.moreFuncInstance[idx].text;
             this.moveStage(data);
           }
@@ -669,10 +670,10 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_3'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
               this.titleAction = this.moreFuncInstance[idx].text;
               this.moveReason(data, true);
             }
@@ -681,10 +682,10 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_4'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
               this.titleAction = this.moreFuncInstance[idx].text;
               this.moveReason(data, false);
             }
@@ -886,6 +887,11 @@ export class DealsComponent
           }
         });
         // }
+      } else {
+        if (this.kanban) {
+          this.dataSelected.stepID = this.crrStepID;
+          this.kanban.updateCard(this.dataSelected);
+        }
       }
     });
   }
@@ -1196,7 +1202,6 @@ export class DealsComponent
   getTotalDealColums(stepID) {
     let totalCol = 0;
     if (this.kanban) {
-      debugger;
     }
     return totalCol;
   }

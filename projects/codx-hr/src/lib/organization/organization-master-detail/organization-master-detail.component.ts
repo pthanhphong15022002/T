@@ -21,8 +21,8 @@ import {
 @Component({
   selector: 'lib-organization-masterdetail',
   templateUrl: './organization-master-detail.component.html',
-  styleUrls: ['./organization-master-detail.component.css'],
-  // encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./organization-master-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationMasterDetailComponent {
@@ -75,31 +75,31 @@ export class OrganizationMasterDetailComponent {
                 headerText: grd['Birthday']['headerText'],
                 field: 'Birthday',
                 template: this.templateBirthday,
-                width: '150',
+                width: '100',
               },
               {
                 headerText: grd['Phone']['headerText'],
                 field: 'Phone',
                 template: this.templatePhone,
-                width: '150',
+                width: '110',
               },
               {
                 headerText: grd['Email']['headerText'],
                 field: 'Email',
                 template: this.templateEmail,
-                width: '150',
+                width: '170',
               },
               {
                 headerText: grd['JoinedOn']['headerText'],
                 field: 'JoinedOn',
                 template: this.templateJoinedOn,
-                width: '150',
+                width: '100',
               },
               {
                 headerText: grd['Status']['headerText'],
                 field: 'Status',
                 template: this.templateStatus,
-                width: '150',
+                width: '100',
               },
             ];
           }

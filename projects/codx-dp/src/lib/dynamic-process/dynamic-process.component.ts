@@ -210,7 +210,7 @@ export class DynamicProcessComponent
         type: ViewType.card,
         sameData: true,
         active: true,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.templateViewCard,
           headerTemplate: this.headerTemplate,
