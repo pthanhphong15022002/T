@@ -574,6 +574,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ) {
       return;
     }
+    if (!this.acService.CheckExistAccount(this.cashpayment)) {
+      return;
+    }
     switch (this.action) {
       case 'add':
         if (this.hasSaved) {
@@ -1024,6 +1027,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (
       !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
     ) {
+      return;
+    }
+    if (this.cashpaymentline.length == 0 && this.settledInvoices.length == 0) {
+      this.notification.notifyCode('AC0013');
       return;
     }
     this.cashpayment.unbounds.isAddNew = false;

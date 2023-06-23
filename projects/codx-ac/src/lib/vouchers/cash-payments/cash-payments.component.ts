@@ -561,9 +561,9 @@ export class CashPaymentsComponent extends UIComponent {
             .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [data,'1'])
             .subscribe((res: any) => {
               if (res) {
-                this.itemSelected = { ...res };
+                this.itemSelected = res;
                 this.loadDatadetail(this.itemSelected);
-                this.view.dataService.update(data).subscribe((res) => {});
+                this.view.dataService.update(this.itemSelected).subscribe((res) => {});
                 this.detectorRef.detectChanges();
               }
             });
