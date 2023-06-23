@@ -209,18 +209,6 @@ export class AddContractsComponent implements OnInit {
   }
 
   ngAfterViewInit() {}
-  // getFormModel() {
-  //   this.cache
-  //     .gridViewSetup(
-  //       this.fmContractsPayments?.formName,
-  //       this.fmContractsPayments?.gridViewName
-  //     )
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.grvPayments = res;
-  //       }
-  //     });
-  // }
 
   setDataContract(data) {
     if (this.action == 'add') {
@@ -236,31 +224,122 @@ export class AddContractsComponent implements OnInit {
       this.contracts.delStatus = '1';
       this.contracts.contractID = 'HD-' + (Math.random()*10000000000).toFixed(0);
 
-      this.contracts.contractType = this.contracts.contractType
-        ? this.contracts.contractType
-        : '1';
-      this.contracts.pmtStatus = this.contracts.pmtStatus
-        ? this.contracts.pmtStatus
-        : '0';
-      this.setCOntractByDataOutput();
+      this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
+      this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
+      this.setContractByDataOutput();
     }
+
     if (this.action == 'edit') {
       this.contracts = data;
-      // this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
-      this.getQuotationsLinesInContract(
-        this.contracts?.recID,
-        this.contracts?.quotationID
-      );
+      this.getQuotationsLinesInContract(this.contracts?.recID,this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
     if (this.action == 'copy') {
       this.contracts = data;
       this.contracts.recID = Util.uid();
       delete this.contracts['id'];
-      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsLinesInContract(this.contracts?.recID,this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
   }
+//#region Quotation 
+  getQuotationsLinesInContract(contractID, quotationID) {
+    this.contractService
+      .getQuotationsLinesInContract([contractID || null, quotationID || null])
+      .subscribe((res) => {
+        if(res){
+          if(res?.length > 0){
+            this.listQuotationsLine = res;
+            this.contracts.contractAmt = this.sumNetAmtQuotations();
+            this.listQuotationsLineOfContract = this.listQuotationsLine.filter((quotationsLine) => quotationsLine?.contractID);
+            if (this.action == 'copy' && this.listQuotationsLineOfContract?.length > 0){
+              this.listQuotationsLineOfContract = this.listQuotationsLineOfContract.map(item => {
+                return {...item, contractID : this.contracts?.recID }
+              })
+            }
+          }
+        }else{
+          this.listQuotationsLine = [];
+          this.contracts.contractAmt = null;
+        }
+        this.listQuotationsLine = res?.length > 0 ? res : [];
+      });
+  }
+
+  getDataByQuotationID(recID) { // quotation, quotationsLine, customer
+    this.listQuotationsLineOfContract = this.listQuotationsLine.filter(
+      (quotationsLine) => quotationsLine?.contractID
+    );
+    this.contractService.getDataByTransID(recID).subscribe((res) => {
+      if (res) {
+        let quotation = res[0];
+        let quotationsLine = res[1];
+        let customer = res[2];
+        let countQuotation = quotationsLine?.lenght || 0;
+        this.listQuotationsLineOfContract = this.listQuotationsLineOfContract.map((item, index) => ({...item,rowNo: index + countQuotation + 1}))
+        this.listQuotationsLine = [
+          ...this.listQuotationsLineOfContract,
+          ...quotationsLine,
+        ];
+        this.listQuotationsLine = this.listQuotationsLine.sort((a,b) => (a.rowNo - b.rowNo));
+        this.quotations = quotation;
+        this.setDataContractCombobox(customer);
+        this.contracts.dealID = quotation?.refID;
+        this.contracts.contractAmt = this.sumNetAmtQuotations();; // giá trị hợp đồng
+        this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
+        this.contracts.remainAmt =
+          Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại
+        this.contracts.currencyID = quotation.currencyID; // tiền tệ
+        this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
+      }
+    });
+  }
+
+  eventQuotationLines(e) {
+    this.listQuotationsLine = e?.listQuotationLines;
+    this.quotationLinesAddNew = e?.quotationLinesAddNew;
+    this.quotationLinesEdit = e?.quotationLinesEdit;
+    this.quotationLinesDeleted = e?.quotationLinesDeleted;
+    let quotationLine = this.quotationLinesAddNew.find(
+      (quotationLine) => quotationLine.recID == e?.quotationLineIdNew
+    );
+    if (quotationLine) {
+      quotationLine.contractID = this.contracts?.recID;
+      this.listQuotationsLineOfContractAdd.push(quotationLine);
+    }
+    this.loadTotal();
+  }
+
+  loadTotal() {
+    let totals = 0;
+    let totalVAT = 0;
+    let totalDis = 0;
+    let totalSales = 0;
+    if (this.listQuotationsLine?.length > 0) {
+      this.listQuotationsLine.forEach((element) => {
+        totalSales += element['salesAmt'] ?? 0;
+        totals += element['netAmt'] ?? 0;
+        totalVAT += element['vatAmt'] ?? 0;
+        totalDis += element['discAmt'] ?? 0;
+      });
+    }
+    this.contracts.contractAmt = totals;
+    this.quotations['totalSalesAmt'] = totalSales;
+    this.quotations['totalAmt'] = totals;
+    this.quotations['totalTaxAmt'] = totalVAT;
+    this.quotations['discAmt'] = totalDis;
+  }
+
+  sumNetAmtQuotations(){ // tính tổng giá trị của mặt hàng
+    if(this.listQuotationsLine?.length > 0){
+      let contractAmt = this.listQuotationsLine.reduce((sum, item ) => {
+        return sum + item?.netAmt || 0
+      },0)
+      return contractAmt;
+    }
+    return 0;
+  }
+  //#endregion
 
   getFormModel() {
     this.cache
@@ -331,8 +410,8 @@ export class AddContractsComponent implements OnInit {
   }
 
   setValueComboboxQuotation() {
-    let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
-    if (listQoutation) {
+    let listQuotation = this.inputQuotation.ComponentCurrent.dataService.data;
+    if (listQuotation) {
       if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.quotationID = null;
         this.inputQuotation.ComponentCurrent.dataService.data = [];
@@ -382,7 +461,7 @@ export class AddContractsComponent implements OnInit {
       );
   }
 
-  setCOntractByDataOutput() {
+  setContractByDataOutput() {
     if (this.contracts.dealID) {
       this.getCustomerByDealID(this.contracts.dealID);
     }
@@ -418,14 +497,6 @@ export class AddContractsComponent implements OnInit {
     });
   }
 
-  getQuotationsLinesInContract(contractID, quotationID) {
-    this.contractService
-      .getQuotationsLinesInContract([contractID || null, quotationID || null])
-      .subscribe((res) => {
-        this.listQuotationsLine = res?.length > 0 ? res : [];
-      });
-  }
-
   getPayMentByContractID(contractID) {
     this.contractService
       .getPaymentsByContractID(contractID)
@@ -438,32 +509,6 @@ export class AddContractsComponent implements OnInit {
           );
         }
       });
-  }
-
-  getDataByQuotationID(recID) {
-    this.listQuotationsLineOfContract = this.listQuotationsLine.filter(
-      (quotationsLine) => quotationsLine?.contractID
-    );
-    this.contractService.getDataByTransID(recID).subscribe((res) => {
-      if (res) {
-        let quotation = res[0];
-        let quotationsLine = res[1];
-        let customer = res[2];
-        this.listQuotationsLine = [
-          ...this.listQuotationsLineOfContract,
-          ...quotationsLine,
-        ];
-        this.quotations = quotation;
-        this.setDataContractCombobox(customer);
-        this.contracts.dealID = quotation?.refID;
-        this.contracts.contractAmt = quotation.totalAmt; // giá trị hợp đồng
-        this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
-        this.contracts.remainAmt =
-          Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại
-        this.contracts.currencyID = quotation.currencyID; // tiền tệ
-        this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
-      }
-    });
   }
 
   setDataContractCombobox(customer) {
@@ -625,6 +670,7 @@ export class AddContractsComponent implements OnInit {
     payment.lineType = '0';
     this.openPopupPayment('add', payment);
   }
+
   editPayment(payment) {
     this.openPopupPayment('edit', payment);
   }
@@ -757,43 +803,5 @@ export class AddContractsComponent implements OnInit {
         this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
       }
     });
-  }
-
-  eventQuotationLines(e) {
-    this.listQuotationsLine = e?.listQuotationLines;
-    this.quotationLinesAddNew = e?.quotationLinesAddNew;
-    this.quotationLinesEdit = e?.quotationLinesEdit;
-    this.quotationLinesDeleted = e?.quotationLinesDeleted;
-    let quotationLine = this.quotationLinesAddNew.find(
-      (quotationLine) => quotationLine.recID == e?.quotationLineIdNew
-    );
-    if (quotationLine) {
-      quotationLine.contractID = this.contracts?.recID;
-      // quotationLine.costPrice = 50000;
-      this.listQuotationsLineOfContractAdd.push(quotationLine);
-    }
-    console.log(quotationLine);
-    this.loadTotal();
-  }
-
-  loadTotal() {
-    let totals = 0;
-    let totalVAT = 0;
-    let totalDis = 0;
-    let totalSales = 0;
-    if (this.listQuotationsLine?.length > 0) {
-      this.listQuotationsLine.forEach((element) => {
-        //tisnh tong tien
-        totalSales += element['salesAmt'] ?? 0;
-        totals += element['netAmt'] ?? 0;
-        totalVAT += element['vatAmt'] ?? 0;
-        totalDis += element['discAmt'] ?? 0;
-      });
-    }
-
-    this.quotations['totalSalesAmt'] = totalSales;
-    this.quotations['totalAmt'] = totals;
-    this.quotations['totalTaxAmt'] = totalVAT;
-    this.quotations['discAmt'] = totalDis;
   }
 }

@@ -342,6 +342,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         .subscribe((res) => {
           if (res) {
             this.listActivitie.push(res);
+            this.isNoData = false;
             this.notiService.notifyCode('SYS006');
             this.detectorRef.detectChanges();
           }
