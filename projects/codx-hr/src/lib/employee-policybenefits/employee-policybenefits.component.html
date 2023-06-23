@@ -2,24 +2,23 @@
   #view
   service="HR"
   assemblyName="ERM.Business.HR"
-  entityName="HR_PolicyAL"
-  className="PolicyALBusiness"
-  method="GetAllPolicyALAsync"
+  entityName="HR_PolicyBenefits"
+  className="PolicyBenefitsBusiness"
+  method="GetAllPolicyBenefitAsync"
   [views]="views"
   [autoLoad]="true"
   idField="recID"
   [button]="buttonAdd"
-  (buttonClick)="addPolicyAL($event)"
+  (buttonClick)="addPolicyBenefit($event)"
 >
-  <!-- (selectedChange)="changeItemDetail($event)" -->
 </codx-views>
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-20 min-w-200px p-1">
+    <div class="w-15 min-w-150px p-1">
       <span
         [innerHTML]="
-          data?.ALObjectID | formatvalue : view.formModel : 'ALObjectID' | async
+          data?.benefitID | formatvalue : view.formModel : 'benefitID' | async
         "
       >
       </span>
@@ -34,16 +33,47 @@
       </span>
     </div>
 
-    <div class="w-25 min-w-250px px-2">
+    <div class="w-15 min-w-150px px-2">
       <span
         [innerHTML]="
-          data?.ALStandard | formatvalue : view.formModel : 'alstandard' | async
+          data?.fixedAmt | formatvalue : view.formModel : 'fixedAmt' | async
         "
       >
       </span>
     </div>
 
-    <div class="w-30 min-w-300px px-2">
+    <div class="w-20 min-w-150px px-2">
+      {{ data.percentage }}
+      <button class="text-primary" *ngIf="data.hasIncludeBenefits == 1">
+        <i class="icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
+      </button>
+    </div>
+    <ng-template #toolTipBenefits>
+      <div>
+        <codx-label fieldName="Percentage" [formModel]="view.formModel">
+        </codx-label>
+        {{ data.percentage }}
+      </div>
+
+      <div>
+        <codx-label fieldName="PercentageOn" [formModel]="view.formModel">
+        </codx-label>
+        <span class="badge badge-success border-0 ms-2">
+          {{ data.percentageOn }}
+        </span>
+      </div>
+      <div>
+        <codx-label fieldName="IncludeBenefits" [formModel]="view.formModel">
+        </codx-label>
+        <span class="badge badge-success border-0 ms-2">
+            <span *ngFor="let item of Getchildbenefits(data.benefitID)">
+
+            </span>
+        </span>
+      </div>
+    </ng-template>
+
+    <div class="w-25 min-w-300px px-2">
       <div class="flex-row">
         <span>
           <i class="icon-calendar_today icon-14 text-dark"></i>
@@ -117,11 +147,11 @@
 
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-20 min-w-200px p-3 fw-bold text-dark">
+    <div class="w-15 min-w-150px p-3 fw-bold text-dark">
       <codx-label
         [formModel]="view.formModel"
         name="lblALObj"
-        [default]="'Đối tượng phép năm'"
+        [default]="'Loại phụ cấp'"
       ></codx-label>
     </div>
     <div class="w-25 min-w-150px p-3 fw-bold text-dark">
@@ -131,14 +161,21 @@
         [default]="'Chính sách'"
       ></codx-label>
     </div>
-    <div class="w-25 min-w-250px p-3 fw-bold text-dark">
+    <div class="w-15 min-w-150px p-3 fw-bold text-dark">
       <codx-label
         [formModel]="view.formModel"
         name="lblALStandard"
-        [default]="'Tiêu chuẩn phép năm'"
+        [default]="'Số tiền cố định'"
       ></codx-label>
     </div>
-    <div class="w-30 min-w-300px p-3 fw-bold text-dark">
+    <div class="w-20 min-w-150px p-3 fw-bold text-dark">
+      <codx-label
+        [formModel]="view.formModel"
+        name="lblPercentage"
+        [default]="'Tỷ lệ (%)'"
+      ></codx-label>
+    </div>
+    <div class="w-25 min-w-300px p-3 fw-bold text-dark">
       <codx-label
         [formModel]="view.formModel"
         name="lblEffect"

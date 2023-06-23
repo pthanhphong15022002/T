@@ -21,7 +21,7 @@ import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
 })
 export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   @ViewChild('tabContent') public tabContent: TabComponent;
-  
+  @Input() dataSV:any;
   @Input() formModel: any;
   @Input() recID: any; //Mã bảng khảo sát
 
@@ -94,18 +94,38 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       this.recID = changes['recID']?.currentValue;
       this.getRespondents();
     }
+    if(changes?.dataSV && changes.dataSV?.previousValue != changes.dataSV?.currentValue)
+    {
+      this.dataSV =  changes.dataSV?.currentValue;
+      this.getAvatar();
+    }
   }
 
   onInit(): void {
     //this.tabContent.refreshActiveTab();
   }
 
- 
+  getAvatar()
+  {
+    if(this.dataSV && this.dataSV.settings) {
+      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      if(this.dataSV?.settings?.backgroudColor) {
+        document.getElementById("bg-color-sv-answer").style.backgroundColor = this.dataSV?.settings?.backgroudColor;
+      }
+    }
+  }
+
   onSelectTab(e:any)
   {
     var dc= document.getElementById("ejstab-survey-id");
-    if(e.selectedIndex == 1) dc.classList.add("border-bt-none");
-    else dc.classList.remove("border-bt-none")
+    if(e.selectedIndex == 1 || e.selectedIndex == 2) {
+      dc.classList.add("border-bt-none","ejstab-survey-answer");
+      dc.classList.remove("ejstab-survey-answer2");
+    }
+    else {
+      dc.classList.remove("border-bt-none","ejstab-survey-answer");
+      dc.classList.add("ejstab-survey-answer2");
+    }
   }
 
   //Ẩn hiện collaspe

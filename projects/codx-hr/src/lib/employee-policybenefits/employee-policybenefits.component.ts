@@ -4,14 +4,14 @@ import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarM
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { PopupPolicyalComponent } from './popup-policyal/popup-policyal.component';
+import { PopupPolicybenefitsComponent } from './popup-policybenefits/popup-policybenefits.component';
 
 @Component({
-  selector: 'lib-employee-policyal',
-  templateUrl: './employee-policyal.component.html',
-  styleUrls: ['./employee-policyal.component.css']
+  selector: 'lib-employee-policybenefits',
+  templateUrl: './employee-policybenefits.component.html',
+  styleUrls: ['./employee-policybenefits.component.css']
 })
-export class EmployeePolicyalComponent extends UIComponent{
+export class EmployeePolicybenefitsComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   ActionAdd = 'add'
@@ -53,10 +53,6 @@ export class EmployeePolicyalComponent extends UIComponent{
     this.GetGvSetup();
   }
 
-  onClickOpenPopupDetailInfo(){
-
-  }
-
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -72,6 +68,11 @@ export class EmployeePolicyalComponent extends UIComponent{
     console.log('view ne', this.view);
   }
 
+  Getchildbenefits(benefitID){
+
+  }
+
+
   ngAfterViewChecked() {
     if (!this.formGroup?.value) {
       this.hrService
@@ -85,9 +86,9 @@ export class EmployeePolicyalComponent extends UIComponent{
     }
   }
 
-  addPolicyAL(evt) {
+  addPolicyBenefit(evt) {
     // if (evt.id == 'btnAdd') {
-    //   this.HandlePolicyAL(
+    //   this.HandlePolicyBenefit(
     //     evt.text,
     //     'add',
     //     null
@@ -103,16 +104,20 @@ export class EmployeePolicyalComponent extends UIComponent{
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
-      'AddPolicyALAsync',
+      'PolicyBenefitsBusiness',
+      'AddPolicyBenefitsAsync',
       null
     );
+  }
+
+  onClickOpenPopupDetailInfo(){
+
   }
 
   clickMF(event, data){
     switch(event.functionID){
       case 'SYS03': //add
-      this.HandlePolicyAL(event.text, this.ActionEdit, data);
+      this.HandlePolicyBenefit(event.text, this.ActionEdit, data);
         break;
 
       case 'SYS02': //delete
@@ -122,12 +127,13 @@ export class EmployeePolicyalComponent extends UIComponent{
       case 'SYS04': //copy
         this.copyValue(event.text, data);
         break;
+
     }
   }
 
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      this.HandlePolicyAL(
+      this.HandlePolicyBenefit(
         actionHeaderText,
         'copy',
         res
@@ -135,13 +141,16 @@ export class EmployeePolicyalComponent extends UIComponent{
     });
   }
 
-  HandlePolicyAL(actionHeaderText, actionType: string, data: any){
+  HandlePolicyBenefit(actionHeaderText, actionType: string, data: any){
+    debugger
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
+    console.log('header text ne', this.view.function.description);
+    
     let dialg = this.callfc.openSide(
-      PopupPolicyalComponent,
+      PopupPolicybenefitsComponent,
       {
         actionType: actionType,
         dataObj: data,

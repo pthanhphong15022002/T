@@ -1,6 +1,10 @@
 <div class="page-questions w-100 mt-4">
   <div class="d-flex w-100">
     <div class="d-flex flex-column">
+      <ng-container *ngIf="avatar">
+        <div class="KHCwJ dYYAhb w-100" [ngStyle]="{'background-image': 'url(' + avatar + ')'}">
+        </div>
+      </ng-container>
       <div class="box">
         <div *ngFor="let itemSession of questions">
           <div
@@ -28,6 +32,7 @@
                   'b-l-session': itemSession.active,
                   'b-t-title': itemSession.category == 'T'
                 }"
+                [style.borderTopColor]="primaryColor"
               >
                 <form id="formSession" class="form-horizontal example-box">
                   <ng-container #body>
@@ -65,7 +70,7 @@
                 >
                   <div
                     [ngClass]="
-                      itemQuestion.active
+                        itemQuestion.active
                         ? 'content-wrapper b-l'
                         : 'content-wrapper'
                     "

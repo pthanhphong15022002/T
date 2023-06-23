@@ -2,13 +2,19 @@
   width: 800px !important;
   margin: auto;
   position: relative;
-
+  height: 100%;
   .box-sv
   {
     border-radius: 7px; 
   }
-  .ejstab-survey
+  .div-header-2
   {
+    height: calc(100% - 79px);
+  }
+
+  .ejstab-survey-answer , .ejstab-survey-answer2
+  {
+    
     .e-tab-header
     {
       background: none;
@@ -49,6 +55,20 @@
       i{
         color: white;
       }
+    }
+  }
+  .ejstab-survey-answer
+  {
+    .e-content
+    {
+      height: calc( 100% - 24px ) !important;
+    }
+  }
+  .ejstab-survey-answer2
+  {
+    .e-content
+    {
+      height: calc( 100% - 40px ) !important;
     }
   }
   .border-bt-none
@@ -142,4 +162,21 @@
 .div-sv-mt p
 {
   margin-bottom: 0;
+}
+.add-sv-accordion
+{
+  border: none !important;
+  .e-acrdn-header
+  {
+    border: none !important;
+    padding: 6px 10px !important;
+  }
+  .e-acrdn-header-content
+  {
+    width: 100% !important;
+  }
+  .e-acrdn-header:focus
+  {
+    box-shadow: none !important;
+  }
 }
