@@ -5,7 +5,7 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="false"
+    [hideMF]="dataSelected?.status == '7'"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
@@ -199,7 +199,7 @@
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
                     <div
-                    *ngIf="dataSelected.status != '1'"
+                    *ngIf="dataSelected.status != '1' && dataSelected.status != '7'"
                     [ngStyle]="{
                       'background-color':
                         dataSelected.status == '3' || dataSelected.status == '4'
@@ -223,9 +223,9 @@
                       >{{ dataSelected?.currentStepName }}</span
                     >
                   </div>
-                  <div *ngIf="dataSelected.status == '1'">
+                  <div *ngIf="dataSelected.status == '1' || dataSelected.status == '7'">
                     <codx-vll
-                      [name]="'DP028'"
+                      [name]="gridViewSetup?.Status?.referedValue"
                       [field]="'Status'"
                       [value]="dataSelected?.status"
                       [showText]="true"
@@ -234,7 +234,6 @@
                     >
                     </codx-vll>
                   </div>
-
 
                   </div>
                   <div class="d-flex flex-column align-items-top" style="margin-top: 2.25rem !important;">

@@ -1,6 +1,8 @@
 .e-tab .e-content.e-lib {
     padding-left: 0px;
 }
-.table-cashpayment{
-    height: calc(94vh - 352px)!important;
+
+.table-cashpayment table{
+    height: calc(100vh - 385px)!important;
+
 }
