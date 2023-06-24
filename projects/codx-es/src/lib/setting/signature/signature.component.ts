@@ -235,6 +235,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   click(evt: ButtonModel) {
+    this.viewBase.dataService.service=this.service;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew(evt);

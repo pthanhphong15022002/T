@@ -639,17 +639,13 @@ export class CashPaymentsComponent extends UIComponent {
       return false;
     }
   }
-  select(e) {
-    if (e.isSwiped) {
-      e.cancel = true;
-    }
-  }
   created(e: any, ele: TabComponent) {
     this.changeTab(this.itemSelected.subType, ele);
   }
   changeTab(e?: any, ele?: TabComponent){
     ele = this.tabObj;
-    ele.hideTab(0, false);
+    if (ele) {
+      ele.hideTab(0, false);
     switch (e) {
       case '1':
       case '3':
@@ -665,6 +661,7 @@ export class CashPaymentsComponent extends UIComponent {
         ele.hideTab(1, false);
         ele.hideTab(2, false);
         break;
+    }
     }
   }
   // checkRead(){
