@@ -195,7 +195,7 @@
         "></span>
     </div>
     <div class="card-add mt-1" #cardbodyRef>
-      <ejs-tab #tabObj (selecting)="select($event)" (created)="created($event, tabObj)">
+      <ejs-tab #tabObj (created)="created($event, tabObj)">
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
           <e-tabitem>
@@ -248,8 +248,8 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="acctTrans">
-    <div class="table-responsive table-cashpayment">
-      <table style="table-layout: fixed;" class="table border mb-0">
+    <div class="table-responsive table-ac">
+      <table style="table-layout: fixed;" class="table mb-0">
         <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15;">
           <tr class="border-bottom">
             <!-- <th class="w-10 bg-gray-100 border-bottom text-center">
@@ -297,9 +297,6 @@
         <tbody>
           <ng-container *ngFor="let item of acctTrans">
             <tr *ngIf="!item.crediting">
-              <!-- <td class="text-center red">
-                <span *ngIf="(checkCrediting(item))" class="fw-bold">{{item.entryID}}</span>
-              </td> -->
               <td class="">
                 <div class="d-flex justify-content-start ps-3">
                   <div class="w-100px min-w-100px">
@@ -322,8 +319,14 @@
                     <div *ngIf="(item.objectName!= null && item.objectName != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label *ngIf="itemSelected?.subType == '1'" style="white-space: nowrap"
+                        <codx-label *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'" style="white-space: nowrap"
                           class="fs-7 fw-bold" default="Nhà cung cấp">
+                        </codx-label>
+                        <codx-label *ngIf="itemSelected?.subType == '3' || itemSelected?.subType == '4'" style="white-space: nowrap"
+                          class="fs-7 fw-bold" default="Nhân viên">
+                        </codx-label>
+                        <codx-label *ngIf="itemSelected?.subType == '9'" style="white-space: nowrap"
+                          class="fs-7 fw-bold" default="Đối tượng">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
@@ -398,26 +401,12 @@
               <td class="text-center">
                 <div class="d-flex align-items-center">
                   <ng-container *ngIf="itemSelected?.currencyID == baseCurr">
-                    <!-- <span class="fw-bold line-clamp line-clamp-1">{{item.transAmt.toLocaleString("it-IT")
-                      }}</span> -->
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
                 </div>
               </td>
               <td>
-              </td>
-              <td class="text-center" *ngIf="itemSelected?.currencyID != baseCurr">
-                <!-- <div class="d-flex align-items-center justify-content-start mb-2">
-                  <ng-container>
-                    <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{(item.dr +
-                      item.cr).toLocaleString("it-IT")
-                      }}</span>
-                    <ng-template #popdr>
-                      <span class="fw-bold">{{(item.dr + item.cr).toLocaleString("it-IT")}}</span>
-                    </ng-template>
-                  </ng-container>
-                </div> -->
               </td>
               <td>
                 <div *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
@@ -427,7 +416,7 @@
                 </div>
               </td>
             </tr>
-            <tr *ngIf="item.crediting" [class]="createLine(item) ? 'border-bottom' : ''">
+            <tr *ngIf="item.crediting" [style]="createLine(item) ? 'border-bottom: 1px solid var(--bs-border-color) !important;' : ''">
               <td>
                 <div class="d-flex justify-content-start w-100 ps-3">
                   <div class="w-100px min-w-100px">
@@ -450,8 +439,14 @@
                     <div *ngIf="(item.objectName!= null && item.objectName != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label *ngIf="itemSelected?.subType == '1'" style="white-space: nowrap"
+                        <codx-label *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'" style="white-space: nowrap"
                           class="fs-7 fw-bold" default="Nhà cung cấp">
+                        </codx-label>
+                        <codx-label *ngIf="itemSelected?.subType == '3' || itemSelected?.subType == '4'" style="white-space: nowrap"
+                          class="fs-7 fw-bold" default="Nhân viên">
+                        </codx-label>
+                        <codx-label *ngIf="itemSelected?.subType == '9'" style="white-space: nowrap"
+                          class="fs-7 fw-bold" default="Đối tượng">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
@@ -546,26 +541,6 @@
             </tr>
           </ng-container>
         </tbody>
-        <tfoot *ngIf="acctTrans.length > 0" class="bg-light" style="position: sticky;
-          bottom: 0;">
-          <td></td>
-          <td>
-            <div class="d-flex align-items-center">
-              <!-- <span class="fw-bold line-clamp line-clamp-1">{{totalacct}}</span> -->
-              <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalacct
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
-            </div>
-          </td>
-          <td>
-            <div class="d-flex align-items-center">
-              <!-- <span class="fw-bold line-clamp line-clamp-1">{{totaloff}}</span> -->
-              <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaloff
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
-            </div>
-          </td>
-          <td></td>
-          <td></td>
-        </tfoot>
       </table>
       <div *ngIf="acctTrans.length == 0" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100 mt-9">
@@ -578,20 +553,31 @@
         </div>
       </div>
     </div>
+    <table style="table-layout: fixed;border: 1px solid var(--bs-border-color) !important;" class="table mb-0">
+      <tfoot  *ngIf="acctTrans.length > 0" class="bg-light" style="position: sticky;
+        bottom: 0;">
+        <td class="w-40 bg-gray-100"></td>
+        <td class="w-15 bg-gray-100">
+          <div class="d-flex align-items-center">
+            <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalacct
+                    | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+          </div>
+        </td>
+        <td class="w-15 bg-gray-100">
+          <div class="d-flex align-items-center">
+            <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaloff
+                    | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+          </div>
+        </td>
+        <td class="w-15 bg-gray-100"></td>
+        <td class="w-15 bg-gray-100"></td>
+      </tfoot>
+    </table>
   </ng-container>
-
-  <!-- <ng-container *ngIf="cashpaymentline">
-    <div *ngIf="cashpaymentline.length > 0" class="d-flex flex-wrap mt-6 mb-5">
-      <div class="d-flex align-items-center mb-1 bg-light me-5">
-        <span class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"></span>
-        <span class="text-dark fw-bold py-1 px-2">Tổng cộng: {{ total }}</span>
-      </div>
-    </div>
-  </ng-container> -->
 </ng-template>
 <ng-template #tabSet>
   <ng-container *ngIf="(itemSelected.subType == '2' || itemSelected.subType == '9') && settledInvoices">
-    <div class="table-responsive table-cashpayment">
+    <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table border mb-0">
         <thead class="border-gray-200" style="position: sticky; top: 0">
           <tr class="border-bottom">
@@ -695,25 +681,6 @@
             </td>
           </tr>
         </tbody>
-        <tfoot *ngIf="settledInvoices.length > 0" class="bg-light" style="position: sticky;
-          bottom: 0;">
-          <td></td>
-          <td></td>
-          <td></td>  
-          <td>
-            <div class="d-flex align-items-center justify-content-start">
-              <span class="fw-bold line-clamp line-clamp-1" #balAmt [innerHTML]="totalbalAmt
-                    | formatvalue : fmSettledInvoices : 'balAmt' : balAmt | async"></span>
-            </div>
-          </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-start">
-              <span class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="totalsettledAmt
-                    | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
-            </div>
-          </td>
-          <td></td>
-        </tfoot>
       </table>
       <div *ngIf="settledInvoices.length == 0" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100 mt-9">
@@ -726,6 +693,27 @@
         </div>
       </div>
     </div>
+    <table style="table-layout: fixed;border: 1px solid var(--bs-border-color) !important;" class="table border mb-0">
+      <tfoot *ngIf="settledInvoices.length > 0" class="bg-light" style="position: sticky;
+        bottom: 0;">
+        <td class="w-20 bg-gray-100"></td>
+        <td class="w-30 bg-gray-100"></td>
+        <td class="w-30 bg-gray-100"></td>  
+        <td class="w-20 bg-gray-100">
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="fw-bold line-clamp line-clamp-1" #balAmt [innerHTML]="totalbalAmt
+                  | formatvalue : fmSettledInvoices : 'balAmt' : balAmt | async"></span>
+          </div>
+        </td>
+        <td class="w-30 bg-gray-100">
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="totalsettledAmt
+                  | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
+          </div>
+        </td>
+        <td class="w-30 bg-gray-100"></td>
+      </tfoot>
+    </table>
   </ng-container>
 </ng-template>
 <ng-template #tabVat>

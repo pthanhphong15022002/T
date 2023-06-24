@@ -148,6 +148,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   authStore: AuthStore;
   typeSet: any;
   loading: any = false;
+  loadingform: any = true;
   mapReasonName = new Map<string, string>();
   constructor(
     inject: Injector,
@@ -446,6 +447,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadFormat();
     this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 1000);
+    
   }
 
   gridCreatedSet() {
