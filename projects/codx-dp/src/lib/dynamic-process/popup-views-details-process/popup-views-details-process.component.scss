@@ -114,3 +114,13 @@
 .dp-process-main .e-splitter .e-split-bar.e-split-bar-horizontal {
     background: var(--gray-150);
   }
+
+  .line-clamp-process-name {
+    display: inline-block!important;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 350px;
+  }
