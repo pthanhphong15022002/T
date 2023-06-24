@@ -1161,6 +1161,12 @@ export class DealsComponent
                 type: 'delete',
                 data: data,
               });
+              //up kaban
+              if (this.kanban) {
+                let money = data.dealValue * data.exchangeRate;
+                this.renderTotal(data.stepID, 'minus', money);
+                this.kanban.refresh();
+              }
             }
           });
         this.changeDetectorRef.detectChanges();
