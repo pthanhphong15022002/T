@@ -4,10 +4,17 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { CallFuncService, DialogData, DialogModel, DialogRef, CacheService } from 'codx-core';
+import {
+  CallFuncService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  CacheService,
+} from 'codx-core';
 import { TabModel } from '../../models/models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CodxDpService } from '../../codx-dp.service';
@@ -19,8 +26,12 @@ import { CodxDpService } from '../../codx-dp.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class PopupViewsDetailsProcessComponent implements OnInit {
+  @ViewChild('popupGuide') popupGuide;
+  @ViewChild('viewDetail') viewDetail: TemplateRef<any>;
+  @ViewChild('viewKanban') viewKanban: TemplateRef<any>;
+  @ViewChild('viewDashboard') viewDashboard: TemplateRef<any>;
   dialog: DialogRef;
-  name = 'Mission';
+  name = 'Dashboard';
   isCreate = false;
   process = new DP_Processes();
   dialogGuide: DialogRef;
@@ -29,10 +40,10 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   listValueRefid: string[] = [];
   stepNames = [];
   tabInstances = [];
-  @ViewChild('popupGuide') popupGuide;
   tabControl: TabModel[] = [
-    { name: 'Mission', textDefault: 'Nhiệm vụ', isActive: true },
-    { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
+    { name: 'Dashboard', textDefault: 'Dashboard', isActive: true },
+    { name: 'Detail', textDefault: 'Chi tiết quy trình', isActive: false },
+    { name: 'Kanban', textDefault: 'Kanban', isActive: false },
   ];
   // value
   vllApplyFor = 'DP002';
@@ -52,9 +63,9 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
     this.cache.valueList('DP034').subscribe((res) => {
-      if(res && res.datas){
+      if (res && res.datas) {
         var tabIns = [];
-        res.datas.forEach(element => {
+        res.datas.forEach((element) => {
           var tab = {};
           tab['viewModelDetail'] = element?.value;
           tab['textDefault'] = element?.text;

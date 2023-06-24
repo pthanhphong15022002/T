@@ -161,13 +161,14 @@
           </div>
         </ng-template>
         <ng-template #content class="pd-t-20">
-          <div class="scroll-y ques-scroll">
+          <div id="bg-color-sv" class="scroll-y ques-scroll" >
             <app-questions
               #app_question
               [formModel]="view.formModel"
               [dataService]="view.dataService"
               [recID]="recID"
               [funcID]="funcID"
+              [dataSV]="dataSV"
             ></app-questions>
           </div>
         </ng-template>
@@ -187,11 +188,14 @@
             </a>
           </div>
         </ng-template>
-        <ng-template #content class="pd-t-20">
-          <app-answers
-            [formModel]="view.formModel"
-            [recID]="recID"
-          ></app-answers>
+        <ng-template #content class="pd-t-20 ">
+          <div id="bg-color-sv-answer" class="h-100">
+            <app-answers
+              [formModel]="view.formModel"
+              [recID]="recID"
+              [dataSV]="dataSV"
+            ></app-answers>
+          </div>
         </ng-template>
       </e-tabitem>
       <e-tabitem>
@@ -210,7 +214,9 @@
           </div>
         </ng-template>
         <ng-template #content class="pd-t-20">
-          <app-setting [formModel]="view.formModel" [data]="dataSV"></app-setting>
+          <div id="bg-color-sv-setting" class="h-100">
+            <app-setting [formModel]="view.formModel" [data]="dataSV"></app-setting>
+          </div>
         </ng-template>
       </e-tabitem>
     </e-tabitems>

@@ -92,6 +92,25 @@ export class AddSurveyComponent extends UIComponent {
     this.getSignalAfterSave();
   }
 
+  // getAvatar()
+  // {
+  //   this.SvService.getSV(this.recID).subscribe((item :any)=>{
+  //     if(item) {
+  //       this.dataSV = item;
+  //       this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
+  //     }
+  //     else this.title = this.titleNull;
+  //   })
+  //   if(this.dataSV && this.dataSV.settings) {
+  //     this.dataSV.settings = JSON.parse(this.dataSV.settings);
+  //     if(this.dataSV?.settings?.image) this.avatar = this.dataSV?.settings?.image;
+  //     if(this.dataSV?.settings?.primaryColor) this.primaryColor = this.dataSV?.settings?.primaryColor;
+  //     if(this.dataSV?.settings?.backgroudColor) {
+  //       this.backgroudColor = this.dataSV?.settings?.backgroudColor;
+  //       document.getElementById("bg-color-sv").style.backgroundColor = this.backgroudColor
+  //     }
+  //   }
+  // }
   generateGUID() {
     var d = new Date().getTime(); //Timestamp
     var d2 =
@@ -305,6 +324,7 @@ export class AddSurveyComponent extends UIComponent {
       this.seletedS = true;
       this.mode = 'S';
     }
+    this.getSV();
   }
 
   onSubmit() {}

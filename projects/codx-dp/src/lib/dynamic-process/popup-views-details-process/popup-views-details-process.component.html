@@ -9,9 +9,21 @@
         >
           <span class="icon-arrow_back icon-18"></span>
         </button>
+        <span class="mt-1 me-1" (click)="showGuide(p)">
+          <span
+            class="icon-event_notes text-hover-primary cursor-pointer"
+            [ngbPopover]="popperMemo"
+            #p="ngbPopover"
+            (mouseenter)="process.memo ? p.open() : ''"
+            (mouseleave)="p.close()"
+            placement="right bottom left"
+            container="body"
+          ></span
+        ></span>
         <span
-          class="text-dark fw-bold fs-4 me-4"
+          class="text-dark fw-bold fs-4 me-4 line-clamp-process-name"
           #processName
+          [ngbTooltip]="process.processName"
           [innerHTML]="
             process.processName
               | formatvalue
@@ -22,17 +34,6 @@
                 : 'grvDPProcesses'
               | async
           "
-        ></span>
-        <span class="mt-1" (click)="showGuide(p)">
-          <span
-            class="icon-event_notes text-hover-primary cursor-pointer"
-            [ngbPopover]="popperMemo"
-            #p="ngbPopover"
-            (mouseenter)="process.memo ? p.open() : ''"
-            (mouseleave)="p.close()"
-            placement="right bottom left"
-            container="body"
-          ></span
         ></span>
       </div>
       <div class="d-flex align-items-center">
@@ -64,7 +65,7 @@
         </button> -->
       </div>
     </div>
-    <!-- <div class="d-flex tab-header">
+    <div class="d-flex tab-header">
       <ng-container *ngFor="let item of tabControl; let i = index">
         <a
           [class]="
@@ -82,7 +83,7 @@
           </codx-label>
         </a>
       </ng-container>
-    </div> -->
+    </div>
   </div>
   <!-- </div> -->
   <div class="w-100 view-details-main pt-3 bg-gray-100">
@@ -94,19 +95,24 @@
           data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto"
           data-kt-scroll-dependencies=".popup-process-header"
-          data-kt-scroll-wrappers=".process-body .no-header"
-          [attr.data-kt-scroll-offset]="'0px'"
+          data-kt-scroll-wrappers=".process-body .no-header ."
+          [attr.data-kt-scroll-offset]="'120px'"
         >
-          <ng-container *ngIf="name == 'Mission' && process">
-            <codx-instances
-              [process]="process"
-              [isCreate]="isCreate"
-              (valueListID)="valueListRefID($event)"
-              [tabInstances]="tabInstances"
-            ></codx-instances>
+          <ng-container
+            *ngIf="name == 'Dashboard'"
+            [ngTemplateOutlet]="viewDashboard"
+          >
           </ng-container>
-          <ng-container *ngIf="name == 'Dashboard'">
-            <ng-container>Dashboard - Tháng 3 mới làm control </ng-container>
+          <ng-container
+            *ngIf="name == 'Detail' && process"
+            [ngTemplateOutlet]="viewDetail"
+          >
+          </ng-container>
+
+          <ng-container
+            *ngIf="name == 'Kanban'"
+            [ngTemplateOutlet]="viewKanban"
+          >
           </ng-container>
         </div>
       </div>
@@ -128,7 +134,8 @@
       ></codx-label>
     </span>
     <div>
-      <button type="button"
+      <button
+        type="button"
         class="btn btn-icon btn-sm btn-light"
         (click)="dialogGuide.close()"
       >
@@ -136,20 +143,30 @@
       </button>
     </div>
   </div>
-  <div class="pb-2 px-7" style="max-height: 240px; overflow: auto;">
-  <ng-container *ngFor="let item of stepNames; let i = index">
-    <div class="d-flex text-gray-700 pb-1 pt-2">
-      <span class="me-2 fw-bold">
-        <codx-label
-          name="lblPhase"
-          [formName]="'DPProcesses'"
-          [gridViewName]="'grvDPProcesses'"
-          default="Bước"
-        ></codx-label>
-        {{ i + 1 + ":" }}
-      </span>
-      <span>{{ item }}</span>
-    </div>
-  </ng-container>
-</div>
+  <div class="pb-2 px-7" style="max-height: 240px; overflow: auto">
+    <ng-container *ngFor="let item of stepNames; let i = index">
+      <div class="d-flex text-gray-700 pb-1 pt-2">
+        <span class="me-2 fw-bold">
+          <codx-label
+            name="lblPhase"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Bước"
+          ></codx-label>
+          {{ i + 1 + ":" }}
+        </span>
+        <span>{{ item }}</span>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+<!-- viewDetail -->
+<ng-template #viewDetail>view Detail vẽ như BP</ng-template>
+<!-- viewKanban -->
+<ng-template #viewKanban>
+  <ng-container>Tìm cách xử lý vẽ như BP</ng-container>
+</ng-template>
+<!-- viewDasboard -->
+<ng-template #viewDashboard>
+  <ng-container>Dashboard - tính toán vẽ ra</ng-container>
 </ng-template>
