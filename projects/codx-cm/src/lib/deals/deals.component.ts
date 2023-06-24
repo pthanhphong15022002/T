@@ -37,6 +37,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { AnyNsRecord } from 'dns';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-deals',
@@ -127,8 +128,8 @@ export class DealsComponent
   functionModule: any;
   nameModule: string = '';
   paramDefault: any;
-  currencyIDDefault: any;
-  exchangeRateDefault: any;
+  currencyIDDefault: any = 'VND';
+  exchangeRateDefault: any = 1;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -143,7 +144,6 @@ export class DealsComponent
     // if (!this.funcID) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // }
-    debugger;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     ///lay tien mac dinh
@@ -154,12 +154,13 @@ export class DealsComponent
           this.paramDefault = JSON.parse(dataParam.dataValue);
           this.currencyIDDefault =
             this.paramDefault['DefaultCurrency'] ?? 'VND';
+          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
           if (this.currencyIDDefault != 'VND') {
             let day = new Date();
             this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
-                if (res && res != 0) this.exchangeRateDefault = res;
+                if (res) this.exchangeRateDefault = res;
                 else {
                   this.currencyIDDefault = 'VND';
                   this.exchangeRateDefault = 1;
@@ -802,6 +803,9 @@ export class DealsComponent
   }
 
   moveReason(data: any, isMoveSuccess: boolean) {
+    //lay step Id cu de gen lai total
+    if (!this.crrStepID || this.crrStepID != data.stepID)
+      this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -887,6 +891,13 @@ export class DealsComponent
           if (res) {
             data = res[0];
             this.view.dataService.update(data).subscribe();
+            //up kaban
+            if (this.kanban) {
+              let money = data.dealValue * data.exchangeRate;
+              this.renderTotal(data.stepID, 'add', money);
+              this.renderTotal(this.crrStepID, 'minus', money);
+              this.kanban.refresh();
+            }
             this.detectorRef.detectChanges();
           }
         });
@@ -1009,12 +1020,9 @@ export class DealsComponent
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
+      this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
       this.openFormDeal(formMD, option, 'add');
     });
   }
@@ -1036,7 +1044,13 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-        // this.dataSelected = JSON.parse(JSON.stringify(e.event));
+        //up kaban
+        if (this.kanban) {
+          let dt = e.event;
+          let money = dt.dealValue * dt.exchangeRate;
+          this.renderTotal(dt.stepID, 'add', money);
+          this.kanban.refresh();
+        }
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1046,6 +1060,8 @@ export class DealsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+    let dealValueOld = data.dealValue;
+    let exchangeRateOld = data.exchangeRate;
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -1073,7 +1089,19 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            // this.dataSelected = JSON.parse(JSON.stringify(e.event))
+            //up kaban
+            if (
+              this.kanban &&
+              (dealValueOld != e.event?.dealValue ||
+                exchangeRateOld != e.event?.exchangeRate)
+            ) {
+              let dt = e.event;
+              let money =
+                dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
+              this.renderTotal(dt.stepID, 'add', money);
+              this.kanban.refresh();
+            }
+
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
@@ -1203,13 +1231,6 @@ export class DealsComponent
     //   });
   }
 
-  getTotalDealColums(stepID) {
-    let totalCol = 0;
-    if (this.kanban) {
-    }
-    return totalCol;
-  }
-
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
     this.codxCmService.getProcess(dt.processID).subscribe((process) => {
@@ -1308,4 +1329,31 @@ export class DealsComponent
   }
   //end duyet
   //--------------------------------------------------------------------//
+
+  //--------------------------Tính tổng-------------------------//
+  genTotal(stepID) {
+    let totalCol = 0;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+      if (idx != -1) {
+        let dt = this.kanban.columns[idx];
+        if (dt.totalDealValue) {
+          totalCol = dt.totalDealValue / this.exchangeRateDefault;
+        }
+      }
+    }
+    return totalCol;
+  }
+
+  renderTotal(stepID, action = 'add', money) {
+    let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+    if (idx != -1) {
+      if (action == 'add') {
+        this.kanban.columns[idx].totalDealValue += money;
+      } else if (action == 'minus') {
+        this.kanban.columns[idx].totalDealValue -= money;
+      }
+    }
+  }
+  //end
 }

@@ -144,6 +144,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           this.paramDefault = JSON.parse(dataParam.dataValue);
           this.currencyIDDefault =
             this.paramDefault['DefaultCurrency'] ?? 'VND';
+          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
           if (this.currencyIDDefault != 'VND') {
             let day = new Date();
             this.codxCM
@@ -493,17 +494,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   //function More
-  //gửi duyệt
-  sendApprover(dt) {
-    //test
-    dt.status = '1';
-    this.itemSelected.status = '1';
-    this.view.dataService.update(this.itemSelected).subscribe();
-    this.itemSelected = JSON.parse(
-      JSON.stringify(this.view.dataService.dataSelected)
-    );
-  }
-
   // tạo phiên bản mới
   createNewVersion(data) {
     this.isNewVersion = true;
@@ -525,63 +515,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         break;
     }
   }
-
-  //huy yêu cầu duyệt
-  rejectApprove(dt) {
-    //test
-    dt.status = '0';
-    this.itemSelected.status = '0';
-    this.view.dataService.update(this.itemSelected).subscribe();
-    this.itemSelected = JSON.parse(
-      JSON.stringify(this.view.dataService.dataSelected)
-    );
-
-    // ES016 - Hủy
-    let processNo;
-    this.notiService.alertCode('ES016').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        //check truoc ben quy trình có thiết lập chưa ?? cos la lam tiep
-        this.codxCM
-          .getESCategoryByCategoryID(processNo)
-          .subscribe((res2: any) => {
-            if (res2) {
-              //trình ký
-              if (res2?.eSign == true) {
-                // this.cancelAproval(item);
-                //this.callfunc.openForm();
-              } else if (res2?.eSign == false) {
-                this.codxShareService
-                  .codxCancel(
-                    'CM',
-                    dt?.recID,
-                    this.view.formModel.entityName,
-                    ''
-                  )
-                  .subscribe((res3) => {
-                    if (res3) {
-                      this.itemSelected.status = '0';
-                      this.codxCM
-                        .updateStatusQuotatitons([this.itemSelected.recID, '0'])
-                        .subscribe((res4) => {
-                          if (res4.status == 0) {
-                            this.view.dataService
-                              .update(this.itemSelected)
-                              .subscribe();
-                            this.notiService.notifyCode('SYS007');
-                          } else this.notiService.notifyCode('SYS021');
-                        });
-                    } else this.notiService.notifyCode('SYS021');
-                  });
-              }
-            }
-          });
-      }
-    });
-  }
-
-  //cance ki so
-
-  //end trình ký
 
   // tạo hợp đồng
   createContract(dt) {

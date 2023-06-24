@@ -191,21 +191,23 @@
         [ngbTooltip]="'Tổng tiền dự kiến'"
         container="body"
       ></span>
-      <span
-        class="text-gray-700 line-clamp-menu"
-        container="body"
-        [ngbTooltip]="
-          getTotalDealColums(data?.keyField) + ' ' + currencyIDDefault
-        "
-        [innerHTML]="
-          getTotalDealColums(data?.keyField) != 0
-            ? (getTotalDealColums(data?.keyField)
-              | formatvalue : view.formModel : 'dealValue'
-              | async)
-            : 0
-        "
-      ></span>
-      <span class="text-gray-700 me-1" [innerHTML]="currencyIDDefault"></span>
+      <ng-container
+        [ngTemplateOutlet]="showToltal"
+        [ngTemplateOutletContext]="{ $implicit: genTotal(data.keyField) }"
+      ></ng-container>
+      <ng-template #showToltal let-total>
+        <span
+          class="text-gray-700 line-clamp-menu"
+          container="body"
+          [ngbTooltip]="total + ' ' + currencyIDDefault"
+          [innerHTML]="
+            total != 0
+              ? (total | formatvalue : view.formModel : 'dealValue' | async)
+              : 0
+          "
+        ></span>
+        <span class="text-gray-700 me-1" [innerHTML]="currencyIDDefault"></span>
+      </ng-template>
     </div>
   </div>
 </ng-template>
@@ -273,7 +275,10 @@
     </div>
     <div class="row mb-1 mx-0">
       <div class="col-5 ps-0 d-flex align-items-center line-clamp line-clamp-1">
-        <div [ngbTooltip]="gridViewSetup['DealValue']?.headerText" class="pe-1 d-flex align-items-center">
+        <div
+          [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+          class="pe-1 d-flex align-items-center"
+        >
           <span class="icon-monetization_on icon-16 text-warning me-1"></span>
           <span
             class="text-nowrap"
@@ -285,7 +290,7 @@
           ></span>
         </div>
         <span
-          [ngClass]="data?.currencyID ?'':'line-clamp-menu'"
+          [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
           class="text-gray-700"
           [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
           #currencyID
