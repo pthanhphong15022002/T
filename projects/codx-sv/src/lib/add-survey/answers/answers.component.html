@@ -92,10 +92,32 @@
                   <span class="ms-7 mt-4">{{an.answer}}</span>
                 </div>
               </ng-container>
+              <!-- Menu thả xuống -->
               <ng-container *ngSwitchCase="'L'">
                 <div class="d-flex align-items-center">
                   <codx-input [type]="'radio'" [disabled]="true" [checked]="true"></codx-input>
                   <span class="ms-7 mt-4">{{an.answer}}</span>
+                </div>
+              </ng-container>
+              <!-- Hộp kiểm -->
+              <ng-container *ngSwitchCase="'C'">
+                <div class="d-flex align-items-center mt-4">
+                  <codx-input [type]="'checkbox'" [disabled]="true" [checked]="true"></codx-input>
+                  <span class="ms-7">{{an.answer}}</span>
+                </div>
+              </ng-container>
+              <!-- Ngày -->
+              <ng-container *ngSwitchCase="'D'">
+                <div class="d-flex align-items-center mt-4">
+                  <div class="border-end"><span class="me-5">{{an.answer | date: "dd/MM/yyyy" }}</span></div>
+                  <div class="symbol symbol-circle symbol-25px w-20px h-20px text-center C4IyCf ms-5"><span>{{an.count}}</span></div>
+                </div>
+              </ng-container>
+               <!-- Giờ -->
+               <ng-container *ngSwitchCase="'H'">
+                <div class="d-flex align-items-center mt-4">
+                  <div class="border-end"><span class="me-5">{{an.answer}}</span></div>
+                  <div class="symbol symbol-circle symbol-25px w-20px h-20px text-center C4IyCf ms-5"><span>{{an.count}}</span></div>
                 </div>
               </ng-container>
             </ng-container>
@@ -112,6 +134,7 @@
               [seriesSetting]="settingChart(item?.answerType,'seriesSetting')"
               [chartArea]="settingChart(item?.answerType,'chartArea')"
               [legendSettings]="settingChart(item?.answerType,'legendSettings')"
+              [isTransposed]="settingChart(item?.answerType,'isTransposed')"
               [dataSource]="item.dataChart"
               [palettes]="palettes" 
             > 
@@ -241,6 +264,9 @@
             ></codx-input>
               {{item.answer}}
             </ng-container>
+            <ng-container *ngSwitchCase="'D'">
+              {{item.answer | date: "dd/MM/yyyy"}}
+            </ng-container>
           </ng-container> 
        
         </div>
@@ -296,11 +322,11 @@
             <ng-template #content>
               {{""}}
               <div *ngFor="let x of i?.responds">
-                <div class="row">
+                <div class="row mb-5">
                   <div class="col-5 div-sv-mt">{{extractContent(x.question)}}</div>
                   <div class="col-7">
                     <ng-container *ngFor="let z of x.results">
-                      <div class=""><span>{{z.answer ? z.answer : 'Để trống' }}</span></div>
+                      <div class=""><span>{{z.answer ? formatValueDate(z.answer) : 'Câu trả lời được để trống' }}</span></div>
                     </ng-container>
                   </div>
                 </div>

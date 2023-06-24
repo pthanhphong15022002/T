@@ -18,6 +18,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileUpload } from '@shared/models/file.model';
 import { environment } from 'src/environments/environment';
 import { CopylinkComponent } from '../copylink/copylink.component';
+import { SharelinkComponent } from '../sharelink/sharelink.component';
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
@@ -44,6 +45,7 @@ export class AddSurveyComponent extends UIComponent {
   titleNull = "Mẫu không có tiêu đề";
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
+  primaryColor:any;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -79,6 +81,8 @@ export class AddSurveyComponent extends UIComponent {
       if(item) {
         this.dataSV = item;
         this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
+
+        this.getAvatar(this.dataSV);
       }
       else this.title = this.titleNull;
     })
@@ -90,6 +94,14 @@ export class AddSurveyComponent extends UIComponent {
     if (!this.funcID) this.codxService.navigate('SVT01');
     //this.getSV();
     this.getSignalAfterSave();
+  }
+
+  getAvatar(data:any)
+  {
+    if(data && data.settings) {
+      data.settings = JSON.parse(data.settings);
+      if(data?.settings?.primaryColor) this.primaryColor = data?.settings?.primaryColor;
+    }
   }
 
   // getAvatar()
@@ -223,6 +235,17 @@ export class AddSurveyComponent extends UIComponent {
             }
             else this.notifySvr.notifyCode("SV002");
           })
+          break;
+        }
+      //Share link
+      case "SVT0102":
+        {
+          this.callfc.openForm(SharelinkComponent,"",900,600,"",
+            {
+              headerText: e?.data?.customName,
+              recID: this.recID
+            }
+          );
           break;
         }
     }
@@ -368,6 +391,7 @@ export class AddSurveyComponent extends UIComponent {
     if(e?.field == "title") this.title = e?.data;
     this.dataSV[e?.field] = e?.data;
     this.SvService.signalSave.next('saving');
+    if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
     this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{ if(item) this.SvService.signalSave.next('done');});
   }
 

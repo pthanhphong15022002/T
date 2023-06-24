@@ -284,7 +284,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   getAvatar()
   {
     if(this.dataSV && this.dataSV.settings) {
-      this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
       if(this.dataSV?.settings?.image) this.avatar = this.dataSV?.settings?.image;
       if(this.dataSV?.settings?.primaryColor) this.primaryColor = this.dataSV?.settings?.primaryColor;
       if(this.dataSV?.settings?.backgroudColor) {
@@ -734,7 +734,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   copyCard(itemSession, itemQuestion, category) {
     if (category == 'S') this.copySession(itemSession);
     else this.copyNoSession(itemSession, itemQuestion);
-    console.log('check copy questions', this.questions);
   }
 
   copySession(itemSession) {

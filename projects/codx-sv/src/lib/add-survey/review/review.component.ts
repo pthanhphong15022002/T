@@ -72,12 +72,11 @@ export class ReviewComponent extends UIComponent implements OnInit {
     private injector: Injector,
     private SVServices: CodxSvService,
     private change: ChangeDetectorRef,
-    private auth: AuthService,
+    private auth: AuthStore,
     private sanitizer: DomSanitizer
   ) {
     super(injector);
-    let data: any = this.auth.user$;
-    this.user = data.source.value;
+    this.user = this.auth.get();
     this.router.queryParams.subscribe((queryParams) => {
       if (queryParams?.funcID) {
         this.funcID = queryParams.funcID;
@@ -289,10 +288,13 @@ export class ReviewComponent extends UIComponent implements OnInit {
       }
       else
         this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[0] = itemAnswer;
-        document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");
+        var doc = document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID);
+        if(doc) doc.setAttribute("disabled","");
     }
 
-    if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID)
+    if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
+
+    
   }
 
   checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer, answerType = null) {
@@ -339,10 +341,31 @@ export class ReviewComponent extends UIComponent implements OnInit {
   checkDisabelAnswerOrder(e, itemSession, itemQuestion, itemAnswer , seqNoSession)
   {
     itemAnswer.choose = true;
+    itemAnswer.answer = e?.target?.value;
+    var seqNo = itemQuestion.answerType == "O" ? 0 : itemAnswer.seqNo;
     this.lstQuestion[itemSession.seqNo].children[
       itemQuestion.seqNo
-    ].answers[0] = itemAnswer;
+    ].answers[seqNo] = itemAnswer;
     document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).removeAttribute("disabled");
+    //if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
+  }
+
+  checkDisabelAnswerOrderC(e:any, itemSession, itemQuestion, itemAnswer , seqNoSession)
+  {
+    if(e.data)
+    {
+      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).removeAttribute("disabled");
+    }
+    else {
+      itemAnswer.answer = "";
+      this.lstQuestion[itemSession.seqNo].children[
+        itemQuestion.seqNo
+      ].answers[itemAnswer.seqNo] = itemAnswer;
+      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("value","");
+      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");;
+    }
+
+    //if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
   }
 
   getValue(seqNoSession, seqNoQuestion, seqNoAnswer) {
@@ -354,7 +377,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {
-    
     if(this.survey?.status != "5") return ;
 
     this.checkRequired();
@@ -370,12 +392,12 @@ export class ReviewComponent extends UIComponent implements OnInit {
         x.answers.forEach((y) => {
           let seqNo = 0;
           if(y.seqNo) seqNo = y.seqNo;
-          let answer = '';
-          if(y.other) answer = (document.getElementById('ip-order-'+x.seqNo+x.recID) as HTMLInputElement).value;
-          else if(y.answer) answer = y.answer;
+          //let answer = '';
+          // if(y.other) answer = (document.getElementById('ip-order-'+x.seqNo+x.recID) as HTMLInputElement).value;
+          // else if(y.answer) answer = y.answer;
           let objR = {
             seqNo: seqNo,
-            answer: answer,
+            answer: y.answer,
             other: y.other,
             columnNo: false,
           };
@@ -401,10 +423,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
     });
     if(!check)
     {
-      this.respondents.email = this.user.email;
-      this.respondents.respondent = this.user.userName;
-      this.respondents.position = this.user.positionID;
-      this.respondents.department = this.user.departmentID;
+      this.respondents.email = this.user?.email;
+      this.respondents.respondent = this.user?.userName;
       this.respondents.responds = respondQuestion;
       this.respondents.objectType = '';
       this.respondents.objectID = '';
