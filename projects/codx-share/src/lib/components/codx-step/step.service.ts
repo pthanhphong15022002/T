@@ -47,6 +47,29 @@ export class StepService {
     return phonePattern.test(phoneNumber);
   }
 
+  compareDates(date1, date2, type = 's') {
+    date1 = new Date(date1);
+    date2 = new Date(date2);
+    if (type === 'h') {
+      date1.setHours(0, 0, 0, 0);
+      date2.setHours(0, 0, 0, 0);
+    } else if (type === 'm') {
+      date1.setMinutes(0, 0, 0);
+      date2.setMinutes(0, 0, 0);
+    } else {
+      date1.setSeconds(0, 0);
+      date2.setSeconds(0, 0);
+    }
+    
+    if (date1.getTime() === date2.getTime()) {
+      return 0;
+    } else if (date1 < date2) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
+
   checkTaskLink(task, step) {
     let check = true;
     let tasks = step?.tasks;
