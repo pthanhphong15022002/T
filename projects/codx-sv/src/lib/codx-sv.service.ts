@@ -361,6 +361,15 @@ export class CodxSvService {
     );
   }
 
+  shareLink(data:any) {
+    return this.api.execSv(
+      'SV',
+      'SV',
+      'SurveysBusiness',
+      'ShareLinkAsync',
+      data
+    );
+  }
   onSaveListFile(lstDataUpload) {
     return this.api.execSv('DM', 'DM', 'FileBussiness', 'CopyListFileAsync', [
       lstDataUpload,

@@ -41,6 +41,10 @@
 .ejstab-survey .e-tab-header .e-toolbar-item.e-active {
   color: #4C2B87 !important;
   border-bottom: 2px #623DA1 solid  !important;
+  .e-tab-text
+  {
+    color: #4C2B87 !important;
+  }
 }
 .ejstab-survey
 {
@@ -51,7 +55,7 @@
   }
   .e-content
   {
-    height: calc(100% - 26px) !important;
+    height: calc(100% - 17px) !important;
     .e-item , .e-item>div 
     {
       height: 100% !important;
@@ -84,4 +88,23 @@ app-add-survey > div
   codx-views{
     height: 100% !important;
   }
+}
+.fs-30px
+{
+  font-size: 30px !important;
+}
+.sv-saving
+{
+  position: absolute;
+  right: 19px;
+  margin-top: 8px;
+  z-index: 1;
+}
+.sv-loading-gif
+{
+  background-image: url("../../../../../src/assets/themes/sv/default/img/loading.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 20px;
+  height: 20px;
 }

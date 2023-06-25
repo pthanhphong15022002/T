@@ -34,8 +34,8 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Chế độ mặc định"  [fiedName]="'lblSVPublic'" [formName]="'SVPublic'" class="fs-5-sm"></codx-label>
-                    <codx-label default="Thêm tags gợi ý tìm kiếm khảo sát"  [fiedName]="'lblSVSubPublic'" [formName]="'SVSubPublic'" class="fs-7 text-gray-500"></codx-label>
+                    <codx-label default="Chế độ công cộng"  [fiedName]="'lblSVPublic'" [formName]="'SVPublic'" class="fs-5-sm"></codx-label>
+                    <codx-label default="Không cần đăng nhập khi tham gia khảo sát"  [fiedName]="'lblSVSubPublic'" [formName]="'SVSubPublic'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div>
                     <codx-input type="switch" [field]="'isPublic'" [crrValue]="public"  (valueChange)="valueChangeData($event)"></codx-input>

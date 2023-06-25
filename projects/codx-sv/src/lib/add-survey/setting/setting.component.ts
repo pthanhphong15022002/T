@@ -102,7 +102,7 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
     //Lấy màu mặc định đầu tiên
     //document.getElementById("id-sv-"+this.listColor[0]?.default).appendChild(createElement('span', { className: 'sv-circle-selectioncolor'}));
     var color = this.selectFirst ? this.listColor[0]?.default : this.primaryColor;
-    this.listBackgroundColor = [this.hexToRGB(color,0.2),this.hexToRGB(color,0.5),this.hexToRGB(color,0.7)];
+    this.listBackgroundColor = [this.hexToRGB(color,0.1),this.hexToRGB(color,0.3),this.hexToRGB(color,0.5)];
 
     if(this.selectFirst)
     {
@@ -129,7 +129,7 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
     e.target.appendChild(createElement('span', { className: 'sv-circle-selection'+ type}));
     
     if(type == "color") {
-      this.listBackgroundColor = [this.hexToRGB(color,0.2),this.hexToRGB(color,0.5),this.hexToRGB(color,0.7)];
+      this.listBackgroundColor = [this.hexToRGB(color,0.1),this.hexToRGB(color,0.3),this.hexToRGB(color,0.5)];
       var data2 = 
       {
         field : "backgroudColor",
@@ -139,6 +139,8 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
       this.changeColors = true;
 
       document.getElementById("bg-color-sv-setting").style.backgroundColor = this.listBackgroundColor[0];
+      document.getElementById("icon-sv-default").style.color = color;
+      
     }
     else document.getElementById("bg-color-sv-setting").style.backgroundColor = color;
     var data = 
