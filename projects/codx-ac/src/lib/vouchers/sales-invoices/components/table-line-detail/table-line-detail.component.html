@@ -16,17 +16,17 @@
 ></codx-gridview-v2>
 
 <ng-template #columnItemID let-data>
-  <div class="py-1 d-flex flex-column gap-2">
+  <div class="py-1 d-flex flex-column gap-1">
     <div class="fw-bold">{{ data.itemName }}</div>
     <div>
       <codx-label
         fiedName="idiM3"
         [formModel]="fmSalesInvoicesLines"
-      ></codx-label
-      >:&nbsp;
+        class="label-colon"
+      ></codx-label>
       <span
         *ngFor="let i of [0, 1, 2, 3]; last as isLast"
-        class="text-gray-600"
+        class="text-gray-500"
       >
         <span
           *ngIf="data['idiM' + i]"
@@ -41,15 +41,16 @@
         >
       </span>
     </div>
-    <div>
+    <div class="d-flex flex-wrap">
       <codx-label
-        fiedName="idiM4"
+        fiedName="lblIdiM4"
         [formModel]="fmSalesInvoicesLines"
-      ></codx-label
-      >:&nbsp;
+        default="Kho"
+        class="label-colon"
+      ></codx-label>
       <span
         *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast"
-        class="text-gray-600"
+        class="text-gray-500"
       >
         <span
           *ngIf="data['idiM' + i]"
@@ -66,7 +67,7 @@
     </div>
 
     <codx-vll
-      *ngIf="data.lineType === '2'"
+      *ngIf="data.lineType !== '1'"
       [formModel]="fmSalesInvoicesLines"
       field="LineType"
       [value]="data.lineType"
@@ -79,12 +80,25 @@
 </ng-template>
 
 <ng-template #columnQuantity let-data>
-  {{ data.quantity }} {{ data.umid }}
+  <div class="d-flex flex-column pt-1 gap-1">
+    <div>{{ data.quantity }}</div>
+    <div>{{ data.umid }}</div>
+  </div>
 </ng-template>
 
 <ng-template #columnVatid let-data>
-  {{ (vats | nameById : "VATID" : "TaxRate" : data.vatid) * 100 }}% |
-  {{ data.vatAmt }}
+  <div class="d-flex flex-column pt-1 gap-1">
+    <div>{{ data.vatAmt | currency : "" : "" }}</div>
+    <div
+      *ngIf="
+        vats | nameById : 'VATID' : 'TaxRate' : data.vatid as taxRate;
+        else taxRate
+      "
+    >
+      {{ taxRate * 100 }}%
+    </div>
+    <ng-template #taxRate>-</ng-template>
+  </div>
 </ng-template>
 
 <ng-template #more let-data>

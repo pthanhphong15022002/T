@@ -168,7 +168,7 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
             titleAction: this.title,
             gridViewSetup: res,
             lstGroup: this.lstGroup,
-            systemProcess: true,
+            systemProcess: '1',
             data: this.data,
           };
           var dialog = this.callfc.openForm(
