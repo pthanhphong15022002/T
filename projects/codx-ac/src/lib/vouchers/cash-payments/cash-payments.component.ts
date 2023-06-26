@@ -130,7 +130,7 @@ export class CashPaymentsComponent extends UIComponent {
       if (params?.parent) {
         this.cache.functionList(params.parent).subscribe((res) => {
           if (res) {
-            this.view.setRootNode(res?.customName);
+this.parent =res;
           }
         });
       }
@@ -195,8 +195,9 @@ export class CashPaymentsComponent extends UIComponent {
         this.className = 'CashReceiptsBusiness';
         break;
     }
-    //this.view.setRootNode(this.parent?.customName);
-
+if(this.parent){
+  this.view.setRootNode(this.parent.customName);
+}
     this.detectorRef.detectChanges();
   }
 
