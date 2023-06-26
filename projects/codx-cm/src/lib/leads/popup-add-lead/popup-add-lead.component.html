@@ -234,28 +234,21 @@
   </div>
 
   <div class="row">
-    <!-- <div class="col-6">
+    <div class="col-6">
+
       <div class="form-group">
         <codx-label
+          fiedName="Owner"
           [formModel]="form.formModel"
-          fiedName="ProcessID"
           [Group]="form.formGroup"
-          default="Quy trình"
         >
         </codx-label>
-      <div >
-        <codx-input
-        [formModel]="form.formModel"
-        field="processID"
-        [model]="{ApplyFor: '5'}"
-        [crrValue]="lead?.processID"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+      <ejs-combobox [dataSource]="listParticipants"
+      (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+      [placeholder]="gridViewSetup?.Owner?.description"
+      [allowFiltering]='true' [value]="owner"></ejs-combobox>
       </div>
-
-      </div>
-    </div> -->
+    </div>
 
     <div class="col-6">
       <div class="form-group">
@@ -400,28 +393,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-6">
 
-      <div class="form-group">
-        <codx-label
-          fiedName="Owner"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <!-- <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="owner"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input> -->
-      <ejs-combobox [dataSource]="listParticipants"
-      (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
-      [placeholder]="gridViewSetup?.Owner?.description"
-      [allowFiltering]='true' [value]="owner"></ejs-combobox>
-      </div>
-    </div>
     <div class="col-6">
       <div class="form-group">
         <codx-label

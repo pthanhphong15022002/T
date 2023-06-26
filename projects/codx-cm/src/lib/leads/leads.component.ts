@@ -346,7 +346,7 @@ export class LeadsComponent
     };
 
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = false;
+      eventItem.disabled = data.status != '3';
     };
 
     var isMergeLead = (eventItem, data) => {
