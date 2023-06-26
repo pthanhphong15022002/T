@@ -73,10 +73,15 @@
 /***/
 .popup-task-detail {
     codx-views>.container-fluid {
-        height: calc(100vh - 225px) !important;
+        height: calc(100vh - 202px) !important;
         overflow: hidden;
         overflow-y: auto;
-
+        codx-view-list{
+            height: auto!important;
+        }
+        codx-content{
+            height:auto !important;
+        }
     }
 
     .toolbar {
@@ -86,7 +91,7 @@
     }
 
     .sprints-task-detail {
-        height: calc(100vh - 186px) !important;
+        height: calc(100vh - 155px) !important;
         overflow: hidden;
 
         .card-body.fillter-card-body.scroll-y {
