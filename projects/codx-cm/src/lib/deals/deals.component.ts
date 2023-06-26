@@ -344,22 +344,24 @@ export class DealsComponent
           }
         }
       });
-    } else if (
-      this.funcID == 'CM0201' &&
-      this.viewCrr == 6 &&
-      this.processIDKanban != this.crrProcessID &&
-      (this.view?.currentView as any)?.kanban
-    ) {
-      this.crrProcessID = this.processIDKanban;
-      this.dataObj = { processID: this.processIDKanban };
-      this.view.views.forEach((x) => {
-        if (x.type == 6) {
-          x.request.dataObj = this.dataObj;
-          x.request2.dataObj = this.dataObj;
-        }
-      });
-      this.loadKanban();
     }
+
+    // else if (
+    //   this.funcID == 'CM0201' &&
+    //   this.viewCrr == 6 &&
+    //   this.processIDKanban != this.crrProcessID &&
+    //   (this.view?.currentView as any)?.kanban
+    // ) {
+    //   this.crrProcessID = this.processIDKanban;
+    //   this.dataObj = { processID: this.processIDKanban };
+    //   this.view.views.forEach((x) => {
+    //     if (x.type == 6) {
+    //       x.request.dataObj = this.dataObj;
+    //       x.request2.dataObj = this.dataObj;
+    //     }
+    //   });
+    //   this.loadKanban();
+    // }
   }
 
   click(evt: ButtonModel) {
