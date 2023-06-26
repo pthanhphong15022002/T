@@ -67,6 +67,8 @@ import { ClosingTransactionComponent } from './periodic/closing-transaction/clos
 import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
 import { LayloutJournalComponent } from './laylout-journal/laylout-journal.component';
 import { TestJournalComponent } from './test-journal/test-journal.component';
+import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 
 export const routes: Routes = [
   {
@@ -275,6 +277,8 @@ export const routes: Routes = [
     DragDropModule,
     CoreModule,
     NgxUiLoaderModule,
+    ProgressBarModule,
+    CircularGaugeModule,
   ],
 })
 export class AcModule {}

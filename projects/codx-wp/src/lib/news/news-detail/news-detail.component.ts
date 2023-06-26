@@ -1,4 +1,11 @@
-import { Component, HostBinding, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  Injector,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewModel, ViewType, DialogModel, UIComponent } from 'codx-core';
 import { WP_Comments } from '../../models/WP_Comments.model';
@@ -10,50 +17,44 @@ import { PopupAddCommentComponent } from '../popup/popup-add-comment/popup-add-c
   selector: 'wp-news-detail',
   templateUrl: './news-detail.component.html',
   styleUrls: ['./news-detail.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class NewsDetailComponent extends UIComponent {
-
   @HostBinding('class') get class() {
-    return "bg-body h-100 news-main card-body hover-scroll-overlay-y news-detail";
+    return 'bg-body h-100 news-main card-body scroll-y news-detail';
   }
   NEWSTYPE = {
-    POST: "1",
-    VIDEO: "2"
-  }
-  entityName: string = "WP_News";
-  category: string = "";
-  recID: string = "";
-  funcID: string = "";
+    POST: '1',
+    VIDEO: '2',
+  };
+  entityName: string = 'WP_News';
+  category: string = '';
+  recID: string = '';
+  funcID: string = '';
   data: any;
   listViews = [];
   listTag = [];
   listNews = [];
   views: Array<ViewModel> = [];
-  userPermission:any = null;
-  sysMoreFunc:any = null;
+  userPermission: any = null;
+  sysMoreFunc: any = null;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  constructor(
-    private injector:Injector,
-  ) {
+  constructor(private injector: Injector) {
     super(injector);
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
-      this.recID = param["recID"];
-      this.category = param["category"];
-      this.funcID = param["funcID"];
-      this.loadData(this.recID,this.category);
+      this.recID = param['recID'];
+      this.category = param['category'];
+      this.funcID = param['funcID'];
+      this.loadData(this.recID, this.category);
       this.getUserPermission(this.funcID);
-      this.getDataTagAsync("WP_News");
+      this.getDataTagAsync('WP_News');
     });
-    this.cache.moreFunction("CoDXSystem","")
-    .subscribe((mFuc:any) => {
-      if(mFuc)
-        this.moreFunction = mFuc;
+    this.cache.moreFunction('CoDXSystem', '').subscribe((mFuc: any) => {
+      if (mFuc) this.moreFunction = mFuc;
     });
-    
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -63,86 +64,98 @@ export class NewsDetailComponent extends UIComponent {
         active: true,
         model: {
           panelLeftRef: this.panelLeftRef,
-        }
+        },
       },
     ];
     this.detectorRef.detectChanges();
   }
 
   //
-  onLoading(event:any){
-    debugger
+  onLoading(event: any) {
+    debugger;
   }
 
-  //load data 
+  //load data
   loadData(recID: string, category: string) {
     this.getData(recID);
     this.getSubData(category);
   }
-  getData(recID:string){
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "NewsBusiness",
-      "GetPostByIDAsync",
-      [recID])
+  getData(recID: string) {
+    this.api
+      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetPostByIDAsync', [
+        recID,
+      ])
       .subscribe((res) => {
-        if(res) {
+        if (res) {
           this.data = res;
           this.detectorRef.detectChanges();
         }
       });
   }
   //get data order view + created
-  getSubData(category:string){
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "NewsBusiness",
-      "GetSubDataAsync",
-      [category])
-      .subscribe((res:any) => {
-        if(res){
+  getSubData(category: string) {
+    this.api
+      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetSubDataAsync', [
+        category,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
           this.listViews = res[0];
           this.listNews = res[1];
           this.detectorRef.detectChanges();
         }
       });
   }
-  // get permisison 
-  getUserPermission(funcID:string){
-    if(funcID){
-      let funcIDPermission  = funcID + "P";
-      this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcIDPermission])
-      .subscribe((res:any) => {
-        if(res){
-          this.userPermission = res;
-          this.detectorRef.detectChanges();
-        }
-      });
+  // get permisison
+  getUserPermission(funcID: string) {
+    if (funcID) {
+      let funcIDPermission = funcID + 'P';
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.SYS',
+          'CommonBusiness',
+          'GetUserPermissionsAsync',
+          [funcIDPermission]
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.userPermission = res;
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
   // get data tags
-  getDataTagAsync(entityName:string){
-    if(entityName){
+  getDataTagAsync(entityName: string) {
+    if (entityName) {
       this.api
-      .exec<any[]>('BS', 'TagsBusiness', 'GetModelDataAsync', [entityName])
-      .subscribe((res: any) => {
-        if (res) {
-          this.listTag = res.datas;
-          this.detectorRef.detectChanges();
-        }
-      });
+        .exec<any[]>('BS', 'TagsBusiness', 'GetModelDataAsync', [entityName])
+        .subscribe((res: any) => {
+          if (res) {
+            this.listTag = res.datas;
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
   //click view detail post
   clickViewDeital(data: any) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewAsync", data.recID)
-    .subscribe(
-      (res) => {
+    this.api
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'UpdateViewAsync',
+        data.recID
+      )
+      .subscribe((res) => {
         if (res) {
-          this.codxService.navigate('', `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
-          this.loadData(data.recID,this.category);
+          this.codxService.navigate(
+            '',
+            `wp2/news/${this.funcID}/${data.category}/${data.recID}`
+          );
+          this.loadData(data.recID, this.category);
         }
       });
   }
@@ -151,40 +164,53 @@ export class NewsDetailComponent extends UIComponent {
     this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${tag.value}`);
   }
   // add
-  moreFunction:any = null;
+  moreFunction: any = null;
   openPopupAdd(type: string) {
-    if(this.view){
+    if (this.view) {
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
+      let mfc = Array.from<any>(this.moreFunction).find(
+        (x: any) => x.functionID === 'SYS01'
+      );
       let data = {
         action: mfc.defaultName,
-        type:type
-      }
-      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data , '', option);
+        type: type,
+      };
+      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
     }
   }
   clickShowPopupSearch() {
-    if(this.view){
+    if (this.view) {
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.view.funcID, "", option);
-    } 
+      this.callfc.openForm(
+        PopupSearchComponent,
+        '',
+        0,
+        0,
+        '',
+        this.view.funcID,
+        '',
+        option
+      );
+    }
   }
   // open popup share
   openPopupShare(data: any) {
-    if (data){
-      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
+    if (data) {
+      let mfc = Array.from<any>(this.moreFunction).find(
+        (x: any) => x.functionID === 'SYS01'
+      );
       let post = new WP_Comments();
       post.shares = JSON.parse(JSON.stringify(data));
       post.refID = data.recID;
       let obj = {
         data: post,
-        refType: "WP_News",
+        refType: 'WP_News',
         status: 'share',
         headerText: mfc.defaultName,
       };
@@ -192,8 +218,16 @@ export class NewsDetailComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.zIndex = 100;
-      this.callfc.openForm(PopupAddCommentComponent, '', 700, 650, '', obj, '', option);
+      this.callfc.openForm(
+        PopupAddCommentComponent,
+        '',
+        700,
+        650,
+        '',
+        obj,
+        '',
+        option
+      );
     }
-    
   }
 }

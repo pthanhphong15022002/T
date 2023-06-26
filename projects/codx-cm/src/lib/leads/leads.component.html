@@ -47,13 +47,12 @@
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
-    <div class="d-flex justify-content-start mb-1 w-100">
+    <div class="d-flex justify-content-start mb-1 w-100"   [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText">
       <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
       <div>
         <span
           class="text-gray-600 fs-7"
           #businessLineID
-          [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
           [innerHTML]="
             data?.businessLineID
               | formatvalue
@@ -67,15 +66,27 @@
         ></span>
       </div>
     </div>
+    <div class="d-flex justify-content-start mb-1 w-100">
+      <span
+        class="text-gray-600 fs-7 line-clamp line-clamp-2"
+        #note
+        [ngbTooltip]="data?.note"
+        [innerHTML]="
+          data?.note
+            | formatvalue : view.formModel : 'note' : note
+            | async
+        "
+      ></span>
+    </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <div
           *ngIf="data.status != '1' && data.status != '7'"
           [ngStyle]="{
             'background-color':
-              data.status == '3' || data.status == '4'
+              data.status == '3'
                 ? colorReasonSuccess?.color
-                : data.status == '5' || data.status == '6'
+                : data.status == '5'
                 ? colorReasonFail?.color
                 : data?.steps['backgroundColor']
           }"
@@ -93,7 +104,44 @@
             >{{ data?.currentStepName }}</span
           >
         </div>
-        <div *ngIf="data.status == '1' || data.status == '7'">
+        <div *ngIf="data.status == '7'">
+
+
+          <div class="d-flex justify-content-start">
+            <div>
+              <div
+              [ngStyle]="{
+                'background-color':colorReasonSuccess?.color
+              }"
+              class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+            >
+              <span
+                [ngClass]="data?.steps['icon']"
+                [ngStyle]="{ color: data?.steps['iconColor'] }"
+                class="me-1"
+              ></span>
+              <span
+                class="text-ellipsis line-clamp line-clamp-1"
+                [ngbTooltip]="data?.currentStepName"
+                [ngStyle]="{ color: data?.steps['textColor'] }"
+                >{{ data?.currentStepName }}</span
+              >
+            </div>
+            </div>
+            <div>
+              <codx-vll
+              [name]="gridViewSetup?.Status?.referedValue"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="data.status == '1'">
           <codx-vll
             [name]="gridViewSetup?.Status?.referedValue"
             [field]="'Status'"
@@ -106,7 +154,6 @@
         </div>
 
         <div class="d-flex align-items-center text-gray-600">
-          <!-- <span class="icon-16 icon-av_timer me-1"></span> -->
           <span
             class="text-gray-700 fs-7 line-clamp-menu"
             [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
@@ -196,12 +243,11 @@
   </codx-temp-full>
   <ng-template #descTmpCard>
     <div class="'d-flex flex-column w-100">
-      <div class="d-flex justify-content-start mb-1 w-100">
+      <div class="d-flex justify-content-start mb-1 w-100"   [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText">
         <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
         <span
           class="text-gray-600 fs-7 line-clamp-menu"
           #businessLineID
-          [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
           [innerHTML]="
             data?.businessLineID
               | formatvalue : view.formModel : 'businessLineID' : businessLineID
@@ -209,6 +255,20 @@
           "
         ></span>
       </div>
+
+      <div class="d-flex justify-content-start mb-1 w-100">
+        <span
+          class="text-gray-600 fs-7 line-clamp line-clamp-2"
+          #note
+          [ngbTooltip]="data?.note"
+          [innerHTML]="
+            data?.note
+              | formatvalue : view.formModel : 'note' : note
+              | async
+          "
+        ></span>
+      </div>
+
     </div>
   </ng-template>
 </ng-template>
@@ -261,3 +321,4 @@
 </ng-template>
 
 <!-- end kanban -->
+

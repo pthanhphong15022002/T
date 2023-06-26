@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
                 <div class="me-4">
-                    <span class="fw-bolder fs-1" >{{headerText}}</span>
+                    <span class="fw-bold fs-1" >{{headerText}}</span>
                 </div>
                 <div class="d-flex align-items-center justify-content-start ">
                     <ng-container *ngIf="data.shareControl">
@@ -47,10 +47,10 @@
         <div class="card-body p-0 addnews-body">
             <div class="row mt-1">
                 <div class="col-5">
-                    <div class="card add-news-left w-100 rounded-0 border-0">
+                    <div class="card add-news-left w-100 rounded-0 pe-6 border-end">
                         <div class="form-group">
                             <codx-label 
-                                class="fw-bolder" 
+                                class="fw-bold" 
                                 [fiedName]="'Category'"
                                 [formModel]="dialogRef.formModel" 
                                 [default]="grvSetup['Category']['headerText']">
@@ -66,7 +66,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <codx-label 
-                                        class="fw-bolder" 
+                                        class="fw-bold" 
                                         [fiedName]="'StartDate'"
                                         [formModel]="dialogRef.formModel" 
                                         [default]="grvSetup['StartDate']['headerText']">
@@ -83,7 +83,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <codx-label 
-                                        class="fw-bolder" 
+                                        class="fw-bold" 
                                         [formModel]="dialogRef.formModel" 
                                         [fiedName]="'EndDate'"
                                         [default]="grvSetup['EndDate']['headerText']">
@@ -100,7 +100,7 @@
                         </div>
                         <div class="form-group">
                             <codx-label 
-                                class="fw-bolder" 
+                                class="fw-bold" 
                                 [formModel]="dialogRef.formModel" 
                                 [fiedName]="'Subject'"
                                 [default]="grvSetup['Subject']['headerText']">
@@ -114,7 +114,7 @@
                         </div>
                         <div class="form-group">
                             <codx-label 
-                                class="fw-bolder" 
+                                class="fw-bold" 
                                 [formModel]="dialogRef.formModel" 
                                 [fiedName]="'SubContent'"
                                 [default]="grvSetup['SubContent']['headerText']">
@@ -130,7 +130,7 @@
                         </div>
                         <div class="form-group">
                             <codx-label 
-                                class="fw-bolder mb-2" 
+                                class="fw-bold mb-2" 
                                 [formModel]="dialogRef.formModel" 
                                 [fiedName]="'Image'"
                                 [default]="grvSetup['Image']['headerText']">
@@ -164,7 +164,7 @@
                         <div class="d-flex align-items-center mb-2">
                             <div class="me-4">
                                 <codx-label 
-                                    class="fw-bolder" 
+                                    class="fw-bold" 
                                     [formModel]="dialogRef.formModel" 
                                     [fiedName]="'AllowShare'"
                                     [default]="grvSetup['AllowShare']['headerText']">
@@ -185,7 +185,7 @@
                         <div class="d-flex align-items-center">
                             <div class="me-4">
                                 <codx-label 
-                                    class="fw-bolder" 
+                                    class="fw-bold" 
                                     [formModel]="dialogRef.formModel" 
                                     [fiedName]="'CreatePost'"
                                     [default]="grvSetup['CreatePost']['headerText']">
@@ -205,10 +205,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-7 h-100  ps-12">
-                    <div>
+                <div class="col-7 h-100 ps-9">
+                    <div class="mb-1">
                         <codx-label 
-                            class="fw-bolder" 
+                            class="fw-bold" 
                             [formModel]="dialogRef.formModel" 
                             [fiedName]="'Contents'"
                             [default]="grvSetup['Contents']['headerText']">
@@ -318,9 +318,10 @@
         <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="cursor-pointer" [innerHTML]="post.shareName"></span>
         </div>
+    
         <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
             <div class="py-2">
-                <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
+                <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bold"></codx-label>
             </div>
             <div class="hr-list-employee">
                 <ng-container *ngFor="let permisison of post.permissions">

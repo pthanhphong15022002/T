@@ -18,7 +18,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
@@ -57,6 +57,7 @@ export class PopupAddSalesInvoiceComponent
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
   expanded: boolean = false;
+  originVisibleCols:any=[];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -71,6 +72,7 @@ export class PopupAddSalesInvoiceComponent
   };
   isReturnInvoice: boolean;
   gridHeight: number;
+  journalStateSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     injector: Injector,
@@ -107,9 +109,7 @@ export class PopupAddSalesInvoiceComponent
       this.journalService.getVoucherNoPlaceholderText();
 
     this.journalService.getJournal(this.master.journalNo).subscribe((res) => {
-      this.journal = res?.dataValue
-        ? { ...res, ...JSON.parse(res.dataValue) }
-        : res;
+      this.journal = res;
 
       this.editSettings.mode =
         this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
@@ -119,6 +119,8 @@ export class PopupAddSalesInvoiceComponent
       }
 
       this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+
+      this.journalStateSubject.next(true);
     });
 
     if (this.isEdit) {
@@ -194,7 +196,8 @@ export class PopupAddSalesInvoiceComponent
   onInputChange(e): void {
     console.log('onInputChange', e);
 
-    if (!e.data) {
+    // e.data for valueChange and e.crrValue for controlBlur
+    if (!e.data && !e.crrValue) {
       return;
     }
 
@@ -247,46 +250,64 @@ export class PopupAddSalesInvoiceComponent
         sumRowHeight -
         weirdHeight;
     }, 500);
-
-    // cache problem ❌
-    let toggleFields: string[] = [
-      ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
-      ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
-    ];
-    for (const c of this.grid.columnsGrid) {
-      if (toggleFields.includes(c.fieldName)) {
-        c.isVisible = true;
-        this.grid.visibleColumns.push(c);
+    this.originVisibleCols = this.grid.visibleColumns.slice();
+    this.journalStateSubject.subscribe((loaded) => {
+      if (!loaded) {
+        return;
       }
-    }
-    this.grid.hideColumns(this.hiddenFields);
 
-    for (const v of this.grid.visibleColumns) {
-      if (v.fieldName === 'DIM1') {
-        if (['1', '2'].includes(this.journal.diM1Control)) {
-          v.predicate = '@0.Contains(DepartmentID)';
-          v.dataValue = `[${this.journal.diM1}]`;
+      // cache problem ❌
+      let toggleFields: string[] = [
+        ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
+        ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
+      ];
+      for (const c of this.grid.columnsGrid) {
+        if (toggleFields.includes(c.fieldName)) {
+          c.isVisible = true;
+          this.grid.visibleColumns.push(c);
         }
       }
+      this.grid.hideColumns(this.hiddenFields);
 
-      if (v.fieldName === 'DIM2') {
-        if (['1', '2'].includes(this.journal.diM2Control)) {
-          v.predicate = '@0.Contains(CostCenterID)';
-          v.dataValue = `[${this.journal.diM2}]`;
+      for (const v of this.grid.visibleColumns) {
+        if (v.fieldName === 'DIM1') {
+          if (['1', '2'].includes(this.journal.diM1Control)) {
+            v.predicate = '@0.Contains(DepartmentID)';
+            v.dataValue = `[${this.journal.diM1}]`;
+          }
+        }
+
+        if (v.fieldName === 'DIM2') {
+          if (['1', '2'].includes(this.journal.diM2Control)) {
+            v.predicate = '@0.Contains(CostCenterID)';
+            v.dataValue = `[${this.journal.diM2}]`;
+          }
+        }
+
+        if (v.fieldName === 'DIM3') {
+          if (['1', '2'].includes(this.journal.diM3Control)) {
+            v.predicate = '@0.Contains(CostItemID)';
+            v.dataValue = `[${this.journal.diM3}]`;
+          }
         }
       }
-
-      if (v.fieldName === 'DIM3') {
-        if (['1', '2'].includes(this.journal.diM3Control)) {
-          v.predicate = '@0.Contains(CostItemID)';
-          v.dataValue = `[${this.journal.diM3}]`;
-        }
-      }
-    }
+    });
   }
 
   onCellChange(e): void {
     console.log('onCellChange', e);
+    if (e.field === 'itemID') {
+      for (const v of this.grid.visibleColumns) {
+        if (
+          ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
+            v.fieldName?.toLowerCase()
+          )
+        ) {
+          v.predicate = 'ItemID=@0';
+          v.dataValue = `${e.data.itemID}`;
+        }
+      }
+    }
 
     const postFields: string[] = [
       'itemID',
@@ -358,10 +379,14 @@ export class PopupAddSalesInvoiceComponent
 
   onAddNew(e): void {
     console.log('onAddNew', e);
-
+    if(e.type=='closeEdit'){
+      this.grid.visibleColumns = this.originVisibleCols.slice();
+    }
     this.detailService
       .save(null, null, null, null, false)
-      .subscribe((res) => console.log(res));
+      .subscribe((res) => {
+        this.grid.visibleColumns = this.originVisibleCols.slice();
+      });
   }
 
   onEdit(e): void {
@@ -370,7 +395,9 @@ export class PopupAddSalesInvoiceComponent
     this.detailService.updateDatas.set(e.recID, e);
     this.detailService
       .save(null, null, null, null, false)
-      .subscribe((res) => console.log(res));
+      .subscribe((res) =>{
+        this.grid.visibleColumns = this.originVisibleCols.slice()
+      });
   }
 
   onFocusOut(e): void {

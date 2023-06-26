@@ -139,7 +139,9 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
       this.changeColors = true;
 
       document.getElementById("bg-color-sv-setting").style.backgroundColor = this.listBackgroundColor[0];
+      if(document.getElementById("btn-sv-release")) document.getElementById("btn-sv-release").style.backgroundColor = color;
       document.getElementById("icon-sv-default").style.color = color;
+    
       
     }
     else document.getElementById("bg-color-sv-setting").style.backgroundColor = color;

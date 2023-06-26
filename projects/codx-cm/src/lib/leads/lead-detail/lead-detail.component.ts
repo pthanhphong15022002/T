@@ -28,11 +28,12 @@ export class LeadDetailComponent  implements OnInit {
   @ViewChild('contract')contract: TemplateRef<any>;
 
   @ViewChild('references')references: TemplateRef<any>;
+  @ViewChild('comment')comment: TemplateRef<any>;
 
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
+    // { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false, template: null },
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
@@ -60,14 +61,21 @@ export class LeadDetailComponent  implements OnInit {
   }
 
   ngAfterViewInit(): void {
-      let references = { name: 'References', textDefault: 'Liên kết', isActive: false, template: this.references};
-      this.tabControl.push(references)
+
+
 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
       this.dataSelected = this.dataSelected;
+      if(this.dataSelected.dealID) {
+        let references = { name: 'References', textDefault: 'Liên kết', isActive: false, template: this.references};
+        this.tabControl.push(references)
+      }
+      else {
+        this.tabControl.pop();
+      }
       this.afterLoad();
     }
   }
@@ -85,6 +93,12 @@ export class LeadDetailComponent  implements OnInit {
         name: 'Task',
         textDefault: 'Công việc',
         icon: 'icon-more',
+        isActive: false,
+      },
+      {
+        name: 'Comment',
+        textDefault: 'Thảo luận',
+        icon: 'icon-i-chat-right',
         isActive: false,
       },
     ]
@@ -111,16 +125,6 @@ export class LeadDetailComponent  implements OnInit {
   }
 
   async afterLoad() {
-    // var options = new DataRequest();
-    // options.entityName = 'CM_Deals';
-    // options.predicates = 'RecID=@0';
-    // options.dataValues = '61bc2462-069e-11ee-94b2-00155d035517';
-    // options.pageLoading = false;
-    // this.deals = await firstValueFrom(
-    //   this.codxCmService.loadDataAsync('CM', options)
-    // );
-
-
   }
 }
 
