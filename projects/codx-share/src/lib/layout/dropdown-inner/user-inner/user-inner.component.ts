@@ -306,8 +306,33 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         'HRS0211',
       ])
       .subscribe((res) => {
+        debugger;
+        var sampleArr = this.base64ToArrayBuffer(res);
+        this.saveByteArray('excel', sampleArr);
         console.log(res);
       });
+  }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  saveByteArray(reportName, byte) {
+    var blob = new Blob([byte], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
   }
 
   ngOnDestroy() {
