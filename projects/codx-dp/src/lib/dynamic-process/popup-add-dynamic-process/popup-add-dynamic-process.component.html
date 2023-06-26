@@ -197,14 +197,14 @@
             >
             </codx-label>
           </h2>
-          <ng-container
+          <ng-template
             *ngIf="currentTab == 1"
             [ngTemplateOutlet]="stageHeader"
-          ></ng-container>
-          <ng-container
+          ></ng-template>
+          <ng-template
             *ngIf="currentTab == 3"
             [ngTemplateOutlet]="headerFormTemp"
-          ></ng-container>
+          ></ng-template>
         </div>
         <div
           [ngClass]="
@@ -225,7 +225,7 @@
               id="pane_1"
               [ngClass]="currentTab == 0 ? 'active show' : ''"
             >
-              <ng-container [ngTemplateOutlet]="General"></ng-container>
+              <ng-template [ngTemplateOutlet]="General"></ng-template>
             </div>
             <div
               class="tab-pane fade"
@@ -233,23 +233,23 @@
               [ngClass]="currentTab == 1 ? 'active show' : ''"
             >
               <!-- Thiet lap giai doan thuan -->
-              <ng-container [ngTemplateOutlet]="stage"></ng-container>
+              <ng-template [ngTemplateOutlet]="stage"></ng-template>
             </div>
             <div
               class="tab-pane fade"
               id="pane_3"
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
-              <ng-container
+              <ng-template
                 [ngTemplateOutlet]="dynamicFieldsAllSteps"
-              ></ng-container>
+              ></ng-template>
             </div>
             <div
               class="tab-pane fade"
               id="pane_4"
               [ngClass]="currentTab == 3 ? 'active show' : ''"
             >
-              <ng-container [ngTemplateOutlet]="dynamicFormTemp"></ng-container>
+              <ng-template [ngTemplateOutlet]="dynamicFormTemp"></ng-template>
             </div>
           </div>
         </div>
@@ -388,7 +388,7 @@
             <codx-input
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
-              [disabled]="systemProcess || process?.category == '0' ? true : false"
+              [disabled]="systemProcess == '1' || process?.category == '0' ? true : false"
               type="text"
               [crrValue]="process.processName"
               (valueChange)="valueChange($event)"
@@ -412,7 +412,7 @@
                   : 'DP002'
               "
               (valueChange)="valueChange($event)"
-              [disabled]="action == 'edit' || systemProcess"
+              [disabled]="action == 'edit' || systemProcess == '1'"
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >
             </codx-input>

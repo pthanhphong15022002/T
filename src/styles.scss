@@ -607,6 +607,10 @@ ejs-calendar {
   height: 5px!important;
   border-radius: 0!important;
 }
+
+.e-calendar .e-content td.e-today span.e-day{
+    box-shadow: inset 2px 0 var(--primary-dark), inset 0 2px var(--primary-dark), inset -2px 0 var(--primary-dark), inset 0 -2px var(--primary-dark);
+}
 /////
 .card {
   box-shadow: none;
