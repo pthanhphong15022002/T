@@ -10,6 +10,7 @@ import {
 import {
   ButtonModel,
   CodxListviewComponent,
+  DataRequest,
   UIComponent,
   ViewModel,
   ViewType,
@@ -47,6 +48,11 @@ export class HomeComponent extends UIComponent implements OnInit {
     fontColor: 'black',
     fontFormat: 'B',
   };
+
+  dataModel = new DataRequest();
+
+  dataSurveys :any;
+  dataSurveysSystem:any;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('lstView') lstView: CodxListviewComponent;
 
@@ -62,7 +68,17 @@ export class HomeComponent extends UIComponent implements OnInit {
       }
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) this.functionList = res;
+      if (res) {
+        this.functionList = res;
+        this.dataModel.funcID = this.funcID;
+        this.dataModel.entityName = this.functionList.entityName;
+        this.dataModel.predicate = this.functionList.predicate;
+        this.dataModel.dataValue = this.functionList.dataValue;
+        this.dataModel.pageLoading = false;
+        this.dataModel.page = 1;
+        this.dataModel.pageSize=20;
+        this.getData();
+      }
     });
 
     this.viewList = 
@@ -103,6 +119,17 @@ export class HomeComponent extends UIComponent implements OnInit {
     ];
   }
 
+  getData()
+  {
+    this.svService.getDataSurveys(this.dataModel,true).subscribe(item=>{
+      if(item)
+      {
+        debugger
+        this.dataSurveys = item[0][0];
+        this.dataSurveysSystem = item[1];
+      }
+    });
+  }
 
   ngAfterViewInit() {
     this.views = [

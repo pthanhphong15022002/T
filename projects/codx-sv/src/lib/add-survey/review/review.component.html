@@ -6,7 +6,7 @@
         </div>
       </ng-container>
       <div class="box">
-        <ng-container *ngIf="survey?.stop ;else elseStop">
+        <ng-container *ngIf="(survey?.stop || expiredOn);else elseStop">
           <div class="card-survey">
             <div class="control-section inplace-editor-control-section form-lafyout">
               <div class="content-wrapper b-t" [style.borderTopColor]="primaryColor">
@@ -17,7 +17,7 @@
                       [innerHTML]="itemSession.question"
                     ></span>
                     <span class="mt-5" *ngIf="!itemSession.question">Mẫu không có tiêu đề</span>
-                    <div class="fs-6 mt-5">Khảo sát đã đóng.</div>
+                    <div class="fs-5-sm mt-5">{{expiredOn ? 'Khảo sát đã hết thời gian trả lời.': 'Khảo sát đã đóng.'}}</div>
                   </div>
                 </form>
               </div>
