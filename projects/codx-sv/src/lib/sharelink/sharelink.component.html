@@ -23,7 +23,7 @@
 <ng-template #footer>
     <div class="d-flex align-items-center justify-content-between">
         <div class="checkbox-inline d-flex align-items-center">
-            <codx-input type="checkbox" label="Tạo bài viết" ></codx-input>
+            <codx-input type="checkbox" label="Tạo bài viết" (valueChange)="valueChange($event,'post')"></codx-input>
         </div>
         <button type="button" id="btnShare" class="btn btn-primary" >
             <codx-label [fiedName]="'lblSend'"  default="Chia sẻ" class="ms-1 fw-bold" (click)="save()"></codx-label>
