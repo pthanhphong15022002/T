@@ -85,7 +85,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   hasModuleES: boolean = false;
   dataType = ''; //Anh Thao thêm để lấy data khi không có dataService --sau nay nếu sửa thì báo anh Thảo với!! Thank - Huế ngày 14/04/2023
   signFileFM: FormModel;
-  curUser:any;
+  curUser: any;
 
   constructor(
     private esService: CodxEsService,
@@ -94,8 +94,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
     private callfunc: CallFuncService,
-    private authService:AuthService,
-    private authStore:AuthStore,
+    private authService: AuthService,
+    private authStore: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -147,11 +147,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.esService.getFormModel('EST011').then(res=>{
-      if(res){
-        this.signFileFM=res;
+    this.esService.getFormModel('EST011').then((res) => {
+      if (res) {
+        this.signFileFM = res;
       }
-    })
+    });
     let predicate = 'RefModule=@0 and FormName=@1';
     let dataValue = 'SYS;System';
     this.esService
@@ -272,10 +272,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     if (event?.field && event?.component) {
       let fieldName =
         event.field.charAt(0).toUpperCase() + event.field.slice(1);
-      switch (event?.field) {        
-        case 'autoNumberControl': 
-        case 'areaControl': 
-        {
+      switch (event?.field) {
+        case 'autoNumberControl':
+        case 'areaControl': {
           this.data[event['field']] = event?.data == true ? '1' : '0';
           this.form?.formGroup?.patchValue({
             [event['field']]: this.data[event['field']],
@@ -406,9 +405,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.isSaved = true;
           if (isClose) {
-            this.notify.notifyCode('SYS006');     
-            if(this.dialog?.dataService)       
-            (this.dialog?.dataService as CRUDService).add(res).subscribe();
+            this.notify.notifyCode('SYS006');
+            if (this.dialog?.dataService)
+              (this.dialog?.dataService as CRUDService).add(res).subscribe();
             this.dialog && this.dialog.close(res);
           }
         }
@@ -448,10 +447,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           autoNoCode: this.data?.autoNumber,
           description: this.formModel?.entityName,
           newAutoNoCode: this.data.categoryID ?? this.data.recID,
-          isAdd:true,
+          isAdd: true,
           isSaveNew: '1',
-          disableAssignRule:true,
-        },'', {isFull:true} as any
+          disableAssignRule: true,
+        },
+        '',
+        { isFull: true } as any
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
@@ -472,9 +473,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         {
           formModel: this.dialog.formModel,
           autoNoCode: this.data?.autoNumber,
-          isAdd:false,
+          isAdd: false,
           description: this.formModel?.entityName,
-          disableAssignRule:true,
+          disableAssignRule: true,
         }
       );
       popupAutoNum.closed.subscribe((res) => {
@@ -520,8 +521,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             });
             this.cr.detectChanges();
           }
-          if(this.dialog?.dataService)       
-          (this.dialog?.dataService as CRUDService).add(this.data).subscribe();
+          if (this.dialog?.dataService)
+            (this.dialog?.dataService as CRUDService)
+              .add(this.data)
+              .subscribe();
           this.isSaved = true;
 
           //openForm add process
@@ -598,42 +601,51 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.dialog && this.dialog.close();
   }
 
-  openPopupSignFile(){
+  openPopupSignFile() {
     let option = new SidebarModel();
-      option.Width = '800px';
-      //option.DataService = this.view?.dataService;
-      option.FormModel = this.signFileFM;
-      let signFile = new ES_SignFile();
-      signFile.title = this.data?.categoryName;
-      signFile.categoryID = this.data?.categoryID;
-      signFile.refType = this.formModel?.entityName;
-      signFile.owner = this.authService?.userValue?.userID;
-      signFile.isTemplate = true;
-      signFile.processID = this.data?.recID;
-      signFile.approveControl = '3';
-      signFile.buid=this.curUser?.buid;
-      signFile.createdBy=this.authService?.userValue?.userID;
-      signFile.createdOn=new Date();
-      delete signFile?.recID;
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      let dialogAdd = this.callfunc.openForm(
-        PopupAddSignFileComponent,
-        'Thêm mới',
-        700,
-        650,
-        this.signFileFM.funcID,
-        {
-          data:signFile,
-          isAddNew: true,
-          formModel: this.signFileFM,
-          option: option,
-          disableCateID:true,
-          saveAsTemplate:true,
-        },
-        '',
-        dialogModel
-      );
+    option.Width = '800px';
+    option.FormModel = this.signFileFM;
+    let isAddNew = false;
+    this.esService
+      .getTemplateOfCategory(this.data?.categoryID)
+      .subscribe((res: any) => {
+        if (res) {
+          let signFile = res;
+          if (signFile.categoryID == null || signFile.categoryID == '') {
+            signFile.title = this.data?.categoryName;
+            signFile.categoryID = this.data?.categoryID;
+            signFile.refType = this.formModel?.entityName ?? 'ES_Categories';
+            signFile.owner = this.authService?.userValue?.userID;
+            signFile.isTemplate = true;
+            signFile.processID = this.data?.recID;
+            signFile.approveControl = '3';
+            signFile.buid = this.curUser?.buid;
+            signFile.createdBy = this.authService?.userValue?.userID;
+            signFile.createdOn = new Date();
+            isAddNew=true;
+          }
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          let dialogAdd = this.callfunc.openForm(
+            PopupAddSignFileComponent,
+            'Thêm mới',
+            700,
+            650,
+            this.signFileFM.funcID,
+            {
+              data: signFile,
+              isAddNew: isAddNew,
+              formModel: this.signFileFM,
+              option: option,
+              disableCateID: true,
+              isTemplate: true,
+              refType:this.formModel?.entityName ?? 'ES_Categories'
+            },
+            '',
+            dialogModel
+          );
+        }
+      });
   }
 
   setViewAutoNumber(modelAutoNumber) {
@@ -818,5 +830,4 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
     });
   }
-
 }

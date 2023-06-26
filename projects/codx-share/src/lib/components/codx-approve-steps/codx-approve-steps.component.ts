@@ -299,9 +299,16 @@ export class CodxApproveStepsComponent
             console.log('new step', this.lstStep);
           }
           if (this.lstDeleteStep.length > 0 ) {
-            if (this.lstDeleteStep[0].transID != this.recID) {
-              this.lstDeleteStep = [];
+            if(this.approveControl=='1'){
+              if (this.lstDeleteStep[0].transID != this.recID) {
+                this.lstDeleteStep = [];
+              }
             }
+            else if(this.approveControl=='3'){
+              if (this.lstDeleteStep[0].transID != this.transId) {
+                this.lstDeleteStep = [];
+              }
+            }            
           }
 
           this.onSaveForm();
@@ -329,7 +336,9 @@ export class CodxApproveStepsComponent
 
         dialog.closed.subscribe((res) => {
           if (res?.event) {
-            this.approveControl = '1';
+            if(!this.isTemplate ) {
+              this.approveControl = '1';
+            }
             if (this.type == '1') {
               if (this.lstStep?.length > 0) {
                 for (let i = 0; i < this.lstStep.length; i++) {
