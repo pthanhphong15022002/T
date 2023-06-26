@@ -152,7 +152,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
             this.setSelectedDropDown(this.respondents.responds[0].question)
             this.loadQuestionByID(this.respondents.responds[0].questionID);
           }
-          if(this.respondents.responds.length == 1) this.next = false
+          if(this.respondents.responds && this.respondents.responds.length == 1) this.next = false
         }
       })
     }

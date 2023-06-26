@@ -67,7 +67,6 @@ export class AddSurveyComponent extends UIComponent {
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
         this.getSV();
-        this.change.detectChanges();
       }
       this.url = queryParams;
     });

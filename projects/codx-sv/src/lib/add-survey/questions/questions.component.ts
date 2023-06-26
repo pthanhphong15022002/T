@@ -39,6 +39,7 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-questions',
@@ -48,7 +49,9 @@ import { SortSessionComponent } from './sort-session/sort-session.component';
   providers: [RteService, MultiSelectService],
 })
 export class QuestionsComponent extends UIComponent implements OnInit , OnChanges {
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @Input() dataSV :any
+
   avatar:any;
   primaryColor:any;
   backgroudColor:any;
@@ -205,6 +208,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     inject: Injector,
     private change: ChangeDetectorRef,
     private SVServices: CodxSvService,
+    private shareService : CodxShareService,
     private notification: NotificationsService,
     private sanitizer: DomSanitizer
   ) {
@@ -1986,4 +1990,24 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   //     [data]
   //   );
   // }
+  changeAvatar()
+  {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e:any)
+  {
+    if(e?.pathDisk)
+    {
+      this.avatar = this.shareService.getThumbByUrl(e?.pathDisk);
+      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      this.dataSV.settings.image = e?.pathDisk;
+      this.SVServices.signalSave.next('saving');
+      this.dataSV.settings = JSON.stringify(this.dataSV.settings);
+      this.SVServices.updateSV(this.dataSV.recID,this.dataSV).subscribe((res) => {
+        if (res) {
+          this.SVServices.signalSave.next('done');
+        }
+      }); 
+    }
+  }
 }
