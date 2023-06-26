@@ -14,7 +14,7 @@
   >
     <div class="saving d-flex align-items-center">
       <span class="icon-arrow_back pe-6 icon-24 cursor-pointer" (click)="back()"></span>
-      <i id="icon-sv-default" class="icon-i-file-earmark-text-fill fs-30px" [style.color]="primaryColor"></i>
+      <i id="icon-sv-default" class="icon-i-file-earmark-text-fill fs-30px color-7248B9" [style.color]="primaryColor"></i>
       <codx-input type="text" [crrValue]="title" ngClass="add-sv-title w-100" [field]="'title'" (valueChange)="valueChange($event)" [ngbTooltip]="title"></codx-input>
 
      
@@ -35,26 +35,20 @@
           default="Tùy chỉnh giao diện"
         ></codx-label>
       </ng-template> -->
-
-      <span
-        class="btn btn-icon btn-white w-36px h-30px mx-2"
-        [ngbPopover]="show"
-        triggers="mouseenter:mouseleave"
-        placement="bottom"
-        [autoClose]="'outside'"
-        (click)="review()"
-      >
-        <i class="icon-i-eye icon-22"></i>
-      </span>
-      <ng-template #show>
-        <codx-label fiedName="Show" default="Xem trước"></codx-label>
-      </ng-template>
-
       <div class="d-flex align-items-center mx-2 mt-1px">
         <codx-input type="checkbox" class="me-2" [crrValue]="dataSV?.isSystem"  [field]="'isSystem'" (valueChange)="valueChange($event)"></codx-input>
         <codx-label default="Lưu thành mẫu"></codx-label>
       </div>
 
+      <button type="button"  class="btn btn-3699FF me-2 text-white" (click)="review()">
+        <i class="icon-i-eye icon-22  text-white"></i>
+        <codx-label [fiedName]="'lblSVReview'" formName="SVReview"  default="Xem trước" class="ms-1 fw-bold"></codx-label>
+      </button>
+
+      
+      <button *ngIf="dataSV?.status != '5'" type="button" id="btn-sv-release" class="btn text-white btn-7248B9" [style.backgroundColor]="primaryColor" (click)="release()">
+        <codx-label [fiedName]="'lblSVRelease'" formName="SVRelease"  default="Phát hành" class="ms-1 fw-bold"></codx-label>
+      </button>
      
       <!-- <span
         class="btn btn-icon btn-white w-36px h-30px ms-2"
@@ -99,7 +93,7 @@
           <codx-label
           fiedName="Done"
           [default]="'Đã lưu tất cả thay đổi'"
-          class="ps-6"
+          class="ps-6 sv-saved"
         ></codx-label>
       </ng-container>
     </ng-template>

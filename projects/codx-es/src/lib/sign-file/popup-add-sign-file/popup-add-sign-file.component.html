@@ -1,7 +1,7 @@
 <div class="card-body p-0 codx-card-custom" *ngIf="isAfterRender && formModelCustom">
   <div class="codx-stepper stepper stepper-pills">
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center col-3">
         <h2 class="h2-title">
           <codx-label *ngIf="
               (data?.approveStatus == 1 || data?.approveStatus == 2) &&
@@ -26,7 +26,7 @@
           </div>
         </h2>
       </div>
-      <div class="d-flex align-items-center stepper" *ngIf="
+      <div class="d-flex align-items-center justify-content-center stepper col-6" *ngIf="
           (data?.approveStatus == 1 || data?.approveStatus == 2) &&
           modeView != '1'
         ">
@@ -113,13 +113,13 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-end col-3" >
         <ng-container *ngIf="
             (data?.approveStatus == 1 || data?.approveStatus == 2) &&
             modeView != '1' &&
             modeView != '2'
           ">
-          <div ngbDropdown class="dropdown" [style.visibility]="
+          <div ngbDropdown class="dropdown d-flex flex-row" [style.visibility]="
               currentTab == 2 && data.files?.length > 0 ? 'visible' : 'hidden'
             ">
             <button
@@ -128,9 +128,9 @@
               <span (click)="saveAndClose()">
                 <codx-label class="me-3" name="lblSave" [formModel]="formModelCustom" default="Lưu"></codx-label>
               </span>
-              <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1"></span>
+              <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1" *ngIf="!isTemplate"></span>
             </button>
-            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1" *ngIf="!isTemplate">
               <li>
                 <a ngbDropdownItem (click)="openTemplateName(addTemplateName)" class="cursor-pointer">
                   <div class="d-flex flex-column">
@@ -151,8 +151,13 @@
                 </a>
               </li>
             </ul>
+            <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="isTemplate "
+                (click)="openTemplateName(addTemplateName)">
+                <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Lưu thành quy trình mẫu"></codx-label>
+              </a>
           </div>
-          <a class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release() " *ngIf="!saveAsTemplate"
+          
+          <button class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release()" [disabled]="isReleasing" *ngIf="!isTemplate"
             [ngClass]="user.userID == data.owner ? '' : 'disabled'" [style.visibility]="
               currentTab == 2 &&
               data.files?.length > 0 &&
@@ -162,7 +167,7 @@
             ">
             <codx-label Name="lblAprrove" class="text-white" [formModel]="dialog.formModel"
               default="Gửi duyệt"></codx-label>
-          </a>
+          </button>
         </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close()"></i>
@@ -307,7 +312,7 @@
               <codx-label name="lblBack" [formModel]="formModelCustom" default="Quay lại">
               </codx-label>
             </button>
-            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !saveAsTemplate"
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate"
               [disabled]="modeView == '2' ? true : false" (click)="openPopup(processTemplate)">
               <codx-label name="lblBtnTemplate" [formModel]="formModelCustom" default="Dùng quy trình mẫu">
               </codx-label>
@@ -337,9 +342,9 @@
                   <span (click)="saveAndClose()">
                     <codx-label class="me-3" name="lblSave" [formModel]="formModelCustom" default="Lưu"></codx-label>
                   </span>
-                  <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1"></span>
+                  <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1" *ngIf="!isTemplate"></span>
                 </button>
-                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1" *ngIf="!isTemplate">
                   <li>
                     <a ngbDropdownItem (click)="openTemplateName(addTemplateName)" class="cursor-pointer">
                       <div class="d-flex flex-column">
@@ -361,10 +366,14 @@
                   </li>
                 </ul>
               </div>
-              <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="!saveAsTemplate"
-                (click)="release()">
-                <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
+              <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="isTemplate "
+                (click)="openTemplateName(addTemplateName)">
+                <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Lưu thành quy trình mẫu"></codx-label>
               </a>
+              <button class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="!isTemplate "
+                (click)="release()"  [disabled]="isReleasing">
+                <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
+              </button>
             </ng-container>
           </div>
         </div>

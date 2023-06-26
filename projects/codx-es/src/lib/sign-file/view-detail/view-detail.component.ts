@@ -209,10 +209,13 @@ export class ViewDetailComponent implements OnInit {
                     this.esService
                       .getod(this.itemDetail?.recID)
                       .subscribe((res) => {
-                        res.refType = this.itemDetail?.refType;
-                        let index = this.dataReferences.findIndex(x=>x.recID == res.recID);
-                        if (index < 0) this.dataReferences.push(res);
-                        this.df.detectChanges();
+                        if(res){
+                          res.refType = this.itemDetail?.refType;
+                          let index = this.dataReferences.findIndex(x=>x.recID == res.recID);
+                          if (index < 0) this.dataReferences.push(res);
+                          this.df.detectChanges();
+                        }
+                        
                       });
                   }
                 });
@@ -414,6 +417,7 @@ export class ViewDetailComponent implements OnInit {
           option: option,
           headerText: mF?.text,
           moreFunction: this.mfRelease,
+          dataService :this.view?.dataService,
         },
         '',
         dialogModel
