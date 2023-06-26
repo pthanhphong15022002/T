@@ -2000,7 +2000,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     {
       this.avatar = this.shareService.getThumbByUrl(e?.pathDisk);
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-      this.dataSV.settings.image = e?.pathDisk;
+      this.dataSV.settings.image = environment.urlUpload +"/"+ e?.pathDisk;
       this.SVServices.signalSave.next('saving');
       this.dataSV.settings = JSON.stringify(this.dataSV.settings);
       this.SVServices.updateSV(this.dataSV.recID,this.dataSV).subscribe((res) => {
