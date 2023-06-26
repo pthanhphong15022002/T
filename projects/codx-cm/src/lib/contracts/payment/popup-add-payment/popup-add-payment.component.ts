@@ -16,6 +16,8 @@ import { StepService } from 'projects/codx-share/src/lib/components/codx-step/st
   styleUrls: ['./popup-add-payment.component.scss'],
 })
 export class PopupAddPaymentComponent {
+  REQUIRE = ['scheduleDate','scheduleAmt'];
+  view ;
   isSave = false;
   action = '';
   contract: CM_Contracts;
@@ -58,7 +60,7 @@ export class PopupAddPaymentComponent {
     this.contractID = this.contract?.recID;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.setDataInput();
     this.sumScheduleAmt = this.listPayment?.reduce((sum, item) => {
       return sum + item?.scheduleAmt || 0;
@@ -66,6 +68,7 @@ export class PopupAddPaymentComponent {
     this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
     this.percent =
       (this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
+    this.view = await this.stepService.getFormModel(this.dialog.formModel);
   }
 
   setDataInput() {
@@ -135,6 +138,9 @@ export class PopupAddPaymentComponent {
   //#endregion
   //#region Save
   saveAndClose() {
+    if(this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)){
+      return
+    }
     if (this.action == 'add' || this.action == 'copy') {
       this.addPayment(true);
     }
@@ -144,6 +150,10 @@ export class PopupAddPaymentComponent {
   }
 
   saveAndContinue() {
+    if(this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)){
+      return
+    }
+    
     if (this.action == 'add' || this.action == 'copy') {
       this.addPayment(false);
     }
@@ -151,6 +161,7 @@ export class PopupAddPaymentComponent {
       this.editPayment(false);
     }
   }
+
   //#endregion
   //#region Add
   async addPayment(isClose) {
