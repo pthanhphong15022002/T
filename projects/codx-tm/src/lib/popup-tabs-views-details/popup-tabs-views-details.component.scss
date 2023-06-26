@@ -73,8 +73,8 @@
 /***/
 .popup-task-detail {
     codx-views>.container-fluid {
-        height: calc(100vh - 202px) !important;
-        overflow: hidden;
+        // height: calc(100vh - 202px) !important;
+        //overflow: hidden;
         overflow-y: auto;
         codx-view-list{
             height: auto!important;
