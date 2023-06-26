@@ -33,7 +33,7 @@
 
         <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length>0">
           <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem">
-            <img src="./assets/themes/sv/default/img/template1.png" class="rounded-2"/>
+            <img src="./assets/themes/sv/default/img/avatar-default.png" class="rounded-2"/>
             <div class="py-2 fw-bold">
               <span>{{item?.title}}</span>
             </div>
@@ -43,7 +43,7 @@
     </div>
     <div class="py-y bg-body list-survey">
       <div class="d-flex justify-content-between py-2 h-100">
-        <ejs-tab *ngIf="listFunctionList" height="100%" class="ejs-tab-survey">
+        <ejs-tab *ngIf="listFunctionList" height="100%" class="ejs-tab-survey"  (selected)='onTabSelect($event)'>
           <e-tabitems>
             <!-- Tab danh sách tôi tạo -->
             <e-tabitem *ngFor="let item of listFunctionList">
@@ -113,10 +113,10 @@
 </ng-template>
 
 <ng-template #tabCreate>
-  <div *ngIf="dataSurveys" class="row">
+  <div *ngIf="dataSurveys" class="row w-100">
     <div class="col-2 mt-2" *ngFor="let item of dataSurveys">
       <ng-container *ngTemplateOutlet=" templateListCard; context: { $implicit: item }"></ng-container>
-    </div>
+    </div>  
   </div>
 </ng-template>
 
