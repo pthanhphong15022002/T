@@ -147,7 +147,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   noteFail: string = '';
   noteResult: string = '';
   isUpdatePermiss = false;
-  systemProcess: boolean = false;
+  systemProcess: string = '0'; //0 từ process, 1 - từ quy trình mặc định, 2 - từ dynamic form
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -326,7 +326,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
-    this.systemProcess = dt?.data?.systemProcess ?? false;
+    this.systemProcess = dt?.data?.systemProcess ?? '0';
     this.action = dt.data.action;
     this.showID = dt.data.showID;
     this.user = this.authStore.get();
@@ -342,9 +342,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.formModelField.entityName = 'DP_Steps_Fields';
     this.formModelField.funcID = 'DPT0301';
 
-    this.process = !this.systemProcess
-      ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
-      : dt?.data?.data;
+    this.process =
+      this.systemProcess == '0'
+        ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
+        : JSON.parse(JSON.stringify(dt?.data?.data));
     console.log(this.process);
     this.getIconReason();
     this.getValueYesNo();
@@ -397,7 +398,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.getAvatar(this.process);
       this.instanceNoSetting = this.process.instanceNoSetting;
     } else if (this.action == 'add') {
-      if(this.lstGroup != null && this.lstGroup.length > 0){
+      if (this.lstGroup != null && this.lstGroup.length > 0) {
         this.process.groupID = this.lstGroup[0].groupID;
       }
       this.process.autoName = this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
@@ -417,8 +418,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.titleDefaultCF = fun.customName || fun.description;
       }
     });
-
-
 
     this.getGrvStep();
     this.getGrvStepReason();
@@ -621,7 +620,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   onAdd() {
-    if (!this.systemProcess) {
+    if (this.systemProcess == '0') {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
@@ -658,7 +657,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.listStepApprover,
               this.listStepApproverDelete
             );
-            this.codxService.navigate('', `shared/settings/CMS`);
+            if (this.systemProcess == '1')
+              this.codxService.navigate('', `shared/settings/CMS`);
             this.dialog.close(res);
             this.notiService.notifyCode('SYS006');
           }
@@ -667,7 +667,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   onUpdate() {
-    if (!this.systemProcess) {
+    if (this.systemProcess == '0') {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
@@ -726,7 +726,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.listStepApprover,
               this.listStepApproverDelete
             );
-            this.codxService.navigate('', `shared/settings/CMS`);
+            if (this.systemProcess == '1')
+              this.codxService.navigate('', `shared/settings/CMS`);
             this.dialog.close(res);
             this.notiService.notifyCode('SYS007');
           }
@@ -829,14 +830,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 .subscribe();
           }
 
-          if (this.systemProcess) {
+          if (this.systemProcess == '1') {
             this.codxService.navigate('', `shared/settings/CMS`);
           }
           this.dialog.close();
         } else return;
       });
     } else {
-      if (this.systemProcess) {
+      if (this.systemProcess == '1') {
         this.codxService.navigate('', `shared/settings/CMS`);
       }
 

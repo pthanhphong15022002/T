@@ -54,7 +54,13 @@ export class JournalService {
     journalOptions.pageLoading = false;
     return this.acService
       .loadDataAsync('AC', journalOptions)
-      .pipe(map((res) => res[0]));
+      .pipe(
+        map((res) =>
+          res[0]?.dataValue
+            ? { ...JSON.parse(res[0].dataValue), ...res[0] }
+            : res[0]
+        )
+      );
   }
 
   /**
