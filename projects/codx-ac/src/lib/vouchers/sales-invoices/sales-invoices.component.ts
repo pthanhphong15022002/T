@@ -45,8 +45,8 @@ export class SalesInvoicesComponent
   };
   functionName: string;
   journalNo: string;
-  selectedData: ISalesInvoice;
-  salesInvoicesLines: ISalesInvoicesLine[] = [];
+  master: ISalesInvoice;
+  lines: ISalesInvoicesLine[] = [];
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -132,20 +132,20 @@ export class SalesInvoicesComponent
       return;
     }
 
-    this.selectedData = e.data.data ?? e.data;
+    this.master = e.data.data ?? e.data;
 
     this.expanding = false;
     this.loading = true;
-    this.salesInvoicesLines = [];
+    this.lines = [];
     const salesInvoicesLinesOptions = new DataRequest();
     salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
     salesInvoicesLinesOptions.predicates = 'TransID=@0';
-    salesInvoicesLinesOptions.dataValues = this.selectedData.recID;
+    salesInvoicesLinesOptions.dataValues = this.master.recID;
     salesInvoicesLinesOptions.pageLoading = false;
     this.acService
       .loadDataAsync('SM', salesInvoicesLinesOptions)
       .subscribe((res: ISalesInvoicesLine[]) => {
-        this.salesInvoicesLines = res;
+        this.lines = res;
         this.loading = false;
       });
   }

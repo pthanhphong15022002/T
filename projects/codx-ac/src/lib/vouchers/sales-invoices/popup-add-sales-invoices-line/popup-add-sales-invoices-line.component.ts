@@ -89,9 +89,7 @@ export class PopupAddSalesInvoicesLineComponent
     this.journalService
       .getJournal(this.journalNo)
       .subscribe((res: IJournal) => {
-        const journal: IJournal = res?.dataValue
-          ? { ...res, ...JSON.parse(res.dataValue) }
-          : res;
+        const journal: IJournal = res;
 
         this.hiddenFields = this.journalService.getHiddenFields(journal);
 
@@ -158,9 +156,9 @@ export class PopupAddSalesInvoicesLineComponent
   // var cacheDIM={};
   //#region Event
   onInputChange(e) {
-    console.log("onInputChange", e);
+    console.log('onInputChange', e);
 
-    if (!e.data) {
+    if (!e.data && !e.crrValue) {
       return;
     }
 
