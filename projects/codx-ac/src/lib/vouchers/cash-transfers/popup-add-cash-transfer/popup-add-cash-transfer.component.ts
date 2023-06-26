@@ -137,9 +137,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.journalService
       .getJournal(this.cashTransfer.journalNo)
       .subscribe((res) => {
-        this.journal = res?.dataValue
-          ? { ...res, ...JSON.parse(res.dataValue) }
-          : res;
+        this.journal = res;
 
         this.journalService.loadComboboxBy067(
           this.journal,

@@ -49,6 +49,7 @@
                       <codx-label
                         fiedName="currencyID"
                         [formModel]="form.formModel"
+                        default="Tiền tệ"
                       ></codx-label>
                       <codx-input
                         field="currencyID"
@@ -62,6 +63,7 @@
                       <codx-label
                         fiedName="exchangeRate"
                         [formModel]="form.formModel"
+                        default="Tỷ giá"
                       ></codx-label>
                       <codx-input
                         field="exchangeRate"
@@ -77,6 +79,7 @@
                     <codx-label
                       fiedName="voucherDate"
                       [formModel]="form.formModel"
+                      default="Ngày chứng từ"
                     ></codx-label>
                     <codx-input
                       field="voucherDate"
@@ -90,6 +93,7 @@
                     <codx-label
                       fiedName="voucherNo"
                       [formModel]="form.formModel"
+                      default="Số chứng từ"
                     ></codx-label>
                     <codx-input
                       field="voucherNo"
@@ -583,7 +587,11 @@
 
 <ng-template #salesInvoiceTemplate>
   <div class="col-4 form-group">
-    <codx-label fiedName="objectID" [formModel]="form.formModel"></codx-label>
+    <codx-label
+      fiedName="objectID"
+      [formModel]="form.formModel"
+      default="Khách hàng"
+    ></codx-label>
     <codx-input
       field="objectID"
       [formModel]="form.formModel"
@@ -592,7 +600,11 @@
     ></codx-input>
   </div>
   <div class="col-8 form-group">
-    <codx-label fiedName="objectName" [formModel]="form.formModel"></codx-label>
+    <codx-label
+      fiedName="objectName"
+      [formModel]="form.formModel"
+      default="Tên khách"
+    ></codx-label>
     <codx-input
       field="objectName"
       [formModel]="form.formModel"
@@ -605,6 +617,7 @@
     <codx-label
       fiedName="pmtMethodID"
       [formModel]="form.formModel"
+      default="Hình thức thanh toán"
     ></codx-label>
     <codx-input
       field="pmtMethodID"
@@ -613,7 +626,11 @@
     ></codx-input>
   </div>
   <div class="col-3 form-group">
-    <codx-label fiedName="pmtTermID" [formModel]="form.formModel"></codx-label>
+    <codx-label
+      fiedName="pmtTermID"
+      [formModel]="form.formModel"
+      default="Điều khoản thanh toán"
+    ></codx-label>
     <codx-input
       field="pmtTermID"
       [formModel]="form.formModel"
@@ -621,7 +638,11 @@
     ></codx-input>
   </div>
   <div class="col-3 form-group">
-    <codx-label fiedName="delModeID" [formModel]="form.formModel"></codx-label>
+    <codx-label
+      fiedName="delModeID"
+      [formModel]="form.formModel"
+      default="Hình thức giao hàng"
+    ></codx-label>
     <codx-input
       field="delModeID"
       [formModel]="form.formModel"
@@ -629,7 +650,11 @@
     ></codx-input>
   </div>
   <div class="col-3 form-group">
-    <codx-label fiedName="warehouse" [formModel]="form.formModel"></codx-label>
+    <codx-label
+      fiedName="warehouse"
+      [formModel]="form.formModel"
+      default="Kho xuất"
+    ></codx-label>
     <codx-input
       field="warehouse"
       [formModel]="form.formModel"
@@ -638,7 +663,11 @@
   </div>
 
   <div class="col-3 form-group">
-    <codx-label fiedName="channelID" [formModel]="form.formModel"></codx-label>
+    <codx-label
+      fiedName="channelID"
+      [formModel]="form.formModel"
+      default="Kênh bán hàng"
+    ></codx-label>
     <codx-input
       field="channelID"
       [formModel]="form.formModel"
@@ -649,6 +678,7 @@
     <codx-label
       fiedName="salespersonID"
       [formModel]="form.formModel"
+      default="Nhân viên bán hàng"
     ></codx-label>
     <codx-input
       field="salespersonID"
@@ -661,6 +691,7 @@
     <codx-label
       fiedName="supervisorID"
       [formModel]="form.formModel"
+      default="Nhân viên tư vấn"
     ></codx-label>
     <codx-input
       field="supervisorID"
@@ -669,7 +700,11 @@
     ></codx-input>
   </div>
   <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
-    <codx-label fiedName="projectID" [formModel]="form.formModel"></codx-label>
+    <codx-label
+      fiedName="projectID"
+      [formModel]="form.formModel"
+      default="Dự án"
+    ></codx-label>
     <codx-input
       field="projectID"
       [formModel]="form.formModel"
