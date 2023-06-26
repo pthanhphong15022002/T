@@ -242,13 +242,13 @@ export class CasesComponent
   }
 
   changeView(e) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.viewCrr = e?.view?.type;
     this.changeFilter();
     if (!this.funCrr) {
       this.funCrr = this.funcID;
       return;
     }
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
@@ -1172,7 +1172,11 @@ export class CasesComponent
 
   //-----------------------------change Filter -------------------------------//
   changeFilter() {
-    if (this.viewCrr == 6) {
+    if (
+      this.viewCrr == 6 ||
+      this.funcID != 'CM0401' ||
+      this.funcID != 'CM0402'
+    ) {
       let idxBusinesLineOp = this.view.filterOptions.findIndex(
         (x) => x.fieldName == 'BusinessLineID'
       );

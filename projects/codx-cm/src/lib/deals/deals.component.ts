@@ -250,6 +250,7 @@ export class DealsComponent
   }
 
   changeView(e) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.viewCrr = e?.view?.type;
     //xu ly view fitter
     this.changeFilter();
@@ -258,7 +259,7 @@ export class DealsComponent
       this.funCrr = this.funcID;
       return;
     }
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+
     if (this.viewCrr == 6)
       this.kanban = (this.view?.currentView as any)?.kanban;
     if (this.funCrr != this.funcID) {
@@ -1372,7 +1373,7 @@ export class DealsComponent
 
   //-----------------------------change Filter -------------------------------//
   changeFilter() {
-    if (this.viewCrr == 6) {
+    if (this.viewCrr == 6 || this.funcID != 'CM0201') {
       let idxBusinesLineOp = this.view.filterOptions.findIndex(
         (x) => x.fieldName == 'BusinessLineID'
       );
