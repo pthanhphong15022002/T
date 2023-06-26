@@ -63,6 +63,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
 import { E } from '@angular/cdk/keycodes';
 import { PopUpVatComponent } from '../pop-up-vat/pop-up-vat.component';
+import {
+  AnimationModel,
+  ILoadedEventArgs,
+  IProgressValueEventArgs,
+  ProgressBar,
+  ProgressBarAnnotationDirective,
+} from '@syncfusion/ej2-angular-progressbar';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
@@ -86,6 +93,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cbxReason') cbxReason: CodxInputComponent;
   @ViewChild('cbxObject') cbxObject: CodxInputComponent;
   @ViewChild('cbxPayname') cbxPayname: CodxInputComponent;
+  @ViewChild('annotationsave') annotationsave: ProgressBar;
+  @ViewChild('annotationform') annotationform: ProgressBar;
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -149,7 +158,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   typeSet: any;
   loading: any = false;
   loadingform: any = true;
-  mapReasonName = new Map<string, string>();
+  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -158,9 +167,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
     private auth: AuthService,
+    private elementRef: ElementRef,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
+
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
@@ -207,6 +218,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
+    (this.elementRef.nativeElement as HTMLElement).addEventListener('keyup',(e:KeyboardEvent)=>{
+      console.log(e);
+      console.log(document.activeElement);
+      // if (e.keyCode == '9') {
+      //   console.log(document.activeElement.className)
+      //   if (document.activeElement.className == 'e-tab-wrap') {
+      //     if (
+      //       !this.acService.validateFormData(
+      //         this.form.formGroup,
+      //         this.gridViewSetup
+      //       )
+      //     ) {
+      //       return;
+      //     }
+      //     if (this.cashpayment.subType != '2') {
+      //       this.addRow('1');
+      //     }
+      //   }
+      // }
+    })
     this.dt.detectChanges();
   }
   //#endregion
@@ -450,7 +481,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     setTimeout(() => {
       this.loadingform = false;
     }, 1000);
-    
   }
 
   gridCreatedSet() {
@@ -471,6 +501,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.hideFieldsSet.push('SettledDisc2');
     }
     this.gridSet.hideColumns(this.hideFieldsSet);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 1000);
   }
 
   lineChanged(e: any) {
@@ -1508,11 +1541,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     });
   }
-  // focusout(){
-  //   (this.focus[0] as HTMLInputElement).focus();
 
-  //   console.log(this.focus);
-  // }
-
+  loadProgressbar(args: ILoadedEventArgs) {
+    if (args.progressBar.element.id === 'load-save-container') {
+      args.progressBar.annotations[0].content = '<img src="../assets/themes/ac/default/img/save.svg"></img>';
+    }
+    if (args.progressBar.element.id === 'load-form-container') {
+      args.progressBar.annotations[0].content = '<img style="width: 50px;height:50px" src="../assets/themes/ac/default/img/file.gif" alt="">';
+    }
+  }
   //#endregion
 }

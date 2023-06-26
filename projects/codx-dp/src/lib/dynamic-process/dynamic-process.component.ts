@@ -1104,7 +1104,7 @@ export class DynamicProcessComponent
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     dialogModel.zIndex = 999;
-    var dialog = this.callfc.openForm(
+    let dialogView = this.callfc.openForm(
       PopupViewsDetailsProcessComponent,
       '',
       this.widthWin,
@@ -1114,7 +1114,7 @@ export class DynamicProcessComponent
       '',
       dialogModel
     );
-    // dialog.closed.subscribe((e) => {
+    // dialogView.closed.subscribe((e) => {
     //   if (e?.event && e?.event != null) {
     //     this.view.dataService.update(e?.event[0]).subscribe();
     //     let totalInstanceById = e?.event[1];

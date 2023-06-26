@@ -124,7 +124,6 @@ export class HomeComponent extends UIComponent implements OnInit {
     this.svService.getDataSurveys(this.dataModel,true).subscribe(item=>{
       if(item)
       {
-        debugger
         this.dataSurveys = item[0][0];
         this.dataSurveysSystem = item[1];
       }
@@ -230,6 +229,15 @@ export class HomeComponent extends UIComponent implements OnInit {
   onSearch(e:any)
   {
     
+  }
+  //change tab
+  onTabSelect(e:any)
+  {
+    var funcID = this.listFunctionList[e?.selectedIndex].functionID;
+    this.dataModel.funcID = funcID;
+    this.dataModel.page = 1;
+    this.dataModel.pageSize=20;
+    this.getData();
   }
 
   //Lấy trạng thái hiện thị
