@@ -5,6 +5,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPolicyalComponent } from './popup-policyal/popup-policyal.component';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-employee-policyal',
@@ -69,7 +70,6 @@ export class EmployeePolicyalComponent extends UIComponent{
         },
       },
     ];
-    console.log('view ne', this.view);
   }
 
   ngAfterViewChecked() {
@@ -86,17 +86,17 @@ export class EmployeePolicyalComponent extends UIComponent{
   }
 
   addPolicyAL(evt) {
-    // if (evt.id == 'btnAdd') {
-    //   this.HandlePolicyAL(
-    //     evt.text,
-    //     'add',
-    //     null
-    //   );
-    // }
+    if (evt.id == 'btnAdd') {
+      this.HandlePolicyAL(
+        evt.text,
+        'add',
+        null
+      );
+    }
 
-    this.add().subscribe((res) => {
+    // this.add().subscribe((res) => {
       
-    })
+    // })
   }
 
   add(){
@@ -135,11 +135,13 @@ export class EmployeePolicyalComponent extends UIComponent{
     });
   }
 
+
+
   HandlePolicyAL(actionHeaderText, actionType: string, data: any){
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialg = this.callfc.openSide(
       PopupPolicyalComponent,
       {
