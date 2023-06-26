@@ -218,8 +218,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
-    (this.elementRef.nativeElement as HTMLElement).addEventListener('keydown',(e:any)=>{
-      alert(e.keyCode);
+    (this.elementRef.nativeElement as HTMLElement).addEventListener('keyup',(e:KeyboardEvent)=>{
+      console.log(e);
+      console.log(document.activeElement);
+      // if (e.keyCode == '9') {
+      //   console.log(document.activeElement.className)
+      //   if (document.activeElement.className == 'e-tab-wrap') {
+      //     if (
+      //       !this.acService.validateFormData(
+      //         this.form.formGroup,
+      //         this.gridViewSetup
+      //       )
+      //     ) {
+      //       return;
+      //     }
+      //     if (this.cashpayment.subType != '2') {
+      //       this.addRow('1');
+      //     }
+      //   }
+      // }
     })
     this.dt.detectChanges();
   }
@@ -484,6 +501,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.hideFieldsSet.push('SettledDisc2');
     }
     this.gridSet.hideColumns(this.hideFieldsSet);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 1000);
   }
 
   lineChanged(e: any) {
