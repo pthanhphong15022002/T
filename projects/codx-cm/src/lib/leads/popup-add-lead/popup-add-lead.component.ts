@@ -166,7 +166,7 @@ export class PopupAddLeadComponent
   onInit(): void {}
 
   valueChange($event) {
-    if ($event) {
+    if ($event && $event.data) {
       this.lead[$event.field] = $event.data;
     }
   }
