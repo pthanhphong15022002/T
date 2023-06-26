@@ -14,6 +14,7 @@ import {
   DialogModel,
   DialogRef,
   CacheService,
+  FormModel,
 } from 'codx-core';
 import { TabModel } from '../../models/models';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -30,6 +31,10 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   @ViewChild('viewDetail') viewDetail: TemplateRef<any>;
   @ViewChild('viewKanban') viewKanban: TemplateRef<any>;
   @ViewChild('viewDashboard') viewDashboard: TemplateRef<any>;
+  //temp
+  @ViewChild('titleTmpStep') titleTmpStep: TemplateRef<any>;
+  @ViewChild('footerStep') footerStep: TemplateRef<any>;
+
   dialog: DialogRef;
   name = 'Dashboard';
   isCreate = false;
@@ -47,6 +52,25 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   ];
   // value
   vllApplyFor = 'DP002';
+  formModelStep: FormModel = {
+    formName: 'DPSteps',
+    gridViewName: 'grvDPSteps',
+    entityName: 'DP_Steps',
+  };
+
+  formModelTaskGroup: FormModel = {
+    formName: 'DPStepsTaskGroups',
+    gridViewName: 'grvDPStepsTaskGroups',
+    entityName: 'DP_Steps_TaskGroups',
+  };
+
+  formModelTask: FormModel = {
+    formName: 'DPStepsTasks',
+    gridViewName: 'grvDPStepsTasks',
+    entityName: 'DP_Steps_Tasks',
+  };
+
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
@@ -62,19 +86,19 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     this.dpService
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
-    this.cache.valueList('DP034').subscribe((res) => {
-      if (res && res.datas) {
-        var tabIns = [];
-        res.datas.forEach((element) => {
-          var tab = {};
-          tab['viewModelDetail'] = element?.value;
-          tab['textDefault'] = element?.text;
-          tab['icon'] = element?.icon;
-          tabIns.push(tab);
-        });
-        this.tabInstances = tabIns;
-      }
-    });
+    // this.cache.valueList('DP034').subscribe((res) => {
+    //   if (res && res.datas) {
+    //     var tabIns = [];
+    //     res.datas.forEach((element) => {
+    //       var tab = {};
+    //       tab['viewModelDetail'] = element?.value;
+    //       tab['textDefault'] = element?.text;
+    //       tab['icon'] = element?.icon;
+    //       tabIns.push(tab);
+    //     });
+    //     this.tabInstances = tabIns;
+    //   }
+    // });
   }
 
   ngOnInit(): void {}
