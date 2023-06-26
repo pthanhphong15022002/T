@@ -30,13 +30,13 @@ export class CustomergroupsComponent extends UIComponent {
   @ViewChild('custGroupName') custGroupName!: TemplateRef<any>;
   @ViewChild('createdOn') createdOn!: TemplateRef<any>;
   @ViewChild('createdBy') createdBy!: TemplateRef<any>;
-  funcID: any;
+  funcID = '';
   authStore: any;
   views: Array<ViewModel> = [];
-  entityName: string = 'CM_CustomerGroups';
+  entityName = 'CM_CustomerGroups';
   predicate: string;
   dataValue: string;
-  idField: string = 'recID';
+  idField = 'recID';
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   dataSelected: any;
@@ -174,6 +174,7 @@ export class CustomergroupsComponent extends UIComponent {
 
   //#region  CRUDService
   add(evt) {
+    this.view.dataService.service = 'CM'; //Lỗi k bắt được service khi add new && copy
     this.view.dataService.addNew().subscribe((res: any) => {
       this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
@@ -234,6 +235,7 @@ export class CustomergroupsComponent extends UIComponent {
   }
 
   copy(evt, data) {
+    this.view.dataService.service = 'CM';
     if (data) {
       this.view.dataService.dataSelected = data;
     }
