@@ -1428,7 +1428,7 @@ export class DealsComponent
       );
       if (idxBusinesLine == -1 && this.orgPin) {
         this.view.orgPinned.unshift(this.orgPin);
-        this.orgFilter = null;
+        this.orgPin = null;
       }
 
       let idxBusinesLineItem = this.view.pinnedItems.findIndex(
@@ -1436,7 +1436,7 @@ export class DealsComponent
       );
       if (idxBusinesLineItem == -1 && this.pinnedItem) {
         this.view.pinnedItems.unshift(this.pinnedItem);
-        this.orgFilter = null;
+        this.pinnedItem = null;
       }
     }
   }
