@@ -6,7 +6,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Thời hạn trả lời"  [fiedName]="'lblSVResponseTime'" [formName]="'SVResponseTime'" class="fs-6"></codx-label>
+                    <codx-label default="Thời hạn trả lời"  [fiedName]="'lblSVResponseTime'" [formName]="'SVResponseTime'" class="fs-5-sm"></codx-label>
                     <codx-label default="Chương trình tự động đóng khảo sát khi đến ngày hết hạn trả lời"  [fiedName]="'lblSVSubResponseTime'" [formName]="'SVSubResponseTime'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div class="w-200px">
@@ -15,7 +15,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Phân loại khảo sát"  [fiedName]="'lblSVSurveyClassification'" [formName]="'SVSurveyClassification'" class="fs-6"></codx-label>
+                    <codx-label default="Phân loại khảo sát"  [fiedName]="'lblSVSurveyClassification'" [formName]="'SVSurveyClassification'" class="fs-5-sm"></codx-label>
                     <codx-label default="Chọn phân loại cho khảo sát để hỗ trợ việc tìm kiếm cho khảo sát"  [fiedName]="'lblSVSubSurveyClassification'" [formName]="'SVSubSurveyClassification'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div class="w-200px">
@@ -24,7 +24,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Tags"  [fiedName]="'lblSVTags'" [formName]="'SVTags'" class="fs-6"></codx-label>
+                    <codx-label default="Tags"  [fiedName]="'lblSVTags'" [formName]="'SVTags'" class="fs-5-sm"></codx-label>
                     <codx-label default="Thêm tags gợi ý tìm kiếm khảo sát"  [fiedName]="'lblSVSubSurveyClassification'" [formName]="'SVSubSurveyClassification'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div>
@@ -34,8 +34,8 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Chế độ mặc định"  [fiedName]="'lblSVPublic'" [formName]="'SVPublic'" class="fs-6"></codx-label>
-                    <codx-label default="Thêm tags gợi ý tìm kiếm khảo sát"  [fiedName]="'lblSVSubPublic'" [formName]="'SVSubPublic'" class="fs-7 text-gray-500"></codx-label>
+                    <codx-label default="Chế độ công cộng"  [fiedName]="'lblSVPublic'" [formName]="'SVPublic'" class="fs-5-sm"></codx-label>
+                    <codx-label default="Không cần đăng nhập khi tham gia khảo sát"  [fiedName]="'lblSVSubPublic'" [formName]="'SVSubPublic'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div>
                     <codx-input type="switch" [field]="'isPublic'" [crrValue]="public"  (valueChange)="valueChangeData($event)"></codx-input>
@@ -48,12 +48,12 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Màu"  [fiedName]="'lblSVColor'" [formName]="'SVColor'" class="fs-6"></codx-label>
+                    <codx-label default="Màu"  [fiedName]="'lblSVColor'" [formName]="'SVColor'" class="fs-5-sm"></codx-label>
                     <codx-label default="Màu theme chính của khảo sát"  [fiedName]="'lblSVSubColor'" [formName]="'SVSubColor'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div class="row div-color">
                     <div *ngFor="let item of listColor ; let i = index" [attr.data-index]="i" [id]="'id-sv-'+item?.default" class="col-1 div-color-circle rounded-circle w-25px h-25px cursor-pointer" [style.backgroundColor]="item?.default" (click)="beforeCircleTileRender($event,item?.default ,'color')">
-                        <ng-container *ngIf="(i == 0 && selectFirst) || (item?.default == primaryColor && !selectFirst)">
+                        <ng-container *ngIf="(item?.default == primaryColor && !selectFirst) || (i == 0 && selectFirst)">
                             <span class="sv-circle-selectioncolor"></span>
                         </ng-container>
                     </div>
@@ -65,12 +65,12 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Màu nền"  [fiedName]="'lblSVBackgroundColor'" [formName]="'SVBackgroundColor'" class="fs-6"></codx-label>
+                    <codx-label default="Màu nền"  [fiedName]="'lblSVBackgroundColor'" [formName]="'SVBackgroundColor'" class="fs-5-sm"></codx-label>
                     <codx-label default="Màu nền của khảo sát"  [fiedName]="'lblSVSubBackgroundColor'" [formName]="'SVSubBackgroundColor'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div class="row div-color">
                     <div *ngFor="let item of listBackgroundColor ; let i = index" [attr.data-index]="i" [id]="'id-sv-'+item" class="col-1 div-color-circle rounded-circle w-25px h-25px cursor-pointer" [style.backgroundColor]="item" (click)="beforeCircleTileRender($event,item ,'bg')">
-                        <ng-container *ngIf="((i == listBackgroundColor.length - 1) && selectFirst ) || (item == backgroudColor && !selectFirst)">
+                        <ng-container *ngIf="(i == 0 && selectFirst ) || (item == backgroudColor && !selectFirst)  || (i == 0 && changeColors)">
                             <span class="sv-circle-selectionbg"></span>
                         </ng-container>
                     </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
-                    <codx-label default="Hình ảnh"  [fiedName]="'lblSVBackgroundImage'" [formName]="'SVBackgroundImage'" class="fs-6"></codx-label>
+                    <codx-label default="Hình ảnh"  [fiedName]="'lblSVBackgroundImage'" [formName]="'SVBackgroundImage'" class="fs-5-sm"></codx-label>
                     <codx-label default="Hình ảnh hiện thị đầu trang khảo sát"  [fiedName]="'lblSVSubBackgroundImage'" [formName]="'SVSubBackgroundImage'" class="fs-7 text-gray-500"></codx-label>
                 </div>
                 <div class="d-flex align-items-center h-60px">
@@ -105,7 +105,7 @@
                 <codx-label default="Mẫu chia sẻ"  [fiedName]="'lblSVShareForm'" [formName]="'SVShareForm'" class="fw-bold fs-3"></codx-label>
             </div>
             <div class="d-flex align-items-center py-2">
-                <codx-label default="Tiêu đề"  [fiedName]="'lblSVSubject'" [formName]="'SVSubject'" class="fs-6 w-50px"></codx-label> :
+                <codx-label default="Tiêu đề"  [fiedName]="'lblSVSubject'" [formName]="'SVSubject'" class="fs-5-sm w-50px"></codx-label> :
                 <codx-input type="text" class="ms-5" ngClass="w-sv-subject" [field]="'subject'" [crrValue]="subject" (valueChange)="valueChangeData($event)"></codx-input>
             </div>
             <div>

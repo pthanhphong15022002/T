@@ -9,9 +9,21 @@
         >
           <span class="icon-arrow_back icon-18"></span>
         </button>
+        <span class="mt-1 me-1" (click)="showGuide(p)">
+          <span
+            class="icon-event_notes text-hover-primary cursor-pointer"
+            [ngbPopover]="popperMemo"
+            #p="ngbPopover"
+            (mouseenter)="process.memo ? p.open() : ''"
+            (mouseleave)="p.close()"
+            placement="right bottom left"
+            container="body"
+          ></span
+        ></span>
         <span
-          class="text-dark fw-bold fs-4 me-4"
+          class="text-dark fw-bold fs-4 me-4 line-clamp-process-name"
           #processName
+          [ngbTooltip]="process.processName"
           [innerHTML]="
             process.processName
               | formatvalue
@@ -22,17 +34,6 @@
                 : 'grvDPProcesses'
               | async
           "
-        ></span>
-        <span class="mt-1" (click)="showGuide(p)">
-          <span
-            class="icon-event_notes text-hover-primary cursor-pointer"
-            [ngbPopover]="popperMemo"
-            #p="ngbPopover"
-            (mouseenter)="process.memo ? p.open() : ''"
-            (mouseleave)="p.close()"
-            placement="right bottom left"
-            container="body"
-          ></span
         ></span>
       </div>
       <div class="d-flex align-items-center">
@@ -64,7 +65,7 @@
         </button> -->
       </div>
     </div>
-    <!-- <div class="d-flex tab-header">
+    <div class="d-flex tab-header">
       <ng-container *ngFor="let item of tabControl; let i = index">
         <a
           [class]="
@@ -82,7 +83,7 @@
           </codx-label>
         </a>
       </ng-container>
-    </div> -->
+    </div>
   </div>
   <!-- </div> -->
   <div class="w-100 view-details-main pt-3 bg-gray-100">
@@ -94,19 +95,24 @@
           data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto"
           data-kt-scroll-dependencies=".popup-process-header"
-          data-kt-scroll-wrappers=".process-body .no-header"
-          [attr.data-kt-scroll-offset]="'0px'"
+          data-kt-scroll-wrappers=".process-body .no-header ."
+          [attr.data-kt-scroll-offset]="'120px'"
         >
-          <ng-container *ngIf="name == 'Mission' && process">
-            <codx-instances
-              [process]="process"
-              [isCreate]="isCreate"
-              (valueListID)="valueListRefID($event)"
-              [tabInstances]="tabInstances"
-            ></codx-instances>
+          <ng-container
+            *ngIf="name == 'Dashboard'"
+            [ngTemplateOutlet]="viewDashboard"
+          >
           </ng-container>
-          <ng-container *ngIf="name == 'Dashboard'">
-            <ng-container>Dashboard - Tháng 3 mới làm control </ng-container>
+          <ng-container
+            *ngIf="name == 'Detail' && process"
+            [ngTemplateOutlet]="viewDetail"
+          >
+          </ng-container>
+
+          <ng-container
+            *ngIf="name == 'Kanban'"
+            [ngTemplateOutlet]="viewKanban"
+          >
           </ng-container>
         </div>
       </div>
@@ -128,7 +134,8 @@
       ></codx-label>
     </span>
     <div>
-      <button type="button"
+      <button
+        type="button"
         class="btn btn-icon btn-sm btn-light"
         (click)="dialogGuide.close()"
       >
@@ -136,20 +143,227 @@
       </button>
     </div>
   </div>
-  <div class="pb-2 px-7" style="max-height: 240px; overflow: auto;">
-  <ng-container *ngFor="let item of stepNames; let i = index">
-    <div class="d-flex text-gray-700 pb-1 pt-2">
-      <span class="me-2 fw-bold">
-        <codx-label
-          name="lblPhase"
-          [formName]="'DPProcesses'"
-          [gridViewName]="'grvDPProcesses'"
-          default="Bước"
-        ></codx-label>
-        {{ i + 1 + ":" }}
-      </span>
-      <span>{{ item }}</span>
+  <div class="pb-2 px-7" style="max-height: 240px; overflow: auto">
+    <ng-container *ngFor="let item of stepNames; let i = index">
+      <div class="d-flex text-gray-700 pb-1 pt-2">
+        <span class="me-2 fw-bold">
+          <codx-label
+            name="lblPhase"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Bước"
+          ></codx-label>
+          {{ i + 1 + ":" }}
+        </span>
+        <span>{{ item }}</span>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+<!-- viewDetail -->
+<ng-template #viewDetail>
+  <div class="card">
+    <div>
+      <!-- drop -->
+      <ng-container>
+        <div cdkDropList class="list mw-900px" style="margin: 0 auto">
+          <div>
+            <ng-container *ngFor="let item of process.steps">
+              <div class="mb-3">
+                <div class="card card-steplist">
+                  <div
+                    class="steplist-hearder border border-gray-200 rounded px-6 py-4"
+                  >
+                    <codx-temp-full
+                      [hideMF]="true"
+                      [formModel]="formModelStep"
+                      [titleTmp]="titleTmpStep"
+                      [desc]="item?.memo"
+                      [footer]="footerStep"
+                      [dataItem]="item"
+                      [moreFuncCss]="'me-15'"
+                    >
+                    </codx-temp-full>
+                  </div>
+                  <!-- <div              
+                    class="list"
+                  >
+                    <ng-container
+                      *ngIf="!item?.items || item?.items?.length == 0"
+                    >
+                      <div
+                        style="height: 15px; width: 100%"
+                      ></div>
+                    </ng-container>
+                    <ng-container *ngIf="item?.items?.length > 0">
+                      <ng-container *ngFor="let item1 of item.items">
+                        <div
+                          class="card card-steplist p-0"
+                        >
+                          <div class="ps-6 pt-4">
+                            <div class="steplist-item step-danger rounded p-4">
+                              <codx-temp-full
+                                [hideMF]="true"
+                                [formModel]="dialog.formModel"
+                                [titleTmp]="titleTmp"
+                                [desc]="item1?.memo"
+                                [dataItem]="item1"
+                                [desc2Tmp]="cardTitleTmp"
+                                [footer]="cardImgFooter"
+                                [moreFuncCss]="'me-15'"
+                              ></codx-temp-full>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container> 
+                  </div> -->
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
     </div>
-  </ng-container>
-</div>
+  </div>
+</ng-template>
+
+<!-- temp chung  -->
+<ng-template #titleTmpStep let-data>
+  <div style="width: 100%">
+    <div
+      class="fw-bold line-clamp line-clamp-1 fs-3 mb-2"
+      style="cursor: context-menu; display: -webkit-inline-box"
+    >
+      <!-- 'fs-5 mb-1' -->
+      <codx-label
+        [fiedName]="'StepNo'"
+        [formModel]="formModelStep"
+        [setRequire]="false"
+      ></codx-label>
+      <span>{{ " " + data?.stepNo }}</span>
+      <codx-label name="lblSplit" default=":"></codx-label>
+      <span>
+        {{ " " + data?.stepName }}
+      </span>
+    </div>
+  </div>
+
+  <div class="step-rignt w-100px min-w-100px">
+    <!-- <span
+      class="text-danger"
+    >
+      <span
+        #duration
+        [innerHTML]="
+          data?.duration
+            | formatvalue
+              : view.formModel
+              : 'duration'
+              : duration
+              : 'BPActivity'
+              : 'grvBPActivity'
+            | async
+        "
+      >
+      </span
+      >&nbsp;
+      <span
+        [innerHTML]="data?.interval | vll : vllInterval : 'text' | async"
+      ></span>
+    </span> -->
+    <!-- Bo nut them chi tiet -->
+    <!-- <div class="moreFC-ver" *ngIf="!hideMoreFC">
+      <div class="action-menu">
+        <ng-container #moreFC>
+          <div class="moreFC rounded-4 py-2" id="{{ data?.recID }}">
+            <ng-container *ngIf="data.stepType == 'P'">
+              <ng-container *ngFor="let menu of childFuncOfP">
+                <div
+                  class="icon-MF cursor-pointer pt-1 pb-2"
+                  (click)="clickMenu(data, menu)"
+                >
+                  <span
+                    class="{{ menu.icon }} icon-18 text-hover-primary "
+                    [ngbPopover]="hoverViewText(menu.text)"
+                    triggers="mouseenter:mouseleave"
+                    placement="right left"
+                    [autoClose]="'outside'"
+                  ></span>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="data.stepType == 'A'">
+              <ng-container *ngFor="let menu of childFuncOfA">
+                <div
+                  class="icon-MF cursor-pointer pt-1 pb-2"
+                  (click)="clickMenu(data, menu)"
+                >
+                  <span
+                    class="{{ menu.icon }} icon-18 text-hover-primary "
+                    [ngbPopover]="hoverViewText(menu.text)"
+                    triggers="mouseenter:mouseleave"
+                    placement="right left"
+                    [autoClose]="'outside'"
+                  ></span>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div> -->
+  </div>
+</ng-template>
+
+<ng-template #footerStep let-data>
+  <div class="col-6 d-flex align-items-center flex-wrap" *ngIf="data.roles?.length > 0">
+    <ng-container *ngFor="let perm of data.roles; index as i">
+      <div
+        *ngIf="perm.roleType == 'S'"
+        class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+      >
+        <div class="d-flex align-items-center mb-2">
+          <codx-label
+            class="fw-bold fs-6 text-dark me-3"
+            name="lblParticipantRole"
+            default="Người phụ trách giai đoạn"
+          >
+          </codx-label>
+          <!-- <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light-primary"
+        (click)="sharePerm(controlShare, 'participants-2')"
+      >
+        <i class="icon-person_add_alt_1 icon-16"></i>
+      </button> -->
+        </div>
+        <div class="me-2">
+          <codx-img
+            class
+            [width]="20"
+            [objectId]="perm.objectName"
+            objectType="AD_Users"
+          >
+          </codx-img>
+        </div>
+        <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+        <!-- <ng-container>
+        <div class="action-menu-od" (click)="removeRole(perm.objectID)">
+          <i class="icon-close text-danger icon-16"></i>
+        </div>
+      </ng-container> -->
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<!-- viewKanban -->
+<ng-template #viewKanban>
+  <ng-container>Tìm cách xử lý vẽ như BP</ng-container>
+</ng-template>
+
+<!-- viewDasboard -->
+<ng-template #viewDashboard>
+  <ng-container>Dashboard - tính toán vẽ ra</ng-container>
 </ng-template>

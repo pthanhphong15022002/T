@@ -37,6 +37,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { AnyNsRecord } from 'dns';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-deals',
@@ -102,6 +103,8 @@ export class DealsComponent
 
   titleAction = '';
   vllPriority = 'TM005';
+  vllApprove = '';
+  vllStatus = '';
   crrFuncID = '';
   viewMode = 2;
   // const set value
@@ -125,8 +128,12 @@ export class DealsComponent
   functionModule: any;
   nameModule: string = '';
   paramDefault: any;
-  currencyIDDefault: any;
-  exchangeRateDefault: any;
+  currencyIDDefault: any = 'VND';
+  exchangeRateDefault: any = 1;
+  fiterOption: any;
+  orgFilter: any;
+  orgPin: any;
+  pinnedItem: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -141,7 +148,6 @@ export class DealsComponent
     // if (!this.funcID) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // }
-    debugger;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     ///lay tien mac dinh
@@ -152,12 +158,13 @@ export class DealsComponent
           this.paramDefault = JSON.parse(dataParam.dataValue);
           this.currencyIDDefault =
             this.paramDefault['DefaultCurrency'] ?? 'VND';
+          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
           if (this.currencyIDDefault != 'VND') {
             let day = new Date();
             this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
-                if (res && res != 0) this.exchangeRateDefault = res;
+                if (res) this.exchangeRateDefault = res;
                 else {
                   this.currencyIDDefault = 'VND';
                   this.exchangeRateDefault = 1;
@@ -243,12 +250,16 @@ export class DealsComponent
   }
 
   changeView(e) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.viewCrr = e?.view?.type;
+    //xu ly view fitter
+    this.changeFilter();
+
     if (!this.funCrr) {
       this.funCrr = this.funcID;
       return;
     }
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+
     if (this.viewCrr == 6)
       this.kanban = (this.view?.currentView as any)?.kanban;
     if (this.funCrr != this.funcID) {
@@ -493,6 +504,8 @@ export class DealsComponent
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        this.vllStatus = this.gridViewSetup['Status'].referedValue;
+        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
       }
     });
   }
@@ -798,6 +811,9 @@ export class DealsComponent
   }
 
   moveReason(data: any, isMoveSuccess: boolean) {
+    //lay step Id cu de gen lai total
+    if (!this.crrStepID || this.crrStepID != data.stepID)
+      this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -883,6 +899,13 @@ export class DealsComponent
           if (res) {
             data = res[0];
             this.view.dataService.update(data).subscribe();
+            //up kaban
+            if (this.kanban) {
+              let money = data.dealValue * data.exchangeRate;
+              this.renderTotal(data.stepID, 'add', money);
+              this.renderTotal(this.crrStepID, 'minus', money);
+              this.kanban.refresh();
+            }
             this.detectorRef.detectChanges();
           }
         });
@@ -1005,12 +1028,9 @@ export class DealsComponent
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
+      this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
       this.openFormDeal(formMD, option, 'add');
     });
   }
@@ -1032,7 +1052,13 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-        // this.dataSelected = JSON.parse(JSON.stringify(e.event));
+        //up kaban
+        if (this.kanban) {
+          let dt = e.event;
+          let money = dt.dealValue * dt.exchangeRate;
+          this.renderTotal(dt.stepID, 'add', money);
+          this.kanban.refresh();
+        }
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1042,6 +1068,8 @@ export class DealsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+    let dealValueOld = data.dealValue;
+    let exchangeRateOld = data.exchangeRate;
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -1069,7 +1097,19 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            // this.dataSelected = JSON.parse(JSON.stringify(e.event))
+            //up kaban
+            if (
+              this.kanban &&
+              (dealValueOld != e.event?.dealValue ||
+                exchangeRateOld != e.event?.exchangeRate)
+            ) {
+              let dt = e.event;
+              let money =
+                dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
+              this.renderTotal(dt.stepID, 'add', money);
+              this.kanban.refresh();
+            }
+
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
@@ -1129,6 +1169,12 @@ export class DealsComponent
                 type: 'delete',
                 data: data,
               });
+              //up kaban
+              if (this.kanban) {
+                let money = data.dealValue * data.exchangeRate;
+                this.renderTotal(data.stepID, 'minus', money);
+                this.kanban.refresh();
+              }
             }
           });
         this.changeDetectorRef.detectChanges();
@@ -1199,13 +1245,6 @@ export class DealsComponent
     //   });
   }
 
-  getTotalDealColums(stepID) {
-    let totalCol = 0;
-    if (this.kanban) {
-    }
-    return totalCol;
-  }
-
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
     this.codxCmService.getProcess(dt.processID).subscribe((process) => {
@@ -1256,13 +1295,13 @@ export class DealsComponent
   }
 
   //Huy duyet
-  cancelApprover(dt, processNo) {
+  cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
         this.codxCmService.getProcess(dt.processID).subscribe((process) => {
           if (process) {
             this.codxCmService
-              .getESCategoryByCategoryID(processNo)
+              .getESCategoryByCategoryID(process.processNo)
               .subscribe((res2: any) => {
                 if (res2) {
                   if (res2?.eSign == true) {
@@ -1304,4 +1343,102 @@ export class DealsComponent
   }
   //end duyet
   //--------------------------------------------------------------------//
+
+  //--------------------------Tính tổng-------------------------//
+  genTotal(stepID) {
+    let totalCol = 0;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+      if (idx != -1) {
+        let dt = this.kanban.columns[idx];
+        if (dt.totalDealValue) {
+          totalCol = dt.totalDealValue / this.exchangeRateDefault;
+        }
+      }
+    }
+    return totalCol;
+  }
+
+  renderTotal(stepID, action = 'add', money) {
+    let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+    if (idx != -1) {
+      if (action == 'add') {
+        this.kanban.columns[idx].totalDealValue += money;
+      } else if (action == 'minus') {
+        this.kanban.columns[idx].totalDealValue -= money;
+      }
+    }
+  }
+  //end
+
+  //-----------------------------change Filter -------------------------------//
+  changeFilter() {
+    if (this.viewCrr == 6 || this.funcID != 'CM0201') {
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp != -1) {
+        this.fiterOption = this.view.filterOptions[idxBusinesLineOp];
+        this.view.filterOptions.splice(idxBusinesLineOp, 1);
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg != -1) {
+        this.orgFilter = this.view.orgFilters[idxBusinesLineOg];
+        this.view.orgFilters.splice(idxBusinesLineOg, 1);
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine != -1) {
+        this.orgPin = this.view.orgPinned[idxBusinesLine];
+        this.view.orgPinned.splice(idxBusinesLine, 1);
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem != -1) {
+        this.pinnedItem = this.view.pinnedItems[idxBusinesLineItem];
+        this.view.pinnedItems.splice(idxBusinesLineItem, 1);
+      }
+    } else {
+      ///add fileter
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp == -1 && this.fiterOption) {
+        this.view.filterOptions.unshift(this.fiterOption);
+        this.fiterOption = null;
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg == -1 && this.orgFilter) {
+        this.view.orgFilters.unshift(this.orgFilter);
+        this.orgFilter = null;
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine == -1 && this.orgPin) {
+        this.view.orgPinned.unshift(this.orgPin);
+        this.orgPin = null;
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem == -1 && this.pinnedItem) {
+        this.view.pinnedItems.unshift(this.pinnedItem);
+        this.pinnedItem = null;
+      }
+    }
+  }
+  //end
 }

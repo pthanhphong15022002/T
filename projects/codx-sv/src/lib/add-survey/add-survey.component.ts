@@ -18,6 +18,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileUpload } from '@shared/models/file.model';
 import { environment } from 'src/environments/environment';
 import { CopylinkComponent } from '../copylink/copylink.component';
+import { SharelinkComponent } from '../sharelink/sharelink.component';
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
@@ -44,6 +45,7 @@ export class AddSurveyComponent extends UIComponent {
   titleNull = "Mẫu không có tiêu đề";
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
+  primaryColor:any;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -65,7 +67,6 @@ export class AddSurveyComponent extends UIComponent {
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
         this.getSV();
-        this.change.detectChanges();
       }
       this.url = queryParams;
     });
@@ -79,6 +80,8 @@ export class AddSurveyComponent extends UIComponent {
       if(item) {
         this.dataSV = item;
         this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
+
+        this.getAvatar(this.dataSV);
       }
       else this.title = this.titleNull;
     })
@@ -92,6 +95,33 @@ export class AddSurveyComponent extends UIComponent {
     this.getSignalAfterSave();
   }
 
+  getAvatar(data:any)
+  {
+    if(data && data.settings) {
+      data.settings = JSON.parse(data.settings);
+      if(data?.settings?.primaryColor) this.primaryColor = data?.settings?.primaryColor;
+    }
+  }
+
+  // getAvatar()
+  // {
+  //   this.SvService.getSV(this.recID).subscribe((item :any)=>{
+  //     if(item) {
+  //       this.dataSV = item;
+  //       this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
+  //     }
+  //     else this.title = this.titleNull;
+  //   })
+  //   if(this.dataSV && this.dataSV.settings) {
+  //     this.dataSV.settings = JSON.parse(this.dataSV.settings);
+  //     if(this.dataSV?.settings?.image) this.avatar = this.dataSV?.settings?.image;
+  //     if(this.dataSV?.settings?.primaryColor) this.primaryColor = this.dataSV?.settings?.primaryColor;
+  //     if(this.dataSV?.settings?.backgroudColor) {
+  //       this.backgroudColor = this.dataSV?.settings?.backgroudColor;
+  //       document.getElementById("bg-color-sv").style.backgroundColor = this.backgroudColor
+  //     }
+  //   }
+  // }
   generateGUID() {
     var d = new Date().getTime(); //Timestamp
     var d2 =
@@ -150,9 +180,9 @@ export class AddSurveyComponent extends UIComponent {
             280, 
             "" , 
             {
-              "headerText" : e?.data?.customName,
-              "funcID": this.funcID,
-              "recID": this.recID
+              headerText : e?.data?.customName,
+              funcID: this.funcID,
+              recID: this.recID
             },
             "",
             option
@@ -162,13 +192,11 @@ export class AddSurveyComponent extends UIComponent {
       //Đóng khảo sát 
       case "SVT0104":
         {
-          var obj = 
-          {
-            title: this.title,
-            stop: true,
-            expiredOn: new Date()
-          }
-          this.SvService.updateSV(this.recID,obj).subscribe(item=>{
+          this.dataSV.title = this.title;
+          this.dataSV.stop = true;
+          this.dataSV.expiredOn = new Date();
+          if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
+          this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{
             if(item) {
               var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
               var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0100");
@@ -183,27 +211,37 @@ export class AddSurveyComponent extends UIComponent {
       //Phát hành
       case "SVT0100":
         {
-          var obj2 = 
-          {
-            stop: false,
-            status: '5',
-            startedOn: new Date()
-          }
-          this.SvService.updateSV(this.recID,obj2).subscribe(item=>{
+          debugger
+          this.dataSV.stop = false;
+          this.dataSV.status = "5";
+          this.dataSV.startedOn =  new Date();
+          if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
+          this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{
             if(item) 
             {
               if(this.mfTmp?.arrMf)
               {
-                var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
+                //var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
                 var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0104");
-                ph[0].disabled = true;
+                //ph[0].disabled = true;
                 dks[0].disabled = false;
               }
-              this.change.detectChanges();
               this.notifySvr.notifyCode("SV001");
             }
             else this.notifySvr.notifyCode("SV002");
           })
+          break;
+        }
+      //Share link
+      case "SVT0102":
+        {
+          this.callfc.openForm(SharelinkComponent,"",900,600,"",
+            {
+              headerText: e?.data?.customName,
+              funcID: this.funcID,
+              recID: this.recID
+            }
+          );
           break;
         }
     }
@@ -214,15 +252,15 @@ export class AddSurveyComponent extends UIComponent {
     
     if(data?.status == "5")
     {
-      var release = e.filter(
-        (x: { functionID: string }) =>
-          x.functionID == 'SVT0100'
-      );
+      // var release = e.filter(
+      //   (x: { functionID: string }) =>
+      //     x.functionID == 'SVT0100'
+      // );
       var close = e.filter(
         (x: { functionID: string }) =>
           x.functionID == 'SVT0104'
       );
-      if(release && release[0]) release[0].disabled = true;
+      //if(release && release[0]) release[0].disabled = true;
       if(close && close[0]) close[0].disabled = false;
     }
     else
@@ -235,32 +273,16 @@ export class AddSurveyComponent extends UIComponent {
       if(close && close[0]) close[0].disabled = true;
     }
   }
-  // add() {
-  //   var dataAnswerTemp = [
-  //     {
-  //       seqNo: 0,
-  //       answer: `Tùy chọn 1`,
-  //     },
-  //   ];
-  //   this.questions.transID = 'dced3e82-8d71-11ed-9499-00155d035517';
-  //   this.questions.seqNo = 0;
-  //   this.questions.category = 'S';
-  //   this.questions.question = 'Câu hỏi session 1';
-  //   this.questions.answers = null;
-  //   this.questions.answerType = null;
-  //   this.questions.parentID = null;
-
-  //   this.api
-  //     .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
-  //       'dced3e82-8d71-11ed-9499-00155d035517',
-  //       [this.questions],
-  //       true,
-  //     ])
-  //     .subscribe((res) => {
-  //       if (res) {
-  //       }
-  //     });
-  // }
+  
+  //Phát hành khảo sát
+  release()
+  {
+    var mf = 
+    {
+      functionID: "SVT0100"
+    }
+    this.clickMF(mf);
+  }
 
   getSignalAfterSave() {
     this.SvService.signalSave.subscribe((res) => {
@@ -305,6 +327,7 @@ export class AddSurveyComponent extends UIComponent {
       this.seletedS = true;
       this.mode = 'S';
     }
+    this.getSV();
   }
 
   onSubmit() {}
@@ -348,6 +371,7 @@ export class AddSurveyComponent extends UIComponent {
     if(e?.field == "title") this.title = e?.data;
     this.dataSV[e?.field] = e?.data;
     this.SvService.signalSave.next('saving');
+    if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
     this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{ if(item) this.SvService.signalSave.next('done');});
   }
 

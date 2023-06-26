@@ -5,7 +5,14 @@
   <ngx-ui-loader [loaderId]="'loader'" [logoUrl]="'../assets/themes/ac/default/img/bussiness-accouting-codx.svg'"></ngx-ui-loader>
 </div> -->
 <div *ngIf="loading" class="ac-load-save">
-  <img style="width: 5%;" src="../assets/themes/ac/default/img/loaders.gif" alt="">
+  <!-- <img style="width: 5%;" src="../assets/themes/ac/default/img/loader2.gif" alt=""> -->
+  <ejs-progressbar #annotationsave id='load-save-container' type='Circular' [maximum]='100' [minimum]='0' [value]='20'
+    width='120' height='120' [animation]='animation' [isIndeterminate]='true' (load)='loadProgressbar($event)'>
+    <e-progressbar-annotations>
+      <e-progressbar-annotation content=' '>
+      </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar>
 </div>
 <!-- Start: Body -->
 <ng-template #body>
@@ -66,7 +73,17 @@
         <ng-container *ngTemplateOutlet="addLine"></ng-container>
       </div>
     </div>
+    <div *ngIf="loadingform" class="ac-load-form">
+      <ejs-progressbar #annotationform id='load-form-container' type='Circular' [maximum]='100' [minimum]='0' [value]='20'
+        width='120' height='120' [animation]='animation' [isIndeterminate]='true' (load)='loadProgressbar($event)'>
+        <e-progressbar-annotations>
+          <e-progressbar-annotation content=' '>
+          </e-progressbar-annotation>
+        </e-progressbar-annotations>
+      </ejs-progressbar>
+    </div>
   </div>
+
 </ng-template>
 <!-- End: Body -->
 
@@ -96,8 +113,7 @@
                   <codx-label *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'"
                     fiedName="ReceiptAmt" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input 
-                    *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
+                  <codx-input *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
                     [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
                     (controlBlur)="valueFocusOut($event)"></codx-input>
                   <codx-input *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'"
@@ -256,7 +272,7 @@
             <div class="form-group">
               <codx-label fiedName="PostedDate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input   [Group]="form.formGroup" field="postedDate" [formModel]="form.formModel"
+              <codx-input [Group]="form.formGroup" field="postedDate" [formModel]="form.formModel"
                 (valueChange)="valueChange($event)">
               </codx-input>
             </div>
@@ -274,10 +290,12 @@
     <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 columnsGrid="" showRowNumber="true" class="tabLine" #gridCash
         [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
-        [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting" predicates="TransID=@0"
-        [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction" [dataValues]="form.data.recID"
-        [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" (created)="gridCreated()" rowHeight="35"
-        (onAddNew)="onAddNew($event)" [autoAddRow]="true" (eventAction)="eventAction($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
+        predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
+        [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
+        (created)="gridCreated()" rowHeight="35" (onAddNew)="onAddNew($event)" [autoAddRow]="true"
+        (eventAction)="eventAction($event)" (onEdit)="onEdit($event)"
+        (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
@@ -290,8 +308,7 @@
           <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
             <button type="button" class="btn btn-sm btn-light-primary" (click)="popupVat()">
               <i class="icon-i-graph-up icon-16"></i>
-              <codx-label [formModel]="form.formModel" fiedName="lblAddVat"
-                default="Hóa đơn GTGT"></codx-label>
+              <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Hóa đơn GTGT"></codx-label>
             </button>
           </div>
         </div>
@@ -847,41 +864,41 @@
 <ng-template #tabsettledInvoices>
   <ng-container *ngIf="(cashpayment?.subType == '2' || cashpayment?.subType == '9')">
     <div class="tabline-content scroll-ac header-table-ac position-relative"
-    *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '9'">
-    <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
-      entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35" [allowFiltering]="true"
-      [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
-      [dataSource]="settledInvoices" (created)="gridCreatedSet()" (cellChanged)="settledLineChanged($event)">
-    </codx-gridview-v2>
-    <div class="btn-addline">
-      <div class="d-flex align-items-center">
-        <div *ngIf="action != 'edit'">
-          <button class="btn btn-sm btn-light-primary" (click)="settlement(0)">
-            <i class="icon-i-wallet2 icon-16"></i>
-            <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
-              default="Đề xuất thanh toán"></codx-label>
-          </button>
-        </div>
-        <div class="ms-2">
-          <button class="btn btn-sm btn-light-primary" (click)="settlement(1)">
-            <i class="icon-i-clipboard-plus icon-16"></i>
-            <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
-              default="Cấn trừ tự động"></codx-label>
-          </button>
+      *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '9'">
+      <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
+        entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35"
+        [allowFiltering]="true" [allowSorting]="true" [hideMoreFunc]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
+        [dataSource]="settledInvoices" (created)="gridCreatedSet()" (cellChanged)="settledLineChanged($event)">
+      </codx-gridview-v2>
+      <div class="btn-addline">
+        <div class="d-flex align-items-center">
+          <div *ngIf="action != 'edit'">
+            <button class="btn btn-sm btn-light-primary" (click)="settlement(0)">
+              <i class="icon-i-wallet2 icon-16"></i>
+              <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
+                default="Đề xuất thanh toán"></codx-label>
+            </button>
+          </div>
+          <div class="ms-2">
+            <button class="btn btn-sm btn-light-primary" (click)="settlement(1)">
+              <i class="icon-i-clipboard-plus icon-16"></i>
+              <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
+                default="Cấn trừ tự động"></codx-label>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row" *ngIf="settledInvoices.length == 0" style="height: 30px;background-color: whitesmoke;">
-  </div>
+    <div class="row" *ngIf="settledInvoices.length == 0" style="height: 30px;background-color: whitesmoke;">
+    </div>
   </ng-container>
 </ng-template>
 <!-- End: VoucherLineRefs -->
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (changeDataMF)="changeDataMF($event)" (clickMF)="clickMF($event, data)"
-    type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (changeDataMF)="changeDataMF($event)"
+    (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <ng-template #morefunction2 let-data>
   <div class="d-flex align-items-center justify-content-start">
@@ -963,9 +980,9 @@
     <ng-container *ngIf="form.formGroup">
       <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
         class="input-circle input-border-0 w-400px mt-1 mb-1">
-        <codx-dropdown-select [isToolbar]="false" [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px" [isMulti]="false"
-        type="valuelist" field="subType" [refValue]="'AC063'" [value]="cashpayment.subType" emptyText="Loại phiếu"
-        (valueChange)="changeType($event)"></codx-dropdown-select>
+        <codx-dropdown-select [isToolbar]="false" [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px"
+          [isMulti]="false" type="valuelist" field="subType" [refValue]="'AC063'" [value]="cashpayment.subType"
+          emptyText="Loại phiếu" (valueChange)="changeType($event)"></codx-dropdown-select>
         <!-- <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
           (valueChange)="changeType($event)">
         </codx-input> -->
@@ -973,7 +990,7 @@
           [refValue]="'AC063'"
           [value]="cashpayment?.subType" (valueChange)="valueChange($event)"></codx-inplace> -->
       </div>
-      
+
       <span style="margin-left: 30px;" *ngIf="(action == 'edit' && cashpayment?.status != '0')">
         <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
           [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg  mt-1">
@@ -1000,8 +1017,8 @@
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
         <!-- <codx-inplace style="width: fit-content" type="text" [value]="cashpayment.refDocs" field="refDocs"
           emptyText="Nhập chứng từ gốc" (actionEvent)="changeRef($event)"></codx-inplace> -->
-        <codx-input style="width: 100%;" class="fw-bold" [Group]="form.formGroup" field="refDocs" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
+        <codx-input style="width: 100%;" class="fw-bold" [Group]="form.formGroup" field="refDocs"
+          [formModel]="form.formModel" (valueChange)="valueChange($event)">
         </codx-input>
         <!-- <span aria-placeholder="nhập" class="input" role="textbox" contenteditable>99</span>  -->
       </div>

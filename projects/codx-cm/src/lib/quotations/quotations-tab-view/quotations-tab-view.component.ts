@@ -225,10 +225,10 @@ export class QuotationsTabViewComponent
         this.copy(data);
         break;
       case 'CM0202_1':
-        this.sendApprover(data);
+        this.approvalTrans(data);
         break;
       case 'CM0202_2':
-        this.rejectApprove(data);
+        this.cancelApprover(data);
         break;
       case 'CM0202_3':
         this.createContract(data);
@@ -267,7 +267,7 @@ export class QuotationsTabViewComponent
     });
   }
 
-  openPopup(res, action,copyToRecID=null) {
+  openPopup(res, action, copyToRecID = null) {
     res.status = res.status ?? '0';
     res.customerID = res.customerID ?? this.customerID;
     res.refType = res.refType ?? this.refType;
@@ -288,7 +288,7 @@ export class QuotationsTabViewComponent
       disableContactsID: this.disableContactsID,
       action: action,
       headerText: this.titleActionAdd,
-      copyToRecID : copyToRecID
+      copyToRecID: copyToRecID,
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -376,9 +376,9 @@ export class QuotationsTabViewComponent
           )
           .subscribe((id) => {
             res.quotationID = id;
-            this.openPopup(this.quotation, 'copy',copyToRecID);
+            this.openPopup(this.quotation, 'copy', copyToRecID);
           });
-      } else this.openPopup(this.quotation, 'copy',copyToRecID);
+      } else this.openPopup(this.quotation, 'copy', copyToRecID);
     });
   }
 
@@ -449,17 +449,6 @@ export class QuotationsTabViewComponent
   }
 
   //function More
-  //gửi duyệt
-  sendApprover(dt) {
-    //test
-    dt.status = '1';
-    this.itemSelected.status = '1';
-    this.view.dataService.update(this.itemSelected).subscribe();
-    this.itemSelected = JSON.parse(
-      JSON.stringify(this.view.dataService.dataSelected)
-    );
-  }
-
   // tạo phiên bản mới
   createNewVersion(data) {
     this.isNewVersion = true;
@@ -482,66 +471,116 @@ export class QuotationsTabViewComponent
     }
   }
 
-  //huy yêu cầu duyệt
-  rejectApprove(dt) {
-    //test
-    dt.status = '0';
-    this.itemSelected.status = '0';
-    this.view.dataService.update(this.itemSelected).subscribe();
-    this.itemSelected = JSON.parse(
-      JSON.stringify(this.view.dataService.dataSelected)
-    );
-
-    // ES016 - Hủy
-    let processNo;
-    this.notiService.alertCode('ES016').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        //check truoc ben quy trình có thiết lập chưa ?? cos la lam tiep
-        this.codxCM
-          .getESCategoryByCategoryID(processNo)
-          .subscribe((res2: any) => {
-            if (res2) {
-              //trình ký
-              if (res2?.eSign == true) {
-                // this.cancelAproval(item);
-                //this.callfunc.openForm();
-              } else if (res2?.eSign == false) {
-                this.codxShareService
-                  .codxCancel(
-                    'CM',
-                    dt?.recID,
-                    this.view.formModel.entityName,
-                    ''
-                  )
-                  .subscribe((res3) => {
-                    if (res3) {
-                      this.itemSelected.status = '0';
-                      this.codxCM
-                        .updateStatusQuotatitons([this.itemSelected.recID, '0'])
-                        .subscribe((res4) => {
-                          if (res4.status == 0) {
-                            this.view.dataService
-                              .update(this.itemSelected)
-                              .subscribe();
-                            this.notiService.notifyCode('SYS007');
-                          } else this.notiService.notifyCode('SYS021');
-                        });
-                    } else this.notiService.notifyCode('SYS021');
-                  });
-              }
-            }
-          });
-      }
-    });
-  }
-
-  //cance ki so
-
-  //end trình ký
-
   // tạo hợp đồng
   createContract(dt) {
     //viet vao day thuan
   }
   // end
+
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    this.codxCM.getDeals(dt.refID).subscribe((deals) => {
+      if (deals) {
+        this.codxCM.getProcess(deals.processID).subscribe((process) => {
+          if (process) {
+            this.codxCM
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res) => {
+                if (res.eSign) {
+                  //kys soos
+                } else {
+                  this.release(dt, res.processID);
+                }
+              });
+          } else {
+            this.notiService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      } else {
+        this.notiService.notify(
+          'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+          '3'
+        );
+      }
+    });
+  }
+  //Gửi duyệt
+  release(data: any, processID: any) {
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+        else {
+          this.itemSelected.approveStatus = '3';
+          this.view.dataService.update(this.itemSelected).subscribe();
+          // if (this.kanban) this.kanban.updateCard(this.itemSelected);
+          this.codxCM
+            .updateApproveStatus('DealsBusiness', data?.recID, '3')
+            .subscribe();
+          this.notiService.notifyCode('ES007');
+        }
+      });
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.codxCM.getProcess(dt.processID).subscribe((process) => {
+          if (process) {
+            this.codxCM
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        dt?.recID,
+                        this.view.formModel.entityName,
+                        ''
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          this.itemSelected.approveStatus = '0';
+                          this.codxCM
+                            .updateApproveStatus(
+                              'QuotationsBusiness',
+                              dt?.recID,
+                              '0'
+                            )
+                            .subscribe();
+                          this.notiService.notifyCode('SYS007');
+                        } else this.notiService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+          } else {
+            this.notiService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      }
+    });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
 }

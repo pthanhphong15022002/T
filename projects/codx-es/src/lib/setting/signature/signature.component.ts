@@ -235,6 +235,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   click(evt: ButtonModel) {
+    this.viewBase.dataService.service=this.service;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew(evt);
@@ -321,7 +322,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     });
   }
 
-  copy(evt) {
+  copy(evt) {    
     this.viewBase.dataService.dataSelected = evt?.data;
     this.viewBase.dataService.copy().subscribe((res: any) => {
       this.viewBase.dataService.dataSelected.recID = res?.recID;
@@ -373,6 +374,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event: any, data) {
+    
+    this.viewBase.dataService.service=this.service;
     event.data = data;
     switch (event?.functionID) {
       case 'SYS03':

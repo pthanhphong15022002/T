@@ -185,27 +185,37 @@
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center line-colums">
-      <span
+    <div class="d-flex align-items-center line-colums ms-3">
+      <!-- <span
         class="icon-monetization_on icon-16 text-warning me-2"
         [ngbTooltip]="'Tổng tiền dự kiến'"
         container="body"
-      ></span>
-      <span
-        class="text-gray-700 line-clamp-menu"
-        container="body"
-        [ngbTooltip]="
-          getTotalDealColums(data?.keyField) + ' ' + currencyIDDefault
-        "
-        [innerHTML]="
-          getTotalDealColums(data?.keyField) != 0
-            ? (getTotalDealColums(data?.keyField)
-              | formatvalue : view.formModel : 'dealValue'
-              | async)
-            : 0
-        "
-      ></span>
-      <span class="text-gray-700 me-1" [innerHTML]="currencyIDDefault"></span>
+      ></span> -->
+      <ng-container
+        [ngTemplateOutlet]="showToltal"
+        [ngTemplateOutletContext]="{
+          $implicit: genTotal(data.keyField),
+          color: getPropertiesHeader(data, 'textColor')
+        }"
+      ></ng-container>
+      <ng-template #showToltal let-total let-color>
+        <span
+          [ngStyle]="{ color: color }"
+          class="line-clamp-menu"
+          container="body"
+          [ngbTooltip]="total + ' ' + currencyIDDefault"
+          [innerHTML]="
+            total != 0
+              ? (total | formatvalue : view.formModel : 'dealValue' | async)
+              : 0
+          "
+        ></span>
+        <span
+          [ngStyle]="{ color: color }"
+          class="me-1"
+          [innerHTML]="currencyIDDefault"
+        ></span>
+      </ng-template>
     </div>
   </div>
 </ng-template>
@@ -273,7 +283,10 @@
     </div>
     <div class="row mb-1 mx-0">
       <div class="col-5 ps-0 d-flex align-items-center line-clamp line-clamp-1">
-        <div [ngbTooltip]="gridViewSetup['DealValue']?.headerText" class="pe-1 d-flex align-items-center">
+        <div
+          [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+          class="pe-1 d-flex align-items-center"
+        >
           <span class="icon-monetization_on icon-16 text-warning me-1"></span>
           <span
             class="text-nowrap"
@@ -285,7 +298,7 @@
           ></span>
         </div>
         <span
-          [ngClass]="data?.currencyID ?'':'line-clamp-menu'"
+          [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
           class="text-gray-700"
           [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
           #currencyID
@@ -352,7 +365,7 @@
         </div>
         <div *ngIf="data.status == '1'">
           <codx-vll
-            [name]="'DP028'"
+            [name]="vllStatus"
             [field]="'Status'"
             [value]="data?.status"
             [showText]="true"
@@ -361,6 +374,17 @@
           >
           </codx-vll>
         </div>
+        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+          <codx-vll
+            [name]="vllApprove"
+            [field]="'ApproveStatus'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
         <div class="d-flex align-items-center text-gray-600">
           <span class="icon-16 icon-av_timer me-1"></span>
           <span

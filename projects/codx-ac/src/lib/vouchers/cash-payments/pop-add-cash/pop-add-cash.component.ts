@@ -63,6 +63,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
 import { E } from '@angular/cdk/keycodes';
 import { PopUpVatComponent } from '../pop-up-vat/pop-up-vat.component';
+import {
+  AnimationModel,
+  ILoadedEventArgs,
+  IProgressValueEventArgs,
+  ProgressBar,
+  ProgressBarAnnotationDirective,
+} from '@syncfusion/ej2-angular-progressbar';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
@@ -86,6 +93,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cbxReason') cbxReason: CodxInputComponent;
   @ViewChild('cbxObject') cbxObject: CodxInputComponent;
   @ViewChild('cbxPayname') cbxPayname: CodxInputComponent;
+  @ViewChild('annotationsave') annotationsave: ProgressBar;
+  @ViewChild('annotationform') annotationform: ProgressBar;
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -148,7 +157,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   authStore: AuthStore;
   typeSet: any;
   loading: any = false;
-  mapReasonName = new Map<string, string>();
+  loadingform: any = true;
+  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -157,9 +167,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
     private auth: AuthService,
+    private elementRef: ElementRef,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
+
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
@@ -206,6 +218,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
+    (this.elementRef.nativeElement as HTMLElement).addEventListener('keyup',(e:KeyboardEvent)=>{
+      console.log(e);
+      console.log(document.activeElement);
+      // if (e.keyCode == '9') {
+      //   console.log(document.activeElement.className)
+      //   if (document.activeElement.className == 'e-tab-wrap') {
+      //     if (
+      //       !this.acService.validateFormData(
+      //         this.form.formGroup,
+      //         this.gridViewSetup
+      //       )
+      //     ) {
+      //       return;
+      //     }
+      //     if (this.cashpayment.subType != '2') {
+      //       this.addRow('1');
+      //     }
+      //   }
+      // }
+    })
     this.dt.detectChanges();
   }
   //#endregion
@@ -446,6 +478,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadFormat();
     this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 1000);
   }
 
   gridCreatedSet() {
@@ -466,6 +501,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.hideFieldsSet.push('SettledDisc2');
     }
     this.gridSet.hideColumns(this.hideFieldsSet);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 1000);
   }
 
   lineChanged(e: any) {
@@ -1306,6 +1344,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         (x) => x.fieldName == fieldName
       );
       if (idx > -1) {
+        visibleColumns[idx].predicate = '';
+        visibleColumns[idx].dataValue = '';
         switch (fieldName) {
           case 'AccountID':
             if (
@@ -1395,12 +1435,30 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.hideFields.push('DR2');
         this.hideFields.push('TaxAmt2');
       }
+      let i = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'AccountID'
+      );
+      if (i > -1) {
+        this.gridCash.columnsGrid[i].headerText = 'TK nợ';
+      }
+      let idx = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'OffsetAcctID'
+      );
+      if (idx > -1) {
+        this.gridCash.columnsGrid[idx].isRequire = true;
+      }
     } else {
       let i = this.gridCash.columnsGrid.findIndex(
         (x) => x.fieldName == 'AccountID'
       );
       if (i > -1) {
         this.gridCash.columnsGrid[i].headerText = 'TK';
+      }
+      let idx = this.gridCash.columnsGrid.findIndex(
+        (x) => x.fieldName == 'OffsetAcctID'
+      );
+      if (idx > -1) {
+        this.gridCash.columnsGrid[idx].isRequire = false;
       }
       this.hideFields.push('OffsetAcctID');
       if (this.cashpayment.currencyID == this.baseCurr) {
@@ -1439,6 +1497,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var arr = [
       'TaxAmt2',
       'DR2',
+      'CR',
       'CR2',
       'SubControl',
       'DIM1',
@@ -1449,6 +1508,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'AssetGroupID',
       'ObjectID',
       'SettlementRule',
+      'OffsetAcctID',
     ];
     arr.forEach((fieldName) => {
       let i = this.gridCash.columnsGrid.findIndex(
@@ -1481,28 +1541,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     });
   }
-  // focusout(){
-  //   (this.focus[0] as HTMLInputElement).focus();
 
-  //   console.log(this.focus);
-  // }
-
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key == 'Tab') {
-      if (
-        !this.acService.validateFormData(
-          this.form.formGroup,
-          this.gridViewSetup
-        )
-      ) {
-        return;
-      }
-      if (document.activeElement.className == 'e-tab-wrap') {
-        if (this.cashpayment.subType != '2') {
-          this.addRow('1');
-        }
-      }
+  loadProgressbar(args: ILoadedEventArgs) {
+    if (args.progressBar.element.id === 'load-save-container') {
+      args.progressBar.annotations[0].content = '<img src="../assets/themes/ac/default/img/save.svg"></img>';
+    }
+    if (args.progressBar.element.id === 'load-form-container') {
+      args.progressBar.annotations[0].content = '<img style="width: 50px;height:50px" src="../assets/themes/ac/default/img/file.gif" alt="">';
     }
   }
   //#endregion

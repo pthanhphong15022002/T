@@ -32,6 +32,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { CasesDetailComponent } from './case-detail/cases-detail.component';
 import { PopupAddCasesComponent } from './popup-add-cases/popup-add-cases.component';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-cases',
@@ -95,6 +96,8 @@ export class CasesComponent
 
   titleAction = '';
   vllPriority = 'TM005';
+  vllApprove = '';
+  vllStatus = '';
   crrFuncID = '';
   viewMode = 2;
   // const set value
@@ -117,6 +120,11 @@ export class CasesComponent
   dataDrop: any;
   dataColums: any = [];
   moreFuncCase: any;
+  gridViewSetup: any;
+  fiterOption: any;
+  orgFilter: any;
+  orgPin: any;
+  pinnedItem: any;
 
   constructor(
     private inject: Injector,
@@ -124,12 +132,16 @@ export class CasesComponent
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     // if (!this.funcID) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // }
+    this.cache.functionList(this.funcID).subscribe((fun) => {
+      if (fun) this.getGridViewSetup(fun.formName, fun.gridViewName);
+    });
 
     this.executeApiCalls();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -230,12 +242,13 @@ export class CasesComponent
   }
 
   changeView(e) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.viewCrr = e?.view?.type;
+    this.changeFilter();
     if (!this.funCrr) {
       this.funCrr = this.funcID;
       return;
     }
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
@@ -457,6 +470,11 @@ export class CasesComponent
       case 'CM0401_5':
       case 'CM0402_5':
         this.codxCmService.exportFile(data, this.titleAction);
+        break;
+      // trinh ký
+      case 'CM0401_6':
+      case 'CM0402_6':
+        this.approvalTrans(data);
         break;
     }
   }
@@ -1042,4 +1060,188 @@ export class CasesComponent
       this.getMoreFunction(fun.formName, fun.gridViewName);
     });
   }
+
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+      if (process) {
+        this.codxCmService
+          .getESCategoryByCategoryID(process.processNo)
+          .subscribe((res) => {
+            if (res.eSign) {
+              //kys soos
+            } else {
+              this.release(dt, res.processID);
+            }
+          });
+      } else {
+        this.notificationsService.notify(
+          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+          '3'
+        );
+      }
+    });
+  }
+  //Gửi duyệt
+  release(data: any, processID: any) {
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError)
+          this.notificationsService.notify(res2?.msgCodeError);
+        else {
+          this.dataSelected.approveStatus = '3';
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          this.codxCmService
+            .updateApproveStatus('DealsBusiness', data?.recID, '3')
+            .subscribe();
+          this.notificationsService.notifyCode('ES007');
+        }
+      });
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notificationsService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+          if (process) {
+            this.codxCmService
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        dt?.recID,
+                        this.view.formModel.entityName,
+                        ''
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          this.dataSelected.approveStatus = '0';
+                          this.codxCmService
+                            .updateApproveStatus(
+                              'CasesBusiness',
+                              dt?.recID,
+                              '0'
+                            )
+                            .subscribe();
+                          this.notificationsService.notifyCode('SYS007');
+                        } else this.notificationsService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+          } else {
+            this.notificationsService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      }
+    });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
+
+  getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+        this.vllStatus = this.gridViewSetup['Status'].referedValue;
+        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
+      }
+    });
+  }
+
+  //-----------------------------change Filter -------------------------------//
+  changeFilter() {
+    if (
+      this.viewCrr == 6 ||
+      this.funcID != 'CM0401' ||
+      this.funcID != 'CM0402'
+    ) {
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp != -1) {
+        this.fiterOption = this.view.filterOptions[idxBusinesLineOp];
+        this.view.filterOptions.splice(idxBusinesLineOp, 1);
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg != -1) {
+        this.orgFilter = this.view.orgFilters[idxBusinesLineOg];
+        this.view.orgFilters.splice(idxBusinesLineOg, 1);
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine != -1) {
+        this.orgPin = this.view.orgPinned[idxBusinesLine];
+        this.view.orgPinned.splice(idxBusinesLine, 1);
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem != -1) {
+        this.pinnedItem = this.view.pinnedItems[idxBusinesLineItem];
+        this.view.pinnedItems.splice(idxBusinesLineItem, 1);
+      }
+    } else {
+      ///add fileter
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp == -1 && this.fiterOption) {
+        this.view.filterOptions.unshift(this.fiterOption);
+        this.fiterOption = null;
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg == -1 && this.orgFilter) {
+        this.view.orgFilters.unshift(this.orgFilter);
+        this.orgFilter = null;
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine == -1 && this.orgPin) {
+        this.view.orgPinned.unshift(this.orgPin);
+        this.orgPin = null;
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem == -1 && this.pinnedItem) {
+        this.view.pinnedItems.unshift(this.pinnedItem);
+        this.pinnedItem = null;
+      }
+    }
+  }
+  //end
 }

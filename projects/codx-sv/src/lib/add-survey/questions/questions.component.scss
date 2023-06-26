@@ -441,7 +441,7 @@
 
   .b-t {
     border: 0px solid #e2e3ee;
-    border-top-color: #7248B9 !important;
+    border-top-color: #7248B9 ;
     border-top-width: 10px !important;
     border-top-right-radius: 7px !important;
     border-top-left-radius: 7px !important;
@@ -614,6 +614,7 @@
 .card-survey , .cdk-drop-list.answer
 {
   background-color: white;
+  border-radius: 20px;
 }
 .cdk-drag
 {
@@ -701,4 +702,18 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+.KHCwJ {
+  background-size: cover;
+  background-position: center;
+  height: 192.5px;
+}
+.dYYAhb {
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.KHCwJ:hover
+{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }

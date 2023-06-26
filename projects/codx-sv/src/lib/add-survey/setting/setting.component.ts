@@ -41,6 +41,7 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
   
   public = false;
   selectFirst = true;
+  changeColors = false;
   primaryColor:any;
   backgroudColor:any;
 
@@ -62,7 +63,7 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
   parseDataSetting()
   {
     if(this.data.settings) {
-      this.data.settings = JSON.parse(this.data.settings);
+      if(typeof this.data.settings == "string") this.data.settings = JSON.parse(this.data.settings);
       if(this.data.settings?.isPublic == "1") this.public = true;
       if(this.data?.settings?.primaryColor) 
       {
@@ -71,6 +72,7 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
         this.backgroudColor = this.data?.settings?.backgroudColor;
         this.subject = this.data?.settings?.subject;
         this.messages = this.data?.settings?.messages;
+        document.getElementById("bg-color-sv-setting").style.backgroundColor = this.data?.settings?.backgroudColor;
       }
       if(this.data?.settings?.image) this.srcFile = this.data?.settings?.image;
     }
@@ -94,12 +96,13 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
     }
   }
 
+
   selectedColor()
   {
     //Lấy màu mặc định đầu tiên
     //document.getElementById("id-sv-"+this.listColor[0]?.default).appendChild(createElement('span', { className: 'sv-circle-selectioncolor'}));
     var color = this.selectFirst ? this.listColor[0]?.default : this.primaryColor;
-    this.listBackgroundColor = [this.hexToRGB(color,0.2),this.hexToRGB(color,0.5),this.hexToRGB(color,0.7)];
+    this.listBackgroundColor = [this.hexToRGB(color,0.1),this.hexToRGB(color,0.3),this.hexToRGB(color,0.5)];
 
     if(this.selectFirst)
     {
@@ -121,12 +124,27 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
   beforeCircleTileRender(e:any , color:any , type:any)
   {
     this.selectFirst = false;
-    
+    this.changeColors = false;
     this.removeElementsByClass("sv-circle-selection" + type);
     e.target.appendChild(createElement('span', { className: 'sv-circle-selection'+ type}));
     
-    if(type == "color") this.listBackgroundColor = [this.hexToRGB(color,0.2),this.hexToRGB(color,0.5),this.hexToRGB(color,0.7)];
+    if(type == "color") {
+      this.listBackgroundColor = [this.hexToRGB(color,0.1),this.hexToRGB(color,0.3),this.hexToRGB(color,0.5)];
+      var data2 = 
+      {
+        field : "backgroudColor",
+        data: this.listBackgroundColor[0]
+      }
+      this.valueChangeData(data2);
+      this.changeColors = true;
+
+      document.getElementById("bg-color-sv-setting").style.backgroundColor = this.listBackgroundColor[0];
+      if(document.getElementById("btn-sv-release")) document.getElementById("btn-sv-release").style.backgroundColor = color;
+      document.getElementById("icon-sv-default").style.color = color;
     
+      
+    }
+    else document.getElementById("bg-color-sv-setting").style.backgroundColor = color;
     var data = 
     {
       field : type == "color" ? "primaryColor" : "backgroudColor",
@@ -224,10 +242,6 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
           else if(!this.data.settings) this.data.settings = {};
 
           if(e?.field == "isPublic") this.data.settings[e?.field] = e?.data ? "1" : "0";
-          else if (e?.field == "primaryColor") {
-            this.data.settings[e?.field] = e?.data;
-            this.data.settings["backgroudColor"] = "";
-          }
           else this.data.settings[e?.field] = e?.data;
           
           break;
