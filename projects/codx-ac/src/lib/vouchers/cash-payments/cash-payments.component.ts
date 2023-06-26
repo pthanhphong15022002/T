@@ -31,6 +31,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -44,6 +45,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
+  @ViewChild('tabObj') tabObj: TabComponent;
   dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -520,6 +522,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.acctTrans = res;
         this.loadTotal();
       });
+    this.changeTab(data.subType);
   }
 
   release(data: any) {
@@ -561,9 +564,9 @@ export class CashPaymentsComponent extends UIComponent {
             .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [data,'1'])
             .subscribe((res: any) => {
               if (res) {
-                this.itemSelected = { ...res };
+                this.itemSelected = res;
                 this.loadDatadetail(this.itemSelected);
-                this.view.dataService.update(data).subscribe((res) => {});
+                this.view.dataService.update(this.itemSelected).subscribe((res) => {});
                 this.detectorRef.detectChanges();
               }
             });
@@ -597,6 +600,8 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   loadTotal() {
+    this.totalacct = 0;
+    this.totaloff = 0;
     for (let index = 0; index < this.acctTrans.length; index++) {
       if (!this.acctTrans[index].crediting) {
         this.totalacct = this.totalacct + this.acctTrans[index].transAmt;
@@ -607,6 +612,8 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   loadTotalSet(){
+    this.totalbalAmt = 0;
+    this.totalsettledAmt = 0;
     for (let index = 0; index < this.settledInvoices.length; index++) {
       this.totalbalAmt = this.totalbalAmt + this.settledInvoices[index].balAmt;
       this.totalsettledAmt = this.totalsettledAmt + this.settledInvoices[index].settledAmt;
@@ -630,6 +637,31 @@ export class CashPaymentsComponent extends UIComponent {
       return true;
     } else {
       return false;
+    }
+  }
+  created(e: any, ele: TabComponent) {
+    this.changeTab(this.itemSelected.subType, ele);
+  }
+  changeTab(e?: any, ele?: TabComponent){
+    ele = this.tabObj;
+    if (ele) {
+      ele.hideTab(0, false);
+    switch (e) {
+      case '1':
+      case '3':
+      case '4':
+        ele.hideTab(1, true);
+        ele.hideTab(2, true);
+        break;
+      case '2':
+        ele.hideTab(1, false);
+        ele.hideTab(2, true);
+        break;
+      case '9':
+        ele.hideTab(1, false);
+        ele.hideTab(2, false);
+        break;
+    }
     }
   }
   // checkRead(){

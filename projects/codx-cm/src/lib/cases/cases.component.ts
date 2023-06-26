@@ -32,6 +32,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { CasesDetailComponent } from './case-detail/cases-detail.component';
 import { PopupAddCasesComponent } from './popup-add-cases/popup-add-cases.component';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-cases',
@@ -95,6 +96,8 @@ export class CasesComponent
 
   titleAction = '';
   vllPriority = 'TM005';
+  vllApprove = '';
+  vllStatus = '';
   crrFuncID = '';
   viewMode = 2;
   // const set value
@@ -112,6 +115,12 @@ export class CasesComponent
   funCrr: any;
   viewsDefault: any;
   viewCrr: any;
+  crrStepID: any;
+  stepIdClick: any;
+  dataDrop: any;
+  dataColums: any = [];
+  moreFuncCase: any;
+  gridViewSetup: any;
 
   constructor(
     private inject: Injector,
@@ -119,12 +128,16 @@ export class CasesComponent
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
+    // if (!this.funcID) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
+    this.cache.functionList(this.funcID).subscribe((fun) => {
+      if (fun) this.getGridViewSetup(fun.formName, fun.gridViewName);
+    });
 
     this.executeApiCalls();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -155,7 +168,7 @@ export class CasesComponent
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
@@ -184,7 +197,6 @@ export class CasesComponent
       });
       this.changeDetectorRef.detectChanges();
     });
-
   }
 
   afterLoad() {
@@ -203,49 +215,6 @@ export class CasesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-  }
-
-  reloadData() {
-    // if (this.view) {
-    //   this.dataSelected = null;
-    //   this.view.dataService.predicates = null;
-    //   this.view.dataService.dataValues = null;
-    //   this.view.dataObj = this.dataObj;
-    //   this.view?.views?.forEach((x) => {
-    //     if (x.type == 6) {
-    //       x.request.dataObj = this.dataObj;
-    //       x.request2.dataObj = this.dataObj;
-    //     }
-    //   });
-    //   if ((this.view?.currentView as any)?.kanban) {
-    //     let kanban = (this.view?.currentView as any)?.kanban;
-    //     let settingKanban = kanban.kanbanSetting;
-    //     settingKanban.isChangeColumn = true;
-    //     settingKanban.formName = this.view?.formModel?.formName;
-    //     settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-    //     this.api
-    //       .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-    //         settingKanban,
-    //         this.dataObj,
-    //       ])
-    //       .subscribe((resource) => {
-    //         if (resource?.columns && resource?.columns.length)
-    //           kanban.columns = resource.columns;
-    //         kanban.kanbanSetting.isChangeColumn = false;
-    //         kanban.dataObj = this.dataObj;
-    //         kanban.loadDataSource(
-    //           kanban.columns,
-    //           kanban.kanbanSetting?.swimlaneSettings,
-    //           false
-    //         );
-    //         kanban.refresh();
-    //       });
-    //   }
-    //   if (this.processID)
-    //     (this.view?.dataService as CRUDService)
-    //       .setPredicates(['ProcessID==@0'], [this.processID])
-    //       .subscribe();
-    // }
   }
 
   async executeApiCalls() {
@@ -497,6 +466,11 @@ export class CasesComponent
       case 'CM0402_5':
         this.codxCmService.exportFile(data, this.titleAction);
         break;
+      // trinh ký
+      case 'CM0401_6':
+      case 'CM0402_6':
+        this.approvalTrans(data);
+        break;
     }
   }
 
@@ -630,7 +604,6 @@ export class CasesComponent
     //   dataCM: dataCM,
     //   stepName: data.currentStepName,
     // };
-
     // var dialogRevision = this.callfc.openForm(
     //   PopupMoveReasonComponent,
     //   '',
@@ -675,7 +648,12 @@ export class CasesComponent
     //         }
     //       });
     //     }
+    //   } else {
+    //   if (this.kanban) {
+    //     this.dataSelected.stepID = this.crrStepID;
+    //     this.kanban.updateCard(this.dataSelected);
     //   }
+    // }
     // });
   }
   updateReasonCases(instance: any, cases: any) {
@@ -798,23 +776,121 @@ export class CasesComponent
 
   onActions(e) {
     switch (e.type) {
-      // case 'drop':
-      //   this.dataDrop = e.data;
-      //   this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
-      //   // xử lý data chuyển công đoạn
-      //   if (this.crrStepID != this.dataDrop.stepID)
-      //     this.dropcasess(this.dataDrop);
+      case 'drop':
+        this.dataDrop = e.data;
+        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+        // xử lý data chuyển công đoạn
+        if (this.crrStepID != this.dataDrop.stepID)
+          this.dropCases(this.dataDrop);
 
-      //   break;
-      // case 'drag':
-      //   ///bắt data khi kéo
-      //   this.crrStepID = e?.data?.stepID;
+        break;
+      case 'drag':
+        ///bắt data khi kéo
+        this.crrStepID = e?.data?.stepID;
 
-      //   break;
+        break;
       case 'dbClick':
         //xư lý dbClick
         this.viewDetail(e.data);
         break;
+    }
+  }
+
+  getMoreFunction(formName, gridViewName) {
+    this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.moreFuncCase = res;
+      }
+    });
+  }
+
+  dropCases(data) {
+    data.stepID = this.crrStepID;
+    // if (!data.edit) {
+    //   this.notificationsService.notifyCode('SYS032');
+    //   return;
+    // }
+    // if (data.closed) {
+    //   this.notificationsService.notify(
+    //     'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
+    //     '2'
+    //   );
+    //   return;
+    // }
+
+    // if (this.moreFuncInstance?.length == 0) {
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status == '1') {
+    //   this.notificationsService.notifyCode('DP038');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status != '1' && data.status != '2') {
+    //   this.notificationsService.notifyCode('DP037');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+
+    // Alo Bao bat dk chặn
+    if (
+      this.kanban &&
+      this.kanban.columns?.length > 0 &&
+      this.dataColums?.length == 0
+    )
+      this.dataColums = this.kanban.columns;
+
+    if (this.dataColums.length > 0) {
+      var idx = this.dataColums.findIndex(
+        (x) => x.dataColums.recID == this.stepIdClick
+      );
+      if (idx != -1) {
+        var stepCrr = this.dataColums[idx].dataColums;
+        if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
+          idx = this.moreFuncCase.findIndex(
+            (x) => x.functionID == 'CM0401_1' || x.functionID == 'CM0402_1'
+          );
+          if (idx != -1) {
+            // if (this.checkMoreReason(data)) {
+            //   this.notificationsService.notifyCode('SYS032');
+            //   return;
+            // }
+            this.titleAction = this.moreFuncCase[idx].text;
+            this.moveStage(data);
+          }
+        } else {
+          if (stepCrr?.isSuccessStep) {
+            idx = this.moreFuncCase.findIndex(
+              (x) => x.functionID == 'CM0401_3' || x.functionID == 'CM0402_3'
+            );
+            if (idx != -1) {
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
+              this.titleAction = this.moreFuncCase[idx].text;
+              this.moveReason(data, true);
+            }
+          } else {
+            idx = this.moreFuncCase.findIndex(
+              (x) => x.functionID == 'CM0401_4' || x.functionID == 'CM0402_4'
+            );
+            if (idx != -1) {
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
+              this.titleAction = this.moreFuncCase[idx].text;
+              this.moveReason(data, false);
+            }
+          }
+        }
+      }
+      // else {
+      //  // data.stepID = this.crrStepID;
+      //   this.changeDetectorRef.detectChanges();
+      // }
     }
   }
 
@@ -845,7 +921,7 @@ export class CasesComponent
       caseType: this.caseType,
       applyFor: this.applyFor,
       titleAction: this.titleAction,
-      processID:this.processID,
+      processID: this.processID,
     };
     let dialogCustomcases = this.callfc.openSide(
       PopupAddCasesComponent,
@@ -975,6 +1051,116 @@ export class CasesComponent
       } else if (this.formModelCrr.formName === 'CMRequests') {
         this.caseType = '2';
         this.applyFor = '3';
+      }
+      this.getMoreFunction(fun.formName, fun.gridViewName);
+    });
+  }
+
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+      if (process) {
+        this.codxCmService
+          .getESCategoryByCategoryID(process.processNo)
+          .subscribe((res) => {
+            if (res.eSign) {
+              //kys soos
+            } else {
+              this.release(dt, res.processID);
+            }
+          });
+      } else {
+        this.notificationsService.notify(
+          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+          '3'
+        );
+      }
+    });
+  }
+  //Gửi duyệt
+  release(data: any, processID: any) {
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError)
+          this.notificationsService.notify(res2?.msgCodeError);
+        else {
+          this.dataSelected.approveStatus = '3';
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          this.codxCmService
+            .updateApproveStatus('DealsBusiness', data?.recID, '3')
+            .subscribe();
+          this.notificationsService.notifyCode('ES007');
+        }
+      });
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notificationsService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+          if (process) {
+            this.codxCmService
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        dt?.recID,
+                        this.view.formModel.entityName,
+                        ''
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          this.dataSelected.approveStatus = '0';
+                          this.codxCmService
+                            .updateApproveStatus(
+                              'CasesBusiness',
+                              dt?.recID,
+                              '0'
+                            )
+                            .subscribe();
+                          this.notificationsService.notifyCode('SYS007');
+                        } else this.notificationsService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+          } else {
+            this.notificationsService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      }
+    });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
+
+  getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+        this.vllStatus = this.gridViewSetup['Status'].referedValue;
+        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
       }
     });
   }

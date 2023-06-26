@@ -28,22 +28,28 @@ import {
   ViewType,
 } from 'codx-core';
 
-import {firstValueFrom} from 'rxjs';
-import { CM_Contracts, CM_ContractsPayments, CM_Quotations, CM_QuotationsLines } from '../models/cm_model';
+import { firstValueFrom } from 'rxjs';
+import {
+  CM_Contracts,
+  CM_ContractsPayments,
+  CM_Quotations,
+  CM_QuotationsLines,
+} from '../models/cm_model';
 import { CodxCmService } from '../codx-cm.service';
 import { ContractsService } from './service-contracts.service';
 import { AddContractsComponent } from './add-contracts/add-contracts.component';
 import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'contracts-detail',
   templateUrl: './contracts.component.html',
-  styleUrls: ['./contracts.component.scss']
+  styleUrls: ['./contracts.component.scss'],
 })
-export class ContractsComponent extends UIComponent{
+export class ContractsComponent extends UIComponent {
   @Input() funcID: string;
   @Input() customerID: string;
-  @ViewChild('contract')contract: TemplateRef<any>;
+  @ViewChild('contract') contract: TemplateRef<any>;
 
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
@@ -59,10 +65,10 @@ export class ContractsComponent extends UIComponent{
   listQuotationsLine: CM_QuotationsLines[];
   quotations: CM_Quotations;
 
-  listClicked =[]
+  listClicked = [];
   tabClicked = '';
   fomatDate = 'dd/MM/yyyy';
-  account:any;
+  account: any;
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -72,7 +78,7 @@ export class ContractsComponent extends UIComponent{
   methodLoadData = 'GetListContractsAsync';
 
   isAddContract = true;
-  actionName = ''
+  actionName = '';
 
   fmQuotations: FormModel = {
     formName: 'CMQuotations',
@@ -100,7 +106,6 @@ export class ContractsComponent extends UIComponent{
     funcID: 'CM02042  ',
   };
 
-
   //test
   moreDefaut = {
     share: true,
@@ -111,6 +116,7 @@ export class ContractsComponent extends UIComponent{
   };
   grvSetup: any;
   vllStatus = '';
+  vllApprove = '';
 
   customerIDCrr = '';
   requestData = new DataRequest();
@@ -123,12 +129,37 @@ export class ContractsComponent extends UIComponent{
   button?: ButtonModel;
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false, template: null },
+    {
+      name: 'Comment',
+      textDefault: 'Thảo luận',
+      isActive: false,
+      template: null,
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      template: null,
+    },
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
-    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
-    { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
-    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
+    {
+      name: 'Approve',
+      textDefault: 'Ký duyệt',
+      isActive: false,
+      template: null,
+    },
+    {
+      name: 'References',
+      textDefault: 'Liên kết',
+      isActive: false,
+      template: null,
+    },
+    {
+      name: 'Quotations',
+      textDefault: 'Báo giá',
+      isActive: false,
+      template: null,
+    },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   constructor(
@@ -140,6 +171,7 @@ export class ContractsComponent extends UIComponent{
     private changeDetector: ChangeDetectorRef,
     private cmService: CodxCmService,
     private contractService: ContractsService,
+    private codxShareService: CodxShareService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -149,16 +181,38 @@ export class ContractsComponent extends UIComponent{
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
     );
-    this.vllStatus = this.grvSetup['Status'].referedValue;    
+    this.vllStatus = this.grvSetup['Status'].referedValue;
+    this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
+
     this.button = {
       id: 'btnAdd',
     };
     this.listClicked = [
-      { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-      { name: 'detailItem', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
-      { name: 'pay', textDefault: 'Phương thức và tiến độ thanh toán', icon: 'icon-tune', isActive: false },
-      { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-more', isActive: false },
-    ]
+      {
+        name: 'general',
+        textDefault: 'Thông tin chung',
+        icon: 'icon-info',
+        isActive: true,
+      },
+      {
+        name: 'detailItem',
+        textDefault: 'Chi tiết mặt hàng',
+        icon: 'icon-link',
+        isActive: false,
+      },
+      {
+        name: 'pay',
+        textDefault: 'Phương thức và tiến độ thanh toán',
+        icon: 'icon-tune',
+        isActive: false,
+      },
+      {
+        name: 'termsAndRelated',
+        textDefault: 'Điều khoản và hồ sơ liên quan',
+        icon: 'icon-more',
+        isActive: false,
+      },
+    ];
     this.getAccount();
   }
 
@@ -189,7 +243,7 @@ export class ContractsComponent extends UIComponent{
     ];
   }
 
-  changeTab(e){
+  changeTab(e) {
     this.tabClicked = e;
   }
 
@@ -197,7 +251,7 @@ export class ContractsComponent extends UIComponent{
     this.actionName = e?.text;
     switch (e.id) {
       case 'btnAdd':
-        if(this.isAddContract){
+        if (this.isAddContract) {
           this.isAddContract = false;
           this.addContract();
         }
@@ -207,7 +261,9 @@ export class ContractsComponent extends UIComponent{
 
   selectedChange(val: any) {
     this.itemSelected = val?.data;
-    this.getQuotationsAndQuotationsLinesByTransID(this.itemSelected.quotationID);
+    this.getQuotationsAndQuotationsLinesByTransID(
+      this.itemSelected.quotationID
+    );
     this.getPayMentByContractID(this.itemSelected?.recID);
     this.detectorRef.detectChanges();
   }
@@ -217,7 +273,7 @@ export class ContractsComponent extends UIComponent{
       if (res) {
         this.quotations = res[0];
         this.listQuotationsLine = res[1];
-      }else{
+      } else {
         this.quotations = null;
         this.listQuotationsLine = [];
       }
@@ -225,16 +281,20 @@ export class ContractsComponent extends UIComponent{
   }
 
   getPayMentByContractID(contractID) {
-    this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
-      if (res) {
-        let listPayAll =  res as CM_ContractsPayments[];
-        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
-        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
-      }else{
-        this.listPayment = [];
-        this.listPaymentHistory = [];
-      }
-    });
+    this.contractService
+      .getPaymentsByContractID(contractID)
+      .subscribe((res) => {
+        if (res) {
+          let listPayAll = res as CM_ContractsPayments[];
+          this.listPayment = listPayAll.filter((pay) => pay.lineType == '0');
+          this.listPaymentHistory = listPayAll.filter(
+            (pay) => pay.lineType == '1'
+          );
+        } else {
+          this.listPayment = [];
+          this.listPaymentHistory = [];
+        }
+      });
   }
 
   // moreFunc
@@ -261,7 +321,7 @@ export class ContractsComponent extends UIComponent{
         break;
       case 'CM0204_3':
         //tạo hợp đồng gia hạn
-        this.addContractAdjourn(data)
+        this.addContractAdjourn(data);
         break;
       case 'CM0204_5':
         //Đã giao hàng
@@ -273,70 +333,71 @@ export class ContractsComponent extends UIComponent{
         break;
       case 'CM0204_1':
         //Gửi duyệt
-       
+
         break;
       case 'CM0204_2':
         //Hủy yêu cầu duyệt
-       
+
         break;
     }
   }
 
-  async addContract(){
+  async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = new CM_Contracts();
-      let contractOutput = await this.openPopupContract(null, "add",contracts);
-    })
+      let contractOutput = await this.openPopupContract(null, 'add', contracts);
+    });
   }
 
-  async addContractAdjourn(data: CM_Contracts){
+  async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
       contracts.contractType = '2';
       contracts.quotationID = null;
       contracts.refID = contracts.recID;
       delete contracts['id'];
-      let contractOutput = await this.openPopupContract(null, "add",contracts);
-    })
-  }
-
-  async editContract(contract){
-    let dataEdit = JSON.parse(JSON.stringify(contract));
-    this.view.dataService.edit(dataEdit).subscribe(async (res) => {
-      let dataOutput = await this.openPopupContract(null,"edit",dataEdit);
-    })
-  }
-
-  async copyContract(contract){
-    this.view.dataService.addNew().subscribe(async (res) => {
-      let dataCopy = JSON.parse(JSON.stringify(contract));
-      let contractOutput = await this.openPopupContract(null,"copy",dataCopy);
+      let contractOutput = await this.openPopupContract(null, 'add', contracts);
     });
   }
 
-  updateDelStatus(contract: CM_Contracts){
-    if(contract?.recID){
+  async editContract(contract) {
+    let dataEdit = JSON.parse(JSON.stringify(contract));
+    this.view.dataService.edit(dataEdit).subscribe(async (res) => {
+      let dataOutput = await this.openPopupContract(null, 'edit', dataEdit);
+    });
+  }
+
+  async copyContract(contract) {
+    this.view.dataService.addNew().subscribe(async (res) => {
+      let dataCopy = JSON.parse(JSON.stringify(contract));
+      let contractOutput = await this.openPopupContract(null, 'copy', dataCopy);
+    });
+  }
+
+  updateDelStatus(contract: CM_Contracts) {
+    if (contract?.recID) {
       this.contractService.updateDelStatus(contract?.recID).subscribe((res) => {
         if (res) {
-          contract.delStatus = "2";
-          this.notiService.notifyCode('SYS007');   
+          contract.delStatus = '2';
+          this.notiService.notifyCode('SYS007');
         }
       });
     }
-    
   }
 
-  completedContract(contract: CM_Contracts){
+  completedContract(contract: CM_Contracts) {
     this.notiService
       .alertCode('CM004', null, ['"' + contract?.contractName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.contractService.updateStatus(contract?.recID).subscribe((res) => {
-            if (res) {
-              contract.status = "4";
-              this.notiService.notifyCode('SYS007');   
-            }
-          });
+          this.contractService
+            .updateStatus(contract?.recID)
+            .subscribe((res) => {
+              if (res) {
+                contract.status = '4';
+                this.notiService.notifyCode('SYS007');
+              }
+            });
         }
       });
   }
@@ -350,19 +411,20 @@ export class ContractsComponent extends UIComponent{
     return true;
   }
 
-  deleteContract(contract){
-    if(contract?.recID){
+  deleteContract(contract) {
+    if (contract?.recID) {
       this.view.dataService
-      .delete([contract], true, (option: RequestOption) =>
-      this.beforeDelete(option, contract.recID))
-      .subscribe((res: any) => {
-        if (res) {
-        }
-      });
+        .delete([contract], true, (option: RequestOption) =>
+          this.beforeDelete(option, contract.recID)
+        )
+        .subscribe((res: any) => {
+          if (res) {
+          }
+        });
     }
   }
 
-  async openPopupContract(projectID,action, contract?){
+  async openPopupContract(projectID, action, contract?) {
     let data = {
       projectID,
       action,
@@ -370,7 +432,7 @@ export class ContractsComponent extends UIComponent{
       account: this.account,
       type: 'view',
       actionName: this.actionName || '',
-    }
+    };
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1001;
@@ -391,23 +453,20 @@ export class ContractsComponent extends UIComponent{
     return dataPopupOutput;
   }
 
-  getAccount(){
-    this.api.execSv<any>(
-      'SYS',
-      'AD',
-      'CompanySettingsBusiness',
-      'GetAsync'
-    ).subscribe(res => {
-      console.log(res);
-      if(res){
-        this.account = res;
-      }
-    })
+  getAccount() {
+    this.api
+      .execSv<any>('SYS', 'AD', 'CompanySettingsBusiness', 'GetAsync')
+      .subscribe((res) => {
+        console.log(res);
+        if (res) {
+          this.account = res;
+        }
+      });
   }
 
-  async getForModel  (functionID) {
+  async getForModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
-    let formModel = new FormModel;
+    let formModel = new FormModel();
     formModel.formName = f?.formName;
     formModel.gridViewName = f?.gridViewName;
     formModel.entityName = f?.entityName;
@@ -415,14 +474,14 @@ export class ContractsComponent extends UIComponent{
     return formModel;
   }
 
-  addPayHistory(){
+  addPayHistory() {
     this.openPopupPay('add', 'payHistory', null);
   }
-  addPay(){
+  addPay() {
     this.openPopupPay('add', 'pay', null);
   }
 
-  async openPopupPay(action,type,data) {
+  async openPopupPay(action, type, data) {
     let dataInput = {
       action,
       data,
@@ -435,17 +494,115 @@ export class ContractsComponent extends UIComponent{
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupTask = this.callfc.openForm(
-      PopupAddPaymentComponent,'',
+      PopupAddPaymentComponent,
+      '',
       550,
       400,
       '',
       dataInput,
       '',
-      option,
-      );
+      option
+    );
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
 
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    this.cmService.getProcess(dt.processID).subscribe((process) => {
+      if (process) {
+        this.cmService
+          .getESCategoryByCategoryID(process.processNo)
+          .subscribe((res) => {
+            if (res.eSign) {
+              //kys soos
+            } else {
+              this.release(dt, res.processID);
+            }
+          });
+      } else {
+        this.notiService.notify(
+          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+          '3'
+        );
+      }
+    });
+  }
+  //Gửi duyệt
+  release(data: any, processID: any) {
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+        else {
+          this.itemSelected.approveStatus = '3';
+          this.view.dataService.update(this.itemSelected).subscribe();
+          // if (this.kanban) this.kanban.updateCard(this.itemSelected);
+          this.cmService
+            .updateApproveStatus('DealsBusiness', data?.recID, '3')
+            .subscribe();
+          this.notiService.notifyCode('ES007');
+        }
+      });
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.cmService.getProcess(dt.processID).subscribe((process) => {
+          if (process) {
+            this.cmService
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        dt?.recID,
+                        this.view.formModel.entityName,
+                        ''
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          this.itemSelected.approveStatus = '0';
+                          this.cmService
+                            .updateApproveStatus(
+                              'DealsBusiness',
+                              dt?.recID,
+                              '0'
+                            )
+                            .subscribe();
+                          this.notiService.notifyCode('SYS007');
+                        } else this.notiService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+          } else {
+            this.notiService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      }
+    });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
 }

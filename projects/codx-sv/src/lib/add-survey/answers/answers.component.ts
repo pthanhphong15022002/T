@@ -13,6 +13,7 @@ import { CodxSVAnswerService } from './answers.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { isObservable } from 'rxjs';
 import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
+import moment from 'moment';
 
 @Component({
   selector: 'app-answers',
@@ -21,7 +22,7 @@ import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
 })
 export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   @ViewChild('tabContent') public tabContent: TabComponent;
-  
+  @Input() dataSV:any;
   @Input() formModel: any;
   @Input() recID: any; //Mã bảng khảo sát
 
@@ -94,18 +95,38 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       this.recID = changes['recID']?.currentValue;
       this.getRespondents();
     }
+    if(changes?.dataSV && changes.dataSV?.previousValue != changes.dataSV?.currentValue)
+    {
+      this.dataSV =  changes.dataSV?.currentValue;
+      this.getAvatar();
+    }
   }
 
   onInit(): void {
     //this.tabContent.refreshActiveTab();
   }
 
- 
+  getAvatar()
+  {
+    if(this.dataSV && this.dataSV.settings) {
+      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      if(this.dataSV?.settings?.backgroudColor) {
+        document.getElementById("bg-color-sv-answer").style.backgroundColor = this.dataSV?.settings?.backgroudColor;
+      }
+    }
+  }
+
   onSelectTab(e:any)
   {
     var dc= document.getElementById("ejstab-survey-id");
-    if(e.selectedIndex == 1) dc.classList.add("border-bt-none");
-    else dc.classList.remove("border-bt-none")
+    if(e.selectedIndex == 1 || e.selectedIndex == 2) {
+      dc.classList.add("border-bt-none","ejstab-survey-answer");
+      dc.classList.remove("ejstab-survey-answer2");
+    }
+    else {
+      dc.classList.remove("border-bt-none","ejstab-survey-answer");
+      dc.classList.add("ejstab-survey-answer2");
+    }
   }
 
   //Ẩn hiện collaspe
@@ -126,8 +147,11 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
           this.lstQuestion = item[1]
           this.lstCountQuestion = item[2]
           this.respondents = this.lstRespondents[this.lstRespondents.length - 1];
-          this.setSelectedDropDown(this.respondents.responds[0].question)
-          this.loadQuestionByID(this.respondents.responds[0].questionID);
+          if(this.respondents && this.respondents?.responds[0])
+          {
+            this.setSelectedDropDown(this.respondents.responds[0].question)
+            this.loadQuestionByID(this.respondents.responds[0].questionID);
+          }
           if(this.respondents.responds.length == 1) this.next = false
         }
       })
@@ -272,6 +296,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   {
     switch(answerType)
     {
+      case "C":
       case "T":
       case "T2":
         {
@@ -327,11 +352,14 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
                 textWrap: 'Wrap'
               };
             }
+            case 'isTransposed':
+              {
+                if(answerType == "C") return true;
+                return false;
+              }
           }
           break;
         }
-      
-      case "C":
       case "L":
       case "O":
       {
@@ -361,9 +389,18 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
               };
               break;
             }
+          case 'isTransposed':
+            {
+              return false;
+            }
         }
       }
     }
     return null;
+  }
+  formatValueDate(data:any)
+  {
+    if(moment(data, moment.ISO_8601, true).isValid()) return moment(data).format('DD/MM/YYYY');
+    return data;
   }
 }

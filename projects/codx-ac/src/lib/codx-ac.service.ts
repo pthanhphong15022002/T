@@ -4,7 +4,6 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
-  CodxComboboxComponent,
   DataRequest,
   FormModel,
   NotificationsService,
@@ -97,44 +96,52 @@ export class CodxAcService {
   ): boolean {
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
 
+    let invalidFields: string[] = [];
     const controls = formGroup.controls;
-    let isValid: boolean = true;
-    var keepgoing = true;
     for (const propName in controls) {
-      if (keepgoing) {
-        if (ignoredFields.includes(propName.toLowerCase())) {
-          continue;
-        }
+      if (ignoredFields.includes(propName.toLowerCase())) {
+        continue;
+      }
 
-        if (controls[propName].invalid) {
-          const gvsPropName =
-            irregularGvsPropNames.find(
-              (i) => i.toLowerCase() === propName.toLowerCase()
-            ) ?? this.toPascalCase(propName);
+      if (controls[propName].invalid) {
+        const gvsPropName =
+          irregularGvsPropNames.find(
+            (i) => i.toLowerCase() === propName.toLowerCase()
+          ) ?? this.toPascalCase(propName);
 
-          this.notiService.notifyCode(
-            'SYS009',
-            0,
-            `"${gridViewSetup[gvsPropName]?.headerText}"`
-          );
-          var element = document.querySelectorAll('codx-input');
-          for (let index = 0; index < element.length; index++) {
-            var input = window.ng.getComponent(
-              element[index]
-            ) as CodxComboboxComponent;
-            if (input.ControlName == propName) {
-              var focus = element[index].getElementsByTagName('input')[0];
-              focus.select();
-              focus.focus();
-            }
-          }
-          isValid = false;
-          keepgoing = false;
-        }
+        invalidFields.push(gvsPropName);
       }
     }
 
-    return isValid;
+    if (invalidFields.length == 0) {
+      return true;
+    }
+
+    this.notiService.notify(
+      invalidFields
+        .map(
+          (f) =>
+            `${invalidFields.length > 1 ? '•' : ''} "${
+              gridViewSetup[f].headerText
+            }" không được phép bỏ trống`
+        )
+        .join('<br>'),
+      '2'
+    );
+
+    // set the focus to the first invalid input
+    invalidFields = invalidFields.map((f) => f.toLowerCase());
+    const inputEls: Element[] = Array.from(
+      document.querySelectorAll('codx-input')
+    );
+    for (const el of inputEls) {
+      if (invalidFields.includes(el.getAttribute('field')?.toLowerCase())) {
+        el.querySelector('input').focus();
+        break;
+      }
+    }
+
+    return false;
   }
 
   /** @param irregularDataPropNames Use irregularDataPropNames in case unable to transform some gvs prop names to data prop names respectively. */
@@ -302,6 +309,16 @@ export class CodxAcService {
       .subscribe((res) => console.log('deleteFile', res));
   }
 
+  CheckExistAccount(data: any): boolean {
+    let result: boolean = true;
+    this.api
+      .exec('AC', 'CashPaymentsBusiness', 'CheckExistAccount', [data])
+      .subscribe((res: any) => {
+        result = res;
+      });
+    return result;
+  }
+
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(
       'ES',
@@ -311,6 +328,7 @@ export class CodxAcService {
       [entityName]
     );
   }
+
   setPopupSize(dialog: any, width: any, height: any) {
     dialog.dialog.properties.height = width;
     dialog.dialog.properties.width = height;

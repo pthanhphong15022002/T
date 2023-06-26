@@ -1,0 +1,32 @@
+<codx-form 
+    [headerText]="headerText"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex align-items-center justify-content-between border-bottom pb-4">
+        <div>
+            <codx-label default="Đến" fiedName="lblSVForm" formName="SVForm" class="fs-5-sm"></codx-label>:
+        </div>
+        <codx-input type="share" field="addUser" [refValue]="'DM001'" [showInput]="true" class="w-100" (valueChange)="valueChange($event,'to')"> </codx-input>
+    </div>
+    <div class="d-flex align-items-center py-6">
+        <codx-label default="Tiêu đề"  [fiedName]="'lblSVSubject'" [formName]="'SVSubject'" class="fs-5-sm w-50px"></codx-label> :
+        <codx-input type="text" class="ms-5" ngClass="w-sv-subject" [field]="'subject'" (valueChange)="valueChange($event,'subject')"></codx-input>
+    </div>
+    <div>
+        <codx-input type="textarea"  ngClass="w-100" [height]="300" [field]="'messages'" (valueChange)="valueChange($event,'content')"></codx-input>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="checkbox-inline d-flex align-items-center">
+            <codx-input type="checkbox" label="Tạo bài viết" ></codx-input>
+        </div>
+        <button type="button" id="btnShare" class="btn btn-primary" >
+            <codx-label [fiedName]="'lblSend'"  default="Chia sẻ" class="ms-1 fw-bold" (click)="save()"></codx-label>
+        </button>
+    </div>
+</ng-template>

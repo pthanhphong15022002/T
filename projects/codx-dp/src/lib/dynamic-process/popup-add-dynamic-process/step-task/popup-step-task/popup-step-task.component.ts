@@ -174,15 +174,15 @@ export class PopupJobComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  changeOwner(e) {
-    let owner = e?.map((x) => {
-      return {
-        ...x,
-        roleType: 'O',
-      };
-    });
-    this.owner = owner;
-  }
+  // changeOwner(e) {
+  //   let owner = e?.map((x) => {
+  //     return {
+  //       ...x,
+  //       roleType: 'O',
+  //     };
+  //   });
+  //   this.owner = owner;
+  // }
 
   changeRoler(e, roleType) {    
     if (!e || e?.length == 0) return;

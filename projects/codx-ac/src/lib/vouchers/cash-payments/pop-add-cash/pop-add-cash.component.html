@@ -5,7 +5,7 @@
   <ngx-ui-loader [loaderId]="'loader'" [logoUrl]="'../assets/themes/ac/default/img/bussiness-accouting-codx.svg'"></ngx-ui-loader>
 </div> -->
 <div *ngIf="loading" class="ac-load-save">
-  <img style="width: 5%;" src="../assets/themes/ac/default/img/loaders.gif" alt="">
+  <img style="width: 5%;" src="../assets/themes/ac/default/img/loader2.gif" alt="">
 </div>
 <!-- Start: Body -->
 <ng-template #body>
@@ -67,6 +67,7 @@
       </div>
     </div>
   </div>
+
 </ng-template>
 <!-- End: Body -->
 
@@ -264,6 +265,9 @@
         </div>
       </div>
     </div>
+    <div *ngIf="loadingform" class="ac-load-form">
+      <img style="width: 5%;" src="../assets/themes/ac/default/img/loader2.gif" alt="">
+    </div>
   </ng-container>
 </ng-template>
 <!-- End: Tab Basic -->
@@ -298,6 +302,9 @@
       </div>
     </div>
     <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 30px;background-color: whitesmoke;">
+    </div>
+    <div *ngIf="loadingform" class="ac-load-form">
+      <img style="width: 5%;" src="../assets/themes/ac/default/img/loader2.gif" alt="">
     </div>
   </ng-container>
   <!-- <ng-container
