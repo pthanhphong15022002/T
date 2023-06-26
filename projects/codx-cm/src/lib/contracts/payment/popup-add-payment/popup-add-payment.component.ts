@@ -16,6 +16,8 @@ import { StepService } from 'projects/codx-share/src/lib/components/codx-step/st
   styleUrls: ['./popup-add-payment.component.scss'],
 })
 export class PopupAddPaymentComponent {
+  REQUIRE = ['scheduleDate', 'scheduleAmt'];
+  view;
   isSave = false;
   action = '';
   contract: CM_Contracts;
@@ -28,6 +30,7 @@ export class PopupAddPaymentComponent {
   percent = 0;
   remaining = 0;
   sumScheduleAmt = 0;
+  sumScheduleAmtAllPayment = 0;
   isErorrDate = true;
 
   fmContracts: FormModel = {
@@ -58,14 +61,16 @@ export class PopupAddPaymentComponent {
     this.contractID = this.contract?.recID;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.setDataInput();
-    this.sumScheduleAmt = this.listPayment?.reduce((sum, item) => {
+    this.sumScheduleAmtAllPayment = this.listPayment?.reduce((sum, item) => {
       return sum + item?.scheduleAmt || 0;
     }, 0);
+    this.sumScheduleAmt = this.sumScheduleAmtAllPayment;
     this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
     this.percent =
       (this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
+    this.view = await this.stepService.getFormModel(this.dialog.formModel);
   }
 
   setDataInput() {
@@ -100,20 +105,13 @@ export class PopupAddPaymentComponent {
 
   valueChangeText(event) {
     this.payment[event?.field] = event?.data;
-    if (
-      event?.field == 'scheduleAmt' &&
-      event?.data > this.contract.contractAmt
-    ) {
-      this.notiService.notifyCode(
-        'Số tiền thanh toán lớn hơn giá trị hợp đồng'
-      );
-      this.payment[event?.field] = this.contract.contractAmt;
-    }
     if (event?.field == 'scheduleAmt') {
-      this.percent =
-        (this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
-      this.sumScheduleAmt += event?.data;
-      this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
+      this.percent = (this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
+      this.sumScheduleAmt = this.sumScheduleAmtAllPayment + event?.data; // đã thanh toán
+      this.remaining = this.contract?.contractAmt - this.sumScheduleAmt; // còn lại
+      if(this.remaining < 0){
+        this.notiService.notifyCode('Số tiền thanh toán lớn hơn giá trị hợp đồng');
+      }
     }
   }
 
@@ -123,9 +121,9 @@ export class PopupAddPaymentComponent {
 
   changeValueDate(event) {
     this.payment[event?.field] = new Date(event?.data?.fromDate);
-    if(this.action == 'add'){
+    if (this.action == 'add') {
       let check = this.stepService.compareDates(this.payment?.scheduleDate, new Date(), 'h');
-      if(check < 0 && this.isErorrDate){
+      if (check < 0 && this.isErorrDate) {
         this.notiService.notifyCode('Ngày hẹn thanh toán phải lớn hơn hiện tại');
       }
       this.isErorrDate = !this.isErorrDate;
@@ -135,6 +133,9 @@ export class PopupAddPaymentComponent {
   //#endregion
   //#region Save
   saveAndClose() {
+    if (this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)) {
+      return
+    }
     if (this.action == 'add' || this.action == 'copy') {
       this.addPayment(true);
     }
@@ -144,6 +145,10 @@ export class PopupAddPaymentComponent {
   }
 
   saveAndContinue() {
+    if (this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)) {
+      return
+    }
+
     if (this.action == 'add' || this.action == 'copy') {
       this.addPayment(false);
     }
@@ -151,6 +156,7 @@ export class PopupAddPaymentComponent {
       this.editPayment(false);
     }
   }
+
   //#endregion
   //#region Add
   async addPayment(isClose) {

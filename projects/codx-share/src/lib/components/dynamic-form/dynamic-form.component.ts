@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import {
   UIComponent,
@@ -15,6 +16,8 @@ import {
   NotificationsService,
   FormModel,
   AuthStore,
+  DialogModel,
+  Util,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
@@ -25,6 +28,7 @@ import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/cate
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { UsingHistoryComponent } from './using-history/using-history.component';
 import { AccessHistoryComponent } from './access-history/access-history.component';
+import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -147,6 +151,10 @@ export class DynamicFormComponent extends UIComponent {
         this.openFormAccessHistory(data, evt); //done
         break;
       }
+      //form edit quy trinh by dong san pham
+      case 'CMS0105_1':
+        this.openEditProcess(data, evt);
+        break;
       default:
         break;
     }
@@ -403,4 +411,66 @@ export class DynamicFormComponent extends UIComponent {
       null
     );
   }
+
+  //#region Edit process by dong san pham
+  async openEditProcess(data, evt) {
+    var process = await firstValueFrom(
+      this.api.execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'ProcessesBusiness',
+        'GetAsync',
+        [data?.processID]
+      )
+    );
+    if (process) {
+      this.api
+        .execSv<any>(
+          'DP',
+          'ERM.Business.DP',
+          'ProcessGroupsBusiness',
+          'GetAsync'
+        )
+        .subscribe((groups) => {
+          if (groups && groups.length > 0) {
+            this.cache
+              .gridViewSetup('DPProcesses', 'grvDPProcesses')
+              .subscribe((res) => {
+                let dialogModel = new DialogModel();
+                dialogModel.IsFull = true;
+                dialogModel.zIndex = 999;
+                let formModel = new FormModel();
+                formModel.entityName = 'DP_Processes';
+                formModel.formName = 'DPProcesses';
+                formModel.gridViewName = 'grvDPProcesses';
+                formModel.funcID = 'DP01';
+                // dialogModel.DataService = this.view?.dataService;
+                dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
+                if (res) {
+                  var obj = {
+                    action: 'edit',
+                    titleAction: evt ? evt.text : '',
+                    gridViewSetup: res,
+                    lstGroup: groups,
+                    systemProcess: '2',
+                    data: process,
+                  };
+                  var dialog = this.callfc.openForm(
+                    PopupAddDynamicProcessComponent,
+                    '',
+                    Util.getViewPort().height - 100,
+                    Util.getViewPort().width - 100,
+                    '',
+                    obj,
+                    '',
+                    dialogModel
+                  );
+                  dialog.closed.subscribe((e) => {});
+                }
+              });
+          }
+        });
+    }
+  }
+  //#endregion
 }

@@ -135,7 +135,7 @@
       </div>
     </div>
     <div class="row form-group">
-      <div class="col-4">
+      <div class="col-6">
         <div>
           <codx-label
             [formModel]="dialog.formModel"
@@ -155,7 +155,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-6">
         <div>
           <codx-label
             [formModel]="dialog.formModel"
@@ -173,7 +173,28 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-4">
+    </div>
+    <div class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label
+            [formModel]="dialog.formModel"
+            fiedName=""
+            default="Tỷ lệ thanh toán (%)"
+          ></codx-label>
+        </div>
+        <div class="">
+          <ejs-numerictextbox
+            [value]="percent"
+            format="###'%'"
+            min="0"
+            max="100"
+            (change)="valueChangePercent($event)"
+            disabled="false"
+          ></ejs-numerictextbox>
+        </div>
+      </div>
+      <div class="col-6">
         <div>
           <codx-label
             [formModel]="dialog.formModel"

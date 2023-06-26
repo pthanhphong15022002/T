@@ -361,13 +361,13 @@ export class CodxSvService {
     );
   }
 
-  shareLink(data:any) {
+  shareLink(data:any,post=false,funcID:any) {
     return this.api.execSv(
       'SV',
       'SV',
       'SurveysBusiness',
       'ShareLinkAsync',
-      data
+      [data,post,funcID]
     );
   }
   onSaveListFile(lstDataUpload) {
@@ -376,6 +376,12 @@ export class CodxSvService {
     ]);
   }
 
+  getDataSurveys(data:any,isSystem=false) {
+    return this.api.execSv('SV', 'SV', 'SurveysBusiness', 'GetAsync', [
+      data,
+      isSystem
+    ]);
+  }
   onSubmit(data) {
     return this.api.execSv(
       'SV',
