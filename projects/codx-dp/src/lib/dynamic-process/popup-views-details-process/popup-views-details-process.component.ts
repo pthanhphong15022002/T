@@ -70,7 +70,6 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     entityName: 'DP_Steps_Tasks',
   };
 
-
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
@@ -131,25 +130,26 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     }
   }
   closeDetailInstance(data) {
-    let listMap = new Map();
-    for (let i = 0; i < this.listValueRefid.length; i++) {
-      let id = this.listValueRefid[i];
-      listMap.set(id, listMap.get(id) + 1 || 1);
-    }
-    var isUseSuccess = data.steps.filter((x) => x.isSuccessStep)[0].isUsed;
-    var isUseFail = data.steps.filter((x) => x.isFailStep)[0].isUsed;
-    var dataCountInstance = [data.recID, isUseSuccess, isUseFail];
-    this.dpService
-      .countInstanceByProccessId(dataCountInstance)
-      .subscribe((res) => {
-        if (res) {
-          data.totalInstance = res;
-        } else {
-          data.totalInstance = 0;
-        }
-        var datas = [data, listMap];
-        this.dialog.close(datas);
-      });
+    // let listMap = new Map();
+    // for (let i = 0; i < this.listValueRefid.length; i++) {
+    //   let id = this.listValueRefid[i];
+    //   listMap.set(id, listMap.get(id) + 1 || 1);
+    // }
+    // var isUseSuccess = data.steps.filter((x) => x.isSuccessStep)[0].isUsed;
+    // var isUseFail = data.steps.filter((x) => x.isFailStep)[0].isUsed;
+    // var dataCountInstance = [data.recID, isUseSuccess, isUseFail];
+    // this.dpService
+    //   .countInstanceByProccessId(dataCountInstance)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       data.totalInstance = res;
+    //     } else {
+    //       data.totalInstance = 0;
+    //     }
+    //     var datas = [data, listMap];
+    //     this.dialog.close(datas);
+    //   });
+    this.dialog.close();
   }
   valueListRefID(e) {
     //bat e ve xu lys
