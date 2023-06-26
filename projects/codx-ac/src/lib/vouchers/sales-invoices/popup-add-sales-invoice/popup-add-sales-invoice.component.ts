@@ -57,6 +57,7 @@ export class PopupAddSalesInvoiceComponent
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
   expanded: boolean = false;
+  originVisibleCols:any=[];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -249,7 +250,7 @@ export class PopupAddSalesInvoiceComponent
         sumRowHeight -
         weirdHeight;
     }, 500);
-
+    this.originVisibleCols = this.grid.visibleColumns.slice();
     this.journalStateSubject.subscribe((loaded) => {
       if (!loaded) {
         return;
@@ -295,7 +296,6 @@ export class PopupAddSalesInvoiceComponent
 
   onCellChange(e): void {
     console.log('onCellChange', e);
-
     if (e.field === 'itemID') {
       for (const v of this.grid.visibleColumns) {
         if (
@@ -379,10 +379,14 @@ export class PopupAddSalesInvoiceComponent
 
   onAddNew(e): void {
     console.log('onAddNew', e);
-
+    if(e.type=='closeEdit'){
+      this.grid.visibleColumns = this.originVisibleCols.slice();
+    }
     this.detailService
       .save(null, null, null, null, false)
-      .subscribe((res) => console.log(res));
+      .subscribe((res) => {
+        this.grid.visibleColumns = this.originVisibleCols.slice();
+      });
   }
 
   onEdit(e): void {
@@ -391,7 +395,9 @@ export class PopupAddSalesInvoiceComponent
     this.detailService.updateDatas.set(e.recID, e);
     this.detailService
       .save(null, null, null, null, false)
-      .subscribe((res) => console.log(res));
+      .subscribe((res) =>{
+        this.grid.visibleColumns = this.originVisibleCols.slice()
+      });
   }
 
   onFocusOut(e): void {
