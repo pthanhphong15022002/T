@@ -12,6 +12,9 @@ export class SharelinkComponent implements OnInit {
   dialog:any
   data:any;
   recID:any;
+  funcID:any;
+  post = false;
+
   constructor(
     private notifySvr: NotificationsService,
     private svService : CodxSvService,
@@ -22,6 +25,7 @@ export class SharelinkComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dt?.data?.headerText;
     this.recID = dt?.data?.recID;
+    this.funcID = dt?.data?.funcID;
   }
   ngOnInit(): void {
   }
@@ -60,6 +64,11 @@ export class SharelinkComponent implements OnInit {
         this.data.subject = e?.data;
         break;
       }
+      case "post":
+      {
+        this.post = e?.data;
+        break;
+      }
     }
     
   }
@@ -68,7 +77,14 @@ export class SharelinkComponent implements OnInit {
   {
     if(!this.checkRequired()) return
     this.data.recID = this.recID;
-    this.svService.shareLink(this.data).subscribe();
+    this.svService.shareLink(this.data,this.post,this.funcID).subscribe(item=>{
+      if(item)
+      {
+        this.notifySvr.notifyCode("SYS015");
+        this.dialog.colse();
+      }
+      else this.notifySvr.notifyCode("SYS016");
+    });
   }
 
   checkRequired()
