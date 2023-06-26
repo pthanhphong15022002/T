@@ -121,6 +121,10 @@ export class CasesComponent
   dataColums: any = [];
   moreFuncCase: any;
   gridViewSetup: any;
+  fiterOption: any;
+  orgFilter: any;
+  orgPin: any;
+  pinnedItem: any;
 
   constructor(
     private inject: Injector,
@@ -239,6 +243,7 @@ export class CasesComponent
 
   changeView(e) {
     this.viewCrr = e?.view?.type;
+    this.changeFilter();
     if (!this.funCrr) {
       this.funCrr = this.funcID;
       return;
@@ -1164,4 +1169,75 @@ export class CasesComponent
       }
     });
   }
+
+  //-----------------------------change Filter -------------------------------//
+  changeFilter() {
+    if (this.viewCrr == 6) {
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp != -1) {
+        this.fiterOption = this.view.filterOptions[idxBusinesLineOp];
+        this.view.filterOptions.splice(idxBusinesLineOp, 1);
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg != -1) {
+        this.orgFilter = this.view.orgFilters[idxBusinesLineOg];
+        this.view.orgFilters.splice(idxBusinesLineOg, 1);
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine != -1) {
+        this.orgPin = this.view.orgPinned[idxBusinesLine];
+        this.view.orgPinned.splice(idxBusinesLine, 1);
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem != -1) {
+        this.pinnedItem = this.view.pinnedItems[idxBusinesLineItem];
+        this.view.pinnedItems.splice(idxBusinesLineItem, 1);
+      }
+    } else {
+      ///add fileter
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp == -1 && this.fiterOption) {
+        this.view.filterOptions.unshift(this.fiterOption);
+        this.fiterOption = null;
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg == -1 && this.orgFilter) {
+        this.view.orgFilters.unshift(this.orgFilter);
+        this.orgFilter = null;
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine == -1 && this.orgPin) {
+        this.view.orgPinned.unshift(this.orgPin);
+        this.orgFilter = null;
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem == -1 && this.pinnedItem) {
+        this.view.pinnedItems.unshift(this.pinnedItem);
+        this.orgFilter = null;
+      }
+    }
+  }
+  //end
 }
