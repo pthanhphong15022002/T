@@ -65,7 +65,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6">
+      <div class="col-12">
         <div class="form-group">
           <codx-label
             fiedName="DealName"
@@ -85,7 +85,8 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+    </div>
+      <!-- <div class="col-6">
         <div class="form-group">
           <codx-label
             [formModel]="formModelDeals"
@@ -103,44 +104,12 @@
             ></ejs-combobox>
           </div>
 
-          <!-- <codx-input
-            [formModel]="formModelDeals"
-            [refValue]="gridViewSetupDeal?.ProcessID?.referedValue"
-            [placeholder]="gridViewSetupDeal?.ProcessID?.description"
-            field="processID"
-            [disabled]="true"
-            [model]="{ ApplyFor: '1' }"
-            [crrValue]="deal?.processID"
-          >
-          </codx-input> -->
         </div>
-      </div>
-    </div>
+      </div> -->
+    <!-- </div> -->
 
     <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            fiedName="Category"
-            default="Loại cơ hội"
-            [formModel]="formModelDeals"
-          >
-          </codx-label>
-          <codx-input
-            field="category"
-            type="valuelist"
-            [refValue]="
-              gridViewSetupDeal?.Category?.referedValue
-                ? gridViewSetupDeal?.Category?.referedValue
-                : 'CRM010'
-            "
-            [placeholder]="gridViewSetupDeal?.Category?.description"
-            [crrValue]="deal?.category"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
+
       <div class="col-6">
         <div class="form-group">
           <codx-label
@@ -163,6 +132,7 @@
       </div>
     </div>
     <div class="row">
+
       <div class="col-6">
         <div class="form-group">
           <codx-label
@@ -171,17 +141,35 @@
             default="Doanh số dự kiến"
           >
           </codx-label>
-          <codx-input
-            type="text"
-            [formModel]="formModelDeals"
-            [crrValue]="deal?.dealValue"
-            [placeholder]="gridViewSetupDeal?.DealValue?.description"
-            field="dealValue"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
+          <div class="d-flex flex-row">
+            <div class="col-8 pe-2">
+
+              <codx-input
+              type="number"
+              [min]="0"
+              [formModel]="formModelDeals"
+              [crrValue]="deal?.dealValue"
+              [placeholder]="gridViewSetupDeal?.DealValue?.description"
+              field="dealValue"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+            </div>
+            <div class="col-4">
+              <codx-input
+                field="currencyID"
+                [formModel]="formModelDeals"
+                [refValue]="gridViewSetupDeal?.CurrencyID?.referedValue"
+                [crrValue]="deal?.currencyID"
+                type="combobox"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="col-6">
         <div class="form-group">
           <codx-label

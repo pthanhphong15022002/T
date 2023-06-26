@@ -11,6 +11,10 @@
 *ngSwitchCase="tabTask"
 [ngTemplateOutlet]="task"
 ></some-element>
+<some-element
+*ngSwitchCase="tabComment"
+[ngTemplateOutlet]="comment"
+></some-element>
 
   <some-element *ngSwitchDefault></some-element>
 </container-element>
@@ -351,5 +355,18 @@
     (continueStep)="continueStep($event)"
     (saveAssignTask)="saveAssignTask($event)"
   ></step-task>
+</ng-template>
+
+
+<ng-template #comment let-data>
+  <codx-tabs
+    [entityName]="formModel.entityName"
+    [formModel]="formModel"
+    [TabControl]="tabControlComment"
+    [objectID]="dataSelected.recID"
+    [funcID]="formModel.funcID"
+    [refType]="formModel.entityName"
+    [refID]="dataSelected.recID"
+  ></codx-tabs>
 </ng-template>
 
