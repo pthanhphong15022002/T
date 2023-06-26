@@ -75,6 +75,9 @@ import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.co
 import { DashboardContentComponent } from './tmdashboard/dashboard-content/dashboard-content.component';
 import { MeetingDetailComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/meeting-detail/meeting-detail.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { SearchingComponent } from './searching/searching.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 
 export const routes: Routes = [
   {
@@ -83,7 +86,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'report/:funcID',
-        component: ReportsComponent,
+        component: CodxReportViewsComponent,
       },
       {
         path: 'report/detail/:funcID',
@@ -92,6 +95,14 @@ export const routes: Routes = [
       {
         path: 'tmdashboard/:funcID',
         component: TMDashboardComponent,
+      },
+      {
+        path: 'share/dynamic/:funcID',
+        component: DynamicFormComponent,
+      },
+      {
+        path: 'searching/:funcID',
+        component: SearchingComponent,
       },
       {
         path: 'tasks/:funcID',
@@ -209,6 +220,7 @@ const T_Component: Type<any>[] = [
   PopupTabsViewsDetailsComponent,
   LayoutNoToolbarComponent,
   DashboardContentComponent,
+  SearchingComponent,
 ];
 @NgModule({
   imports: [

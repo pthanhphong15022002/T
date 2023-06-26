@@ -18,15 +18,15 @@ implements OnInit, AfterViewInit
 @Output() saveAssign = new EventEmitter<any>();
 titleAction: string = '';
 listStep = [];
-isUpdate = true; //xư lý cho edit trung tuy chinh ko
+isUpdate = true;
 listStepsProcess = [];
-listCategory = [];
+// listCategory = [];
 isDataLoading = true;
-// titleDefault= "Trường tùy chỉnh"//truyen vay da
 readonly tabInformation: string = 'Information';
 readonly tabField: string = 'Field';
 readonly tabTask: string = 'Task';
-
+readonly tabComment: string = 'Comment';
+tabControlComment = [ { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null }];
 fmProcductsLines: FormModel = {
   formName: 'CMProducts',
   gridViewName: 'grvCMProducts',
@@ -57,20 +57,11 @@ ngOnChanges(changes: SimpleChanges){
 
 async executeApiCalls() {
   try {
-    await this.getValueList();
+ //   await this.getValueList();
   } catch (error) {
     console.error('Error executing API calls:', error);
   }
 }
-//nvthuan
-// getListInstanceStep() {
-//   let instanceID = this.dataSelected?.refID;
-//   if (instanceID) {
-//     this.cmService.getStepInstance([instanceID]).subscribe((res) => {
-//       this.listStep = res;
-//     });
-//   }
-// }
 
 getListInstanceStep() {
   var data = [
@@ -96,17 +87,17 @@ deleteListReason(listStep: any): void {
   listStep.pop();
 }
 
-async getValueList() {
-  this.cache.valueList('CRM010').subscribe((res) => {
-    if (res.datas) {
-      this.listCategory = res?.datas;
-    }
-  });
-}
+// async getValueList() {
+//   this.cache.valueList('CRM010').subscribe((res) => {
+//     if (res.datas) {
+//       this.listCategory = res?.datas;
+//     }
+//   });
+// }
 
-getNameCategory(categoryId:string) {
-  return this.listCategory.filter(x=> x.value == categoryId)[0]?.text;
-}
+// getNameCategory(categoryId:string) {
+//   return this.listCategory.filter(x=> x.value == categoryId)[0]?.text;
+// }
 
 
 //truong tuy chinh - đang cho bằng 1

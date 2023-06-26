@@ -81,7 +81,7 @@ export class SharelinkComponent implements OnInit {
       if(item)
       {
         this.notifySvr.notifyCode("SYS015");
-        this.dialog.colse();
+        this.dialog.close();
       }
       else this.notifySvr.notifyCode("SYS016");
     });
