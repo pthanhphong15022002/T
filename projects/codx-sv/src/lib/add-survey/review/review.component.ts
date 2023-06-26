@@ -46,6 +46,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
   lstQuestion: any;
   isSent:boolean = false;
   survey:any;
+  //Thời hạn trả lời
+  expiredOn = false;
   html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -110,6 +112,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if(res && res[2]) {
           this.survey = res[2];
+          debugger
+          if(this.survey?.expiredOn && new Date(this.survey?.expiredOn) <=  new Date()) this.expiredOn = true;
           this.getAvatar(this.survey);
         }
         if (res && res[0] && res[0].length > 0) {
