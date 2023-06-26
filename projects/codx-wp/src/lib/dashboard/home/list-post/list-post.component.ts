@@ -185,7 +185,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      debugger
       if(!res || res.closedBy=="escape" || !res.event) return;
       (this.listview.dataService as CRUDService).add(res.event).subscribe();
     });

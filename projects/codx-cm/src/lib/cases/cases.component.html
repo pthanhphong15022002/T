@@ -96,7 +96,6 @@
     [imageWidth]="35"
     imgCss="me-4"
     [imageObjType]="'CM_Customers'"
-
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-15'"
@@ -122,10 +121,7 @@
         #caseName
         [innerHTML]="
           data?.caseName
-            | formatvalue
-              : formModel
-              : 'caseName'
-              : caseName
+            | formatvalue : formModel : 'caseName' : caseName
             | async
         "
       ></span>
@@ -134,7 +130,6 @@
 </ng-template>
 
 <ng-template #footer let-data>
-
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-end codx-badge">
       <div class="me-2 badge badge-light-primary"></div>
@@ -164,7 +159,7 @@
       </div>
       <div *ngIf="data.status == '1'">
         <codx-vll
-          [name]="'DP028'"
+          [name]="vllStatus"
           [field]="'Status'"
           [value]="data?.status"
           [showText]="true"
@@ -173,7 +168,17 @@
         >
         </codx-vll>
       </div>
-
+      <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+        <codx-vll
+          [name]="vllApprove"
+          [field]="'ApproveStatus'"
+          [value]="data?.approveStatus"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-primary badge-sm"
+        >
+        </codx-vll>
+      </ng-container>
       <div class="d-flex align-items-center text-gray-600">
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
@@ -271,7 +276,6 @@
     [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
-
   >
   </codx-cases-detail>
 </ng-template>

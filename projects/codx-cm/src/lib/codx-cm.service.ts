@@ -33,7 +33,6 @@ export class CodxCmService {
   contactSubject = new BehaviorSubject<any>(null);
   // valueContact = this.contactSubject.asObservable();
 
-
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -82,7 +81,7 @@ export class CodxCmService {
   getOneCustomer(recID, entityName) {
     return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
       recID,
-      entityName
+      entityName,
     ]);
   }
 
@@ -439,12 +438,12 @@ export class CodxCmService {
   }
 
   getListFile(funcID, objectID, objectType, referType) {
-    return this.api.exec<any>('DM', 'FileBussiness', 'GetFilesForOutsideAsync', [
-      funcID,
-      objectID,
-      objectType,
-      referType,
-    ]);
+    return this.api.exec<any>(
+      'DM',
+      'FileBussiness',
+      'GetFilesForOutsideAsync',
+      [funcID, objectID, objectType, referType]
+    );
   }
 
   addInstance(data: any) {
@@ -464,38 +463,18 @@ export class CodxCmService {
     );
   }
 
-  addDeal(data:any){
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'AddDealAsync',
-      data
-    );
+  addDeal(data: any) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync', data);
   }
-  editDeal(data:any){
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'EditDealAsync',
-      data
-    );
+  editDeal(data: any) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'EditDealAsync', data);
   }
 
-  addCases(data:any){
-    return this.api.exec<any>(
-      'CM',
-      'CasesBusiness',
-      'AddCasesAsync',
-      data
-    );
+  addCases(data: any) {
+    return this.api.exec<any>('CM', 'CasesBusiness', 'AddCasesAsync', data);
   }
-  editCases(data:any){
-    return this.api.exec<any>(
-      'CM',
-      'CasesBusiness',
-      'EditCasesAsync',
-      data
-    );
+  editCases(data: any) {
+    return this.api.exec<any>('CM', 'CasesBusiness', 'EditCasesAsync', data);
   }
 
   getListCbxCampaigns() {
@@ -792,7 +771,6 @@ export class CodxCmService {
     );
   }
 
-
   getIdBusinessLineByProcessID(data) {
     return this.api.exec<any>(
       'CM',
@@ -836,7 +814,7 @@ export class CodxCmService {
       data
     );
   }
-  updateListReason(data){
+  updateListReason(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -994,6 +972,25 @@ export class CodxCmService {
     );
   }
 
+  getProcess(recID) {
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', recID);
+  }
+  //get
+  getDeals(recID) {
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsBusiness',
+      'GetDealsByRefIDAsysnc',
+      recID
+    );
+  }
+
+  updateApproveStatus(className, recID, status) {
+    return this.api.exec<any>('CM', className, 'UpdateApproveStatusAsync', [
+      recID,
+      status,
+    ]);
+  }
 
   updateStatusQuotatitons(data) {
     return this.api.exec<any>(
