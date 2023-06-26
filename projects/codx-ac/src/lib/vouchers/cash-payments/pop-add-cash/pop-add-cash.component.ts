@@ -158,9 +158,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
     private auth: AuthService,
+    private elementRef: ElementRef,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
+
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
@@ -207,6 +209,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
+    (this.elementRef.nativeElement as HTMLElement).addEventListener('keydown',(e:any)=>{
+      alert(e.keyCode);
+    })
     this.dt.detectChanges();
   }
   //#endregion
@@ -450,7 +455,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     setTimeout(() => {
       this.loadingform = false;
     }, 1000);
-    
+
   }
 
   gridCreatedSet() {
