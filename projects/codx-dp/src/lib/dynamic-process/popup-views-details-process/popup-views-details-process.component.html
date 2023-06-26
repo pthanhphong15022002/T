@@ -151,9 +151,7 @@
             <ng-container *ngFor="let step of process.steps">
               <div class="">
                 <div class="card card-steplist">
-                  <div
-                    class="step border border-gray-200 rounded px-6 py-4"
-                  >
+                  <div class="step border border-gray-200 rounded px-6 py-4">
                     <ng-container
                       [ngTemplateOutlet]="viewStep"
                       [ngTemplateOutletContext]="{step}"
@@ -162,24 +160,23 @@
                   <div *ngIf="step?.taskGroups?.length > 0">
                     <div
                       class="group border border-gray-200 rounded px-6 py-4"
-                      style="margin-left: 20px"
+                      style="margin: 10px 0 10px 20px"
                       *ngFor="let group of step?.taskGroups"
                     >
                       <ng-container
                         [ngTemplateOutlet]="viewGroupTask"
                         [ngTemplateOutletContext]="{group}"
                       ></ng-container>
-                      <ng-container *ngIf="group?.tasks?.length > 0">
-                        <div *ngFor="let task of group?.tasks">
+                      <ng-container *ngIf="group?.tasks?.length > 0" >
+                        <div *ngFor="let task of group?.tasks" style="margin-left: 40px;">
                           <ng-container
-                          [ngTemplateOutlet]="viewTask"
-                          [ngTemplateOutletContext]="{task}"
-                        ></ng-container>
+                            [ngTemplateOutlet]="viewTask"
+                            [ngTemplateOutletContext]="{task}"
+                          ></ng-container>
                         </div>
                       </ng-container>
                     </div>
                   </div>
-                 
                 </div>
               </div>
             </ng-container>
@@ -202,21 +199,42 @@
   >
   </codx-temp-full>
   <ng-template #titleTmpStep let-data>
-    <div style="width: 100%">
+    <div style="width: 100%" class="d-flex align-items-center justify-content-between">
       <div
-        class="fw-bold line-clamp line-clamp-1 fs-3 mb-2"
+        class="d-flex align-items-center line-clamp line-clamp-1 fs-3 mb-2"
         style="cursor: context-menu; display: -webkit-inline-box"
       >
         <!-- <codx-label
           [fiedName]="'StepNo'"
           [formModel]="formModelStep"
           [setRequire]="false"
-        ></codx-label> -->
-        <!-- <span>{{ " " + data?.stepNo }}</span> -->
-        <!-- <codx-label name="lblSplit" default=":"></codx-label> -->
-        <span>
+        ></codx-label>
+        <span>{{ " " + data?.stepNo }}</span>
+        <codx-label name="lblSplit" default=":"></codx-label> -->
+        <codx-icon-step
+          [icon]="data?.icon"
+          [iconColor]="data?.iconColor"
+          [isStep]="true"
+        ></codx-icon-step>
+        <span class="ms-2">
           {{ " " + data?.stepName }}
         </span>
+      </div>
+      <div>
+        <span>{{data?.durationDay}}</span>
+        <codx-label
+          class="mx-1"
+          [fiedName]="'day'"
+          [formModel]="formModelStep"
+          default="ngày"
+        ></codx-label>
+        <span>{{data?.durationHour}}</span>
+        <codx-label
+          class="mx-1"
+          [fiedName]="'hour'"
+          [formModel]="formModelStep"
+          default="giờ"
+        ></codx-label>
       </div>
     </div>
   </ng-template>
@@ -267,21 +285,35 @@
   >
   </codx-temp-full>
   <ng-template #titleGroup let-data>
-    <div style="width: 100%">
+    <div style="width: 100%" class="d-flex align-items-center justify-content-between">
       <div
-        class="fw-bold line-clamp line-clamp-1 fs-3 mb-2"
+        class="fw-bold line-clamp line-clamp-1 fs-3 mb-2 d-flex align-items-center"
         style="cursor: context-menu; display: -webkit-inline-box"
       >
-        <!-- <codx-label
-          [fiedName]="'taskGroupName'"
-          [formModel]="formModelTaskGroup"
-          [setRequire]="false"
-        ></codx-label>
-        <span>{{ " " + data?.indexNo }}</span>
-        <codx-label name="lblSplit" default=":"></codx-label> -->
+        <codx-icon-step
+          [typeTask]="'G'"
+          [isStep]="false"
+          [listTypeTask]="listType"
+        ></codx-icon-step>
         <span>
           {{ " " + data?.taskGroupName }}
         </span>
+      </div>
+      <div>
+        <span>{{data?.durationDay}}</span>
+        <codx-label
+          class="mx-1"
+          [fiedName]="'day'"
+          [formModel]="formModelStep"
+          default="ngày"
+        ></codx-label>
+        <span>{{data?.durationHour}}</span>
+        <codx-label
+          class="mx-1"
+          [fiedName]="'hour'"
+          [formModel]="formModelStep"
+          default="giờ"
+        ></codx-label>
       </div>
     </div>
   </ng-template>
@@ -293,17 +325,9 @@
     >
       <ng-container *ngFor="let perm of data.roles; index as i">
         <div
-          *ngIf="perm.roleType == 'S'"
+          *ngIf="perm.roleType == 'O'"
           class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
         >
-          <div class="d-flex align-items-center mb-2">
-            <codx-label
-              class="fw-bold fs-6 text-dark me-3"
-              name="lblParticipantRole"
-              default="Người phụ trách giai đoạn"
-            >
-            </codx-label>
-          </div>
           <div class="me-2">
             <codx-img
               class
@@ -320,8 +344,59 @@
   </ng-template>
 </ng-template>
 <ng-template #viewTask let-data="task">
-  <span>Công việc</span>
-  <span>{{data?.taskName}}</span>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <codx-icon-step
+        [typeTask]="data?.taskType"
+        [listTypeTask]="listType"
+        [isStep]="false"
+      ></codx-icon-step>
+      <span>{{ data?.taskName }}</span>
+    </div>
+    <div>
+      <span>{{data?.durationDay}}</span>
+      <codx-label
+        class="mx-1"
+        [fiedName]="'day'"
+        [formModel]="formModelStep"
+        default="ngày"
+      ></codx-label>
+      <span>{{data?.durationHour}}</span>
+      <codx-label
+        class="mx-1"
+        [fiedName]="'hour'"
+        [formModel]="formModelStep"
+        default="giờ"
+      ></codx-label>
+    </div>
+  </div>
+  
+
+  <ng-container *ngFor="let perm of data.roles; index as i">
+    <div
+      *ngIf="perm.roleType == 'O'"
+      class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+    >
+      <!-- <div class="d-flex align-items-center mb-2">
+        <codx-label
+          class="fw-bold fs-6 text-dark me-3"
+          name="lblParticipantRole"
+          default="Người phụ trách"
+        >
+        </codx-label>
+      </div> -->
+      <div class="ms-5">
+        <codx-img
+          class
+          [width]="20"
+          [objectId]="perm.objectName"
+          objectType="AD_Users"
+        >
+        </codx-img>
+      </div>
+      <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+    </div>
+  </ng-container>
 </ng-template>
 
 <!-- temp chung  -->

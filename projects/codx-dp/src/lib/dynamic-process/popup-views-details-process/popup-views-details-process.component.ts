@@ -19,6 +19,7 @@ import {
 import { TabModel } from '../../models/models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CodxDpService } from '../../codx-dp.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-views-details-process',
@@ -50,6 +51,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     { name: 'Detail', textDefault: 'Chi tiết quy trình', isActive: false },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false },
   ];
+  listType = [];
   // value
   vllApplyFor = 'DP002';
   formModelStep: FormModel = {
@@ -85,16 +87,19 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     this.dpService
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
+      
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if(this.process?.steps?.length > 0){
       this.process?.steps?.forEach((step) => {
         this.groupByTask(step);
       })
       console.log(this.process.steps.map((step) => (step.taskGroups)));
-      
+      let data = await firstValueFrom(this.cache.valueList('DP004'));  
+      this.listType = data ? data?.datas : [];
     }
+     
   }
 
   clickMenu(event) {
