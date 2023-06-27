@@ -49,7 +49,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   //onChange dataSource
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
-      this.dataService.setPredicates([],[this.orgUnitID]).subscribe((res) => {
+      this.dataService.setPredicates([],[this.orgUnitID], res => {
         if(res)
         {
           res.forEach(x => {
@@ -100,7 +100,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   ): ConnectorModel {
     connector.targetDecorator.shape = "None";
     connector.type = "Orthogonal";
-    connector.constraints = 0;
+    connector.constraints = 1;
     connector.cornerRadius = 5;
     connector.style.strokeColor = "#6d6d6d";
     return connector;
