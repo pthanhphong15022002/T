@@ -92,6 +92,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.title = dialogData?.data[2];
     if (this.funcType == _addMF || this.funcType == _copyMF) {
       this.isAddNew = true;
+      this.data.attendees=1;
     } else {
       this.isAddNew = false;
     }
@@ -191,6 +192,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
       .subscribe((res) => {
         this.cache.valueList(res?.Category.referedValue).subscribe((res) => {
           this.requestType = res.datas;
+          this.detectorRef.detectChanges();
         });
       });
     this.codxBookingService
@@ -466,7 +468,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                       .codxRelease(
                         'EP',
                         item?.recID,
-                        res?.processID,
+                        category?.processID,
                         'EP_Bookings',
                         this.formModel.funcID,
                         item?.createdBy,
