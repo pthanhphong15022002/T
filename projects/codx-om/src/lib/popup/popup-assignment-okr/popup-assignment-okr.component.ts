@@ -154,7 +154,7 @@ export class PopupAssignmentOKRComponent
     this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
       if (res) {  
         this.dataOKR = res;
-        this.codxOmService.getOKRHavedLinks(this.okrRecID).subscribe((links: any) => {
+        this.codxOmService.getOKRHavedLinks(this.okrRecID,OMCONST.VLL.RefType_Link.Assign).subscribe((links: any) => {
           if (links && links.length > 0) {
             this.assignmentOKR = links[0];
             this.detectorRef.detectChanges();
@@ -324,11 +324,7 @@ export class PopupAssignmentOKRComponent
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
 
-  onSaveForm() {
-    if (this.assignmentOKR.objectID == null) {
-      this.notificationsService.notify('Đối tượng phân công không được bỏ trống', '2', null);
-      return;
-    }
+  onSaveForm() {    
     if (this.okrPlan.status!= '1') {
       this.notificationsService.notify('Kế hoạch mục tiêu kỳ ' + this.okrPlan?.periodID +' đang ở tình trạng' + this.statusVLL[this.okrPlan?.status]?.text+' nên không thể thay đổi đối tượng phân công', '2', null);
       return;

@@ -492,6 +492,7 @@ export class PopupAddKRComponent extends UIComponent {
       let avgTarget = this.kr.target / this.editTargets.length;
       for (let i = 0; i < this.editTargets.length; i++) {
         this.editTargets[i].target = avgTarget;
+        this.editTargets[i].edited = false;
       }
       this.detectorRef.detectChanges();
     }
