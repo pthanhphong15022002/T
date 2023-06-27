@@ -242,6 +242,63 @@
             >
             </codx-tag>
           </div>
+          <div class="d-flex justify-content-between align-items-start" *ngIf="funcID == 'CM0101'">
+            <div class="w-100 mt-1">
+              <codx-label
+                style="white-space: nowrap"
+                class="fw-bold text-primary"
+                fiedName="SegmentID"
+                [formModel]="formModel"
+              ></codx-label>
+              <div class="mt-1">
+                <div
+                  class="text-dark fw-bold codx-textcontent"
+                  [innerHTML]="
+                    dataSelected?.segmentID
+                      | formatvalue : formModel : 'SegmentID'
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+            <div class="w-100 mt-1">
+              <codx-label
+                style="white-space: nowrap"
+                class="fw-bold text-primary"
+                fiedName="ChannelID"
+                [formModel]="formModel"
+              ></codx-label>
+              <div class="mt-1">
+                <div
+                  class="text-dark fw-bold codx-textcontent"
+                  [innerHTML]="
+                    dataSelected?.channelID
+                      | formatvalue : formModel : 'ChannelID'
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+            <div class="justify-content-end w-100 mt-1">
+              <codx-label
+                style="white-space: nowrap"
+                class="fw-bold text-primary"
+                fiedName="Owner"
+                [formModel]="formModel"
+              ></codx-label>
+              <div class="mt-1">
+                <codx-imgs
+                  class="h-25px"
+                  [isToolTip]="true"
+                  [width]="25"
+                  [objectId]="dataSelected?.owner"
+                  [objectType]="'AD_Users'"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
+              </div>
+            </div>
+          </div>
         </div>
       </ng-template>
       <ng-template #body let-data>

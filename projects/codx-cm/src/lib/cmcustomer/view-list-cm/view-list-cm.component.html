@@ -283,28 +283,6 @@
     >
       <div class="me-4 d-flex align-items-center">
         <span
-          [ngbTooltip]="popupPartnerFrom"
-          *ngIf="funcID == 'CM0103'"
-          class="icon-date_range icon-18 text-gray-500 me-2"
-          ><ng-template #popupPartnerFrom>
-            <codx-label
-              name="PartnerFrom"
-              [formModel]="formModel"
-            ></codx-label> </ng-template
-        ></span>
-        <span
-          *ngIf="funcID == 'CM0103'"
-          class="text-gray-900"
-          [innerHTML]="
-            dataSelected?.partnerFrom
-              | formatvalue : formModel : 'PartnerFrom'
-              | async
-          "
-        >
-        </span>
-      </div>
-      <div class="me-4 d-flex align-items-center">
-        <span
           *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
           class="icon-contact_phone icon-18 text-gray-500 me-2"
           [ngbTooltip]="popupCountContact"
