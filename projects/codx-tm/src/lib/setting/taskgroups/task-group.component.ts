@@ -136,7 +136,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
     ];
   }
 
-  onLoading(e) {
+  onLoading() {
     let formModel = this.view.formModel;
     if (formModel) {
       this.cacheSv
