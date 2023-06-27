@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./popup-add-payment-history.component.scss']
 })
 export class PopupAddPaymentHistoryComponent {
+  REQUIRE = ['scheduleDate', 'scheduleAmt','paidDate','paidAmt'];
   isSave = false;
   action = '';
   payment: CM_ContractsPayments;
