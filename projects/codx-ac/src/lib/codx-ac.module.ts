@@ -292,6 +292,7 @@ export const routes: Routes = [
     PopAddInvoiceSetlementComponent,
     ClosingDataComponent,
     PopAddClosingDataComponent,
+    TableLineDetailStaticComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
