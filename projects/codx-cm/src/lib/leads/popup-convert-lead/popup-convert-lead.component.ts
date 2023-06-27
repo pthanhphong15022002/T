@@ -627,7 +627,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.owner = e;
   }
   valueChangeCustomer(e) {
-    this.customer[e.field] = e?.data?.trim();
+    this.customer[e.field] = e?.data;
     if (e.field == 'customerName' && e?.data) {
       this.nameAvt = e?.data?.trim();
     }
@@ -637,7 +637,7 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   valueChange(e) {
-    this.deal[e.field] = e?.data?.trim();
+    this.deal[e.field] = e?.data;
     if (e.field == 'customerID') {
       this.customerID = e?.data ? e.data : null;
       if (this.customerID) {
