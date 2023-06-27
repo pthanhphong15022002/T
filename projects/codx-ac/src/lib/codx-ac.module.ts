@@ -292,9 +292,9 @@ export const routes: Routes = [
     PopAddInvoiceSetlementComponent,
     ClosingDataComponent,
     PopAddClosingDataComponent,
-    LayloutJournalComponent, //Phuc gan vao de het loi
-    TableLineDetailStaticComponent, //Phuc gan vao de het loi
-    TestJournalComponent //Phuc gan vao de het loi
+    TableLineDetailStaticComponent,
+    TestJournalComponent,
+    LayloutJournalComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

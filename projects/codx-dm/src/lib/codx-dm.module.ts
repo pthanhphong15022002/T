@@ -2,16 +2,27 @@ import { FormsModule } from '@angular/forms';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { BreadcrumbComponent, TabModule } from '@syncfusion/ej2-angular-navigations';
+import {
+  BreadcrumbComponent,
+  TabModule,
+} from '@syncfusion/ej2-angular-navigations';
 import { HomeComponent } from './home/home.component';
 import { CardComponent } from './views/card/card.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -24,7 +35,7 @@ import { SubFolderComponent } from './createFolder/subFolder/subFolder.component
 import { DetailComponent } from './views/detail/detail.component';
 import { CopyComponent } from './copy/copy.component';
 import { PropertiesComponent } from './properties/properties.component';
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CoreModule } from '@core/core.module';
 import { MoveComponent } from './move/move.component';
 import { VersionComponent } from './version/version.component';
@@ -34,9 +45,11 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
 import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.directive';
 import { DragDropFileFolderDirective } from './directives/drag-drop-file-folder.directive';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { CodxReportComponent } from 'projects/codx-report/src/lib/codx-report.component';
 //import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { TooltipModule } from '@syncfusion/ej2-angular-popups';
-
 
 export const routes: Routes = [
   {
@@ -51,11 +64,11 @@ export const routes: Routes = [
       // {
       //   path: 'DMT02',
       //   component: HomeComponent
-      // },  
+      // },
       // {
       //   path: 'DMT03',
       //   component: HomeComponent
-      // },  
+      // },
       {
         path: ':funcID',
         component: HomeComponent,
@@ -63,19 +76,35 @@ export const routes: Routes = [
       },
       {
         path: ':funcID/:fileID',
-        component: ViewFileDialogComponent
+        component: ViewFileDialogComponent,
       },
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
+      // {
+      //   path: 'dmdashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
+      {
+        path: 'share/dynamic/:funcID',
+        component: DynamicFormComponent,
       },
       // {
       //   path: '',
       //   redirectTo: 'home',
       //   pathMatch: 'full',
       // },
-    ]
-  }
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -96,7 +125,7 @@ const T_Component: Type<any>[] = [
   ShareComponent,
   DragDropFileUploadDirective,
   DragDropFileFolderDirective,
-]
+];
 @NgModule({
   imports: [
     CommonModule,
@@ -116,13 +145,11 @@ const T_Component: Type<any>[] = [
     NgbModule,
     CoreModule,
     UploaderModule,
-    DialogModule
+    DialogModule,
     //TooltipModule,
-   // InfiniteScrollModule
+    // InfiniteScrollModule
   ],
-  exports: [
-    RouterModule
-  ],
+  exports: [RouterModule],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -133,7 +160,6 @@ const T_Component: Type<any>[] = [
 //   exports: [NgbdRatingBasic],
 //   bootstrap: [NgbdRatingBasic]
 // })
-
 export class CodxDmModule {
   public static forRoot(
     config?: EnvironmentConfig
