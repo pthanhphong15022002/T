@@ -630,10 +630,6 @@ export class PopupAddDealComponent
     if (this.action !== this.actionEdit) {
       datas = [this.deal, this.lstContactDeal];
     } else {
-      // this.covnertListContact(
-      //   this.lstContactOld,
-      //   JSON.parse(JSON.stringify(this.lstContactDeal))
-      // );
       datas = [
         this.deal,
         this.customerIDOld,
@@ -677,20 +673,13 @@ export class PopupAddDealComponent
     } catch (error) {}
   }
   async getParamatersProcessDefault() {
-    this.cache
-      .viewSettingValues(this.functionModule + 'Parameters')
-      .subscribe((res) => {
-        if (res?.length > 0) {
-          let dataParam = res.filter(
-            (x) => x.category == '4' && !x.transType
-          )[0];
-          debugger;
-          this.processIdDefault = '1a6d0f15-09d0-11ee-94b3-00155d035517';
-          this.deal.processID = this.processIdDefault;
-          this.getListInstanceSteps(this.processIdDefault);
-          //  if (dataParam) this.paramView = JSON.parse(dataParam.dataValue);
-        }
-      });
+    this.codxCmService.getListProcessDefault(['1']).subscribe((res)=>{
+      if(res) {
+        this.processIdDefault = res.recID
+        this.deal.processID = this.processIdDefault;
+        this.getListInstanceSteps(this.processIdDefault);
+      }
+    });
   }
 
   async getGridViewSetup(formName, gridViewName) {

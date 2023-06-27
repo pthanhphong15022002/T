@@ -12,18 +12,18 @@
   *ngIf="isAfterRender"
 >
   <ng-template #header>
-    <div class="d-flex align-items-center mt-n8">
+    <div class="d-flex align-items-center mt-n9">
       <codx-temp-full
         [title]="itemDetail?.categoryName"
         [icoCss]="
-          'icon-16 es-icon-title rounded-circle me-3 ' + itemDetail?.icon
+          'icon-16 es-icon-title rounded-circle me-2 ' + itemDetail?.icon
         "
         [icoStyle]="setStyles(itemDetail?.color)"
-        [titleCss]="'fs-7'"
+        [titleCss]="'fs-6'"
       >
       </codx-temp-full>
     </div>
-    <div class="pt-3 d-flex flex-row justify-content-center">
+    <div class="pt-2 d-flex flex-row justify-content-center">
       <span class="fs-3 fw-bold col-10 text-truncate" [innerHTML]=" itemDetail?.title | formatvalue : formModel : 'Title' | async "></span>
       <div class="d-flex align-self-center col-2 justify-content-end">
         <codx-vll
@@ -38,7 +38,7 @@
         </codx-vll>
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-3 mt-3">
+    <div class="d-flex justify-content-between flex-grow-1 mb-2 mt-3">
       <div class="">
         <codx-temp-full
           class="user-center"
@@ -48,7 +48,7 @@
           [subTitleCss]="'text-gray-500'"
           [imageId]="itemDetail?.owner"
           imageObjType="AD_Users"
-          [imageWidth]="40"
+          [imageWidth]="35"
         >
         </codx-temp-full>
       </div>
@@ -56,7 +56,7 @@
     </div>
 
     
-    <div class="d-flex align-item-center mb-2">
+    <div class="d-flex align-item-center mb-1">
       <div class="me-1 icon-apartment icon-16 text-gray-700"></div>
       <div class="d-flex align-items-center me-5">
         <codx-label

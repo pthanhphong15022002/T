@@ -65,7 +65,7 @@ export class PopupConvertLeadComponent implements OnInit {
       name: 'Contacts',
     },
     {
-      icon: 'con-settings',
+      icon: 'icon-read_more',
       text: 'Thông tin nhập liệu',
       name: 'InputInformation',
     },
@@ -99,6 +99,9 @@ export class PopupConvertLeadComponent implements OnInit {
   modifyOnAvt: Date;
   entityName: any;
   isCheckContact: boolean = false;
+  businessLine: any;
+  dateMax: Date;
+  dateMessage: string;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -117,6 +120,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.modifyOnAvt = this.lead?.modifiedOn;
     this.entityName = this.dialog.formModel?.entityName;
     this.deal.processID = null;
+    this.promiseAll();
   }
 
   async ngOnInit() {
@@ -124,14 +128,14 @@ export class PopupConvertLeadComponent implements OnInit {
     this.gridViewSetupDeal = await firstValueFrom(
       this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
     );
-    var options = new DataRequest();
-    options.entityName = 'DP_Processes';
-    options.predicates = 'ApplyFor=@0 && !Deleted';
-    options.dataValues = '1';
-    options.pageLoading = false;
-    this.listCbxProcess = await firstValueFrom(
-      this.cmSv.loadDataAsync('DP', options)
-    );
+    // var options = new DataRequest();
+    // options.entityName = 'DP_Processes';
+    // options.predicates = 'ApplyFor=@0 && !Deleted';
+    // options.dataValues = '1';
+    // options.pageLoading = false;
+    // this.listCbxProcess = await firstValueFrom(
+    //   this.cmSv.loadDataAsync('DP', options)
+    // );
     if (
       this.lead.businessLineID != null &&
       this.lead.businessLineID.trim() != ''
@@ -148,8 +152,6 @@ export class PopupConvertLeadComponent implements OnInit {
       this.countAddSys++;
     }
 
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
     this.changeDetectorRef.detectChanges();
   }
 
@@ -170,75 +172,108 @@ export class PopupConvertLeadComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  promiseAll() {}
+
   async getProcessIDBybusinessLineID(businessLineID) {
     var options = new DataRequest();
     options.entityName = 'CM_BusinessLines';
     options.predicates = 'RecID=@0';
     options.dataValues = businessLineID;
     options.pageLoading = false;
-    var businessLine = await firstValueFrom(
+    this.businessLine = await firstValueFrom(
       this.cmSv.loadDataAsync('CM', options)
     );
 
-    if (this.listCbxProcess != null && this.listCbxProcess.length > 0) {
-      this.deal.processID = businessLine[0]?.processID;
-      this.getProcessByProcessID(this.deal.processID);
-    }
+    this.getListInstanceSteps(this.businessLine[0].processID);
   }
 
   async getProcessByProcessID(e) {
-    var process = this.listCbxProcess.find((x) => x.recID == e);
-    if (process != null) {
-      if (process.permissions != null) {
-        var lstPerm = process.permissions.filter((x) => x.roleType == 'P');
-        this.listParticipants =
-          lstPerm != null && lstPerm.length > 0
-            ? await this.cmSv.getListUserByOrg(lstPerm)
-            : [];
-      }
-      if (this.deal.processID) {
-        var lstStep =
-          process?.steps != null ? this.groupByStep(process?.steps) : [];
-        this.deal.endDate = this.HandleEndDate(lstStep);
-      }
-
-      if (
-        process.instanceNoSetting != null &&
-        process.instanceNoSetting.trim() != ''
-      ) {
-        this.deal.dealID = await firstValueFrom(
-          this.api.execSv<any>(
-            'DP',
-            'ERM.Business.DP',
-            'InstancesBusiness',
-            'GenAutoNumberInstanceNoSettingApiAsync',
-            process.instanceNoSetting
-          )
-        );
-      } else {
-        this.deal.dealID = await firstValueFrom(
-          this.api.execSv<any>(
-            'SYS',
-            'ERM.Business.AD',
-            'AutoNumbersBusiness',
-            'GenAutoNumberAsync',
-            ['CM0201', 'CM_Deals', 'DealID']
-          )
-        );
-      }
-
-      this.listInstanceSteps = await firstValueFrom(
-        this.api.execSv<any>(
-          'DP',
-          'ERM.Business.DP',
-          'InstancesBusiness',
-          'CreateListInstancesStepsByProcessAsync',
-          this.deal?.processID
-        )
-      );
+    // var process = this.listCbxProcess.find((x) => x.recID == e);
+    // if (process != null) {
+    //   if (process.permissions != null) {
+    //     var lstPerm = process.permissions.filter((x) => x.roleType == 'P');
+    //     this.listParticipants =
+    //       lstPerm != null && lstPerm.length > 0
+    //         ? await this.cmSv.getListUserByOrg(lstPerm)
+    //         : [];
+    //   }
+    //   if (this.deal.processID) {
+    //     var lstStep =
+    //       process?.steps != null ? this.groupByStep(process?.steps) : [];
+    //     this.deal.endDate = this.HandleEndDate(lstStep);
+    //   }
+    //   if (
+    //     process.instanceNoSetting != null &&
+    //     process.instanceNoSetting.trim() != ''
+    //   ) {
+    //     this.deal.dealID = await firstValueFrom(
+    //       this.api.execSv<any>(
+    //         'DP',
+    //         'ERM.Business.DP',
+    //         'InstancesBusiness',
+    //         'GenAutoNumberInstanceNoSettingApiAsync',
+    //         process.instanceNoSetting
+    //       )
+    //     );
+    //   } else {
+    //     this.deal.dealID = await firstValueFrom(
+    //       this.api.execSv<any>(
+    //         'SYS',
+    //         'ERM.Business.AD',
+    //         'AutoNumbersBusiness',
+    //         'GenAutoNumberAsync',
+    //         ['CM0201', 'CM_Deals', 'DealID']
+    //       )
+    //     );
+    //   }
+    //   this.listInstanceSteps = await firstValueFrom(
+    //     this.api.execSv<any>(
+    //       'DP',
+    //       'ERM.Business.DP',
+    //       'InstancesBusiness',
+    //       'CreateListInstancesStepsByProcessAsync',
+    //       this.deal?.processID
+    //     )
+    //   );
+    // }
+    // this.changeDetectorRef.detectChanges();
+  }
+  async getListInstanceSteps(processId: any) {
+    if (processId) {
+      var data = [processId, this.deal?.refID, 'add', '1'];
+      this.deal.owner = null;
+      this.deal.salespersonID = null;
+      this.deal.processID = processId;
+      this.cmSv.getInstanceSteps(data).subscribe(async (res) => {
+        if (res && res.length > 0) {
+          var obj = {
+            id: processId,
+            steps: res[0],
+            permissions: await this.getListPermission(res[1]),
+            dealId: this.deal.dealID,
+          };
+          this.listInstanceSteps = res[0];
+          this.listParticipants = obj.permissions;
+          this.deal.dealID = res[2];
+          this.dateMax = this.HandleEndDate(
+            this.listInstanceSteps,
+            'add',
+            null
+          );
+          this.deal.endDate = this.dateMax;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    } else {
+      this.cmSv.getListProcessDefault(['1']).subscribe((res) => {
+        if (res) {
+          var processId = res.recID;
+          if (processId) {
+            this.getListInstanceSteps(processId);
+          }
+        }
+      });
     }
-
-    this.changeDetectorRef.detectChanges();
   }
 
   getListContactByObjectID(objectID) {
@@ -306,13 +341,36 @@ export class PopupConvertLeadComponent implements OnInit {
       this.notiService.notifyCode(messageCheckFormat);
       return;
     }
+    if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
+      this.notiService.notifyCode(
+        'DP032',
+        0,
+        '"' + this.gridViewSetupDeal['EndDate']?.headerText + '"',
+        '"' + this.dateMessage + '"'
+      );
+      return;
+    }
 
     this.onConvert();
+  }
+  checkEndDayInstance(endDate, endDateCondition) {
+    var date1 = new Date(endDate);
+    var date2 = new Date(endDateCondition);
+    this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
+
+    return date1 < date2;
   }
 
   async onConvert() {
     var data = [];
-    data = [this.lead.recID, this.customer, this.deal, this.isCheckContact ? this.lstContactDeal : null];
+    data = [
+      this.lead.recID,
+      this.customer,
+      this.deal,
+      this.isCheckContact ? this.lstContactDeal : null,
+    ];
     await this.api
       .execSv<any>(
         'CM',
@@ -400,20 +458,20 @@ export class PopupConvertLeadComponent implements OnInit {
         if (processId != this.deal?.processID) {
           this.deal.processID = processId;
 
-          this.getProcessByProcessID(this.deal.processID);
+          this.getListInstanceSteps(this.deal.processID);
         }
       }
     }
   }
-  async cbxProcessChange(e) {
-    if (e != null && e.trim() != '') {
-      if (e != this.deal?.processID) {
-        this.deal.processID = e;
-        if (this.listCbxProcess != null) {
-        }
-      }
-    }
-  }
+  // async cbxProcessChange(e) {
+  //   if (e != null && e.trim() != '') {
+  //     if (e != this.deal?.processID) {
+  //       this.deal.processID = e;
+  //       if (this.listCbxProcess != null) {
+  //       }
+  //     }
+  //   }
+  // }
 
   groupByStep(listStep) {
     return listStep.sort(function (a, b) {
@@ -437,9 +495,11 @@ export class PopupConvertLeadComponent implements OnInit {
     });
   }
 
-  HandleEndDate(listSteps: any) {
-    var dateNow = new Date();
-    var endDate = new Date();
+  HandleEndDate(listSteps: any, action: string, endDateValue: any) {
+    var dateNow =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    var endDate =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
     for (let i = 0; i < listSteps.length; i++) {
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
       endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
@@ -527,25 +587,26 @@ export class PopupConvertLeadComponent implements OnInit {
         this.lead.customerID = this.customerID;
       }
       this.radioChecked = true;
-      this.getListContactByObjectID(this.customerID);
+      // this.getListContactByObjectID(this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
       this.setDataCustomer();
+
       if (this.countAddNew == 0) {
         this.customerID = Util.uid();
         this.customerNewOld = this.customerID;
         this.customer.recID = this.customerNewOld;
       }
       this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
-
       this.gridViewSetupCustomer = await firstValueFrom(
         this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
       );
+      this.customer.headcounts = this.lead?.headcounts;
 
       this.countAddNew++;
 
-      this.getListContactByObjectID(this.customerNewOld);
+      // this.getListContactByObjectID(this.customerNewOld);
     }
   }
 
@@ -557,7 +618,6 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.webPage = this.lead?.webPage;
     this.customer.industries = this.lead?.industries;
     this.customer.annualRevenue = this.lead?.annualRevenue;
-    this.customer.headcounts = this.lead?.headcounts;
     this.customer.establishDate = this.lead?.establishDate;
     this.customer.channelID = this.lead?.channelID;
   }
@@ -569,7 +629,7 @@ export class PopupConvertLeadComponent implements OnInit {
   valueChangeCustomer(e) {
     this.customer[e.field] = e?.data;
     if (e.field == 'customerName' && e?.data) {
-      this.nameAvt = e.data;
+      this.nameAvt = e?.data?.trim();
     }
   }
   valueTagChange(e) {
@@ -585,6 +645,10 @@ export class PopupConvertLeadComponent implements OnInit {
         this.lead.customerID = this.customerID;
         this.getListContactByObjectID(this.customerID);
       }
+    }
+
+    if (e.field == 'currencyID') {
+      this.loadExchangeRate();
     }
   }
 
@@ -835,5 +899,30 @@ export class PopupConvertLeadComponent implements OnInit {
       this.nameAvt = this.customer?.customerName;
       this.modifyOnAvt = this.customer?.modifiedOn;
     }
+  }
+  loadExchangeRate() {
+    let day = this.deal.createdOn ?? new Date();
+    if (this.deal.currencyID) {
+      this.cmSv.getExchangeRate(this.deal.currencyID, day).subscribe((res) => {
+        let exchangeRateNew = res?.exchRate ?? 0;
+        if (exchangeRateNew == 0) {
+          this.notiService.notify(
+            'Tỷ giá tiền tệ "' +
+              this.deal.currencyID +
+              '" chưa thiết lập xin hay chọn lại !',
+            '3'
+          );
+          return;
+        } else {
+          this.deal.exchangeRate = exchangeRateNew;
+        }
+      });
+    }
+  }
+  async getListPermission(permissions) {
+    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    return this.listParticipants != null && this.listParticipants.length > 0
+      ? await this.cmSv.getListUserByOrg(this.listParticipants)
+      : this.listParticipants;
   }
 }

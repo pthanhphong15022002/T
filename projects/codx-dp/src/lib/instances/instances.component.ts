@@ -401,7 +401,7 @@ export class InstancesComponent
   }
 
   getPropertiesHeader(data, type) {
-    if (this.listHeader?.length == 0) {
+    if (!this.listHeader || this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);

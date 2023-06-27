@@ -49,7 +49,7 @@
                       <i class="icon-keyboard_arrow_down"></i>
                     </span>
                     <div ngbDropdownMenu class="" style="min-width: 400px">
-                      <div class="card card-flush" *ngIf="eInfoFormModel">
+                      <div class="card card-flush" *ngIf="eInfoFormModel && LoadedEInfo == true">
                         <div class="card-body py-2 px-3">
                           <div class="d-flex flex-column">
                             <div
@@ -103,9 +103,6 @@
                               </div>
                             </div>
                             <div class="d-flex align-items-center mb-2">
-                              <span
-                                class="icon-portrait icon-16 text-gray-800 me-1"
-                              ></span>
                               <span class="text-dark">
                                 <span
                                   [innerHTML]="
@@ -1461,8 +1458,8 @@
                       <span
                         class="fw-bold text-dark ms-7"
                         [innerHTML]="
-                          infoPersonal?.idCardNo
-                            | formatvalue : eInfoFormModel : 'idCardNo'
+                          infoPersonal?.accountNo
+                            | formatvalue : eInfoFormModel : 'accountNo'
                             | async
                         "
                       ></span>

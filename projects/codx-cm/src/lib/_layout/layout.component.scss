@@ -16,4 +16,11 @@
 
 codx-cmcustomer-detail .codx-detail-main{
 	padding-bottom: 0!important;
+} 
+.cm-scroll-top{
+  min-height: 55px;
+}
+.cm-scroll{
+ 	height: calc(100vh - 280px);
+ 	overflow: auto;
 }
