@@ -137,7 +137,7 @@ export class InventoryComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .copy(this.view.dataService.dataSelected)
+      .copy()
       .subscribe((res: any) => {
         var obj = {
           formType: 'copy',

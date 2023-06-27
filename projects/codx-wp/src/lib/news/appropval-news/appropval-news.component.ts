@@ -154,7 +154,7 @@ export class AppropvalNewsComponent extends UIComponent {
     let predicates = [item.value ? "ApproveStatus = @0" : ""];
     let dataValues = [item.value];
     this.view.dataService.page = 0;
-    this.view.dataService.setPredicates(predicates, dataValues).subscribe();
+    this.view.dataService.setPredicates(predicates, dataValues);
     this.tabAsside.forEach((e) => {
         e.active = e.value === item.value ;
     });
