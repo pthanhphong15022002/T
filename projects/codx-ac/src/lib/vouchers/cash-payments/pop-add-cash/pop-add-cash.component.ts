@@ -228,6 +228,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       }
     );
+    (this.elementRef.nativeElement as HTMLElement).addEventListener(
+      'click',
+      (e: any) => {
+          if(this.gridCash && this.gridCash.gridRef){
+            if(this.gridCash.gridRef.isEdit){
+              debugger
+
+            }
+          }
+      }
+    );
 
     this.dt.detectChanges();
   }
@@ -857,7 +868,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           //     break;
           //   case '9':
           //     if (document.getElementById('gridcash') != null) {
-                
+
           //     }
           //     if (document.getElementById('gridset') != null) {
           //       this.settlement(0);
