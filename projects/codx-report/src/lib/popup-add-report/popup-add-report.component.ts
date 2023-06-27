@@ -140,6 +140,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     public atSV: AttachmentService,
     private cache: CacheService,
     private callFuncService: CallFuncService,
+    // private realHub: RealHubService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -156,7 +157,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
+    // this.realHub.startConnection('wp')(x=>{
+    //   x.asObjectserable().subscribe(z=>{
+    
+    //   });
+    // });
   }
 
   ngAfterViewInit(): void {
@@ -171,6 +176,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   getReport(){
+    debugger
     this.api
     .execSv(
       'rptsys',
@@ -268,6 +274,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   setDefaut() {
+    debugger
     this.recID = Util.uid();
     this.data = {};
     this.data.description = null;
@@ -437,27 +444,16 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   async saveForm() {
-
+    debugger
     if (!this.data.recID) {
       this.data.recID = this.recID;
     }
-    // if (this.attachment && this.attachment.fileUploadList.length > 0) {
-    //   this.attachment.objectId = this.recID;
-    //   console.log(this.attachment.fileUploadList);
-
-    //   (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-
-    //     if (item2?.status == 0) {
-    //     }
-
-
-    //   });
-    //   this.data.reportName = this.data.location =
-    //   this.attachment.fileUploadList[0].fileName;
-    // }
     if(!this.data.customName) this.data.customName = this.data.defaultName;
-    if (!this.data.service) this.data.service = 'rpt' + this.moduleName;
-    if(this.data.assemblyName) this.data.service = this.data.assemblyName.split(".").pop();
+    if(this.moduleName){
+      this.data.service = 'rpt' + this.moduleName.toLowerCase();
+    }
+    else
+      this.data.service = 'rpt' + this.data.assemblyName.split(".")[2].toLowerCase();
     this.fuctionItem.functionID = this.data.reportID;
     this.fuctionItem.functionType = 'R';
     this.fuctionItem.parentID = this.funcID;
@@ -486,6 +482,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         [this.data, this.fuctionItem]
       )
       .subscribe((res) => {
+        debugger
         this.data.reportContent && this.setDataset();
         this.dialog.close();
       });
@@ -506,7 +503,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   fileSelected(e:any){
-    console.log(e.filesData)
+    debugger
     let file = e.filesData[0].rawFile;
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -568,6 +565,7 @@ private downloadCustomFile(e:any){
    if(linkSource.split(',').length ==1){
        linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
       }
+      debugger
     const downloadLink = document.createElement("a");
     downloadLink.href = linkSource;
     downloadLink.download = this.data.reportName;

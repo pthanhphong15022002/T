@@ -177,7 +177,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.postProject = value;
         break;
     }
-    this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
+    this.grid.dataService.setPredicates([field + '=@0'], [value]);
   }
   toolBarClick(e) {
     switch (e.id) {

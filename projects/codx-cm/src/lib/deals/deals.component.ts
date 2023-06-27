@@ -112,7 +112,7 @@ export class DealsComponent
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
-  listHeader: any;
+  listHeader: any = [];
   colorReasonSuccess: any;
   colorReasonFail: any;
   processID: any;
@@ -130,6 +130,13 @@ export class DealsComponent
   paramDefault: any;
   currencyIDDefault: any = 'VND';
   exchangeRateDefault: any = 1;
+  fiterOption: any;
+  orgFilter: any;
+  orgPin: any;
+  pinnedItem: any;
+  processIDKanban: string;
+  processIDDefault: string;
+  crrProcessID = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -146,6 +153,14 @@ export class DealsComponent
     // }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
+
+    this.codxCmService.getProcessDefault('1').subscribe((res) => {
+      if (res) {
+        this.processIDDefault = res.recID;
+        this.processIDKanban = res.recID;
+      }
+    });
+
     ///lay tien mac dinh
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
@@ -221,10 +236,10 @@ export class DealsComponent
           v.hide = true;
           v.active = false;
         }
-        if (!(this.funcID == 'CM0201' && v.type == '6')) this.views.push(v);
+        // if (!(this.funcID == 'CM0201' && v.type == '6'))
+        this.views.push(v);
       });
     });
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -246,86 +261,103 @@ export class DealsComponent
   }
 
   changeView(e) {
-    this.viewCrr = e?.view?.type;
-    if (!this.funCrr) {
-      this.funCrr = this.funcID;
-      return;
-    }
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.viewCrr == 6)
+    this.viewCrr = e?.view?.type;
+    //xu ly view fitter
+    this.changeFilter();
+    if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
+    }
+
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
+    else if (this.processIDKanban)
+      this.dataObj = { processID: this.processIDKanban };
+
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-      if (this.processID) this.dataObj = { processID: this.processID };
-      if (this.crrFuncID != this.funcID) {
-        this.cache.viewSettings(this.funcID).subscribe((views) => {
-          if (views) {
-            this.afterLoad();
-            this.crrFuncID = this.funcID;
-            this.views = [];
-            let idxActive = -1;
-            let viewOut = false;
-            this.viewsDefault.forEach((v, index) => {
-              let idx = views.findIndex((x) => x.view == v.type);
-              if (idx != -1) {
-                v.hide = false;
-                if (v.type != this.viewCrr) v.active = false;
-                else v.active = true;
-                if (views[idx].isDefault) idxActive = index;
-              } else {
-                v.hide = true;
-                v.active = false;
-                if (this.viewCrr == v.type) viewOut = true;
-              }
-              if (v.type == 6) {
-                v.request.dataObj = this.dataObj;
-                v.request2.dataObj = this.dataObj;
-              }
-              if (!(this.funcID == 'CM0201' && v.type == '6'))
-                this.views.push(v);
-              else viewOut = true;
-            });
-            if (!this.views.some((x) => x.active)) {
-              if (idxActive != -1) this.views[idxActive].active = true;
-              else this.views[0].active = true;
+      // this.cache.viewSettings(this.funcID).subscribe((views) => {
+      //   if (views) {
+      //     this.afterLoad();
+      //     this.views = [];
+      //     let idxActive = -1;
+      //     let viewOut = false;
+      //     this.viewsDefault.forEach((v, index) => {
+      //       let idx = views.findIndex((x) => x.view == v.type);
+      //       if (idx != -1) {
+      //         v.hide = false;
+      //         if (v.type != this.viewCrr) v.active = false;
+      //         else v.active = true;
+      //         if (views[idx].isDefault) idxActive = index;
+      //       } else {
+      //         v.hide = true;
+      //         v.active = false;
+      //         if (this.viewCrr == v.type) viewOut = true;
+      //       }
+      //       if (v.type == 6) {
+      //         v.request.dataObj = this.dataObj;
+      //         v.request2.dataObj = this.dataObj;
+      //       }
+      //       //  if (!(this.funcID == 'CM0201' && v.type == '6'))
+      //       this.views.push(v);
+      //       //  else viewOut = true;
+      //     });
+      //     if (!this.views.some((x) => x.active)) {
+      //       if (idxActive != -1) this.views[idxActive].active = true;
+      //       else this.views[0].active = true;
 
-              let viewModel =
-                idxActive != -1 ? this.views[idxActive] : this.views[0];
-              this.view.viewActiveType = viewModel.type;
-              this.view.viewChange(viewModel);
-              if (viewOut) this.view.load();
-            }
-            if ((this.view?.currentView as any)?.kanban) {
-              let kanban = (this.view?.currentView as any)?.kanban;
-              let settingKanban = kanban.kanbanSetting;
-              settingKanban.isChangeColumn = true;
-              settingKanban.formName = this.view?.formModel?.formName;
-              settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-              this.api
-                .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-                  settingKanban,
-                  this.dataObj,
-                ])
-                .subscribe((resource) => {
-                  if (resource?.columns && resource?.columns.length)
-                    kanban.columns = resource.columns;
-                  kanban.kanbanSetting.isChangeColumn = false;
-                  kanban.dataObj = this.dataObj;
-                  kanban.loadDataSource(
-                    kanban.columns,
-                    kanban.kanbanSetting?.swimlaneSettings,
-                    false
-                  );
-                  kanban.refresh();
-                  this.kanban = kanban;
-                });
-            }
+      //       let viewModel =
+      //         idxActive != -1 ? this.views[idxActive] : this.views[0];
+      //       this.view.viewActiveType = viewModel.type;
+      //       this.view.viewChange(viewModel);
+      //       // if (viewOut)
+      //       // this.view.load();
+      //     }
 
-            this.detectorRef.detectChanges();
-          }
-        });
-      }
+      // if ((this.view?.currentView as any)?.kanban) {
+      //   this.loadKanban();
+      //   // let kanban = (this.view?.currentView as any)?.kanban;
+      //   // let settingKanban = kanban.kanbanSetting;
+      //   // settingKanban.isChangeColumn = true;
+      //   // settingKanban.formName = this.view?.formModel?.formName;
+      //   // settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+      //   // this.api
+      //   //   .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+      //   //     settingKanban,
+      //   //     this.dataObj,
+      //   //   ])
+      //   //   .subscribe((resource) => {
+      //   //     if (resource?.columns && resource?.columns.length)
+      //   //       kanban.columns = resource.columns;
+      //   //     kanban.kanbanSetting.isChangeColumn = false;
+      //   //     kanban.dataObj = this.dataObj;
+      //   //     kanban.loadDataSource(
+      //   //       kanban.columns,
+      //   //       kanban.kanbanSetting?.swimlaneSettings,
+      //   //       false
+      //   //     );
+      //   //     kanban.refresh();
+      //   //     this.kanban = kanban;
+      //   //     this.detectorRef.detectChanges();
+      //   //   });
+      // }
+      // }
+      // });
+    } else if (
+      this.funcID == 'CM0201' &&
+      this.viewCrr == 6 &&
+      this.processIDKanban != this.crrProcessID &&
+      (this.view?.currentView as any)?.kanban
+    ) {
+      this.crrProcessID = this.processIDKanban;
+      this.dataObj = { processID: this.processIDKanban };
+      this.view.views.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      this.loadKanban();
     }
   }
 
@@ -611,6 +643,9 @@ export class DealsComponent
         //xư lý dbClick
         this.viewDetail(e.data);
         break;
+      //chang fiter
+      case 'pined-filter':
+        this.seclectFilter(e.data);
     }
   }
 
@@ -982,7 +1017,7 @@ export class DealsComponent
   }
 
   getPropertiesHeader(data, type) {
-    if (this.listHeader?.length == 0) {
+    if (!this.listHeader || this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
@@ -1071,10 +1106,7 @@ export class DealsComponent
         option.Width = '800px';
         option.zIndex = 1001;
         var formMD = new FormModel();
-        // formMD.funcID = funcIDApplyFor;
-        // formMD.entityName = fun.entityName;
-        // formMD.formName = fun.formName;
-        // formMD.gridViewName = fun.gridViewName;
+
         var obj = {
           action: 'edit',
           formMD: formMD,
@@ -1122,10 +1154,6 @@ export class DealsComponent
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
       this.openFormDeal(formMD, option, 'copy');
@@ -1360,6 +1388,179 @@ export class DealsComponent
         this.kanban.columns[idx].totalDealValue -= money;
       }
     }
+  }
+  //end
+
+  //-----------------------------change Filter -------------------------------//
+  changeFilter() {
+    if (this.funcID != 'CM0201') {
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp != -1) {
+        this.fiterOption = this.view.filterOptions[idxBusinesLineOp];
+        this.view.filterOptions.splice(idxBusinesLineOp, 1);
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg != -1) {
+        this.orgFilter = this.view.orgFilters[idxBusinesLineOg];
+        this.view.orgFilters.splice(idxBusinesLineOg, 1);
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine != -1) {
+        this.orgPin = this.view.orgPinned[idxBusinesLine];
+        this.view.orgPinned.splice(idxBusinesLine, 1);
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem != -1) {
+        this.pinnedItem = this.view.pinnedItems[idxBusinesLineItem];
+        this.view.pinnedItems.splice(idxBusinesLineItem, 1);
+      }
+    } else {
+      ///add fileter
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp == -1 && this.fiterOption) {
+        this.view.filterOptions.unshift(this.fiterOption);
+        this.fiterOption = null;
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg == -1 && this.orgFilter) {
+        this.view.orgFilters.unshift(this.orgFilter);
+        this.orgFilter = null;
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine == -1 && this.orgPin) {
+        this.view.orgPinned.unshift(this.orgPin);
+        this.orgPin = null;
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem == -1 && this.pinnedItem) {
+        this.view.pinnedItems.unshift(this.pinnedItem);
+        this.pinnedItem = null;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async seclectFilter(datas) {
+    if (datas && datas?.length > 0) {
+      var filter = datas.filter((x) => x.field == 'BusinessLineID')[0];
+      if (filter) {
+        this.processIDKanban = await firstValueFrom(
+          this.codxCmService.getProcessByBusinessLineID(filter?.value)
+        );
+        if (!this.processIDKanban) this.processIDKanban = this.processIDDefault;
+      } else this.processIDKanban = this.processIDDefault;
+    }
+    // load kanban
+    if (this.viewCrr == 6 && this.processIDKanban != this.crrProcessID) {
+      this.processIDKanban == this.crrProcessID;
+      this.dataObj = { processID: this.processIDKanban };
+      this.view.views.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      this.loadKanban();
+    }
+  }
+
+  loadKanban() {
+    if (!this.kanban) this.kanban = (this.view?.currentView as any)?.kanban;
+    let kanban = (this.view?.currentView as any)?.kanban;
+    let settingKanban = kanban.kanbanSetting;
+    settingKanban.isChangeColumn = true;
+    settingKanban.formName = this.view?.formModel?.formName;
+    settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+    this.api
+      .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+        settingKanban,
+        this.dataObj,
+      ])
+      .subscribe((resource) => {
+        if (resource?.columns && resource?.columns.length)
+          kanban.columns = resource.columns;
+        kanban.kanbanSetting.isChangeColumn = false;
+        kanban.dataObj = this.dataObj;
+        kanban.loadDataSource(
+          kanban.columns,
+          kanban.kanbanSetting?.swimlaneSettings,
+          false
+        );
+        kanban.refresh();
+        this.kanban = kanban;
+        // if (this.kanban) this.kanban.refresh();
+        this.detectorRef.detectChanges();
+      });
+  }
+
+  onLoading() {
+    if (!this.funCrr) return;
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
+    else if (this.processIDKanban)
+      this.dataObj = { processID: this.processIDKanban };
+    this.cache.viewSettings(this.funcID).subscribe((views) => {
+      if (views) {
+        this.afterLoad();
+        this.views = [];
+        let idxActive = -1;
+        let viewOut = false;
+        this.viewsDefault.forEach((v, index) => {
+          let idx = views.findIndex((x) => x.view == v.type);
+          if (idx != -1) {
+            v.hide = false;
+            if (v.type != this.viewCrr) v.active = false;
+            else v.active = true;
+            if (views[idx].isDefault) idxActive = index;
+          } else {
+            v.hide = true;
+            v.active = false;
+            if (this.viewCrr == v.type) viewOut = true;
+          }
+          if (v.type == 6) {
+            v.request.dataObj = this.dataObj;
+            v.request2.dataObj = this.dataObj;
+          }
+          //  if (!(this.funcID == 'CM0201' && v.type == '6'))
+          this.views.push(v);
+          //  else viewOut = true;
+        });
+        if (!this.views.some((x) => x.active)) {
+          if (idxActive != -1) this.views[idxActive].active = true;
+          else this.views[0].active = true;
+
+          let viewModel =
+            idxActive != -1 ? this.views[idxActive] : this.views[0];
+          this.view.viewActiveType = viewModel.type;
+          this.view.viewChange(viewModel);
+          // if (viewOut)
+          // this.view.load();
+        }
+        if ((this.view?.currentView as any)?.kanban) this.loadKanban();
+      }
+    });
   }
   //end
 }

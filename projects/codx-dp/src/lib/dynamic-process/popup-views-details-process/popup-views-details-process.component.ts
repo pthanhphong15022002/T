@@ -19,6 +19,7 @@ import {
 import { TabModel } from '../../models/models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CodxDpService } from '../../codx-dp.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-views-details-process',
@@ -50,6 +51,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     { name: 'Detail', textDefault: 'Chi tiết quy trình', isActive: false },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false },
   ];
+  listType = [];
   // value
   vllApplyFor = 'DP002';
   formModelStep: FormModel = {
@@ -85,32 +87,54 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     this.dpService
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
-    // this.cache.valueList('DP034').subscribe((res) => {
-    //   if (res && res.datas) {
-    //     var tabIns = [];
-    //     res.datas.forEach((element) => {
-    //       var tab = {};
-    //       tab['viewModelDetail'] = element?.value;
-    //       tab['textDefault'] = element?.text;
-    //       tab['icon'] = element?.icon;
-    //       tabIns.push(tab);
-    //     });
-    //     this.tabInstances = tabIns;
-    //   }
-    // });
+      
   }
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    if(this.process?.steps?.length > 0){
+      this.process?.steps?.forEach((step) => {
+        this.groupByTask(step);
+      })
+      console.log(this.process.steps.map((step) => (step.taskGroups)));
+      let data = await firstValueFrom(this.cache.valueList('DP004'));  
+      this.listType = data ? data?.datas : [];
+    }
+     
+  }
 
-  clickMenu(item) {
-    this.name = item.name;
-    this.tabControl.forEach((obj) => {
-      if (!obj.isActive && obj.name == this.name) {
-        obj.isActive = true;
-      } else obj.isActive = false;
-    });
+  clickMenu(event) {
+    this.name = event;
     this.changeDetectorRef.detectChanges();
   }
+
+  groupByTask(step){
+    let listGroupTask;
+    const taskGroupList = step?.tasks?.reduce((group, task) => {
+      const {taskGroupID} = task;
+      group[taskGroupID] = group[taskGroupID] ?? [];
+      group[taskGroupID].push(task);
+      return group;
+    }, {});
+    const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+      let tasks = taskGroupList[taskGroup['recID']] ?? [];
+      return {
+        ...taskGroup,
+        tasks: tasks.sort((a, b) => a['indexNo'] - b['indexNo']),
+      };
+    });
+    // this.currentStep['taskGroups'] = taskGroupConvert;
+    listGroupTask = taskGroupConvert;
+    if (taskGroupList['null']) {
+      let taskGroup = {};
+      taskGroup['tasks'] =
+        taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
+        [];
+      taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+      listGroupTask.push(taskGroup);
+    }
+    step['taskGroups'] = listGroupTask;   
+  }
+
   showGuide(p) {
     p.close();
     let option = new DialogModel();

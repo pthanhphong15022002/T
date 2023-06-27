@@ -99,9 +99,9 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
-    this.cache
-      .gridViewSetup(view.function.formName, view.function.gridViewName)
-      .subscribe(() => {});
+    // this.cache
+    //   .gridViewSetup(view.function.formName, view.function.gridViewName)
+    //   .subscribe(() => {});
   }
 
   changeDataMF(e: any, data) {
@@ -455,7 +455,7 @@ export class DynamicFormComponent extends UIComponent {
                     systemProcess: '2',
                     data: process,
                   };
-                  var dialog = this.callfc.openForm(
+                  this.callfc.openForm(
                     PopupAddDynamicProcessComponent,
                     '',
                     Util.getViewPort().height - 100,
@@ -465,7 +465,6 @@ export class DynamicFormComponent extends UIComponent {
                     '',
                     dialogModel
                   );
-                  dialog.closed.subscribe((e) => {});
                 }
               });
           }

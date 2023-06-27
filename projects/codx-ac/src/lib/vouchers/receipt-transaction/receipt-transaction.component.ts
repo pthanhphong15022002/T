@@ -128,7 +128,7 @@ export class ReceiptTransactionComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template2: this.templateMore,

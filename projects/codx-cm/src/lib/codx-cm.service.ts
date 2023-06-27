@@ -101,6 +101,15 @@ export class CodxCmService {
     );
   }
 
+  updateStatusCustoemr(recID, status) {
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'UpdateStatusCustomerAsync',
+      [recID, status]
+    );
+  }
+
   getContactByObjectID(objectID) {
     return this.api.exec<any>('CM', 'ContactsBusiness', 'GetOneAsync', [
       objectID,
@@ -1109,6 +1118,24 @@ export class CodxCmService {
       'TaskBusiness',
       'GetListTaskTreeBySessionIDAsync',
       recID
+    );
+  }
+
+  getProcessDefault(applyFor) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessDefaultAsync',
+      applyFor
+    );
+  }
+
+  getProcessByBusinessLineID(bussinessID) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetProcessByBussinessIDAsync',
+      bussinessID
     );
   }
 }

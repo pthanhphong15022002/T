@@ -1,0 +1,93 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeader]="subHeader"
+  [body]="body"
+  [footer]="footer"
+  [data]="data"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+  <ng-template #subHeader>
+    <ng-container *ngIf="form?.formGroup">
+      <div class="d-flex">
+        <div class="symbol symbol-circle symbol-30px symbol-vllicon">
+          <codx-input
+            class=""
+            type="vllicon"
+            refValue="L1470"
+            field="icon"
+            [crrValue]="data?.icon"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+
+        <div class="ms-4">
+          <codx-input
+            class="ms-4"
+            type="colorpicker"
+            [showText]="false"
+            [modeSwitcher]="false"
+            [crrValue]="data?.iconColor"
+            field="iconColor"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #body>
+    <ng-container *ngIf="form?.formGroup">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" [fiedName]="'CustGroupID'">
+        </codx-label>
+        <codx-input
+          type="text"
+          [placeholder]="
+            disabledShowInput
+              ? planceHolderAutoNumber
+              : gridViewSetup['CustGroupID']?.description
+          "
+          [disabled]="disabledShowInput"
+          [crrValue]="data?.custGroupID"
+          (valueChange)="valueChange($event)"
+          [field]="'custGroupID'"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" [fiedName]="'CustGroupName'">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [field]="'custGroupName'"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" [fiedName]="'Note'">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [field]="'note'"
+        >
+        </codx-input>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
