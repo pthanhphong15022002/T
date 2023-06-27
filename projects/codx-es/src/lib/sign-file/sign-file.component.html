@@ -9,9 +9,9 @@
       'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
       data?.icon
     "
-    [status]="data?.approveStatus"
+    [status]="data?.approveStatus "
     [icoStyle]="setStyles(data?.color)"
-    [statusVll]="lstReferValue?.ApproveStatus"
+    [statusVll]="data?.isTemplate!=true ? lstReferValue?.ApproveStatus : ''"
     [date]="data?.createdOn"
     [resources]="data?.createdBy != undefined ? data?.createdBy : ''"
     [resourceObjType]="'AD_Users'"
@@ -37,6 +37,7 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
+    [showApproveStatus]="itemDetail?.isTemplate!=true ? true : false"
     (uploaded)="getDetailSignFile($event)"
   >
   </lib-view-detail>
@@ -49,7 +50,7 @@
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [icoStatus2]="data?.security"
-    [statusVll]="lstReferValue['ApproveStatus']"
+    [statusVll]="lstReferValue?.ApproveStatus"
     [icoStatus]="data?.urgency"
     [title]="data?.categoryName"
     [status]="data?.approveStatus"

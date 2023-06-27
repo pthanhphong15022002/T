@@ -607,6 +607,10 @@ ejs-calendar {
   height: 5px!important;
   border-radius: 0!important;
 }
+
+.e-calendar .e-content td.e-today span.e-day{
+    box-shadow: inset 2px 0 var(--primary-dark), inset 0 2px var(--primary-dark), inset -2px 0 var(--primary-dark), inset 0 -2px var(--primary-dark);
+}
 /////
 .card {
   box-shadow: none;
@@ -1848,6 +1852,7 @@ textarea.codx-textarea {
   display: none !important;
 }
 
+codx-toolbar{
 codx-dropdown-calendar {
   button.dropdown-toggle.btn {
     height: 26px !important;
@@ -1860,6 +1865,7 @@ codx-dropdown-calendar {
     padding-bottom: 2px !important;
     height: 26px !important;
   }
+}
 }
 
 codx-calendar .e-tab{

@@ -1,3 +1,4 @@
+import { Double } from '@syncfusion/ej2-angular-charts';
 import { Util } from 'codx-core';
 
 export class CM_Products {
@@ -186,6 +187,8 @@ export class CM_Deals {
   modifiedBy: string;
   boolean;
   note: string;
+  currencyID:string;
+  exchangeRate:number;
 }
 
 export class CM_Permissions {
@@ -389,7 +392,7 @@ export class BS_AddressBook {
 }
 export class CM_ContractsPayments {
   recID: string = Util.uid(); //Mã thanh toán
-  transID: string = Util.uid(); //Mã giao dịch
+  transID: string; //Mã giao dịch
   lineType: string; //Loại: Lịch thanh toán, Lịch sử thanh toán
   rowNo: number; //Số thứ tự hàng
   scheduleDate: Date; //Ngày hẹn thanh toán

@@ -39,6 +39,7 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-questions',
@@ -48,6 +49,12 @@ import { SortSessionComponent } from './sort-session/sort-session.component';
   providers: [RteService, MultiSelectService],
 })
 export class QuestionsComponent extends UIComponent implements OnInit , OnChanges {
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @Input() dataSV :any
+
+  avatar:any;
+  primaryColor:any;
+  backgroudColor:any;
   surveys: SV_Surveys = new SV_Surveys();
   respondResults: any = new Array();
   formats: any = new Array();
@@ -201,6 +208,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     inject: Injector,
     private change: ChangeDetectorRef,
     private SVServices: CodxSvService,
+    private shareService : CodxShareService,
     private notification: NotificationsService,
     private sanitizer: DomSanitizer
   ) {
@@ -223,6 +231,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     {
       this.recID = changes.recID?.currentValue;
       this.loadDataFunc();
+    }
+    if(changes?.dataSV && changes.dataSV?.previousValue != changes.dataSV?.currentValue)
+    {
+      this.dataSV =  changes.dataSV?.currentValue;
+      this.getAvatar();
     }
   }
   //lấy answerType
@@ -269,7 +282,20 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   onInit(): void {
-   
+   //this.getAvatar();
+  }
+
+  getAvatar()
+  {
+    if(this.dataSV && this.dataSV.settings) {
+      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      if(this.dataSV?.settings?.image) this.avatar = this.dataSV?.settings?.image;
+      if(this.dataSV?.settings?.primaryColor) this.primaryColor = this.dataSV?.settings?.primaryColor;
+      if(this.dataSV?.settings?.backgroudColor) {
+        this.backgroudColor = this.dataSV?.settings?.backgroudColor;
+        document.getElementById("bg-color-sv").style.backgroundColor = this.backgroudColor
+      }
+    }
   }
 
   loadDataFunc()
@@ -368,7 +394,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
   addNewQ(listQ:any)
   {
- 
     this.api
     .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
       this.recID,
@@ -713,7 +738,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   copyCard(itemSession, itemQuestion, category) {
     if (category == 'S') this.copySession(itemSession);
     else this.copyNoSession(itemSession, itemQuestion);
-    console.log('check copy questions', this.questions);
   }
 
   copySession(itemSession) {
@@ -1966,4 +1990,24 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   //     [data]
   //   );
   // }
+  changeAvatar()
+  {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e:any)
+  {
+    if(e?.pathDisk)
+    {
+      this.avatar = this.shareService.getThumbByUrl(e?.pathDisk);
+      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      this.dataSV.settings.image = environment.urlUpload +"/"+ e?.pathDisk;
+      this.SVServices.signalSave.next('saving');
+      this.dataSV.settings = JSON.stringify(this.dataSV.settings);
+      this.SVServices.updateSV(this.dataSV.recID,this.dataSV).subscribe((res) => {
+        if (res) {
+          this.SVServices.signalSave.next('done');
+        }
+      }); 
+    }
+  }
 }

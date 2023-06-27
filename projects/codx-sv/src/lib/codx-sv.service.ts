@@ -361,12 +361,27 @@ export class CodxSvService {
     );
   }
 
+  shareLink(data:any,post=false,funcID:any) {
+    return this.api.execSv(
+      'SV',
+      'SV',
+      'SurveysBusiness',
+      'ShareLinkAsync',
+      [data,post,funcID]
+    );
+  }
   onSaveListFile(lstDataUpload) {
     return this.api.execSv('DM', 'DM', 'FileBussiness', 'CopyListFileAsync', [
       lstDataUpload,
     ]);
   }
 
+  getDataSurveys(data:any,isSystem=false) {
+    return this.api.execSv('SV', 'SV', 'SurveysBusiness', 'GetAsync', [
+      data,
+      isSystem
+    ]);
+  }
   onSubmit(data) {
     return this.api.execSv(
       'SV',
@@ -375,5 +390,16 @@ export class CodxSvService {
       'SaveAsync',
       [data, true]
     );
+  }
+
+  filterSearchSuggest()
+  {
+    // return this.api.execSv(
+    //   'SV',
+    //   'SV',
+    //   'RespondentsBusiness',
+    //   'SaveAsync',
+    //   [data, true]
+    // );
   }
 }

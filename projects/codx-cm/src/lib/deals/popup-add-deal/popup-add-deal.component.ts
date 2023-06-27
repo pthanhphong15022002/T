@@ -25,6 +25,7 @@ import {
   CodxInputComponent,
   DataRequest,
   DialogModel,
+  CodxFormComponent,
 } from 'codx-core';
 import { CM_Contacts, CM_Deals } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
@@ -49,6 +50,7 @@ export class PopupAddDealComponent
   tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   CodxListContactsComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   // setting values in system
   dialog: DialogRef;
@@ -140,6 +142,7 @@ export class PopupAddDealComponent
 
   // load data form DP
   isLoading: boolean = false;
+  currencyIDOld: string;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -199,6 +202,9 @@ export class PopupAddDealComponent
           this.customerName = $event.component.itemsSelected[0].CustomerName;
           this.getListContactByObjectID(this.customerID);
         }
+      }
+      if ($event.field == 'currencyID') {
+        this.loadExchangeRate();
       }
     }
   }
@@ -624,10 +630,6 @@ export class PopupAddDealComponent
     if (this.action !== this.actionEdit) {
       datas = [this.deal, this.lstContactDeal];
     } else {
-      // this.covnertListContact(
-      //   this.lstContactOld,
-      //   JSON.parse(JSON.stringify(this.lstContactDeal))
-      // );
       datas = [
         this.deal,
         this.customerIDOld,
@@ -671,20 +673,13 @@ export class PopupAddDealComponent
     } catch (error) {}
   }
   async getParamatersProcessDefault() {
-    this.cache
-      .viewSettingValues(this.functionModule + 'Parameters')
-      .subscribe((res) => {
-        if (res?.length > 0) {
-          let dataParam = res.filter(
-            (x) => x.category == '4' && !x.transType
-          )[0];
-          debugger;
-          this.processIdDefault = '1a6d0f15-09d0-11ee-94b3-00155d035517';
-          this.deal.processID = this.processIdDefault;
-          this.getListInstanceSteps(this.processIdDefault);
-          //  if (dataParam) this.paramView = JSON.parse(dataParam.dataValue);
-        }
-      });
+    this.codxCmService.getListProcessDefault(['1']).subscribe((res)=>{
+      if(res) {
+        this.processIdDefault = res.recID
+        this.deal.processID = this.processIdDefault;
+        this.getListInstanceSteps(this.processIdDefault);
+      }
+    });
   }
 
   async getGridViewSetup(formName, gridViewName) {
@@ -997,5 +992,30 @@ export class PopupAddDealComponent
       }
       this.changeDetectorRef.detectChanges();
     }
+  }
+
+  loadExchangeRate() {
+    let day = this.deal.createdOn ?? new Date();
+    if(this.deal.currencyID) {
+      this.codxCmService
+      .getExchangeRate(this.deal.currencyID, day)
+      .subscribe((res) => {
+        let exchangeRateNew = res?.exchRate ?? 0;
+        if (exchangeRateNew == 0) {
+          this.notificationsService.notify(
+            'Tỷ giá tiền tệ "' +
+              this.deal.currencyID +
+              '" chưa thiết lập xin hay chọn lại !',
+            '3'
+          );
+          this.form.formGroup.patchValue(this.deal);
+          return;
+        }
+        else {
+          this.deal.exchangeRate = exchangeRateNew;
+        }
+      });
+    }
+
   }
 }

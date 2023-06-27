@@ -221,6 +221,7 @@
                 class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
                 fiedName="ItemID"
                 [formModel]="fmQuotationLines"
+                [setRequire]="false"
               >
               </codx-label>
             </div>
@@ -295,7 +296,12 @@
       </thead>
       <tbody *ngFor="let item of listQuotationLines">
         <!-- | slice : (page - 1) * pageSize : page * pageSize -->
-        <tr style="border-bottom: 1px solid !important ; border-bottom-color: #eaf0f7 !important;">
+        <tr
+          style="
+            border-bottom: 1px solid !important ;
+            border-bottom-color: #eaf0f7 !important;
+          "
+        >
           <td>
             <div class="d-flex align-items-center me-5 mb-1">
               <span
@@ -315,7 +321,10 @@
                   item.idiM0 | formatvalue : fmQuotationLines : 'idiM0' | async
                 "
               >
-                <span *ngIf="item?.idiM1 || item?.idiM2 || item?.idiM3">|</span></span>
+                <span *ngIf="item?.idiM1 || item?.idiM2 || item?.idiM3"
+                  >|</span
+                ></span
+              >
               <span
                 *ngIf="item?.idiM1"
                 class="text-dark mx-1"

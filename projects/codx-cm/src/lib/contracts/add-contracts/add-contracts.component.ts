@@ -72,8 +72,8 @@ export class AddContractsComponent implements OnInit {
   type: 'view' | 'deal' | 'quotation' | 'customer';
   customer: CM_Customers;
   customerID = {};
-  listQuotationsLineOfContractAdd: CM_QuotationsLines[] = [];
-  listQuotationsLineOfContract: CM_QuotationsLines[] = [];
+  listQLineOfContractAdd: CM_QuotationsLines[] = [];
+  listQLineOfContract: CM_QuotationsLines[] = [];
   listQuotationsLine: CM_QuotationsLines[] = [];
   quotationLinesDeleted: CM_QuotationsLines[] = [];
   quotationLinesEdit: CM_QuotationsLines[] = [];
@@ -127,6 +127,7 @@ export class AddContractsComponent implements OnInit {
   customerIdOld = null;
   isLoadDate = true;
   checkPhone = true;
+  isErorrDate = true;
 
   constructor(
     private cache: CacheService,
@@ -160,8 +161,8 @@ export class AddContractsComponent implements OnInit {
     this.setDataContract(this.contractsInput);
     this.disabledDelActualDate =
       !this.contracts?.delStatus ||
-      this.contracts?.delStatus == '0' ||
-      this.contracts?.delStatus == '1'
+        this.contracts?.delStatus == '0' ||
+        this.contracts?.delStatus == '1'
         ? true
         : false;
 
@@ -207,21 +208,8 @@ export class AddContractsComponent implements OnInit {
       // /template: this.columnVatid,
     ];
   }
-
-  ngAfterViewInit() {}
-  // getFormModel() {
-  //   this.cache
-  //     .gridViewSetup(
-  //       this.fmContractsPayments?.formName,
-  //       this.fmContractsPayments?.gridViewName
-  //     )
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.grvPayments = res;
-  //       }
-  //     });
-  // }
-
+ 
+//#region setData
   setDataContract(data) {
     if (this.action == 'add') {
       this.contracts = data;
@@ -234,155 +222,27 @@ export class AddContractsComponent implements OnInit {
       this.contracts.pmtMethodID = 'ATM';
       this.contracts.pmtStatus = '1';
       this.contracts.delStatus = '1';
-      this.contracts.contractID = 'HD-' + (Math.random()*10000000000).toFixed(0);
+      this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
 
-      this.contracts.contractType = this.contracts.contractType
-        ? this.contracts.contractType
-        : '1';
-      this.contracts.pmtStatus = this.contracts.pmtStatus
-        ? this.contracts.pmtStatus
-        : '0';
-      this.setCOntractByDataOutput();
+      this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
+      this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
+      this.setContractByDataOutput();
     }
+
     if (this.action == 'edit') {
       this.contracts = data;
-      // this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
-      this.getQuotationsLinesInContract(
-        this.contracts?.recID,
-        this.contracts?.quotationID
-      );
+      this.getQuotationsLinesInContract(this.contracts?.recID, this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
     if (this.action == 'copy') {
       this.contracts = data;
       this.contracts.recID = Util.uid();
       delete this.contracts['id'];
-      this.getQuotationsAndQuotationsLinesByTransID(this.contracts.quotationID);
+      this.getQuotationsLinesInContract(this.contracts?.recID, this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
   }
-
-  getFormModel() {
-    this.cache
-      .gridViewSetup(
-        this.dialog?.formModel?.formName,
-        this.dialog?.formModel?.gridViewName
-      )
-      .subscribe((res) => {
-        for (let key in res) {
-          if (res[key]) {
-            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
-            this.view[keyConvert] = res[key]['headerText'];
-          }
-        }
-      });
-  }
-
-  valueChangeText(event) {
-    this.contracts[event?.field] = event?.data;
-    if (event?.field == 'contractName') {
-      this.contracts[event?.field] = this.stepService.capitalizeFirstLetter(
-        event?.data
-      );
-    }
-    if (event?.field == 'delPhone' && this.checkPhone) {
-      let isPhone = this.stepService.isValidPhoneNumber(event?.data);
-      if (!isPhone) {
-        this.notiService.notifyCode('RS030');
-        this.checkPhone = !this.checkPhone;
-        return;
-      }
-    }
-  }
-
-  valueChangeCombobox(event) {
-    this.contracts[event?.field] = event?.data;
-    if (event?.field == 'dealID' && event?.data) {
-      this.getCustomerByDealID(event?.data);
-      this.setValueComboboxQuotation();
-      if (!this.contracts.customerID) {
-      }
-    }
-    if (event?.field == 'quotationID' && event?.data) {
-      this.getDataByQuotationID(event?.data);
-      this.setValueComboboxDeal();
-      if (!this.contracts.customerID) {
-      }
-    }
-    if (event?.field == 'customerID' && event?.data) {
-      this.setValueComboboxQuotation();
-      this.setValueComboboxDeal();
-      this.getCustomerByrecID(event?.data);
-    }
-    if (event?.field == 'delStatus') {
-      this.disabledDelActualDate =
-        event?.data == '0' || event?.data == '1' ? true : false;
-    }
-  }
-
-  setValueComboboxDeal() {
-    let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
-    if (listDeal) {
-      if (this.customerIdOld != this.contracts.customerID) {
-        this.contracts.dealID = null;
-        this.inputDeal.ComponentCurrent.dataService.data = [];
-      }
-    }
-  }
-
-  setValueComboboxQuotation() {
-    let listQoutation = this.inputQuotation.ComponentCurrent.dataService.data;
-    if (listQoutation) {
-      if (this.customerIdOld != this.contracts.customerID) {
-        this.contracts.quotationID = null;
-        this.inputQuotation.ComponentCurrent.dataService.data = [];
-      }
-    }
-  }
-
-  changeValueDate(event) {
-    this.contracts[event?.field] = new Date(event?.data?.fromDate);
-    if (event?.field == 'effectiveTo' && this.isLoadDate) {
-      const startDate = new Date(this.contracts['effectiveFrom']);
-      const endDate = new Date(this.contracts['effectiveTo']);
-      if (endDate && startDate > endDate) {
-        // this.isSaveTimeTask = false;
-        this.isLoadDate = !this.isLoadDate;
-        this.notiService.notifyCode(
-          'CM010',
-          0,
-          this.view['effectiveTo'],
-          this.view['effectiveFrom']
-        );
-        return;
-      } else {
-        // this.isSaveTimeTask = true;
-      }
-    } else {
-      this.isLoadDate = !this.isLoadDate;
-    }
-  }
-
-  loadComboboxData(comboboxName: string, service: string): Observable<any> {
-    const dataRequest = new DataRequest();
-    dataRequest.comboboxName = comboboxName;
-    dataRequest.pageLoading = false;
-    return this.api
-      .execSv(
-        service,
-        'ERM.Business.Core',
-        'DataBusiness',
-        'LoadDataCbxAsync',
-        [dataRequest]
-      )
-      .pipe(
-        tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0])),
-        tap((p) => console.log(p))
-      );
-  }
-
-  setCOntractByDataOutput() {
+  setContractByDataOutput() {
     if (this.contracts.dealID) {
       this.getCustomerByDealID(this.contracts.dealID);
     }
@@ -392,78 +252,6 @@ export class AddContractsComponent implements OnInit {
     if (this.contracts.quotationID) {
       this.getDataByQuotationID(this.contracts.quotationID);
     }
-  }
-
-  getCustomerByDealID(dealID) {
-    this.contractService.getCustomerBydealID(dealID).subscribe((res) => {
-      if (res) {
-        this.setDataContractCombobox(res);
-      }
-    });
-  }
-
-  getCustomerByrecID(recID) {
-    this.contractService.getCustomerByRecID(recID).subscribe((res) => {
-      if (res) {
-        this.setDataContractCombobox(res);
-      }
-    });
-  }
-
-  getQuotationsAndQuotationsLinesByTransID(recID) {
-    this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
-      if (res) {
-        this.quotations = res[0];
-      }
-    });
-  }
-
-  getQuotationsLinesInContract(contractID, quotationID) {
-    this.contractService
-      .getQuotationsLinesInContract([contractID || null, quotationID || null])
-      .subscribe((res) => {
-        this.listQuotationsLine = res?.length > 0 ? res : [];
-      });
-  }
-
-  getPayMentByContractID(contractID) {
-    this.contractService
-      .getPaymentsByContractID(contractID)
-      .subscribe((res) => {
-        if (res) {
-          let listPayAll = res as CM_ContractsPayments[];
-          this.listPayment = listPayAll.filter((pay) => pay.lineType == '0');
-          this.listPaymentHistory = listPayAll.filter(
-            (pay) => pay.lineType == '1'
-          );
-        }
-      });
-  }
-
-  getDataByQuotationID(recID) {
-    this.listQuotationsLineOfContract = this.listQuotationsLine.filter(
-      (quotationsLine) => quotationsLine?.contractID
-    );
-    this.contractService.getDataByTransID(recID).subscribe((res) => {
-      if (res) {
-        let quotation = res[0];
-        let quotationsLine = res[1];
-        let customer = res[2];
-        this.listQuotationsLine = [
-          ...this.listQuotationsLineOfContract,
-          ...quotationsLine,
-        ];
-        this.quotations = quotation;
-        this.setDataContractCombobox(customer);
-        this.contracts.dealID = quotation?.refID;
-        this.contracts.contractAmt = quotation.totalAmt; // giá trị hợp đồng
-        this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
-        this.contracts.remainAmt =
-          Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại
-        this.contracts.currencyID = quotation.currencyID; // tiền tệ
-        this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
-      }
-    });
   }
 
   setDataContractCombobox(customer) {
@@ -480,281 +268,59 @@ export class AddContractsComponent implements OnInit {
     this.contracts.bankAccount = customer?.bankAccount;
     this.contracts.bankID = customer?.bankID;
   }
-
-  handleSaveContract() {
-    let message = [];
-    for (let key of this.REQUIRE) {
-      if (
-        (typeof this.contracts[key] === 'string' &&
-          !this.contracts[key].trim()) ||
-        !this.contracts[key] ||
-        this.contracts[key]?.length === 0
-      ) {
-        message.push(this.view[key]);
-      }
-    }
-    if (message.length > 0) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + message.join(', ') + ' " '
-      );
-    } else if (
-      this.contracts?.delPhone &&
-      !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
-    ) {
-      this.notiService.notifyCode('RS030');
-      return;
-    } else {
-      switch (this.action) {
-        case 'add':
-        case 'copy':
-          this.addContracts();
-          break;
-        case 'edit':
-          this.editContract();
-          break;
-      }
-    }
-  }
-
-  beforeSave(op: RequestOption) {
-    let data = [];
-    if (this.action == 'add' || this.action == 'copy') {
-      op.methodName = 'AddContractsAsync';
-      data = [
-        this.contracts,
-        this.listPaymentAdd,
-        this.listQuotationsLineOfContractAdd,
-      ];
-    }
-    if (this.action == 'edit') {
-      op.methodName = 'UpdateContractAsync';
-      data = [
-        this.contracts,
-        this.listPaymentAdd,
-        this.listPaymentEdit,
-        this.listPaymentDelete,
-        this.listQuotationsLineOfContractAdd,
-      ];
-    }
-    op.data = data;
-    return true;
-  }
-
-  addContracts() {
-    if (this.type == 'view') {
-      this.dialog.dataService
-        .save((opt: any) => this.beforeSave(opt), 0)
-        .subscribe((res) => {
-          if (res.save) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.save)
-              .subscribe();
-            this.dialog.close(res.save);
-          } else {
-            this.dialog.close();
-          }
-          // this.changeDetector.detectChanges();
-        });
-    } else {
-      this.cmService
-        .addContracts([this.contracts, this.listPaymentAdd])
-        .subscribe((res) => {
-          if (res) {
-            this.dialog.close({ contract: res, action: this.action });
-          }
-        });
-    }
-    // console.log(this.contracts);
-  }
-
-  editContract() {
-    if (this.type == 'view') {
-      this.dialog.dataService
-        .save((opt: any) => this.beforeSave(opt))
-        .subscribe((res) => {
-          this.dialog.close({ contract: res, action: this.action });
-        });
-    } else {
-      let data = [
-        this.contracts,
-        this.listPaymentAdd,
-        this.listPaymentEdit,
-        this.listPaymentDelete,
-      ];
-      this.cmService.editContracts(data).subscribe((res) => {
+  //#endregion
+//#region Quotation 
+  getQuotationsLinesInContract(contractID, quotationID) {
+    this.contractService
+      .getQuotationsLinesInContract([contractID || null, quotationID || null])
+      .subscribe((res) => {
         if (res) {
-          this.dialog.close({ contract: res, action: this.action });
-        }
-      });
-    }
-  }
-  // chuyển tab
-  changeTab(e) {
-    this.tabClicked = e;
-  }
-
-  addFile(evt: any) {
-    this.attachment.uploadFile();
-  }
-
-  onClickMFPayment(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.deletePayment(data);
-        break;
-      case 'SYS03':
-        this.editPayment(data);
-        break;
-      case 'SYS04':
-        console.log(data);
-        // this.copyContract(data);
-        break;
-      case 'CM02041_1': //xem lịch sử
-        this.viewPayHistory(data, 1200, 500);
-        break;
-      case 'CM02041_2': // thêm lịch sử
-        this.addPayHistory(data);
-        break;
-    }
-  }
-
-  addPayment() {
-    let payment = new CM_ContractsPayments();
-    payment.lineType = '0';
-    this.openPopupPayment('add', payment);
-  }
-  editPayment(payment) {
-    this.openPopupPayment('edit', payment);
-  }
-
-  deletePayment(payment) {
-    this.notiService.alertCode('SYS030').subscribe((res) => {
-      if (res.event.status === 'Y') {
-        let indexPayDelete = this.listPayment.findIndex(
-          (payFind) => payFind.recID == payment.recID
-        );
-        if (indexPayDelete >= 0) {
-          this.listPayment.splice(indexPayDelete, 1);
-          this.listPaymentDelete.push(payment);
-          for (
-            let index = indexPayDelete;
-            index < this.listPayment.length;
-            index++
-          ) {
-            this.listPayment[index].rowNo = index + 1;
+          if (res?.length > 0) {
+            this.listQuotationsLine = res;
+            this.contracts.contractAmt = this.sumNetAmtQuotations();
+            this.listQuotationsLine = this.listQuotationsLine.sort((a,b) => (a.rowNo -b.rowNo));
+            this.listQLineOfContract = this.listQuotationsLine.filter((quotationsLine) => quotationsLine?.contractID);
+            if (this.action == 'copy' && this.listQLineOfContract?.length > 0) {
+              this.listQLineOfContract = this.listQLineOfContract.map(item => {
+                return { ...item, contractID: this.contracts?.recID }
+              })
+            }
           }
-          this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+        } else {
+          this.listQuotationsLine = [];
+          this.contracts.contractAmt = null;
         }
-      }
-    });
+        this.listQuotationsLine = res?.length > 0 ? res : [];
+      });
   }
 
-  async openPopupPayment(action, payment) {
-    let dataInput = {
-      action,
-      payment,
-      listPayment: this.listPayment,
-      listPaymentAdd: this.listPaymentAdd,
-      listPaymentEdit: this.listPaymentEdit,
-      listPaymentDelet: this.listPaymentDelete,
-      contract: this.contracts,
-    };
-
-    let option = new DialogModel();
-    option.IsFull = false;
-    option.zIndex = 1021;
-    option.FormModel = this.fmContractsPayments;
-    let popupPayment = this.callfunc.openForm(
-      PopupAddPaymentComponent,
-      '',
-      550,
-      400,
-      '',
-      dataInput,
-      '',
-      option
+  getDataByQuotationID(recID) { // quotation, quotationsLine, customer
+    this.listQLineOfContract = this.listQuotationsLine.filter(
+      (quotationsLine) => quotationsLine?.contractID
     );
-
-    popupPayment.closed.subscribe((res) => {
+    this.contractService.getDataByTransID(recID).subscribe((res) => {
       if (res) {
-        this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
-      }
-    });
-  }
-
-  addPayHistory(payment) {
-    let payMentHistory = new CM_ContractsPayments();
-    let countPayMent = this.listPayment.length;
-    payMentHistory.rowNo = countPayMent + 1;
-    payMentHistory.refNo = this.contracts?.recID;
-    payMentHistory.lineType = '1';
-    this.openPopupPaymentHistory('add', payment, payMentHistory);
-  }
-
-  viewPayHistory(payment, width: number, height: number) {
-    let dataInput = {
-      payment,
-      listPaymentHistory: this.listPaymentHistory,
-      listPaymentAdd: this.listPaymentAdd,
-      listPaymentEdit: this.listPaymentEdit,
-      listPaymentDelet: this.listPaymentDelete,
-    };
-
-    let option = new DialogModel();
-    option.IsFull = false;
-    option.zIndex = 1021;
-    option.FormModel = this.fmContractsPaymentsHistory;
-    let popupPayHistory = this.callfunc.openForm(
-      PopupViewPaymentHistoryComponent,
-      '',
-      width,
-      height,
-      '',
-      dataInput,
-      '',
-      option
-    );
-  }
-
-  async openPopupPaymentHistory(action, payment, paymentHistory) {
-    let dataInput = {
-      action,
-      payment,
-      paymentHistory,
-      contract: this.contracts,
-      listPayment: this.listPayment,
-      listPaymentHistory: this.listPaymentHistory,
-      listPaymentAdd: this.listPaymentAdd,
-      listPaymentEdit: this.listPaymentEdit,
-      listPaymentDelet: this.listPaymentDelete,
-    };
-
-    let formModel = new FormModel();
-    formModel.entityName = 'CM_ContractsPayments';
-    formModel.formName = 'CMContractsPayments';
-    formModel.gridViewName = 'grvCMContractsPayments';
-
-    let option = new DialogModel();
-    option.IsFull = false;
-    option.zIndex = 1021;
-    option.FormModel = formModel;
-
-    let popupPaymentHistory = this.callfunc.openForm(
-      PopupAddPaymentHistoryComponent,
-      '',
-      600,
-      400,
-      '',
-      dataInput,
-      '',
-      option
-    );
-
-    popupPaymentHistory.closed.subscribe((res) => {
-      if (res) {
-        this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+        let quotation = res[0];
+        let quotationsLine = res[1];
+        let customer = res[2];
+        let countQuotation = quotationsLine?.length || 0;
+        this.listQLineOfContract = this.listQLineOfContract.map((item, index) => ({ ...item, rowNo: index + countQuotation + 1 }));
+        let qLinesNotEdit = this.listQLineOfContract.filter(qLine => !(this.quotationLinesEdit.some(qLinesEdit => qLinesEdit.recID === qLine.recID)));
+        this.quotationLinesEdit = [...this.quotationLinesEdit,...qLinesNotEdit];
+        this.listQuotationsLine = [
+          ...this.listQLineOfContract,
+          ...quotationsLine,
+        ];
+        this.listQuotationsLine = this.listQuotationsLine.sort((a, b) => (a.rowNo - b.rowNo));
+        this.quotations = quotation;
+        this.setDataContractCombobox(customer);
+        this.contracts.dealID = quotation?.refID;
+        this.contracts.contractAmt = this.sumNetAmtQuotations();; // giá trị hợp đồng
+        this.contracts.paidAmt = this.contracts.paidAmt || 0; // số tiền đã thanh toán
+        this.contracts.remainAmt =
+          Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt); // số tiền còn lại
+        this.contracts.currencyID = quotation.currencyID; // tiền tệ
+        this.contracts.exchangeRate = quotation.exchangeRate; // tỷ giá
       }
     });
   }
@@ -769,10 +335,8 @@ export class AddContractsComponent implements OnInit {
     );
     if (quotationLine) {
       quotationLine.contractID = this.contracts?.recID;
-      // quotationLine.costPrice = 50000;
-      this.listQuotationsLineOfContractAdd.push(quotationLine);
+      this.listQLineOfContractAdd.push(quotationLine);
     }
-    console.log(quotationLine);
     this.loadTotal();
   }
 
@@ -783,17 +347,472 @@ export class AddContractsComponent implements OnInit {
     let totalSales = 0;
     if (this.listQuotationsLine?.length > 0) {
       this.listQuotationsLine.forEach((element) => {
-        //tisnh tong tien
         totalSales += element['salesAmt'] ?? 0;
         totals += element['netAmt'] ?? 0;
         totalVAT += element['vatAmt'] ?? 0;
         totalDis += element['discAmt'] ?? 0;
       });
     }
-
+    this.contracts.contractAmt = totals;
     this.quotations['totalSalesAmt'] = totalSales;
     this.quotations['totalAmt'] = totals;
     this.quotations['totalTaxAmt'] = totalVAT;
     this.quotations['discAmt'] = totalDis;
   }
+
+  sumNetAmtQuotations() { // tính tổng giá trị của mặt hàng
+    if (this.listQuotationsLine?.length > 0) {
+      let contractAmt = this.listQuotationsLine.reduce((sum, item) => {
+        return sum + item?.netAmt || 0
+      }, 0)
+      return contractAmt;
+    }
+    return 0;
+  }
+  //#endregion
+//#region CRUD
+beforeSave(op: RequestOption) {
+  let data = [];
+  if (this.action == 'add' || this.action == 'copy') {
+    op.methodName = 'AddContractsAsync';
+    data = [
+      this.contracts,
+      this.listPaymentAdd,
+      this.listQLineOfContractAdd,
+    ];
+  }
+  if (this.action == 'edit') {
+    op.methodName = 'UpdateContractAsync';
+    data = [
+      this.contracts,
+      this.listPaymentAdd,
+      this.listPaymentEdit,
+      this.listPaymentDelete,
+      this.listQLineOfContractAdd,
+      this.quotationLinesEdit,
+      this.quotationLinesDeleted
+    ];
+  }
+  op.data = data;
+  return true;
+}
+
+addContracts() {
+  if (this.type == 'view') {
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), 0)
+      .subscribe((res) => {
+        if (res.save) {
+          (this.dialog.dataService as CRUDService)
+            .update(res.save)
+            .subscribe();
+          this.dialog.close(res.save);
+        } else {
+          this.dialog.close();
+        }
+        // this.changeDetector.detectChanges();
+      });
+  } else {
+    this.cmService
+      .addContracts([this.contracts, this.listPaymentAdd])
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close({ contract: res, action: this.action });
+        }
+      });
+  }
+  // console.log(this.contracts);
+}
+
+editContract() {
+  if (this.type == 'view') {
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res) => {
+        this.dialog.close({ contract: res, action: this.action });
+      });
+  } else {
+    let data = [
+      this.contracts,
+      this.listPaymentAdd,
+      this.listPaymentEdit,
+      this.listPaymentDelete,
+    ];
+    this.cmService.editContracts(data).subscribe((res) => {
+      if (res) {
+        this.dialog.close({ contract: res, action: this.action });
+      }
+    });
+  }
+}
+//#endregion
+//#region Save
+handleSaveContract() {
+  let message = [];
+  for (let key of this.REQUIRE) {
+    if (
+      (typeof this.contracts[key] === 'string' &&
+        !this.contracts[key].trim()) ||
+      !this.contracts[key] ||
+      this.contracts[key]?.length === 0
+    ) {
+      message.push(this.view[key]);
+    }
+  }
+  if (message.length > 0) {
+    this.notiService.notifyCode(
+      'SYS009',
+      0,
+      '"' + message.join(', ') + ' " '
+    );
+  } else if (
+    this.contracts?.delPhone &&
+    !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
+  ) {
+    this.notiService.notifyCode('RS030');
+    return;
+  } else {
+    switch (this.action) {
+      case 'add':
+      case 'copy':
+        this.addContracts();
+        break;
+      case 'edit':
+        this.editContract();
+        break;
+    }
+  }
+}
+//#endregion
+//#region change Input
+valueChangeText(event) {
+  this.contracts[event?.field] = event?.data;
+  if (event?.field == 'contractName') {
+    this.contracts[event?.field] = this.stepService.capitalizeFirstLetter(
+      event?.data
+    );
+  }
+  if (event?.field == 'delPhone' && this.checkPhone) {
+    let isPhone = this.stepService.isValidPhoneNumber(event?.data);
+    if (!isPhone) {
+      this.notiService.notifyCode('RS030');
+      this.checkPhone = !this.checkPhone;
+      return;
+    }
+  }
+}
+
+valueChangeCombobox(event) {
+  this.contracts[event?.field] = event?.data;
+  if (event?.field == 'dealID' && event?.data) {
+    this.getCustomerByDealID(event?.data);
+    this.setValueComboboxQuotation();
+    if (!this.contracts.customerID) {
+    }
+  }
+  if (event?.field == 'quotationID' && event?.data) {
+    this.getDataByQuotationID(event?.data);
+    this.setValueComboboxDeal();
+    if (!this.contracts.customerID) {
+    }
+  }
+  if (event?.field == 'customerID' && event?.data) {
+    this.setValueComboboxQuotation();
+    this.setValueComboboxDeal();
+    this.getCustomerByrecID(event?.data);
+  }
+  if (event?.field == 'delStatus') {
+    this.disabledDelActualDate =
+      event?.data == '0' || event?.data == '1' ? true : false;
+  }
+}
+
+setValueComboboxDeal() {
+  let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
+  if (listDeal) {
+    if (this.customerIdOld != this.contracts.customerID) {
+      this.contracts.dealID = null;
+      this.inputDeal.ComponentCurrent.dataService.data = [];
+    }
+  }
+}
+
+setValueComboboxQuotation() {
+  let listQuotation = this.inputQuotation.ComponentCurrent.dataService.data;
+  if (listQuotation) {
+    if (this.customerIdOld != this.contracts.customerID) {
+      this.contracts.quotationID = null;
+      this.inputQuotation.ComponentCurrent.dataService.data = [];
+    }
+  }
+}
+
+changeValueDate(event) {
+  this.contracts[event?.field] = new Date(event?.data?.fromDate);
+  if (event?.field == 'effectiveTo' && this.isLoadDate) {
+    const startDate = new Date(this.contracts['effectiveFrom']);
+    const endDate = new Date(this.contracts['effectiveTo']);
+    if (endDate && startDate > endDate) {
+      // this.isSaveTimeTask = false;
+      this.isLoadDate = !this.isLoadDate;
+      this.notiService.notifyCode(
+        'CM010',
+        0,
+        this.view['effectiveTo'],
+        this.view['effectiveFrom']
+      );
+      return;
+    } else {
+      // this.isSaveTimeTask = true;
+    }
+  } else {
+    this.isLoadDate = !this.isLoadDate;
+  }
+}
+//#endregion
+//#region get data
+getCustomerByDealID(dealID) {
+  this.contractService.getCustomerBydealID(dealID).subscribe((res) => {
+    if (res) {
+      this.setDataContractCombobox(res);
+    }
+  });
+}
+
+getCustomerByrecID(recID) {
+  this.contractService.getCustomerByRecID(recID).subscribe((res) => {
+    if (res) {
+      this.setDataContractCombobox(res);
+    }
+  });
+}
+
+getQuotationsAndQuotationsLinesByTransID(recID) {
+  this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
+    if (res) {
+      this.quotations = res[0];
+    }
+  });
+}
+
+getPayMentByContractID(contractID) {
+  this.contractService
+    .getPaymentsByContractID(contractID)
+    .subscribe((res) => {
+      if (res) {
+        let listPayAll = res as CM_ContractsPayments[];
+        this.listPayment = listPayAll.filter((pay) => pay.lineType == '0');
+        this.listPaymentHistory = listPayAll.filter(
+          (pay) => pay.lineType == '1'
+        );
+      }
+    });
+}
+getFormModel() {
+  this.cache
+    .gridViewSetup(
+      this.dialog?.formModel?.formName,
+      this.dialog?.formModel?.gridViewName
+    )
+    .subscribe((res) => {
+      for (let key in res) {
+        if (res[key]) {
+          let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+          this.view[keyConvert] = res[key]['headerText'];
+        }
+      }
+    });
+}
+//#endregion
+//#region payment
+addPayment() {
+  let payment = new CM_ContractsPayments();
+  payment.lineType = '0';
+  this.openPopupPayment('add', payment);
+}
+
+editPayment(payment) {
+  this.openPopupPayment('edit', payment);
+}
+
+deletePayment(payment) {
+  this.notiService.alertCode('SYS030').subscribe((res) => {
+    if (res.event.status === 'Y') {
+      let indexPayDelete = this.listPayment.findIndex(
+        (payFind) => payFind.recID == payment.recID
+      );
+      if (indexPayDelete >= 0) {
+        this.listPayment.splice(indexPayDelete, 1);
+        this.listPaymentDelete.push(payment);
+        for (
+          let index = indexPayDelete;
+          index < this.listPayment.length;
+          index++
+        ) {
+          this.listPayment[index].rowNo = index + 1;
+        }
+        this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      }
+    }
+  });
+}
+
+async openPopupPayment(action, payment) {
+  let dataInput = {
+    action,
+    payment,
+    listPayment: this.listPayment,
+    listPaymentAdd: this.listPaymentAdd,
+    listPaymentEdit: this.listPaymentEdit,
+    listPaymentDelet: this.listPaymentDelete,
+    contract: this.contracts,
+  };
+
+  let option = new DialogModel();
+  option.IsFull = false;
+  option.zIndex = 1021;
+  option.FormModel = this.fmContractsPayments;
+  let popupPayment = this.callfunc.openForm(
+    PopupAddPaymentComponent,
+    '',
+    550,
+    400,
+    '',
+    dataInput,
+    '',
+    option
+  );
+
+  popupPayment.closed.subscribe((res) => {
+    if (res) {
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+    }
+  });
+}
+
+addPayHistory(payment) {
+  let payMentHistory = new CM_ContractsPayments();
+  let countPayMent = this.listPayment.length;
+  payMentHistory.rowNo = countPayMent + 1;
+  payMentHistory.refNo = this.contracts?.recID;
+  payMentHistory.lineType = '1';
+  this.openPopupPaymentHistory('add', payment, payMentHistory);
+}
+
+viewPayHistory(payment, width: number, height: number) {
+  let dataInput = {
+    payment,
+    listPaymentHistory: this.listPaymentHistory,
+    listPaymentAdd: this.listPaymentAdd,
+    listPaymentEdit: this.listPaymentEdit,
+    listPaymentDelet: this.listPaymentDelete,
+  };
+
+  let option = new DialogModel();
+  option.IsFull = false;
+  option.zIndex = 1021;
+  option.FormModel = this.fmContractsPaymentsHistory;
+  let popupPayHistory = this.callfunc.openForm(
+    PopupViewPaymentHistoryComponent,
+    '',
+    width,
+    height,
+    '',
+    dataInput,
+    '',
+    option
+  );
+}
+
+async openPopupPaymentHistory(action, payment, paymentHistory) {
+  let dataInput = {
+    action,
+    payment,
+    paymentHistory,
+    contract: this.contracts,
+    listPayment: this.listPayment,
+    listPaymentHistory: this.listPaymentHistory,
+    listPaymentAdd: this.listPaymentAdd,
+    listPaymentEdit: this.listPaymentEdit,
+    listPaymentDelet: this.listPaymentDelete,
+  };
+
+  let formModel = new FormModel();
+  formModel.entityName = 'CM_ContractsPayments';
+  formModel.formName = 'CMContractsPayments';
+  formModel.gridViewName = 'grvCMContractsPayments';
+
+  let option = new DialogModel();
+  option.IsFull = false;
+  option.zIndex = 1021;
+  option.FormModel = formModel;
+
+  let popupPaymentHistory = this.callfunc.openForm(
+    PopupAddPaymentHistoryComponent,
+    '',
+    600,
+    400,
+    '',
+    dataInput,
+    '',
+    option
+  );
+
+  popupPaymentHistory.closed.subscribe((res) => {
+    if (res) {
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+    }
+  });
+}
+//#endregion
+//#region click
+changeTab(e) {
+  this.tabClicked = e;
+}
+
+addFile(evt: any) {
+  this.attachment.uploadFile();
+}
+
+onClickMFPayment(e, data) {
+  switch (e.functionID) {
+    case 'SYS02':
+      this.deletePayment(data);
+      break;
+    case 'SYS03':
+      this.editPayment(data);
+      break;
+    case 'SYS04':
+      console.log(data);
+      // this.copyContract(data);
+      break;
+    case 'CM02041_1': //xem lịch sử
+      this.viewPayHistory(data, 1200, 500);
+      break;
+    case 'CM02041_2': // thêm lịch sử
+      this.addPayHistory(data);
+      break;
+  }
+}
+//#endregion
+
+loadComboboxData(comboboxName: string, service: string): Observable<any> {
+  const dataRequest = new DataRequest();
+  dataRequest.comboboxName = comboboxName;
+  dataRequest.pageLoading = false;
+  return this.api
+    .execSv(
+      service,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
+    )
+    .pipe(
+      tap((p) => console.log(p)),
+      map((p) => JSON.parse(p[0])),
+      tap((p) => console.log(p))
+    );
+}
+
 }

@@ -67,6 +67,16 @@ import { ClosingTransactionComponent } from './periodic/closing-transaction/clos
 import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
 import { LayloutJournalComponent } from './laylout-journal/laylout-journal.component';
 import { TestJournalComponent } from './test-journal/test-journal.component';
+import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { CalculatingCostOfProductComponent } from './periodic/calculating-cost-of-product/calculating-cost-of-product.component';
+import { PopAddCalculatingCostOfProductComponent } from './periodic/calculating-cost-of-product/pop-add-calculating-cost-of-product/pop-add-calculating-cost-of-product.component';
+import { ExchangeRateTransactionComponent } from './periodic/exchange-rate-transaction/exchange-rate-transaction.component';
+import { PopAddExchangeRateTransactionComponent } from './periodic/exchange-rate-transaction/pop-add-exchange-rate-transaction/pop-add-exchange-rate-transaction.component';
+import { InvoiceSetlementComponent } from './periodic/invoice-setlement/invoice-setlement.component';
+import { PopAddInvoiceSetlementComponent } from './periodic/invoice-setlement/pop-add-invoice-setlement/pop-add-invoice-setlement.component';
+import { ClosingDataComponent } from './periodic/closing-data/closing-data.component';
+import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
 
 export const routes: Routes = [
   {
@@ -182,6 +192,26 @@ export const routes: Routes = [
         component: ClosingTransactionComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'calculatingcostofproduct/:funcID',
+        component: CalculatingCostOfProductComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'exchangeratetransaction/:funcID',
+        component: ExchangeRateTransactionComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'invoicesetlement/:funcID',
+        component: InvoiceSetlementComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'closingdata/:funcID',
+        component: ClosingDataComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
@@ -254,9 +284,15 @@ export const routes: Routes = [
     PopAddDeductInterestExpensesComponent,
     ClosingTransactionComponent,
     PopAddClosingTransactionComponent,
+    CalculatingCostOfProductComponent,
+    PopAddCalculatingCostOfProductComponent,
+    ExchangeRateTransactionComponent,
+    PopAddExchangeRateTransactionComponent,
+    InvoiceSetlementComponent,
+    PopAddInvoiceSetlementComponent,
+    ClosingDataComponent,
+    PopAddClosingDataComponent,
     TableLineDetailStaticComponent,
-    TestJournalComponent,
-    LayloutJournalComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
@@ -275,6 +311,8 @@ export const routes: Routes = [
     DragDropModule,
     CoreModule,
     NgxUiLoaderModule,
+    ProgressBarModule,
+    CircularGaugeModule,
   ],
 })
 export class AcModule {}

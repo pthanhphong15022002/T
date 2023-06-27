@@ -65,8 +65,8 @@
   padding: 5px 15px;
   .e-content
   {
-    height: 100% !important;
-    width: 100%;
+    height: calc(100% - 265px)!important;
+    width: calc(100% - 20px);
     text-align: left !important;
     position: fixed;
     .e-item , .e-item > div

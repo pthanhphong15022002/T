@@ -37,6 +37,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { AnyNsRecord } from 'dns';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-deals',
@@ -102,6 +103,8 @@ export class DealsComponent
 
   titleAction = '';
   vllPriority = 'TM005';
+  vllApprove = '';
+  vllStatus = '';
   crrFuncID = '';
   viewMode = 2;
   // const set value
@@ -116,7 +119,7 @@ export class DealsComponent
   dataDrop: any;
   stepIdClick: any;
   crrStepID: any;
-  dataColums: any;
+  dataColums: any = [];
   moreFuncInstance: any;
   funCrr: any;
   viewCrr: any;
@@ -125,8 +128,15 @@ export class DealsComponent
   functionModule: any;
   nameModule: string = '';
   paramDefault: any;
-  currencyIDDefault: any;
-  exchangeRateDefault: any;
+  currencyIDDefault: any = 'VND';
+  exchangeRateDefault: any = 1;
+  fiterOption: any;
+  orgFilter: any;
+  orgPin: any;
+  pinnedItem: any;
+  processIDKanban: string;
+  processIDDefault: string;
+  crrProcessID = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -138,12 +148,19 @@ export class DealsComponent
   ) {
     super(inject);
     this.executeApiCalls();
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
-
+    // if (!this.funcID) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
+
+    this.codxCmService.getProcessDefault('1').subscribe((res) => {
+      if (res) {
+        this.processIDDefault = res.recID;
+        this.processIDKanban = res.recID;
+      }
+    });
+
     ///lay tien mac dinh
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
@@ -152,12 +169,13 @@ export class DealsComponent
           this.paramDefault = JSON.parse(dataParam.dataValue);
           this.currencyIDDefault =
             this.paramDefault['DefaultCurrency'] ?? 'VND';
+          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
           if (this.currencyIDDefault != 'VND') {
             let day = new Date();
             this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
-                if (res && res != 0) this.exchangeRateDefault = res;
+                if (res) this.exchangeRateDefault = res;
                 else {
                   this.currencyIDDefault = 'VND';
                   this.exchangeRateDefault = 1;
@@ -199,7 +217,7 @@ export class DealsComponent
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
@@ -218,10 +236,10 @@ export class DealsComponent
           v.hide = true;
           v.active = false;
         }
-        if (!(this.funcID == 'CM0201' && v.type == '6')) this.views.push(v);
+        // if (!(this.funcID == 'CM0201' && v.type == '6'))
+        this.views.push(v);
       });
     });
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -243,87 +261,107 @@ export class DealsComponent
   }
 
   changeView(e) {
-    this.viewCrr = e?.view?.type;
-    if (!this.funCrr) {
-      this.funCrr = this.funcID;
-      return;
-    }
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.viewCrr == 6)
+    this.viewCrr = e?.view?.type;
+    //xu ly view fitter
+    this.changeFilter();
+    if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
+      // this.kanban.loaded = false;
+    }
+
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
+    else if (this.processIDKanban)
+      this.dataObj = { processID: this.processIDKanban };
+
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-      if (this.processID) this.dataObj = { processID: this.processID };
-      if (this.crrFuncID != this.funcID) {
-        this.cache.viewSettings(this.funcID).subscribe((views) => {
-          if (views) {
-            this.afterLoad();
-            this.crrFuncID = this.funcID;
-            this.views = [];
-            let idxActive = -1;
-            let viewOut = false;
-            this.viewsDefault.forEach((v, index) => {
-              let idx = views.findIndex((x) => x.view == v.type);
-              if (idx != -1) {
-                v.hide = false;
-                if (v.type != this.viewCrr) v.active = false;
-                else v.active = true;
-                if (views[idx].isDefault) idxActive = index;
-              } else {
-                v.hide = true;
-                v.active = false;
-                if (this.viewCrr == v.type) viewOut = true;
-              }
-              if (v.type == 6) {
-                v.request.dataObj = this.dataObj;
-                v.request2.dataObj = this.dataObj;
-              }
-              if (!(this.funcID == 'CM0201' && v.type == '6'))
-                this.views.push(v);
-              else viewOut = true;
-            });
-            if (!this.views.some((x) => x.active)) {
-              if (idxActive != -1) this.views[idxActive].active = true;
-              else this.views[0].active = true;
-
-              let viewModel =
-                idxActive != -1 ? this.views[idxActive] : this.views[0];
-              this.view.viewActiveType = viewModel.type;
-              this.view.viewChange(viewModel);
-              if (viewOut) this.view.load();
+      this.cache.viewSettings(this.funcID).subscribe((views) => {
+        if (views) {
+          this.afterLoad();
+          this.views = [];
+          let idxActive = -1;
+          let viewOut = false;
+          this.viewsDefault.forEach((v, index) => {
+            let idx = views.findIndex((x) => x.view == v.type);
+            if (idx != -1) {
+              v.hide = false;
+              if (v.type != this.viewCrr) v.active = false;
+              else v.active = true;
+              if (views[idx].isDefault) idxActive = index;
+            } else {
+              v.hide = true;
+              v.active = false;
+              if (this.viewCrr == v.type) viewOut = true;
             }
-            if ((this.view?.currentView as any)?.kanban) {
-              let kanban = (this.view?.currentView as any)?.kanban;
-              let settingKanban = kanban.kanbanSetting;
-              settingKanban.isChangeColumn = true;
-              settingKanban.formName = this.view?.formModel?.formName;
-              settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-              this.api
-                .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-                  settingKanban,
-                  this.dataObj,
-                ])
-                .subscribe((resource) => {
-                  if (resource?.columns && resource?.columns.length)
-                    kanban.columns = resource.columns;
-                  kanban.kanbanSetting.isChangeColumn = false;
-                  kanban.dataObj = this.dataObj;
-                  kanban.loadDataSource(
-                    kanban.columns,
-                    kanban.kanbanSetting?.swimlaneSettings,
-                    false
-                  );
-                  kanban.refresh();
-                  this.kanban = kanban;
-                });
+            if (v.type == 6) {
+              v.request.dataObj = this.dataObj;
+              v.request2.dataObj = this.dataObj;
             }
+            //  if (!(this.funcID == 'CM0201' && v.type == '6'))
+            this.views.push(v);
+            //  else viewOut = true;
+          });
+          if (!this.views.some((x) => x.active)) {
+            if (idxActive != -1) this.views[idxActive].active = true;
+            else this.views[0].active = true;
 
-            this.detectorRef.detectChanges();
+            let viewModel =
+              idxActive != -1 ? this.views[idxActive] : this.views[0];
+            this.view.viewActiveType = viewModel.type;
+            this.view.viewChange(viewModel);
+            // if (viewOut)
+            // this.view.load();
           }
-        });
-      }
+
+          if ((this.view?.currentView as any)?.kanban) {
+            this.loadKanban();
+            // let kanban = (this.view?.currentView as any)?.kanban;
+            // let settingKanban = kanban.kanbanSetting;
+            // settingKanban.isChangeColumn = true;
+            // settingKanban.formName = this.view?.formModel?.formName;
+            // settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+            // this.api
+            //   .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+            //     settingKanban,
+            //     this.dataObj,
+            //   ])
+            //   .subscribe((resource) => {
+            //     if (resource?.columns && resource?.columns.length)
+            //       kanban.columns = resource.columns;
+            //     kanban.kanbanSetting.isChangeColumn = false;
+            //     kanban.dataObj = this.dataObj;
+            //     kanban.loadDataSource(
+            //       kanban.columns,
+            //       kanban.kanbanSetting?.swimlaneSettings,
+            //       false
+            //     );
+            //     kanban.refresh();
+            //     this.kanban = kanban;
+            //     this.detectorRef.detectChanges();
+            //   });
+          }
+        }
+      });
     }
+
+    // else if (
+    //   this.funcID == 'CM0201' &&
+    //   this.viewCrr == 6 &&
+    //   this.processIDKanban != this.crrProcessID &&
+    //   (this.view?.currentView as any)?.kanban
+    // ) {
+    //   this.crrProcessID = this.processIDKanban;
+    //   this.dataObj = { processID: this.processIDKanban };
+    //   this.view.views.forEach((x) => {
+    //     if (x.type == 6) {
+    //       x.request.dataObj = this.dataObj;
+    //       x.request2.dataObj = this.dataObj;
+    //     }
+    //   });
+    //   this.loadKanban();
+    // }
   }
 
   click(evt: ButtonModel) {
@@ -493,6 +531,8 @@ export class DealsComponent
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        this.vllStatus = this.gridViewSetup['Status'].referedValue;
+        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
       }
     });
   }
@@ -606,42 +646,46 @@ export class DealsComponent
         //xư lý dbClick
         this.viewDetail(e.data);
         break;
+      //chang fiter
+      case 'pined-filter':
+        this.seclectFilter(e.data);
     }
   }
 
   dropDeals(data) {
     data.stepID = this.crrStepID;
-    if (!data.edit) {
-      this.notificationsService.notifyCode('SYS032');
-      return;
-    }
-    if (data.closed) {
-      this.notificationsService.notify(
-        'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
-      return;
-    }
+    // if (!data.edit) {
+    //   this.notificationsService.notifyCode('SYS032');
+    //   return;
+    // }
+    // if (data.closed) {
+    //   this.notificationsService.notify(
+    //     'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
+    //     '2'
+    //   );
+    //   return;
+    // }
 
-    if (this.moreFuncInstance?.length == 0) {
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
-    if (data.status == '1') {
-      this.notificationsService.notifyCode('DP038');
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
-    if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notifyCode('DP037');
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
+    // if (this.moreFuncInstance?.length == 0) {
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status == '1') {
+    //   this.notificationsService.notifyCode('DP038');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status != '1' && data.status != '2') {
+    //   this.notificationsService.notifyCode('DP037');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
 
+    // Alo Bao bat dk chặng
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
-      this.dataColums.length == 0
+      this.dataColums?.length == 0
     )
       this.dataColums = this.kanban.columns;
 
@@ -656,10 +700,10 @@ export class DealsComponent
             (x) => x.functionID == 'CM0201_1'
           );
           if (idx != -1) {
-            if (this.checkMoreReason(data)) {
-              this.notificationsService.notifyCode('SYS032');
-              return;
-            }
+            // if (this.checkMoreReason(data)) {
+            //   this.notificationsService.notifyCode('SYS032');
+            //   return;
+            // }
             this.titleAction = this.moreFuncInstance[idx].text;
             this.moveStage(data);
           }
@@ -669,10 +713,10 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_3'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
               this.titleAction = this.moreFuncInstance[idx].text;
               this.moveReason(data, true);
             }
@@ -681,10 +725,10 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_4'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
               this.titleAction = this.moreFuncInstance[idx].text;
               this.moveReason(data, false);
             }
@@ -797,6 +841,9 @@ export class DealsComponent
   }
 
   moveReason(data: any, isMoveSuccess: boolean) {
+    //lay step Id cu de gen lai total
+    if (!this.crrStepID || this.crrStepID != data.stepID)
+      this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -882,10 +929,22 @@ export class DealsComponent
           if (res) {
             data = res[0];
             this.view.dataService.update(data).subscribe();
+            //up kaban
+            if (this.kanban) {
+              let money = data.dealValue * data.exchangeRate;
+              this.renderTotal(data.stepID, 'add', money);
+              this.renderTotal(this.crrStepID, 'minus', money);
+              this.kanban.refresh();
+            }
             this.detectorRef.detectChanges();
           }
         });
         // }
+      } else {
+        if (this.kanban) {
+          this.dataSelected.stepID = this.crrStepID;
+          this.kanban.updateCard(this.dataSelected);
+        }
       }
     });
   }
@@ -999,12 +1058,9 @@ export class DealsComponent
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
+      this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
       this.openFormDeal(formMD, option, 'add');
     });
   }
@@ -1026,7 +1082,13 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-        // this.dataSelected = JSON.parse(JSON.stringify(e.event));
+        //up kaban
+        if (this.kanban) {
+          let dt = e.event;
+          let money = dt.dealValue * dt.exchangeRate;
+          this.renderTotal(dt.stepID, 'add', money);
+          this.kanban.refresh();
+        }
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1036,6 +1098,8 @@ export class DealsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+    let dealValueOld = data.dealValue;
+    let exchangeRateOld = data.exchangeRate;
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -1063,7 +1127,19 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            // this.dataSelected = JSON.parse(JSON.stringify(e.event))
+            //up kaban
+            if (
+              this.kanban &&
+              (dealValueOld != e.event?.dealValue ||
+                exchangeRateOld != e.event?.exchangeRate)
+            ) {
+              let dt = e.event;
+              let money =
+                dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
+              this.renderTotal(dt.stepID, 'add', money);
+              this.kanban.refresh();
+            }
+
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
@@ -1123,6 +1199,12 @@ export class DealsComponent
                 type: 'delete',
                 data: data,
               });
+              //up kaban
+              if (this.kanban) {
+                let money = data.dealValue * data.exchangeRate;
+                this.renderTotal(data.stepID, 'minus', money);
+                this.kanban.refresh();
+              }
             }
           });
         this.changeDetectorRef.detectChanges();
@@ -1193,14 +1275,6 @@ export class DealsComponent
     //   });
   }
 
-  getTotalDealColums(stepID) {
-    let totalCol = 0;
-    if (this.kanban) {
-      debugger;
-    }
-    return totalCol;
-  }
-
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
     this.codxCmService.getProcess(dt.processID).subscribe((process) => {
@@ -1251,13 +1325,13 @@ export class DealsComponent
   }
 
   //Huy duyet
-  cancelApprover(dt, processNo) {
+  cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
         this.codxCmService.getProcess(dt.processID).subscribe((process) => {
           if (process) {
             this.codxCmService
-              .getESCategoryByCategoryID(processNo)
+              .getESCategoryByCategoryID(process.processNo)
               .subscribe((res2: any) => {
                 if (res2) {
                   if (res2?.eSign == true) {
@@ -1299,4 +1373,144 @@ export class DealsComponent
   }
   //end duyet
   //--------------------------------------------------------------------//
+
+  //--------------------------Tính tổng-------------------------//
+  genTotal(stepID) {
+    let totalCol = 0;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+      if (idx != -1) {
+        let dt = this.kanban.columns[idx];
+        if (dt.totalDealValue) {
+          totalCol = dt.totalDealValue / this.exchangeRateDefault;
+        }
+      }
+    }
+    return totalCol;
+  }
+
+  renderTotal(stepID, action = 'add', money) {
+    let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+    if (idx != -1) {
+      if (action == 'add') {
+        this.kanban.columns[idx].totalDealValue += money;
+      } else if (action == 'minus') {
+        this.kanban.columns[idx].totalDealValue -= money;
+      }
+    }
+  }
+  //end
+
+  //-----------------------------change Filter -------------------------------//
+  changeFilter() {
+    if (this.viewCrr == 6 || this.funcID != 'CM0201') {
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp != -1) {
+        this.fiterOption = this.view.filterOptions[idxBusinesLineOp];
+        this.view.filterOptions.splice(idxBusinesLineOp, 1);
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg != -1) {
+        this.orgFilter = this.view.orgFilters[idxBusinesLineOg];
+        this.view.orgFilters.splice(idxBusinesLineOg, 1);
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine != -1) {
+        this.orgPin = this.view.orgPinned[idxBusinesLine];
+        this.view.orgPinned.splice(idxBusinesLine, 1);
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem != -1) {
+        this.pinnedItem = this.view.pinnedItems[idxBusinesLineItem];
+        this.view.pinnedItems.splice(idxBusinesLineItem, 1);
+      }
+    } else {
+      ///add fileter
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp == -1 && this.fiterOption) {
+        this.view.filterOptions.unshift(this.fiterOption);
+        this.fiterOption = null;
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg == -1 && this.orgFilter) {
+        this.view.orgFilters.unshift(this.orgFilter);
+        this.orgFilter = null;
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine == -1 && this.orgPin) {
+        this.view.orgPinned.unshift(this.orgPin);
+        this.orgPin = null;
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem == -1 && this.pinnedItem) {
+        this.view.pinnedItems.unshift(this.pinnedItem);
+        this.pinnedItem = null;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async seclectFilter(datas) {
+    if (datas && datas?.length > 0) {
+      var filter = datas.filter((x) => x.field == 'BusinessLineID')[0];
+      if (filter) {
+        this.processIDKanban = await firstValueFrom(
+          this.codxCmService.getProcessByBusinessLineID(filter?.value)
+        );
+        if (!this.processIDKanban) this.processIDKanban = this.processIDDefault;
+      } else this.processIDKanban = this.processIDDefault;
+    }
+  }
+
+  loadKanban() {
+    let kanban = (this.view?.currentView as any)?.kanban;
+    let settingKanban = kanban.kanbanSetting;
+    settingKanban.isChangeColumn = true;
+    settingKanban.formName = this.view?.formModel?.formName;
+    settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+    this.api
+      .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+        settingKanban,
+        this.dataObj,
+      ])
+      .subscribe((resource) => {
+        if (resource?.columns && resource?.columns.length)
+          kanban.columns = resource.columns;
+        kanban.kanbanSetting.isChangeColumn = false;
+        kanban.dataObj = this.dataObj;
+        kanban.loadDataSource(
+          kanban.columns,
+          kanban.kanbanSetting?.swimlaneSettings,
+          false
+        );
+        kanban.refresh();
+        this.kanban = kanban;
+        // this.kanban.loaded = true;
+        // this.kanban.refresh();
+        this.detectorRef.detectChanges();
+      });
+  }
+  //end
 }

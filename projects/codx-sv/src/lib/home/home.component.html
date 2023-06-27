@@ -23,44 +23,27 @@
           </div>
         </div>
       </div>
-      <div class="d-flex align-items-center div-title">
+      <div class="d-flex align-items-center justify-content-center div-title">
         <div class="card-survey rounded-2" (click)="createNewSurvey()">
           <img src="./assets/themes/sv/default/img/add-survey.png" class="rounded-2"/>
           <div class="py-2 fw-bold">
             <span>Trống</span>
           </div>
         </div>
-        <!-- <codx-label fiedName="" formModel="" default="Trống"></codx-label> -->
-        <div class="card-survey rounded-2">
-          <img src="./assets/themes/sv/default/img/template1.png" class="rounded-2"/>
-          <div class="py-2 fw-bold">
-            <span>Thông tin liên hệ</span>
+
+        <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length>0">
+          <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem">
+            <img src="./assets/themes/sv/default/img/avatar-default.png" class="rounded-2"/>
+            <div class="py-2 fw-bold">
+              <span>{{item?.title}}</span>
+            </div>
           </div>
-        </div>
-        <div class="card-survey rounded-2">
-          <img src="./assets/themes/sv/default/img/template2.png" class="rounded-2"/>
-          <div class="py-2 fw-bold">
-            <span>Trả lời sự kiện</span>
-          </div>
-        </div>
-        <div class="card-survey rounded-2">
-          <img src="./assets/themes/sv/default/img/template3.png" class="rounded-2"/>
-          <div class="py-2 fw-bold">
-            <span>Lời mời dự tiệc</span>
-          </div>
-        </div>
-        <div class="card-survey rounded-2">
-          <img src="./assets/themes/sv/default/img/template4.png" class="rounded-2"/>
-          <div class="py-2 fw-bold">
-            <span>Đăng ký áo phông</span>
-          </div>
-        </div>
-        
+        </ng-container>
       </div>
     </div>
-    <div class="py-y bg-body list-survey h-100">
+    <div class="py-y bg-body list-survey">
       <div class="d-flex justify-content-between py-2 h-100">
-        <ejs-tab *ngIf="listFunctionList" height="100%" class="ejs-tab-survey">
+        <ejs-tab *ngIf="listFunctionList" height="100%" class="ejs-tab-survey"  (selected)='onTabSelect($event)'>
           <e-tabitems>
             <!-- Tab danh sách tôi tạo -->
             <e-tabitem *ngFor="let item of listFunctionList">
@@ -94,7 +77,6 @@
         >
         </codx-toolbar-more>
       </div>
-     
     </div>
   </div>
 </ng-template>
@@ -131,19 +113,11 @@
 </ng-template>
 
 <ng-template #tabCreate>
-  <codx-listview
-    #lstView
-    [itemTemplate]="templateListCard"
-    type="cardView"
-    [funcId]="funcID"
-    [service]="service"
-    [assemblyName]="assemblyName"
-    [className]="className"
-    [method]="method"
-    [entityName]="functionList?.entityName"
-    ngClass="py-5"
-  >
-  </codx-listview>
+  <div *ngIf="dataSurveys" class="row w-100">
+    <div class="col-2 mt-2" *ngFor="let item of dataSurveys">
+      <ng-container *ngTemplateOutlet=" templateListCard; context: { $implicit: item }"></ng-container>
+    </div>  
+  </div>
 </ng-template>
 
 <ng-template #tabAnswer>
