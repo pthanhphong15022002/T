@@ -1,6 +1,17 @@
 <div class="page-questions w-100 mt-4">
   <div class="d-flex w-100">
     <div class="d-flex flex-column">
+      <ng-container *ngIf="avatar">
+        <div class="KHCwJ dYYAhb w-100 cursor-pointer" [ngStyle]="{'background-image': 'url(' + avatar + ')'}" (click)="changeAvatar()">
+        </div>
+        <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" isSaveSelected="1"  hideImageThumb="1"
+          hideDes="1"  isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" 
+          [idField]="'RecID'" [referType]="'avt'" [objectType]="formModel?.entityName" [objectId]="recID" [heightScroll]="30" ngClass="'pt-5'" hideImageUpload="1"
+          (fileSave)="fileAdded($event)" [allowExtensions]="'.jpg,.png'"
+        >
+        </codx-attachment>
+        <!-- isSaveSelected="1" -->
+      </ng-container>
       <div class="box">
         <div *ngFor="let itemSession of questions">
           <div
@@ -28,6 +39,7 @@
                   'b-l-session': itemSession.active,
                   'b-t-title': itemSession.category == 'T'
                 }"
+                [style.borderTopColor]="primaryColor"
               >
                 <form id="formSession" class="form-horizontal example-box">
                   <ng-container #body>
@@ -65,7 +77,7 @@
                 >
                   <div
                     [ngClass]="
-                      itemQuestion.active
+                        itemQuestion.active
                         ? 'content-wrapper b-l'
                         : 'content-wrapper'
                     "

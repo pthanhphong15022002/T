@@ -20,6 +20,7 @@ export class CodxTMService {
   data = [];
   moment = moment().locale('en');
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
+  SetLayout = new BehaviorSubject<any>(null);
   layoutChange = this.layoutcpn.asObservable();
   user: UserModel;
   myTaskComponent = false;

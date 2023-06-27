@@ -103,9 +103,6 @@
                               </div>
                             </div>
                             <div class="d-flex align-items-center mb-2">
-                              <span
-                                class="icon-portrait icon-16 text-gray-800 me-1"
-                              ></span>
                               <span class="text-dark">
                                 <span
                                   [innerHTML]="
@@ -2149,15 +2146,15 @@
           <div #family class="mt-5">
             <div class="row" *ngIf="lstFamily?.length > 0 && eFamilyFormModel; else emptyDataTemplate">
               <ng-container *ngFor="let item of lstFamily">
-                <div class="col-6 mb-5 ps-15">
-                  <div class="rounded rounded-2 border border-gray-150 w-300px mw-300px">
+                <div class="col-6 mb-5 ps-9">
+                  <div class="rounded rounded-2 border border-gray-150 w-325px mw-325px">
                     <codx-temp-full
                       (clickMF)="clickMF($event, item, 'family')"
-                      cardCss="card-template p-3 w-300px mw-300px h-100px"
+                      cardCss="card-template p-3 w-325px mw-325px h-100px"
                       [moreFuncCss]="'me-10'"
                       [imageId]="item.recID"
                       [imageObjType]="'HR_EFamilies'"
-                      [imageWidth]="40"
+                      [imageWidth]="35"
                       [title]="item?.relationName"
                       [titleCss]="'fs-6 mb-1'"
                       [subTitleTmp]="subtitleTmp"
@@ -2192,8 +2189,8 @@
                             </span>
                           </div>
                         </div>
-                        <div class="d-flex mb-1">
-                          <span class="me-2"
+                        <div class="d-flex flex-wrap">
+                          <span class="me-2 mb-1"
                             [ngClass]="data.isEmergency ? 'text-danger' : ''"
                             [innerHTML]="
                             data?.mobile
@@ -2203,7 +2200,7 @@
                             ></span
                           >
 
-                          <span class=""
+                          <span class="mb-1"
                           [innerHTML]="
                           data?.personalEmail
                                       | formatvalue

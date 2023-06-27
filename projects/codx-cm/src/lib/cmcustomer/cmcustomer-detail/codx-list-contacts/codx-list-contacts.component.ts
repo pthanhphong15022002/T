@@ -83,6 +83,8 @@ export class CodxListContactsComponent implements OnInit {
         if (changes['objectID']?.currentValue == this.id) return;
         this.id = changes['objectID']?.currentValue;
         this.getListContacts();
+      }else{
+        if(!this.loaded) this.loaded = true;
       }
     }
   }
@@ -135,6 +137,7 @@ export class CodxListContactsComponent implements OnInit {
     if (!this.selectAll) {
       this.request.predicates = 'ObjectID=@0';
       this.request.dataValues = this.objectID;
+      this.request.pageLoading = false;
       this.request.entityName = 'CM_Contacts';
       this.request.funcID = 'CM0102';
       this.className = 'ContactsBusiness';

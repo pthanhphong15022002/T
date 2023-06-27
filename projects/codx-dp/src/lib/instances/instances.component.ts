@@ -183,21 +183,6 @@ export class InstancesComponent
   ownerStepProcess: any;
 
   isHaveFile: boolean = false;
-  //test temp
-  // dataTemplet = [
-  //   {
-  //     templateName: 'File excel của Khanh- Team bá cháy',
-  //     recID: '1',
-  //   },
-  //   {
-  //     templateName: 'Khanh múa rất đẹp,sập sân khấu',
-  //     recID: '2',
-  //   },
-  //   {
-  //     templateName: 'Khanh pig bá đạo',
-  //     recID: '3',
-  //   },
-  // ];
   type = 'excel';
   requestTemp = new DataRequest();
   optionEx = new DataRequest();
@@ -237,7 +222,7 @@ export class InstancesComponent
   dataVll: any;
   dataCM: any;
   constructor(
-    private inject: Injector,
+    inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private codxShareService: CodxShareService,
@@ -316,7 +301,7 @@ export class InstancesComponent
         type: ViewType.listdetail,
         active: true,
         sameData: true,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
@@ -328,7 +313,7 @@ export class InstancesComponent
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
@@ -750,7 +735,11 @@ export class InstancesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+                this.notificationsService.notifyCode(
+                  check ? 'DP016' : 'DP017',
+                  0,
+                  "'" + data.title + "'"
+                );
                 if (this.process.showInstanceControl === '1') {
                   this.view.dataService.update(this.dataSelected).subscribe();
                 }
@@ -865,7 +854,7 @@ export class InstancesComponent
                 break;
               //an khi aprover rule
               case 'DP17':
-                if (!data.write || data.closed) {
+                if (!data.write || data.closed || data.approveStatus == '5') {
                   res.disabled = true;
                 } else if (!this.process?.approveRule) {
                   res.isblur = true;
@@ -1136,14 +1125,12 @@ export class InstancesComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notifyCode('DP038',  0,
-      '"' + data.title + '"');
+      this.notificationsService.notifyCode('DP038', 0, '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
     }
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notifyCode('DP037',  0,
-      '"' + data.title + '"');
+      this.notificationsService.notifyCode('DP037', 0, '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -1553,6 +1540,12 @@ export class InstancesComponent
         }
 
         this.detectorRef.detectChanges();
+      } else {
+        if (this.kanban) {
+          this.dataSelected.stepID = this.crrStepID;
+          this.kanban.updateCard(this.dataSelected);
+          this.detectorRef.detectChanges();
+        }
       }
     });
   }
@@ -2186,8 +2179,8 @@ export class InstancesComponent
     //     processID
     //   )
     //   .subscribe((res2: any) => {
-    let dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
     //trình ký
     if (this.esCategory?.eSign == true) {
       //   let signFile = new ES_SignFile();

@@ -49,6 +49,9 @@ import { ApprovalsComponent } from './approvals/approvals.component';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { PopupEditOwnerstepComponent } from './instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { PopupSelectTempletComponent } from './instances/popup-select-templet/popup-select-templet.component';
+import { CommonModule } from '@angular/common';
+import { CoreModule } from '@core/core.module';
+import { environment } from 'src/environments/environment';
 
 const routes: Routes = [
   {
@@ -70,7 +73,7 @@ const routes: Routes = [
         path: 'approvals/:funcID',
         loadChildren: () =>
           import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
-            (m) => m.ApprovelModule
+            (m) => m.ApprovelDpModule
           ),
         data: { noReuse: true },
       },
@@ -141,6 +144,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupSelectTempletComponent,
   ],
   imports: [
+    CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
@@ -154,6 +158,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     DragDropModule,
     SliderModule,
+    CoreModule,
+    CodxCoreModule.forRoot({ environment }),
+
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

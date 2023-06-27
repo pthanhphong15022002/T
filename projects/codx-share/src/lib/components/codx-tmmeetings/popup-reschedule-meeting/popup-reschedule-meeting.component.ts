@@ -1,4 +1,10 @@
-import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  ChangeDetectorRef,
+  ViewChild,
+} from '@angular/core';
 import {
   DialogData,
   DialogRef,
@@ -103,7 +109,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
       });
   }
   //#region save
-  onSave(){
+  onSave() {
     if (this.isCheckStartEndTime(this.meeting.startDate)) {
       this.notiService.notifyCode('CO002');
       return;
@@ -144,34 +150,49 @@ export class PopupRescheduleMeetingComponent implements OnInit {
             .subscribe((x) => {
               if (x?.event && x?.event?.status == 'Y') {
                 this.onUpdate();
-              }
-              else return;
+              } else return;
             });
         } else {
           this.onUpdate();
         }
       });
-
   }
 
-  onUpdate(){
-    this.tmSv.UpdateDateMeeting(this.meeting.meetingID, this.meeting.startDate, this.meeting.endDate, this.funcID, this.comment, this.meeting.location).subscribe(res=>{
-      if(res){
-        this.dialog.close(res);
-        //chưa có mssgcode dời lịch
-        this.notiService.notifyCode('SYS034');
-        this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0025', this.funcID).subscribe();
-        //dời phòng bên EP
-        this.api.execSv(
-          'EP',
-          'ERM.Business.EP',
-          'BookingsBusiness',
-          'ChangeBookingDateTimeAsync',
-          [this.meeting.recID, this.meeting.startDate, this.meeting.endDate, this.meeting?.location]
-        ).subscribe(res=>{});
-      }else
-        this.dialog.close();
-    })
+  onUpdate() {
+    this.tmSv
+      .UpdateDateMeeting(
+        this.meeting.meetingID,
+        this.meeting.startDate,
+        this.meeting.endDate,
+        this.funcID,
+        this.comment,
+        this.meeting.location
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+          //chưa có mssgcode dời lịch
+          this.notiService.notifyCode('SYS034');
+          this.tmSv
+            .sendMailAlert(this.meeting.recID, 'TM_0025', this.funcID)
+            .subscribe();
+          //dời phòng bên EP
+          this.api
+            .execSv(
+              'EP',
+              'ERM.Business.EP',
+              'BookingsBusiness',
+              'ChangeBookingDateTimeAsync',
+              [
+                this.meeting.recID,
+                this.meeting.startDate,
+                this.meeting.endDate,
+                this.meeting?.location,
+              ]
+            )
+            .subscribe((res) => {});
+        } else this.dialog.close();
+      });
   }
   //#endregion
 
@@ -314,23 +335,19 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   }
 
   valueStartTimeChange(event: any) {
-    if (this.startTime != event.data.fromDate) {
-      this.startTime = event.data.fromDate;
-      this.fullDayChangeWithTime();
-      // this.isFullDay = false;
-      this.setDate();
-      this.changDetec.detectChanges();
-    }
+    this.startTime = event.data.fromDate;
+    this.fullDayChangeWithTime();
+    // this.isFullDay = false;
+    this.setDate();
+    this.changDetec.detectChanges();
   }
 
   valueEndTimeChange(event: any) {
-    if (this.endTime != event.data.fromDate) {
-      this.endTime = event.data.toDate;
-      this.fullDayChangeWithTime();
-      // this.isFullDay = false;
-      this.setDate();
-      this.changDetec.detectChanges();
-    }
+    this.endTime = event.data.toDate;
+    this.fullDayChangeWithTime();
+    // this.isFullDay = false;
+    this.setDate();
+    this.changDetec.detectChanges();
   }
   valueChangeCheckFullDay(e) {
     if (e?.data) {
@@ -355,7 +372,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
 
   //region time work
   setDate() {
-    if(this.startTime != null && this.endTime != null){
+    if (this.startTime != null && this.endTime != null) {
       if (this.startTime) {
         this.beginHour = parseInt(this.startTime.split(':')[0]);
         this.beginMinute = parseInt(this.startTime.split(':')[1]);
@@ -391,7 +408,6 @@ export class PopupRescheduleMeetingComponent implements OnInit {
       this.loadRoomAvailable();
       this.changDetec.detectChanges();
     }
-
   }
 
   getTimeParameter() {
@@ -414,7 +430,6 @@ export class PopupRescheduleMeetingComponent implements OnInit {
               .toDate()
           );
           this.loadRoomAvailable();
-
         }
       });
   }
@@ -437,12 +452,20 @@ export class PopupRescheduleMeetingComponent implements OnInit {
           for (var i = 0; i < this.dayOnWeeks.length; i++) {
             var day = this.dayOnWeeks[i];
             if (day.shiftType == '1') {
-              this.startTimeWork = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
-              endShiftType1 = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
+              this.startTimeWork =
+                day.startTime.length == 5
+                  ? day.startTime
+                  : day.startTime.slice(0, 5);
+              endShiftType1 =
+                day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
             }
             if (day.shiftType == '2') {
-              this.endTimeWork = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
-              starrShiftType2 = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
+              this.endTimeWork =
+                day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
+              starrShiftType2 =
+                day.startTime.length == 5
+                  ? day.startTime
+                  : day.startTime.slice(0, 5);
             }
           }
 

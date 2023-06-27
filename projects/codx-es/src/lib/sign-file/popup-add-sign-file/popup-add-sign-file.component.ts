@@ -16,6 +16,7 @@ import {
   AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
+  CRUDService,
   CacheService,
   CallFuncService,
   CodxService,
@@ -88,6 +89,9 @@ export class PopupAddSignFileComponent implements OnInit {
   oldNode: number; //vị trí node trước
 
   type: string; //copy
+  
+  isTemplate: boolean;// signfile dạng template
+  refType: string;// EntityName của nghiệp vụ mặc định là "ES_SignFiles"
 
   disableContinue: boolean = false;
   disableCateID: boolean = false;
@@ -104,11 +108,10 @@ export class PopupAddSignFileComponent implements OnInit {
   cbbProcess=[];
   listCategory=[];
   curCategory: any;
-  saveAsTemplate :boolean;
   confirmControl: any;
   allowEditAreas: any;
   nextClick = false;
-
+  isReleasing=false;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -124,6 +127,9 @@ export class PopupAddSignFileComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    if(!this.dialog.dataService){
+      this.dialog.dataService= data?.data?.dataService;
+    }
     this.modeView = data?.data?.modeView ?? '0';
     /*
     1: view
@@ -136,7 +142,8 @@ export class PopupAddSignFileComponent implements OnInit {
     this.disableCateID = data?.data?.disableCateID ?? false;
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
-    this.saveAsTemplate =data?.data?.saveAsTemplate ? true : false
+    this.isTemplate =data?.data?.isTemplate ? true : false;
+    this.refType = data?.data?.refType ?? 'ES_SignFiles'
     if (this.modeView == '2') {
       this.disableCateID = true;
     }
@@ -157,7 +164,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.lstFile = data?.data?.files;
     } else {
       if (!this.isAddNew) {
-        this.data = data?.data.dataSelected;
+        this.data = data?.data.dataSelected ??data?.data?.data;
         this.processTab = 3;
       }
       if (
@@ -167,6 +174,12 @@ export class PopupAddSignFileComponent implements OnInit {
         this.currentTab = 2;
         this.processTab = 3;
       }
+    }
+    if(this.data.refType=="ES_Categories"){
+      this.disableCateID=true;
+    }
+    if(this.data.isTemplate){
+      this.isTemplate=true;
     }
   }
 
@@ -757,6 +770,9 @@ export class PopupAddSignFileComponent implements OnInit {
     }
 
     if (!this.isSaved && this.isAddNew) {
+      if(this.data.refType==null || this.data.refType==''){
+        this.data.refType = this.refType;
+      }
       this.esService.addNewSignFile(this.data).subscribe(async (res) => {
         if (res != null) {
           console.log('ADD NEW SIGNFILE: ', res);
@@ -934,11 +950,17 @@ export class PopupAddSignFileComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.notify.alertCode('SYS007');
-            dialogTemplateName && dialogTemplateName.close();
-            if(this.saveAsTemplate){
-              this.dialog && this.dialog.close();
+            this.notify.notifyCode('SYS006');
+            let cate = this.listCategory.filter((item) => item.categoryID == res?.categoryID);
+            if(cate?.length>0){
+              res.icon= cate[0]?.icon;
+              res.color= cate[0]?.color;
+              res.categoryName= cate[0]?.categoryName;
             }
+            if(this.isTemplate && this.dialog?.dataService){
+              (this.dialog?.dataService as CRUDService)?.add(res)?.subscribe();            
+            }
+            dialogTemplateName && dialogTemplateName.close();
           }
         });
     } else {
@@ -947,12 +969,12 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   updateApproveTemplate() {
-    if (this.data?.approveControl != '1') {
-      this.notify.notify('Qui trình chưa thay đổi');
-      return;
-    }
+    // if (this.data?.approveControl != '1') {
+    //   this.notify.notify('Qui trình chưa thay đổi');
+    //   return;
+    // }
     this.esService
-      .updateApproveTemplate(this.data.recID, this.data.processID)
+      .updateApproveTemplate(this.data)
       .subscribe((res) => {
         if (res != null) {
           this.notify.notifyCode('SYS007');
@@ -993,9 +1015,10 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.currentTab > 2) return;
 
     let oldNode = currentTab;
-    let newNode = oldNode + 1;
+    let newNode = oldNode + 1;    
     switch (currentTab) {
-      case 0:
+      case 0:           
+        
         if (
           this.attachment?.fileUploadList?.length > 0 ||
           this.data?.files?.length > 0
@@ -1046,7 +1069,7 @@ export class PopupAddSignFileComponent implements OnInit {
       //   // }
       //   break;
 
-      case 1:     
+      case 1:  
       this.oldNode=oldNode;
       this.newNode=newNode;
       this.onSaveSignFile();
@@ -1110,7 +1133,8 @@ export class PopupAddSignFileComponent implements OnInit {
   //#region Open form
   dataStepChange(event) {
     if (event == true) {
-      if (this.data.approveControl != '1') {
+      this.nextClick=false;
+      if (this.data.approveControl != '1' && !this.isTemplate && this.data.refType!='ES_Categories') {
         this.data.approveControl = '1';
         this.dialogSignFile.patchValue({ approveControl: '1' });
         this.onSaveSignFile();
@@ -1191,21 +1215,21 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   saveAndClose() {
-    if(this.saveAsTemplate){
-      this.openTemplateName(this.addTemplateName) 
-      
-    }
-    else{
-      this.esService.getSFByID(this.data?.recID).subscribe((res) => {
-        if (res?.signFile) {
-          this.data.files = res?.signFile?.files;
-          this.dialogSignFile.patchValue({ files: res?.signFile?.files });
-          this.onSaveSignFile();
-          this.dialog && this.dialog.close(this.data);
+    this.esService.getSFByID(this.data?.recID).subscribe((res) => {
+      if (res?.signFile) {
+        this.data.files = res?.signFile?.files;
+        this.dialogSignFile.patchValue({ files: res?.signFile?.files });
+        this.onSaveSignFile();
+        if(this.isAddNew){          
+          this.notify.notifyCode('SYS006');
         }
-      });
-    }
-    
+        else{
+          this.notify.notifyCode('SYS007');
+        }
+        this.dialog && this.dialog.close(this.data);
+        
+      }
+    });     
   }
 
   closeDialogTmp(dialogTmp: DialogRef) {
@@ -1219,63 +1243,62 @@ export class PopupAddSignFileComponent implements OnInit {
 
   release() {
     //Gửi duyệt'
-
-    if (this.user.userID != this.data.owner) {
-      return;
+    if(!this.isReleasing){
+      this.isReleasing=true;
+      if (this.user.userID != this.data.owner) {
+        this.isReleasing=false;
+        return;
+      }
+      if (this.eSign == true && this.processTab < 2 && this.currentTab == 2) {
+        this.isReleasing=false;
+        return;
+      }
+        this.codxShareService
+        .codxRelease(
+          'ES',
+          this.data?.recID,
+          this.data.approveControl == '1'? this.data?.recID: this.data?.processID,        
+          this.formModelCustom.entityName,
+          this.formModelCustom.funcID,
+          "",
+          this.data?.title ,
+          this.data?.refType
+        )
+        .subscribe((res) => {
+          if (res?.msgCodeError == null && res?.rowCount > 0) {
+            this.esService.getSFByID(this.data?.recID).subscribe((res) => {
+              if (res?.signFile) {
+                this.data.files = res?.signFile?.files;
+                this.dialogSignFile.patchValue({ files: res?.signFile?.files });
+  
+                this.dialogSignFile.patchValue({ approveStatus: '3' });
+                this.data.approveStatus = '3';
+  
+                this.esService.editSignFile(this.data).subscribe((result) => {
+                  if (result) {
+                    //Gen QR code
+                    this.esService
+                      .addQRBeforeRelease(this.data.recID)
+                      .subscribe((res) => {});
+  
+                    // Notify
+                    this.notify.notifyCode('ES007');
+                    this.dialog &&
+                      this.dialog.close({
+                        data: this.data,
+                        approved: true,
+                      });
+                  }
+                });
+              }
+            });
+          } else {
+            this.notify.notifyCode(res?.msgCodeError);            
+            this.isReleasing=false;
+          }
+        });
     }
-    if (this.eSign == true && this.processTab < 2 && this.currentTab == 2) {
-      return;
-    }
-
-    // this.esService
-    //   .release(
-    //     this.data,
-    //     this.formModelCustom.entityName,
-    //     this.formModelCustom.funcID
-    //   )
-      this.codxShareService
-      .codxRelease(
-        'ES',
-        this.data?.recID,
-        this.data.approveControl == '1'? this.data?.recID: this.data?.processID,        
-        this.formModelCustom.entityName,
-        this.formModelCustom.funcID,
-        "",
-        this.data?.title ,
-        this.data?.refType
-      )
-      .subscribe((res) => {
-        if (res?.msgCodeError == null && res?.rowCount > 0) {
-          this.esService.getSFByID(this.data?.recID).subscribe((res) => {
-            if (res?.signFile) {
-              this.data.files = res?.signFile?.files;
-              this.dialogSignFile.patchValue({ files: res?.signFile?.files });
-
-              this.dialogSignFile.patchValue({ approveStatus: '3' });
-              this.data.approveStatus = '3';
-
-              this.esService.editSignFile(this.data).subscribe((result) => {
-                if (result) {
-                  //Gen QR code
-                  this.esService
-                    .addQRBeforeRelease(this.data.recID)
-                    .subscribe((res) => {});
-
-                  // Notify
-                  this.notify.notifyCode('ES007');
-                  this.dialog &&
-                    this.dialog.close({
-                      data: this.data,
-                      approved: true,
-                    });
-                }
-              });
-            }
-          });
-        } else {
-          this.notify.notifyCode(res?.msgCodeError);
-        }
-      });
+    
   }
 
   afterCategoryChange() {

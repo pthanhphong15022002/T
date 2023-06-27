@@ -77,6 +77,8 @@ import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quo
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
 import { TaskComponent } from './deals/step-task/task/task.component';
+import { CustomergroupsComponent } from './customergroups/customergroups.component';
+import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
 
 const routes: Routes = [
   {
@@ -113,6 +115,14 @@ const routes: Routes = [
         path: 'leads/:funcID',
         component: LeadsComponent,
       },
+      // {
+      //   path: 'approvals/:funcID',
+      //   loadChildren: () =>
+      //     import('projects/codx-cm/src/lib/codx-cm-approval.module').then(
+      //       (m) => m.ApprovelCmModule
+      //     ),
+      //   data: { noReuse: true },
+      // },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -128,6 +138,7 @@ const routes: Routes = [
         component: SettingProcessCmComponent,
         data: { noReuse: true },
       },
+
     ],
   },
 ];
@@ -180,6 +191,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupConvertLeadComponent,
     ViewQuotationsComponent,
     ContractsComponent,
+    CustomergroupsComponent,
+    PopupAddCustgroupComponent,
     //test
     CodxAsideCustomComponent,
     PopupAddPaymentComponent,

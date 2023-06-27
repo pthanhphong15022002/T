@@ -81,7 +81,7 @@ export class CmCustomerComponent
   crrFuncID = '';
   viewMode = 2;
   isButton = true;
-
+  gridViewSetup: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -129,6 +129,7 @@ export class CmCustomerComponent
         this.funcID = param.funcID;
         this.isButton = true;
         this.afterLoad();
+
       }
     });
   }
@@ -171,7 +172,21 @@ export class CmCustomerComponent
       // formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
       // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
       // this.view.formModel = formMD;
+      if (this.funcID == 'CM0101') {
+        this.cache
+          .gridViewSetup(
+            fun?.formName,
+            fun?.gridViewName
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.gridViewSetup = res;
+            }
+          });
+      }
     });
+
+
     this.detectorRef.detectChanges();
   }
 
@@ -546,7 +561,20 @@ export class CmCustomerComponent
     });
   }
 
-  deleteContactToCM(data) {
+  async deleteContactToCM(data) {
+    var check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'ContactsBusiness',
+        'CheckContactDealAsync',
+        [data.recID]
+      )
+    );
+    if (check) {
+      this.notiService.notifyCode('CM012');
+      return;
+    }
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {

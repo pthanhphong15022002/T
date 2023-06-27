@@ -36,17 +36,30 @@
 }
 
 .ques-scroll {
-  height: calc(100vh - 92px) !important;
+  height: 100% !important
 }
-.e-tab .e-tab-header .e-toolbar-item.e-active {
+.ejstab-survey .e-tab-header .e-toolbar-item.e-active {
   color: #4C2B87 !important;
-  border-bottom: 3px #623DA1 solid  !important;
+  border-bottom: 2px #623DA1 solid  !important;
+  .e-tab-text
+  {
+    color: #4C2B87 !important;
+  }
 }
 .ejstab-survey
 {
+  height: calc(100% - 40px) !important;
   .e-tab-text
   {
     text-transform: none !important;
+  }
+  .e-content
+  {
+    height: calc(100% - 17px) !important;
+    .e-item , .e-item>div 
+    {
+      height: 100% !important;
+    } 
   }
 }
 .ejstab-survey .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap
@@ -64,4 +77,54 @@
     font-size: 17px !important;
     margin-left: 0 !important;
   }
+}
+.mt-1px
+{
+  margin-top: 1px;
+}
+app-add-survey > div
+{
+  height: 100% !important;
+  codx-views{
+    height: 100% !important;
+  }
+}
+.fs-30px
+{
+  font-size: 30px !important;
+}
+.sv-saving
+{
+  position: absolute;
+  right: 19px;
+  margin-top: 8px;
+  z-index: 1;
+}
+.sv-loading-gif
+{
+  background-image: url("../../../../../src/assets/themes/sv/default/img/loading.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 20px;
+  height: 20px;
+}
+.btn-7248B9
+{
+  background-color: #7248B9;
+}
+.btn-7248B9:hover
+{
+  background-color: #612DBA;
+}
+.color-7248B9
+{
+  color: #7248B9;
+}
+.btn-3699FF
+{
+  background-color: #3699FF;
+}
+.btn-3699FF:hover
+{
+  background-color: #0984FF;
 }

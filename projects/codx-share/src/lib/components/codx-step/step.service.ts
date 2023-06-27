@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
   ApiHttpService,
@@ -37,6 +39,80 @@ export class StepService {
     private calendarService: CodxCalendarService,
     private codxService: CodxService
   ) {}
+
+  //#region common
+  capitalizeFirstLetter(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  isValidPhoneNumber(phoneNumber) {
+    var phonePattern = /^(09|03|07|08|05)\d{8}$/;
+    return phonePattern.test(phoneNumber);
+  }
+
+  compareDates(date1, date2, type = 's') {
+    date1 = new Date(date1);
+    date2 = new Date(date2);
+    if (type === 'h') {
+      date1.setHours(0, 0, 0, 0);
+      date2.setHours(0, 0, 0, 0);
+    } else if (type === 'm') {
+      date1.setMinutes(0, 0, 0);
+      date2.setMinutes(0, 0, 0);
+    } else {
+      date1.setSeconds(0, 0);
+      date2.setSeconds(0, 0);
+    }
+
+    if (date1.getTime() === date2.getTime()) {
+      return 0;
+    } else if (date1 < date2) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
+
+  async getFormModel(formModel: FormModel) {
+    let listHeaderText = {};
+    if(formModel){
+      let header = await firstValueFrom(
+        this.cache.gridViewSetup(formModel?.formName, formModel?.gridViewName)
+      );
+      if (header) {
+        for (let key in header) {
+          if (header[key]) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            listHeaderText[keyConvert] = header[key]['headerText'];
+          }
+        }
+      }
+    }
+    return listHeaderText;
+  }
+
+  checkRequire(require = [], data, headerText){
+    let message = [];
+    if(require?.length > 0){
+      for (let key of require) {
+        if (
+          (typeof data[key] === 'string' && !data[key].toString()?.trim()) || !data[key] || data[key]?.length === 0 || data[key].toString()?.trim() == 'Invalid Date'
+        ) {
+          message.push(headerText[key]);
+        }
+      }
+    }
+    if (message.length > 0) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + message.join(', ') + ' " '
+      );
+      return true;
+    }
+    return false;
+  }
+  //#endregion
 
   checkTaskLink(task, step) {
     let check = true;
@@ -302,7 +378,10 @@ export class StepService {
 
     this.calendarService.getFormModel('EPT21').then((res) => {
       let carFM = res;
-      let carFG = this.codxService.buildFormGroup(carFM?.formName,carFM?.gridViewName);
+      let carFG = this.codxService.buildFormGroup(
+        carFM?.formName,
+        carFM?.gridViewName
+      );
       let popupBookingCar;
 
       if (isOpenSide) {

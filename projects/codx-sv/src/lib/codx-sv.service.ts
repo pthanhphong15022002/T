@@ -8,7 +8,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, finalize, map, share } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +23,8 @@ export class CodxSvService {
   tenant: string;
   private title = new BehaviorSubject<any>(null);
   signalSave = new BehaviorSubject<any>(null);
+  public caches = new Map<string, Map<string, any>>();
+  private cachedObservables = new Map<string, Observable<any>>();
   constructor(
     private api: ApiHttpService,
     private router: Router,
@@ -47,6 +49,112 @@ export class CodxSvService {
   {
     return this.api.execSv("SV","SV","SurveysBusiness","UpdateItemByRecIDAsync",[recID,data])
   }
+
+  loadFuncByParentID(parentID:any): Observable<any>
+  {
+    let paras = [parentID];
+    let keyRoot = "ParentID" + parentID;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv("SYS","SYS","FunctionListBusiness","GetByParentAsync",paras)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+
+  loadValuelist(vll:any): Observable<any>
+  {
+    let paras = [vll];
+    let keyRoot = "Vll" + vll;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.valueList(vll)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+
+  loadTags(entityName:any): Observable<any>
+  {
+    let paras = [entityName];
+    let keyRoot = "Tags" + entityName;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.exec<any>("BS","TagsBusiness","GetModelDataAsync",paras)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+ 
   convertListToObject(
     list: Array<object>,
     fieldName: string,
@@ -253,12 +361,27 @@ export class CodxSvService {
     );
   }
 
+  shareLink(data:any,post=false,funcID:any) {
+    return this.api.execSv(
+      'SV',
+      'SV',
+      'SurveysBusiness',
+      'ShareLinkAsync',
+      [data,post,funcID]
+    );
+  }
   onSaveListFile(lstDataUpload) {
     return this.api.execSv('DM', 'DM', 'FileBussiness', 'CopyListFileAsync', [
       lstDataUpload,
     ]);
   }
 
+  getDataSurveys(data:any,isSystem=false) {
+    return this.api.execSv('SV', 'SV', 'SurveysBusiness', 'GetAsync', [
+      data,
+      isSystem
+    ]);
+  }
   onSubmit(data) {
     return this.api.execSv(
       'SV',
@@ -267,5 +390,16 @@ export class CodxSvService {
       'SaveAsync',
       [data, true]
     );
+  }
+
+  filterSearchSuggest()
+  {
+    // return this.api.execSv(
+    //   'SV',
+    //   'SV',
+    //   'RespondentsBusiness',
+    //   'SaveAsync',
+    //   [data, true]
+    // );
   }
 }

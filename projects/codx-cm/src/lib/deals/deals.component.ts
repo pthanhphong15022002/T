@@ -36,12 +36,15 @@ import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { AnyNsRecord } from 'dns';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
   styleUrls: ['./deals.component.scss'],
-})export class DealsComponent
+})
+export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -100,6 +103,8 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
   titleAction = '';
   vllPriority = 'TM005';
+  vllApprove = '';
+  vllStatus = '';
   crrFuncID = '';
   viewMode = 2;
   // const set value
@@ -114,30 +119,72 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   dataDrop: any;
   stepIdClick: any;
   crrStepID: any;
-  dataColums: any;
+  dataColums: any = [];
   moreFuncInstance: any;
   funCrr: any;
   viewCrr: any;
   viewsDefault: any;
   gridViewSetup: any;
-  functionModule:any;
+  functionModule: any;
   nameModule: string = '';
+  paramDefault: any;
+  currencyIDDefault: any = 'VND';
+  exchangeRateDefault: any = 1;
+  fiterOption: any;
+  orgFilter: any;
+  orgPin: any;
+  pinnedItem: any;
+  processIDKanban: string;
+  processIDDefault: string;
+  crrProcessID = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     this.executeApiCalls();
-    if (!this.funcID) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    }
-
+    // if (!this.funcID) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
+
+    this.codxCmService.getProcessDefault('1').subscribe((res) => {
+      if (res) {
+        this.processIDDefault = res.recID;
+        this.processIDKanban = res.recID;
+      }
+    });
+
+    ///lay tien mac dinh
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) {
+          this.paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyIDDefault =
+            this.paramDefault['DefaultCurrency'] ?? 'VND';
+          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
+          if (this.currencyIDDefault != 'VND') {
+            let day = new Date();
+            this.codxCmService
+              .getExchangeRate(this.currencyIDDefault, day)
+              .subscribe((res) => {
+                if (res) this.exchangeRateDefault = res;
+                else {
+                  this.currencyIDDefault = 'VND';
+                  this.exchangeRateDefault = 1;
+                }
+              });
+          }
+        }
+      }
+    });
   }
 
   onInit(): void {
@@ -147,9 +194,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     };
 
     this.cache.functionList(this.funcID).subscribe((f) => {
-      this.functionModule =  f.module;
+      this.functionModule = f.module;
       this.nameModule = f.customName;
-      this.executeApiCallFunctionID(f.formName,f.gridViewName);
+      this.executeApiCallFunctionID(f.formName, f.gridViewName);
     });
     this.detectorRef.detectChanges();
   }
@@ -170,7 +217,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
+        // toolbarTemplate: this.footerButton,
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
@@ -189,10 +236,10 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
           v.hide = true;
           v.active = false;
         }
-        if (!(this.funcID == 'CM0201' && v.type == '6')) this.views.push(v);
+        // if (!(this.funcID == 'CM0201' && v.type == '6'))
+        this.views.push(v);
       });
     });
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -214,82 +261,103 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   }
 
   changeView(e) {
-    this.viewCrr = e?.view?.type;
-    if (!this.funCrr) {
-      this.funCrr = this.funcID;
-      return;
-    }
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.viewCrr = e?.view?.type;
+    //xu ly view fitter
+    this.changeFilter();
+    if (this.viewCrr == 6) {
+      this.kanban = (this.view?.currentView as any)?.kanban;
+    }
+
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
+    else if (this.processIDKanban)
+      this.dataObj = { processID: this.processIDKanban };
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-      if (this.processID) this.dataObj = { processID: this.processID };
-      if (this.crrFuncID != this.funcID) {
-        this.cache.viewSettings(this.funcID).subscribe((views) => {
-          if (views) {
-            this.afterLoad();
-            this.crrFuncID = this.funcID;
-            this.views = [];
-            let idxActive = -1;
-            let viewOut = false;
-            this.viewsDefault.forEach((v, index) => {
-              let idx = views.findIndex((x) => x.view == v.type);
-              if (idx != -1) {
-                v.hide = false;
-                if (v.type != this.viewCrr) v.active = false;
-                else v.active = true;
-                if (views[idx].isDefault) idxActive = index;
-              } else {
-                v.hide = true;
-                v.active = false;
-                if (this.viewCrr == v.type) viewOut = true;
-              }
-              if (v.type == 6) {
-                v.request.dataObj = this.dataObj;
-                v.request2.dataObj = this.dataObj;
-              }
-              if (!(this.funcID == 'CM0201' && v.type == '6')) this.views.push(v);else viewOut = true;
-            });
-            if (!this.views.some((x) => x.active)) {
-              if (idxActive != -1) this.views[idxActive].active = true;
-              else this.views[0].active = true;
+      // this.cache.viewSettings(this.funcID).subscribe((views) => {
+      //   if (views) {
+      //     this.afterLoad();
+      //     this.views = [];
+      //     let idxActive = -1;
+      //     let viewOut = false;
+      //     this.viewsDefault.forEach((v, index) => {
+      //       let idx = views.findIndex((x) => x.view == v.type);
+      //       if (idx != -1) {
+      //         v.hide = false;
+      //         if (v.type != this.viewCrr) v.active = false;
+      //         else v.active = true;
+      //         if (views[idx].isDefault) idxActive = index;
+      //       } else {
+      //         v.hide = true;
+      //         v.active = false;
+      //         if (this.viewCrr == v.type) viewOut = true;
+      //       }
+      //       if (v.type == 6) {
+      //         v.request.dataObj = this.dataObj;
+      //         v.request2.dataObj = this.dataObj;
+      //       }
+      //       //  if (!(this.funcID == 'CM0201' && v.type == '6'))
+      //       this.views.push(v);
+      //       //  else viewOut = true;
+      //     });
+      //     if (!this.views.some((x) => x.active)) {
+      //       if (idxActive != -1) this.views[idxActive].active = true;
+      //       else this.views[0].active = true;
 
-              let viewModel =
-                idxActive != -1 ? this.views[idxActive] : this.views[0];
-              this.view.viewActiveType = viewModel.type;
-              this.view.viewChange(viewModel);
-              if (viewOut) this.view.load();
-            }
-            if ((this.view?.currentView as any)?.kanban) {
-              let kanban = (this.view?.currentView as any)?.kanban;
-              let settingKanban = kanban.kanbanSetting;
-              settingKanban.isChangeColumn = true;
-              settingKanban.formName = this.view?.formModel?.formName;
-              settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-              this.api
-                .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-                  settingKanban,
-                  this.dataObj,
-                ])
-                .subscribe((resource) => {
-                  if (resource?.columns && resource?.columns.length)
-                    kanban.columns = resource.columns;
-                  kanban.kanbanSetting.isChangeColumn = false;
-                  kanban.dataObj = this.dataObj;
-                  kanban.loadDataSource(
-                    kanban.columns,
-                    kanban.kanbanSetting?.swimlaneSettings,
-                    false
-                  );
-                  kanban.refresh();
-                });
-            }
+      //       let viewModel =
+      //         idxActive != -1 ? this.views[idxActive] : this.views[0];
+      //       this.view.viewActiveType = viewModel.type;
+      //       this.view.viewChange(viewModel);
+      //       // if (viewOut)
+      //       // this.view.load();
+      //     }
 
-            this.detectorRef.detectChanges();
-          }
-        });
-      }
+      // if ((this.view?.currentView as any)?.kanban) {
+      //   this.loadKanban();
+      //   // let kanban = (this.view?.currentView as any)?.kanban;
+      //   // let settingKanban = kanban.kanbanSetting;
+      //   // settingKanban.isChangeColumn = true;
+      //   // settingKanban.formName = this.view?.formModel?.formName;
+      //   // settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+      //   // this.api
+      //   //   .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+      //   //     settingKanban,
+      //   //     this.dataObj,
+      //   //   ])
+      //   //   .subscribe((resource) => {
+      //   //     if (resource?.columns && resource?.columns.length)
+      //   //       kanban.columns = resource.columns;
+      //   //     kanban.kanbanSetting.isChangeColumn = false;
+      //   //     kanban.dataObj = this.dataObj;
+      //   //     kanban.loadDataSource(
+      //   //       kanban.columns,
+      //   //       kanban.kanbanSetting?.swimlaneSettings,
+      //   //       false
+      //   //     );
+      //   //     kanban.refresh();
+      //   //     this.kanban = kanban;
+      //   //     this.detectorRef.detectChanges();
+      //   //   });
+      // }
+      // }
+      // });
+    } else if (
+      this.funcID == 'CM0201' &&
+      this.viewCrr == 6 &&
+      this.processIDKanban != this.crrProcessID &&
+      (this.view?.currentView as any)?.kanban
+    ) {
+      this.crrProcessID = this.processIDKanban;
+      this.dataObj = { processID: this.processIDKanban };
+      this.view.views.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      this.loadKanban();
     }
   }
 
@@ -442,30 +510,28 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     } catch (error) {}
   }
 
-  async executeApiCallFunctionID(formName,gridViewName) {
+  async executeApiCallFunctionID(formName, gridViewName) {
     try {
-      await this.getMoreFunction(formName,gridViewName);
-      await this.getGridViewSetup(formName,gridViewName);
+      await this.getMoreFunction(formName, gridViewName);
+      await this.getGridViewSetup(formName, gridViewName);
     } catch (error) {}
   }
 
-
-  async getMoreFunction(formName,gridViewName){
+  async getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
         this.moreFuncInstance = res;
       }
     });
   }
-  async getGridViewSetup(formName,gridViewName){    this.cache
-    .gridViewSetup(formName, gridViewName)
-    .subscribe((res) => {
-      if(res) {
+  async getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
         this.gridViewSetup = res;
+        this.vllStatus = this.gridViewSetup['Status'].referedValue;
+        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
       }
-
     });
-
   }
 
   async getColorReason() {
@@ -537,6 +603,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       case 'CM0201_5':
         this.exportFile(data);
         break;
+      case 'CM0201_6':
+        this.approvalTrans(data);
+        break;
     }
   }
   changeMF(e) {
@@ -574,42 +643,46 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
         //xư lý dbClick
         this.viewDetail(e.data);
         break;
+      //chang fiter
+      case 'pined-filter':
+        this.seclectFilter(e.data);
     }
   }
 
   dropDeals(data) {
     data.stepID = this.crrStepID;
-    if (!data.edit) {
-      this.notificationsService.notifyCode('SYS032');
-      return;
-    }
-    if (data.closed) {
-      this.notificationsService.notify(
-        'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
-      return;
-    }
+    // if (!data.edit) {
+    //   this.notificationsService.notifyCode('SYS032');
+    //   return;
+    // }
+    // if (data.closed) {
+    //   this.notificationsService.notify(
+    //     'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
+    //     '2'
+    //   );
+    //   return;
+    // }
 
-    if (this.moreFuncInstance?.length == 0) {
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
-    if (data.status == '1') {
-      this.notificationsService.notifyCode('DP037');
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
-    if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notifyCode('DP038');
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
+    // if (this.moreFuncInstance?.length == 0) {
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status == '1') {
+    //   this.notificationsService.notifyCode('DP038');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
+    // if (data.status != '1' && data.status != '2') {
+    //   this.notificationsService.notifyCode('DP037');
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
 
+    // Alo Bao bat dk chặng
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
-      this.dataColums.length == 0
+      this.dataColums?.length == 0
     )
       this.dataColums = this.kanban.columns;
 
@@ -624,10 +697,10 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
             (x) => x.functionID == 'CM0201_1'
           );
           if (idx != -1) {
-            if (this.checkMoreReason(data)) {
-              this.notificationsService.notifyCode('SYS032');
-              return;
-            }
+            // if (this.checkMoreReason(data)) {
+            //   this.notificationsService.notifyCode('SYS032');
+            //   return;
+            // }
             this.titleAction = this.moreFuncInstance[idx].text;
             this.moveStage(data);
           }
@@ -637,10 +710,10 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
               (x) => x.functionID == 'CM0201_3'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
               this.titleAction = this.moreFuncInstance[idx].text;
               this.moveReason(data, true);
             }
@@ -649,10 +722,10 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
               (x) => x.functionID == 'CM0201_4'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
+              // if (this.checkMoreReason(data)) {
+              //   this.notificationsService.notifyCode('SYS032');
+              //   return;
+              // }
               this.titleAction = this.moreFuncInstance[idx].text;
               this.moveReason(data, false);
             }
@@ -765,6 +838,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   }
 
   moveReason(data: any, isMoveSuccess: boolean) {
+    //lay step Id cu de gen lai total
+    if (!this.crrStepID || this.crrStepID != data.stepID)
+      this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -777,7 +853,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   openOrCloseDeal(data, check) {
     var datas = [data.recID, data.processID, check];
     this.notificationsService
-      .alertCode('DP018',null ,this.titleAction , "'"+data.dealName + "'")
+      .alertCode('DP018', null, this.titleAction, "'" + data.dealName + "'")
       .subscribe((info) => {
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
@@ -787,7 +863,11 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
               data.ModifiedOn = new Date();
               this.dataSelected = data;
               this.view.dataService.update(data).subscribe();
-              this.notificationsService.notifyCode(check ? 'DP016' : 'DP017',0,"'"+data.dealName+"'");
+              this.notificationsService.notifyCode(
+                check ? 'DP016' : 'DP017',
+                0,
+                "'" + data.dealName + "'"
+              );
               if (data.showInstanceControl === '1') {
                 this.view.dataService.update(this.dataSelected).subscribe();
               }
@@ -846,10 +926,22 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
           if (res) {
             data = res[0];
             this.view.dataService.update(data).subscribe();
+            //up kaban
+            if (this.kanban) {
+              let money = data.dealValue * data.exchangeRate;
+              this.renderTotal(data.stepID, 'add', money);
+              this.renderTotal(this.crrStepID, 'minus', money);
+              this.kanban.refresh();
+            }
             this.detectorRef.detectChanges();
           }
         });
         // }
+      } else {
+        if (this.kanban) {
+          this.dataSelected.stepID = this.crrStepID;
+          this.kanban.updateCard(this.dataSelected);
+        }
       }
     });
   }
@@ -963,12 +1055,9 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
+      this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
       this.openFormDeal(formMD, option, 'add');
     });
   }
@@ -980,7 +1069,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
       titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
       processID: this.processID,
       gridViewSetup: this.gridViewSetup,
-      functionModule: this.functionModule
+      functionModule: this.functionModule,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -990,7 +1079,13 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-        // this.dataSelected = JSON.parse(JSON.stringify(e.event));
+        //up kaban
+        if (this.kanban) {
+          let dt = e.event;
+          let money = dt.dealValue * dt.exchangeRate;
+          this.renderTotal(dt.stepID, 'add', money);
+          this.kanban.refresh();
+        }
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1000,6 +1095,8 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+    let dealValueOld = data.dealValue;
+    let exchangeRateOld = data.exchangeRate;
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -1017,7 +1114,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa cơ hội',
-          gridViewSetup:this.gridViewSetup
+          gridViewSetup: this.gridViewSetup,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
@@ -1027,7 +1124,19 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            // this.dataSelected = JSON.parse(JSON.stringify(e.event))
+            //up kaban
+            if (
+              this.kanban &&
+              (dealValueOld != e.event?.dealValue ||
+                exchangeRateOld != e.event?.exchangeRate)
+            ) {
+              let dt = e.event;
+              let money =
+                dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
+              this.renderTotal(dt.stepID, 'add', money);
+              this.kanban.refresh();
+            }
+
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
@@ -1060,16 +1169,22 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 
   delete(data: any) {
     var datas = [data.recID];
-    this.codxCmService.isCheckDealInUse(datas).subscribe((res)=> {
-      if(res[0]) {
-        this.notificationsService.notifyCode('CM014' ,0,""+this.nameModule+"");
+    this.codxCmService.isCheckDealInUse(datas).subscribe((res) => {
+      if (res[0]) {
+        this.notificationsService.notifyCode(
+          'CM014',
+          0,
+          '' + this.nameModule + ''
+        );
         return;
-      }
-      else if(res[1]) {
-        this.notificationsService.notifyCode('CM015' ,0,""+this.nameModule+"");
+      } else if (res[1]) {
+        this.notificationsService.notifyCode(
+          'CM015',
+          0,
+          '' + this.nameModule + ''
+        );
         return;
-      }
-      else {
+      } else {
         this.view.dataService.dataSelected = data;
         this.view.dataService
           .delete([this.view.dataService.dataSelected], true, (opt) =>
@@ -1077,18 +1192,26 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
           )
           .subscribe((res) => {
             if (res) {
-              this.view.dataService.onAction.next({ type: 'delete', data: data });
+              this.view.dataService.onAction.next({
+                type: 'delete',
+                data: data,
+              });
+              //up kaban
+              if (this.kanban) {
+                let money = data.dealValue * data.exchangeRate;
+                this.renderTotal(data.stepID, 'minus', money);
+                this.kanban.refresh();
+              }
             }
           });
         this.changeDetectorRef.detectChanges();
       }
-    })
-
+    });
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedDealAsync';
-    opt.data = [itemSelected.recID,null];
+    opt.data = [itemSelected.recID, null];
     return true;
   }
   //#endregion
@@ -1100,8 +1223,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
   }
   //#endregion
 
-
-  autoMoveStage($event){
+  autoMoveStage($event) {
     if ($event && $event != null) {
       this.view.dataService.update($event).subscribe();
       this.detailViewDeal.dataSelected = JSON.parse(
@@ -1149,4 +1271,295 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
     //     }
     //   });
   }
+
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+      if (process) {
+        this.codxCmService
+          .getESCategoryByCategoryID(process.processNo)
+          .subscribe((res) => {
+            if (res.eSign) {
+              //kys soos
+            } else {
+              this.release(dt, res.processID);
+            }
+          });
+      } else {
+        this.notificationsService.notify(
+          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+          '3'
+        );
+      }
+    });
+  }
+  //Gửi duyệt
+  release(data: any, processID: any) {
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError)
+          this.notificationsService.notify(res2?.msgCodeError);
+        else {
+          this.dataSelected.approveStatus = '3';
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          this.codxCmService
+            .updateApproveStatus('DealsBusiness', data?.recID, '3')
+            .subscribe();
+          this.notificationsService.notifyCode('ES007');
+        }
+      });
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notificationsService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+          if (process) {
+            this.codxCmService
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        dt?.recID,
+                        this.view.formModel.entityName,
+                        ''
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          this.dataSelected.approveStatus = '0';
+                          this.codxCmService
+                            .updateApproveStatus(
+                              'DealsBusiness',
+                              dt?.recID,
+                              '0'
+                            )
+                            .subscribe();
+                          this.notificationsService.notifyCode('SYS007');
+                        } else this.notificationsService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+          } else {
+            this.notificationsService.notify(
+              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
+          }
+        });
+      }
+    });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
+
+  //--------------------------Tính tổng-------------------------//
+  genTotal(stepID) {
+    let totalCol = 0;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+      if (idx != -1) {
+        let dt = this.kanban.columns[idx];
+        if (dt.totalDealValue) {
+          totalCol = dt.totalDealValue / this.exchangeRateDefault;
+        }
+      }
+    }
+    return totalCol;
+  }
+
+  renderTotal(stepID, action = 'add', money) {
+    let idx = this.kanban.columns.findIndex((x) => x.keyField == stepID);
+    if (idx != -1) {
+      if (action == 'add') {
+        this.kanban.columns[idx].totalDealValue += money;
+      } else if (action == 'minus') {
+        this.kanban.columns[idx].totalDealValue -= money;
+      }
+    }
+  }
+  //end
+
+  //-----------------------------change Filter -------------------------------//
+  changeFilter() {
+    if (this.funcID != 'CM0201') {
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp != -1) {
+        this.fiterOption = this.view.filterOptions[idxBusinesLineOp];
+        this.view.filterOptions.splice(idxBusinesLineOp, 1);
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg != -1) {
+        this.orgFilter = this.view.orgFilters[idxBusinesLineOg];
+        this.view.orgFilters.splice(idxBusinesLineOg, 1);
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine != -1) {
+        this.orgPin = this.view.orgPinned[idxBusinesLine];
+        this.view.orgPinned.splice(idxBusinesLine, 1);
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem != -1) {
+        this.pinnedItem = this.view.pinnedItems[idxBusinesLineItem];
+        this.view.pinnedItems.splice(idxBusinesLineItem, 1);
+      }
+    } else {
+      ///add fileter
+      let idxBusinesLineOp = this.view.filterOptions.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOp == -1 && this.fiterOption) {
+        this.view.filterOptions.unshift(this.fiterOption);
+        this.fiterOption = null;
+      }
+
+      let idxBusinesLineOg = this.view.orgFilters.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineOg == -1 && this.orgFilter) {
+        this.view.orgFilters.unshift(this.orgFilter);
+        this.orgFilter = null;
+      }
+
+      let idxBusinesLine = this.view.orgPinned.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLine == -1 && this.orgPin) {
+        this.view.orgPinned.unshift(this.orgPin);
+        this.orgPin = null;
+      }
+
+      let idxBusinesLineItem = this.view.pinnedItems.findIndex(
+        (x) => x.fieldName == 'BusinessLineID'
+      );
+      if (idxBusinesLineItem == -1 && this.pinnedItem) {
+        this.view.pinnedItems.unshift(this.pinnedItem);
+        this.pinnedItem = null;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async seclectFilter(datas) {
+    if (datas && datas?.length > 0) {
+      var filter = datas.filter((x) => x.field == 'BusinessLineID')[0];
+      if (filter) {
+        this.processIDKanban = await firstValueFrom(
+          this.codxCmService.getProcessByBusinessLineID(filter?.value)
+        );
+        if (!this.processIDKanban) this.processIDKanban = this.processIDDefault;
+      } else this.processIDKanban = this.processIDDefault;
+    }
+  }
+
+  loadKanban() {
+    let kanban = (this.view?.currentView as any)?.kanban;
+    let settingKanban = kanban.kanbanSetting;
+    settingKanban.isChangeColumn = true;
+    settingKanban.formName = this.view?.formModel?.formName;
+    settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+    this.api
+      .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+        settingKanban,
+        this.dataObj,
+      ])
+      .subscribe((resource) => {
+        if (resource?.columns && resource?.columns.length)
+          kanban.columns = resource.columns;
+        kanban.kanbanSetting.isChangeColumn = false;
+        kanban.dataObj = this.dataObj;
+        kanban.loadDataSource(
+          kanban.columns,
+          kanban.kanbanSetting?.swimlaneSettings,
+          false
+        );
+        kanban.refresh();
+        this.kanban = kanban;
+        // this.kanban.loaded = true;
+        this.kanban.refresh();
+        this.detectorRef.detectChanges();
+      });
+  }
+  onLoading(e) {
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
+    else if (this.processIDKanban)
+      this.dataObj = { processID: this.processIDKanban };
+    this.cache.viewSettings(this.funcID).subscribe((views) => {
+      if (views) {
+        this.afterLoad();
+        this.views = [];
+        let idxActive = -1;
+        let viewOut = false;
+        this.viewsDefault.forEach((v, index) => {
+          let idx = views.findIndex((x) => x.view == v.type);
+          if (idx != -1) {
+            v.hide = false;
+            if (v.type != this.viewCrr) v.active = false;
+            else v.active = true;
+            if (views[idx].isDefault) idxActive = index;
+          } else {
+            v.hide = true;
+            v.active = false;
+            if (this.viewCrr == v.type) viewOut = true;
+          }
+          if (v.type == 6) {
+            v.request.dataObj = this.dataObj;
+            v.request2.dataObj = this.dataObj;
+          }
+          //  if (!(this.funcID == 'CM0201' && v.type == '6'))
+          this.views.push(v);
+          //  else viewOut = true;
+        });
+        if (!this.views.some((x) => x.active)) {
+          if (idxActive != -1) this.views[idxActive].active = true;
+          else this.views[0].active = true;
+
+          let viewModel =
+            idxActive != -1 ? this.views[idxActive] : this.views[0];
+          this.view.viewActiveType = viewModel.type;
+          this.view.viewChange(viewModel);
+          // if (viewOut)
+          // this.view.load();
+        }
+      }
+    });
+    // this.view.views.forEach((x) => {
+    //   if (x.type == 6) {
+    //     x.request.dataObj = this.dataObj;
+    //     x.request2.dataObj = this.dataObj;
+    //   }
+    // });
+    this.loadKanban();
+  }
+  //end
 }
