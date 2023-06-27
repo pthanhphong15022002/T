@@ -199,6 +199,7 @@ import { CodxTaskGoalTempComponent } from './components/codx-task-goal-temp/codx
 import { UsingHistoryComponent } from './components/dynamic-form/using-history/using-history.component';
 import { AccessHistoryComponent } from './components/dynamic-form/access-history/access-history.component';
 import { OrderHistoryComponent } from './components/dynamic-form/order-history/order-history.component';
+import { CodxIconStepComponent } from './components/codx-step/codx-icon-step/codx-icon-step.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -344,6 +345,7 @@ const T_Component: Type<any>[] = [
   PopupCustomFieldComponent,
   CodxViewDetailLittleComponent,
   CodxStepChartComponent,
+  CodxIconStepComponent,
   //CO
   CalendarCenterComponent,
   AddNoteComponent,

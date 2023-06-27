@@ -13,7 +13,6 @@
       <div class="form-group">
         <codx-label
           fiedName="DealID"
-          default="Mã cơ hội"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -35,7 +34,6 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           fiedName="BusinessLineID"
-          default="Dòng sản phẩm"
 
         >
         </codx-label>
@@ -69,7 +67,6 @@
       <div class="form-group">
         <codx-label
           fiedName="DealName"
-          [default]="'Tên cơ hội'"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -78,44 +75,17 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="dealName"
-          [crrValue]="deal?.dealName"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
-
-    <!-- <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          fiedName="ProcessID"
-          [Group]="form.formGroup"
-          default="Quy trình"
-        >
-        </codx-label>
-      <div >
-        <codx-input
-        [formModel]="form.formModel"
-        field="processID"
-        [disabled]="true"
-        [model]="{ApplyFor: '1'}"
-        [crrValue]="deal?.processID"
-      >
-      </codx-input>
-
-      </div>
-
-      </div>
-    </div> -->
-
   </div>
   <div class="row">
     <div class="col-6">
       <div class="form-group">
         <codx-label
           fiedName="CustomerID"
-          default="Khách hàng"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -139,7 +109,6 @@
           [formModel]="form.formModel"
           fiedName="ChannelID"
           [Group]="form.formGroup"
-          default="Kênh"
         >
         </codx-label>
       <codx-input
@@ -158,22 +127,33 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="Category"
-          default="Loại cơ hội"
+          fiedName="DealValue"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
         </codx-label>
-        <codx-input
-          field="category"
-          type="valuelist"
-          refValue="CRM010"
-          crrValue="2"
-          [disabled]="true"
-          [crrValue]="deal?.category"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
+        <div class="d-flex flex-row">
+          <div class="col-8 pe-2">
+
+            <codx-input
+            type="number"
+              field="dealValue"
+              [min]="0"
+              [crrValue]="deal?.dealValue"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="col-4">
+            <codx-input
+              field="currencyID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -183,7 +163,6 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
           fiedName="EndDate"
-          default="Ngày đến hạn dự kiến"
         >
         </codx-label>
         <codx-input
@@ -204,21 +183,20 @@
         <codx-label
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          fiedName="DealValue"
-          default="Doanh số dư kiến"
+          fiedName="Probability"
         >
         </codx-label>
         <codx-input
         type="number"
-          field="dealValue"
-          [min]="0"
-          [crrValue]="deal?.dealValue"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
+        [min]="0"
+        [max]="100"
+        field="probability"
+        [crrValue]="deal?.probability"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
       </div>
     </div>
-
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -236,22 +214,18 @@
 
   </div>
   <div class="row">
-
     <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          fiedName="Probability"
-          default="Tỷ lệ thành công"
+          fiedName="ExpectedClosed"
         >
         </codx-label>
         <codx-input
-        type="number"
-        [min]="0"
-        [max]="100"
-        field="probability"
-        [crrValue]="deal?.probability"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="expectedClosed"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
@@ -264,7 +238,6 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
           fiedName="ConsultantID"
-          default="Nhân viên tư vấn"
         >
         </codx-label>
         <codx-input
@@ -279,33 +252,32 @@
 
   </div>
 </div>
-<div class="row">
 
+<div class="row">
   <div class="col-6">
     <div class="form-group">
       <codx-label
+        fiedName="ExchangeRate"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
-        fiedName="ExpectedClosed"
       >
       </codx-label>
       <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="expectedClosed"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
+        [formModel]="form.formModel"
+        [crrValue]="deal?.exchangeRate"
+        field="exchangeRate"
+        [disabled]="true"
+      >
+      </codx-input>
     </div>
   </div>
-
 </div>
+
   <div class="row">
     <div class="col-12">
       <div class="form-group">
         <codx-label
           fiedName="Note"
-          default="Tóm tắt nhu cầu"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -327,7 +299,6 @@
       <div class="form-group">
         <codx-label
           fiedName="Memo"
-          default="Mô tả chi tiết"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -422,50 +393,7 @@
 </ng-template>
 
 <ng-template #contact>
-  <!-- <ng-container>
-    <div class="d-flex flex-column mb-1">
-      <div class="title text-primary fs-4 fw-bold">
-        <codx-label
-          [formModel]="formModel"
-          name="lblListContactCustomer"
-          default="Danh sách người liên hệ từ khách hàng"
-        ></codx-label>
-      </div>
-      <div class="text-gray-600">
-        <codx-label
-          name="lblCheckContactToDeal"
-          [formModel]="formModel"
-          default="Chọn liên hệ muốn thêm vào cơ hội"
-        >
-        </codx-label>
-      </div>
-    </div>
-
-    <codx-list-contacts
-      #codxListContact
-      [selectAll]="false"
-      [funcID]="'CM0101'"
-      [objectID]="customerID"
-      [listContacts]="lstContactCustomer"
-      [objectType]="'1'"
-      [objectName]="customerName"
-      [isConvertLeadToCus]="true"
-      (contactEvent)="contactEvent($event)"
-      (lstContactEmit)="lstContactEmit($event)"
-      (objectConvert)="objectConvertDeal($event)"
-      [hidenMF]="false"
-      [type]="'formAdd'"
-      [lstContactRef]="lstContactDeal"
-    ></codx-list-contacts>
-  </ng-container> -->
   <ng-container>
-    <!-- <div class="title text-primary fs-4 fw-bold">
-      <codx-label
-        [formModel]="formModel"
-        name="lblListContactDeal"
-        default="Danh sách người liên hệ sử dụng cho cơ hội"
-      ></codx-label>
-    </div> -->
     <codx-list-contacts
       #loadContactDeal
       [selectAll]="false"
@@ -481,21 +409,4 @@
       [type]="'formAdd'"
     ></codx-list-contacts>
   </ng-container>
-
 </ng-template>
-
-<!-- <ng-container *ngIf="addFieldsControl == '2'"> </ng-container>
-
-<ng-template #tabGeneralInfoDetail let-form> </ng-template> -->
-
-<!-- <codx-form
-  #form
-  [headerText]="titleAction"
-  [subHeader]="subHeader"
-  [body]="body"
-  [openMore]="true"
-  [dialog]="dialog"
-  [formModel]="formModel"
-  [footer]="footer"
-  [data]=""
-></codx-form> -->

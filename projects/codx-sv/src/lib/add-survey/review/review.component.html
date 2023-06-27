@@ -1,11 +1,15 @@
-<div class="page-questions pt-5" id="page-questions">
+<div class="page-questions pt-5" id="page-questions" [style.backgroundColor]="backgroudColor">
   <div class="d-flex w-100 justify-content-center">
     <div class="d-flex flex-column">
+      <ng-container *ngIf="avatar">
+        <div class="KHCwJ dYYAhb w-100" [ngStyle]="{'background-image': 'url(' + avatar + ')'}">
+        </div>
+      </ng-container>
       <div class="box">
-        <ng-container *ngIf="survey?.stop ;else elseStop">
+        <ng-container *ngIf="(survey?.stop || expiredOn);else elseStop">
           <div class="card-survey">
             <div class="control-section inplace-editor-control-section form-lafyout">
-              <div class="content-wrapper b-t">
+              <div class="content-wrapper b-t" [style.borderTopColor]="primaryColor">
                 <form id="formSession" class="form-horizontal example-box">
                   <div class="ms-6 title-des-index0 mb-5">
                     <span
@@ -13,7 +17,7 @@
                       [innerHTML]="itemSession.question"
                     ></span>
                     <span class="mt-5" *ngIf="!itemSession.question">Mẫu không có tiêu đề</span>
-                    <div class="fs-6 mt-5">Khảo sát đã đóng.</div>
+                    <div class="fs-5-sm mt-5">{{expiredOn ? 'Khảo sát đã hết thời gian trả lời.': 'Khảo sát đã đóng.'}}</div>
                   </div>
                 </form>
               </div>
@@ -34,6 +38,7 @@
                         ? 'content-wrapper b-t b-l-session'
                         : 'content-wrapper b-t'
                     "
+                    [style.borderTopColor]="primaryColor"
                   >
                     <form
                       id="formSession"
@@ -293,7 +298,9 @@
                   *ngIf="itemSession.seqNo == questions.length - 1"
                   type="button"
                   class="btn btn-submit text-white"
+                  [disabled]="survey?.status != '5' ? true : false"
                   (click)="onSubmit()"
+                  [style.backgroundColor]="primaryColor"
                 >
                   <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
                 </button>
@@ -309,7 +316,7 @@
 <ng-template #tmpIsSent>
   <div class="card-survey">
     <div class="control-section inplace-editor-control-section form-lafyout">
-      <div class="content-wrapper b-t">
+      <div class="content-wrapper b-t" [style.borderTopColor]="primaryColor">
         <form id="formSession" class="form-horizontal example-box">
           <div class="ms-6 title-des-index0 mb-5">
             <span
@@ -349,7 +356,7 @@
   let-itemQuestion="itemQuestion"
   let-itemAnswer="itemAnswer"
 >
-  <div class="e-input-group" *ngIf="itemQuestion.answerType == 'O'">
+  <div class="e-input-group w-100" *ngIf="itemQuestion.answerType == 'O'">
     <codx-input
       *ngIf="!itemAnswer.other"
       type="radio"
@@ -376,21 +383,37 @@
         "
         [style.width]="'125px'"
       ></codx-input>
-      <input type="text" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="true" class="form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event.target.value, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
+      <input type="text" autocomplete="off" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="true" class="form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
 
     </div>
   </div>
-  <div class="e-input-group" *ngIf="itemQuestion.answerType == 'C'">
-    <codx-input
-      type="checkbox"
-      labelPosition="After"
-      [disabled]="false"
-      class="test-check"
-      [label]="itemAnswer.answer"
-      field="C"
-     
-      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
-    ></codx-input>
+  <div class="e-input-group w-100" *ngIf="itemQuestion.answerType == 'C'">
+    <ng-container *ngIf="!itemAnswer.other , else elseCOther">
+      <codx-input
+        type="checkbox"
+        labelPosition="After"
+        [disabled]="false"
+        class="test-check"
+        [label]="itemAnswer.answer"
+        field="C"
+        (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+      ></codx-input>
+    </ng-container>
+    <ng-template #elseCOther>
+      <div class="d-flex align-items-center">
+        <codx-input
+          type="checkbox"
+          labelPosition="After"
+          [disabled]="false"
+          class="test-check"
+          field="C"
+          [label]="'Mục khác:'"
+          (valueChange)="checkDisabelAnswerOrderC($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"
+          ngClass="w-150px"
+        ></codx-input>
+        <input type="text" autocomplete="off" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="true" class="form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
+      </div>
+    </ng-template>
   </div>
   <div
     class="e-input-group w-200px"
@@ -459,7 +482,8 @@
       {{convertAnswer(itemQuestion.answers[0].answer,"r")}}
     </span>
   </div>
-  <div class="ms-6" *ngIf="itemQuestion.answerType == 'D'">
+  <div class="d-flex flex-column" *ngIf="itemQuestion.answerType == 'D'">
+    <div class="mb-2"><span class="text-gray-500">Ngày</span></div>
     <codx-input
       type="datetime"
       format="d"
@@ -469,7 +493,8 @@
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
   </div>
-  <div class="d-flex ms-6" *ngIf="itemQuestion.answerType == 'H'">
+  <div class="d-flex flex-column" *ngIf="itemQuestion.answerType == 'H'">
+    <div class="mb-2"><span class="text-gray-500">Giờ</span></div>
     <codx-input
       type="datetime"
       format="t"
@@ -941,9 +966,27 @@
      
     </div>
   </div>
-  <div class="d-flex align-items-center mt-3 border-top py-3">
-    <span class="ms-6 icon-i-eye-slash icon-24"></span>
-    <span class="ms-3">{{ user?.email ? user?.email : "Guest" }}</span>
+  <div class="d-flex align-items-center mt-3 border-top py-3" *ngIf="user?.userID">
+    <!-- <span class="ms-6 icon-i-eye-slash icon-24"></span> -->
+    <codx-img 
+      [objectId]="user?.userID" 
+      [objectName]="user?.userName" 
+      [objectType]="'AD_Users'" 
+      [referType]="'avt'" 
+      imageType="circle"
+      width="30"
+      ngClass="ms-6"
+    >
+    </codx-img>
+    <div class="d-flex flex-column ms-4">
+      <div>
+        <span>{{ user?.userName}}</span>
+      </div>
+      <div class="text-gray-500">
+        <span>{{ user?.email}}</span>
+      </div>
+    </div>
+
   </div>
 </ng-template>
 

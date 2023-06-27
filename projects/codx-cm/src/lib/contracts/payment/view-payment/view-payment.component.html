@@ -34,9 +34,10 @@
 <ng-template #more let-data>
   <codx-mfunc
     [formModel]="fmContractsPayments"
-    [isBookMark]="true"
+    [isBookMark]="false"
     [dataItem]="moreDefaut"
     [type]="'view'"
+    (changeDataMF)="changeDataMFTask($event)"
     (clickMF)="onClickMFPayment($event, data)"></codx-mfunc>
 </ng-template>
 

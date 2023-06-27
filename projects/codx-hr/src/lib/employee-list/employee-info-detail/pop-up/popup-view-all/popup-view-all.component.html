@@ -11,7 +11,7 @@
         <ng-container *ngComponentOutlet="filter"></ng-container>
     </ng-container> -->
 
-    <div class="card-body p-0 mt-3" 
+    <div class="card-body p-0 employee-all mt-1" 
     *ngIf="formModel && columnGrid; else emptyDataTemplate"
     >
       <!-- <codx-gridview
@@ -42,6 +42,7 @@
       [predicates]="'EmployeeID=@0'"
       [dataValues]="employeeId"
       [emptyTemplate]="emptyDataTemplate"
+      rowHeight="60"
     ></codx-gridview-v2>
     </div>
   </ng-template>
@@ -110,7 +111,7 @@
             "
           ></span>
         </span>
-        <codx-mfunc
+        <codx-mfunc class="mt-n3"
           [formModel]="formModel"
           (clickMF)="clickMF($event, data, funcID)"
           type="hover"
@@ -303,7 +304,7 @@
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
       [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
     ></span> -->
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column justify-content-end">
       <div
         class="d-flex align-items-center text-dark fs-6 fw-bold"
       >
@@ -325,7 +326,7 @@
         placement="right"
         [ngbPopover]="popNewest"
         [style.color]="'#0078FF'"
-        class="icon-bookmark icon-18 ms-auto"
+        class="icon-bookmark icon-16 me-2"
       >
 
       </div>
@@ -345,7 +346,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol2 let-data>
-  <div class="d-flex flex-column">
+  <div class="d-flex flex-column justify-content-end">
     <div class="d-flex align-items-center">
       <span
         class="icon-monetization_on icon-16 me-2 text-dark fs-6 fw-bold"
@@ -368,7 +369,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol3 let-data>
-  <div class="d-flex flex-column">
+  <div class="d-flex flex-column justify-content-end">
     <div
       class="d-flex align-items-center mb-5px text-dark fs-6 fw-bold"
     >
@@ -410,7 +411,7 @@
         </span>
       </div>
     </div>
-    <codx-mfunc
+    <codx-mfunc class="mt-n3"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -441,7 +442,7 @@
     placement="right"
     [ngbPopover]="popNewest"
     [style.color]="'#0078FF'"
-    class="icon-bookmark icon-18 ms-auto"
+    class="icon-bookmark icon-16 me-2"
   >
 </span>
 
@@ -496,7 +497,7 @@
         "
       ></span>
     </span>
-    <codx-mfunc
+    <codx-mfunc class="mt-n3"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -581,7 +582,7 @@
         placement="right"
         [ngbPopover]="popNewest"
         [style.color]="'#0078FF'"
-        class="icon-bookmark icon-18"
+        class="icon-bookmark icon-16 me-2"
       >
     </span>
         <span class="fw-bolder">

@@ -225,7 +225,7 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-4">
+        <div class="col-6">
           <div>
             <codx-label
               [formModel]="dialog.formModel"
@@ -246,7 +246,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-6">
           <div>
             <codx-label
               [formModel]="dialog.formModel"
@@ -260,25 +260,6 @@
               field="contractType"
               [crrValue]="contracts?.contractType"
               (valueChange)="valueChangeCombobox($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="extendOn"
-              default="Ngày gia hạn"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]=""
-              field="extendOn"
-              type="datetime"
-              [crrValue]="contracts?.extendOn"
-              (valueChange)="changeValueDate($event)"
             >
             </codx-input>
           </div>
@@ -437,8 +418,6 @@
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delPhone"
-                type="number"
-                [min]="0"
                 (valueChange)="valueChangeText($event)"
                 [crrValue]="contracts?.delPhone"
               >
@@ -1192,7 +1171,7 @@
                 [formModel]="dialog.formModel"
                 field="pmtStatus"
                 (valueChange)="valueChangeCombobox($event)"
-                [crrValue]="contracts?.paymentStatus"
+                [crrValue]="contracts?.pmtStatus"
               >
               </codx-input>
             </div>

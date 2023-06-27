@@ -26,6 +26,8 @@
   --bs-green:rgb(22, 182, 49);
 
   --speeddialVertDist: 98px;
+
+  --primary: #3699ff;
 }
 
 /*** css for theme********/
@@ -483,6 +485,10 @@
   .btn-outline-primary {
     color: var(--primary-dark);
     border-color: var(--primary);
+  }
+  .btn.btn-outline-primary:focus-visible {
+//    color: var(--bs-btn-hover-color);
+    background-color: var(--primary-active);
   }
 
   .btn-outline-primary:hover {

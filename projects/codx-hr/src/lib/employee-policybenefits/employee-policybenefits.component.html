@@ -1,0 +1,186 @@
+<codx-views
+  #view
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  entityName="HR_PolicyBenefits"
+  className="PolicyBenefitsBusiness"
+  method="GetAllPolicyBenefitAsync"
+  [views]="views"
+  [autoLoad]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (buttonClick)="addPolicyBenefit($event)"
+>
+</codx-views>
+
+<ng-template #templateList let-data>
+  <div class="d-flex align-items-center p-3 border-bottom w-100">
+    <div class="w-15 min-w-150px p-1">
+      <span
+        [innerHTML]="
+          data?.benefitID | formatvalue : view.formModel : 'benefitID' | async
+        "
+      >
+      </span>
+    </div>
+
+    <div class="w-25 min-w-150px px-2">
+      <span
+        [innerHTML]="
+          data?.policyName | formatvalue : view.formModel : 'policyName' | async
+        "
+      >
+      </span>
+    </div>
+
+    <div class="w-15 min-w-150px px-2">
+      <span
+        [innerHTML]="
+          data?.fixedAmt | formatvalue : view.formModel : 'fixedAmt' | async
+        "
+      >
+      </span>
+    </div>
+
+    <div class="w-20 min-w-150px px-2">
+      {{ data.percentage }}
+      <button class="text-primary" *ngIf="data.hasIncludeBenefits == 1">
+        <i class="icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
+      </button>
+    </div>
+    <ng-template #toolTipBenefits>
+      <div>
+        <codx-label fieldName="Percentage" [formModel]="view.formModel">
+        </codx-label>
+        {{ data.percentage }}
+      </div>
+
+      <div>
+        <codx-label fieldName="PercentageOn" [formModel]="view.formModel">
+        </codx-label>
+        <span class="badge badge-success border-0 ms-2">
+          {{ data.percentageOn }}
+        </span>
+      </div>
+      <div>
+        <codx-label fieldName="IncludeBenefits" [formModel]="view.formModel">
+        </codx-label>
+        <span class="badge badge-success border-0 ms-2">
+            <span *ngFor="let item of Getchildbenefits(data.benefitID)">
+
+            </span>
+        </span>
+      </div>
+    </ng-template>
+
+    <div class="w-25 min-w-300px px-2">
+      <div class="flex-row">
+        <span>
+          <i class="icon-calendar_today icon-14 text-dark"></i>
+          {{ data.activeOn | fmDT }}
+        </span>
+        <span class="ms-10">
+          <button
+            class="btn btn-icon"
+            *ngIf="data.hasIncludeObjects == 0 && data.hasExcludeObjects == 0"
+            [ngbTooltip]="'Áp dụng toàn công ty'"
+          >
+            <i class="icon-groups text-primary"></i>
+          </button>
+
+          <button
+            [ngbTooltip]="'Xem chi tiết đối tượng áp dụng/ loại trừ'"
+            class="btn btn-icon"
+            *ngIf="data.hasIncludeObjects == 1 && data.hasExcludeObjects == 0"
+            (click)="onClickOpenPopupDetailInfo()"
+          >
+            <i class="icon-how_to_reg text-primary"></i>
+          </button>
+
+          <button
+            [ngbTooltip]="'Xem chi tiết đối tượng áp dụng/ loại trừ'"
+            class="btn btn-icon"
+            *ngIf="data.hasIncludeObjects == 0 && data.hasExcludeObjects == 1"
+            (click)="onClickOpenPopupDetailInfo()"
+          >
+            <i class="icon-person_remove text-primary"></i>
+          </button>
+
+          <button
+            [ngbTooltip]="'Xem chi tiết đối tượng áp dụng/ loại trừ'"
+            class="btn btn-icon"
+            *ngIf="data.hasIncludeObjects == 1 && data.hasExcludeObjects == 1"
+            (click)="onClickOpenPopupDetailInfo()"
+          >
+            <span>
+              <i class="icon-how_to_reg text-primary"></i>
+              <i class="icon-person_remove text-primary"></i>
+            </span>
+          </button>
+        </span>
+        <span class="ms-4">
+          <codx-vll
+            class="badge badge-sm badge-light-primary me-3"
+            [name]="'HRS104'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </span>
+      </div>
+    </div>
+
+    <div class="align-self-center">
+      <div style="height: 35px" class="has-action-menu">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          [dataItem]="data"
+          type="hover"
+        >
+        </codx-mfunc>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #headerTemplate let-data>
+  <div class="d-flex w-100 ps-2 pe-4">
+    <div class="w-15 min-w-150px p-3 fw-bold text-dark">
+      <codx-label
+        [formModel]="view.formModel"
+        name="lblALObj"
+        [default]="'Loại phụ cấp'"
+      ></codx-label>
+    </div>
+    <div class="w-25 min-w-150px p-3 fw-bold text-dark">
+      <codx-label
+        [formModel]="view.formModel"
+        name="lblPolicy"
+        [default]="'Chính sách'"
+      ></codx-label>
+    </div>
+    <div class="w-15 min-w-150px p-3 fw-bold text-dark">
+      <codx-label
+        [formModel]="view.formModel"
+        name="lblALStandard"
+        [default]="'Số tiền cố định'"
+      ></codx-label>
+    </div>
+    <div class="w-20 min-w-150px p-3 fw-bold text-dark">
+      <codx-label
+        [formModel]="view.formModel"
+        name="lblPercentage"
+        [default]="'Tỷ lệ (%)'"
+      ></codx-label>
+    </div>
+    <div class="w-25 min-w-300px p-3 fw-bold text-dark">
+      <codx-label
+        [formModel]="view.formModel"
+        name="lblEffect"
+        [default]="'Hiệu lực'"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>

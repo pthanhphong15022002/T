@@ -75,16 +75,14 @@ export class CodxAcService {
     let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
     for (let i = 0; i < sortTrans.length; i++) {
       if (sortTrans[i].value != null) {
-        
       }
-      if (i == sortTrans.length - 1 && sortTrans[i].value != null){
+      if (i == sortTrans.length - 1 && sortTrans[i].value != null) {
         newMemo += sortTrans[i].value;
-      }else{
+      } else {
         if (sortTrans[i].value != null) {
           newMemo += sortTrans[i].value + ' - ';
         }
       }
-      
     }
     return newMemo;
   }
@@ -96,37 +94,54 @@ export class CodxAcService {
     irregularGvsPropNames: string[] = [],
     ignoredFields: string[] = []
   ): boolean {
-    console.log(formGroup);
-    console.log(gridViewSetup);
-
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
 
+    let invalidFields: string[] = [];
     const controls = formGroup.controls;
-    let isValid: boolean = true;
     for (const propName in controls) {
       if (ignoredFields.includes(propName.toLowerCase())) {
         continue;
       }
 
       if (controls[propName].invalid) {
-        console.log('invalid', { propName });
-
         const gvsPropName =
           irregularGvsPropNames.find(
             (i) => i.toLowerCase() === propName.toLowerCase()
           ) ?? this.toPascalCase(propName);
 
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          `"${gridViewSetup[gvsPropName]?.headerText}"`
-        );
-
-        isValid = false;
+        invalidFields.push(gvsPropName);
       }
     }
 
-    return isValid;
+    if (invalidFields.length == 0) {
+      return true;
+    }
+
+    this.notiService.notify(
+      invalidFields
+        .map(
+          (f) =>
+            `${invalidFields.length > 1 ? '•' : ''} "${
+              gridViewSetup[f].headerText
+            }" không được phép bỏ trống`
+        )
+        .join('<br>'),
+      '2'
+    );
+
+    // set the focus to the first invalid input
+    invalidFields = invalidFields.map((f) => f.toLowerCase());
+    const inputEls: Element[] = Array.from(
+      document.querySelectorAll('codx-input')
+    );
+    for (const el of inputEls) {
+      if (invalidFields.includes(el.getAttribute('field')?.toLowerCase())) {
+        el.querySelector('input').focus();
+        break;
+      }
+    }
+
+    return false;
   }
 
   /** @param irregularDataPropNames Use irregularDataPropNames in case unable to transform some gvs prop names to data prop names respectively. */
@@ -234,7 +249,8 @@ export class CodxAcService {
       )
       .pipe(
         tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0]))
+        map((p) => JSON.parse(p[0])),
+        tap((p) => console.log(p))
       );
   }
 
@@ -293,6 +309,16 @@ export class CodxAcService {
       .subscribe((res) => console.log('deleteFile', res));
   }
 
+  CheckExistAccount(data: any): boolean {
+    let result: boolean = true;
+    this.api
+      .exec('AC', 'CashPaymentsBusiness', 'CheckExistAccount', [data])
+      .subscribe((res: any) => {
+        result = res;
+      });
+    return result;
+  }
+
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(
       'ES',
@@ -302,6 +328,7 @@ export class CodxAcService {
       [entityName]
     );
   }
+
   setPopupSize(dialog: any, width: any, height: any) {
     dialog.dialog.properties.height = width;
     dialog.dialog.properties.width = height;

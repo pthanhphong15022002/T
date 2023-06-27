@@ -67,7 +67,6 @@ export class EmployeePolicygenernalComponent extends UIComponent {
       },
     ];
     console.log('view ne', this.view);
-    
   }
 
   ngAfterViewChecked() {
@@ -86,7 +85,7 @@ export class EmployeePolicygenernalComponent extends UIComponent {
   addPolicyGeneral(evt) {
     if (evt.id == 'btnAdd') {
       this.HandlePolicyGeneral(
-        evt.text + ' ' + this.view.function.description,
+        evt.text,
         'add',
         null
       );
@@ -121,7 +120,7 @@ export class EmployeePolicygenernalComponent extends UIComponent {
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
       this.HandlePolicyGeneral(
-        actionHeaderText + ' ' + this.view.function.description,
+        actionHeaderText,
         'copy',
         res
       );
@@ -139,10 +138,13 @@ export class EmployeePolicygenernalComponent extends UIComponent {
   }
 
   HandlePolicyGeneral(actionHeaderText, actionType: string, data: any){
+    debugger
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
+    console.log('header text ne', this.view.function.description);
+    
     let dialg = this.callfc.openSide(
       PopupPolicygeneralComponent,
       {
@@ -155,6 +157,7 @@ export class EmployeePolicygenernalComponent extends UIComponent {
     );
     dialg.closed.subscribe((res) => {
       if (res.event) {
+        debugger
         if (actionType == this.ActionAdd) {
           this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == this.ActionCopy) {

@@ -14,14 +14,29 @@
   <ng-template #header>
     <div class="d-flex align-items-center mt-n8">
       <codx-temp-full
-        [title]="itemDetail?.title"
+        [title]="itemDetail?.categoryName"
         [icoCss]="
           'icon-16 es-icon-title rounded-circle me-3 ' + itemDetail?.icon
         "
         [icoStyle]="setStyles(itemDetail?.color)"
-        [titleCss]="'fs-3'"
+        [titleCss]="'fs-7'"
       >
       </codx-temp-full>
+    </div>
+    <div class="pt-3 d-flex flex-row justify-content-center">
+      <span class="fs-3 fw-bold col-10 text-truncate" [innerHTML]=" itemDetail?.title | formatvalue : formModel : 'Title' | async "></span>
+      <div class="d-flex align-self-center col-2 justify-content-end">
+        <codx-vll
+          *ngIf="showApproveStatus"
+          [showText]="true"
+          [showBgColor]="true"
+          [formModel]="formModel"
+          [field]="'ApproveStatus'"
+          [value]="itemDetail?.approveStatus"
+          class="badge badge-light badge-square badge-md"
+        >
+        </codx-vll>
+      </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-3 mt-3">
       <div class="">
@@ -37,18 +52,7 @@
         >
         </codx-temp-full>
       </div>
-      <div class="d-flex align-self-center">
-        <codx-vll
-          *ngIf="showApproveStatus"
-          [showText]="true"
-          [showBgColor]="true"
-          [formModel]="formModel"
-          [field]="'ApproveStatus'"
-          [value]="itemDetail?.approveStatus"
-          class="badge badge-light badge-square badge-md"
-        >
-        </codx-vll>
-      </div>
+      
     </div>
 
     

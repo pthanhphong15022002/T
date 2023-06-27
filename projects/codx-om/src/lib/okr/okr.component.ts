@@ -118,11 +118,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   refIDMeeting: any;
   isCollapsed = false;
   listUM = [];
-  loadedData: boolean =false;
+  loadedData: boolean = false;
   loadedDataTree: boolean;
   useSKR = false;
   reloadedMF = true;
-  value =new OM_Statistical();
+  value = new OM_Statistical();
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -137,7 +137,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.okrService = inject.get(CodxOmService);
 
     this.createCOObject();
-    
   }
 
   //---------------------------------------------------------------------------------//
@@ -171,10 +170,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.setTitle();
       //this.getOKRPlans(this.periodID, this.interval, this.year);
     }
-
-    this.api
-      .exec('OM', 'OKRReportBussiness', 'OKRsListAsync', [null])
-      .subscribe();
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -355,8 +350,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((item: any) => {
           //Reset data View
           //this.isCollapsed = false;
-          if (item) {           
-
+          if (item) {
             this.dataOKRPlans = null;
             this.dataOKRPlans = item;
             this.dataOKRPlans.periodName = this.periodName;
@@ -391,7 +385,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.dataOKRPlans = null;
       this.dataOKR = null;
       this.planNull = true;
-      this.isAfterRender = true; 
+      this.isAfterRender = true;
       this.detectorRef.detectChanges();
     }
   }
@@ -410,7 +404,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           let filterGR = this.dataOKR?.filter(
             (x) => x?.okrGroupID == gr?.okrGroupID
           );
-
 
           if (filterGR != null && filterGR?.length > 0) {
             for (let ob of gr?.listOKR) {
@@ -496,49 +489,64 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  calculateStatistical(evt:any){
-    if(this.dataOKR!=null){
+  calculateStatistical(evt: any) {
+    if (this.dataOKR != null) {
       var tempValue = new OM_Statistical();
       let countNotStartOB = 0;
       let countStartingOB = 0;
       let countDoneOB = 0;
-      for(let gr of this.dataOKR){
-        for(let ob of gr.listOKR){
-          tempValue.totalOB+=1;
-          if(ob?.progress == 0) countNotStartOB+=1;
-          if(ob?.progress > 0 && ob?.progress < 100) countStartingOB+=1;
-          if(ob?.progress ==100) countDoneOB+=1;
-          if(ob?.category=="5") tempValue.totalHighOB+=1;
-          if(ob?.progress==100) tempValue.obDone+=1;
-          if(ob?.category=="5" && ob?.progress==100) tempValue.highOBDone+=1;         
+      for (let gr of this.dataOKR) {
+        for (let ob of gr.listOKR) {
+          tempValue.totalOB += 1;
+          if (ob?.progress == 0) countNotStartOB += 1;
+          if (ob?.progress > 0 && ob?.progress < 100) countStartingOB += 1;
+          if (ob?.progress == 100) countDoneOB += 1;
+          if (ob?.category == '5') tempValue.totalHighOB += 1;
+          if (ob?.progress == 100) tempValue.obDone += 1;
+          if (ob?.category == '5' && ob?.progress == 100)
+            tempValue.highOBDone += 1;
 
-          if(ob?.items?.length>0){
-            for(let kr of ob?.items){
-              if(kr?.notiCheckIn) tempValue.krLateCheckIn+=1;
-              if(kr?.current > kr?.actual) tempValue.krLateProgress+=1;
-              if(kr?.current == kr?.actual && kr?.current >0 && kr?.actual>0) tempValue.krInProgress+=1;
-              if(kr?.current < kr?.actual) tempValue.krOverProgress+=1;
+          if (ob?.items?.length > 0) {
+            for (let kr of ob?.items) {
+              if (kr?.notiCheckIn) tempValue.krLateCheckIn += 1;
+              if (kr?.current > kr?.actual) tempValue.krLateProgress += 1;
+              if (
+                kr?.current == kr?.actual &&
+                kr?.current > 0 &&
+                kr?.actual > 0
+              )
+                tempValue.krInProgress += 1;
+              if (kr?.current < kr?.actual) tempValue.krOverProgress += 1;
               //if(kr?.items?.length>0){
-                // for(let skr of kr?.items){
-                //   if(skr?.kr?.notiCheckIn) tempValue.krLateCheckIn+=1;
-                //   if(skr?.current > skr?.actual) tempValue.krLateProgress+=1;
-                //   if(skr?.current == skr?.actual) tempValue.krInProgress+=1;
-                //   if(skr?.current < skr?.actual) tempValue.krOverProgress+=1;
-                // }
+              // for(let skr of kr?.items){
+              //   if(skr?.kr?.notiCheckIn) tempValue.krLateCheckIn+=1;
+              //   if(skr?.current > skr?.actual) tempValue.krLateProgress+=1;
+              //   if(skr?.current == skr?.actual) tempValue.krInProgress+=1;
+              //   if(skr?.current < skr?.actual) tempValue.krOverProgress+=1;
+              // }
               //}
             }
           }
         }
       }
-      tempValue.percentOBNotStart = (countNotStartOB/tempValue?.totalOB*100).toFixed(1);
-      tempValue.percentOBStarting = (countStartingOB/tempValue?.totalOB*100).toFixed(1);
-      tempValue.percentOBDone = (countDoneOB/tempValue?.totalOB*100).toFixed(1);
-      this.value= tempValue;
+      tempValue.percentOBNotStart = (
+        (countNotStartOB / tempValue?.totalOB) *
+        100
+      ).toFixed(1);
+      tempValue.percentOBStarting = (
+        (countStartingOB / tempValue?.totalOB) *
+        100
+      ).toFixed(1);
+      tempValue.percentOBDone = (
+        (countDoneOB / tempValue?.totalOB) *
+        100
+      ).toFixed(1);
+      this.value = tempValue;
       this.detectorRef.detectChanges();
     }
   }
   getOrgTreeOKR() {
-    if (this.curUser?.employee != null ) {
+    if (this.curUser?.employee != null) {
       let tempOrgID = '';
       let okrLevel = '';
       switch (this.funcID) {
@@ -558,8 +566,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           tempOrgID = this.curUser?.employee.employeeID;
           okrLevel = OMCONST.VLL.OKRLevel.PERS;
           break;
-      }    
-      if(okrLevel == OMCONST.VLL.OKRLevel.PERS) return;
+      }
+      if (okrLevel == OMCONST.VLL.OKRLevel.PERS) return;
       this.codxOmService
         .getOrgTreeOKR(this.dataOKRPlans?.recID, tempOrgID)
         .subscribe((listOrg: any) => {
@@ -609,7 +617,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.curOrgName = this.curUser?.employee?.employeeName;
         break;
     }
-    
+
     this.formModelChanged();
     this.detectorRef.detectChanges();
   }
@@ -627,7 +635,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.setTitle();
     this.dataOKRPlans = null;
     this.dataOKR = null;
-    this.getOKRPlans(this.periodID, this.interval, this.year);    
+    this.getOKRPlans(this.periodID, this.interval, this.year);
     this.detectorRef.detectChanges();
   }
   clickMF(evt: any) {
@@ -1049,20 +1057,20 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       { ...this.groupModel.sharesModel },
     ]);
   }
-  viewListVersion(title:any) {
+  viewListVersion(title: any) {
     let option = new SidebarModel();
     option.FormModel = this.formModelPlan;
     let dialogViewVersion = this.callfc.openSide(
       PopupViewVersionComponent,
-      [this.dataOKRPlans,this.okrFM,this.okrGrv,title,this.funcID],
+      [this.dataOKRPlans, this.okrFM, this.okrGrv, title, this.funcID],
       option
     );
     dialogViewVersion.closed.subscribe((res) => {});
   }
-  updateVersion(title:any) {
+  updateVersion(title: any) {
     let dialogPermission = this.callfc.openForm(
       PopupAddVersionComponent,
-      "",
+      '',
       600,
       330,
       null,
