@@ -50,7 +50,7 @@ export class CashPaymentsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
     text: 'Thêm phiếu chi',
   };
-  isRead:any = false;
+  isRead: any = false;
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -75,7 +75,7 @@ export class CashPaymentsComponent extends UIComponent {
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
-  loading:any = false;
+  loading: any = false;
   arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -123,16 +123,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (m) this.moreFuncName = m.defaultName;
       }
     });
-    this.routerActive.queryParams.subscribe((params) => {
-      this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) {
-            this.view.setRootNode(res?.customName);
-          }
-        });
-      }
-    });
+
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
     });
@@ -193,8 +184,16 @@ export class CashPaymentsComponent extends UIComponent {
         this.className = 'CashReceiptsBusiness';
         break;
     }
-    //this.view.setRootNode(this.parent?.customName);
-
+    this.routerActive.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) {
+            this.view.setRootNode(res?.customName);
+          }
+        });
+      }
+    });
     this.detectorRef.detectChanges();
   }
 
@@ -558,12 +557,17 @@ export class CashPaymentsComponent extends UIComponent {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
           this.api
-            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [data,'1'])
+            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [
+              data,
+              '1',
+            ])
             .subscribe((res: any) => {
               if (res) {
                 this.itemSelected = res;
                 this.loadDatadetail(this.itemSelected);
-                this.view.dataService.update(this.itemSelected).subscribe((res) => {});
+                this.view.dataService
+                  .update(this.itemSelected)
+                  .subscribe((res) => {});
                 this.detectorRef.detectChanges();
               }
             });
@@ -606,10 +610,11 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-  loadTotalSet(){
+  loadTotalSet() {
     for (let index = 0; index < this.settledInvoices.length; index++) {
       this.totalbalAmt = this.totalbalAmt + this.settledInvoices[index].balAmt;
-      this.totalsettledAmt = this.totalsettledAmt + this.settledInvoices[index].settledAmt;
+      this.totalsettledAmt =
+        this.totalsettledAmt + this.settledInvoices[index].settledAmt;
     }
   }
 
@@ -642,7 +647,7 @@ export class CashPaymentsComponent extends UIComponent {
   //       this.isRead = false;
   //     }
   //   }
-      
+
   // }
   //#endregion
 }
