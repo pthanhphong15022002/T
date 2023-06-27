@@ -630,14 +630,8 @@ export class CashPaymentsComponent extends UIComponent {
       color: 'white',
     };
     return styles;
-    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
-    let index = data.filter((x) => x.crediting == item.crediting);
-    if (index == data.filter((x) => x.crediting == item.crediting).length - 1) {
-      return true;
-    } else {
-      return false;
-    }
   }
+
   created(e: any, ele: TabComponent) {
     this.changeTab(this.itemSelected.subType, ele);
   }
