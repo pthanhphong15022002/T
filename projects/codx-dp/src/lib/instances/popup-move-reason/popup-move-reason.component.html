@@ -6,6 +6,8 @@
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="formModel"
+  [data]="reasonStep"
+
 ></codx-form>
 
 <ng-template #subHeader>
@@ -26,8 +28,8 @@
     </div>
     <codx-input
       field="memo"
-      type="textarea"
-      [crrValue]="reasonStep?.memo"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
       (valueChange)="valueChange($event)"
     >
     </codx-input>

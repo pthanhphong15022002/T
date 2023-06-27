@@ -58,6 +58,7 @@
 
 <ng-template #informationTemplate>
   <div class="d-flex">
+    <!-- giá trị hợp đồng  -->
     <codx-label
       class="label-colon text-gray-600"
       fiedName="contractAmt"
@@ -66,7 +67,7 @@
     ></codx-label>
     <span
       *ngIf="contract?.contractAmt > 0"
-      class="me-3 text-dark fw-bold"
+      class="me-1 text-dark fw-bold"
       [innerHTML]="
         contract?.contractAmt
           | formatvalue : fmContracts : 'ContractAmt'
@@ -75,12 +76,12 @@
     ></span>
     <span *ngIf="contract?.contractAmt <= 0" class="me-1">0</span>
     <span
-      class="me-3 text-dark fw-bold"
+      class="me-1 text-dark fw-bold"
       [innerHTML]="
         contract?.currencyID | formatvalue : fmContracts : 'CurrencyID' | async
       "
     ></span>
-    <!-- <span>Số tiền thanh toán: </span> -->
+    <!-- Đã hẹn thanh toán -->
     <span class="me-2">|</span>
     <codx-label
       class="label-colon text-gray-600"
@@ -91,19 +92,20 @@
     ></codx-label>
     <span
       *ngIf="sumScheduleAmt"
-      class="me-3 text-dark fw-bold"
+      class="me-1 text-dark fw-bold"
       [innerHTML]="
-        sumScheduleAmt | formatvalue : fmContracts : 'scheduleAmt' | async
+        sumScheduleAmt | formatvalue : fmContracts : 'ScheduleAmt' | async
       "
     ></span>
     <span *ngIf="!sumScheduleAmt" class="me-1">0</span>
     <span
-      class="me-3 text-dark fw-bold"
+      class="me-1 text-dark fw-bold"
       [innerHTML]="
         contract?.currencyID | formatvalue : fmContracts : 'CurrencyID' | async
       "
     ></span>
   </div>
+  <!-- Còn lại -->
   <div class="d-flex">
     <codx-label
       class="label-colon text-gray-600"
@@ -114,12 +116,12 @@
     ></codx-label>
     <span
       *ngIf="remaining"
-      class="me-3 text-dark fw-bold"
+      class="me-1 text-dark fw-bold"
       [innerHTML]="remaining | formatvalue : fmContracts : 'PaidAmt' | async"
     ></span>
     <span *ngIf="!remaining" class="me-1">0</span>
     <span
-      class="me-3 text-dark fw-bold"
+      class="me-1 text-dark fw-bold"
       [innerHTML]="
         contract?.currencyID | formatvalue : fmContracts : 'CurrencyID' | async
       "
@@ -183,22 +185,13 @@
         <div class="">
           <ejs-numerictextbox
             [value]="percent"
-            format="###'%'"
+            format="###.#'%'"
             min="0"
             max="100"
             (change)="valueChangePercent($event)"
+            (click)="clickTesk('percentChanged')"
             disabled="false"
           ></ejs-numerictextbox>
-          <!-- <codx-input
-            field="scheduleAmt"
-            type="number"
-            format="###'%'"
-            [min]="0"
-            [max]="100"
-            [crrValue]="percent"
-            (valueChange)="valueChangePercent($event)"
-          >
-          </codx-input> -->
         </div>
       </div>
       <div class="" style="width: 50%">
@@ -218,6 +211,7 @@
             [max]="this.contract.contractAmt"
             [crrValue]="payment?.scheduleAmt"
             (valueChange)="valueChangeText($event)"
+            (click)="clickTesk('valueChanged')"
           >
           </codx-input>
         </div>

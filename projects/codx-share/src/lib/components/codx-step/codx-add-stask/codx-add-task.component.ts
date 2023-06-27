@@ -62,6 +62,7 @@ export class CodxAddTaskComponent implements OnInit {
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
   groupTask;
+  titleName = '';
   
   isLoadDate = false;
   isTaskDefault = false;
@@ -100,9 +101,11 @@ export class CodxAddTaskComponent implements OnInit {
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.groupTaskID = dt?.data?.groupTaskID;
     this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+    this.titleName = dt?.data?.titleName || '';
   }
 
   ngOnInit(): void {
+    this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
     this.roles = this.stepsTasks['roles'] || [];
     this.startDateParent = new Date(this.step?.startDate || new Date);
     this.endDateParent = new Date(this.step?.endDate || null);
@@ -119,6 +122,7 @@ export class CodxAddTaskComponent implements OnInit {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
       this.owner = [role]
+      this.stepsTasks.owner = this.owner?.[0].objectID;
     }
   }
 
@@ -260,6 +264,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.removeRoleDuplicate();
     }else if(type == "O"){
       this.owner = listRole;
+      this.stepsTasks['owner']= this.owner?.[0]?.objectID;
       this.removeRoleDuplicate();
     }
   }

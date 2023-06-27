@@ -1054,16 +1054,24 @@ export class CodxEsService {
     );
   }
 
-  updateApproveTemplate(sfID: string, processID: string): Observable<any> {
+  updateApproveTemplate(sf: any): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'UpdateTemplateSignFileAsync',
-      [sfID, processID]
+      [sf]
     );
   }
-
+  getTemplateOfCategory(categoryID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTemplateOfCategoryAsync',
+      [categoryID]
+    );
+  }
   addImgsToPDF(pages, lstAddBefore) {
     let data = [pages, lstAddBefore];
     return this.api.execSv(

@@ -4,7 +4,9 @@
   >
     <div class="d-flex align-items-center">
       <button type="text" class="btn btn-icon btn-primary rounded-circle me-3">
-        <span class="icon-add_box icon-18"></span>
+        <span *ngIf="action == 'add'" class="icon-add_box icon-18"></span>
+        <span *ngIf="action == 'copy'" class="icon-file_copy icon-16"></span>
+        <span *ngIf="action == 'edit'" class="icon-edit_square icon-16"></span>
       </button>
       <codx-label
         class="fs-3 fw-bold"
@@ -225,7 +227,7 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-4">
+        <div class="col-6">
           <div>
             <codx-label
               [formModel]="dialog.formModel"
@@ -246,7 +248,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-6">
           <div>
             <codx-label
               [formModel]="dialog.formModel"
@@ -260,25 +262,6 @@
               field="contractType"
               [crrValue]="contracts?.contractType"
               (valueChange)="valueChangeCombobox($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-4">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="extendOn"
-              default="Ngày gia hạn"
-            ></codx-label>
-          </div>
-          <div class="">
-            <codx-input
-              [formModel]=""
-              field="extendOn"
-              type="datetime"
-              [crrValue]="contracts?.extendOn"
-              (valueChange)="changeValueDate($event)"
             >
             </codx-input>
           </div>
@@ -437,8 +420,6 @@
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delPhone"
-                type="number"
-                [min]="0"
                 (valueChange)="valueChangeText($event)"
                 [crrValue]="contracts?.delPhone"
               >
@@ -1192,7 +1173,7 @@
                 [formModel]="dialog.formModel"
                 field="pmtStatus"
                 (valueChange)="valueChangeCombobox($event)"
-                [crrValue]="contracts?.paymentStatus"
+                [crrValue]="contracts?.pmtStatus"
               >
               </codx-input>
             </div>

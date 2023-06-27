@@ -203,7 +203,7 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSave()"><codx-label [formName]="form.formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
+    <button class="btn btn-primary" [disabled]="disableSave" (click)="onSave()"><codx-label [formName]="form.formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
   </div>
 </ng-template>
 <ng-template #tmpagency let-dialog>

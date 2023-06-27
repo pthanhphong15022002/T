@@ -161,7 +161,22 @@
                 </div>
                 <div class="d-flex flex-column align-items-start">
                   <div
+                    class="d-flex justify-content-end w-100 align-items-end codx-badge mb-3"
+                    *ngIf="funcID == 'CM0101'"
+                  >
+                    <codx-vll
+                      [name]="gridViewSetup?.Status?.referedValue"
+                      [field]="'Status'"
+                      [value]="dataSelected?.status"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-sm"
+                    >
+                    </codx-vll>
+                  </div>
+                  <div
                     class="d-flex justify-content-end w-100 mb-3"
+                    style="margin-left: -5px"
                     *ngIf="dataSelected.isBlackList"
                   >
                     <span
@@ -226,6 +241,63 @@
               [value]="viewTag"
             >
             </codx-tag>
+          </div>
+          <div class="d-flex justify-content-between align-items-start" *ngIf="funcID == 'CM0101'">
+            <div class="w-100 mt-1">
+              <codx-label
+                style="white-space: nowrap"
+                class="fw-bold text-primary"
+                fiedName="SegmentID"
+                [formModel]="formModel"
+              ></codx-label>
+              <div class="mt-1">
+                <div
+                  class="text-dark fw-bold codx-textcontent"
+                  [innerHTML]="
+                    dataSelected?.segmentID
+                      | formatvalue : formModel : 'SegmentID'
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+            <div class="w-100 mt-1">
+              <codx-label
+                style="white-space: nowrap"
+                class="fw-bold text-primary"
+                fiedName="ChannelID"
+                [formModel]="formModel"
+              ></codx-label>
+              <div class="mt-1">
+                <div
+                  class="text-dark fw-bold codx-textcontent"
+                  [innerHTML]="
+                    dataSelected?.channelID
+                      | formatvalue : formModel : 'ChannelID'
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+            <div class="justify-content-end w-100 mt-1">
+              <codx-label
+                style="white-space: nowrap"
+                class="fw-bold text-primary"
+                fiedName="Owner"
+                [formModel]="formModel"
+              ></codx-label>
+              <div class="mt-1">
+                <codx-imgs
+                  class="h-25px"
+                  [isToolTip]="true"
+                  [width]="25"
+                  [objectId]="dataSelected?.owner"
+                  [objectType]="'AD_Users'"
+                  [numberImages]="1"
+                >
+                </codx-imgs>
+              </div>
+            </div>
           </div>
         </div>
       </ng-template>
@@ -339,7 +411,7 @@
               </codx-quotations> -->
               <codx-quotations-tab-view
                 [funcID]="'CM0202'"
-                [showButton]='true'
+                [showButton]="true"
                 [customerID]="dataSelected.recID"
                 [predicates]="'CustomerID==@0'"
                 [dataValues]="dataSelected.recID"
@@ -424,8 +496,5 @@
   ></list-contracts>
 </ng-template>
 <ng-template #taskTemplate let-data>
-  <step-task
-    [typeTask]="2"
-    [customerID]="dataSelected?.recID"
-  ></step-task>
+  <step-task [typeTask]="2" [customerID]="dataSelected?.recID"></step-task>
 </ng-template>

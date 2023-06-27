@@ -36,10 +36,13 @@ import { permissionDis } from '../../models/dispatch.model';
 })
 export class IncommingAddComponent implements OnInit {
   getJSONString = getJSONString;
+  
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('tmpagency') tmpagency: any;
   @ViewChild('tmpdept') tmpdept: any;
   @ViewChild('form') myForm: any;
+  
+  disableSave = false;
   submitted = false;
   checkAgenciesErrors = false;
   dltDis = false;
@@ -94,7 +97,7 @@ export class IncommingAddComponent implements OnInit {
     else this.dispatch = this.dialog.dataService.dataSelected;
 
     this.user = this.auth.get();
-    if (this.user?.userID) this.dispatch.createdBy = this.user?.userID;
+   
 
     if(this.dialog?.dataService?.keyField || this.type == 'edit') this.keyField = true;
     this.gridViewSetup = this.data?.gridViewSetup;
@@ -113,6 +116,7 @@ export class IncommingAddComponent implements OnInit {
       this.dispatch.status = '1';
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
+      if (this.user?.userID) this.dispatch.createdBy = this.user?.userID;
       if (this.type == 'add') {
     
         this.dispatch.dispatchType = this.data?.dispatchType;
@@ -152,6 +156,7 @@ export class IncommingAddComponent implements OnInit {
     } 
     else if (this.type == 'edit') 
     {
+      if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
       if(this.dispatch.relations && this.dispatch.relations.length>0)
       {
@@ -340,6 +345,9 @@ export class IncommingAddComponent implements OnInit {
   }
   /////// lưu/câp nhật công văn
   async onSave() {
+
+    this.disableSave = true;
+
     if (!this.checkIsRequired()) return;
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
@@ -411,6 +419,7 @@ export class IncommingAddComponent implements OnInit {
                   this.odService.shareDispatch(per,this.referType,this.formModel?.entityName).subscribe(item3=>{
                     if(item3)
                     {
+                      this.disableSave = false;
                       item.data.relations = item3?.data[0].relations
                       this.notifySvr.notify(item.message);
                       this.dialog.close(item.data);
@@ -420,11 +429,13 @@ export class IncommingAddComponent implements OnInit {
                 }
                 else
                 {
+                  this.disableSave = false;
                   this.notifySvr.notify(item.message);
                   this.dialog.close(item.data);
                 }
               } 
               else {
+                this.disableSave = false;
                 this.notifySvr.notify(item2.message);
                 this.odService.deleteDispatch(this.dispatch.recID).subscribe();
                 this.dialog.dataService.delete(this.dispatch).subscribe();
@@ -455,12 +466,14 @@ export class IncommingAddComponent implements OnInit {
               (await this.attachment.saveFilesObservable()).subscribe(
                 (item2: any) => {
                   if (item2?.status == 0) {
+                    this.disableSave = false;
                     this.dialog.close(item.data);
                     this.notifySvr.notify(item.message);
                   } else this.notifySvr.notify(item2.message);
                 }
               );
             } else {
+              this.disableSave = false;
               this.dialog.close(item.data);
               this.notifySvr.notify(item.message);
             }

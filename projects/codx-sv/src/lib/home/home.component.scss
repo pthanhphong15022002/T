@@ -12,7 +12,10 @@
     background-color: #F1F3F4 !important;
     height: 225px !important;
   }
-
+  .e-tab .e-tab-header:not(.e-vertical)::before
+  {
+    border-width: 0 !important;
+  }
   .list-survey {
     background-color: white !important;
   }
@@ -31,11 +34,11 @@
     margin-right: 10px;
     align-content: center;
     cursor: pointer;
-    border-radius: 7px;
+    text-align: center;
   }
 
   .card-survey:hover {
-    border: solid 1px #EE4428;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   }
 .list-survey
 {
@@ -47,13 +50,32 @@
 } 
 
   img {
-    width: 165px;
-    height: 125px;
-    border-radius: 7px;
+    width: 167px;
+    height: 127px;
+    //border-radius: 7px;
   }
 }
 .home-notebooks
 {
   overflow: auto;
   height: calc(100% - 20px);
+}
+.ejs-tab-survey
+{
+  padding: 5px 15px;
+  .e-content
+  {
+    height: calc(100% - 265px)!important;
+    width: calc(100% - 20px);
+    text-align: left !important;
+    position: fixed;
+    .e-item , .e-item > div
+    {
+      height: 100% !important;
+    }
+    .e-tab-wrap
+    {
+      padding: 0 10px !important;
+    }
+  }
 }

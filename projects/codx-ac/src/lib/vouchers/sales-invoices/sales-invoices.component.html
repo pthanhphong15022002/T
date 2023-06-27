@@ -94,9 +94,9 @@
     [body]="body"
     [hideMF]="false"
     [formModel]="view.formModel"
-    [dataItem]="selectedData"
+    [dataItem]="master"
     [footer]="contentFooter"
-    (clickMF)="onClickMF($event, selectedData)"
+    (clickMF)="onClickMF($event, master)"
   >
   </codx-detail-tmp>
 </ng-template>
@@ -104,24 +104,25 @@
 <ng-template #header>
   <div class="d-flex align-items-center ac-cashID mt-n8">
     <div
-      class="w-20px h-20px rounded-circle bg-primary d-flex flex-center me-2"
+      class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-2"
     >
       <i class="icon-i-file-earmark-text text-white icon-14"></i>
     </div>
     <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
-      {{ selectedData?.voucherNo }}
+      {{ master?.voucherNo }}
     </span>
 
     <div class="d-flex mt-1 ms-5">
       <codx-label
-        fiedName="voucherDate"
+        fiedName="lblVoucherDate"
         [formModel]="view.formModel"
+        default="Ngày chứng từ"
         class="fw-bold label-colon"
       ></codx-label>
       <span
         class="text-gray-600"
         [innerHTML]="
-          selectedData?.voucherDate
+          master?.voucherDate
             | formatvalue : view.formModel : 'voucherDate'
             | async
         "
@@ -129,12 +130,14 @@
     </div>
   </div>
 
-  <div class="d-flex align-items-center justify-content-between mt-3 mb-2">
-    <span class="fw-bold line-clamp line-clamp-1 fs-4">{{selectedData?.objectName}}</span>
+  <div class="d-flex align-items-center justify-content-between mt-2 mb-1">
+    <span class="fw-bold line-clamp line-clamp-1 fs-4">{{
+      master?.objectName
+    }}</span>
     <codx-vll
       [formModel]="view.formModel"
       field="Status"
-      [value]="selectedData?.status"
+      [value]="master?.status"
       [showText]="true"
       [showBgColor]="true"
       class="badge badge-light badge-sm border-0 me-3"
@@ -155,7 +158,7 @@
         <span
           class="text-gray-600"
           [innerHTML]="
-            selectedData?.invoiceNo
+            master?.invoiceNo
               | formatvalue : view.formModel : 'invoiceNo'
               | async
           "
@@ -169,7 +172,7 @@
         ></codx-label>
         <span
           [innerHTML]="
-            selectedData.invoiceDate
+            master.invoiceDate
               | formatvalue : view.formModel : 'invoiceDate'
               | async
           "
@@ -184,7 +187,7 @@
         ></codx-label>
         <span
           [innerHTML]="
-            selectedData.invoiceDueDate
+            master.invoiceDueDate
               | formatvalue : view.formModel : 'invoiceDueDate'
               | async
           "
@@ -195,7 +198,7 @@
 
     <span class="badge badge-pill badge-primary me-3">
       <span class="fw-bold fs-6">{{
-        selectedData.totalAmt | currency : selectedData?.currencyID : "code"
+        master.totalAmt | currency : master?.currencyID : "code"
       }}</span>
     </span>
   </div>
@@ -210,7 +213,7 @@
       <span
         class="text-gray-600"
         [innerHTML]="
-          selectedData?.pmtMethodID
+          master?.pmtMethodID
             | formatvalue : view.formModel : 'pmtMethodID'
             | async
         "
@@ -224,7 +227,7 @@
       ></codx-label>
       <span
         [innerHTML]="
-          selectedData.salespersonID
+          master.salespersonID
             | formatvalue : view.formModel : 'salespersonID'
             | async
         "
@@ -233,18 +236,40 @@
     </div>
   </div>
 
-  <div class="me-5 mb-5px line-clamp line-clamp-2">
+  <div #memoDiv class="me-5 mb-5px" [ngClass]="!expanding ? 'd-flex' : ''">
+    <span #memoContent [class]="!expanding ? 'text-truncate' : ''">
+      <codx-label
+        fiedName="memo"
+        [formModel]="view.formModel"
+        class="fw-bold label-colon"
+      ></codx-label>
+      <span
+        [innerHTML]="
+          master?.memo | formatvalue : view.formModel : 'memo' | async
+        "
+        class="text-gray-600"
+      ></span>
+    </span>
     <codx-label
-      fiedName="memo"
+      #showMoreBtn
+      *ngIf="!expanding"
+      fieldName="lblMore"
       [formModel]="view.formModel"
-      class="fw-bold label-colon"
+      default="&nbsp;More"
+      class="text-primary"
+      [ngClass]="isMoreBtnHidden ? 'd-none' : ''"
+      role="button"
+      (click)="expanding = !expanding"
     ></codx-label>
-    <span
-      [innerHTML]="
-        selectedData?.memo | formatvalue : view.formModel : 'memo' | async
-      "
-      class="text-gray-600"
-    ></span>
+    <codx-label
+      *ngIf="expanding"
+      fieldName="lblLess"
+      [formModel]="view.formModel"
+      default="&nbsp;Less"
+      class="text-primary"
+      role="button"
+      (click)="onClickShowLess()"
+    ></codx-label>
   </div>
 
   <ejs-tab class="mt-5">
@@ -262,11 +287,10 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <lib-table-line-detail
-            [transID]="selectedData.recID"
-            [gvs]="salesInvoiceService.gvsSalesInvoicesLines"
-            [height]="300"
-          ></lib-table-line-detail>
+          <lib-table-line-detail-static
+            [salesInvoicesLines]="lines"
+            [loading]="loading"
+          ></lib-table-line-detail-static>
         </ng-template>
       </e-tabitem>
     </e-tabitems>
@@ -277,7 +301,7 @@
   <codx-tabs
     [entityName]="view.formModel.entityName"
     [formModel]="view.formModel"
-    [objectID]="selectedData.recID"
+    [objectID]="master.recID"
     [funcID]="view.formModel.funcID"
     [TabControl]="tabControl"
   ></codx-tabs>

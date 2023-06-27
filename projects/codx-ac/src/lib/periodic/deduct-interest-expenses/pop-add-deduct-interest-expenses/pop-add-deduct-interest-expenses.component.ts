@@ -4,7 +4,6 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Paras } from '../../../models/Paras.model';
-import { DeductPrepaidExpenses } from '../../../models/DeductPrepaidExpenses.model';
 import { DeductInterestExpenses } from '../../../models/DeductInterestExpenses.model';
 
 @Component({

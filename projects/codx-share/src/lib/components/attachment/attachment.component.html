@@ -199,7 +199,7 @@
                         </div>
                     </div>
                     <div *ngIf="hideImageUpload == '0'" class="overflow-auto mh-200px">
-                        <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center justify-content-between mb-3 ">
+                        <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center justify-content-between" [class.mb-3]="fileUploadList.length>1">
                             <div class="has-action-menu w-100">
                                 <ng-container *ngIf="(displayThumb == 'simple') then simple else full"></ng-container>
                                 <div class="action-menu d-flex align-items-center">

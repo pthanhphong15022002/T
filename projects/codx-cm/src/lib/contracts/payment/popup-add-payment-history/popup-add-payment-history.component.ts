@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./popup-add-payment-history.component.scss']
 })
 export class PopupAddPaymentHistoryComponent {
+  REQUIRE = ['scheduleDate', 'scheduleAmt','paidDate','paidAmt'];
   isSave = false;
   action = '';
   payment: CM_ContractsPayments;
@@ -24,6 +25,7 @@ export class PopupAddPaymentHistoryComponent {
 
   listPaymentHistoryOfPayment: CM_ContractsPayments[]; //
 
+  percent = 0;
   remainAmt = 0;
   title = "Lịch sử thanh toán";
   dialog: DialogRef;
@@ -74,6 +76,8 @@ export class PopupAddPaymentHistoryComponent {
     this.paymentHistory.scheduleDate = this.payment?.scheduleDate;
     this.paymentHistory.scheduleAmt = this.payment?.scheduleAmt;
     this.paymentHistory.remainAmt = this.payment?.remainAmt;
+    this.paymentHistory.paidDate = new Date();
+    this.paymentHistory.transID = (Math.random() * 10000000000).toFixed(0);
   }
 
   valueChangeText(event) {
@@ -94,6 +98,13 @@ export class PopupAddPaymentHistoryComponent {
 
   changeValueDate(event) {
     this.paymentHistory[event?.field] = new Date(event?.data?.fromDate);
+  }
+
+  valueChangePercent(e) {
+    this.percent = e?.value;
+    this.paymentHistory.paidAmt = Number(
+      ((this.percent * this.paymentHistory?.scheduleAmt) / 100).toFixed(0)
+    );
   }
 
   save() {

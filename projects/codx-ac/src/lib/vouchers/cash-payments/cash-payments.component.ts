@@ -31,6 +31,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -40,15 +41,18 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
+  @ViewChild('tabObj') tabObj: TabComponent;
   dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
-    icon: 'icon-i-card-heading',
+    icon: 'icon-i-file-earmark-plus',
     text: 'Thêm phiếu chi',
   };
+  isRead: any = false;
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -61,8 +65,10 @@ export class CashPaymentsComponent extends UIComponent {
   dataCategory: any;
   journal: IJournal;
   approval: any;
-  totalacct: any;
-  totaloff: any;
+  totalacct: any = 0;
+  totaloff: any = 0;
+  totalsettledAmt: any = 0;
+  totalbalAmt: any = 0;
   className: any;
   classNameLine: any;
   entityName: any;
@@ -71,6 +77,7 @@ export class CashPaymentsComponent extends UIComponent {
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
+  loading: any = false;
   arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -95,6 +102,11 @@ export class CashPaymentsComponent extends UIComponent {
   ];
   parent: any;
   authStore: AuthStore;
+  fmAccTrans: FormModel = {
+    formName: 'AcctTrans',
+    gridViewName: 'grvAcctTrans',
+    entityName: 'AC_AcctTrans',
+  };
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -113,18 +125,12 @@ export class CashPaymentsComponent extends UIComponent {
         if (m) this.moreFuncName = m.defaultName;
       }
     });
-    this.routerActive.queryParams.subscribe((params) => {
-      this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) {
-            this.view.setRootNode(res?.customName);
-          }
-        });
-      }
-    });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
+    });
+
+    this.routerActive.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
     });
   }
   //#endregion
@@ -151,6 +157,15 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+
+        model: {
+          template: this.listTemplate,
+        },
+      },
+      {
         type: ViewType.grid,
         active: true,
         sameData: true,
@@ -174,8 +189,16 @@ export class CashPaymentsComponent extends UIComponent {
         this.className = 'CashReceiptsBusiness';
         break;
     }
-    //this.view.setRootNode(this.parent?.customName);
-
+    this.routerActive.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) {
+            this.view.setRootNode(res?.customName);
+          }
+        });
+      }
+    });
     this.detectorRef.detectChanges();
   }
 
@@ -253,7 +276,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(this.itemSelected).subscribe();
+              //this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -286,7 +309,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(this.itemSelected).subscribe();
+              //this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -465,28 +488,6 @@ export class CashPaymentsComponent extends UIComponent {
           });
           break;
       }
-      // check có hay ko duyệt trước khi ghi sổ
-      // if (data?.status == '1') {
-      //   if (this.approval == '0') {
-      //     bm.forEach((element) => {
-      //       element.disabled = true;
-      //     });
-      //   } else {
-      //     bm[1].disabled = true;
-      //     bm[2].disabled = true;
-      //   }
-      // }
-      // //Chờ duyệt
-      // if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
-      //   bm[1].disabled = true;
-      //   bm[0].disabled = true;
-      // }
-      // //hủy duyệt
-      // if (data?.approveStatus == '4' || data?.status == '0') {
-      //   for (var i = 0; i < bm.length; i++) {
-      //     bm[i].disabled = true;
-      //   }
-      // }
     }
   }
 
@@ -507,13 +508,13 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     switch (data.subType) {
-      case '5':
+      case '9':
       case '2':
         this.api
           .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
           .subscribe((res: any) => {
             this.settledInvoices = res;
-            //this.loadTotal();
+            this.loadTotalSet();
           });
         break;
     }
@@ -523,8 +524,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.acctTrans = res;
         this.loadTotal();
       });
-    this.loadCashbookName(this.itemSelected);
-    // this.loadReasonName(this.itemSelected);
+    this.changeTab(data.subType);
   }
 
   release(data: any) {
@@ -562,11 +562,21 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
-          data.status = '1';
-          this.itemSelected = { ...data };
-          this.loadDatadetail(this.itemSelected);
-          this.view.dataService.update(data).subscribe((res) => {});
-          this.detectorRef.detectChanges();
+          this.api
+            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [
+              data,
+              '1',
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                this.itemSelected = res;
+                this.loadDatadetail(this.itemSelected);
+                this.view.dataService
+                  .update(this.itemSelected)
+                  .subscribe((res) => {});
+                this.detectorRef.detectChanges();
+              }
+            });
         } else this.notification.notifyCode(result?.msgCodeError);
       });
   }
@@ -592,43 +602,34 @@ export class CashPaymentsComponent extends UIComponent {
     this.api
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
-        this.journal = res[0];
+        if (res) {
+          this.journal = res[0];
+        }
+       
       });
   }
 
   loadTotal() {
-    var totalacct = 0;
-    var totaloff = 0;
+    this.totalacct = 0;
+    this.totaloff = 0;
     for (let index = 0; index < this.acctTrans.length; index++) {
       if (!this.acctTrans[index].crediting) {
-        totalacct = totalacct + this.acctTrans[index].transAmt;
+        this.totalacct = this.totalacct + this.acctTrans[index].transAmt;
       } else {
-        totaloff = totaloff + this.acctTrans[index].transAmt;
+        this.totaloff = this.totaloff + this.acctTrans[index].transAmt;
       }
     }
-    this.totalacct = totalacct.toLocaleString('it-IT');
-    this.totaloff = totaloff.toLocaleString('it-IT');
   }
 
-  loadCashbookName(data) {
-    this.api
-      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        for (let index = 0; index < res.length; index++) {
-          if (res[index].cashBookID == data.cashBookID) {
-            this.cashbookName = res[index].cashBookName;
-          }
-        }
-      });
+  loadTotalSet() {
+    this.totalbalAmt = 0;
+    this.totalsettledAmt = 0;
+    for (let index = 0; index < this.settledInvoices.length; index++) {
+      this.totalbalAmt = this.totalbalAmt + this.settledInvoices[index].balAmt;
+      this.totalsettledAmt =
+        this.totalsettledAmt + this.settledInvoices[index].settledAmt;
+    }
   }
-
-  // loadReasonName(data) {
-  //   this.api
-  //     .exec('AC', 'CommonBusiness', 'GetReasonName', [data])
-  //     .subscribe((res: any) => {
-  //       this.reasonName = res;
-  //     });
-  // }
 
   setStyles(color): any {
     let styles = {
@@ -649,5 +650,43 @@ export class CashPaymentsComponent extends UIComponent {
       return false;
     }
   }
+
+  created(e: any, ele: TabComponent) {
+    this.changeTab(this.itemSelected.subType, ele);
+  }
+  changeTab(e?: any, ele?: TabComponent) {
+    ele = this.tabObj;
+    if (ele) {
+      ele.hideTab(0, false);
+      switch (e) {
+        case '1':
+        case '3':
+        case '4':
+          ele.hideTab(1, true);
+          ele.hideTab(2, true);
+          break;
+        case '2':
+          ele.hideTab(1, false);
+          ele.hideTab(2, true);
+          break;
+        case '9':
+          ele.hideTab(1, false);
+          ele.hideTab(2, false);
+          break;
+      }
+    }
+  }
+  // checkRead(){
+  //   var eMaxText = document.getElementById('max-dots');
+  //   var eText = document.getElementById('dots');
+  //   if (eMaxText && eText) {
+  //     if (eText.offsetWidth > (eMaxText.offsetWidth - 100)) {
+  //       this.isRead = true;
+  //     }else{
+  //       this.isRead = false;
+  //     }
+  //   }
+
+  // }
   //#endregion
 }
