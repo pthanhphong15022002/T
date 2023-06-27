@@ -57,7 +57,7 @@
             </ng-container>
           </ng-container>
         </div>
-        <div class="d-flex align-items-center text-info-date mb-1">
+        <div class="d-flex flex-wrap align-items-center text-info-date mb-1">
           <span class="d-flex align-items-center me-2">
             <span class="text-gray-700 me-3">{{item.createdOn | timefrom}}</span>
             <ng-container *ngIf="item.approveControl == '1' && item.approveStatus == '3'">
