@@ -193,8 +193,7 @@ export class SignFileComponent extends UIComponent {
       this.view.dataService.predicate = 'ApproveStatus=@0';
       this.view.dataService.dataValue = stt;
       this.view.dataService
-        .setPredicates(['ApproveStatus=@0'], [stt])
-        .subscribe((item) => {});
+        .setPredicates(['ApproveStatus=@0'], [stt]);
     }
   }
 
