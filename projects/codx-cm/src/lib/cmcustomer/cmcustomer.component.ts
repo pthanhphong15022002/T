@@ -129,7 +129,6 @@ export class CmCustomerComponent
         this.funcID = param.funcID;
         this.isButton = true;
         this.afterLoad();
-
       }
     });
   }
@@ -174,10 +173,7 @@ export class CmCustomerComponent
       // this.view.formModel = formMD;
       if (this.funcID == 'CM0101') {
         this.cache
-          .gridViewSetup(
-            fun?.formName,
-            fun?.gridViewName
-          )
+          .gridViewSetup(fun?.formName, fun?.gridViewName)
           .subscribe((res) => {
             if (res) {
               this.gridViewSetup = res;
@@ -185,7 +181,6 @@ export class CmCustomerComponent
           });
       }
     });
-
 
     this.detectorRef.detectChanges();
   }
