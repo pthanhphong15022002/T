@@ -11,6 +11,7 @@ import { AuthService, AuthStore, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { CodxSvService } from '../../codx-sv.service';
 import { SV_Respondents } from '../../models/SV_Respondents';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-review',
@@ -29,6 +30,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   questions: any = [];
   functionList: any;
   recID: any;
+  repondID:any;
   funcID: any;
   lstEditIV: any = [];
   REFER_TYPE = {
@@ -48,6 +50,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
   survey:any;
   //Thời hạn trả lời
   expiredOn = false;
+  dataRepond:any;
+  dataSVRepondents:any;
+  select:any;
   html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -73,6 +78,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private SVServices: CodxSvService,
+    private shareService : CodxShareService,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
     private sanitizer: DomSanitizer
@@ -87,8 +93,18 @@ export class ReviewComponent extends UIComponent implements OnInit {
             this.functionList = res;
             if (queryParams?.recID) {
               this.recID = queryParams.recID;
+              this.loadData();
             }
-            this.loadData();
+            else if (queryParams?.transID) {
+              this.repondID = queryParams.transID;
+              this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
+                this.dataSVRepondents = item;
+                this.dataRepond = item?.responds;
+                this.recID = item?.transID;
+                this.loadData();
+              })
+            }
+         
           }
         });
       }
@@ -105,45 +121,40 @@ export class ReviewComponent extends UIComponent implements OnInit {
 
   loadData() {
     this.questions = null;
-    this.api
-      .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [
-        this.recID,
-      ])
-      .subscribe((res: any) => {
-        if(res && res[2]) {
-          this.survey = res[2];
-          debugger
-          if(this.survey?.expiredOn && new Date(this.survey?.expiredOn) <=  new Date()) this.expiredOn = true;
-          this.getAvatar(this.survey);
+
+    this.SVServices.getDataQuestion(this.recID).subscribe(res=>{
+      if(res && res[2]) {
+        this.survey = res[2];
+        if(this.survey?.expiredOn && new Date(this.survey?.expiredOn) <=  new Date()) this.expiredOn = true;
+        this.getAvatar(this.survey);
+      }
+      if (res && res[0] && res[0].length > 0) {
+        this.questions = this.getHierarchy(res[0], res[1]);
+        if (this.questions) {
+          this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
+          this.lstQuestion = this.lstQuestionTemp;
+          this.itemSession = JSON.parse(JSON.stringify(this.questions[0]));
+          this.itemSessionFirst = JSON.parse(
+            JSON.stringify(this.questions[0])
+          );
         }
-        if (res && res[0] && res[0].length > 0) {
-          this.questions = this.getHierarchy(res[0], res[1]);
-          if (this.questions) {
-            this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
-            this.lstQuestion = this.lstQuestionTemp;
-            this.itemSession = JSON.parse(JSON.stringify(this.questions[0]));
-            this.itemSessionFirst = JSON.parse(
-              JSON.stringify(this.questions[0])
-            );
+        //hàm lấy safe url của các question là video youtube
+        this.getURLEmbed(res[1]);
+        this.SVServices.getFilesByObjectTypeRefer(
+          this.functionList.entityName,
+          this.recID
+        ).subscribe((res: any) => {
+          if (res) {
+            res.forEach((x) => {
+              if (x.referType == this.recID +"_"+this.REFER_TYPE.VIDEO)
+                x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
+            });
+            this.lstEditIV = res;
           }
-          //hàm lấy safe url của các question là video youtube
-          this.getURLEmbed(res[1]);
-          this.SVServices.getFilesByObjectTypeRefer(
-            this.functionList.entityName,
-            this.recID
-          ).subscribe((res: any) => {
-            if (res) {
-              res.forEach((x) => {
-                if (x.referType == this.recID +"_"+this.REFER_TYPE.VIDEO)
-                  x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
-              });
-              this.lstEditIV = res;
-            }
-          });
-          this.getDataAnswer(this.lstQuestionTemp);
-        }
-       
-      });
+        });
+        this.getDataAnswer(this.lstQuestionTemp);
+      }
+    })
   }
 
   getAvatar(data:any)
@@ -159,17 +170,44 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
   getDataAnswer(lstData) {
     if (lstData) {
-      let objAnswer = {
-        seqNo: null,
-        answer: null,
-        other: false,
-        columnNo: 0,
-      };
-      lstData.forEach((x) => {
-        x.children.forEach((y) => {
-          y.answers = [objAnswer];
+      if(this.repondID)
+      {
+        debugger
+        lstData.forEach((x) => {
+          x.children.forEach((y) => {
+            var answers = this.dataRepond.filter(r=>r.questionID == y?.recID);
+            if(answers[0].results)
+            {
+              if(y?.answerType == "C") this.lstAnswer = answers[0].results;
+              y.answers = answers[0].results;
+            }
+            else
+            {
+              let objAnswer = {
+                seqNo: null,
+                answer: null,
+                other: false,
+                columnNo: 0,
+              };
+              y.answers = [objAnswer]
+            }
+          });
         });
-      });
+      }
+      else
+      {
+        let objAnswer = {
+          seqNo: null,
+          answer: null,
+          other: false,
+          columnNo: 0,
+        };
+        lstData.forEach((x) => {
+          x.children.forEach((y) => {
+            y.answers = [];
+          });
+        });
+      }
     }
   }
 
@@ -179,6 +217,68 @@ export class ReviewComponent extends UIComponent implements OnInit {
       res['children'] = [];
       dataQuestion.forEach((x) => {
         if (x.parentID == res.recID) {
+          if(this.repondID)
+          {
+            var answer = this.dataRepond.filter(r=>r.questionID == x.recID);
+            switch(x.answerType)
+            {
+              case "O":
+                {
+                  if(answer[0]?.results.length > 0)
+                  {
+                    var result = answer[0]?.results[0].answer;
+                    var other = answer[0]?.results[0].other;
+                    if(other)
+                    {
+                      x.answers.forEach(y=>{
+                        if(y.other){
+                          y.checked = true;
+                          y.answer = result;
+                        } 
+                      })
+                    }
+                    else
+                    {
+                      x.answers.forEach(y=>{
+                        if(y.answer == result) y.checked = true;
+                      })
+                    }
+                  }
+                  break;
+                }
+              case "C":
+                {
+                  var result = answer[0]?.results;
+                  
+                  for(var rs = 0 ; rs< result.length ; rs ++)
+                  {
+                    
+                    if(result[rs].other)
+                    {
+                      x.answers.forEach(y=>{
+                        if(y.other){
+                          y.checked = true;
+                          y.answer = result[rs].answer;
+                        } 
+                      })
+                    }
+                    else
+                    {
+                      x.answers.forEach(y=>{
+                        if(y.answer == result[rs].answer) y.checked = true;
+                      })
+                    }
+                  }
+                  break;
+                }
+              case "L":
+                {
+                  if(answer[0]?.results.length > 0) this.select = answer[0]?.results[0].answer;
+                  break;
+                }
+            }
+          }
+         
           res['children'].push(x);
         }
       });
@@ -231,7 +331,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   continue(pageNum) {
-    let html = document.getElementById('page-questions');
+    let html = document.getElementById('page-review');
     html.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
@@ -247,9 +347,15 @@ export class ReviewComponent extends UIComponent implements OnInit {
     //itemAnswer.choose = choose
     if(itemQuestion.answerType == "L")
     {
+      let objAnswer = {
+        seqNo: 0,
+        answer: itemAnswer,
+        other: false,
+        columnNo: 0,
+      };
       this.lstQuestion[itemSession.seqNo].children[
         itemQuestion.seqNo
-      ].answers[0].answer = itemAnswer;
+      ].answers = [objAnswer];
 
       return;
     }
@@ -278,10 +384,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       } 
       else if (e.field == 'C') {
         if (e.data) this.lstAnswer.push(JSON.parse(JSON.stringify(itemAnswer)));
-        else
-          this.lstAnswer = this.lstAnswer.filter((x) => {
-            x.seqNo == itemAnswer.seqNo;
-          });
+        else this.lstAnswer = this.lstAnswer.filter(x => x.seqNo != itemAnswer.seqNo);
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers = this.lstAnswer;
@@ -292,8 +395,11 @@ export class ReviewComponent extends UIComponent implements OnInit {
       }
       else
         this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[0] = itemAnswer;
-        var doc = document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID);
-        if(doc) doc.setAttribute("disabled","");
+        var doc = document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement;
+        if(doc) {
+          doc.setAttribute("disabled","");
+          doc.focus();
+        }
     }
 
     if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
@@ -359,13 +465,15 @@ export class ReviewComponent extends UIComponent implements OnInit {
     if(e.data)
     {
       document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).removeAttribute("disabled");
+      (document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement).focus();
     }
     else {
-      itemAnswer.answer = "";
+
+      this.lstAnswer =  this.lstAnswer.filter(x => x.seqNo != itemAnswer.seqNo);
       this.lstQuestion[itemSession.seqNo].children[
         itemQuestion.seqNo
-      ].answers[itemAnswer.seqNo] = itemAnswer;
-      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("value","");
+      ].answers = this.lstAnswer;
+      (document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement).value = "";
       document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");;
     }
 
@@ -376,7 +484,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
     if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers != null) {
       return this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
         seqNoAnswer
-      ].answer;
+      ]?.answer;
     } else return '';
   }
 
@@ -425,11 +533,20 @@ export class ReviewComponent extends UIComponent implements OnInit {
         }
       }
     });
-    if(!check)
+
+    if(this.repondID)
+    {
+      this.dataSVRepondents.responds = respondQuestion;
+      this.SVServices.onUpdate(this.dataSVRepondents).subscribe((res:any) => {
+        // if(res && res.status == 5) this.isSent = true
+      });
+    }
+    else if(!check)
     {
       this.respondents.email = this.user?.email;
       this.respondents.respondent = this.user?.userName;
       this.respondents.responds = respondQuestion;
+
       this.respondents.objectType = '';
       this.respondents.objectID = '';
       this.respondents.finishedOn = new Date();
