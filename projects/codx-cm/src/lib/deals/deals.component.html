@@ -17,7 +17,7 @@
   (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
   (searchChanged)="searchChanged($event)"
-  (onLoading)="onLoading($event)"
+  (onLoading)="onLoading()"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -180,7 +180,11 @@
           class="me-3"
         >
         </span>
-        <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+        <span
+          class="line-clamp-menu"
+          [ngbTooltip]="data.headerText"
+          [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
+        >
           {{ data.headerText }}
         </span>
       </div>

@@ -112,7 +112,7 @@ export class DealsComponent
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
-  listHeader: any;
+  listHeader: any = [];
   colorReasonSuccess: any;
   colorReasonFail: any;
   processID: any;
@@ -1017,7 +1017,7 @@ export class DealsComponent
   }
 
   getPropertiesHeader(data, type) {
-    if (this.listHeader?.length == 0) {
+    if (!this.listHeader || this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
@@ -1106,10 +1106,7 @@ export class DealsComponent
         option.Width = '800px';
         option.zIndex = 1001;
         var formMD = new FormModel();
-        // formMD.funcID = funcIDApplyFor;
-        // formMD.entityName = fun.entityName;
-        // formMD.formName = fun.formName;
-        // formMD.gridViewName = fun.gridViewName;
+
         var obj = {
           action: 'edit',
           formMD: formMD,
@@ -1157,10 +1154,6 @@ export class DealsComponent
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
       this.openFormDeal(formMD, option, 'copy');
@@ -1479,9 +1472,22 @@ export class DealsComponent
         if (!this.processIDKanban) this.processIDKanban = this.processIDDefault;
       } else this.processIDKanban = this.processIDDefault;
     }
+    // load kanban
+    if (this.viewCrr == 6 && this.processIDKanban != this.crrProcessID) {
+      this.processIDKanban == this.crrProcessID;
+      this.dataObj = { processID: this.processIDKanban };
+      this.view.views.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
+        }
+      });
+      this.loadKanban();
+    }
   }
 
   loadKanban() {
+    if (!this.kanban) this.kanban = (this.view?.currentView as any)?.kanban;
     let kanban = (this.view?.currentView as any)?.kanban;
     let settingKanban = kanban.kanbanSetting;
     settingKanban.isChangeColumn = true;
@@ -1504,12 +1510,13 @@ export class DealsComponent
         );
         kanban.refresh();
         this.kanban = kanban;
-        // this.kanban.loaded = true;
-        this.kanban.refresh();
+        // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
   }
-  onLoading(e) {
+
+  onLoading() {
+    if (!this.funCrr) return;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -1551,15 +1558,9 @@ export class DealsComponent
           // if (viewOut)
           // this.view.load();
         }
+        if ((this.view?.currentView as any)?.kanban) this.loadKanban();
       }
     });
-    // this.view.views.forEach((x) => {
-    //   if (x.type == 6) {
-    //     x.request.dataObj = this.dataObj;
-    //     x.request2.dataObj = this.dataObj;
-    //   }
-    // });
-    this.loadKanban();
   }
   //end
 }

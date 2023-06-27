@@ -31,7 +31,10 @@ export class PopupAddPaymentComponent {
   remaining = 0;
   sumScheduleAmt = 0;
   sumScheduleAmtAllPayment = 0;
+  sumScheduleAmtAllPaymentEdit = 0;
   isErorrDate = true;
+  percentChanged = true;
+  valueChanged = true;
 
   fmContracts: FormModel = {
     formName: 'CMContracts',
@@ -62,14 +65,13 @@ export class PopupAddPaymentComponent {
   }
 
   async ngOnInit(): Promise<void> {
-    this.setDataInput();
     this.sumScheduleAmtAllPayment = this.listPayment?.reduce((sum, item) => {
       return sum + item?.scheduleAmt || 0;
     }, 0);
     this.sumScheduleAmt = this.sumScheduleAmtAllPayment;
     this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
-    this.percent =
-      (this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
+    this.percent =(this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
+    this.setDataInput();
     this.view = await this.stepService.getFormModel(this.dialog.formModel);
   }
 
@@ -79,6 +81,7 @@ export class PopupAddPaymentComponent {
     }
     if (this.action == 'edit') {
       this.payment = JSON.parse(JSON.stringify(this.payment));
+      this.sumScheduleAmtAllPaymentEdit = this.sumScheduleAmtAllPayment - this.payment?.scheduleAmt || 0;
     }
     if (this.action == 'copy') {
     }
@@ -97,22 +100,33 @@ export class PopupAddPaymentComponent {
 
   //#region change value
   valueChangePercent(e) {
-    this.percent = e?.value;
-    this.payment.scheduleAmt = Number(
-      ((this.percent * this.contract.contractAmt) / 100).toFixed(0)
-    );
+    if(this.percentChanged){
+      this.percent = e?.value;
+      this.payment.scheduleAmt = Number(
+        ((this.percent * this.contract.contractAmt) / 100).toFixed(0)
+      );
+      this.checkRemaining(this.payment.scheduleAmt);
+      this.valueChanged = false;
+    }
   }
 
   valueChangeText(event) {
     this.payment[event?.field] = event?.data;
-    if (event?.field == 'scheduleAmt') {
-      this.percent = (this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
-      this.sumScheduleAmt = this.sumScheduleAmtAllPayment + event?.data; // đã thanh toán
-      this.remaining = this.contract?.contractAmt - this.sumScheduleAmt; // còn lại
-      if(this.remaining < 0){
-        this.notiService.notifyCode('Số tiền thanh toán lớn hơn giá trị hợp đồng');
-      }
+    if (event?.field == 'scheduleAmt' && this.valueChanged) {
+      this.percent = Number(((this.payment.scheduleAmt / this.contract?.contractAmt) * 100).toFixed(1));
+      this.checkRemaining(event?.data);
+      this.percentChanged = false;
     }
+  }
+
+  checkRemaining(scheduleAmt){
+    if(this.action == 'edit'){
+      this.sumScheduleAmt = this.sumScheduleAmtAllPaymentEdit + scheduleAmt;
+    }else{
+      this.sumScheduleAmt = this.sumScheduleAmtAllPayment + scheduleAmt; // đã thanh toán
+    }
+    this.remaining = this.contract?.contractAmt - this.sumScheduleAmt; // còn lại
+    if(this.remaining < 0){this.notiService.notifyCode('CM018');}
   }
 
   valueChangeCombobox(event) {
@@ -128,6 +142,10 @@ export class PopupAddPaymentComponent {
       }
       this.isErorrDate = !this.isErorrDate;
     }
+  }
+
+  clickTesk(event){
+    this[event] = true;
   }
 
   //#endregion
