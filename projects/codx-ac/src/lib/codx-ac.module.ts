@@ -64,6 +64,14 @@ import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expe
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
 import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
 import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
+import { CalculatingCostOfProductComponent } from './periodic/calculating-cost-of-product/calculating-cost-of-product.component';
+import { PopAddCalculatingCostOfProductComponent } from './periodic/calculating-cost-of-product/pop-add-calculating-cost-of-product/pop-add-calculating-cost-of-product.component';
+import { ExchangeRateTransactionComponent } from './periodic/exchange-rate-transaction/exchange-rate-transaction.component';
+import { PopAddExchangeRateTransactionComponent } from './periodic/exchange-rate-transaction/pop-add-exchange-rate-transaction/pop-add-exchange-rate-transaction.component';
+import { InvoiceSetlementComponent } from './periodic/invoice-setlement/invoice-setlement.component';
+import { PopAddInvoiceSetlementComponent } from './periodic/invoice-setlement/pop-add-invoice-setlement/pop-add-invoice-setlement.component';
+import { ClosingDataComponent } from './periodic/closing-data/closing-data.component';
+import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
 
 export const routes: Routes = [
   {
@@ -179,6 +187,26 @@ export const routes: Routes = [
         component: ClosingTransactionComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'calculatingcostofproduct/:funcID',
+        component: CalculatingCostOfProductComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'exchangeratetransaction/:funcID',
+        component: ExchangeRateTransactionComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'invoicesetlement/:funcID',
+        component: InvoiceSetlementComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'closingdata/:funcID',
+        component: ClosingDataComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
@@ -241,6 +269,14 @@ export const routes: Routes = [
     PopAddDeductInterestExpensesComponent,
     ClosingTransactionComponent,
     PopAddClosingTransactionComponent,
+    CalculatingCostOfProductComponent,
+    PopAddCalculatingCostOfProductComponent,
+    ExchangeRateTransactionComponent,
+    PopAddExchangeRateTransactionComponent,
+    InvoiceSetlementComponent,
+    PopAddInvoiceSetlementComponent,
+    ClosingDataComponent,
+    PopAddClosingDataComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
