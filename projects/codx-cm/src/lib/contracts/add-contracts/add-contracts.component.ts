@@ -708,7 +708,9 @@ viewPayHistory(payment, width: number, height: number) {
     listPaymentHistory: this.listPaymentHistory,
     listPaymentAdd: this.listPaymentAdd,
     listPaymentEdit: this.listPaymentEdit,
-    listPaymentDelet: this.listPaymentDelete,
+    listPaymentDelete: this.listPaymentDelete,
+    contracts: this.contracts,
+    listPayment: this.listPayment,
   };
 
   let option = new DialogModel();

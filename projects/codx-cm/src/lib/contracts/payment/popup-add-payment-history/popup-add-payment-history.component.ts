@@ -105,8 +105,8 @@ export class PopupAddPaymentHistoryComponent {
     this.paymentHistory[event?.field] = new Date(event?.data?.fromDate);
     if (this.action == 'add') {
       this.checkDate = this.stepService.compareDates( this.paymentHistory?.paidDate,  new Date(),'h');
-      if (this.checkDate < 0 && this.isErorrDate) {
-        this.notiService.notifyCode('CM017',0,[this.view?.paidDate]);
+      if (this.checkDate > 0 && this.isErorrDate) {
+        this.notiService.notifyCode('CRM019',0,[this.view?.paidDate]);
       }
       this.isErorrDate = !this.isErorrDate;
     }
@@ -123,6 +123,10 @@ export class PopupAddPaymentHistoryComponent {
     if (this.stepService.checkRequire(this.REQUIRE, this.paymentHistory, this.view)) {
       return
     }
+    if (this.checkDate > 0) {
+      this.notiService.notifyCode('CMR019',0,[this.view?.scheduleDate]);
+      return;
+    }
     if (this.action == 'add' || this.action == 'copy') {
       this.addPaymentHistory(false);
     }
@@ -134,6 +138,10 @@ export class PopupAddPaymentHistoryComponent {
   saveAndClose() {
     if (this.stepService.checkRequire(this.REQUIRE, this.paymentHistory, this.view)) {
       return
+    }
+    if (this.checkDate > 0) {
+      this.notiService.notifyCode('CMR019',0,[this.view?.scheduleDate]);
+      return;
     }
     if (this.action == 'add' || this.action == 'copy') {
       this.addPaymentHistory(true);
