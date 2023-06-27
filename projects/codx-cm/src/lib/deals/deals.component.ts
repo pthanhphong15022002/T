@@ -1507,7 +1507,7 @@ export class DealsComponent
       });
   }
   onLoading(e) {
-    if (this.funCrr != this.funcID) return;
+    if (!this.funCrr) return;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
