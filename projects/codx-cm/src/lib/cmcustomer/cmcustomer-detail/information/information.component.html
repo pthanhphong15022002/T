@@ -20,7 +20,7 @@
         <ng-container [ngTemplateOutlet]="partners"></ng-container>
       </ng-container>
     </div>
-    <div class="mb-5" >
+    <div class="mb-5">
       <div class="mb-3">
         <codx-label
           class="text-dark text-primary fw-bold fs-6"
@@ -53,9 +53,7 @@
       </div>
       <div class="row">
         <div class="col-6">
-          <div
-            class="mb-3 d-flex align-items-top"
-          >
+          <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px">
               <codx-label
                 class="label-colon text-gray-600 codx-textlabel"
@@ -74,9 +72,7 @@
               "
             ></div>
           </div>
-          <div
-            class="mb-3 d-flex align-items-top"
-          >
+          <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px">
               <codx-label
                 class="label-colon text-gray-600 codx-textlabel"
@@ -92,9 +88,7 @@
           </div>
         </div>
         <div class="col-6">
-          <div
-            class="mb-3 d-flex align-items-top"
-          >
+          <div class="mb-3 d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600">
               <codx-label
                 class="label-colon text-gray-600 codx-textlabel"
@@ -154,9 +148,7 @@
   <div class="row">
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -174,9 +166,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -194,29 +184,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="EstablishDate"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected.establishDate
-                | formatvalue : formModel : 'EstablishDate'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -234,9 +202,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -252,9 +218,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -270,27 +234,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="Email"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.email | formatvalue : formModel : 'Email' | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -312,9 +256,7 @@
     </div>
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -332,9 +274,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -352,9 +292,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -372,10 +310,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-          *ngIf="funcID == 'CM0101'"
-        >
+        <div class="mb-3 d-flex align-items-top" *ngIf="funcID == 'CM0101'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -395,9 +330,7 @@
             </codx-input>
           </div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -415,9 +348,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -433,58 +364,16 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="channelID"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.channelID
-                | formatvalue : formModel : 'ChannelID'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="SegmentID"
-              [formModel]="formModel"
-            ></codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.segmentID
-                | formatvalue : formModel : 'SegmentID'
-                | async
-            "
-          ></div>
-        </div>
       </div>
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #contacts>
   <div class="row">
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -502,9 +391,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -522,9 +409,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -540,9 +425,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -560,49 +443,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="Occupation"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.occupation
-                | formatvalue : formModel : 'Occupation'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="JobTitle"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.jobTitle
-                | formatvalue : formModel : 'JobTitle'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -620,9 +461,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -640,9 +479,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -674,9 +511,7 @@
             ></span>
           </div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -696,89 +531,7 @@
     </div>
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="BirthPlace"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.birthPlace
-                | formatvalue : formModel : 'BirthPlace'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="IDCardNo"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.idCardNo
-                | formatvalue : formModel : 'IDCardNo'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="IssuedOn"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.issuedOn
-                | formatvalue : formModel : 'IssuedOn'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="IssuedBy"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.issuedBy
-                | formatvalue : formModel : 'IssuedBy'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -796,9 +549,61 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="BirthPlace"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.birthPlace
+                | formatvalue : formModel : 'BirthPlace'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-3 d-flex align-items-top">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="IDCardNo"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.idCardNo
+                | formatvalue : formModel : 'IDCardNo'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-3 d-flex align-items-top">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="IssuedOn"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.issuedOn
+                | formatvalue : formModel : 'IssuedOn'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -816,9 +621,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -836,49 +639,8 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="Education"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.education
-                | formatvalue : formModel : 'Education'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="MaritalStatus"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.maritalStatus
-                | formatvalue : formModel : 'MaritalStatus'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -896,9 +658,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -914,24 +674,6 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="Income"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.income | formatvalue : formModel : 'Income' | async
-            "
-          ></div>
-        </div>
       </div>
     </div>
   </div>
@@ -941,9 +683,7 @@
   <div class="row">
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -965,9 +705,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -985,29 +723,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="EstablishDate"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected.establishDate
-                | formatvalue : formModel : 'EstablishDate'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1025,9 +741,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1043,9 +757,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1061,27 +773,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="Email"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.email | formatvalue : formModel : 'Email' | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1099,9 +791,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1117,14 +807,11 @@
             "
           ></div>
         </div>
-
       </div>
     </div>
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1142,9 +829,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1162,29 +847,7 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
-          <div class="w-150px min-w-150px">
-            <codx-label
-              class="label-colon text-gray-600 codx-textlabel"
-              fiedName="Capital"
-              [formModel]="formModel"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              dataSelected?.capital
-                | formatvalue : formModel : 'Capital'
-                | async
-            "
-          ></div>
-        </div>
-        <div
-          class="mb-3 d-flex align-items-top"
-        >
+        <div class="mb-3 d-flex align-items-top">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -1202,13 +865,11 @@
             "
           ></div>
         </div>
-        <div
-          class="mb-3 d-flex align-items-top" *ngIf="funcID == 'CM0103'"
-        >
+        <div class="mb-3 d-flex align-items-top" *ngIf="funcID == 'CM0103'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
-              fiedName="PartnerFrom"
+              fiedName="ChannelID"
               [formModel]="formModel"
             >
             </codx-label>
@@ -1216,8 +877,8 @@
           <div
             class="text-dark fw-bold codx-textcontent"
             [innerHTML]="
-              dataSelected?.partnerFrom
-                | formatvalue : formModel : 'PartnerFrom'
+              dataSelected?.channelID
+                | formatvalue : formModel : 'ChannelID'
                 | async
             "
           ></div>
