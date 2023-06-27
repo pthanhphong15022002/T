@@ -624,7 +624,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   clickMF($event, data) {}
 
   search(e) {
-    this.listView.dataService.search(e).subscribe();
+    this.listView.dataService.search(e);
     this.detectorRef.detectChanges();
   }
 

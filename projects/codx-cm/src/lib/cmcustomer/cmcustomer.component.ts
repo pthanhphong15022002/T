@@ -261,7 +261,7 @@ export class CmCustomerComponent
 
   //#region Search
   searchChanged(e) {
-    this.view.dataService.search(e).subscribe();
+    this.view.dataService.search(e);
     this.detectorRef.detectChanges();
   }
   //#endregion
