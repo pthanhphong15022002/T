@@ -128,6 +128,10 @@ export class CashPaymentsComponent extends UIComponent {
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
     });
+
+    this.routerActive.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+    });
   }
   //#endregion
 
@@ -598,7 +602,10 @@ export class CashPaymentsComponent extends UIComponent {
     this.api
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
-        this.journal = res[0];
+        if (res) {
+          this.journal = res[0];
+        }
+       
       });
   }
 

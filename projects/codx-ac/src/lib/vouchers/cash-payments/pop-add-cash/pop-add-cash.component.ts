@@ -222,16 +222,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       (e: KeyboardEvent) => {
         if (e.key == 'Tab') {
           if (document.activeElement.className == 'e-tab-wrap') {
-            var element = document.getElementById('btnadd');
-            element.focus();
+            // var element = document.getElementById('btnadd');
+            // element.focus();
           }
         }
-        // if (e.key == 'Enter') {
-        //   if (document.activeElement.id == 'btnadd') {
-        //     var element = document.getElementById('btnadd');
-        //     element.click();
-        //   }
-        // }
       }
     );
 
@@ -604,7 +598,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow(type: any) {
-    alert("hhi");
     if (
       !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
     ) {
@@ -852,24 +845,28 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (!this.loadingform || !this.loading) {
       switch (e.type) {
         case 'autoAdd':
-          switch (this.cashpayment.subType) {
-            case '1':
-            case '3':
-            case '4':
-              this.addRow('1');
-              break;
-            case '2':
-              this.settlement(0);
-              break;
-            case '9':
-              if (document.getElementById('gridcash') != null) {
-                this.addRow('1');
-              }
-              if (document.getElementById('gridset') != null) {
-                this.settlement(0);
-              }
-              break;
-          }
+          this.addRow('1');
+          // switch (this.cashpayment.subType) {
+          //   case '1':
+          //   case '3':
+          //   case '4':
+          //     this.addRow('1');
+          //     break;
+          //   case '2':
+          //     this.settlement(0);
+          //     break;
+          //   case '9':
+          //     if (document.getElementById('gridcash') != null) {
+                
+          //     }
+          //     if (document.getElementById('gridset') != null) {
+          //       this.settlement(0);
+          //     }
+          //     break;
+          // }
+          break;
+        case 'endEdit':
+          this.addRow('1');
           break;
       }
     }
@@ -1187,7 +1184,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.lockFields = this.dataLine.unbounds.lockFields as Array<string>;
         this.requireGrid();
         this.lockGrid();
-        //this.gridCash.endEdit();
+        this.gridCash.endEdit();
         this.gridCash.addRow(this.dataLine, idx);
         break;
       case '2':
@@ -1578,9 +1575,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       args.progressBar.annotations[0].content =
         '<img style="width: 50px;height:50px" src="../assets/themes/ac/default/img/file.gif" alt="">';
     }
-  }
-  keypress(e) {
-    console.log(e);
   }
   //#endregion
 }
