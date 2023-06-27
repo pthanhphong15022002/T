@@ -267,7 +267,6 @@ export class DealsComponent
     this.changeFilter();
     if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
-      // this.kanban.loaded = false;
     }
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -277,91 +276,89 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      this.cache.viewSettings(this.funcID).subscribe((views) => {
-        if (views) {
-          this.afterLoad();
-          this.views = [];
-          let idxActive = -1;
-          let viewOut = false;
-          this.viewsDefault.forEach((v, index) => {
-            let idx = views.findIndex((x) => x.view == v.type);
-            if (idx != -1) {
-              v.hide = false;
-              if (v.type != this.viewCrr) v.active = false;
-              else v.active = true;
-              if (views[idx].isDefault) idxActive = index;
-            } else {
-              v.hide = true;
-              v.active = false;
-              if (this.viewCrr == v.type) viewOut = true;
-            }
-            if (v.type == 6) {
-              v.request.dataObj = this.dataObj;
-              v.request2.dataObj = this.dataObj;
-            }
-            //  if (!(this.funcID == 'CM0201' && v.type == '6'))
-            this.views.push(v);
-            //  else viewOut = true;
-          });
-          if (!this.views.some((x) => x.active)) {
-            if (idxActive != -1) this.views[idxActive].active = true;
-            else this.views[0].active = true;
+      // this.cache.viewSettings(this.funcID).subscribe((views) => {
+      //   if (views) {
+      //     this.afterLoad();
+      //     this.views = [];
+      //     let idxActive = -1;
+      //     let viewOut = false;
+      //     this.viewsDefault.forEach((v, index) => {
+      //       let idx = views.findIndex((x) => x.view == v.type);
+      //       if (idx != -1) {
+      //         v.hide = false;
+      //         if (v.type != this.viewCrr) v.active = false;
+      //         else v.active = true;
+      //         if (views[idx].isDefault) idxActive = index;
+      //       } else {
+      //         v.hide = true;
+      //         v.active = false;
+      //         if (this.viewCrr == v.type) viewOut = true;
+      //       }
+      //       if (v.type == 6) {
+      //         v.request.dataObj = this.dataObj;
+      //         v.request2.dataObj = this.dataObj;
+      //       }
+      //       //  if (!(this.funcID == 'CM0201' && v.type == '6'))
+      //       this.views.push(v);
+      //       //  else viewOut = true;
+      //     });
+      //     if (!this.views.some((x) => x.active)) {
+      //       if (idxActive != -1) this.views[idxActive].active = true;
+      //       else this.views[0].active = true;
 
-            let viewModel =
-              idxActive != -1 ? this.views[idxActive] : this.views[0];
-            this.view.viewActiveType = viewModel.type;
-            this.view.viewChange(viewModel);
-            // if (viewOut)
-            // this.view.load();
-          }
+      //       let viewModel =
+      //         idxActive != -1 ? this.views[idxActive] : this.views[0];
+      //       this.view.viewActiveType = viewModel.type;
+      //       this.view.viewChange(viewModel);
+      //       // if (viewOut)
+      //       // this.view.load();
+      //     }
 
-          if ((this.view?.currentView as any)?.kanban) {
-            this.loadKanban();
-            // let kanban = (this.view?.currentView as any)?.kanban;
-            // let settingKanban = kanban.kanbanSetting;
-            // settingKanban.isChangeColumn = true;
-            // settingKanban.formName = this.view?.formModel?.formName;
-            // settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-            // this.api
-            //   .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-            //     settingKanban,
-            //     this.dataObj,
-            //   ])
-            //   .subscribe((resource) => {
-            //     if (resource?.columns && resource?.columns.length)
-            //       kanban.columns = resource.columns;
-            //     kanban.kanbanSetting.isChangeColumn = false;
-            //     kanban.dataObj = this.dataObj;
-            //     kanban.loadDataSource(
-            //       kanban.columns,
-            //       kanban.kanbanSetting?.swimlaneSettings,
-            //       false
-            //     );
-            //     kanban.refresh();
-            //     this.kanban = kanban;
-            //     this.detectorRef.detectChanges();
-            //   });
-          }
+      // if ((this.view?.currentView as any)?.kanban) {
+      //   this.loadKanban();
+      //   // let kanban = (this.view?.currentView as any)?.kanban;
+      //   // let settingKanban = kanban.kanbanSetting;
+      //   // settingKanban.isChangeColumn = true;
+      //   // settingKanban.formName = this.view?.formModel?.formName;
+      //   // settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+      //   // this.api
+      //   //   .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+      //   //     settingKanban,
+      //   //     this.dataObj,
+      //   //   ])
+      //   //   .subscribe((resource) => {
+      //   //     if (resource?.columns && resource?.columns.length)
+      //   //       kanban.columns = resource.columns;
+      //   //     kanban.kanbanSetting.isChangeColumn = false;
+      //   //     kanban.dataObj = this.dataObj;
+      //   //     kanban.loadDataSource(
+      //   //       kanban.columns,
+      //   //       kanban.kanbanSetting?.swimlaneSettings,
+      //   //       false
+      //   //     );
+      //   //     kanban.refresh();
+      //   //     this.kanban = kanban;
+      //   //     this.detectorRef.detectChanges();
+      //   //   });
+      // }
+      // }
+      // });
+    } else if (
+      this.funcID == 'CM0201' &&
+      this.viewCrr == 6 &&
+      this.processIDKanban != this.crrProcessID &&
+      (this.view?.currentView as any)?.kanban
+    ) {
+      this.crrProcessID = this.processIDKanban;
+      this.dataObj = { processID: this.processIDKanban };
+      this.view.views.forEach((x) => {
+        if (x.type == 6) {
+          x.request.dataObj = this.dataObj;
+          x.request2.dataObj = this.dataObj;
         }
       });
+      this.loadKanban();
     }
-
-    // else if (
-    //   this.funcID == 'CM0201' &&
-    //   this.viewCrr == 6 &&
-    //   this.processIDKanban != this.crrProcessID &&
-    //   (this.view?.currentView as any)?.kanban
-    // ) {
-    //   this.crrProcessID = this.processIDKanban;
-    //   this.dataObj = { processID: this.processIDKanban };
-    //   this.view.views.forEach((x) => {
-    //     if (x.type == 6) {
-    //       x.request.dataObj = this.dataObj;
-    //       x.request2.dataObj = this.dataObj;
-    //     }
-    //   });
-    //   this.loadKanban();
-    // }
   }
 
   click(evt: ButtonModel) {
@@ -1403,7 +1400,7 @@ export class DealsComponent
 
   //-----------------------------change Filter -------------------------------//
   changeFilter() {
-    if (this.viewCrr == 6 || this.funcID != 'CM0201') {
+    if (this.funcID != 'CM0201') {
       let idxBusinesLineOp = this.view.filterOptions.findIndex(
         (x) => x.fieldName == 'BusinessLineID'
       );
@@ -1508,9 +1505,61 @@ export class DealsComponent
         kanban.refresh();
         this.kanban = kanban;
         // this.kanban.loaded = true;
-        // this.kanban.refresh();
+        this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
+  }
+  onLoading(e) {
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    if (this.processID) this.dataObj = { processID: this.processID };
+    else if (this.processIDKanban)
+      this.dataObj = { processID: this.processIDKanban };
+    this.cache.viewSettings(this.funcID).subscribe((views) => {
+      if (views) {
+        this.afterLoad();
+        this.views = [];
+        let idxActive = -1;
+        let viewOut = false;
+        this.viewsDefault.forEach((v, index) => {
+          let idx = views.findIndex((x) => x.view == v.type);
+          if (idx != -1) {
+            v.hide = false;
+            if (v.type != this.viewCrr) v.active = false;
+            else v.active = true;
+            if (views[idx].isDefault) idxActive = index;
+          } else {
+            v.hide = true;
+            v.active = false;
+            if (this.viewCrr == v.type) viewOut = true;
+          }
+          if (v.type == 6) {
+            v.request.dataObj = this.dataObj;
+            v.request2.dataObj = this.dataObj;
+          }
+          //  if (!(this.funcID == 'CM0201' && v.type == '6'))
+          this.views.push(v);
+          //  else viewOut = true;
+        });
+        if (!this.views.some((x) => x.active)) {
+          if (idxActive != -1) this.views[idxActive].active = true;
+          else this.views[0].active = true;
+
+          let viewModel =
+            idxActive != -1 ? this.views[idxActive] : this.views[0];
+          this.view.viewActiveType = viewModel.type;
+          this.view.viewChange(viewModel);
+          // if (viewOut)
+          // this.view.load();
+        }
+      }
+    });
+    // this.view.views.forEach((x) => {
+    //   if (x.type == 6) {
+    //     x.request.dataObj = this.dataObj;
+    //     x.request2.dataObj = this.dataObj;
+    //   }
+    // });
+    this.loadKanban();
   }
   //end
 }
