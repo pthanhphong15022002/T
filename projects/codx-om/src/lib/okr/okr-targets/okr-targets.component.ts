@@ -442,7 +442,97 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
+
   changeDataKRMF(evt: any, kr: any, isSKR: boolean) {
+    if (evt != null && kr != null) {
+      evt.forEach((func) => {
+        if (
+          //MF hệ thống
+          func.functionID == 'SYS003' ||
+          func.functionID == 'SYS004' ||
+          func.functionID == 'SYS007' ||
+          func.functionID == 'SYS002' ||
+          func.functionID == OMCONST.MFUNCID.KRDetail ||
+          func.functionID == OMCONST.MFUNCID.SKRDetail
+        ) {
+          func.disabled = true;
+        }
+
+        //Ẩn MF khi Plan chưa phát hành
+        //Check-In
+        if (
+          this.dataOKRPlans?.status == '1' && 
+          (func.functionID == OMCONST.MFUNCID.KRCheckIn ||
+          func.functionID == OMCONST.MFUNCID.SKRCheckIn)) 
+        {      
+          func.disabled = true;        
+        }
+
+        //Ẩn MF khi Plan phát hành    
+        else if (
+          this.dataOKRPlans?.status == '2' && (
+          //MF hệ thống
+          func.functionID == OMCONST.MFUNCID.Copy ||
+          func.functionID == OMCONST.MFUNCID.Edit ||
+          func.functionID == OMCONST.MFUNCID.Delete ||
+          //Phân bổ
+          func.functionID == OMCONST.MFUNCID.KRDistribute ||
+          func.functionID == OMCONST.MFUNCID.SKRDistribute ||
+          //Phân công
+          func.functionID == OMCONST.MFUNCID.KRAssign ||
+          func.functionID == OMCONST.MFUNCID.SKRAssign ||
+          //Thay đổi trọng số
+          func.functionID == OMCONST.MFUNCID.KREditSKRWeight||
+          //Đánh giá định kì
+          func.functionID == OMCONST.MFUNCID.KRReviewCheckIn
+        )) {
+          func.disabled = true;
+        }
+        
+        //Ẩn phân bổ MF        
+        //   if (
+        //     (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
+        //       func.functionID == OMCONST.MFUNCID.SKRDistribute)
+        //   ) {
+        //     func.disabled = true;
+        //   }
+
+        //Ẩn sửa trọng số SKR nếu KR ko có SKR
+        if (kr?.items == null || kr?.items.length == 0 && (func.functionID == OMCONST.MFUNCID.KREditSKRWeight)) {          
+          func.disabled = true; 
+        }
+
+        //Ẩn Check-In nếu KR/SKR đã phân công/phân bổ        
+        if (
+          func.functionID == OMCONST.MFUNCID.KRCheckIn ||
+          func.functionID == OMCONST.MFUNCID.SKRCheckIn ||
+          func.functionID == OMCONST.MFUNCID.KRReviewCheckIn 
+        ) {
+          if (
+            (kr?.items != null && kr?.items.length > 0) ||
+            kr?.hasAssign != null ||
+            this.dataOKRPlans.status != '2'
+          ) {
+            func.disabled = true;
+          } else {
+            func.disabled = false;
+          }
+        }
+        
+        if(
+          kr?.autoCreated && (
+          //MF hệ thống
+          func.functionID == OMCONST.MFUNCID.Copy ||
+          func.functionID == OMCONST.MFUNCID.Edit ||
+          func.functionID == OMCONST.MFUNCID.Delete
+        )){
+          func.disabled = true;
+        }
+
+      });
+    }
+  } 
+  changeDataKRMF1(evt: any, kr: any, isSKR: boolean) {
     if (evt != null && kr != null) {
       evt.forEach((func) => {
         if (
@@ -1113,15 +1203,21 @@ export class OkrTargetsComponent implements OnInit {
   }
   deleteOB(ob: any) {
     if (true) {
-      //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteOKR(ob).subscribe((res: any) => {
-        if (res) {
-          this.notificationsService.notifyCode('SYS008');
-          this.removeOB(ob);
+      this.notificationsService.alertCode('SYS030').subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.codxOmService.deleteOKR(ob).subscribe((res: any) => {
+            if (res) {
+              this.notificationsService.notifyCode('SYS008');
+              this.removeOB(ob);
+            } else {
+              this.notificationsService.notifyCode('SYS022');
+            }
+          });
         } else {
-          this.notificationsService.notifyCode('SYS022');
+          return;
         }
       });
+      
     }
   }
   //KeyResults && SubKeyResult
@@ -1208,19 +1304,25 @@ export class OkrTargetsComponent implements OnInit {
 
   deleteKR(kr: any, isSubKR: boolean) {
     if (true) {
-      //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteOKR(kr).subscribe((res: any) => {
-        if (res) {
-          this.notificationsService.notifyCode('SYS008');
-          if (isSubKR) {
-            this.removeSKR(kr);
+      this.notificationsService.alertCode('SYS030').subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.codxOmService.deleteOKR(kr).subscribe((res: any) => {
+          if (res) {
+            this.notificationsService.notifyCode('SYS008');
+            if (isSubKR) {
+              this.removeSKR(kr);
+            } else {
+              this.removeKR(kr);
+            }
           } else {
-            this.removeKR(kr);
+            this.notificationsService.notifyCode('SYS022');
           }
+        });
         } else {
-          this.notificationsService.notifyCode('SYS022');
+          return;
         }
       });
+      
     }
   }
   //Xem chi tiết OB

@@ -1,7 +1,8 @@
 import { Component, Optional } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
-import { CM_ContractsPayments } from '../../../models/cm_model';
+import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel } from 'codx-core';
+import { CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
+import { PopupAddPaymentHistoryComponent } from '../popup-add-payment-history/popup-add-payment-history.component';
 
 @Component({
   selector: 'lib-popup-view-payment-history',
@@ -23,9 +24,15 @@ export class PopupViewPaymentHistoryComponent {
   };
   columns: any;
   grvPayments: any;
+  listPaymentDelete:CM_ContractsPayments[];
+  listPaymentEdit:CM_ContractsPayments[];
+  listPaymentAdd:CM_ContractsPayments[];
+  listPayment:CM_ContractsPayments[];
+  contracts: CM_Contracts;
 
   constructor(
     private cmService: CodxCmService,
+    private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -33,6 +40,12 @@ export class PopupViewPaymentHistoryComponent {
     this.payment = dt?.data?.payment;
     this.listPaymentHistory = dt?.data?.listPaymentHistory;
     this.isSave = dt?.data?.isSave || false;
+
+    this.listPaymentDelete = dt?.data?.listPaymentDelete;
+    this.listPaymentEdit = dt?.data?.listPaymentEdit;
+    this.listPaymentAdd = dt?.data?.listPaymentAdd;
+    this.listPayment = dt?.data?.listPayment;
+    this.contracts = dt?.data?.contracts;
   }
 
   ngOnInit(): void {
@@ -98,11 +111,52 @@ export class PopupViewPaymentHistoryComponent {
       case 'SYS03':
         console.log(data);
         // this.editContract(data);
+        this.openPopupPaymentHistory('edit',this.payment,data);
         break;
       case 'SYS04':
         console.log(data);
         // this.copyContract(data);
         break;
     }
+  }
+
+  async openPopupPaymentHistory(action, payment, paymentHistory) {
+    let dataInput = {
+      action,
+      payment,
+      paymentHistory,
+      contract: this.contracts,
+      listPayment: this.listPayment,
+      listPaymentHistory: this.listPaymentHistory,
+      listPaymentAdd: this.listPaymentAdd,
+      listPaymentEdit: this.listPaymentEdit,
+      listPaymentDelet: this.listPaymentDelete,
+      isSave: this.isSave,
+    };
+
+    let formModel = new FormModel();
+    formModel.entityName = 'CM_ContractsPayments';
+    formModel.formName = 'CMContractsPayments';
+    formModel.gridViewName = 'grvCMContractsPayments';
+
+    let option = new DialogModel();
+    option.IsFull = false;
+    option.zIndex = 1021;
+    option.FormModel = formModel;
+
+    let popupPaymentHistory = this.callfunc.openForm(
+      PopupAddPaymentHistoryComponent,
+      '',
+      600,
+      400,
+      '',
+      dataInput,
+      '',
+      option
+    );
+
+    popupPaymentHistory.closed.subscribe((res) => {
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+    });
   }
 }

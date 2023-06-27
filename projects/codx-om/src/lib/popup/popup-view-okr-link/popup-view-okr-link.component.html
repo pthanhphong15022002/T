@@ -1,9 +1,9 @@
-<div *ngIf="isAfterRender">
-  <div class="d-flex justify-content-between align-items-center flex-grow-1 px-5 pt-5">
+<div>
+  <div class="d-flex justify-content-between align-items-center flex-grow-1 px-5 pt-5 pb-3">
     <div class="d-flex flex-column">
       <div class="fw-bold fs-4 mb-1" >
-        <codx-label *ngIf="listLink[0]?.refType=='2'" name="lblCheckInHistoryView" default="Phân công"></codx-label>
-        <codx-label *ngIf="listLink[0]?.refType!='2'" name="lblCheckInHistoryView" default="Phân bổ"></codx-label>
+        <codx-label *ngIf="listLink[0]?.refType=='2'" name="lblOMAssign" default="Phân công"></codx-label>
+        <codx-label *ngIf="listLink[0]?.refType!='2'" name="lblOMDistribute" default="Phân bổ"></codx-label>
       </div>
     </div>
     <button type="button" class="btn btn-sm btn-icon" aria-label="Close" (click)="dialog.close()">
