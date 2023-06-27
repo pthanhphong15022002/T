@@ -9,11 +9,11 @@
                     <div *ngIf="link; then jump1 else nojump1"></div>
                     <ng-template #jump1>
                         <a class="cursor-pointer" (click)="onJump(i)">
-                            <span class="text-gray-700 text-nowrap t456">{{item.toString()}}</span>
+                            <span class="text-gray-600 text-nowrap t456">{{item.toString()}}</span>
                         </a>
                     </ng-template>
                     <ng-template #nojump1>
-                        <span class="text-gray-700 text-nowrap t123">{{item.toString()}}</span>
+                        <span class="text-gray-600 text-nowrap t123">{{item.toString()}}</span>
                     </ng-template>
                 </ng-container>
             </ng-container>

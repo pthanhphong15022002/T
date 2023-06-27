@@ -13,4 +13,10 @@ export class Paras {
     alloMethod: any;
     alloGroupID: any;
     alloEntryID: any;
+    postLG: any;
+    costingGroupID: any;
+    currencyID: any;
+    voucherNo: any;
+    objectID: any;
+    accountType: any;
   }

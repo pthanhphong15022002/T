@@ -1,1 +1,625 @@
-<p>popup-policyal works!</p>
+<codx-layout-add
+  #form
+  [title]="headerText"
+  [tabInfo]="tabInfo"
+  [formModel]="formModel"
+  [subHeader]=""
+  [footer]="footer"
+  [dialog]="dialog"
+  [openMore]="true"
+  [tabContent]="[overallInfo, policyInfo, setting, applyObj, subtractObj]"
+  [data]="alpolicyObj"
+  *ngIf="isAfterRender"
+>
+</codx-layout-add>
+
+<ng-template #overallInfo>
+  <div class="form-group row">
+    <div class="col-8">
+      <codx-label fiedName="ALObjectID" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="alObjectID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4">
+      <codx-vll
+        *ngIf="alpolicyObj.status"
+        [formModel]="formModel"
+        [field]="'Status'"
+        [value]="alpolicyObj?.status"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+        ngClass="badge badge-sm badge-light"
+      >
+      </codx-vll>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-8">
+      <codx-label fiedName="PolicyID" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="policyID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4">
+      <codx-label fiedName="Priority" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="priority"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label fiedName="PolicyName" [formModel]="formModel"></codx-label>
+    <codx-input
+      field="policyName"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-4">
+      <codx-label fiedName="ActiveOn" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="activeOn"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4">
+      <codx-label fiedName="ExpiredOn" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="expiredOn"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-4 d-flex flex-column">
+      <codx-label fiedName="Stop" [formModel]="formModel"></codx-label>
+      <codx-input
+        class="mt-3"
+        field="stop"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-input
+      field="note"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="text-primary">
+    <codx-label 
+        [formModel]="formModel" 
+        [name]="'lblTcPhepNam'"
+        [default]="'Tiêu chuẩn phép năm'"
+    >
+    </codx-label>
+  </div>
+
+  <div class="form-group row d-flex justify-content-between">
+    <div class="col-6 d-flex flex-column">
+      <codx-label fiedName="ALStandard" [formModel]="formModel"></codx-label>
+      <codx-label
+        [name]="'ALStandard'"
+        [default]="grvSetup.ALStandard.headerNote"
+        [formModel]="formModel"
+      ></codx-label>
+    </div>
+    <div class="col-4">
+      <codx-input
+        field="alStandard"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="text-primary">
+    <codx-label 
+        [formModel]="formModel" 
+        [name]="'lblAttachFile'"
+        [default]="'File đính kèm'"
+    >
+    </codx-label>
+  </div>
+
+  <div class="d-none">
+    <codx-attachment
+      #attachment
+      hideImageUpload="0"
+      showMessage="0"
+      hideBtnSave="1"
+      [functionID]="funcID"
+      hideFolder="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      (fileAdded)="fileAdded($event)"
+      isDeleteTemp="1"
+      [allowMultiFile]="1"
+      [idBrowse]="'add'"
+      hideMoreF="0"
+      [formModel]="formModel"
+      [idField]="'RecID'"
+      [referType]="'source'"
+      [objectType]="formModel?.entityName"
+      [objectId]="alpolicyObj?.recID"
+      (fileAdded)="addFiles($event)">
+    >
+    <!-- (fileDelete)="handleDelete($event)"
+    (fileCount)="getfileCount($event)"
+    (fileGet)="getfileCount($event)" -->
+    </codx-attachment>
+  </div>
+</ng-template>
+
+<ng-template #policyInfo>
+  <div class="form-group row mt-5">
+    <codx-input
+      field="memo"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<ng-template #setting> 
+    <div class="form-group row text-primary">
+        <codx-label
+            [formModel]="formModel"
+            [name]="'lblThietLapChung'"
+            [default]="'Thiết lập chung'"
+        >
+        </codx-label>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="CloseToDay" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'CloseToDay'"
+            [default]="grvSetup.CloseToDay.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-3">
+          <codx-input
+            field="closeToDay"
+            [formModel]="formModel"
+            [Group]="formGroup"
+            (valueChange)="onChangeSelectCloseToDay($event)"
+          ></codx-input>
+        </div>
+        <div class="col-3">
+            <codx-input
+              field="closeToMonth"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            (valueChange)="onChangeSelectCloseToMonth($event)"
+
+            ></codx-input>
+          </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="CalculateALBy" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'CalculateALBy'"
+            [default]="grvSetup.CalculateALBy.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="calculateALBy"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="RegisterALBy" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'RegisterALBy'"
+            [default]="grvSetup.RegisterALBy.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="registerALBy"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="RoundingTransfer" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'RoundingTransfer'"
+            [default]="grvSetup.RoundingTransfer.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="roundingTransfer"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="RoundingTotal" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'RoundingTotal'"
+            [default]="grvSetup.RoundingTotal.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="roundingTotal"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+            [formModel]="formModel"
+            [name]="'lblQuyDinhPhepNam'"
+            [default]="'Quy định tính phép năm'"
+        >
+        </codx-label>
+    </div>
+
+    
+    <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="FirstMonthType" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'FirstMonthType'"
+            [default]="grvSetup.FirstMonthType.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="firstMonthType"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+    <div class="form-group row">
+        bo cai bang data vao day
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="IsAdvanceNextYear" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'IsAdvanceNextYear'"
+            [default]="grvSetup.IsAdvanceNextYear.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-3">
+          <codx-input
+            field="isAdvanceNextYear"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+        <div class="col-3">
+            <codx-input
+              field="maxDayAdvance"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="IsRegisterNextYear" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'IsRegisterNextYear'"
+            [default]="grvSetup.IsRegisterNextYear.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-3">
+          <codx-input
+            field="isRegisterNextYear"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+        <div class="col-3">
+            <codx-input
+              field="maxDayRegister"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="IsTransferNextYear" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'IsTransferNextYear'"
+            [default]="grvSetup.IsTransferNextYear.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="isTransferNextYear"
+            [formModel]="formModel"
+            [Group]="formGroup"
+            (valueChange)="ValChangeTransferNextYear($event)"
+          ></codx-input>
+          <button
+          class="btn btn-icon ms-3"
+          (click)="onClickExpandTransferNextYear()"
+        >
+          <i class="icon-18"
+            [ngClass]="expandTransferNextYear ? 'icon-keyboard_arrow_down':'icon-keyboard_arrow_right'"
+          ></i>
+        </button>
+        </div>
+      </div>
+
+      <div class="form-group row" *ngIf="expandTransferNextYear">
+        <div class="col-6 d-flex flex-column">
+          <codx-label class="ms-6" fiedName="TransferYears" [formModel]="formModel"></codx-label>
+          <codx-label
+          class="ms-6"
+            [name]="'TransferYears'"
+            [default]="grvSetup.TransferYears.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+          [disabled]="transferNextYearDisabled"
+            field="transferYears"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row" *ngIf="expandTransferNextYear">
+        <div class="col-6 d-flex flex-column">
+          <codx-label class="ms-6" fiedName="TransferToDay" [formModel]="formModel"></codx-label>
+          <codx-label
+          class="ms-6"
+            [name]="'TransferToDay'"
+            [default]="grvSetup.TransferToDay.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-3">
+          <codx-input
+          [disabled]="transferNextYearDisabled"
+            field="transferToDay"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+        <div class="col-3">
+            <codx-input
+          [disabled]="transferNextYearDisabled"
+              field="transferToMonth"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+      </div>
+
+      <div class="form-group row" *ngIf="expandTransferNextYear">
+        <div class="col-6 d-flex flex-column">
+          <codx-label class="ms-6" fiedName="MaxDayTransfer" [formModel]="formModel"></codx-label>
+          <codx-label
+          class="ms-6"
+            [name]="'MaxDayTransfer'"
+            [default]="grvSetup.MaxDayTransfer.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+          [disabled]="transferNextYearDisabled"
+            field="maxDayTransfer"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row" *ngIf="expandTransferNextYear">
+        <div class="col-6 d-flex flex-column">
+          <codx-label class="ms-6" fiedName="MaxALStandard" [formModel]="formModel"></codx-label>
+          <codx-label
+          class="ms-6"
+            [name]="'MaxALStandard'"
+            [default]="grvSetup.MaxALStandard.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+          [disabled]="transferNextYearDisabled"
+            field="maxALStandard"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+            [formModel]="formModel"
+            [name]="'lblQuyDinhTC'"
+            [default]="'Quy định tăng phép tiêu chuẩn theo thâm niên'"
+        >
+        </codx-label>
+    </div>
+
+    <div class="form-group row">
+        bo cai bang data 2 vao day
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="IncreaseSeniorityType" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'IncreaseSeniorityType'"
+            [default]="grvSetup.IncreaseSeniorityType.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="increaseSeniorityType"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+            <codx-label
+                fiedName="IsMonth"
+                [formModel]="formModel"
+            ></codx-label>
+    
+            <codx-label
+            [name]="'IsMonth'"
+            [default]="grvSetup.IsMonth.headerNote"
+            [formModel]="formModel"
+    ></codx-label>
+        </div>
+        <div class="col-6">
+            <codx-input
+                field="isMonth"
+                [formModel]="formModel"
+                [Group]="formGroup"
+                (valueChange)="ValueChangeIsMonth($event)"
+            ></codx-input>
+            <button
+            class="btn btn-icon ms-3"
+            (click)="onClickExpandIsMonth()"
+          >
+            <i class="icon-18"
+              [ngClass]="expandIsMonth ? 'icon-keyboard_arrow_down':'icon-keyboard_arrow_right'"
+            ></i>
+          </button>
+        </div>
+    </div>
+
+      <div class="form-group row" *ngIf="expandIsMonth">
+        <div class="col-6 d-flex flex-column">
+          <codx-label class="ms-6" fiedName="IsAdvanceMonth" [formModel]="formModel"></codx-label>
+          <codx-label
+          class="ms-6"
+            [name]="'IsAdvanceMonth'"
+            [default]="grvSetup.IsAdvanceMonth.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-3">
+          <codx-input
+          [disabled]="isMonthDisabled"
+            field="isAdvanceMonth"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+        <div class="col-3">
+            <codx-input
+            [disabled]="isMonthDisabled"
+              field="maxDayAdvanceMonth"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+      </div>
+
+      <div class="form-group row" *ngIf="expandIsMonth">
+        <div class="col-6 d-flex flex-column">
+          <codx-label class="ms-6" fiedName="AllocateSeniorityType" [formModel]="formModel"></codx-label>
+          <codx-label
+          class="ms-6"
+            [name]="'AllocateSeniorityType'"
+            [default]="grvSetup.AllocateSeniorityType.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="allocateSeniorityType"
+            [formModel]="formModel"
+            [disabled]="isMonthDisabled"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+</ng-template>
+
+<ng-template #applyObj> </ng-template>
+
+<ng-template #subtractObj> </ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-between">
+    <button
+    class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+    (click)="openFormUploadFile()"
+  >
+    <codx-label
+      name="lblAddFile"
+      default="Đính kèm file"
+      [formModel]="formModel"
+    ></codx-label>
+  </button>
+
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

@@ -52,7 +52,7 @@ export class CashPaymentsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
     text: 'Thêm phiếu chi',
   };
-  isRead:any = false;
+  isRead: any = false;
   headerText: any;
   moreFuncName: any;
   funcName: any;
@@ -77,7 +77,7 @@ export class CashPaymentsComponent extends UIComponent {
   baseCurr: any;
   cashbookName: any;
   reasonName: any;
-  loading:any = false;
+  loading: any = false;
   arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -125,18 +125,12 @@ export class CashPaymentsComponent extends UIComponent {
         if (m) this.moreFuncName = m.defaultName;
       }
     });
-    this.routerActive.queryParams.subscribe((params) => {
-      this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) {
-this.parent =res;
-          }
-        });
-      }
-    });
     this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
+    });
+
+    this.routerActive.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
     });
   }
   //#endregion
@@ -195,9 +189,16 @@ this.parent =res;
         this.className = 'CashReceiptsBusiness';
         break;
     }
-if(this.parent){
-  this.view.setRootNode(this.parent.customName);
-}
+    this.routerActive.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+      if (params?.parent) {
+        this.cache.functionList(params.parent).subscribe((res) => {
+          if (res) {
+            this.view.setRootNode(res?.customName);
+          }
+        });
+      }
+    });
     this.detectorRef.detectChanges();
   }
 
@@ -562,12 +563,17 @@ if(this.parent){
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
           this.api
-            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [data,'1'])
+            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [
+              data,
+              '1',
+            ])
             .subscribe((res: any) => {
               if (res) {
                 this.itemSelected = res;
                 this.loadDatadetail(this.itemSelected);
-                this.view.dataService.update(this.itemSelected).subscribe((res) => {});
+                this.view.dataService
+                  .update(this.itemSelected)
+                  .subscribe((res) => {});
                 this.detectorRef.detectChanges();
               }
             });
@@ -596,7 +602,10 @@ if(this.parent){
     this.api
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .subscribe((res) => {
-        this.journal = res[0];
+        if (res) {
+          this.journal = res[0];
+        }
+       
       });
   }
 
@@ -612,12 +621,13 @@ if(this.parent){
     }
   }
 
-  loadTotalSet(){
+  loadTotalSet() {
     this.totalbalAmt = 0;
     this.totalsettledAmt = 0;
     for (let index = 0; index < this.settledInvoices.length; index++) {
       this.totalbalAmt = this.totalbalAmt + this.settledInvoices[index].balAmt;
-      this.totalsettledAmt = this.totalsettledAmt + this.settledInvoices[index].settledAmt;
+      this.totalsettledAmt =
+        this.totalsettledAmt + this.settledInvoices[index].settledAmt;
     }
   }
 
@@ -640,29 +650,30 @@ if(this.parent){
       return false;
     }
   }
+
   created(e: any, ele: TabComponent) {
     this.changeTab(this.itemSelected.subType, ele);
   }
-  changeTab(e?: any, ele?: TabComponent){
+  changeTab(e?: any, ele?: TabComponent) {
     ele = this.tabObj;
     if (ele) {
       ele.hideTab(0, false);
-    switch (e) {
-      case '1':
-      case '3':
-      case '4':
-        ele.hideTab(1, true);
-        ele.hideTab(2, true);
-        break;
-      case '2':
-        ele.hideTab(1, false);
-        ele.hideTab(2, true);
-        break;
-      case '9':
-        ele.hideTab(1, false);
-        ele.hideTab(2, false);
-        break;
-    }
+      switch (e) {
+        case '1':
+        case '3':
+        case '4':
+          ele.hideTab(1, true);
+          ele.hideTab(2, true);
+          break;
+        case '2':
+          ele.hideTab(1, false);
+          ele.hideTab(2, true);
+          break;
+        case '9':
+          ele.hideTab(1, false);
+          ele.hideTab(2, false);
+          break;
+      }
     }
   }
   // checkRead(){
@@ -675,7 +686,7 @@ if(this.parent){
   //       this.isRead = false;
   //     }
   //   }
-      
+
   // }
   //#endregion
 }
