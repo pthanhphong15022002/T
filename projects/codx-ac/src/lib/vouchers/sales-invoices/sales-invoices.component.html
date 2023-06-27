@@ -129,172 +129,177 @@
       ></span>
     </div>
   </div>
-
-  <div class="d-flex align-items-center justify-content-between mt-2 mb-1">
-    <span class="fw-bold line-clamp line-clamp-1 fs-4">{{
-      master?.objectName
-    }}</span>
-    <codx-vll
-      [formModel]="view.formModel"
-      field="Status"
-      [value]="master?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-light badge-sm border-0 me-3"
-    >
-    </codx-vll>
-  </div>
 </ng-template>
 
 <ng-template #body>
-  <div class="d-flex align-items-center justify-content-between">
+  <div class="d-flex flex-column h-100">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <span class="fw-bold line-clamp line-clamp-1 fs-4">{{
+        master?.objectName
+      }}</span>
+      <codx-vll
+        [formModel]="view.formModel"
+        field="Status"
+        [value]="master?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm border-0 me-3"
+      >
+      </codx-vll>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex flex-wrap">
+        <div class="d-flex align-items-top me-5 mb-5px">
+          <codx-label
+            fiedName="invoiceNo"
+            [formModel]="view.formModel"
+            class="fw-bold label-colon"
+          ></codx-label>
+          <span
+            class="text-gray-600"
+            [innerHTML]="
+              master?.invoiceNo
+                | formatvalue : view.formModel : 'invoiceNo'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="d-flex align-items-top me-5 mb-5px">
+          <codx-label
+            fiedName="invoiceDate"
+            [formModel]="view.formModel"
+            class="fw-bold label-colon"
+          ></codx-label>
+          <span
+            [innerHTML]="
+              master.invoiceDate
+                | formatvalue : view.formModel : 'invoiceDate'
+                | async
+            "
+            class="text-gray-600"
+          ></span>
+        </div>
+        <div class="d-flex align-items-top me-5 mb-5px">
+          <codx-label
+            fiedName="invoiceDueDate"
+            [formModel]="view.formModel"
+            class="fw-bold label-colon"
+          ></codx-label>
+          <span
+            [innerHTML]="
+              master.invoiceDueDate
+                | formatvalue : view.formModel : 'invoiceDueDate'
+                | async
+            "
+            class="text-gray-600"
+          ></span>
+        </div>
+      </div>
+
+      <span class="badge badge-pill badge-primary me-3">
+        <span class="fw-bold fs-6">{{
+          master.totalAmt | currency : master?.currencyID : "code"
+        }}</span>
+      </span>
+    </div>
+
     <div class="d-flex flex-wrap">
       <div class="d-flex align-items-top me-5 mb-5px">
         <codx-label
-          fiedName="invoiceNo"
+          fiedName="pmtMethodID"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
         ></codx-label>
         <span
           class="text-gray-600"
           [innerHTML]="
-            master?.invoiceNo
-              | formatvalue : view.formModel : 'invoiceNo'
+            master?.pmtMethodID
+              | formatvalue : view.formModel : 'pmtMethodID'
               | async
           "
         ></span>
       </div>
       <div class="d-flex align-items-top me-5 mb-5px">
         <codx-label
-          fiedName="invoiceDate"
+          fiedName="salespersonID"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
         ></codx-label>
         <span
           [innerHTML]="
-            master.invoiceDate
-              | formatvalue : view.formModel : 'invoiceDate'
+            master.salespersonID
+              | formatvalue : view.formModel : 'salespersonID'
               | async
           "
           class="text-gray-600"
         ></span>
       </div>
-      <div class="d-flex align-items-top me-5 mb-5px">
+    </div>
+
+    <div #memoDiv class="me-5 mb-5px" [ngClass]="!expanding ? 'd-flex' : ''">
+      <span #memoContent [class]="!expanding ? 'text-truncate' : ''">
         <codx-label
-          fiedName="invoiceDueDate"
+          fiedName="memo"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
         ></codx-label>
         <span
           [innerHTML]="
-            master.invoiceDueDate
-              | formatvalue : view.formModel : 'invoiceDueDate'
-              | async
+            master?.memo | formatvalue : view.formModel : 'memo' | async
           "
           class="text-gray-600"
         ></span>
-      </div>
+      </span>
+      <codx-label
+        #showMoreBtn
+        *ngIf="!expanding"
+        fieldName="lblMore"
+        [formModel]="view.formModel"
+        default="&nbsp;Xem thêm"
+        class="text-primary"
+        style="white-space: nowrap"
+        [ngClass]="isMoreBtnHidden ? 'd-none' : ''"
+        role="button"
+        (click)="expanding = !expanding"
+      ></codx-label>
+      <codx-label
+        *ngIf="expanding"
+        fieldName="lblLess"
+        [formModel]="view.formModel"
+        default="&nbsp;Thu lại"
+        class="text-primary"
+        role="button"
+        (click)="onClickShowLess()"
+      ></codx-label>
     </div>
 
-    <span class="badge badge-pill badge-primary me-3">
-      <span class="fw-bold fs-6">{{
-        master.totalAmt | currency : master?.currencyID : "code"
-      }}</span>
-    </span>
-  </div>
-
-  <div class="d-flex flex-wrap">
-    <div class="d-flex align-items-top me-5 mb-5px">
-      <codx-label
-        fiedName="pmtMethodID"
-        [formModel]="view.formModel"
-        class="fw-bold label-colon"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          master?.pmtMethodID
-            | formatvalue : view.formModel : 'pmtMethodID'
-            | async
-        "
-      ></span>
-    </div>
-    <div class="d-flex align-items-top me-5 mb-5px">
-      <codx-label
-        fiedName="salespersonID"
-        [formModel]="view.formModel"
-        class="fw-bold label-colon"
-      ></codx-label>
-      <span
-        [innerHTML]="
-          master.salespersonID
-            | formatvalue : view.formModel : 'salespersonID'
-            | async
-        "
-        class="text-gray-600"
-      ></span>
+    <div class="mt-3 flex-grow-1" style="height: 0">
+      <ejs-tab heightAdjustMode="Fill">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex me-2">
+                <span class="icon-format_list_numbered icon-18 me-2"></span>
+                <codx-label
+                  class="fw-bold"
+                  fiedName="lblDetail"
+                  [formModel]="view.formModel"
+                  default="Thông tin chi tiết"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <lib-table-line-detail-static
+                [salesInvoicesLines]="lines"
+                [loading]="loading"
+              ></lib-table-line-detail-static>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
     </div>
   </div>
-
-  <div #memoDiv class="me-5 mb-5px" [ngClass]="!expanding ? 'd-flex' : ''">
-    <span #memoContent [class]="!expanding ? 'text-truncate' : ''">
-      <codx-label
-        fiedName="memo"
-        [formModel]="view.formModel"
-        class="fw-bold label-colon"
-      ></codx-label>
-      <span
-        [innerHTML]="
-          master?.memo | formatvalue : view.formModel : 'memo' | async
-        "
-        class="text-gray-600"
-      ></span>
-    </span>
-    <codx-label
-      #showMoreBtn
-      *ngIf="!expanding"
-      fieldName="lblMore"
-      [formModel]="view.formModel"
-      default="&nbsp;More"
-      class="text-primary"
-      [ngClass]="isMoreBtnHidden ? 'd-none' : ''"
-      role="button"
-      (click)="expanding = !expanding"
-    ></codx-label>
-    <codx-label
-      *ngIf="expanding"
-      fieldName="lblLess"
-      [formModel]="view.formModel"
-      default="&nbsp;Less"
-      class="text-primary"
-      role="button"
-      (click)="onClickShowLess()"
-    ></codx-label>
-  </div>
-
-  <ejs-tab class="mt-5">
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex me-2">
-            <span class="icon-format_list_numbered icon-18 me-2"></span>
-            <codx-label
-              class="fw-bold"
-              fiedName="lblDetail"
-              [formModel]="view.formModel"
-              default="Thông tin chi tiết"
-            ></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <lib-table-line-detail-static
-            [salesInvoicesLines]="lines"
-            [loading]="loading"
-          ></lib-table-line-detail-static>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
 </ng-template>
 
 <ng-template #contentFooter>
