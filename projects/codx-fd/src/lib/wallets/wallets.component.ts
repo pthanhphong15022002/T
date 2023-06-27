@@ -518,8 +518,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
     this.loadList = true;
     if (this.listview) {
       this.listView.dataService
-        .setPredicate(this.options.predicate, [this.options.dataValue])
-        .subscribe();
+        .setPredicate(this.options.predicate, [this.options.dataValue]);
     }
     this.LoadData();
   }

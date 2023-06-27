@@ -337,50 +337,50 @@
                     <div *ngIf="(item.diM3 != null && item.diM3 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" fiedName="DIM3"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" fiedName="lblDIM3"
+                          default="Mục phí">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM3}}</span>
                         &nbsp;-&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          :&nbsp;{{item.diM3Name}}
+                          :&nbsp;{{item.costItemName}}
                         </span>
                       </ng-container>
                     </div>
                     <div *ngIf="(item.diM2 != null && item.diM2 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="DIM2"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2"
+                          default="TTCP">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM2}}</span>
                         &nbsp;-&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.diM2Name}}
+                          {{item.costCenterName}}
                         </span>
                       </ng-container>
                     </div>
                     <div *ngIf="(item.diM1 != null && item.diM1 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="DIM1"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblDIM1"
+                          default="Phòng ban">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM1}}</span>
                         &nbsp;-&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.diM1Name}}
+                          {{item.departmentName}}
                         </span>
                       </ng-container>
                     </div>
                     <div *ngIf="(item.projectID != null && item.projectID != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="ProjectID"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblProjectID"
+                          default="Dự án">
                         </codx-label>
                         :&nbsp;
                         <span style="white-space: nowrap" class="fs-7 text-gray-700">{{item.projectID}}</span>
@@ -458,50 +458,50 @@
                     <div *ngIf="(item.diM3 != null && item.diM3 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="DIM3"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" fiedName="lblDIM3"
+                          default="Mục phí">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM3}}</span>
                         &nbsp;-&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.diM3Name}}
+                          :&nbsp;{{item.costItemName}}
                         </span>
                       </ng-container>
                     </div>
                     <div *ngIf="(item.diM2 != null && item.diM2 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="DIM2"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2"
+                          default="TTCP">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM2}}</span>
                         &nbsp;-&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.diM2Name}}
+                          {{item.costCenterName}}
                         </span>
                       </ng-container>
                     </div>
                     <div *ngIf="(item.diM1 != null && item.diM1 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="DIM1"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblDIM1"
+                          default="Phòng ban">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM1}}</span>
                         &nbsp;-&nbsp;
                         <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.diM1Name}}
+                          {{item.departmentName}}
                         </span>
                       </ng-container>
                     </div>
                     <div *ngIf="(item.projectID != null && item.projectID != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="ProjectID"
-                          [formModel]="fmCashPaymentsLines">
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblProjectID"
+                          default="Dự án">
                         </codx-label>
                         :&nbsp;
                         <span style="white-space: nowrap" class="fs-7 text-gray-700">{{item.projectID}}</span>

@@ -83,8 +83,8 @@ export class CodxListContactsComponent implements OnInit {
         if (changes['objectID']?.currentValue == this.id) return;
         this.id = changes['objectID']?.currentValue;
         this.getListContacts();
-      }else{
-        if(!this.loaded) this.loaded = true;
+      } else {
+        if (!this.loaded) this.loaded = true;
       }
     }
   }
@@ -114,14 +114,15 @@ export class CodxListContactsComponent implements OnInit {
         this.cmSv.contactSubject.next(null);
       }
     });
-    if(this.objectType == "4"){
-      this.cache.gridViewSetup('CMContacts', 'grvCMContacts').subscribe(res =>{
-        if(res){
-          this.placeholder = res?.Role?.description ?? this.placeholder;
-        }
-      })
+    if (this.objectType == '4') {
+      this.cache
+        .gridViewSetup('CMContacts', 'grvCMContacts')
+        .subscribe((res) => {
+          if (res) {
+            this.placeholder = res?.Role?.description ?? this.placeholder;
+          }
+        });
     }
-
   }
 
   loadListContact(lstContact) {
@@ -195,7 +196,7 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   changeContacts(item) {
-    this.currentRecID = item.recID;
+    this.currentRecID = item?.recID;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -249,10 +250,7 @@ export class CodxListContactsComponent implements OnInit {
               res.disabled = true;
             break;
           case 'SYS02':
-            if (
-              this.objectType == '1' ||
-              this.objectType == '3'
-            )
+            if (this.objectType == '1' || this.objectType == '3')
               res.disabled = true;
             break;
           case 'CM0102_1':
@@ -386,7 +384,7 @@ export class CodxListContactsComponent implements OnInit {
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
-              if(this.objectType == '4'){
+              if (this.objectType == '4') {
                 this.placeholder = JSON.parse(JSON.stringify(this.placeholder));
               }
               this.changeContacts(this.listContacts[index]);
@@ -403,8 +401,8 @@ export class CodxListContactsComponent implements OnInit {
       index = -1;
       return;
     }
-    index = this.listContacts.findIndex(x => x.recID == recID);
-    if(index != -1){
+    index = this.listContacts.findIndex((x) => x.recID == recID);
+    if (index != -1) {
       this.listContacts[index].role = event?.trim();
       this.lstContactEmit.emit(this.listContacts);
     }
@@ -440,7 +438,8 @@ export class CodxListContactsComponent implements OnInit {
                 this.listContacts = this.cmSv.bringDefaultContactToFront(
                   this.cmSv.loadList(data, this.listContacts, 'delete')
                 );
-                this.changeContacts(this.listContacts[0]);
+                if (this.listContacts != null && this.listContacts.length > 0)
+                  this.changeContacts(this.listContacts[0]);
                 this.contactEvent.emit(data);
                 this.lstContactEmit.emit(this.listContacts);
                 this.notiService.notifyCode('SYS008');
@@ -455,7 +454,8 @@ export class CodxListContactsComponent implements OnInit {
               this.contactEvent.emit({ data: data, action: 'delete' });
               this.listContacts.splice(index, 1);
               lstDelete.push(data);
-              this.changeContacts(this.listContacts[0]);
+              if (this.listContacts != null && this.listContacts.length > 0)
+                this.changeContacts(this.listContacts[0]);
               this.lstContactEmit.emit(this.listContacts);
 
               this.lstContactDeleteEmit.emit(lstDelete);
