@@ -16,4 +16,8 @@
 
 codx-cmcustomer-detail .codx-detail-main{
 	padding-bottom: 0!important;
+} 
+.cm-scroll{
+ 	height: calc(100vh - 265px);
+ 	overflow: auto;
 }
