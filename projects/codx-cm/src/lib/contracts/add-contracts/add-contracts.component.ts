@@ -153,7 +153,7 @@ export class AddContractsComponent implements OnInit {
     this.listTypeContract = contractService.listTypeContract;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
-        this.headerTest = this.headerTest + ' ' + f?.defaultName;
+        this.headerTest = this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
       }
     });
   }
@@ -334,6 +334,7 @@ export class AddContractsComponent implements OnInit {
       (quotationLine) => quotationLine.recID == e?.quotationLineIdNew
     );
     if (quotationLine) {
+      quotationLine.transID = null;
       quotationLine.contractID = this.contracts?.recID;
       this.listQLineOfContractAdd.push(quotationLine);
     }
@@ -354,6 +355,8 @@ export class AddContractsComponent implements OnInit {
       });
     }
     this.contracts.contractAmt = totals;
+    this.contracts.remainAmt = Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt);
+
     this.quotations['totalSalesAmt'] = totalSales;
     this.quotations['totalAmt'] = totals;
     this.quotations['totalTaxAmt'] = totalVAT;

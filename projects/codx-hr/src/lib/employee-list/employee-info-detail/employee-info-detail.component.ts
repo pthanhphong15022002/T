@@ -578,6 +578,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   startDateBusinessTravelFilterValue;
   endDateBusinessTravelFilterValue;
   filterBusinessTravelPredicates: string;
+  LoadedEInfo = false;
   //#endregion
 
 
@@ -657,9 +658,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         // Load full thong tin employee
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
           if(res){
+            console.log('info nv',  res[0]);
             this.infoPersonal = res[0];
             this.infoPersonal.PositionName = res[1]
             this.lstOrg = res[2]
+            this.LoadedEInfo = true;
+            this.df.detectChanges();
           }
         })
 
@@ -2138,6 +2142,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
                       .subscribe((dataEBaSlary) => {
                         this.crrEBSalary = dataEBaSlary;
+                        this.df.detectChanges();
                       });
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -3775,6 +3780,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.pageNum = newPageNum;
     }
     if (this.crrIndex > -1) {
+      this.LoadedEInfo = false;
       let urlView = '/hr/employeedetail/HRT03b';
       this.codxService.replaceNavigate(
         urlView,

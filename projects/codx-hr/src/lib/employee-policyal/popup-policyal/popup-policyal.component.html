@@ -202,6 +202,7 @@
             field="closeToDay"
             [formModel]="formModel"
             [Group]="formGroup"
+            (valueChange)="onChangeSelectCloseToDay($event)"
           ></codx-input>
         </div>
         <div class="col-3">
@@ -209,6 +210,8 @@
               field="closeToMonth"
               [formModel]="formModel"
               [Group]="formGroup"
+            (valueChange)="onChangeSelectCloseToMonth($event)"
+
             ></codx-input>
           </div>
       </div>
@@ -406,7 +409,7 @@
         </div>
         <div class="col-6">
           <codx-input
-          [diasbled]="transferNextYearDisabled"
+          [disabled]="transferNextYearDisabled"
             field="transferYears"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -426,7 +429,7 @@
         </div>
         <div class="col-3">
           <codx-input
-          [diasbled]="transferNextYearDisabled"
+          [disabled]="transferNextYearDisabled"
             field="transferToDay"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -434,7 +437,7 @@
         </div>
         <div class="col-3">
             <codx-input
-          [diasbled]="transferNextYearDisabled"
+          [disabled]="transferNextYearDisabled"
               field="transferToMonth"
               [formModel]="formModel"
               [Group]="formGroup"
@@ -454,7 +457,7 @@
         </div>
         <div class="col-6">
           <codx-input
-          [diasbled]="transferNextYearDisabled"
+          [disabled]="transferNextYearDisabled"
             field="maxDayTransfer"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -474,7 +477,7 @@
         </div>
         <div class="col-6">
           <codx-input
-          [diasbled]="transferNextYearDisabled"
+          [disabled]="transferNextYearDisabled"
             field="maxALStandard"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -556,7 +559,7 @@
         </div>
         <div class="col-3">
           <codx-input
-          [diasbled]="isMonthDisabled"
+          [disabled]="isMonthDisabled"
             field="isAdvanceMonth"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -564,7 +567,7 @@
         </div>
         <div class="col-3">
             <codx-input
-            [diasbled]="isMonthDisabled"
+            [disabled]="isMonthDisabled"
               field="maxDayAdvanceMonth"
               [formModel]="formModel"
               [Group]="formGroup"
@@ -586,7 +589,7 @@
           <codx-input
             field="allocateSeniorityType"
             [formModel]="formModel"
-            [diasbled]="isMonthDisabled"
+            [disabled]="isMonthDisabled"
             [Group]="formGroup"
           ></codx-input>
         </div>

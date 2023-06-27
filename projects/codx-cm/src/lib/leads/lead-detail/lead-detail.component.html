@@ -57,25 +57,19 @@
           </div>
           <div class="ms-5 d-flex justify-content-between">
             <div class="d-flex flex-column">
-              <div class="d-flex flex-row">
-                <div class="d-flex align-items-top justify-content-end fs-3">
-                </div>
-                <div
-                  class="d-flex align-items-top justify-content-end ps-10 fs-3"
-                >
-                <span
-                class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
-              ></span>
-              <span
-                class="fw-bold line-clamp-menu"
-                [ngbTooltip]="gridViewSetup['AnnualRevenue']?.headerText"
-                #annualRevenue
-                [innerHTML]="
-                  dataSelected?.annualRevenue
-                    | formatvalue : formModel : 'annualRevenue' : annualRevenue
-                    | async
-                "
-              ></span>
+              <div class="d-flex flex-row mb-1">
+                <div class="d-flex align-items-center justify-content-end ps-6">
+                  <span class="icon-monetization_on text-warning icon-18 me-1"></span>
+                  <span
+                    class="fw-bold line-clamp-menu fs-5"
+                    [ngbTooltip]="gridViewSetup['AnnualRevenue']?.headerText"
+                    #annualRevenue
+                    [innerHTML]="
+                      dataSelected?.annualRevenue
+                        | formatvalue : formModel : 'annualRevenue' : annualRevenue
+                        | async
+                    "
+                  ></span>
                 </div>
               </div>
               <div class="d-flex justify-content-end">
@@ -206,7 +200,7 @@
                           ? colorReasonFail?.color
                           : dataSelected?.steps['backgroundColor']
                     }"
-                    class="me-2 badge badge-sm d-flex align-items-center"
+                    class="badge badge-sm d-flex align-items-center"
                   >
                     <span
                       [ngClass]="dataSelected?.steps['icon']"

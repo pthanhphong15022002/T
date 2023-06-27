@@ -112,7 +112,7 @@ export class DealsComponent
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
-  listHeader: any;
+  listHeader: any = [];
   colorReasonSuccess: any;
   colorReasonFail: any;
   processID: any;
@@ -1017,7 +1017,7 @@ export class DealsComponent
   }
 
   getPropertiesHeader(data, type) {
-    if (this.listHeader?.length == 0) {
+    if (!this.listHeader || this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
