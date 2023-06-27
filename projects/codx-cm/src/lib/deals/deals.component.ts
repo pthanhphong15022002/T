@@ -1472,6 +1472,10 @@ export class DealsComponent
         if (!this.processIDKanban) this.processIDKanban = this.processIDDefault;
       } else this.processIDKanban = this.processIDDefault;
     }
+    // load kanban
+    if (this.viewCrr == 6 && this.processIDKanban != this.crrProcessID) {
+      this.loadKanban();
+    }
   }
 
   loadKanban() {
@@ -1496,14 +1500,14 @@ export class DealsComponent
           kanban.kanbanSetting?.swimlaneSettings,
           false
         );
-        //kanban.refresh();
+        kanban.refresh();
         this.kanban = kanban;
-        // this.kanban.loaded = true;
-        if (this.kanban) this.kanban.refresh();
+        // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
   }
   onLoading(e) {
+    if (this.funCrr != this.funcID) return;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
