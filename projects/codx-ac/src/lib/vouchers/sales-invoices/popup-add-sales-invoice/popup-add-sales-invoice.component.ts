@@ -27,6 +27,7 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -57,7 +58,7 @@ export class PopupAddSalesInvoiceComponent
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
   expanded: boolean = false;
-  originVisibleCols:any=[];
+  originVisibleCols: any[] = [];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -250,7 +251,9 @@ export class PopupAddSalesInvoiceComponent
         sumRowHeight -
         weirdHeight;
     }, 500);
+
     this.originVisibleCols = this.grid.visibleColumns.slice();
+
     this.journalStateSubject.subscribe((loaded) => {
       if (!loaded) {
         return;
@@ -296,6 +299,7 @@ export class PopupAddSalesInvoiceComponent
 
   onCellChange(e): void {
     console.log('onCellChange', e);
+
     if (e.field === 'itemID') {
       for (const v of this.grid.visibleColumns) {
         if (
@@ -312,6 +316,7 @@ export class PopupAddSalesInvoiceComponent
     const postFields: string[] = [
       'itemID',
       'costPrice',
+      'salesPrice',
       'quantity',
       'netAmt',
       'vatid',
@@ -379,25 +384,25 @@ export class PopupAddSalesInvoiceComponent
 
   onAddNew(e): void {
     console.log('onAddNew', e);
-    if(e.type=='closeEdit'){
+
+    if (e.type == 'closeEdit') {
       this.grid.visibleColumns = this.originVisibleCols.slice();
     }
-    this.detailService
-      .save(null, null, null, null, false)
-      .subscribe((res) => {
-        this.grid.visibleColumns = this.originVisibleCols.slice();
-      });
+
+    this.detailService.save(null, null, null, null, false).subscribe(() => {
+      this.grid.visibleColumns = this.originVisibleCols.slice();
+    });
   }
 
   onEdit(e): void {
     console.log('onEdit', e);
 
     this.detailService.updateDatas.set(e.recID, e);
-    this.detailService
-      .save(null, null, null, null, false)
-      .subscribe((res) =>{
-        this.grid.visibleColumns = this.originVisibleCols.slice()
-      });
+    this.detailService.save(null, null, null, null, false).subscribe(() => {
+      this.grid.visibleColumns = JSON.parse(
+        JSON.stringify(this.originVisibleCols)
+      );
+    });
   }
 
   onFocusOut(e): void {
