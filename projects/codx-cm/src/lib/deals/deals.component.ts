@@ -1106,10 +1106,7 @@ export class DealsComponent
         option.Width = '800px';
         option.zIndex = 1001;
         var formMD = new FormModel();
-        // formMD.funcID = funcIDApplyFor;
-        // formMD.entityName = fun.entityName;
-        // formMD.formName = fun.formName;
-        // formMD.gridViewName = fun.gridViewName;
+
         var obj = {
           action: 'edit',
           formMD: formMD,
@@ -1157,10 +1154,6 @@ export class DealsComponent
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
       this.openFormDeal(formMD, option, 'copy');
@@ -1482,6 +1475,7 @@ export class DealsComponent
   }
 
   loadKanban() {
+    if (!this.kanban) this.kanban = (this.view?.currentView as any)?.kanban;
     let kanban = (this.view?.currentView as any)?.kanban;
     let settingKanban = kanban.kanbanSetting;
     settingKanban.isChangeColumn = true;
@@ -1502,10 +1496,10 @@ export class DealsComponent
           kanban.kanbanSetting?.swimlaneSettings,
           false
         );
-        kanban.refresh();
+        //kanban.refresh();
         this.kanban = kanban;
         // this.kanban.loaded = true;
-        this.kanban.refresh();
+        if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
   }
@@ -1551,15 +1545,9 @@ export class DealsComponent
           // if (viewOut)
           // this.view.load();
         }
+        if ((this.view?.currentView as any)?.kanban) this.loadKanban();
       }
     });
-    // this.view.views.forEach((x) => {
-    //   if (x.type == 6) {
-    //     x.request.dataObj = this.dataObj;
-    //     x.request2.dataObj = this.dataObj;
-    //   }
-    // });
-    this.loadKanban();
   }
   //end
 }
