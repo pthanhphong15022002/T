@@ -190,6 +190,12 @@ export class PopupAddPaymentHistoryComponent {
     if (paymentFind) {
       paymentFind.paidAmt += Number(this.paymentHistory.paidAmt || 0);
       paymentFind.remainAmt = this.payment?.remainAmt
+      let indexPayEdit = this.listPaymentEdit?.findIndex(payment => payment.recID == paymentFind?.recID);
+      if(indexPayEdit >= 0){
+        this.listPaymentEdit?.splice(indexPayEdit,1,paymentFind);
+      }else{
+        this.listPaymentEdit?.push(paymentFind);
+      }
     }
     if (paymentAddFind) {
       paymentAddFind.paidAmt += Number(this.paymentHistory.paidAmt || 0);

@@ -704,6 +704,7 @@ addPayHistory(payment) {
 
 viewPayHistory(payment, width: number, height: number) {
   let dataInput = {
+    isSave:false,
     payment,
     listPaymentHistory: this.listPaymentHistory,
     listPaymentAdd: this.listPaymentAdd,
