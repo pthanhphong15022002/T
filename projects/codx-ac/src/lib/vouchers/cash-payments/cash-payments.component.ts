@@ -632,6 +632,18 @@ export class CashPaymentsComponent extends UIComponent {
     return styles;
   }
 
+  createLine(item) {
+    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
+    let index = data
+      .filter((x) => x.crediting == item.crediting)
+      .findIndex((x) => x.recID == item.recID);
+    if (index == data.filter((x) => x.crediting == item.crediting).length - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   created(e: any, ele: TabComponent) {
     this.changeTab(this.itemSelected.subType, ele);
   }
