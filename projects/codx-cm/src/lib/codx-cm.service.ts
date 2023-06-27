@@ -1111,4 +1111,22 @@ export class CodxCmService {
       recID
     );
   }
+
+  getProcessDefault(applyFor) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessDefaultAsync',
+      applyFor
+    );
+  }
+
+  getProcessByBusinessLineID(bussinessID) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetProcessByBussinessIDAsync',
+      bussinessID
+    );
+  }
 }
