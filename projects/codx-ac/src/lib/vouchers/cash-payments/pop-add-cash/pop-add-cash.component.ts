@@ -222,8 +222,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       (e: KeyboardEvent) => {
         if (e.key == 'Tab') {
           if (document.activeElement.className == 'e-tab-wrap') {
-            // var element = document.getElementById('btnadd');
-            // element.focus();
+            var element = document.getElementById('btnadd');
+            element.focus();
           }
         }
       }
