@@ -78,7 +78,6 @@
             [formModel]="formModelDeals"
             field="dealName"
             [crrValue]="deal?.dealName"
-            [refValue]="gridViewSetupDeal?.DealName?.referedValue"
             [placeholder]="gridViewSetupDeal?.DealName?.description"
             (valueChange)="valueChange($event)"
           >
@@ -491,7 +490,7 @@
   </div>
 </ng-template>
 <ng-template #addCustomer>
-  <ng-container *ngIf="formModelCustomer && gridViewSetupCustomer">
+  <ng-container *ngIf="formModelCustomer">
     <div class="mb-2">
       <div class="mt-6">
         <codx-label
@@ -686,7 +685,7 @@
             [crrValue]="customer?.headcounts"
             [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.Headcounts?.description"
-            [refValue]="gridViewSetupCustomer?.Headcounts?.referedValue ?? 'CRM005'"
+            [refValue]="gridViewSetupCustomer?.Headcounts?.referedValue"
             (valueChange)="valueChangeCustomer($event)"
             field="headcounts"
           >

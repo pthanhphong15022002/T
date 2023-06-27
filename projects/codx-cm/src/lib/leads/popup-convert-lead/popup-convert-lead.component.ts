@@ -102,6 +102,7 @@ export class PopupConvertLeadComponent implements OnInit {
   businessLine: any;
   dateMax: Date;
   dateMessage: string;
+  gridViewSetup: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -119,6 +120,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.nameAvt = this.lead?.leadName;
     this.modifyOnAvt = this.lead?.modifiedOn;
     this.entityName = this.dialog.formModel?.entityName;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
     this.deal.processID = null;
     this.promiseAll();
   }
@@ -598,11 +600,13 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customerNewOld = this.customerID;
         this.customer.recID = this.customerNewOld;
       }
-      this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
-      this.gridViewSetupCustomer = await firstValueFrom(
-        this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
-      );
-      this.customer.headcounts = this.lead?.headcounts;
+      setTimeout(async () => {
+        this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+        this.gridViewSetupCustomer = await firstValueFrom(
+          this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+        );
+        this.customer.headcounts = this.lead?.headcounts;
+      }, 0);
 
       this.countAddNew++;
 
