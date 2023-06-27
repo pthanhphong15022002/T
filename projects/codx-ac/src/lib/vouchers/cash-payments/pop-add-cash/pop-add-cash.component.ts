@@ -222,8 +222,18 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       (e: KeyboardEvent) => {
         if (e.key == 'Tab') {
           if (document.activeElement.className == 'e-tab-wrap') {
-            var element = document.getElementById('btnadd');
-            element.focus();
+            switch(this.cashpayment.subType){
+              case '1':
+              case '3':
+              case '4':
+                var element = document.getElementById('btnadd');
+                element.focus();
+                break;
+              case '2':
+                var element = document.getElementById('btnset');
+                element.focus();
+                break;
+            }
           }
         }
       }
@@ -841,32 +851,24 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  eventAction(e: any) {
+  autoAddRow(e: any) {
     if (!this.loadingform || !this.loading) {
       switch (e.type) {
         case 'autoAdd':
           this.addRow('1');
-          // switch (this.cashpayment.subType) {
-          //   case '1':
-          //   case '3':
-          //   case '4':
-          //     this.addRow('1');
-          //     break;
-          //   case '2':
-          //     this.settlement(0);
-          //     break;
-          //   case '9':
-          //     if (document.getElementById('gridcash') != null) {
-                
-          //     }
-          //     if (document.getElementById('gridset') != null) {
-          //       this.settlement(0);
-          //     }
-          //     break;
-          // }
           break;
         case 'endEdit':
           this.addRow('1');
+          break;
+      }
+    }
+    //this.addRow();
+  }
+  autoAddRowSet(e: any) {
+    if (!this.loadingform || !this.loading) {
+      switch (e.type) {
+        case 'autoAdd':
+          this.settlement(0)
           break;
       }
     }
