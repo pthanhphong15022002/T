@@ -172,6 +172,10 @@ export class PopupAddPaymentComponent {
     if (this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)) {
       return
     }
+    if (this.checkDate < 0) {
+      this.notiService.notifyCode('CM017',0,[this.view?.scheduleDate]);
+      return;
+    }
 
     if (this.action == 'add' || this.action == 'copy') {
       this.addPayment(false);
