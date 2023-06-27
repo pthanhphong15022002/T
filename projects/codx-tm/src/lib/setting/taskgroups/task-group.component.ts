@@ -335,13 +335,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
         break;
     }
   }
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
+
   ngAfterViewInit(): void {
     this.view.dataService.methodSave = 'AddTaskGroupsAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync';
@@ -408,6 +402,8 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   }
 
   add() {
+    if (!this.view.dataService.service)
+      this.view.dataService.service = this.view.service; // bùa cứng
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
