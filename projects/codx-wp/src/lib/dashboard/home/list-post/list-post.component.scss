@@ -350,6 +350,10 @@ ejs-listview .e-ul>li {
 // .WP_News-images>codx-img>div>img {
 //     width: 100% !important;
 // }
+
+.WP_News-images{
+    overflow: hidden;
+}
 .news-image{
     width: 100% !important;
 }

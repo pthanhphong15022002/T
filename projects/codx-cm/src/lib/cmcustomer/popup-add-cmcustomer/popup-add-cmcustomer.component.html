@@ -781,11 +781,21 @@
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>
     <codx-input
+      type="combobox"
+      [crrValue]="data?.industries"
+      [formModel]="form.formModel"
+      [placeholder]="gridViewSetup?.Industries?.description"
+      [refValue]="gridViewSetup?.Industries?.referedValue"
+      (valueChange)="valueChangeIndustries($event)"
+      field="industries"
+    >
+    </codx-input>
+    <!-- <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="industries"
     >
-    </codx-input>
+    </codx-input> -->
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Owner"> </codx-label>

@@ -774,8 +774,7 @@ export class CodxAsideCustomComponent implements OnInit, OnDestroy, OnChanges {
     this.codxService.activeViews?.viewChange(viewModel);
     if (this.idSubCrr != data.recID) {
       (this.codxService.activeViews?.dataService as CRUDService)
-        .setPredicates(['ProcessID==@0'], [data.recID])
-        .subscribe();
+        .setPredicates(['ProcessID==@0'], [data.recID]);
     }
 
     //kaban

@@ -1,0 +1,8 @@
+:host ::ng-deep .codx-detail-main {
+  display: flex;
+  flex-direction: column;
+
+  .codx-detail-body {
+    flex: 1;
+  }
+}

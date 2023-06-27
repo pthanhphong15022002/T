@@ -11,7 +11,7 @@
       (clickMF)="clickMF($event, dataSelected)"
     >
       <ng-template #header let-data>
-        <div class="d-flex align-items-center justify-content-between mb-1">
+        <div class="d-flex align-items-center justify-content-between mb-3">
           <div *ngIf="funcID == 'CM0101'">
             <div class="d-flex align-items-center mb-1">
               <span
@@ -47,15 +47,15 @@
           </div>
         </div>
         <div class="container_detail">
-          <div class="d-flex w-100 mb-1 mt-n5">
-            <div class="me-4">
+          <div class="d-flex w-100 cm-scroll-top">
+            <div class="me-3">
               <codx-img
                 [objectId]="dataSelected.recID"
                 [objectName]="getNameCrm(dataSelected)"
                 [referType]="'avt'"
                 [imgOn]="dataSelected?.modifiedOn"
                 [objectType]="entityName"
-                [width]="35"
+                [width]="30"
               >
               </codx-img>
             </div>
@@ -63,7 +63,7 @@
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
                   <div
-                    class="fw-bold fs-5-sm text-dark line-clamp line-clamp-1 mb-1"
+                    class="fw-bold fs-5-sm text-dark line-clamp line-clamp-1"
                   >
                     {{
                       funcID == "CM0101"
@@ -90,7 +90,7 @@
                             ? 'icon-phone_android text-primary'
                             : 'icon-phonelink_erase'
                         "
-                        class="icon-16 me-2 text-gray-700"
+                        class="icon-14 me-2 text-gray-700"
                         ><ng-template #popupAllowCall>
                           <codx-label
                             name="lblAllowCall"
@@ -121,7 +121,7 @@
                             ? 'icon-email text-primary'
                             : 'icon-print_disabled'
                         "
-                        class="icon-16 me-2 text-gray-700"
+                        class="icon-14 me-2 text-gray-700"
                         ><ng-template #popupAllowEmail>
                           <codx-label
                             name="lblAllowEmail"
@@ -148,7 +148,7 @@
                   >
                     <span
                       [ngbTooltip]="popupAddress"
-                      class="icon-location_on icon-16 me-2 text-gray-600"
+                      class="icon-location_on icon-16 me-2 text-gray-600 fs-7"
                       ><ng-template #popupAddress>
                         <codx-label
                           fiedName="Address"
@@ -194,7 +194,7 @@
               </div>
             </div>
           </div>
-          
+
         </div>
       </ng-template>
       <ng-template #body let-data>

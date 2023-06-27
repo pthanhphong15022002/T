@@ -223,7 +223,7 @@ export class DynamicProcessComponent
   }
 
   searchDynamicProcess($event) {
-    this.view.dataService.search($event).subscribe();
+    this.view.dataService.search($event);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -1035,8 +1035,7 @@ export class DynamicProcessComponent
     if (predicates) predicates = '( ' + predicates + ' )';
 
     (this.view.dataService as CRUDService)
-      .setPredicates([predicates], [dataValueFilter.join(';')])
-      .subscribe();
+      .setPredicates([predicates], [dataValueFilter.join(';')]);
   }
 
   //setting trình kí
