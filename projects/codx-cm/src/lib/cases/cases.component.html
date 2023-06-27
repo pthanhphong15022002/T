@@ -17,7 +17,8 @@
   [selectedFirst]="true"
   (selectedChange)="selectedChange($event)"
   (onActions)="onActions($event)"
-  (searchChanged)="searchChanged($event)"
+  (onLoading)="onLoading()"
+  (viewChanged)="changeView($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
 

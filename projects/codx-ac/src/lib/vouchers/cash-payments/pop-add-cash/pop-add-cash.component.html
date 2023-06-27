@@ -300,15 +300,13 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div>
-            <!-- <button id="btnadd" class="btn btn-sm btn-light-primary" (keydown.enter)="addRow('1')" (click)="addRow('1')">
+            <button id="btnadd" class="btn btn-sm btn-light-primary" (keydown.enter)="addRow('1'); $event.preventDefault();"  (click)="addRow('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
-            </button> -->
-            <!-- <button id="btnadd" (keydown.enter)="addRow('1')" (click)="addRow('1')"></button> -->
-            <input id="btnadd" (keydown.enter)="addRow('1')" (click)="addRow('1')">
+            </button>
           </div>
           <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
-            <button type="button" class="btn btn-sm btn-light-primary" (click)="popupVat()">
+            <button class="btn btn-sm btn-light-primary" (keydown.enter)="popupVat(); $event.preventDefault();" (click)="popupVat()">
               <i class="icon-i-graph-up icon-16"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Hóa đơn GTGT"></codx-label>
             </button>
@@ -329,7 +327,7 @@
       *ngIf="cashpayment?.subType === '2' || cashpayment?.subType === '9'">
       <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices"
         entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35"
-        [allowFiltering]="true" [autoAddRow]="true" (eventAction)="eventAction($event)" [allowSorting]="true" [hideMoreFunc]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
+        [allowFiltering]="true" [autoAddRow]="true" [allowSorting]="true" [hideMoreFunc]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
         [dataSource]="settledInvoices" (created)="gridCreatedSet()" (cellChanged)="settledLineChanged($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
