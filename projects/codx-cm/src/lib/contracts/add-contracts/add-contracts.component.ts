@@ -153,7 +153,7 @@ export class AddContractsComponent implements OnInit {
     this.listTypeContract = contractService.listTypeContract;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
-        this.headerTest = this.headerTest + ' ' + f?.defaultName;
+        this.headerTest = this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
       }
     });
   }
@@ -708,7 +708,9 @@ viewPayHistory(payment, width: number, height: number) {
     listPaymentHistory: this.listPaymentHistory,
     listPaymentAdd: this.listPaymentAdd,
     listPaymentEdit: this.listPaymentEdit,
-    listPaymentDelet: this.listPaymentDelete,
+    listPaymentDelete: this.listPaymentDelete,
+    contracts: this.contracts,
+    listPayment: this.listPayment,
   };
 
   let option = new DialogModel();
