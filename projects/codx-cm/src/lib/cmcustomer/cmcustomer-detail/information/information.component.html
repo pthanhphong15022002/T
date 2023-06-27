@@ -1,6 +1,6 @@
 <div *ngIf="dataSelected != null">
   <div class="d-flex flex-column pe-3">
-    <div class="mb-5">
+    <div class="mb-2">
       <div class="mb-3">
         <codx-label
           class="text-dark text-primary fw-bold fs-6"
@@ -20,7 +20,7 @@
         <ng-container [ngTemplateOutlet]="partners"></ng-container>
       </ng-container>
     </div>
-    <div class="mb-5">
+    <div class="mt-5 mb-2">
       <div class="mb-3">
         <codx-label
           class="text-dark text-primary fw-bold fs-6"
@@ -35,7 +35,7 @@
       </div>
     </div>
     <div
-      class="mb-5"
+      class="mt-5 mb-2"
       *ngIf="
         (funcID == 'CM0102' && dataSelected?.objectType) ||
         dataSelected?.objectID ||
