@@ -14,10 +14,10 @@ export class PopupPolicyalComponent
   implements OnInit
 {
   expandTransferNextYear = false;
-  transferNextYearDisabled = false;
+  transferNextYearDisabled = true;
 
   expandIsMonth = false;
-  isMonthDisabled = false;
+  isMonthDisabled = true;
 
   formModel: FormModel;
   formGroup: FormGroup;
@@ -154,6 +154,15 @@ export class PopupPolicyalComponent
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        console.log('data nhan vao', this.alpolicyObj);
+        
+        if(this.alpolicyObj.isTransferNextYear == true){
+          this.transferNextYearDisabled = false;
+        }
+
+        if(this.alpolicyObj.isMonth == true){
+          this.isMonthDisabled = false;
+        }
         if (this.actionType == 'copy') {
           if (this.alpolicyObj.activeOn == '0001-01-01T00:00:00') {
             this.alpolicyObj.activeOn = null;
@@ -195,6 +204,41 @@ export class PopupPolicyalComponent
       this.isMonthDisabled = true;
     }
     this.df.detectChanges();
+  }
+
+  validateMonthDate(month, day){
+    debugger
+    if(month == 4 || month == 6 || month == 9 || month == 11){
+      if(day > 30){
+        this.notify.notifyCode('HR016');
+      }
+    }
+    else if(month == 2){
+      if(day > 28){
+        this.notify.notifyCode('HR016');
+      }
+    }
+    else{
+      if(day > 31){
+        this.notify.notifyCode('HR016');
+      }
+    }
+  }
+
+  onChangeSelectCloseToDay(evt){
+    let day = parseInt(evt.data)
+    let month = parseInt(this.alpolicyObj.closeToMonth)
+    if(month){
+      this.validateMonthDate(month, day);
+    }
+  }
+
+  onChangeSelectCloseToMonth(evt){
+    let month = parseInt(evt.data)
+    let day = parseInt(this.alpolicyObj.closeToDay)
+    if(day){
+      this.validateMonthDate(month, day);
+    }
   }
 
   onClickExpandIsMonth(){
