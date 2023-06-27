@@ -106,7 +106,7 @@ export class PopupAddPaymentHistoryComponent {
     if (this.action == 'add') {
       this.checkDate = this.stepService.compareDates( this.paymentHistory?.paidDate,  new Date(),'h');
       if (this.checkDate > 0 && this.isErorrDate) {
-        this.notiService.notifyCode('CM019',0,[this.view?.paidDate]);
+        this.notiService.notifyCode('CRM019',0,[this.view?.paidDate]);
       }
       this.isErorrDate = !this.isErorrDate;
     }
@@ -124,7 +124,7 @@ export class PopupAddPaymentHistoryComponent {
       return
     }
     if (this.checkDate > 0) {
-      this.notiService.notifyCode('CM019',0,[this.view?.scheduleDate]);
+      this.notiService.notifyCode('CMR019',0,[this.view?.scheduleDate]);
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {
@@ -140,7 +140,7 @@ export class PopupAddPaymentHistoryComponent {
       return
     }
     if (this.checkDate > 0) {
-      this.notiService.notifyCode('CM019',0,[this.view?.scheduleDate]);
+      this.notiService.notifyCode('CMR019',0,[this.view?.scheduleDate]);
       return;
     }
     if (this.action == 'add' || this.action == 'copy') {
