@@ -171,7 +171,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
-
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
@@ -218,26 +217,24 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
-    (this.elementRef.nativeElement as HTMLElement).addEventListener('keyup',(e:KeyboardEvent)=>{
-      console.log(e);
-      console.log(document.activeElement);
-      // if (e.keyCode == '9') {
-      //   console.log(document.activeElement.className)
-      //   if (document.activeElement.className == 'e-tab-wrap') {
-      //     if (
-      //       !this.acService.validateFormData(
-      //         this.form.formGroup,
-      //         this.gridViewSetup
-      //       )
-      //     ) {
-      //       return;
-      //     }
-      //     if (this.cashpayment.subType != '2') {
-      //       this.addRow('1');
-      //     }
-      //   }
-      // }
-    })
+    (this.elementRef.nativeElement as HTMLElement).addEventListener(
+      'keyup',
+      (e: KeyboardEvent) => {
+        if (e.key == 'Tab') {
+          if (document.activeElement.className == 'e-tab-wrap') {
+            var element = document.getElementById('btnadd');
+            element.focus();
+          }
+        }
+        // if (e.key == 'Enter') {
+        //   if (document.activeElement.id == 'btnadd') {
+        //     var element = document.getElementById('btnadd');
+        //     element.click();
+        //   }
+        // }
+      }
+    );
+
     this.dt.detectChanges();
   }
   //#endregion
@@ -607,6 +604,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addRow(type: any) {
+    alert("hhi");
     if (
       !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
     ) {
@@ -851,6 +849,30 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   eventAction(e: any) {
+    if (!this.loadingform || !this.loading) {
+      switch (e.type) {
+        case 'autoAdd':
+          switch (this.cashpayment.subType) {
+            case '1':
+            case '3':
+            case '4':
+              this.addRow('1');
+              break;
+            case '2':
+              this.settlement(0);
+              break;
+            case '9':
+              if (document.getElementById('gridcash') != null) {
+                this.addRow('1');
+              }
+              if (document.getElementById('gridset') != null) {
+                this.settlement(0);
+              }
+              break;
+          }
+          break;
+      }
+    }
     //this.addRow();
   }
 
@@ -1101,14 +1123,19 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onDiscard() {
-    this.dialog.dataService
-      .delete([this.cashpayment], true, null, '', 'AC0010', null, null, false)
-      .subscribe((res) => {
-        if (res.data != null) {
-          this.dialog.close();
-          this.dt.detectChanges();
-        }
-      });
+    if (this.hasSaved) {
+      this.dialog.dataService
+        .delete([this.cashpayment], true, null, '', 'AC0010', null, null, false)
+        .subscribe((res) => {
+          if (res.data != null) {
+            this.dialog.close();
+            this.dt.detectChanges();
+          }
+        });
+    } else {
+      this.dialog.close();
+      this.dt.detectChanges();
+    }
   }
   //#endregion
 
@@ -1544,11 +1571,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadProgressbar(args: ILoadedEventArgs) {
     if (args.progressBar.element.id === 'load-save-container') {
-      args.progressBar.annotations[0].content = '<img src="../assets/themes/ac/default/img/save.svg"></img>';
+      args.progressBar.annotations[0].content =
+        '<img src="../assets/themes/ac/default/img/save.svg"></img>';
     }
     if (args.progressBar.element.id === 'load-form-container') {
-      args.progressBar.annotations[0].content = '<img style="width: 50px;height:50px" src="../assets/themes/ac/default/img/file.gif" alt="">';
+      args.progressBar.annotations[0].content =
+        '<img style="width: 50px;height:50px" src="../assets/themes/ac/default/img/file.gif" alt="">';
     }
+  }
+  keypress(e) {
+    console.log(e);
   }
   //#endregion
 }
