@@ -182,20 +182,27 @@ export class PopupViewPaymentHistoryComponent {
     if (payHistory?.recID) {
       this.notiService.alertCode('SYS030').subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.listPaymentDelete.push(payHistory);
           this.listPayment, this.listPaymentHistory;
           this.listPayHistoryOfPay;
-          this.findPayHistory(
-            this.listPayHistoryOfPay,
-            payHistory,
-            'delete'
-          );
+          this.findPayHistory(this.listPayHistoryOfPay,payHistory,'delete');
           this.findPayHistory(this.listPaymentHistory, payHistory, 'delete');
+          let index = this.listPaymentAdd?.findIndex(pay => pay?.recID == payHistory.recID);
+          if(index >= 0){
+            this.listPaymentAdd.splice(index,1);
+          }else{
+            this.listPaymentDelete.push(payHistory);
+          }
           this.listPayHistoryOfPay = JSON.parse(
             JSON.stringify(this.listPayHistoryOfPay)
           );
           this.sumPaid -= payHistory?.paidAmt || 0;
           this.remain += payHistory?.paidAmt || 0;
+          this.payment.paidAmt -= payHistory?.paidAmt || 0;
+          this.payment.remainAmt += payHistory?.paidAmt || 0;
+          this.findPayHistory(this.listPaymentEdit, this.payment, 'edit');
+          this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+          this.findPayHistory(this.listPayment, this.payment, 'edit');
+
         }
       });
     }
@@ -211,6 +218,8 @@ export class PopupViewPaymentHistoryComponent {
         if (type == 'edit') {
           listData?.splice(index, 1, data);
         }
+      }else{
+        listData?.push(data);
       }
     }
   }

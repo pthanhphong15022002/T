@@ -577,10 +577,10 @@ export class IncommingComponent
       predicates = ['Status=@0'];
       dataValues = [status];
     }
-    this.view.dataService
-      .setPredicates(predicates, dataValues,item => {
-        this.lstDtDis = item[0];
-      });
+    // this.view.dataService
+    //   .setPredicates(predicates, dataValues,item => {
+    //     this.lstDtDis = item[0];
+    //   });
     this.activeDiv = status;
   }
 
