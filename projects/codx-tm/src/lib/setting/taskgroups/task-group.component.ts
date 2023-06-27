@@ -76,21 +76,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
   // @ViewChild('view') view!: ViewsComponent;
-
-  constructor(
-    inject: Injector,
-    private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
-    private authStore: AuthStore,
-    private cacheSv: CacheService,
-    private activedRouter: ActivatedRoute,
-    private tmService: CodxTMService
-  ) {
-    super(inject);
-    this.user = this.authStore.get();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-  }
-
   user: any;
   funcID: any;
   views: Array<ViewModel> = [];
@@ -117,6 +102,20 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
     lineHeight: 1.4,
   };
   titleAction = '';
+
+  constructor(
+    inject: Injector,
+    private dt: ChangeDetectorRef,
+    private callfunc: CallFuncService,
+    private authStore: AuthStore,
+    private cacheSv: CacheService,
+    private activedRouter: ActivatedRoute,
+    private tmService: CodxTMService
+  ) {
+    super(inject);
+    this.user = this.authStore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   onInit(): void {
     this.button = {
@@ -303,19 +302,19 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
               width: 100,
             },
           ];
+          this.views = [
+            {
+              type: ViewType.grid,
+              sameData: true,
+              active: false,
+              model: {
+                resources: this.columnsGrid,
+                template2: this.itemMoreFunc,
+              },
+            },
+          ];
+          this.detectorRef.detectChanges();
         });
-      this.views = [
-        {
-          type: ViewType.grid,
-          sameData: true,
-          active: false,
-          model: {
-            resources: this.columnsGrid,
-            template2: this.itemMoreFunc,
-          },
-        },
-      ];
-      this.detectorRef.detectChanges();
     }
   }
 
