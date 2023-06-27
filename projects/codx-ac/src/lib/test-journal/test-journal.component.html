@@ -1,12 +1,75 @@
-<codx-views #view [views]="views" funcID="ACT" [autoLoad]="false">
+<codx-views #view [views]="views" funcID="ACT" service="AC" entityName="AC_Journals" [autoLoad]="true">
 </codx-views>
 
 <ng-template #panelLeftRef>
-    <div class="container">
-        <ul>
-            <li *ngFor="let item of vll85">
-                {{item.text}}
-            </li>
-        </ul>
+    <div class="zone-1">
+        <div class="my-3 d-flex justify-content-between">
+            <div class="codx-breadcrumb">
+                <ol class="breadcrumb breadcrumb-dot text-muted fs-6 fw-semibold">
+                    <li class="breadcrumb-item"><a href="#" class="">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" class="">Library</a></li>
+                    <li class="breadcrumb-item text-gray-500">Active</li>
+                </ol>
+            </div>
+            <div>...</div>
+        </div>
+
+        <div class="card-add w-200px h-200px bg-body rounded-2 border border-gray-150">
+            <a href="#" class="d-block w-100 h-100">
+                <div class="d-flex justify-content-center flex-stack w-100 h-100">
+                    <div class="h-80px d-flex flex-center flex-column">
+                        <span class="icon-add icon-40 text-primary"></span>
+                        <div class="mt-2 text-gray-600">Thêm mới</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <codx-card-img cardCss="border border-danger rounded-0 h-100 w-225px card-no-body"
+            imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1">
+        </codx-card-img>
+
     </div>
+    <div class="py-y bg-body list-survey">
+        <div class="d-flex justify-content-between py-2 ">
+            <div class="main-list">
+                <ul>
+                    <li *ngFor="let item of vll85">
+                        {{item.text}}
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex">
+                <codx-searchbar class="mt-1"></codx-searchbar>
+                <codx-toolbar-choose class="mt-2 mx-2" [views]="subViews" (viewChange)="viewChanged($event)">
+                </codx-toolbar-choose>
+            </div>
+        </div>
+        <div class="h-100">
+            <div [class]="viewActive == 1 ?'':'d-none'">
+                <codx-listview #cardView [itemTemplate]="itemTemplate" type="listView" funcId="ACT" service="AC"
+                    entityName="AC_Journals" ngClass="py-5" [dataService]="view.dataService">
+                </codx-listview>
+            </div>
+            <!-- <ng-container *ngIf="viewActive == 1;else cardView">
+               
+            </ng-container> -->
+            <!-- <ng-template #cardView> -->
+            <div [class]="viewActive == 5 ?'':'d-none'">
+                <codx-listview [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC"
+                    entityName="AC_Journals" ngClass="py-5" [dataService]="view.dataService">
+                </codx-listview>
+            </div>
+            <!-- </ng-template> -->
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateListCard let-data>
+    <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-225px" imageId="Admin" imageObjType="AD_Users"
+        imgCss="w-100 h-150px" [imageWidth]="1000" [formModel]="view.formModel" [typeMF]="'hover'" titleTmp="ffff">
+    </codx-card-img>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+    fffffffffffffff
 </ng-template>
