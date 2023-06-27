@@ -55,7 +55,11 @@
         class="me-3"
       >
       </span>
-      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+      <span
+        class="line-clamp-menu"
+        [ngbTooltip]="data.headerText"
+        [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
+      >
         {{ data.headerText }}
       </span>
     </div>
