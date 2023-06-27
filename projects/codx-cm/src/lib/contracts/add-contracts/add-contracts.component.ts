@@ -153,7 +153,7 @@ export class AddContractsComponent implements OnInit {
     this.listTypeContract = contractService.listTypeContract;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
-        this.headerTest = this.headerTest + ' ' + f?.defaultName;
+        this.headerTest = this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
       }
     });
   }
