@@ -65,7 +65,7 @@ export class PopupConvertLeadComponent implements OnInit {
       name: 'Contacts',
     },
     {
-      icon: 'con-settings',
+      icon: 'icon-read_more',
       text: 'Thông tin nhập liệu',
       name: 'InputInformation',
     },
@@ -587,7 +587,7 @@ export class PopupConvertLeadComponent implements OnInit {
         this.lead.customerID = this.customerID;
       }
       this.radioChecked = true;
-      this.getListContactByObjectID(this.customerID);
+      // this.getListContactByObjectID(this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
@@ -597,15 +597,15 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customerNewOld = this.customerID;
         this.customer.recID = this.customerNewOld;
       }
-      this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
-
-      this.gridViewSetupCustomer = await firstValueFrom(
-        this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
-      );
-
+      setTimeout(async () => {
+        this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+        this.gridViewSetupCustomer = await firstValueFrom(
+          this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+        );
+      }, 0);
       this.countAddNew++;
 
-      this.getListContactByObjectID(this.customerNewOld);
+      // this.getListContactByObjectID(this.customerNewOld);
     }
   }
 
@@ -627,9 +627,9 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.owner = e;
   }
   valueChangeCustomer(e) {
-    this.customer[e.field] = e?.data;
+    this.customer[e.field] = e?.data?.trim();
     if (e.field == 'customerName' && e?.data) {
-      this.nameAvt = e.data;
+      this.nameAvt = e?.data?.trim();
     }
   }
   valueTagChange(e) {
@@ -637,7 +637,7 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   valueChange(e) {
-    this.deal[e.field] = e?.data;
+    this.deal[e.field] = e?.data?.trim();
     if (e.field == 'customerID') {
       this.customerID = e?.data ? e.data : null;
       if (this.customerID) {
