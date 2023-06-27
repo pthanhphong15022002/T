@@ -117,7 +117,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
     this.options.entityPermission = 'FD_KudosTrans';
     this.options.gridViewName = 'grvKudosTrans';
     this.options.formName = 'KudosTrans';
-    this.options.funcID = this.funcID; 
+    this.options.funcID = this.funcID;
     this.setPredicate();
   }
 
@@ -349,12 +349,11 @@ export class AchievementComponent extends UIComponent implements OnInit {
     });
     this.options.predicate += this.predicate;
     this.options.dataValue += ';' + this.dataValue;
-    
+
     this.loadList = true;
     if (this.listview) {
       this.listView.dataService
-      .setPredicate(this.options.predicate, [this.options.dataValue])
-      .subscribe();
+      .setPredicate(this.options.predicate, [this.options.dataValue]);
     }
     this.chartLabels = [];
     this.colors[0].backgroundColor = [];

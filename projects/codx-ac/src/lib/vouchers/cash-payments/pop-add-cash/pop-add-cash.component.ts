@@ -238,6 +238,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       }
     );
+    (this.elementRef.nativeElement as HTMLElement).addEventListener(
+      'click',
+      (e: any) => {
+          if(this.gridCash && this.gridCash.gridRef){
+            if(this.gridCash.gridRef.isEdit){
+              debugger
+
+            }
+          }
+      }
+    );
 
     this.dt.detectChanges();
   }

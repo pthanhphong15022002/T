@@ -121,8 +121,9 @@ export const OMCONST = {
       Quarter: 'Q',
     },
     RefType_Link: {
-      Align: '1',
+      Distribute: '1',
       Assign: '2',
+      Link:'3',
     },
     PlanStatus:{
       Cancelled:'0',
@@ -131,6 +132,20 @@ export const OMCONST = {
       AtRisk:'3',
       InTrouble:'4',
       Completed:'5',
+    },
+    ASSIGN_TYPE:  {
+      OB : "ASO",
+      KR : "ASR",
+      SKR : "ASS",
+    },
+  
+    HAS_ASSIGN : "AS",
+    HAS_DISTRIBUTE : "DT",
+  
+    DISTRIBUTE_TYPE:  {
+      OB : "DTO",
+      KR : "DTR",
+      SKR : "DTS",
     }
   },
   GRVNAME: {},
@@ -141,7 +156,8 @@ export const OMCONST = {
     Type3:'3',
     Type4:'4',
   },
-  ASSET_URL:'./assets/themes/om/default/img/'
+  ASSET_URL:'./assets/themes/om/default/img/',
+  
   //region format
 
   //---------------------------------------------------------------------------------//
