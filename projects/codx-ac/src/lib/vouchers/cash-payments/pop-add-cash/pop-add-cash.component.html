@@ -440,7 +440,7 @@
     <ng-container *ngIf="form.formGroup">
       <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
         class="input-circle input-border-0 w-400px mt-1 mb-1">
-        <codx-dropdown-select [isToolbar]="false" [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px"
+        <codx-dropdown-select [disabled]="loadingform" [isToolbar]="false" [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px"
           [isMulti]="false" type="valuelist" field="subType" [refValue]="'AC063'" [value]="cashpayment.subType"
           emptyText="Loại phiếu" (valueChange)="changeType($event)"></codx-dropdown-select>
         <!-- <codx-input [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
