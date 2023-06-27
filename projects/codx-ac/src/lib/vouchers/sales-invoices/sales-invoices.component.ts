@@ -25,7 +25,7 @@ import { SalesInvoiceService } from './sales-invoices.service';
 @Component({
   selector: 'lib-sales-invoices',
   templateUrl: './sales-invoices.component.html',
-  styleUrls: ['./sales-invoices.component.css'],
+  styleUrls: ['./sales-invoices.component.scss'],
 })
 export class SalesInvoicesComponent
   extends UIComponent
@@ -114,9 +114,9 @@ export class SalesInvoicesComponent
     const memoDivWidth: number = this.memoDiv?.nativeElement.offsetWidth;
     const memoContentWidth: number =
       this.memoContent?.nativeElement.offsetWidth;
-    const MoreBtnWidth: number = this.showMoreBtn?.nativeElement.offsetWidth;
+    const moreBtnWidth: number = this.showMoreBtn?.nativeElement.offsetWidth;
 
-    this.isMoreBtnHidden = memoContentWidth + MoreBtnWidth < memoDivWidth;
+    this.isMoreBtnHidden = memoContentWidth + moreBtnWidth < memoDivWidth;
   }
 
   ngOnDestroy() {
@@ -137,13 +137,13 @@ export class SalesInvoicesComponent
     this.expanding = false;
     this.loading = true;
     this.lines = [];
-    const salesInvoicesLinesOptions = new DataRequest();
-    salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
-    salesInvoicesLinesOptions.predicates = 'TransID=@0';
-    salesInvoicesLinesOptions.dataValues = this.master.recID;
-    salesInvoicesLinesOptions.pageLoading = false;
+    const options = new DataRequest();
+    options.entityName = 'SM_SalesInvoicesLines';
+    options.predicates = 'TransID=@0';
+    options.dataValues = this.master.recID;
+    options.pageLoading = false;
     this.acService
-      .loadDataAsync('SM', salesInvoicesLinesOptions)
+      .loadDataAsync('SM', options)
       .subscribe((res: ISalesInvoicesLine[]) => {
         this.lines = res;
         this.loading = false;
