@@ -44,6 +44,7 @@ export class PopupAddPaymentComponent {
   };
 
   title = 'Lịch thanh toán';
+  checkDate = 0;
   dialog: DialogRef;
   constructor(
     private cmService: CodxCmService,
@@ -136,9 +137,9 @@ export class PopupAddPaymentComponent {
   changeValueDate(event) {
     this.payment[event?.field] = new Date(event?.data?.fromDate);
     if (this.action == 'add') {
-      let check = this.stepService.compareDates(this.payment?.scheduleDate, new Date(), 'h');
-      if (check < 0 && this.isErorrDate) {
-        this.notiService.notifyCode('Ngày hẹn thanh toán phải lớn hơn hiện tại');
+      this.checkDate = this.stepService.compareDates(this.payment?.scheduleDate, new Date(), 'h');
+      if (this.checkDate < 0 && this.isErorrDate) {
+        this.notiService.notifyCode('CM017',0,[this.view?.scheduleDate]);
       }
       this.isErorrDate = !this.isErorrDate;
     }
@@ -154,6 +155,11 @@ export class PopupAddPaymentComponent {
     if (this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)) {
       return
     }
+    if (this.checkDate < 0) {
+      this.notiService.notifyCode('CM017',0,[this.view?.scheduleDate]);
+      return;
+    }
+
     if (this.action == 'add' || this.action == 'copy') {
       this.addPayment(true);
     }
