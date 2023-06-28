@@ -574,7 +574,6 @@
         <codx-input
           type="text"
           [crrValue]="customer?.customerName"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.CustomerName?.description"
           field="customerName"
           (valueChange)="valueChangeCustomer($event)"
@@ -588,7 +587,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.shortName"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.ShortName?.description"
             field="shortName"
             (valueChange)="valueChangeCustomer($event)"
@@ -601,7 +599,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.taxCode"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.TaxCode?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="taxCode"
@@ -615,7 +612,6 @@
         <codx-input
           type="text"
           [crrValue]="customer?.address"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Address?.description"
           (valueChange)="valueChangeCustomer($event)"
           field="address"
@@ -629,7 +625,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.phone"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.Phone?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="phone"
@@ -642,7 +637,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.faxNo"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.FaxNo?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="faxNo"
@@ -656,7 +650,6 @@
         <codx-input
           type="text"
           [crrValue]="customer?.webPage"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.WebPage?.description"
           (valueChange)="valueChangeCustomer($event)"
           field="webPage"
@@ -670,7 +663,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.annualRevenue"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.AnnualRevenue?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="annualRevenue"
@@ -683,7 +675,6 @@
           <codx-input
             type="valuelist"
             [crrValue]="customer?.headcounts"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.Headcounts?.description"
             [refValue]="gridViewSetupCustomer?.Headcounts?.referedValue"
             (valueChange)="valueChangeCustomer($event)"
@@ -698,7 +689,6 @@
         <codx-input
           type="combobox"
           [crrValue]="customer?.owner"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Owner?.description"
           [refValue]="gridViewSetupCustomer?.Owner?.referedValue"
           (valueChange)="valueChangeCustomer($event)"
@@ -712,7 +702,6 @@
         <codx-input
           type="combobox"
           [crrValue]="customer?.industries"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Industries?.description"
           [refValue]="gridViewSetupCustomer?.Industries?.referedValue"
           (valueChange)="valueChangeCustomer($event)"
