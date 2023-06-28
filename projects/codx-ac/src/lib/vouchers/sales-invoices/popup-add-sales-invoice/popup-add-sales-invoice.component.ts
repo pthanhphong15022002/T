@@ -230,6 +230,10 @@ export class PopupAddSalesInvoiceComponent
         return;
       }
 
+      if (this.journal.inputMode === "2") {
+        return;
+      }
+
       // ❌ cache problem
       let toggleFields: string[] = [
         ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
