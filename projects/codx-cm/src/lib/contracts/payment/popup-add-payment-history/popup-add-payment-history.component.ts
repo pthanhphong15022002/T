@@ -32,6 +32,9 @@ export class PopupAddPaymentHistoryComponent {
   isErorrDate = true;
   title = 'Lịch sử thanh toán';
   dialog: DialogRef;
+  percentChanged = true;
+  valueChanged = true;
+  remainAmtOld = 0; //đã thanh toán
   constructor(
     private cmService: CodxCmService,
     private notiService: NotificationsService,
@@ -66,7 +69,8 @@ export class PopupAddPaymentHistoryComponent {
       this.setPaymentHistory();
     }
     if (this.action == 'edit') {
-      
+      this.percent =  Number(((this.paymentHistory.paidAmt / this.paymentHistory?.scheduleAmt) * 100).toFixed(1));
+      this.remainAmtOld = this.paymentHistory.paidAmt + this.paymentHistory?.remainAmt;
     }
     if (this.action == 'copy') {
     }
@@ -86,13 +90,39 @@ export class PopupAddPaymentHistoryComponent {
     this.paymentHistory.transID = (Math.random() * 10000000000).toFixed(0);
   }
 
-  valueChangeText(event) {
-    this.paymentHistory[event?.field] = event?.data;
-    if (event?.field == 'paidAmt') {
-      this.payment.remainAmt = this.remainAmt - (event?.data || 0);
-      this.paymentHistory.remainAmt = this.payment?.remainAmt;
+  clickTesk(event){
+    this[event] = true;
+  }
+
+  checkRemaining(){
+    if(this.action == 'add'){
+      this.paymentHistory.remainAmt -=  this.paymentHistory.paidAmt;
+    }else{
+      this.paymentHistory.remainAmt = this.remainAmtOld - this.paymentHistory.paidAmt;
     }
   }
+
+  valueChangePercent(e) {
+    if(this.percentChanged){
+      this.percent = e?.value;
+     this.paymentHistory.paidAmt = Number(
+      ((this.percent * this.paymentHistory?.scheduleAmt) / 100).toFixed(2)
+    );
+      this.checkRemaining();
+      this.valueChanged = false;
+    }
+  }
+
+
+  valueChangeText(event) {
+    this.paymentHistory[event?.field] = event?.data;
+    if (event?.field == 'paidAmt' && this.valueChanged) {
+      this.percent = Number(((this.paymentHistory.paidAmt / this.paymentHistory?.scheduleAmt) * 100).toFixed(1));
+      this.checkRemaining();
+      this.percentChanged = false;
+    }
+  }
+
 
   valueChangeCombobox(event) {
     this.paymentHistory[event?.field] = event?.data;
@@ -115,13 +145,6 @@ export class PopupAddPaymentHistoryComponent {
       }
       this.isErorrDate = !this.isErorrDate;
     }
-  }
-
-  valueChangePercent(e) {
-    this.percent = e?.value;
-    this.paymentHistory.paidAmt = Number(
-      ((this.percent * this.paymentHistory?.scheduleAmt) / 100).toFixed(0)
-    );
   }
 
   save() {
@@ -172,7 +195,7 @@ export class PopupAddPaymentHistoryComponent {
   // số tiền đã thanh toán: paidAmt
 
   async addPaymentHistory(isClose) {
-    this.paymentHistory.remainAmt = this.payment.remainAmt;
+    this.payment.remainAmt = this.paymentHistory.remainAmt;
     if (this.isSave) {
       let paymentOut = await firstValueFrom(
         this.cmService.addPaymentsHistory(this.paymentHistory)
@@ -194,11 +217,6 @@ export class PopupAddPaymentHistoryComponent {
       this.action = 'add';
       this.setPaymentHistory();
     }
-    // this.cmService.addPayments(this.payment).subscribe( res => {
-    //   if(res){
-    //       this.dialog.close({ payment: res, action: this.action });
-    //     }
-    //   })
   }
 
   updateContractAndPaymentByPaymentHistory() {
@@ -250,25 +268,9 @@ export class PopupAddPaymentHistoryComponent {
         }
         this.notiService.notifyCode('SYS007');
       }
-    } else {
-      // let payHistoryIndex = this.listPaymentHistory.findIndex(payment => payment.recID == this.paymentHistory?.recID);
-      // if (payHistoryIndex >= 0) {
-      //   this.listPaymentHistory.splice(payHistoryIndex, 1, this.paymentHistory);
-      // }
-      // let paymentIndexAdd = this.listPaymentAdd.findIndex(payment => payment.recID == this.paymentHistory?.recID);
-      // if (paymentIndexAdd >= 0) {
-      //   this.listPaymentAdd.splice(paymentIndexAdd, 1, this.paymentHistory);
-      // } else {
-      //   let paymentIndexEdit = this.listPaymentEdit.findIndex(payment => payment.recID == this.paymentHistory?.recID);
-      //   if (paymentIndexEdit >= 0) {
-      //     this.listPaymentEdit.splice(paymentIndexAdd, 1, this.paymentHistory);
-      //   } else {
-      //     this.listPaymentEdit.push(this.paymentHistory);
-      //   }
-      // }
     }
     if (isClose) {
-      this.dialog.close(true);
+      this.dialog.close(this.paymentHistory);
     } else {
       this.action = 'add';
       this.setPaymentHistory();

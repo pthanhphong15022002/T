@@ -40,6 +40,7 @@
       "
     ></span>
     <span> | </span>
+    <!-- số tiền hẹn thanh toán -->
     <codx-label
       class="text-gray-600"
       fiedName="scheduleAmt"
@@ -70,7 +71,7 @@
     <span
     class="fs-7"
     [innerHTML]="
-    sumPaid
+    payment?.paidAmt
         | formatvalue : dialog.formModel : 'PaidAmt'
         | async
     "
@@ -89,7 +90,7 @@
       *ngIf="remain!= 0"
       class="fs-7"
       [innerHTML]="
-      remain
+      payment?.remainAmt
           | formatvalue : dialog.formModel : 'ScheduleAmt'
           | async
       "
