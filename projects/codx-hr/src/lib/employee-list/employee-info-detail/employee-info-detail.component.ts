@@ -2819,10 +2819,15 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
         } else if (actionType == 'edit') {
+          debugger
           if(res.event){
             let kq = this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate)
             if(kq == true){
-              this.listCrrBenefit.push(res.event);
+              let index = this.listCrrBenefit.indexOf(data)
+              if(index >-1){
+                this.listCrrBenefit[index] = res.event;
+              }
+              // this.listCrrBenefit.push(res.event);
             }
             else if(kq == false){
               let index = this.listCrrBenefit.indexOf(data)
@@ -2830,6 +2835,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.listCrrBenefit.splice(index, 1);
               }
             }
+            this.df.detectChanges();
           }
           // (this.eBenefitGrid?.dataService as CRUDService)
           //   ?.update(res.event)
