@@ -97,7 +97,6 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.isDate = false;
     this.changeAvata = false;
     this.changeAvataContact = false;
-
   }
 
   async ngAfterViewInit() {
@@ -356,22 +355,22 @@ export class PopupMergeLeadsComponent implements OnInit {
   changeAvatarNew(type) {
     if (type == 'avata') {
       this.changeAvata = true;
-      if (this.changeAvata) {
-        this.recIDLead = JSON.parse(JSON.stringify(this.leadNew?.recID));
-        this.nameLead = JSON.parse(JSON.stringify(this.leadNew?.leadName));
-        this.modifyOn = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
-      }
+      // if (this.changeAvata) {
+      //   this.recIDLead = JSON.parse(JSON.stringify(this.leadNew?.recID));
+      //   this.nameLead = JSON.parse(JSON.stringify(this.leadNew?.leadName));
+      //   this.modifyOn = JSON.parse(JSON.stringify(this.leadNew?.modifiedOn));
+      // }
     } else {
       this.changeAvataContact = true;
-      if (this.changeAvataContact) {
-        this.recIDAvt = JSON.parse(JSON.stringify(this.leadNew?.contactID));
-        this.nameContact = JSON.parse(
-          JSON.stringify(this.leadNew?.contactName)
-        );
-        this.modifyOnContact = JSON.parse(
-          JSON.stringify(this.leadNew?.modifiedOn)
-        );
-      }
+      // if (this.changeAvataContact) {
+      //   this.recIDAvt = JSON.parse(JSON.stringify(this.leadNew?.contactID));
+      //   this.nameContact = JSON.parse(
+      //     JSON.stringify(this.leadNew?.contactName)
+      //   );
+      //   this.modifyOnContact = JSON.parse(
+      //     JSON.stringify(this.leadNew?.modifiedOn)
+      //   );
+      // }
     }
 
     this.changeDetector.detectChanges();
@@ -379,6 +378,11 @@ export class PopupMergeLeadsComponent implements OnInit {
 
   valueChange(e) {
     this.leadNew[e.field] = e?.data;
+    if (e?.field == 'leadName') {
+      this.nameLead = e?.data;
+    } else if (e?.field == 'contactName') {
+      this.nameContact = e?.data;
+    }
   }
   valueDateChange(e) {
     if (e != null) {
