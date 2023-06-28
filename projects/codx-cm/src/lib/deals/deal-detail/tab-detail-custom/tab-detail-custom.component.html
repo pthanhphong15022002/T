@@ -1,39 +1,36 @@
-
 <div class="main-right">
+  <container-element [ngSwitch]="tabClicked">
+    <some-element
+      *ngSwitchCase="tabInformation"
+      [ngTemplateOutlet]="information"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabField"
+      [ngTemplateOutlet]="field"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabTask"
+      [ngTemplateOutlet]="task"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabContact"
+      [ngTemplateOutlet]="contact"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabOpponent"
+      [ngTemplateOutlet]="opponent"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabQuotation"
+      [ngTemplateOutlet]="quotation"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabContract"
+      [ngTemplateOutlet]="contract"
+    ></some-element>
 
-<container-element [ngSwitch]="tabClicked">
-  <some-element
-    *ngSwitchCase="tabInformation"
-    [ngTemplateOutlet]="information"
-  ></some-element>
-  <some-element
-    *ngSwitchCase="tabField"
-    [ngTemplateOutlet]="field"
-  ></some-element>
-  <some-element
-  *ngSwitchCase="tabTask"
-  [ngTemplateOutlet]="task"
-></some-element>
-  <some-element
-    *ngSwitchCase="tabContact"
-    [ngTemplateOutlet]="contact"
-  ></some-element>
-  <some-element
-    *ngSwitchCase="tabOpponent"
-    [ngTemplateOutlet]="opponent"
-  ></some-element>
-  <some-element
-    *ngSwitchCase="tabQuotation"
-    [ngTemplateOutlet]="quotation"
-  ></some-element>
-  <some-element
-    *ngSwitchCase="tabContract"
-    [ngTemplateOutlet]="contract"
-  ></some-element>
-
-  <some-element *ngSwitchDefault></some-element>
-</container-element>
-
+    <some-element *ngSwitchDefault></some-element>
+  </container-element>
 </div>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
@@ -226,19 +223,19 @@
                 fiedName="Probability"
               ></codx-label>
             </div>
-            <div class="text-dark fw-bold codx-textcontent d-flex justify-content-start">
+            <div
+              class="text-dark fw-bold codx-textcontent d-flex justify-content-start"
+            >
               <span
                 #probability
                 *ngIf="dataSelected?.probability; else defaultNull"
                 [innerHTML]="
                   dataSelected?.probability
-                    | formatvalue
-                      : formModel
-                      : 'probability'
-                      : probability
+                    | formatvalue : formModel : 'probability' : probability
                     | async
                 "
-              ></span>%
+              ></span
+              >%
             </div>
           </div>
         </div>
@@ -301,20 +298,18 @@
     </div>
     <div class="mt-5">
       <div class="text-dark text-primary fw-bold fs-6 mb-3">
-        <codx-label fiedName="Memo"                 [setRequire]="false"
-        [formModel]="formModel" ></codx-label>
+        <codx-label
+          fiedName="Memo"
+          [setRequire]="false"
+          [formModel]="formModel"
+        ></codx-label>
       </div>
       <span
-      #memo
-      [innerHTML]="
-      dataSelected.memo
-          | formatvalue
-            : formModel
-            : 'memo'
-            : memo
-          | async
-      "
-    ></span>
+        #memo
+        [innerHTML]="
+          dataSelected.memo | formatvalue : formModel : 'memo' : memo | async
+        "
+      ></span>
     </div>
   </div>
 </ng-template>
@@ -330,7 +325,11 @@
       [customerID]="dataSelected?.customerID"
       [objectType]="'4'"
       [type]="'formDetail'"
-      [hidenMF]="false"
+      [hidenMF]="
+        !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed
+          ? true
+          : false
+      "
       (contactEvent)="contactChange($event)"
     ></codx-list-contacts>
   </div>
@@ -343,7 +342,7 @@
         *ngIf="item?.fields?.length > 0"
         [dataStep]="item"
         [showColumnControl]="showColumnControl(item.stepID)"
-        [isUpdate]="dataSelected.status == '1' || dataSelected.status == '2' "
+        [isUpdate]="dataSelected.status == '1' || dataSelected.status == '2'"
       >
       </codx-fields-detail-temp>
     </ng-container>
@@ -353,6 +352,11 @@
 <ng-template #opponent>
   <codx-tab-dealcompetitors
     [dealID]="dataSelected.recID"
+    [hidenMF]="
+      !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed
+        ? true
+        : false
+    "
   ></codx-tab-dealcompetitors>
 </ng-template>
 <ng-template #quotation>
@@ -367,15 +371,15 @@
   >
   </codx-quotations> -->
   <codx-quotations-tab-view
-  [typeModel]="'deals'"
-  [showButton]="true"
-  [predicates]="'RefID==@0'"
-  [dataValues]="dataSelected.recID"
-  [refID]="dataSelected.recID"
-  [refType]="'CM_Deals'"
-  [disableRefID]="true"
-  [disableCusID]="true"
-  [customerID]="dataSelected.customerID"
+    [typeModel]="'deals'"
+    [showButton]="true"
+    [predicates]="'RefID==@0'"
+    [dataValues]="dataSelected.recID"
+    [refID]="dataSelected.recID"
+    [refType]="'CM_Deals'"
+    [disableRefID]="true"
+    [disableCusID]="true"
+    [customerID]="dataSelected.customerID"
   ></codx-quotations-tab-view>
 </ng-template>
 

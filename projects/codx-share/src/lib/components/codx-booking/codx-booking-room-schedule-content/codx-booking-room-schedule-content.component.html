@@ -83,7 +83,7 @@
     <span class="me-2 fw-bold">:</span>
     <span class="text-gray-800 text-break" [innerHTML]="data?.memo"> </span>
   </div>
-  <div class="d-flex mb-2">
+  <div class="d-flex mb-2" *ngIf="this.haveFile">
     <div class="d-flex text-dark me-6">
       <codx-label
         name="lblAttachment"

@@ -592,21 +592,17 @@ export class PopupConvertLeadComponent implements OnInit {
       // this.getListContactByObjectID(this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
+      this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+      this.gridViewSetupCustomer = await firstValueFrom(
+        this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+      );
       this.radioChecked = false;
-      this.setDataCustomer();
-
       if (this.countAddNew == 0) {
         this.customerID = Util.uid();
         this.customerNewOld = this.customerID;
         this.customer.recID = this.customerNewOld;
       }
-      setTimeout(async () => {
-        this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
-        this.gridViewSetupCustomer = await firstValueFrom(
-          this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
-        );
-        this.customer.headcounts = this.lead?.headcounts;
-      }, 0);
+      this.setDataCustomer();
 
       this.countAddNew++;
 
@@ -624,6 +620,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.annualRevenue = this.lead?.annualRevenue;
     this.customer.establishDate = this.lead?.establishDate;
     this.customer.channelID = this.lead?.channelID;
+    this.customer.headcounts = this.lead?.headcounts;
   }
 
   valueChangeOwner(e) {

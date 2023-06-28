@@ -457,6 +457,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       itemQuestion.seqNo
     ].answers[seqNo] = itemAnswer;
     document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).removeAttribute("disabled");
+    if(e?.target?.value)  (document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement).focus();
     //if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
   }
 
@@ -474,7 +475,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
         itemQuestion.seqNo
       ].answers = this.lstAnswer;
       (document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement).value = "";
-      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");;
+      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");
     }
 
     //if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
@@ -489,7 +490,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {
-    if(this.survey?.status != "5") return ;
+    if(this.survey?.status != "5" || this.survey?.stop || this.expiredOn) return ;
 
     this.checkRequired();
     let lstAnswers = [];
