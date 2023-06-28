@@ -31,7 +31,6 @@ export class CodxIconStepComponent implements OnInit, OnChanges {
       }
     }
     this.task = this.listTypeTask?.find(type => type.value == this.typeTask);
-    console.log(this.task);
   }
   async ngOnInit(): Promise<void> {
         this.sizeBoder = this.size.toString() + 'px';

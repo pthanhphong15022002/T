@@ -57,6 +57,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vllIssue: any = 'AC117';
   funcID: any;
   entityMaster: any;
+  loading: any = false;
+  loadingform: any = true;
   journal: IJournal;
   voucherNoPlaceholderText$: Observable<string>;
   fmInventoryJournalLines: FormModel = {
@@ -89,6 +91,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
+    private elementRef: ElementRef,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -146,9 +149,36 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.inventoryJournal);
-    setTimeout(() => {
-      this.focusInput();
-    }, 500);
+    (this.elementRef.nativeElement as HTMLElement).addEventListener(
+      'keyup',
+      (e: KeyboardEvent) => {
+        if (e.key == 'Tab') {
+          if (document.activeElement.className == 'e-tab-wrap') {
+            var element = document.getElementById('btnadd');
+            element.focus();
+          }
+        }
+      }
+    );
+    (this.elementRef.nativeElement as HTMLElement).addEventListener(
+      'click',
+      (e: any) => {
+        console.log(e);
+        if (
+          e.target.closest('.e-grid') == null &&
+          e.target.closest('.e-popup') == null &&
+          e.target.closest('.edit-value') == null
+        ) {
+          if (this.gridInventoryJournalLine.gridRef.isEdit) {
+            this.gridInventoryJournalLine.autoAddRow = false;
+            this.gridInventoryJournalLine.endEdit();
+            this.gridInventoryJournalLine.autoAddRow = true;
+          }
+        }
+      }
+    );
+
+    this.dt.detectChanges();
   }
 
   //#endregion
@@ -157,6 +187,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   gridCreated() {
     this.gridInventoryJournalLine.hideColumns(this.lockFields);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 1000);
   }
 
   clickMF(e, data) {
@@ -378,6 +411,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   save(isclose: boolean)
   {
+    this.loading = true;
     switch (this.formType) {
       case 'add':
       case 'copy':
@@ -418,6 +452,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     });
                     this.dt.detectChanges();
                 }
+                this.loading = false;
+              }
+              else{
+                this.loading = false;
               }
             });
         } else {
@@ -454,6 +492,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     });
                   }
                   this.dt.detectChanges();
+                }
+                else {
+                  this.loading = false;
+                  this.inventoryJournal.unbounds.isAddNew = true;
                 }
               });
             }
@@ -1079,11 +1121,20 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     return costAmt;
   }
 
-  focusInput() {
-    var element = document.querySelectorAll('input');
-    (element[0] as HTMLInputElement).focus();
-    (element[0] as HTMLInputElement).setSelectionRange(0, 2000);
+  autoAddRowSet(e: any) {
+    if (!this.loadingform || !this.loading) {
+      switch (e.type) {
+        case 'autoAdd':
+          this.addRow();
+          break;
+        case 'endEdit':
+          if (this.gridInventoryJournalLine.autoAddRow) {
+            this.addRow();
+          }
+          break;
+      }
+    }
+    //this.addRow();
   }
-
   //#endregion
 }

@@ -1,22 +1,35 @@
 import {
+  AfterViewInit,
   Component,
   Injector,
   Input,
+  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  CacheService,
+  ResourceModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 
 @Component({
   selector: 'process-views-tabs-details',
   templateUrl: './views-tabs-details.component.html',
   styleUrls: ['./views-tabs-details.component.css'],
 })
-export class ViewsTabsDetailsComponent extends UIComponent {
+export class ViewsTabsDetailsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   @ViewChild('viewKanban') viewKanban: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban: TemplateRef<any>;
-  @Input() viewMode = 6;
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+
+  @Input() viewMode = '6';
   @Input() dataObj: any;
 
   funcID: any = 'DPT06';
@@ -35,6 +48,7 @@ export class ViewsTabsDetailsComponent extends UIComponent {
 
   constructor(private inject: Injector) {
     super(inject);
+    // this.cache.viewSettings(this.funcID).subscribe((res) => {});
   }
 
   onInit(): void {
@@ -53,17 +67,18 @@ export class ViewsTabsDetailsComponent extends UIComponent {
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
   }
+
   ngAfterViewInit(): void {
     this.views = [
-      // {
-      //   id: '16',
-      //   type: ViewType.content,
-      //   active: false,
-      //   sameData: false,
-      //   model: {
-      //     panelRightRef: this.itemViewList,
-      //   },
-      // },
+      {
+        id: '16',
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        model: {
+          panelRightRef: this.itemViewList,
+        },
+      },
       {
         id: '6',
         type: ViewType.kanban,
@@ -86,18 +101,19 @@ export class ViewsTabsDetailsComponent extends UIComponent {
       //   },
       // },
     ];
+    this.detectorRef.detectChanges();
   }
-  viewChange(e) {
+  viewChanged(e) {
     if ((this.view.currentView as any)?.kanban)
       this.kanban = (this.view.currentView as any)?.kanban;
   }
 
-  getPropertiesHeader(data, type) {
+  getPropertiesHeader(data) {
     if (!this.listHeader || this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
-    return find ? find[type] : '';
+    return find;
   }
 
   getPropertyColumn() {

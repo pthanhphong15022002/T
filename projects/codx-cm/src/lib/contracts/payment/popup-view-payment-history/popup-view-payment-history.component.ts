@@ -37,8 +37,8 @@ export class PopupViewPaymentHistoryComponent {
   listPayment: CM_ContractsPayments[];
   contracts: CM_Contracts;
 
-  sumPaid = 0;
-  remain = 0;
+  sumPaid = 0; // đã thanh toán
+  remain = 0;//còn lại
 
   constructor(
     private cmService: CodxCmService,
