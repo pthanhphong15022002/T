@@ -29,11 +29,21 @@
     [rootData]="data"
   >
   </codx-card-img>
+
+  <ng-template #cardTitleTmp let-data>
+    <codx-temp-full
+      style="width: 100%"
+      [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+      [title]="data?.taskGroupName"
+    >
+    </codx-temp-full>
+  </ng-template>
+  <ng-template #footerKanban let-data> sdasd </ng-template>
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
   <div
-    class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
+    class="d-flex align-items-center justify-content-between w-100"
     [id]="data?.keyField"
   >
     <ng-container
@@ -63,7 +73,5 @@
     </ng-template>
   </div>
 </ng-template>
-<ng-template #cardTitleTmp let-data> dsfsdfdsf </ng-template>
-<ng-template #footerKanban let-data> sdasd </ng-template>
 
 <ng-template #itemViewList let-data></ng-template>

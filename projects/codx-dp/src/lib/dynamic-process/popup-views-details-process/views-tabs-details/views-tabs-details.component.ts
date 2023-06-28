@@ -28,6 +28,8 @@ export class ViewsTabsDetailsComponent
   @ViewChild('cardKanban') cardKanban: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('cardTitleTmp') cardTitleTmp: TemplateRef<any>;
+  @ViewChild('footerKanban') footerKanban: TemplateRef<any>;
 
   @Input() viewMode = '6';
   @Input() dataObj: any;
@@ -89,6 +91,7 @@ export class ViewsTabsDetailsComponent
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
+          setColorHeader: true,
         },
       },
       // {
