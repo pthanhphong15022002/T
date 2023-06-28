@@ -62,8 +62,6 @@
                 : formModel
                 : 'businessLineID'
                 : businessLineID
-                : 'CMLeads'
-                : 'grvCMLeads'
               | async
           "
         ></span>
@@ -114,10 +112,10 @@
         <div class="d-flex align-items-center text-gray-600">
           <span
             class="text-gray-700 fs-7 line-clamp-menu"
-            [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
-            #endDate
+            [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
+            #modifiedOn
             [innerHTML]="
-              data?.endDate | formatvalue : view.formModel : 'endDate' | async
+              data?.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
             "
           ></span>
         </div>
@@ -196,7 +194,7 @@
     [title]="data?.leadName"
     [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmpCard"
-    [hideMF]="data?.status == '7'"
+    [hideMF]="data?.status == '11'"
   >
   </codx-temp-full>
   <ng-template #descTmpCard>
@@ -239,16 +237,16 @@
           <span class="icon-16 icon-av_timer me-1"></span>
           <span
             class="text-gray-700"
-            #endDate
+            #modifiedOn
             [innerHTML]="
-              data.endDate | formatvalue : view.formModel : 'endDate' | async
+              data?.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
             "
           ></span>
         </span>
         <codx-imgs
           [isToolTip]="true"
           [width]="25"
-          [objectId]="data.owner"
+          [objectId]="data?.owner"
           objectType="AD_Users"
           [numberImages]="1"
         >

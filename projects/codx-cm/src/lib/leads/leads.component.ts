@@ -356,7 +356,7 @@ export class LeadsComponent
     };
 
     var isMergeLead = (eventItem, data) => {
-      eventItem.disabled = false;
+      eventItem.disabled = data.status != '1' && data.status != '3';
     };
 
     functionMappings = {

@@ -5,7 +5,7 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="dataSelected?.status == '7'"
+    [hideMF]="dataSelected?.status == '11'"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
@@ -58,9 +58,14 @@
           <div class="ms-5 d-flex justify-content-between">
             <div class="d-flex flex-column">
               <div class="d-flex flex-row">
-                <div class="d-flex align-items-top justify-content-end fs-3">
-                </div>
+                <ng-template #tooltipDealValue>
+                  <div class="text-end text-sm-start">
+                    <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
+                    >: {{ dataSelected?.dealValue }}
+                  </div>
+                </ng-template>
                 <div
+                [ngbTooltip]="tooltipDealValue"
                   class="d-flex align-items-top justify-content-end ps-10 fs-3"
                 >
                 <span
@@ -68,7 +73,7 @@
               ></span>
               <span
                 class="fw-bold line-clamp-menu pe-1"
-                [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+
                 #dealValue
                 [innerHTML]="
                   dataSelected?.dealValue
@@ -206,43 +211,39 @@
                   <div
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
-                    <div
-                    *ngIf="dataSelected.status != '1' && dataSelected.status != '7'"
-                    [ngStyle]="{
-                      'background-color':
-                        dataSelected.status == '3' || dataSelected.status == '4'
-                          ? colorReasonSuccess?.color
-                          : dataSelected.status == '5' ||
-                            dataSelected.status == '6'
-                          ? colorReasonFail?.color
-                          : dataSelected?.steps['backgroundColor']
-                    }"
-                    class="badge badge-sm d-flex align-items-center"
+                  <div
+                  *ngIf="dataSelected.status == '5'; else statusDefault"
+                  [ngStyle]="{
+                    'background-color': dataSelected?.steps['backgroundColor']
+                  }"
+                  class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+                >
+                  <span
+                    [ngClass]="dataSelected?.steps['icon']"
+                    [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                    class="me-1"
+                  ></span>
+                  <span
+                    class="text-ellipsis line-clamp line-clamp-1"
+                    [ngbTooltip]="dataSelected?.currentStepName"
+                    [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
+                    >{{ dataSelected?.currentStepName }}</span
                   >
-                    <span
-                      [ngClass]="dataSelected?.steps['icon']"
-                      [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                      class="me-1"
-                    ></span>
-                    <span
-                      class="menu-title fw-bold line-clamp line-clamp-2"
-                      [ngbTooltip]="dataSelected?.currentStepName"
-                      [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                      >{{ dataSelected?.currentStepName }}</span
-                    >
-                  </div>
-                  <div *ngIf="dataSelected.status == '1' || dataSelected.status == '7'">
+                </div>
+                <ng-template #statusDefault>
+                  <div *ngIf="dataSelected?.status">
                     <codx-vll
-                      [name]="gridViewSetup?.Status?.referedValue"
-                      [field]="'Status'"
-                      [value]="dataSelected?.status"
-                      [showText]="true"
-                      [showBgColor]="true"
-                      class="badge badge-light badge-sm"
-                    >
-                    </codx-vll>
+                    [name]="gridViewSetup?.Status?.referedValue"
+                    [field]="'Status'"
+                    [value]="dataSelected?.status"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm"
+                  >
+                  </codx-vll>
                   </div>
 
+                </ng-template>
                   </div>
 
                   <ng-template #tooltipSalesperson>
@@ -605,14 +606,14 @@
 </ng-template> -->
 
 <ng-template #referencesDeal>
-<div *ngIf="deals; else noData"
+<div *ngIf="tmpDeal; else noData"
 class="d-flex justify-content-between align-items-top p-3 border-bottom border-gray-150 user-nav-item"
 >
 <div class="d-flex flex-column">
   <div
     class="fw-bold fs-6 line-clamp line-clamp-1 mb-3"
     [innerHTML]="
-    deals.dealName | formatvalue : formModelDeal : 'DealName' | async
+    tmpDeal.dealName | formatvalue : formModelDeal : 'DealName' | async
     "
   ></div>
   <div class="d-flex flex-wrap align-items-top me-4 mb-1">
@@ -630,11 +631,21 @@ class="d-flex justify-content-between align-items-top p-3 border-bottom border-g
         fiedName="DealValue"
       ></codx-label>
       <span
-        class="ms-1 text-dark fw-bold"
+        class="ms-1 text-dark fw-bold pe-1"
         [innerHTML]="
-        deals.dealValue | formatvalue : formModelDeal : 'DealValue' | async
+        tmpDeal.dealValue | formatvalue : formModelDeal : 'DealValue' | async
         "
       ></span>
+      <span
+      class="fw-bold line-clamp-menu"
+      #currencyID
+      [innerHTML]="
+      tmpDeal?.currencyID
+          | formatvalue : formModelDeal : 'currencyID' : currencyID
+          | async
+      "
+    ></span>
+
     </div>
     <div class="d-flex align-items-center">
       <span
@@ -655,7 +666,7 @@ class="d-flex justify-content-between align-items-top p-3 border-bottom border-g
       <span
         class="me-1 text-dark fw-bold"
         [innerHTML]="
-        deals.probability | formatvalue : formModelDeal : 'Probability' | async
+        tmpDeal.probability | formatvalue : formModelDeal : 'Probability' | async
         "
       ></span
       ><span class="text-dark fw-bold">%</span>
@@ -666,52 +677,35 @@ class="d-flex justify-content-between align-items-top p-3 border-bottom border-g
   <div class="d-flex flex-column w-130px min-w-130px">
     <div class="d-flex align-items-center justify-content-end mb-1">
       <div
-        *ngIf="deals.status != '1'"
-        style="border-radius: 23px; padding: 0px 8px 0px;"
-        [ngStyle]="{
-          'background-color':
-          deals.status == '3' || deals.status == '4'
-              ? colorReasonSuccess?.color
-              : deals.status == '5' || deals.status == '6'
-              ? colorReasonFail?.color
-              : getStep(deals?.stepID)?.backgroundColor
-        }"
-        class="d-flex align-items-center"
+      *ngIf="tmpDeal.status == '5'; else statusDefault"
+      [ngStyle]="{
+        'background-color': tmpDeal?.steps['backgroundColor']
+      }"
+      class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+    >
+      <span
+        [ngClass]="tmpDeal?.steps['icon']"
+        [ngStyle]="{ color: tmpDeal?.steps['iconColor'] }"
+        class="me-1"
+      ></span>
+      <span
+        class="text-ellipsis line-clamp line-clamp-1"
+        [ngbTooltip]="tmpDeal?.currentStepName"
+        [ngStyle]="{ color: tmpDeal?.steps['textColor'] }"
+        >{{ tmpDeal?.currentStepName }}</span
       >
-        <span
-          [ngClass]="getStep(deals?.stepID)?.icon"
-          [ngStyle]="{ color: getStep(deals?.stepID)?.iconColor }"
-          class="me-1"
-        ></span>
-        <div
-          [ngbPopover]="getStep(deals?.stepID)?.stepName"
-          #pStep="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="pStep.open()"
-          (mouseleave)="pStep.close()"
-          placement="left bottom right top"
-        >
-          <span
-            class="line-clamp line-clamp-1"
-            [ngStyle]="{ color: getStep(deals?.stepID)?.textColor }"
-            [innerHTML]="getStep(deals?.stepID)?.stepName"
-          ></span>
-        </div>
-      </div>
-      <div
-        class="d-flex justify-content-end mb-1"
-        *ngIf="deals.status == '1'"
+    </div>
+    <ng-template #statusDefault>
+      <codx-vll
+        [name]="gridViewSetupDeal?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="tmpDeal?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
       >
-        <codx-vll
-          [name]="gridViewSetup?.Status?.referedValue"
-          [field]="'Status'"
-          [value]="deals?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-sm"
-        >
-        </codx-vll>
-      </div>
+      </codx-vll>
+    </ng-template>
     </div>
     <div class="ms-1 d-flex justify-content-end align-items-center mt-1">
       <span
@@ -726,17 +720,17 @@ class="d-flex justify-content-between align-items-top p-3 border-bottom border-g
       <span
         class="text-gray-700"
         [innerHTML]="
-        deals.endDate | formatvalue : formModelDeal : 'EndDate' | async
+        tmpDeal.endDate | formatvalue : formModelDeal : 'EndDate' | async
         "
       ></span>
     </div>
   </div>
 
-  <div class="ms-5" *ngIf="deals.owner">
+  <div class="ms-5" *ngIf="tmpDeal.owner">
     <codx-imgs
       [isToolTip]="true"
       [width]="30"
-      [objectId]="deals.owner"
+      [objectId]="tmpDeal.owner"
       ojectType="AD_Users"
       [numberImages]="1"
     >
