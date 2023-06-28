@@ -52,6 +52,7 @@ import { PopupSelectTempletComponent } from './instances/popup-select-templet/po
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '@core/core.module';
 import { environment } from 'src/environments/environment';
+import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details-process/views-tabs-details/views-tabs-details.component';
 
 const routes: Routes = [
   {
@@ -142,6 +143,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ApprovalsComponent,
     PopupEditOwnerstepComponent,
     PopupSelectTempletComponent,
+    ViewsTabsDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -160,7 +162,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     SliderModule,
     CoreModule,
     CodxCoreModule.forRoot({ environment }),
-
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

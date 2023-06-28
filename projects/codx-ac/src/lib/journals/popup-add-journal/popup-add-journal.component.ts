@@ -551,6 +551,10 @@ export class PopupAddJournalComponent
       .closed.subscribe(({ event }) => {
         console.log(event);
 
+        if (!event) {
+          return;
+        }
+
         this.journal.idimControl = event;
         this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
           this.journal.idimControl.split(';').includes(d.value)

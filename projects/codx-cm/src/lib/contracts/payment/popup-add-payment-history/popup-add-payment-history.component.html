@@ -124,8 +124,6 @@
           <codx-input
             [formModel]="dialog.formModel"
             field="remainAmt"
-            type="number"
-            [min]="0"
             [crrValue]="paymentHistory?.remainAmt"
             (valueChange)="valueChangeText($event)"
             [disabled]="true"
