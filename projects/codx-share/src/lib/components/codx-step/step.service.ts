@@ -75,7 +75,7 @@ export class StepService {
 
   async getFormModel(formModel: FormModel) {
     let listHeaderText = {};
-    if(formModel){
+    if (formModel) {
       let header = await firstValueFrom(
         this.cache.gridViewSetup(formModel?.formName, formModel?.gridViewName)
       );
@@ -91,12 +91,15 @@ export class StepService {
     return listHeaderText;
   }
 
-  checkRequire(require = [], data, headerText){
+  checkRequire(require = [], data, headerText) {
     let message = [];
-    if(require?.length > 0){
+    if (require?.length > 0) {
       for (let key of require) {
         if (
-          (typeof data[key] === 'string' && !data[key].toString()?.trim()) || !data[key] || data[key]?.length === 0 || data[key].toString()?.trim() == 'Invalid Date'
+          (typeof data[key] === 'string' && !data[key].toString()?.trim()) ||
+          !data[key] ||
+          data[key]?.length === 0 ||
+          data[key].toString()?.trim() == 'Invalid Date'
         ) {
           message.push(headerText[key]);
         }

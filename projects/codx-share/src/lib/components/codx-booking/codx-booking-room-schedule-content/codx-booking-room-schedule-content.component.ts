@@ -26,6 +26,7 @@ export class CodxBookingRoomScheduleContentComponent
   @Input() recID: any;
   data:any;
   curUser: import("codx-core").UserModel;
+  haveFile = false;
   constructor(
     private injector: Injector,
     private codxShareService: CodxShareService,
@@ -46,6 +47,19 @@ export class CodxBookingRoomScheduleContentComponent
         this.data = res;
       }
     });
+      this.api
+      .execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      [this.recID])
+      .subscribe((res:any[]) => {
+          if(res?.length>0){
+            this.haveFile = true;
+          }
+      });
+  
   }
   ngAfterViewInit(): void {}
 

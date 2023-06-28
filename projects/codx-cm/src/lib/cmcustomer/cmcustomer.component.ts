@@ -82,6 +82,7 @@ export class CmCustomerComponent
   viewMode = 2;
   isButton = true;
   gridViewSetup: any;
+  lstCustGroups = [];
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -154,7 +155,7 @@ export class CmCustomerComponent
     }
   }
 
-  afterLoad() {
+  async afterLoad() {
     // this.entityName =
     //   this.funcID == 'CM0101'
     //     ? 'CM_Customers'
@@ -172,6 +173,7 @@ export class CmCustomerComponent
       // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
       // this.view.formModel = formMD;
       if (this.funcID == 'CM0101') {
+        this.lstCustGroups = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','CustomerGroupsBusiness','GetListDealCompetitorsAsync'));
         this.cache
           .gridViewSetup(fun?.formName, fun?.gridViewName)
           .subscribe((res) => {
@@ -577,7 +579,13 @@ export class CmCustomerComponent
       });
   }
 
-  updateStatusCustomer(status, data) {
+  async updateStatusCustomer(status, data) {
+    var check = false;
+    check = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','DealsBusiness','IsExitDealStatusByCustomerIDAsync', data?.recID));
+    if(check){
+      this.notiService.notifyCode('CM020');
+      return;
+    }
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService
