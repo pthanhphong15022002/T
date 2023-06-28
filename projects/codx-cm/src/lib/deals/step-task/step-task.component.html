@@ -3,12 +3,12 @@
     <div class="left d-flex align-items-center">
       <div>
         <codx-dropdown-select
-          cssPopup="h-350px w-300px"
+          cssPopup="h-300px w-300px"
           [isMulti]="true"
           type="valuelist"
           [emptyText]="'Tình trạng'"
           field="status"
-          [refValue]="'DP032'"
+          [dataSource]="status"
           (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div>
