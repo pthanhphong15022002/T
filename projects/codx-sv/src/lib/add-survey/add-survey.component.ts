@@ -199,9 +199,9 @@ export class AddSurveyComponent extends UIComponent {
           this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{
             if(item) {
               var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
-              var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0100");
+              //var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0100");
               dks[0].disabled = true;
-              ph[0].disabled = false;
+              //ph[0].disabled = false;
               this.notifySvr.notifyCode("SV003");
             }
             else this.notifySvr.notifyCode("SV004");
@@ -263,6 +263,16 @@ export class AddSurveyComponent extends UIComponent {
       if(close && close[0]) close[0].disabled = false;
     }
     else
+    {
+      var close = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'SVT0104'
+      );
+  
+      if(close && close[0]) close[0].disabled = true;
+    }
+
+    if(data?.stop)
     {
       var close = e.filter(
         (x: { functionID: string }) =>

@@ -37,8 +37,7 @@ export class PopupViewPlanVersionComponent extends UIComponent {
   planNull: boolean;
   dataOKR: any;
   value=new OM_Statistical();
-  showPlanMF: boolean;
-  loadedData: boolean;
+  loadedData = false;
   curUser: any;
   funcID: any;
   isCollapsed = false;
@@ -71,11 +70,8 @@ export class PopupViewPlanVersionComponent extends UIComponent {
         .subscribe((item: any) => {
           //Reset data View
           //this.isCollapsed = false;
-          if (item) {           
-
-            this.dataOKRPlans = null;
+          if (item) {
             this.dataOKRPlans = item;
-            this.planNull = false;
             this.codxOmService
               .getAllOKROfPlan(item?.recID)
               .subscribe((okrs: any) => {
@@ -86,14 +82,20 @@ export class PopupViewPlanVersionComponent extends UIComponent {
                       this.totalOB += gr.listOKR.length;
                     }
                   }
-                  this.calculateStatistical();
-                  this.isAfterRender = true;
-                  this.showPlanMF = true;
-                  this.loadedData = true;
-                  this.detectorRef.detectChanges();
+                  
                 }
+                this.calculateStatistical();
+                this.isAfterRender = true;
+                this.loadedData = true;
+                this.detectorRef.detectChanges();
               });
           } 
+          else{      
+            this.dataOKRPlans = null;     
+            this.isAfterRender = true;
+            this.loadedData = true;
+            this.detectorRef.detectChanges();
+          }
         });
   }
 
