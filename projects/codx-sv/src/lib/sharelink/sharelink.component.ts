@@ -103,7 +103,7 @@ export class SharelinkComponent implements OnInit {
     else {
       this.emailTemplate = emailTemplate[0];
       this.subject = emailTemplate[0]?.subject;
-      this.messages = emailTemplate[0]?.messages;
+      this.messages = emailTemplate[0]?.message;
     }
   }
   save()
