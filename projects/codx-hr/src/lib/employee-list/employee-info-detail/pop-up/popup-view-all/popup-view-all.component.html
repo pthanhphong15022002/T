@@ -11,7 +11,7 @@
         <ng-container *ngComponentOutlet="filter"></ng-container>
     </ng-container> -->
 
-    <div class="card-body p-0 employee-all mt-1" 
+    <div class="card-body p-0 employee-all" 
     *ngIf="formModel && columnGrid; else emptyDataTemplate"
     >
       <!-- <codx-gridview
@@ -42,7 +42,7 @@
       [predicates]="'EmployeeID=@0'"
       [dataValues]="employeeId"
       [emptyTemplate]="emptyDataTemplate"
-      rowHeight="60"
+      rowHeight="40"
     ></codx-gridview-v2>
     </div>
   </ng-template>
@@ -304,56 +304,50 @@
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
       [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
     ></span> -->
-    <div class="d-flex flex-column justify-content-end">
-      <div
-        class="d-flex align-items-center text-dark fs-6 fw-bold"
-      >
-      <ng-template #popNewest>
-        <span>
-          <codx-label
-            name="lblIsNewest"
-            [formModel]="formModel"
-            default="Đang hiệu lực"
-          ></codx-label>
-        </span>
-      </ng-template>
-      <div
-        *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
-        #popOver="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="popOver.open()"
-        (mouseleave)="popOver.close()"
-        placement="right"
-        [ngbPopover]="popNewest"
-        [style.color]="'#0078FF'"
-        class="icon-bookmark icon-16 me-2"
-      >
+    <div
+          class="d-flex align-items-center"
+        >
+        <ng-template #popNewest>
+          <span>
+            <codx-label
+              name="lblIsNewest"
+              [formModel]="formModel"
+              default="Đang hiệu lực"
+            ></codx-label>
+          </span>
+        </ng-template>
+        <div class="w-20px me-1">
+          <div
+            *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="right"
+            [ngbPopover]="popNewest"
+            [style.color]="'#0078FF'"
+            class="icon-bookmark icon-18"
+          >
 
+          </div>
+        </div>
+        <span class="text-dark"
+          [innerHTML]="
+            data?.bSalary
+              | formatvalue : formModel : 'bSalary'
+              | async
+          "
+        ></span>
       </div>
-        <span class="icon-attach_money icon-16 me-1"></span>
-        <span class="">
-          <span
-            [innerHTML]="
-              data?.bSalary
-                | formatvalue : formModel : 'bSalary'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-    </div>
   </div>
 </ng-template>
 
 <ng-template #basicSalaryCol2 let-data>
-  <div class="d-flex flex-column justify-content-end">
-    <div class="d-flex align-items-center">
-      <span
-        class="icon-monetization_on icon-16 me-2 text-dark fs-6 fw-bold"
-      ></span>
+  <div class="d-flex justify-content-end w-125px">
+    <div class="d-flex align-items-center w-auto">
       <span
         [ngClass]="
-          data.isCurrent ? 'text-primary fw-bold' : 'text-dark fs-6 fw-bold'
+          data.isCurrent ? 'text-primary' : 'text-dark'
         "
       >
         <span
@@ -369,18 +363,14 @@
 </ng-template>
 
 <ng-template #basicSalaryCol3 let-data>
-  <div class="d-flex flex-column justify-content-end w-200px aqua">
-    <div
-      class="text-dark fs-6 fw-bold"
-    >
-      <span
+  <div class="d-flex justify-content-end w-125px">
+    <span class="text-dark"
         [innerHTML]="
           data?.jSalary
             | formatvalue : formModel : 'jSalary'
             | async
         "
       ></span>
-    </div>
   </div>
 </ng-template>
 
@@ -388,9 +378,8 @@
   <div class="has-action-menu">
     <div class="d-flex flex-column">
       <div
-        class="d-flex align-items-center text-dark fs-6 fw-bold"
+        class="d-flex align-items-center text-dark"
       >
-        <span class="icon-event icon-16 text-gray-500 me-2"></span>
         <span
           [innerHTML]="
             data?.effectedDate
@@ -399,7 +388,7 @@
           "
         ></span>
         <span *ngIf="data?.expiredDate">
-          <span class="mx-2">-</span>
+          <span class="mx-2 text-gray-400">-</span>
           <span
             [innerHTML]="
               data?.expiredDate
@@ -424,6 +413,7 @@
 <!-- #region template Phụ cấp  -->
 <ng-template #templateBenefitID let-data>
   <ng-template #popNewest>
+    
     <span>
       <codx-label
         name="lblIsNewest"
@@ -432,18 +422,21 @@
       ></codx-label>
     </span>
   </ng-template>
-  <span
-    *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
-    #popOver="ngbPopover"
-    [openDelay]="500"
-    (mouseenter)="popOver.open()"
-    (mouseleave)="popOver.close()"
-    placement="right"
-    [ngbPopover]="popNewest"
-    [style.color]="'#0078FF'"
-    class="icon-bookmark icon-16 me-2"
-  >
-</span>
+  <div class="d-flex align-items-top">
+  <span class="w-20px me-1">
+    <span
+      *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="right"
+      [ngbPopover]="popNewest"
+      [style.color]="'#0078FF'"
+      class="icon-bookmark icon-18"
+    >
+   </span>
+  </span>
 
   <span
     [innerHTML]="
@@ -454,18 +447,21 @@
       class="icon-i-plus-circle icon-12 pe-2"
     ></span> -->
   </span>
+</div>
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
-  <div #benefitNorm>
-    <span
-      [innerHTML]="
-        data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
-      "
-    >
-    </span>
-    <span class="mx-1">/</span>
-    <span
+  <div class="d-flex align-items-center" #benefitNorm>
+    <div class="w-150px d-flex justify-content-end">
+      <span class="text-dark"
+        [innerHTML]="
+          data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
+        "
+      >
+      </span>
+    </div>
+    <span class="mx-2 text-gray-400">/</span>
+    <span class="w-100px text-gray-600"
       [innerHTML]="
         data?.benefitNorm
           | formatvalue : formModel : 'benefitNorm'
@@ -572,19 +568,21 @@
         </div>
       </div>
       <div class="d-flex align-items-center mb-2" *ngIf="!data.isAppendix">
-        <span
-        *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
-        #popOver="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="popOver.open()"
-        (mouseleave)="popOver.close()"
-        placement="right"
-        [ngbPopover]="popNewest"
-        [style.color]="'#0078FF'"
-        class="icon-bookmark icon-16 me-2"
-      >
-    </span>
-        <span class="fw-bolder">
+        <span class="w-20px me-2">
+          <span
+            *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="right"
+            [ngbPopover]="popNewest"
+            [style.color]="'#0078FF'"
+            class="icon-bookmark icon-18"
+          >
+          </span>
+        </span>
+        <span class="fw-bold">
           <span
             [innerHTML]="
               data?.contractTypeID

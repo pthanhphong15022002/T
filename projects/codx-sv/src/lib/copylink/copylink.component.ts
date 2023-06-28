@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { AESCryptoService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'app-copylink',
@@ -21,6 +21,7 @@ export class CopylinkComponent implements OnInit{
     private auth : AuthStore,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private aesCrypto: AESCryptoService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -35,10 +36,18 @@ export class CopylinkComponent implements OnInit{
   ngOnInit()
   {
     this.user = this.auth.get();
+
+    var obj = 
+    {
+      funcID : this.funcID,
+      recID: this.recID
+    }
+    var key = JSON.stringify(obj);
+    key = this.aesCrypto.encode(key);
     //Link public 
-    this.public = location.host + "/" + this.user.tenant +  "/forms?funcID=" + this.funcID +"&recID=" + this.recID;
+    this.public = location.host + "/" + this.user.tenant +  "/forms?_k="+key;
     //Link Internal
-    this.internal = location.host + "/" + this.user.tenant +  "/sv/review?funcID=" + this.funcID +"&recID=" + this.recID;
+    this.internal = location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
 
     this.copyLinkGroup = this.formBuilder.group({
       link: 'internal',
