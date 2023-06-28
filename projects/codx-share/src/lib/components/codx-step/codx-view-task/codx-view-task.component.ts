@@ -251,14 +251,14 @@ export class CodxViewTaskComponent implements OnInit {
         document
           .getElementsByClassName('codx-dialog-container')[0]
           .setAttribute('style', 'width: 550px; z-index: 1000;');
-        doc.setAttribute('style', 'display: none');
-        ext.classList.remove('rotate-back');
+        doc?.setAttribute('style', 'display: none');
+        ext?.classList.remove('rotate-back');
       } else {
         document
           .getElementsByClassName('codx-dialog-container')[0]
           .setAttribute('style', 'width: 900px; z-index: 1000;');
-        doc.setAttribute('style', 'display: block');
-        ext.classList.add('rotate-back');
+        doc?.setAttribute('style', 'display: block');
+        ext?.classList.add('rotate-back');
       }
     }
   }

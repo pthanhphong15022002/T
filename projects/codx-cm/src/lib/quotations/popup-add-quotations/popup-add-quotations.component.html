@@ -14,7 +14,7 @@
       <div class="d-flex justify-content-start me-2">
         <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
           <i *ngIf="action == 'add'" class="icon-add_box icon-16"></i>
-          <i *ngIf="action == 'copy'" class=" icon-file_copy icon-16"></i>
+          <i *ngIf="action == 'copy'" class="icon-file_copy icon-16"></i>
           <i *ngIf="action == 'edit'" class="icon-edit_square icon-16"></i>
         </div>
         <div class="card-title">
@@ -108,7 +108,7 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div class="row mb-2">
+      <div class="row mt-5 mb-2">
         <ng-container *ngTemplateOutlet="descriptionQuotation"></ng-container>
       </div>
     </div>
@@ -482,17 +482,16 @@
 
   <!--  Start:thêm sản phẩm -->
   <ng-template #descriptionQuotation>
-    
-      <div #tabsNote class="row">
-        <div class="form-group">
-          <codx-label fiedName="Memo" [formModel]="form.formModel"></codx-label>
-          <codx-input
-            field="memo"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
-        </div>
-        <!-- <div
+    <div #tabsNote class="row">
+      <div class="form-group">
+        <codx-label fiedName="Memo" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="memo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <!-- <div
           class="col-4 fw-bolder fs-5"
           style="padding-left: 100px; padding-right: 20px"
         >
@@ -605,8 +604,7 @@
             </div>
           </div>
         </div> -->
-      </div>
-
+    </div>
   </ng-template>
   <!--  End:thêm sản phẩm -->
 </codx-form>

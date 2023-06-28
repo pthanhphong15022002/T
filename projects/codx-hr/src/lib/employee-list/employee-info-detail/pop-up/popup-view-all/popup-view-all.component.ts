@@ -932,9 +932,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       (this.gridView.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe((res) =>{
+          [this.filterByBenefitIDArr.join(';')],res =>{
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
         });
     } else if (
@@ -956,9 +954,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       (this.gridView.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe((res) =>{
+          [this.filterByBenefitIDArr.join(';')],res =>{
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
         });
     } else if (
@@ -967,8 +963,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}" and EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       (this.gridView.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [])
-        .subscribe((res) =>{
+        .setPredicates([this.filterEBenefitPredicates], [],res =>{
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
         });
       // console.log('truong hop 3', this.filterEBenefitPredicates);
@@ -980,8 +975,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}")`;
       // console.log('truong hop 4', this.filterEBenefitPredicates);
       (this.gridView.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [''])
-        .subscribe((res) =>{
+        .setPredicates([this.filterEBenefitPredicates], [''],res =>{
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
         });
     }

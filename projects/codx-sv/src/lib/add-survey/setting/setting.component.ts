@@ -44,6 +44,7 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
   changeColors = false;
   primaryColor:any;
   backgroudColor:any;
+  emailTemplate:any;
 
   constructor(private injector: Injector , private change : ChangeDetectorRef , private SvService : CodxSvService , private shareService : CodxShareService) {
     super(injector);
@@ -52,12 +53,17 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-   
+    if(changes?.data && changes.data?.previousValue != changes.data?.currentValue)
+    {
+      if(typeof this.data.settings == "string") this.data.settings = JSON.parse(this.data.settings);
+      if(this.data?.settings?.image) this.srcFile = this.data?.settings?.image;
+    }
   }
 
   onInit(): void {
     this.parseDataSetting();
     this.getVll();
+    this.getAlertRule();
   }
 
   parseDataSetting()
@@ -75,6 +81,36 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
         document.getElementById("bg-color-sv-setting").style.backgroundColor = this.data?.settings?.backgroudColor;
       }
       if(this.data?.settings?.image) this.srcFile = this.data?.settings?.image;
+    }
+  }
+
+  getAlertRule()
+  {
+    var alertRule = this.SvService.loadAlertRule("SV_0001") as any;
+    if(isObservable(alertRule))
+    {
+      alertRule.subscribe((item:any)=>{
+        this.getEmailTemplate(item.emailTemplate)
+      })
+    }
+    else this.getEmailTemplate(alertRule?.emailTemplate)
+  }
+
+  getEmailTemplate(recID:any)
+  {
+    var emailTemplate = this.SvService.loadEmailTemplate(recID) as any;
+    if(isObservable(emailTemplate))
+    {
+      emailTemplate.subscribe((item:any)=>{ 
+        this.emailTemplate = item[0]
+        this.subject = item[0]?.subject;
+        this.messages = item[0]?.message;
+      });
+    }
+    else {
+      this.emailTemplate = emailTemplate[0];
+      this.subject = emailTemplate[0]?.subject;
+      this.messages = emailTemplate[0]?.messages;
     }
   }
   //lấy vll color
