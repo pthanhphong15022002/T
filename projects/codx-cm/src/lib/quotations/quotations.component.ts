@@ -76,7 +76,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
-  predicates = 'RefType==@0 && RefID==@1';
+  predicates = '';
   dataValues = '';
   columnGrids: any;
   arrFieldIsVisible = [];
@@ -379,7 +379,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
     var obj = {
       data: res,
-      disableRefID: false,
+      disableDealID: false,
       action: 'add',
       headerText: this.titleAction,
     };
@@ -541,7 +541,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.codxCmService.getDeals(dt.refID).subscribe((deals) => {
+    this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
       if (deals) {
         this.codxCmService.getProcess(deals.processID).subscribe((process) => {
           if (process) {
