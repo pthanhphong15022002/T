@@ -312,12 +312,30 @@
             field="firstMonthType"
             [formModel]="formModel"
             [Group]="formGroup"
+            (valueChange)="onChangeFirstMonthType($event)"
           ></codx-input>
         </div>
       </div>
 
-    <div class="form-group row">
-        bo cai bang data vao day
+    <div class="form-group row ms-6" *ngIf="loadGridview1 == true">
+        <codx-gridview-v2
+        #gridView1
+      [columnsGrid]="columnGrid1"
+      [service]="'HR'"
+      [assemblyName]="'Core'"
+      [className]="'DataBusiness'"
+      [method]="'LoadDataAsync'"
+      [hideMoreFunc]="true"
+      [editSettings]="editSettings"
+      [templateMore]="tempMfGrv1"
+      [dataSource]="dataSourceGridView1"
+      rowHeight="35"
+      (onAddNew)="onAddNewGrid1($event)"
+      [autoAddRow]="true"
+      (onEdit)="onEditGrid1($event)"
+      (onDelete)="onDeleteGrid1($event)"
+        >
+        </codx-gridview-v2>
     </div>
 
     <div class="form-group row">
@@ -624,4 +642,46 @@
       ></codx-label>
     </button>
   </div>
+</ng-template>
+
+
+<ng-template #headTmpGrid1Col1>
+  <codx-label
+    [formModel]="formModel"
+    [name]="'lblGridCol1'"
+    default="Từ (>=)"
+    class="fw-bold fs-6 text-gray-800"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #headTmpGrid1Col2>
+  <codx-label
+    [formModel]="formModel"
+    [name]="'lblGridCol2'"
+    default="Số ngày phép"
+    class="fw-bold fs-6 text-gray-800"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #tmpGrid1Col1 let-data>
+  <div class="d-flex align-items-center mb-2">
+    {{data.fromValue}}
+  </div>
+</ng-template>
+
+<ng-template #tmpGrid1Col2 let-data>
+  <div class="d-flex align-items-center mb-2">
+    {{data.days}}
+  </div>
+</ng-template>
+
+<ng-template #tempMfGrv1 let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="formModel"
+    (clickMF)="clickMF($event, data)"
+    type="hover"
+  ></codx-mfunc>
 </ng-template>

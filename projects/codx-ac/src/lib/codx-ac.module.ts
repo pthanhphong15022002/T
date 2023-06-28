@@ -77,6 +77,7 @@ import { InvoiceSetlementComponent } from './periodic/invoice-setlement/invoice-
 import { PopAddInvoiceSetlementComponent } from './periodic/invoice-setlement/pop-add-invoice-setlement/pop-add-invoice-setlement.component';
 import { ClosingDataComponent } from './periodic/closing-data/closing-data.component';
 import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
+import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
 export const routes: Routes = [
   {
@@ -315,6 +316,7 @@ export const routes: Routes = [
     NgxUiLoaderModule,
     ProgressBarModule,
     CircularGaugeModule,
+    TooltipModule 
   ],
 })
 export class AcModule {}

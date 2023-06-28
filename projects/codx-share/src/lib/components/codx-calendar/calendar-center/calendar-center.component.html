@@ -74,7 +74,7 @@
             </div>
             <div *ngIf="itemList.status != null">
               <div class="my-2 note-list">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-start">
                   <codx-input
                     #checkBoxNote
                     id="checkBoxNote"
@@ -126,11 +126,7 @@
       <span class="d-flex flex-start"
         >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
       >
-      <span
-        class="d-flex flex-start fw-bold"
-        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-        >{{ data.title }}</span
-      >
+      <span class="fw-bold text-truncate">{{ data.title }}</span>
     </div>
   </ng-container>
   <ng-container *ngIf="data.transType === 'WP_Notes'">

@@ -106,6 +106,7 @@
         </div>
       </div> -->
     <!-- </div> -->
+
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -162,66 +163,48 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <!-- <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="formModelDeals"
-            fiedName="EndDate"
-            default="Ngày đến hạn dự kiến"
-          >
-          </codx-label>
-          <codx-input
-            type="datetime"
-            field="endDate"
-            format="d"
-            [placeholder]="gridViewSetupDeal?.EndDate?.description"
-            [crrValue]="deal?.endDate"
-            (valueChange)="valueDateChange($event, 'deal')"
-          >
-          </codx-input>
-        </div>
-      </div> -->
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="formModelDeals"
-            fiedName="ExpectedClosed"
-            default="Ngày dự kiến đóng"
-          >
-          </codx-label>
-          <codx-input
-            type="datetime"
-            format="d"
-            field="expectedClosed"
-            [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
-            [crrValue]="deal?.expectedClosed"
-            (valueChange)="valueDateChange($event, 'deal')"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="formModelDeals"
-            fiedName="ChannelID"
-            default="Kênh"
-          >
-          </codx-label>
-          <codx-input
-            type="combobox"
-            [formModel]="formModelDeals"
-            field="channelID"
-            [crrValue]="deal?.channelID"
-            [refValue]="gridViewSetupDeal?.ChannelID?.referedValue"
-            [placeholder]="gridViewSetupDeal?.ChannelID?.description"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
+<div class="row">
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        [formModel]="formModelDeals"
+        fiedName="ExpectedClosed"
+        default="Ngày dự kiến đóng"
+      >
+      </codx-label>
+      <codx-input
+        type="datetime"
+        format="d"
+        field="expectedClosed"
+        [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
+        [crrValue]="deal?.expectedClosed"
+        (valueChange)="valueDateChange($event, 'deal')"
+      >
+      </codx-input>
     </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        [formModel]="formModelDeals"
+        fiedName="ChannelID"
+        default="Kênh"
+      >
+      </codx-label>
+      <codx-input
+        type="combobox"
+        [formModel]="formModelDeals"
+        field="channelID"
+        [crrValue]="deal?.channelID"
+        [refValue]="gridViewSetupDeal?.ChannelID?.referedValue"
+        [placeholder]="gridViewSetupDeal?.ChannelID?.description"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+</div>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -231,13 +214,6 @@
             [formModel]="formModelDeals"
           >
           </codx-label>
-          <!--
-          <codx-popup-participants
-            [lstParticipants]="listParticipants"
-            [dialog]="dialog"
-            (eventUser)="valueChangeOwner($event)"
-            [owner]="deal?.salespersonID"
-          ></codx-popup-participants> -->
           <ejs-combobox
             [dataSource]="listParticipants"
             [fields]="fieldCbxParticipants"

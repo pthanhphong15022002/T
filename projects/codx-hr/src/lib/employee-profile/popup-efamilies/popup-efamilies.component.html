@@ -40,7 +40,7 @@
                 </codx-img> -->
         <codx-img
           #imageUpLoad
-          [width]="100"
+          [width]="80"
           [objectType]="formModel.entityName"
           aria-disabled="true"
           [funcId]="funcID"
@@ -62,13 +62,13 @@
             field="isEmployee"
           ></codx-input>
           <codx-label
-            class="px-2"
+            class="ms-3"
             [formModel]="formModel"
             fiedName="IsEmployee"
           ></codx-label>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mb-0">
           <codx-label
             [formModel]="formModel"
             fiedName="RefEmployeeID"

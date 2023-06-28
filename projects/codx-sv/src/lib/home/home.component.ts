@@ -336,6 +336,6 @@ export class HomeComponent extends UIComponent implements OnInit {
         if(setting?.image) return this.shareService.getThumbByUrl(setting?.image , 120);
       }
     }
-    return "./assets/themes/sv/default/img/avatar-default.png";
+    return "./assets/themes/sv/default/img/EmptySurvey.svg";
   }
 }
