@@ -29,6 +29,7 @@ import { PopupStatusCompetitorComponent } from './popup-status-competitor/popup-
 export class CodxTabDealcompetitorsComponent implements OnInit {
   @Input() dealID: any;
   @Input() funcID: any;
+  @Input() hidenMF = true;
   lstDealCompetitors = [];
   moreFuncAdd = '';
   formModel: FormModel;
@@ -41,7 +42,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   assemblyName = 'ERM.Business.CM';
   className = 'DealsBusiness';
   method = 'GetListDealAndDealCompetitorAsync';
-  hidenMF: boolean;
   vllStatus = '';
   currentRecID = '';
   constructor(
@@ -75,7 +75,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
 
   getListDealAndDealCompetitor() {
     this.loaded = false;
-    this.hidenMF = true;
     this.request.predicates = 'DealID=@0';
     this.request.dataValues = this.dealID;
     this.request.entityName = 'CM_DealsCompetitors';
@@ -84,7 +83,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     this.fetch().subscribe((item) => {
       this.lstDealCompetitors = item;
       var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
-      this.hidenMF = false;
       this.getAddressCompetitors(lstID);
       if (
         this.lstDealCompetitors != null &&
@@ -178,11 +176,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    if (e != null && data != null) {
-      if (data.status == '1') {
-        this.hidenMF = true;
-      }
-    }
+
   }
 
   setStatus(title, data) {
