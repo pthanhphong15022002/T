@@ -430,13 +430,13 @@ export class CodxSvService {
     );
   }
 
-  shareLink(data:any,post=false,funcID:any) {
+  shareLink(data:any,post=false,funcID:any,link:any) {
     return this.api.execSv(
       'SV',
       'SV',
       'SurveysBusiness',
       'ShareLinkAsync',
-      [data,post,funcID]
+      [data,post,funcID,link]
     );
   }
   onSaveListFile(lstDataUpload) {

@@ -1,5 +1,5 @@
 import { I } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, HostBinding } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, HostBinding, Output } from '@angular/core';
 import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -7,7 +7,7 @@ import {
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
-import { AuthService, AuthStore, UIComponent } from 'codx-core';
+import { AESCryptoService, AuthService, AuthStore, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { CodxSvService } from '../../codx-sv.service';
 import { SV_Respondents } from '../../models/SV_Respondents';
@@ -21,10 +21,12 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   providers: [RteService, MultiSelectService],
 })
 export class ReviewComponent extends UIComponent implements OnInit {
+  
+  @HostBinding('class.h-100') someField: boolean = false;
+
   avatar:any;
   primaryColor:any;
   backgroudColor:any;
-  @HostBinding('class.h-100') someField: boolean = false;
   en = environment;
   respondents: SV_Respondents = new SV_Respondents();
   questions: any = [];
@@ -81,32 +83,39 @@ export class ReviewComponent extends UIComponent implements OnInit {
     private shareService : CodxShareService,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private aesCrypto: AESCryptoService
   ) {
     super(injector);
     this.user = this.auth.get();
     this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.funcID) {
-        this.funcID = queryParams.funcID;
-        this.cache.functionList(this.funcID).subscribe((res) => {
-          if (res) {
-            this.functionList = res;
-            if (queryParams?.recID) {
-              this.recID = queryParams.recID;
-              this.loadData();
-            }
-            else if (queryParams?.transID) {
-              this.repondID = queryParams.transID;
-              this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
-                this.dataSVRepondents = item;
-                this.dataRepond = item?.responds;
-                this.recID = item?.transID;
+      if (queryParams?._k) {
+        var key = this.aesCrypto.decode(queryParams?._k);
+        if(key)
+        {
+          var obj = JSON.parse(key);
+          this.funcID = obj?.funcID;
+          this.cache.functionList(this.funcID).subscribe((res) => {
+            if (res) {
+              this.functionList = res;
+              if (obj?.recID) {
+                this.recID = obj?.recID;
                 this.loadData();
-              })
+              }
+              else if (obj?.transID) {
+                this.repondID = obj?.transID;
+                this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
+                  this.dataSVRepondents = item;
+                  this.dataRepond = item?.responds;
+                  this.recID = item?.transID;
+                  this.loadData();
+                })
+              }
+           
             }
-         
-          }
-        });
+          });
+        }
+       
       }
     });
   }

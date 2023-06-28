@@ -9,6 +9,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   ViewChild,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ColorPickerEventArgs, PaletteTileEventArgs } from '@syncfusion/ej2-angular-inputs';
 import { UIComponent } from 'codx-core';
@@ -26,7 +28,7 @@ import { isObservable } from 'rxjs';
 })
 export class SettingComponent extends UIComponent implements OnInit, OnChanges , AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @Output() changeSetting = new EventEmitter<any>();
   @Input() formModel: any;
   @Input() data: any;
 
@@ -277,7 +279,10 @@ export class SettingComponent extends UIComponent implements OnInit, OnChanges ,
           if(typeof this.data.settings == 'string') this.data.settings = JSON.parse(this.data.settings);
           else if(!this.data.settings) this.data.settings = {};
 
-          if(e?.field == "isPublic") this.data.settings[e?.field] = e?.data ? "1" : "0";
+          if(e?.field == "isPublic") {
+            this.data.settings[e?.field] = e?.data ? "1" : "0";
+            this.changeSetting.emit(this.data.settings);
+          }
           else this.data.settings[e?.field] = e?.data;
           
           break;
