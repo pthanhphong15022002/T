@@ -1920,7 +1920,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   valueChangeSessionEJS(e, itemSession, field) {
-    debugger
     if (e && e != itemSession[field]) {
       let dataTemp = JSON.parse(JSON.stringify(this.questions));
       dataTemp[itemSession.seqNo][field] = e;
