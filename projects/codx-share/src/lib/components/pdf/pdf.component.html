@@ -273,8 +273,7 @@
                 align="Left"
               ></e-item>
               <e-item
-              *ngIf="isApprover && isEditable"
-
+                *ngIf="isApprover && isEditable"
                 (click)="clickHighlightText()"
                 prefixIcon="e-icons e-style"
                 tooltipText="Highlight"
@@ -282,8 +281,7 @@
                 align="Left"
               ></e-item>
               <e-item
-              *ngIf="isApprover && isEditable"
-
+                *ngIf="isApprover && isEditable"
                 (click)="changeEditMode()"
                 prefixIcon="e-icons e-repeat"
                 tooltipText="Edit"
@@ -291,14 +289,13 @@
                 align="Left"
               ></e-item>
               <e-item
-              *ngIf="isApprover && isEditable"
-
+                *ngIf="isApprover && isEditable"
                 (click)="changeRemoveHLAMode()"
                 prefixIcon="e-erase e-icons"
               >
               </e-item>
               <e-item
-              *ngIf="isApprover && isEditable"
+                *ngIf="isApprover && isEditable"
                 prefixIcon="e-icons e-circle-check"
                 (click)="confirmHighlightText(false)"
               >
@@ -582,7 +579,8 @@
                               curAnnotFontStyle
                             "
                           >
-                            <input
+                            <textarea
+                              [id]="area.recID"
                               type="text"
                               formControlName="content"
                               class="form-control w-100"
@@ -597,11 +595,13 @@
                               [ngClass]="{
                                 'fw-bolder': isBold,
                                 'fst-italic': isItalic,
-                                'text-decoration-underline': isUnd
+                                'text-decoration-underline': isUnd,
+                                'text-decoration-line-through': isLineThrough,
+
                               }"
                               [defaultValue]="area.labelValue"
                               (keydown)="change($event, 'keydown')"
-                            />
+                            ></textarea>
                           </div>
 
                           <div
@@ -660,7 +660,7 @@
                               "
                             >
                               <ejs-dropdownlist
-                                class="me-2 min-w-70px"
+                                class="me-2 min-w-50px"
                                 id="fontStylesDropdownList"
                                 [dataSource]="lstAnnotFontStyle"
                                 [(value)]="curAnnotFontStyle"
@@ -716,16 +716,21 @@
                               >
                                 <span class="icon-format_underlined"></span>
                               </button>
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-icon"
+                                [ngClass]="{
+                                  btn: true,
+                                  'bg-white border': !isLineThrough,
+                                  'btn-success': isLineThrough
+                                }"
+                                (click)="changeFontWeight(4)"
+                              >
+                                <span class="e-icons e-strikethrough"></span>
+                              </button>
                             </div>
                           </div>
                           <div class="d-flex ms-12" *ngIf="area.labelType == 5">
-                            <!-- <div
-                            class="date-type-space"
-                            *ngFor="
-                              let dateType of lstSignDateType;
-                              let index = index
-                            "
-                          > -->
                             <codx-input
                               class="me-4 date-Type"
                               [name]="area.recID"
