@@ -2930,12 +2930,12 @@ export class EmployeeProfileComponent extends UIComponent {
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       //this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
 
-      (this.grid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')],item => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
+      // (this.grid.dataService as CRUDService)
+      //   .setPredicates(
+      //     [this.filterEBenefitPredicates],
+      //     [this.filterByBenefitIDArr.join(';')],item => {
+      //     console.log('item tra ve sau khi loc 1', item);
+      //   });
     } else if (
       (this.filterByBenefitIDArr.length > 0 &&
         this.startDateEBenefitFilterValue == undefined) ||

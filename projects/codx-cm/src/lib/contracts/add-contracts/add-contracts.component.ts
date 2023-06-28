@@ -212,7 +212,7 @@ export class AddContractsComponent implements OnInit {
 //#region setData
   setDataContract(data) {
     if (this.action == 'add') {
-      this.contracts = data;
+      this.contracts = data ? data : new CM_Contracts();
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
