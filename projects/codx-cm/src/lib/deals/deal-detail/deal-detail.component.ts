@@ -40,9 +40,6 @@ export class DealDetailComponent implements OnInit {
   @ViewChild('contract') contract: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
 
-
-
-  // listContract: CM_Contacts[];
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -70,20 +67,6 @@ export class DealDetailComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    // view mới bỏ nha a thảo đưa lên tab
-    // {
-    //   name: 'Quotations',
-    //   textDefault: 'Báo giá',
-    //   isActive: false,
-    //   template: null,
-    // },
-    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    // {
-    //   name: 'Contract',
-    //   textDefault: 'Hợp đồng',
-    //   isActive: false,
-    //   template: null,
-    // },
   ];
 
   formModelCustomer: FormModel;

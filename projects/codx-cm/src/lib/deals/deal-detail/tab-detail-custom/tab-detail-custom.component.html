@@ -360,23 +360,12 @@
   ></codx-tab-dealcompetitors>
 </ng-template>
 <ng-template #quotation>
-  <!-- <codx-quotations
-    [typeModel]="'deals'"
-    [showButton]="true"
-    [predicates]="'RefID==@0'"
-    [dataValues]="dataSelected.recID"
-    [refID]="dataSelected.recID"
-    [refType]="'CM_Deals'"
-    [disableRefID]="true"
-  >
-  </codx-quotations> -->
   <codx-quotations-tab-view
     [typeModel]="'deals'"
     [showButton]="true"
     [predicates]="'DealID==@0'"
     [dataValues]="dataSelected.recID"
-    [refID]="dataSelected.recID"
-    [refType]="'CM_Deals'"
+    [dealID]="dataSelected.recID"
     [disableDealID]="true"
     [disableCusID]="true"
     [customerID]="dataSelected.customerID"

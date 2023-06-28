@@ -5,3 +5,11 @@
 .nowrap {
   white-space: nowrap !important;
 }
+.user-nav-item.user-nav-active {
+  background-color: #f4f7ff;
+  border-left-color: #3699ff;
+}
+
+.user-nav-item:hover{
+  background-color:var(--primary-lighter);
+}
