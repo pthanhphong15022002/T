@@ -47,6 +47,8 @@ export class ViewsTabsDetailsComponent
   resourceKanban: ResourceModel;
   kanban: any;
   listHeader: any;
+  dataDrop: any;
+  crrStepID: any;
 
   constructor(private inject: Injector) {
     super(inject);
@@ -132,5 +134,21 @@ export class ViewsTabsDetailsComponent
       }) || [];
 
     return dataColumns;
+  }
+
+  onActions(e) {
+    switch (e.type) {
+      case 'drop':
+        e.data.stepID = this.crrStepID;
+        break;
+      case 'drag':
+        ///bắt data khi kéo
+        this.crrStepID = e?.data?.stepID;
+
+        break;
+      case 'dbClick':
+        //xư lý dbClick
+        break;
+    }
   }
 }
