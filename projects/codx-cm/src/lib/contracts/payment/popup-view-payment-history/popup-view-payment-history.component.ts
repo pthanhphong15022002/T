@@ -56,7 +56,7 @@ export class PopupViewPaymentHistoryComponent {
     this.listPaymentEdit = dt?.data?.listPaymentEdit;
     this.listPaymentAdd = dt?.data?.listPaymentAdd;
     this.listPayment = dt?.data?.listPayment;
-    this.contracts = dt?.data?.contracts;
+    this.contracts = dt?.data?.contract;
   }
 
   ngOnInit(): void {
@@ -138,11 +138,11 @@ export class PopupViewPaymentHistoryComponent {
   }
 
   async openPopupPaymentHistory(action, payment, paymentHistory) {
-    let payHistoryEdit = JSON.parse(JSON?.stringify(paymentHistory));
+    paymentHistory = JSON.parse(JSON?.stringify(paymentHistory));
     let dataInput = {
       action,
       payment,
-      payHistoryEdit,
+      paymentHistory,
       contract: this.contracts,
       listPayment: this.listPayment,
       listPaymentHistory: this.listPaymentHistory,
@@ -175,6 +175,10 @@ export class PopupViewPaymentHistoryComponent {
 
     popupPaymentHistory.closed.subscribe((res) => {
       // this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      this.listPayHistoryOfPay =
+      this.listPaymentHistory.filter(
+        (paymentHistory) => paymentHistory.refLineID == this.payment?.recID
+      ) || [];
     });
   }
 
@@ -200,9 +204,10 @@ export class PopupViewPaymentHistoryComponent {
           this.payment.paidAmt -= payHistory?.paidAmt || 0;
           this.payment.remainAmt += payHistory?.paidAmt || 0;
           this.findPayHistory(this.listPaymentEdit, this.payment, 'edit');
-          this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+          this.findPayHistory(this.listPayment, this.payment, 'edit')
           this.findPayHistory(this.listPayment, this.payment, 'edit');
-
+          this.contracts.paidAmt -= payHistory?.paidAmt;
+          this.contracts.remainAmt += payHistory?.paidAmt;
         }
       });
     }
@@ -221,6 +226,8 @@ export class PopupViewPaymentHistoryComponent {
       }else{
         listData?.push(data);
       }
+    }else{
+      listData?.push(data);
     }
   }
 }

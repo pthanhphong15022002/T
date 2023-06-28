@@ -220,7 +220,9 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelete: this.listPaymentDelete,
+      listPayment: this.listPayment,
       isSave: this.isSave,
+      contract: this.contracts,
     };
 
     let option = new DialogModel();
@@ -237,6 +239,9 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       '',
       option
     );
+    popupPayHistory.closed.subscribe(res => {
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+    })
   }
 
   async openPopupPaymentHistory(action, payment, paymentHistory) {
