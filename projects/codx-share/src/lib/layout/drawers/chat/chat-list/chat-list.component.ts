@@ -139,13 +139,13 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     if(event){
       this.searched = true;
       this.codxListView.dataService.method = 'SearchAsync';
-      this.codxListView.dataService.search(event).subscribe();
+      this.codxListView.dataService.search(event);
     }
     else
     {
       this.searched = false;
       this.codxListView.dataService.method = 'GetGroupAsync';
-      this.codxListView.dataService.search(event).subscribe();
+      this.codxListView.dataService.search(event);
     }
     this.dt.detectChanges();
 

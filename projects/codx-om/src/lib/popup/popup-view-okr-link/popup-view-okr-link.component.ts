@@ -15,6 +15,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
+import { OMCONST } from '../../codx-om.constant';
 
 @Component({
   selector: 'popup-view-okr-link',
@@ -43,11 +44,11 @@ export class PopupViewOKRLinkComponent extends UIComponent {
   }
 
   onInit(): void {
-    if(this.data){
-      this.omService.getOKRHavedLinks(this.data?.recID).subscribe((res:any)=>{
+    if(this.data?.hasAssign){
+      let refType = this.data?.hasAssign.includes(OMCONST.VLL.HAS_ASSIGN) ? OMCONST.VLL.RefType_Link.Assign : this.data?.hasAssign.includes(OMCONST.VLL.HAS_DISTRIBUTE) ? OMCONST.VLL.RefType_Link.Distribute :OMCONST.VLL.RefType_Link.Link; 
+      this.omService.getOKRHavedLinks(this.data?.recID,refType).subscribe((res:any)=>{
         if(res){
-          this.listLink = res;
-          
+          this.listLink = res;          
         }
         this.isAfterRender = true;
       })

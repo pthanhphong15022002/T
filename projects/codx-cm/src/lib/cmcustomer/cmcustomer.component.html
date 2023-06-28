@@ -277,7 +277,7 @@
         <codx-vll
           [name]="gridViewSetup?.Status?.referedValue"
           [field]="'Status'"
-          [value]="data?.status"
+          [value]="(data?.status == '5' || data?.status == '7' || data?.status == '9') ? '4' : data?.status"
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-sm"

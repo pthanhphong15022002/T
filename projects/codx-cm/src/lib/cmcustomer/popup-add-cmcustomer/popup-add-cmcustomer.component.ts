@@ -342,6 +342,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
+  valueChangeIndustries(e){
+    this.data[e.field] = e?.data;
+  }
+
   //#region save
   beforeSave(op) {
     var data = [];

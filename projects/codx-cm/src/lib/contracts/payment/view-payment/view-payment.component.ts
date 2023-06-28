@@ -110,6 +110,9 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       // textAlign: 'left',
       // /template: this.columnVatid,
     ];
+    if(this.listPayment && this.listPayment?.length > 0){
+      this.listPayment = this.listPayment?.sort((a,b) => (a?.rowNo - b?.rowNo));
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -176,7 +179,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       listPayment: this.listPayment,
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
-      listPaymentDelet: this.listPaymentDelete,
+      listPaymentDelete: this.listPaymentDelete,
       contract: this.contracts,
       isSave: this.isSave,
     };
@@ -216,7 +219,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       listPaymentHistory: this.listPaymentHistory,
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
-      listPaymentDelet: this.listPaymentDelete,
+      listPaymentDelete: this.listPaymentDelete,
       isSave: this.isSave,
     };
 
@@ -246,7 +249,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       listPaymentHistory: this.listPaymentHistory,
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
-      listPaymentDelet: this.listPaymentDelete,
+      listPaymentDelete: this.listPaymentDelete,
       isSave: this.isSave,
     };
 

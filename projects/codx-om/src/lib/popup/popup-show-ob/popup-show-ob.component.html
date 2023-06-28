@@ -1,10 +1,13 @@
+
 <div class="h-100 w-100">
-  <div class="h-100 w-100 px-5 py-5 bg-gray-100 ">
+  <div class="h-100 w-100 px-5 py-5 bg-gray-200 ">
     <div class="w-100 h-100 d-flex flex-column">
-      <div class="">
-        <div class=" mx-5 mt-5 d-flex align-items-center justify-content-between">
+      <div class="bg-white">
+        <div class=" mx-5 mt-3 mb-2 d-flex align-items-top justify-content-between">
           <div class="col-1">
-            <span class="icon-arrow_back hover-primary cursor-pointer" (click)="closeDialog()"></span>
+            <span type="button" class="" (click)="closeDialog()">
+              <i class="icon-arrow_back icon-20"></i>
+            </span>
           </div>
           <div class=" text-center">
             <span class="fw-bold fs-3"
@@ -45,7 +48,8 @@
           </ng-container>
         </div>
       </div>
-      <div class="flex-grow-1 rounded-3 bg-body scroll-y p-3 pb-0 ">
+
+      <div class="flex-grow-1 rounded-3 bg-body scroll-y p-3 pb-0 mt-5">
         <div
           class="sprints-task-detail"
           data-kt-scroll="true"

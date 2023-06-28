@@ -1,4 +1,4 @@
-<div class="page-questions pt-5" id="page-questions" [style.backgroundColor]="backgroudColor">
+<div class="page-review pt-5" id="page-review" [style.backgroundColor]="backgroudColor">
   <div class="d-flex w-100 justify-content-center">
     <div class="d-flex flex-column">
       <ng-container *ngIf="avatar">
@@ -6,7 +6,7 @@
         </div>
       </ng-container>
       <div class="box">
-        <ng-container *ngIf="(survey?.stop || expiredOn);else elseStop">
+        <ng-container *ngIf="((survey?.stop || expiredOn ) && !repondID);else elseStop">
           <div class="card-survey">
             <div class="control-section inplace-editor-control-section form-lafyout">
               <div class="content-wrapper b-t" [style.borderTopColor]="primaryColor">
@@ -298,11 +298,11 @@
                   *ngIf="itemSession.seqNo == questions.length - 1"
                   type="button"
                   class="btn btn-submit text-white"
-                  [disabled]="survey?.status != '5' ? true : false"
+                  [disabled]="(survey?.status != '5' || survey?.stop || expiredOn) ? true : false"
                   (click)="onSubmit()"
                   [style.backgroundColor]="primaryColor"
                 >
-                  <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
+                  <codx-label fiedName="lblSVSumbit" formName="SVSumbit" [default]="repondID ? 'Gửi lại' : 'Gửi'"></codx-label>
                 </button>
               </div>
             </div>
@@ -324,7 +324,7 @@
               [innerHTML]="itemSession.question"
             ></span>
             <span class="mt-5" *ngIf="!itemSession.question">Mẫu không có tiêu đề</span>
-            <div class="fs-6 mt-5">Câu trả lời của bạn đã được ghi lại.</div>
+            <div class="fs-5-sm mt-5">Câu trả lời của bạn đã được ghi lại.</div>
           </div>
         </form>
       </div>
@@ -366,6 +366,7 @@
       [name]="seqNoSession+itemQuestion?.recID"
       [label]="itemAnswer.answer"
       field="O"
+      [checked]="itemAnswer?.checked"
       [crrValue]="itemAnswer.answer"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer, seqNoSession)"
     ></codx-input>
@@ -378,12 +379,13 @@
         [label]="'Khác:'"
         field="O"
         [crrValue]="'other'"
+        [checked]="itemAnswer?.checked"
         (valueChange)="
         checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer , seqNoSession)
         "
         [style.width]="'125px'"
       ></codx-input>
-      <input type="text" autocomplete="off" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="true" class="form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
+      <input type="text" autocomplete="off" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [value]="itemAnswer?.answer ? itemAnswer?.answer : ''" [disabled]="itemAnswer?.checked == true ? false : true" class="form-control sv-ip-dis border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
 
     </div>
   </div>
@@ -395,6 +397,7 @@
         [disabled]="false"
         class="test-check"
         [label]="itemAnswer.answer"
+        [checked]="itemAnswer?.checked"
         field="C"
         (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
       ></codx-input>
@@ -408,10 +411,11 @@
           class="test-check"
           field="C"
           [label]="'Mục khác:'"
+          [checked]="itemAnswer?.checked"
           (valueChange)="checkDisabelAnswerOrderC($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"
           ngClass="w-150px"
         ></codx-input>
-        <input type="text" autocomplete="off" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="true" class="form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
+        <input type="text" autocomplete="off" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="itemAnswer?.checked == true ? false : true" [value]="itemAnswer?.answer ? itemAnswer?.answer : ''" class="sv-ip-dis form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
       </div>
     </ng-template>
   </div>
@@ -681,7 +685,7 @@
       <!-- //(change)="valueChange($event.target.value, itemSession, itemQuestion, item)" -->
       <select class="form-select w-200px ms-6 mb-5 rounded" aria-label="Default select example" (change)="valueChange( $event, itemSession, itemQuestion, $event.target.value)"> 
         <option selected >Chọn</option>
-        <option *ngFor="let item of itemQuestion.answers" [value]="item.answer">{{item.answer}}</option>
+        <option *ngFor="let item of itemQuestion.answers" [value]="item.answer" [selected]="repondID && select && select == item.answer">{{item.answer}}</option>
       </select>
     </ng-container>
   </ng-template>
@@ -967,7 +971,6 @@
     </div>
   </div>
   <div class="d-flex align-items-center mt-3 border-top py-3" *ngIf="user?.userID">
-    <!-- <span class="ms-6 icon-i-eye-slash icon-24"></span> -->
     <codx-img 
       [objectId]="user?.userID" 
       [objectName]="user?.userName" 
@@ -988,6 +991,12 @@
     </div>
 
   </div>
+  <!-- <ng-template #elseUserID>
+    <div class="d-flex align-items-center ms-5 mb-5">
+      <i class="icon-i-person-fill"></i>
+      <span class="fs-5-sm ms-1">Khách mời</span>
+    </div>
+  </ng-template> -->
 </ng-template>
 
 <ng-template #template_card_session let-itemSession="itemSession">

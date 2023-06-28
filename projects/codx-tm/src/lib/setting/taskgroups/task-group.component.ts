@@ -76,21 +76,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
   // @ViewChild('view') view!: ViewsComponent;
-
-  constructor(
-    inject: Injector,
-    private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
-    private authStore: AuthStore,
-    private cacheSv: CacheService,
-    private activedRouter: ActivatedRoute,
-    private tmService: CodxTMService
-  ) {
-    super(inject);
-    this.user = this.authStore.get();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-  }
-
   user: any;
   funcID: any;
   views: Array<ViewModel> = [];
@@ -118,6 +103,20 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   };
   titleAction = '';
 
+  constructor(
+    inject: Injector,
+    private dt: ChangeDetectorRef,
+    private callfunc: CallFuncService,
+    private authStore: AuthStore,
+    private cacheSv: CacheService,
+    private activedRouter: ActivatedRoute,
+    private tmService: CodxTMService
+  ) {
+    super(inject);
+    this.user = this.authStore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
+
   onInit(): void {
     this.button = {
       id: 'btnAdd',
@@ -137,7 +136,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
     ];
   }
 
-  onLoading(e) {
+  onLoading() {
     let formModel = this.view.formModel;
     if (formModel) {
       this.cacheSv
@@ -303,19 +302,19 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
               width: 100,
             },
           ];
+          this.views = [
+            {
+              type: ViewType.grid,
+              sameData: true,
+              active: false,
+              model: {
+                resources: this.columnsGrid,
+                template2: this.itemMoreFunc,
+              },
+            },
+          ];
+          this.detectorRef.detectChanges();
         });
-      this.views = [
-        {
-          type: ViewType.grid,
-          sameData: true,
-          active: false,
-          model: {
-            resources: this.columnsGrid,
-            template2: this.itemMoreFunc,
-          },
-        },
-      ];
-      this.detectorRef.detectChanges();
     }
   }
 
@@ -336,13 +335,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
         break;
     }
   }
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
+
   ngAfterViewInit(): void {
     this.view.dataService.methodSave = 'AddTaskGroupsAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync';
@@ -409,6 +402,8 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   }
 
   add() {
+    if (!this.view.dataService.service)
+      this.view.dataService.service = this.view.service; // bùa cứng
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;

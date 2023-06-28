@@ -212,7 +212,7 @@ export class AddContractsComponent implements OnInit {
 //#region setData
   setDataContract(data) {
     if (this.action == 'add') {
-      this.contracts = data;
+      this.contracts = data ? data : new CM_Contracts();
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
@@ -704,11 +704,14 @@ addPayHistory(payment) {
 
 viewPayHistory(payment, width: number, height: number) {
   let dataInput = {
+    isSave:false,
     payment,
     listPaymentHistory: this.listPaymentHistory,
     listPaymentAdd: this.listPaymentAdd,
     listPaymentEdit: this.listPaymentEdit,
-    listPaymentDelet: this.listPaymentDelete,
+    listPaymentDelete: this.listPaymentDelete,
+    contracts: this.contracts,
+    listPayment: this.listPayment,
   };
 
   let option = new DialogModel();

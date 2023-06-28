@@ -201,7 +201,7 @@ export class FAPostingAccountsComponent
   //#region Function
   filter(field: string, value: string): void {
     this.selectedValue = value;
-    this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
+    this.grid.dataService.setPredicates([field + '=@0'], [value]);
   }
 
   getBreadcrumb(postType): string {

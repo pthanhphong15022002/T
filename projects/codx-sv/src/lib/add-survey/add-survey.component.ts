@@ -211,7 +211,6 @@ export class AddSurveyComponent extends UIComponent {
       //Phát hành
       case "SVT0100":
         {
-          debugger
           this.dataSV.stop = false;
           this.dataSV.status = "5";
           this.dataSV.startedOn =  new Date();
@@ -366,6 +365,10 @@ export class AddSurveyComponent extends UIComponent {
     });
   }
 
+  changeAvatar(e:any)
+  {
+    this.dataSV.setting = e;
+  }
   valueChange(e:any)
   {
     if(e?.field == "title") this.title = e?.data;

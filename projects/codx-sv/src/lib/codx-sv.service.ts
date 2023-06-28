@@ -155,6 +155,75 @@ export class CodxSvService {
     return observable;
   }
  
+  loadAlertRule(ruleNo:any): Observable<any>
+  {
+    let paras = [ruleNo];
+    let keyRoot = "AlertRule" + ruleNo;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv<any>("SYS","AD","AlertRulesBusiness","GetAlertRulesWithRuleNoAsync",paras)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+
+  loadEmailTemplate(emailTemplate:any): Observable<any>
+  {
+    let paras = [emailTemplate];
+    let keyRoot = "EmailTemplate" + emailTemplate;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv<any>("SYS","AD","EmailTemplatesBusiness","GetEmailTemplateAsync",paras)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
   convertListToObject(
     list: Array<object>,
     fieldName: string,
@@ -382,6 +451,13 @@ export class CodxSvService {
       isSystem
     ]);
   }
+  getDataQuestion(recID:any) {
+    return this.api.execSv("SV",'ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', recID);
+  }
+
+  getDataRepondent(recID:any) {
+    return this.api.execSv("SV",'ERM.Business.SV', 'RespondentsBusiness', 'GetItemByRecIDAsync', recID);
+  }
   onSubmit(data) {
     return this.api.execSv(
       'SV',
@@ -391,7 +467,16 @@ export class CodxSvService {
       [data, true]
     );
   }
-
+  onUpdate(data)
+  {
+    return this.api.execSv(
+      'SV',
+      'SV',
+      'RespondentsBusiness',
+      'UpdateAsync',
+      [data, true]
+    );
+  }
   filterSearchSuggest()
   {
     // return this.api.execSv(
