@@ -12,7 +12,7 @@
 
 <ng-template #body>
   <div class="card-add popup-sales h-100 d-flex flex-column">
-    <ejs-tab class="section1">
+    <ejs-tab>
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -434,6 +434,7 @@
               </ng-template>
 
               <button
+                id="btnAddLine"
                 class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
                 style="top: -28px"
                 (click)="onClickAddRow()"
@@ -451,7 +452,7 @@
       </e-tabitems>
     </ejs-tab>
 
-    <div class="row pt-5 section3">
+    <div class="row pt-5">
       <div class="col-5 form-group">
         <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
         <codx-input

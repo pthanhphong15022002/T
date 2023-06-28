@@ -116,13 +116,13 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
     this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
     this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
-    if (this.leadOne) {
-      this.lstContactOne = await this.getContacts(this.leadOne?.recID);
-      this.lstAddressOne = await this.getListAddress(
-        this.dialog?.formModel?.entityName,
-        this.leadOne?.recID
-      );
-    }
+    // if (this.leadOne) {
+    //   this.lstContactOne = await this.getContacts(this.leadOne?.recID);
+    //   this.lstAddressOne = await this.getListAddress(
+    //     this.dialog?.formModel?.entityName,
+    //     this.leadOne?.recID
+    //   );
+    // }
     this.gridViewSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
     );
@@ -147,9 +147,9 @@ export class PopupMergeLeadsComponent implements OnInit {
     var options = new DataRequest();
     options.entityName = 'CM_Leads';
     options.predicates =
-      'Status!=@0 and RecID!=@1 and RecID!=@2 and IsDuplicated==false';
+      '(Status.Equals(@0) or Status.Equals(@1)) and !RecID.Equals(@2) and !RecID.Equals(@3) and IsDuplicated==false';
     options.dataValues =
-      '11' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
+      '1' + ';' + '3' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     lst =
