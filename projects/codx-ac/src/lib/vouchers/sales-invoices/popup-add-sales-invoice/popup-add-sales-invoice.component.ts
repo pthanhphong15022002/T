@@ -27,7 +27,6 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
-import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -58,7 +57,6 @@ export class PopupAddSalesInvoiceComponent
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
   expanded: boolean = false;
-  originVisibleCols: any[] = [];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -125,13 +123,13 @@ export class PopupAddSalesInvoiceComponent
     });
 
     if (this.isEdit) {
-      const salesInvoicesLinesOptions = new DataRequest();
-      salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
-      salesInvoicesLinesOptions.predicates = 'TransID=@0';
-      salesInvoicesLinesOptions.dataValues = this.master.recID;
-      salesInvoicesLinesOptions.pageLoading = false;
+      const options = new DataRequest();
+      options.entityName = 'SM_SalesInvoicesLines';
+      options.predicates = 'TransID=@0';
+      options.dataValues = this.master.recID;
+      options.pageLoading = false;
       this.acService
-        .loadDataAsync('SM', salesInvoicesLinesOptions)
+        .loadDataAsync('SM', options)
         .subscribe(
           (res) => (this.lines = res.sort((a, b) => a.rowNo - b.rowNo))
         );
@@ -252,14 +250,12 @@ export class PopupAddSalesInvoiceComponent
         weirdHeight;
     }, 500);
 
-    this.originVisibleCols = this.grid.visibleColumns.slice();
-
     this.journalStateSubject.subscribe((loaded) => {
       if (!loaded) {
         return;
       }
 
-      // cache problem ❌
+      // ❌ cache problem
       let toggleFields: string[] = [
         ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
         ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
@@ -300,17 +296,16 @@ export class PopupAddSalesInvoiceComponent
   onCellChange(e): void {
     console.log('onCellChange', e);
 
+    if (!e.data[e.field]) {
+      return;
+    }
+
     if (e.field === 'itemID') {
-      for (const v of this.grid.visibleColumns) {
-        if (
-          ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
-            v.fieldName?.toLowerCase()
-          )
-        ) {
-          v.predicate = 'ItemID=@0';
-          v.dataValue = `${e.data.itemID}`;
-        }
-      }
+      this.setPredicatesByItemID(e.data.itemID);
+    }
+
+    if (e.field.toLowerCase() === 'idim4') {
+      this.setPredicateByIDIM4(e.data[e.field]);
     }
 
     const postFields: string[] = [
@@ -382,32 +377,52 @@ export class PopupAddSalesInvoiceComponent
     );
   }
 
-  onAddNew(e): void {
-    console.log('onAddNew', e);
+  onEndAddNew(e): void {
+    console.log('onEndAddNew', e);
 
-    if (e.type == 'closeEdit') {
-      this.grid.visibleColumns = this.originVisibleCols.slice();
-    }
-
-    this.detailService.save(null, null, null, null, false).subscribe(() => {
-      this.grid.visibleColumns = this.originVisibleCols.slice();
-    });
+    this.detailService.save(null, null, null, null, false).subscribe(() => {});
   }
 
-  onEdit(e): void {
-    console.log('onEdit', e);
+  onEndEdit(e): void {
+    console.log('onEndEdit', e);
 
     this.detailService.updateDatas.set(e.recID, e);
-    this.detailService.save(null, null, null, null, false).subscribe(() => {
-      this.grid.visibleColumns = JSON.parse(
-        JSON.stringify(this.originVisibleCols)
-      );
-    });
+    this.detailService.save(null, null, null, null, false).subscribe(() => {});
   }
 
-  onFocusOut(e): void {
-    // for copyRow ???
+  onActionEvent(e): void {
+    console.log('onActionEvent', e);
+
+    // ❌ for copyRow ???
     delete this.grid.rowDataSelected.createdOn;
+
+    if (e.type === 'beginEdit') {
+      // reset predicates
+      for (const v of this.grid.visibleColumns) {
+        if (
+          [
+            'idim0',
+            'idim1',
+            'idim2',
+            'idim3',
+            'idim6',
+            'idim7',
+            'idim5',
+          ].includes(v.fieldName?.toLowerCase())
+        ) {
+          v.predicate = '';
+          v.dataValue = '';
+        }
+      }
+
+      if (e.data.itemID) {
+        this.setPredicatesByItemID(e.data.itemID);
+      }
+
+      if (e.data.idiM4) {
+        this.setPredicateByIDIM4(e.data.idiM4);
+      }
+    }
   }
   //#endregion
 
@@ -544,5 +559,25 @@ export class PopupAddSalesInvoiceComponent
   //#endregion
 
   //#region Function
+  setPredicatesByItemID(dataValue: string): void {
+    for (const v of this.grid.visibleColumns) {
+      if (
+        ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
+          v.fieldName?.toLowerCase()
+        )
+      ) {
+        v.predicate = 'ItemID=@0';
+        v.dataValue = dataValue;
+      }
+    }
+  }
+
+  setPredicateByIDIM4(dataValue: string): void {
+    const idim5 = this.grid.visibleColumns.find(
+      (v) => v.fieldName?.toLowerCase() === 'idim5'
+    );
+    idim5.predicate = 'WarehouseID=@0';
+    idim5.dataValue = dataValue;
+  }
   //#endregion
 }
