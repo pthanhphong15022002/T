@@ -11,7 +11,7 @@
 </codx-form>
 
 <ng-template #body>
-  <div class="card-add popup-sales h-100">
+  <div class="card-add popup-sales h-100 d-flex flex-column">
     <ejs-tab class="section1">
       <e-tabitems>
         <e-tabitem>
@@ -22,7 +22,7 @@
                 fiedName="lblGeneralInfoTab"
                 default="Thông tin chứng từ"
                 [formModel]="form.formModel"
-                class="fw-bold fs-5-sm"
+                class="fw-bold fs-6"
               ></codx-label>
             </div>
           </ng-template>
@@ -120,7 +120,7 @@
                 fiedName="lblReceiptInfo"
                 [formModel]="form.formModel"
                 default="Thông tin hóa đơn"
-                class="fw-bold fs-5-sm"
+                class="fw-bold fs-6"
               ></codx-label>
             </div>
           </ng-template>
@@ -259,7 +259,7 @@
                 fiedName="lblRef"
                 [formModel]="form.formModel"
                 default="Tham chiếu"
-                class="fw-bold fs-5-sm"
+                class="fw-bold fs-6"
               ></codx-label>
             </div>
           </ng-template>
@@ -365,7 +365,7 @@
                 fiedName="lblOtherInfo"
                 [formModel]="form.formModel"
                 default="Thông tin khác"
-                class="fw-bold fs-5-sm"
+                class="fw-bold fs-6"
               ></codx-label>
             </div>
           </ng-template>
@@ -388,20 +388,20 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ejs-tab>
+    <ejs-tab heightAdjustMode="Fill">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
             <i class="icon-format_list_numbered icon-20 me-2"></i>
             <codx-label
-              class="fw-bold fs-5-sm"
+              class="fw-bold fs-6"
               fiedName="lblDetail"
               [formModel]="form.formModel"
               default="Chi tiết"
             ></codx-label>
           </ng-template>
           <ng-template #content>
-            <div class="position-relative">
+            <div class="position-relative h-100">
               <codx-gridview-v2
                 #grid
                 *ngIf="editSettings.mode === 'Normal'; else dialogMode"
@@ -415,10 +415,9 @@
                 [allowSorting]="true"
                 [autoLoad]="false"
                 [dataSource]="lines"
-                [height]="gridHeight"
                 [rowHeight]="35"
                 (cellChanged)="onCellChange($event)"
-                (created)="onCreate($event, false)"
+                (created)="onCreate($event)"
                 (onAddNew)="onEndAddNew($event)"
                 (onEdit)="onEndEdit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -432,7 +431,7 @@
                   [hasMF]="true"
                   [dataService]="detailService"
                   [height]="gridHeight"
-                  (create)="onCreate($event, true)"
+                  (create)="onCreate($event)"
                 ></lib-table-line-detail>
               </ng-template>
 
