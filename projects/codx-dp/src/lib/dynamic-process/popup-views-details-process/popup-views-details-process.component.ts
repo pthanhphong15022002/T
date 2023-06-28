@@ -37,7 +37,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   @ViewChild('footerStep') footerStep: TemplateRef<any>;
 
   dialog: DialogRef;
-  name = 'Dashboard';
+  name = 'Detail';
   isCreate = false;
   process = new DP_Processes();
   dialogGuide: DialogRef;
@@ -47,8 +47,8 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   stepNames = [];
   tabInstances = [];
   tabControl: TabModel[] = [
-    { name: 'Dashboard', textDefault: 'Dashboard', isActive: true },
-    { name: 'Detail', textDefault: 'Chi tiết quy trình', isActive: false },
+    // { name: 'Dashboard', textDefault: 'Dashboard', isActive: true },
+    { name: 'Detail', textDefault: 'Chi tiết quy trình', isActive: true },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false },
   ];
   listType = [];
@@ -87,19 +87,17 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     this.dpService
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
-      
   }
 
   async ngOnInit(): Promise<void> {
-    if(this.process?.steps?.length > 0){
+    if (this.process?.steps?.length > 0) {
       this.process?.steps?.forEach((step) => {
         this.groupByTask(step);
-      })
-      console.log(this.process.steps.map((step) => (step.taskGroups)));
-      let data = await firstValueFrom(this.cache.valueList('DP004'));  
+      });
+      console.log(this.process.steps.map((step) => step.taskGroups));
+      let data = await firstValueFrom(this.cache.valueList('DP004'));
       this.listType = data ? data?.datas : [];
     }
-     
   }
 
   clickMenu(event) {
@@ -107,10 +105,10 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  groupByTask(step){
+  groupByTask(step) {
     let listGroupTask;
     const taskGroupList = step?.tasks?.reduce((group, task) => {
-      const {taskGroupID} = task;
+      const { taskGroupID } = task;
       group[taskGroupID] = group[taskGroupID] ?? [];
       group[taskGroupID].push(task);
       return group;
@@ -132,7 +130,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
       taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
       listGroupTask.push(taskGroup);
     }
-    step['taskGroups'] = listGroupTask;   
+    step['taskGroups'] = listGroupTask;
   }
 
   showGuide(p) {

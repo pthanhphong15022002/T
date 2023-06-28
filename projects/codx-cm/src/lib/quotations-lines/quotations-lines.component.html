@@ -16,7 +16,6 @@
         rowHeight="40"
         predicates="TransID==@0"
         [dataValues]="transID"
-        [editSettings]="editSettings"
         (cellChanged)="quotationsLineChanged($event)"
         (created)="gridCreated($event, gridQuationsLines)"
       ></codx-gridview-v2>

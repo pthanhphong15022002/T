@@ -489,7 +489,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {
-    if(this.survey?.status != "5") return ;
+    if(this.survey?.status != "5" || this.survey?.stop || this.expiredOn) return ;
 
     this.checkRequired();
     let lstAnswers = [];
