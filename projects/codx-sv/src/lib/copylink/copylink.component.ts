@@ -45,9 +45,9 @@ export class CopylinkComponent implements OnInit{
     var key = JSON.stringify(obj);
     key = this.aesCrypto.encode(key);
     //Link public 
-    this.public = location.host + "/" + this.user.tenant +  "/forms?_k="+key;
+    this.public = window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/forms?_k="+key;
     //Link Internal
-    this.internal = location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
+    this.internal = window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
 
     this.copyLinkGroup = this.formBuilder.group({
       link: 'internal',
@@ -56,8 +56,30 @@ export class CopylinkComponent implements OnInit{
 
   copyLink(type:any)
   {
-    navigator.clipboard.writeText(type == "public" ? this.public : this.internal);
+    var link = type == "public" ? this.public : this.internal;
+    if (window.isSecureContext && navigator?.clipboard) {
+      navigator.clipboard.writeText(link);
+    } 
+    else 
+    {
+      this.unsecuredCopyToClipboard(link);
+    }
     this.notifySvr.notifyCode("SYS041")
+  }
+
+  unsecuredCopyToClipboard(link:any)
+  {
+    const textArea = document.createElement("textarea"); 
+    textArea.value=link; 
+    document.body.appendChild(textArea); 
+    textArea.focus();
+    textArea.select(); 
+    try{
+      document.execCommand('copy')
+    }catch(err){
+      console.error('Unable to copy to clipboard',err)
+    }
+    document.body.removeChild(textArea)
   }
 
   onSave()
