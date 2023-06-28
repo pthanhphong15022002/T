@@ -41,7 +41,7 @@ export class EmployeeListComponent extends UIComponent {
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_Employees';
   className = 'EmployeesBusiness';
-  method = 'GetModelFormEmployAsync';
+  method = 'GetListEmployeeAsync';
 
   constructor(
     private injector: Injector,
