@@ -242,7 +242,7 @@ export class AddSurveyComponent extends UIComponent {
           }
           var key = JSON.stringify(obj);
           key = this.aesCrypto.encode(key);
-          var link =  window.location.host+ "/" + this.user.tenant +  "/sv/review?_k="+key;
+          var link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
 
           if(this.dataSV?.settings)
           {
