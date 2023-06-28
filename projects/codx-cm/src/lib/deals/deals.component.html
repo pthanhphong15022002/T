@@ -17,6 +17,7 @@
   (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
   (searchChanged)="searchChanged($event)"
+  (onLoading)="onLoading()"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -179,7 +180,11 @@
           class="me-3"
         >
         </span>
-        <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+        <span
+          class="line-clamp-menu"
+          [ngbTooltip]="data.headerText"
+          [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
+        >
           {{ data.headerText }}
         </span>
       </div>
@@ -240,7 +245,7 @@
     [body]="footer"
     [formModel]="view.formModel"
     [footer]="footer"
-    [titleCss]="'text-gray-700 mb-1 fw-normal'"
+    [titleCss]="'text-gray-500 fs-7 fw-normal'"
     [hideMF]="!data?.roles?.isOnwer"
     [dataItem]="data"
   >
@@ -257,7 +262,7 @@
   <div class="d-flex flex-column w-100">
     <div class="mb-1">
       <span
-        class="text-dark fs-5-sm fw-bold line-clamp line-clamp-2"
+        class="text-dark fs-6 fw-bold line-clamp line-clamp-2"
         [ngbTooltip]="tooltipDealName"
         #dealName
         [innerHTML]="
@@ -434,6 +439,8 @@
     [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
+    [checkMoreReason]="checkMoreReason(dataSelected)"
+
   >
   </codx-deal-detail>
 </ng-template>

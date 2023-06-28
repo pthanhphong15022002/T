@@ -358,21 +358,24 @@
                   </container-element>
                 </div>
               </div>
-              <a>
-                <div
-                  class="fs-5 text-dark fw-bold my-0 me-2 cursor-pointer"
-                  (click)="onJump()"
-                >
-                  {{ this.dmSV.menuActive.getValue() }}
-                </div>
-              </a>
-              <codx-breadcumb
-                notTree="true"
-                link="true"
-                end="2"
-                start="1"
-                max="4"
-              ></codx-breadcumb>
+              <div class="d-flex align-items-center">
+                <a>
+                  <div
+                    class="fs-5 text-dark fw-bold my-0 me-2 cursor-pointer"
+                    (click)="onJump()"
+                  >
+                    {{ this.dmSV.menuActive.getValue() }}
+                  </div>
+                </a>
+                <codx-breadcumb
+                  notTree="true"
+                  link="true"
+                  end="2"
+                  start="1"
+                  max="4"
+                ></codx-breadcumb>
+              </div>
+             
             </div>
             <!-- <a>
                 <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>

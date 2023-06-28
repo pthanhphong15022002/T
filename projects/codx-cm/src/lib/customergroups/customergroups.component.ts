@@ -14,6 +14,7 @@ import {
   SidebarModel,
   CacheService,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { PopupAddCustgroupComponent } from './popup-add-custgroup/popup-add-custgroup.component';
 
@@ -29,7 +30,9 @@ export class CustomergroupsComponent extends UIComponent {
   @ViewChild('custGroupID') custGroupID!: TemplateRef<any>;
   @ViewChild('custGroupName') custGroupName!: TemplateRef<any>;
   @ViewChild('createdOn') createdOn!: TemplateRef<any>;
+  @ViewChild('modifiedOn') modifiedOn!: TemplateRef<any>;
   @ViewChild('createdBy') createdBy!: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   funcID = '';
   authStore: any;
   views: Array<ViewModel> = [];
@@ -39,6 +42,7 @@ export class CustomergroupsComponent extends UIComponent {
   idField = 'recID';
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
+  arrFieldIsVisible = [];
   dataSelected: any;
   funcList: any = {};
   columnsGrid = [];
@@ -83,68 +87,74 @@ export class CustomergroupsComponent extends UIComponent {
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.gridViewSetup = gv;
-          this.columnsGrid = [
-            {
-              field: 'custGroupID',
-              headerText: gv
-                ? gv['CustGroupID'].headerText || 'CustGroupID'
-                : 'custGroupID',
-              template: this.custGroupID,
-              width: 100,
-            },
-            {
-              field: 'custGroupName',
-              headerText: gv
-                ? gv['CustGroupName'].headerText || 'CustGroupName'
-                : 'CustGroupName',
-              template: this.custGroupName,
-              width: 200,
-            },
-            {
-              field: 'icon',
-              headerText: gv ? gv['Icon'].headerText || 'Icon' : 'Icon',
-              template: this.icon,
-              width: 80,
-            },
-            {
-              field: 'note',
-              headerText: gv ? gv['Note'].headerText || 'Note' : 'Note',
-              template: this.note,
-              width: 200,
-            },
-            {
-              field: 'createdBy',
-              headerText: gv
-                ? gv['CreatedBy'].headerText || 'CreatedBy'
-                : 'CreatedBy',
-              template: this.createdBy,
-              width: 200,
-            },
-            {
-              field: 'createdOn',
-              headerText: gv
-                ? gv['CreatedOn'].headerText || 'CreatedOn'
-                : 'CreatedOn',
-              template: this.createdOn,
-              width: 200,
-            },
-          ];
+          this.gridViewSetup.IconColor.isVisible = false;
+          let arrField = Object.values(this.gridViewSetup).filter(
+            (x: any) => x.isVisible
+          );
+          if (Array.isArray(arrField)) {
+            this.arrFieldIsVisible = arrField
+              .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+              .map((x: any) => x.fieldName);
+            this.getColumnGrid(this.gridViewSetup);
+          }
 
-          this.views = [
-            {
-              sameData: true,
-              type: ViewType.grid,
-              active: true,
-              model: {
-                resources: this.columnsGrid,
-                hideMoreFunc: true,
-              },
-            },
-          ];
           this.detectorRef.detectChanges();
         });
     }
   }
+
+  getColumnGrid(grid) {
+    this.columnsGrid = [];
+
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'Icon':
+          template = this.icon;
+          break;
+        case 'CreatedOn':
+          template = this.createdOn;
+          break;
+        case 'ModifiedOn':
+          template = this.modifiedOn;
+          break;
+        default:
+          break;
+      }
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grid[key].headerText,
+          width: grid[key].width,
+          template: template,
+          // textAlign: 'center',
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grid[key].headerText,
+          width: grid[key].width,
+        };
+      }
+
+      this.columnsGrid.push(colums);
+    });
+
+    this.views = [
+      {
+        sameData: true,
+        type: ViewType.grid,
+        active: true,
+        model: {
+          resources: this.columnsGrid,
+          template2: this.templateMore,
+        },
+      },
+    ];
+  }
+
   viewChanged(evt: any, view: ViewsComponent) {}
 
   click(evt: ButtonModel) {
@@ -265,20 +275,20 @@ export class CustomergroupsComponent extends UIComponent {
     });
   }
 
-  delete(data){
+  delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-    .delete([this.view.dataService.dataSelected], true, (opt) =>
-      this.beforeDel(opt)
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.view.dataService.onAction.next({
-          type: 'delete',
-          data: data,
-        });
-      }
-    });
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];

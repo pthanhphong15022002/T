@@ -94,7 +94,7 @@
       *ngIf="sumScheduleAmt"
       class="me-1 text-dark fw-bold"
       [innerHTML]="
-        sumScheduleAmt | formatvalue : fmContracts : 'scheduleAmt' | async
+        sumScheduleAmt | formatvalue : fmContracts : 'ScheduleAmt' | async
       "
     ></span>
     <span *ngIf="!sumScheduleAmt" class="me-1">0</span>
@@ -185,10 +185,11 @@
         <div class="">
           <ejs-numerictextbox
             [value]="percent"
-            format="###'%'"
+            format="###.#'%'"
             min="0"
             max="100"
             (change)="valueChangePercent($event)"
+            (click)="clickTesk('percentChanged')"
             disabled="false"
           ></ejs-numerictextbox>
         </div>
@@ -210,6 +211,7 @@
             [max]="this.contract.contractAmt"
             [crrValue]="payment?.scheduleAmt"
             (valueChange)="valueChangeText($event)"
+            (click)="clickTesk('valueChanged')"
           >
           </codx-input>
         </div>

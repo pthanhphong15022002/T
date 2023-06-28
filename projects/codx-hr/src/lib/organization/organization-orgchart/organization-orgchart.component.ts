@@ -127,7 +127,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   ): ConnectorModel {
     connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
-    // connector.constraints = 0;
+    //connector.constraints = 0;
     connector.cornerRadius = 5;
     connector.style.strokeColor = '#6d6d6d';
     return connector;

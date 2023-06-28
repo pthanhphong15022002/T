@@ -386,7 +386,7 @@ export class ProcessesComponent
   }
 
   searchChange($event) {
-    this.view.dataService.search($event).subscribe();
+    this.view.dataService.search($event);
     this.changeDetectorRef.detectChanges();
   }
 

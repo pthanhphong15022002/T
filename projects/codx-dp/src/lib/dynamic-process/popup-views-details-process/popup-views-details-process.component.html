@@ -149,7 +149,7 @@
         <div cdkDropList class="list mw-900px" style="margin: 0 auto">
           <div>
             <ng-container *ngFor="let step of process.steps">
-              <div class="">
+              <div class="" *ngIf="!step?.isFailStep && !step?.isSuccessStep">
                 <div class="card card-steplist">
                   <div class="step border border-gray-200 rounded px-6 py-4">
                     <ng-container
@@ -164,11 +164,17 @@
                       *ngFor="let group of step?.taskGroups"
                     >
                       <ng-container
+                        *ngIf="group?.recID"
                         [ngTemplateOutlet]="viewGroupTask"
                         [ngTemplateOutletContext]="{group}"
                       ></ng-container>
-                      <ng-container *ngIf="group?.tasks?.length > 0" >
-                        <div *ngFor="let task of group?.tasks" style="margin-left: 40px;">
+                      <ng-container *ngIf="group?.tasks?.length > 0">
+                        <div
+                          *ngFor="let task of group?.tasks"
+                          [ngStyle]="
+                            group?.recID ? { 'margin-left': '40px' } : {}
+                          "
+                        >
                           <ng-container
                             [ngTemplateOutlet]="viewTask"
                             [ngTemplateOutletContext]="{task}"
@@ -199,18 +205,11 @@
   >
   </codx-temp-full>
   <ng-template #titleTmpStep let-data>
-    <div style="width: 100%" class="d-flex align-items-center justify-content-between">
+    <div class="w-100">
       <div
         class="d-flex align-items-center line-clamp line-clamp-1 fs-3 mb-2"
         style="cursor: context-menu; display: -webkit-inline-box"
       >
-        <!-- <codx-label
-          [fiedName]="'StepNo'"
-          [formModel]="formModelStep"
-          [setRequire]="false"
-        ></codx-label>
-        <span>{{ " " + data?.stepNo }}</span>
-        <codx-label name="lblSplit" default=":"></codx-label> -->
         <codx-icon-step
           [icon]="data?.icon"
           [iconColor]="data?.iconColor"
@@ -220,22 +219,10 @@
           {{ " " + data?.stepName }}
         </span>
       </div>
-      <div>
-        <span>{{data?.durationDay}}</span>
-        <codx-label
-          class="mx-1"
-          [fiedName]="'day'"
-          [formModel]="formModelStep"
-          default="ngày"
-        ></codx-label>
-        <span>{{data?.durationHour}}</span>
-        <codx-label
-          class="mx-1"
-          [fiedName]="'hour'"
-          [formModel]="formModelStep"
-          default="giờ"
-        ></codx-label>
-      </div>
+      <ng-container
+        [ngTemplateOutlet]="dayTem"
+        [ngTemplateOutletContext]="{data}"
+      ></ng-container>
     </div>
   </ng-template>
 
@@ -285,29 +272,48 @@
   >
   </codx-temp-full>
   <ng-template #titleGroup let-data>
-    <div style="width: 100%" class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center justify-content-between w-100">
       <div
-        class="fw-bold line-clamp line-clamp-1 fs-3 mb-2 d-flex align-items-center"
+        class="d-flex align-items-center"
         style="cursor: context-menu; display: -webkit-inline-box"
       >
         <codx-icon-step
           [typeTask]="'G'"
           [isStep]="false"
           [listTypeTask]="listType"
+          [size]="36"
         ></codx-icon-step>
-        <span>
-          {{ " " + data?.taskGroupName }}
-        </span>
+        <div>
+          <span class="line-clamp line-clamp-1 fw-bold fs-4">
+            {{ " " + data?.taskGroupName }}
+          </span>
+          <div>
+            <span>{{ data?.durationDay }}</span>
+            <codx-label
+              class="mx-1"
+              [fiedName]="'day'"
+              [formModel]="formModelStep"
+              default="ngày"
+            ></codx-label>
+            <span>{{ data?.durationHour }}</span>
+            <codx-label
+              class="mx-1"
+              [fiedName]="'hour'"
+              [formModel]="formModelStep"
+              default="giờ"
+            ></codx-label>
+          </div>
+        </div>
       </div>
       <div>
-        <span>{{data?.durationDay}}</span>
+        <span>{{ data?.durationDay }}</span>
         <codx-label
           class="mx-1"
           [fiedName]="'day'"
           [formModel]="formModelStep"
           default="ngày"
         ></codx-label>
-        <span>{{data?.durationHour}}</span>
+        <span>{{ data?.durationHour }}</span>
         <codx-label
           class="mx-1"
           [fiedName]="'hour'"
@@ -320,13 +326,13 @@
 
   <ng-template #footerGroup let-data>
     <div
-      class="col-6 d-flex align-items-center flex-wrap"
+      class="col-6 d-flex align-items-center flex-wrap ms-4"
       *ngIf="data.roles?.length > 0"
     >
       <ng-container *ngFor="let perm of data.roles; index as i">
         <div
           *ngIf="perm.roleType == 'O'"
-          class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+          class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative ms-4"
         >
           <div class="me-2">
             <codx-img
@@ -344,68 +350,90 @@
   </ng-template>
 </ng-template>
 <ng-template #viewTask let-data="task">
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-center">
-      <codx-icon-step
-        [typeTask]="data?.taskType"
-        [listTypeTask]="listType"
-        [isStep]="false"
-      ></codx-icon-step>
-      <span>{{ data?.taskName }}</span>
-    </div>
-    <div>
-      <span>{{data?.durationDay}}</span>
-      <codx-label
-        class="mx-1"
-        [fiedName]="'day'"
-        [formModel]="formModelStep"
-        default="ngày"
-      ></codx-label>
-      <span>{{data?.durationHour}}</span>
-      <codx-label
-        class="mx-1"
-        [fiedName]="'hour'"
-        [formModel]="formModelStep"
-        default="giờ"
-      ></codx-label>
-    </div>
-  </div>
-  
-
-  <ng-container *ngFor="let perm of data.roles; index as i">
-    <div
-      *ngIf="perm.roleType == 'O'"
-      class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
-    >
-      <!-- <div class="d-flex align-items-center mb-2">
-        <codx-label
-          class="fw-bold fs-6 text-dark me-3"
-          name="lblParticipantRole"
-          default="Người phụ trách"
-        >
-        </codx-label>
-      </div> -->
-      <div class="ms-5">
-        <codx-img
-          class
-          [width]="20"
-          [objectId]="perm.objectName"
-          objectType="AD_Users"
-        >
-        </codx-img>
+  <div class="mb-2">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <codx-icon-step
+          [typeTask]="data?.taskType"
+          [listTypeTask]="listType"
+          [isStep]="false"
+        ></codx-icon-step>
+        <span class="fs-5 fw-bold">{{ data?.taskName }}</span>
       </div>
-      <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+      <div>
+        <span>{{ data?.durationDay }}</span>
+        <codx-label
+          class="mx-1"
+          [fiedName]="'day'"
+          [formModel]="formModelStep"
+          default="ngày"
+        ></codx-label>
+        <span>{{ data?.durationHour }}</span>
+        <codx-label
+          class="mx-1"
+          [fiedName]="'hour'"
+          [formModel]="formModelStep"
+          default="giờ"
+        ></codx-label>
+      </div>
     </div>
-  </ng-container>
+    <ng-container *ngFor="let perm of data.roles; index as i">
+      <div
+        *ngIf="perm.roleType == 'O'"
+        class="cursor-pointer d-flex align-items-center mt-2 ms-4"
+      >
+        <!-- <div class="d-flex align-items-center mb-2">
+          <codx-label
+            class="fw-bold fs-6 text-dark me-3"
+            name="lblParticipantRole"
+            default="Người phụ trách"
+          >
+          </codx-label>
+        </div> -->
+        <div class="ms-5">
+          <codx-img
+            class
+            [width]="20"
+            [objectId]="perm.objectName"
+            objectType="AD_Users"
+          >
+          </codx-img>
+        </div>
+        <div class="text-dark fw-bold ms-1">{{ perm.objectName }}</div>
+      </div>
+    </ng-container>
+  </div>
 </ng-template>
 
 <!-- temp chung  -->
 <!-- viewKanban -->
 <ng-template #viewKanban>
-  <ng-container>Tìm cách xử lý vẽ như BP</ng-container>
+  <process-views-tabs-details
+    [viewMode]="6"
+    [dataObj]="dataObj"
+  ></process-views-tabs-details>
 </ng-template>
 
 <!-- viewDasboard -->
-<ng-template #viewDashboard>
+<!-- <ng-template #viewDashboard>
   <ng-container>Dashboard - tính toán vẽ ra</ng-container>
+</ng-template> -->
+
+<ng-template #dayTem let-data="data">
+  <div>
+    <span>{{ data?.durationDay }}</span>
+    <codx-label
+      class="mx-1"
+      [fiedName]="'day'"
+      [formModel]="formModelStep"
+      default="ngày"
+    ></codx-label>
+    <span>{{ data?.durationHour }}</span>
+    <codx-label
+      class="mx-1"
+      [fiedName]="'hour'"
+      [formModel]="formModelStep"
+      default="giờ"
+    ></codx-label>
+  </div>
 </ng-template>

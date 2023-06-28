@@ -363,7 +363,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   onSearch(e) {
-    if (this.lstView) this.lstView.dataService.search(e).subscribe();
+    if (this.lstView) this.lstView.dataService.search(e);
     this.detectorRef.detectChanges();
   }
 

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Optional } from '@angular/core';
 import { CodxSvService } from '../codx-sv.service';
 import { DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'app-sharelink',
@@ -14,7 +15,9 @@ export class SharelinkComponent implements OnInit {
   recID:any;
   funcID:any;
   post = false;
-
+  emailTemplate:any;
+  subject:any;
+  messages:any;
   constructor(
     private notifySvr: NotificationsService,
     private svService : CodxSvService,
@@ -28,6 +31,7 @@ export class SharelinkComponent implements OnInit {
     this.funcID = dt?.data?.funcID;
   }
   ngOnInit(): void {
+    this.getAlertRule();
   }
   
   valueChange(e:any,type:any)
@@ -73,6 +77,35 @@ export class SharelinkComponent implements OnInit {
     
   }
 
+  getAlertRule()
+  {
+    var alertRule = this.svService.loadAlertRule("SV_0001") as any;
+    if(isObservable(alertRule))
+    {
+      alertRule.subscribe((item:any)=>{
+        this.getEmailTemplate(item.emailTemplate)
+      })
+    }
+    else this.getEmailTemplate(alertRule?.emailTemplate)
+  }
+
+  getEmailTemplate(recID:any)
+  {
+    var emailTemplate = this.svService.loadEmailTemplate(recID) as any;
+    if(isObservable(emailTemplate))
+    {
+      emailTemplate.subscribe((item:any)=>{ 
+        this.emailTemplate = item[0]
+        this.subject = item[0]?.subject;
+        this.messages = item[0]?.message;
+      });
+    }
+    else {
+      this.emailTemplate = emailTemplate[0];
+      this.subject = emailTemplate[0]?.subject;
+      this.messages = emailTemplate[0]?.message;
+    }
+  }
   save()
   {
     if(!this.checkRequired()) return

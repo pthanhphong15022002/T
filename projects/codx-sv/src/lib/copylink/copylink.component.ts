@@ -38,7 +38,7 @@ export class CopylinkComponent implements OnInit{
     //Link public 
     this.public = location.host + "/" + this.user.tenant +  "/forms?funcID=" + this.funcID +"&recID=" + this.recID;
     //Link Internal
-    this.internal = location.host + "/" + this.user.tenant +  "/review?funcID=" + this.funcID +"&recID=" + this.recID;
+    this.internal = location.host + "/" + this.user.tenant +  "/sv/review?funcID=" + this.funcID +"&recID=" + this.recID;
 
     this.copyLinkGroup = this.formBuilder.group({
       link: 'internal',
