@@ -350,7 +350,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   approve(mode, title: string, subTitle: string, comment: any) {
-    debugger;
     switch (this.pdfView.signerInfo.signType) {
       case '2': {
         if (this.pdfView.isAwait) {
@@ -404,13 +403,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
                         mode: mode,
                       };
                       this.esService
-                      .updateTransAwaitingStatus(this.transRecID, true)
-                      .subscribe((updateTransStatus) => {
-                        //that bai
-                        this.esService.setupChange.next(true);
-                        this.esService.statusChange.next(3);
-                        this.notify.notifyCode('ES017');
-                      });
+                        .updateTransAwaitingStatus(this.transRecID, true)
+                        .subscribe((updateTransStatus) => {
+                          //that bai
+                          this.esService.setupChange.next(true);
+                          this.esService.statusChange.next(3);
+                          this.notify.notifyCode('ES017');
+                        });
                       this.notify.notifyCode('SYS021');
                     }
                   });
