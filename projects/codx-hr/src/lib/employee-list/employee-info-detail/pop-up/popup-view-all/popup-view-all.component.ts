@@ -929,14 +929,12 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       this.filterEBenefitPredicates += ') ';
       // console.log('truong hop 1', this.filterEBenefitPredicates);
-      (this.gridView.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe((res) =>{
-          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
-        });
+      // (this.gridView.dataService as CRUDService)
+      //   .setPredicates(
+      //     [this.filterEBenefitPredicates],
+      //     [this.filterByBenefitIDArr.join(';')],res =>{
+      //     this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
+      //   });
     } else if (
       this.filterByBenefitIDArr.length > 0 &&
       (this.startDateEBenefitFilterValue == undefined ||
@@ -953,24 +951,21 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += ') ';
       // console.log('truong hop 2', this.filterEBenefitPredicates);
-      (this.gridView.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe((res) =>{
-          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
-        });
+      // (this.gridView.dataService as CRUDService)
+      //   .setPredicates(
+      //     [this.filterEBenefitPredicates],
+        //   [this.filterByBenefitIDArr.join(';')],res =>{
+        //   this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
+        // });
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
       this.startDateEBenefitFilterValue != null
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}" and EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
-      (this.gridView.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [])
-        .subscribe((res) =>{
-          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
-        });
+      // (this.gridView.dataService as CRUDService)
+      //   .setPredicates([this.filterEBenefitPredicates], [],res =>{
+      //     this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
+      //   });
       // console.log('truong hop 3', this.filterEBenefitPredicates);
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
@@ -979,11 +974,10 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}")`;
       // console.log('truong hop 4', this.filterEBenefitPredicates);
-      (this.gridView.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [''])
-        .subscribe((res) =>{
-          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
-        });
+      // (this.gridView.dataService as CRUDService)
+      //   .setPredicates([this.filterEBenefitPredicates], [''],res =>{
+      //     this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
+      //   });
     }
   }
 

@@ -245,7 +245,7 @@ export class NoteBooksComponent
   }
 
   onSearch(e) {
-    this.listView.dataService.search(e).subscribe();
+    this.listView.dataService.search(e);
     this.detectorRef.detectChanges();
   }
 }

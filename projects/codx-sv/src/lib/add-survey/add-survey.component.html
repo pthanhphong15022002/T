@@ -40,13 +40,13 @@
         <codx-label default="Lưu thành mẫu"></codx-label>
       </div>
 
-      <button type="button"  class="btn btn-3699FF me-2 text-white" (click)="review()">
-        <i class="icon-i-eye icon-22  text-white"></i>
+      <button type="button"  class="btn btn-sm btn-3699FF me-2 text-white" (click)="review()">
+        <i class="icon-i-eye icon-18  text-white"></i>
         <codx-label [fiedName]="'lblSVReview'" formName="SVReview"  default="Xem trước" class="ms-1 fw-bold"></codx-label>
       </button>
 
       
-      <button *ngIf="dataSV?.status != '5'" type="button" id="btn-sv-release" class="btn text-white btn-7248B9" [style.backgroundColor]="primaryColor" (click)="release()">
+      <button *ngIf="dataSV?.status != '5'" type="button" id="btn-sv-release" class="btn btn-sm text-white btn-7248B9" [style.backgroundColor]="primaryColor" (click)="release()">
         <codx-label [fiedName]="'lblSVRelease'" formName="SVRelease"  default="Phát hành" class="ms-1 fw-bold"></codx-label>
       </button>
      
@@ -124,6 +124,7 @@
               [recID]="recID"
               [funcID]="funcID"
               [dataSV]="dataSV"
+              (changeAvatar)="changeAvatar($event)"
             ></app-questions>
           </div>
         </ng-template>
@@ -170,7 +171,7 @@
         </ng-template>
         <ng-template #content class="pd-t-20">
           <div id="bg-color-sv-setting" class="h-100">
-            <app-setting [formModel]="view.formModel" [data]="dataSV"></app-setting>
+            <app-setting [formModel]="view.formModel" [data]="dataSV" ></app-setting>
           </div>
         </ng-template>
       </e-tabitem>

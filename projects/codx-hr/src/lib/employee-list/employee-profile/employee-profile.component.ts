@@ -2908,18 +2908,7 @@ export class EmployeeProfileComponent extends UIComponent {
   valueChangeFilterBenefit(evt) {
     console.log('filter theo type', evt);
     this.filterByBenefitIDArr = evt.data;
-    // let predicates = '('
-    // for(let i =0 ; i< this.filterByBenefitIDArr.length; i++){
-    //   if(i>0){
-    //     predicates +=' or '
-    //   }
-    //   predicates += `BenefitID==@${i}`
-    // }
-    // predicates += ') and ';
-
-    // (this.grid.dataService as CRUDService).setPredicates(['BenefitID==@0'], ['1']).subscribe((item) => {
-    //   console.log('item tra ve', item);
-    // });
+ 
     this.UpdateEBenefitPredicate();
   }
 
@@ -2941,14 +2930,12 @@ export class EmployeeProfileComponent extends UIComponent {
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       //this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
 
-      (this.grid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
+      // (this.grid.dataService as CRUDService)
+      //   .setPredicates(
+      //     [this.filterEBenefitPredicates],
+      //     [this.filterByBenefitIDArr.join(';')],item => {
+      //     console.log('item tra ve sau khi loc 1', item);
+      //   });
     } else if (
       (this.filterByBenefitIDArr.length > 0 &&
         this.startDateEBenefitFilterValue == undefined) ||
@@ -2966,10 +2953,7 @@ export class EmployeeProfileComponent extends UIComponent {
         .setPredicates(
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
+        );
     } else if (this.startDateEBenefitFilterValue != null) {
       (this.grid.dataService as CRUDService)
         .setPredicates(
@@ -2977,10 +2961,7 @@ export class EmployeeProfileComponent extends UIComponent {
             `EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`,
           ],
           []
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
+        );
     }
   }
 
@@ -3059,10 +3040,7 @@ UpdateEDayOffsPredicate(){
     this.filterEDayoffPredicates +=  `and (BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
     //this.filterEBenefitDatavalues = this.filterByKowIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
     
-    (this.dayoffGrid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr.join(';')])
-    .subscribe((item) => {
-      console.log('item tra ve sau khi loc 1', item);
-    });
+    (this.dayoffGrid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr.join(';')]);
   }
   else if(this.filterByKowIDArr.length > 0 && (this.startDateEDayoffFilterValue == undefined || this.startDateEDayoffFilterValue == null)){
     let i = 0;
@@ -3073,16 +3051,10 @@ UpdateEDayOffsPredicate(){
       this.filterEDayoffPredicates += `KowID==@${i}`
     }
 
-    (this.dayoffGrid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr.join(';')])
-    .subscribe((item) => {
-      console.log('item tra ve sau khi loc 2', item);
-    });
+    (this.dayoffGrid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr.join(';')]);
   }
   else if(this.startDateEDayoffFilterValue != null){
-    (this.dayoffGrid.dataService as CRUDService).setPredicates([`BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}"`], [])
-    .subscribe((item) => {
-      console.log('item tra ve sau khi loc 3', item);
-    });
+    (this.dayoffGrid.dataService as CRUDService).setPredicates([`BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}"`], []);
   }
 }
 
@@ -3109,15 +3081,9 @@ UpdateBusinessTravelPredicate(){
   this.filterBusinessTravelPredicates = "";
   if(this.startDateBusinessTravelFilterValue == null){
     (this.businessTravelGrid.dataService as CRUDService).setPredicates([`EmployeeID=@0`], [this.data.employeeID])
-    .subscribe((item) => {
-      console.log('item tra ve sau khi loc 3', item);
-    });
   }
   else{
     (this.businessTravelGrid.dataService as CRUDService).setPredicates([`BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}"`], [])
-    .subscribe((item) => {
-      console.log('item tra ve sau khi loc 3', item);
-    });
   }
 }
 

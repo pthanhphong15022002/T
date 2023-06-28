@@ -81,7 +81,7 @@
         </div>
         <div class="me-3">
           <codx-img
-            [objectId]="objectType != '4' ? data.recID : data.refID"
+            [objectId]="type == 'formDetail' && objectType == '4' ? data?.refID : data?.recID"
             [objectName]="data?.contactName"
             [objectType]="'CM_Contacts'"
             [width]="30"

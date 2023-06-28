@@ -48,21 +48,21 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
   //onChange dataSource
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
-      this.dataService.setPredicates([],[this.orgUnitID]).subscribe((res) => {
-        if(res)
-        {
-          res.forEach(x => {
-            if(x.orgUnitID === this.orgUnitID)
-            {
-              x.parentID = "";
-              return;
-            }
-          });
-        }
-        this.dataSource = this.newDataManager(res);
-      });
-    }
+    // if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
+    //   this.dataService.setPredicates([],[this.orgUnitID], res => {
+    //     if(res)
+    //     {
+    //       res.forEach(x => {
+    //         if(x.orgUnitID === this.orgUnitID)
+    //         {
+    //           x.parentID = "";
+    //           return;
+    //         }
+    //       });
+    //     }
+    //     this.dataSource = this.newDataManager(res);
+    //   });
+    // }
   }
   setDataOrg(data: any[]) {
     let setting = this.newDataManager(data);
@@ -100,7 +100,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   ): ConnectorModel {
     connector.targetDecorator.shape = "None";
     connector.type = "Orthogonal";
-    connector.constraints = 0;
+    connector.constraints = 1;
     connector.cornerRadius = 5;
     connector.style.strokeColor = "#6d6d6d";
     return connector;

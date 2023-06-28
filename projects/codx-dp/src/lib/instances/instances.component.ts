@@ -1751,8 +1751,7 @@ export class InstancesComponent
       .setPredicates(
         [this.filterInstancePredicates],
         [this.dataValueFilterArr.join(';')]
-      )
-      .subscribe();
+      );
 
     //kanaban chua loc dc
     // if (this.kanban) {

@@ -1,5 +1,12 @@
 import { Component, Optional } from '@angular/core';
-import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel } from 'codx-core';
+import {
+  CallFuncService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupAddPaymentHistoryComponent } from '../popup-add-payment-history/popup-add-payment-history.component';
@@ -13,7 +20,7 @@ export class PopupViewPaymentHistoryComponent {
   isSave = false;
   dialog: DialogRef;
   listPaymentHistory: CM_ContractsPayments[];
-  listPaymentHistoryOfPayment: CM_ContractsPayments[];
+  listPayHistoryOfPay: CM_ContractsPayments[];
   payment: CM_ContractsPayments;
   moreDefaut = {
     share: true,
@@ -24,15 +31,19 @@ export class PopupViewPaymentHistoryComponent {
   };
   columns: any;
   grvPayments: any;
-  listPaymentDelete:CM_ContractsPayments[];
-  listPaymentEdit:CM_ContractsPayments[];
-  listPaymentAdd:CM_ContractsPayments[];
-  listPayment:CM_ContractsPayments[];
+  listPaymentDelete: CM_ContractsPayments[];
+  listPaymentEdit: CM_ContractsPayments[];
+  listPaymentAdd: CM_ContractsPayments[];
+  listPayment: CM_ContractsPayments[];
   contracts: CM_Contracts;
+
+  sumPaid = 0;
+  remain = 0;
 
   constructor(
     private cmService: CodxCmService,
     private callfunc: CallFuncService,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -49,9 +60,19 @@ export class PopupViewPaymentHistoryComponent {
   }
 
   ngOnInit(): void {
-    this.listPaymentHistoryOfPayment = this.listPaymentHistory.filter(
-      (paymentHistory) => paymentHistory.refLineID == this.payment?.recID
-    ) || [];
+    this.listPayHistoryOfPay =
+      this.listPaymentHistory.filter(
+        (paymentHistory) => paymentHistory.refLineID == this.payment?.recID
+      ) || [];
+      if(this.listPayHistoryOfPay && this.listPayHistoryOfPay.length > 0){
+        this.listPayHistoryOfPay = this.listPayHistoryOfPay.sort((a, b) => (a.rowNo -b.rowNo));
+        this.sumPaid = this.listPayHistoryOfPay.reduce(
+          (sum, payHistory) => (sum += payHistory?.paidAmt || 0),
+          0
+        );
+        this.remain = this.payment?.scheduleAmt - this.sumPaid;
+      }
+    
     this.columns = [
       {
         field: 'rowNo',
@@ -104,14 +125,10 @@ export class PopupViewPaymentHistoryComponent {
   onClickMFPayment(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        console.log(data);
-
-        // this.deleteContract(data);
+        this.deletePayHistory(data);
         break;
       case 'SYS03':
-        console.log(data);
-        // this.editContract(data);
-        this.openPopupPaymentHistory('edit',this.payment,data);
+        this.openPopupPaymentHistory('edit', this.payment, data);
         break;
       case 'SYS04':
         console.log(data);
@@ -121,10 +138,11 @@ export class PopupViewPaymentHistoryComponent {
   }
 
   async openPopupPaymentHistory(action, payment, paymentHistory) {
+    let payHistoryEdit = JSON.parse(JSON?.stringify(paymentHistory));
     let dataInput = {
       action,
       payment,
-      paymentHistory,
+      payHistoryEdit,
       contract: this.contracts,
       listPayment: this.listPayment,
       listPaymentHistory: this.listPaymentHistory,
@@ -156,7 +174,53 @@ export class PopupViewPaymentHistoryComponent {
     );
 
     popupPaymentHistory.closed.subscribe((res) => {
-      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+      // this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
     });
+  }
+
+  deletePayHistory(payHistory: CM_ContractsPayments) {
+    if (payHistory?.recID) {
+      this.notiService.alertCode('SYS030').subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.listPayment, this.listPaymentHistory;
+          this.listPayHistoryOfPay;
+          this.findPayHistory(this.listPayHistoryOfPay,payHistory,'delete');
+          this.findPayHistory(this.listPaymentHistory, payHistory, 'delete');
+          let index = this.listPaymentAdd?.findIndex(pay => pay?.recID == payHistory.recID);
+          if(index >= 0){
+            this.listPaymentAdd.splice(index,1);
+          }else{
+            this.listPaymentDelete.push(payHistory);
+          }
+          this.listPayHistoryOfPay = JSON.parse(
+            JSON.stringify(this.listPayHistoryOfPay)
+          );
+          this.sumPaid -= payHistory?.paidAmt || 0;
+          this.remain += payHistory?.paidAmt || 0;
+          this.payment.paidAmt -= payHistory?.paidAmt || 0;
+          this.payment.remainAmt += payHistory?.paidAmt || 0;
+          this.findPayHistory(this.listPaymentEdit, this.payment, 'edit');
+          this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+          this.findPayHistory(this.listPayment, this.payment, 'edit');
+
+        }
+      });
+    }
+  }
+
+  findPayHistory(listData = [], data, type) {
+    if (listData?.length > 0) {
+      let index = listData?.findIndex((x) => x.recID == data?.recID);
+      if (index >= 0) {
+        if (type == 'delete') {
+          listData?.splice(index, 1);
+        }
+        if (type == 'edit') {
+          listData?.splice(index, 1, data);
+        }
+      }else{
+        listData?.push(data);
+      }
+    }
   }
 }

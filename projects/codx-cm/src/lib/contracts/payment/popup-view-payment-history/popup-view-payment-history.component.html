@@ -60,13 +60,21 @@
   <div>
     <codx-label
       class="text-gray-600"
-      fiedName="scheduleDate"
+      fiedName="paidAmt"
       [formModel]="dialog.formModel"
       default="Đã thanh toán"
+      [setRequire]="false"
     >
     </codx-label>
     <span class="fs-7">: </span>
-    <span>0</span>
+    <span
+    class="fs-7"
+    [innerHTML]="
+    sumPaid
+        | formatvalue : dialog.formModel : 'PaidAmt'
+        | async
+    "
+  ></span>
     <span> | </span>
     <codx-label
       class="text-gray-600"
@@ -76,11 +84,13 @@
     >
     </codx-label>
     <span class="fs-7">: </span>
+    <span *ngIf="remain == 0">0</span>
     <span
+      *ngIf="remain!= 0"
       class="fs-7"
       [innerHTML]="
-        payment?.scheduleAmt
-          | formatvalue : dialog.formModel : 'scheduleAmt'
+      remain
+          | formatvalue : dialog.formModel : 'ScheduleAmt'
           | async
       "
     ></span>
@@ -102,7 +112,7 @@
       [contentEditable]="false"
       [allowFiltering]="true"
       [allowSorting]="true"
-      [dataSource]="listPaymentHistoryOfPayment"
+      [dataSource]="listPayHistoryOfPay"
       [autoLoad]="false"
       rowHeight="40"
       predicates="TransID=@0"

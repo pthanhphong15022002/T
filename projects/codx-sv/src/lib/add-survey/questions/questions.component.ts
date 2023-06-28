@@ -1,4 +1,4 @@
-import { OnChanges, Output, SimpleChanges } from '@angular/core';
+import { EventEmitter, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectorRef,
@@ -156,23 +156,23 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       icon: "icon-cloud_upload",
       group: true
     },
-    {
-      id: "R",
-      name: "Phạm vi tuyến tính",
-      icon: "fa fa-ellipsis-h"
-    },
-    {
-      id: "O2",
-      name: "Lưới trắc nghiệm",
-      icon: "icon-grid_round"
-    }
-    ,
-    {
-      id: "C2",
-      name: "Lưới hộp kiểm",
-      icon: "icon-grid_on",
-      group: true
-    },
+    // {
+    //   id: "R",
+    //   name: "Phạm vi tuyến tính",
+    //   icon: "fa fa-ellipsis-h"
+    // },
+    // {
+    //   id: "O2",
+    //   name: "Lưới trắc nghiệm",
+    //   icon: "icon-grid_round"
+    // }
+    // ,
+    // {
+    //   id: "C2",
+    //   name: "Lưới hộp kiểm",
+    //   icon: "icon-grid_on",
+    //   group: true
+    // },
     {
       id: "D",
       name: "Ngày",
@@ -203,6 +203,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('input_check') input_check: CodxInputComponent;
+  @Output() changeAvatar = new EventEmitter<any>();
   src: any;
   constructor(
     inject: Injector,
@@ -289,7 +290,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   {
     if(this.dataSV && this.dataSV.settings) {
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-      if(this.dataSV?.settings?.image) this.avatar = this.dataSV?.settings?.image;
+      if(this.dataSV?.settings?.image) this.avatar = this.shareService.getThumbByUrl(this.dataSV?.settings?.image , 120) ;
       if(this.dataSV?.settings?.primaryColor) this.primaryColor = this.dataSV?.settings?.primaryColor;
       if(this.dataSV?.settings?.backgroudColor) {
         this.backgroudColor = this.dataSV?.settings?.backgroudColor;
@@ -1990,7 +1991,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   //     [data]
   //   );
   // }
-  changeAvatar()
+  updateAvatar()
   {
     this.attachment.uploadFile();
   }
@@ -1998,11 +1999,12 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   {
     if(e?.pathDisk)
     {
-      this.avatar = this.shareService.getThumbByUrl(e?.pathDisk);
+      this.avatar = this.shareService.getThumbByUrl(e?.pathDisk , 120);
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-      this.dataSV.settings.image = environment.urlUpload +"/"+ e?.pathDisk;
+      this.dataSV.settings.image = this.shareService.getThumbByUrl(e?.pathDisk , 120);
       this.SVServices.signalSave.next('saving');
       this.dataSV.settings = JSON.stringify(this.dataSV.settings);
+      this.changeAvatar.emit(this.dataSV.settings);
       this.SVServices.updateSV(this.dataSV.recID,this.dataSV).subscribe((res) => {
         if (res) {
           this.SVServices.signalSave.next('done');

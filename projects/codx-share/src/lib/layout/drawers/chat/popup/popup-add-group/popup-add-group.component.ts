@@ -58,7 +58,7 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
   }
 
   searchEvent(textSearch:any){
-    this.listview.dataService.search(textSearch).subscribe();
+    this.listview.dataService.search(textSearch);
   }
   // value change
   valueChange(event){
