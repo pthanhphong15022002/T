@@ -4,7 +4,9 @@
   >
     <div class="d-flex align-items-center">
       <button type="text" class="btn btn-icon btn-primary rounded-circle me-3">
-        <span class="icon-add_box icon-18"></span>
+        <span *ngIf="action == 'add'" class="icon-add_box icon-18"></span>
+        <span *ngIf="action == 'copy'" class="icon-file_copy icon-16"></span>
+        <span *ngIf="action == 'edit'" class="icon-edit_square icon-16"></span>
       </button>
       <codx-label
         class="fs-3 fw-bold"
@@ -1044,6 +1046,7 @@
                 [min]="0"
                 (valueChange)="valueChangeText($event)"
                 [crrValue]="contracts?.paidAmt"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -1065,6 +1068,7 @@
                 [min]="0"
                 (valueChange)="valueChangeText($event)"
                 [crrValue]="contracts?.remainAmt"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -1128,7 +1132,6 @@
                 type="valuelist"
                 [crrValue]="contracts?.currencyID"
                 (valueChange)="valueChangeText($event)"
-                [disabled]="true"
               >
               </codx-input>
             </div>

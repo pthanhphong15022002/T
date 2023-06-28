@@ -82,7 +82,7 @@
         <codx-label
           name="lblUpdateInfo"
           class="fs-6 text-dark text-primary fw-bold"
-          default="Thông tin bổ sung"
+          default="Thông tin mở rộng"
           [formModel]="form.formModel"
         >
         </codx-label>
@@ -98,16 +98,7 @@
               >
               </codx-input>
             </div>
-            <div class="form-group">
-              <codx-label [formModel]="form.formModel" fiedName="Headcounts">
-              </codx-label>
-              <codx-input
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                field="headcounts"
-              >
-              </codx-input>
-            </div>
+
             <div class="form-group">
               <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
               </codx-label>
@@ -118,8 +109,6 @@
               >
               </codx-input>
             </div>
-          </div>
-          <div class="col-6">
             <div class="form-group">
               <codx-label [formModel]="form.formModel" fiedName="BankAccount">
               </codx-label>
@@ -127,6 +116,18 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="bankAccount"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="Headcounts">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                field="headcounts"
               >
               </codx-input>
             </div>
@@ -140,21 +141,24 @@
               >
               </codx-input>
             </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="d-flex justify-content-between">
-            <div class="me-2">
-              <codx-input
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                field="officialHour"
-              >
-              </codx-input>
-            </div>
-            <div class="w-100">
-              <codx-label [formModel]="form.formModel" fiedName="OfficialHour">
-              </codx-label>
+            <div class="form-group" style="margin-top: 33px">
+              <div class="d-flex justify-content-between">
+                <div class="me-2">
+                  <codx-input
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                    field="officialHour"
+                  >
+                  </codx-input>
+                </div>
+                <div class="w-100">
+                  <codx-label
+                    [formModel]="form.formModel"
+                    fiedName="OfficialHour"
+                  >
+                  </codx-label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -163,7 +167,7 @@
         <codx-label
           name="lblSystemInfo"
           class="fs-6 text-dark text-primary fw-bold"
-          default="Thông tin hệ thống"
+          default="Thông tin mặc định"
           [formModel]="form.formModel"
         >
         </codx-label>
@@ -179,6 +183,8 @@
               >
               </codx-input>
             </div>
+          </div>
+          <div class="col-6">
             <div class="form-group">
               <codx-label [formModel]="form.formModel" fiedName="SegmentID">
               </codx-label>
@@ -190,33 +196,21 @@
               </codx-input>
             </div>
           </div>
-          <div class="col-6">
-            <div class="form-group">
-              <codx-label [formModel]="form.formModel" fiedName="Owner">
-              </codx-label>
-              <codx-input
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                field="owner"
-              >
-              </codx-input>
-            </div>
-            <div class="form-group">
-              <codx-label [formModel]="form.formModel" fiedName="ConsultantID">
-              </codx-label>
-              <codx-input
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                field="consultantID"
-              >
-              </codx-input>
-            </div>
-          </div>
         </div>
       </div>
     </ng-container>
     <ng-container *ngIf="funcID == 'CM0102'">
       <div class="row">
+        <div class="col-6 form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Nationality">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="nationality"
+          >
+          </codx-input>
+        </div>
         <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" fiedName="BirthPlace">
           </codx-label>
@@ -227,7 +221,7 @@
           >
           </codx-input>
         </div>
-        <div class="col-6 form-group">
+        <!-- <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" fiedName="Education">
           </codx-label>
           <codx-input
@@ -236,7 +230,7 @@
             field="education"
           >
           </codx-input>
-        </div>
+        </div> -->
       </div>
       <div class="row">
         <div class="col-6 form-group">
@@ -250,18 +244,6 @@
           </codx-input>
         </div>
         <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="MaritalStatus">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="maritalStatus"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" fiedName="IssuedOn">
           </codx-label>
           <codx-input
@@ -271,6 +253,40 @@
           >
           </codx-input>
         </div>
+        <!-- <div class="col-6 form-group">
+          <codx-label [formModel]="form.formModel" fiedName="MaritalStatus">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="maritalStatus"
+          >
+          </codx-input>
+        </div> -->
+      </div>
+      <div class="row">
+        <div class="col-6 form-group">
+          <codx-label [formModel]="form.formModel" fiedName="EthnicGroup">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="ethnicGroup"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Religion">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="religion"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" [fiedName]="'BankAccount'">
           </codx-label>
@@ -278,18 +294,6 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [field]="'bankAccount'"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IssuedBy">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="issuedBy"
           >
           </codx-input>
         </div>
@@ -304,17 +308,21 @@
           </codx-input>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Nationality">
+          <codx-label [formModel]="form.formModel" fiedName="IssuedBy">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="nationality"
+            field="issuedBy"
           >
           </codx-input>
         </div>
+
+      </div>
+      <div class="row">
+
         <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" fiedName="Income">
           </codx-label>
@@ -325,18 +333,8 @@
           >
           </codx-input>
         </div>
-      </div>
+      </div> -->
       <div class="row">
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="EthnicGroup">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="ethnicGroup"
-          >
-          </codx-input>
-        </div>
         <div class="col-6 form-group">
           <div class="row">
             <div class="col-7">
@@ -361,18 +359,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Religion">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="religion"
-          >
-          </codx-input>
-        </div>
         <div class="col-6 form-group">
           <codx-label [formModel]="form.formModel" fiedName="Email">
           </codx-label>
@@ -386,46 +372,74 @@
       </div>
     </ng-container>
     <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
-      <div class="row">
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Headcounts">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="headcounts"
-          >
-          </codx-input>
+      <div class="mb-2">
+        <codx-label
+          name="lblUpdateInfo"
+          class="fs-6 text-dark text-primary fw-bold"
+          default="Thông tin mở rộng"
+          [formModel]="form.formModel"
+        >
+        </codx-label>
+        <div class="row mt-5">
+          <div class="col-6 form-group">
+            <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="annualRevenue"
+            >
+            </codx-input>
+          </div>
+          <div class="col-6 form-group">
+            <codx-label [formModel]="form.formModel" fiedName="Headcounts">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="headcounts"
+            >
+            </codx-input>
+          </div>
         </div>
-        <div class="col-6 form-group">
+      </div>
+      <div class="mb-2 mt-5">
+        <codx-label
+          name="lblSystemInfo"
+          class="fs-6 text-dark text-primary fw-bold"
+          default="Thông tin mặc định"
+          [formModel]="form.formModel"
+        >
+        </codx-label>
+        <div class="row mt-3" *ngIf="funcID == 'CM0103'">
+          <div class="col-6 form-group">
+            <codx-label [formModel]="form.formModel" fiedName="SegmentID">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="segmentID"
+            >
+            </codx-input>
+          </div>
+          <div class="col-6 form-group">
+            <codx-label [formModel]="form.formModel" fiedName="ChannelID">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="channelID"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="funcID == 'CM0104'">
           <codx-label [formModel]="form.formModel" fiedName="SegmentID">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="segmentID"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Capital">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="capital"
-          >
-          </codx-input>
-        </div>
-        <div class="col-6 form-group" *ngIf="funcID == 'CM0103'">
-          <codx-label [formModel]="form.formModel" fiedName="PartnerFrom">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="partnerFrom"
           >
           </codx-input>
         </div>
@@ -680,6 +694,45 @@
     >
     </codx-input>
   </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ShortName">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="shortName"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <!-- <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
+        </codx-label>
+        <codx-input
+          type="datetime"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="establishDate"
+        >
+        </codx-input>
+      </div> -->
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="TaxCode">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="taxCode"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
@@ -693,39 +746,6 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="ShortName">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="shortName"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
-        </codx-label>
-        <codx-input
-          type="datetime"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="establishDate"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="TaxCode">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="taxCode"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
         <codx-input
           [formModel]="form.formModel"
@@ -734,6 +754,8 @@
         >
         </codx-input>
       </div>
+    </div>
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="FaxNo"> </codx-label>
         <codx-input
@@ -743,36 +765,44 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="email"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="WebPage">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="webPage"
-        >
-        </codx-input>
-      </div>
     </div>
   </div>
 
-
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="WebPage"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="webPage"
+    >
+    </codx-input>
+  </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>
     <codx-input
+      type="combobox"
+      [crrValue]="data?.industries"
+      [formModel]="form.formModel"
+      [placeholder]="gridViewSetup?.Industries?.description"
+      [refValue]="gridViewSetup?.Industries?.referedValue"
+      (valueChange)="valueChangeIndustries($event)"
+      field="industries"
+    >
+    </codx-input>
+    <!-- <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="industries"
+    >
+    </codx-input> -->
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Owner"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="owner"
     >
     </codx-input>
   </div>
@@ -934,18 +964,6 @@
         </codx-input>
       </div>
       <div class="col-6 form-group">
-        <codx-label [formModel]="form.formModel" fiedName="JobTitle">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="jobTitle"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 form-group">
         <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
         </codx-label>
         <codx-input
@@ -955,13 +973,26 @@
         >
         </codx-input>
       </div>
+    </div>
+
+    <div class="row">
       <div class="col-6 form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Department">
+        <codx-label [formModel]="dialog.formModel" fiedName="Gender">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="department"
+          field="gender"
+        >
+        </codx-input>
+      </div>
+      <div class="col-6 form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Birthday">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="birthday"
         >
         </codx-input>
       </div>
@@ -977,16 +1008,6 @@
       </codx-input>
     </div>
     <div class="row">
-      <div class="col-6 form-group">
-        <codx-label [formModel]="dialog.formModel" fiedName="Gender">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="gender"
-        >
-        </codx-input>
-      </div>
       <div class="col-6 form-group">
         <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
@@ -1013,18 +1034,6 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [field]="'mobile'"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Birthday">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="birthday"
         >
         </codx-input>
       </div>
@@ -1060,7 +1069,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-6 form-group">
         <codx-label [formModel]="form.formModel" fiedName="Occupation">
         </codx-label>
@@ -1071,18 +1080,40 @@
         >
         </codx-input>
       </div>
+
+    </div> -->
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
+      </codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [field]="'webPage'"
+      >
+      </codx-input>
+    </div>
+    <div class="row">
       <div class="col-6 form-group">
-        <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
+        <codx-label [formModel]="form.formModel" fiedName="JobTitle">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [field]="'webPage'"
+          field="jobTitle"
+        >
+        </codx-input>
+      </div>
+      <div class="col-6 form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Department">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="department"
         >
         </codx-input>
       </div>
     </div>
-
     <div class="form-group">
       <codx-label [formModel]="form.formModel" [fiedName]="'Memo'">
       </codx-label>
@@ -1109,19 +1140,6 @@
           [Group]="form.formGroup"
           [disabled]="true"
           [field]="funcID == 'CM0103' ? 'partnerID' : 'competitorID'"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [fiedName]="funcID == 'CM0103' ? 'PartnerName' : 'CompetitorName'"
-        >
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          [field]="funcID == 'CM0103' ? 'partnerName' : 'competitorName'"
         >
         </codx-input>
       </div>
@@ -1157,12 +1175,15 @@
     </div>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
+    <codx-label
+      [formModel]="form.formModel"
+      [fiedName]="funcID == 'CM0103' ? 'PartnerName' : 'CompetitorName'"
+    >
+    </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [crrValue]="data?.address"
-      (valueChange)="valueChangeAdress($event)"
-      field="address"
+      [Group]="form.formGroup"
+      [field]="funcID == 'CM0103' ? 'partnerName' : 'competitorName'"
     >
     </codx-input>
   </div>
@@ -1178,23 +1199,33 @@
       </codx-input>
     </div>
     <div class="col-6 form-group">
+      <codx-label [formModel]="form.formModel" fiedName="TaxCode"> </codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="taxCode"
+      >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.address"
+      (valueChange)="valueChangeAdress($event)"
+      field="address"
+    >
+    </codx-input>
+  </div>
+
+  <div class="row">
+    <div class="col-6 form-group">
       <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="phone"
-      >
-      </codx-input>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
-      </codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="establishDate"
       >
       </codx-input>
     </div>
@@ -1208,57 +1239,23 @@
       </codx-input>
     </div>
   </div>
-  <div class="row">
-    <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="CEO"> </codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="ceo"
-      >
-      </codx-input>
-    </div>
-    <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="email"
-      >
-      </codx-input>
-    </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="WebPage"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="webPage"
+    >
+    </codx-input>
   </div>
-  <div class="row">
-    <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="TaxCode"> </codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="taxCode"
-      >
-      </codx-input>
-    </div>
-    <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="WebPage"> </codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="webPage"
-      >
-      </codx-input>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 form-group">
-      <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
-      </codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="annualRevenue"
-      >
-      </codx-input>
-    </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="CEO"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="ceo"
+    >
+    </codx-input>
   </div>
 
   <div class="form-group">

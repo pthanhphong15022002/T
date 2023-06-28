@@ -486,6 +486,10 @@
     color: var(--primary-dark);
     border-color: var(--primary);
   }
+  .btn.btn-outline-primary:focus-visible {
+//    color: var(--bs-btn-hover-color);
+    background-color: var(--primary-active);
+  }
 
   .btn-outline-primary:hover {
     background-color: var(--primary-light);

@@ -35,6 +35,8 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() funcID = 'CM0101';
   @Input() entityName = '';
+  @Input() gridViewSetup: any;
+  @Input() lstCustGroups = [];
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
@@ -86,7 +88,6 @@ export class CmCustomerDetailComponent implements OnInit {
   tabDetail = [];
   formModelContact: FormModel;
   formModelAddress: FormModel;
-  gridViewSetup: any;
   listAddress = [];
   contactPerson = new CM_Contacts();
   viewTag = '';
@@ -192,25 +193,6 @@ export class CmCustomerDetailComponent implements OnInit {
       this.addressNameCM = this.dataSelected?.address;
 
     }
-  }
-
-
-  getGridviewSetup() {
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-  }
-
-  getVllByGridViewSetupContact() {
-    this.cache.gridViewSetup('CMContacts', 'grvCMContacts').subscribe((res) => {
-      if (res) {
-        this.vllContactType = res?.ContactType?.referedValue;
-      }
-    });
   }
 
   getListAddress(entityName, recID) {

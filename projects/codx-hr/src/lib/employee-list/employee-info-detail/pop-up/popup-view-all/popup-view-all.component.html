@@ -11,7 +11,7 @@
         <ng-container *ngComponentOutlet="filter"></ng-container>
     </ng-container> -->
 
-    <div class="card-body p-0 employee-all mt-1" 
+    <div class="card-body p-0 employee-all" 
     *ngIf="formModel && columnGrid; else emptyDataTemplate"
     >
       <!-- <codx-gridview
@@ -58,11 +58,11 @@
         data.recID == crrPassport?.recID ? ' bg-primary' : 'bg-transparent'
       "
     ></span> -->
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-i-card-text icon-16 text-gray-500 me-2"></span>
+    <div class="d-flex flex-column py-3">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-i-card-text icon-16 text-gray-600 me-2"></span>
         <div
-          class="text-dark"
+          class="text-dark fw-bold"
           [innerHTML]="
             data?.passportNo
               | formatvalue : formModel : 'passportNo'
@@ -71,7 +71,7 @@
         ></div>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-home_work icon-16 text-gray-500 me-2"></span>
+        <span class="icon-home_work icon-16 text-gray-600 me-2"></span>
         <div
           class="text-dark"
           [innerHTML]="
@@ -88,7 +88,7 @@
 <ng-template #passportCol2 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
+      <div class="d-flex align-items-center mb-1">
         <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span
@@ -134,10 +134,10 @@
         data.recID == crrWorkpermit?.recID ? ' bg-primary' : 'bg-transparent'
       "
     ></span> -->
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-i-card-text icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
+    <div class="d-flex flex-column py-3">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-i-card-text icon-16 text-gray-600 me-2"></span>
+        <span class="text-dark fw-bold">
           <span
             [innerHTML]="
               data?.workPermitNo
@@ -145,7 +145,7 @@
                 | async
             "
           ></span>
-          <i class="icon-i-dot text-gray-500 icon-16"></i>
+          <i class="icon-i-dot text-gray-500 icon-16 mx-1 pt-1"></i>
           <span
           class="badge badge-primary border-2"
           [innerHTML]="
@@ -157,8 +157,8 @@
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-primary me-2"></span>
-        <span class="text-dark">
+        <span class="icon-event icon-16 text-gray-600 me-2"></span>
+        <span class="text-gray-600">
           <span
             [innerHTML]="
               data?.fromDate
@@ -184,10 +184,10 @@
 
 <ng-template #workPermitCol2 let-data>
   <div class="has-action-menu">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-category icon-16 text-primary me-2"></span>
-        <span class="text-dark">
+    <div class="d-flex flex-column py-3">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-category icon-16 text-gray-600 me-2"></span>
+        <span class="text-dark fw-bold">
           <span
             [innerHTML]="
               data?.jobAssign
@@ -199,7 +199,7 @@
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-i-card-text icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
+        <span class="text-gray-600">
           <span
           >{{data.workingForm}}</span>
         </span>
@@ -224,10 +224,10 @@
       class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
       [class]="data.recID == crrVisa?.recID ? ' bg-primary' : 'bg-transparent'"
     ></span> -->
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-5px">
-        <span class="icon-i-card-text icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
+    <div class="d-flex flex-column py-3">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-i-card-text icon-16 text-gray-600 me-2"></span>
+        <span class="text-dark fw-bold">
           <span
             [innerHTML]="
               data?.visaNo | formatvalue : formModel : 'visaNo' | async
@@ -236,8 +236,8 @@
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-category icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
+        <span class="icon-category icon-16 text-gray-600 me-2"></span>
+        <span class="text-gray-600">
           <span
             [innerHTML]="
               data?.visaType | formatvalue : formModel : 'visaType' | async
@@ -251,10 +251,10 @@
 
 <ng-template #visaCol2 let-data>
   <div class="has-action-menu">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger me-2"></span>
-        <span class="text-dark">
+    <div class="d-flex flex-column py-3">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-event icon-16 text-gray-600 me-2"></span>
+        <span class="text-gray-700">
           <span
             [innerHTML]="
               data?.effectedDate
@@ -263,8 +263,8 @@
             "
           ></span>
         </span>
-        <span class="me-1 ms-1">-</span>
-        <span class="text-dark">
+        <span class="mx-2">-</span>
+        <span class="text-gray-700">
           <span
             [innerHTML]="
               data?.expiredDate
@@ -275,8 +275,8 @@
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-home_work icon-16 text-gray-500 me-2"></span>
-        <span class="text-dark">
+        <span class="icon-home_work icon-16 text-gray-600 me-2"></span>
+        <span class="text-gray-700">
           <span
             [innerHTML]="
               data?.nationalityID | formatvalue : formModel : 'nationalityID' | async
@@ -304,56 +304,50 @@
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
       [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
     ></span> -->
-    <div class="d-flex flex-column justify-content-end">
-      <div
-        class="d-flex align-items-center text-dark fs-6 fw-bold"
-      >
-      <ng-template #popNewest>
-        <span>
-          <codx-label
-            name="lblIsNewest"
-            [formModel]="formModel"
-            default="Đang hiệu lực"
-          ></codx-label>
-        </span>
-      </ng-template>
-      <div
-        *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
-        #popOver="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="popOver.open()"
-        (mouseleave)="popOver.close()"
-        placement="right"
-        [ngbPopover]="popNewest"
-        [style.color]="'#0078FF'"
-        class="icon-bookmark icon-16 me-2"
-      >
+    <div
+          class="d-flex align-items-center"
+        >
+        <ng-template #popNewest>
+          <span>
+            <codx-label
+              name="lblIsNewest"
+              [formModel]="formModel"
+              default="Đang hiệu lực"
+            ></codx-label>
+          </span>
+        </ng-template>
+        <div class="w-20px me-1">
+          <div
+            *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="right"
+            [ngbPopover]="popNewest"
+            [style.color]="'#0078FF'"
+            class="icon-bookmark icon-18"
+          >
 
+          </div>
+        </div>
+        <span class="text-dark"
+          [innerHTML]="
+            data?.bSalary
+              | formatvalue : formModel : 'bSalary'
+              | async
+          "
+        ></span>
       </div>
-        <span class="icon-attach_money icon-16 me-1"></span>
-        <span class="">
-          <span
-            [innerHTML]="
-              data?.bSalary
-                | formatvalue : formModel : 'bSalary'
-                | async
-            "
-          ></span>
-        </span>
-      </div>
-    </div>
   </div>
 </ng-template>
 
 <ng-template #basicSalaryCol2 let-data>
-  <div class="d-flex flex-column justify-content-end">
-    <div class="d-flex align-items-center">
-      <span
-        class="icon-monetization_on icon-16 me-2 text-dark fs-6 fw-bold"
-      ></span>
+  <div class="d-flex justify-content-end w-125px">
+    <div class="d-flex align-items-center w-auto">
       <span
         [ngClass]="
-          data.isCurrent ? 'text-primary fw-bold' : 'text-dark fs-6 fw-bold'
+          data.isCurrent ? 'text-primary' : 'text-dark'
         "
       >
         <span
@@ -369,19 +363,14 @@
 </ng-template>
 
 <ng-template #basicSalaryCol3 let-data>
-  <div class="d-flex flex-column justify-content-end">
-    <div
-      class="d-flex align-items-center mb-5px text-dark fs-6 fw-bold"
-    >
-      <span class="icon-attach_money icon-16 me-2"></span>
-      <span
+  <div class="d-flex justify-content-end w-125px">
+    <span class="text-dark"
         [innerHTML]="
           data?.jSalary
             | formatvalue : formModel : 'jSalary'
             | async
         "
       ></span>
-    </div>
   </div>
 </ng-template>
 
@@ -389,9 +378,8 @@
   <div class="has-action-menu">
     <div class="d-flex flex-column">
       <div
-        class="d-flex align-items-center text-dark fs-6 fw-bold"
+        class="d-flex align-items-center text-dark"
       >
-        <span class="icon-event icon-16 text-gray-500 me-2"></span>
         <span
           [innerHTML]="
             data?.effectedDate
@@ -400,7 +388,7 @@
           "
         ></span>
         <span *ngIf="data?.expiredDate">
-          <span class="mx-2">-</span>
+          <span class="mx-2 text-gray-400">-</span>
           <span
             [innerHTML]="
               data?.expiredDate
@@ -425,6 +413,7 @@
 <!-- #region template Phụ cấp  -->
 <ng-template #templateBenefitID let-data>
   <ng-template #popNewest>
+    
     <span>
       <codx-label
         name="lblIsNewest"
@@ -433,18 +422,21 @@
       ></codx-label>
     </span>
   </ng-template>
-  <span
-    *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
-    #popOver="ngbPopover"
-    [openDelay]="500"
-    (mouseenter)="popOver.open()"
-    (mouseleave)="popOver.close()"
-    placement="right"
-    [ngbPopover]="popNewest"
-    [style.color]="'#0078FF'"
-    class="icon-bookmark icon-16 me-2"
-  >
-</span>
+  <div class="d-flex align-items-top">
+  <span class="w-20px me-1">
+    <span
+      *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="right"
+      [ngbPopover]="popNewest"
+      [style.color]="'#0078FF'"
+      class="icon-bookmark icon-18"
+    >
+   </span>
+  </span>
 
   <span
     [innerHTML]="
@@ -455,18 +447,21 @@
       class="icon-i-plus-circle icon-12 pe-2"
     ></span> -->
   </span>
+</div>
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
-  <div #benefitNorm>
-    <span
-      [innerHTML]="
-        data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
-      "
-    >
-    </span>
-    <span class="mx-1">/</span>
-    <span
+  <div class="d-flex align-items-center" #benefitNorm>
+    <div class="w-150px d-flex justify-content-end">
+      <span class="text-dark"
+        [innerHTML]="
+          data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
+        "
+      >
+      </span>
+    </div>
+    <span class="mx-2 text-gray-400">/</span>
+    <span class="w-100px text-gray-600"
       [innerHTML]="
         data?.benefitNorm
           | formatvalue : formModel : 'benefitNorm'
@@ -573,19 +568,21 @@
         </div>
       </div>
       <div class="d-flex align-items-center mb-2" *ngIf="!data.isAppendix">
-        <span
-        *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
-        #popOver="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="popOver.open()"
-        (mouseleave)="popOver.close()"
-        placement="right"
-        [ngbPopover]="popNewest"
-        [style.color]="'#0078FF'"
-        class="icon-bookmark icon-16 me-2"
-      >
-    </span>
-        <span class="fw-bolder">
+        <span class="w-20px me-2">
+          <span
+            *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="right"
+            [ngbPopover]="popNewest"
+            [style.color]="'#0078FF'"
+            class="icon-bookmark icon-18"
+          >
+          </span>
+        </span>
+        <span class="fw-bold">
           <span
             [innerHTML]="
               data?.contractTypeID
@@ -770,7 +767,7 @@
   [formModel]="formModel"
   [name]="'lblContractsGridCol1'"
   default="Loại hợp đồng | Thời hạn"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -780,7 +777,7 @@
   [formModel]="formModel"
   [name]="'lblContractsGridCol2'"
   default="Hợp đồng"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -790,7 +787,7 @@
   [formModel]="formModel"
   [name]="'lblContractsGridCol3'"
   default="Ghi chú"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -800,7 +797,7 @@
   [formModel]="formModel"
   [name]="'lblBasicSalGridCol1'"
   default="Lương cơ bản"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -810,7 +807,7 @@
   [formModel]="formModel"
   [name]="'lblBasicSalGridCol2'"
   default="Lương đóng BH"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -820,7 +817,7 @@
   [formModel]="formModel"
   [name]="'lblBasicSalGridCol3'"
   default="Lương chức danh"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -830,7 +827,7 @@
   [formModel]="formModel"
   [name]="'lblBasicSalGridCol4'"
   default="Hiệu lực"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -840,7 +837,7 @@
   [formModel]="formModel"
   [name]="'lblBenefitGridCol1'"
   default="Loại phụ cấp"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -850,7 +847,7 @@
   [formModel]="formModel"
   [name]="'lblBenefitGridCol2'"
   default="Số tiền"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -860,7 +857,7 @@
   [formModel]="formModel"
   [name]="'lblBenefitGridCol3'"
   default="Hiệu lực"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -870,7 +867,7 @@
   [formModel]="formModel"
   [name]="'lblWorkPermitGridCol1'"
   default="Số GPLĐ | Thời hạn"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>
@@ -880,7 +877,7 @@
   [formModel]="formModel"
   [name]="'lblWorkPermitGridCol2'"
   default="Vị trí công việc | Hình thức làm việc"
-  class="fw-bold fs-6 text-gray-600"
+  class="fw-bold fs-6"
 >
 </codx-label>
 </ng-template>

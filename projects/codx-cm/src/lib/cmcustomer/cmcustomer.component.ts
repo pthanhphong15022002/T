@@ -81,7 +81,8 @@ export class CmCustomerComponent
   crrFuncID = '';
   viewMode = 2;
   isButton = true;
-
+  gridViewSetup: any;
+  lstCustGroups = [];
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -154,7 +155,7 @@ export class CmCustomerComponent
     }
   }
 
-  afterLoad() {
+  async afterLoad() {
     // this.entityName =
     //   this.funcID == 'CM0101'
     //     ? 'CM_Customers'
@@ -171,7 +172,18 @@ export class CmCustomerComponent
       // formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
       // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
       // this.view.formModel = formMD;
+      if (this.funcID == 'CM0101') {
+        this.lstCustGroups = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','CustomerGroupsBusiness','GetListDealCompetitorsAsync'));
+        this.cache
+          .gridViewSetup(fun?.formName, fun?.gridViewName)
+          .subscribe((res) => {
+            if (res) {
+              this.gridViewSetup = res;
+            }
+          });
+      }
     });
+
     this.detectorRef.detectChanges();
   }
 
@@ -206,6 +218,14 @@ export class CmCustomerComponent
       case 'CM0102_3':
       case 'CM0102_2':
         this.deleteContactToCM(data);
+        break;
+      //tạm ngưng
+      case 'CM0101_4':
+        this.updateStatusCustomer('99', data);
+        break;
+      //mở lại
+      case 'CM0101_5':
+        this.updateStatusCustomer('2', data);
         break;
     }
   }
@@ -254,6 +274,12 @@ export class CmCustomerComponent
             )
               res.disabled = true;
             break;
+          case 'CM0101_4':
+            if (data.status === '99') res.disabled = true;
+            break;
+          case 'CM0101_5':
+            if (data.status !== '99') res.disabled = true;
+            break;
         }
       });
     }
@@ -261,7 +287,7 @@ export class CmCustomerComponent
 
   //#region Search
   searchChanged(e) {
-    this.view.dataService.search(e).subscribe();
+    this.view.dataService.search(e);
     this.detectorRef.detectChanges();
   }
   //#endregion
@@ -528,22 +554,63 @@ export class CmCustomerComponent
   setIsBlackList(data, isBlacklist) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.cmSv.setIsBlackList(data.recID, isBlacklist).subscribe((res) => {
-          if (res) {
-            this.dataSelected.isBlackList = isBlacklist;
-            this.customerDetail.dataSelected = JSON.parse(
-              JSON.stringify(this.dataSelected)
-            );
-            // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
-            this.view.dataService.update(this.dataSelected).subscribe();
-            this.notiService.notifyCode('SYS007');
-            this.detectorRef.detectChanges();
-          }
-        });
-      }
-    });
+    this.notiService
+      .alertCode(
+        'CM007',
+        null,
+        data?.customerName,
+        "'" + this.titleAction?.toLocaleLowerCase() + "'"
+      )
+      .subscribe((x) => {
+        if (x?.event?.status == 'Y') {
+          this.cmSv.setIsBlackList(data.recID, isBlacklist).subscribe((res) => {
+            if (res) {
+              this.dataSelected.isBlackList = isBlacklist;
+              this.customerDetail.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
+              this.view.dataService.update(this.dataSelected).subscribe();
+              this.notiService.notifyCode('SYS007');
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+  }
+
+  async updateStatusCustomer(status, data) {
+    var check = false;
+    check = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','DealsBusiness','IsExitDealStatusByCustomerIDAsync', data?.recID));
+    if(check){
+      this.notiService.notifyCode('CM020');
+      return;
+    }
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService
+      .alertCode(
+        'CM007',
+        null,
+        this.titleAction?.toLocaleLowerCase(),
+        "'" + data?.customerName + "'"
+      )
+      .subscribe((x) => {
+        if (x?.event?.status == 'Y') {
+          this.cmSv.updateStatusCustoemr(data.recID, status).subscribe((res) => {
+            if (res) {
+              this.dataSelected.status = status;
+              this.customerDetail.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
+              this.view.dataService.update(this.dataSelected).subscribe();
+              this.notiService.notifyCode('SYS007');
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
   }
 
   async deleteContactToCM(data) {
@@ -563,7 +630,7 @@ export class CmCustomerComponent
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
+      if (x?.event?.status == 'Y') {
         if (data.objectID != null && data.objectType != null) {
           if (!data?.contactType.split(';').some((x) => x == '1')) {
             this.cmSv.updateContactCrm(data.recID).subscribe((res) => {

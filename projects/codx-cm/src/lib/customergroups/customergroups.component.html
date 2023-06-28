@@ -22,9 +22,7 @@
     #custGroupID
     class="text-dark"
     [innerHTML]="
-      data?.custGroupID
-        | formatvalue : view.formModel : 'custGroupID'
-        | async
+      data?.custGroupID | formatvalue : view.formModel : 'custGroupID' | async
     "
   ></div>
 </ng-template>
@@ -46,14 +44,13 @@
     class="text-dark"
     [innerHTML]="data?.note | formatvalue : view.formModel : 'note' | async"
   ></div>
-
 </ng-template>
 
 <ng-template #icon let-data>
   <div class="d-flex justify-content-left">
     <i
-      [ngClass]="data.icon"
-      [style.background]="data.iconColor"
+      [ngClass]="data?.icon"
+      [style.background]="data?.iconColor"
       [style.color]="'white'"
       class="fs-5 d-flex align-items-center justify-content-center h-35px w-35px rounded-circle p-3 m-1"
     ></i>
@@ -69,25 +66,35 @@
   ></div>
 </ng-template>
 <ng-template #createdOn let-data>
-  <div class="has-action-menu">
-    <div
-      #createdOn
-      class="text-dark ms-3"
-      [innerHTML]="
-        data?.createdOn | formatvalue : view.formModel : 'createdOn' | async
-      "
-    ></div>
-    <div class="">
-      <codx-mfunc
-        [formModel]="view.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
+  <div
+    #createdOn
+    class="text-dark"
+    [innerHTML]="
+      data?.createdOn | formatvalue : view.formModel : 'createdOn' | async
+    "
+  ></div>
+</ng-template>
+<ng-template #modifiedOn let-data>
+  <div
+    #modifiedOn
+    class="text-dark"
+    [innerHTML]="
+      data?.modifiedOn | formatvalue : view.formModel : 'ModifiedOn' | async
+    "
+  ></div>
+</ng-template>
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
   </div>
 </ng-template>
+
 <ng-template #morefunction let-data>
   <div class="d-flex float-end" style="height: 30px">
     <codx-mfunc

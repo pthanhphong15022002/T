@@ -442,6 +442,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
+
   changeDataKRMF(evt: any, kr: any, isSKR: boolean) {
     if (evt != null && kr != null) {
       evt.forEach((func) => {
@@ -456,65 +457,52 @@ export class OkrTargetsComponent implements OnInit {
         ) {
           func.disabled = true;
         }
-      });
-      //Ẩn MF khi Plan chưa phát hành
-      if (this.dataOKRPlans?.status == '1') {
-        evt.forEach((func) => {
-          if (
-            //Check-In
-            func.functionID == OMCONST.MFUNCID.KRCheckIn ||
-            func.functionID == OMCONST.MFUNCID.SKRCheckIn
-          ) {
-            func.disabled = true;
-          }
-        });
-      }
-      //Ẩn MF khi Plan chưa phát hành
-      else if (this.dataOKRPlans?.status == '2') {
-        evt.forEach((func) => {
-          if (
-            //MF hệ thống
-            func.functionID == OMCONST.MFUNCID.Copy ||
-            func.functionID == OMCONST.MFUNCID.Edit ||
-            func.functionID == OMCONST.MFUNCID.Delete ||
-            //Phân bổ
-            func.functionID == OMCONST.MFUNCID.KRDistribute ||
-            func.functionID == OMCONST.MFUNCID.SKRDistribute ||
-            //Phân công
-            func.functionID == OMCONST.MFUNCID.KRAssign ||
-            func.functionID == OMCONST.MFUNCID.SKRAssign ||
-            //Thay đổi trọng số
-            func.functionID == OMCONST.MFUNCID.KREditSKRWeight||
-            //Đánh giá định kì
-            func.functionID == OMCONST.MFUNCID.KRReviewCheckIn
-          ) {
-            func.disabled = true;
-          }
-        });
-      }
-      //Ẩn phân bổ MF
-      // evt.forEach((func) => {
-      //   if (
-      //     (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
-      //       func.functionID == OMCONST.MFUNCID.SKRDistribute)
-      //   ) {
-      //     func.disabled = true;
-      //   }
-      // });
 
-      
+        //Ẩn MF khi Plan chưa phát hành
+        //Check-In
+        if (
+          this.dataOKRPlans?.status == '1' && 
+          (func.functionID == OMCONST.MFUNCID.KRCheckIn ||
+          func.functionID == OMCONST.MFUNCID.SKRCheckIn)) 
+        {      
+          func.disabled = true;        
+        }
 
-      //Ẩn sửa trọng số SKR nếu KR ko có SKR
-      if (kr?.items == null || kr?.items.length == 0) {
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.KREditSKRWeight) {
-            func.disabled = true;
-          }
-        });
-      }
+        //Ẩn MF khi Plan phát hành    
+        else if (
+          this.dataOKRPlans?.status == '2' && (
+          //MF hệ thống
+          func.functionID == OMCONST.MFUNCID.Copy ||
+          func.functionID == OMCONST.MFUNCID.Edit ||
+          func.functionID == OMCONST.MFUNCID.Delete ||
+          //Phân bổ
+          func.functionID == OMCONST.MFUNCID.KRDistribute ||
+          func.functionID == OMCONST.MFUNCID.SKRDistribute ||
+          //Phân công
+          func.functionID == OMCONST.MFUNCID.KRAssign ||
+          func.functionID == OMCONST.MFUNCID.SKRAssign ||
+          //Thay đổi trọng số
+          func.functionID == OMCONST.MFUNCID.KREditSKRWeight||
+          //Đánh giá định kì
+          func.functionID == OMCONST.MFUNCID.KRReviewCheckIn
+        )) {
+          func.disabled = true;
+        }
+        
+        //Ẩn phân bổ MF        
+        //   if (
+        //     (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
+        //       func.functionID == OMCONST.MFUNCID.SKRDistribute)
+        //   ) {
+        //     func.disabled = true;
+        //   }
 
-      //Ẩn Check-In nếu KR/SKR đã phân công/phân bổ
-      evt.forEach((func) => {
+        //Ẩn sửa trọng số SKR nếu KR ko có SKR
+        if (kr?.items == null || kr?.items.length == 0 && (func.functionID == OMCONST.MFUNCID.KREditSKRWeight)) {          
+          func.disabled = true; 
+        }
+
+        //Ẩn Check-In nếu KR/SKR đã phân công/phân bổ        
         if (
           func.functionID == OMCONST.MFUNCID.KRCheckIn ||
           func.functionID == OMCONST.MFUNCID.SKRCheckIn ||
@@ -530,9 +518,20 @@ export class OkrTargetsComponent implements OnInit {
             func.disabled = false;
           }
         }
+        
+        if(
+          kr?.autoCreated && (
+          //MF hệ thống
+          func.functionID == OMCONST.MFUNCID.Copy ||
+          func.functionID == OMCONST.MFUNCID.Edit ||
+          func.functionID == OMCONST.MFUNCID.Delete
+        )){
+          func.disabled = true;
+        }
+
       });
     }
-  }
+  } 
   changeDataOBMF(evt: any, ob: any) {
     if (evt != null && ob != null) {
       evt.forEach((func) => {
@@ -547,48 +546,50 @@ export class OkrTargetsComponent implements OnInit {
         ) {
           func.disabled = true;
         }
+
+        //Ẩn MF khi Plan chưa phát hành
+        if (this.dataOKRPlans?.status == '1') {
+        }
+        //Ẩn MF khi Plan chưa phát hành
+        else if (this.dataOKRPlans?.status == '2' && (
+          //MF hệ thống
+          func.functionID == OMCONST.MFUNCID.Copy ||
+          func.functionID == OMCONST.MFUNCID.Edit ||
+          func.functionID == OMCONST.MFUNCID.Delete ||
+          //Phân bổ
+          func.functionID == OMCONST.MFUNCID.OBDistribute ||
+          //Phân công
+          func.functionID == OMCONST.MFUNCID.OBAssign ||
+          //Thay đổi trọng số
+          func.functionID == OMCONST.MFUNCID.OBEditKRWeight
+        )){           
+          func.disabled = true;            
+        }
+        //Ẩn phân bổ MF
+        // evt.forEach((func) => {
+        //   if (
+        //     func.functionID == OMCONST.MFUNCID.OBDistribute
+        //   ) {
+        //     func.disabled = true;
+        //   }
+        // });
+
+        //Ẩn phân bổ trọng số nếu ko có kr
+
+        if ((ob?.items == null || ob?.items.length == 0) && func.functionID == OMCONST.MFUNCID.OBEditKRWeight) {
+          func.disabled = true;
+        }
+
+        if(
+          ob?.autoCreated && (
+          //MF hệ thống
+          func.functionID == OMCONST.MFUNCID.Copy ||
+          func.functionID == OMCONST.MFUNCID.Edit ||
+          func.functionID == OMCONST.MFUNCID.Delete
+        )){
+          func.disabled = true;
+        }
       });
-
-      //Ẩn MF khi Plan chưa phát hành
-      if (this.dataOKRPlans?.status == '1') {
-      }
-      //Ẩn MF khi Plan chưa phát hành
-      else if (this.dataOKRPlans?.status == '2') {
-        evt.forEach((func) => {
-          if (
-            //MF hệ thống
-            func.functionID == OMCONST.MFUNCID.Copy ||
-            func.functionID == OMCONST.MFUNCID.Edit ||
-            func.functionID == OMCONST.MFUNCID.Delete ||
-            //Phân bổ
-            func.functionID == OMCONST.MFUNCID.OBDistribute ||
-            //Phân công
-            func.functionID == OMCONST.MFUNCID.OBAssign ||
-            //Thay đổi trọng số
-            func.functionID == OMCONST.MFUNCID.OBEditKRWeight
-          ) {
-            func.disabled = true;
-          }
-        });
-      }
-      //Ẩn phân bổ MF
-      // evt.forEach((func) => {
-      //   if (
-      //     func.functionID == OMCONST.MFUNCID.OBDistribute
-      //   ) {
-      //     func.disabled = true;
-      //   }
-      // });
-
-      //Ẩn phân bổ trọng số nếu ko có kr
-
-      if (ob?.items == null || ob?.items.length == 0) {
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.OBEditKRWeight) {
-            func.disabled = true;
-          }
-        });
-      }
     }
   }
   selectionChange(parent) {
@@ -1113,15 +1114,21 @@ export class OkrTargetsComponent implements OnInit {
   }
   deleteOB(ob: any) {
     if (true) {
-      //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteOKR(ob).subscribe((res: any) => {
-        if (res) {
-          this.notificationsService.notifyCode('SYS008');
-          this.removeOB(ob);
+      this.notificationsService.alertCode('SYS030').subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.codxOmService.deleteOKR(ob).subscribe((res: any) => {
+            if (res) {
+              this.notificationsService.notifyCode('SYS008');
+              this.removeOB(ob);
+            } else {
+              this.notificationsService.notifyCode('SYS022');
+            }
+          });
         } else {
-          this.notificationsService.notifyCode('SYS022');
+          return;
         }
       });
+      
     }
   }
   //KeyResults && SubKeyResult
@@ -1208,19 +1215,25 @@ export class OkrTargetsComponent implements OnInit {
 
   deleteKR(kr: any, isSubKR: boolean) {
     if (true) {
-      //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteOKR(kr).subscribe((res: any) => {
-        if (res) {
-          this.notificationsService.notifyCode('SYS008');
-          if (isSubKR) {
-            this.removeSKR(kr);
+      this.notificationsService.alertCode('SYS030').subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.codxOmService.deleteOKR(kr).subscribe((res: any) => {
+          if (res) {
+            this.notificationsService.notifyCode('SYS008');
+            if (isSubKR) {
+              this.removeSKR(kr);
+            } else {
+              this.removeKR(kr);
+            }
           } else {
-            this.removeKR(kr);
+            this.notificationsService.notifyCode('SYS022');
           }
+        });
         } else {
-          this.notificationsService.notifyCode('SYS022');
+          return;
         }
       });
+      
     }
   }
   //Xem chi tiết OB

@@ -65,10 +65,10 @@
                 </codx-img>
               </div>
               <div class="d-flex flex-column">
-                <div class="text-gray-700 fs-6 mb-1">
+                <div class="text-gray-600">
                   {{ dataSelected.customerName }}
                 </div>
-                <div class="fw-bold text-dark fs-4"
+                <div class="fw-bold text-dark fs-5"
                     [ngbTooltip]="tooltipDealName"
                     #dealName
                     [innerHTML]="
@@ -83,7 +83,7 @@
           <div class="ms-5 d-flex justify-content-between">
             <div class="d-flex flex-column">
               <div class="d-flex flex-row">
-                <div class="d-flex align-items-top justify-content-end fs-3">
+                <div class="d-flex align-items-top justify-content-end fs-4">
                   <span
                     class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
                   ></span>
@@ -100,7 +100,7 @@
                   ></span>
                 </div>
                 <div
-                  class="d-flex align-items-top justify-content-end ps-10 fs-3"
+                  class="d-flex align-items-top justify-content-end ps-10 fs-4"
                 >
                   <span
                     class="icon-check_circle text-green icon-16 mt-1 pe-1"
@@ -377,6 +377,7 @@
       [tabClicked]="tabClicked"
       [dataSelected]="dataSelected"
       [formModel]="formModel"
+      [checkMoreReason]="checkMoreReason"
       (saveAssign)="saveAssign($event)"
     ></codx-tab-deal-detail>
   </div>

@@ -127,7 +127,7 @@ export class NewsTagComponent extends UIComponent {
     if (tag && tag.text) {
       this.dataValues = tag.text;
       this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${this.dataValues}`)
-      this.listview.dataService.setPredicates([this.predicates], [this.dataValues]).subscribe();
+      this.listview.dataService.setPredicates([this.predicates], [this.dataValues]);
     }
   }
 

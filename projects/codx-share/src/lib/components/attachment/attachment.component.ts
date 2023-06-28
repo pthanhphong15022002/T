@@ -3265,7 +3265,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.referType = this.referType;
         fileUpload.category = this.category;
         this.lstRawFile.push(files[i].rawFile);
-        fileUpload.reWrite = false;
+        fileUpload.reWrite = this.isReWrite;
         //fileUpload.data = '';
         fileUpload.item = files[i];
         //fileUpload.folderId = this.folderId;

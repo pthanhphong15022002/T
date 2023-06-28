@@ -4388,8 +4388,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByBenefitIDArr.length > 0 &&
       (this.startDateEBenefitFilterValue == undefined ||
@@ -4410,16 +4409,14 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
       this.startDateEBenefitFilterValue != null
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}" and EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       (this.eBenefitGrid.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [])
-        .subscribe();
+        .setPredicates([this.filterEBenefitPredicates], []);
       console.log('truong hop 3', this.filterEBenefitPredicates);
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
@@ -4429,8 +4426,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 4', this.filterEBenefitPredicates);
       (this.eBenefitGrid.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [''])
-        .subscribe();
+        .setPredicates([this.filterEBenefitPredicates], ['']);
     }
   }
 
@@ -4741,8 +4737,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEAssetPredicates],
           [this.filterByAssetCatIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByAssetCatIDArr.length > 0 &&
       (this.startDateEAssetFilterValue == undefined ||
@@ -4763,16 +4758,14 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEAssetPredicates],
           [this.filterByAssetCatIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByAssetCatIDArr.length <= 0 &&
       this.startDateEAssetFilterValue != null
     ) {
       this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
       (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates([this.filterEAssetPredicates], [])
-        .subscribe();
+        .setPredicates([this.filterEAssetPredicates], []);
       console.log('truong hop 3', this.filterEAssetPredicates);
     } else if (
       this.filterByAssetCatIDArr.length <= 0 &&
@@ -4782,8 +4775,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 4', this.filterEAssetPredicates);
       (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates([this.filterEAssetPredicates], [''])
-        .subscribe();
+        .setPredicates([this.filterEAssetPredicates], ['']);
     }
   }
   valueChangeYearFilterAward(evt) {
@@ -4792,8 +4784,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.End_Date_Award_Filter_Value = null;
       this.Filter_Award_Predicates = `(EmployeeID=="${this.employeeID}")`;
       (this.AwardGrid.dataService as CRUDService)
-        .setPredicates([this.Filter_Award_Predicates], [''])
-        .subscribe();
+        .setPredicates([this.Filter_Award_Predicates], ['']);
     } else {
       this.Start_Date_Award_Filter_Value = evt.fromDate.toJSON();
       this.End_Date_Award_Filter_Value = evt.toDate.toJSON();
@@ -4803,8 +4794,7 @@ export class EmployeeDetailComponent extends UIComponent {
             `(EmployeeID=="${this.employeeID}" and AwardDate>="${this.Start_Date_Award_Filter_Value}" and AwardDate<="${this.End_Date_Award_Filter_Value}")`,
           ],
           []
-        )
-        .subscribe();
+        );
     }
   }
   valueChangeYearFilterEAsset(evt) {
@@ -4841,8 +4831,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEVaccinePredicates],
           [this.filterByVaccineTypeIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByVaccineTypeIDArr.length > 0 &&
       (this.startDateEVaccineFilterValue == undefined ||
@@ -4863,16 +4852,14 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEVaccinePredicates],
           [this.filterByVaccineTypeIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByVaccineTypeIDArr.length <= 0 &&
       this.startDateEVaccineFilterValue != null
     ) {
       this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}" and InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}")`;
       (this.eVaccinesGrid.dataService as CRUDService)
-        .setPredicates([this.filterEVaccinePredicates], [])
-        .subscribe();
+        .setPredicates([this.filterEVaccinePredicates], []);
       console.log('truong hop 3', this.filterEVaccinePredicates);
     } else if (
       this.filterByVaccineTypeIDArr.length <= 0 &&
@@ -4882,8 +4869,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 4', this.filterEVaccinePredicates);
       (this.eVaccinesGrid.dataService as CRUDService)
-        .setPredicates([this.filterEVaccinePredicates], [''])
-        .subscribe();
+        .setPredicates([this.filterEVaccinePredicates], ['']);
     }
   }
 
@@ -4895,8 +4881,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 1', this.filterESkillPredicates);
       (this.skillGrid.dataService as CRUDService)
-        .setPredicates([this.filterESkillPredicates], [''])
-        .subscribe();
+        .setPredicates([this.filterESkillPredicates], ['']);
     } else {
       this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -4913,8 +4898,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterESkillPredicates],
           [this.filterByESkillIDArr.join(';')]
-        )
-        .subscribe();
+        );
     }
   }
 
@@ -4940,8 +4924,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.Filter_ETrainCourse_Predicates],
           [this.Filter_By_ETrainCourse_IDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.Filter_By_ETrainCourse_IDArr.length > 0 &&
       (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
@@ -4962,16 +4945,14 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.Filter_ETrainCourse_Predicates],
           [this.Filter_By_ETrainCourse_IDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.Filter_By_ETrainCourse_IDArr.length <= 0 &&
       this.Start_Date_ETrainCourse_Filter_Value != null
     ) {
       this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
       (this.eTrainCourseGrid.dataService as CRUDService)
-        .setPredicates([this.Filter_ETrainCourse_Predicates], [])
-        .subscribe();
+        .setPredicates([this.Filter_ETrainCourse_Predicates], []);
       console.log('truong hop 3', this.Filter_ETrainCourse_Predicates);
     } else if (
       this.Filter_By_ETrainCourse_IDArr.length <= 0 &&
@@ -4981,8 +4962,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 4', this.Filter_ETrainCourse_Predicates);
       (this.eTrainCourseGrid.dataService as CRUDService)
-        .setPredicates([this.Filter_ETrainCourse_Predicates], [''])
-        .subscribe();
+        .setPredicates([this.Filter_ETrainCourse_Predicates], ['']);
     }
   }
 
@@ -4993,8 +4973,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 1', this.Filter_EDiseases_Predicates);
       (this.eDiseasesGrid.dataService as CRUDService)
-        .setPredicates([this.Filter_EDiseases_Predicates], [''])
-        .subscribe();
+        .setPredicates([this.Filter_EDiseases_Predicates], ['']);
     } else {
       this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -5011,8 +4990,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.Filter_EDiseases_Predicates],
           [this.Filter_By_EDiseases_IDArr.join(';')]
-        )
-        .subscribe();
+        );
     }
   }
   // filter đào tạo
@@ -5058,8 +5036,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.endDateBusinessTravelFilterValue = null;
       this.filterBusinessTravelPredicates = `(EmployeeID=="${this.employeeID}")`;
       (this.businessTravelGrid.dataService as CRUDService)
-        .setPredicates([this.filterBusinessTravelPredicates], [''])
-        .subscribe();
+        .setPredicates([this.filterBusinessTravelPredicates], ['']);
     } else {
       this.startDateBusinessTravelFilterValue = evt.fromDate.toJSON();
       this.endDateBusinessTravelFilterValue = evt.toDate.toJSON();
@@ -5069,8 +5046,7 @@ export class EmployeeDetailComponent extends UIComponent {
             `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}")`,
           ],
           []
-        )
-        .subscribe();
+        );
     }
   }
 
@@ -5096,8 +5072,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByKowIDArr.length > 0 &&
       (this.startDateEDayoffFilterValue == undefined ||
@@ -5118,16 +5093,14 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
-        )
-        .subscribe();
+        );
     } else if (
       this.filterByKowIDArr.length <= 0 &&
       this.startDateEDayoffFilterValue != null
     ) {
       this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
       (this.dayoffGrid.dataService as CRUDService)
-        .setPredicates([this.filterEDayoffPredicates], [])
-        .subscribe();
+        .setPredicates([this.filterEDayoffPredicates], []);
       console.log('truong hop 3', this.filterEDayoffPredicates);
     } else if (
       this.filterByKowIDArr.length <= 0 &&
@@ -5137,8 +5110,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 4', this.filterEDayoffPredicates);
       (this.dayoffGrid.dataService as CRUDService)
-        .setPredicates([this.filterEDayoffPredicates], [''])
-        .subscribe();
+        .setPredicates([this.filterEDayoffPredicates], ['']);
     }
   }
 
@@ -5167,8 +5139,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}")`;
       console.log('truong hop 1', this.filterAccidentIdPredicate);
       (this.eAccidentGridView.dataService as CRUDService)
-        .setPredicates([this.filterAccidentIdPredicate], [''])
-        .subscribe();
+        .setPredicates([this.filterAccidentIdPredicate], ['']);
     } else {
       this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -5185,8 +5156,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .setPredicates(
           [this.filterAccidentIdPredicate],
           [this.filterByAccidentIDArr.join(';')]
-        )
-        .subscribe();
+        );
     }
   }
 

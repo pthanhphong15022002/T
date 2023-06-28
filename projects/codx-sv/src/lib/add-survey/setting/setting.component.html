@@ -84,7 +84,7 @@
                 <div class="d-flex align-items-center h-60px">
                     <div class="me-5">
                         <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" isSaveSelected="1" hideImageThumb="1"
-                            hideDes="1"  isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" 
+                            hideDes="1"  isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'"  [isReWrite]="true"
                             [idField]="'RecID'" [referType]="'avt'" [objectType]="formModel?.entityName" [objectId]="data?.recID" [heightScroll]="30" ngClass="'pt-5'" hideImageUpload="1"
                             (fileSave)="fileAdded($event)" [allowExtensions]="'.jpg,.png'"
                         >

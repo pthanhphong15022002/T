@@ -183,8 +183,8 @@
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center min-h-100px border-bottom" (dblclick)="clickViewEmpInfo(data)">
     <!-- Nhân viên -->
-    <div class="w-40 p-3">
-      <div class="d-flex align-items-center cursor-pointer hover-active py-3" (dblclick)="clickViewEmpInfo(data)">
+    <div class="w-40 p-3 ps-5">
+      <div class="d-flex align-items-center cursor-pointer hover-active" (dblclick)="clickViewEmpInfo(data)">
         <div class="d-flex flex-column me-4">
           <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
             objectType="HR_Employees" [width]="40">
@@ -224,7 +224,7 @@
     </div>
     <!-- Liên hệ -->
     <div class="w-25 p-3">
-      <div class="d-flex flex-column py-3">
+      <div class="d-flex flex-column">
         <div class="d-flex align-items-center mb-1">
           <span class="text-gray-700" [ngbTooltip]="data.email? grvSetup?.Email.headerText : null"
             [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
@@ -244,7 +244,7 @@
     </div>
     <!-- Thông tin cá nhân -->
     <div class="w-25 p-3">
-      <div class="d-flex flex-column py-3">
+      <div class="d-flex flex-column">
         <div class="align-items-center1 mb-1">
           <span class="text-gray-700 me-1">
             <codx-label [setRequire]="false" [fiedName]="'Birthday'" [formModel]="view.formModel"
@@ -283,7 +283,7 @@
     <!-- Tình trạng -->
     <div class="w-25 p-3">
       <div class="d-flex has-action-menu justify-content-between w-100">
-        <div class="d-flex flex-column py-3">
+        <div class="d-flex flex-column">
           <div class="d-flex mb-1">
             <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
               [className]="'badge badge-sm badge-inline'">

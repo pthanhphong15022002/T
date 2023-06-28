@@ -12,14 +12,14 @@
   [data]="lead"
 ></codx-layout-add>
 <ng-template #subHeader>
-  <codx-tag
+  <!-- <codx-tag
     field="tags"
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
     [value]="data?.tags"
     (valueChange)="valueTagChange($event)"
-  ></codx-tag>
+  ></codx-tag> -->
 </ng-template>
 
 <ng-template #tabDeal>
@@ -78,7 +78,6 @@
             [formModel]="formModelDeals"
             field="dealName"
             [crrValue]="deal?.dealName"
-            [refValue]="gridViewSetupDeal?.DealName?.referedValue"
             [placeholder]="gridViewSetupDeal?.DealName?.description"
             (valueChange)="valueChange($event)"
           >
@@ -86,7 +85,7 @@
         </div>
       </div>
     </div>
-      <!-- <div class="col-6">
+    <!-- <div class="col-6">
         <div class="form-group">
           <codx-label
             [formModel]="formModelDeals"
@@ -119,17 +118,16 @@
           </codx-label>
           <div class="d-flex flex-row">
             <div class="col-8 pe-2">
-
               <codx-input
-              type="number"
-              [min]="0"
-              [formModel]="formModelDeals"
-              [crrValue]="deal?.dealValue"
-              [placeholder]="gridViewSetupDeal?.DealValue?.description"
-              field="dealValue"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
+                type="number"
+                [min]="0"
+                [formModel]="formModelDeals"
+                [crrValue]="deal?.dealValue"
+                [placeholder]="gridViewSetupDeal?.DealValue?.description"
+                field="dealValue"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
             </div>
             <div class="col-4">
               <codx-input
@@ -246,6 +244,7 @@
         </div>
       </div>
     </div>
+
     <div class="form-group">
       <codx-label
         fiedName="Note"
@@ -551,7 +550,6 @@
         <codx-input
           type="text"
           [crrValue]="customer?.customerName"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.CustomerName?.description"
           field="customerName"
           (valueChange)="valueChangeCustomer($event)"
@@ -559,120 +557,120 @@
         </codx-input>
       </div>
       <div class="row">
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label [formModel]="formModelCustomer" fiedName="ShortName">
-            </codx-label>
-            <codx-input
-              type="text"
-              [crrValue]="customer?.shortName"
-              [formModel]="formModelCustomer"
-              [placeholder]="gridViewSetupCustomer?.ShortName?.description"
-              field="shortName"
-              (valueChange)="valueChangeCustomer($event)"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group">
-            <codx-label
-              [formModel]="formModelCustomer"
-              fiedName="EstablishDate"
-            >
-            </codx-label>
-            <codx-input
-              type="datetime"
-              [crrValue]="customer?.establishDate"
-              format="d"
-              [placeholder]="gridViewSetupCustomer?.EstablishDate?.description"
-              field="establishDate"
-              (valueChange)="valueDateChange($event, 'customer')"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group">
-            <codx-label [formModel]="formModelCustomer" fiedName="TaxCode">
-            </codx-label>
-            <codx-input
-              type="text"
-              [crrValue]="customer?.taxCode"
-              [formModel]="formModelCustomer"
-              [placeholder]="gridViewSetupCustomer?.TaxCode?.description"
-              (valueChange)="valueChangeCustomer($event)"
-              field="taxCode"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group">
-            <codx-label [formModel]="formModelCustomer" fiedName="SegmentID">
-            </codx-label>
-            <codx-input
-              type="combobox"
-              [crrValue]="customer?.segmentID"
-              [formModel]="formModelCustomer"
-              [placeholder]="
-                gridViewSetupCustomer?.SegmentID?.description ?? ''
-              "
-              [refValue]="gridViewSetupCustomer?.SegmentID?.referedValue"
-              field="segmentID"
-              (valueChange)="valueChangeCustomer($event)"
-            >
-            </codx-input>
-          </div>
+        <div class="col-6 form-group">
+          <codx-label [formModel]="formModelCustomer" fiedName="ShortName">
+          </codx-label>
+          <codx-input
+            type="text"
+            [crrValue]="customer?.shortName"
+            [placeholder]="gridViewSetupCustomer?.ShortName?.description"
+            field="shortName"
+            (valueChange)="valueChangeCustomer($event)"
+          >
+          </codx-input>
         </div>
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label [formModel]="formModelCustomer" fiedName="Phone">
-            </codx-label>
-            <codx-input
-              type="text"
-              [crrValue]="customer?.phone"
-              [formModel]="formModelCustomer"
-              [placeholder]="gridViewSetupCustomer?.Phone?.description"
-              (valueChange)="valueChangeCustomer($event)"
-              field="phone"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group">
-            <codx-label [formModel]="formModelCustomer" fiedName="FaxNo">
-            </codx-label>
-            <codx-input
-              type="text"
-              [crrValue]="customer?.faxNo"
-              [formModel]="formModelCustomer"
-              [placeholder]="gridViewSetupCustomer?.FaxNo?.description"
-              (valueChange)="valueChangeCustomer($event)"
-              field="faxNo"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group">
-            <codx-label [formModel]="formModelCustomer" fiedName="Email">
-            </codx-label>
-            <codx-input
-              type="text"
-              [crrValue]="customer?.email"
-              [formModel]="formModelCustomer"
-              [placeholder]="gridViewSetupCustomer?.Email?.description"
-              (valueChange)="valueChangeCustomer($event)"
-              field="email"
-            >
-            </codx-input>
-          </div>
-          <div class="form-group">
-            <codx-label [formModel]="formModelCustomer" fiedName="WebPage">
-            </codx-label>
-            <codx-input
-              type="text"
-              [crrValue]="customer?.webPage"
-              [formModel]="formModelCustomer"
-              [placeholder]="gridViewSetupCustomer?.WebPage?.description"
-              (valueChange)="valueChangeCustomer($event)"
-              field="webPage"
-            >
-            </codx-input>
-          </div>
+        <div class="col-6 form-group">
+          <codx-label [formModel]="formModelCustomer" fiedName="TaxCode">
+          </codx-label>
+          <codx-input
+            type="text"
+            [crrValue]="customer?.taxCode"
+            [placeholder]="gridViewSetupCustomer?.TaxCode?.description"
+            (valueChange)="valueChangeCustomer($event)"
+            field="taxCode"
+          >
+          </codx-input>
         </div>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="formModelCustomer" fiedName="Address">
+        </codx-label>
+        <codx-input
+          type="text"
+          [crrValue]="customer?.address"
+          [placeholder]="gridViewSetupCustomer?.Address?.description"
+          (valueChange)="valueChangeCustomer($event)"
+          field="address"
+        >
+        </codx-input>
+      </div>
+      <div class="row">
+        <div class="col-6 form-group">
+          <codx-label [formModel]="formModelCustomer" fiedName="Phone">
+          </codx-label>
+          <codx-input
+            type="text"
+            [crrValue]="customer?.phone"
+            [placeholder]="gridViewSetupCustomer?.Phone?.description"
+            (valueChange)="valueChangeCustomer($event)"
+            field="phone"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <codx-label [formModel]="formModelCustomer" fiedName="FaxNo">
+          </codx-label>
+          <codx-input
+            type="text"
+            [crrValue]="customer?.faxNo"
+            [placeholder]="gridViewSetupCustomer?.FaxNo?.description"
+            (valueChange)="valueChangeCustomer($event)"
+            field="faxNo"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="formModelCustomer" fiedName="WebPage">
+        </codx-label>
+        <codx-input
+          type="text"
+          [crrValue]="customer?.webPage"
+          [placeholder]="gridViewSetupCustomer?.WebPage?.description"
+          (valueChange)="valueChangeCustomer($event)"
+          field="webPage"
+        >
+        </codx-input>
+      </div>
+      <div class="row">
+        <div class="col-6 form-group">
+          <codx-label [formModel]="formModelCustomer" fiedName="AnnualRevenue">
+          </codx-label>
+          <codx-input
+            type="text"
+            [crrValue]="customer?.annualRevenue"
+            [placeholder]="gridViewSetupCustomer?.AnnualRevenue?.description"
+            (valueChange)="valueChangeCustomer($event)"
+            field="annualRevenue"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <codx-label [formModel]="formModelCustomer" fiedName="Headcounts">
+          </codx-label>
+          <codx-input
+            type="valuelist"
+            [crrValue]="customer?.headcounts"
+            [placeholder]="gridViewSetupCustomer?.Headcounts?.description"
+            [refValue]="gridViewSetupCustomer?.Headcounts?.referedValue"
+            (valueChange)="valueChangeCustomer($event)"
+            field="headcounts"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="formModelCustomer" fiedName="Owner">
+        </codx-label>
+        <codx-input
+          type="combobox"
+          [crrValue]="customer?.owner"
+          [placeholder]="gridViewSetupCustomer?.Owner?.description"
+          [refValue]="gridViewSetupCustomer?.Owner?.referedValue"
+          (valueChange)="valueChangeCustomer($event)"
+          field="owner"
+        >
+        </codx-input>
       </div>
       <div class="form-group">
         <codx-label [formModel]="formModelCustomer" fiedName="Industries">
@@ -680,7 +678,6 @@
         <codx-input
           type="combobox"
           [crrValue]="customer?.industries"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Industries?.description"
           [refValue]="gridViewSetupCustomer?.Industries?.referedValue"
           (valueChange)="valueChangeCustomer($event)"

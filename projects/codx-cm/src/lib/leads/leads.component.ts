@@ -219,7 +219,7 @@ export class LeadsComponent
               sameData: false,
               request: this.request,
               request2: this.resourceKanban,
-              toolbarTemplate: this.footerButton,
+              // toolbarTemplate: this.footerButton,
               model: {
                 template: this.cardKanban,
                 template2: this.viewColumKaban,
@@ -730,33 +730,40 @@ export class LeadsComponent
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         this.cache.functionList(this.funcID).subscribe((fun) => {
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          var formMD = new FormModel();
-          formMD.entityName = fun.entityName;
-          formMD.formName = fun.formName;
-          formMD.gridViewName = fun.gridViewName;
-          formMD.funcID = this.funcID;
-          option.FormModel = JSON.parse(JSON.stringify(formMD));
-          option.Width = '800px';
-          var obj = {
-            action: 'edit',
-            title: this.titleAction,
-          };
-          var dialog = this.callfc.openSide(
-            PopupConvertLeadComponent,
-            obj,
-            option
-          );
-          dialog.closed.subscribe((e) => {
-            if (!e?.event) this.view.dataService.clear();
-            if (e && e.event) {
-              this.dataSelected.status = '7';
-              this.view.dataService.update(this.dataSelected).subscribe();
-              this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-              this.detectorRef.detectChanges();
-            }
-          });
+          this.cache
+            .gridViewSetup(fun?.formName, fun?.gridViewName)
+            .subscribe((res) => {
+              let option = new SidebarModel();
+              option.DataService = this.view.dataService;
+              var formMD = new FormModel();
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              formMD.funcID = this.funcID;
+              option.FormModel = JSON.parse(JSON.stringify(formMD));
+              option.Width = '800px';
+              var obj = {
+                action: 'edit',
+                title: this.titleAction,
+                gridViewSetup: res,
+              };
+              var dialog = this.callfc.openSide(
+                PopupConvertLeadComponent,
+                obj,
+                option
+              );
+              dialog.closed.subscribe((e) => {
+                if (!e?.event) this.view.dataService.clear();
+                if (e && e.event) {
+                  this.dataSelected.status = '7';
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.detectorRef.detectChanges();
+                }
+              });
+            });
         });
       });
   }
