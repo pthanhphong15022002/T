@@ -171,7 +171,7 @@
         </ng-template>
         <ng-template #content class="pd-t-20">
           <div id="bg-color-sv-setting" class="h-100">
-            <app-setting [formModel]="view.formModel" [data]="dataSV" ></app-setting>
+            <app-setting [formModel]="view.formModel" [data]="dataSV" (changeSetting)="changeSetting($event)"></app-setting>
           </div>
         </ng-template>
       </e-tabitem>

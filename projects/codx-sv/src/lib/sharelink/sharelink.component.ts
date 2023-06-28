@@ -14,6 +14,7 @@ export class SharelinkComponent implements OnInit {
   data:any;
   recID:any;
   funcID:any;
+  link:any;
   post = false;
   emailTemplate:any;
   subject:any;
@@ -29,6 +30,7 @@ export class SharelinkComponent implements OnInit {
     this.headerText = dt?.data?.headerText;
     this.recID = dt?.data?.recID;
     this.funcID = dt?.data?.funcID;
+    this.link = dt?.data?.link;
   }
   ngOnInit(): void {
     this.getAlertRule();
@@ -106,11 +108,12 @@ export class SharelinkComponent implements OnInit {
       this.messages = emailTemplate[0]?.message;
     }
   }
+
   save()
   {
     if(!this.checkRequired()) return
     this.data.recID = this.recID;
-    this.svService.shareLink(this.data,this.post,this.funcID).subscribe(item=>{
+    this.svService.shareLink(this.data,this.post,this.funcID,this.link).subscribe(item=>{
       if(item)
       {
         this.notifySvr.notifyCode("SYS015");
