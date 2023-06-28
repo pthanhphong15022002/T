@@ -46,7 +46,7 @@
       </button>
 
       
-      <button *ngIf="dataSV?.status != '5'" type="button" id="btn-sv-release" class="btn btn-sm text-white btn-7248B9" [style.backgroundColor]="primaryColor" (click)="release()">
+      <button *ngIf="dataSV?.status != '5' || dataSV?.stop" type="button" id="btn-sv-release" class="btn btn-sm text-white btn-7248B9" [style.backgroundColor]="primaryColor" (click)="release()">
         <codx-label [fiedName]="'lblSVRelease'" formName="SVRelease"  default="Phát hành" class="ms-1 fw-bold"></codx-label>
       </button>
      

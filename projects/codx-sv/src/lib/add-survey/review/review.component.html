@@ -17,7 +17,8 @@
                       [innerHTML]="itemSession.question"
                     ></span>
                     <span class="mt-5" *ngIf="!itemSession.question">Mẫu không có tiêu đề</span>
-                    <div class="fs-5-sm mt-5">{{expiredOn ? 'Khảo sát đã hết thời gian trả lời.': 'Khảo sát đã đóng.'}}</div>
+                    <div *ngIf="expiredOn && !survey?.stop" class="fs-5-sm mt-5">Khảo sát đã hết thời gian trả lời.</div>
+                    <div *ngIf="survey?.stop" class="fs-5-sm mt-5">Khảo sát đã đóng.</div>
                   </div>
                 </form>
               </div>
