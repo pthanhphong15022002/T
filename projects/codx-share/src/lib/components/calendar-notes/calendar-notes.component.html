@@ -212,7 +212,11 @@
               class="btn btn-sm btn-primary"
               (click)="updateSettingValueVer2()"
             >
-              <codx-label class="fw-normal" name="lblSaveSettingValue" default="Save"></codx-label>
+              <codx-label
+                class="fw-normal"
+                name="lblSaveSettingValue"
+                default="Save"
+              ></codx-label>
             </button>
           </div>
         </div>
@@ -417,19 +421,20 @@
                 </div>
                 <div *ngIf="itemList.status != null">
                   <div class="my-2 note-list">
-                    <codx-input
-                      #checkBoxNote
-                      id="checkBoxNote"
-                      type="checkbox"
-                      label="{{ itemList.listNote }}"
-                      [disabled]="false"
-                      [checked]="
-                        itemList?.status == 'true' || itemList?.status == '1'
-                      "
-                      labelPosition="After"
-                      class="test-check"
-                      (valueChange)="valueChangeCB($event, item, i)"
-                    ></codx-input>
+                    <div class="d-flex justify-content-start">
+                      <codx-input
+                        #checkBoxNote
+                        id="checkBoxNote"
+                        type="checkbox"
+                        [disabled]="false"
+                        [checked]="
+                          itemList?.status == 'true' || itemList?.status == '1'
+                        "
+                        class="test-check"
+                        (valueChange)="valueChangeCB($event, item, i)"
+                      ></codx-input>
+                      <div class="text-break ms-2">{{ itemList.listNote }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
