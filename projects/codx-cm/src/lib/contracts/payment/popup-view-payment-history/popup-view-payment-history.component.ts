@@ -212,22 +212,20 @@ export class PopupViewPaymentHistoryComponent {
           } else {
             this.listPaymentDelete.push(payHistory);
           }
-
+          //cập nhật thứ tự khi xóa
           let listPayHisUpdate = this.listPayHistoryOfPay?.filter((pay) => pay?.rowNo > payHistory?.rowNo);
           listPayHisUpdate.forEach((pay) => { 
             pay.rowNo -= 1; 
             let index = this.listPaymentAdd?.findIndex((payFind) => payFind?.recID == pay.recID);
+            //kiểm tra tồn tại trong add không có thì sửa không thì đưa vào edit
             if (index >= 0) {
               this.listPaymentAdd.splice(index, 1);
             } else {
               this.findPayHistory(this.listPaymentEdit, pay, 'edit');
             }
-            this.findPayHistory(this.listPaymentEdit, pay, 'edit');
           })
 
-          this.listPayHistoryOfPay = JSON.parse(
-            JSON.stringify(this.listPayHistoryOfPay)
-          );
+          this.listPayHistoryOfPay = JSON.parse(JSON.stringify(this.listPayHistoryOfPay));
           this.sumPaid -= payHistory?.paidAmt || 0;
           this.remain += payHistory?.paidAmt || 0;
           this.payment.paidAmt -= payHistory?.paidAmt || 0;
