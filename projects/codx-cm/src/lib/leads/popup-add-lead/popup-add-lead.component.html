@@ -15,6 +15,21 @@
         <div class="form-group">
           <codx-label
             [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            fiedName="ChannelID"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="channelID"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
             fiedName="LeadID"
             [Group]="form.formGroup"
             default="Mã tiềm năng"
@@ -26,17 +41,6 @@
             [crrValue]="lead?.leadID"
             [disabled]="true"
           ></codx-input>
-        </div>
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="LeadName">
-          </codx-label>
-          <codx-input
-            field="LeadName"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
         </div>
       </div>
       <div class="col-6">
@@ -71,6 +75,37 @@
   </div>
 
   <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="LeadName">
+        </codx-label>
+        <codx-input
+          field="leadName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Address">
+        </codx-label>
+        <codx-input
+          field="address"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -81,6 +116,61 @@
         </codx-label>
         <codx-input
           field="companyPhone"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="FaxNo"
+          default="Fax"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="faxNo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="WebPage">
+        </codx-label>
+        <codx-input
+          field="webPage"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="AnnualRevenue"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          field="annualRevenue"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
@@ -106,29 +196,10 @@
         </codx-input>
       </div>
     </div>
+
   </div>
-
   <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="FaxNo"
-          default="Fax"
-        >
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="faxNo"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="col-6">
+    <div class="col-12">
       <div class="form-group">
         <codx-label
           fiedName="Industries"
@@ -136,8 +207,6 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-
-        <!-- gán tạm -->
         <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -148,94 +217,59 @@
 
       </div>
     </div>
-
   </div>
-
-
   <div class="row">
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          fiedName="WebPage"
-          default="Website"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-          field="webPage"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="AnnualRevenue"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-          field="annualRevenue"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="EstablishDate"
-        >
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="establishDate"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="BusinessLineID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
+        fiedName="BusinessLineID"
         [formModel]="form.formModel"
-        field="businessLineID"
-        [crrValue]="lead?.businessLineID"
-        (valueChange)="valueChange($event)"
+        [Group]="form.formGroup"
       >
-      </codx-input>
-
+      </codx-label>
+      <codx-input
+      [formModel]="form.formModel"
+      field="businessLineID"
+      [crrValue]="lead?.businessLineID"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
 
       </div>
     </div>
-
-  </div>
-
-  <div class="row">
     <div class="col-6">
-
+      <div class="form-group">
+        <codx-label
+          fiedName="DealValue"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <div class="d-flex flex-row">
+          <div class="col-8 pe-2">
+            <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="dealValue"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+          </div>
+          <div class="col-4">
+            <codx-input
+              field="currencyID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
       <div class="form-group">
         <codx-label
           fiedName="Owner"
@@ -249,27 +283,6 @@
       [allowFiltering]='true' [value]="owner"></ejs-combobox>
       </div>
     </div>
-
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="EndDate"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-        type="datetime"
-        field="endDate"
-        format="d"
-        [crrValue]="lead?.endDate"
-        (valueChange)="valueChangeDate($event)"
-      >
-      </codx-input>
-
-      </div>
-    </div>
-
   </div>
 
 
@@ -359,21 +372,20 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
+          fiedName="SalespersonID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          fiedName="ChannelID"
         >
         </codx-label>
         <codx-input
+          field="salespersonID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="channelID"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
-
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -392,29 +404,6 @@
       </div>
     </div>
   </div>
-  <div class="row">
-
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          fiedName="SalespersonID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-          field="salespersonID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-  </div>
-
-
 </ng-template>
 
 <ng-template #contact let-form>

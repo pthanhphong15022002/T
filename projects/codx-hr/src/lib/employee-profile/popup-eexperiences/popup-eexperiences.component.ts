@@ -39,7 +39,6 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
-  //@ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -55,7 +54,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.formModel = dialog?.formModel;
     this.actionType = data?.data?.actionType;
-    this.data = data?.data?.eExperienceObj;
+    this.data = JSON.parse(JSON.stringify(data?.data?.eExperienceObj));
     if(this.data){
       this.fromdateVal = this.data.fromDate;
       this.todateVal = this.data.toDate;
@@ -136,6 +135,17 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    if(this.data.companyName){
+      if(this.data.companyName.trim().length == 0){
+        this.data.companyName = null;
+        this.formGroup.patchValue(this.data);
+      }
+    }
+    this.data.fromDate = this.fromdateVal;
+    this.data.toDate = this.todateVal;
+
+    this.formGroup.patchValue({fromDate: this.data.fromDate})
+    this.formGroup.patchValue({toDate: this.data.toDate})
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -143,9 +153,6 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
 
     this.data.employeeID = this.employId;
     console.log('employeeId', this.data.employeeID);
-
-    this.data.fromDate = this.fromdateVal;
-    this.data.toDate = this.todateVal;
 
     //Xu li validate thong tin from-to
     if(this.data.toDate && this.data.fromDate){

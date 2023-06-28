@@ -21,9 +21,9 @@
   </div>
 </ng-template>
 <!-- panel right lef -->
-<!-- <ng-template #panelRightLef>
+<ng-template #panelRightLef>
   <ng-container *ngTemplateOutlet="currView"></ng-container>
-</ng-template> -->
+</ng-template>
 
 <!-- tree master detail -->
 <ng-template #tmpMasterDetail>
@@ -33,15 +33,16 @@
     [orgUnitID]="orgUnitID"
   ></lib-organization-masterdetail>
 </ng-template>
-<!-- tree orgChart
+
 <ng-template #tmpOrgChart>
   <hr-organization-orgchart
     [view]="view"
-    [dataService]="dataService"
+    [dataService]="view.dataService"
     [formModel]="view.formModel"
     [orgUnitID]="orgUnitID"
   ></hr-organization-orgchart>
 </ng-template>
+<!-- tree orgChart
 <ng-template #tmpList>
   <lib-organization-list
     [view]="view"
@@ -220,7 +221,147 @@
 </ng-template>
 <!--- Template tree-->
 <ng-template #templateTree let-item>
-  <div class="d-flex flex-column px-6 py-4 border-bottom has-action-menu">
+  <div class="row px-2 border-bottom has-action-menu">
+    <div class="col-8 my-6">
+      <div class="text-dark fw-bold fs-6">
+        {{ item.orgUnitName }}
+      </div>
+      <codx-vll
+        [name]="'L0605'"
+        [value]="item.orgUnitType"
+        [showText]="true"
+        [showBgColor]="true"
+        [showIcon]="true"
+        class="c-orgtype badge badge-light badge-md my-2 d-flex align-items-center"
+      >
+      </codx-vll>
+      <div *ngIf="item.parentName" class="text-gray-600 me-2">
+        <codx-label
+          [formModel]="view.formModel"
+          default="Trực thuộc:"
+        ></codx-label>
+        <span class="text-dark">
+          {{ item.parentName }}
+        </span>
+      </div>
+    </div>
+
+    <div class="col-4 d-flex justify-content-end my-4">
+      <div class="w-75">
+        <div class="d-flex align-items-top justify-content-between">
+          <div class="me-3">
+            <codx-img
+              [objectId]="item.employeeManager?.employeeID"
+              [objectName]="item.employeeManager?.employeeName"
+              [objectType]="'HR_Employees'"
+              [width]="35"
+              [imageType]="'circle'"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column w-100">
+            <div class="mb-1">
+              <ng-container
+                *ngIf="item.employeeManager?.employeeName; else lblEmployeeName"
+              >
+                <span class="fw-bold fs-6 text-dark">{{
+                  item.employeeManager.employeeName
+                }}</span>
+              </ng-container>
+              <ng-template #lblEmployeeName>
+                <codx-label
+                  [className]="'fw-bold fs-6'"
+                  [formModel]="view.formModel"
+                  name="lblEmployeeName"
+                  default="Tên nhân viên"
+                ></codx-label>
+              </ng-template>
+            </div>
+            <div class="mb-1 text-gray-500">
+              <ng-container *ngIf="item.positionName; else lblPositionName">
+                <span class="text-dark-400">{{ item.positionName }}</span>
+              </ng-container>
+              <ng-template #lblPositionName>
+                <codx-label
+                  [className]="'text-dark-400'"
+                  [formModel]="view.formModel"
+                  name="lblPositionName"
+                  default="Chức vụ"
+                ></codx-label>
+              </ng-template>
+            </div>
+            <div class="d-flex align-items-center flex-wrap">
+              <ng-container *ngIf="item.employeeManager?.phone; else lblPhone">
+                <span class="text-dark-400">{{
+                  item.employeeManager?.phone
+                }}</span>
+              </ng-container>
+              <ng-template #lblPhone>
+                <codx-label
+                  [className]="'text-dark-400'"
+                  [formModel]="view.formModel"
+                  name="lblEmployeePhone"
+                  default="SĐT"
+                ></codx-label>
+              </ng-template>
+              <ng-container *ngIf="item.employeeManager?.email; else lblEmail">
+                <span class="mx-1 text-dark-400">|</span>
+                <span class="text-dark-700">{{
+                  item.employeeManager.email
+                }}</span>
+              </ng-container>
+              <ng-template #lblEmail>
+                <span class="mx-1 text-dark-400">|</span>
+                <codx-label
+                  [className]="'text-dark-400 ms-2'"
+                  [formModel]="view.formModel"
+                  name="lblEmail"
+                  default="Email"
+                ></codx-label>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-25 d-flex justify-content-end">
+        <div class="d-flex">
+          <div #c class="mx-6 d-flex flex-column align-items-center">
+            <span class="text-gray-500">
+              <codx-label
+                [formModel]="view.formModel"
+                name="lblStaff"
+                default="Nhân viên"
+              >
+              </codx-label>
+            </span>
+            <div class="fs-2 fw-bold mb-2 text-primary number-users">
+              {{ item.counts ? item.counts : 0 }}
+            </div>
+            <ng-container *ngIf="item.staffEmp?.length > 0">
+              <ng-container
+                *ngTemplateOutlet="
+                  templateListEmployee;
+                  context: { $implicit: item.staffEmp }
+                "
+              >
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <codx-mfunc
+        [formModel]="view.formModel"
+        (clickMF)="clickMF($event, item)"
+        [dataItem]="item"
+        type="hover"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+  <!-- <div class="d-flex flex-column px-6 py-4 border-bottom has-action-menu">
     <div class="d-flex align-items-center org-header mb-2">
       <div class="text-dark fw-bold fs-6 me-3">
         {{ item.orgUnitName }}
@@ -321,6 +462,7 @@
           </div>
         </div>
       </div>
+
       <div class="d-flex">
         <div #c class="mx-6 d-flex flex-column align-items-center">
           <span class="text-gray-500">
@@ -355,7 +497,7 @@
       >
       </codx-mfunc>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
 <ng-template #templateListEmployee let-employees>
@@ -378,8 +520,17 @@
           [width]="30"
         >
         </codx-img>
+        <ng-container *ngIf="employees[1] && employees?.length < 3">
+          <codx-img
+            [objectId]="employees[1].employeeID"
+            [objectName]="employees[1].employeeName"
+            [objectType]="'HR_Employees'"
+            [width]="30"
+          >
+          </codx-img>
+        </ng-container>
         <span
-          *ngIf="employees?.length > 1"
+          *ngIf="employees?.length > 1 && employees?.length !== 2"
           class="multiple-employee rounded-circle"
         >
           <span class="text-white">+{{ employees.length - 1 }}</span>
@@ -392,7 +543,10 @@
       aria-labelledby="dropdownMenuButton"
     >
       <div class="py-2">
-        <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
+        <codx-label
+          default="Danh sách nhân viên :"
+          class="fw-bold"
+        ></codx-label>
         <span class="fw-bold">{{ employees?.length }}</span>
       </div>
       <!-- <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar> -->
@@ -407,10 +561,13 @@
               [width]="30"
             >
             </codx-img>
-            <div class="d-flex flex-column w-300px">
-              <span class="fs-6">{{ emp.employeeName }}</span>
-              <!-- <span class="text-gray-600">{{emp.positionName}}</span> -->
+            <div class="d-grid w-300px">
+              <span class="fs-7 fw-bold">{{ emp.employeeName }}</span>
+
+              <span class="fs-8">{{ emp.positionName }}</span>
             </div>
+            <!-- <div class="d-flex flex-column w-300px">
+            </div> -->
           </div>
         </ng-container>
       </div>

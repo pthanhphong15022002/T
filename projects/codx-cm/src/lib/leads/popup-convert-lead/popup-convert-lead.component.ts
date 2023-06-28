@@ -122,6 +122,8 @@ export class PopupConvertLeadComponent implements OnInit {
     this.entityName = this.dialog.formModel?.entityName;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.deal.processID = null;
+    this.deal.currencyID = this.lead?.currencyID;
+    this.deal.exchangeRate = this.lead?.exchangeRate;
     this.promiseAll();
   }
 
@@ -242,41 +244,46 @@ export class PopupConvertLeadComponent implements OnInit {
   }
   async getListInstanceSteps(processId: any) {
     if (processId) {
-      var data = [processId, this.deal?.refID, 'add', '1'];
-      this.deal.owner = null;
-      this.deal.salespersonID = null;
-      this.deal.processID = processId;
-      this.cmSv.getInstanceSteps(data).subscribe(async (res) => {
-        if (res && res.length > 0) {
-          var obj = {
-            id: processId,
-            steps: res[0],
-            permissions: await this.getListPermission(res[1]),
-            dealId: this.deal.dealID,
-          };
-          this.listInstanceSteps = res[0];
-          this.listParticipants = obj.permissions;
-          this.deal.dealID = res[2];
-          this.dateMax = this.HandleEndDate(
-            this.listInstanceSteps,
-            'add',
-            null
-          );
-          this.deal.endDate = this.dateMax;
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+      this.getListInstanceStepId(processId);
     } else {
       this.cmSv.getListProcessDefault(['1']).subscribe((res) => {
         if (res) {
           var processId = res.recID;
           if (processId) {
-            this.getListInstanceSteps(processId);
+            this.getListInstanceStepId(processId);
           }
         }
       });
     }
   }
+
+  getListInstanceStepId(processId: any){
+    var data = [processId, this.deal?.refID, 'add', '1'];
+    this.deal.owner = null;
+    this.deal.salespersonID = null;
+    this.deal.processID = processId;
+    this.cmSv.getInstanceSteps(data).subscribe(async (res) => {
+      if (res && res.length > 0) {
+        var obj = {
+          id: processId,
+          steps: res[0],
+          permissions: await this.getListPermission(res[1]),
+          dealId: this.deal.dealID,
+        };
+        this.listInstanceSteps = res[0];
+        this.listParticipants = obj.permissions;
+        this.deal.dealID = res[2];
+        this.dateMax = this.HandleEndDate(
+          this.listInstanceSteps,
+          'add',
+          null
+        );
+        this.deal.endDate = this.dateMax;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
 
   getListContactByObjectID(objectID) {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
@@ -459,7 +466,6 @@ export class PopupConvertLeadComponent implements OnInit {
         var processId = e.component.itemsSelected[0].ProcessID;
         if (processId != this.deal?.processID) {
           this.deal.processID = processId;
-
           this.getListInstanceSteps(this.deal.processID);
         }
       }
@@ -592,21 +598,17 @@ export class PopupConvertLeadComponent implements OnInit {
       // this.getListContactByObjectID(this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
+      this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+      this.gridViewSetupCustomer = await firstValueFrom(
+        this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
+      );
       this.radioChecked = false;
-      this.setDataCustomer();
-
       if (this.countAddNew == 0) {
         this.customerID = Util.uid();
         this.customerNewOld = this.customerID;
         this.customer.recID = this.customerNewOld;
       }
-      setTimeout(async () => {
-        this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
-        this.gridViewSetupCustomer = await firstValueFrom(
-          this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
-        );
-        this.customer.headcounts = this.lead?.headcounts;
-      }, 0);
+      this.setDataCustomer();
 
       this.countAddNew++;
 
@@ -624,6 +626,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.annualRevenue = this.lead?.annualRevenue;
     this.customer.establishDate = this.lead?.establishDate;
     this.customer.channelID = this.lead?.channelID;
+    this.customer.headcounts = this.lead?.headcounts;
   }
 
   valueChangeOwner(e) {

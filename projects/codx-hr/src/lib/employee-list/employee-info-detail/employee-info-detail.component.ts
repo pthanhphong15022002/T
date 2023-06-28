@@ -666,7 +666,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.df.detectChanges();
           }
         })
-
+        debugger
         // Load full thong tin current cua employee
         this.getEmpCurrentData().subscribe((res) => {
           if(res){
@@ -2819,10 +2819,15 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
         } else if (actionType == 'edit') {
+          debugger
           if(res.event){
             let kq = this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate)
             if(kq == true){
-              this.listCrrBenefit.push(res.event);
+              let index = this.listCrrBenefit.indexOf(data)
+              if(index >-1){
+                this.listCrrBenefit[index] = res.event;
+              }
+              // this.listCrrBenefit.push(res.event);
             }
             else if(kq == false){
               let index = this.listCrrBenefit.indexOf(data)
@@ -2830,6 +2835,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.listCrrBenefit.splice(index, 1);
               }
             }
+            this.df.detectChanges();
           }
           // (this.eBenefitGrid?.dataService as CRUDService)
           //   ?.update(res.event)
@@ -4473,24 +4479,24 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.Start_Date_Award_Filter_Value = null;
       this.End_Date_Award_Filter_Value = null;
       this.Filter_Award_Predicates = `(EmployeeID=="${this.employeeID}")`;
-      // (this.AwardGrid.dataService as CRUDService)
-      //   .setPredicates([this.Filter_Award_Predicates], [''],res => {
-      //     this.UpdateDataOnGrid(this.AwardGrid , res, this.Filter_Award_Predicates,null)
-      //   });
+      (this.AwardGrid.dataService as CRUDService)
+        .setPredicates([this.Filter_Award_Predicates], [''],res => {
+          this.UpdateDataOnGrid(this.AwardGrid , res, this.Filter_Award_Predicates,null)
+        });
     } else {
       this.Start_Date_Award_Filter_Value = evt.fromDate.toJSON();
       this.End_Date_Award_Filter_Value = evt.toDate.toJSON();
       let inYear =new Date(this.End_Date_Award_Filter_Value).getFullYear();
       this.Filter_Award_Predicates = `(EmployeeID=="${this.employeeID}" and InYear=="${inYear}")`;
 
-      // (this.AwardGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [
-      //       this.Filter_Award_Predicates
-      //     ],
-      //     [],res => {
-      //     this.UpdateDataOnGrid(this.AwardGrid , res, this.Filter_Award_Predicates,null)
-      //   });
+      (this.AwardGrid.dataService as CRUDService)
+        .setPredicates(
+          [
+            this.Filter_Award_Predicates
+          ],
+          [],res => {
+          this.UpdateDataOnGrid(this.AwardGrid , res, this.Filter_Award_Predicates,null)
+        });
     }
   }
 
@@ -4522,12 +4528,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.filterEVaccinePredicates += ') ';
       this.filterEVaccinePredicates += `and (InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}")`;
       this.filterEVaccinePredicates += ') ';
-      // (this.eVaccinesGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [this.filterEVaccinePredicates],
-      //     [this.filterByVaccineTypeIDArr.join(';')],res => {
-      //     this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,this.filterByVaccineTypeIDArr.join(';'))
-      //   });
+      (this.eVaccinesGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterEVaccinePredicates],
+          [this.filterByVaccineTypeIDArr.join(';')],res => {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,this.filterByVaccineTypeIDArr.join(';'))
+        });
     } else if (
       this.filterByVaccineTypeIDArr?.length > 0 &&
       (this.startDateEVaccineFilterValue == undefined ||
@@ -4543,32 +4549,32 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       this.filterEVaccinePredicates += ') ';
       this.filterEVaccinePredicates += ') ';
-      // (this.eVaccinesGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [this.filterEVaccinePredicates],
-      //     [this.filterByVaccineTypeIDArr.join(';')]
-      //   ,res => {
-      //     this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,this.filterByVaccineTypeIDArr.join(';'))
-      //   });
+      (this.eVaccinesGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterEVaccinePredicates],
+          [this.filterByVaccineTypeIDArr.join(';')]
+        ,res => {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,this.filterByVaccineTypeIDArr.join(';'))
+        });
     } else if (
       this.filterByVaccineTypeIDArr?.length <= 0 &&
       this.startDateEVaccineFilterValue != null
     ) {
       this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}" and InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}")`;
-      // (this.eVaccinesGrid.dataService as CRUDService)
-      //   .setPredicates([this.filterEVaccinePredicates], [],res=> {
-      //     this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,null)
-      //   });
+      (this.eVaccinesGrid.dataService as CRUDService)
+        .setPredicates([this.filterEVaccinePredicates], [],res=> {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,null)
+        });
     } else if (
       this.filterByVaccineTypeIDArr?.length <= 0 &&
       (this.startDateEVaccineFilterValue == undefined ||
         this.startDateEVaccineFilterValue == null)
     ) {
       this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}")`;
-      // (this.eVaccinesGrid.dataService as CRUDService)
-      //   .setPredicates([this.filterEVaccinePredicates], [''],res => {
-      //     this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,null)
-      //   });
+      (this.eVaccinesGrid.dataService as CRUDService)
+        .setPredicates([this.filterEVaccinePredicates], [''],res => {
+          this.UpdateDataOnGrid(this.eVaccinesGrid , res, this.filterEVaccinePredicates,null)
+        });
     }
   }
 
@@ -4578,10 +4584,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     if (lengthArr <= 0) {
       this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}")`;
-      // (this.skillGrid.dataService as CRUDService)
-      //   .setPredicates([this.filterESkillPredicates], [''],res=> {
-      //     this.UpdateDataOnGrid(this.skillGrid , res, this.filterESkillPredicates,null)
-      //   });
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates([this.filterESkillPredicates], [''],res=> {
+          this.UpdateDataOnGrid(this.skillGrid , res, this.filterESkillPredicates,null)
+        });
     } else {
       this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -4592,12 +4598,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       this.filterESkillPredicates += ') ';
       this.filterESkillPredicates += ') ';
-      // (this.skillGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [this.filterESkillPredicates],
-      //     [this.filterByESkillIDArr.join(';')],res => {
-      //     this.UpdateDataOnGrid(this.skillGrid , res, this.filterESkillPredicates,this.filterByESkillIDArr.join(';'))
-      //   });
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterESkillPredicates],
+          [this.filterByESkillIDArr.join(';')],res => {
+          this.UpdateDataOnGrid(this.skillGrid , res, this.filterESkillPredicates,this.filterByESkillIDArr.join(';'))
+        });
     }
   }
 
@@ -4618,12 +4624,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.Filter_ETrainCourse_Predicates += ') ';
       this.Filter_ETrainCourse_Predicates += `and (TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
       this.Filter_ETrainCourse_Predicates += ') ';
-      // (this.eTrainCourseGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [this.Filter_ETrainCourse_Predicates],
-      //     [this.Filter_By_ETrainCourse_IDArr.join(';')],res => {
-      //     this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,this.Filter_By_ETrainCourse_IDArr.join(';'))
-      //   });
+      (this.eTrainCourseGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.Filter_ETrainCourse_Predicates],
+          [this.Filter_By_ETrainCourse_IDArr.join(';')],res => {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,this.Filter_By_ETrainCourse_IDArr.join(';'))
+        });
     } else if (
       this.Filter_By_ETrainCourse_IDArr?.length > 0 &&
       (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
@@ -4639,31 +4645,31 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       this.Filter_ETrainCourse_Predicates += ') ';
       this.Filter_ETrainCourse_Predicates += ') ';
-      // (this.eTrainCourseGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [this.Filter_ETrainCourse_Predicates],
-      //     [this.Filter_By_ETrainCourse_IDArr.join(';')],res=> {
-      //     this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,this.Filter_By_ETrainCourse_IDArr.join(';'))
-      //   });
+      (this.eTrainCourseGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.Filter_ETrainCourse_Predicates],
+          [this.Filter_By_ETrainCourse_IDArr.join(';')],res=> {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,this.Filter_By_ETrainCourse_IDArr.join(';'))
+        });
     } else if (
       this.Filter_By_ETrainCourse_IDArr?.length <= 0 &&
       this.Start_Date_ETrainCourse_Filter_Value != null
     ) {
       this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
-      // (this.eTrainCourseGrid.dataService as CRUDService)
-      //   .setPredicates([this.Filter_ETrainCourse_Predicates], [],res => {
-      //     this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,null)
-      //   });
+      (this.eTrainCourseGrid.dataService as CRUDService)
+        .setPredicates([this.Filter_ETrainCourse_Predicates], [],res => {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,null)
+        });
     } else if (
       this.Filter_By_ETrainCourse_IDArr?.length <= 0 &&
       (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
         this.Start_Date_ETrainCourse_Filter_Value == null)
     ) {
       this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}")`;
-      // (this.eTrainCourseGrid.dataService as CRUDService)
-      //   .setPredicates([this.Filter_ETrainCourse_Predicates], [''],res => {
-      //     this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,null)
-      //   });
+      (this.eTrainCourseGrid.dataService as CRUDService)
+        .setPredicates([this.Filter_ETrainCourse_Predicates], [''],res => {
+          this.UpdateDataOnGrid(this.eTrainCourseGrid , res, this.Filter_ETrainCourse_Predicates,null)
+        });
     }
   }
 
@@ -4672,10 +4678,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let lengthArr = this.Filter_By_EDiseases_IDArr?.length;
     if (lengthArr <= 0) {
       this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}")`;
-      // (this.eDiseasesGrid.dataService as CRUDService)
-      //   .setPredicates([this.Filter_EDiseases_Predicates], [''],res => {
-      //     this.UpdateDataOnGrid(this.eDiseasesGrid , res, this.Filter_EDiseases_Predicates,null)
-      //   });
+      (this.eDiseasesGrid.dataService as CRUDService)
+        .setPredicates([this.Filter_EDiseases_Predicates], [''],res => {
+          this.UpdateDataOnGrid(this.eDiseasesGrid , res, this.Filter_EDiseases_Predicates,null)
+        });
     } else {
       this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -4686,12 +4692,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       this.Filter_EDiseases_Predicates += ') ';
       this.Filter_EDiseases_Predicates += ') ';
-      // (this.eDiseasesGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [this.Filter_EDiseases_Predicates],
-      //     [this.Filter_By_EDiseases_IDArr.join(';')],res => {
-      //     this.UpdateDataOnGrid(this.eDiseasesGrid , res, this.Filter_EDiseases_Predicates,this.Filter_By_EDiseases_IDArr.join(';'))
-      //   });
+      (this.eDiseasesGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.Filter_EDiseases_Predicates],
+          [this.Filter_By_EDiseases_IDArr.join(';')],res => {
+          this.UpdateDataOnGrid(this.eDiseasesGrid , res, this.Filter_EDiseases_Predicates,this.Filter_By_EDiseases_IDArr.join(';'))
+        });
     }
   }
 
@@ -4737,22 +4743,22 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.startDateBusinessTravelFilterValue = null;
       this.endDateBusinessTravelFilterValue = null;
       this.filterBusinessTravelPredicates = `(EmployeeID=="${this.employeeID}")`;
-      // (this.businessTravelGrid.dataService as CRUDService)
-      //   .setPredicates([this.filterBusinessTravelPredicates], [''],res => {
-      //     this.UpdateDataOnGrid(this.businessTravelGrid , res, this.filterBusinessTravelPredicates,null)
-      //   });
+      (this.businessTravelGrid.dataService as CRUDService)
+        .setPredicates([this.filterBusinessTravelPredicates], [''],res => {
+          this.UpdateDataOnGrid(this.businessTravelGrid , res, this.filterBusinessTravelPredicates,null)
+        });
     } else {
       this.startDateBusinessTravelFilterValue = evt.fromDate.toJSON();
       this.endDateBusinessTravelFilterValue = evt.toDate.toJSON();
       this.filterBusinessTravelPredicates = `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}")`;
-      // (this.businessTravelGrid.dataService as CRUDService)
-      //   .setPredicates(
-      //     [
-      //       this.filterBusinessTravelPredicates
-      //     ],
-      //     [],res => {
-      //     this.UpdateDataOnGrid(this.businessTravelGrid , res, this.filterBusinessTravelPredicates,null)
-      //   });
+      (this.businessTravelGrid.dataService as CRUDService)
+        .setPredicates(
+          [
+            this.filterBusinessTravelPredicates
+          ],
+          [],res => {
+          this.UpdateDataOnGrid(this.businessTravelGrid , res, this.filterBusinessTravelPredicates,null)
+        });
     }
   }
 
@@ -4775,12 +4781,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.filterEDayoffPredicates += ') ';
         this.filterEDayoffPredicates += `and (BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
         this.filterEDayoffPredicates += ') ';
-        // (this.dayoffGrid?.dataService as CRUDService)
-        //   .setPredicates(
-        //     [this.filterEDayoffPredicates],
-        //     [this.filterByKowIDArr.join(';')],res => {
-        //     this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,this.filterByKowIDArr.join(';'))
-        //   });
+        (this.dayoffGrid?.dataService as CRUDService)
+          .setPredicates(
+            [this.filterEDayoffPredicates],
+            [this.filterByKowIDArr.join(';')],res => {
+            this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,this.filterByKowIDArr.join(';'))
+          });
       } else if (
         this.filterByKowIDArr?.length > 0 &&
         (this.startDateEDayoffFilterValue == undefined ||
@@ -4796,33 +4802,33 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
         this.filterEDayoffPredicates += ') ';
         this.filterEDayoffPredicates += ') ';
-        // (this.dayoffGrid?.dataService as CRUDService)
-        //   .setPredicates(
-        //     [this.filterEDayoffPredicates],
-        //     [this.filterByKowIDArr.join(';')],res=> {
-        //       this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,this.filterByKowIDArr.join(';'))
-        //     }
-          // );
+        (this.dayoffGrid?.dataService as CRUDService)
+          .setPredicates(
+            [this.filterEDayoffPredicates],
+            [this.filterByKowIDArr.join(';')],res=> {
+              this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,this.filterByKowIDArr.join(';'))
+            }
+          );
       } else if (
         this.filterByKowIDArr?.length <= 0 &&
         this.startDateEDayoffFilterValue != null
       ) {
         this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
-        // (this.dayoffGrid?.dataService as CRUDService)
-        //   .setPredicates([this.filterEDayoffPredicates], [],res => {
-        //       this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,null)
-        //     }
-        //   );
+        (this.dayoffGrid?.dataService as CRUDService)
+          .setPredicates([this.filterEDayoffPredicates], [],res => {
+              this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,null)
+            }
+          );
       } else if (
         this.filterByKowIDArr?.length <= 0 &&
         (this.startDateEDayoffFilterValue == undefined ||
           this.startDateEDayoffFilterValue == null)
       ) {
         this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}")`;
-        // (this.dayoffGrid?.dataService as CRUDService)
-        //   .setPredicates([this.filterEDayoffPredicates], [''],res => {
-        //     this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,null)
-        //   });
+        (this.dayoffGrid?.dataService as CRUDService)
+          .setPredicates([this.filterEDayoffPredicates], [''],res => {
+            this.UpdateDataOnGrid(this.dayoffGrid , res, this.filterEDayoffPredicates,null)
+          });
       }
     }
   }
@@ -4849,10 +4855,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     if (lengthArr <= 0) {
       this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}")`;
-      // (this.eAccidentGridView.dataService as CRUDService)
-      //   .setPredicates([this.filterAccidentIdPredicate], [''],res => {
-      //     this.UpdateDataOnGrid(this.eAccidentGridView , res, this.filterAccidentIdPredicate,null)
-      //   });
+      (this.eAccidentGridView.dataService as CRUDService)
+        .setPredicates([this.filterAccidentIdPredicate], [''],res => {
+          this.UpdateDataOnGrid(this.eAccidentGridView , res, this.filterAccidentIdPredicate,null)
+        });
     } else {
       this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
@@ -4863,12 +4869,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       this.filterAccidentIdPredicate += ') ';
       this.filterAccidentIdPredicate += ') ';
-      // (this.eAccidentGridView.dataService as CRUDService)
-      //   .setPredicates(
-      //     [this.filterAccidentIdPredicate],
-      //     [this.filterByAccidentIDArr.join(';')],res => {
-      //     this.UpdateDataOnGrid(this.eAccidentGridView , res, this.filterAccidentIdPredicate,this.filterByAccidentIDArr.join(';'))
-      //   });
+      (this.eAccidentGridView.dataService as CRUDService)
+        .setPredicates(
+          [this.filterAccidentIdPredicate],
+          [this.filterByAccidentIDArr.join(';')],res => {
+          this.UpdateDataOnGrid(this.eAccidentGridView , res, this.filterAccidentIdPredicate,this.filterByAccidentIDArr.join(';'))
+        });
     }
   }
 

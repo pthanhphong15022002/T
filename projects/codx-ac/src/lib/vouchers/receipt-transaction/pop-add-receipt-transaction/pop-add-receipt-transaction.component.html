@@ -173,32 +173,17 @@
         [gridViewName]="fmInventoryJournalLines.gridViewName" [entityName]="fmInventoryJournalLines.entityName"
         [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
         [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="inventoryJournalLines" service="IV"
-        [autoLoad]="false" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (onDoubleClick)="onDoubleClick($event)"
+        [autoLoad]="false" [autoAddRow]="true" (eventAction)="autoAddRowSet($event)" (created)="gridCreated()" (onAddNew)="onAddNew($event)" (onEdit)="onEdit($event)" (onDoubleClick)="onDoubleClick($event)"
         (cellChanged)="lineChanged($event)"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
-        <button type="button" class="btn btn-sm btn-light-primary" (click)="addRow()">
+        <button id="btnadd" type="button" class="btn btn-sm btn-light-primary" (keydown.enter)="addRow(); $event.preventDefault();" (click)="addRow()">
           <i class="icon-playlist_add icon-16"></i>
           <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
         </button>
       </div>
     </div>
     <div class="row" *ngIf="inventoryJournalLines.length == 0" style="height: 40px;">
-      <!-- <table style="table-layout: fixed;" class="table table-row-bordered">
-        <tfoot style="background-color: whitesmoke;position: sticky;
-          bottom: 0;">
-          <ng-container *ngFor="let item of gridInventoryJournalLine.visibleColumns">
-            <td class="w-10" *ngIf="item.summaryBottom == '1'">
-              <div class="d-flex align-items-center">
-                <span style="font-size: 14px;" class="sum-content fw-bold">Tổng cộng: </span>
-                <span style="font-size: 14px;" class="sum-content fw-bold">0</span>
-              </div>
-            </td>
-            <td *ngIf="item.summaryBottom != '1'">
-            </td>
-          </ng-container>
-        </tfoot>
-      </table> -->
     </div>
   </ng-container>
   <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">

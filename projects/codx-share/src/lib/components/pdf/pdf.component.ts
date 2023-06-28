@@ -222,6 +222,13 @@ export class PdfComponent
   isBold = false;
   isItalic = false;
   isUnd = false;
+  isLineThrough = false;
+  //
+
+  //Multi line text
+  minLineW = 20;
+  maxLineW = 300;
+  //
 
   //auto sign
   needSuggest: boolean = true;
@@ -642,6 +649,9 @@ export class PdfComponent
           this.isBold = area.fontFormat?.includes('bold') ? true : false;
           this.isItalic = area.fontFormat?.includes('italic') ? true : false;
           this.isUnd = area.fontFormat?.includes('underline') ? true : false;
+          this.isLineThrough = area.fontFormat?.includes('line-through')
+            ? true
+            : false;
           this.curAnnotFontSize = area.fontSize;
           this.curAnnotFontStyle = area.fontStyle;
           this.curAnnotDateFormat = area.dateFormat;
@@ -793,7 +803,8 @@ export class PdfComponent
 
     let y = konva.position().y;
     let x = konva.position().x;
-    let w = konva.scale().x * this.xScale;
+    let w =
+      konva.scale().x * this.xScale * (type == 'text' ? konva.width() : 1);
     let h = konva.scale().y * this.yScale;
 
     let tmpArea: tmpSignArea = {
@@ -845,7 +856,8 @@ export class PdfComponent
                 e.type,
                 konva?.getPosition(),
                 konva?.scale(),
-                konva.attrs.rotation
+                konva.attrs.rotation,
+                type == 'text' ? konva.width() : 1
               );
             });
             konva.draw();
@@ -1288,10 +1300,9 @@ export class PdfComponent
     event,
     newPos?: { x: number; y: number },
     newScale?: { x: number; y: number },
-    rotate?: number
+    rotate?: number,
+    width?: number
   ) {
-    console.log('rotate resize', rotate);
-
     switch (event) {
       case 'dragend': {
         tmpArea.location.top =
@@ -1302,7 +1313,7 @@ export class PdfComponent
       }
 
       case 'transformend': {
-        tmpArea.location.width = newScale.x;
+        tmpArea.location.width = newScale.x * width;
         tmpArea.location.height = newScale.y;
         tmpArea.location.top =
           (newPos ? newPos.y : tmpArea.location.top) / this.yScale;
@@ -1316,6 +1327,7 @@ export class PdfComponent
     this.resetTime(tmpArea);
   }
 
+  //dang lam
   addArea(
     url,
     type: string,
@@ -1375,25 +1387,46 @@ export class PdfComponent
           text: url,
           fontSize: 14,
           fontFamily: 'Arial',
+          // text: "COMPLEX TEXT\n\nAll the world's a stage, and all the men and women merely players. They have their exits and their entrances.",
           draggable: draggable,
           name: JSON.stringify(tmpName),
           id: recID,
           align: 'left',
+          scaleX: 1,
+          scaleY: 1,
+        });
+
+        textArea.on('transform', () => {
+          textArea.setAttrs({
+            width: Math.max(
+              textArea.width() * textArea.scaleX(),
+              this.minLineW
+            ),
+            scaleX: 1,
+            scaleY: 1,
+            fontSize: textArea.fontSize(),
+            fontFamily: textArea.fontFamily(),
+            fontStyle: textArea.fontStyle(),
+          });
         });
         if (isSaveToDB) {
           textArea.scale({
             x: this.xScale,
             y: this.yScale,
           });
+          textArea.width(Math.min(this.maxLineW, textArea.width()));
           this.stepNo = stepNo;
 
           this.needAddKonva = textArea;
+
+          // });
         } else {
           textArea.id(area.recID ? area.recID : textArea.id());
           textArea.draggable(!area.allowEditAreas ? false : !area.isLock);
+          textArea.width(Number(area.location?.width));
           textArea.scale({
-            x: area.location.width * this.xScale,
-            y: area.location.height * this.yScale,
+            x: 1,
+            y: 1,
           });
           textArea.rotate(area.location.fileRotate + this.rotate);
           textArea.fontSize(area.fontSize);
@@ -1411,13 +1444,14 @@ export class PdfComponent
           textArea.y(imgY);
 
           this.lstLayer.get(area.location.pageNumber + 1).add(textArea);
-          textArea.on('dragend transformend  ', (e: any) => {
+          textArea.on('dragend transformend', (e: any) => {
             this.addDragResizeEevent(
               area,
               e.type,
               textArea.getPosition(),
               textArea.scale(),
-              textArea.attrs.rotation
+              textArea.attrs.rotation,
+              textArea.width()
             );
           });
 
@@ -1492,7 +1526,8 @@ export class PdfComponent
                 e.type,
                 imgArea.getPosition(),
                 imgArea.scale(),
-                imgArea.attrs.rotation
+                imgArea.attrs.rotation,
+                1
               );
             });
             this.lstLayer.get(area.location.pageNumber + 1).add(imgArea);
@@ -1678,6 +1713,7 @@ export class PdfComponent
     }
   }
 
+  //dang lam
   changeAnnotPro(type, recID, newUrl = null) {
     // switch (type.toString()) {
     let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea?.attrs?.name);
@@ -1685,6 +1721,7 @@ export class PdfComponent
     let style = 'normal';
     let curArea = this.lstAreas.find((area) => area.recID == recID);
     if (curArea == null) return;
+    let isTxt = false;
     if (this.imgConfig.includes(type)) {
       if (!newUrl) return;
       else {
@@ -1731,6 +1768,7 @@ export class PdfComponent
 
     // [3, 4, 5, 6, 7]
     else {
+      isTxt = true;
       if (type != '5') {
         textContent = this.formAnnot.value.content;
       } else {
@@ -1752,13 +1790,18 @@ export class PdfComponent
       // this.curSelectedArea.attrs.textDecoration = this.isUnd
       //   ? 'line-through'
       //   : '';
+      let inputW = document.getElementById(recID).clientWidth;
+      console.log('inputW', inputW);
       let position = this.curSelectedArea.getPosition();
       let textArea = new Konva.Text({
         text: textContent,
         fontSize: this.curAnnotFontSize,
         fontFamily: this.curAnnotFontStyle,
         fontStyle: style,
-        textDecoration: this.isUnd ? 'underline' : '',
+        width: Math.min(this.maxLineW, inputW),
+        textDecoration:
+          (this.isUnd ? 'underline' : '') +
+          (this.isLineThrough ? ' line-through' : ''),
         x: position.x,
         y: position.y,
         draggable: transformable,
@@ -1768,6 +1811,21 @@ export class PdfComponent
         rotation: curArea.location.fileRotate + this.rotate,
       });
       textArea.scale(this.curSelectedArea.scale());
+      if (isTxt) {
+        textArea.on('transform', () => {
+          textArea.setAttrs({
+            width: Math.max(
+              textArea.width() * textArea.scaleX(),
+              this.minLineW
+            ),
+            scaleX: 1,
+            scaleY: 1,
+            fontSize: textArea.fontSize(),
+            fontFamily: textArea.fontFamily(),
+            fontStyle: textArea.fontStyle(),
+          });
+        });
+      }
       this.curSelectedArea.destroy();
       this.curSelectedArea = textArea;
       let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1); //xoa cho nay ne
@@ -1784,7 +1842,9 @@ export class PdfComponent
     //save to db
     let y = this.curSelectedArea.position().y;
     let x = this.curSelectedArea.position().x;
-    let w = this.curSelectedArea.scale().x / this.xScale;
+    let w =
+      (this.curSelectedArea.scale().x / this.xScale) *
+      (isTxt ? this.curSelectedArea.width() : 1);
     let h = this.curSelectedArea.scale().y / this.yScale;
 
     let tmpArea: tmpSignArea = {
@@ -1814,7 +1874,9 @@ export class PdfComponent
       fontFormat: this.imgConfig.includes(type)
         ? ''
         : style + ' ' + this.curSelectedArea.attrs?.textDecoration ?? '',
-      fontSize: this.imgConfig.includes(type) ? '' : this.curAnnotFontSize,
+      fontSize: this.imgConfig.includes(type)
+        ? 0
+        : +this.curAnnotFontSize * this.xScale,
       signatureType: 2,
       comment: '',
       createdBy: tmpName.Signer,
@@ -2081,6 +2143,9 @@ export class PdfComponent
       case 3:
         this.isUnd = !this.isUnd;
         break;
+      case 4:
+        this.isLineThrough = !this.isLineThrough;
+        break;
     }
     this.detectorRef.detectChanges();
   }
@@ -2323,7 +2388,8 @@ export class PdfComponent
                     e.type,
                     textArea?.getPosition(),
                     textArea?.scale(),
-                    textArea.attrs.rotation
+                    textArea.attrs.rotation,
+                    textArea.width()
                   );
                 });
                 textArea.draw();
@@ -2417,7 +2483,8 @@ export class PdfComponent
                       e.type,
                       imgArea?.getPosition(),
                       imgArea?.scale(),
-                      imgArea.attrs.rotation
+                      imgArea.attrs.rotation,
+                      1
                     );
                   });
                   imgArea.draw();

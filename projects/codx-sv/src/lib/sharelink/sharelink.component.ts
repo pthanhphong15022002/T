@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Optional } from '@angular/core';
 import { CodxSvService } from '../codx-sv.service';
 import { DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'app-sharelink',
@@ -13,8 +14,9 @@ export class SharelinkComponent implements OnInit {
   data:any;
   recID:any;
   funcID:any;
+  link:any;
   post = false;
-
+  emailTemplate:any;
   constructor(
     private notifySvr: NotificationsService,
     private svService : CodxSvService,
@@ -26,8 +28,10 @@ export class SharelinkComponent implements OnInit {
     this.headerText = dt?.data?.headerText;
     this.recID = dt?.data?.recID;
     this.funcID = dt?.data?.funcID;
+    this.link = dt?.data?.link;
   }
   ngOnInit(): void {
+    this.getAlertRule();
   }
   
   valueChange(e:any,type:any)
@@ -73,11 +77,42 @@ export class SharelinkComponent implements OnInit {
     
   }
 
+  getAlertRule()
+  {
+    var alertRule = this.svService.loadAlertRule("SV_0001") as any;
+    if(isObservable(alertRule))
+    {
+      alertRule.subscribe((item:any)=>{
+        this.getEmailTemplate(item.emailTemplate)
+      })
+    }
+    else this.getEmailTemplate(alertRule?.emailTemplate)
+  }
+
+  getEmailTemplate(recID:any)
+  {
+    if(typeof this.data != 'object') this.data = {};
+    var emailTemplate = this.svService.loadEmailTemplate(recID) as any;
+    if(isObservable(emailTemplate))
+    {
+      emailTemplate.subscribe((item:any)=>{ 
+        this.emailTemplate = item[0]
+        this.data.subject = item[0]?.subject;
+        this.data.content = item[0]?.message;
+      });
+    }
+    else {
+      this.emailTemplate = emailTemplate[0];
+      this.data.subject = emailTemplate[0]?.subject;
+      this.data.content = emailTemplate[0]?.message;
+    }
+  }
+
   save()
   {
     if(!this.checkRequired()) return
     this.data.recID = this.recID;
-    this.svService.shareLink(this.data,this.post,this.funcID).subscribe(item=>{
+    this.svService.shareLink(this.data,this.post,this.funcID,this.link).subscribe(item=>{
       if(item)
       {
         this.notifySvr.notifyCode("SYS015");

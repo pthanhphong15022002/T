@@ -106,6 +106,7 @@
         </div>
       </div> -->
     <!-- </div> -->
+
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -162,66 +163,48 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <!-- <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="formModelDeals"
-            fiedName="EndDate"
-            default="Ngày đến hạn dự kiến"
-          >
-          </codx-label>
-          <codx-input
-            type="datetime"
-            field="endDate"
-            format="d"
-            [placeholder]="gridViewSetupDeal?.EndDate?.description"
-            [crrValue]="deal?.endDate"
-            (valueChange)="valueDateChange($event, 'deal')"
-          >
-          </codx-input>
-        </div>
-      </div> -->
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="formModelDeals"
-            fiedName="ExpectedClosed"
-            default="Ngày dự kiến đóng"
-          >
-          </codx-label>
-          <codx-input
-            type="datetime"
-            format="d"
-            field="expectedClosed"
-            [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
-            [crrValue]="deal?.expectedClosed"
-            (valueChange)="valueDateChange($event, 'deal')"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="formModelDeals"
-            fiedName="ChannelID"
-            default="Kênh"
-          >
-          </codx-label>
-          <codx-input
-            type="combobox"
-            [formModel]="formModelDeals"
-            field="channelID"
-            [crrValue]="deal?.channelID"
-            [refValue]="gridViewSetupDeal?.ChannelID?.referedValue"
-            [placeholder]="gridViewSetupDeal?.ChannelID?.description"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
+<div class="row">
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        [formModel]="formModelDeals"
+        fiedName="ExpectedClosed"
+        default="Ngày dự kiến đóng"
+      >
+      </codx-label>
+      <codx-input
+        type="datetime"
+        format="d"
+        field="expectedClosed"
+        [placeholder]="gridViewSetupDeal?.ExpectedClosed?.description"
+        [crrValue]="deal?.expectedClosed"
+        (valueChange)="valueDateChange($event, 'deal')"
+      >
+      </codx-input>
     </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        [formModel]="formModelDeals"
+        fiedName="ChannelID"
+        default="Kênh"
+      >
+      </codx-label>
+      <codx-input
+        type="combobox"
+        [formModel]="formModelDeals"
+        field="channelID"
+        [crrValue]="deal?.channelID"
+        [refValue]="gridViewSetupDeal?.ChannelID?.referedValue"
+        [placeholder]="gridViewSetupDeal?.ChannelID?.description"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+</div>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -231,13 +214,6 @@
             [formModel]="formModelDeals"
           >
           </codx-label>
-          <!--
-          <codx-popup-participants
-            [lstParticipants]="listParticipants"
-            [dialog]="dialog"
-            (eventUser)="valueChangeOwner($event)"
-            [owner]="deal?.salespersonID"
-          ></codx-popup-participants> -->
           <ejs-combobox
             [dataSource]="listParticipants"
             [fields]="fieldCbxParticipants"
@@ -574,7 +550,6 @@
         <codx-input
           type="text"
           [crrValue]="customer?.customerName"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.CustomerName?.description"
           field="customerName"
           (valueChange)="valueChangeCustomer($event)"
@@ -588,7 +563,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.shortName"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.ShortName?.description"
             field="shortName"
             (valueChange)="valueChangeCustomer($event)"
@@ -601,7 +575,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.taxCode"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.TaxCode?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="taxCode"
@@ -615,7 +588,6 @@
         <codx-input
           type="text"
           [crrValue]="customer?.address"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Address?.description"
           (valueChange)="valueChangeCustomer($event)"
           field="address"
@@ -629,7 +601,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.phone"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.Phone?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="phone"
@@ -642,7 +613,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.faxNo"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.FaxNo?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="faxNo"
@@ -656,7 +626,6 @@
         <codx-input
           type="text"
           [crrValue]="customer?.webPage"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.WebPage?.description"
           (valueChange)="valueChangeCustomer($event)"
           field="webPage"
@@ -670,7 +639,6 @@
           <codx-input
             type="text"
             [crrValue]="customer?.annualRevenue"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.AnnualRevenue?.description"
             (valueChange)="valueChangeCustomer($event)"
             field="annualRevenue"
@@ -683,7 +651,6 @@
           <codx-input
             type="valuelist"
             [crrValue]="customer?.headcounts"
-            [formModel]="formModelCustomer"
             [placeholder]="gridViewSetupCustomer?.Headcounts?.description"
             [refValue]="gridViewSetupCustomer?.Headcounts?.referedValue"
             (valueChange)="valueChangeCustomer($event)"
@@ -698,7 +665,6 @@
         <codx-input
           type="combobox"
           [crrValue]="customer?.owner"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Owner?.description"
           [refValue]="gridViewSetupCustomer?.Owner?.referedValue"
           (valueChange)="valueChangeCustomer($event)"
@@ -712,7 +678,6 @@
         <codx-input
           type="combobox"
           [crrValue]="customer?.industries"
-          [formModel]="formModelCustomer"
           [placeholder]="gridViewSetupCustomer?.Industries?.description"
           [refValue]="gridViewSetupCustomer?.Industries?.referedValue"
           (valueChange)="valueChangeCustomer($event)"

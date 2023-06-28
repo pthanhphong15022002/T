@@ -352,7 +352,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           //Reset data View
           //this.isCollapsed = false;
           if (item) {
-            this.dataOKRPlans = null;
             this.dataOKRPlans = item;
             this.dataOKRPlans.periodName = this.periodName;
             this.planNull = false;
@@ -361,16 +360,20 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .getAllOKROfPlan(item?.recID)
               .subscribe((okrs: any) => {
                 if (okrs) {
-                  this.dataOKR = okrs;
-                  this.calculateStatistical(null);
+                  this.dataOKR = okrs;                  
+                }
+                else{                  
+                  this.dataOKR = null; 
+                }
+                this.calculateStatistical(null);
                   this.isAfterRender = true;
                   this.showPlanMF = true;
                   this.loadedData = true;
                   this.getOrgTreeOKR();
                   this.detectorRef.detectChanges();
-                }
               });
           } else {
+            this.dataOKRPlans = null;
             this.orgUnitTree = [];
             this.dataOKRPlans = null;
             this.dataOKR = null;
