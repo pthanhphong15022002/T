@@ -9,8 +9,9 @@
   [views]="views"
   [idField]="idField"
   [autoLoad]="true"
-  [viewActiveType]="viewMode"
+  [viewActiveType]="'6'"
   [toolbarDisplay]="false"
+  (viewChanged)="viewChanged($event)"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -54,5 +55,7 @@
     </div>
   </div>
 </ng-template>
-<ng-template #cardTitleTmp let-data></ng-template>
-<ng-template #footerKanban let-data></ng-template>
+<ng-template #cardTitleTmp let-data> dsfsdfdsf </ng-template>
+<ng-template #footerKanban let-data> sdasd </ng-template>
+
+<ng-template #itemViewList let-data></ng-template>

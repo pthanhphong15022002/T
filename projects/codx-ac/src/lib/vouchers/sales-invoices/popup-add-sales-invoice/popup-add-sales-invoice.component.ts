@@ -31,7 +31,7 @@ import { SalesInvoiceService } from '../sales-invoices.service';
 @Component({
   selector: 'lib-popup-add-sales-invoice',
   templateUrl: './popup-add-sales-invoice.component.html',
-  styleUrls: ['./popup-add-sales-invoice.component.css'],
+  styleUrls: ['./popup-add-sales-invoice.component.scss'],
 })
 export class PopupAddSalesInvoiceComponent
   extends UIComponent
@@ -222,33 +222,8 @@ export class PopupAddSalesInvoiceComponent
     }
   }
 
-  onCreate(e, isUsingColumnTemplate): void {
+  onCreate(e): void {
     console.log(this.grid);
-
-    setTimeout(() => {
-      const bodyHeight: number =
-        document.querySelector<HTMLElement>('.card-body')?.offsetHeight;
-      const section1Height: number =
-        document.querySelector<HTMLElement>('.section1')?.offsetHeight;
-      const section3Height: number =
-        document.querySelector<HTMLElement>('.section3')?.offsetHeight;
-      const tabHeight: number =
-        document.querySelector<HTMLElement>('.e-tab-header')?.offsetHeight;
-      const thHeight: number =
-        document.querySelector<HTMLElement>('.e-gridheader')?.offsetHeight;
-      const sumRowHeight: number =
-        document.querySelector<HTMLElement>('.e-summaryrow')?.offsetHeight ?? 0;
-      const weirdHeight: number = isUsingColumnTemplate ? 54 : 27;
-
-      this.gridHeight =
-        bodyHeight -
-        section1Height -
-        section3Height -
-        tabHeight -
-        thHeight -
-        sumRowHeight -
-        weirdHeight;
-    }, 500);
 
     this.journalStateSubject.subscribe((loaded) => {
       if (!loaded) {
