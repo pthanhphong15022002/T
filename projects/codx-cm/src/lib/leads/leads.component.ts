@@ -257,8 +257,6 @@ export class LeadsComponent
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
-        // this.promiseByFuncID(this.funcIDCrr.formName,this.funcIDCrr.gridViewName);
-
         this.getGridViewSetup(
           this.funcIDCrr.formName,
           this.funcIDCrr.gridViewName
@@ -312,8 +310,9 @@ export class LeadsComponent
     var functionMappings;
     var isDisabled = (eventItem, data) => {
       if (
-        (data.closed && data.status != '1') ||
+        (data.closed && data.status != '1' && data.status != '3') ||
         data.status == '1' ||
+        data.status == '3' ||
         this.checkMoreReason(data)
       ) {
         eventItem.disabled = true;
@@ -336,18 +335,24 @@ export class LeadsComponent
     };
     var isClosed = (eventItem, data) => {
       eventItem.disabled =
-        data.closed || data.status == '1' || this.checkMoreReason(data);
+        data.closed ||
+        data.status == '1' ||
+        data.status == '3' ||
+        this.checkMoreReason(data);
     };
     var isOpened = (eventItem, data) => {
       eventItem.disabled =
-        !data.closed || data.status == '1' || this.checkMoreReason(data);
+        !data.closed ||
+        data.status == '1' ||
+        data.status == '3' ||
+        this.checkMoreReason(data);
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = data.status != '1';
+      eventItem.disabled = data.status != '1' && data.status != '3';
     };
 
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = data.status != '3';
+      eventItem.disabled = data.status != '9';
     };
 
     var isMergeLead = (eventItem, data) => {
@@ -503,6 +508,7 @@ export class LeadsComponent
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
+    debugger;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -540,7 +546,7 @@ export class LeadsComponent
         this.moveReason(data, false);
         break;
       case 'CM0205_9':
-        this.moveReason(data, false);
+        //'  this.moveReason(data, false);
         break;
       // case 'CM0201_7':
       //   this.popupOwnerRoles(data);
@@ -988,7 +994,7 @@ export class LeadsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
-        data = this.updateReasonLead(e.event?.instance, data);
+        data = this.updateReasonLead(e.event?.instance, data, isMoveSuccess);
         var datas = [data];
         this.codxCmService.moveLeadReason(datas).subscribe((res) => {
           if (res) {
@@ -1001,8 +1007,8 @@ export class LeadsComponent
       }
     });
   }
-  updateReasonLead(instance: any, lead: any) {
-    lead.status = instance.status;
+  updateReasonLead(instance: any, lead: any, isMoveSuccess: boolean) {
+    lead.status = isMoveSuccess ? '9' : '15';
     lead.stepID = instance.stepID;
     lead.nextStep = '';
     return lead;

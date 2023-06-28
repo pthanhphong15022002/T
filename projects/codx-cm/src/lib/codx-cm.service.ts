@@ -532,6 +532,9 @@ export class CodxCmService {
   AddDeal(data) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync', data);
   }
+  getOneTmpDeal(data) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneTmpDealAsync', data);
+  }
   async getListUserByOrg(list = []) {
     var lstOrg = [];
     if (list != null && list.length > 0) {
