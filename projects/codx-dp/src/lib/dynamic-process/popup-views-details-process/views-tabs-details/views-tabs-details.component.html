@@ -8,8 +8,70 @@
   [method]="method"
   [views]="views"
   [idField]="idField"
-  [dataObj]="dataObj"
   [autoLoad]="true"
-  [viewActiveType]="viewMode"
+  [viewActiveType]="'6'"
   [toolbarDisplay]="false"
+  (viewChanged)="viewChanged($event)"
 ></codx-views>
+
+<!-- KANBAN -->
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    [hideMF]="true"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [typeMF]="'hover'"
+    [titleTmp]="cardTitleTmp"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="footerKanban"
+    [dataItem]="data"
+    [rootData]="data"
+  >
+  </codx-card-img>
+
+  <ng-template #cardTitleTmp let-data>
+    <codx-temp-full
+      style="width: 100%"
+      [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+      [title]="data?.taskGroupName"
+    >
+    </codx-temp-full>
+  </ng-template>
+  <ng-template #footerKanban let-data> sdasd </ng-template>
+</ng-template>
+
+<ng-template #viewColumKaban let-data>
+  <div
+    class="d-flex align-items-center justify-content-between w-100"
+    [id]="data?.keyField"
+  >
+    <ng-container
+      [ngTemplateOutlet]="headerKanban"
+      [ngTemplateOutletContext]="{
+        $implicit: getPropertiesHeader(data)
+      }"
+    ></ng-container>
+    <ng-template #headerKanban let-header>
+      <div class="line-colums d-flex align-items-center">
+        <span
+          [ngClass]="header.icon"
+          [ngStyle]="{ color: header.iconColor }"
+          class="me-1"
+        >
+        </span>
+        <span
+          class="fs-6"
+          [ngStyle]="{ color: header.textColor }"
+          [ngbTooltip]="data.headerText"
+          container="body"
+          placement="bottom"
+        >
+          {{ data.headerText }}
+        </span>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #itemViewList let-data></ng-template>

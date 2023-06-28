@@ -14,13 +14,13 @@
 </codx-layout-add>
 
 <ng-template #contractInfo>
-  <div *ngIf="openFrom == 'empContractProcess'" class="form-group row mt-5">
+  <div *ngIf="openFrom == 'empContractProcess'" class="form-group row">
     <div class="col-10">
       <div class="d-flex">
         <div class="d-flex flex-column position-relative">
           <codx-img
             [width]="40"
-            class="me-3"
+            class="me-4"
             [objectId]="employeeObj?.employeeID ?? employeeObj?.emp?.employeeID"
             [referType]="'avt'"
             [objectName]="

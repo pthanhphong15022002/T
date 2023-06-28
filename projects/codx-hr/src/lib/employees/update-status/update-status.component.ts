@@ -46,15 +46,17 @@ export class UpdateStatusComponent implements OnInit {
         "EmployeesBusiness",
         "UpdateStatusAsync", 
         [this.employee.employeeID, this.value])
-        .subscribe((res) => {
+        .subscribe((res:boolean) => {
           if (res) 
           {
             this.employee.status = this.value;
-            this.dialogRef.close(this.employee)
+            this.dialogRef.close(this.employee);
+            this.notiService.notifyCode("SYS007");
           } 
           else 
           {
-            this.dialogRef.close()
+            this.dialogRef.close();
+            this.notiService.notifyCode("SYS021");
           }
       });
     }

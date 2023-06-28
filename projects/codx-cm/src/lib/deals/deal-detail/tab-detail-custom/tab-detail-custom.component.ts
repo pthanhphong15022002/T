@@ -33,6 +33,7 @@ export class TabDetailCustomComponent
   @Input() tabClicked: any;
   @Input() dataSelected: any;
   @Input() formModel: any;
+  @Input() checkMoreReason = true;
   @Input() listSteps: DP_Instances_Steps[] = [];
   @Output() saveAssign = new EventEmitter<any>();
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent

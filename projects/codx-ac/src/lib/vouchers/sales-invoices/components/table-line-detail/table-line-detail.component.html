@@ -5,14 +5,12 @@
   [entityName]="fmSalesInvoicesLines.entityName"
   [templateMore]="more"
   service="SM"
-  [height]="height"
   [autoLoad]="false"
   [hideMoreFunc]="!hasMF"
   [columnsGrid]="columns"
   [showRowNumber]="true"
   predicates="TransID=@0"
   [dataValues]="transID"
-  (created)="onCreate($event)"
 ></codx-gridview-v2>
 
 <ng-template #columnItemID let-data>

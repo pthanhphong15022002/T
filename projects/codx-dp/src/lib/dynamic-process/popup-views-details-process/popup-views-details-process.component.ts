@@ -71,6 +71,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     gridViewName: 'grvDPStepsTasks',
     entityName: 'DP_Steps_Tasks',
   };
+  dataObj: any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -87,6 +88,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     this.dpService
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
+    this.dataObj = { processID: this.process.recID };
   }
 
   async ngOnInit(): Promise<void> {

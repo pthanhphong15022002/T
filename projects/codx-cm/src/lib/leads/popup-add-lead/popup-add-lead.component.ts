@@ -19,6 +19,7 @@ import {
   ImageViewerComponent,
   Util,
   CRUDService,
+  CodxFormComponent,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Deals, CM_Leads } from '../../models/cm_model';
@@ -43,6 +44,7 @@ export class PopupAddLeadComponent
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
   @ViewChild('imageUploadLead') imageUploadLead: ImageViewerComponent;
   @ViewChild('imageUploadContact') imageUploadContact: ImageViewerComponent;
+  @ViewChild('form') form: CodxFormComponent;
   // setting values in system
   dialog: DialogRef;
   //type any
@@ -84,7 +86,7 @@ export class PopupAddLeadComponent
     subText: 'General information',
   };
   menuGeneralSystem = {
-    icon: 'icon-info',
+    icon: 'icon-read_more',
     text: 'Thông tin hệ thống',
     name: 'GeneralSystem',
     subName: 'General system',
@@ -168,6 +170,32 @@ export class PopupAddLeadComponent
   valueChange($event) {
     if ($event && $event.data) {
       this.lead[$event.field] = $event.data;
+      if ($event.field == 'currencyID') {
+        this.loadExchangeRate();
+      }
+    }
+  }
+  loadExchangeRate() {
+    let day = this.lead.createdOn ?? new Date();
+    if(this.lead.currencyID) {
+      this.codxCmService
+      .getExchangeRate(this.lead.currencyID, day)
+      .subscribe((res) => {
+        let exchangeRateNew = res?.exchRate ?? 0;
+        if (exchangeRateNew == 0) {
+          this.notificationsService.notify(
+            'Tỷ giá tiền tệ "' +
+              this.lead.currencyID +
+              '" chưa thiết lập xin hay chọn lại !',
+            '3'
+          );
+          this.form.formGroup.patchValue(this.lead);
+          return;
+        }
+        else {
+          this.lead.exchangeRate = exchangeRateNew;
+        }
+      });
     }
   }
   valueChangeDate($event) {
@@ -188,6 +216,7 @@ export class PopupAddLeadComponent
 
     this.convertDataInstance(this.lead, this.instance);
     this.updateDateDeal(this.instance, this.lead);
+
     this.promiseSaveFile();
   }
   cbxChange($event, field) {
@@ -245,9 +274,9 @@ export class PopupAddLeadComponent
   }
   updateDateDeal(instance: tmpInstances, lead: CM_Leads) {
     if (this.action !== this.actionEdit) {
-      lead.stepID = this.listInstanceSteps[0].stepID;
-      lead.nextStep = this.listInstanceSteps[1].stepID;
-      lead.status = '1';
+      lead.stepID = this.listInstanceSteps[0]?.stepID;
+      lead.nextStep = this.listInstanceSteps[1]?.stepID;
+      lead.status = this.owner? '3':'1';
       lead.refID = instance.recID;
       lead.startDate = null;
     }

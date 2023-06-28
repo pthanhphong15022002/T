@@ -69,7 +69,7 @@
   <div class="w-100 view-details-main pt-3 bg-gray-100">
     <div class="dp-process-main rounded-3 bg-body scroll-y pt-2 mx-5 h-100">
       <div class="view-details-content m-0 h-100">
-        <div
+        <!-- <div
           class="process-views-detail"
           data-kt-scroll="true"
           data-kt-scroll-activate="{default: true}"
@@ -77,12 +77,13 @@
           data-kt-scroll-dependencies=".popup-process-header"
           data-kt-scroll-wrappers=".process-body .no-header ."
           [attr.data-kt-scroll-offset]="'120px'"
-        >
-          <ng-container
+        > -->
+        <div>
+          <!-- <ng-container
             *ngIf="name == 'Dashboard'"
             [ngTemplateOutlet]="viewDashboard"
           >
-          </ng-container>
+          </ng-container> -->
           <ng-container
             *ngIf="name == 'Detail' && process"
             [ngTemplateOutlet]="viewDetail"
@@ -157,7 +158,7 @@
                       [ngTemplateOutletContext]="{step}"
                     ></ng-container>
                   </div>
-                  <div *ngIf="step?.taskGroups?.length > 0 ">
+                  <div *ngIf="step?.taskGroups?.length > 0">
                     <div
                       class="group border border-gray-200 rounded px-6 py-4"
                       style="margin: 10px 0 10px 20px"
@@ -168,8 +169,13 @@
                         [ngTemplateOutlet]="viewGroupTask"
                         [ngTemplateOutletContext]="{group}"
                       ></ng-container>
-                      <ng-container *ngIf="group?.tasks?.length > 0" >
-                        <div *ngFor="let task of group?.tasks" [ngStyle]="group?.recID ? {'margin-left': '40px'} : {}">
+                      <ng-container *ngIf="group?.tasks?.length > 0">
+                        <div
+                          *ngFor="let task of group?.tasks"
+                          [ngStyle]="
+                            group?.recID ? { 'margin-left': '40px' } : {}
+                          "
+                        >
                           <ng-container
                             [ngTemplateOutlet]="viewTask"
                             [ngTemplateOutletContext]="{task}"
@@ -283,14 +289,14 @@
             {{ " " + data?.taskGroupName }}
           </span>
           <div>
-            <span>{{data?.durationDay}}</span>
+            <span>{{ data?.durationDay }}</span>
             <codx-label
               class="mx-1"
               [fiedName]="'day'"
               [formModel]="formModelStep"
               default="ngày"
             ></codx-label>
-            <span>{{data?.durationHour}}</span>
+            <span>{{ data?.durationHour }}</span>
             <codx-label
               class="mx-1"
               [fiedName]="'hour'"
@@ -301,14 +307,14 @@
         </div>
       </div>
       <div>
-        <span>{{data?.durationDay}}</span>
+        <span>{{ data?.durationDay }}</span>
         <codx-label
           class="mx-1"
           [fiedName]="'day'"
           [formModel]="formModelStep"
           default="ngày"
         ></codx-label>
-        <span>{{data?.durationHour}}</span>
+        <span>{{ data?.durationHour }}</span>
         <codx-label
           class="mx-1"
           [fiedName]="'hour'"
@@ -356,14 +362,14 @@
         <span class="fs-5 fw-bold">{{ data?.taskName }}</span>
       </div>
       <div>
-        <span>{{data?.durationDay}}</span>
+        <span>{{ data?.durationDay }}</span>
         <codx-label
           class="mx-1"
           [fiedName]="'day'"
           [formModel]="formModelStep"
           default="ngày"
         ></codx-label>
-        <span>{{data?.durationHour}}</span>
+        <span>{{ data?.durationHour }}</span>
         <codx-label
           class="mx-1"
           [fiedName]="'hour'"
@@ -398,30 +404,32 @@
       </div>
     </ng-container>
   </div>
-
 </ng-template>
 
 <!-- temp chung  -->
 <!-- viewKanban -->
 <ng-template #viewKanban>
-  <ng-container>Tìm cách xử lý vẽ như BP</ng-container>
+  <process-views-tabs-details
+    [viewMode]="'6'"
+    [dataObj]="dataObj"
+  ></process-views-tabs-details>
 </ng-template>
 
 <!-- viewDasboard -->
-<ng-template #viewDashboard>
+<!-- <ng-template #viewDashboard>
   <ng-container>Dashboard - tính toán vẽ ra</ng-container>
-</ng-template>
+</ng-template> -->
 
 <ng-template #dayTem let-data="data">
   <div>
-    <span>{{data?.durationDay}}</span>
+    <span>{{ data?.durationDay }}</span>
     <codx-label
       class="mx-1"
       [fiedName]="'day'"
       [formModel]="formModelStep"
       default="ngày"
     ></codx-label>
-    <span>{{data?.durationHour}}</span>
+    <span>{{ data?.durationHour }}</span>
     <codx-label
       class="mx-1"
       [fiedName]="'hour'"
