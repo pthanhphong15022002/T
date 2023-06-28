@@ -38,23 +38,14 @@
 </ng-template>
 <ng-template #templatePhone let-data>
     <div class="d-flex align-items-center employee-add">
-        <span class="icon-phone_android icon-16 me-2"></span>
-        <span class="text-gray-600" *ngIf="data.phone; else noPhone">
-            {{ data.phone}}
-        </span>
-        <ng-template #noPhone>
-            <span class="place-holder">{{ grvSetup["Phone"].headerText }}</span>
-        </ng-template>
+        <span class="text-gray-600" 
+            [innerHTML]="data.phone | formatvalue: grid.formModel:'phone' | async"></span>
     </div>
 </ng-template>
 <ng-template #templateEmail let-data>
     <div class="d-flex align-items-center employee-email">
-        <span class="icon-email icon-16 me-2"></span>
-        <span class="text-gray-600" *ngIf="data.email;else noEmail"
+        <span class="text-gray-600" 
             [innerHTML]="data.email | formatvalue: grid.formModel:'email' | async"></span>
-        <ng-template #noEmail>
-            <span class="place-holder">{{ grvSetup["Email"].headerText }}</span>
-        </ng-template>
     </div>
 </ng-template>
 <ng-template #templateJoinedOn let-item>

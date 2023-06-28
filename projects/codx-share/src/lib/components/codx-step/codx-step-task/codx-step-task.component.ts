@@ -479,6 +479,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP13':
           case 'DP27': // đặt xe
           case 'DP07':
+          case 'DP31':
+          case 'DP30':
+          case 'DP29':
+          case 'DP28':
             res.disabled = true;
             break;
           case 'SYS02': //xóa
@@ -566,10 +570,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
+          case 'DP31':
+          case 'DP30':
+          case 'DP29':
+          case 'DP28':
             res.disabled = true;
             break;
           case 'DP20': // tiến độ
-            res.isbookmark = true;
+            res.isbookmark = false;
             if (
               !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
             ) {
@@ -578,7 +586,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
             break;
           case 'DP08': // Thêm nhóm công việc
-            res.isbookmark = true;
+            res.isbookmark = false;
             if (!(this.isRoleAll && this.isOnlyView)) {
               res.disabled = true;
             }

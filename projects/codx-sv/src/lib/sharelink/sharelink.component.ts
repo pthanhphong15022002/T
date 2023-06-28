@@ -17,8 +17,6 @@ export class SharelinkComponent implements OnInit {
   link:any;
   post = false;
   emailTemplate:any;
-  subject:any;
-  messages:any;
   constructor(
     private notifySvr: NotificationsService,
     private svService : CodxSvService,
@@ -93,19 +91,20 @@ export class SharelinkComponent implements OnInit {
 
   getEmailTemplate(recID:any)
   {
+    if(typeof this.data != 'object') this.data = {};
     var emailTemplate = this.svService.loadEmailTemplate(recID) as any;
     if(isObservable(emailTemplate))
     {
       emailTemplate.subscribe((item:any)=>{ 
         this.emailTemplate = item[0]
-        this.subject = item[0]?.subject;
-        this.messages = item[0]?.message;
+        this.data.subject = item[0]?.subject;
+        this.data.content = item[0]?.message;
       });
     }
     else {
       this.emailTemplate = emailTemplate[0];
-      this.subject = emailTemplate[0]?.subject;
-      this.messages = emailTemplate[0]?.message;
+      this.data.subject = emailTemplate[0]?.subject;
+      this.data.content = emailTemplate[0]?.message;
     }
   }
 

@@ -388,7 +388,7 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ejs-tab heightAdjustMode="Fill">
+    <ejs-tab heightAdjustMode="Fill" class="overflow-auto">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -430,8 +430,6 @@
                   [hiddenFields]="hiddenFields"
                   [hasMF]="true"
                   [dataService]="detailService"
-                  [height]="gridHeight"
-                  (create)="onCreate($event)"
                 ></lib-table-line-detail>
               </ng-template>
 

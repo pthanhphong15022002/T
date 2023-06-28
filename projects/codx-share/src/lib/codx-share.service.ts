@@ -40,6 +40,8 @@ import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { ApproveProcess } from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
+import axios from 'axios';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -893,10 +895,9 @@ export class CodxShareService {
           .subscribe((token) => {
             let url = '';
             if (isLogout) {
-              url = `${environment.loginHCS}/LogoutUser.aspx?tklid=${token}`;
-              this.httpClient.get<any>(url).subscribe((reponse) => {
-                console.log('log out', reponse);
-              });
+              url = `${environment.apiUrl}/hcs/UI2017/LogoutUser.aspx?tklid=${token}`;
+              // window.open(url, '_blank');
+              axios.get(url);
             } else {
               url = `${environment.loginHCS}/verifytoken.aspx?tklid=${token}&returnUrl=${returnUrl}`;
               if (url != '') {

@@ -83,7 +83,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   quotationLinesAddNew = [];
   quotationLinesEdit = [];
   quotationLinesDeleted = [];
-  disableRefID = false;
+  disableDealID = false;
   disableCusID = false;
   disableContactsID = false;
   modelObjectIDContacs: any;
@@ -121,7 +121,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     }
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
-    this.disableRefID = dt?.data?.disableRefID;
+    this.disableDealID = dt?.data?.disableDealID;
     this.disableCusID = dt?.data?.disableCusID;
     this.disableContactsID = dt?.data?.disableContactsID;
     this.copyToRecID = dt?.data?.copyToRecID;
@@ -288,7 +288,7 @@ export class PopupAddQuotationsComponent implements OnInit {
 
     this.quotations[e.field] = e.data;
     switch (e?.field) {
-      case 'refID':
+      case 'dealID':
         if (
           this.quotations.customerID !=
           e?.component?.itemsSelected[0]?.CustomerID
@@ -310,7 +310,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           //co hoi
           this.dealsCbx.ComponentCurrent.dataService.data = [];
           this.dealsCbx.crrValue = null;
-          this.quotations.refID = null;
+          this.quotations.dealID = null;
           // lien he
           this.contactCbx.ComponentCurrent.dataService.data = [];
           this.contactCbx.crrValue = null;
@@ -326,7 +326,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.customerCbx.crrValue = null;
 
           this.dealsCbx.ComponentCurrent.dataService.data = [];
-          this.quotations.refID = null;
+          this.quotations.dealID = null;
           this.dealsCbx.crrValue = null;
 
           this.quotations.customerID = e?.component?.itemsSelected[0]?.ObjectID;
