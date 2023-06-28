@@ -142,12 +142,20 @@ export class SalesInvoicesComponent
     salesInvoicesLinesOptions.predicates = 'TransID=@0';
     salesInvoicesLinesOptions.dataValues = this.master.recID;
     salesInvoicesLinesOptions.pageLoading = false;
-    this.acService
-      .loadDataAsync('SM', salesInvoicesLinesOptions)
-      .subscribe((res: ISalesInvoicesLine[]) => {
-        this.lines = res;
-        this.loading = false;
-      });
+    // this.acService
+    //   .loadDataAsync('SM', salesInvoicesLinesOptions)
+    //   .subscribe((res: ISalesInvoicesLine[]) => {
+    //     this.lines = res;
+    //     this.loading = false;
+    //   });
+    this.api
+      .exec(
+        'SM',
+        'SalesInvoicesLinesBusiness',
+        'GetLinesAsync',
+        salesInvoicesLinesOptions
+      )
+      .subscribe();
   }
 
   onClickAdd(e): void {

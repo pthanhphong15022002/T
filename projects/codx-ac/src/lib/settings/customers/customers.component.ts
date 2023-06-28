@@ -123,8 +123,8 @@ export class CustomersComponent extends UIComponent {
           headerText: e.text + ' ' + this.funcName,
         };
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         option.Width = '800px';
         this.dialog = this.callfunc.openSide(
           PopAddCustomersComponent,
@@ -137,23 +137,21 @@ export class CustomersComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopAddCustomersComponent,
-          obj,
-          option
-        );
-      });
+    this.view.dataService.copy().subscribe((res: any) => {
+      var obj = {
+        formType: 'copy',
+        headerText: e.text + ' ' + this.funcName,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(
+        PopAddCustomersComponent,
+        obj,
+        option
+      );
+    });
   }
   delete(data) {
     if (data) {
@@ -169,12 +167,10 @@ export class CustomersComponent extends UIComponent {
           .subscribe((res: any) => {
             if (res) {
               this.api
-                .exec(
-                  'ERM.Business.BS',
-                  'AddressBookBusiness',
-                  'DeleteAsync',
-                  [this.objecttype, data.customerID]
-                )
+                .exec('ERM.Business.BS', 'AddressBookBusiness', 'DeleteAsync', [
+                  this.objecttype,
+                  data.customerID,
+                ])
                 .subscribe((res: any) => {
                   if (res) {
                     this.api
