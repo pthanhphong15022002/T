@@ -283,8 +283,8 @@ export class ItempostingaccountsComponent extends UIComponent {
           subheaderText: this.subheaderText,
         };
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(PopAddItemComponent, obj, option);
         
@@ -304,8 +304,8 @@ export class ItempostingaccountsComponent extends UIComponent {
           subheaderText: this.subheaderText,
         };
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(PopAddItemComponent, obj, option);
         

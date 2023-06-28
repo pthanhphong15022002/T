@@ -125,8 +125,8 @@ export class WarehousesComponent extends UIComponent {
           headerText: e.text + ' ' + this.funcName,
         };
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         option.Width = '800px';
         this.dialog = this.callfunc.openSide(
           PopAddWarehousesComponent,
@@ -147,8 +147,8 @@ export class WarehousesComponent extends UIComponent {
           headerText: e.text + ' ' + this.funcName,
         };
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         option.Width = '800px';
         this.dialog = this.callfunc.openSide(
           PopAddWarehousesComponent,
