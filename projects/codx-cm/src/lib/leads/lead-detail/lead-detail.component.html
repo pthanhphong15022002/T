@@ -67,15 +67,26 @@
                 class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
               ></span>
               <span
-                class="fw-bold line-clamp-menu"
-                [ngbTooltip]="gridViewSetup['AnnualRevenue']?.headerText"
-                #annualRevenue
+                class="fw-bold line-clamp-menu pe-1"
+                [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+                #dealValue
                 [innerHTML]="
-                  dataSelected?.annualRevenue
-                    | formatvalue : formModel : 'annualRevenue' : annualRevenue
+                  dataSelected?.dealValue
+                    | formatvalue : formModel : 'dealValue' : dealValue
                     | async
                 "
               ></span>
+              <span
+                class="fw-bold line-clamp-menu"
+                [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+                #currencyID
+                [innerHTML]="
+                  dataSelected?.currencyID
+                    | formatvalue : formModel : 'currencyID' : currencyID
+                    | async
+                "
+              ></span>
+
                 </div>
               </div>
               <div class="d-flex justify-content-end">
@@ -300,7 +311,7 @@
                       ></codx-label>
                     </div>
                     <div class="d-flex justify-content-end">
-
+<!--
                       <codx-imgs
                       [width]="30"
                       [objectId]="dataSelected.salespersonID"
@@ -309,7 +320,40 @@
                       [ngbTooltip]="tooltipSalesperson"
                       [isToolTip]="false"
                     >
-                    </codx-imgs>
+                    </codx-imgs> -->
+
+                    <div style="position: relative">
+                      <!-- <codx-imgs
+                        [objectId]="item?.resourceID"
+                        [objectName]="item?.resourceName"
+                        objectType="AD_Users"
+                        [numberImages]="1"
+                      >
+                      </codx-imgs> -->
+
+                      <codx-img
+                      [width]="30"
+                      [objectId]="dataSelected.salespersonID"
+                      objectType="AD_Users"
+                      [referType]="'avt'"
+                      [numberImages]="1"
+                    >
+                    </codx-img>
+                      <div style="position: absolute; right: 0px; bottom: 0px">
+                        <ng-container *ngFor="let role of listRoles">
+                          <ng-container *ngIf="role.value == '1'">
+                            <span
+                              ><img
+                                src="/assets/themes/tm/default/img/CM.svg"
+                                alt=""
+                            /></span>
+
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                    </div>
+
+
 
                     <codx-imgs
                       [width]="30"
@@ -560,30 +604,152 @@
  <lib-quotations [funcID]="'CM0202'" [customerID]="dataSelected.customerID" ></lib-quotations>
 </ng-template> -->
 
-<ng-template #references>
-  <!-- <codx-temp-full
-  [typeMF]="'hover'"
-  [imageId]="deals?.customerID"
-  [imgOn]="deals?.modifiedOn"
-  [imageObjName]="deals?.customerName"
-  [imageReferType]="'avt'"
-  [imageWidth]="35"
-  imgCss="me-4"
-  [iconCss]="deals.closed ? 'icon-lock text-danger' : ''"
-  [imageObjType]="'CM_Customers'"
-  cardCss="card-template border-bottom p-3 list-task"
-  (clickMF)="clickMF($event, deals)"
-  (changeDataMF)="changeDataMF($event, deals)"
-  [typeMF]="'hover'"
-  [title]="deals?.customerName"
-  [descTmp]="descTmp"
-  [body]="footer"
-  [formModel]="view.formModel"
-  [footer]="footer"
-  [titleCss]="'fw-bold fs-6'"
-  [hideMF]="false"
-  [dataItem]="deals"
+<ng-template #referencesDeal>
+<div *ngIf="deals; else noData"
+class="d-flex justify-content-between align-items-top p-3 border-bottom border-gray-150 user-nav-item"
 >
-</codx-temp-full> -->
+<div class="d-flex flex-column">
+  <div
+    class="fw-bold fs-6 line-clamp line-clamp-1 mb-3"
+    [innerHTML]="
+    deals.dealName | formatvalue : formModelDeal : 'DealName' | async
+    "
+  ></div>
+  <div class="d-flex flex-wrap align-items-top me-4 mb-1">
+    <div class="me-3 d-flex justify-content-start me-6">
+      <span class="icon-money icon-16 me-1" [ngbTooltip]="popupDealValue">
+        <ng-template #popupDealValue>
+          <codx-label
+            fiedName="DealValue"
+            [formModel]="formModelDeal"
+          ></codx-label> </ng-template
+      ></span>
+      <codx-label
+        class="label-colon text-gray-600"
+        [formModel]="formModelDeal"
+        fiedName="DealValue"
+      ></codx-label>
+      <span
+        class="ms-1 text-dark fw-bold"
+        [innerHTML]="
+        deals.dealValue | formatvalue : formModelDeal : 'DealValue' | async
+        "
+      ></span>
+    </div>
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-offline_pin icon-16 me-2"
+        [ngbTooltip]="popupProbability"
+      >
+        <ng-template #popupProbability>
+          <codx-label
+            fiedName="Probability"
+            [formModel]="formModelDeal"
+          ></codx-label> </ng-template
+      ></span>
+      <codx-label
+        class="label-colon text-gray-600 me-1"
+        [formModel]="formModelDeal"
+        fiedName="Probability"
+      ></codx-label>
+      <span
+        class="me-1 text-dark fw-bold"
+        [innerHTML]="
+        deals.probability | formatvalue : formModelDeal : 'Probability' | async
+        "
+      ></span
+      ><span class="text-dark fw-bold">%</span>
+    </div>
+  </div>
+</div>
+<div class="d-flex align-items-top ms-4">
+  <div class="d-flex flex-column w-130px min-w-130px">
+    <div class="d-flex align-items-center justify-content-end mb-1">
+      <div
+        *ngIf="deals.status != '1'"
+        style="border-radius: 23px; padding: 0px 8px 0px;"
+        [ngStyle]="{
+          'background-color':
+          deals.status == '3' || deals.status == '4'
+              ? colorReasonSuccess?.color
+              : deals.status == '5' || deals.status == '6'
+              ? colorReasonFail?.color
+              : getStep(deals?.stepID)?.backgroundColor
+        }"
+        class="d-flex align-items-center"
+      >
+        <span
+          [ngClass]="getStep(deals?.stepID)?.icon"
+          [ngStyle]="{ color: getStep(deals?.stepID)?.iconColor }"
+          class="me-1"
+        ></span>
+        <div
+          [ngbPopover]="getStep(deals?.stepID)?.stepName"
+          #pStep="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="pStep.open()"
+          (mouseleave)="pStep.close()"
+          placement="left bottom right top"
+        >
+          <span
+            class="line-clamp line-clamp-1"
+            [ngStyle]="{ color: getStep(deals?.stepID)?.textColor }"
+            [innerHTML]="getStep(deals?.stepID)?.stepName"
+          ></span>
+        </div>
+      </div>
+      <div
+        class="d-flex justify-content-end mb-1"
+        *ngIf="deals.status == '1'"
+      >
+        <codx-vll
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="deals?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
+    </div>
+    <div class="ms-1 d-flex justify-content-end align-items-center mt-1">
+      <span
+        class="icon-date_range icon-16 text-gray-800 me-1"
+        [ngbTooltip]="popupEndDate"
+        ><ng-template #popupEndDate>
+          <codx-label
+            fiedName="EndDate"
+            [formModel]="formModelDeal"
+          ></codx-label> </ng-template
+      ></span>
+      <span
+        class="text-gray-700"
+        [innerHTML]="
+        deals.endDate | formatvalue : formModelDeal : 'EndDate' | async
+        "
+      ></span>
+    </div>
+  </div>
+
+  <div class="ms-5" *ngIf="deals.owner">
+    <codx-imgs
+      [isToolTip]="true"
+      [width]="30"
+      [objectId]="deals.owner"
+      ojectType="AD_Users"
+      [numberImages]="1"
+    >
+    </codx-imgs>
+  </div>
+</div>
+</div>
+
+
+</ng-template>
+<ng-template #noData>
+  <codx-no-data>
+
+  </codx-no-data>
 </ng-template>
 

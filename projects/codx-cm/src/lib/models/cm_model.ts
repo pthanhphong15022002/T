@@ -725,4 +725,7 @@ export class CM_Leads {
   closedBy: string;
   closedOn: Date;
   closed: boolean;
+  currencyID: string;
+  exchangeRate: number;
+  dealValue: number;
 }
