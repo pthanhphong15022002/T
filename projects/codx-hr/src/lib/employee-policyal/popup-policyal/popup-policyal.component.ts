@@ -225,6 +225,22 @@ export class PopupPolicyalComponent
     }
   }
 
+  onChangeSelectTransferDay(evt){
+    let day = parseInt(evt.data)
+    let month = parseInt(this.alpolicyObj.transferToDay)
+    if(month){
+      this.validateMonthDate(month, day);
+    }
+  }
+
+  onChangeSelectTransferMonth(evt){
+    let month = parseInt(evt.data)
+    let day = parseInt(this.alpolicyObj.transferToMonth)
+    if(day){
+      this.validateMonthDate(month, day);
+    }
+  }
+
   onChangeSelectCloseToDay(evt){
     let day = parseInt(evt.data)
     let month = parseInt(this.alpolicyObj.closeToMonth)
