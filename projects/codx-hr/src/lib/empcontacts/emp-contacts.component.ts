@@ -56,7 +56,7 @@ export class EmpContactsComponent extends UIComponent {
   buttons: Array<ButtonModel> = [];
 
   request: ResourceModel;
-  orgUnitID : string = '' ;
+  itemSelected : any;
 
   constructor(inject: Injector,
     //private changedt: ChangeDetectorRef,
@@ -165,7 +165,7 @@ export class EmpContactsComponent extends UIComponent {
         id: '4',
         type: ViewType.tree_card,
         active: false,
-        sameData: true,
+        sameData: false,
         request: this.request,
         model:{
           resizable: true,
@@ -179,7 +179,7 @@ export class EmpContactsComponent extends UIComponent {
   }
 
   selectedChange(event: any): void {
-    this.orgUnitID = event?.data?.orgUnitID;
+    this.itemSelected = event?.data;
     this.detectorRef.detectChanges();
   }
 
