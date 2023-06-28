@@ -17,7 +17,8 @@
                       [innerHTML]="itemSession.question"
                     ></span>
                     <span class="mt-5" *ngIf="!itemSession.question">Mẫu không có tiêu đề</span>
-                    <div class="fs-5-sm mt-5">{{expiredOn ? 'Khảo sát đã hết thời gian trả lời.': 'Khảo sát đã đóng.'}}</div>
+                    <div *ngIf="expiredOn && !survey?.stop" class="fs-5-sm mt-5">Khảo sát đã hết thời gian trả lời.</div>
+                    <div *ngIf="survey?.stop" class="fs-5-sm mt-5">Khảo sát đã đóng.</div>
                   </div>
                 </form>
               </div>
@@ -356,7 +357,7 @@
   let-itemQuestion="itemQuestion"
   let-itemAnswer="itemAnswer"
 >
-  <div class="e-input-group w-100" *ngIf="itemQuestion.answerType == 'O'">
+  <div class="e-input-group-sv w-100" *ngIf="itemQuestion.answerType == 'O'">
     <codx-input
       *ngIf="!itemAnswer.other"
       type="radio"
@@ -389,7 +390,7 @@
 
     </div>
   </div>
-  <div class="e-input-group w-100" *ngIf="itemQuestion.answerType == 'C'">
+  <div class="e-input-group-sv w-100" *ngIf="itemQuestion.answerType == 'C'">
     <ng-container *ngIf="!itemAnswer.other , else elseCOther">
       <codx-input
         type="checkbox"
@@ -420,7 +421,7 @@
     </ng-template>
   </div>
   <div
-    class="e-input-group w-200px"
+    class="e-input-group-sv w-200px"
     *ngIf="itemQuestion.answerType == 'T'"
   >
     <!-- <input #input
@@ -441,7 +442,7 @@
     </codx-input>
   </div>
   <div
-    class="e-input-group long-text me-8"
+    class="e-input-group-sv long-text me-8"
     *ngIf="itemQuestion.answerType == 'T2'"
   >
     <codx-input
@@ -519,7 +520,7 @@
   <div class="d-flex pb-8">
     <div
       [ngClass]="
-        input_check?.value ? 'e-input-group bg-active' : 'e-input-group'
+        input_check?.value ? 'e-input-group-sv bg-active' : 'e-input-group-sv'
       "
       *ngIf="
         itemQuestion.answerType == 'O' ||
@@ -539,7 +540,7 @@
       </codx-input>
     </div>
     <div
-      class="e-input-group short-text"
+      class="e-input-group-sv short-text"
       *ngIf="itemQuestion.answerType == 'T'"
     >
       <input
@@ -552,7 +553,7 @@
       />
     </div>
     <div
-      class="e-input-group long-text"
+      class="e-input-group-sv long-text"
       *ngIf="itemQuestion.answerType == 'T2'"
     >
       <input
@@ -564,7 +565,7 @@
         [disabled]="false"
       />
     </div>
-    <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'D'">
+    <div class="e-input-group-sv date-time" *ngIf="itemQuestion.answerType == 'D'">
       <input
         class="e-input"
         type="text"
@@ -574,7 +575,7 @@
         [disabled]="true"
       />
     </div>
-    <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'H'">
+    <div class="e-input-group-sv date-time" *ngIf="itemQuestion.answerType == 'H'">
       <input
         class="e-input"
         type="text"
@@ -728,9 +729,6 @@
                   [src]="getSrcImage(item)"
                   alt=""
                 />
-                <span
-                  class="icon-close icon-20 icon-MF-image-outside-answer action-menu pointer"
-                ></span>
               </div>
             </div>
           </div>
@@ -962,7 +960,7 @@
     </div>
   </div>
   <div class="form-group ms-6">
-    <div class="title-des">
+    <div class="title-des ms-3">
       <span
         *ngIf="itemSession.comment"
         [innerHTML]="itemSession.comment"
@@ -1016,7 +1014,7 @@
       </div>
     </div>
     <div class="form-group question">
-      <div class="title-des">
+      <div class="title-des ms">
         <span
           *ngIf="itemSession.comment"
           [innerHTML]="itemSession.comment"

@@ -29,6 +29,7 @@ export class DealDetailComponent implements OnInit {
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
   @Input() funcID = 'CM0201'; //
+  @Input() checkMoreReason = true;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
