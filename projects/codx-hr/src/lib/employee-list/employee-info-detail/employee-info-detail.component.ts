@@ -666,7 +666,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.df.detectChanges();
           }
         })
-
+        debugger
         // Load full thong tin current cua employee
         this.getEmpCurrentData().subscribe((res) => {
           if(res){

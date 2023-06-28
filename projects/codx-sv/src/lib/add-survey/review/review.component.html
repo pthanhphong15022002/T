@@ -6,7 +6,7 @@
         </div>
       </ng-container>
       <div class="box">
-        <ng-container *ngIf="(survey?.stop || expiredOn);else elseStop">
+        <ng-container *ngIf="((survey?.stop || expiredOn ) && !repondID);else elseStop">
           <div class="card-survey">
             <div class="control-section inplace-editor-control-section form-lafyout">
               <div class="content-wrapper b-t" [style.borderTopColor]="primaryColor">
@@ -298,7 +298,7 @@
                   *ngIf="itemSession.seqNo == questions.length - 1"
                   type="button"
                   class="btn btn-submit text-white"
-                  [disabled]="survey?.status != '5' ? true : false"
+                  [disabled]="(survey?.status != '5' || survey?.stop || expiredOn) ? true : false"
                   (click)="onSubmit()"
                   [style.backgroundColor]="primaryColor"
                 >
