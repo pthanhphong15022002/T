@@ -48,19 +48,17 @@ export class LeadDetailComponent implements OnInit {
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
   @ViewChild('comment') comment: TemplateRef<any>;
 
-
-
   treeTask = [];
 
   nameDetail = '';
   tabClicked = '';
 
   tabDetail = [];
-  tabControl=[];
+  tabControl = [];
   contactPerson: any;
   listRoles = [];
-  deals:CM_Deals= null;
-
+  tmpDeal: any;
+  gridViewSetupDeal:any;
   request: ResourceModel;
   formModelDeal: FormModel;
   constructor(
@@ -74,22 +72,45 @@ export class LeadDetailComponent implements OnInit {
         this.listRoles = res.datas;
       }
     });
-
   }
 
   ngOnInit(): void {
-
     this.tabControl = [
-      { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
-      { name: 'Attachment', textDefault: 'Đính kèm',  isActive: false,  template: null, },
-      {name: 'AssignTo',  textDefault: 'Giao việc', isActive: false,  template: null,},
-      {  name: 'Approve', textDefault: 'Ký duyệt',  isActive: false,  template: null,  },
-      {  name: 'Deal',textDefault: 'Liên kết', isActive: false,template: this.referencesDeal, icon:'icon-i-link' },
+      {
+        name: 'History',
+        textDefault: 'Lịch sử',
+        isActive: true,
+        template: null,
+      },
+      {
+        name: 'Attachment',
+        textDefault: 'Đính kèm',
+        isActive: false,
+        template: null,
+      },
+      {
+        name: 'AssignTo',
+        textDefault: 'Giao việc',
+        isActive: false,
+        template: null,
+      },
+      {
+        name: 'Approve',
+        textDefault: 'Ký duyệt',
+        isActive: false,
+        template: null,
+      },
+      {
+        name: 'Deal',
+        textDefault: 'Liên kết',
+        isActive: false,
+        template: this.referencesDeal,
+        icon: 'icon-i-link',
+      },
     ];
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
@@ -100,12 +121,19 @@ export class LeadDetailComponent implements OnInit {
           this.tabControl.splice(index, 1);
         }
         let references = {
-          name: 'Deal',textDefault: 'Liên kết', isActive: false,template: this.referencesDeal, icon:'icon-i-link'
+          name: 'Deal',
+          textDefault: 'Liên kết',
+          isActive: false,
+          template: this.referencesDeal,
+          icon: 'icon-i-link',
         };
         this.tabControl.push(references);
         this.promiseAll();
+      }else {
+        this.tmpDeal = null;
       }
       this.afterLoad();
+      //    console.log('log grid lead: ', this.gridViewSetup?.Status?.referedValue);
     }
   }
 
@@ -116,12 +144,6 @@ export class LeadDetailComponent implements OnInit {
         textDefault: 'Thông tin chung',
         icon: 'icon-info',
         isActive: true,
-      },
-      {
-        name: 'Field',
-        textDefault: 'Thông tin mở rộng',
-        icon: 'icon-add_to_photos',
-        isActive: false,
       },
       {
         name: 'Task',
@@ -157,9 +179,14 @@ export class LeadDetailComponent implements OnInit {
   changeFooter(e) {}
 
   async afterLoad() {}
-  async promiseAll(){
+  async promiseAll() {
     this.formModelDeal = await this.codxCmService.getFormModel('CM0201');
-    this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.formModelDeal?.formName, this.formModelDeal?.gridViewName));
+    this.gridViewSetupDeal = await firstValueFrom(
+      this.cache.gridViewSetup(
+        this.formModelDeal?.formName,
+        this.formModelDeal?.gridViewName
+      )
+    );
     await this.getTmpDeal();
   }
   // async getColorReason() {
@@ -176,12 +203,26 @@ export class LeadDetailComponent implements OnInit {
   //   });
   // }
 
-  async getTmpDeal(){
-    this.codxCmService.getOneTmpDeal([this.dataSelected.dealID]).subscribe ((res)=> {
-      if(res) {
-        this.deals = res[0];
-      }
-    })
+  async getTmpDeal() {
+    this.codxCmService
+      .getOneTmpDeal([this.dataSelected.dealID])
+      .subscribe((res) => {
+        if (res) {
+          this.tmpDeal = res[0];
+        }
+      });
+  }
+
+  pushTabFields(isCheck) {
+    if (isCheck) {
+      var objField = {
+        name: 'Field',
+        textDefault: 'Thông tin mở rộng',
+        icon: 'icon-add_to_photos',
+        isActive: false,
+      };
+      this.tabDetail.splice(1, 0, objField);
+    }
   }
 
   getStep(stepID) {

@@ -689,4 +689,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   // }
   //#endregion
+  mouseenter(e){
+    console.log(e);
+  }
 }

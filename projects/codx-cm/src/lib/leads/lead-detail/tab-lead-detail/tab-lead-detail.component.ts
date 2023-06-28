@@ -13,6 +13,7 @@ import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../../../codx-cm.service';
+import { LeadDetailComponent } from '../lead-detail.component';
 
 @Component({
   selector: 'codx-tab-lead-detail',
@@ -59,7 +60,8 @@ export class TabLeadDetailComponent
   constructor(
     private inject: Injector,
     private codxCmService: CodxCmService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private leadDetailComponent: LeadDetailComponent,
   ) {
     super(inject);
   }
@@ -94,6 +96,8 @@ export class TabLeadDetailComponent
       if (res) {
         this.listStep = res;
         this.checkCompletedInstance(this.dataSelected?.status);
+        this.leadDetailComponent.pushTabFields((this.checkHaveField(this.listStep)));
+
       }
       this.isDataLoading = false;
     });
@@ -107,7 +111,16 @@ export class TabLeadDetailComponent
     listStep.pop();
     listStep.pop();
   }
-
+  checkHaveField(listStep: any){
+    var isCheck = false;
+    for(let item of listStep) {
+        if(item?.fields?.length > 0 && item?.fields) {
+          isCheck = true;
+          return isCheck;
+        }
+    }
+    return isCheck;
+  }
   // async getValueList() {
   //   this.cache.valueList('CRM010').subscribe((res) => {
   //     if (res.datas) {

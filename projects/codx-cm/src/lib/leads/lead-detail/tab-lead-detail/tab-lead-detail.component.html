@@ -260,7 +260,7 @@
   <div class="d-flex flex-column">
     <ng-container *ngFor="let item of listStep">
       <codx-fields-detail-temp
-        *ngIf="item?.fields?.length > 0"
+        *ngIf="item?.fields?.length > 0 && item?.fields"
         [dataStep]="item"
         [showColumnControl]="showColumnControl(item.stepID)"
         [isUpdate]="dataSelected.status == '1' || dataSelected.status == '2' "

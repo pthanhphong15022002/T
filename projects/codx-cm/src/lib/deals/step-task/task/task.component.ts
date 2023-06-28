@@ -288,8 +288,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
               (activitie) => activitie.recID == res.recID
             );
             this.listActivitie?.splice(index, 1, res);
-            console.log(res);
-
             this.notiService.notifyCode('SYS007');
             this.detectorRef.detectChanges();
           }
