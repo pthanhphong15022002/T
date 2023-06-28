@@ -3340,3 +3340,7 @@ lib-layoutonlyheader{
 //   background-color: #ffffff24 !important;
 // }
 
+.codx-tab .tab-content .main-work .e-rte-content {
+  height: calc(100vh - 315px) !important;
+  max-height: none;
+}

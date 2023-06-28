@@ -1,9 +1,10 @@
 import {
   AfterViewInit,
   Component,
+  HostListener,
   Injector,
   Optional,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
@@ -230,7 +231,7 @@ export class PopupAddSalesInvoiceComponent
         return;
       }
 
-      if (this.journal.inputMode === "2") {
+      if (this.journal.inputMode === '2') {
         return;
       }
 
@@ -401,6 +402,18 @@ export class PopupAddSalesInvoiceComponent
       if (e.data.idiM4) {
         this.setPredicateByIDIM4(e.data.idiM4);
       }
+    }
+  }
+
+  // ❌
+  @HostListener('keyup', ['$event'])
+  onKeyUp(e: KeyboardEvent): void {
+    if (e.shiftKey || e.key !== 'Tab') {
+      return;
+    }
+
+    if (document.activeElement.className === 'e-tab-wrap') {
+      document.getElementById('btnAddLine').focus();
     }
   }
   //#endregion

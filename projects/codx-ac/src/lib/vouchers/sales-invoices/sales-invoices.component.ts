@@ -35,9 +35,8 @@ export class SalesInvoicesComponent
   @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
   @ViewChild('sider') sider?: TemplateRef<any>;
   @ViewChild('content') content?: TemplateRef<any>;
-  @ViewChild('memoDiv', { read: ElementRef }) memoDiv: ElementRef;
-  @ViewChild('memoContent', { read: ElementRef }) memoContent: ElementRef;
-  @ViewChild('showMoreBtn', { read: ElementRef }) showMoreBtn: ElementRef;
+  @ViewChild('memoContent', { read: ElementRef })
+  memoContent: ElementRef<HTMLElement>;
 
   views: Array<ViewModel> = [];
   btnAdd = {
@@ -56,7 +55,7 @@ export class SalesInvoicesComponent
   parent: any;
   loading: boolean = false;
 
-  isMoreBtnHidden: boolean = false;
+  overflowed: boolean = false;
   expanding: boolean = false;
 
   constructor(
@@ -111,12 +110,8 @@ export class SalesInvoicesComponent
   }
 
   ngAfterViewChecked(): void {
-    const memoDivWidth: number = this.memoDiv?.nativeElement.offsetWidth;
-    const memoContentWidth: number =
-      this.memoContent?.nativeElement.offsetWidth;
-    const moreBtnWidth: number = this.showMoreBtn?.nativeElement.offsetWidth;
-
-    this.isMoreBtnHidden = memoContentWidth + moreBtnWidth < memoDivWidth;
+    const element: HTMLElement = this.memoContent?.nativeElement;
+    this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
   ngOnDestroy() {

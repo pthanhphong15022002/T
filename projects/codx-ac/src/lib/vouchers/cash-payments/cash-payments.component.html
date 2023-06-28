@@ -58,10 +58,16 @@
   </ng-container>
 </ng-template>
 <ng-template #descTmp let-data>
-  <span placement="bottom" [ngbTooltip]="memo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
-  <ng-template #memo>
+  <ejs-tooltip id='tooltip' target="#tipmemo">
+    <span id="tipmemo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
+    <ng-template #content>
+      <span>{{data?.memo}}</span> 
+    </ng-template>
+  </ejs-tooltip>
+  
+  <!-- <ng-template #memo>
     <span class="text-gray-600">{{data?.memo}}</span>
-  </ng-template>
+  </ng-template> -->
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <div *ngIf="data?.objectName" class="d-flex align-items-center mb-1">
@@ -71,12 +77,17 @@
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-2">
-      <div [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)"
-        class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-        <i style="font-size: 15px !important;" class="text-white"
-          [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
-      </div>
+    <div style="position: relative;z-index: 1000;" class="d-flex align-items-center ac-cashID mt-n8 mb-2">
+      <ejs-tooltip id='tooltip' target="#tipsub" position='BottomRight'>
+        <div id="tipsub" [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)"
+          class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+          <i style="font-size: 15px !important;" class="text-white"
+            [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
+        </div>
+        <ng-template #content>
+          <span>{{(itemSelected?.subType | vll : 'AC063' : 'text' | async)}}</span> 
+        </ng-template>
+      </ejs-tooltip>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
         {{ itemSelected?.voucherNo }}
       </span>
@@ -351,8 +362,7 @@
                     <div *ngIf="(item.diM2 != null && item.diM2 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2"
-                          default="TTCP">
+                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2" default="TTCP">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM2}}</span>
@@ -472,8 +482,7 @@
                     <div *ngIf="(item.diM2 != null && item.diM2 != '')"
                       class="d-flex align-items-center justify-content-start">
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2"
-                          default="TTCP">
+                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2" default="TTCP">
                         </codx-label>
                         :&nbsp;
                         <span class="fs-7 text-gray-700">{{item.diM2}}</span>

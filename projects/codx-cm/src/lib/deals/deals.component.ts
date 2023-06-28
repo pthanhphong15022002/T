@@ -445,7 +445,7 @@ export class DealsComponent
                 more.disabled = true;
                 break;
               case 'CM0201_7':
-                if (data.closed) {
+                if (data.closed || this.checkMoreReason(data)) {
                   more.disabled = true;
                 }
                 break;

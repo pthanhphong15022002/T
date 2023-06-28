@@ -209,6 +209,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     let countPayMent = this.listPayment.length;
     payMentHistory.rowNo = countPayMent + 1;
     payMentHistory.refNo = this.contracts?.recID;
+    payMentHistory.remainAmt = payment?.remainAmt;
     payMentHistory.lineType = '1';
     this.openPopupPaymentHistory('add', payment, payMentHistory);
   }
