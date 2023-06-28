@@ -242,12 +242,12 @@ export class AddSurveyComponent extends UIComponent {
           }
           var key = JSON.stringify(obj);
           key = this.aesCrypto.encode(key);
-          var link =  window.location.host+ "/" + this.user.tenant +  "/sv/review?_k="+key;
+          var link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
 
           if(this.dataSV?.settings)
           {
             if(typeof this.dataSV?.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-            if(this.dataSV?.settings?.isPublic == "1") link =  location.host + "/" + this.user.tenant +  "/forms?_k="+key;
+            if(this.dataSV?.settings?.isPublic == "1") link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/forms?_k="+key;
           }
          
           this.callfc.openForm(SharelinkComponent,"",900,600,"",

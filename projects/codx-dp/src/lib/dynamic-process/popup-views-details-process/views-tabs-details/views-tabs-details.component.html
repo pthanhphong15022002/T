@@ -36,23 +36,31 @@
     class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
     [id]="data?.keyField"
   >
-    <div class="line-colums d-flex align-items-center">
-      <span
-        [ngClass]="getPropertiesHeader(data, 'icon')"
-        [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
-        class="me-1"
-      >
-      </span>
-      <span
-        class="fs-6"
-        [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
-        [ngbTooltip]="data.headerText"
-        container="body"
-        placement="bottom"
-      >
-        {{ data.headerText }}
-      </span>
-    </div>
+    <ng-container
+      [ngTemplateOutlet]="headerKanban"
+      [ngTemplateOutletContext]="{
+        $implicit: getPropertiesHeader(data)
+      }"
+    ></ng-container>
+    <ng-template #headerKanban let-header>
+      <div class="line-colums d-flex align-items-center">
+        <span
+          [ngClass]="header.icon"
+          [ngStyle]="{ color: header.iconColor }"
+          class="me-1"
+        >
+        </span>
+        <span
+          class="fs-6"
+          [ngStyle]="{ color: header.textColor }"
+          [ngbTooltip]="data.headerText"
+          container="body"
+          placement="bottom"
+        >
+          {{ data.headerText }}
+        </span>
+      </div>
+    </ng-template>
   </div>
 </ng-template>
 <ng-template #cardTitleTmp let-data> dsfsdfdsf </ng-template>

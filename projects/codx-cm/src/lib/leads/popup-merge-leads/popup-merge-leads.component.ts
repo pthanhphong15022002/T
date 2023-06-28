@@ -149,7 +149,7 @@ export class PopupMergeLeadsComponent implements OnInit {
     options.predicates =
       'Status!=@0 and RecID!=@1 and RecID!=@2 and IsDuplicated==false';
     options.dataValues =
-      '7' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
+      '11' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     lst =
