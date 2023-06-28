@@ -116,13 +116,13 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
     this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
     this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
-    if (this.leadOne) {
-      this.lstContactOne = await this.getContacts(this.leadOne?.recID);
-      this.lstAddressOne = await this.getListAddress(
-        this.dialog?.formModel?.entityName,
-        this.leadOne?.recID
-      );
-    }
+    // if (this.leadOne) {
+    //   this.lstContactOne = await this.getContacts(this.leadOne?.recID);
+    //   this.lstAddressOne = await this.getListAddress(
+    //     this.dialog?.formModel?.entityName,
+    //     this.leadOne?.recID
+    //   );
+    // }
     this.gridViewSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
     );
