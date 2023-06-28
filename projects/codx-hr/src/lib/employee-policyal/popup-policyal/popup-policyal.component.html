@@ -433,6 +433,7 @@
             field="transferToDay"
             [formModel]="formModel"
             [Group]="formGroup"
+            (valueChange)="onChangeSelectTransferDay($event)"
           ></codx-input>
         </div>
         <div class="col-3">
@@ -441,6 +442,7 @@
               field="transferToMonth"
               [formModel]="formModel"
               [Group]="formGroup"
+            (valueChange)="onChangeSelectTransferMonth($event)"
             ></codx-input>
           </div>
       </div>
