@@ -108,12 +108,12 @@ export class ViewsTabsDetailsComponent
       this.kanban = (this.view.currentView as any)?.kanban;
   }
 
-  getPropertiesHeader(data, type) {
+  getPropertiesHeader(data) {
     if (!this.listHeader || this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
-    return find ? find[type] : '';
+    return find;
   }
 
   getPropertyColumn() {
