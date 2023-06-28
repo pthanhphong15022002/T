@@ -55,6 +55,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   dataRepond:any;
   dataSVRepondents:any;
   select:any;
+  isPublic:any;
   html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -175,13 +176,15 @@ export class ReviewComponent extends UIComponent implements OnInit {
       if(data?.settings?.backgroudColor) {
         this.backgroudColor = data?.settings?.backgroudColor;
       }
+      if(data?.settings?.isPublic) {
+        this.isPublic = data?.settings?.isPublic;
+      }
     }
   }
   getDataAnswer(lstData) {
     if (lstData) {
       if(this.repondID)
       {
-        debugger
         lstData.forEach((x) => {
           x.children.forEach((y) => {
             var answers = this.dataRepond.filter(r=>r.questionID == y?.recID);
@@ -553,12 +556,19 @@ export class ReviewComponent extends UIComponent implements OnInit {
     }
     else if(!check)
     {
-      this.respondents.email = this.user?.email;
-      this.respondents.respondent = this.user?.userName;
+      if(this.isPublic != '1')
+      {
+        this.respondents.email = this.user?.email;
+        this.respondents.respondent = this.user?.userName;
+        this.respondents.objectID = this.user?.userID;
+        this.respondents.createdBy = this.user?.userID;
+      }
+      else
+      {
+        this.respondents.createdBy = "System";
+      }
       this.respondents.responds = respondQuestion;
-
       this.respondents.objectType = '';
-      this.respondents.objectID = '';
       this.respondents.finishedOn = new Date();
       this.respondents.transID = this.recID;
       this.respondents.scores = 0;
