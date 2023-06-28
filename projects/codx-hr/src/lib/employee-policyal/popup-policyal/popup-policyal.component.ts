@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CallFuncService, CodxFormComponent, DialogData, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent } from 'codx-core';
+import { CRUDService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-
+import {
+  EditSettingsModel,
+} from '@syncfusion/ej2-angular-grids';
 @Component({
   selector: 'lib-popup-policyal',
   templateUrl: './popup-policyal.component.html',
@@ -13,11 +15,37 @@ export class PopupPolicyalComponent
   extends UIComponent
   implements OnInit
 {
+  @ViewChild('gridView1') gridView1: CodxGridviewV2Component;
+  @ViewChild('gridView2') gridView2: CodxGridviewV2Component;
+
+  @ViewChild('tmpGrid1Col1', { static: true })
+  tmpGrid1Col1: TemplateRef<any>;
+  @ViewChild('tmpGrid1Col2', { static: true })
+  tmpGrid1Col2: TemplateRef<any>;
+  @ViewChild('headTmpGrid1Col1', { static: true }) headTmpGrid1Col1: TemplateRef<any>;
+  @ViewChild('headTmpGrid1Col2', { static: true }) headTmpGrid1Col2: TemplateRef<any>;
+
   expandTransferNextYear = false;
   transferNextYearDisabled = true;
 
+  editSettings: EditSettingsModel = {
+    allowEditing: true,
+    allowAdding: true,
+    allowDeleting: true,
+    mode: 'Normal',
+  };
+
+  ejsgrid
+  loadGridview1 = false;
+  dataSourceGridView1 : any = [];
+
+  predicate1: any;
+  predicate2: any;
+
   expandIsMonth = false;
   isMonthDisabled = true;
+  columnGrid1: any;
+  columnGrid2: any;
 
   formModel: FormModel;
   formGroup: FormGroup;
@@ -95,6 +123,21 @@ export class PopupPolicyalComponent
   }
 
   onInit(): void {
+    if(!this.columnGrid1){
+      this.columnGrid1 = [
+        {
+          headerTemplate: this.headTmpGrid1Col1,
+          template: this.tmpGrid1Col1,
+          width: '150',
+        },
+        {
+          headerTemplate: this.headTmpGrid1Col2,
+          template: this.tmpGrid1Col2,
+          width: '150',
+        }
+      ]
+    }
+
     if (!this.formModel)
       this.hrSevice.getFormModel(this.funcID).then((formModel) => {
         if (formModel) {
@@ -118,6 +161,10 @@ export class PopupPolicyalComponent
             this.initForm();
           }
         });
+  }
+
+  clickMF(event, data){
+
   }
 
   initForm() {
@@ -257,6 +304,31 @@ export class PopupPolicyalComponent
     }
   }
 
+  onChangeFirstMonthType(evt){
+    if(parseInt(evt.data) > 1){
+      this.GetPolicyDetailByFirstMonthType(evt.data).subscribe((res) => {
+        this.dataSourceGridView1 = res;
+      });
+      this.loadGridview1 = true;
+      // this.predicate1 = `PolicyType == 'AL' and PolicyID == "${this.alpolicyObj.policyID}" && ItemType == 'ALFirstMonthType' && ItemSelect == "${evt.data}"`;
+      // (this.gridView1.dataService as CRUDService).setPredicates([this.predicate1],[]);
+    }
+    else{
+      this.loadGridview1 = false;
+    }
+    this.df.detectChanges();
+  }
+
+  GetPolicyDetailByFirstMonthType(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'GetPolicyDetailByFirstMonthTypeAsync',
+      ['AL', this.alpolicyObj.policyType, 'ALFirstMonthType', data]
+    );
+  }
+
   onClickExpandIsMonth(){
     this.expandIsMonth = !this.expandIsMonth;
   }
@@ -265,8 +337,16 @@ export class PopupPolicyalComponent
 
   }
 
+  onAddNewGrid1($evt){
 
+  }
 
+  onEditGrid1(evt){
 
+  }
+
+  onDeleteGrid1(evt){
+
+  }
 }
 
