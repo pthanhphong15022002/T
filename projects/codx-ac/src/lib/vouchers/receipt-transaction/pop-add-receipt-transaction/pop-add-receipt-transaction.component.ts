@@ -977,6 +977,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   // }
   
   loadItemID(value) {
+    let isFocus = true;
+    let id;
     let sArray = [
       'packingspecifications',
       'styles',
@@ -984,17 +986,27 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       'itembatchs',
       'itemseries',
     ];
-    var element = document
+    var elements = document
       .querySelector('.tabLine')
       .querySelectorAll('codx-inplace');
-    element.forEach((e) => {
+    elements.forEach((e) => {
       var input = window.ng.getComponent(e) as CodxInplaceComponent;
       if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
         input.value = "";
         input.predicate = 'ItemID="' + value + '"';
         input.loadSetting();
+        if(isFocus)
+        {
+          id = e.id;
+          isFocus = false;
+        }
       }
     });
+    var element = document.getElementById(id);
+    var codxInplace = window.ng.getComponent(element) as CodxInplaceComponent;
+    setTimeout(() => {
+      codxInplace.enableEditMode();
+    }, 500);
   }
 
   loadPredicate(visibleColumns, data)
