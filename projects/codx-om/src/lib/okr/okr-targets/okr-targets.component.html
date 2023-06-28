@@ -195,7 +195,7 @@
         </span>
       </div>
     </div>
-    <div *ngIf="this.totalOB >0; else defaultEmpty">
+    <div *ngIf="totalOB >0; else defaultEmpty">
       <div *ngFor="let item of dataOKR">
         <div *ngIf="item?.listOKR?.length>0">
           <span *ngIf="item?.okrGroupName!=null" class="fs-5 fw-bold">{{item?.okrGroupName}}</span>
@@ -211,6 +211,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </div>
 <ng-template #templateTreeView let-item>

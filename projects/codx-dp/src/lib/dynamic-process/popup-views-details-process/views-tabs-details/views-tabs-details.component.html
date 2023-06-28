@@ -1,0 +1,58 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  [idField]="idField"
+  [autoLoad]="true"
+  [viewActiveType]="viewMode"
+  [toolbarDisplay]="false"
+></codx-views>
+
+<!-- KANBAN -->
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    [hideMF]="true"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [typeMF]="'hover'"
+    [titleTmp]="cardTitleTmp"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="footerKanban"
+    [dataItem]="data"
+    [rootData]="data"
+  >
+  </codx-card-img>
+</ng-template>
+
+<ng-template #viewColumKaban let-data>
+  <div
+    class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
+    [id]="data?.keyField"
+  >
+    <div class="line-colums d-flex align-items-center">
+      <span
+        [ngClass]="getPropertiesHeader(data, 'icon')"
+        [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+        class="me-1"
+      >
+      </span>
+      <span
+        class="fs-6"
+        [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
+        [ngbTooltip]="data.headerText"
+        container="body"
+        placement="bottom"
+      >
+        {{ data.headerText }}
+      </span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #cardTitleTmp let-data></ng-template>
+<ng-template #footerKanban let-data></ng-template>
