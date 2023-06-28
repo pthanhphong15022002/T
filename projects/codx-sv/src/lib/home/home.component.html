@@ -6,8 +6,9 @@
     <div class="p-2 bg-body body-survey px-5">
       <div class="d-flex justify-content-between align-items-center py-2">
         <codx-label
-          default="Biểu mẫu"
+          default="Khảo sát mẫu"
           fiedName="lblSVTitleNew"
+          formName="SVTitleNew"
           class="fw-bold fs-5"
         >
         </codx-label>
@@ -23,17 +24,16 @@
           </div>
         </div>
       </div>
-      <div class="d-flex align-items-center justify-content-center div-title">
+      <div class="d-flex align-items-center div-title">
         <div class="card-survey rounded-2" (click)="createNewSurvey()">
           <img src="./assets/themes/sv/default/img/add-survey.png" class="rounded-2"/>
           <div class="py-2 fw-bold">
             <span>Trống</span>
           </div>
         </div>
-
         <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length>0">
-          <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem">
-            <img src="./assets/themes/sv/default/img/avatar-default.png" class="rounded-2"/>
+          <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem" (click)="update(item)">
+            <img [src]="getImgSrc(item , 'card')" class="rounded-2"/>
             <div class="py-2 fw-bold">
               <span>{{item?.title}}</span>
             </div>
@@ -53,7 +53,12 @@
                 </div>
               </ng-template>
               <ng-template #content>
-                <ng-container *ngTemplateOutlet="tabCreate"></ng-container>
+                <ng-container *ngIf="tabIndex == 'SVT01'">
+                  <ng-container  *ngTemplateOutlet="tabCreate"></ng-container>
+                </ng-container>
+                <ng-container *ngIf="tabIndex == 'SVT02'">
+                  <ng-container  *ngTemplateOutlet="tabRepondent"></ng-container>
+                </ng-container>
               </ng-template>
            </e-tabitem>
           </e-tabitems>
@@ -81,47 +86,22 @@
   </div>
 </ng-template>
 
-<ng-template #templateListCard let-item>
-  <div (click)="update(item)">
-    <codx-card-img
-      cardCss="border rounded-2 card-img-mwp img-storage w-200px h-200px"
-      (clickMF)="clickMF($event, item)"
-      [imageSrc]="'./assets/themes/sv/default/img/avatar-default.png'"
-      imgCss="h-150px w-200px mb-2 "
-      [titleTmp]="titleTmp"
-      [imgOn]="item?.modifiedOn"
-      [desc2]="item.memo"
-      cssDes2="line-clamp line-clamp-1"
-      imageWidth="223"
-      [formModel]=""
-      [dataItem]="item"
-      [imageObjName]="item.title"
-    >
-    </codx-card-img>
-  </div>
-  <ng-template #titleTmp>
-    <div class="d-flex flex-column">
-      <div class="d-flex align-item-center w-170px mt-1">
-        <span class="line-clamp line-clamp-1 fw-bold">{{item.title}}</span>
-      </div>
-      <div class="d-flex align-item-center">
-        <i class="icon-i-file-earmark-text-fill text-primary icon-15" ></i>
-        <span class="ms-2 fs-7 text-gray-500">{{getStatus(item)}}</span>
-      </div>
-    </div>
-  </ng-template>
-</ng-template>
+
 
 <ng-template #tabCreate>
-  <div *ngIf="dataSurveys" class="row w-100">
-    <div class="col-2 mt-2" *ngFor="let item of dataSurveys">
+  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100">
+    <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
       <ng-container *ngTemplateOutlet=" templateListCard; context: { $implicit: item }"></ng-container>
     </div>  
   </div>
 </ng-template>
 
-<ng-template #tabAnswer>
-  
+<ng-template #tabRepondent>
+  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100">
+    <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
+      <ng-container *ngTemplateOutlet=" templateListCardRepondent; context: { $implicit: item }"></ng-container>
+    </div>  
+  </div>
 </ng-template>
 
 <ng-template #tabBookMark>
@@ -134,4 +114,60 @@
 
 <ng-template #tabReport>
   
+</ng-template>
+
+<ng-template #templateListCard let-item>
+  <div (click)="update(item)">
+    <codx-card-img
+      cardCss="border rounded-2 card-img-mwp img-storage w-200px h-200px"
+      (clickMF)="clickMF($event, item)"
+      [imageSrc]="getImgSrc(item , 'card')"
+      imgCss="h-150px w-110px"
+      [titleTmp]="titleTmp"
+      cssDes2="line-clamp line-clamp-1"
+      imageWidth="223"
+      [bgColor]="getStatus(item,'bg')"
+    >
+    </codx-card-img>
+  </div>
+  <ng-template #titleTmp>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-item-center w-170px mt-1">
+        <span class="line-clamp line-clamp-1 fw-bold">{{item.title}}</span>
+      </div>
+      <div class="d-flex align-item-center">
+        <i class="icon-i-file-earmark-text-fill icon-15 text-primary"></i>
+        <span class="ms-2 fs-7 text-gray-500">{{getStatus(item,"status")}}</span>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #templateListCardRepondent let-item>
+  <div (click)="updateRepond(item)">
+    <codx-card-img
+      cardCss="border rounded-2 card-img-mwp img-storage w-200px h-200px"
+      (clickMF)="clickMF($event, item)"
+      imgCss="h-150px w-110px"
+      [imageSrc]="getImgSrc(item , 'repondent')"
+      [titleTmp]="titleTmpRepondent"
+      cssDes2="line-clamp line-clamp-1"
+      imageWidth="223"
+      [formModel]=""
+      [dataItem]="item"
+      [bgColor]="getBgRepondent(item)"
+    >
+    </codx-card-img>
+  </div>
+  <ng-template #titleTmpRepondent>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-item-center w-170px mt-1">
+        <span class="line-clamp line-clamp-1 fw-bold">{{item?.unbounds?.title}}</span>
+      </div>
+      <div class="d-flex align-item-center">
+        <i class="icon-i-clock icon-14 text-primary"></i>
+        <span class="ms-2 fs-7 text-gray-500">{{item?.createdOn | date: "dd/MM/yyyy"}}</span>
+      </div>
+    </div>
+  </ng-template>
 </ng-template>

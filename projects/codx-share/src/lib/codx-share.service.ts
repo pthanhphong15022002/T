@@ -795,7 +795,7 @@ export class CodxShareService {
       return (
         environment.urlUpload +
         '/api/' +
-        arr[1] +
+        this.user?.tenant+
         '/thumbs/' +
         uploadID +
         '/' +

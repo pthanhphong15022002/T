@@ -578,8 +578,7 @@ export class IncommingComponent
       dataValues = [status];
     }
     this.view.dataService
-      .setPredicates(predicates, dataValues)
-      .subscribe((item) => {
+      .setPredicates(predicates, dataValues,item => {
         this.lstDtDis = item[0];
       });
     this.activeDiv = status;

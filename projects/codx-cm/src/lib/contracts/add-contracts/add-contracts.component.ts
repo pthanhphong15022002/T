@@ -153,7 +153,7 @@ export class AddContractsComponent implements OnInit {
     this.listTypeContract = contractService.listTypeContract;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
-        this.headerTest = this.headerTest + ' ' + f?.defaultName;
+        this.headerTest = this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
       }
     });
   }
@@ -212,7 +212,7 @@ export class AddContractsComponent implements OnInit {
 //#region setData
   setDataContract(data) {
     if (this.action == 'add') {
-      this.contracts = data;
+      this.contracts = data ? data : new CM_Contracts();
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
@@ -334,6 +334,7 @@ export class AddContractsComponent implements OnInit {
       (quotationLine) => quotationLine.recID == e?.quotationLineIdNew
     );
     if (quotationLine) {
+      quotationLine.transID = null;
       quotationLine.contractID = this.contracts?.recID;
       this.listQLineOfContractAdd.push(quotationLine);
     }
@@ -354,6 +355,8 @@ export class AddContractsComponent implements OnInit {
       });
     }
     this.contracts.contractAmt = totals;
+    this.contracts.remainAmt = Number(this.contracts.contractAmt) - Number(this.contracts.paidAmt);
+
     this.quotations['totalSalesAmt'] = totalSales;
     this.quotations['totalAmt'] = totals;
     this.quotations['totalTaxAmt'] = totalVAT;
@@ -701,11 +704,14 @@ addPayHistory(payment) {
 
 viewPayHistory(payment, width: number, height: number) {
   let dataInput = {
+    isSave:false,
     payment,
     listPaymentHistory: this.listPaymentHistory,
     listPaymentAdd: this.listPaymentAdd,
     listPaymentEdit: this.listPaymentEdit,
-    listPaymentDelet: this.listPaymentDelete,
+    listPaymentDelete: this.listPaymentDelete,
+    contracts: this.contracts,
+    listPayment: this.listPayment,
   };
 
   let option = new DialogModel();

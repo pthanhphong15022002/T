@@ -41,7 +41,7 @@ export class PopupViewPlanVersionComponent extends UIComponent {
   loadedData: boolean;
   curUser: any;
   funcID: any;
-  isCollapsed = true;
+  isCollapsed = false;
   totalOB=0;
   constructor(
     private injector: Injector,
@@ -99,43 +99,66 @@ export class PopupViewPlanVersionComponent extends UIComponent {
 
 
   calculateStatistical(){
-    if(this.dataOKR!=null){
+    if (this.dataOKR != null) {
       var tempValue = new OM_Statistical();
       let countNotStartOB = 0;
       let countStartingOB = 0;
       let countDoneOB = 0;
-      for(let gr of this.dataOKR){
-        for(let ob of gr.listOKR){
-          tempValue.totalOB+=1;
-          if(ob?.progress == 0) countNotStartOB+=1;
-          if(ob?.progress > 0 && ob?.progress < 100) countStartingOB+=1;
-          if(ob?.progress ==100) countDoneOB+=1;
-          if(ob?.category=="5") tempValue.totalHighOB+=1;
-          if(ob?.progress==100) tempValue.obDone+=1;
-          if(ob?.category=="5" && ob?.progress==100) tempValue.highOBDone+=1;         
+      for (let gr of this.dataOKR) {
+        for (let ob of gr.listOKR) {
+          tempValue.totalOB += 1;
+          if (ob?.progress == 0) countNotStartOB += 1;
+          if (ob?.progress > 0 && ob?.progress < 100) countStartingOB += 1;
+          if (ob?.progress == 100) countDoneOB += 1;
+          if (ob?.category == '5') tempValue.totalHighOB += 1;
+          if (ob?.progress == 100) tempValue.obDone += 1;
+          if (ob?.category == '5' && ob?.progress == 100)
+            tempValue.highOBDone += 1;
 
-          if(ob?.items?.length>0){
-            for(let kr of ob?.items){
-              if(kr?.notiCheckIn) tempValue.krLateCheckIn+=1;
-              if(kr?.current > kr?.actual) tempValue.krLateProgress+=1;
-              if(kr?.current == kr?.actual) tempValue.krInProgress+=1;
-              if(kr?.current < kr?.actual) tempValue.krOverProgress+=1;
-              if(kr?.items?.length>0){
-                for(let skr of kr?.items){
-                  if(skr?.nextCheckIn!=null && new Date(skr?.nextCheckIn) < new Date) tempValue.krLateCheckIn+=1;
-                  if(skr?.current > skr?.actual) tempValue.krLateProgress+=1;
-                  if(skr?.current == skr?.actual) tempValue.krInProgress+=1;
-                  if(skr?.current < skr?.actual) tempValue.krOverProgress+=1;
-                }
-              }
+          if (ob?.items?.length > 0) {
+            for (let kr of ob?.items) {
+              if (kr?.notiCheckIn) tempValue.krLateCheckIn += 1;
+              if (kr?.current > kr?.actual) tempValue.krLateProgress += 1;
+              if (
+                kr?.current == kr?.actual &&
+                kr?.current > 0 &&
+                kr?.actual > 0
+              )
+                tempValue.krInProgress += 1;
+              if (kr?.current < kr?.actual) tempValue.krOverProgress += 1;
+              //if(kr?.items?.length>0){
+              // for(let skr of kr?.items){
+              //   if(skr?.kr?.notiCheckIn) tempValue.krLateCheckIn+=1;
+              //   if(skr?.current > skr?.actual) tempValue.krLateProgress+=1;
+              //   if(skr?.current == skr?.actual) tempValue.krInProgress+=1;
+              //   if(skr?.current < skr?.actual) tempValue.krOverProgress+=1;
+              // }
+              //}
             }
           }
         }
       }
-      tempValue.percentOBNotStart = (countNotStartOB/tempValue.totalOB*100).toFixed(1);
-      tempValue.percentOBStarting = (countStartingOB/tempValue.totalOB*100).toFixed(1);
-      tempValue.percentOBDone = (countDoneOB/tempValue.totalOB*100).toFixed(1);
-      this.value= tempValue;
+      if(tempValue?.totalOB>0){
+        tempValue.percentOBNotStart = (
+          (countNotStartOB / tempValue?.totalOB) *
+          100
+        ).toFixed(1);
+        tempValue.percentOBStarting = (
+          (countStartingOB / tempValue?.totalOB) *
+          100
+        ).toFixed(1);
+        tempValue.percentOBDone = (
+          (countDoneOB / tempValue?.totalOB) *
+          100
+        ).toFixed(1);
+        
+      }
+      else{      
+        tempValue.percentOBNotStart ='0';
+        tempValue.percentOBStarting ='0';
+        tempValue.percentOBDone ='0';
+      }
+      this.value = tempValue;
       this.detectorRef.detectChanges();
     }
   }
@@ -168,6 +191,11 @@ export class PopupViewPlanVersionComponent extends UIComponent {
     this.isCollapsed = collapsed;
     this.detectorRef.detectChanges();
   }
+
+  closeDialog() {
+    this.dialogRef && this.dialogRef.close();
+  }
+
   onSaveForm() {}
   
 }

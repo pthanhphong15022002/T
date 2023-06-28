@@ -166,12 +166,12 @@
       rangeColorValuePath="quantity"
       [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
       [leafItemSettings]="{
-        labelPath: 'refName',
+        labelPath: 'refName'
       }"
       [tooltipSettings]="{
         visible: true,
         template:
-          '<div><span >${refName}: </span><span >${quantity}</span></div>',
+          '<div><span >${refName}: </span><span >${quantity}</span></div>'
       }"
     >
     </ejs-treemap>
@@ -188,7 +188,7 @@
       #circulargauge=""
       [tooltip]="tooltip"
       [legendSettings]="{
-        visible: true,
+        visible: true
       }"
     >
       <e-axes>
@@ -490,11 +490,7 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div
-    class="w-100 h-100"
-    id="12"
-    title="Thống kê công việc hoàn thành và số giờ thực hiện"
-  >
+  <div class="w-100 h-100" id="12" title="Thống kê công việc hoàn thành và số giờ thực hiện">
     <ejs-chart
       style="display: block"
       align="center"
@@ -837,7 +833,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="10" title="Tỷ lệ công việc được giao">
+  <div class="w-100 h-100" id="10" title="Thống kê công việc hoàn thành và số giờ thực hiện">
     <ejs-chart
       style="display: block"
       align="center"

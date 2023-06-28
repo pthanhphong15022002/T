@@ -13,11 +13,11 @@
         <codx-input type="share" field="addUser" [refValue]="'DM001'" [showInput]="true" class="w-100" (valueChange)="valueChange($event,'to')"> </codx-input>
     </div>
     <div class="d-flex align-items-center py-6">
-        <codx-label default="Tiêu đề"  [fiedName]="'lblSVSubject'" [formName]="'SVSubject'" class="fs-5-sm w-50px"></codx-label> :
-        <codx-input type="text" class="ms-5" ngClass="w-sv-subject" [field]="'subject'" (valueChange)="valueChange($event,'subject')"></codx-input>
+        <codx-label default="Tiêu đề"  [fiedName]="'lblSVSubject'" [formName]="'SVSubject'" class="fs-5-sm w-50px" ></codx-label> :
+        <codx-input type="text" class="ms-5" ngClass="w-sv-subject" [field]="'subject'" (valueChange)="valueChange($event,'subject')" [crrValue]="subject"></codx-input>
     </div>
     <div>
-        <codx-input type="textarea"  ngClass="w-100" [height]="300" [field]="'messages'" (valueChange)="valueChange($event,'content')"></codx-input>
+        <codx-input type="textarea"  ngClass="w-100" [height]="300" [field]="'messages'" (valueChange)="valueChange($event,'content')" [crrValue]="messages"></codx-input>
     </div>
 </ng-template>
 <ng-template #footer>

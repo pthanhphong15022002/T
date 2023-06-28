@@ -438,13 +438,13 @@ export class CodxOmService {
     );
   }
   //Lấy danh sách Bộ mục tiêu
-  getOKRPlans(periodID: string, interval: string, year: any) {
+  getOKRPlans(dataRequest:any,periodID: string, interval: string, year: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKRPlan,
       'GetAsync',
-      [periodID, interval, year]
+      [dataRequest,periodID, interval, year]
     );
   }
   getOKRPlansByID(recID: any) {
@@ -722,13 +722,13 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRHavedLinks(recID: string) {    
+  getOKRHavedLinks(recID: string,refType:string) {    
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'GetOKRHavedLinksAsync',
-      [recID]
+      [recID,refType]
     );
   }
   //Lấy sơ đồ cây OKR
