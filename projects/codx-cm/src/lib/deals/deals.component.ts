@@ -445,7 +445,7 @@ export class DealsComponent
                 more.disabled = true;
                 break;
               case 'CM0201_7':
-                if (data.closed) {
+                if (data.closed || this.checkMoreReason(data)) {
                   more.disabled = true;
                 }
                 break;
@@ -1515,7 +1515,7 @@ export class DealsComponent
       });
   }
 
-  onLoading() {
+  onLoading(e) {
     if (!this.funCrr) return;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };

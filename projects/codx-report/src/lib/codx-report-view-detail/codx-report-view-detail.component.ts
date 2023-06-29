@@ -1,7 +1,7 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthStore, DialogModel, LayoutService, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { AuthStore, DialogModel, LayoutService, PageLink, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.component';
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
 
@@ -80,35 +80,36 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       // },
     ];
 
-    this.routerNg.events.subscribe((event: any)=>{
-      if(event instanceof NavigationEnd){
-        if(event.url.includes('detail')){
-          let funcID = event.url.split('/').pop();
-          this.funcID = funcID;
-          this.pageTitle.setBreadcrumbs([]);
-          this.layout.showIconBack = true;
-          this.pageTitle.setTitle('');
-          this.pageTitle.setSubTitle('')
-          //this.funcID = this.router.snapshot.params['funcID'];
-          this.getReport(funcID);
-        }
-        else if(event.url.includes(this.rootFunction.funtionID)){
+    // this.routerNg.events.subscribe((event: any)=>{
+    //   if(event instanceof NavigationEnd){
+    //     if(event.url.includes('detail')){
+    //       debugger
+    //       let funcID = event.url.split('/').pop();
+    //       this.funcID = funcID;
+    //       //this.pageTitle.setBreadcrumbs([]);
+    //       this.layout.showIconBack = true;
+    //       this.pageTitle.setRootNode(this.rootFunction.customName);
 
-          this.pageTitle.setTitle(this.rootFunction.customName);
-          this.pageTitle.setSubTitle(this.rootFunction.customName);
-          this.pageTitle.setBreadcrumbs([]);
-          this.setBreadCrumb(this.funcItem,true)
-        }
-        this.changeDetectorRef.detectChanges();
-      }
-    })
+    //       //this.funcID = this.router.snapshot.params['funcID'];
+    //       this.getReport(funcID);
+    //     }
+    //     else if(event.url.includes(this.rootFunction.funtionID)){
+
+    //       //this.pageTitle.setTitle(this.rootFunction.customName);
+    //       //this.pageTitle.setSubTitle(this.rootFunction.customName);
+    //       //this.pageTitle.setBreadcrumbs([]);
+    //       this.setBreadCrumb(this.funcItem,true)
+    //     }
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // })
 
 
   }
   viewChanged(e:any){
     this.funcID = this.router.snapshot.params['funcID'];
     this.viewBase.moreFuncs = this.moreFc;
-    this.pageTitle.setBreadcrumbs([]);
+    //this.pageTitle.setBreadcrumbs([]);
 
     if(this.funcID){
       this.getReport(this.funcID);
@@ -182,11 +183,17 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
       if(res){
         this.rootFunction = res;
+        this.pageTitle.setRootNode(this.rootFunction.customName)
+        let parent: PageLink = {
+          title: this.rootFunction.customName,
+          path: this.rootFunction.module.toLowerCase()+'/report/' + this.rootFunction.functionID
+        }
+        this.pageTitle.setParent(parent)
         this.getReportList(this.funcItem.moduleID, this.funcItem.reportType);
       }
     })
   }
-  getReport(funcID:string){
+getReport(funcID:string){
     this.api
     .execSv(
       'rptsys',
@@ -200,35 +207,46 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         this.funcItem = res;
 
         this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
-
+        this.pageTitle.setSubTitle("")
 
       }
     });
   }
   setBreadCrumb(func:any,deleteChild:boolean=false){
     if(func){
-      let eleHeader = document.querySelector('codx-header');
-      if(eleHeader){
-        let titleEle = eleHeader.querySelector('codx-page-title');
-          if(titleEle){
-            (titleEle as HTMLElement).innerHTML='';
+      !deleteChild && this.pageTitle.setSubTitle(func.customName)
+      deleteChild && this.pageTitle.setSubTitle("");
+      // let eleHeader = document.querySelector('codx-header');
+      // if(eleHeader){
+      //   let titleEle = eleHeader.querySelector('codx-page-title');
+      //     if(titleEle){
+      //       (titleEle as HTMLElement).innerHTML='';
 
-            if(!titleEle.querySelector('#clonedBreadCrumb') && !deleteChild){
-              let clone = this.breadCrumb.nativeElement
-              clone.id = 'clonedBreadCrumb';
-              if(clone.classList.contains('invisible')) clone.classList.remove('invisible')
-              titleEle.appendChild(clone);
-            }
-            if(deleteChild){
-              titleEle.querySelector('#clonedBreadCrumb')?.remove();
-            }
-          }
-      }
+      //       if(!titleEle.querySelector('#clonedBreadCrumb') && !deleteChild){
+      //         let clone = this.breadCrumb.nativeElement
+      //         clone.id = 'clonedBreadCrumb';
+      //         if(clone.classList.contains('invisible')) clone.classList.remove('invisible')
+      //         titleEle.appendChild(clone);
+      //       }
+      //       if(deleteChild){
+      //         titleEle.querySelector('#clonedBreadCrumb')?.remove();
+      //       }
+      //     }
+      // }
     }
   }
   getReportList(moduleID:string,reportType:string){
     this.api.execSv("rptsys",'Codx.RptBusiniess.SYS',"ReportListBusiness","GetReportsByModuleAsync",[reportType,moduleID]).subscribe((res:any)=>{
       this.orgReportList = res;
+      let arrChildren : Array<PageLink>=[];
+      for(let i=0 ;i< this.orgReportList.length;i++){
+        let pageLink: PageLink = {
+          title: this.orgReportList[i].customName,
+          path:this.rootFunction.module.toLowerCase()+'/report/detail/' + this.orgReportList[i].reportID
+        };
+       arrChildren.push(pageLink);
+      }
+      this.pageTitle.setChildren(arrChildren);
       this.reportList = this.orgReportList.filter((x:any)=>x.reportID != this.funcItem.reportID);
       this.setBreadCrumb(this.funcItem);
     })

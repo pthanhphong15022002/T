@@ -167,15 +167,15 @@
               <span class="fw-bold text-dark text-nowrap">
                 <codx-label
                   class="label-colon"
-                  fiedName="RefID"
+                  fiedName="DealID"
                   [formModel]="formModel"
                 ></codx-label
               ></span>
               <span
                 class="text-gray-700"
                 [innerHTML]="
-                  itemSelected?.refID
-                    | formatvalue : formModel : 'refID'
+                  itemSelected?.dealID
+                    | formatvalue : formModel : 'dealID'
                     | async
                 "
               ></span>
@@ -344,6 +344,5 @@
     [listContract]="listContract"
     [type]="'quotation'"
   >
-    </list-contracts
-  >
+  </list-contracts>
 </ng-template>

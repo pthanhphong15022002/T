@@ -124,8 +124,6 @@
           <codx-input
             [formModel]="dialog.formModel"
             field="remainAmt"
-            type="number"
-            [min]="0"
             [crrValue]="paymentHistory?.remainAmt"
             (valueChange)="valueChangeText($event)"
             [disabled]="true"
@@ -186,10 +184,11 @@
         <div class="">
           <ejs-numerictextbox
             [value]="percent"
-            format="###'%'"
+            format="###.#'%'"
             min="0"
             max="100"
             (change)="valueChangePercent($event)"
+            (click)="clickTesk('percentChanged')"
             disabled="false"
           ></ejs-numerictextbox>
         </div>
@@ -210,6 +209,7 @@
             [min]="0"
             [crrValue]="paymentHistory?.paidAmt"
             (valueChange)="valueChangeText($event)"
+            (click)="clickTesk('valueChanged')"
           >
           </codx-input>
         </div>

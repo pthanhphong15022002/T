@@ -9,8 +9,11 @@ import {
   UIComponent,
   CRUDService,
   RequestOption,
+  RequestModel,
+  ResourceModel,
 } from 'codx-core';
 import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-employee.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-employee-list',
@@ -27,6 +30,8 @@ export class EmployeeListComponent extends UIComponent {
   sysMoreFunc: any[] = [];
   grvSetup: any;
   funcIDEmpInfor: string = 'HRT03b';
+  orgUnitID: string = '';
+  request: ResourceModel;
   // template columns grid
   @ViewChild('colEmployee', { static: true }) colEmployee: TemplateRef<any>;
   @ViewChild('colContact', { static: true }) colContact: TemplateRef<any>;
@@ -35,18 +40,22 @@ export class EmployeeListComponent extends UIComponent {
 
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
+
+  @ViewChild('tempTree') tempTree: TemplateRef<any>;
+  @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
   // template any
 
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_Employees';
   className = 'EmployeesBusiness';
-  method = 'GetModelFormEmployAsync';
+  method = 'GetListEmployeeAsync';
 
-  constructor(
-    private injector: Injector,
-  ) {
+  constructor( private injector: Injector,
+    private routerActive: ActivatedRoute,
+    ) {
     super(injector);
+    this.funcID = this.routerActive.snapshot.params['funcID'];
   }
   onInit(): void {
     this.router.params.subscribe((param: any) => {
@@ -64,15 +73,35 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
+    this.request = new ResourceModel();
+    this.request.service = 'HR';
+    this.request.assemblyName = 'ERM.Business.HR';
+    this.request.className = 'EmployeesBusiness';
+    this.request.method = 'GetModelFormEmployAsyncNew';
+    this.request.autoLoad = false;
+    this.request.parentIDField = 'ParentID';
+    this.request.idField = 'orgUnitID';
+
     this.views = [
       {
         id: '1',
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
+        },
+      },
+      {
+        id: '2',
+        type: ViewType.tree_masterdetail,
+        sameData: true,
+        //request: this.request,
+        model: {
+          resizable: true,
+          template: this.tempTree,
+          panelRightRef: this.tmpMasterDetail,
+          resourceModel: { parentIDField: 'ParentID' , idField: 'OrgUnitID'},
         },
       },
     ];

@@ -1,20 +1,17 @@
 import {
-  ChangeDetectorRef,
   Component,
-  OnInit,
+  Injector,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  ApiHttpService,
   ButtonModel,
-  CacheService,
   CodxListviewComponent,
-  DataRequest,
   FormModel,
+  ResourceModel,
+  UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { catchError, map, Observable, of, finalize, Subscription } from 'rxjs';
@@ -25,8 +22,8 @@ import { catchError, map, Observable, of, finalize, Subscription } from 'rxjs';
   styleUrls: ['./emp-contacts.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EmpContactsComponent implements OnInit {
-  options = new DataRequest();
+export class EmpContactsComponent extends UIComponent {
+  console = console;
   actionSub: Subscription;
   displayCard = false;
   predicate = 'Status<@0';
@@ -50,24 +47,27 @@ export class EmpContactsComponent implements OnInit {
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
 
+  @ViewChild('tmpTree') tmpTree: TemplateRef<any>;
+  @ViewChild('tmpTreeItemDetail') tmpTreeItemDetail: TemplateRef<any>;
+  @ViewChild('tmpTreeItemDetailCard') tmpTreeItemDetailCard: TemplateRef<any>;
+
+
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
-  constructor(
-    private api: ApiHttpService,
-    private changedt: ChangeDetectorRef,
-    private cache: CacheService
-  ) {}
 
-  ngOnDestroy(): void {}
+  request: ResourceModel;
+  itemSelected: any;
+  grvSetup: any;
+  funcID: string = '';
 
-  ngOnInit(): void {
-    this.options.pageLoading = true;
-    this.options.pageSize = 50;
-    this.options.entityName = 'HR_Employees';
-    this.options.funcID = 'HR001';
-    this.options.page = 1;
-    this.options.searchText = '';
-    this.options.unFavorite = true;
+  constructor(inject: Injector,
+    //private changedt: ChangeDetectorRef,
+  ) { super(inject); }
+
+  ngOnDestroy(): void { }
+
+  onInit(): void {
+    this.funcID = this.router.snapshot.params['funcID'];
     this.buttons = [
       {
         id: '1',
@@ -118,9 +118,19 @@ export class EmpContactsComponent implements OnInit {
         width: 140,
       },
     ];
+    this.getFunction('HRT03a1')
   }
 
   ngAfterViewInit(): void {
+    this.request = new ResourceModel();
+    this.request.service = 'HR';
+    this.request.assemblyName = 'ERM.Business.HR';
+    this.request.className = 'EmployeesBusiness';
+    this.request.method = 'GetModelFormEmployAsyncNew';
+    this.request.autoLoad = false;
+    this.request.parentIDField = 'ParentID';
+    this.request.idField = 'orgUnitID';
+
     this.views = [
       {
         id: '1',
@@ -141,10 +151,65 @@ export class EmpContactsComponent implements OnInit {
           template: this.cardTemp,
         },
       },
+      {
+        id: '3',
+        type: ViewType.tree_list,
+        active: false,
+        sameData: true,
+        //request: this.request,
+        model: {
+          resizable: true,
+          template: this.tmpTree,
+          panelRightRef: this.tmpTreeItemDetail,
+          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
+        },
+      },
+      {
+        id: '4',
+        type: ViewType.tree_card,
+        active: false,
+        sameData: false,
+        request: this.request,
+        model: {
+          resizable: true,
+          template: this.tmpTree,
+          panelRightRef: this.tmpTreeItemDetailCard,
+          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
+        }
+      }
     ];
-    this.changedt.detectChanges();
+
+    this.detectorRef.detectChanges();
   }
 
+  selectedChange(event: any): void {
+    this.itemSelected = event?.data;
+    this.detectorRef.detectChanges();
+  }
+
+  viewChanged(event: any) {
+    if (event?.view?.id === '3' || event?.view?.id === '4') {
+      this.view.dataService.parentIdField = 'ParentID';
+    } else {
+      this.view.dataService.parentIdField = '';
+    }
+  }
+  getFunction(funcID: string) {
+    if (funcID) {
+      this.cache.functionList(funcID).subscribe((func: any) => {
+        if (func) this.funcID = func;
+        if (func?.formName && func?.gridViewName) {
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.grvSetup = grd;
+              }
+            });
+        }
+      });
+    }
+  }
   search($event, ele) {
     if ($event.keyCode === 13) {
       //this.chartOrg.SearchText = $(ele).val();
@@ -203,35 +268,12 @@ export class EmpContactsComponent implements OnInit {
       );
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
-  placeholder(
-    value: string,
-    formModel: FormModel,
-    field: string
-  ): Observable<string> {
-    if (value) {
-      return of(`<span>${value}</span>`);
-    } else {
-      return this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .pipe(
-          map((datas) => {
-            if (datas && datas[field]) {
-              var gvSetup = datas[field];
-              if (gvSetup) {
-                if (!value) {
-                  var headerText = gvSetup.headerText as string;
-                  return `<span class="opacity-50">${headerText}</span>`;
-                }
-              }
-            }
-
-            return `<span class="opacity-50">${field}</span>`;
-          })
-        );
-    }
+  placeholder(field: string) {
+    var headerText = this.grvSetup[field].headerText as string;
+    return `<span class="place-holder">${headerText}</span>`
   }
 }

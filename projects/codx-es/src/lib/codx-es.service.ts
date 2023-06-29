@@ -455,13 +455,13 @@ export class CodxEsService {
       [data, isAdd]
     );
   }
-  getAllCategory(): Observable<any> {
+  getAllCategory(category:string): Observable<any> {
     return this.api.execSv(
       'ES',
       'ES',
       'CategoriesBusiness',
       'GetAllCategoryAsync',
-      []
+      [category]
     );
   }
 
@@ -639,6 +639,16 @@ export class CodxEsService {
     );
   }
 
+  getCategoryByCateIDType(categoryID: string, category :string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category]
+    );
+  }
+
   checkCategoryName(model: any) {
     return this.api.execSv<any>(
       'ES',
@@ -648,6 +658,7 @@ export class CodxEsService {
       [model]
     );
   }
+
   //#endregion
 
   //#region ES_ApprovalSteps

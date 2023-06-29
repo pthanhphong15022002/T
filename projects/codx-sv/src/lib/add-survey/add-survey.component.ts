@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { AuthStore, CallFuncService, CodxMoreFunctionComponent, DialogModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AESCryptoService, AuthStore, CallFuncService, CodxMoreFunctionComponent, DialogModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
 import { SV_Questions } from '../models/SV_Questions';
 import { SV_Surveys } from '../models/SV_Surveys';
@@ -40,12 +40,12 @@ export class AddSurveyComponent extends UIComponent {
   sv:any;
   title: any ;
   signal: any = null;
-  url: any;
   user: any;
   titleNull = "Mẫu không có tiêu đề";
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
   primaryColor:any;
+  width= "200px";
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -53,22 +53,24 @@ export class AddSurveyComponent extends UIComponent {
   constructor(
     private injector: Injector, 
     private SvService: CodxSvService,
-    private captureService: NgxCaptureService,
     private auth : AuthStore,
-    private dmSV: CodxDMService,
-    private change: ChangeDetectorRef,
     private notifySvr: NotificationsService,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    private aesCrypto: AESCryptoService
   ) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
       this.title = this.titleNull;
-      if (queryParams?.funcID) this.funcID = queryParams.funcID;
-      if (queryParams?.recID) {
-        this.recID = queryParams.recID;
-        this.getSV();
+      if(queryParams?._k)
+      {
+        var key = JSON.parse(this.aesCrypto.decode(queryParams?._k));
+        this.funcID = key?.funcID;
+        if (key?.recID) {
+          this.recID = key.recID;
+          this.getSV();
+        }
       }
-      this.url = queryParams;
+    
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
@@ -80,10 +82,10 @@ export class AddSurveyComponent extends UIComponent {
       if(item) {
         this.dataSV = item;
         this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
-
         this.getAvatar(this.dataSV);
       }
       else this.title = this.titleNull;
+      this.width = ((this.title.length + 1 )* 8) + "px";
     })
   }
   onInit(): void {
@@ -199,9 +201,9 @@ export class AddSurveyComponent extends UIComponent {
           this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{
             if(item) {
               var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
-              var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0100");
+              //var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0100");
               dks[0].disabled = true;
-              ph[0].disabled = false;
+              //ph[0].disabled = false;
               this.notifySvr.notifyCode("SV003");
             }
             else this.notifySvr.notifyCode("SV004");
@@ -234,16 +236,37 @@ export class AddSurveyComponent extends UIComponent {
       //Share link
       case "SVT0102":
         {
+          var obj = 
+          {
+            funcID : this.funcID,
+            recID: this.recID
+          }
+          var key = JSON.stringify(obj);
+          key = this.aesCrypto.encode(key);
+          var link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
+
+          if(this.dataSV?.settings)
+          {
+            if(typeof this.dataSV?.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
+            if(this.dataSV?.settings?.isPublic == "1") link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/forms?_k="+key;
+          }
+         
           this.callfc.openForm(SharelinkComponent,"",900,600,"",
             {
               headerText: e?.data?.customName,
               funcID: this.funcID,
-              recID: this.recID
+              recID: this.recID,
+              link: link
             }
           );
           break;
         }
     }
+  }
+
+  getLink()
+  {
+    this.dataSV
   }
   
   changeDataMF(e:any , data:any)
@@ -263,6 +286,16 @@ export class AddSurveyComponent extends UIComponent {
       if(close && close[0]) close[0].disabled = false;
     }
     else
+    {
+      var close = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'SVT0104'
+      );
+  
+      if(close && close[0]) close[0].disabled = true;
+    }
+
+    if(data?.stop)
     {
       var close = e.filter(
         (x: { functionID: string }) =>
@@ -355,13 +388,20 @@ export class AddSurveyComponent extends UIComponent {
     //     })
     //   })
     // ).subscribe();
-    this.codxService.navigate('SVT01',"",null,null,true);
+    if(this.SvService.signalSave.getValue() == "saving") this.notifySvr.notifyCode("SV005");
+    else this.codxService.navigate('SVT01',"",null,null,true);
   }
 
   review() {
+    var obj = 
+    {
+      funcID : this.funcID,
+      recID : this.recID
+    }
+    var key = JSON.stringify(obj);
+    var k = this.aesCrypto.encode(key);
     this.codxService.openUrlNewTab('', 'sv/review', {
-      funcID: this.funcID,
-      recID: this.recID,
+      _k: k
     });
   }
 
@@ -408,6 +448,11 @@ export class AddSurveyComponent extends UIComponent {
       counter += 1;
     }
     return result;
-}
+  }
 
+  changeSetting(e:any)
+  {
+    this.dataSV.settings = e;
+  }
+ 
 }

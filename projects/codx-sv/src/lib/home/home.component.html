@@ -26,7 +26,7 @@
       </div>
       <div class="d-flex align-items-center div-title">
         <div class="card-survey rounded-2" (click)="createNewSurvey()">
-          <img src="./assets/themes/sv/default/img/add-survey.png" class="rounded-2"/>
+          <img src="./assets/themes/sv/default/img/AddSurvey.svg" class="rounded-2"/>
           <div class="py-2 fw-bold">
             <span>Trống</span>
           </div>
@@ -89,7 +89,7 @@
 
 
 <ng-template #tabCreate>
-  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100">
+  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100 overflow-auto h-dataSurvey ">
     <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
       <ng-container *ngTemplateOutlet=" templateListCard; context: { $implicit: item }"></ng-container>
     </div>  

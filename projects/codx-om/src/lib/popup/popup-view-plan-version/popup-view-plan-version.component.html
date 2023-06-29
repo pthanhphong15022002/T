@@ -149,22 +149,25 @@
                 
               </div>
             </div>
-            <div *ngIf="this.totalOB >0 ; else defaultEmpty">
-              <div *ngFor="let item of dataOKR">
-                <div *ngIf="item?.listOKR?.length>0">
-                  <span *ngIf="item?.okrGroupName!=null" class="fs-5 fw-bold">{{item?.okrGroupName}}</span>
-                  <span *ngIf="item?.okrGroupName==null && dataOKR?.length>1" class="fs-5 fw-bold text-gray-500"><codx-label
-                      name="lblGroupID" [default]="'Mục tiêu chiến lược'" [formModel]="formModel"></codx-label></span>
-                  <div class="okr-treeview">
-                    <codx-treeview [id]="'tree'+ item?.okrGroupID" #treeView [itemTemplate]="templateTreeView"
-                      [data]="item?.listOKR" [enableCheck]="false" idField="recID" parentIdField="parentID" [autoLoad]="false"
-                      [isOutput]="true" [isLoadChild]="true" 
-                      class="overflow-auto ">
-                    </codx-treeview>
+            <div *ngIf="loadedData">
+              <div *ngIf="this.totalOB >0 ; else defaultEmpty">
+                <div *ngFor="let item of dataOKR">
+                  <div *ngIf="item?.listOKR?.length>0">
+                    <span *ngIf="item?.okrGroupName!=null" class="fs-5 fw-bold">{{item?.okrGroupName}}</span>
+                    <span *ngIf="item?.okrGroupName==null && dataOKR?.length>1" class="fs-5 fw-bold text-gray-500"><codx-label
+                        name="lblGroupID" [default]="'Mục tiêu chiến lược'" [formModel]="formModel"></codx-label></span>
+                    <div class="okr-treeview">
+                      <codx-treeview [id]="'tree'+ item?.okrGroupID" #treeView [itemTemplate]="templateTreeView"
+                        [data]="item?.listOKR" [enableCheck]="false" idField="recID" parentIdField="parentID" [autoLoad]="false"
+                        [isOutput]="true" [isLoadChild]="true" 
+                        class="overflow-auto ">
+                      </codx-treeview>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            
           </div>
         </div>
         <ng-template #templateTreeView let-item>

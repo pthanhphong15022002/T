@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  AESCryptoService,
   ButtonModel,
   CodxListviewComponent,
   DataRequest,
@@ -59,7 +60,7 @@ export class HomeComponent extends UIComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('lstView') lstView: CodxListviewComponent;
 
-  constructor(private injector: Injector, private change: ChangeDetectorRef , private svService: CodxSvService , private shareService : CodxShareService) {
+  constructor(private injector: Injector, private change: ChangeDetectorRef , private svService: CodxSvService , private shareService : CodxShareService , private aesCrypto: AESCryptoService) {
     super(injector);
     this.getVll();
   }
@@ -200,26 +201,48 @@ export class HomeComponent extends UIComponent implements OnInit {
     this.view.dataService.addNew().subscribe((res) => {
       res.title = "Mẫu không có tiêu đề"
       this.api.execSv("SV","SV","SurveysBusiness","SaveAsync",[res,this.formats,true]).subscribe((item : any)=>{
-        this.codxService.navigate('', 'sv/add-survey', {
+        var obj = 
+        {
           funcID: this.funcID,
-          recID: item?.result?.recID,
+          recID:  item?.result?.recID
+        }
+        var key = JSON.stringify(obj);
+        key = this.aesCrypto.encode(key);
+
+        this.codxService.navigate('', 'sv/add-survey', {
+          _k: key
         });
       })
     });
   }
 
   update(item) {
-    this.codxService.navigate('', 'sv/add-survey', {
+    var obj = 
+    {
       funcID: this.funcID,
-      recID: item.recID,
+      recID:  item.recID
+    }
+    var key = JSON.stringify(obj);
+    key = this.aesCrypto.encode(key);
+
+    this.codxService.navigate('', 'sv/add-survey', {
+      _k: key
     });
   }
 
   updateRepond(item)
   {
-    this.codxService.navigate('', 'sv/review', {
+    var obj = 
+    {
       funcID: this.funcID,
-      transID: item.recID,
+      transID: item.recID
+    }
+
+    var key = JSON.stringify(obj);
+    key = this.aesCrypto.encode(key);
+
+    this.codxService.navigate('', 'sv/review', {
+      _k : key
     });
   }
 
@@ -313,6 +336,6 @@ export class HomeComponent extends UIComponent implements OnInit {
         if(setting?.image) return this.shareService.getThumbByUrl(setting?.image , 120);
       }
     }
-    return "./assets/themes/sv/default/img/avatar-default.png";
+    return "./assets/themes/sv/default/img/EmptySurvey.svg";
   }
 }
