@@ -89,7 +89,7 @@
 
 
 <ng-template #tabCreate>
-  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100">
+  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100 overflow-auto h-dataSurvey ">
     <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
       <ng-container *ngTemplateOutlet=" templateListCard; context: { $implicit: item }"></ng-container>
     </div>  

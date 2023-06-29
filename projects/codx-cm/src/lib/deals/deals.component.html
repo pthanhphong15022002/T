@@ -16,8 +16,7 @@
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
-  (searchChanged)="searchChanged($event)"
-  (onLoading)="onLoading()"
+  (onLoading)="onLoading($event)"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -177,7 +176,7 @@
           [ngClass]="getPropertiesHeader(data, 'icon')"
           [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
           style="font-size: 18px"
-          class="me-3"
+          class="me-1"
         >
         </span>
         <span
@@ -189,7 +188,7 @@
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center line-colums ms-3">
+    <div class="d-flex align-items-center line-colums ms-3 mt-1">
       <!-- <span
         class="icon-monetization_on icon-16 text-warning me-2"
         [ngbTooltip]="'Tổng tiền dự kiến'"
@@ -205,7 +204,7 @@
       <ng-template #showToltal let-total let-color>
         <span
           [ngStyle]="{ color: color }"
-          class="line-clamp-menu"
+          class="line-clamp-menu cursor-pointer"
           container="body"
           [ngbTooltip]="total + ' ' + currencyIDDefault"
           [innerHTML]="
@@ -440,7 +439,6 @@
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
     [checkMoreReason]="checkMoreReason(dataSelected)"
-
   >
   </codx-deal-detail>
 </ng-template>
@@ -451,3 +449,60 @@
 </ng-template>
 
 <!-- toolip dealName -->
+
+<!--Confirm or Refuse-->
+<ng-template #confirmOrRefuseTemp>
+  <codx-form
+    [headerText]="titleAction"
+    [body]="confirmBody"
+    [footer]="confirmFooter"
+    [dialog]="popupConfirm"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #confirmBody>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="ReturnedCmt"
+          formName="CMLeads"
+          gridViewName="grvCMLeads"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="returnedCmt"
+        formName="CMLeads"
+        gridViewName="grvCMLeads"
+        type="text"
+        [crrValue]="returnedCmt"
+        (valueChange)="valueChangeConfirm($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmFooter>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-2"
+      (click)="popupConfirm.close()"
+    >
+      <codx-label
+        fiedName="lblCancel"
+        [formModel]="view.formModel"
+        default="Hủy"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="saveConfirm()">
+      <codx-label
+        name=" lblSuscess"
+        [formModel]="view.formModel"
+        default="Đồng ý"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

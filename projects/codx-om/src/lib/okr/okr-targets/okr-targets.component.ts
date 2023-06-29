@@ -483,6 +483,9 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == OMCONST.MFUNCID.SKRAssign ||
           //Thay đổi trọng số
           func.functionID == OMCONST.MFUNCID.KREditSKRWeight||
+          //Thay đổi chỉ tiêu
+          func.functionID == OMCONST.MFUNCID.KRChagneAssignTarget||
+
           //Đánh giá định kì
           func.functionID == OMCONST.MFUNCID.KRReviewCheckIn
         )) {
@@ -524,7 +527,9 @@ export class OkrTargetsComponent implements OnInit {
           //MF hệ thống
           func.functionID == OMCONST.MFUNCID.Copy ||
           func.functionID == OMCONST.MFUNCID.Edit ||
-          func.functionID == OMCONST.MFUNCID.Delete
+          func.functionID == OMCONST.MFUNCID.Delete||          
+          //Thay đổi chỉ tiêu
+          func.functionID == OMCONST.MFUNCID.KRChagneAssignTarget
         )){
           func.disabled = true;
         }
@@ -541,6 +546,7 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == 'SYS004' ||
           func.functionID == 'SYS007' ||
           func.functionID == 'SYS002' ||
+          func.functionID == 'OMT105' ||
           func.functionID == OMCONST.MFUNCID.OBDetail ||
           func.functionID == OMCONST.MFUNCID.OBDistribute
         ) {

@@ -236,6 +236,7 @@
     </div>
   </ng-container>
 </ng-template>
+
 <ng-template #viewDetailFieldCurrent let-data>
   <div class="d-flex">
     <span class="">
@@ -262,9 +263,10 @@
       </span>
     </span>
 
-    <span class="">
+    <span class="margin-l">
       <ng-container *ngIf="!data.dataValue">
-        <span class="place-holder margin-l" *ngIf="data.dataType != 'R'">
+        <!-- margin-l -->
+        <span class="place-holder" *ngIf="data.dataType != 'R'">
           {{ data.title }}
         </span>
         <ng-container *ngIf="data.dataType == 'R'">
@@ -284,20 +286,21 @@
           </ngb-rating>
         </ng-container>
       </ng-container>
-
+      <!-- margin-l -->
       <ng-container *ngIf="data.dataValue">
-        <span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
+        <span class="text-dark" *ngIf="data.dataType == 'T'">
           {{ data.dataValue }}
         </span>
-
+        <!-- margin-l -->
         <span
-          class="text-dark margin-l"
+          class="text-dark"
           *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
           [innerHTML]="formatNumber(data)"
         >
           <span *ngIf="data.dataFormat == 'P'">%</span>
         </span>
-        <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
+        <!-- margin-l -->
+        <span class="text-dark" *ngIf="data.dataType == 'D'">
           <span
             *ngIf="
               data?.dataFormat == '1' ||

@@ -127,20 +127,37 @@ export class SalesInvoicesComponent
       return;
     }
 
-    this.master = e.data.data ?? e.data;
+    let data = e.data.data ?? e.data;
+    if (!data) return;
+
+    if (this.master && this.master?.recID == data?.recID) return;
+
+    console.log('chay 1 lân');
+    this.master = data;
 
     this.expanding = false;
     this.loading = true;
     this.lines = [];
-    const options = new DataRequest();
-    options.entityName = 'SM_SalesInvoicesLines';
-    options.predicates = 'TransID=@0';
-    options.dataValues = this.master.recID;
-    options.pageLoading = false;
-    this.acService
-      .loadDataAsync('SM', options)
-      .subscribe((res: ISalesInvoicesLine[]) => {
-        this.lines = res;
+    const salesInvoicesLinesOptions = new DataRequest();
+    salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
+    salesInvoicesLinesOptions.predicates = 'TransID=@0';
+    salesInvoicesLinesOptions.dataValues = this.master.recID;
+    salesInvoicesLinesOptions.pageLoading = false;
+    // this.acService
+    //   .loadDataAsync('SM', salesInvoicesLinesOptions)
+    //   .subscribe((res: ISalesInvoicesLine[]) => {
+    //     this.lines = res;
+    //     this.loading = false;
+    //   });
+    this.api
+      .exec(
+        'SM',
+        'SalesInvoicesLinesBusiness',
+        'GetLinesAsync',
+        salesInvoicesLinesOptions
+      )
+      .subscribe((res: any) => {
+        this.lines = res[0];
         this.loading = false;
       });
   }

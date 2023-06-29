@@ -5,7 +5,7 @@
             [title]="data.employeeName" [imageObjName]="data.employeeName"
             [subTitle]="data.positionName? data.positionName: 
                         (data.positionID? data.positionID : placeholder('PositionID'))" 
-            [dataItem]="data" [imageObjType]="formModel.entityName"
+            [dataItem]="data" [imageObjType]="formModel?.entityName"
             [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [footer]="footer">
         </codx-card-center>
     </div>
