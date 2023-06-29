@@ -18,6 +18,7 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
   views: ViewModel[];
   viewType = ViewType;
   funcID:any;
+  funcItem:any;
   button: ButtonModel = {
     id:'btnAdd'
   }
@@ -34,7 +35,10 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
     this.funcID = this.router.snapshot.params['funcID'];
     this.cacheSv.functionList(this.funcID).subscribe((res:any)=>{
       if(res){
+        this.funcItem = res;
         this.module = res.module ? res.module.toLowerCase() : '';
+        this.pageTitle.setRootNode("");
+        this.pageTitle.setChildren([]);
       }
     })
   }
@@ -80,8 +84,8 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
   }
   viewChanged(e:any){
     this.funcID = this.router.snapshot.params['funcID'];
-    this.pageTitle.calculateTitle();
-    this.pageTitle.calculateBreadcrumbs();
+    this.pageTitle.setRootNode("");
+    //this.pageTitle.setTitle(this.funcItem.customName ? this.funcItem.customName : "" );
   }
   onActions(e:any){
     if (e.type == 'detail') {
