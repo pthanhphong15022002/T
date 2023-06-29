@@ -290,7 +290,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   {
     if(this.dataSV && this.dataSV.settings) {
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-      if(this.dataSV?.settings?.image) this.avatar = this.dataSV?.settings?.image;//this.shareService.getThumbByUrl(this.dataSV?.settings?.image , 120) ;
+      if(this.dataSV?.settings?.image) this.avatar = this.shareService.getThumbByUrl(this.dataSV?.settings?.image , 120) ;
       if(this.dataSV?.settings?.primaryColor) this.primaryColor = this.dataSV?.settings?.primaryColor;
       if(this.dataSV?.settings?.backgroudColor) {
         this.backgroudColor = this.dataSV?.settings?.backgroudColor;
