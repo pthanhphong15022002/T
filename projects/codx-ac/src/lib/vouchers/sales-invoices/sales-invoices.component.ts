@@ -132,7 +132,13 @@ export class SalesInvoicesComponent
       return;
     }
 
-    this.master = e.data.data ?? e.data;
+    let data = e.data.data ?? e.data;
+    if (!data) return;
+
+    if (this.master && this.master?.recID == data?.recID) return;
+
+    console.log('chay 1 lân');
+    this.master = data;
 
     this.expanding = false;
     this.loading = true;
@@ -155,7 +161,10 @@ export class SalesInvoicesComponent
         'GetLinesAsync',
         salesInvoicesLinesOptions
       )
-      .subscribe();
+      .subscribe((res: any) => {
+        this.lines = res[0];
+        this.loading = false;
+      });
   }
 
   onClickAdd(e): void {
