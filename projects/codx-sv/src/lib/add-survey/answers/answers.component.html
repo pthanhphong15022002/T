@@ -274,6 +274,17 @@
             <ng-container *ngSwitchCase="'D'">
               {{item.answer | date: "dd/MM/yyyy"}}
             </ng-container>
+            <ng-container *ngSwitchCase="'R'">
+              <codx-input
+                type="radio"
+                [disabled]="true"
+                class="test-check"
+                field="R"
+                ngClass="ip-ans me-7"
+                [checked]="true"
+              ></codx-input>
+              <span>{{item.answer}}</span>
+            </ng-container>
           </ng-container> 
        
         </div>
