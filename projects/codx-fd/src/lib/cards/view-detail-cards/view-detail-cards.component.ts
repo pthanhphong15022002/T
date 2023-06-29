@@ -1,8 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, FormModel } from 'codx-core';
-import { isBuffer } from 'util';
-import { CardType, Valuelist } from '../../models/model';
 
 @Component({
   selector: 'lib-view-detail-cards',
@@ -19,6 +17,8 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
 
   data: any = null;
   behavior: any[] = [];
+  showmore: boolean = false;
+  showSM: boolean = false;
 
   constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
 
@@ -59,6 +59,22 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
         }
         this.dt.detectChanges();
       }
+      const textElement = document.getElementById('situation');
+      const lineHeight = parseInt(getComputedStyle(textElement).lineHeight);
+      const height = textElement.clientHeight;
+      const lineCount = Math.round(height / lineHeight);
+      if(lineCount && lineCount > 3){
+        this.showSM = true;
+        this.showmore = true;
+      } else {
+        this.showmore = false;
+        this.showSM = false;
+      }
     });
+  }
+
+  showMore(){
+    this.showmore = false;
+    this.showSM = false;
   }
 }
