@@ -246,20 +246,22 @@
                         "
                       >
                         <ng-template #popupCustGroupID>
-                          <codx-label
-                            [setRequire]="false"
-                            class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
-                            fiedName="ReturnedCmt"
-                            [formModel]="formModel"
-                          ></codx-label>
-                          <span
-                            class="d-flex align-items-start inline"
-                            [innerHTML]="
-                              dataSelected?.returnedCmt
-                                | formatvalue : formModel : 'ReturnedCmt'
-                                | async
-                            "
-                          ></span>
+                          <div class="text-end text-sm-start">
+                            <codx-label
+                              [setRequire]="false"
+                              class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
+                              fiedName="ReturnedCmt"
+                              [formModel]="formModel"
+                            ></codx-label>
+                            <span
+                              class="d-flex align-items-start inline"
+                              [innerHTML]="
+                                dataSelected?.returnedCmt
+                                  | formatvalue : formModel : 'ReturnedCmt'
+                                  | async
+                              "
+                            ></span>
+                          </div>
                         </ng-template>
                         <codx-vll
                           [name]="gridViewSetup?.Status?.referedValue"
