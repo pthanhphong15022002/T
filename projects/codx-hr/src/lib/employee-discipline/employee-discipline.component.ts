@@ -93,7 +93,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -103,7 +102,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.itemTemplateListDetail,
           panelRightRef: this.panelRightListDetail,

@@ -95,7 +95,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.templateList,
@@ -106,7 +105,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
         id: '2',
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
