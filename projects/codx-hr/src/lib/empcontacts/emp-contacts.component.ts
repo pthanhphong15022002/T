@@ -56,7 +56,9 @@ export class EmpContactsComponent extends UIComponent {
   buttons: Array<ButtonModel> = [];
 
   request: ResourceModel;
-  itemSelected : any;
+  itemSelected: any;
+  grvSetup: any;
+  funcID: string = '';
 
   constructor(inject: Injector,
     //private changedt: ChangeDetectorRef,
@@ -65,7 +67,7 @@ export class EmpContactsComponent extends UIComponent {
   ngOnDestroy(): void { }
 
   onInit(): void {
-
+    this.funcID = this.router.snapshot.params['funcID'];
     this.buttons = [
       {
         id: '1',
@@ -116,6 +118,7 @@ export class EmpContactsComponent extends UIComponent {
         width: 140,
       },
     ];
+    this.getFunction('HRT03a1')
   }
 
   ngAfterViewInit(): void {
@@ -158,7 +161,7 @@ export class EmpContactsComponent extends UIComponent {
           resizable: true,
           template: this.tmpTree,
           panelRightRef: this.tmpTreeItemDetail,
-          resourceModel: { parentIDField: 'ParentID' , idField: 'OrgUnitID' },
+          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
         },
       },
       {
@@ -167,14 +170,15 @@ export class EmpContactsComponent extends UIComponent {
         active: false,
         sameData: false,
         request: this.request,
-        model:{
+        model: {
           resizable: true,
           template: this.tmpTree,
           panelRightRef: this.tmpTreeItemDetailCard,
-          resourceModel: { parentIDField: 'ParentID' , idField: 'OrgUnitID' },
+          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
         }
       }
     ];
+
     this.detectorRef.detectChanges();
   }
 
@@ -188,6 +192,22 @@ export class EmpContactsComponent extends UIComponent {
       this.view.dataService.parentIdField = 'ParentID';
     } else {
       this.view.dataService.parentIdField = '';
+    }
+  }
+  getFunction(funcID: string) {
+    if (funcID) {
+      this.cache.functionList(funcID).subscribe((func: any) => {
+        if (func) this.funcID = func;
+        if (func?.formName && func?.gridViewName) {
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.grvSetup = grd;
+              }
+            });
+        }
+      });
     }
   }
   search($event, ele) {
@@ -252,31 +272,8 @@ export class EmpContactsComponent extends UIComponent {
 
   requestEnded(evt: any) { }
 
-  placeholder(
-    value: string,
-    formModel: FormModel,
-    field: string
-  ): Observable<string> {
-    if (value) {
-      return of(`<span>${value}</span>`);
-    } else {
-      return this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .pipe(
-          map((datas) => {
-            if (datas && datas[field]) {
-              var gvSetup = datas[field];
-              if (gvSetup) {
-                if (!value) {
-                  var headerText = gvSetup.headerText as string;
-                  return `<span class="opacity-50">${headerText}</span>`;
-                }
-              }
-            }
-
-            return `<span class="opacity-50">${field}</span>`;
-          })
-        );
-    }
+  placeholder(field: string) {
+    var headerText = this.grvSetup[field].headerText as string;
+    return `<span class="place-holder">${headerText}</span>`
   }
 }

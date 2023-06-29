@@ -200,6 +200,8 @@ import { UsingHistoryComponent } from './components/dynamic-form/using-history/u
 import { AccessHistoryComponent } from './components/dynamic-form/access-history/access-history.component';
 import { OrderHistoryComponent } from './components/dynamic-form/order-history/order-history.component';
 import { CodxIconStepComponent } from './components/codx-step/codx-icon-step/codx-icon-step.component';
+import { CodxViewContentComponent } from './components/codx-view-content/codx-view-content.component';
+import { PopupViewContentComponent } from './components/codx-view-content/popup-view-content.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -352,6 +354,8 @@ const T_Component: Type<any>[] = [
   PopupTitleComponent,
   SaveNoteComponent,
   UpdateNotePinComponent,
+  PopupViewContentComponent,
+  CodxViewContentComponent
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -383,6 +387,7 @@ const T_Pipe: Type<any>[] = [
     UsingHistoryComponent,
     AccessHistoryComponent,
     OrderHistoryComponent,
+
   ],
   exports: [T_Component, T_Pipe],
   imports: [

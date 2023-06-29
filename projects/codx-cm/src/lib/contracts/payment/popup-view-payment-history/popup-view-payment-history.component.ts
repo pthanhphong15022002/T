@@ -257,4 +257,20 @@ export class PopupViewPaymentHistoryComponent {
       listData?.push(data);
     }
   }
+
+  changeDataMFStep(event) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'CM02041_2':
+          case 'CM02041_1':
+            res.disabled = true;
+            break;
+        }
+      })
+    }
+  }
+
 }
