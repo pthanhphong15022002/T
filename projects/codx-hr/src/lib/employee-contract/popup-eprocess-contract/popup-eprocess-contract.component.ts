@@ -107,6 +107,9 @@ export class PopupEProcessContractComponent
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    // console.log(this.employeeObj);
+    // orgUnitID
+    // positionID
 
     if (this.data?.benefits) {
       this.tempBenefitArr = JSON.parse(this.data.benefits);
@@ -127,8 +130,8 @@ export class PopupEProcessContractComponent
       )
       .subscribe((res: any) => {
         if (res) {
-          if(res.key){
-            this.autoNumField2 = res.key
+          if (res.key) {
+            this.autoNumField2 = res.key;
           }
           this.benefitObj = res?.data;
           this.benefitObj.effectedDate = null;
@@ -226,13 +229,12 @@ export class PopupEProcessContractComponent
           this.idField
         )
         .subscribe((res) => {
-          
           if (res) {
-            this.autoNumField = res.key ? res.key : null; 
+            this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
             this.df.detectChanges();
             console.log('get default contract', res);
-            
+
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
             this.data.signedDate = null;
@@ -241,6 +243,14 @@ export class PopupEProcessContractComponent
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
             this.isAfterRender = true;
+
+            this.formGroup.patchValue({
+              orgUnitID: this.employeeObj.orgUnitID,
+            });
+            this.formGroup.patchValue({
+              positionID: this.employeeObj.positionID,
+            });
+
             this.cr.detectChanges();
           }
         });
@@ -383,8 +393,9 @@ export class PopupEProcessContractComponent
           break;
         }
         case 'effectedDate': {
-          this.data.effectedDate = event.data;
-          this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
+          //Fix bug when tab input field still error border
+          // this.data.effectedDate = event.data;
+          // this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
           this.setExpiredDate(this.data.limitMonths);
           break;
         }
@@ -419,9 +430,20 @@ export class PopupEProcessContractComponent
     empRequest.pageLoading = false;
     this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'employeeID') {
+          this.employeeObj = emp[0][0];
+
+          //Set employee data to field
+          this.formGroup.patchValue({
+            orgUnitID: this.employeeObj.orgUnitID,
+          });
+          this.formGroup.patchValue({
+            positionID: this.employeeObj.positionID,
+          });
+        }
         if (fieldName === 'signerID') {
           this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+            console.log(emp);
             if (emp[1] > 0) {
               let positionID = emp[0][0].positionID;
 

@@ -285,7 +285,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     var count = 0 ;
     if(answers && answers.length > 0) 
     var listAnswers =  answers.filter(x=>x.answer);
-    if(listAnswers.length > 0)
+    if(listAnswers && listAnswers.length > 0)
       listAnswers.forEach(elm => {
         count = count + elm.count;
       });

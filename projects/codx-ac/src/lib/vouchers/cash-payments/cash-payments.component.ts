@@ -32,7 +32,11 @@ import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { AnimationModel, ILoadedEventArgs, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
+import {
+  AnimationModel,
+  ILoadedEventArgs,
+  ProgressBar,
+} from '@syncfusion/ej2-angular-progressbar';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -493,6 +497,117 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
+  changeMF(e: any, data: any) {
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT041003' || // ghi sổ
+        x.functionID == 'ACT041002' || // gửi duyệt
+        x.functionID == 'ACT041004' || // hủy yêu cầu duyệt
+        x.functionID == 'ACT041008' || // khôi phục
+        x.functionID == 'ACT042901' || // chuyển tiền điện tử
+        x.functionID == 'ACT041010' || // in
+        x.functionID == 'ACT041009' // kiểm tra tính hợp lệ
+    );
+    if (bm.length > 0) {
+      bm.forEach((element) => {
+        element.isbookmark = false;
+      });
+      switch (data?.status) {
+        case '0':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '1':
+          if (this.journal.approvalControl == '0') {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041003' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            bm.forEach((element) => {
+              if (
+                element.functionID == 'ACT041002' ||
+                element.functionID == 'ACT041010'
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
+          break;
+        case '2':
+        case '4':
+          bm.forEach((element) => {
+            element.disabled = true;
+          });
+          break;
+        case '3':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041004' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '5':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '6':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041008' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '9':
+          bm.forEach((element) => {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+      }
+    }
+  }
+
   changeItemDetail(event) {
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
@@ -607,7 +722,6 @@ export class CashPaymentsComponent extends UIComponent {
         if (res) {
           this.journal = res[0];
         }
-       
       });
   }
 
