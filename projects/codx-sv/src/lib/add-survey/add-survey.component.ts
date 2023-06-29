@@ -85,7 +85,7 @@ export class AddSurveyComponent extends UIComponent {
         this.getAvatar(this.dataSV);
       }
       else this.title = this.titleNull;
-      this.width = (this.title.length + 1 )* 8 + "px";
+      this.width = ((this.title.length + 1 )* 8) + "px";
     })
   }
   onInit(): void {

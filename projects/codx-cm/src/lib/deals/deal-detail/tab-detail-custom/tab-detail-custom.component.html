@@ -326,7 +326,7 @@
       [objectType]="'4'"
       [type]="'formDetail'"
       [hidenMF]="
-        !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed
+        !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected?.closed || dataSelected?.status == '1'
           ? true
           : false
       "
@@ -353,7 +353,7 @@
   <codx-tab-dealcompetitors
     [dealID]="dataSelected.recID"
     [hidenMF]="
-      !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed
+      !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed || dataSelected?.status == '1'
         ? true
         : false
     "

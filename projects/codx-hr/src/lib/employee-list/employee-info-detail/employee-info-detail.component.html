@@ -3947,11 +3947,11 @@
             >
             </codx-temp-full>
             <ng-template #footerEContract let-data>
-              <div class="row mb-5">
+              <div class="row mb-2">
                 <div class="col-4">
-                  <div class="text-gray-600 pb-1 d-flex">
+                  <div class="d-flex align-items-center">
                     <span
-                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                      class="icon-wysiwyg icon-1 me-2"
                     ></span>
                     <codx-label
                       [setRequire]="false"
@@ -3964,7 +3964,7 @@
                 <div class="col-8">
                   <div class="d-flex align-items-center">
                     <div
-                      class="text-primary t-dark"
+                      class="text-primary fw-bold"
                       [innerHTML]="
                         data?.contractTypeID
                           | formatvalue : eContractFormModel : 'contractTypeID'
@@ -3975,11 +3975,11 @@
                 </div>
               </div>
 
-              <div class="row mb-5">
+              <div class="row mb-2">
                 <div class="col-4">
-                  <div class="text-gray-600 pb-1 d-flex">
+                  <div class="d-flex align-items-center">
                     <span
-                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                      class="icon-event_note icon-16 me-2"
                     ></span>
                     <codx-label
                       [name]="'lblEContractMainTimeLimit'"
@@ -3991,7 +3991,7 @@
                 </div>
                 <div class="col-8">
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark">
+                    <span class="text-dark">
                       <span
                         [innerHTML]="
                           data?.effectedDate
@@ -4001,7 +4001,7 @@
                       ></span>
                     </span>
                     <span class="mx-2 text-gray-400">-</span>
-                    <span class="fw-bold text-dark">
+                    <span class="text-dark">
                       <span
                         [innerHTML]="
                           data?.expiredDate
@@ -4014,14 +4014,14 @@
                 </div>
               </div>
 
-              <div class="row mb-5">
+              <div class="row mb-2">
                 <div class="col-4">
-                  <div class="text-gray-600 pb-1 d-flex">
+                  <div class="d-flex align-items-center">
                     <span
-                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                      class="icon-hd icon-16 me-2"
                     ></span>
                     <codx-label
-                      class="text-gray-600"
+                      class="text-dark"
                       fiedName="ContractNo"
                       [setRequire]="false"
                       [formModel]="eContractFormModel"
@@ -4029,7 +4029,7 @@
                     </codx-label>
                     <span class="mx-2">-</span>
                     <codx-label
-                      class="text-gray-600"
+                      class="text-dark"
                       fiedName="SignedDate"
                       [setRequire]="false"
                       [formModel]="eContractFormModel"
@@ -4039,15 +4039,13 @@
                 </div>
                 <div class="col-8">
                   <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                      <span class="text-dark">
-                        <span>{{ crrEContract?.contractNo }}</span>
-                      </span>
-                    </div>
+                    <span class="text-dark fw-bold">
+                      <span>{{ crrEContract?.contractNo }}</span>
+                    </span>
                     <span
-                      class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 mx-2 text-gray-400"
+                      class="icon-i-arrow-down-left-circle-fill fs-icon fs-6 mx-2 text-gray-400"
                     ></span>
-                    <div class="fs-6">
+                    <div class="text-gray-600">
                       <span
                         [innerHTML]="
                           data?.signedDate
@@ -7544,8 +7542,8 @@
 </ng-template> -->
 
 <ng-template #emptyDataTemplate>
-  <div class="d-flex ms-1">
-    <span class="text-gray-500 fw-bold">
+  <div class="ms-9 mt-5">
+    <span class="text-gray-700">
       {{ "SYS011" | mssg | async }}
     </span>
   </div>

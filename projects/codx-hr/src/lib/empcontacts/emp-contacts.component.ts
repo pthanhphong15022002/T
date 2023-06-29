@@ -59,13 +59,6 @@ export class EmpContactsComponent extends UIComponent {
   itemSelected: any;
   grvSetup: any;
   funcID: string = '';
-  empFormModel: {
-    entityName: "HR_Employees",
-    entityPer: "HR_Employees",
-    formName: "EmployeeInfomation",
-    funcID: "HRT03a1",
-    gridViewName: "grvEmployeeInfomation"
-  };
 
   constructor(inject: Injector,
     //private changedt: ChangeDetectorRef,
