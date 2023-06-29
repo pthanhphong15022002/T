@@ -120,6 +120,13 @@
                   <div class="symbol symbol-circle symbol-25px w-20px h-20px text-center C4IyCf ms-5"><span>{{an.count}}</span></div>
                 </div>
               </ng-container>
+               <!-- Phạm vi tuyến tính -->
+               <ng-container *ngSwitchCase="'R'">
+                <div class="d-flex align-items-center">
+                  <codx-input [type]="'radio'" [disabled]="true" [checked]="true"></codx-input>
+                  <span class="ms-7 mt-4">{{an.answer}}</span>
+                </div>
+              </ng-container>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -322,11 +329,11 @@
             <ng-template #content>
               {{""}}
               <div *ngFor="let x of i?.responds">
-                <div class="row mb-5">
-                  <div class="col-5 div-sv-mt">{{extractContent(x.question)}}</div>
+                <div class="row mb-5 border-bottom">
+                  <div class="col-5 div-sv-mt fw-bold">{{extractContent(x.question)}}</div>
                   <div class="col-7">
                     <ng-container *ngFor="let z of x.results">
-                      <div class=""><span>{{z.answer ? formatValueDate(z.answer) : 'Câu trả lời được để trống' }}</span></div>
+                      <div ><span>{{z.answer ? formatValueDate(z.answer) : 'Câu trả lời được để trống' }}</span></div>
                     </ng-container>
                   </div>
                 </div>

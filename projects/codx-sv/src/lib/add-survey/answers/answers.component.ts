@@ -299,6 +299,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       case "C":
       case "T":
       case "T2":
+      case "R":
         {
           switch(properties)
           {
@@ -398,6 +399,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     }
     return null;
   }
+  
   formatValueDate(data:any)
   {
     if(moment(data, moment.ISO_8601, true).isValid()) return moment(data).format('DD/MM/YYYY');
