@@ -141,6 +141,20 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     }
   }
 
+  changeDataMF(event) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'CM0204_4':
+            res.disabled = true;
+            break;
+        }
+      })
+    }
+  }
+
   addPayment() {
     let payment = new CM_ContractsPayments();
     payment.lineType = '0';
@@ -150,21 +164,36 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     this.openPopupPayment('edit', payment);
   }
 
-  deletePayment(payment) {
+  deletePayment(paymentDel) {
+    let payHistory = this.listPaymentHistory?.find(paymentHis => paymentHis.refLineID == paymentDel.recID);
+    if(payHistory){
+      this.notiService.notifyCode('Đã có lịch sử thanh toán');
+      return
+    }
     this.notiService.alertCode('SYS030').subscribe((res) => {
       if (res.event.status === 'Y') {
-        let indexPayDelete = this.listPayment.findIndex(
-          (payFind) => payFind.recID == payment.recID
-        );
+        let indexPayDelete = this.listPayment.findIndex((payFind) => payFind.recID == paymentDel.recID);
         if (indexPayDelete >= 0) {
           this.listPayment.splice(indexPayDelete, 1);
-          this.listPaymentDelete.push(payment);
-          for (
-            let index = indexPayDelete;
-            index < this.listPayment.length;
-            index++
-          ) {
+          let indexAdd = this.listPaymentAdd?.findIndex((payAdd) => payAdd.recID == paymentDel.recID);
+          if(indexAdd >=0){
+            this.listPaymentAdd?.splice(indexAdd,1);
+          }else{
+            this.listPaymentDelete.push(paymentDel);
+          }        
+          for (let index = indexPayDelete;index < this.listPayment.length;index++) {
             this.listPayment[index].rowNo = index + 1;
+            let indexFind = this.listPaymentAdd.findIndex(payAdd => payAdd.recID == this.listPayment[index]?.recID);
+            if(indexFind >= 0){
+              this.listPaymentAdd?.splice(indexFind,1,this.listPayment[index]);
+            }else{
+              let indexFindEdit = this.listPaymentEdit.findIndex(payAdd => payAdd.recID == this.listPayment[index]?.recID);
+              if(indexFindEdit >= 0){
+                this.listPaymentEdit?.splice(indexFindEdit,1,this.listPayment[index]);
+              }else{
+                this.listPaymentEdit?.push(this.listPayment[index]);
+              }
+            }
           }
           this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
         }
@@ -209,6 +238,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     let countPayMent = this.listPayment.length;
     payMentHistory.rowNo = countPayMent + 1;
     payMentHistory.refNo = this.contracts?.recID;
+    payMentHistory.remainAmt = payment?.remainAmt;
     payMentHistory.lineType = '1';
     this.openPopupPaymentHistory('add', payment, payMentHistory);
   }
@@ -220,13 +250,15 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       listPaymentAdd: this.listPaymentAdd,
       listPaymentEdit: this.listPaymentEdit,
       listPaymentDelete: this.listPaymentDelete,
+      listPayment: this.listPayment,
       isSave: this.isSave,
+      contract: this.contracts,
     };
 
     let option = new DialogModel();
     option.IsFull = false;
     option.zIndex = 1021;
-    option.FormModel = this.fmContractsPaymentsHistory;
+    option.FormModel = this.fmContractsPayments;
     let popupPayHistory = this.callfunc.openForm(
       PopupViewPaymentHistoryComponent,
       '',
@@ -237,6 +269,9 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       '',
       option
     );
+    popupPayHistory.closed.subscribe(res => {
+      this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
+    })
   }
 
   async openPopupPaymentHistory(action, payment, paymentHistory) {
@@ -279,13 +314,6 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     });
   }
 
-  async changeDataMFTask(event) {
-    console.log(event);
-    
-      event.forEach((res) => {
-
-      });
-  }
 
   // gridCreated() {
   //   let rowHeight = document.querySelector(this.class + '.e-gridcontent') as HTMLElement;

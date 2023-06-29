@@ -237,7 +237,7 @@
       </div>
     </div>
 
-    <div #memoDiv class="me-5 mb-5px" [ngClass]="!expanding ? 'd-flex' : ''">
+    <div class="me-4 mb-5px" [ngClass]="!expanding ? 'd-flex' : ''">
       <span #memoContent [class]="!expanding ? 'text-truncate' : ''">
         <codx-label
           fiedName="memo"
@@ -252,14 +252,13 @@
         ></span>
       </span>
       <codx-label
-        #showMoreBtn
         *ngIf="!expanding"
         fieldName="lblMore"
         [formModel]="view.formModel"
         default="&nbsp;Xem thêm"
         class="text-primary"
         style="white-space: nowrap"
-        [ngClass]="isMoreBtnHidden ? 'd-none' : ''"
+        [ngClass]="!overflowed ? 'd-none' : ''"
         role="button"
         (click)="expanding = !expanding"
       ></codx-label>

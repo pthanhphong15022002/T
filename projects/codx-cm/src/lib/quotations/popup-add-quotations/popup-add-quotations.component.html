@@ -167,15 +167,15 @@
         <div class="col-6 row">
           <div class="form-group">
             <codx-label
-              fiedName="RefID"
+              fiedName="DealID"
               [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               #dealsCbx
-              field="refID"
+              field="dealID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              [disabled]="disableRefID"
+              [disabled]="disableDealID"
               (valueChange)="changeCombox($event)"
             ></codx-input>
           </div>

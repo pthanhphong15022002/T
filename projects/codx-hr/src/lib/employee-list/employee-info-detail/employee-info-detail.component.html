@@ -1082,7 +1082,7 @@
                   <codx-label fiedName="Phone" [formModel]="eInfoFormModel">
                   </codx-label>
                 </div>
-                <div>
+                <div class="ms-7">
                   <span
                     class="fw-bold text-dark"
                     [innerHTML]="
@@ -1121,7 +1121,7 @@
                   <codx-label fiedName="Mobile" [formModel]="eInfoFormModel">
                   </codx-label>
                 </div>
-                <div>
+                <div class="ms-7">
                   <span
                     class="fw-bold text-dark"
                     [innerHTML]="
@@ -3395,7 +3395,7 @@
               {{ getFormHeader(eBasicSalaryFuncID) }}
             </div>
           </div>
-          <div class="d-flex align-items-center ms-5">
+          <div class="d-flex align-items-center ms-5 me-3">
             <button
               type="button"
               class="btn btn-icon btn-sm btn-white"
@@ -3405,20 +3405,17 @@
             >
               <span class="icon-add icon-18"></span>
             </button>
-            <span class="text-gray-400 me-3 ms-1">|</span>
-            <button
-              class="btn btn-white text-primary"
+            <span class="text-gray-400 mx-2">|</span>
+            <button type="button"
+              class="btn btn-sm btn-white text-primary"
               (click)="valueChangeViewAllEBasicSalary()"
             >
-              <u>
-                <codx-label
-                  class="me-3"
-                  name="lblSeeAllEBenefit"
-                  [formModel]="eInfoFormModel"
-                  default="Xem tất cả"
-                >
-                </codx-label>
-              </u>
+              <codx-label
+                name="lblSeeAllEBenefit"
+                [formModel]="eInfoFormModel"
+                default="Xem tất cả"
+              >
+              </codx-label>
             </button>
             <!-- <span class="mt-1">
                 <codx-input
@@ -3536,7 +3533,7 @@
               {{ getFormHeader(eJobSalFuncID) }}
             </div>
           </div>
-          <div class="d-flex align-items-center ms-5">
+          <div class="d-flex align-items-center ms-5 me-3">
             <button
               type="button"
               class="btn btn-icon btn-sm btn-white"
@@ -3546,14 +3543,15 @@
             >
               <i class="icon-add icon-18"></i>
             </button>
-            <span class="text-gray-400 me-3 ms-1">|</span>
-            <codx-label
-              class="me-3"
-              name="lblSeeAllEBenefit"
-              [formModel]="eInfoFormModel"
-              default="Xem tất cả"
-            >
-            </codx-label>
+            <span class="text-gray-400 mx-2">|</span>
+            <button type="button" class="btn btn-sm btn-white tect-primary">
+              <codx-label
+                name="lblSeeAllEBenefit"
+                [formModel]="eInfoFormModel"
+                default="Xem tất cả"
+              >
+              </codx-label>
+            </button>
             <span class="mt-1">
               <codx-input
                 type="switch"
@@ -3689,7 +3687,7 @@
               {{ getFormHeader(benefitFuncID) }}
             </div>
           </div>
-          <div class="d-flex align-items-center ms-5">
+          <div class="d-flex align-items-center ms-5 me-3">
             <button
               type="button"
               class="btn btn-icon btn-sm btn-white"
@@ -3697,20 +3695,17 @@
             >
               <i class="icon-add icon-18"></i>
             </button>
-            <span class="text-gray-400 me-3 ms-1">|</span>
-            <button
-              class="btn btn-white text-primary"
+            <span class="text-gray-400 mx-2">|</span>
+            <button type="button"
+              class="btn btn-sm btn-white text-primary"
               (click)="valueChangeViewAllEBenefit($event)"
             >
-              <u>
-                <codx-label
-                  class="me-3"
-                  name="lblSeeAllEBenefit"
-                  [formModel]="benefitFormodel"
-                  default="Xem tất cả"
-                >
-                </codx-label>
-              </u>
+            <codx-label
+              name="lblSeeAllEBenefit"
+              [formModel]="benefitFormodel"
+              default="Xem tất cả"
+            >
+            </codx-label>
             </button>
           </div>
         </div>
@@ -3736,12 +3731,12 @@
                 <ng-template #footerBenefit let-data>
                   <div class="row">
                     <div class="col-4">
-                      <div class="d-flex align-items-center mb-3">
+                      <div class="d-flex align-items-top mb-3">
                         <span
-                          class="icon-card_giftcard text-gray-600 me-2 icon-16"
+                          class="icon-card_giftcard text-gray-700 me-2 icon-16"
                         ></span>
                         <span
-                          class="text-dark fw-bold"
+                          class="text-gray-700"
                           [innerHTML]="
                             data.benefitID
                               | formatvalue : benefitFormodel : 'benefitID'
@@ -3754,7 +3749,7 @@
                     <div class="col-4">
                       <div class="d-flex align-items-center mb-3">
                         <div class="w-100px d-flex justify-content-end">
-                          <span class="text-gray-700">{{ data.benefitAmt }}</span>
+                          <span class="text-dark fw-bold">{{ data.benefitAmt }}</span>
                         </div>
                         <div class="w-100px d-flex align-items-center">
                           <span class="text-gray-400 mx-2">/</span>
@@ -3914,7 +3909,7 @@
                 {{ getFormHeader(eContractFuncID) }}
               </div>
             </div>
-            <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5 me-3">
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
@@ -3924,19 +3919,16 @@
               </button>
               <span class="text-gray-400 mx-2">|</span>
 
-              <button
-                class="btn btn-white text-primary"
+              <button type="button"
+                class="btn btn-sm btn-white text-primary"
                 (click)="popupViewAllContract()"
               >
-                <u>
-                  <codx-label
-                    class="me-3"
-                    name="lblSeeAllEContract"
-                    [formModel]="eInfoFormModel"
-                    default="Xem tất cả"
-                  >
-                  </codx-label>
-                </u>
+              <codx-label
+                  name="lblSeeAllEContract"
+                  [formModel]="eInfoFormModel"
+                  default="Xem tất cả"
+                >
+              </codx-label>
               </button>
             </div>
           </div>

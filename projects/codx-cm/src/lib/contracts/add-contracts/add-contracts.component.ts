@@ -59,6 +59,7 @@ export class AddContractsComponent implements OnInit {
     'pmtStatus',
     'delModeID',
     'delStatus',
+    'customerID'
   ];
   contracts: CM_Contracts;
   contractsInput: CM_Contracts;
@@ -151,6 +152,7 @@ export class AddContractsComponent implements OnInit {
     this.headerTest = dt?.data?.actionName;
     this.getFormModel();
     this.listTypeContract = contractService.listTypeContract;
+
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
         this.headerTest = this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
@@ -223,6 +225,8 @@ export class AddContractsComponent implements OnInit {
       this.contracts.pmtStatus = '1';
       this.contracts.delStatus = '1';
       this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
+      this.contracts.paidAmt = 0;
+      this.contracts.remainAmt = 0;
 
       this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
       this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
@@ -237,6 +241,7 @@ export class AddContractsComponent implements OnInit {
     if (this.action == 'copy') {
       this.contracts = data;
       this.contracts.recID = Util.uid();
+      this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
       delete this.contracts['id'];
       this.getQuotationsLinesInContract(this.contracts?.recID, this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
@@ -451,24 +456,9 @@ editContract() {
 //#endregion
 //#region Save
 handleSaveContract() {
-  let message = [];
-  for (let key of this.REQUIRE) {
-    if (
-      (typeof this.contracts[key] === 'string' &&
-        !this.contracts[key].trim()) ||
-      !this.contracts[key] ||
-      this.contracts[key]?.length === 0
-    ) {
-      message.push(this.view[key]);
-    }
-  }
-  if (message.length > 0) {
-    this.notiService.notifyCode(
-      'SYS009',
-      0,
-      '"' + message.join(', ') + ' " '
-    );
-  } else if (
+  if (this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)) {
+    return
+  }else if (
     this.contracts?.delPhone &&
     !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
   ) {

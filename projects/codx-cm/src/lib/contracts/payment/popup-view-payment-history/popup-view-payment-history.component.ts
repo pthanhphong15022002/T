@@ -37,8 +37,8 @@ export class PopupViewPaymentHistoryComponent {
   listPayment: CM_ContractsPayments[];
   contracts: CM_Contracts;
 
-  sumPaid = 0;
-  remain = 0;
+  sumPaid = 0; // đã thanh toán
+  remain = 0; //còn lại
 
   constructor(
     private cmService: CodxCmService,
@@ -56,7 +56,7 @@ export class PopupViewPaymentHistoryComponent {
     this.listPaymentEdit = dt?.data?.listPaymentEdit;
     this.listPaymentAdd = dt?.data?.listPaymentAdd;
     this.listPayment = dt?.data?.listPayment;
-    this.contracts = dt?.data?.contracts;
+    this.contracts = dt?.data?.contract;
   }
 
   ngOnInit(): void {
@@ -64,15 +64,17 @@ export class PopupViewPaymentHistoryComponent {
       this.listPaymentHistory.filter(
         (paymentHistory) => paymentHistory.refLineID == this.payment?.recID
       ) || [];
-      if(this.listPayHistoryOfPay && this.listPayHistoryOfPay.length > 0){
-        this.listPayHistoryOfPay = this.listPayHistoryOfPay.sort((a, b) => (a.rowNo -b.rowNo));
-        this.sumPaid = this.listPayHistoryOfPay.reduce(
-          (sum, payHistory) => (sum += payHistory?.paidAmt || 0),
-          0
-        );
-        this.remain = this.payment?.scheduleAmt - this.sumPaid;
-      }
-    
+    if (this.listPayHistoryOfPay && this.listPayHistoryOfPay.length > 0) {
+      this.listPayHistoryOfPay = this.listPayHistoryOfPay.sort(
+        (a, b) => a.rowNo - b.rowNo
+      );
+      this.sumPaid = this.listPayHistoryOfPay.reduce(
+        (sum, payHistory) => (sum += payHistory?.paidAmt || 0),
+        0
+      );
+      this.remain = this.payment?.scheduleAmt - this.sumPaid;
+    }
+
     this.columns = [
       {
         field: 'rowNo',
@@ -138,11 +140,11 @@ export class PopupViewPaymentHistoryComponent {
   }
 
   async openPopupPaymentHistory(action, payment, paymentHistory) {
-    let payHistoryEdit = JSON.parse(JSON?.stringify(paymentHistory));
+    let paymentHistoryClone = JSON.parse(JSON?.stringify(paymentHistory));
     let dataInput = {
       action,
       payment,
-      payHistoryEdit,
+      paymentHistory: paymentHistoryClone,
       contract: this.contracts,
       listPayment: this.listPayment,
       listPaymentHistory: this.listPaymentHistory,
@@ -174,6 +176,22 @@ export class PopupViewPaymentHistoryComponent {
     );
 
     popupPaymentHistory.closed.subscribe((res) => {
+      if (res?.event) {
+        let payHisEdit = res?.event;
+        let paidAmt = payHisEdit?.paidAmt - paymentHistory?.paidAmt;
+        payment.paidAmt += paidAmt;
+        payment.remainAmt += -paidAmt;
+        this.contracts.paidAmt += paidAmt;
+        this.contracts.remainAmt += -paidAmt;
+        this.listPayment;
+        this.findPayHistory(this.listPayment, payment, 'edit');
+        this.findPayHistory(this.listPayHistoryOfPay, payHisEdit, 'edit');
+        this.findPayHistory(this.listPaymentHistory, payHisEdit, 'edit');
+        this.findPayHistory(this.listPaymentEdit, payHisEdit, 'edit');
+        this.listPayHistoryOfPay = JSON.parse(
+          JSON.stringify(this.listPayHistoryOfPay)
+        );
+      }
       // this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
     });
   }
@@ -184,25 +202,39 @@ export class PopupViewPaymentHistoryComponent {
         if (x.event && x.event.status == 'Y') {
           this.listPayment, this.listPaymentHistory;
           this.listPayHistoryOfPay;
-          this.findPayHistory(this.listPayHistoryOfPay,payHistory,'delete');
+          this.findPayHistory(this.listPayHistoryOfPay, payHistory, 'delete');
           this.findPayHistory(this.listPaymentHistory, payHistory, 'delete');
-          let index = this.listPaymentAdd?.findIndex(pay => pay?.recID == payHistory.recID);
-          if(index >= 0){
-            this.listPaymentAdd.splice(index,1);
-          }else{
+          let index = this.listPaymentAdd?.findIndex(
+            (pay) => pay?.recID == payHistory.recID
+          );
+          if (index >= 0) {
+            this.listPaymentAdd.splice(index, 1);
+          } else {
             this.listPaymentDelete.push(payHistory);
           }
-          this.listPayHistoryOfPay = JSON.parse(
-            JSON.stringify(this.listPayHistoryOfPay)
-          );
+          //cập nhật thứ tự khi xóa
+          let listPayHisUpdate = this.listPayHistoryOfPay?.filter((pay) => pay?.rowNo > payHistory?.rowNo);
+          listPayHisUpdate.forEach((pay) => { 
+            pay.rowNo -= 1; 
+            let index = this.listPaymentAdd?.findIndex((payFind) => payFind?.recID == pay.recID);
+            //kiểm tra tồn tại trong add không có thì sửa không thì đưa vào edit
+            if (index >= 0) {
+              this.listPaymentAdd.splice(index, 1);
+            } else {
+              this.findPayHistory(this.listPaymentEdit, pay, 'edit');
+            }
+          })
+
+          this.listPayHistoryOfPay = JSON.parse(JSON.stringify(this.listPayHistoryOfPay));
           this.sumPaid -= payHistory?.paidAmt || 0;
           this.remain += payHistory?.paidAmt || 0;
           this.payment.paidAmt -= payHistory?.paidAmt || 0;
           this.payment.remainAmt += payHistory?.paidAmt || 0;
           this.findPayHistory(this.listPaymentEdit, this.payment, 'edit');
-          this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
           this.findPayHistory(this.listPayment, this.payment, 'edit');
-
+          this.findPayHistory(this.listPayment, this.payment, 'edit');
+          this.contracts.paidAmt -= payHistory?.paidAmt;
+          this.contracts.remainAmt += payHistory?.paidAmt;
         }
       });
     }
@@ -218,9 +250,27 @@ export class PopupViewPaymentHistoryComponent {
         if (type == 'edit') {
           listData?.splice(index, 1, data);
         }
-      }else{
+      } else {
         listData?.push(data);
       }
+    } else {
+      listData?.push(data);
     }
   }
+
+  changeDataMFStep(event) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'CM02041_2':
+          case 'CM02041_1':
+            res.disabled = true;
+            break;
+        }
+      })
+    }
+  }
+
 }
