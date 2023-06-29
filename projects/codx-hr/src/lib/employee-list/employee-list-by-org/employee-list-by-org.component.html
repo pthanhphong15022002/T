@@ -2,7 +2,7 @@
     <ng-container *ngIf="showManager">
         <div class="d-flex align-items-top p-3">
             <div class="me-5">
-                <codx-img [width]="50" [objectId]="manager?.employeeID ? manager?.employeeID : ''"
+                <codx-img #empAvatar [width]="50" [objectId]="manager?.employeeID ? manager?.employeeID : ''"
                     [objectName]="manager?.employeeName ? manager?.employeeName : ''" [objectType]="'HR_Employees'" [imageType]="'circle'">
                 </codx-img>
             </div>
@@ -56,7 +56,7 @@
         </div>
     </ng-container>
 
-    <div class="h-100 org-gridview">
+    <div *ngIf="columnsGrid" class="h-100 org-gridview">
         <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="'HR'"
             [entityName]="'HR_Employees'" assemblyName="ERM.Business.HR" [className]="'EmployeesBusiness'"
             [hideMoreFunc]="true" [method]="'GetEmployeeListByOrgUnitIDGridView'" [dataValues]="orgUnitID"
