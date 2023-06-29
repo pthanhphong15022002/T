@@ -41,15 +41,15 @@ export class QuotationsTabViewComponent
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('popDetail') popDetail?: TemplateRef<any>;
   @Input() funcID: string = 'CM0202';
-  @Input() predicates: any; // 'RefType==@0 && RefID==@1';
+  @Input() predicates: any; //
   @Input() dataValues: any; //= '
   @Input() customerID: string;
-  @Input() refType: string;
-  @Input() refID: string;
+  // @Input() refType: string;
+  @Input() dealID: string;
   @Input() recID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
-  @Input() disableRefID = false;
+  @Input() disableDealID = false;
   @Input() disableCusID = false;
   @Input() disableContactsID = false;
   @Input() typeModel = 'custormmers' || 'deals' || 'contracts';
@@ -79,7 +79,7 @@ export class QuotationsTabViewComponent
     funcID: 'CM0202',
   };
   customerIDCrr = '';
-  refIDCrr = '';
+  dealIDCrr = '';
   recIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
@@ -129,9 +129,9 @@ export class QuotationsTabViewComponent
         } else return;
         break;
       case 'deals':
-        if (changes['refID']) {
-          if (changes['refID'].currentValue === this.refIDCrr) return;
-          this.refIDCrr = changes['refID'].currentValue;
+        if (changes['dealID']) {
+          if (changes['dealID'].currentValue === this.dealIDCrr) return;
+          this.dealIDCrr = changes['dealID'].currentValue;
         } else return;
         break;
       // case 'contracts':
@@ -149,8 +149,8 @@ export class QuotationsTabViewComponent
   ngAfterViewInit() {}
 
   getQuotations() {
-    this.requestData.predicates = this.predicates; // 'RefType==@0 && RefID==@1';
-    this.requestData.dataValues = this.dataValues; //this.refType + ';' + this.refID;
+    this.requestData.predicates = this.predicates;
+    this.requestData.dataValues = this.dataValues;
     this.requestData.entityName = this.entityName;
     this.requestData.funcID = this.funcID;
     this.requestData.pageLoading = false;
@@ -270,8 +270,7 @@ export class QuotationsTabViewComponent
   openPopup(res, action, copyToRecID = null) {
     res.status = res.status ?? '0';
     res.customerID = res.customerID ?? this.customerID;
-    res.refType = res.refType ?? this.refType;
-    res.refID = res.refID ?? this.refID;
+    res.dealID = res.dealID ?? this.dealID;
     res.salespersonID = res.salespersonID ?? this.salespersonID;
     res.consultantID = res.consultantID ?? this.consultantID;
     res.totalAmt = res.totalAmt ?? 0;
@@ -283,7 +282,7 @@ export class QuotationsTabViewComponent
 
     var obj = {
       data: res,
-      disableRefID: this.disableRefID,
+      disableDealID: this.disableDealID,
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
       action: action,
@@ -319,7 +318,7 @@ export class QuotationsTabViewComponent
       data: quotation,
       action: 'edit',
       headerText: this.titleAction,
-      disableRefID: this.disableRefID,
+      disableDealID: this.disableDealID,
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
     };
@@ -479,7 +478,7 @@ export class QuotationsTabViewComponent
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.codxCM.getDeals(dt.refID).subscribe((deals) => {
+    this.codxCM.getDeals(dt.dealID).subscribe((deals) => {
       if (deals) {
         this.codxCM.getProcess(deals.processID).subscribe((process) => {
           if (process) {

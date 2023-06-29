@@ -35,9 +35,8 @@ export class SalesInvoicesComponent
   @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
   @ViewChild('sider') sider?: TemplateRef<any>;
   @ViewChild('content') content?: TemplateRef<any>;
-  @ViewChild('memoDiv', { read: ElementRef }) memoDiv: ElementRef;
-  @ViewChild('memoContent', { read: ElementRef }) memoContent: ElementRef;
-  @ViewChild('showMoreBtn', { read: ElementRef }) showMoreBtn: ElementRef;
+  @ViewChild('memoContent', { read: ElementRef })
+  memoContent: ElementRef<HTMLElement>;
 
   views: Array<ViewModel> = [];
   btnAdd = {
@@ -56,7 +55,7 @@ export class SalesInvoicesComponent
   parent: any;
   loading: boolean = false;
 
-  isMoreBtnHidden: boolean = false;
+  overflowed: boolean = false;
   expanding: boolean = false;
 
   constructor(
@@ -111,12 +110,8 @@ export class SalesInvoicesComponent
   }
 
   ngAfterViewChecked(): void {
-    const memoDivWidth: number = this.memoDiv?.nativeElement.offsetWidth;
-    const memoContentWidth: number =
-      this.memoContent?.nativeElement.offsetWidth;
-    const moreBtnWidth: number = this.showMoreBtn?.nativeElement.offsetWidth;
-
-    this.isMoreBtnHidden = memoContentWidth + moreBtnWidth < memoDivWidth;
+    const element: HTMLElement = this.memoContent?.nativeElement;
+    this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
   ngOnDestroy() {
@@ -132,20 +127,37 @@ export class SalesInvoicesComponent
       return;
     }
 
-    this.master = e.data.data ?? e.data;
+    let data = e.data.data ?? e.data;
+    if (!data) return;
+
+    if (this.master && this.master?.recID == data?.recID) return;
+
+    console.log('chay 1 lân');
+    this.master = data;
 
     this.expanding = false;
     this.loading = true;
     this.lines = [];
-    const options = new DataRequest();
-    options.entityName = 'SM_SalesInvoicesLines';
-    options.predicates = 'TransID=@0';
-    options.dataValues = this.master.recID;
-    options.pageLoading = false;
-    this.acService
-      .loadDataAsync('SM', options)
-      .subscribe((res: ISalesInvoicesLine[]) => {
-        this.lines = res;
+    const salesInvoicesLinesOptions = new DataRequest();
+    salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
+    salesInvoicesLinesOptions.predicates = 'TransID=@0';
+    salesInvoicesLinesOptions.dataValues = this.master.recID;
+    salesInvoicesLinesOptions.pageLoading = false;
+    // this.acService
+    //   .loadDataAsync('SM', salesInvoicesLinesOptions)
+    //   .subscribe((res: ISalesInvoicesLine[]) => {
+    //     this.lines = res;
+    //     this.loading = false;
+    //   });
+    this.api
+      .exec(
+        'SM',
+        'SalesInvoicesLinesBusiness',
+        'GetLinesAsync',
+        salesInvoicesLinesOptions
+      )
+      .subscribe((res: any) => {
+        this.lines = res[0];
         this.loading = false;
       });
   }

@@ -39,7 +39,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   @Input() refID: string;
   @Input() salespersonID: string;
   @Input() consultantID: string;
-  @Input() disableRefID = false;
+  @Input() disableDealID = false;
   @Input() disableCusID = false;
   @Input() disableContactsID = false;
   @Input() typeModel = 'custormmers' || 'deals';
@@ -212,7 +212,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
 
     var obj = {
       data: res,
-      disableRefID: this.disableRefID,
+      disableDealID: this.disableDealID,
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
       action: action,
@@ -246,7 +246,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       data: quotation,
       action: 'edit',
       headerText: e.text,
-      disableRefID: this.disableRefID,
+      disableDealID: this.disableDealID,
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
     };

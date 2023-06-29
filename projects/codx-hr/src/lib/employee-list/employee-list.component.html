@@ -254,7 +254,7 @@
             <span class="text-gray-700">{{ data.birthday | fmDT}}</span>
           </ng-container>
           <ng-template #noBirthday>
-            <span class="place-holder">{{grvSetup['Birthday'].headerText}}</span>
+            <span class="place-holder">{{grvSetup?.Birthday.headerText}}</span>
           </ng-template>
         </div>
         <div class="align-items-center mb-1">
@@ -329,3 +329,16 @@
 </ng-template>
 <!-- end template list -->
 <!-- #endregion ListView-Mode -->
+
+<!-- tree_masterDetail -->
+<ng-template #tempTree let-data>
+  <div class="d-flex align-items-top py-1">
+    <i class="icon-home me-2"></i>
+    <span>{{ data.orgUnitName }}</span>
+  </div>
+</ng-template>
+<ng-template #tmpMasterDetail>
+  <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [orgUnitID]="itemSelected?.orgUnitID"
+  ></lib-employee-list-by-org>
+</ng-template>
+<!-- end tree_masterDetail -->

@@ -35,7 +35,7 @@
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [hideMF]="data?.status == '7' || !data?.roles?.isOnwer "
+    [hideMF]="data?.status == '11' || !data?.roles?.isOnwer"
     [title]="data?.leadName"
     [descTmp]="descTmp"
     [formModel]="view.formModel"
@@ -47,23 +47,22 @@
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
-    <div class="d-flex justify-content-start mb-1 w-100"   [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText">
+    <div
+      class="d-flex justify-content-start mb-1 w-100"
+      [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+    >
       <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
       <div>
         <span
           class="text-gray-600 fs-7"
           #businessLineID
           [innerHTML]="
-            data?.businessLineID
-              | formatvalue
-                : formModel
-                : 'businessLineID'
-                : businessLineID
-                : 'CMLeads'
-                : 'grvCMLeads'
+          data?.businessLineID
+              | formatvalue : view.formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
+
       </div>
     </div>
     <div class="d-flex justify-content-start mb-1 w-100">
@@ -72,23 +71,16 @@
         #note
         [ngbTooltip]="data?.note"
         [innerHTML]="
-          data?.note
-            | formatvalue : view.formModel : 'note' : note
-            | async
+          data?.note | formatvalue : view.formModel : 'note' : note | async
         "
       ></span>
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <div
-          *ngIf="data.status != '1' && data.status != '7'"
+          *ngIf="data.status == '5'; else statusDefault"
           [ngStyle]="{
-            'background-color':
-              data.status == '3'
-                ? colorReasonSuccess?.color
-                : data.status == '5'
-                ? colorReasonFail?.color
-                : data?.steps['backgroundColor']
+            'background-color': data?.steps['backgroundColor']
           }"
           class="me-1 badge badge-sm d-flex align-items-center mw-125px"
         >
@@ -104,32 +96,27 @@
             >{{ data?.currentStepName }}</span
           >
         </div>
-        <div *ngIf="data.status == '7'">
-
-
-          <div class="d-flex justify-content-start">
-            <div>
-              <div
-              [ngStyle]="{
-                'background-color':colorReasonSuccess?.color
-              }"
-              class="me-1 badge badge-sm d-flex align-items-center mw-125px"
-            >
-              <span
-                [ngClass]="data?.steps['icon']"
-                [ngStyle]="{ color: data?.steps['iconColor'] }"
-                class="me-1"
-              ></span>
-              <span
-                class="text-ellipsis line-clamp line-clamp-1"
-                [ngbTooltip]="data?.currentStepName"
-                [ngStyle]="{ color: data?.steps['textColor'] }"
-                >{{ data?.currentStepName }}</span
-              >
-            </div>
-            </div>
-            <div>
-              <codx-vll
+        <ng-template #statusDefault>
+          <div [ngbTooltip]="data?.status == '13' ? popupCustGroupID : ''">
+            <ng-template #popupCustGroupID>
+              <div class="text-end text-sm-start">
+                <codx-label
+                  [setRequire]="false"
+                  class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
+                  fiedName="ReturnedCmt"
+                  [formModel]="view.formModel"
+                ></codx-label>
+                <span
+                  class="d-flex align-items-start inline"
+                  [innerHTML]="
+                    data?.returnedCmt
+                      | formatvalue : view.formModel : 'ReturnedCmt'
+                      | async
+                  "
+                ></span>
+              </div>
+            </ng-template>
+            <codx-vll
               [name]="gridViewSetup?.Status?.referedValue"
               [field]="'Status'"
               [value]="data?.status"
@@ -138,28 +125,17 @@
               class="badge badge-light badge-sm"
             >
             </codx-vll>
-            </div>
           </div>
-        </div>
-        <div *ngIf="data.status == '1'">
-          <codx-vll
-            [name]="gridViewSetup?.Status?.referedValue"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-        </div>
-
+        </ng-template>
         <div class="d-flex align-items-center text-gray-600">
           <span
             class="text-gray-700 fs-7 line-clamp-menu"
-            [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
-            #endDate
+            [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
+            #modifiedOn
             [innerHTML]="
-              data?.endDate | formatvalue : view.formModel : 'endDate' | async
+              data?.modifiedOn
+                | formatvalue : view.formModel : 'modifiedOn'
+                | async
             "
           ></span>
         </div>
@@ -211,7 +187,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
-    [hideMF]="data?.status == '7' || hideMoreFC"
+    [hideMF]="data?.status == '11' || hideMoreFC"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
@@ -238,22 +214,27 @@
     [title]="data?.leadName"
     [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmpCard"
-    [hideMF]="data?.status == '7'"
+    [hideMF]="data?.status == '11'"
   >
   </codx-temp-full>
   <ng-template #descTmpCard>
     <div class="'d-flex flex-column w-100">
-      <div class="d-flex justify-content-start mb-1 w-100"   [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText">
+      <div
+        class="d-flex justify-content-start mb-1 w-100"
+        [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+      >
         <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
+
         <span
-          class="text-gray-600 fs-7 line-clamp-menu"
+          class="text-gray-600 fs-7"
           #businessLineID
           [innerHTML]="
-            data?.businessLineID
-              | formatvalue : view.formModel : 'businessLineID' : businessLineID
+          data?.businessLineID
+              | formatvalue : formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
+
       </div>
 
       <div class="d-flex justify-content-start mb-1 w-100">
@@ -262,13 +243,10 @@
           #note
           [ngbTooltip]="data?.note"
           [innerHTML]="
-            data?.note
-              | formatvalue : view.formModel : 'note' : note
-              | async
+            data?.note | formatvalue : view.formModel : 'note' : note | async
           "
         ></span>
       </div>
-
     </div>
   </ng-template>
 </ng-template>
@@ -281,16 +259,18 @@
           <span class="icon-16 icon-av_timer me-1"></span>
           <span
             class="text-gray-700"
-            #endDate
+            #modifiedOn
             [innerHTML]="
-              data.endDate | formatvalue : view.formModel : 'endDate' | async
+              data?.modifiedOn
+                | formatvalue : view.formModel : 'modifiedOn'
+                | async
             "
           ></span>
         </span>
         <codx-imgs
           [isToolTip]="true"
           [width]="25"
-          [objectId]="data.owner"
+          [objectId]="data?.owner"
           objectType="AD_Users"
           [numberImages]="1"
         >
@@ -321,4 +301,3 @@
 </ng-template>
 
 <!-- end kanban -->
-

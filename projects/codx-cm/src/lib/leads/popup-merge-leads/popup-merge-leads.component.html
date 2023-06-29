@@ -719,7 +719,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-1 row form-group">
+      <!-- <div class="mt-1 row form-group">
         <div class="w-10">
           <codx-label
             [formModel]="dialog.formModel"
@@ -815,7 +815,7 @@
             ></div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="mt-1 row form-group">
         <div class="w-10">
           <codx-label
@@ -2081,9 +2081,13 @@
                 ></codx-input>
               </span>
             </div>
-            <div>
-              {{ leadOne?.contactName }}
-            </div>
+            <div
+              [innerHTML]="
+                leadOne?.contactName
+                  | formatvalue : dialog.formModel : 'contactName'
+                  | async
+              "
+            ></div>
           </div>
         </div>
         <div class="w-20">
@@ -2104,9 +2108,13 @@
                 ></codx-input>
               </span>
             </div>
-            <div>
-              {{ leadTwo?.contactName }}
-            </div>
+            <div
+              [innerHTML]="
+                leadTwo?.contactName
+                  | formatvalue : dialog.formModel : 'contactName'
+                  | async
+              "
+            ></div>
           </div>
         </div>
         <div class="w-20">
@@ -2127,9 +2135,13 @@
                 ></codx-input>
               </span>
             </div>
-            <div>
-              {{ leadThree?.contactName }}
-            </div>
+            <div
+              [innerHTML]="
+                leadThree?.contactName
+                  | formatvalue : dialog.formModel : 'contactName'
+                  | async
+              "
+            ></div>
           </div>
         </div>
       </div>

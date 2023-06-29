@@ -122,6 +122,8 @@ export class PopupConvertLeadComponent implements OnInit {
     this.entityName = this.dialog.formModel?.entityName;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.deal.processID = null;
+    this.deal.currencyID = this.lead?.currencyID;
+    this.deal.exchangeRate = this.lead?.exchangeRate;
     this.promiseAll();
   }
 
@@ -242,40 +244,40 @@ export class PopupConvertLeadComponent implements OnInit {
   }
   async getListInstanceSteps(processId: any) {
     if (processId) {
-      var data = [processId, this.deal?.refID, 'add', '1'];
-      this.deal.owner = null;
-      this.deal.salespersonID = null;
-      this.deal.processID = processId;
-      this.cmSv.getInstanceSteps(data).subscribe(async (res) => {
-        if (res && res.length > 0) {
-          var obj = {
-            id: processId,
-            steps: res[0],
-            permissions: await this.getListPermission(res[1]),
-            dealId: this.deal.dealID,
-          };
-          this.listInstanceSteps = res[0];
-          this.listParticipants = obj.permissions;
-          this.deal.dealID = res[2];
-          this.dateMax = this.HandleEndDate(
-            this.listInstanceSteps,
-            'add',
-            null
-          );
-          this.deal.endDate = this.dateMax;
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+      this.getListInstanceStepId(processId);
     } else {
       this.cmSv.getListProcessDefault(['1']).subscribe((res) => {
         if (res) {
           var processId = res.recID;
           if (processId) {
-            this.getListInstanceSteps(processId);
+            this.getListInstanceStepId(processId);
           }
         }
       });
     }
+  }
+
+  getListInstanceStepId(processId: any) {
+    var data = [processId, this.deal?.refID, 'add', '1'];
+    this.deal.owner = null;
+    this.deal.salespersonID = null;
+    this.deal.processID = processId;
+    this.cmSv.getInstanceSteps(data).subscribe(async (res) => {
+      if (res && res.length > 0) {
+        var obj = {
+          id: processId,
+          steps: res[0],
+          permissions: await this.getListPermission(res[1]),
+          dealId: this.deal.dealID,
+        };
+        this.listInstanceSteps = res[0];
+        this.listParticipants = obj.permissions;
+        this.deal.dealID = res[2];
+        this.dateMax = this.HandleEndDate(this.listInstanceSteps, 'add', null);
+        this.deal.endDate = this.dateMax;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   getListContactByObjectID(objectID) {
@@ -313,6 +315,24 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       if (this.countValidate > 0) {
         return;
+      }
+      if (
+        this.customer?.taxCode != null &&
+        this.customer?.taxCode.trim() != ''
+      ) {
+        var check = await firstValueFrom(
+          this.api.execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CustomersBusiness',
+            'IsExitCoincideTaxCodeAsync',
+            [this.customer?.recID, this.customer?.taxCode, 'CM_Customers']
+          )
+        );
+        if (check) {
+          this.notiService.notifyCode('CM016');
+          return;
+        }
       }
     }
 
@@ -459,7 +479,6 @@ export class PopupConvertLeadComponent implements OnInit {
         var processId = e.component.itemsSelected[0].ProcessID;
         if (processId != this.deal?.processID) {
           this.deal.processID = processId;
-
           this.getListInstanceSteps(this.deal.processID);
         }
       }

@@ -37,6 +37,7 @@ import { LeadDetailComponent } from './lead-detail/lead-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { firstValueFrom } from 'rxjs';
+import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -172,7 +173,6 @@ export class LeadsComponent
         },
       },
     ];
-
   }
   afterLoad() {
     this.request = new ResourceModel();
@@ -198,36 +198,38 @@ export class LeadsComponent
     } catch (error) {}
   }
   async getProcessSetting() {
-    this.codxCmService.getListProcessDefault([this.applyForLead]).subscribe((res)=>{
-      if(res) {
-        this.processId = res.recID;
-        this.dataObj = {processID :res.recID};
-        this.afterLoad();
-        this.views = [
-          {
-            type: ViewType.listdetail,
-            sameData: true,
-            model: {
-              template: this.itemTemplate,
-              panelRightRef: this.templateDetail,
+    this.codxCmService
+      .getListProcessDefault([this.applyForLead])
+      .subscribe((res) => {
+        if (res) {
+          this.processId = res.recID;
+          this.dataObj = { processID: res.recID };
+          this.afterLoad();
+          this.views = [
+            {
+              type: ViewType.listdetail,
+              sameData: true,
+              model: {
+                template: this.itemTemplate,
+                panelRightRef: this.templateDetail,
+              },
             },
-          },
-          {
-            type: ViewType.kanban,
-            active: false,
-            sameData: false,
-            request: this.request,
-            request2: this.resourceKanban,
-            toolbarTemplate: this.footerButton,
-            model: {
-              template: this.cardKanban,
-              template2: this.viewColumKaban,
-              setColorHeader: true,
+            {
+              type: ViewType.kanban,
+              active: false,
+              sameData: false,
+              request: this.request,
+              request2: this.resourceKanban,
+              // toolbarTemplate: this.footerButton,
+              model: {
+                template: this.cardKanban,
+                template2: this.viewColumKaban,
+                setColorHeader: true,
+              },
             },
-          },
-        ];
-      }
-    });
+          ];
+        }
+      });
   }
   async getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
@@ -256,8 +258,6 @@ export class LeadsComponent
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
-        // this.promiseByFuncID(this.funcIDCrr.formName,this.funcIDCrr.gridViewName);
-
         this.getGridViewSetup(
           this.funcIDCrr.formName,
           this.funcIDCrr.gridViewName
@@ -311,8 +311,9 @@ export class LeadsComponent
     var functionMappings;
     var isDisabled = (eventItem, data) => {
       if (
-        (data.closed && data.status != '1') ||
+        (data.closed && data.status != '1' && data.status != '3') ||
         data.status == '1' ||
+        data.status == '3' ||
         this.checkMoreReason(data)
       ) {
         eventItem.disabled = true;
@@ -335,22 +336,28 @@ export class LeadsComponent
     };
     var isClosed = (eventItem, data) => {
       eventItem.disabled =
-        data.closed || data.status == '1' || this.checkMoreReason(data);
+        data.closed ||
+        data.status == '1' ||
+        data.status == '3' ||
+        this.checkMoreReason(data);
     };
     var isOpened = (eventItem, data) => {
       eventItem.disabled =
-        !data.closed || data.status == '1' || this.checkMoreReason(data);
+        !data.closed ||
+        data.status == '1' ||
+        data.status == '3' ||
+        this.checkMoreReason(data);
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = data.status != '1';
+      eventItem.disabled = data.status != '1' && data.status != '3';
     };
 
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = data.status != '3';
+      eventItem.disabled = data.status != '9';
     };
 
     var isMergeLead = (eventItem, data) => {
-      eventItem.disabled = false;
+      eventItem.disabled = data.status != '1' && data.status != '3';
     };
 
     functionMappings = {
@@ -417,10 +424,7 @@ export class LeadsComponent
       return;
     }
     if (data.closed) {
-      this.notificationsService.notify(
-        'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
+      this.notificationsService.notify('DP038');
       return;
     }
 
@@ -428,13 +432,13 @@ export class LeadsComponent
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (data.status == '1') {
+    if (data.status == '1' || data.status == '3') {
       this.notificationsService.notifyCode('DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notifyCode('DP038');
+    if (data.status != '1' && data.status != '3' && data.status != '5' ) {
+      this.notificationsService.notifyCode('DP037', 0, '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -539,11 +543,8 @@ export class LeadsComponent
         this.moveReason(data, false);
         break;
       case 'CM0205_9':
-        this.moveReason(data, false);
+        this.popupOwnerRoles(data);
         break;
-      // case 'CM0201_7':
-      //   this.popupOwnerRoles(data);
-      //   break;
     }
   }
 
@@ -612,7 +613,7 @@ export class LeadsComponent
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
-      processId: this.processId
+      processId: this.processId,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -641,16 +642,12 @@ export class LeadsComponent
         option.Width = '800px';
         option.zIndex = 1001;
         var formMD = new FormModel();
-        // formMD.funcID = funcIDApplyFor;
-        // formMD.entityName = fun.entityName;
-        // formMD.formName = fun.formName;
-        // formMD.gridViewName = fun.gridViewName;
         var obj = {
           action: 'edit',
           formMD: formMD,
           titleAction: 'Chỉnh sửa tiềm năng',
           applyFor: this.applyForLead,
-          processId: this.processId
+          processId: this.processId,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -679,10 +676,6 @@ export class LeadsComponent
       option.FormModel = this.view.formModel;
 
       var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
       this.openFormLead(formMD, option, 'copy');
@@ -723,37 +716,40 @@ export class LeadsComponent
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         this.cache.functionList(this.funcID).subscribe((fun) => {
-          this.cache.gridViewSetup(fun?.formName, fun?.gridViewName).subscribe(res => {
-            let option = new SidebarModel();
-            option.DataService = this.view.dataService;
-            var formMD = new FormModel();
-            formMD.entityName = fun.entityName;
-            formMD.formName = fun.formName;
-            formMD.gridViewName = fun.gridViewName;
-            formMD.funcID = this.funcID;
-            option.FormModel = JSON.parse(JSON.stringify(formMD));
-            option.Width = '800px';
-            var obj = {
-              action: 'edit',
-              title: this.titleAction,
-              gridViewSetup: res
-            };
-            var dialog = this.callfc.openSide(
-              PopupConvertLeadComponent,
-              obj,
-              option
-            );
-            dialog.closed.subscribe((e) => {
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event) {
-                this.dataSelected.status = '7';
-                this.view.dataService.update(this.dataSelected).subscribe();
-                this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-                this.detectorRef.detectChanges();
-              }
+          this.cache
+            .gridViewSetup(fun?.formName, fun?.gridViewName)
+            .subscribe((res) => {
+              let option = new SidebarModel();
+              option.DataService = this.view.dataService;
+              var formMD = new FormModel();
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              formMD.funcID = this.funcID;
+              option.FormModel = JSON.parse(JSON.stringify(formMD));
+              option.Width = '800px';
+              var obj = {
+                action: 'edit',
+                title: this.titleAction,
+                gridViewSetup: res,
+              };
+              var dialog = this.callfc.openSide(
+                PopupConvertLeadComponent,
+                obj,
+                option
+              );
+              dialog.closed.subscribe((e) => {
+                if (!e?.event) this.view.dataService.clear();
+                if (e && e.event) {
+                  this.dataSelected.status = '11';
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.detectorRef.detectChanges();
+                }
+              });
             });
-          })
-
         });
       });
   }
@@ -787,7 +783,6 @@ export class LeadsComponent
         if (e.event.length > 0) {
           e.event[0].modifiedOn = new Date();
           this.view.dataService.add(e.event[0], 0).subscribe();
-          // this.view.dataService.update(e.event[0]).subscribe();
 
           if (e.event[1]) {
             this.view.dataService.remove(e.event[1]).subscribe();
@@ -819,7 +814,6 @@ export class LeadsComponent
               this.dataSelected = res[0];
               this.notificationsService.notifyCode('SYS007');
               this.view.dataService.update(this.dataSelected).subscribe();
-              // if (this.kanban) this.kanban.updateCard(this.dataSelected);
             }
             this.detectorRef.detectChanges();
           });
@@ -984,7 +978,7 @@ export class LeadsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
-        data = this.updateReasonLead(e.event?.instance, data);
+        data = this.updateReasonLead(e.event?.instance, data, isMoveSuccess);
         var datas = [data];
         this.codxCmService.moveLeadReason(datas).subscribe((res) => {
           if (res) {
@@ -997,8 +991,8 @@ export class LeadsComponent
       }
     });
   }
-  updateReasonLead(instance: any, lead: any) {
-    lead.status = instance.status;
+  updateReasonLead(instance: any, lead: any, isMoveSuccess: boolean) {
+    lead.status = isMoveSuccess ? '9' : '15';
     lead.stepID = instance.stepID;
     lead.nextStep = '';
     return lead;
@@ -1006,37 +1000,42 @@ export class LeadsComponent
 
   popupOwnerRoles(data) {
     this.dataSelected = data;
-    this.cache.functionList('DPT0402').subscribe((fun) => {
       var formMD = new FormModel();
       let dialogModel = new DialogModel();
-      formMD.funcID = fun.functionID;
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
+      formMD.funcID = this.funcIDCrr.functionID;
+      formMD.entityName = this.funcIDCrr.entityName;
+      formMD.formName = this.funcIDCrr.formName;
+      formMD.gridViewName = this.funcIDCrr.gridViewName;
       dialogModel.zIndex = 999;
       dialogModel.FormModel = formMD;
-      var dataCM = {
-        refID: data?.refID,
+      var obj = {
+        recID: data?.recID,
         processID: data?.processID,
         stepID: data?.stepID,
+        gridViewSetup:this.gridViewSetup,
+        formModel:this.view.formModel,
+        applyFor: this.applyForLead,
+        titleAction: this.titleAction,
+        owner: data.owner
+
       };
       var dialog = this.callfc.openForm(
-        PopupEditOwnerstepComponent,
+        PopupOwnerDealComponent,
         '',
         500,
         280,
         '',
-        [null, this.titleAction, data, this.applyForLead, dataCM],
+        obj,
         '',
         dialogModel
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
           this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
       });
-    });
   }
 
   //#region event
@@ -1045,4 +1044,6 @@ export class LeadsComponent
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
+
+
 }

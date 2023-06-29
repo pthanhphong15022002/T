@@ -1,0 +1,36 @@
+<div class="ms-5 d-flex flex-wrap">
+    <div class="me-5 mt-5" *ngFor="let data of lstData">
+        <codx-card-center cardCss="border d-flex flex-center flex-column  card-user"
+            [imageId]="data.employeeID" imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" 
+            [title]="data.employeeName" [imageObjName]="data.employeeName"
+            [subTitle]="data.positionName? data.positionName: 
+                        (data.positionID? data.positionID : placeholder('PositionID'))" 
+            [dataItem]="data" [imageObjType]="formModel?.entityName"
+            [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [footer]="footer">
+        </codx-card-center>
+    </div>
+    <ng-container  *ngTemplateOutlet="noData">
+
+    </ng-container>
+</div>
+
+<ng-template #footer let-data>
+    <div class="d-flex align-items-center flex-center d-phone">
+        <span class="icon-phone_android icon-16 me-2"></span>
+        <span class="text-gray-700">
+            <span #phone [innerHTML]="data.phone | formatvalue: formModel:'Phone' | async"></span>
+        </span>
+    </div>
+    <div class="d-flex align-items-center flex-center d-mail">
+        <span class="icon-email icon-16 me-2"> </span>
+        <span class="text-gray-700">
+            <span #email [innerHTML]="data.email | formatvalue: formModel:'Email' | async"></span>
+        </span>
+    </div>
+</ng-template>
+
+<ng-template #noData>
+    <span *ngIf="lstData.length <= 0 && !onloading" class="text-gray-700 mt-5">
+        No data loaded
+    </span> 
+</ng-template>

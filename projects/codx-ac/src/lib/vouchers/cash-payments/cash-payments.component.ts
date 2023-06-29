@@ -32,6 +32,7 @@ import { SettledInvoices } from '../../models/SettledInvoices.model';
 import { map } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { AnimationModel, ILoadedEventArgs, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -107,6 +108,7 @@ export class CashPaymentsComponent extends UIComponent {
     gridViewName: 'grvAcctTrans',
     entityName: 'AC_AcctTrans',
   };
+  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -276,7 +278,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              //this.view.dataService.update(this.itemSelected).subscribe();
+              this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -309,7 +311,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              //this.view.dataService.update(this.itemSelected).subscribe();
+              this.view.dataService.update(this.itemSelected).subscribe();
             }
           }
         });
@@ -676,17 +678,5 @@ export class CashPaymentsComponent extends UIComponent {
       }
     }
   }
-  // checkRead(){
-  //   var eMaxText = document.getElementById('max-dots');
-  //   var eText = document.getElementById('dots');
-  //   if (eMaxText && eText) {
-  //     if (eText.offsetWidth > (eMaxText.offsetWidth - 100)) {
-  //       this.isRead = true;
-  //     }else{
-  //       this.isRead = false;
-  //     }
-  //   }
-
-  // }
   //#endregion
 }

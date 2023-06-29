@@ -26,6 +26,8 @@ import {
   DialogModel,
   CRUDService,
   Util,
+  AlertConfirmInputConfig,
+  DialogRef,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -66,6 +68,9 @@ export class DealsComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
   @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
+  @ViewChild('confirmOrRefuseTemp') confirmOrRefuseTemp: TemplateRef<any>;
+
+  popupConfirm: DialogRef;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -137,6 +142,7 @@ export class DealsComponent
   processIDKanban: string;
   processIDDefault: string;
   crrProcessID = '';
+  returnedCmt = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -276,6 +282,7 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
+      // this.view.load();
       // this.cache.viewSettings(this.funcID).subscribe((views) => {
       //   if (views) {
       //     this.afterLoad();
@@ -374,135 +381,136 @@ export class DealsComponent
     this.clickMF(e.e, e.data);
   }
   changeDataMF($event, data) {
-    if ($event != null && data != null) {
-      if (!data?.roles?.isOnwer) {
-        for (let more of $event) {
-          switch (more.functionID) {
-            case 'SYS01':
-            case 'SYS101':
-            case 'CM0201_1':
-            case 'CM0201_3':
-            case 'CM0201_4':
-            case 'SYS03':
-            case 'SYS04':
-            case 'SYS02':
-            case 'CM0201_2':
-            default:
-              more.disabled = true;
-          }
-        }
-      } else {
-        if (data.status == '1') {
-          for (let more of $event) {
-            switch (more.functionID) {
-              case 'SYS01':
-              case 'SYS101':
-              case 'CM0201_1':
-              case 'CM0201_3':
-              case 'CM0201_4':
-                more.disabled = true;
-                break;
-              case 'SYS03':
-              case 'SYS04':
-              case 'SYS02':
-              case 'CM0201_2':
-                more.isblur = false;
-                break;
-              default:
-                more.isblur = true;
-            }
-          }
-        } else {
-          for (let more of $event) {
-            switch (more.functionID) {
-              // move stage
-              case 'CM0201_1':
-                if (this.checkMoreReason(data) || data.closed) {
-                  more.disabled = true;
-                }
-                break;
-              // reason success
-              case 'CM0201_3':
-                if (
-                  this.checkMoreReason(data) ||
-                  data.closed ||
-                  !data.roleMore?.isReasonSuccess
-                ) {
-                  more.disabled = true;
-                }
-                break;
-              // reason fail
-              case 'CM0201_4':
-                if (
-                  this.checkMoreReason(data) ||
-                  data.closed ||
-                  !data.roleMore?.isReasonFail
-                ) {
-                  more.disabled = true;
-                }
-                break;
-              case 'CM0201_2':
-                more.disabled = true;
-                break;
-              case 'CM0201_7':
-                if (data.closed) {
-                  more.disabled = true;
-                }
-                break;
-              case 'CM0201_8':
-                if (data.closed) {
-                  more.disabled = true;
-                }
-                break;
-              case 'CM0201_9':
-                if (!data.closed) {
-                  more.disabled = true;
-                }
-                break;
-              case 'SYS101':
-              case 'SYS01':
-                if (this.checkMoreReason(data) || data.closed) {
-                  more.disabled = true;
-                }
-                break;
+    // if ($event != null && data != null) {
+    //   if (!data?.roles?.isOnwer) {
+    //     for (let more of $event) {
+    //       switch (more.functionID) {
+    //         case 'SYS01':
+    //         case 'SYS101':
+    //         case 'CM0201_1':
+    //         case 'CM0201_3':
+    //         case 'CM0201_4':
+    //         case 'SYS03':
+    //         case 'SYS04':
+    //         case 'SYS02':
+    //         case 'CM0201_2':
+    //         default:
+    //           more.disabled = true;
+    //       }
+    //     }
+    //   } else {
+    //     if (data.status == '1') {
+    //       for (let more of $event) {
+    //         switch (more.functionID) {
+    //           case 'SYS01':
+    //           case 'SYS101':
+    //           case 'CM0201_1':
+    //           case 'CM0201_3':
+    //           case 'CM0201_4':
+    //             more.disabled = true;
+    //             break;
+    //           case 'SYS03':
+    //           case 'SYS04':
+    //           case 'SYS02':
+    //           case 'CM0201_2':
+    //             more.isblur = false;
+    //             break;
+    //           default:
+    //             more.isblur = true;
+    //         }
+    //       }
+    //     } else {
+    //       for (let more of $event) {
+    //         switch (more.functionID) {
+    //           // move stage
+    //           case 'CM0201_1':
+    //             if (this.checkMoreReason(data) || data.closed) {
+    //               more.disabled = true;
+    //             }
+    //             break;
+    //           // reason success
+    //           case 'CM0201_3':
+    //             if (
+    //               this.checkMoreReason(data) ||
+    //               data.closed ||
+    //               !data.roleMore?.isReasonSuccess
+    //             ) {
+    //               more.disabled = true;
+    //             }
+    //             break;
+    //           // reason fail
+    //           case 'CM0201_4':
+    //             if (
+    //               this.checkMoreReason(data) ||
+    //               data.closed ||
+    //               !data.roleMore?.isReasonFail
+    //             ) {
+    //               more.disabled = true;
+    //             }
+    //             break;
+    //           case 'CM0201_2':
+    //             more.disabled = true;
+    //             break;
+    //           case 'CM0201_7':
+    //             if (data.closed || this.checkMoreReason(data)) {
+    //               more.disabled = true;
+    //             }
+    //             break;
+    //           case 'CM0201_8':
+    //             if (data.closed) {
+    //               more.disabled = true;
+    //             }
+    //             break;
+    //           case 'CM0201_9':
+    //             if (!data.closed) {
+    //               more.disabled = true;
+    //             }
+    //             break;
+    //           case 'SYS101':
+    //           case 'SYS01':
+    //             if (this.checkMoreReason(data) || data.closed) {
+    //               more.disabled = true;
+    //             }
+    //             break;
 
-              case 'SYS103':
-              case 'SYS03':
-                if (
-                  this.checkMoreReason(data) ||
-                  data.closed ||
-                  !data.roles.write
-                ) {
-                  more.disabled = true;
-                }
-                break;
+    //           case 'SYS103':
+    //           case 'SYS03':
+    //             if (
+    //               this.checkMoreReason(data) ||
+    //               data.closed ||
+    //               !data.roles.write
+    //             ) {
+    //               more.disabled = true;
+    //             }
+    //             break;
 
-              case 'SYS102':
-              case 'SYS02':
-                if (
-                  this.checkMoreReason(data) ||
-                  data.closed ||
-                  !data.roles.delete
-                ) {
-                  more.disabled = true;
-                }
-                break;
+    //           case 'SYS102':
+    //           case 'SYS02':
+    //             // if (
+    //             //   this.checkMoreReason(data) ||
+    //             //   data.closed ||
+    //             //   !data.roles.delete
+    //             // ) {
+    //             //   more.disabled = true;
+    //             // }
+    //             more.disabled = false;
+    //             break;
 
-              case 'SYS104':
-              case 'SYS04':
-                if (
-                  this.checkMoreReason(data) ||
-                  data.closed ||
-                  !data.roles.delete
-                ) {
-                  more.disabled = true;
-                }
-                break;
-            }
-          }
-        }
-      }
-    }
+    //           case 'SYS104':
+    //           case 'SYS04':
+    //             if (
+    //               this.checkMoreReason(data) ||
+    //               data.closed ||
+    //               !data.roles.delete
+    //             ) {
+    //               more.disabled = true;
+    //             }
+    //             break;
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
   async executeApiCalls() {
     try {
@@ -605,6 +613,14 @@ export class DealsComponent
         break;
       case 'CM0201_6':
         this.approvalTrans(data);
+        break;
+      //Xác nhận
+      case 'CM0201_12':
+        this.confirmOrRefuse(true, data);
+        break;
+      //Từ chối
+      case 'CM0201_13':
+        this.confirmOrRefuse(false, data);
         break;
     }
   }
@@ -1393,6 +1409,7 @@ export class DealsComponent
 
   //-----------------------------change Filter -------------------------------//
   changeFilter() {
+    //change view filter
     if (this.funcID != 'CM0201') {
       let idxBusinesLineOp = this.view.filterOptions.findIndex(
         (x) => x.fieldName == 'BusinessLineID'
@@ -1515,8 +1532,14 @@ export class DealsComponent
       });
   }
 
-  onLoading() {
+  onLoading(e) {
     if (!this.funCrr) return;
+    //reload filter
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funCrr != this.funcID) {
+      this.view.pinedFilter.filters = [];
+      this.view.dataService.filter.filters = [];
+    }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -1563,4 +1586,68 @@ export class DealsComponent
     });
   }
   //end
+
+  //#region xác nhận/ từ chối
+  confirmOrRefuse(check, data) {
+    if (check) {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notificationsService
+        .alertCode(
+          'CM007',
+          null,
+          this.titleAction?.toLocaleLowerCase(),
+          "'" + data?.dealName + "'"
+        )
+        .subscribe((x) => {
+          if (x?.event?.status == 'Y') {
+            this.codxCmService
+              .confirmOrRefuse(data?.recID, check, '')
+              .subscribe((res) => {
+                if (res) {
+                  this.dataSelected.status = '3';
+                  this.detailViewDeal.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
+        });
+    } else {
+      this.returnedCmt = '';
+      this.popupConfirm = this.callfc.openForm(
+        this.confirmOrRefuseTemp,
+        '',
+        500,
+        280
+      );
+    }
+  }
+
+  valueChangeConfirm(e) {
+    this.returnedCmt = e?.data?.trim();
+  }
+
+  saveConfirm() {
+    var data = this.dataSelected;
+    this.codxCmService
+      .confirmOrRefuse(this.dataSelected?.recID, false, this.returnedCmt)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.remove(this.dataSelected).subscribe();
+          this.dataSelected = this.view.dataService.data[0];
+          this.popupConfirm.close();
+          this.notificationsService.notifyCode('CM022');
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
 }

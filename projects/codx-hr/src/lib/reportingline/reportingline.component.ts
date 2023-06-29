@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
   TemplateRef,
@@ -52,7 +51,8 @@ export class ReportinglineComponent extends UIComponent {
   grvSetup: any[] = [];
   constructor(
     inject: Injector,
-    private adService: CodxAdService
+    private adService: CodxAdService,
+    private notiService: NotificationsService,
   ) {
     super(inject);
   }
@@ -255,14 +255,17 @@ export class ReportinglineComponent extends UIComponent {
     this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
+        this.beforeDel(opt), null, null, null, null, null
       )
       .subscribe((res) => {
         if (res) {
           this.itemSelected = this.view.dataService.data[0];
           this.detectorRef.detectChanges();
+        }else{
+          //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
         }
       });
+
   }
   // selected data
   onSelectionChanged(event) {

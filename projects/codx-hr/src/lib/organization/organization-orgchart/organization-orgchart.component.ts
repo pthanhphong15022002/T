@@ -20,20 +20,20 @@ import {
   TextModel,
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
-import {
-  OrgItemConfig,
-  Enabled,
-  PageFitMode,
-  Colors,
-  AnnotationType,
-  Thickness,
-  LineType,
-  AdviserPlacementType,
-  ItemType,
-  ChildrenPlacementType,
-  GroupByType,
-  LevelAnnotationConfig,
-} from 'ngx-basic-primitives';
+// import {
+//   OrgItemConfig,
+//   Enabled,
+//   PageFitMode,
+//   Colors,
+//   AnnotationType,
+//   Thickness,
+//   LineType,
+//   AdviserPlacementType,
+//   ItemType,
+//   ChildrenPlacementType,
+//   GroupByType,
+//   LevelAnnotationConfig,
+// } from 'ngx-basic-primitives';
 import {
   ApiHttpService,
   CallFuncService,

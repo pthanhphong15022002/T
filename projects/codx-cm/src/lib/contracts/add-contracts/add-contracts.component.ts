@@ -1,43 +1,40 @@
 import {
-  ChangeDetectorRef,
-  Component,
   OnInit,
   Optional,
-  TemplateRef,
   ViewChild,
+  Component,
+  TemplateRef,
 } from '@angular/core';
 import {
-  CM_Contacts,
   CM_Contracts,
-  CM_ContractsPayments,
   CM_Customers,
   CM_Quotations,
   CM_QuotationsLines,
+  CM_ContractsPayments,
 } from '../../models/cm_model';
 import {
-  ApiHttpService,
-  AuthStore,
-  CRUDService,
-  CacheService,
-  CallFuncService,
-  CodxInputComponent,
-  DataRequest,
-  DialogData,
-  DialogModel,
+  Util,
   DialogRef,
   FormModel,
-  NotificationsService,
+  DialogData,
+  CRUDService,
+  DialogModel,
+  DataRequest,
+  CacheService,
   RequestOption,
-  Util,
+  ApiHttpService,
+  CallFuncService,
+  CodxInputComponent,
+  NotificationsService,
 } from 'codx-core';
+import { Observable, map, tap} from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Observable, map, tap, firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
-import { PopupViewPaymentHistoryComponent } from '../payment/popup-view-payment-history/popup-view-payment-history.component';
-import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
-import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-history/popup-add-payment-history.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-history/popup-add-payment-history.component';
+import { PopupViewPaymentHistoryComponent } from '../payment/popup-view-payment-history/popup-view-payment-history.component';
 
 @Component({
   selector: 'add-contracts',
@@ -45,11 +42,10 @@ import { StepService } from 'projects/codx-share/src/lib/components/codx-step/st
   styleUrls: ['./add-contracts.component.scss'],
 })
 export class AddContractsComponent implements OnInit {
+  @ViewChild('more') more: TemplateRef<any>;
+  @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
-  @ViewChild('inputDeal') inputDeal: CodxInputComponent;
-  @ViewChild('more') more: TemplateRef<any>;
-  @ViewChild('test') test: any;
   REQUIRE = [
     'contractName',
     'contractID',
@@ -59,53 +55,45 @@ export class AddContractsComponent implements OnInit {
     'pmtStatus',
     'delModeID',
     'delStatus',
+    'customerID',
+    'currencyID',
   ];
+  customer: CM_Customers;
   contracts: CM_Contracts;
+  quotations: CM_Quotations;
   contractsInput: CM_Contracts;
+  listQuotationsLine: CM_QuotationsLines[] = [];
+  quotationLinesEdit: CM_QuotationsLines[] = [];
+  listQLineOfContract: CM_QuotationsLines[] = [];
+  quotationLinesAddNew: CM_QuotationsLines[] = [];
+  quotationLinesDeleted: CM_QuotationsLines[] = [];
+  listQLineOfContractAdd: CM_QuotationsLines[] = [];
+
+  listPayment: CM_ContractsPayments[] = [];
+  listPaymentAdd: CM_ContractsPayments[] = [];
+  listPaymentEdit: CM_ContractsPayments[] = [];
+  listPaymentDelete: CM_ContractsPayments[] = [];
+  listPaymentHistory: CM_ContractsPayments[] = [];
+
+  account: any;
+  columns: any;
+  grvPayments: any;
+  projectID: string;
   dialog!: DialogRef;
 
+  view = [];
+  isLoadDate = true;
+  checkPhone = true;
+  isErorrDate = true;
+  customerIdOld = null;
+  disabledDelActualDate = false;
+
   action = 'add';
-  projectID: string;
   tabClicked = '';
-  listTypeContract = [];
-  account: any;
-  type: 'view' | 'deal' | 'quotation' | 'customer';
-  customer: CM_Customers;
   customerID = {};
-  listQLineOfContractAdd: CM_QuotationsLines[] = [];
-  listQLineOfContract: CM_QuotationsLines[] = [];
-  listQuotationsLine: CM_QuotationsLines[] = [];
-  quotationLinesDeleted: CM_QuotationsLines[] = [];
-  quotationLinesEdit: CM_QuotationsLines[] = [];
-  quotationLinesAddNew: CM_QuotationsLines[] = [];
-  quotations: CM_Quotations;
   headerTest = '';
-
-  fmQuotations: FormModel = {
-    formName: 'CMQuotations',
-    gridViewName: 'grvCMQuotations',
-    entityName: 'CM_Quotations',
-    funcID: 'CM02021',
-  };
-
-  fmQuotationLines: FormModel = {
-    formName: 'CMQuotationsLines',
-    gridViewName: 'grvCMQuotationsLines',
-    entityName: 'CM_QuotationsLines',
-    funcID: 'CM02021',
-  };
-  fmContractsPayments: FormModel = {
-    formName: 'CMContractsPayments',
-    gridViewName: 'grvCMContractsPayments',
-    entityName: 'CM_ContractsPayments',
-    funcID: 'CM02041 ',
-  };
-  fmContractsPaymentsHistory: FormModel = {
-    formName: 'CMContractsPaymentsHistory',
-    gridViewName: 'grvCMContractsPaymentsHistory',
-    entityName: 'CM_ContractsPayments',
-    funcID: 'CM02042  ',
-  };
+  listTypeContract = [];
+  type: 'view' | 'deal' | 'quotation' | 'customer';
 
   moreDefaut = {
     share: true,
@@ -114,46 +102,55 @@ export class AddContractsComponent implements OnInit {
     download: true,
     delete: true,
   };
-  listPayment: CM_ContractsPayments[] = [];
-  listPaymentHistory: CM_ContractsPayments[] = [];
 
-  listPaymentAdd: CM_ContractsPayments[] = [];
-  listPaymentEdit: CM_ContractsPayments[] = [];
-  listPaymentDelete: CM_ContractsPayments[] = [];
-  columns: any;
-  grvPayments: any;
-  disabledDelActualDate = false;
-  view = [];
-  customerIdOld = null;
-  isLoadDate = true;
-  checkPhone = true;
-  isErorrDate = true;
+  fmQuotations: FormModel = {
+    funcID: 'CM02021',
+    formName: 'CMQuotations',
+    entityName: 'CM_Quotations',
+    gridViewName: 'grvCMQuotations',
+  };
+
+  fmQuotationLines: FormModel = {
+    funcID: 'CM02021',
+    formName: 'CMQuotationsLines',
+    entityName: 'CM_QuotationsLines',
+    gridViewName: 'grvCMQuotationsLines',
+  };
+  fmContractsPayments: FormModel = {
+    funcID: 'CM0204 ',
+    formName: 'CMContractsPayments',
+    entityName: 'CM_ContractsPayments',
+    gridViewName: 'grvCMContractsPayments',
+  };
 
   constructor(
     private cache: CacheService,
+    private api: ApiHttpService,
+    private cmService: CodxCmService,
+    private stepService: StepService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
-    private authStore: AuthStore,
-    private cmService: CodxCmService,
     private contractService: ContractsService,
-    private changeDetector: ChangeDetectorRef,
-    private api: ApiHttpService,
-    private stepService: StepService,
+    @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.projectID = dt?.data?.projectID;
-    this.action = dt?.data?.action;
-    this.contractsInput = dt?.data?.contract;
-    this.account = dt?.data?.account;
     this.type = dt?.data?.type;
+    this.action = dt?.data?.action;
+    this.account = dt?.data?.account;
+    this.projectID = dt?.data?.projectID;
     this.headerTest = dt?.data?.actionName;
+    this.contractsInput = dt?.data?.contract;
+
     this.getFormModel();
     this.listTypeContract = contractService.listTypeContract;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
-        this.headerTest = this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
+        if(this.headerTest){
+          this.headerTest = this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
+        }else{
+          this.headerTest = f?.defaultName.toString().toLowerCase();
+        }
       }
     });
   }
@@ -165,48 +162,6 @@ export class AddContractsComponent implements OnInit {
         this.contracts?.delStatus == '1'
         ? true
         : false;
-
-    this.columns = [
-      {
-        field: 'rowNo',
-        headerText: this.grvPayments?.ItemID?.RowNo ?? 'STT',
-        width: 50,
-      },
-      {
-        field: 'scheduleDate',
-        headerText:
-          this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
-        width: 150,
-      },
-      {
-        field: 'scheduleAmt',
-        headerText:
-          this.grvPayments?.ScheduleAmt?.headerText ?? 'Số tiền hẹn thanh toán',
-        width: 150,
-      },
-      {
-        field: 'paidAmt',
-        headerText: this.grvPayments?.PaidAmt?.headerText ?? 'Đã thanh toán',
-        width: 150,
-      },
-      {
-        field: 'remainAmt',
-        headerText: this.grvPayments?.RemainAmt?.headerText ?? 'Dư nợ còn lại',
-        width: 150,
-      },
-      {
-        field: 'status',
-        headerText: this.grvPayments?.Status?.headerText ?? 'Trạng thái',
-        width: 90,
-      },
-      {
-        field: 'note',
-        headerText: this.grvPayments?.Note?.headerText ?? 'Ghi chú',
-        width: 90,
-      },
-      // textAlign: 'left',
-      // /template: this.columnVatid,
-    ];
   }
  
 //#region setData
@@ -216,16 +171,17 @@ export class AddContractsComponent implements OnInit {
       this.contracts.recID = Util.uid();
       this.contracts.projectID = this.projectID;
       this.contracts.contractDate = new Date();
-      this.contracts.status = '0';
       this.contracts.effectiveFrom = new Date();
+      this.contracts.paidAmt = 0;
+      this.contracts.status = '0';
+      this.contracts.remainAmt = 0;
       this.contracts.useType = '1';
-      this.contracts.pmtMethodID = 'ATM';
       this.contracts.pmtStatus = '1';
       this.contracts.delStatus = '1';
+      this.contracts.pmtMethodID = 'ATM';
       this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
-
-      this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
       this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
+      this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
       this.setContractByDataOutput();
     }
 
@@ -233,11 +189,13 @@ export class AddContractsComponent implements OnInit {
       this.contracts = data;
       this.getQuotationsLinesInContract(this.contracts?.recID, this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
+      this.getCustomersDefaults(this.contracts?.customerID);
     }
     if (this.action == 'copy') {
       this.contracts = data;
-      this.contracts.recID = Util.uid();
       delete this.contracts['id'];
+      this.contracts.recID = Util.uid();
+      this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
       this.getQuotationsLinesInContract(this.contracts?.recID, this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);
     }
@@ -451,24 +409,9 @@ editContract() {
 //#endregion
 //#region Save
 handleSaveContract() {
-  let message = [];
-  for (let key of this.REQUIRE) {
-    if (
-      (typeof this.contracts[key] === 'string' &&
-        !this.contracts[key].trim()) ||
-      !this.contracts[key] ||
-      this.contracts[key]?.length === 0
-    ) {
-      message.push(this.view[key]);
-    }
-  }
-  if (message.length > 0) {
-    this.notiService.notifyCode(
-      'SYS009',
-      0,
-      '"' + message.join(', ') + ' " '
-    );
-  } else if (
+  if (this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)) {
+    return
+  }else if (
     this.contracts?.delPhone &&
     !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
   ) {
@@ -523,6 +466,7 @@ valueChangeCombobox(event) {
     this.setValueComboboxQuotation();
     this.setValueComboboxDeal();
     this.getCustomerByrecID(event?.data);
+    this.getCustomersDefaults(event?.data);
   }
   if (event?.field == 'delStatus') {
     this.disabledDelActualDate =
@@ -717,7 +661,7 @@ viewPayHistory(payment, width: number, height: number) {
   let option = new DialogModel();
   option.IsFull = false;
   option.zIndex = 1021;
-  option.FormModel = this.fmContractsPaymentsHistory;
+  option.FormModel = this.fmContractsPayments;
   let popupPayHistory = this.callfunc.openForm(
     PopupViewPaymentHistoryComponent,
     '',
@@ -799,6 +743,17 @@ onClickMFPayment(e, data) {
       this.addPayHistory(data);
       break;
   }
+}
+//#endregion
+//#region Customners
+getCustomersDefaults(customerID){
+  this.cmService.getContactByObjectID(customerID).subscribe(res => {
+    if(res){
+      this.contracts.representative = res?.contactName;
+      this.contracts.jobTitle = res?.jobTitle;
+    }
+
+  })
 }
 //#endregion
 

@@ -339,6 +339,24 @@ export class IncommingAddComponent implements OnInit {
     }
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
+
+  changeValueAgencies(e:any)
+  {
+    if(e?.component?.dataSelected && e?.component?.dataSelected.length > 0)
+    {
+      var arr = []
+      e?.component?.dataSelected.forEach(elm => {
+
+        var obj = {
+          agencyID : elm?.dataSelected?.agencyID,
+          agencyName : elm?.dataSelected?.agencyName
+        };
+        arr.push(obj);
+      });
+      this.dispatch.agencies = arr;
+    }
+   
+  }
   
   valueChangeDate(event: any) {
     this.dispatch[event?.field] = event?.data.fromDate;
@@ -348,12 +366,12 @@ export class IncommingAddComponent implements OnInit {
 
     this.disableSave = true;
 
-    if (!this.checkIsRequired()) return;
+    if (!this.checkIsRequired()) {this.disableSave = false ; return;}
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
     /////////////////////////////////////////////////////////
-    this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    this.dispatch.agencyName = this.dispatch.agencyName ? this.dispatch.agencyName.toString(): "";
     if(this.dispatch.dispatchType == "3" && this.agencyName)  this.dispatch.agencyName = this.agencyName
     this.addRelations();
     if (this.type == 'add' || this.type == 'copy') {
@@ -519,10 +537,15 @@ export class IncommingAddComponent implements OnInit {
   checkIsRequired() {
     var arr = [];
     for (var i = 0; i < this.objRequied.length; i++) {
-      var field = capitalizeFirstLetter(this.objRequied[i]);
-      var data = this.dispatch[field];
-      if(!data)
-        arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
+       var field = capitalizeFirstLetter(this.objRequied[i]);
+      if(this.type == "add" && this.formModel.funcID == 'ODT41' && field == "agencyName"){}
+      else
+      {
+        var data = this.dispatch[field];
+        if(!data)
+          arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
+      }
+     
     }
 
     //Kiểm tra số tự động

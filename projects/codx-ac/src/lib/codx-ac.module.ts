@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
+import { AccumulationTooltipService, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
@@ -77,6 +77,7 @@ import { InvoiceSetlementComponent } from './periodic/invoice-setlement/invoice-
 import { PopAddInvoiceSetlementComponent } from './periodic/invoice-setlement/pop-add-invoice-setlement/pop-add-invoice-setlement.component';
 import { ClosingDataComponent } from './periodic/closing-data/closing-data.component';
 import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
+import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
 export const routes: Routes = [
   {
@@ -315,6 +316,8 @@ export const routes: Routes = [
     NgxUiLoaderModule,
     ProgressBarModule,
     CircularGaugeModule,
+    TooltipModule,
+    ChartAllModule
   ],
 })
 export class AcModule {}

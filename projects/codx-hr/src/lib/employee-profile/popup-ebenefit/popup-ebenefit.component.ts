@@ -49,8 +49,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.formModel = dialog?.formModel;
-    // this.benefitObj = JSON.parse(JSON.stringify(this.benefitObj));
-    this.benefitObj = data?.data?.benefitObj;
+    this.benefitObj = JSON.parse(JSON.stringify(data?.data?.benefitObj));
     console.log('benefit obj nhan dc la', this.benefitObj);
 
     // this.indexSelected =
@@ -129,9 +128,14 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
 
   onSaveForm() {
     this.benefitObj.employeeID = this.employId;
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
     this.formGroup.patchValue({ benefitID: this.benefitObj.benefitID }); // test combobox chua co
+    this.formGroup.patchValue({ employeeID: this.benefitObj.employeeID });
     if (this.benefitObj.expiredDate < this.benefitObj.effectedDate) {
-      // this.notify.notifyCode('HR002');
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
         'EffectedDate',
@@ -143,7 +147,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
         if (p != null) {
-          console.log('sau khi them moi benefit', p);
           if (p.length > 1) {
             this.benefitObj.recID = p[1].recID;
           } else this.benefitObj.recID = p[0].recID;
