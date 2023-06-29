@@ -1136,7 +1136,7 @@ export class PopupAddSignFileComponent implements OnInit {
   dataStepChange(event) {
     if (event == true) {
       this.nextClick=false;
-      if (this.data.approveControl != '1' && !this.isTemplate && this.data.refType!='ES_Categories') {
+      if (this.data.approveControl != '1' && !(this.isTemplate && this.data.refType=='ES_Categories')) {        
         this.data.approveControl = '1';
         this.dialogSignFile.patchValue({ approveControl: '1' });
         this.onSaveSignFile();

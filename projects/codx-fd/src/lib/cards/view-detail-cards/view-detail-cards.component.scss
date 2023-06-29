@@ -17,3 +17,29 @@
     background-color: var(--gray-150);
     border-radius: 8px;
 }
+
+.show-more {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+.content-card{
+    height: 310px;
+    overflow-y: scroll; /* hiển thị thanh cuộn */
+    -webkit-overflow-scrolling: touch; /* tối ưu hóa cuộn trên các thiết bị cảm ứng */
+}
+
+.content-card::-webkit-scrollbar {
+    width: 0px !important; /* ẩn thanh cuộn */
+    height: 0px !important;
+}
+
+.content-card::-webkit-scrollbar-track {
+    background-color: transparent !important; /* ẩn thanh cuộn */
+}
+
+.content-card::-webkit-scrollbar-thumb {
+    background-color: transparent !important; /* ẩn thanh cuộn */
+}
