@@ -82,10 +82,10 @@ export class AddSurveyComponent extends UIComponent {
       if(item) {
         this.dataSV = item;
         this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
-
         this.getAvatar(this.dataSV);
       }
       else this.title = this.titleNull;
+      this.width = (this.title.length + 1 )* 8 + "px";
     })
   }
   onInit(): void {
@@ -454,9 +454,5 @@ export class AddSurveyComponent extends UIComponent {
   {
     this.dataSV.settings = e;
   }
-
-  changeText(text:any)
-  {
-    this.width = (text.length + 1 ) * 8 + "px";
-  }
+ 
 }
