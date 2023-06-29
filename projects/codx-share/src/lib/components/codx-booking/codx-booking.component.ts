@@ -730,7 +730,15 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   data.approveStatus = EPCONST.A_STATUS.Released;
                   data.write = false;
                   data.delete = false;
-                  this.view.dataService.update(data).subscribe();
+                  this.codxBookingService
+                  .getBookingByRecID(data.recID)
+                  .subscribe((res) => {
+                    if (res) {
+                      data.approveStatus = res?.approveStatus;
+                      this.detectorRef.detectChanges();
+                    }                    
+                    this.view.dataService.update(data).subscribe();
+                  });
                 } else {
                   this.notificationsService.notifyCode(res?.msgCodeError);
                 }
@@ -1019,6 +1027,12 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     else{
       this.notificationsService.notifyCode('SYS032');
       return;
+    }
+  }
+  reloadData(data:any) {
+    if(data!=null){
+      this.view?.dataService.update(data).subscribe();
+      this.detectorRef.detectChanges();
     }
   }
 

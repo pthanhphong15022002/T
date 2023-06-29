@@ -2189,4 +2189,12 @@ export class CodxTasksComponent
       }
     });
   }
+
+  //onLoading
+  onLoading(e) {
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (!this.crrFuncID || (this.crrFuncID && this.funcID != this.crrFuncID))
+    //   return;
+    // this.afterLoad();
+  }
 }

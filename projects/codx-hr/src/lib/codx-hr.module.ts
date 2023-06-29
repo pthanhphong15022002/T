@@ -127,6 +127,8 @@ import { EmployeePolicyalComponent } from './employee-policyal/employee-policyal
 import { PopupPolicyalComponent } from './employee-policyal/popup-policyal/popup-policyal.component';
 import { EmployeePolicybenefitsComponent } from './employee-policybenefits/employee-policybenefits.component';
 import { PopupPolicybenefitsComponent } from './employee-policybenefits/popup-policybenefits/popup-policybenefits.component';
+import { OrgEmpContactDetailCardComponent } from './empcontacts/org-emp-contact-detail-card/org-emp-contact-detail-card.component';
+import { EmployeeListByOrgComponent } from './employee-list/employee-list-by-org/employee-list-by-org.component';
 export const routes: Routes = [
       {
         path: '',
@@ -411,7 +413,9 @@ const T_Component: Type<any>[] = [
   EmployeePolicyalComponent,
   PopupPolicyalComponent,
   EmployeePolicybenefitsComponent,
-  PopupPolicybenefitsComponent
+  PopupPolicybenefitsComponent,
+  OrgEmpContactDetailCardComponent,
+  EmployeeListByOrgComponent
 ];
 @NgModule({
   imports: [

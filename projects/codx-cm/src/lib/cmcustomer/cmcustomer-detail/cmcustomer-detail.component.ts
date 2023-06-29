@@ -36,6 +36,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() funcID = 'CM0101';
   @Input() entityName = '';
   @Input() gridViewSetup: any;
+  @Input() lstCustGroups = [];
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();

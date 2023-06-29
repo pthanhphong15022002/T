@@ -156,11 +156,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       icon: "icon-cloud_upload",
       group: true
     },
-    // {
-    //   id: "R",
-    //   name: "Phạm vi tuyến tính",
-    //   icon: "fa fa-ellipsis-h"
-    // },
+    {
+      id: "R",
+      name: "Phạm vi tuyến tính",
+      icon: "fa fa-ellipsis-h"
+    },
     // {
     //   id: "O2",
     //   name: "Lưới trắc nghiệm",
@@ -353,7 +353,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         } else {
           this.questions = [
             {
-              recID: crypto.randomUUID(),
+              recID: this.generateGUID(),
               seqNo: 0,
               question: null,
               answers: null,
@@ -364,7 +364,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
               transID:this.recID,
               children: [
                 {
-                  recID: crypto.randomUUID(),
+                  recID: this.generateGUID(),
                   seqNo: 0,
                   question: 'Câu hỏi 1',
                   answers: [

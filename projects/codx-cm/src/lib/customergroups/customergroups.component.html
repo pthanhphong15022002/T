@@ -49,8 +49,8 @@
 <ng-template #icon let-data>
   <div class="d-flex justify-content-left">
     <i
-      [ngClass]="data.icon"
-      [style.background]="data.iconColor"
+      [ngClass]="data?.icon"
+      [style.background]="data?.iconColor"
       [style.color]="'white'"
       class="fs-5 d-flex align-items-center justify-content-center h-35px w-35px rounded-circle p-3 m-1"
     ></i>

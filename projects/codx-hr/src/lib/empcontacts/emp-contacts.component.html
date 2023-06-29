@@ -1,57 +1,28 @@
-<codx-views
-  #view
-  funcID="WPT05"
-  service="HR"
-  entityName="HR_Employees"
-  [views]="views"
-  [buttons]="buttons"
-  [formModel]="view.formModel"
-  idField="employeeID"
-  assemblyName="ERM.Business.HR"
-  className="EmployeesBusiness"
-  method="GetModelFormEmployAsync"
-  [selectedFirst]="true"
-  [viewActiveType]="'1'"
->
+<codx-views #view service="HR" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
+  method="GetModelFormEmployAsyncNew" [views]="views" [selectedFirst]="true" idField="employeeID" [buttons]="buttons"
+  [viewActiveType]="'2'" (viewChanged)="viewChanged($event)" (selectedChange)="selectedChange($event)">
 </codx-views>
 
 <ng-template #cardTemp let-data>
-  <codx-card-center
-    cardCss="border  d-flex flex-center flex-column  card-user"
-    [imageId]="data.employeeID"
-    imageObjType="HR_Employees"
-    imageWidth="50"
-    [formModel]="view.formModel"
-    [title]="
-      placeholder(data.employeeName, view.formModel, 'EmployeeName') | async
-    "
-    [imageObjName]="data.employeeName"
-    [subTitle]="
-      placeholder(data.positionName, view.formModel, 'PositionID') | async
-    "
-    [dataItem]="data"
-    [imageObjType]="view.formModel.entityName"
-    [desc]="
-      placeholder(
-        data.birthday | date : 'dd/MM/yyyy',
-        view.formModel,
-        'Birthday'
-      ) | async
-    "
-    [footer]="footer"
-  >
-  </codx-card-center>
+  <codx-card-center cardCss="border d-flex flex-center flex-column  card-user"
+            [imageId]="data.employeeID" imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" 
+            [title]="data.employeeName" [imageObjName]="data.employeeName"
+            [subTitle]="data.positionName? data.positionName: 
+                        (data.positionID? data.positionID : placeholder('PositionID'))" 
+            [dataItem]="data" [imageObjType]="view.formModel.entityName"
+            [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [footer]="footer">
+        </codx-card-center>
 </ng-template>
 
 <ng-template #footer let-data>
   <div class="d-flex align-items-center flex-center d-phone">
-    <span class="icon-phone_android icon-16 me-2"></span>
+    <!-- <span class="icon-phone_android icon-16 me-2"></span> -->
     <span class="text-gray-700">
       <span #phone [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
     </span>
   </div>
   <div class="d-flex align-items-center flex-center d-mail">
-    <span class="icon-email icon-16 me-2"> </span>
+    <!-- <span class="icon-email icon-16 me-2"> </span> -->
     <span class="text-gray-700">
       <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
     </span>
@@ -60,14 +31,8 @@
 
 <ng-template #itemEmployee let-data>
   <div class="d-flex align-items-center emp-list">
-    <codx-img
-      class="me-3"
-      [width]="30"
-      [objectId]="data.employeeID"
-      [objectName]="data.employeeName"
-      objectType="HR_Employees"
-      [referType]="'avt'"
-    >
+    <codx-img class="me-3" [width]="30" [objectId]="data.employeeID" [objectName]="data.employeeName"
+      objectType="HR_Employees" [referType]="'avt'">
     </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center">
@@ -92,13 +57,8 @@
 </ng-template>
 
 <ng-template #itemStatusName let-data>
-  <codx-vll
-    [value]="data.status"
-    [name]="'HR003'"
-    [showText]="true"
-    [showBgColor]="true"
-    [className]="'badge badge-success badge-sm badge-inline'"
-  ></codx-vll>
+  <codx-vll [value]="data.status" [name]="'HR003'" [showText]="true" [showBgColor]="true"
+    [className]="'badge badge-success badge-sm badge-inline'"></codx-vll>
 </ng-template>
 
 <ng-template #itemBirthDay let-data>
@@ -107,7 +67,7 @@
       <span class="text-gray-600">
         <span #birthday [innerHTML]="data.birthday
         | formatvalue: view.formModel:'Birthday'
-        | async" ></span>
+        | async"></span>
       </span>
     </div>
   </div>
@@ -116,7 +76,7 @@
 <ng-template #itemJoinOn let-data>
   <div class="d-flex align-items-center">
     <span class="text-gray-600">
-      <span #joinedOn [innerHTML]="data.joinedOn | formatvalue: view.formModel:'JoinedOn' | async" ></span>
+      <span #joinedOn [innerHTML]="data.joinedOn | formatvalue: view.formModel:'JoinedOn' | async"></span>
     </span>
   </div>
 </ng-template>
@@ -134,7 +94,21 @@
   <div class="d-flex align-items-center employee-email">
     <span class="icon-email icon-16 me-2"></span>
     <span class="text-gray-600">
-      <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async" ></span>
+      <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
     </span>
   </div>
+</ng-template>
+
+<ng-template #tmpTree let-data>
+  <div class="d-flex align-items-center py-1">
+    <i class="icon-home me-2"></i><span>{{ data.orgUnitName }}</span>
+  </div>
+</ng-template>
+<ng-template #tmpTreeItemDetail let-data>
+  <lib-employee-list-by-org [showManager]="false" [formModel]="view.formModel"
+    [orgUnitID]="itemSelected?.orgUnitID"></lib-employee-list-by-org></ng-template>
+
+<ng-template #tmpTreeItemDetailCard let-data>
+  <lib-org-emp-contact-detail-card [orgUnitID]="itemSelected?.orgUnitID" [grvSetup]="grvSetup"
+    [formModel]="view.formModel"></lib-org-emp-contact-detail-card>
 </ng-template>

@@ -1,5 +1,5 @@
 import { I } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, HostBinding } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, HostBinding, Output } from '@angular/core';
 import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -7,7 +7,7 @@ import {
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
-import { AuthService, AuthStore, UIComponent } from 'codx-core';
+import { AESCryptoService, AuthService, AuthStore, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { CodxSvService } from '../../codx-sv.service';
 import { SV_Respondents } from '../../models/SV_Respondents';
@@ -21,10 +21,12 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   providers: [RteService, MultiSelectService],
 })
 export class ReviewComponent extends UIComponent implements OnInit {
+  
+  @HostBinding('class.h-100') someField: boolean = false;
+
   avatar:any;
   primaryColor:any;
   backgroudColor:any;
-  @HostBinding('class.h-100') someField: boolean = false;
   en = environment;
   respondents: SV_Respondents = new SV_Respondents();
   questions: any = [];
@@ -53,6 +55,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   dataRepond:any;
   dataSVRepondents:any;
   select:any;
+  isPublic:any;
   html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -81,32 +84,39 @@ export class ReviewComponent extends UIComponent implements OnInit {
     private shareService : CodxShareService,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private aesCrypto: AESCryptoService
   ) {
     super(injector);
     this.user = this.auth.get();
     this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.funcID) {
-        this.funcID = queryParams.funcID;
-        this.cache.functionList(this.funcID).subscribe((res) => {
-          if (res) {
-            this.functionList = res;
-            if (queryParams?.recID) {
-              this.recID = queryParams.recID;
-              this.loadData();
-            }
-            else if (queryParams?.transID) {
-              this.repondID = queryParams.transID;
-              this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
-                this.dataSVRepondents = item;
-                this.dataRepond = item?.responds;
-                this.recID = item?.transID;
+      if (queryParams?._k) {
+        var key = this.aesCrypto.decode(queryParams?._k);
+        if(key)
+        {
+          var obj = JSON.parse(key);
+          this.funcID = obj?.funcID;
+          this.cache.functionList(this.funcID).subscribe((res) => {
+            if (res) {
+              this.functionList = res;
+              if (obj?.recID) {
+                this.recID = obj?.recID;
                 this.loadData();
-              })
+              }
+              else if (obj?.transID) {
+                this.repondID = obj?.transID;
+                this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
+                  this.dataSVRepondents = item;
+                  this.dataRepond = item?.responds;
+                  this.recID = item?.transID;
+                  this.loadData();
+                })
+              }
+           
             }
-         
-          }
-        });
+          });
+        }
+       
       }
     });
   }
@@ -166,13 +176,15 @@ export class ReviewComponent extends UIComponent implements OnInit {
       if(data?.settings?.backgroudColor) {
         this.backgroudColor = data?.settings?.backgroudColor;
       }
+      if(data?.settings?.isPublic) {
+        this.isPublic = data?.settings?.isPublic;
+      }
     }
   }
   getDataAnswer(lstData) {
     if (lstData) {
       if(this.repondID)
       {
-        debugger
         lstData.forEach((x) => {
           x.children.forEach((y) => {
             var answers = this.dataRepond.filter(r=>r.questionID == y?.recID);
@@ -457,6 +469,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       itemQuestion.seqNo
     ].answers[seqNo] = itemAnswer;
     document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).removeAttribute("disabled");
+    if(e?.target?.value)  (document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement).focus();
     //if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
   }
 
@@ -474,14 +487,14 @@ export class ReviewComponent extends UIComponent implements OnInit {
         itemQuestion.seqNo
       ].answers = this.lstAnswer;
       (document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement).value = "";
-      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");;
+      document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID).setAttribute("disabled","");
     }
 
     //if(itemQuestion.mandatory) this.removeClass(itemQuestion.recID);
   }
 
   getValue(seqNoSession, seqNoQuestion, seqNoAnswer) {
-    if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers != null) {
+    if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers && this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers.length>0) {
       return this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
         seqNoAnswer
       ]?.answer;
@@ -543,12 +556,19 @@ export class ReviewComponent extends UIComponent implements OnInit {
     }
     else if(!check)
     {
-      this.respondents.email = this.user?.email;
-      this.respondents.respondent = this.user?.userName;
+      if(this.isPublic != '1')
+      {
+        this.respondents.email = this.user?.email;
+        this.respondents.respondent = this.user?.userName;
+        this.respondents.objectID = this.user?.userID;
+        this.respondents.createdBy = this.user?.userID;
+      }
+      else
+      {
+        this.respondents.createdBy = "System";
+      }
       this.respondents.responds = respondQuestion;
-
       this.respondents.objectType = '';
-      this.respondents.objectID = '';
       this.respondents.finishedOn = new Date();
       this.respondents.transID = this.recID;
       this.respondents.scores = 0;

@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { AESCryptoService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'app-copylink',
@@ -21,6 +21,7 @@ export class CopylinkComponent implements OnInit{
     private auth : AuthStore,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private aesCrypto: AESCryptoService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -35,10 +36,18 @@ export class CopylinkComponent implements OnInit{
   ngOnInit()
   {
     this.user = this.auth.get();
+
+    var obj = 
+    {
+      funcID : this.funcID,
+      recID: this.recID
+    }
+    var key = JSON.stringify(obj);
+    key = this.aesCrypto.encode(key);
     //Link public 
-    this.public = location.host + "/" + this.user.tenant +  "/forms?funcID=" + this.funcID +"&recID=" + this.recID;
+    this.public = window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/forms?_k="+key;
     //Link Internal
-    this.internal = location.host + "/" + this.user.tenant +  "/sv/review?funcID=" + this.funcID +"&recID=" + this.recID;
+    this.internal = window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
 
     this.copyLinkGroup = this.formBuilder.group({
       link: 'internal',
@@ -47,8 +56,30 @@ export class CopylinkComponent implements OnInit{
 
   copyLink(type:any)
   {
-    navigator.clipboard.writeText(type == "public" ? this.public : this.internal);
+    var link = type == "public" ? this.public : this.internal;
+    if (window.isSecureContext && navigator?.clipboard) {
+      navigator.clipboard.writeText(link);
+    } 
+    else 
+    {
+      this.unsecuredCopyToClipboard(link);
+    }
     this.notifySvr.notifyCode("SYS041")
+  }
+
+  unsecuredCopyToClipboard(link:any)
+  {
+    const textArea = document.createElement("textarea"); 
+    textArea.value=link; 
+    document.body.appendChild(textArea); 
+    textArea.focus();
+    textArea.select(); 
+    try{
+      document.execCommand('copy')
+    }catch(err){
+      console.error('Unable to copy to clipboard',err)
+    }
+    document.body.removeChild(textArea)
   }
 
   onSave()

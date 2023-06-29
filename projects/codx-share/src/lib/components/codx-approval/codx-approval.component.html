@@ -5,22 +5,21 @@
   (selectedChange)="valueChange($event)"
   [button]="button"
   [entityName]="'ES_ApprovalTrans'"
-  [method]="'LoadDataAsync'"
-  [assemblyName]="'Core'"
+  [method]="'GetAsync'"
+  [assemblyName]="'ES'"
   [service]="'ES'"
-  [className]="'DataBusiness'"
+  [className]="'ApprovalTransBusiness'"
   [selectedFirst]="true"
   idField="recID"
 >
 </codx-views>
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    [title]="vllApproval ? vllApproval[data.processType]?.text : dvlApproval?.text"
-    [icoCss]="
-    (vllApproval ? vllApproval[data.processType]?.icon : dvlApproval?.icon) +
+    [title]="(data?.unbounds?.categoryName) ? (data?.unbounds?.categoryName) :(vllApproval ? vllApproval[data.processType]?.text : dvlApproval?.text)"
+    [icoCss]="((data?.unbounds?.icon) ? (data?.unbounds?.icon) : (vllApproval ? vllApproval[data.processType]?.icon : dvlApproval?.icon)) +
       ' w-35px d-flex h-35px justify-content-center align-items-center rounded-circle text-white me-3 fs-4'
     "
-    [icoStyle]="setStyles(vllApproval ? vllApproval[data.processType]?.color : dvlApproval?.color)"
+    [icoStyle]="setStyles((data?.unbounds?.color) ? (data?.unbounds?.color) : (vllApproval ? vllApproval[data.processType]?.color : dvlApproval?.color))"
     [desc]="data?.htmlView"
     [statusVll]="'ES030'"
     [status]="data?.status + data?.stepType"

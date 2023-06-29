@@ -27,12 +27,10 @@ import { SalesInvoiceService } from '../../sales-invoices.service';
 })
 export class TableLineDetailComponent extends UIComponent implements OnChanges {
   //#region Constructor
-  @Input() height: number = 400;
   @Input() hasMF: boolean = false;
   @Input() gvs: any;
   @Input() transID: string;
   @Input() dataService: CRUDService;
-  @Output() create = new EventEmitter();
 
   @ViewChild('grid', { static: true }) grid: CodxGridviewV2Component;
   @ViewChild('columnItemID', { static: true }) columnItemID: TemplateRef<any>;
@@ -110,10 +108,6 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
         this.export(data);
         break;
     }
-  }
-
-  onCreate(e): void {
-    this.create.emit(e);
   }
   //#endregion
 

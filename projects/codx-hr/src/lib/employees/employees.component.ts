@@ -173,6 +173,7 @@ export class EmployeesComponent extends UIComponent {
   }
 
   btnClick(event: any) {
+    debugger
     if (event?.text) {
       this.view.dataService.addNew().subscribe((res: any) => {
         if (res) {

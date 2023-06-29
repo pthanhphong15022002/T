@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, DialogRef, FormModel, NotificationsService,} from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
@@ -70,6 +71,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.cache.valueList('DP032').subscribe(res => {
+      if(res?.datas){
+        this.status = res?.datas?.filter(data => data.value!= '4' && data.value!= '5');
+      }
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -131,7 +137,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   async promiseAll(){
     try {
       await this.getValueListReason();
-      await this.getListStatus();
     }
     catch (e) {
 
@@ -181,15 +186,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       listReasonInstance.push(reasonInstance);
     }
     return listReasonInstance;
-  }
-
-
-  async getListStatus(){
-    this.cache.valueList('DP028').subscribe(res => {
-      if(res?.datas){
-        this.status = res?.datas;
-      }
-    })
   }
 
   getNameReason(isReason){

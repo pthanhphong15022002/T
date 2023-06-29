@@ -1470,9 +1470,18 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                 this.returnData.approveStatus = '3';
                 this.returnData.write = false;
                 this.returnData.delete = false;
-                (this.dialogRef.dataService as CRUDService)
-                  .update(this.returnData)
-                  .subscribe();
+                this.codxBookingService
+                  .getBookingByRecID(this.returnData.recID)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.returnData.approveStatus = res?.approveStatus;
+                      this.detectorRef.detectChanges();
+                    }
+                    (this.dialogRef.dataService as CRUDService)
+                    .update(this.returnData)
+                    .subscribe();
+                  });
+                
                 this.dialogRef && this.dialogRef.close(this.returnData);
               } else {
                 this.notificationsService.notifyCode(res?.msgCodeError);

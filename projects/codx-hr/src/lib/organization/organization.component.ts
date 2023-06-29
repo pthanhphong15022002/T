@@ -59,12 +59,23 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
+  // inject: Injector;
 
   constructor(inject: Injector, private activedRouter: ActivatedRoute) {
     super(inject);
   }
 
-  onInit(): void {}
+  onInit(): void {
+    // this.dataService = new CRUDService(this.inject);
+    // this.dataService.service = 'HR';
+    // this.dataService.assemblyName = 'ERM.Business.HR';
+    // this.dataService.className = 'OrganizationUnitsBusiness';
+    // this.dataService.method = 'GetOrgAsync';
+    // this.dataService.idField = 'OrgUnitID';
+    // this.dataService.request.entityName = 'HR_OrganizationUnits';
+    // this.detectorRef.detectChanges();
+  }
+
   ngAfterViewInit(): void {
     this.request = new ResourceModel();
     this.request.service = 'HR';
@@ -77,7 +88,7 @@ export class OrgorganizationComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
-        active: true,
+        // active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -86,18 +97,18 @@ export class OrgorganizationComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listtree,
-        active: false,
+        // active: false,
         sameData: false,
         request: this.request,
         model: {
           template: this.templateTree,
-          resourceModel: { parentIDField: 'ParentID' },
+          // resourceModel: { parentIDField: 'ParentID' },
         },
       },
       {
         id: '3',
         type: ViewType.tree_masterdetail,
-        active: false,
+        // active: false,
         sameData: false,
         request: this.request,
         model: {
@@ -106,9 +117,26 @@ export class OrgorganizationComponent extends UIComponent {
           panelRightRef: this.tmpMasterDetail,
         },
       },
+      // {
+      //   id: '4',
+      //   type: ViewType.tree_orgchart,
+      //   sameData: false,
+      //   // active: true,
+      //   request: this.request,
+      //   model: {
+      //     resizable: true,
+      //     template: this.tempTree,
+      //     panelRightRef: this.tmpOrgChart,
+      //     // panelRightRef: this.panelRightLef,
+      //     // template2: this.tmpOrgChart,
+      //     // resourceModel: { parentIDField: 'ParentID' },
+      //   },
+      // },
     ];
 
     this.detectorRef.detectChanges();
+    // this.dataService.currentComponent =
+    //   this.view?.dataService?.currentComponent;
   }
 
   //loadEmployList
@@ -267,7 +295,7 @@ export class OrgorganizationComponent extends UIComponent {
 
   viewChanged(event: any) {
     //Prevent load data when click same id and check update data when CRUD or not
-    if (this.viewActive !== event.view.id) {
+    if (this.viewActive !== event.view.id && event.view.id !== '4') {
       // if (this.viewActive !== event.view.id && this.flagLoaded) {
       // console.log(this.view.currentView.dataService.data);
 
@@ -296,6 +324,9 @@ export class OrgorganizationComponent extends UIComponent {
       this.viewActive = event.view.id;
       this.view.currentView.dataService.load().subscribe();
     }
+    // if (this.viewActive !== event.view.id && event.view.id === '4') {
+
+    // }
   }
 
   // convert org to tmp

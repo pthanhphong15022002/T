@@ -55,10 +55,9 @@ export class CodxBookingViewDetailComponent
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;
-  @ViewChild('attachment') tabModel;
   //@ViewChild('codxBooking') codxBooking: CodxBookingComponent;
   //MFunction Booking
+  @Output('reloadData') reloadData: EventEmitter<any> = new EventEmitter();
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('release') release: EventEmitter<any> = new EventEmitter();
