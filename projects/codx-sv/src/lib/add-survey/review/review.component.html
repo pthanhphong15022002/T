@@ -285,7 +285,7 @@
                   class="btn btn-submit-white text-purple me-6"
                   (click)="continue(itemSession.seqNo - 1)"
                 >
-                  <codx-label fiedName="Back" default="Quay lại" class="text-bolder"></codx-label>
+                  <codx-label fiedName="Back" default="Quay lại" class="text-bolder" [style.color]="primaryColor"></codx-label>
                 </button>
                 <button
                   *ngIf="itemSession.seqNo != questions.length - 1"
@@ -293,7 +293,7 @@
                   class="btn btn-submit-white text-purple"
                   (click)="continue(itemSession.seqNo + 1)"
                 >
-                  <codx-label fiedName="lblContinue" default="Tiếp" class="text-bolder" formName="fmReview"></codx-label>
+                  <codx-label fiedName="lblContinue" default="Tiếp" class="text-bolder" formName="fmReview" [style.color]="primaryColor"></codx-label>
                 </button>
                 <button
                   *ngIf="itemSession.seqNo == questions.length - 1"
