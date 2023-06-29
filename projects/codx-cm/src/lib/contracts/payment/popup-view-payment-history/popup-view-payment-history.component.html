@@ -115,6 +115,7 @@
       [allowSorting]="true"
       [dataSource]="listPayHistoryOfPay"
       [autoLoad]="false"
+      [hideMoreFunc]="false"
       rowHeight="40"
       predicates="TransID=@0"
     ></codx-gridview-v2>
@@ -126,6 +127,7 @@
       [dataItem]="moreDefaut"
       [type]="'view'"
       (clickMF)="onClickMFPayment($event, data)"
+      (changeDataMF)="changeDataMFStep($event)"
     ></codx-mfunc>
   </ng-template>
 </ng-template>

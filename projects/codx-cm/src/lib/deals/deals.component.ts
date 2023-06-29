@@ -1529,7 +1529,7 @@ export class DealsComponent
       });
   }
 
-  onLoading() {
+  onLoading(e) {
     if (!this.funCrr) return;
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
