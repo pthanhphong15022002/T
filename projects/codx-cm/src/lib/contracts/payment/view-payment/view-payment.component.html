@@ -16,14 +16,12 @@
     height="'200px'"
     predicates="TransID=@0"
     ></codx-gridview-v2>
-  <div class="d-flex align-items-center my-5">
-    <div class="content-icon">
-      <span class="icon-add text-primary"></span>
-    </div>
+  <div class="my-5">
     <button
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-primary btn-sm d-flex align-items-center ps-1 pe-2"
       (click)="addPayment()">
+      <span class="icon-add text-white fw-bold"></span>
       <codx-label
         [formModel]="fmContractsPayments"
         fiedName

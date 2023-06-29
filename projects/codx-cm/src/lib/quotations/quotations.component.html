@@ -53,7 +53,8 @@
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
     <div class="d-flex align-items-top mb-1">
-      <span class="icon-corporate_fare text-gray-600 icon-16 me-2"></span>
+      <!-- <span class="icon-corporate_fare text-gray-600 icon-16 me-2"></span> -->
+      <cm-view-icon-group [customerID]="data?.customerID"></cm-view-icon-group>
       <span
         class="text-gray-600"
         [innerHTML]="
@@ -229,7 +230,8 @@
 
 <ng-template #templateCustomer let-data>
   <div class="">
-    <span class="icon-corporate_fare text-primary icon-16 me-2"></span>
+    <!-- <span class="icon-corporate_fare text-primary icon-16 me-2"></span> -->
+    <cm-view-icon-group [customerID]="data?.customerID"></cm-view-icon-group>
     <span
       [innerHTML]="
         data?.customerID | formatvalue : view.formModel : 'customerID' | async
@@ -288,6 +290,46 @@
         data?.createdOn | formatvalue : view.formModel : 'createdOn' | async
       "
     ></span>
+  </div>
+</ng-template>
+
+<ng-template #templateDeal let-data>
+  <div class="">
+    <span
+      class="line-clamp-1 cursor-pointer"
+      [innerHTML]="
+        data?.dealID | formatvalue : view.formModel : 'dealID' | async
+      "
+    ></span>
+    <!-- [ngbTooltip]="dealnameFull"
+    <ng-template #dealnameFull>
+      <span
+        [innerHTML]="
+          data?.dealID | formatvalue : view.formModel : 'dealID' | async
+        "
+      ></span
+    ></ng-template> -->
+  </div>
+</ng-template>
+
+<ng-template #templateApproverStatus let-data>
+  <div class="">
+    <codx-vll
+      [name]="vllApprove"
+      [field]="'ApproveStatus'"
+      [value]="data?.approveStatus"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-md fs-7"
+    >
+    </codx-vll>
+    <!-- <span
+      [innerHTML]="
+        data?.approveStatus
+          | formatvalue : view.formModel : 'approveStatus'
+          | async
+      "
+    ></span> -->
   </div>
 </ng-template>
 
