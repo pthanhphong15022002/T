@@ -27,6 +27,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   styleUrls: ['./employee-day-off.component.css'],
 })
 export class EmployeeDayOffComponent extends UIComponent {
+  console = console;
   //#region view
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
@@ -111,7 +112,6 @@ export class EmployeeDayOffComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.templateList,
@@ -121,7 +121,6 @@ export class EmployeeDayOffComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,
@@ -355,8 +354,10 @@ export class EmployeeDayOffComponent extends UIComponent {
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '' ,
-              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              '',
+              this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo,
               ''
             )
             .subscribe((result) => {

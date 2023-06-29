@@ -653,6 +653,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.employeeID = params['employeeID'];
       this.pageNum = params['page'];
       this.maxPageNum = params['totalPage']
+      debugger
 
       if(this.employeeID){
         // Load full thong tin employee
@@ -666,7 +667,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.df.detectChanges();
           }
         })
-        debugger
         // Load full thong tin current cua employee
         this.getEmpCurrentData().subscribe((res) => {
           if(res){
@@ -684,6 +684,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         })
       }
       if (this.employeeID) {
+        debugger
         if (history.state) {
           this.listEmp = history.state.data
           this.request = history.state.request;
@@ -3746,6 +3747,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   nextEmp() {
     if (this.listEmp) {
+      debugger
       // console.log('vi tri tim trong mang', this.listEmp.findIndex(
       //   (x: any) => this.employeeID == x['EmployeeID']
       // ))

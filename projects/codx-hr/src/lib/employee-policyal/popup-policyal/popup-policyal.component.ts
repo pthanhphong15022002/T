@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CRUDService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent } from 'codx-core';
+import { CRUDService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent, Util } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import {
@@ -58,6 +58,12 @@ export class PopupPolicyalComponent
   headerText: string;
   alpolicyObj: any;
   grvSetup // chua viet code lay grvsetup
+
+  fmPolicyDetail: FormModel = {
+    formName: 'PolicyDetails',
+    gridViewName: 'grvPolicyDetails',
+    entityName: 'HR_PolicyDetails',
+  };
 
   tabInfo: any[] = [
     {
@@ -126,11 +132,19 @@ export class PopupPolicyalComponent
     if(!this.columnGrid1){
       this.columnGrid1 = [
         {
+          field: 'fromValue',
+          allowEdit : true,
+          controlType: 'text',
+          dataType : 'int',
           headerTemplate: this.headTmpGrid1Col1,
           template: this.tmpGrid1Col1,
           width: '150',
         },
         {
+          field: 'days',
+          allowEdit : true,
+          controlType: 'text',
+          dataType : 'string',
           headerTemplate: this.headTmpGrid1Col2,
           template: this.tmpGrid1Col2,
           width: '150',
@@ -319,6 +333,16 @@ export class PopupPolicyalComponent
     this.df.detectChanges();
   }
 
+  changeDataMF(evt){
+    debugger
+    for(let i = 0; i < evt.length; i++){
+      let funcIDStr = evt[i].functionID;
+      if(funcIDStr == ''){
+        evt[i].disabled = true;
+      }
+    }
+  }
+
   GetPolicyDetailByFirstMonthType(data){
     return this.api.execSv<any>(
       'HR',
@@ -337,12 +361,29 @@ export class PopupPolicyalComponent
 
   }
 
-  onAddNewGrid1($evt){
+  addRowGrid1(){
+    debugger
+    let idx = this.gridView1.dataSource.length;
+    // if(idx > 1){
+    //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
+    //   data.recID = Util.uid();
+    //   data.days = 0;
+    //   data.fromValue = 0;
+    //   this.gridView1.addRow(data, idx);
+    // }
+    let data = {
+      recID: Util.uid()
+    };
 
+    this.gridView1.addRow(data, idx);
+  }
+
+  onAddNewGrid1(evt){
+    debugger
   }
 
   onEditGrid1(evt){
-
+    debugger
   }
 
   onDeleteGrid1(evt){

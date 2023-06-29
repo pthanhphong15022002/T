@@ -156,6 +156,10 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
   }
 
   addPayment() {
+    if(!this.contracts?.contractAmt){
+      this.notiService.notifyCode('CM023');
+      return;
+    }
     let payment = new CM_ContractsPayments();
     payment.lineType = '0';
     this.openPopupPayment('add', payment);
@@ -313,12 +317,4 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
     });
   }
-
-
-  // gridCreated() {
-  //   let rowHeight = document.querySelector(this.class + '.e-gridcontent') as HTMLElement;
-  //   let countPayment = this.listPayment.length;
-  //   let height = Number(countPayment || 0) * 40;
-  //   rowHeight.style.height = height.toString() + 'px';
-  // }
 }

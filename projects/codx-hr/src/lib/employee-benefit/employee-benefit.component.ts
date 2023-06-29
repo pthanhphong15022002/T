@@ -98,7 +98,6 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -108,7 +107,6 @@ export class EmployeeBenefitComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
@@ -211,7 +209,7 @@ export class EmployeeBenefitComponent extends UIComponent {
               this.view.formModel.entityName,
               this.view.formModel.funcID,
               '',
-              'Phụ cấp - ' + this.itemDetail.decisionNo ,
+              'Phụ cấp - ' + this.itemDetail.decisionNo,
               ''
             )
             .subscribe((result) => {
