@@ -241,6 +241,7 @@ export class AddContractsComponent implements OnInit {
     if (this.action == 'copy') {
       this.contracts = data;
       this.contracts.recID = Util.uid();
+      this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
       delete this.contracts['id'];
       this.getQuotationsLinesInContract(this.contracts?.recID, this.contracts?.quotationID);
       this.getPayMentByContractID(this.contracts?.recID);

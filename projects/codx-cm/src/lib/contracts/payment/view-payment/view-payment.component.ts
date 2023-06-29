@@ -141,6 +141,20 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     }
   }
 
+  changeDataMF(event) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'CM0204_4':
+            res.disabled = true;
+            break;
+        }
+      })
+    }
+  }
+
   addPayment() {
     let payment = new CM_ContractsPayments();
     payment.lineType = '0';
@@ -244,7 +258,7 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     let option = new DialogModel();
     option.IsFull = false;
     option.zIndex = 1021;
-    option.FormModel = this.fmContractsPaymentsHistory;
+    option.FormModel = this.fmContractsPayments;
     let popupPayHistory = this.callfunc.openForm(
       PopupViewPaymentHistoryComponent,
       '',
@@ -300,13 +314,6 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     });
   }
 
-  async changeDataMFTask(event) {
-    console.log(event);
-    
-      event.forEach((res) => {
-
-      });
-  }
 
   // gridCreated() {
   //   let rowHeight = document.querySelector(this.class + '.e-gridcontent') as HTMLElement;
