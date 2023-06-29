@@ -41,7 +41,6 @@ export class CmCustomerDetailComponent implements OnInit {
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
 
-  listContract: CM_Contacts[];
   moreFuncAdd = '';
   moreFuncEdit = '';
   vllContactType = '';
@@ -158,7 +157,6 @@ export class CmCustomerDetailComponent implements OnInit {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.getOneCustomerDetail(this.dataSelected);
-        this.getContractByCustomersID();
       }
     }
   }
@@ -343,16 +341,4 @@ export class CmCustomerDetailComponent implements OnInit {
     }
   }
 
-  getContractByCustomersID() {
-    if(this.dataSelected?.recID){
-      var data = [this.dataSelected?.recID];
-      this.cmSv.getListContractByCustomersID(data).subscribe((res) => {
-        if (res) {
-          this.listContract = res;
-        }else{
-          this.listContract = [];
-        }
-      });
-    }
-  }
 }
