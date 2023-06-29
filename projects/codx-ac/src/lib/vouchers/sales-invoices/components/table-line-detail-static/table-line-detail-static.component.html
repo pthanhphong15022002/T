@@ -1,4 +1,4 @@
-<div class="table-responsive h-100">
+<div #myTable class="table-responsive h-100">
   <table class="table table-hover h-100">
     <thead>
       <tr>
@@ -135,6 +135,8 @@
           </div>
         </td>
       </tr>
+
+      <tr *ngIf="!hasVerticalScrollbar" class="h-100"></tr>
     </tbody>
 
     <tfoot>

@@ -2,53 +2,48 @@
     <ng-container *ngIf="showManager">
         <div class="d-flex align-items-top p-3">
             <div class="me-5">
-                <codx-img [width]="50" [objectId]="employeeManager?.employeeID ? employeeManager?.employeeID : ''"
-                    [objectName]="employeeManager?.employeeName ? employeeManager?.employeeName : ''" [objectType]="'HR_Employees'" [imageType]="'circle'">
+                <codx-img [width]="50" [objectId]="manager?.employeeID ? manager?.employeeID : ''"
+                    [objectName]="manager?.employeeName ? manager?.employeeName : ''" [objectType]="'HR_Employees'" [imageType]="'circle'">
                 </codx-img>
             </div>
             <div class="d-flex align-items-top w-100 justify-content-between">
                 <div class="d-flex flex-column">
                     <div class="mb-1">
-                        <ng-container *ngIf="employeeManager?.employeeName; else lblEmployeeName">
-                            <span class="fw-bold text-dark fs-5">{{employeeManager.employeeName}}</span>
+                        <ng-container *ngIf="manager?.employeeName; else lblEmployeeName">
+                            <span class="fw-bold text-dark fs-5">{{manager.employeeName}}</span>
                         </ng-container>
                         <ng-template #lblEmployeeName>
-                            <codx-label [className]="'fw-bold text-dark fs-5'" [formModel]="formModel"
-                                name="lblEmployeeName" default="Tên nhân viên"></codx-label>
+                            <span class="place-holder">{{grvSetup['EmployeeName']?.headerText}}</span>
                         </ng-template>
                     </div>
                     <div class="mb-1">
-                        <ng-container *ngIf="employeeManager?.positionName; else lblPositionName">
-                            <span class="text-gray-500">{{employeeManager.positionName}}</span>
+                        <ng-container *ngIf="manager?.positionID; else lblPositionName">
+                            <span class="text-gray-500">{{manager.positionName? manager.positionName: manager.positionID}}</span>
                         </ng-container>
                         <ng-template #lblPositionName>
-                            <codx-label [className]="'text-gray-500'" [formModel]="formModel" name="lblPositionName"
-                                default="Chức vụ"></codx-label>
+                            <span class="place-holder">{{grvSetup['PositionID']?.headerText}}</span>
                         </ng-template>
                         <span class="ms-2 me-2 text-gray-500">|</span>
-                        <ng-container *ngIf="employeeManager?.orgUnitName; else lblOrgUnitName">
-                            <span class="text-gray-700">{{employeeManager.orgUnitName}}</span>
+                        <ng-container *ngIf="manager?.orgUnitID; else lblOrgUnitName">
+                            <span class="text-gray-700">{{manager.orgUnitName? manager.orgUnitName: manager.orgUnitID}}</span>
                         </ng-container>
                         <ng-template #lblOrgUnitName>
-                            <codx-label [className]="'text-gray-700'" [formModel]="formModel" name="lblOrgUnitName"
-                                default="Phòng ban"></codx-label>
+                            <span class="place-holder"> {{grvSetup['OrgUnitID']?.headerText}}</span>
                         </ng-template>
                     </div>
                     <div>
-                        <ng-container *ngIf="employeeManager?.phone; else lblPhone">
-                            <span class="text-gray-700">{{ employeeManager?.phone }}</span>
+                        <ng-container *ngIf="manager?.phone; else lblPhone">
+                            <span class="text-gray-700">{{ manager?.phone }}</span>
                         </ng-container>
                         <ng-template #lblPhone>
-                            <codx-label [className]="'text-gray-700'" [formModel]="formModel" name="lblEmployeePhone"
-                                default="SĐT"></codx-label>
+                            <span class="place-holder"> {{grvSetup['Phone']?.headerText}}</span>
                         </ng-template>
                         <span class="mx-2">|</span>
-                        <ng-container *ngIf="employeeManager?.email; else lblEmail">
-                            <span class="text-gray-700">{{ employeeManager.email }}</span>
+                        <ng-container *ngIf="manager?.email; else lblEmail">
+                            <span class="text-gray-700">{{ manager.email }}</span>
                         </ng-container>
                         <ng-template #lblEmail>
-                            <codx-label [className]="'text-gray-700'" [formModel]="formModel" name="lblEmail"
-                                default="Email"></codx-label>
+                            <span class="place-holder"> {{grvSetup['Email']?.headerText}}</span>
                         </ng-template>
                     </div>
                 </div>
@@ -98,7 +93,7 @@
         <span class="text-gray-700">{{ item.birthday | fmDT }}</span>
     </ng-container>
     <ng-template #noBirthday>
-        <span class="place-holder">{{ grvSetup["Birthday"].headerText }}</span>
+        <span class="place-holder">{{ grvSetup["Birthday"]?.headerText }}</span>
     </ng-template>
 </ng-template>
 <ng-template #templatePhone let-data>

@@ -156,11 +156,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       icon: "icon-cloud_upload",
       group: true
     },
-    // {
-    //   id: "R",
-    //   name: "Phạm vi tuyến tính",
-    //   icon: "fa fa-ellipsis-h"
-    // },
+    {
+      id: "R",
+      name: "Phạm vi tuyến tính",
+      icon: "fa fa-ellipsis-h"
+    },
     // {
     //   id: "O2",
     //   name: "Lưới trắc nghiệm",
