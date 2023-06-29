@@ -1,4 +1,3 @@
-import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import {
   ChangeDetectorRef,
   Component,
@@ -78,6 +77,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     if (this.dialogRef.dataService.keyField === 'EmployeeID') {
       this.employeeIDDisable = true;
     } else this.employeeIDDisable = false;
+    if (this.action === 'edit') this.employeeIDDisable = true;
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
