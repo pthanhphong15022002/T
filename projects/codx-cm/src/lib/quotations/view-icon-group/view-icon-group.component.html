@@ -1,0 +1,14 @@
+<ng-container *ngIf="loaded">
+  <ng-container *ngIf="data; else noData">
+    <span
+      [ngClass]="data?.icon ?? 'icon-corporate_fare text-primary icon-16'"
+      [ngStyle]="{ color: data?.iconColor }"
+      class="me-2"
+      [ngbTooltip]="data.custGroupName"
+    >
+    </span>
+  </ng-container>
+  <ng-template #noData>
+    <span class="icon-corporate_fare text-primary icon-16 me-2"></span>
+  </ng-template>
+</ng-container>
