@@ -755,7 +755,7 @@ export class LeadsComponent
               dialog.closed.subscribe((e) => {
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event) {
-                  this.dataSelected.status = '7';
+                  this.dataSelected.status = '11';
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)

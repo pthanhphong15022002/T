@@ -293,7 +293,7 @@
           <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
             <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 1" [transId]="
                 data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl" [isTemplate]="data?.isTemplate"
-               [recID]="data.recID" [type]="'1'" [eSign]="eSign" [signatureType]="signatureType"
+               [recID]="data.recID" [type]="'1'" [eSign]="eSign" [signatureType]="signatureType" [refType]="data?.refType !=null ? data?.refType :refType"
               [mssgDelete]="mssgDelete" (addEditItem)="dataStepChange($event)">
             </codx-approval-steps>
           </div>

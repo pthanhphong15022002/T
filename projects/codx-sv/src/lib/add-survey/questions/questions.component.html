@@ -18,9 +18,10 @@
             class="card-survey"
             [id]="'card-survey-' + itemSession.seqNo"
             (click)="clickToScroll(itemSession.seqNo, null, 'S')"
+            [style.backgroundColor]="'transparent'"
           >
-            <div *ngIf="questions.length > 1" class="count-session">
-              <div class="d-flex num-session">
+            <div *ngIf="questions.length > 1" class="count-session" [style.backgroundColor]="primaryColor">
+              <div class="d-flex num-session" >
                 <codx-label fiedName="AOS" default="Phần"></codx-label>
                 <span
                   >&nbsp;{{

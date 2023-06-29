@@ -58,10 +58,7 @@
           #businessLineID
           [innerHTML]="
             data?.businessLineID
-              | formatvalue
-                : formModel
-                : 'businessLineID'
-                : businessLineID
+              | formatvalue : formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
@@ -99,15 +96,35 @@
           >
         </div>
         <ng-template #statusDefault>
-          <codx-vll
-            [name]="gridViewSetup?.Status?.referedValue"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
+          <div [ngbTooltip]="data?.status == '13' ? popupCustGroupID : ''">
+            <ng-template #popupCustGroupID>
+              <div class="text-end text-sm-start">
+                <codx-label
+                  [setRequire]="false"
+                  class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
+                  fiedName="ReturnedCmt"
+                  [formModel]="view.formModel"
+                ></codx-label>
+                <span
+                  class="d-flex align-items-start inline"
+                  [innerHTML]="
+                    data?.returnedCmt
+                      | formatvalue : view.formModel : 'ReturnedCmt'
+                      | async
+                  "
+                ></span>
+              </div>
+            </ng-template>
+            <codx-vll
+              [name]="gridViewSetup?.Status?.referedValue"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
+          </div>
         </ng-template>
         <div class="d-flex align-items-center text-gray-600">
           <span
@@ -115,7 +132,9 @@
             [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
             #modifiedOn
             [innerHTML]="
-              data?.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
+              data?.modifiedOn
+                | formatvalue : view.formModel : 'modifiedOn'
+                | async
             "
           ></span>
         </div>
@@ -167,7 +186,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
-    [hideMF]="data?.status == '11'|| hideMoreFC"
+    [hideMF]="data?.status == '11' || hideMoreFC"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
@@ -239,7 +258,9 @@
             class="text-gray-700"
             #modifiedOn
             [innerHTML]="
-              data?.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
+              data?.modifiedOn
+                | formatvalue : view.formModel : 'modifiedOn'
+                | async
             "
           ></span>
         </span>

@@ -3139,6 +3139,15 @@ codx-toolbar-report{
   }
 }
 
+.h-350px.w-550px{
+  codx-calendar .codx-form .card-footer{
+    padding-top: 0;
+  }
+  .h-375px{
+    height: 275px!important;
+  }
+}
+
 .h-450px.dropdown-menu{
   .w-75px {
     width: 66px !important;
@@ -3343,4 +3352,15 @@ lib-layoutonlyheader{
 .codx-tab .tab-content .main-work .e-rte-content {
   height: calc(100vh - 315px) !important;
   max-height: none;
+}
+
+/// chỉnh lại dialog
+aside {
+  .card-header {
+    min-height: 70px !important;
+  }
+  codx-layout-add .card-header {
+    height: 90px !important;
+    min-height: 90px !important;
+  }
 }
