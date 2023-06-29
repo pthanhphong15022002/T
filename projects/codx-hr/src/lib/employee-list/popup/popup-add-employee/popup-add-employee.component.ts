@@ -1,4 +1,3 @@
-import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import {
   ChangeDetectorRef,
   Component,
@@ -78,6 +77,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     if (this.dialogRef.dataService.keyField === 'EmployeeID') {
       this.employeeIDDisable = true;
     } else this.employeeIDDisable = false;
+    if (this.action === 'edit') this.employeeIDDisable = true;
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
@@ -249,7 +249,10 @@ export class PopupAddEmployeeComponent implements OnInit {
         }
       }
     }
-
+    if (!this.validateEmail(this.data.email))
+      return false;
+    if (!this.validateEmail(this.data.personalEmail))
+      return false;
 
     let today = new Date().toJSON();
     if (this.data.issuedOn && this.data.issuedOn >= today) {
@@ -333,6 +336,17 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.codxModifiedOn = new Date();
     this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
+  validateEmail(email: string) {
+    const regex = new RegExp(
+      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+    );
+    if (regex.test(email) == false) {
+      this.notifySV.notifyCode('SYS037', 0, '');
+      return false;
+    }
+    return true;
+  }
+
   // getOrgNote() {
   //   if (this.data['orgUnitID']) {
   //     this.orgNote = '';

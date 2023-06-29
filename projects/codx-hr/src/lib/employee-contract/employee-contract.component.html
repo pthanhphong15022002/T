@@ -116,18 +116,31 @@
     <div class="w-20 min-w-200px px-2">
       <div class="d-flex">
         <ng-container *ngIf="flagChangeMF">
-          <codx-vll
-            [formModel]="view.formModel"
-            [field]="'Status'"
-            [value]="
-              runModeCheck ? data?.unbounds?.statusApproval : data?.status
-            "
-            [showText]="true"
-            [showIcon]="false"
-            [showBgColor]="true"
-            ngClass="badge badge-sm"
-          >
-          </codx-vll>
+          <ng-container *ngIf="runModeCheck , else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
+         
         </ng-container>
         <div
           *ngIf="data?.isCurrent && !data?.isExpire"
