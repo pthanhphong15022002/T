@@ -4,13 +4,14 @@
 </codx-views>
 
 <ng-template #cardTemp let-data>
-  <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
-    imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" [title]="
-      placeholder(data.employeeName, view.formModel, 'EmployeeName') | async" [imageObjName]="data.employeeName"
-    [subTitle]="placeholder(data.positionName, view.formModel, 'PositionID') | async" [dataItem]="data"
-    [imageObjType]="view.formModel.entityName"
-    [desc]="placeholder(data.birthday | date : 'dd/MM/yyyy',view.formModel,'Birthday') | async" [footer]="footer">
-  </codx-card-center>
+  <codx-card-center cardCss="border d-flex flex-center flex-column  card-user"
+            [imageId]="data.employeeID" imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" 
+            [title]="data.employeeName" [imageObjName]="data.employeeName"
+            [subTitle]="data.positionName? data.positionName: 
+                        (data.positionID? data.positionID : placeholder('PositionID'))" 
+            [dataItem]="data" [imageObjType]="view.formModel.entityName"
+            [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [footer]="footer">
+        </codx-card-center>
 </ng-template>
 
 <ng-template #footer let-data>
@@ -108,6 +109,6 @@
     [orgUnitID]="itemSelected?.orgUnitID"></lib-employee-list-by-org></ng-template>
 
 <ng-template #tmpTreeItemDetailCard let-data>
-  <lib-org-emp-contact-detail-card [orgUnitID]="itemSelected?.orgUnitID"
-    [formModel]="view.formModel"></lib-org-emp-contact-detail-card>
+  <lib-org-emp-contact-detail-card [orgUnitID]="itemSelected?.orgUnitID" [grvSetup]="grvSetup"
+    [formModel]="empFormModel"></lib-org-emp-contact-detail-card>
 </ng-template>

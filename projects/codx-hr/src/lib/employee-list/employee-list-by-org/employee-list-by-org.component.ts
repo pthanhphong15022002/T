@@ -30,7 +30,6 @@ export class EmployeeListByOrgComponent {
     private dt: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-
   }
   ngAfterViewInit(): void {
     if (this.grvSetup) {

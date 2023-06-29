@@ -98,12 +98,14 @@
 </ng-template>
 <ng-template #templatePhone let-data>
     <div class="d-flex align-items-center employee-add">
-        <span class="text-gray-600" [innerHTML]="data.phone | formatvalue: grid.formModel:'phone' | async"></span>
+        <span *ngIf="formModel.formName != 'EmployeeInfomation'" class="icon-phone_android icon-16 me-2"></span>
+        <span class="text-gray-600" [innerHTML]="data.phone | formatvalue: formModel:'phone' | async"></span>
     </div>
 </ng-template>
 <ng-template #templateEmail let-data>
     <div class="d-flex align-items-center employee-email">
-        <span class="text-gray-600" [innerHTML]="data.email | formatvalue: grid.formModel:'email' | async"></span>
+        <span *ngIf="formModel.formName != 'EmployeeInfomation'" class="icon-email icon-16 me-2"> </span>
+        <span class="text-gray-600" [innerHTML]="data.email | formatvalue: formModel:'email' | async"></span>
     </div>
 </ng-template>
 <ng-template #templateJoinedOn let-item>
