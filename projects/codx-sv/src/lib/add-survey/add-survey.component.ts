@@ -45,6 +45,7 @@ export class AddSurveyComponent extends UIComponent {
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
   primaryColor:any;
+  width= "200px";
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -452,5 +453,10 @@ export class AddSurveyComponent extends UIComponent {
   changeSetting(e:any)
   {
     this.dataSV.settings = e;
+  }
+
+  changeText(text:any)
+  {
+    this.width = (text.length + 1 ) * 8 + "px";
   }
 }

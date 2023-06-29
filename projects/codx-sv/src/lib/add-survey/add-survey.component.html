@@ -15,7 +15,7 @@
     <div class="saving d-flex align-items-center">
       <span class="icon-arrow_back pe-6 icon-24 cursor-pointer" (click)="back()"></span>
       <i id="icon-sv-default" class="icon-i-file-earmark-text-fill fs-30px color-7248B9" [style.color]="primaryColor"></i>
-      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title border-bottom w-500px ms-2" [field]="'title'" (valueChange)="valueChange($event)" [ngbTooltip]="title"></codx-input>
+      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title border-bottom ms-2" [field]="'title'" [style.width]="width" (keypup)="changeText($event?.target?.value)" (valueChange)="valueChange($event)" [ngbTooltip]="title"></codx-input>
 
      
     </div>
