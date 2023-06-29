@@ -150,21 +150,36 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     this.openPopupPayment('edit', payment);
   }
 
-  deletePayment(payment) {
+  deletePayment(paymentDel) {
+    let payHistory = this.listPaymentHistory?.find(paymentHis => paymentHis.refLineID == paymentDel.recID);
+    if(payHistory){
+      this.notiService.notifyCode('Đã có lịch sử thanh toán');
+      return
+    }
     this.notiService.alertCode('SYS030').subscribe((res) => {
       if (res.event.status === 'Y') {
-        let indexPayDelete = this.listPayment.findIndex(
-          (payFind) => payFind.recID == payment.recID
-        );
+        let indexPayDelete = this.listPayment.findIndex((payFind) => payFind.recID == paymentDel.recID);
         if (indexPayDelete >= 0) {
           this.listPayment.splice(indexPayDelete, 1);
-          this.listPaymentDelete.push(payment);
-          for (
-            let index = indexPayDelete;
-            index < this.listPayment.length;
-            index++
-          ) {
+          let indexAdd = this.listPaymentAdd?.findIndex((payAdd) => payAdd.recID == paymentDel.recID);
+          if(indexAdd >=0){
+            this.listPaymentAdd?.splice(indexAdd,1);
+          }else{
+            this.listPaymentDelete.push(paymentDel);
+          }        
+          for (let index = indexPayDelete;index < this.listPayment.length;index++) {
             this.listPayment[index].rowNo = index + 1;
+            let indexFind = this.listPaymentAdd.findIndex(payAdd => payAdd.recID == this.listPayment[index]?.recID);
+            if(indexFind >= 0){
+              this.listPaymentAdd?.splice(indexFind,1,this.listPayment[index]);
+            }else{
+              let indexFindEdit = this.listPaymentEdit.findIndex(payAdd => payAdd.recID == this.listPayment[index]?.recID);
+              if(indexFindEdit >= 0){
+                this.listPaymentEdit?.splice(indexFindEdit,1,this.listPayment[index]);
+              }else{
+                this.listPaymentEdit?.push(this.listPayment[index]);
+              }
+            }
           }
           this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
         }

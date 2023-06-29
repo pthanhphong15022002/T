@@ -65,7 +65,7 @@ export class CalculatingCostOfProductComponent extends UIComponent{
       },
       {
         type: ViewType.smallcard,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
