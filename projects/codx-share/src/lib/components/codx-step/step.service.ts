@@ -115,6 +115,17 @@ export class StepService {
     }
     return false;
   }
+
+  async getNameFunctionID(functionID){
+    let textMore = '';
+    let moreFunction =  await firstValueFrom(this.cache.moreFunction('CoDXSystem', null));
+    if(moreFunction){
+      let more = moreFunction.find((f) => f.functionID == functionID);
+      textMore = more ? more?.customName : '';
+    }
+    return textMore;
+  }
+  
   //#endregion
 
   checkTaskLink(task, step) {
