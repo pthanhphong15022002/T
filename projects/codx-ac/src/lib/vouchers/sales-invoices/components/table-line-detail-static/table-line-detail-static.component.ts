@@ -1,9 +1,12 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   Injector,
   Input,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
 import { ISalesInvoicesLine } from '../../interfaces/ISalesInvoicesLine.interface';
@@ -16,11 +19,13 @@ import { SalesInvoiceService } from '../../sales-invoices.service';
 })
 export class TableLineDetailStaticComponent
   extends UIComponent
-  implements OnChanges
+  implements AfterViewInit, OnChanges
 {
   //#region Constructor
   @Input() salesInvoicesLines: ISalesInvoicesLine[] = [];
   @Input() loading: boolean = false;
+
+  @ViewChild('myTable') tableRef: ElementRef<HTMLElement>;
 
   gvs: any;
   ths: { field: string; headerText: string; class?: string }[] = [];
@@ -41,6 +46,7 @@ export class TableLineDetailStaticComponent
     gridViewName: 'grvSalesInvoicesLines',
     entityPer: 'SM_SalesInvoicesLines',
   };
+  hasVerticalScrollbar: boolean;
 
   constructor(injector: Injector, salesInvoiceService: SalesInvoiceService) {
     super(injector);
@@ -81,6 +87,11 @@ export class TableLineDetailStaticComponent
         class: 'text-end pe-5',
       },
     ];
+  }
+
+  ngAfterViewInit(): void {
+    const tableElement: HTMLElement = this.tableRef.nativeElement;
+    this.hasVerticalScrollbar = tableElement.offsetHeight < tableElement.scrollHeight;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
