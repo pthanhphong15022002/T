@@ -1,0 +1,50 @@
+<codx-form
+  [headerText]="titleAction"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="fw-bold mb-1 mt-5">
+    <codx-label
+    [default]="gridViewSetup.SalespersonID.headerText"
+    fiedName="SalespersonID"
+    [formModel]="formModel"
+  >
+  </codx-label>
+  </div>
+
+  <ejs-combobox [dataSource]="listParticipants" [enabled]="isBlock"
+  (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+  [placeholder]="gridViewSetup?.SalespersonID?.description"
+  [allowFiltering]='true' [value]="owner"
+  ></ejs-combobox>
+
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-2"
+      (click)="dialog.close()"
+    >
+      <codx-label
+        name="lblCancel"
+        formName="DPInstancesSteps"
+        gridViewName="grvDPInstancesSteps"
+        default="Hủy"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="onSaveOwner()">
+      <codx-label
+        name=" lblSuscess"
+        formName="DPInstancesSteps"
+        gridViewName="grvDPInstancesSteps"
+        default="Đồng ý"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

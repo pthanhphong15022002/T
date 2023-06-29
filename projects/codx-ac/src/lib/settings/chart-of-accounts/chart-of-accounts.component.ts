@@ -57,7 +57,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           resources: this.columnsGrid,
           template2: this.templateMore,
