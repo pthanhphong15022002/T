@@ -635,7 +635,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   sum(field) {
     let sum = 0;
     this.listQuotationLines.forEach((e) => {
-      sum += e[field];
+      sum += e[field] ?? 0;
     });
 
     return sum;
