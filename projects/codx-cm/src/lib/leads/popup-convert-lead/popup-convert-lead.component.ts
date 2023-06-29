@@ -257,7 +257,7 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-  getListInstanceStepId(processId: any){
+  getListInstanceStepId(processId: any) {
     var data = [processId, this.deal?.refID, 'add', '1'];
     this.deal.owner = null;
     this.deal.salespersonID = null;
@@ -273,17 +273,12 @@ export class PopupConvertLeadComponent implements OnInit {
         this.listInstanceSteps = res[0];
         this.listParticipants = obj.permissions;
         this.deal.dealID = res[2];
-        this.dateMax = this.HandleEndDate(
-          this.listInstanceSteps,
-          'add',
-          null
-        );
+        this.dateMax = this.HandleEndDate(this.listInstanceSteps, 'add', null);
         this.deal.endDate = this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });
   }
-
 
   getListContactByObjectID(objectID) {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
@@ -320,6 +315,24 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       if (this.countValidate > 0) {
         return;
+      }
+      if (
+        this.customer?.taxCode != null &&
+        this.customer?.taxCode.trim() != ''
+      ) {
+        var check = await firstValueFrom(
+          this.api.execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CustomersBusiness',
+            'IsExitCoincideTaxCodeAsync',
+            [this.customer?.recID, this.customer?.taxCode, 'CM_Customers']
+          )
+        );
+        if (check) {
+          this.notiService.notifyCode('CM016');
+          return;
+        }
       }
     }
 
