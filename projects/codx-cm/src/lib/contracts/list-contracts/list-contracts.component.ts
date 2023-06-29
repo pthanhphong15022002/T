@@ -312,6 +312,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
   }
   //#endregion
   
+  //#region vỉew contract
   viewContract(contract){
     var obj = {
       contract,
@@ -333,4 +334,5 @@ export class ListContractsComponent implements OnInit, OnChanges {
       option
     );
   }
+  //#endregion
 }
