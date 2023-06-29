@@ -177,7 +177,7 @@
           [ngClass]="getPropertiesHeader(data, 'icon')"
           [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
           style="font-size: 18px"
-          class="me-3"
+          class="me-1"
         >
         </span>
         <span
@@ -189,7 +189,7 @@
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center line-colums ms-3">
+    <div class="d-flex align-items-center line-colums ms-3 mt-1">
       <!-- <span
         class="icon-monetization_on icon-16 text-warning me-2"
         [ngbTooltip]="'Tổng tiền dự kiến'"
@@ -205,7 +205,7 @@
       <ng-template #showToltal let-total let-color>
         <span
           [ngStyle]="{ color: color }"
-          class="line-clamp-menu"
+          class="line-clamp-menu cursor-pointer"
           container="body"
           [ngbTooltip]="total + ' ' + currencyIDDefault"
           [innerHTML]="
@@ -440,7 +440,6 @@
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
     [checkMoreReason]="checkMoreReason(dataSelected)"
-
   >
   </codx-deal-detail>
 </ng-template>
