@@ -1,13 +1,90 @@
-<codx-views #view 
-  [views]="views" 
-  [autoLoad]="true" 
-  [idField]="'recID'">
+<codx-views #view [views]="views" [autoLoad]="false" [idField]="'recID'">
 </codx-views>
-<ng-template #itemTemplate>
-    <div style="width: 100%;height: 100%;object-fit: cover;">
-        <img src="../assets/themes/ac/default/img/dashboard.jpg" width="100%" height="100%" style="margin-top: -51px;
-        height: 106%;
-        margin-left: -63px;
-        width: 104%;">
-        </div>
+<!-- test form dashboard sau này xóa -->
+<ng-template #template>
+  <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
 </ng-template>
+<ng-template #dashboard1>
+  <div class="container-fluid">
+    <div class="card-group">
+      <div style="width: 300px !important;" class="card-item me-5 mb-5">
+        <codx-card-center cardCss="dp-card-process border rounded-3 h-100" [resourceObjType]="view.entityName"
+          [formModel]="view.formModel" hideMF="true" [titleTmp]="titleTmp1" desc="Hóa đơn đã phát hành"
+          [baseHeaderRightTmp]="baseHeaderRightTmp">
+        </codx-card-center>
+      </div>
+      <div style="width: 300px !important;" class="card-item me-5 mb-5">
+        <codx-card-center cardCss="dp-card-process border rounded-3 h-100" [resourceObjType]="view.entityName"
+          [formModel]="view.formModel" hideMF="true" [titleTmp]="titleTmp2" desc="Hóa đơn điều chỉnh"
+          [baseHeaderRightTmp]="baseHeaderRightTmp">
+        </codx-card-center>
+      </div>
+      <div style="width: 300px !important;" class="card-item me-5 mb-5">
+        <codx-card-center cardCss="dp-card-process border rounded-3 h-100" [resourceObjType]="view.entityName"
+          [formModel]="view.formModel" hideMF="true" [titleTmp]="titleTmp3" desc="Hóa đơn thay thế"
+          [baseHeaderRightTmp]="baseHeaderRightTmp">
+        </codx-card-center>
+      </div>
+      <div style="width: 300px !important;" class="card-item me-5 mb-5">
+        <codx-card-center cardCss="dp-card-process border rounded-3 h-100" [resourceObjType]="view.entityName"
+          [formModel]="view.formModel" hideMF="true" [titleTmp]="titleTmp4" desc="Hóa đơn hủy"
+          [baseHeaderRightTmp]="baseHeaderRightTmp">
+        </codx-card-center>
+      </div>
+    </div>
+  </div>
+  <!-- Column chart -->
+  <div>
+    <ejs-chart id="chart-container" [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis' [title]='"Biến động doanh thu theo tháng"'>
+      <e-series-collection>
+        <e-series [dataSource]='chartData' type='Column' xName='month' yName='sales' name='Sales'></e-series>
+      </e-series-collection>
+  </ejs-chart>
+  </div>
+  <!-- Column chart -->
+
+  <!-- pipe chart -->
+  <div style="margin-top: -13rem;
+  margin-left: -45rem;" class="flex">
+    <ejs-accumulationchart id="container" #pie style='display:block;  width: 92%' [legendSettings]="legendSettings" [title]="title" [enableAnimation]= 'true' [enableBorderOnMouseMove]='false'>
+      <e-accumulation-series-collection>
+          <e-accumulation-series name='Browser' [dataLabel]="dataLabel" [dataSource]='data' xName='Browser' yName='Users' [startAngle]='55' innerRadius="0%" radius="40%" [explode]='true' explodeOffset='10%' [explodeIndex]='0'>
+          </e-accumulation-series>
+      </e-accumulation-series-collection>
+  </ejs-accumulationchart>
+  </div>
+  <!-- pipe chart -->
+</ng-template>
+<ng-template #baseHeaderRightTmp>
+  <div style="background-color: var(--primary-dark);
+  color: white;
+  margin-top: -0.5rem;" class="position-absolute end-0 p-2">
+    <span class="fs-3 fw-bold">99</span>
+  </div>
+
+</ng-template>
+<ng-template #titleTmp1>
+  <img style="width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto !important" src="../assets/themes/ac/default/img/issue-invoice.png" class="me-2" />
+</ng-template>
+<ng-template #titleTmp2>
+  <img style="width: 60%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto !important" src="../assets/themes/ac/default/img/adjusted-invoice.svg" class="me-2" />
+</ng-template>
+<ng-template #titleTmp3>
+  <img style="width: 65%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto !important" src="../assets/themes/ac/default/img/replacement-invoice.svg" class="me-2" />
+</ng-template>
+<ng-template #titleTmp4>
+  <img style="width: 65%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto !important" src="../assets/themes/ac/default/img/invoice-deleted.svg" class="me-2" />
+</ng-template>
+<!-- test form dashboard sau này xóa -->

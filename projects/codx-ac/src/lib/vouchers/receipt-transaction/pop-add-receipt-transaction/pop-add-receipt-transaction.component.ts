@@ -153,6 +153,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       'keyup',
       (e: KeyboardEvent) => {
         if (e.key == 'Tab') {
+          if (this.gridInventoryJournalLine) {
+            this.gridInventoryJournalLine.autoAddRow = true;
+          }  
           if (document.activeElement.className == 'e-tab-wrap') {
             var element = document.getElementById('btnadd');
             element.focus();
@@ -160,7 +163,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         }
       }
     );
-    
     (document.body as HTMLElement).addEventListener(
       'click',
       (e: any) => {
@@ -171,10 +173,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         ) {
           if (this.gridInventoryJournalLine.gridRef.isEdit) {
             this.gridInventoryJournalLine.endEdit();
-            this.gridInventoryJournalLine.autoAddRow = true;
+            this.gridInventoryJournalLine.autoAddRow = false;
           }
         }else{
-          if (this.gridInventoryJournalLine && this.gridInventoryJournalLine.gridRef.isEdit) {
+          if (this.gridInventoryJournalLine) {
             this.gridInventoryJournalLine.autoAddRow = false;
           }
         }
@@ -1017,6 +1019,27 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }, 500);
   }
 
+  // loadItemID(value) {
+  //   let sArray = [
+  //     'packingspecifications',
+  //     'styles',
+  //     'itemcolors',
+  //     'itembatchs',
+  //     'itemseries',
+  //   ];
+  //   var elements = document
+  //     .querySelector('.tabLine')
+  //     .querySelectorAll('codx-inplace');
+  //   elements.forEach((e) => {
+  //     var input = window.ng.getComponent(e) as CodxInplaceComponent;
+  //     if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+  //       input.value = "";
+  //       input.predicate = 'ItemID="' + value + '"';
+  //       input.loadSetting();
+  //     }
+  //   });
+  // }
+
   loadPredicate(visibleColumns, data)
   {
     var arr = [
@@ -1142,21 +1165,23 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   autoAddRowSet(e: any) {
-    if (!this.loadingform || !this.loading) {
-      switch (e.type) {
-        case 'autoAdd':
-          this.addRow();
-          break;
-        case 'add':
-          if (this.gridInventoryJournalLine.autoAddRow) {
+    setTimeout(() => {
+      if (!this.loadingform || !this.loading) {
+        switch (e.type) {
+          case 'autoAdd':
             this.addRow();
-          }
-          break;
-        case 'closeEdit':
-          this.gridInventoryJournalLine.autoAddRow = true;
-          break;
+            break;
+          case 'add':
+            if (this.gridInventoryJournalLine.autoAddRow) {
+              this.addRow();
+            }
+            break;
+          case 'closeEdit':
+            this.gridInventoryJournalLine.autoAddRow = true;
+            break;
+        }
       }
-    }
+    }, 500);
   }
   //#endregion
 }

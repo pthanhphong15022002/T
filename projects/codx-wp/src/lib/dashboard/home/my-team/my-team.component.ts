@@ -119,38 +119,44 @@ export class MyTeamComponent implements OnInit {
 
 
   pageIndex:number = 1;
+  total:number = 0;
   lstMyTeam:any[] = [];
-  myTeams:any = [];
+  scrolling:boolean = false;
   //get my team 
   getMyTeam(){
-    debugger
-    if(this.user)
-    {
-      this.api
-      .execSv("HR",
-      "ERM.Business.HR",
-      "EmployeesBusiness",
-      "GetMyTeamAsync",
-      [this.user.userID,this.pageIndex])
-      .subscribe((res:any[]) => {
-        if(res)
+    this.api
+    .execSv("HR",
+    "ERM.Business.HR",
+    "EmployeesBusiness",
+    "GetMyTeamAsync",
+    [this.user.userID,this.pageIndex])
+    .subscribe((res:any[]) => {
+      if(res && res[0].length > 0)
+      {
+        if(this.pageIndex == 1)
         {
-          if(this.pageIndex == 1)
-          {
-            this.myTeams = res[0];
-          }
-          this.lstMyTeam.push(res[0]);
-          if(this.lstMyTeam.length < res[1])
-              this.pageIndex = this.pageIndex + 1;
+          this.total = res[1];
         }
-        this.dt.detectChanges();
-      });
-    }
-    
+        this.lstMyTeam.push(...res[0]);
+        if(this.lstMyTeam.length < this.total){
+          this.scrolling = true;
+          this.pageIndex = this.pageIndex + 1;
+        }
+        else
+          this.scrolling = false;
+      }
+      else
+          this.scrolling = false;
+      this.dt.detectChanges();
+    });
   }
   // load data when scroll
-  scrolling($event){
-    debugger
+  scroll(ele : HTMLDivElement){
+    if(this.scrolling && ele.offsetHeight - ele.scrollHeight <= 50)
+    {
+      this.scrolling = false;
+      this.getMyTeam();
+    }
   }
   employeeSeletecd:any = null;
   PopoverEmp(p: any, item:any) {

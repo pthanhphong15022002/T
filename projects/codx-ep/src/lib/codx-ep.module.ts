@@ -33,6 +33,7 @@ import { CardTransComponent } from './booking/cardTran/cardTrans.component';
 import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 import { PopupDriverAssignComponent } from './approval/popup-driver-assign/popup-driver-assign.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { CodxViewContentComponent } from 'projects/codx-share/src/lib/components/codx-view-content/codx-view-content.component';
 
 export const routes: Routes = [
   {
@@ -95,6 +96,10 @@ export const routes: Routes = [
       {
         path: 'share/dynamic/:funcID',
         component: DynamicFormComponent,
+      },
+      {
+        path: 'dialog/:funcID',
+        component: CodxViewContentComponent,
       },
     ],
   },
