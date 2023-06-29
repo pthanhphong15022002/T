@@ -43,7 +43,6 @@ export class TabDetailCustomComponent
   // isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
-  listContract: CM_Contacts[];
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
@@ -93,22 +92,9 @@ export class TabDetailCustomComponent
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
       }
       this.getListInstanceStep();
-      this.getContractByDeaID();
     }
   }
 
-  async getContractByDeaID() {
-    if (this.dataSelected?.recID) {
-      var data = [this.dataSelected?.recID];
-      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
-        if (res) {
-          this.listContract = res;
-        } else {
-          this.listContract = [];
-        }
-      });
-    }
-  }
   async executeApiCalls() {
     try {
       await this.getValueList();

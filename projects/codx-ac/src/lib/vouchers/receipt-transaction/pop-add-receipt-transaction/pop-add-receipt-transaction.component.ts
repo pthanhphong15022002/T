@@ -153,6 +153,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       'keyup',
       (e: KeyboardEvent) => {
         if (e.key == 'Tab') {
+          if (this.gridInventoryJournalLine) {
+            this.gridInventoryJournalLine.autoAddRow = true;
+          }  
           if (document.activeElement.className == 'e-tab-wrap') {
             var element = document.getElementById('btnadd');
             element.focus();
@@ -160,7 +163,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         }
       }
     );
-    
     (document.body as HTMLElement).addEventListener(
       'click',
       (e: any) => {
