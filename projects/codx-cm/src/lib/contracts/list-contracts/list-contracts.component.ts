@@ -39,6 +39,8 @@ export class ListContractsComponent implements OnInit, OnChanges {
   };
   projectID:'';
   requestData = new DataRequest();
+  dataValuesOld;
+  isData = true;
 
   service = 'CM';
   entityName = 'CM_Contracts';
@@ -65,27 +67,13 @@ export class ListContractsComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    if(changes.projectID){
-      // this.getContracts(this.projectID); 
+    if(changes.dataValues && this.dataValues != this.dataValuesOld){
+      this.getContracts();
+      this.dataValuesOld = this.dataValues;
     }
-    // if(changes.customers){
-    //   this.customersData = this.customers;
-    // }
-    this.getContracts();
   }
 
   async ngOnInit(): Promise<void> {
-    // this.cache.functionList('DPT040102').subscribe((res) => {
-    //   if (res) {
-    //     let formModel = new FormModel();
-    //     formModel.formName = res?.formName;
-    //     formModel.gridViewName = res?.gridViewName;
-    //     formModel.entityName = res?.entityName;
-    //     formModel.funcID = 'DPT040102';
-    //     this.frmModelInstancesTask = formModel;
-    //     console.log(this.frmModelInstancesTask);
-    //   }
-    // });
     this.getAccount();
     this.formModel.entityName = 'CM_Contracts';
     this.formModel.formName = 'CMContracts';
@@ -103,6 +91,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
 
     this.fetch().subscribe((res) => {
       this.listContract = res;
+      this.isData = this.listContract?.length > 0 ? true : false;
     });
   }
 
