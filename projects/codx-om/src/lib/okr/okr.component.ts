@@ -783,7 +783,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ||
             func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
             func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-            func.functionID == OMCONST.MFUNCID.PermissionPER
+            func.functionID == OMCONST.MFUNCID.PlanWeightPER
           ) {
             func.disabled = true;
           }
