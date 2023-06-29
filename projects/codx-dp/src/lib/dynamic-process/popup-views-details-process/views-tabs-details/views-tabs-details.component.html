@@ -12,6 +12,7 @@
   [viewActiveType]="'6'"
   [toolbarDisplay]="false"
   (viewChanged)="viewChanged($event)"
+  (onActions)="onActions($event)"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -34,11 +35,11 @@
     <codx-temp-full
       style="width: 100%"
       [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
-      [title]="data?.taskGroupName"
+      [title]="data?.name || 'Chua co data'"
     >
     </codx-temp-full>
   </ng-template>
-  <ng-template #footerKanban let-data> sdasd </ng-template>
+  <ng-template #footerKanban let-data></ng-template>
 </ng-template>
 
 <ng-template #viewColumKaban let-data>

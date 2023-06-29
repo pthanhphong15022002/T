@@ -19,7 +19,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(inject: Injector,
     private callfc: CallFuncService) {
     super(inject);
-    this.layoutModel.toolbarDisplay = false;
+    this.layoutModel.toolbarDisplay = true;
   }
   funcID:any = '';
   func:any={};

@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
+import { AccumulationTooltipService, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
@@ -316,7 +316,8 @@ export const routes: Routes = [
     NgxUiLoaderModule,
     ProgressBarModule,
     CircularGaugeModule,
-    TooltipModule 
+    TooltipModule,
+    ChartAllModule
   ],
 })
 export class AcModule {}

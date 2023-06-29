@@ -26,6 +26,8 @@ import {
   DialogModel,
   CRUDService,
   Util,
+  AlertConfirmInputConfig,
+  DialogRef,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -66,6 +68,9 @@ export class DealsComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
   @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
+  @ViewChild('confirmOrRefuseTemp') confirmOrRefuseTemp: TemplateRef<any>;
+
+  popupConfirm: DialogRef;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -137,6 +142,7 @@ export class DealsComponent
   processIDKanban: string;
   processIDDefault: string;
   crrProcessID = '';
+  returnedCmt = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -276,6 +282,7 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
+      // this.view.load();
       // this.cache.viewSettings(this.funcID).subscribe((views) => {
       //   if (views) {
       //     this.afterLoad();
@@ -606,6 +613,14 @@ export class DealsComponent
         break;
       case 'CM0201_6':
         this.approvalTrans(data);
+        break;
+      //Xác nhận
+      case 'CM0201_12':
+        this.confirmOrRefuse(true, data);
+        break;
+      //Từ chối
+      case 'CM0201_13':
+        this.confirmOrRefuse(false, data);
         break;
     }
   }
@@ -1394,6 +1409,7 @@ export class DealsComponent
 
   //-----------------------------change Filter -------------------------------//
   changeFilter() {
+    //change view filter
     if (this.funcID != 'CM0201') {
       let idxBusinesLineOp = this.view.filterOptions.findIndex(
         (x) => x.fieldName == 'BusinessLineID'
@@ -1516,8 +1532,14 @@ export class DealsComponent
       });
   }
 
-  onLoading() {
+  onLoading(e) {
     if (!this.funCrr) return;
+    //reload filter
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funCrr != this.funcID) {
+      this.view.pinedFilter.filters = [];
+      this.view.dataService.filter.filters = [];
+    }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -1564,4 +1586,68 @@ export class DealsComponent
     });
   }
   //end
+
+  //#region xác nhận/ từ chối
+  confirmOrRefuse(check, data) {
+    if (check) {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notificationsService
+        .alertCode(
+          'CM007',
+          null,
+          this.titleAction?.toLocaleLowerCase(),
+          "'" + data?.dealName + "'"
+        )
+        .subscribe((x) => {
+          if (x?.event?.status == 'Y') {
+            this.codxCmService
+              .confirmOrRefuse(data?.recID, check, '')
+              .subscribe((res) => {
+                if (res) {
+                  this.dataSelected.status = '3';
+                  this.detailViewDeal.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
+        });
+    } else {
+      this.returnedCmt = '';
+      this.popupConfirm = this.callfc.openForm(
+        this.confirmOrRefuseTemp,
+        '',
+        500,
+        280
+      );
+    }
+  }
+
+  valueChangeConfirm(e) {
+    this.returnedCmt = e?.data?.trim();
+  }
+
+  saveConfirm() {
+    var data = this.dataSelected;
+    this.codxCmService
+      .confirmOrRefuse(this.dataSelected?.recID, false, this.returnedCmt)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.remove(this.dataSelected).subscribe();
+          this.dataSelected = this.view.dataService.data[0];
+          this.popupConfirm.close();
+          this.notificationsService.notifyCode('CM022');
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
 }

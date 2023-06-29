@@ -47,7 +47,8 @@ export class CodxApproveStepsComponent
   @Input() eSign: boolean = false; //Quy trình ký số
   @Input() signatureType; //Quy trình ký số
   @Input() approveControl = '3';//Áp dụng quy trình duyệt theo: 1;Theo file trình ký; 2;ProcessID;  3;Category
-  @Input() isTemplate = false; //signFile của template mẫu
+  @Input() isTemplate = false; //signFile của template mẫu  
+  @Input() refType = "ES_SignFiles"; //refType của signFile xử lí cho QTM của category
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -258,6 +259,12 @@ export class CodxApproveStepsComponent
   }
 
   delete(approvalStep) {
+    if(this.isTemplate && this.data.refType!='ES_Categories'){
+      this.approveControl="3";
+    }
+    else{
+      this.approveControl="1";
+    }
     let mssgCode = 'SYS030';
     if (this.type == '1' && this.mssgDelete != '') {
       mssgCode = this.mssgDelete;

@@ -94,15 +94,18 @@
               </div>
               <div class="d-flex justify-content-end">
                 <span
-                  class="text-gray-600 line-clamp-menu"
-                  #endDate
-                  [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
-                  [innerHTML]="
-                    dataSelected?.endDate
-                      | formatvalue : formModel : 'endDate' : endDate
-                      | async
-                  "
-                ></span>
+                class="text-gray-600 line-clamp-menu"
+                #endDate
+                [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
+                [innerHTML]="
+                  dataSelected?.endDate
+                    | formatvalue
+                      : formModel
+                      : 'endDate'
+                      : endDate
+                    | async
+                "
+              ></span>
               </div>
             </div>
           </div>
@@ -186,27 +189,13 @@
                           {{ dataSelected?.jobTitle }}
                         </div>
                         <div class="d-flex align-items-start">
-                          <div
-                            class="d-flex align-items-center me-5"
-                            *ngIf="dataSelected?.phone"
-                          >
-                            <span
-                              class="icon-phone_android text-primary icon-16 me-2"
-                            ></span>
-                            <span class="text-gray-800 fs-7">{{
-                              dataSelected?.phone
-                            }}</span>
+                          <div class="d-flex align-items-center me-5" *ngIf="dataSelected?.phone">
+                            <span class="icon-phone_android text-primary icon-16 me-2"></span>
+                            <span class="text-gray-800 fs-7">{{ dataSelected?.phone }}</span>
                           </div>
-                          <div
-                            class="d-flex align-items-center"
-                            *ngIf="dataSelected?.email"
-                          >
-                            <span
-                              class="icon-email icon-16 text-primary icon-16 me-2"
-                            ></span>
-                            <span class="text-gray-800 fs-7">{{
-                              dataSelected?.email
-                            }}</span>
+                          <div class="d-flex align-items-center" *ngIf="dataSelected?.email">
+                            <span class="icon-email icon-16 text-primary icon-16 me-2"></span>
+                            <span class="text-gray-800 fs-7">{{ dataSelected?.email }}</span>
                           </div>
                         </div>
                       </div>
@@ -240,7 +229,29 @@
                       >
                     </div>
                     <ng-template #statusDefault>
-                      <div *ngIf="dataSelected?.status">
+                      <div
+                      [ngbTooltip]="
+                        dataSelected?.status == '13' ? popupCustGroupID : ''
+                      "
+                    >
+                        <ng-template #popupCustGroupID>
+                          <div class="text-end text-sm-start">
+                            <codx-label
+                              [setRequire]="false"
+                              class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
+                              fiedName="ReturnedCmt"
+                              [formModel]="formModel"
+                            ></codx-label>
+                            <span
+                              class="d-flex align-items-start inline"
+                              [innerHTML]="
+                                dataSelected?.returnedCmt
+                                  | formatvalue : formModel : 'ReturnedCmt'
+                                  | async
+                              "
+                            ></span>
+                          </div>
+                        </ng-template>
                         <codx-vll
                           [name]="gridViewSetup?.Status?.referedValue"
                           [field]="'Status'"
@@ -275,16 +286,16 @@
                   <ng-template #tooltipConsultant>
                     <div class="d-flex justify-content-center fw-bold fs-6">
                       <span
-                        #consultantID
-                        [innerHTML]="
-                          dataSelected?.consultantID
-                            | formatvalue
-                              : formModel
-                              : 'consultantID'
-                              : consultantID
-                            | async
-                        "
-                      ></span>
+                      #consultantID
+                      [innerHTML]="
+                      dataSelected?.consultantID
+                          | formatvalue
+                            : formModel
+                            : 'consultantID'
+                            : consultantID
+                          | async
+                      "
+                    ></span>
                     </div>
                     <div class="d-flex justify-content-center">
                       {{ gridViewSetup["ConsultantID"]?.headerText }}
@@ -307,10 +318,8 @@
                     </div>
                   </ng-template>
 
-                  <div
-                    class="d-flex flex-column align-items-top"
-                    style="margin-top: 2.25rem !important"
-                  >
+
+                  <div class="d-flex flex-column align-items-top" style="margin-top: 2.25rem !important;">
                     <div class="d-flex justify-content-end">
                       <codx-label
                         default="Thông tin bán hàng"
@@ -318,74 +327,68 @@
                       ></codx-label>
                     </div>
                     <div class="d-flex justify-content-end">
-                      <div style="position: relative">
-                        <codx-imgs
-                          [width]="30"
-                          [objectId]="dataSelected?.owner"
-                          ojectType="AD_Users"
-                          [numberImages]="1"
-                          [ngbTooltip]="tooltipOwner"
-                          [isToolTip]="false"
-                        >
-                        </codx-imgs>
-                        <div
-                          style="position: absolute; right: 0px; bottom: 0px"
-                        >
-                          <span
-                            ><img
-                              src="/assets/themes/cm/default/img/{{
-                                getIcon('1')
-                              }}"
-                              alt=""
-                          /></span>
-                        </div>
-                      </div>
+<!--
+                      <codx-imgs
+                      [width]="30"
+                      [objectId]="dataSelected.salespersonID"
+                      ojectType="AD_Users"
+                      [numberImages]="1"
+                      [ngbTooltip]="tooltipSalesperson"
+                      [isToolTip]="false"
+                    >
+                    </codx-imgs> -->
 
-                      <div style="position: relative"  [ngbTooltip]="tooltipSalesperson">
-                        <codx-img
-                          [width]="30"
+                    <div style="position: relative">
+                      <!-- <codx-imgs
+                        [objectId]="item?.resourceID"
+                        [objectName]="item?.resourceName"
+                        objectType="AD_Users"
+                        [numberImages]="1"
+                      >
+                      </codx-imgs> -->
 
-                          [objectId]="dataSelected.salespersonID"
-                          objectType="AD_Users"
-                          [referType]="'avt'"
-                          [numberImages]="1"
-                        >
-                        </codx-img>
-                        <div
-                          style="position: absolute; right: 0px; bottom: 0px"
-                        >
-                          <span
-                            ><img
-                              src="/assets/themes/cm/default/img/{{
-                                getIcon('3')
-                              }}"
-                              alt=""
-                          /></span>
-                        </div>
-                      </div>
+                      <codx-img
+                      [width]="30"
+                      [objectId]="dataSelected.salespersonID"
+                      objectType="AD_Users"
+                      [referType]="'avt'"
+                      [numberImages]="1"
+                    >
+                    </codx-img>
+                      <div style="position: absolute; right: 0px; bottom: 0px">
+                        <ng-container *ngFor="let role of listRoles">
+                          <ng-container *ngIf="role.value == '1'">
+                            <span
+                              ><img
+                                src="/assets/themes/tm/default/img/CM.svg"
+                                alt=""
+                            /></span>
 
-                      <div style="position: relative">
-                        <codx-imgs
-                          [width]="30"
-                          [objectId]="dataSelected?.consultantID"
-                          ojectType="AD_Users"
-                          [numberImages]="1"
-                          [ngbTooltip]="tooltipConsultant"
-                          [isToolTip]="false"
-                        >
-                        </codx-imgs>
-                        <div
-                          style="position: absolute; right: 0px; bottom: 0px"
-                        >
-                          <span
-                            ><img
-                              src="/assets/themes/cm/default/img/{{
-                                getIcon('5')
-                              }}"
-                              alt=""
-                          /></span>
-                        </div>
+                          </ng-container>
+                        </ng-container>
                       </div>
+                    </div>
+
+
+
+                    <codx-imgs
+                      [width]="30"
+                      [objectId]="dataSelected?.consultantID"
+                      ojectType="AD_Users"
+                      [numberImages]="1"
+                      [ngbTooltip]="tooltipConsultant"
+                      [isToolTip]="false"
+                    >
+                    </codx-imgs>
+                    <codx-imgs
+                      [width]="30"
+                      [objectId]="dataSelected?.owner"
+                      ojectType="AD_Users"
+                      [numberImages]="1"
+                      [ngbTooltip]="tooltipOwner"
+                      [isToolTip]="false"
+                    >
+                    </codx-imgs>
                     </div>
                   </div>
                 </div>
@@ -395,12 +398,12 @@
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex tab-header">
                   <codx-taskbar
-                    [listTab]="tabDetail"
-                    [change]="dataSelected"
-                    (tab)="changeTab($event)"
-                    size="18"
-                    class="mb-3 fw-bold"
-                  ></codx-taskbar>
+                  [listTab]="tabDetail"
+                  [change]="dataSelected"
+                  (tab)="changeTab($event)"
+                  size="18"
+                  class="mb-3 fw-bold"
+                ></codx-taskbar>
                 </div>
               </div>
             </div>

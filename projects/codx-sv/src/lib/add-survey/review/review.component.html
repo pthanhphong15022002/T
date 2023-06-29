@@ -69,7 +69,7 @@
                             "
                           ></ng-container>
                         </form>
-                        <div class="formSession2 d-flex align-items-center b-t-index">
+                        <div class="formSession2 d-flex align-items-center b-t-index" [style.backgroundColor]="primaryColor">
                           <span
                             *ngIf="itemSession.question"
                             style="color: white"
@@ -285,7 +285,7 @@
                   class="btn btn-submit-white text-purple me-6"
                   (click)="continue(itemSession.seqNo - 1)"
                 >
-                  <codx-label fiedName="Back" default="Quay lại" class="text-bolder"></codx-label>
+                  <codx-label fiedName="Back" default="Quay lại" class="text-bolder" [style.color]="primaryColor"></codx-label>
                 </button>
                 <button
                   *ngIf="itemSession.seqNo != questions.length - 1"
@@ -293,7 +293,7 @@
                   class="btn btn-submit-white text-purple"
                   (click)="continue(itemSession.seqNo + 1)"
                 >
-                  <codx-label fiedName="lblContinue" default="Tiếp" class="text-bolder" formName="fmReview"></codx-label>
+                  <codx-label fiedName="lblContinue" default="Tiếp" class="text-bolder" formName="fmReview" [style.color]="primaryColor"></codx-label>
                 </button>
                 <button
                   *ngIf="itemSession.seqNo == questions.length - 1"
@@ -421,7 +421,7 @@
     </ng-template>
   </div>
   <div
-    class="e-input-group-sv w-200px"
+    class="e-input-group-sv w-100"
     *ngIf="itemQuestion.answerType == 'T'"
   >
     <!-- <input #input
@@ -442,7 +442,7 @@
     </codx-input>
   </div>
   <div
-    class="e-input-group-sv long-text me-8"
+    class="e-input-group-sv long-text"
     *ngIf="itemQuestion.answerType == 'T2'"
   >
     <codx-input
@@ -930,17 +930,17 @@
   let-itemQuestion="itemQuestion"
 >
   <div class="d-flex">
-    <div class="form-group question w-100">
+    <div class="question w-100">
       <div class="title-des d-flex">
         <span *ngIf="itemQuestion.question"  [innerHTML]="itemQuestion.question"></span>
         <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
       </div>
     </div>
   </div>
-  <div class="form-group question">
+  <div class="form-group question mt-5" *ngIf="itemQuestion.comment">
     <div class="title-des">
-      <span *ngIf="itemQuestion.comment" [innerHTML]="itemQuestion.comment"></span>
-      <span *ngIf="!itemQuestion.comment">{{ "Mô tả (không bắt buộc)" }}</span>
+      <span [innerHTML]="itemQuestion.comment"></span>
+      <!-- <span *ngIf="!itemQuestion.comment">{{ "Mô tả (không bắt buộc)" }}</span> -->
     </div>
   </div>
 </ng-template>
@@ -968,7 +968,7 @@
      
     </div>
   </div>
-  <div class="d-flex align-items-center mt-3 border-top py-3" *ngIf="user?.userID">
+  <div class="d-flex align-items-center mt-3 border-top py-3" *ngIf="user?.userID && isPublic != '1'">
     <codx-img 
       [objectId]="user?.userID" 
       [objectName]="user?.userName" 

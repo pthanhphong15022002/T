@@ -112,6 +112,7 @@ export class PopupAddSignFileComponent implements OnInit {
   allowEditAreas: any;
   nextClick = false;
   isReleasing=false;
+  typeCategory: any;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -143,7 +144,8 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
     this.isTemplate =data?.data?.isTemplate ? true : false;
-    this.refType = data?.data?.refType ?? 'ES_SignFiles'
+    this.refType = data?.data?.refType ?? 'ES_SignFiles';
+    this.typeCategory = this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType;
     if (this.modeView == '2') {
       this.disableCateID = true;
     }
@@ -184,7 +186,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.esService.getAllCategory().subscribe((res:any)=>{
+    this.esService.getAllCategory(this.typeCategory).subscribe((res:any)=>{
       if(res){
         this.listCategory=res;
       }
@@ -234,7 +236,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.isAddNew = false;
 
               this.esService
-                .getCategoryByCateID(this.data.categoryID)
+              .getCategoryByCateIDType(this.data?.categoryID,this.typeCategory)
                 .subscribe((cate) => {
                   if (cate) {
                     this.data.processID = cate.processID;
@@ -263,7 +265,7 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.data.refType = this.oSignFile.refType;
 
                     this.esService
-                      .getCategoryByCateID(this.data.categoryID)
+                    .getCategoryByCateIDType(this.data?.categoryID,this.typeCategory)
                       .subscribe((cate) => {
                         if (cate) {
                           this.data.processID = cate.processID;
@@ -290,7 +292,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   ngAfterViewInit() {
     this.esService
-      .getCategoryByCateID(this.data?.categoryID)
+    .getCategoryByCateIDType(this.data?.categoryID,this.typeCategory)
       .subscribe((cate) => {
         if (cate) {
           this.eSign = cate?.eSign;
@@ -364,7 +366,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
                     //get autoNumber by category
                     this.esService
-                      .getCategoryByCateID(this.data.categoryID)
+                    .getCategoryByCateIDType(this.data?.categoryID,this.typeCategory)
                       .subscribe((res) => {
                         if (res) {
                           this.eSign = res.eSign;
@@ -722,7 +724,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
       else{
         this.esService
-        .getCategoryByCateID(this.data?.categoryID)
+        .getCategoryByCateIDType(this.data?.categoryID,this.typeCategory)
         .subscribe((cate) => {
           if (cate) {
             this.curCategory = cate?.signatureType;
@@ -1134,7 +1136,7 @@ export class PopupAddSignFileComponent implements OnInit {
   dataStepChange(event) {
     if (event == true) {
       this.nextClick=false;
-      if (this.data.approveControl != '1' && !this.isTemplate && this.data.refType!='ES_Categories') {
+      if (this.data.approveControl != '1' && !(this.isTemplate && this.data.refType=='ES_Categories')) {        
         this.data.approveControl = '1';
         this.dialogSignFile.patchValue({ approveControl: '1' });
         this.onSaveSignFile();
@@ -1271,8 +1273,8 @@ export class PopupAddSignFileComponent implements OnInit {
                 this.data.files = res?.signFile?.files;
                 this.dialogSignFile.patchValue({ files: res?.signFile?.files });
   
-                this.dialogSignFile.patchValue({ approveStatus: '3' });
-                this.data.approveStatus = '3';
+                this.dialogSignFile.patchValue({ approveStatus: res?.signFile?.approveStatus });
+                this.data.approveStatus =  res?.signFile?.approveStatus ;
   
                 this.esService.editSignFile(this.data).subscribe((result) => {
                   if (result) {

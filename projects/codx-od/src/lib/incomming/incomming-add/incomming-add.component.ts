@@ -339,6 +339,14 @@ export class IncommingAddComponent implements OnInit {
     }
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
+
+  changeValueAgencies(e:any)
+  {
+    if(e?.component?.instance?.dataSelected)
+    {
+      
+    }
+  }
   
   valueChangeDate(event: any) {
     this.dispatch[event?.field] = event?.data.fromDate;

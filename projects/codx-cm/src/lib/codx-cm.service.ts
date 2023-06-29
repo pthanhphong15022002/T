@@ -526,6 +526,8 @@ export class CodxCmService {
       data
     );
   }
+
+
   getListChannels() {
     return this.api.exec<any>('CM', 'ChannelsBusiness', 'GetListChannelsAsync');
   }
@@ -752,6 +754,16 @@ export class CodxCmService {
       'DealsBusiness',
       'EditDealAsync',
       data
+    );
+  }
+
+  confirmOrRefuse(recID: string, check: boolean, returnedCmt: string) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'ConfirmOrRefuseAsync',
+      [recID, check, returnedCmt]
     );
   }
   // moveDealReason(data) {

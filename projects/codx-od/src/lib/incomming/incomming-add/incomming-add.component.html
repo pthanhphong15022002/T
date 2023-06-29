@@ -40,10 +40,19 @@
           default="Phòng ban" (click)="hideDept('pb')"></codx-label>
       </ng-container>
     </div>
-    <div class="align-items-start" style="display: flex" [hidden]="showAgency">
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="agencyName" style="width: 100%"
+    <div class="align-items-start" [class.border-bottom]="formModel?.funcID == 'ODT41'" style="display: flex" [hidden]="showAgency">
+      <ng-container *ngIf="formModel?.funcID != 'ODT41' , else agencies">
+        <codx-input  [formModel]="form.formModel" [Group]="form.formGroup" field="agencyName" style="width: 100%"
         (valueChange)="changeValueAgency($event)">
       </codx-input>
+      </ng-container>
+      <ng-template #agencies>
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="agencies" [showInput]="true" style="width: 100%" (valueChange)="changeValueAgencies($event)"
+       >
+      </codx-input>
+      </ng-template>
+     
+      
       <!--  (valueChange)="changeValueAgency($event)" -->
       <!--   <codx-input
         placeholder="Nhập đơn vị"

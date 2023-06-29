@@ -599,8 +599,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.dataRequest.page = 1;
     this.dataRequest.pageSize = 1000;
     this.dataRequest.funcID = this.funcID;
-    this.dataRequest.dataValue = 'false';
-    this.dataRequest.predicate = 'Stop==@0';
+    this.dataRequest.dataValue = 'false;';
+    this.dataRequest.predicate = 'Stop==@0 && OKRLevel==@1';
 
 
     switch (this.funcID) {
@@ -614,6 +614,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.dataRequest.entityPermission = "OM_OKRCompany";
         this.dataRequest.gridViewName = "grvOKRCompany";
         this.dataRequest.formName = "OKRCompany";
+        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.COMP;
         break;
       case OMCONST.FUNCID.DEPT:
         this.skrFuncID = OMCONST.SKRFUNCID.DEPT;
@@ -625,6 +626,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.dataRequest.entityPermission = "OM_OKRDepartment";
         this.dataRequest.gridViewName = "grvOKRDepartment";
         this.dataRequest.formName = "OKRDepartment";
+        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.DEPT ;
         break;
       case OMCONST.FUNCID.ORG:
         this.skrFuncID = OMCONST.SKRFUNCID.ORG;
@@ -636,6 +638,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.dataRequest.entityPermission = "OM_OKRTeam";
         this.dataRequest.gridViewName = "grvOKRTeam";
         this.dataRequest.formName = "OKRTeam";
+        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.ORG;
         break;
       case OMCONST.FUNCID.PERS:
         this.skrFuncID = OMCONST.SKRFUNCID.PERS;
@@ -647,6 +650,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.dataRequest.entityPermission = "OM_OKRPersonal";
         this.dataRequest.gridViewName = "grvOKRPersonal";
         this.dataRequest.formName = "OKRPersonal";
+        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.PERS;
         break;
     }
 
@@ -779,7 +783,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ||
             func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
             func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-            func.functionID == OMCONST.MFUNCID.PermissionPER
+            func.functionID == OMCONST.MFUNCID.PlanWeightPER
           ) {
             func.disabled = true;
           }
