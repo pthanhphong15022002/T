@@ -141,7 +141,7 @@ export class PopupAddPaymentHistoryComponent {
         'h'
       );
       if (this.checkDate > 0 && this.isErorrDate) {
-        this.notiService.notifyCode('CRM019', 0, [this.view?.paidDate]);
+        this.notiService.notifyCode('CM019', 0, [this.view?.paidDate]);
       }
       this.isErorrDate = !this.isErorrDate;
     }

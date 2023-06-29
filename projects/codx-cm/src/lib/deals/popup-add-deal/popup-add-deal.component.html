@@ -190,6 +190,7 @@
         type="number"
         [min]="0"
         [max]="100"
+        [placeholder]="gridViewSetup?.Probability?.description"
         field="probability"
         [crrValue]="deal?.probability"
         (valueChange)="valueChange($event)"

@@ -13,17 +13,17 @@ export class OrgEmpContactDetailCardComponent {
 
   @Input() orgUnitID: string = '';
   @Input() formModel: FormModel;
+  @Input() grvSetup: any;
 
   onloading = true;
   lstData: any[] = [];
-  grvSetup: any;
   constructor(private cache: CacheService,
     private api: ApiHttpService) {
 
   }
   ngOnInit(): void {
     this.getListDataEmpByOrgUnitID();
-    if (this.formModel) {
+    if (this.formModel && !this.grvSetup) {
       this.cache.gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
         .subscribe(res => {
           if (res) this.grvSetup = res;

@@ -148,7 +148,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     size: '15px',
     color: '#00CC66',
   };
-  rangeWidth: number = 25;
+  rangeWidth: number = 10;
   //Initializing titleStyle
   titleStyle: Object = { size: '18px' };
   font2: Object = {
@@ -182,8 +182,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     height: 1,
     width: 1,
     offset: 0,
-    interval: 30,
+    interval: 25,
   };
+  
   majorTicks2: Object = {
     height: 0,
   };

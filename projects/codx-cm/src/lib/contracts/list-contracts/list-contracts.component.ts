@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DataRequest, DialogModel, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
-import { firstValueFrom } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CM_Contracts } from '../../models/cm_model';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'list-contracts',
@@ -19,9 +20,16 @@ export class ListContractsComponent implements OnInit, OnChanges {
   @Input() dealID: string;
   @Input() quotationID: string;
   @Input() type: 'view' | 'deal' | 'quotation' | 'customer';
+
+  @Input() funcID: string = 'CM0202';
+  @Input() predicates: any; //
+  @Input() dataValues: any; //= '
+  @Input() customerID: string;
+
   dateFomat = 'dd/MM/yyyy';
   account: any;
   customersData:any;
+  headerTextTitle = '';
   moreDefaut = {
     share: true,
     write: true,
@@ -30,14 +38,20 @@ export class ListContractsComponent implements OnInit, OnChanges {
     delete: true,
   };
   projectID:'';
+  requestData = new DataRequest();
+
+  service = 'CM';
+  entityName = 'CM_Contracts';
+  className = 'ContractsBusiness';
+  assemblyName = 'ERM.Business.CM';
+  methodLoadData = 'GetListContractsAsync';
 
   formModel: FormModel = {
-      entityName: "CM_Contracts",
-      entityPer: "CM_Contracts",
-      formName: "CMContracts",
-      funcID: "CM0204",
-      gridViewName: "grvCMContracts"
-
+    funcID: "CM0204",
+    formName: "CMContracts",
+    entityPer: "CM_Contracts",
+    entityName: "CM_Contracts",
+    gridViewName: "grvCMContracts"
   }
 
   constructor(
@@ -45,37 +59,70 @@ export class ListContractsComponent implements OnInit, OnChanges {
     private callFunc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private stepService: StepService,
   ) {
     
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    // if(changes.projectID){
-    //   this.getContracts(this.projectID); 
-    // }
-    if(changes.customers){
-      this.customersData = this.customers;
+    if(changes.projectID){
+      // this.getContracts(this.projectID); 
     }
+    // if(changes.customers){
+    //   this.customersData = this.customers;
+    // }
+    this.getContracts();
   }
 
-  ngOnInit(): void {
-    this.cache.functionList('DPT040102').subscribe((res) => {
-      if (res) {
-        let formModel = new FormModel();
-        formModel.formName = res?.formName;
-        formModel.gridViewName = res?.gridViewName;
-        formModel.entityName = res?.entityName;
-        formModel.funcID = 'DPT040102';
-        this.frmModelInstancesTask = formModel;
-        console.log(this.frmModelInstancesTask);
-      }
-    });
+  async ngOnInit(): Promise<void> {
+    // this.cache.functionList('DPT040102').subscribe((res) => {
+    //   if (res) {
+    //     let formModel = new FormModel();
+    //     formModel.formName = res?.formName;
+    //     formModel.gridViewName = res?.gridViewName;
+    //     formModel.entityName = res?.entityName;
+    //     formModel.funcID = 'DPT040102';
+    //     this.frmModelInstancesTask = formModel;
+    //     console.log(this.frmModelInstancesTask);
+    //   }
+    // });
     this.getAccount();
     this.formModel.entityName = 'CM_Contracts';
     this.formModel.formName = 'CMContracts';
     this.formModel.gridViewName = 'grvCMContracts';
+    this.headerTextTitle = await this.stepService.getNameFunctionID('SYS01');
   }
 
+  //#region GetContract
+  getContracts() {
+    this.requestData.predicates = this.predicates;
+    this.requestData.dataValues = this.dataValues;
+    this.requestData.entityName = this.entityName;
+    this.requestData.funcID = this.funcID;
+    this.requestData.pageLoading = false;
+
+    this.fetch().subscribe((res) => {
+      this.listContract = res;
+    });
+  }
+
+  fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.methodLoadData,
+        this.requestData
+      )
+      .pipe(
+        finalize(() => {}),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+  }
+  //#endregion
 
   changeDataMFTask(event){
 
@@ -95,16 +142,16 @@ export class ListContractsComponent implements OnInit, OnChanges {
     }
   }
 
-  getContracts(data){
-    this.api.exec<any>(
-      'CM',
-      'ContractsBusiness',
-      'GetContractsAsync',
-      data
-    ).subscribe((e) => {
-        this.listContract = e || [];
-    })
-  }
+  // getContracts(data){
+  //   this.api.exec<any>(
+  //     'CM',
+  //     'ContractsBusiness',
+  //     'GetContractsAsync',
+  //     data
+  //   ).subscribe((e) => {
+  //       this.listContract = e || [];
+  //   })
+  // }
 
   setCustomer(){
     let contracts = new CM_Contracts();
@@ -189,7 +236,8 @@ export class ListContractsComponent implements OnInit, OnChanges {
       action,
       contract: contract || null,
       account: this.account,
-      type: this.type
+      type: this.type,
+      actionName : this.headerTextTitle,
     }
     let option = new DialogModel();
     option.IsFull = true;

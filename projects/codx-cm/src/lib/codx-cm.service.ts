@@ -526,6 +526,8 @@ export class CodxCmService {
       data
     );
   }
+
+
   getListChannels() {
     return this.api.exec<any>('CM', 'ChannelsBusiness', 'GetListChannelsAsync');
   }
@@ -754,6 +756,16 @@ export class CodxCmService {
       data
     );
   }
+
+  confirmOrRefuse(recID: string, check: boolean, returnedCmt: string) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'ConfirmOrRefuseAsync',
+      [recID, check, returnedCmt]
+    );
+  }
   // moveDealReason(data) {
   //   return this.api.execSv<any>(
   //     'CM',
@@ -851,6 +863,24 @@ export class CodxCmService {
       data
     );
   }
+
+  getListPermissionOwner(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetListPermissionInCMAsync',
+      data
+    );
+  }
+  updateOwnerLead(data){
+    return this.api.exec<any>(
+      'CM',
+      'LeadsBusiness',
+      'UpdateOwnerLeadAsync',
+      data
+    );
+  }
+
 
   //#endregion -- Bao
 

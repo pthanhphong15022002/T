@@ -153,6 +153,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       'keyup',
       (e: KeyboardEvent) => {
         if (e.key == 'Tab') {
+          if (this.gridInventoryJournalLine) {
+            this.gridInventoryJournalLine.autoAddRow = true;
+          }  
           if (document.activeElement.className == 'e-tab-wrap') {
             var element = document.getElementById('btnadd');
             element.focus();
@@ -160,19 +163,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         }
       }
     );
-    (this.elementRef.nativeElement as HTMLElement).addEventListener(
+    (document.body as HTMLElement).addEventListener(
       'click',
       (e: any) => {
-        console.log(e);
         if (
           e.target.closest('.e-grid') == null &&
           e.target.closest('.e-popup') == null &&
           e.target.closest('.edit-value') == null
         ) {
           if (this.gridInventoryJournalLine.gridRef.isEdit) {
-            this.gridInventoryJournalLine.autoAddRow = false;
             this.gridInventoryJournalLine.endEdit();
-            this.gridInventoryJournalLine.autoAddRow = true;
+            this.gridInventoryJournalLine.autoAddRow = false;
+          }
+        }else{
+          if (this.gridInventoryJournalLine) {
+            this.gridInventoryJournalLine.autoAddRow = false;
           }
         }
       }
@@ -351,13 +356,15 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    if (this.hasSaved) {
-      this.dialog.close({
-        update: true,
-        data: this.inventoryJournal,
-      });
-    } else {
-      this.dialog.close();
+    if (!this.gridInventoryJournalLine.gridRef.isEdit) {
+      if (this.hasSaved) {
+        this.dialog.close({
+          update: true,
+          data: this.inventoryJournal,
+        });
+      } else {
+        this.dialog.close();
+      }
     }
   }
 
@@ -411,56 +418,100 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   save(isclose: boolean)
   {
-    this.loading = true;
-    switch (this.formType) {
-      case 'add':
-      case 'copy':
-        this.inventoryJournal.status = '1';
-        if (this.hasSaved) {
-          this.dialog.dataService.updateDatas.set(
-            this.inventoryJournal['_uuid'],
-            this.inventoryJournal
-          );
-          this.dialog.dataService
-            .save(null, 0, '', 'SYS006', true)
-            .subscribe((res) => {
-              if(res.update.error)
-              {
-                this.inventoryJournal.status = '0';
-              }
-              if (res && res.update.data != null && res.update.error != true) 
-              {
-                if(isclose)
+    if (!this.gridInventoryJournalLine.gridRef.isEdit)
+    {
+      this.loading = true;
+      switch (this.formType) {
+        case 'add':
+        case 'copy':
+          this.inventoryJournal.status = '1';
+          if (this.hasSaved) {
+            this.dialog.dataService.updateDatas.set(
+              this.inventoryJournal['_uuid'],
+              this.inventoryJournal
+            );
+            this.dialog.dataService
+              .save(null, 0, '', 'SYS006', true)
+              .subscribe((res) => {
+                if(res.update.error)
                 {
-                  this.dialog.close({
-                    update: true,
-                    data: res.update,
-                  });
+                  this.inventoryJournal.status = '0';
                 }
-                else
+                if (res && res.update.data != null && res.update.error != true) 
                 {
-                  this.clearInventoryJournal();
-                  this.dialog.dataService.clear();
-                  this.dialog.dataService
-                    .addNew((o) => this.setDefault(o))
-                    .subscribe((res) => {
-                    this.inventoryJournal = res;
-                    this.setWarehouseID();
-                    this.form.formGroup.patchValue(this.inventoryJournal);
-                    this.hasSaved = false;
-                    this.isSaveMaster = false;
+                  if(isclose)
+                  {
+                    this.dialog.close({
+                      update: true,
+                      data: res.update,
                     });
-                    this.dt.detectChanges();
+                  }
+                  else
+                  {
+                    this.clearInventoryJournal();
+                    this.dialog.dataService.clear();
+                    this.dialog.dataService
+                      .addNew((o) => this.setDefault(o))
+                      .subscribe((res) => {
+                      this.inventoryJournal = res;
+                      this.setWarehouseID();
+                      this.form.formGroup.patchValue(this.inventoryJournal);
+                      this.hasSaved = false;
+                      this.isSaveMaster = false;
+                      });
+                      this.dt.detectChanges();
+                  }
+                  this.loading = false;
                 }
-                this.loading = false;
+                else{
+                  this.loading = false;
+                }
+              });
+          } else {
+            // nếu voucherNo đã tồn tại,
+            // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
+            this.journalService.handleVoucherNoAndSave(
+              this.journal,
+              this.inventoryJournal,
+              'IV',
+              this.entityMaster,
+              this.form,
+              this.formType === 'edit',
+              () => {
+                this.dialog.dataService.save().subscribe((res) => {
+                  if(res.save.error)
+                  {
+                    this.inventoryJournal.status = '0';
+                  }
+                  if (res && res.save.data != null && res.save.error != true) {
+                    if(isclose)
+                    {
+                      this.dialog.close();
+                    }
+                    else
+                    {
+                      this.clearInventoryJournal();
+                      this.dialog.dataService.clear();
+                      this.dialog.dataService
+                      .addNew((o) => this.setDefault(o))
+                      .subscribe((res) => {
+                        this.inventoryJournal = res;
+                        this.setWarehouseID();
+                        this.form.formGroup.patchValue(this.inventoryJournal);
+                      });
+                    }
+                    this.dt.detectChanges();
+                  }
+                  else {
+                    this.loading = false;
+                    this.inventoryJournal.unbounds.isAddNew = true;
+                  }
+                });
               }
-              else{
-                this.loading = false;
-              }
-            });
-        } else {
-          // nếu voucherNo đã tồn tại,
-          // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
+            );
+          }
+          break;
+        case 'edit':
           this.journalService.handleVoucherNoAndSave(
             this.journal,
             this.inventoryJournal,
@@ -469,67 +520,26 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.form,
             this.formType === 'edit',
             () => {
-              this.dialog.dataService.save().subscribe((res) => {
-                if(res.save.error)
-                {
-                  this.inventoryJournal.status = '0';
-                }
-                if (res && res.save.data != null && res.save.error != true) {
-                  if(isclose)
-                  {
-                    this.dialog.close();
-                  }
-                  else
-                  {
-                    this.clearInventoryJournal();
-                    this.dialog.dataService.clear();
-                    this.dialog.dataService
-                    .addNew((o) => this.setDefault(o))
-                    .subscribe((res) => {
-                      this.inventoryJournal = res;
-                      this.setWarehouseID();
-                      this.form.formGroup.patchValue(this.inventoryJournal);
-                    });
-                  }
+              if (this.inventoryJournal.status == '0') {
+                this.inventoryJournal.status = '1';
+              }
+              this.dialog.dataService.updateDatas.set(
+                this.inventoryJournal['_uuid'],
+                this.inventoryJournal
+              );
+              this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+                if (res && res.update.data != null) {
+                  this.dialog.close({
+                    update: true,
+                    data: res.update.data,
+                  });
                   this.dt.detectChanges();
-                }
-                else {
-                  this.loading = false;
-                  this.inventoryJournal.unbounds.isAddNew = true;
                 }
               });
             }
           );
-        }
-        break;
-      case 'edit':
-        this.journalService.handleVoucherNoAndSave(
-          this.journal,
-          this.inventoryJournal,
-          'IV',
-          this.entityMaster,
-          this.form,
-          this.formType === 'edit',
-          () => {
-            if (this.inventoryJournal.status == '0') {
-              this.inventoryJournal.status = '1';
-            }
-            this.dialog.dataService.updateDatas.set(
-              this.inventoryJournal['_uuid'],
-              this.inventoryJournal
-            );
-            this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
-              if (res && res.update.data != null) {
-                this.dialog.close({
-                  update: true,
-                  data: res.update.data,
-                });
-                this.dt.detectChanges();
-              }
-            });
-          }
-        );
-        break;
+          break;
+      }
     }
   }
 
@@ -1009,6 +1019,27 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }, 500);
   }
 
+  // loadItemID(value) {
+  //   let sArray = [
+  //     'packingspecifications',
+  //     'styles',
+  //     'itemcolors',
+  //     'itembatchs',
+  //     'itemseries',
+  //   ];
+  //   var elements = document
+  //     .querySelector('.tabLine')
+  //     .querySelectorAll('codx-inplace');
+  //   elements.forEach((e) => {
+  //     var input = window.ng.getComponent(e) as CodxInplaceComponent;
+  //     if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+  //       input.value = "";
+  //       input.predicate = 'ItemID="' + value + '"';
+  //       input.loadSetting();
+  //     }
+  //   });
+  // }
+
   loadPredicate(visibleColumns, data)
   {
     var arr = [
@@ -1134,19 +1165,23 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   autoAddRowSet(e: any) {
-    if (!this.loadingform || !this.loading) {
-      switch (e.type) {
-        case 'autoAdd':
-          this.addRow();
-          break;
-        case 'endEdit':
-          if (this.gridInventoryJournalLine.autoAddRow) {
+    setTimeout(() => {
+      if (!this.loadingform || !this.loading) {
+        switch (e.type) {
+          case 'autoAdd':
             this.addRow();
-          }
-          break;
+            break;
+          case 'add':
+            if (this.gridInventoryJournalLine.autoAddRow) {
+              this.addRow();
+            }
+            break;
+          case 'closeEdit':
+            this.gridInventoryJournalLine.autoAddRow = true;
+            break;
+        }
       }
-    }
-    //this.addRow();
+    }, 500);
   }
   //#endregion
 }

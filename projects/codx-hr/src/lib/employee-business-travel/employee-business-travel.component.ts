@@ -95,7 +95,6 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.templateList,
@@ -105,7 +104,6 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
@@ -253,7 +251,9 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
               this.view.formModel.entityName,
               this.view.formModel.funcID,
               '',
-              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo,
               ''
             )
             .subscribe((result) => {

@@ -494,7 +494,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   getValue(seqNoSession, seqNoQuestion, seqNoAnswer) {
-    if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers != null) {
+    if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers && this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers.length>0) {
       return this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
         seqNoAnswer
       ]?.answer;
