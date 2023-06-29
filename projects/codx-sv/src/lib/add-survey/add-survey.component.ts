@@ -45,6 +45,7 @@ export class AddSurveyComponent extends UIComponent {
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
   primaryColor:any;
+  width= "200px";
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -81,10 +82,10 @@ export class AddSurveyComponent extends UIComponent {
       if(item) {
         this.dataSV = item;
         this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
-
         this.getAvatar(this.dataSV);
       }
       else this.title = this.titleNull;
+      this.width = (this.title.length + 1 )* 8 + "px";
     })
   }
   onInit(): void {
@@ -453,4 +454,5 @@ export class AddSurveyComponent extends UIComponent {
   {
     this.dataSV.settings = e;
   }
+ 
 }
