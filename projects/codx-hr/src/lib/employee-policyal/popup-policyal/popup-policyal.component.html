@@ -318,24 +318,41 @@
       </div>
 
     <div class="form-group row ms-6" *ngIf="loadGridview1 == true">
-        <codx-gridview-v2
-        #gridView1
+      <codx-gridview-v2
+      #gridView1
       [columnsGrid]="columnGrid1"
-      [service]="'HR'"
-      [assemblyName]="'Core'"
-      [className]="'DataBusiness'"
-      [method]="'LoadDataAsync'"
+      [formModel]="fmPolicyDetail"
+      [formName]="fmPolicyDetail.formName"
+      [gridViewName]="fmPolicyDetail.gridViewName"
+      [entityName]="fmPolicyDetail.entityName"
       [hideMoreFunc]="true"
       [editSettings]="editSettings"
-      [templateMore]="tempMfGrv1"
       [dataSource]="dataSourceGridView1"
       rowHeight="35"
       (onAddNew)="onAddNewGrid1($event)"
       [autoAddRow]="true"
       (onEdit)="onEditGrid1($event)"
       (onDelete)="onDeleteGrid1($event)"
-        >
+      >
+      <!-- [service]="'HR'"
+      [assemblyName]="'Core'"
+      [className]="'DataBusiness'"
+      [method]="'LoadDataAsync'" -->
         </codx-gridview-v2>
+        <div class="d-flex justify-content-end">
+          <button
+          class="btn btn-sm btn-light-primary"
+          (click)="addRowGrid1()"
+        >
+    <i class="icon-add icon-16 ms-n1"></i>
+        <codx-label
+        name="lblAddBtnGrid1"
+        default="Thêm"
+        [formModel]="formModel"
+      >
+    </codx-label>
+        </button>
+        </div>
     </div>
 
     <div class="form-group row">
@@ -672,16 +689,13 @@
 </ng-template>
 
 <ng-template #tmpGrid1Col2 let-data>
-  <div class="d-flex align-items-center mb-2">
+  <div class="d-flex align-items-center mb-2 has-action-menu">
     {{data.days}}
-  </div>
-</ng-template>
-
-<ng-template #tempMfGrv1 let-data>
-  <codx-mfunc
+    <codx-mfunc
     [dataItem]="data"
-    [formModel]="formModel"
+    [formModel]="fmPolicyDetail"
     (clickMF)="clickMF($event, data)"
     type="hover"
   ></codx-mfunc>
+  </div>
 </ng-template>
