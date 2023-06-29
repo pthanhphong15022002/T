@@ -387,7 +387,8 @@ export class AddSurveyComponent extends UIComponent {
     //     })
     //   })
     // ).subscribe();
-    this.codxService.navigate('SVT01',"",null,null,true);
+    if(this.SvService.signalSave.getValue() == "saving") this.notifySvr.notifyCode("SV005");
+    else this.codxService.navigate('SVT01',"",null,null,true);
   }
 
   review() {
