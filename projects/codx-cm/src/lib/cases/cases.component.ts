@@ -1330,7 +1330,7 @@ export class CasesComponent
         this.detectorRef.detectChanges();
       });
   }
-  async onLoading() {
+  async onLoading(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     let applyFor =
       this.funcID == 'CM0401' ? '2' : this.funcID == 'CM0402' ? '3' : '';
