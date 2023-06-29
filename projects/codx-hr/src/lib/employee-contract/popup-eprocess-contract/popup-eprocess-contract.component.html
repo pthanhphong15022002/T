@@ -106,7 +106,8 @@
   <div class="form-group row mt-5">
     <div class="col-6">
       <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
-      <codx-input *ngIf="loadedAutoField == true"
+      <codx-input
+        *ngIf="loadedAutoField == true"
         [disabled]="autoNumField == 'ContractNo'"
         field="contractNo"
         [formModel]="formModel"
@@ -332,7 +333,7 @@
     <i class="icon-add icon-16 ms-n1"></i>
     <codx-label
       name="lblAddBenefit"
-      default="AddNew"
+      default="Thêm mới"
       [formModel]="formModel"
     ></codx-label>
   </button>
@@ -354,7 +355,16 @@
 
         <div class="d-flex justify-content-end">
           <div class="d-flex align-items-center">
-            <span>{{ benefit.BenefitAmt }} /</span>
+            <span
+              [innerHTML]="
+                benefit?.BenefitAmt
+                  | formatvalue : benefitFormModel : 'benefitAmt'
+                  | async
+              "
+            >
+              <!-- {{ benefit.BenefitAmt }} -->
+              /</span
+            >
             <span
               class="text-gray-500"
               [innerHTML]="
