@@ -83,37 +83,7 @@ export class MyTeamComponent implements OnInit {
     this.footerCSSClasses = this.layout.getStringCSSClasses("footer");
     this.headerCSSClasses = this.layout.getStringCSSClasses("header");
     this.headerHTMLAttributes = this.layout.getHTMLAttributes("header");
-    this.api
-      .execSv("HR","ERM.Business.HR", "EmployeesBusiness", "GetEmpUsers", [
-        this.user.userID,
-      ])
-      .subscribe((res:any) => {
-        if (res){
-          let id = res.employeeID;
-          this.codx_mwp_service
-            .LoadData(id, '', "3")
-            .subscribe((response: any) => {
-              if (response) {
-                this.employeeMyTeam = [];
-                this.listEmpInfo = []
-                if (response.MyTeam) {
-                  this.employeeMyTeam = response.MyTeam;
-                  this.lstEmpID = this.employeeMyTeam[0].employeeID;
-                  this.employeeMyTeam.forEach(element => {
-                    this.lstEmpID += ";" + element.employeeID;
-                    this.loadEmployInfo(element.employeeID)
-                      .pipe()
-                      .subscribe((response) => {
-                        if (response != null) {
-                          this.listEmpInfo.push(response.InfoPersonal)
-                        }
-                      });
-                  });
-                }
-              }
-            });
-        }
-      });
+    this.getMyTeam();
   }
 
   ngAfterViewInit(): void {
@@ -146,41 +116,47 @@ export class MyTeamComponent implements OnInit {
     // Init Content
     //KTLayoutContent.init("kt_content");
   }
-  // ItemClick(id, isList) {
-  //   var chk = $('input[data-id="' + id + '"]');
-  //   var datas = this.cbxsv.data;
-  //   var item = datas.filter((x) => x.buid == id);
-  //   if (chk.length > 0) {
-  //     if (!chk[0].checked && item && item.length > 0 && isList) {
-  //       chk.attr("checked", "checked");
-  //       this.cbxsv.dataSelcected.push(item[0]);
-  //     } else {
-  //       chk.removeAttr("checked");
-  //       const removeIndex = this.cbxsv.dataSelcected.findIndex(
-  //         (x) => x.buid === id
-  //       );
-  //       // remove object
-  //       this.cbxsv.dataSelcected.splice(removeIndex, 1);
-  //       // this.cbxsv.dataSelcected.de(item[0]);
-  //     }
-  //   }
-  //   this.cbxsv.appendData();
-  //   this.dt.detectChanges();
-  // }
 
-  PopoverEmp(p: any, emp) {
-    if (this.popoverList) {
-      if (this.popoverList.isOpen())
-        this.popoverList.close();
+
+  pageIndex:number = 1;
+  lstMyTeam:any[] = [];
+  myTeams:any = [];
+  //get my team 
+  getMyTeam(){
+    debugger
+    if(this.user)
+    {
+      this.api
+      .execSv("HR",
+      "ERM.Business.HR",
+      "EmployeesBusiness",
+      "GetMyTeamAsync",
+      [this.user.userID,this.pageIndex])
+      .subscribe((res:any[]) => {
+        if(res)
+        {
+          if(this.pageIndex == 1)
+          {
+            this.myTeams = res[0];
+          }
+          this.lstMyTeam.push(res[0]);
+          if(this.lstMyTeam.length < res[1])
+              this.pageIndex = this.pageIndex + 1;
+        }
+        this.dt.detectChanges();
+      });
     }
-    if (emp) {
-      this.imployeeInfo = this.listEmpInfo.find(e => e.employeeID === emp.employeeID);
-      p.open();
-    }
-    else {
-      p.close();
-      this.imployeeInfo = {}
-    }
+    
+  }
+  // load data when scroll
+  scrolling($event){
+    debugger
+  }
+  employeeSeletecd:any = null;
+  PopoverEmp(p: any, item:any) {
+    debugger
+    this.employeeSeletecd = item;
+    p.isOpen() ? p.open() : p.close();
   }
 
   loadEmployInfo(employeeID): Observable<any> {
@@ -196,11 +172,10 @@ export class MyTeamComponent implements OnInit {
     );
   }
 
-  PopoverEmpList(p: any, emp) {
-    this.popoverList = p;
-    if (emp) {
-      p.open();
-    }
+
+  //hover open list myteam
+  PopoverEmpList(p: any) {
+    p.open();
   }
 
   PopoverEmpOfList(p: any, emp) {
