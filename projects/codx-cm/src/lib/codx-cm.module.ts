@@ -79,6 +79,7 @@ import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/
 import { TaskComponent } from './deals/step-task/task/task.component';
 import { CustomergroupsComponent } from './customergroups/customergroups.component';
 import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
+import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 
 const routes: Routes = [
   {
@@ -138,7 +139,6 @@ const routes: Routes = [
         component: SettingProcessCmComponent,
         data: { noReuse: true },
       },
-
     ],
   },
 ];
@@ -209,6 +209,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ContractsViewDetailComponent,
     ContractsDetailComponent,
     TaskComponent,
+    ViewIconGroupComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
