@@ -108,8 +108,10 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   workPermitCol1: TemplateRef<any>;
   @ViewChild('workPermitCol2', { static: true })
   workPermitCol2: TemplateRef<any>;
-  @ViewChild('headTempWorkPermit1', { static: true }) headTempWorkPermit1: TemplateRef<any>;
-  @ViewChild('headTempWorkPermit2', { static: true }) headTempWorkPermit2: TemplateRef<any>;
+  @ViewChild('headTempWorkPermit1', { static: true })
+  headTempWorkPermit1: TemplateRef<any>;
+  @ViewChild('headTempWorkPermit2', { static: true })
+  headTempWorkPermit2: TemplateRef<any>;
 
   //Column grid visa viewChild
   @ViewChild('visaCol1', { static: true }) visaCol1: TemplateRef<any>;
@@ -124,10 +126,14 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   basicSalaryCol3: TemplateRef<any>;
   @ViewChild('basicSalaryCol4', { static: true })
   basicSalaryCol4: TemplateRef<any>;
-  @ViewChild('headTempBasicSal1', { static: true }) headTempBasicSal1: TemplateRef<any>;
-  @ViewChild('headTempBasicSal2', { static: true }) headTempBasicSal2: TemplateRef<any>;
-  @ViewChild('headTempBasicSal3', { static: true }) headTempBasicSal3: TemplateRef<any>;
-  @ViewChild('headTempBasicSal4', { static: true }) headTempBasicSal4: TemplateRef<any>;
+  @ViewChild('headTempBasicSal1', { static: true })
+  headTempBasicSal1: TemplateRef<any>;
+  @ViewChild('headTempBasicSal2', { static: true })
+  headTempBasicSal2: TemplateRef<any>;
+  @ViewChild('headTempBasicSal3', { static: true })
+  headTempBasicSal3: TemplateRef<any>;
+  @ViewChild('headTempBasicSal4', { static: true })
+  headTempBasicSal4: TemplateRef<any>;
 
   //Column grid ebenefit viewChild
   @ViewChild('templateBenefitID', { static: true })
@@ -136,9 +142,12 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   templateBenefitAmt: TemplateRef<any>;
   @ViewChild('templateBenefitEffected', { static: true })
   templateBenefitEffected: TemplateRef<any>;
-  @ViewChild('headTempBenefit1', { static: true }) headTempBenefit1: TemplateRef<any>;
-  @ViewChild('headTempBenefit2', { static: true }) headTempBenefit2: TemplateRef<any>;
-  @ViewChild('headTempBenefit3', { static: true }) headTempBenefit3: TemplateRef<any>;
+  @ViewChild('headTempBenefit1', { static: true })
+  headTempBenefit1: TemplateRef<any>;
+  @ViewChild('headTempBenefit2', { static: true })
+  headTempBenefit2: TemplateRef<any>;
+  @ViewChild('headTempBenefit3', { static: true })
+  headTempBenefit3: TemplateRef<any>;
 
   //Filter benefit
   @ViewChild('filterBenefit', { static: true })
@@ -146,13 +155,16 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
   dialogRef: any;
 
-  // EContract grid 
+  // EContract grid
   @ViewChild('eContractCol1', { static: true }) eContractCol1: TemplateRef<any>;
   @ViewChild('eContractCol2', { static: true }) eContractCol2: TemplateRef<any>;
   @ViewChild('eContractCol3', { static: true }) eContractCol3: TemplateRef<any>;
-  @ViewChild('headTempContracts1', { static: true }) headTempContracts1: TemplateRef<any>;
-  @ViewChild('headTempContracts2', { static: true }) headTempContracts2: TemplateRef<any>;
-  @ViewChild('headTempContracts3', { static: true }) headTempContracts3: TemplateRef<any>;
+  @ViewChild('headTempContracts1', { static: true })
+  headTempContracts1: TemplateRef<any>;
+  @ViewChild('headTempContracts2', { static: true })
+  headTempContracts2: TemplateRef<any>;
+  @ViewChild('headTempContracts3', { static: true })
+  headTempContracts3: TemplateRef<any>;
 
   constructor(
     private injector: Injector,
@@ -196,19 +208,21 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     });
   }
 
-  checkIsNewestDate(effectedDate, expiredDate){
-    if(effectedDate){
+  checkIsNewestDate(effectedDate, expiredDate) {
+    if (effectedDate) {
       let eff = new Date(effectedDate).toLocaleDateString();
       let date = new Date().toLocaleDateString();
-      if(expiredDate){
+      if (expiredDate) {
         let expire = new Date(expiredDate).toLocaleDateString();
-        if(new Date(date) >= new Date(eff) && new Date(date) <= new Date(expire)){
+        if (
+          new Date(date) >= new Date(eff) &&
+          new Date(date) <= new Date(expire)
+        ) {
           return true;
         }
         return false;
-      }
-      else{
-        if(new Date(date) >= new Date(eff)){
+      } else {
+        if (new Date(date) >= new Date(eff)) {
           return true;
         }
         return false;
@@ -308,20 +322,19 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
             //   workHeaderText['WorkPermitNo'] +
             //   ' | ' +
             //   workHeaderText['IssuedPlace'],
-              headerTemplate: this.headTempWorkPermit1,
+            headerTemplate: this.headTempWorkPermit1,
             template: this.workPermitCol1,
             width: '150',
           },
           {
             // headerText:
             //   workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
-              headerTemplate: this.headTempWorkPermit2,
+            headerTemplate: this.headTempWorkPermit2,
             template: this.workPermitCol2,
             width: '150',
           },
         ];
         if (this.funcID == this.eWorkPermitFuncID) {
-
           this.columnGrid = this.workPermitColumnGrid;
           this.filter = null;
           //Get row count
@@ -340,13 +353,13 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
             // headerText: basicSalaryHeaderText['BSalary'],
             headerTemplate: this.headTempBasicSal1,
             template: this.basicSalaryCol1,
-            width: '100',
+            width: '150',
           },
           {
             // headerText: basicSalaryHeaderText['SISalary'],
             headerTemplate: this.headTempBasicSal2,
             template: this.basicSalaryCol2,
-            width: '100',
+            width: '150',
           },
           {
             // headerText: basicSalaryHeaderText['JSalary'],
@@ -418,12 +431,12 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           {
             headerText: basicSalaryHeaderText['BSalary'],
             template: this.basicSalaryCol1,
-            width: '100',
+            width: '150',
           },
           {
             headerText: basicSalaryHeaderText['SISalary'],
             template: this.basicSalaryCol2,
-            width: '100',
+            width: '150',
           },
           {
             headerText: basicSalaryHeaderText['JSalary'],
@@ -479,7 +492,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           this.filter = null;
           this.getEmpInfo();
           //Get row count
-          this.getRowCount()
+          this.getRowCount();
         }
       });
     }
@@ -566,27 +579,36 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //     else{
     //       this.dialogRef.close('none');
     //     }
-    // } 
-    else if(this.funcID == this.eContractFuncID  || this.funcID == this.eBasicSalaryFuncID){
-      debugger
+    // }
+    else if (
+      this.funcID == this.eContractFuncID ||
+      this.funcID == this.eBasicSalaryFuncID
+    ) {
+      debugger;
       let lstData = this.gridView.dataService.data;
-      let lstResult = []
-      for(let i = 0; i < lstData.length; i++){
-        if(this.checkIsNewestDate(lstData[i].effectedDate, lstData[i].expiredDate) == true){
+      let lstResult = [];
+      for (let i = 0; i < lstData.length; i++) {
+        if (
+          this.checkIsNewestDate(
+            lstData[i].effectedDate,
+            lstData[i].expiredDate
+          ) == true
+        ) {
           lstResult.push(lstData[i]);
         }
       }
-      if(lstResult.length > 0){
-        if(this.funcID == this.eBasicSalaryFuncID || this.funcID == this.eContractFuncID){
-          this.dialogRef.close(lstResult[0])
+      if (lstResult.length > 0) {
+        if (
+          this.funcID == this.eBasicSalaryFuncID ||
+          this.funcID == this.eContractFuncID
+        ) {
+          this.dialogRef.close(lstResult[0]);
         }
-        this.dialogRef.close(lstResult)
+        this.dialogRef.close(lstResult);
+      } else {
+        this.dialogRef.close('none');
       }
-      else{
-        this.dialogRef.close('none')
-      }
-    }
-    else {
+    } else {
       this.dialogRef.close();
     }
   }
@@ -618,7 +640,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
           this.HandleEmployeeBasicSalariesInfo(event.text, 'edit', data);
         } else if (funcID == this.ebenefitFuncID) {
           this.HandleEmployeeBenefit(event.text, 'edit', data);
-        } else if(funcID == this.eContractFuncID){
+        } else if (funcID == this.eContractFuncID) {
           this.handleEContractInfo(event.text, 'edit', data);
         }
         break;
@@ -677,30 +699,26 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
                   }
                 });
             } else if (funcID == this.ebenefitFuncID) {
-              this.hrService
-                .DeleteEBenefit(data)
-                .subscribe((p) => {
-                  if (p) {
-                    this.notify.notifyCode('SYS008');
+              this.hrService.DeleteEBenefit(data).subscribe((p) => {
+                if (p) {
+                  this.notify.notifyCode('SYS008');
 
-                    this.updateGridView(this.gridView, 'delete', null, data);
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
+                  this.updateGridView(this.gridView, 'delete', null, data);
+                } else {
+                  this.notify.notifyCode('SYS022');
+                }
+              });
             } else if (funcID == this.eContractFuncID) {
-              this.hrService
-                .deleteEContract(data)
-                .subscribe((p) => {
-                  if (p[0] != null) {
-                    this.notify.notifyCode('SYS008');
+              this.hrService.deleteEContract(data).subscribe((p) => {
+                if (p[0] != null) {
+                  this.notify.notifyCode('SYS008');
 
-                    this.updateGridView(this.gridView, 'delete', null, data);
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } 
+                  this.updateGridView(this.gridView, 'delete', null, data);
+                } else {
+                  this.notify.notifyCode('SYS022');
+                }
+              });
+            }
           }
         });
     }
@@ -745,7 +763,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   ) {
     let returnVal = 0;
     let index = 0;
-    if(oldData){
+    if (oldData) {
       index = gridView.dataService.data.findIndex(
         (p) => p.recID == oldData.recID
       );
@@ -754,18 +772,18 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       // (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
       // gridView.addRow(newData, 0, true);
 
-            //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
-            gridView.refresh();
+      //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
+      gridView.refresh();
       returnVal = 1;
-    } else if (actionType == 'edit') { 
+    } else if (actionType == 'edit') {
       // (gridView?.dataService as CRUDService)?.update(newData).subscribe();
       // gridView.updateRow(index, newData, false);
 
-            //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
-            gridView.refresh();
-    } else if ((actionType == 'delete')) {
+      //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
+      gridView.refresh();
+    } else if (actionType == 'delete') {
       (gridView?.dataService as CRUDService)?.remove(oldData).subscribe();
-      gridView.deleteRow(oldData,true);
+      gridView.deleteRow(oldData, true);
       returnVal = -1;
     }
     // return returnVal;
@@ -885,8 +903,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       PopupEbenefitComponent,
       {
         actionType: actionType,
-        headerText:
-          actionHeaderText + ' ' + this.headerText,
+        headerText: actionHeaderText + ' ' + this.headerText,
         employeeId: this.employeeId,
         funcID: this.ebenefitFuncID,
         benefitObj: data,
@@ -894,7 +911,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      debugger
+      debugger;
       if (res.event) {
         this.updateGridView(this.gridView, actionType, res.event, data);
       }
@@ -902,16 +919,16 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     });
   }
 
-  UpdateDataOnGrid(lst, prdc, dtvl){
-    this.gridView.predicates = prdc,
-    this.gridView.dataValues = dtvl,
-    this.gridView.dataSource = lst;
-    debugger
+  UpdateDataOnGrid(lst, prdc, dtvl) {
+    (this.gridView.predicates = prdc),
+      (this.gridView.dataValues = dtvl),
+      (this.gridView.dataSource = lst);
+    debugger;
   }
 
   //#region filter
   UpdateEBenefitPredicate() {
-    debugger
+    debugger;
     this.filterEBenefitPredicates = '';
     if (
       this.filterByBenefitIDArr.length > 0 &&
@@ -929,12 +946,17 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
       this.filterEBenefitPredicates += ') ';
       // console.log('truong hop 1', this.filterEBenefitPredicates);
-      (this.gridView.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')],res =>{
-          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
-        });
+      (this.gridView.dataService as CRUDService).setPredicates(
+        [this.filterEBenefitPredicates],
+        [this.filterByBenefitIDArr.join(';')],
+        (res) => {
+          this.UpdateDataOnGrid(
+            res,
+            this.filterEBenefitPredicates,
+            this.filterByBenefitIDArr.join(';')
+          );
+        }
+      );
     } else if (
       this.filterByBenefitIDArr.length > 0 &&
       (this.startDateEBenefitFilterValue == undefined ||
@@ -951,21 +973,29 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += ') ';
       // console.log('truong hop 2', this.filterEBenefitPredicates);
-      (this.gridView.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEBenefitPredicates],
-          [this.filterByBenefitIDArr.join(';')],res =>{
-          this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, this.filterByBenefitIDArr.join(';'));
-        });
+      (this.gridView.dataService as CRUDService).setPredicates(
+        [this.filterEBenefitPredicates],
+        [this.filterByBenefitIDArr.join(';')],
+        (res) => {
+          this.UpdateDataOnGrid(
+            res,
+            this.filterEBenefitPredicates,
+            this.filterByBenefitIDArr.join(';')
+          );
+        }
+      );
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
       this.startDateEBenefitFilterValue != null
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}" and EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
-      (this.gridView.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [],res =>{
+      (this.gridView.dataService as CRUDService).setPredicates(
+        [this.filterEBenefitPredicates],
+        [],
+        (res) => {
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
-        });
+        }
+      );
       // console.log('truong hop 3', this.filterEBenefitPredicates);
     } else if (
       this.filterByBenefitIDArr.length <= 0 &&
@@ -974,10 +1004,13 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     ) {
       this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeId}")`;
       // console.log('truong hop 4', this.filterEBenefitPredicates);
-      (this.gridView.dataService as CRUDService)
-        .setPredicates([this.filterEBenefitPredicates], [''],res =>{
+      (this.gridView.dataService as CRUDService).setPredicates(
+        [this.filterEBenefitPredicates],
+        [''],
+        (res) => {
           this.UpdateDataOnGrid(res, this.filterEBenefitPredicates, null);
-        });
+        }
+      );
     }
   }
 
@@ -998,7 +1031,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  getEmpInfo(){
+  getEmpInfo() {
     if (!this.infoPersonal) {
       let empRequest = new DataRequest();
       empRequest.entityName = 'HR_Employees';
@@ -1014,12 +1047,12 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   }
 
   handleEContractInfo(actionHeaderText, actionType: string, data: any) {
-    debugger
+    debugger;
     let option = new SidebarModel();
     option.Width = '850px';
     option.FormModel = this.formModel;
     let isAppendix = false;
-    debugger
+    debugger;
     if (
       (actionType == 'edit' || actionType == 'copy') &&
       data.isAppendix == true
@@ -1032,8 +1065,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         actionType: actionType,
         dataObj: data,
         empObj: this.infoPersonal,
-        headerText:
-          actionHeaderText + ' ' + this.headerText,
+        headerText: actionHeaderText + ' ' + this.headerText,
         employeeId: this.employeeId,
         funcID: this.eContractFuncID,
       },

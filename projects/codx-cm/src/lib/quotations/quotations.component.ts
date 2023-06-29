@@ -50,6 +50,8 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   @ViewChild('templateCreatedOn') templateCreatedOn: TemplateRef<any>;
   @ViewChild('popDetail') popDetail!: TemplateRef<any>;
   @ViewChild('templateDetailGird') templateDetailGird: TemplateRef<any>;
+  @ViewChild('templateDeal') templateDeal: TemplateRef<any>;
+  @ViewChild('templateApproverStatus') templateApproverStatus: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   service = 'CM';
@@ -68,6 +70,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   };
   grvSetup: any;
   vllStatus = '';
+  vllApprove = '';
   formModel: FormModel = {
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
@@ -164,6 +167,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
     );
     this.vllStatus = this.grvSetup['Status'].referedValue;
+    this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
     //lay grid view
     let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
     if (Array.isArray(arrField)) {
@@ -201,6 +205,12 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           break;
         case 'CreatedOn':
           template = this.templateCreatedOn;
+          break;
+        case 'DealID':
+          template = this.templateDeal;
+          break;
+        case 'ApproveStatus':
+          template = this.templateApproverStatus;
           break;
         default:
           break;

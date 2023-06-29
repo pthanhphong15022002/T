@@ -1,6 +1,6 @@
 <codx-views #view service="HR" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-  method="GetModelFormEmployAsyncNew" [views]="views" [selectedFirst]="true" idField="employeeID" [buttons]="buttons"
-  [viewActiveType]="'2'" (viewChanged)="viewChanged($event)" (selectedChange)="selectedChange($event)">
+  method="GetListEmployeeAsync" [views]="views" [selectedFirst]="true" idField="employeeID" [buttons]="buttons"
+  [viewActiveType]="'2'" (selectedChange)="selectedChange($event)">
 </codx-views>
 
 <ng-template #cardTemp let-data>

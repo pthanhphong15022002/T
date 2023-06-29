@@ -326,7 +326,10 @@
       [objectType]="'4'"
       [type]="'formDetail'"
       [hidenMF]="
-        !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected?.closed || dataSelected?.status == '1'
+        !dataSelected?.roles?.isOnwer ||
+        checkMoreReason ||
+        dataSelected?.closed ||
+        dataSelected?.status == '1'
           ? true
           : false
       "
@@ -353,7 +356,10 @@
   <codx-tab-dealcompetitors
     [dealID]="dataSelected.recID"
     [hidenMF]="
-      !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed || dataSelected?.status == '1'
+      !dataSelected?.roles?.isOnwer ||
+      checkMoreReason ||
+      dataSelected.closed ||
+      dataSelected?.status == '1'
         ? true
         : false
     "
@@ -362,7 +368,7 @@
 <ng-template #quotation>
   <codx-quotations-tab-view
     [typeModel]="'deals'"
-    [showButton]="true"
+    [showButton]="!dataSelected?.closed"
     [predicates]="'DealID==@0'"
     [dataValues]="dataSelected.recID"
     [dealID]="dataSelected.recID"
@@ -374,8 +380,8 @@
 
 <ng-template #contract let-data>
   <list-contracts
-    [dealID]="dataSelected?.recID"
-    [listContract]="listContract"
+    [predicates]="'DealID==@0'"
+    [dataValues]="dataSelected?.recID"
     [type]="'deal'"
   ></list-contracts>
 </ng-template>
