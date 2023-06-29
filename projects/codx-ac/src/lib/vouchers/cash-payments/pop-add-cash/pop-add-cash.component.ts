@@ -219,7 +219,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (e.key == 'Tab') {
           if (this.gridCash) {
             this.gridCash.autoAddRow = true;
-          }  
+          }
           if (document.activeElement.className == 'e-tab-wrap') {
             switch (this.cashpayment.subType) {
               case '1':
@@ -237,66 +237,63 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
 
         // phím tắt nút lưu
-        if(e.altKey && e.key == 's'){
-          if (this.gridCash.gridRef.isEdit) {
-            this.gridCash.endEdit();
-            this.gridCash.autoAddRow = true;
-          }else{
-            this.onSave();
-          }
-        }
-        
+        // if(e.altKey && e.key == 's'){
+        //   if (this.gridCash.gridRef.isEdit) {
+        //     this.gridCash.endEdit();
+        //     this.gridCash.autoAddRow = true;
+        //   }else{
+        //     this.onSave();
+        //   }
+        // }
+
         // phím tắt nút lưu & thêm
-        if(e.altKey && e.shiftKey && e.key == 'S'){
-          if (this.gridCash.gridRef.isEdit) {
-            this.gridCash.endEdit();
-            this.gridCash.autoAddRow = true;
-            
-          }else{
-            this.onSaveAdd();
-          }   
-        }
+        // if(e.altKey && e.shiftKey && e.key == 'S'){
+        //   if (this.gridCash.gridRef.isEdit) {
+        //     this.gridCash.endEdit();
+        //     this.gridCash.autoAddRow = true;
+
+        //   }else{
+        //     this.onSaveAdd();
+        //   }
+        // }
 
         // phím tắt nút hủy bỏ
-        if(e.key == 'Delete'){
-          if (this.gridCash.gridRef.isEdit) {
-            this.gridCash.endEdit();
-            this.gridCash.autoAddRow = true;
-          }else{
-            this.onDiscard();
-          } 
-        }
+        // if(e.key == 'Delete'){
+        //   if (this.gridCash.gridRef.isEdit) {
+        //     this.gridCash.endEdit();
+        //     this.gridCash.autoAddRow = true;
+        //   }else{
+        //     this.onDiscard();
+        //   }
+        // }
 
         // phím tắt nút đóng
-        if(e.key == 'Escape'){
-          if (this.gridCash.gridRef.isEdit) {
-            this.gridCash.endEdit();
-            this.gridCash.autoAddRow = true;
-          }else{
-            this.close();
-          }    
-        }
+        // if(e.key == 'Escape'){
+        //   if (this.gridCash.gridRef.isEdit) {
+        //     this.gridCash.endEdit();
+        //     this.gridCash.autoAddRow = true;
+        //   }else{
+        //     this.close();
+        //   }
+        // }
       }
     );
-    (document.body as HTMLElement).addEventListener(
-      'click',
-      (e: any) => {
-        if (
-          e.target.closest('.e-grid') == null &&
-          e.target.closest('.e-popup') == null &&
-          e.target.closest('.edit-value') == null
-        ) {
-          if (this.gridCash.gridRef.isEdit) {
-            this.gridCash.endEdit();
-            this.gridCash.autoAddRow = true;
-          }
-        }else{
-          if (this.gridCash && this.gridCash.gridRef.isEdit) {
-            this.gridCash.autoAddRow = false;
-          }
+    (document.body as HTMLElement).addEventListener('click', (e: any) => {
+      if (
+        e.target.closest('.e-grid') == null &&
+        e.target.closest('.e-popup') == null &&
+        e.target.closest('.edit-value') == null
+      ) {
+        if (this.gridCash && this.gridCash.gridRef.isEdit) {
+          this.gridCash.endEdit();
+          this.gridCash.autoAddRow = true;
+        }
+      } else {
+        if (this.gridCash && this.gridCash.gridRef.isEdit) {
+          this.gridCash.autoAddRow = false;
         }
       }
-    );
+    });
 
     this.dt.detectChanges();
   }
@@ -304,7 +301,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Event
   close() {
-    if (!this.gridCash.gridRef.isEdit || this.gridSet) {
+    if (
+      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+      (this.gridSet && !this.gridSet.gridRef.isEdit)
+    ) {
       if (this.hasSaved) {
         this.dialog.close({
           update: true,
@@ -323,6 +323,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
       case 'SYS03':
         this.editRow(data);
+        break;
+      case 'SYS04':
+        this.copyRow(data);
         break;
     }
   }
@@ -866,6 +869,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.gridRef.selectRow(Number.parseFloat(data.index));
     this.gridCash.gridRef.startEdit();
   }
+  copyRow(data) {
+    let idx = this.gridCash.dataSource.length;
+    data.rowNo = idx + 1;
+    data.recID = Util.uid();
+    this.requireFields = data.unbounds.requireFields as Array<string>;
+    this.lockFields = data.unbounds.lockFields as Array<string>;
+    this.requireGrid();
+    this.lockGrid();
+    this.gridCash.addRow(data, idx);
+  }
 
   onAddNew(e: any) {
     this.loadTotal();
@@ -926,16 +939,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     //this.addRow();
   }
+
   autoAddRowSet(e: any) {
     if (!this.loadingform || !this.loading) {
       switch (e.type) {
         case 'autoAdd':
           if (this.action == 'add') {
             this.settlement(0);
-          }else{
+          } else {
             this.settlement(1);
           }
-          
+
           break;
       }
     }
@@ -1087,7 +1101,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.notification.notifyCode('AC0013');
       return;
     }
-    if (!this.gridCash.gridRef.isEdit || this.gridSet) {
+    if (
+      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+      (this.gridSet && !this.gridSet.gridRef.isEdit)
+    ) {
       this.loading = true;
       switch (this.action) {
         case 'add':
@@ -1161,7 +1178,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.notification.notifyCode('AC0013');
       return;
     }
-    if (!this.gridCash.gridRef.isEdit || this.gridSet) {
+    if (
+      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+      (this.gridSet && !this.gridSet.gridRef.isEdit)
+    ) {
       this.loading = true;
       if (this.hasSaved) {
         this.dialog.dataService.updateDatas.set(
@@ -1209,6 +1229,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           )
           .subscribe((res) => {
             if (res.data != null) {
+              this.notification.notifyCode('E0860');
               this.hasSaved = false;
               this.clearCashpayment();
               this.dialog.dataService.clear();

@@ -340,9 +340,8 @@
 
 <ng-template #contract let-data>
   <list-contracts
-    [quotationID]="itemSelected?.recID"
-    [listContract]="listContract"
+    [predicates]="'QuotationID==@0'"
+    [dataValues]="itemSelected?.recID"
     [type]="'quotation'"
-  >
-  </list-contracts>
+  ></list-contracts>
 </ng-template>
