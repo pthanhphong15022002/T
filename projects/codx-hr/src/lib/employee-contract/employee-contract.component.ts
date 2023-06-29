@@ -100,7 +100,6 @@ export class EmployeeContractComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -110,7 +109,6 @@ export class EmployeeContractComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.itemTemplateListDetail,
           panelRightRef: this.panelRightListDetail,
@@ -188,7 +186,6 @@ export class EmployeeContractComponent extends UIComponent {
 
   changeDataMf(event, data) {
     this.flagChangeMF = true;
-    this.hrService.handleShowHideMF(event, data, this.view.formModel);
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
     );
@@ -206,7 +203,12 @@ export class EmployeeContractComponent extends UIComponent {
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
       this.runModeCheck = true;
-      this.shareService.changeMFApproval(e, data);
+      this.shareService.changeMFApproval(e, data?.unbounds);
+    }
+    else 
+    {
+    
+      this.hrService.handleShowHideMF(event, data, this.view.formModel);
     }
   }
 
