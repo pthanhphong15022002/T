@@ -536,8 +536,8 @@
 
 <ng-template #contract let-data>
   <list-contracts
-    [customersID]="dataSelected?.recID"
-    [listContract]="listContract"
+    [predicates]="'CustomerID==@0'"
+    [dataValues]="dataSelected?.recID"
     [type]="'customer'"
   ></list-contracts>
 </ng-template>
