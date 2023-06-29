@@ -526,15 +526,23 @@
             >
           </td>
           <td>
-            <span
-              class="text-nowrap codx-label fw-bold fs-6"
-              style="float: right; padding-right: 5px"
-              [innerHTML]="
-                sum('vatAmt')
-                  | formatvalue : fmQuotationLines : 'vatAmt'
-                  | async
-              "
-            ></span>
+            <ng-container
+              [ngTemplateOutlet]="sumVatAmt"
+              [ngTemplateOutletContext]="{ $implicit: sum('vatAmt') }"
+            ></ng-container>
+            <ng-template #sumVatAmt let-total>
+              <span
+                class="text-nowrap codx-label fw-bold fs-6"
+                style="float: right; padding-right: 5px"
+                [innerHTML]="
+                  total != 0
+                    ? (total
+                      | formatvalue : fmQuotationLines : 'vatAmt'
+                      | async)
+                    : 0
+                "
+              ></span>
+            </ng-template>
           </td>
         </tr>
       </tfoot>
