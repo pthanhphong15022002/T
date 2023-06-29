@@ -852,6 +852,24 @@ export class CodxCmService {
     );
   }
 
+  getListPermissionOwner(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetListPermissionInCMAsync',
+      data
+    );
+  }
+  updateOwnerLead(data){
+    return this.api.exec<any>(
+      'CM',
+      'LeadsBusiness',
+      'UpdateOwnerLeadAsync',
+      data
+    );
+  }
+
+
   //#endregion -- Bao
 
   //contracts -- nvthuan

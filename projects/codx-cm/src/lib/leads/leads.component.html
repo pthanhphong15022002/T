@@ -57,14 +57,12 @@
           class="text-gray-600 fs-7"
           #businessLineID
           [innerHTML]="
-            data?.businessLineID
-              | formatvalue
-                : formModel
-                : 'businessLineID'
-                : businessLineID
+          data?.businessLineID
+              | formatvalue : view.formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
+
       </div>
     </div>
     <div class="d-flex justify-content-start mb-1 w-100">
@@ -204,15 +202,17 @@
         [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
       >
         <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
+
         <span
-          class="text-gray-600 fs-7 line-clamp-menu"
+          class="text-gray-600 fs-7"
           #businessLineID
           [innerHTML]="
-            data?.businessLineID
-              | formatvalue : view.formModel : 'businessLineID' : businessLineID
+          data?.businessLineID
+              | formatvalue : formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
+
       </div>
 
       <div class="d-flex justify-content-start mb-1 w-100">

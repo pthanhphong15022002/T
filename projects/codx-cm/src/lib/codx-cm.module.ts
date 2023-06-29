@@ -79,6 +79,7 @@ import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/
 import { TaskComponent } from './deals/step-task/task/task.component';
 import { CustomergroupsComponent } from './customergroups/customergroups.component';
 import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
+import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 
 const routes: Routes = [
   {
@@ -209,6 +210,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ContractsViewDetailComponent,
     ContractsDetailComponent,
     TaskComponent,
+    PopupOwnerDealComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
