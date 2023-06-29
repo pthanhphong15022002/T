@@ -35,8 +35,10 @@ export class SignalRService {
   public createConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/hubwp/chat', {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
         accessTokenFactory: async () => {
-          return this.authStore.get().token;
+          return this.authStore.get()?.token;
         }
       })
       .build();
@@ -44,7 +46,7 @@ export class SignalRService {
     this.hubConnection
       .start()
       .then()
-      .catch((err) => console.log('Error while starting connection: ' + err));
+      .catch();
   }
   // reciver from server
   public registerOnServerEvents() {
