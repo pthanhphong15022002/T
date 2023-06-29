@@ -276,6 +276,7 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
+      // this.view.load();
       // this.cache.viewSettings(this.funcID).subscribe((views) => {
       //   if (views) {
       //     this.afterLoad();
@@ -1393,6 +1394,7 @@ export class DealsComponent
 
   //-----------------------------change Filter -------------------------------//
   changeFilter() {
+    //change view filter
     if (this.funcID != 'CM0201') {
       let idxBusinesLineOp = this.view.filterOptions.findIndex(
         (x) => x.fieldName == 'BusinessLineID'
@@ -1517,6 +1519,12 @@ export class DealsComponent
 
   onLoading(e) {
     if (!this.funCrr) return;
+    //reload filter
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funCrr != this.funcID) {
+      this.view.pinedFilter.filters = [];
+      this.view.dataService.filter.filters = [];
+    }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
