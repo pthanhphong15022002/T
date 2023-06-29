@@ -104,6 +104,9 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
     this.leadNew.recID = Util.uid();
     this.leadNew.contactID = Util.uid();
+    this.leadNew.memo = this.leadNew.memo ?? '';
+    this.leadNew.note = this.leadNew.note ?? '';
+
     this.leadTwo.recID = null;
     this.leadThree.recID = null;
     this.recIDLead = this.leadOne?.recID;

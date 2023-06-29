@@ -42,14 +42,14 @@
       </codx-vll>
       </div>
       <div class="col-6">
-        <span class="me-2">
-        <codx-input
-          [disabled]="'true'"
-          field="isCurrent"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </span>
+        <span class="me-3">
+          <codx-input
+            [disabled]="'true'"
+            field="isCurrent"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </span>
         <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
       </div>
     </div>
@@ -142,7 +142,7 @@
       ></codx-input>
     </div>
 
-    <hr>
+   
 
     <div class="form-group row">
       <div class="col-6">
@@ -176,13 +176,13 @@
     <div class="form-group row">
       <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
       <codx-input
-        field="signerID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      (valueChange)="handleSelectEmp($event)"
-      ></codx-input>
+          field="signerID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        (valueChange)="handleSelectEmp($event)"
+        ></codx-input>
     </div>
-
+    <hr>
     <div class="form-group row">
       <codx-label
         fiedName="SignerPosition"
