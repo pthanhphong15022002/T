@@ -343,7 +343,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol2 let-data>
-  <div class="d-flex justify-content-end w-125px">
+  <div class="d-flex justify-content-end w-110px">
     <div class="d-flex align-items-center w-auto">
       <span
         [ngClass]="
@@ -363,7 +363,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol3 let-data>
-  <div class="d-flex justify-content-end w-125px">
+  <div class="d-flex justify-content-end w-100px">
     <span class="text-dark"
         [innerHTML]="
           data?.jSalary
@@ -451,23 +451,25 @@
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
-  <div class="d-flex align-items-center" #benefitNorm>
-    <div class="w-150px d-flex justify-content-end">
-      <span class="text-dark"
+  <div class="d-flex align-items-center justify-content-center w-100" #benefitNorm>
+    <div class="d-flex align-items-center">
+      <div class="w-100px d-flex justify-content-end">
+        <span class="text-dark"
+          [innerHTML]="
+            data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
+          "
+        >
+        </span>
+      </div>
+      <span class="mx-2 text-gray-400">/</span>
+      <span class="w-100px text-gray-600"
         [innerHTML]="
-          data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
+          data?.benefitNorm
+            | formatvalue : formModel : 'benefitNorm'
+            | async
         "
-      >
-      </span>
+      ></span>
     </div>
-    <span class="mx-2 text-gray-400">/</span>
-    <span class="w-100px text-gray-600"
-      [innerHTML]="
-        data?.benefitNorm
-          | formatvalue : formModel : 'benefitNorm'
-          | async
-      "
-    ></span>
   </div>
 </ng-template>
 
@@ -839,6 +841,7 @@
 </ng-template>
 
 <ng-template #headTempBenefit2>
+  <div class="w-100 d-flex justify-content-center">
   <codx-label
   [formModel]="formModel"
   [name]="'lblBenefitGridCol2'"
@@ -846,6 +849,7 @@
   class="fw-bold fs-6"
 >
 </codx-label>
+</div>
 </ng-template>
 
 <ng-template #headTempBenefit3>
