@@ -200,16 +200,30 @@
 
     <!-- status -->
     <div class="w-20 p-3">
-      <codx-vll
-        [formModel]="view.formModel"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showIcon]="false"
-        [showBgColor]="true"
-        ngClass="badge badge-sm"
-      >
-      </codx-vll>
+      <ng-container *ngIf="flagChangeMF">
+        <ng-container *ngIf="runModeCheck; else elseVll">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            [name]="'ES030'"
+            [value]="data?.unbounds?.statusApproval + data?.unbounds?.stepType"
+            class="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
+        <ng-template #elseVll>
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+            ngClass="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-template>
+      </ng-container>
     </div>
     <!-- end status -->
 
@@ -252,7 +266,7 @@
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
-    [typeMF]="'hover'"
+    [typeMF]="'view'"
     [title]="data.emp?.employeeName"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
@@ -336,14 +350,40 @@
       <!-- status  -->
       <div class="d-flex justify-content-between text-dark">
         <span class="mt-2">
-          <codx-vll
+          <ng-container *ngIf="flagChangeMF">
+            <ng-container *ngIf="runModeCheck; else elseVll">
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="true"
+                [name]="'ES030'"
+                [value]="
+                  data?.unbounds?.statusApproval + data?.unbounds?.stepType
+                "
+                class="badge badge-sm"
+              >
+              </codx-vll>
+            </ng-container>
+            <ng-template #elseVll>
+              <codx-vll
+                [formModel]="view.formModel"
+                [field]="'Status'"
+                [value]="data?.status"
+                [showText]="true"
+                [showIcon]="false"
+                [showBgColor]="true"
+                ngClass="badge badge-sm"
+              >
+              </codx-vll>
+            </ng-template>
+          </ng-container>
+          <!-- <codx-vll
             class="badge fw-bold"
             [name]="'HRS102'"
             [value]="data?.status"
             [showText]="true"
             [showBgColor]="true"
           >
-          </codx-vll>
+          </codx-vll> -->
         </span>
       </div>
     </div>

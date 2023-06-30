@@ -185,6 +185,8 @@ export class EmployeeContractComponent extends UIComponent {
   flagChangeMF: boolean = false;
 
   changeDataMf(event, data) {
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
     this.flagChangeMF = true;
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
@@ -205,10 +207,9 @@ export class EmployeeContractComponent extends UIComponent {
       this.runModeCheck = true;
       this.shareService.changeMFApproval(e, data?.unbounds);
     }
-    else 
-    {
-      this.hrService.handleShowHideMF(event, data, this.view.formModel);
-    }
+    //  else {
+    //   this.hrService.handleShowHideMF(event, data, this.view.formModel);
+    // }
   }
 
   clickMF(event, data) {
