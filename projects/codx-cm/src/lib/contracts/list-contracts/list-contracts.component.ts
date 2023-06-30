@@ -15,8 +15,6 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
-  UIComponent,
-  Util,
 } from 'codx-core';
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
@@ -209,14 +207,14 @@ export class ListContractsComponent implements OnInit, OnChanges {
     if (this.customersData) {
       contracts = this.setCustomer();
     }
-    if (this.dealID) {
-      contracts.dealID = this.dealID;
+    if (this.type == 'deal') {
+      contracts.dealID = this.dataValues;
     }
-    if (this.quotationID) {
-      contracts.quotationID = this.quotationID;
+    if (this.type == 'quotation') {
+      contracts.quotationID = this.dataValues;
     }
-    if (this.customersID) {
-      contracts.customerID = this.customersID;
+    if (this.type == 'customer') {
+      contracts.customerID = this.dataValues;
     }
     let contractOutput = await this.openPopupContract(null, 'add', contracts);
     if (contractOutput?.event?.contract) {

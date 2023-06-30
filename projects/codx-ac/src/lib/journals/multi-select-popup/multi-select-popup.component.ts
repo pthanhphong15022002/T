@@ -20,8 +20,8 @@ export class MultiSelectPopupComponent extends UIComponent {
   @ViewChild('form') form: CodxFormComponent;
   selectedOptions: string[] = [];
   showAll: boolean = false;
+  visibleIdimControls: any[];
   formTitle$: Observable<string>;
-  dimControls$: Observable<any[]>;
 
   constructor(
     injector: Injector,
@@ -53,29 +53,36 @@ export class MultiSelectPopupComponent extends UIComponent {
         map((data) => JSON.parse(data.dataValue)?.IDIMControl?.split(';')),
         tap((o) => console.log(o))
       )
-      .subscribe((settingValues) => {
-        this.dimControls$ = this.cache.valueList('AC069').pipe(
-          map((data) =>
-            data.datas
-              .filter((d) =>
-                this.showAll ? true : settingValues?.includes(d.value)
-              )
-              .map((d) => ({
-                value: d.value,
-                text: d.text,
-                checked: this.selectedOptions?.some((o) => o === d.value),
-              }))
-          ),
-          tap((data) => console.log(data))
-        );
+      .subscribe((settingIdimControls) => {
+        this.cache
+          .valueList('AC069')
+          .pipe(
+            map((data) =>
+              data.datas
+                .filter((d) =>
+                  this.showAll ? true : settingIdimControls?.includes(d.value)
+                )
+                .map((d) => ({
+                  value: d.value,
+                  text: d.text,
+                  checked: this.selectedOptions?.includes(d.value),
+                }))
+            )
+          )
+          .subscribe((res) => {
+            this.visibleIdimControls = res;
+          });
       });
   }
   //#endregion
 
   //#region Event
   onClickSave(): void {
-    console.log(this.selectedOptions);
-    this.dialogRef.close(this.selectedOptions.join(';'));
+    this.dialogRef.close(
+      this.selectedOptions
+        .filter((s) => this.visibleIdimControls.some((v) => v.value === s))
+        .join(';')
+    );
   }
 
   onChange(e, data): void {

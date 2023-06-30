@@ -569,8 +569,10 @@ export class PopupAddSalesInvoiceComponent
     const idim5 = this.grid.visibleColumns.find(
       (v) => v.fieldName?.toLowerCase() === 'idim5'
     );
-    idim5.predicate = 'WarehouseID=@0';
-    idim5.dataValue = dataValue;
+    if (idim5) {
+      idim5.predicate = 'WarehouseID=@0';
+      idim5.dataValue = dataValue;
+    }
   }
   //#endregion
 }
