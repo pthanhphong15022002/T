@@ -3357,13 +3357,11 @@ lib-layoutonlyheader{
   max-height: none;
 }
 
-/// chỉnh lại dialog
-aside {
-  .card-header {
-    min-height: 70px !important;
-  }
-  codx-layout-add .card-header {
-    height: 90px !important;
-    min-height: 90px !important;
-  }
+ejs-datepicker input.e-input {
+  height: 30px !important;
+  line-height: 30px;
+}
+ejs-combobox input.e-input {
+  height: 30px !important;
+  line-height: 30px;
 }

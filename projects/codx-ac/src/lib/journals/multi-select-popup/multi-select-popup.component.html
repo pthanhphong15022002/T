@@ -9,7 +9,7 @@
 
 <ng-template #body>
   <div class="mt-5">
-    <div *ngFor="let d of dimControls$ | async" class="mb-3">
+    <div *ngFor="let d of visibleIdimControls" class="mb-3">
       <codx-input
         type="checkbox"
         class="check-circle"

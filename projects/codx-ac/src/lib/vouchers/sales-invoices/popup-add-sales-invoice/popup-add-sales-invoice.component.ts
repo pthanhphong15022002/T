@@ -4,7 +4,7 @@ import {
   HostListener,
   Injector,
   Optional,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
@@ -299,6 +299,7 @@ export class PopupAddSalesInvoiceComponent
       'lineType',
       'umid',
       'idiM1',
+      'discAmt',
     ];
     if (postFields.includes(e.field)) {
       this.api
@@ -568,8 +569,10 @@ export class PopupAddSalesInvoiceComponent
     const idim5 = this.grid.visibleColumns.find(
       (v) => v.fieldName?.toLowerCase() === 'idim5'
     );
-    idim5.predicate = 'WarehouseID=@0';
-    idim5.dataValue = dataValue;
+    if (idim5) {
+      idim5.predicate = 'WarehouseID=@0';
+      idim5.dataValue = dataValue;
+    }
   }
   //#endregion
 }

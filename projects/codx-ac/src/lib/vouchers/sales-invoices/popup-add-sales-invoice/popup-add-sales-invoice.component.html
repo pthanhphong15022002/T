@@ -29,53 +29,49 @@
           <ng-template #content>
             <div class="row mt-6">
               <div class="col-7 ac-left">
-                <div class="mw-750px">
-                  <div class="row">
-                    <ng-container
-                      *ngTemplateOutlet="
-                        isReturnInvoice
-                          ? returnInvoiceTemplate
-                          : salesInvoiceTemplate
-                      "
-                    ></ng-container>
-                  </div>
+                <div class="row mw-750px">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      isReturnInvoice
+                        ? returnInvoiceTemplate
+                        : salesInvoiceTemplate
+                    "
+                  ></ng-container>
                 </div>
               </div>
               <div class="col-2 ac-bettween"></div>
               <div class="col-3 ac-right d-flex justify-content-end">
-                <div class="d-flex flex-column mw-300px">
-                  <div class="row">
-                    <div class="col-6 form-group">
-                      <codx-label
-                        fiedName="currencyID"
-                        [formModel]="form.formModel"
-                        default="Tiền tệ"
-                      ></codx-label>
-                      <codx-input
-                        field="currencyID"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                        (valueChange)="onInputChange($event)"
-                        [disabled]="journal?.multiCurrency === '0'"
-                      ></codx-input>
-                    </div>
-                    <div class="col-6 form-group">
-                      <codx-label
-                        fiedName="exchangeRate"
-                        [formModel]="form.formModel"
-                        default="Tỷ giá"
-                      ></codx-label>
-                      <codx-input
-                        field="exchangeRate"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
-                        [disabled]="journal?.multiCurrency === '0'"
-                        (controlBlur)="onInputChange($event)"
-                      ></codx-input>
-                    </div>
+                <div class="row mw-300px">
+                  <div class="col-6 form-group">
+                    <codx-label
+                      fiedName="currencyID"
+                      [formModel]="form.formModel"
+                      default="Tiền tệ"
+                    ></codx-label>
+                    <codx-input
+                      field="currencyID"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                      (valueChange)="onInputChange($event)"
+                      [disabled]="journal?.multiCurrency === '0'"
+                    ></codx-input>
+                  </div>
+                  <div class="col-6 form-group">
+                    <codx-label
+                      fiedName="exchangeRate"
+                      [formModel]="form.formModel"
+                      default="Tỷ giá"
+                    ></codx-label>
+                    <codx-input
+                      field="exchangeRate"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                      [disabled]="journal?.multiCurrency === '0'"
+                      (controlBlur)="onInputChange($event)"
+                    ></codx-input>
                   </div>
 
-                  <div class="form-group">
+                  <div class="form-group col-6">
                     <codx-label
                       fiedName="voucherDate"
                       [formModel]="form.formModel"
@@ -88,8 +84,7 @@
                       (valueChange)="onInputChange($event)"
                     ></codx-input>
                   </div>
-
-                  <div class="form-group">
+                  <div class="form-group col-6">
                     <codx-label
                       fiedName="voucherNo"
                       [formModel]="form.formModel"
@@ -105,6 +100,19 @@
                           ? (voucherNoPlaceholderText$ | async)
                           : ''
                       "
+                    ></codx-input>
+                  </div>
+
+                  <div class="form-group col-12">
+                    <codx-label
+                      fiedName="postedDate"
+                      [formModel]="form.formModel"
+                      default="Ngày ghi sổ"
+                    ></codx-label>
+                    <codx-input
+                      field="postedDate"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
                     ></codx-input>
                   </div>
                 </div>
@@ -452,23 +460,55 @@
       </e-tabitems>
     </ejs-tab>
 
-    <div class="row pt-5">
-      <div class="col-5 form-group">
-        <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
+    <div class="row pt-5 mw-750px">
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="channelID"
+          [formModel]="form.formModel"
+          default="Kênh bán hàng"
+        ></codx-label>
         <codx-input
-          field="memo"
+          field="channelID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         ></codx-input>
       </div>
-
-      <div class="col-7">
+      <div class="col-3 form-group">
         <codx-label
-          fiedName="orderNo"
+          fiedName="salespersonID"
           [formModel]="form.formModel"
-          class="fw-bold label-colon"
-        ></codx-label
-        >{{ master.orderNo }}
+          default="Nhân viên bán hàng"
+        ></codx-label>
+        <codx-input
+          field="salespersonID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="onInputChange($event)"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="supervisorID"
+          [formModel]="form.formModel"
+          default="Nhân viên tư vấn"
+        ></codx-label>
+        <codx-input
+          field="supervisorID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
+        <codx-label
+          fiedName="projectID"
+          [formModel]="form.formModel"
+          default="Dự án"
+        ></codx-label>
+        <codx-input
+          field="projectID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
       </div>
     </div>
   </div>
@@ -661,51 +701,10 @@
     ></codx-input>
   </div>
 
-  <div class="col-3 form-group">
-    <codx-label
-      fiedName="channelID"
-      [formModel]="form.formModel"
-      default="Kênh bán hàng"
-    ></codx-label>
+  <div class="col-12 form-group">
+    <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
     <codx-input
-      field="channelID"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    ></codx-input>
-  </div>
-  <div class="col-3 form-group">
-    <codx-label
-      fiedName="salespersonID"
-      [formModel]="form.formModel"
-      default="Nhân viên bán hàng"
-    ></codx-label>
-    <codx-input
-      field="salespersonID"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      (valueChange)="onInputChange($event)"
-    ></codx-input>
-  </div>
-  <div class="col-3 form-group">
-    <codx-label
-      fiedName="supervisorID"
-      [formModel]="form.formModel"
-      default="Nhân viên tư vấn"
-    ></codx-label>
-    <codx-input
-      field="supervisorID"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    ></codx-input>
-  </div>
-  <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
-    <codx-label
-      fiedName="projectID"
-      [formModel]="form.formModel"
-      default="Dự án"
-    ></codx-label>
-    <codx-input
-      field="projectID"
+      field="memo"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
     ></codx-input>

@@ -18,6 +18,9 @@ import {
 import { CodxHrService } from '../../codx-hr.service';
 import { CodxEsService } from 'projects/codx-es/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-view-day-off-detail',
@@ -33,7 +36,9 @@ export class ViewDayOffDetailComponent implements OnChanges {
     private notify: NotificationsService,
     private router: ActivatedRoute,
     private authStore: AuthStore,
-    private cache: CacheService
+    private cache: CacheService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {
     this.user = this.authStore.get();
   }
@@ -87,8 +92,27 @@ export class ViewDayOffDetailComponent implements OnChanges {
   }
 
   changeDataMF(e: any, data: any) {
-    this.hrService.handleShowHideMF(e, data, this.view);
+    this.hrService.handleShowHideMF(e, data, this.view.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
   }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data?.unbounds);
+    }
+  }
+
+  // changeDataMF(e: any, data: any) {
+  //   this.hrService.handleShowHideMF(e, data, this.view);
+  // }
 
   clickMF(evt: any, data: any = null) {
     this.clickMFunction.emit({ event: evt, data: data });

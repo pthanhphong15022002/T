@@ -461,7 +461,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.instance.startDate = null;
     this.instance.processID = this.deal?.processID;
     this.instance.stepID = this.deal?.stepID;
-    this.deal.status = '1';
+    this.deal.status = '0';
     this.deal.refID = this.instance.recID;
     this.deal.startDate = null;
 
@@ -484,15 +484,6 @@ export class PopupConvertLeadComponent implements OnInit {
       }
     }
   }
-  // async cbxProcessChange(e) {
-  //   if (e != null && e.trim() != '') {
-  //     if (e != this.deal?.processID) {
-  //       this.deal.processID = e;
-  //       if (this.listCbxProcess != null) {
-  //       }
-  //     }
-  //   }
-  // }
 
   groupByStep(listStep) {
     return listStep.sort(function (a, b) {

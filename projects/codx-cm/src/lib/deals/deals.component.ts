@@ -511,6 +511,83 @@ export class DealsComponent
     //     }
     //   }
     // }
+
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        if (mappingFunction) {
+          mappingFunction(eventItem, data);
+        }
+      }
+    }
+  }
+  getRoleMoreFunction(type) {
+    var functionMappings;
+    var isDisabled = (eventItem, data) => {
+      if (
+        (data.closed && data.status != '1') ||
+        data.status == '1' ||
+        this.checkMoreReason(data)
+      ) {
+        eventItem.disabled = true;
+      }
+    };
+    var isDelete = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isCopy = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isEdit = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isClosed = (eventItem, data) => {
+      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
+      this.checkMoreReason(data);
+    };
+    var isOpened = (eventItem, data) => {
+      eventItem.disabled = !data.closed || ['1'].includes(data.status);
+      this.checkMoreReason(data);
+    };
+    var isStartDay = (eventItem, data) => {
+      eventItem.disabled = !['1'].includes(data.status);
+    };
+    var isOwner = (eventItem, data) => {
+      eventItem.disabled = !['1', '2'].includes(data.status);
+    };
+    var isConfirmOrRefuse = (eventItem, data) => {
+      eventItem.disabled = data.status != '0';
+    };
+
+    functionMappings = {
+      CM0201_1: isDisabled,
+      CM0201_2: isStartDay,
+      CM0201_3: isDisabled,
+      CM0201_4: isDisabled,
+      CM0201_5: isDisabled,
+      CM0201_6: isDisabled,
+      CM0201_7: isOwner,
+      CM0201_8: isClosed,
+      CM0201_9: isOpened,
+      CM0201_12: isConfirmOrRefuse,
+      CM0201_13: isConfirmOrRefuse,
+      SYS101: isDisabled,
+      SYS103: isEdit,
+      SYS03: isEdit,
+      SYS104: isCopy,
+      SYS04: isCopy,
+      SYS102: isDelete,
+      SYS02: isDelete,
+    };
+
+    return functionMappings[type];
   }
   async executeApiCalls() {
     try {
@@ -557,14 +634,11 @@ export class DealsComponent
   }
 
   checkMoreReason(tmpPermission) {
-    if (
+    return
       !tmpPermission.roleMore.isReasonSuccess &&
       !tmpPermission.roleMore.isReasonFail &&
       !tmpPermission.roleMore.isMoveStage
-    ) {
-      return true;
-    }
-    return false;
+
   }
 
   checkRoleInSystem(tmpRole) {
@@ -572,56 +646,55 @@ export class DealsComponent
   }
 
   clickMF(e, data) {
+    const actions = {
+      SYS03: (data) => {
+        this.edit(data);
+      },
+      SYS04: (data) => {
+        this.copy(data);
+      },
+      SYS02: (data) => {
+        this.delete(data);
+      },
+      CM0201_1: (data) => {
+        this.moveStage(data);
+      },
+      CM0201_2: (data) => {
+        this.handelStartDay(data);
+      },
+      CM0201_3: (data) => {
+        this.moveReason(data, true);
+      },
+      CM0201_4: (data) => {
+        this.moveReason(data, false);
+      },
+      CM0201_8: (data) => {
+        this.openOrCloseDeal(data, true);
+      },
+      CM0201_7: (data) => {
+        this.popupOwnerRoles(data);
+      },
+      CM0201_9: (data) => {
+        this.openOrCloseDeal(data, false);
+      },
+      CM0201_5: (data) => {
+        this.exportFile(data);
+      },
+      CM0201_6: (data) => {
+        this.approvalTrans(data);
+      },
+      CM0201_12: (data) => {
+        this.confirmOrRefuse(true, data);
+      },
+      CM0201_13: (data) => {
+        this.confirmOrRefuse(false, data);
+      },
+    };
     this.dataSelected = data;
     this.titleAction = e.text;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'CM0201_1':
-        this.moveStage(data);
-        break;
-      case 'CM0201_2':
-        this.handelStartDay(data);
-        break;
-      case 'CM0201_3':
-        this.moveReason(data, true);
-        break;
-      case 'CM0201_4':
-        this.moveReason(data, false);
-        break;
-      // Open deal
-      case 'CM0201_8':
-        this.openOrCloseDeal(data, true);
-        break;
-      case 'CM0201_7':
-        this.popupOwnerRoles(data);
-        break;
-      // Close deal
-      case 'CM0201_9':
-        this.openOrCloseDeal(data, false);
-        break;
-      //xuât file
-      case 'CM0201_5':
-        this.exportFile(data);
-        break;
-      case 'CM0201_6':
-        this.approvalTrans(data);
-        break;
-      //Xác nhận
-      case 'CM0201_12':
-        this.confirmOrRefuse(true, data);
-        break;
-      //Từ chối
-      case 'CM0201_13':
-        this.confirmOrRefuse(false, data);
-        break;
+
+    if (actions.hasOwnProperty(e.functionID)) {
+      actions[e.functionID](data);
     }
   }
   changeMF(e) {
@@ -1535,11 +1608,11 @@ export class DealsComponent
   onLoading(e) {
     if (!this.funCrr) return;
     //reload filter
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funCrr != this.funcID) {
-      this.view.pinedFilter.filters = [];
-      this.view.dataService.filter.filters = [];
-    }
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (this.funCrr != this.funcID) {
+    //   this.view.pinedFilter.filters = [];
+    //   this.view.dataService.filter.filters = [];
+    // }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -1605,7 +1678,7 @@ export class DealsComponent
               .confirmOrRefuse(data?.recID, check, '')
               .subscribe((res) => {
                 if (res) {
-                  this.dataSelected.status = '3';
+                  this.dataSelected.status = '1';
                   this.detailViewDeal.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );

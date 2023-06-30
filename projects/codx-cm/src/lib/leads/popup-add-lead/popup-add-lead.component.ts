@@ -276,7 +276,7 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionEdit) {
       lead.stepID = this.listInstanceSteps[0]?.stepID;
       lead.nextStep = this.listInstanceSteps[1]?.stepID;
-      lead.status = this.owner? '3':'1';
+      lead.status = this.owner? '1':'0';
       lead.refID = instance.recID;
       lead.startDate = null;
     }
@@ -291,21 +291,8 @@ export class PopupAddLeadComponent
       if (this.avatarChangeContact) {
         await this.saveFileContact(this.contactId);
       }
-      // if(this.action !== this.actionEdit) {
-      //   this.onAdd();
-      // }
-      // else {
-      //   this.onEdit();
-      // }
 
       if (this.isLoading) {
-        // if (this.action !== this.actionEdit) {
-        //   await this.addDealForDP();
-        //   await this.insertInstance();
-        // } else {
-        //   await this.editDealForDP();
-        //   await this.editInstance();
-        // }
       } else {
         if (this.action !== this.actionEdit) {
           await this.insertInstance();
@@ -400,18 +387,7 @@ export class PopupAddLeadComponent
         }
       });
   }
-  // async getAutoNumber(formModel){
-  //   this.codxCmService
-  //   .getAutonumber(
-  //     formModel.funcID,
-  //     formModel.entityName,'LeadID'
-  //   )
-  //   .subscribe((leadID) => {
-  //     if(leadID) {
-  //       this.lead.leadID = leadID;
-  //     }
-  //   });
-  // }
+
 
   async getListInstanceSteps(processId: any) {
     processId =

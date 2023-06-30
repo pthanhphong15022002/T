@@ -19,7 +19,7 @@ import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { DealsComponent } from '../../deals.component';
 import { DealDetailComponent } from '../deal-detail.component';
 import { CodxListContactsComponent } from '../../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
-import { CM_Contacts } from '../../../models/cm_model';
+import { CM_Contacts, CM_Contracts } from '../../../models/cm_model';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -43,6 +43,12 @@ export class TabDetailCustomComponent
   // isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
+  listContract: CM_Contracts[];
+
+  listContractRef: CM_Contracts[];
+  // listQ
+
+
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
@@ -53,6 +59,8 @@ export class TabDetailCustomComponent
   readonly tabProduct: string = 'Product';
   readonly tabQuotation: string = 'Quotation';
   readonly tabContract: string = 'Contract';
+  readonly tabHistory: string = 'History';
+
 
   fmProcductsLines: FormModel = {
     formName: 'CMProducts',
@@ -91,10 +99,35 @@ export class TabDetailCustomComponent
       {
         this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
       }
+      if(this.tabClicked === this.tabHistory) {
+        this.getHistoryByDeaID();
+      }
       this.getListInstanceStep();
     }
   }
 
+  async getContractByDeaID() {
+    if (this.dataSelected?.recID) {
+      var data = [this.dataSelected?.recID];
+      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
+        if (res) {
+          this.listContract = res;
+        } else {
+          this.listContract = [];
+        }
+      });
+    }
+  }
+  async getHistoryByDeaID() {
+    if (this.dataSelected?.recID) {
+      var data = [this.dataSelected?.recID];
+      this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
+        if (res) {
+          console.log('có data nha');
+        }
+      });
+    }
+  }
   async executeApiCalls() {
     try {
       await this.getValueList();

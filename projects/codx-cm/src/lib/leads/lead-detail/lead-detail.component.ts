@@ -61,6 +61,7 @@ export class LeadDetailComponent implements OnInit {
   gridViewSetupDeal:any;
   request: ResourceModel;
   formModelDeal: FormModel;
+  isBlock:boolean;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -133,7 +134,6 @@ export class LeadDetailComponent implements OnInit {
         this.tmpDeal = null;
       }
       this.afterLoad();
-      //    console.log('log grid lead: ', this.gridViewSetup?.Status?.referedValue);
     }
   }
 
@@ -189,19 +189,6 @@ export class LeadDetailComponent implements OnInit {
     );
     await this.getTmpDeal();
   }
-  // async getColorReason() {
-  //   this.cache.valueList('DP036').subscribe((res) => {
-  //     if (res.datas) {
-  //       for (let item of res.datas) {
-  //         if (item.value === 'S') {
-  //           this.colorReasonSuccess = item;
-  //         } else if (item.value === 'F') {
-  //           this.colorReasonFail = item;
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
 
   async getTmpDeal() {
     this.codxCmService
@@ -214,18 +201,24 @@ export class LeadDetailComponent implements OnInit {
   }
 
   pushTabFields(isCheck) {
+    var index = this.tabDetail.findIndex(x=>x.name == 'Field');
     if (isCheck) {
-      var objField = {
-        name: 'Field',
-        textDefault: 'Thông tin mở rộng',
-        icon: 'icon-add_to_photos',
-        isActive: false,
-      };
-      this.tabDetail.splice(1, 0, objField);
+      if(index == -1) {
+        var objField = {
+          name: 'Field',
+          textDefault: 'Thông tin mở rộng',
+          icon: 'icon-add_to_photos',
+          isActive: false,
+        };
+        this.tabDetail.splice(1, 0, objField);
+        this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
+      }
     }
-  }
+    else {
+      index != -1 && this.tabDetail.splice(index, 1);
+      this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
+    }
 
-  getStep(stepID) {
   }
   getIcon($event){
     if($event == '1') {
