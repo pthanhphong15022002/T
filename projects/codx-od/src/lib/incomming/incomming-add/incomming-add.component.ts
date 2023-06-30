@@ -342,6 +342,7 @@ export class IncommingAddComponent implements OnInit {
 
   changeValueAgencies(e:any)
   {
+    debugger
     if(e?.component?.dataSelected && e?.component?.dataSelected.length > 0)
     {
       var arr = []
