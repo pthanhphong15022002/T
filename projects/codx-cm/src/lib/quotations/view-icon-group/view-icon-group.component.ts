@@ -14,7 +14,7 @@ import { ApiHttpService } from 'codx-core';
 })
 export class ViewIconGroupComponent implements OnInit {
   @ViewChild('noData') noData: TemplateRef<any>;
-  @Input() custormerID: any;
+  @Input() customerID: any;
   data: any;
   loaded = false;
   constructor(private api: ApiHttpService) {}
@@ -26,7 +26,7 @@ export class ViewIconGroupComponent implements OnInit {
     this.loaded = false;
     this.api
       .exec('CM', 'CustomerGroupsBusiness', 'GetTmpGroupCustomersAsync', [
-        this.custormerID,
+        this.customerID,
       ])
       .subscribe((res) => {
         if (res) this.data = res;

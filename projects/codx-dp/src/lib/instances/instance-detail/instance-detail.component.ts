@@ -75,7 +75,7 @@ export class InstanceDetailComponent implements OnInit {
 
   id: any;
   totalInSteps: any;
-  tmpTeps: DP_Instances_Steps;
+  tmpDataSteps: DP_Instances_Steps;
   currentNameStep: Number;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
@@ -353,7 +353,7 @@ export class InstanceDetailComponent implements OnInit {
         this.listSteps = [];
         this.stepName = '';
         this.progress = '0';
-        this.tmpTeps = null;
+        this.tmpDataSteps = null;
       }
       //  this.getListStepsStatus();
       // this.loaded = true;
@@ -396,8 +396,8 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpTeps = JSON.parse(JSON.stringify(data));
-        this.outStepInstance.emit({ data: this.tmpTeps });
+        this.tmpDataSteps = JSON.parse(JSON.stringify(data));
+        this.outStepInstance.emit({ data: this.tmpDataSteps });
         this.stepValue = {
           textColor: data.textColor,
           backgroundColor: data.backgroundColor,
@@ -477,10 +477,10 @@ export class InstanceDetailComponent implements OnInit {
       this.isOnlyView = $event?.isOnlyView;
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
-      this.tmpTeps = JSON.parse(JSON.stringify(this.listSteps[indx]));
-      this.outStepInstance.emit({ data: this.tmpTeps });
-      this.lstInv = this.getInvolved(this.tmpTeps.roles);
-      this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
+      this.tmpDataSteps = JSON.parse(JSON.stringify(this.listSteps[indx]));
+      this.outStepInstance.emit({ data: this.tmpDataSteps });
+      this.lstInv = this.getInvolved(this.tmpDataSteps.roles);
+      this.onwer = this.tmpDataSteps?.owner; // nhớ cho phép null cái
     }
   }
 

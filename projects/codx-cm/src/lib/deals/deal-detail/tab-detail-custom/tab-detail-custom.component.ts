@@ -103,7 +103,6 @@ export class TabDetailCustomComponent
         this.getHistoryByDeaID();
       }
       this.getListInstanceStep();
-      this.getContractByDeaID();
     }
   }
 

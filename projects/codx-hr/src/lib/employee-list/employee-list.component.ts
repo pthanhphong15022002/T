@@ -77,7 +77,7 @@ export class EmployeeListComponent extends UIComponent {
     this.request.service = 'HR';
     this.request.assemblyName = 'ERM.Business.HR';
     this.request.className = 'EmployeesBusiness';
-    this.request.method = 'GetModelFormEmployAsyncNew';
+    this.request.method = 'GetListEmployeeAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
     this.request.idField = 'orgUnitID';
@@ -86,7 +86,7 @@ export class EmployeeListComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
-        sameData: true,
+        sameData:true,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
@@ -95,8 +95,8 @@ export class EmployeeListComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.tree_masterdetail,
-        sameData: true,
-        //request: this.request,
+        request: this.request,
+        sameData:false,
         model: {
           resizable: true,
           template: this.tempTree,
@@ -316,7 +316,7 @@ export class EmployeeListComponent extends UIComponent {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
       let queryParams = {
         employeeID: data.employeeID,
-        page: this.view.dataService.page + 1,
+        page: this.view.dataService.page,
         totalPage: this.view.dataService.pageCount
       };
       let state = {

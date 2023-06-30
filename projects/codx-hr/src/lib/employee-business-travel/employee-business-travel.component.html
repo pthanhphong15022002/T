@@ -16,7 +16,7 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-40 p-2">
+    <div class="w-50 p-2">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -159,16 +159,13 @@
       <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
     </div>
     <div class="w-25 text-dark p-3 fw-bold fw-500">
-      <codx-label
-        name="lblCategory"
-        [default]="'Loại công tác | Thời gian công tác'"
-      ></codx-label>
+      <codx-label name="lblCategory" [default]="'Loại công tác'"></codx-label>
     </div>
     <div class="w-25 text-dark p-3 fw-bold fw-500">
       <codx-label
-        fiedName="lblApproveStatus"
+        fiedName="lblStatus"
         [formModel]="view.formModel"
-        default="Tình trạng"
+        [default]="grvSetup?.Status?.headerText"
       ></codx-label>
     </div>
   </div>

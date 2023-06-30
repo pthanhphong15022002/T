@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService } from 'codx-core';
+import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-employee-list-by-org',
@@ -22,7 +22,7 @@ export class EmployeeListByOrgComponent {
   @ViewChild('templateJoinedOn') templateJoinedOn: TemplateRef<any>;
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateMoreFC') templateMoreFC: TemplateRef<any>;
-
+  @ViewChild('empAvatar') empAvatar: ImageViewerComponent;
 
   constructor(
     private cache: CacheService,
@@ -121,13 +121,18 @@ export class EmployeeListByOrgComponent {
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.orgUnitID = changes.orgUnitID.currentValue;
+    if (this.showManager) 
+    {
+      this.getManager(this.orgUnitID);
+      //this.empAvatar.refreshAvatar();
+    }
     let ins = setInterval(() => {
       if (this.grid) {
+        this.grid.dataService.rowCount = 0;
         clearInterval(ins);
         this.grid.refresh();
       }
     }, 200);
-    if (this.showManager) this.getManager(this.orgUnitID);
   }
 
   getManager(orgUnitID: string) {
