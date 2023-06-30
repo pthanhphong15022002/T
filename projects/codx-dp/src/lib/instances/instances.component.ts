@@ -1545,6 +1545,11 @@ export class InstancesComponent
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
 
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
+        }
+
         this.detectorRef.detectChanges();
       } else {
         if (this.kanban) {
