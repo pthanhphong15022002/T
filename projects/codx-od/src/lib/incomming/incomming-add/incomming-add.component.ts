@@ -74,7 +74,8 @@ export class IncommingAddComponent implements OnInit {
   agencyName:any;
   referType = 'source';
   keyField = false; //Kiểm tra số công văn tự động
-  fileModule:any
+  fileModule:any;
+  crrAgencies:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -156,8 +157,9 @@ export class IncommingAddComponent implements OnInit {
     } 
     else if (this.type == 'edit') 
     {
-      if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
-      this.dispatch.agencyName = this.dispatch.agencyName.toString();
+      if(this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
+      if(this.dispatch.agencyName) this.dispatch.agencyName = this.dispatch.agencyName.toString();
+      if(this.dispatch.agencies && this.dispatch.agencies.length > 0) this.crrAgencies = this.dispatch.agencies.map(u=>u.AgencyID).join(";")
       if(this.dispatch.relations && this.dispatch.relations.length>0)
       {
         this.lrelations = this.dispatch.relations.filter(x=>x.relationType == "6")
@@ -348,8 +350,8 @@ export class IncommingAddComponent implements OnInit {
       e?.component?.dataSelected.forEach(elm => {
 
         var obj = {
-          agencyID : elm?.dataSelected?.agencyID,
-          agencyName : elm?.dataSelected?.agencyName
+          agencyID : elm?.dataSelected?.AgencyID,
+          agencyName : elm?.dataSelected?.AgencyName
         };
         arr.push(obj);
       });

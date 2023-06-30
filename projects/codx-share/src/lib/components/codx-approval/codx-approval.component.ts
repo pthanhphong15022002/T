@@ -81,6 +81,7 @@ export class CodxApprovalComponent
   callfunc: CallFuncService;
   esService: CodxEsService;
   routers: Router;
+  allMFunc: any;
   constructor(inject: Injector) {
     super(inject);
     this.routers = inject.get(Router);
@@ -225,6 +226,7 @@ export class CodxApprovalComponent
   }
   changeMF(data: any, value: object | any = null) {
     var datas = this.dataItem;
+    this.allMFunc = this.allMFunc ?? data;
     if (value) datas = value;
     if (datas) {
       var list = data.filter(
@@ -258,7 +260,13 @@ export class CodxApprovalComponent
           value.status == '2' ||
           value.status == '4'
         )
+        {
           list[i].disabled = true;
+        }
+        else{
+          
+          list[i].disabled = false;
+        }
       }
       this.listApproveMF = list.filter(
         (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
@@ -319,6 +327,7 @@ export class CodxApprovalComponent
     this.detectorRef.detectChanges();
   }
   clickMF(e: any, data: any) {
+    this.changeMF( this.allMFunc, data);
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
     var funcID = e?.functionID;
     if (data.eSign == true) {
