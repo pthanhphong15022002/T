@@ -19,6 +19,29 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   behavior: any[] = [];
   showmore: boolean = false;
   showSM: boolean = false;
+  tabControl = [
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      icon: '',
+      template: null,
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      icon: '',
+      template: null,
+    },
+    {
+      name: 'Comment',
+      textDefault: 'Bình luận',
+      isActive: false,
+      icon: '',
+      template: null,
+    },
+  ];
 
   constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
 

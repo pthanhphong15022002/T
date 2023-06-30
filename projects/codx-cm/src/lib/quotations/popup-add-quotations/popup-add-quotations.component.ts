@@ -146,7 +146,9 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.loadDefault();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.gridCreated();
+  }
 
   //load Default
   loadDefault() {
@@ -359,8 +361,10 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   created(e) {}
 
-  gridCreated(e, grid) {
-    let hBody, hTab, hNote;
+  gridCreated() {
+    let hBody = 0;
+    let hTab = 0;
+    let hNote = 0;
     if (this.cardbodyGeneral)
       hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
     if (this.quotationGeneral)
@@ -927,5 +931,6 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotationLinesEdit = e?.quotationLinesEdit;
     this.quotationLinesDeleted = e?.quotationLinesDeleted;
     this.loadTotal();
+    debugger;
   }
 }
