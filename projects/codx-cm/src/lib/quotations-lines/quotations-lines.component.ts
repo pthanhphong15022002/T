@@ -391,6 +391,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           });
       });
     } else if (this.typeAdd == '2') {
+      this.selectRow(dt);
     }
   }
 
@@ -476,7 +477,10 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
               });
           } else if (this.typeAdd == '2') {
             this.quotationLinesAddNew.push(data);
-            this.gridQuationsLines.addRow(data, data.rowNo - 1); //add row gridview
+            this.gridQuationsLines.addRow(
+              data,
+              this.listQuotationLines?.length ?? 0
+            ); //add row gridview
           }
         }
       });
