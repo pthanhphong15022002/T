@@ -3,11 +3,7 @@
     <thead>
       <tr>
         <th scope="col" *ngFor="let th of ths" [class]="th.class">
-          <codx-label
-            [fiedName]="th.field"
-            [default]="th.headerText"
-            [formModel]="fmSalesInvoicesLines"
-          ></codx-label>
+          <codx-label [fiedName]="th.field" [default]="th.headerText" [formModel]="fmSalesInvoicesLines"></codx-label>
         </th>
       </tr>
     </thead>
@@ -23,10 +19,7 @@
 
       <tr *ngIf="salesInvoicesLines?.length === 0 && !loading">
         <td colspan="100%" style="text-align: center; vertical-align: middle">
-          <img
-            src="../assets/themes/sys/default/img/DataEmpty.svg"
-            class="w-200px"
-          />
+          <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
           <div class="fw-bold mt-1">
             {{ "SYS011" | mssg | async }}
           </div>
@@ -43,56 +36,32 @@
           <div class="py-1 d-flex flex-column gap-1">
             <div class="fw-bold">{{ line.itemName }}</div>
             <div>
-              <codx-label
-                fiedName="idiM3"
-                [formModel]="fmSalesInvoicesLines"
-                class="label-colon"
-                default="Quy cách"
-              ></codx-label>
-              <span
-                *ngFor="let i of [0, 1, 2, 3]; last as isLast"
-                class="text-gray-500"
-              >
+              <codx-label fiedName="idiM3" [formModel]="fmSalesInvoicesLines" class="label-colon"
+                default="Quy cách"></codx-label>
+              <span *ngFor="let i of [0, 1, 2, 3]; last as isLast" class="text-gray-500">
                 <span *ngIf="line['idiM' + i]">{{
                   line["idiM" + i + "Name"] ?? line["idiM" + i]
-                }}</span>
-                <ng-container
-                  *ngIf="!isLast && line['idiM' + i] && line['idiM' + (i + 1)]"
-                  >,&nbsp;
+                  }}</span>
+                <ng-container *ngIf="!isLast && line['idiM' + i] && line['idiM' + (i + 1)]">,&nbsp;
                 </ng-container>
               </span>
             </div>
 
             <div class="d-flex flex-wrap">
-              <codx-label
-                fiedName="lblIdiM4"
-                [formModel]="fmSalesInvoicesLines"
-                default="Kho"
-                class="label-colon"
-              ></codx-label>
-              <span
-                *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast"
-                class="text-gray-500"
-              >
+              <codx-label fiedName="lblIdiM4" [formModel]="fmSalesInvoicesLines" default="Kho"
+                class="label-colon"></codx-label>
+              <span *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast" class="text-gray-500">
                 <span *ngIf="line['idiM' + i]">{{
                   line["idiM" + i + "Name"] ?? line["idiM" + i]
-                }}</span>
-                <ng-container
-                  *ngIf="!isLast && line['idiM' + i] && line['idiM' + (i + 1)]"
-                  >,&nbsp;
+                  }}</span>
+                <ng-container *ngIf="!isLast && line['idiM' + i] && line['idiM' + (i + 1)]">,&nbsp;
                 </ng-container>
               </span>
             </div>
 
-            <codx-vll
-              *ngIf="line.lineType !== '1'"
-              [formModel]="fmSalesInvoicesLines"
-              field="LineType"
-              [value]="line.lineType"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-primary align-self-start"
-            >
+            <codx-vll *ngIf="line.lineType !== '1'" [formModel]="fmSalesInvoicesLines" field="LineType"
+              [value]="line.lineType" [showText]="true" [showBgColor]="true"
+              class="badge badge-primary align-self-start">
             </codx-vll>
           </div>
         </td>
@@ -117,12 +86,10 @@
         <td class="text-end pe-5">
           <div class="d-flex flex-column pt-1 gap-1">
             <div>{{ line.vatAmt | currency : "" : "" }}</div>
-            <div
-              *ngIf="
+            <div *ngIf="
                 vats | nameById : 'VATID' : 'TaxRate' : line.vatid as taxRate;
                 else taxRate
-              "
-            >
+              ">
               {{ taxRate * 100 }}%
             </div>
             <ng-template #taxRate>-</ng-template>
@@ -137,11 +104,7 @@
       <tr>
         <th></th>
         <th class="text-end pe-5">
-          <codx-label
-            fiedName="lblTotal"
-            [formModel]="fmSalesInvoicesLines"
-            default="Tổng cộng"
-          ></codx-label>
+          <codx-label fiedName="lblTotal" [formModel]="fmSalesInvoicesLines" default="Tổng cộng"></codx-label>
         </th>
         <th class="text-end pe-5">
           {{ totalRow.totalQuantity }}

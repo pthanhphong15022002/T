@@ -54,8 +54,9 @@ export class EmployeeListComponent extends UIComponent {
   cmtStatus = '';
   formGroup: FormGroup;
   grv2DataChanged: any;
-  constructor(private injector: Injector,
-    private routerActive: ActivatedRoute,
+  constructor(
+    private injector: Injector,
+    private routerActive: ActivatedRoute
   ) {
     super(injector);
     this.funcID = this.routerActive.snapshot.params['funcID'];
@@ -90,6 +91,7 @@ export class EmployeeListComponent extends UIComponent {
         id: '1',
         type: ViewType.list,
         sameData: true,
+        //active: true,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
@@ -216,7 +218,14 @@ export class EmployeeListComponent extends UIComponent {
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetEmployeeInfoByIDAsync',
+          [data.employeeID]
+        )
+        .subscribe((res) => {
           this.view.dataService.dataSelected = res ? res : this.itemSelected;
           this.view.dataService.copy().subscribe((res: any) => {
             let option = new SidebarModel();
@@ -238,7 +247,7 @@ export class EmployeeListComponent extends UIComponent {
               }
             });
           });
-        })
+        });
     }
   }
 
@@ -280,8 +289,8 @@ export class EmployeeListComponent extends UIComponent {
     });
   }
 
-  viewChanged(event : any){
-    if(this.grv2DataChanged){
+  viewChanged(event: any) {
+    if (this.grv2DataChanged) {
       if (event?.view?.id !== '2') {
         this.view.dataService.data = [];
         this.view.dataService.parentIdField = '';
@@ -327,7 +336,7 @@ export class EmployeeListComponent extends UIComponent {
       let queryParams = {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
-        totalPage: this.view.dataService.pageCount
+        totalPage: this.view.dataService.pageCount,
       };
       let state = {
         data: this.view.dataService.data.map(function (obj) {
@@ -339,7 +348,7 @@ export class EmployeeListComponent extends UIComponent {
     });
   }
   dataChange(event) {
-    console.log(event)
+    console.log(event);
     this.grv2DataChanged = event?.hasDataChanged ? true : false;
   }
 }

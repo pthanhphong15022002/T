@@ -45,6 +45,7 @@
         field="policyID"
         [formModel]="formModel"
         [Group]="formGroup"
+        (valueChange)="onInputPolicyID($event)"
       ></codx-input>
     </div>
     <div class="col-4">
@@ -339,7 +340,7 @@
       [className]="'DataBusiness'"
       [method]="'LoadDataAsync'" -->
         </codx-gridview-v2>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end mt-5">
           <button
           class="btn btn-sm btn-light-primary"
           (click)="addRowGrid1()"
@@ -693,8 +694,9 @@
     {{data.days}}
     <codx-mfunc
     [dataItem]="data"
-    [formModel]="fmPolicyDetail"
-    (clickMF)="clickMF($event, data)"
+    [formModel]="formModel"
+    (clickMF)="clickMF($event, data, 1)"
+    (changeDataMF)="changeDataMF($event)"
     type="hover"
   ></codx-mfunc>
   </div>
