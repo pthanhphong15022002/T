@@ -632,13 +632,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     //   }
     // });
   }
-  onAddNew(e) {
-    debugger;
-  }
-
-  onEdit(e) {
-    debugger;
-  }
 
   sum(field) {
     let sum = 0;
@@ -647,5 +640,12 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     });
 
     return sum;
+  }
+
+  onAddNew(e) {
+    debugger;
+  }
+  onEdit(e) {
+    debugger;
   }
 }
