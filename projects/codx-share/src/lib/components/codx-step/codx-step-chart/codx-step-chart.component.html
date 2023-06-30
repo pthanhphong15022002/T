@@ -1,6 +1,6 @@
-<div class="w-100 d-flex justify-content-end mb-4">
+<div class="w-100 d-flex justify-content-end my-1 me-1">
 	<!-- tùy chọn thời gian -->
-	<span class="input-sm" *ngIf="isShowTypeTime">
+	<div class="input-sm" *ngIf="isShowTypeTime">
 	  <codx-input
 		type="valuelist"
 		[crrValue]="crrViewGant"
@@ -8,7 +8,7 @@
 		(valueChange)="changeViewTimeGant($event)"
 	  >
 	  </codx-input>
-	</span>
+	</div>
   </div>
   <div class="border border-gray-150">
 	<codx-gantt-chart
