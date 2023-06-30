@@ -7,6 +7,7 @@
   [moreFuncs]="moreFc"
   (filterReportChange)="filterReportChange($event)"
   (buttonClick)="onActions($event)"
+  [isSubView]="true"
   >
 </codx-views>
 <ng-template #report>
@@ -23,7 +24,7 @@
 </ng-template> -->
 
 
-<div class="w-100 h-100 pt-5 invisible" id="breadCrumb" #breadCrumb>
+<!-- <div class="w-100 h-100 pt-5 invisible" id="breadCrumb" #breadCrumb>
   <div ngbDropdown class="d-inline-block flex-column" *ngIf="reportList.length" #drop="ngbDropdown" >
     <span class="me-3 fw-bolder fs-3 text-dark" *ngIf="rootFunction" (click)="homeClick()">{{rootFunction.customName}}</span>
     <a type="button"  id="dropdownReport" style="font-size: 1rem !important" ngbDropdownToggle >
@@ -34,4 +35,4 @@
 
     </div>
   </div>
-</div>
+</div> -->
