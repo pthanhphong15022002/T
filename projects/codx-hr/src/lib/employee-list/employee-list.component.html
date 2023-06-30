@@ -1,6 +1,6 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
   [entityName]="entityName" [className]="className" [method]="method" [button]="button" (buttonClick)="add()"
-  idField="employeeID" [selectedFirst]="true" (selectedChange)="selectedChange($event)">
+  idField="employeeID" [selectedFirst]="true" (selectedChange)="selectedChange($event)" (viewChanged)="viewChanged($event)">
 </codx-views>
 <!-- <codx-views #view [views]="views" [button]="button" (buttonClick)="add()" service="HR" idField="employeeID"
   [selectedFirst]="true" (selectedChange)="selectedChange($event)"> -->
@@ -199,7 +199,8 @@
         <div class="d-flex flex-column">
           <div class="d-flex align-items-center mb-1">
             <ng-container *ngIf="data.employeeName">
-              <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">{{data.employeeName }}</span>
+              <span class="fw-bold fs-6 me-3 text-nowrap item-active"
+                (click)="clickViewEmpInfo(data)">{{data.employeeName }}</span>
               <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
               <span class="text-danger">{{ data.employeeID }}</span>
             </ng-container>
@@ -328,7 +329,7 @@
   </div>
 </ng-template>
 <ng-template #tmpMasterDetail>
-  <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [orgUnitID]="itemSelected?.orgUnitID"
-  ></lib-employee-list-by-org>
+  <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [editable]="true"
+    [orgUnitID]="itemSelected?.orgUnitID" [view]="view" (dataChange)="dataChange($event)"></lib-employee-list-by-org>
 </ng-template>
 <!-- end tree_masterDetail -->
