@@ -28,6 +28,10 @@
       *ngSwitchCase="tabContract"
       [ngTemplateOutlet]="contract"
     ></some-element>
+    <some-element
+    *ngSwitchCase="tabHistory"
+    [ngTemplateOutlet]="history"
+  ></some-element>
 
     <some-element *ngSwitchDefault></some-element>
   </container-element>
@@ -385,4 +389,20 @@
     [type]="'deal'"
   ></list-contracts>
 </ng-template>
+
+<ng-template #history>
+  <div class="d-flex justify-content-start">
+    <div>Flex item</div>
+    <div>Flex item</div>
+    <div class="ms-auto">Margin left auto</div>
+  </div>
+  <div class="d-flex justify-content-start" >hello</div>
+  <div class="d-flex justify-content-between">
+    <div class="first-div">Đây là div đầu tiên</div>
+    <div class="last-div">Đây là div cuối cùng</div>
+  </div>
+
+
+</ng-template>
+
 <ng-template #defaultNull> <p class="p-0 m-0">0</p></ng-template>

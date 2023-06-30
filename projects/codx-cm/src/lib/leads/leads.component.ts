@@ -311,10 +311,7 @@ export class LeadsComponent
     var functionMappings;
     var isDisabled = (eventItem, data) => {
       if (
-        (data.closed && data.status != '1' && data.status != '3') ||
-        data.status == '1' ||
-        data.status == '3' ||
-        this.checkMoreReason(data)
+        (data.closed &&  !['0','1'].includes(data.status)) ||  ['0','1'].includes(data.status) ||  this.checkMoreReason(data)
       ) {
         eventItem.disabled = true;
       }
@@ -336,29 +333,29 @@ export class LeadsComponent
     };
     var isClosed = (eventItem, data) => {
       eventItem.disabled =
-        data.closed ||
-        data.status == '1' ||
-        data.status == '3' ||
+        data.closed ||  ['0','1'].includes(data.status)
         this.checkMoreReason(data);
     };
     var isOpened = (eventItem, data) => {
       eventItem.disabled =
-        !data.closed ||
-        data.status == '1' ||
-        data.status == '3' ||
+        !data.closed ||  ['0','1'].includes(data.status)
         this.checkMoreReason(data);
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = data.status != '1' && data.status != '3';
+      eventItem.disabled =   !['0','1'].includes(data.status)
     };
 
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = data.status != '9';
+      eventItem.disabled = data.status != '3';
     };
 
     var isMergeLead = (eventItem, data) => {
-      eventItem.disabled = data.status != '1' && data.status != '3';
+      eventItem.disabled = !['0','1'].includes(data.status)
     };
+    var isOwner = (eventItem, data) => {
+      eventItem.disabled = !['0','1','2'].includes(data.status);
+    };
+
 
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
@@ -369,7 +366,7 @@ export class LeadsComponent
       CM0205_6: isDisabled, // fail
       CM0205_7: isDisabled,
       CM0205_8: isClosed,
-      CM0205_9: isDisabled,
+      CM0205_9: isOwner,
       CM0205_10: isClosed, // close lead
       CM0205_11: isOpened, // open lead
       SYS101: isDisabled,
@@ -385,14 +382,11 @@ export class LeadsComponent
   }
 
   checkMoreReason(tmpPermission) {
-    if (
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
-    ) {
-      return true;
-    }
-    return false;
+    return !(
+      tmpPermission.roleMore.isReasonSuccess ||
+      tmpPermission.roleMore.isReasonFail ||
+      tmpPermission.roleMore.isMoveStage
+    );
   }
 
   onActions(e) {
@@ -992,7 +986,7 @@ export class LeadsComponent
     });
   }
   updateReasonLead(instance: any, lead: any, isMoveSuccess: boolean) {
-    lead.status = isMoveSuccess ? '9' : '15';
+    lead.status = isMoveSuccess ? '3' : '5';
     lead.stepID = instance.stepID;
     lead.nextStep = '';
     return lead;

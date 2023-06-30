@@ -880,6 +880,23 @@ export class CodxCmService {
       data
     );
   }
+  updateOwnerDeal(data){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'UpdateOwnerDealAsync',
+      data
+    );
+  }
+
+  getDataTabHistoryDealAsync(data){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetDataTabHistoryDealAsync',
+      data
+    );
+  }
 
 
   //#endregion -- Bao
