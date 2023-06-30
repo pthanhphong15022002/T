@@ -1,227 +1,251 @@
-<ng-container *ngIf="data">
-    <div class="w-100 d-flex flex-column" id="erm_content">
-        <div class="container p-5">
-            <div class="d-flex">
-                <ng-container *ngIf="data.pattern">
-                    <div class="fd-card-detail-background">
-                        <ng-contaier *ngIf="data.pattern.backgroundColor;else haveCardPattern">
-                            <div class="w-100 h-100" [style.background]="data.backgroundColor"></div>
-                        </ng-contaier>
-                        <ng-template #haveCardPattern>
-                            <codx-img [objectId]="data.pattern.recID" [objectName]="'FD_Patterns'" [width]="800"
-                                [isDefaulImg]="true" [imageType]="'square'">
-                            </codx-img>
-                        </ng-template>
-                    </div>
-                </ng-container>
-                <div class="h-450px min-h-450px w-300px min-w-300px me-9 p-6 viewcard-indetail"
-                    [style.background]="data.backgroundColor">
-                    <div class="card-title fw-bold fs-1 pb-9" [style.color]="data.headerColor">
-                        {{data?.cardType | vll:'L1422':'text'|async}}
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center">
-                        <codx-img class="symbol-circle" [objectId]="data.senderID" objectType="AD_Users" [isDefaulImg]="true" [width]="35">
-                        </codx-img>
-                        <span class="pic-send mx-3">
-                            <img class="w-20px" alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
-                        </span>
-                        <codx-img class="symbol-circle" [objectId]="data.receiverID" objectType="AD_Users" [isDefaulImg]="true" [width]="35">
-                        </codx-img>
-                    </div>
-                    <div class="content-card">
-                        <div class="modal-card-sms mt-6" id="situation" [className]="showmore?'show-more':''" [style.color]="data.textColor"
-                            [innerHTML]="data.situation">
-                        </div>
-                        <div class="mx-2 cursor-pointer" (click)="showMore()" *ngIf="showSM">
-                          <codx-label default="Xem thêm"  [fiedName]="'lblSVMore'" [formName]="'SVMore'"></codx-label>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
-                        <div class="d-flex align-items-center me-3" *ngIf="data.rating">
-                            <img class="w-25px h-25px"
-                                src="/assets/themes/fd/default/img/{{data.rating | vll:ratingVLL:'icon' | async}}" />
-                            <span class="ms-2">
-                                {{data?.rating | vll:ratingVLL:'text'|async}}
-                            </span>
-                        </div>
+<ng-container *ngIf="data?.recID">
+    <codx-detail-tmp
+      [formModel]="formModel"
+      [body]="body"
+      [footer]="footer"
+      [hideMF]="true"
+      [dataItem]="data"
+    >
+      <ng-template #footer>
+        <codx-tabs
+          [entityName]="formModel.entityName"
+          [formModel]="formModel"
+          [TabControl]="tabControl"
+          [objectID]="data.recID"
+          [funcID]="formModel.funcID"
+          [isUpPermission]="true"
+          [isEdit]="true"
+        ></codx-tabs>
+      </ng-template>
+    </codx-detail-tmp>
+  </ng-container>
 
-                        <div class="d-flex align-items-start">
-                            <img src="/assets/img/feedback/gift 1.png" *ngIf="data.hasGift"
-                                class="symbol-image icon-surface1 h-20px me-2" />
-                            <img src="/assets/img/feedback/money-1.png" *ngIf="data.hasPoint"
-                                class="symbol-image icon-money-1 h-20px me-2" />
-                        </div>
-                    </div>
-                </div>
-                <div class="w-100">
-                    <div class="text-primary fw-bold mb-2 mt-2">
-                        <codx-label [formModel]="formModel" name="lblSender" default="Người gửi"></codx-label>
-                    </div>
-                    <ng-container *ngIf="data.sender">
-                        <div class="d-flex align-items-center user-card mb-5">
-                            <span class="me-4">
-                                <codx-img class="ymbol-circle" [objectId]="data.sender.userID"
-                                    [objectType]="'AD_Users'" [width]="35">
+<ng-template #body>
+    <ng-container *ngIf="data">
+        <div class="w-100 d-flex flex-column" id="erm_content">
+            <div class="container p-5">
+                <div class="d-flex">
+                    <ng-container *ngIf="data.pattern">
+                        <div class="fd-card-detail-background">
+                            <ng-contaier *ngIf="data.pattern.backgroundColor;else haveCardPattern">
+                                <div class="w-100 h-100" [style.background]="data.backgroundColor"></div>
+                            </ng-contaier>
+                            <ng-template #haveCardPattern>
+                                <codx-img [objectId]="data.pattern.recID" [objectName]="'FD_Patterns'" [width]="800"
+                                    [isDefaulImg]="true" [imageType]="'square'">
                                 </codx-img>
-                            </span>
-                            <div class="d-flex flex-column">
-                                <div class="text-dark fw-bold">
-                                    {{data.sender.userName}}</div>
-                                <div class="text-gray-500 fs-7">
-                                    {{data.sender.positionName}}
-                                </div>
-                            </div>
+                            </ng-template>
                         </div>
                     </ng-container>
-                    <div class="mt-6">
-                        <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblReciver"
-                                default="Người nhận"></codx-label></div>
-                        <ng-container *ngIf="data.receiver">
+                    <div class="h-450px min-h-450px w-300px min-w-300px me-9 p-6 viewcard-indetail"
+                        [style.background]="data.backgroundColor">
+                        <div class="card-title fw-bold fs-1 pb-9" [style.color]="data.headerColor">
+                            {{data?.cardType | vll:'L1422':'text'|async}}
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <codx-img class="symbol-circle" [objectId]="data.senderID" objectType="AD_Users" [isDefaulImg]="true" [width]="35">
+                            </codx-img>
+                            <span class="pic-send mx-3">
+                                <img class="w-20px" alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
+                            </span>
+                            <codx-img class="symbol-circle" [objectId]="data.receiverID" objectType="AD_Users" [isDefaulImg]="true" [width]="35">
+                            </codx-img>
+                        </div>
+                        <div class="content-card">
+                            <div class="modal-card-sms mt-6" id="situation" [className]="showmore?'show-more':''" [style.color]="data.textColor"
+                                [innerHTML]="data.situation">
+                            </div>
+                            <div class="mx-2 cursor-pointer" (click)="showMore()" *ngIf="showSM">
+                              <codx-label default="Xem thêm"  [fiedName]="'lblSVMore'" [formName]="'SVMore'"></codx-label>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
+                            <div class="d-flex align-items-center me-3" *ngIf="data.rating">
+                                <img class="w-25px h-25px"
+                                    src="/assets/themes/fd/default/img/{{data.rating | vll:ratingVLL:'icon' | async}}" />
+                                <span class="ms-2">
+                                    {{data?.rating | vll:ratingVLL:'text'|async}}
+                                </span>
+                            </div>
+    
+                            <div class="d-flex align-items-start">
+                                <img src="/assets/img/feedback/gift 1.png" *ngIf="data.hasGift"
+                                    class="symbol-image icon-surface1 h-20px me-2" />
+                                <img src="/assets/img/feedback/money-1.png" *ngIf="data.hasPoint"
+                                    class="symbol-image icon-money-1 h-20px me-2" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <div class="text-primary fw-bold mb-2 mt-2">
+                            <codx-label [formModel]="formModel" name="lblSender" default="Người gửi"></codx-label>
+                        </div>
+                        <ng-container *ngIf="data.sender">
                             <div class="d-flex align-items-center user-card mb-5">
                                 <span class="me-4">
-                                    <codx-img class="symbol-circle"
-                                        [objectId]="data.receiver.userID" objectType="AD_Users" [width]="35">
+                                    <codx-img class="ymbol-circle" [objectId]="data.sender.userID"
+                                        [objectType]="'AD_Users'" [width]="35">
                                     </codx-img>
                                 </span>
                                 <div class="d-flex flex-column">
                                     <div class="text-dark fw-bold">
-                                        {{data.receiver.userName}}</div>
+                                        {{data.sender.userName}}</div>
                                     <div class="text-gray-500 fs-7">
-                                        {{data.receiver.positionName}}
+                                        {{data.sender.positionName}}
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="mt-6">
+                            <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblReciver"
+                                    default="Người nhận"></codx-label></div>
+                            <ng-container *ngIf="data.receiver">
+                                <div class="d-flex align-items-center user-card mb-5">
+                                    <span class="me-4">
+                                        <codx-img class="symbol-circle"
+                                            [objectId]="data.receiver.userID" objectType="AD_Users" [width]="35">
+                                        </codx-img>
+                                    </span>
+                                    <div class="d-flex flex-column">
+                                        <div class="text-dark fw-bold">
+                                            {{data.receiver.userName}}</div>
+                                        <div class="text-gray-500 fs-7">
+                                            {{data.receiver.positionName}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <ng-container *ngIf="data.industry">
+                            <div class="mt-9">
+                                <div class="text-primary fw-bold mb-2">
+                                    <ng-container *ngIf="data.cardType == '4'; else andIndustry">
+                                        <codx-label [formModel]="formModel" name="lblIndustry"
+                                            default="Lĩnh vực cải tiến"></codx-label>
+                                    </ng-container>
+                                    <ng-template #andIndustry>
+                                        <codx-label [formModel]="formModel" name="lblIndustry"
+                                            default="Lĩnh vực chia sẻ"></codx-label>
+                                    </ng-template>
+                                </div>
+                                <div class="mb-5 group-files">
+                                    <div class="text-dark">{{data.industryName}}
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="data.behavior">
+                            <div class="mt-9">
+                                <div class="text-primary fw-bold mb-2">
+                                    <codx-label formName="" name="lblBehavior" default="Quy tắc ứng xử"></codx-label>
+                                </div>
+                                <div class="mb-5 group-files">
+                                    <ng-container *ngFor="let item of behavior">
+                                        <div class="text-gray-700">{{item}}</div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="mt-9">
+                            <ng-container *ngIf="data.files  && data.files.length">
+                                <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblFiles"
+                                        default="Tệp tin"></codx-label></div>
+                                <div class="mb-5 group-files" *ngFor="let item of data.files">
+                                    <ng-container *ngTemplateOutlet="templateFile; context:{item:item}">
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div class="mt-9">
+                            <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblSituation"
+                                    default="Nội dung"></codx-label></div>
+                            <div class="modal-card-sms mb-5 text-gray-700">
+                                <span [innerHTML]="data.situation"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-9">
+                    <div class="text-primary fw-bold mb-4">
+                        <codx-label formName="" name="lblShare" default="Chia sẻ"></codx-label>
+                    </div>
+                    <ng-container *ngIf="data.listShare">
+                        <ng-container *ngFor="let item of data.listShare">
+                            <ng-container *ngTemplateOutlet="templateShare; context:{$implicit:item}"></ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <ng-container *ngIf="data.hasGift">
+                    <div class="mt-9">
+                        <div class="text-primary fw-bold">
+                            <codx-label formName="" name="lblGift" default="Quà tặng"></codx-label>
+                        </div>
+                        <ng-container *ngIf="data.gifts">
+                            <div class="mt-9 group-gifts">
+                                <div class="d-flex ms-2">
+                                    <div class="me-5">
+                                        <codx-img [objectId]="data.gifts.giftID" objectType="FD_Gifts" [width]="100"
+                                            imageType="square">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="fw-bold mb-3">{{data.gifts.giftName}}</div>
+                                        <div class="mb-2">
+                                            <span class="fw-normal text-gray-500">
+                                                <codx-label formName="" name="lblPrice" default="Giá:"></codx-label>
+                                            </span>
+                                            <span class="ms-1">{{data.gifts.price}}</span>
+                                            <span class="ms-1">
+                                                <codx-label formName="" name="lblCoin" default="xu"></codx-label>
+                                            </span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <span class="fw-normal">
+                                                <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
+                                            </span>
+                                            <span>{{data.gifts.memo}}</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <span class="fw-normal text-gray-500 me-1">
+                                                <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
+                                            </span>
+                                            <span>{{data.gifts.quantity}}</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <span class="p-2 b rounded-pill"
+                                                [style.color]="data.gifts.status | vll:'L1428':'color' | async"
+                                                [style.background-color]="(data.gifts.status | vll:'L1428':'color' | async) + '30'">
+                                                {{data.gifts.status |vll:"L1428":"text" | async}}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </ng-container>
                     </div>
-                    <ng-container *ngIf="data.industry">
-                        <div class="mt-9">
-                            <div class="text-primary fw-bold mb-2">
-                                <ng-container *ngIf="data.cardType == '4'; else andIndustry">
-                                    <codx-label [formModel]="formModel" name="lblIndustry"
-                                        default="Lĩnh vực cải tiến"></codx-label>
-                                </ng-container>
-                                <ng-template #andIndustry>
-                                    <codx-label [formModel]="formModel" name="lblIndustry"
-                                        default="Lĩnh vực chia sẻ"></codx-label>
-                                </ng-template>
-                            </div>
-                            <div class="mb-5 group-files">
-                                <div class="text-dark">{{data.industryName}}
-                                </div>
-                            </div>
+                </ng-container>
+                <ng-container *ngIf="data.hasPoint">
+                    <div class="mt-6 mb-4">
+                        <div class="text-primary fw-bold mb-2">
+                            <codx-label formName="" name="lblGiftCoins1" default="Tặng xu"></codx-label>
                         </div>
-                    </ng-container>
-                    <ng-container *ngIf="data.behavior">
-                        <div class="mt-9">
-                            <div class="text-primary fw-bold mb-2">
-                                <codx-label formName="" name="lblBehavior" default="Quy tắc ứng xử"></codx-label>
-                            </div>
-                            <div class="mb-5 group-files">
-                                <ng-container *ngFor="let item of behavior">
-                                    <div class="text-gray-700">{{item}}</div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </ng-container>
-                    <div class="mt-9">
-                        <ng-container *ngIf="data.files  && data.files.length">
-                            <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblFiles"
-                                    default="Tệp tin"></codx-label></div>
-                            <div class="mb-5 group-files" *ngFor="let item of data.files">
-                                <ng-container *ngTemplateOutlet="templateFile; context:{item:item}">
-                                </ng-container>
+                        <ng-container *ngIf="data.point">
+                            <div class="ps-2">
+                                <span class="w-20px ms-4">
+                                    <img alt="Pic" src=".../../../assets/demos/svg/dollar.png">
+                                </span>
+                                <span class="ms-5 fw-bold">
+                                    <codx-label formName="" name="lblGiftCoins2" default="Xu tặng:"></codx-label>
+                                </span>
+                                <span class="ms-3">{{data.point}}</span>
                             </div>
                         </ng-container>
                     </div>
-                    <div class="mt-9">
-                        <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblSituation"
-                                default="Nội dung"></codx-label></div>
-                        <div class="modal-card-sms mb-5 text-gray-700">
-                            <span [innerHTML]="data.situation"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-9">
-                <div class="text-primary fw-bold mb-4">
-                    <codx-label formName="" name="lblShare" default="Chia sẻ"></codx-label>
-                </div>
-                <ng-container *ngIf="data.listShare">
-                    <ng-container *ngFor="let item of data.listShare">
-                        <ng-container *ngTemplateOutlet="templateShare; context:{$implicit:item}"></ng-container>
-                    </ng-container>
                 </ng-container>
             </div>
-            <ng-container *ngIf="data.hasGift">
-                <div class="mt-9">
-                    <div class="text-primary fw-bold">
-                        <codx-label formName="" name="lblGift" default="Quà tặng"></codx-label>
-                    </div>
-                    <ng-container *ngIf="data.gifts">
-                        <div class="mt-9 group-gifts">
-                            <div class="d-flex ms-2">
-                                <div class="me-5">
-                                    <codx-img [objectId]="data.gifts.giftID" objectType="FD_Gifts" [width]="100"
-                                        imageType="square">
-                                    </codx-img>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <div class="fw-bold mb-3">{{data.gifts.giftName}}</div>
-                                    <div class="mb-2">
-                                        <span class="fw-normal text-gray-500">
-                                            <codx-label formName="" name="lblPrice" default="Giá:"></codx-label>
-                                        </span>
-                                        <span class="ms-1">{{data.gifts.price}}</span>
-                                        <span class="ms-1">
-                                            <codx-label formName="" name="lblCoin" default="xu"></codx-label>
-                                        </span>
-                                    </div>
-                                    <div class="mb-2">
-                                        <span class="fw-normal">
-                                            <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
-                                        </span>
-                                        <span>{{data.gifts.memo}}</span>
-                                    </div>
-                                    <div class="mb-2">
-                                        <span class="fw-normal text-gray-500 me-1">
-                                            <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
-                                        </span>
-                                        <span>{{data.gifts.quantity}}</span>
-                                    </div>
-                                    <div class="mb-2">
-                                        <span class="p-2 b rounded-pill"
-                                            [style.color]="data.gifts.status | vll:'L1428':'color' | async"
-                                            [style.background-color]="(data.gifts.status | vll:'L1428':'color' | async) + '30'">
-                                            {{data.gifts.status |vll:"L1428":"text" | async}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="data.hasPoint">
-                <div class="mt-6 mb-4">
-                    <div class="text-primary fw-bold mb-2">
-                        <codx-label formName="" name="lblGiftCoins1" default="Tặng xu"></codx-label>
-                    </div>
-                    <ng-container *ngIf="data.point">
-                        <div class="ps-2">
-                            <span class="w-20px ms-4">
-                                <img alt="Pic" src=".../../../assets/demos/svg/dollar.png">
-                            </span>
-                            <span class="ms-5 fw-bold">
-                                <codx-label formName="" name="lblGiftCoins2" default="Xu tặng:"></codx-label>
-                            </span>
-                            <span class="ms-3">{{data.point}}</span>
-                        </div>
-                    </ng-container>
-                </div>
-            </ng-container>
         </div>
-    </div>
-</ng-container>
+    </ng-container>
+</ng-template>
 
 <ng-template #templateFile let-item>
     <div class="d-flex">
