@@ -310,57 +310,36 @@ export class LeadsComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if (
-        (data.closed &&  !['0','1'].includes(data.status)) ||  ['0','1'].includes(data.status) ||  this.checkMoreReason(data)
-      ) {
-        eventItem.disabled = true;
-      }
+        eventItem.disabled =  (data.closed && !['0', '1'].includes(data.status)) || ['0', '1'].includes(data.status) || this.checkMoreReason(data)
     };
-    var isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
-        eventItem.disabled = true;
-      }
-    };
-    var isCopy = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
-        eventItem.disabled = true;
-      }
-    };
-    var isEdit = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
-        eventItem.disabled = true;
-      }
+    var isCRUD = (eventItem, data) => {
+        eventItem.disabled = data.closed || this.checkMoreReason(data);
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled =
-        data.closed ||  ['0','1'].includes(data.status)
-        this.checkMoreReason(data);
+      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
+      this.checkMoreReason(data);
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled =
-        !data.closed ||  ['0','1'].includes(data.status)
-        this.checkMoreReason(data);
+      eventItem.disabled = !data.closed || ['0', '1'].includes(data.status);
+      this.checkMoreReason(data);
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled =   !['0','1'].includes(data.status)
+      eventItem.disabled = !['0', '1'].includes(data.status);
     };
-
     var isConvertLead = (eventItem, data) => {
       eventItem.disabled = data.status != '3';
     };
-
-    var isMergeLead = (eventItem, data) => {
-      eventItem.disabled = !['0','1'].includes(data.status)
-    };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['0','1','2'].includes(data.status);
+      eventItem.disabled = !['0', '1', '2'].includes(data.status);
     };
-
+    var isMoveStage = (eventItem, data) => {
+      eventItem.disabled =  (data.closed && !['0', '1'].includes(data.status)) || ['0', '1'].includes(data.status) || ( data.status !='13' &&  this.checkMoreReason(data) )
+    };
 
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
-      CM0205_2: isMergeLead, // mergeLead
-      CM0205_3: isDisabled,
+      CM0205_2: isStartDay, // mergeLead
+      CM0205_3: isMoveStage,
       CM0205_4: isStartDay, // startyDay
       CM0205_5: isDisabled, // success
       CM0205_6: isDisabled, // fail
@@ -370,23 +349,19 @@ export class LeadsComponent
       CM0205_10: isClosed, // close lead
       CM0205_11: isOpened, // open lead
       SYS101: isDisabled,
-      SYS103: isEdit,
-      SYS03: isEdit,
-      SYS104: isCopy,
-      SYS04: isCopy,
-      SYS102: isDelete,
-      SYS02: isDelete,
+      SYS103: isCRUD,
+      SYS03: isCRUD,
+      SYS104: isCRUD,
+      SYS04: isCRUD,
+      SYS102: isCRUD,
+      SYS02: isCRUD,
     };
 
     return functionMappings[type];
   }
 
   checkMoreReason(tmpPermission) {
-    return !(
-      tmpPermission.roleMore.isReasonSuccess ||
-      tmpPermission.roleMore.isReasonFail ||
-      tmpPermission.roleMore.isMoveStage
-    );
+    return !( tmpPermission.roleMore.isReasonSuccess || tmpPermission.roleMore.isReasonFail);
   }
 
   onActions(e) {
@@ -421,17 +396,16 @@ export class LeadsComponent
       this.notificationsService.notify('DP038');
       return;
     }
-
-    if (this.moreFuncInstance?.length == 0) {
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
+    // if (this.moreFuncInstance?.length == 0) {
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
     if (data.status == '1' || data.status == '3') {
       this.notificationsService.notifyCode('DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (data.status != '1' && data.status != '3' && data.status != '5' ) {
+    if (data.status != '1' && data.status != '3' && data.status != '5') {
       this.notificationsService.notifyCode('DP037', 0, '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
@@ -494,47 +468,48 @@ export class LeadsComponent
   }
 
   clickMF(e, data) {
+    const actions = {
+      SYS03: (data) => {
+        this.edit(data);
+      },
+      SYS04: (data) => {
+        this.copy(data);
+      },
+      SYS02: (data) => {
+        this.delete(data);
+      },
+      CM0205_1: (data) => {
+        this.convertLead(data);
+      },
+      CM0205_2: (data) => {
+        this.mergeLead(data);
+      },
+      CM0205_4: (data) => {
+        this.startDay(data);
+      },
+      CM0205_10: (data) => {
+        this.openOrCloseLead(data, true);
+      },
+      CM0205_11: (data) => {
+        this.openOrCloseLead(data, false);
+      },
+      CM0205_3: (data) => {
+        this.moveStage(data);
+      },
+      CM0205_5: (data) => {
+        this.moveReason(data, true);
+      },
+      CM0205_6: (data) => {
+        this.moveReason(data, false);
+      },
+      CM0205_9: (data) => {
+        this.popupOwnerRoles(data);
+      },
+    };
     this.dataSelected = data;
     this.titleAction = e.text;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'CM0205_1':
-        this.convertLead(data);
-        break;
-      case 'CM0205_2':
-        this.mergeLead(data);
-        break;
-      case 'CM0205_4':
-        this.startDay(data);
-        break;
-      // Close deal
-      case 'CM0205_10':
-        this.openOrCloseLead(data, true);
-        break;
-      // Open deal
-      case 'CM0205_11':
-        this.openOrCloseLead(data, false);
-        break;
-      case 'CM0205_3':
-        this.moveStage(data);
-        break;
-      case 'CM0205_5':
-        this.moveReason(data, true);
-        break;
-      case 'CM0205_6':
-        this.moveReason(data, false);
-        break;
-      case 'CM0205_9':
-        this.popupOwnerRoles(data);
-        break;
+    if (actions.hasOwnProperty(e.functionID)) {
+      actions[e.functionID](data);
     }
   }
 
@@ -588,9 +563,6 @@ export class LeadsComponent
         option.Width = '800px';
         option.zIndex = 1001;
         this.openFormLead(formMD, option, 'add');
-        // }
-
-        // });
       });
     });
   }
@@ -990,42 +962,41 @@ export class LeadsComponent
 
   popupOwnerRoles(data) {
     this.dataSelected = data;
-      var formMD = new FormModel();
-      let dialogModel = new DialogModel();
-      formMD.funcID = this.funcIDCrr.functionID;
-      formMD.entityName = this.funcIDCrr.entityName;
-      formMD.formName = this.funcIDCrr.formName;
-      formMD.gridViewName = this.funcIDCrr.gridViewName;
-      dialogModel.zIndex = 999;
-      dialogModel.FormModel = formMD;
-      var obj = {
-        recID: data?.recID,
-        processID: data?.processID,
-        stepID: data?.stepID,
-        gridViewSetup:this.gridViewSetup,
-        formModel:this.view.formModel,
-        applyFor: this.applyForLead,
-        titleAction: this.titleAction,
-        owner: data.owner
-
-      };
-      var dialog = this.callfc.openForm(
-        PopupOwnerDealComponent,
-        '',
-        500,
-        280,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      dialog.closed.subscribe((e) => {
-        if (e && e?.event != null) {
-          this.view.dataService.update(e?.event).subscribe();
-          this.notificationsService.notifyCode('SYS007');
-          this.detectorRef.detectChanges();
-        }
-      });
+    var formMD = new FormModel();
+    let dialogModel = new DialogModel();
+    formMD.funcID = this.funcIDCrr.functionID;
+    formMD.entityName = this.funcIDCrr.entityName;
+    formMD.formName = this.funcIDCrr.formName;
+    formMD.gridViewName = this.funcIDCrr.gridViewName;
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formMD;
+    var obj = {
+      recID: data?.recID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+      gridViewSetup: this.gridViewSetup,
+      formModel: this.view.formModel,
+      applyFor: this.applyForLead,
+      titleAction: this.titleAction,
+      owner: data.owner,
+    };
+    var dialog = this.callfc.openForm(
+      PopupOwnerDealComponent,
+      '',
+      500,
+      280,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   //#region event
@@ -1034,6 +1005,4 @@ export class LeadsComponent
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
-
-
 }

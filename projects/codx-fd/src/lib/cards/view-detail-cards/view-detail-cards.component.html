@@ -175,6 +175,16 @@
                         </ng-container>
                     </ng-container>
                 </div>
+                <ng-container *ngIf="objectID">
+                    <codx-img 
+                        [width]="300" 
+                        imageType="square" 
+                        [cssClass]="'img'"
+                        [objectId]="objectID" 
+                        [objectType]="'FD_Cards'" 
+                        [referType]="'image'">
+                    </codx-img>
+                </ng-container>
                 <ng-container *ngIf="data.hasGift">
                     <div class="mt-9">
                         <div class="text-primary fw-bold">

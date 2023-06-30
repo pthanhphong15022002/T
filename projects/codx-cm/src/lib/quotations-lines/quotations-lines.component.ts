@@ -38,6 +38,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() exchangeRate: any;
   @Input() currencyID: any;
   @Input() gridHeight: number = 300; //tinh xong truyefn vào
+  @Input() typeAdd = '1'; //1 : add popup  // 2 add dòng
 
   @Input() listQuotationLines: Array<any> = [];
   @Input() quotationLinesAddNew = [];
@@ -64,7 +65,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     allowDeleting: true,
     mode: 'Normal',
   };
-  editSettingsView: EditSettingsModel = {
+  editSettingsPopup: EditSettingsModel = {
     allowEditing: false,
     allowAdding: false,
     allowDeleting: false,
@@ -199,11 +200,11 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           data.exchangeRate = this.exchangeRate;
           data.currencyID = this.currencyID;
           data.transID = this.transID;
-          this.listQuotationLines.push(data);
+          //this.listQuotationLines.push(data);
           // if (this.actionParent == 'edit')
           this.quotationLinesAddNew.push(data);
-          // this.gridQuationsLines.addRow(data, idx); //add row gridview
-          this.gridQuationsLines.refresh();
+          this.gridQuationsLines.addRow(data, idx); //add row gridview
+          // this.gridQuationsLines.refresh();
         }
       });
   }
@@ -334,60 +335,64 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   }
 
   editLine(dt) {
-    this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
-      this.cache
-        .gridViewSetup(
-          this.fmQuotationLines.formName,
-          this.fmQuotationLines.gridViewName
-        )
-        .subscribe((res) => {
-          var obj = {
-            headerText:
-              this.titleActionLine + ' ' + f?.customName || f?.description,
-            quotationsLine: dt,
-            listQuotationLines: this.listQuotationLines,
-            grvSetup: this.grvSetupQuotationsLines,
-          };
-          let opt = new DialogModel();
-          opt.zIndex = 1000;
-          opt.FormModel = this.fmQuotationLines;
+    if (this.typeAdd == '1') {
+      this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
+        this.cache
+          .gridViewSetup(
+            this.fmQuotationLines.formName,
+            this.fmQuotationLines.gridViewName
+          )
+          .subscribe((res) => {
+            var obj = {
+              headerText:
+                this.titleActionLine + ' ' + f?.customName || f?.description,
+              quotationsLine: dt,
+              listQuotationLines: this.listQuotationLines,
+              grvSetup: this.grvSetupQuotationsLines,
+            };
+            let opt = new DialogModel();
+            opt.zIndex = 1000;
+            opt.FormModel = this.fmQuotationLines;
 
-          let dialogQuotations = this.callFC.openForm(
-            PopupAddQuotationsLinesComponent,
-            '',
-            1000,
-            700,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialogQuotations.closed.subscribe((res) => {
-            if (res?.event) {
-              let data = res?.event;
-              let idxUp = this.listQuotationLines.findIndex(
-                (x) => x.recID == data.recID
-              );
-              if (idxUp != -1) {
-                this.listQuotationLines[idxUp] = data;
-                if (this.actionParent == 'edit') {
-                  this.linesUpdate(data);
+            let dialogQuotations = this.callFC.openForm(
+              PopupAddQuotationsLinesComponent,
+              '',
+              1000,
+              700,
+              '',
+              obj,
+              '',
+              opt
+            );
+            dialogQuotations.closed.subscribe((res) => {
+              if (res?.event) {
+                let data = res?.event;
+                let idxUp = this.listQuotationLines.findIndex(
+                  (x) => x.recID == data.recID
+                );
+                if (idxUp != -1) {
+                  this.listQuotationLines[idxUp] = data;
+                  if (this.actionParent == 'edit') {
+                    this.linesUpdate(data);
+                  }
+                  this.gridQuationsLines.refresh();
+                  // this.dialog.dataService.updateDatas.set(
+                  //   this.quotations['_uuid'],
+                  //   this.quotations
+                  // );
+                  this.loadTotal();
+                  this.objectOut.listQuotationLines = this.listQuotationLines;
+
+                  this.eventQuotationLines.emit(this.objectOut);
+                  this.changeDetector.detectChanges();
                 }
-                this.gridQuationsLines.refresh();
-                // this.dialog.dataService.updateDatas.set(
-                //   this.quotations['_uuid'],
-                //   this.quotations
-                // );
-                this.loadTotal();
-                this.objectOut.listQuotationLines = this.listQuotationLines;
-
-                this.eventQuotationLines.emit(this.objectOut);
-                this.changeDetector.detectChanges();
               }
-            }
+            });
           });
-        });
-    });
+      });
+    } else if (this.typeAdd == '2') {
+      this.selectRow(dt);
+    }
   }
 
   copyLine(dataCopy) {
@@ -401,7 +406,6 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       .subscribe((dt) => {
         if (dt && dt.data) {
           let data = dt.data;
-
           let arrField = Object.values(this.grvSetupQuotationsLines).filter(
             (x: any) => x.allowCopy
           );
@@ -416,61 +420,68 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           data.exchangeRate = this.exchangeRate;
           data.currencyID = this.currencyID;
           data.transID = this.transID;
+          if (this.typeAdd == '1') {
+            this.cache
+              .functionList(this.fmQuotationLines.funcID)
+              .subscribe((f) => {
+                this.cache
+                  .gridViewSetup(
+                    this.fmQuotationLines.formName,
+                    this.fmQuotationLines.gridViewName
+                  )
+                  .subscribe((res) => {
+                    let title = f?.customName || f?.description;
+                    var obj = {
+                      headerText:
+                        this.titleActionLine +
+                        ' ' +
+                        title.charAt(0).toLowerCase() +
+                        title.slice(1),
+                      quotationsLine: data,
+                      listQuotationLines: this.listQuotationLines,
+                      grvSetup: this.grvSetupQuotationsLines,
+                    };
+                    let opt = new DialogModel();
+                    opt.zIndex = 1000;
+                    opt.FormModel = this.fmQuotationLines;
 
-          this.cache
-            .functionList(this.fmQuotationLines.funcID)
-            .subscribe((f) => {
-              this.cache
-                .gridViewSetup(
-                  this.fmQuotationLines.formName,
-                  this.fmQuotationLines.gridViewName
-                )
-                .subscribe((res) => {
-                  let title = f?.customName || f?.description;
-                  var obj = {
-                    headerText:
-                      this.titleActionLine +
-                      ' ' +
-                      title.charAt(0).toLowerCase() +
-                      title.slice(1),
-                    quotationsLine: data,
-                    listQuotationLines: this.listQuotationLines,
-                    grvSetup: this.grvSetupQuotationsLines,
-                  };
-                  let opt = new DialogModel();
-                  opt.zIndex = 1000;
-                  opt.FormModel = this.fmQuotationLines;
-
-                  let dialogQuotations = this.callFC.openForm(
-                    PopupAddQuotationsLinesComponent,
-                    '',
-                    1000,
-                    700,
-                    '',
-                    obj,
-                    '',
-                    opt
-                  );
-                  dialogQuotations.closed.subscribe((res) => {
-                    if (res?.event) {
+                    let dialogQuotations = this.callFC.openForm(
+                      PopupAddQuotationsLinesComponent,
+                      '',
+                      1000,
+                      700,
+                      '',
+                      obj,
+                      '',
+                      opt
+                    );
+                    dialogQuotations.closed.subscribe((res) => {
                       if (res?.event) {
-                        data = res?.event;
-                        this.quotationLinesAddNew.push(data);
-                        this.listQuotationLines.push(data);
-                        this.gridQuationsLines.refresh();
-                        this.loadTotal();
-                        this.objectOut.quotationLinesAddNew =
-                          this.quotationLinesAddNew;
-                        this.objectOut.listQuotationLines =
-                          this.listQuotationLines;
+                        if (res?.event) {
+                          data = res?.event;
+                          this.quotationLinesAddNew.push(data);
+                          this.listQuotationLines.push(data);
+                          this.gridQuationsLines.refresh();
+                          this.loadTotal();
+                          this.objectOut.quotationLinesAddNew =
+                            this.quotationLinesAddNew;
+                          this.objectOut.listQuotationLines =
+                            this.listQuotationLines;
 
-                        this.eventQuotationLines.emit(this.objectOut);
-                        this.changeDetector.detectChanges();
+                          this.eventQuotationLines.emit(this.objectOut);
+                          this.changeDetector.detectChanges();
+                        }
                       }
-                    }
+                    });
                   });
-                });
-            });
+              });
+          } else if (this.typeAdd == '2') {
+            this.quotationLinesAddNew.push(data);
+            this.gridQuationsLines.addRow(
+              data,
+              this.listQuotationLines?.length ?? 0
+            ); //add row gridview
+          }
         }
       });
   }
@@ -501,6 +512,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     switch (e.field) {
       case 'itemID':
         this.loadItem(e.value, lineCrr);
+        // this.setPredicatesByItemID(e.data.itemID);
         break;
       case 'VATID':
         let crrtaxrate = e?.component?.itemsSelected[0]?.TaxRate;
@@ -666,5 +678,34 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     this.objectOut['quotationLineIdNew'] = e?.recID; // thuan thêm để lấy quotationLines mới thêm
     this.eventQuotationLines.emit(this.objectOut);
     this.changeDetector.detectChanges();
+  }
+
+  selectRow(data) {
+    this.gridQuationsLines.gridRef.selectRow(Number(data.index));
+    this.gridQuationsLines.gridRef.startEdit();
+  }
+
+  //set row
+  setPredicatesByItemID(dataValue: string): void {
+    for (const v of this.gridQuationsLines.visibleColumns) {
+      if (
+        ['idim0', 'idim1', 'idim2', 'idim3'].includes(
+          v.fieldName?.toLowerCase()
+        )
+      ) {
+        v.predicate = 'ItemID=@0';
+        v.dataValue = dataValue;
+      }
+    }
+  }
+
+  setPredicateByIDIM4(dataValue: string): void {
+    let idim4 = this.gridQuationsLines.visibleColumns.find(
+      (v) => v.fieldName?.toLowerCase() === 'idim4'
+    );
+    if (idim4) {
+      idim4.predicate = 'WarehouseID=@0';
+      idim4.dataValue = dataValue;
+    }
   }
 }
