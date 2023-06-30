@@ -261,7 +261,16 @@
   <ng-template #toolTipDealValue>
     <div class="text-end text-sm-start">
       <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
-      >: {{ data?.dealValue }}
+      >:
+      <span
+      *ngIf="data?.dealValue; else defaultNull"
+      #dealValue
+      [innerHTML]="
+      data?.dealValue
+          | formatvalue : view.formModel : 'dealValue' : dealValue
+          | async
+      "
+    ></span>
     </div>
   </ng-template>
   <ng-template #toolTipProbability>
@@ -270,9 +279,6 @@
       >: {{ data?.probability }}
     </div>
   </ng-template>
-
-
-
 
 
 
@@ -311,9 +317,19 @@
           class="pe-1 d-flex align-items-center"
         >
           <span class="icon-monetization_on icon-16 text-warning me-1"></span>
-          <span class="text-nowrap">
-            {{data?.dealValue}}
-          </span>
+
+
+          <span
+          class="text-nowrap line-clamp line-clamp-1"
+          *ngIf="data?.dealValue; else defaultNull"
+          #dealValue
+          [innerHTML]="
+          data?.dealValue
+              | formatvalue : view.formModel : 'dealValue' : dealValue
+              | async
+          "
+        ></span>
+
         </div>
         <span
           [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
@@ -508,3 +524,4 @@
     </button>
   </div>
 </ng-template>
+<ng-template #defaultNull> <p>0</p></ng-template>
