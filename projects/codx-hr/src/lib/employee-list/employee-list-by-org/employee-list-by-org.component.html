@@ -124,7 +124,7 @@
                 [value]="item.status" [showText]="true" [showBgColor]="true">
             </codx-vll>
         </ng-container>
-        <div class="align-self-center">
+        <div class="align-self-center" *ngIf="editable">
             <div style="height: 40px">
               <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, item)"
                 (changeDataMF)="clickMF($event, item)" [dataItem]="item" type="hover">
