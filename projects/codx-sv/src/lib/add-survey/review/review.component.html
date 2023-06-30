@@ -991,7 +991,13 @@
         </div>
       </div>
       <div *ngIf="survey?.status != '5'" class="me-6">
-        <span class="text-gray-600">Chưa phát hành</span>
+        <div class="d-flex align-items-center">
+          <i class="icon-eye me-3"></i>
+          <div class="d-flex flex-column">
+            <div><span class="text-gray-600">Đang ở chế độ xem trước</span></div>
+            <div><span class="text-gray-400">Chưa phát hành</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </ng-conatiner>

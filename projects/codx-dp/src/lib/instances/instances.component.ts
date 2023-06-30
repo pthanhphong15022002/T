@@ -1267,7 +1267,8 @@ export class InstancesComponent
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
                 this.detailViewInstance.loadChangeData();
-              } else if (this.detailViewPopup) {
+              }
+              if (this.detailViewPopup) {
                 this.detailViewPopup.dataSelect = this.dataSelected;
                 this.detailViewPopup.listSteps = this.listStepInstances;
                 this.detailViewPopup.loadChangeData();
@@ -1542,6 +1543,11 @@ export class InstancesComponent
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
+        }
+
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
         }
 
         this.detectorRef.detectChanges();

@@ -312,7 +312,7 @@
         [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
         (created)="gridCreated()" rowHeight="35" (onAddNew)="onAddNew($event)" [autoAddRow]="true"
         (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
-        (cellChanged)="lineChanged($event)"></codx-gridview-v2>
+        (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
