@@ -8,6 +8,7 @@ import { FD_Permissions } from '../../models/FD_Permissionn.model';
 import { FED_Card } from '../../models/FED_Card.model';
 import { CardType, Valuelist } from '../../models/model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { tmpPost } from '../../models/tmpPost.model';
 
 @Component({
   selector: 'lib-popup-add-cards',
@@ -454,32 +455,24 @@ export class PopupAddCardsComponent implements OnInit {
       //     }  
       //   }
       // }
-      if (this.attachment && this.attachment.fileUploadList.length){
-        (await this.attachment.saveFilesObservable()).subscribe((res) => {
-          if (res) {
-            let attachments = Array.isArray(res) ? res.length : 1;
-            this.card.attachment = attachments.toString();
-            this.addCard();
+      let post: tmpPost = new tmpPost();
+      post.attachments = this.attachment.fileUploadList.length;
+      
+      this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddNewAsync", [this.card, post]).subscribe(async (res: any[]) => {
+        console.log('AddNewAsync',res)
+        if (res && res[0] && res[1] && res[2]) {
+          if (this.attachment && this.attachment.fileUploadList.length){
+            this.attachment.objectId = res[2].recID;
+            (await this.attachment.saveFilesObservable()).subscribe();
           }
-        });
-      } else {
-        this.addCard();
-      }
-      
-      
+          (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
+          this.dialog.close();
+        }
+        else {
+          this.notifySV.notify(res[1]);
+        }
+      });
     }
-  }
-
-  addCard(){
-    this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", this.card).subscribe((res: any[]) => {
-      if (res && res[0] && res[1]) {
-        (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
-        this.dialog.close();
-      }
-      else {
-        this.notifySV.notify(res[1]);
-      }
-    });
   }
 
   openFormShare(content: any) {

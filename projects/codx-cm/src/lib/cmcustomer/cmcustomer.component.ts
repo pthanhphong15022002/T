@@ -470,6 +470,17 @@ export class CmCustomerComponent
             [data.recID]
           )
         );
+        if(!check){
+          check = await firstValueFrom(
+            this.api.execSv<any>(
+              'CM',
+              'ERM.Business.CM',
+              'CustomersBusiness',
+              'IsExitsByQuotationAsync',
+              [data.recID]
+            )
+          );
+        }
         if (check) {
           this.notiService.notifyCode('CM011');
           return;
