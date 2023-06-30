@@ -1370,14 +1370,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     );
     if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
     else this.questions[seqNoSession].children[itemActive.seqNo].active = false;
-    if(this.questions[seqNoSession].children[
+    this.questions[seqNoSession].children[
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
-    ]?.active)
-    {
-      this.questions[seqNoSession].children[
-        itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
-      ].active = true;
-    }
+    ].active = true;
     
     this.itemActive =
       this.questions[seqNoSession].children[
@@ -1486,7 +1481,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   clickQuestionMF(seqNoSession, itemQuestion, answerType) {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
-    debugger
     if (answerType) {
       this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == answerType)[0];
       var data = this.questions[seqNoSession].children[itemQuestion.seqNo];
@@ -1574,7 +1568,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         data.answers = data.answers.filter(x=>!x.other);
         data.other = false;
       }
-      debugger
       //this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
       this.change.detectChanges();
       this.SVServices.signalSave.next('saving');
