@@ -207,7 +207,6 @@ export class EmployeeContractComponent extends UIComponent {
     }
     else 
     {
-    
       this.hrService.handleShowHideMF(event, data, this.view.formModel);
     }
   }

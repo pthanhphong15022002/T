@@ -7,6 +7,7 @@ import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService
 import { FD_Permissions } from '../../models/FD_Permissionn.model';
 import { FED_Card } from '../../models/FED_Card.model';
 import { CardType, Valuelist } from '../../models/model';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-add-cards',
@@ -16,6 +17,7 @@ import { CardType, Valuelist } from '../../models/model';
 })
 export class PopupAddCardsComponent implements OnInit {
   @ViewChild("popupViewCard") popupViewCard: TemplateRef<any>;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   dialog: DialogRef;
   form: FormGroup;
@@ -64,6 +66,7 @@ export class PopupAddCardsComponent implements OnInit {
 
   isWalletReciver: boolean = false;
   showNavigationArrows: boolean = false;
+  readOnly: boolean = false;
 
   MEMBERTYPE = {
     CREATED: "1",
@@ -101,6 +104,9 @@ export class PopupAddCardsComponent implements OnInit {
     Coins: "ActiveCoins",
     CoCoins: "ActiveCoCoins",
   };
+  card = new FED_Card();
+  isHaveFile = false;
+  showLabelAttachment = false;
 
   constructor(
     private api: ApiHttpService,
@@ -148,6 +154,15 @@ export class PopupAddCardsComponent implements OnInit {
           if (this.cardType != this.CARDTYPE_EMNUM.Share && this.cardType != this.CARDTYPE_EMNUM.Radio) {
             this.loadDataPattern(this.cardType);
           }
+          this.api.execSv<any>('FD', 'Core', 'DataBusiness', 'GetDefaultAsync', [funcID, 'FD_Cards',])
+          .subscribe((response: any) => {
+            if (response) {
+              var data = response.data;
+              this.card = {
+                ...data,
+              };
+            }
+          })
         }
       })
     }
@@ -343,7 +358,7 @@ export class PopupAddCardsComponent implements OnInit {
     })
   }
 
-  Save() {
+  async Save() {
     if (!this.form.controls['receiver'].value) {
       let mssg = Util.stringFormat(this.mssgNoti, "Người nhận");
       this.notifySV.notify(mssg);
@@ -386,29 +401,31 @@ export class PopupAddCardsComponent implements OnInit {
       return;
     }
     else {
-      let card = new FED_Card();
-      card = this.form.value;
-      card.functionID = this.funcID;
-      card.entityPer = this.entityName;
-      card.cardType = this.cardType;
-      card.shareControl = this.shareControl;
-      card.objectType = this.objectType;
-      card.listShare = this.lstShare;
+      this.card = {
+        ...this.card,
+        ...this.form.value
+      };
+      this.card.functionID = this.funcID;
+      this.card.entityPer = this.entityName;
+      this.card.cardType = this.cardType;
+      this.card.shareControl = this.shareControl;
+      this.card.objectType = this.objectType;
+      this.card.listShare = this.lstShare;
 
       if (this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement || this.cardType != this.CARDTYPE_EMNUM.Share) {
         if (this.patternSelected?.patternID) {
-          card.pattern = this.patternSelected.recID;
+          this.card.pattern = this.patternSelected.recID;
         }
       }
 
       if (this.gifts && this.gifts.length > 0) {
-        card.hasGifts = true;
-        card.gifts = this.gifts;
+        this.card.hasGifts = true;
+        this.card.gifts = this.gifts;
       }
 
       if (this.givePoint > 0) {
-        card.hasPoints = true;
-        card.coins = this.givePoint
+        this.card.hasPoints = true;
+        this.card.coins = this.givePoint
       }
 
       // if(this.parameter){
@@ -437,16 +454,32 @@ export class PopupAddCardsComponent implements OnInit {
       //     }  
       //   }
       // }
-      this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", card).subscribe((res: any[]) => {
-        if (res && res[0] && res[1]) {
-          (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
-          this.dialog.close();
-        }
-        else {
-          this.notifySV.notify(res[1]);
-        }
-      });
+      if (this.attachment && this.attachment.fileUploadList.length){
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {
+            let attachments = Array.isArray(res) ? res.length : 1;
+            this.card.attachment = attachments.toString();
+            this.addCard();
+          }
+        });
+      } else {
+        this.addCard();
+      }
+      
+      
     }
+  }
+
+  addCard(){
+    this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", this.card).subscribe((res: any[]) => {
+      if (res && res[0] && res[1]) {
+        (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
+        this.dialog.close();
+      }
+      else {
+        this.notifySV.notify(res[1]);
+      }
+    });
   }
 
   openFormShare(content: any) {
@@ -557,5 +590,19 @@ export class PopupAddCardsComponent implements OnInit {
         }
       });
     }
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+
+  fileAdded(e) {
+    console.log(e);
+  }
+
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
   }
 }

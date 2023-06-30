@@ -1,12 +1,10 @@
 <codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="entityName"
   (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" [autoLoad]="true"
-  (selectedChange)="changeItemDetail($event)">
+  (selectedChange)="changeItemDetail($event)" [isSubView]="true">
 </codx-views>
 <ng-template #templateMore let-data>
-  <div class="has-action-menu" style="height: 30px">
-    <codx-mfunc [dataItem]="data" (changeDataMF)="changeDataMF($event, data)" [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)" [isBookMark]="true" type="hover"></codx-mfunc>
-  </div>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMF($event,data)" [formModel]="view.formModel"
+  (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <ng-template #itemTemplate let-data>
   <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
@@ -61,10 +59,10 @@
   <ejs-tooltip id='tooltip' target="#tipmemo">
     <span id="tipmemo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
     <ng-template #content>
-      <span>{{data?.memo}}</span> 
+      <span>{{data?.memo}}</span>
     </ng-template>
   </ejs-tooltip>
-  
+
   <!-- <ng-template #memo>
     <span class="text-gray-600">{{data?.memo}}</span>
   </ng-template> -->
@@ -85,7 +83,7 @@
             [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
         </div>
         <ng-template #content>
-          <span>{{(itemSelected?.subType | vll : 'AC063' : 'text' | async)}}</span> 
+          <span>{{(itemSelected?.subType | vll : 'AC063' : 'text' | async)}}</span>
         </ng-template>
       </ejs-tooltip>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">

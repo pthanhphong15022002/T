@@ -105,7 +105,6 @@ export class EmployeeAwardsComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -115,7 +114,6 @@ export class EmployeeAwardsComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,

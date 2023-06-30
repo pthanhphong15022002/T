@@ -1214,7 +1214,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onDiscard() {
-    if (!this.gridCash.gridRef.isEdit || !this.gridSet.gridRef.isEdit) {
+    if (
+      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+      (this.gridSet && !this.gridSet.gridRef.isEdit)
+    ) {
       if (this.hasSaved) {
         this.dialog.dataService
           .delete(
