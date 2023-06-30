@@ -327,68 +327,75 @@
                       ></codx-label>
                     </div>
                     <div class="d-flex justify-content-end">
-<!--
-                      <codx-imgs
-                      [width]="30"
-                      [objectId]="dataSelected.salespersonID"
-                      ojectType="AD_Users"
-                      [numberImages]="1"
-                      [ngbTooltip]="tooltipSalesperson"
-                      [isToolTip]="false"
-                    >
-                    </codx-imgs> -->
+                      <div style="position: relative" [ngbTooltip]="tooltipOwner">
+                        <codx-imgs
+                          [width]="30"
+                          [objectId]="dataSelected?.owner"
+                          ojectType="AD_Users"
+                          [numberImages]="1"
 
-                    <div style="position: relative">
-                      <!-- <codx-imgs
-                        [objectId]="item?.resourceID"
-                        [objectName]="item?.resourceName"
-                        objectType="AD_Users"
-                        [numberImages]="1"
-                      >
-                      </codx-imgs> -->
-
-                      <codx-img
-                      [width]="30"
-                      [objectId]="dataSelected.salespersonID"
-                      objectType="AD_Users"
-                      [referType]="'avt'"
-                      [numberImages]="1"
-                    >
-                    </codx-img>
-                      <div style="position: absolute; right: 0px; bottom: 0px">
-                        <ng-container *ngFor="let role of listRoles">
-                          <ng-container *ngIf="role.value == '1'">
-                            <span
-                              ><img
-                                src="/assets/themes/tm/default/img/CM.svg"
-                                alt=""
-                            /></span>
-
-                          </ng-container>
-                        </ng-container>
+                          [isToolTip]="false"
+                        >
+                        </codx-imgs>
+                        <div
+                          style="position: absolute; right: 0px; bottom: 0px"
+                        >
+                          <span
+                            ><img
+                              src="/assets/themes/cm/default/img/{{
+                                getIcon('1')
+                              }}"
+                              alt=""
+                          /></span>
+                        </div>
                       </div>
-                    </div>
+
+                      <div style="position: relative"  [ngbTooltip]="tooltipSalesperson">
+                        <codx-img
+                          [width]="30"
+
+                          [objectId]="dataSelected.salespersonID"
+                          objectType="AD_Users"
+                          [referType]="'avt'"
+                          [numberImages]="1"
+                        >
+                        </codx-img>
+                        <div
+                          style="position: absolute; right: 0px; bottom: 0px"
+                        >
+                          <span
+                            ><img
+                              src="/assets/themes/cm/default/img/{{
+                                getIcon('3')
+                              }}"
+                              alt=""
+                          /></span>
+                        </div>
+                      </div>
+
+                      <div style="position: relative"  [ngbTooltip]="tooltipConsultant">
+                        <codx-imgs
+                          [width]="30"
+                          [objectId]="dataSelected?.consultantID"
+                          ojectType="AD_Users"
+                          [numberImages]="1"
+                          [isToolTip]="false"
+                        >
+                        </codx-imgs>
+                        <div
+                          style="position: absolute; right: 0px; bottom: 0px"
+                        >
+                          <span
+                            ><img
+                              src="/assets/themes/cm/default/img/{{
+                                getIcon('5')
+                              }}"
+                              alt=""
+                          /></span>
+                        </div>
+                      </div>
 
 
-
-                    <codx-imgs
-                      [width]="30"
-                      [objectId]="dataSelected?.consultantID"
-                      ojectType="AD_Users"
-                      [numberImages]="1"
-                      [ngbTooltip]="tooltipConsultant"
-                      [isToolTip]="false"
-                    >
-                    </codx-imgs>
-                    <codx-imgs
-                      [width]="30"
-                      [objectId]="dataSelected?.owner"
-                      ojectType="AD_Users"
-                      [numberImages]="1"
-                      [ngbTooltip]="tooltipOwner"
-                      [isToolTip]="false"
-                    >
-                    </codx-imgs>
                     </div>
                   </div>
                 </div>
