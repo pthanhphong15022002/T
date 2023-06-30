@@ -343,7 +343,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol2 let-data>
-  <div class="d-flex justify-content-end w-125px">
+  <div class="d-flex justify-content-end w-110px">
     <div class="d-flex align-items-center w-auto">
       <span
         [ngClass]="
@@ -363,7 +363,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol3 let-data>
-  <div class="d-flex justify-content-end w-125px">
+  <div class="d-flex justify-content-end w-100px">
     <span class="text-dark"
         [innerHTML]="
           data?.jSalary
@@ -451,23 +451,25 @@
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
-  <div class="d-flex align-items-center" #benefitNorm>
-    <div class="w-150px d-flex justify-content-end">
-      <span class="text-dark"
+  <div class="d-flex align-items-center justify-content-center w-100" #benefitNorm>
+    <div class="d-flex align-items-center">
+      <div class="w-100px d-flex justify-content-end">
+        <span class="text-dark"
+          [innerHTML]="
+            data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
+          "
+        >
+        </span>
+      </div>
+      <span class="mx-2 text-gray-400">/</span>
+      <span class="w-100px text-gray-600"
         [innerHTML]="
-          data?.benefitAmt | formatvalue : formModel : 'benefitAmt' | async
+          data?.benefitNorm
+            | formatvalue : formModel : 'benefitNorm'
+            | async
         "
-      >
-      </span>
+      ></span>
     </div>
-    <span class="mx-2 text-gray-400">/</span>
-    <span class="w-100px text-gray-600"
-      [innerHTML]="
-        data?.benefitNorm
-          | formatvalue : formModel : 'benefitNorm'
-          | async
-      "
-    ></span>
   </div>
 </ng-template>
 
@@ -553,8 +555,8 @@
       </span>
     </ng-template>
 
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center" *ngIf="data.isAppendix">
+    <div class="d-flex flex-column py-3">
+      <div class="d-flex align-items-center mb-1" *ngIf="data.isAppendix">
         <div class="d-flex flex-wrap mb-1">
           <div class="d-flex align-items-center">
             <span class="badge border-0 me-2 badge-primary">
@@ -567,7 +569,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex align-items-center mb-2" *ngIf="!data.isAppendix">
+      <div class="d-flex align-items-center mb-1" *ngIf="!data.isAppendix">
         <span class="w-20px me-2">
           <span
             *ngIf="checkIsNewestDate(data.effectedDate, data.expiredDate)"
@@ -593,9 +595,9 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-gray-800 me-1"></span>
-        <span class="fw-bold fs-6">
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 me-2"></span>
+        <span class="text-dark">
           <span
             [innerHTML]="
               data?.effectedDate
@@ -604,8 +606,8 @@
             "
           ></span>
         </span>
-        <span class="me-1 ms-1 fw-bolder">-</span>
-        <span class="fw-bold fs-6">
+        <span class="mx-2 text-gray-400">-</span>
+        <span class="text-dark">
           <span
             [innerHTML]="
               data?.expiredDate
@@ -622,61 +624,57 @@
 </ng-template>
 
 <ng-template #eContractCol2 let-data>
-  <div class="d-flex flex-column">
+  <div class="d-flex flex-column py-3">
+    <div class="d-flex align-items-center" *ngIf="data.isAppendix">
+      <span class="fw-bold">
+        <span
+        class="me-2 icon-article icon-16"
+      ></span>
+        <span
+      [title]="eContractHeaderText.CefContractNo"
+          [innerHTML]="
+            data?.refContractNo
+              | formatvalue : formModel : 'refContractNo'
+              | async
+          "
+        ></span>
+      </span>
+    </div>
+
+    <div class="d-flex align-items-center mb-1">
+      <span
+        class="me-2 icon-article icon-16"
+      ></span>
+      <span class="text-dark">
+        <span
+      [title]="eContractHeaderText.ContractNo"
+
+        >{{ data?.contractNo }}</span>
+      </span>
+    </div>
     <div class="d-flex align-items-center">
-      <div class="d-flex flex-wrap mb-1" >
-        <div class="d-flex align-items-center" *ngIf="data.isAppendix">
-          <span class="fw-bold">
-            <span
-            class="me-1 icon-i-layout-text-sidebar-reverse icon-10 text-gray-800"
-          ></span>
-            <span
-          [title]="eContractHeaderText.CefContractNo"
-              [innerHTML]="
-                data?.refContractNo
-                  | formatvalue : formModel : 'refContractNo'
-                  | async
-              "
-            ></span>
-          </span>
-        </div>
+      <span
+        class="icon-event_note icon-16 me-2"
+      ></span>
+      <span class="text-gray-600">
+        <span
+      [title]="eContractHeaderText.SignedDate"
 
-        <div class="d-flex align-items-center">
-          <span
-            class="me-1 icon-i-layout-text-sidebar-reverse icon-10 text-gray-800"
-          ></span>
-          <span class="text-dark">
-            <span
-          [title]="eContractHeaderText.ContractNo"
-
-            >{{ data?.contractNo }}</span>
-          </span>
-        </div>
-        <div class="d-flex align-items-center">
-          <span
-            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-          ></span>
-          <span class="fw-bold">
-            <span
-          [title]="eContractHeaderText.SignedDate"
-
-              [innerHTML]="
-                data?.signedDate
-                  | formatvalue : formModel : 'signedDate'
-                  | async
-              "
-            ></span>
-          </span>
-        </div>
-      </div>
+          [innerHTML]="
+            data?.signedDate
+              | formatvalue : formModel : 'signedDate'
+              | async
+          "
+        ></span>
+      </span>
     </div>
   </div>
 </ng-template>
 
 <ng-template #eContractCol3 let-data>
-  <div class="has-action-menu min-h-40px">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
+  <div class="has-action-menu">
+    <div class="d-flex flex-column py-3">
+      <div class="d-flex align-items-center">
         <span class="icon-edit icon-16 text-gray-800 me-1"></span>
         <span class="fw-bold fs-6">
           <span
@@ -843,6 +841,7 @@
 </ng-template>
 
 <ng-template #headTempBenefit2>
+  <div class="w-100 d-flex justify-content-center">
   <codx-label
   [formModel]="formModel"
   [name]="'lblBenefitGridCol2'"
@@ -850,6 +849,7 @@
   class="fw-bold fs-6"
 >
 </codx-label>
+</div>
 </ng-template>
 
 <ng-template #headTempBenefit3>

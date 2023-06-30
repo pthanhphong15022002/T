@@ -128,6 +128,9 @@ export class SalesInvoicesComponent
     }
 
     this.master = e.data.data ?? e.data;
+    if (!this.master) {
+      return;
+    }
 
     this.expanding = false;
     this.loading = true;
@@ -137,10 +140,10 @@ export class SalesInvoicesComponent
     options.predicates = 'TransID=@0';
     options.dataValues = this.master.recID;
     options.pageLoading = false;
-    this.acService
-      .loadDataAsync('SM', options)
-      .subscribe((res: ISalesInvoicesLine[]) => {
-        this.lines = res;
+    this.api
+      .exec('SM', 'SalesInvoicesLinesBusiness', 'GetLinesAsync', options)
+      .subscribe((res: any) => {
+        this.lines = res[0];
         this.loading = false;
       });
   }

@@ -152,14 +152,17 @@
           >
           </codx-label>
           <codx-input
-            type="text"
-            [formModel]="formModelDeals"
-            [crrValue]="deal?.probability"
-            [placeholder]="gridViewSetupDeal?.Probability?.description"
-            field="probability"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
+          type="number"
+          [min]="0"
+          [max]="100"
+          [placeholder]="gridViewSetupDeal?.Probability?.description"
+          field="probability"
+          [crrValue]="deal?.probability"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+
+
         </div>
       </div>
     </div>

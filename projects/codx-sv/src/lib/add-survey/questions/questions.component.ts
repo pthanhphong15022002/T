@@ -1175,54 +1175,14 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
 
   GUID: any;
   generateGuid() {
-    var d = new Date().getTime(); //Timestamp
-    var d2 =
-      (typeof performance !== 'undefined' &&
-        performance.now &&
-        performance.now() * 1000) ||
-      0; //Time in microseconds since page-load or 0 if unsupported
-    this.GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if (d > 0) {
-          //Use timestamp until depleted
-          r = (d + r) % 16 | 0;
-          d = Math.floor(d / 16);
-        } else {
-          //Use microseconds since page-load if supported
-          r = (d2 + r) % 16 | 0;
-          d2 = Math.floor(d2 / 16);
-        }
-        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-      }
-    );
+    this.GUID = this.generateGUID();
   }
 
   generateGUID() {
-    var d = new Date().getTime(); //Timestamp
-    var d2 =
-      (typeof performance !== 'undefined' &&
-        performance.now &&
-        performance.now() * 1000) ||
-      0; //Time in microseconds since page-load or 0 if unsupported
-    var GUID;
-    return (GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if (d > 0) {
-          //Use timestamp until depleted
-          r = (d + r) % 16 | 0;
-          d = Math.floor(d / 16);
-        } else {
-          //Use microseconds since page-load if supported
-          r = (d2 + r) % 16 | 0;
-          d2 = Math.floor(d2 / 16);
-        }
-        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-      }
-    ));
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
   }
 
   addCard(itemActive, seqNoSession = null, category) {
@@ -1413,6 +1373,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.questions[seqNoSession].children[
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
     ].active = true;
+    
     this.itemActive =
       this.questions[seqNoSession].children[
         itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
@@ -1520,7 +1481,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   clickQuestionMF(seqNoSession, itemQuestion, answerType) {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
-    debugger
     if (answerType) {
       this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == answerType)[0];
       var data = this.questions[seqNoSession].children[itemQuestion.seqNo];
@@ -1608,7 +1568,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         data.answers = data.answers.filter(x=>!x.other);
         data.other = false;
       }
-      debugger
       //this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
       this.change.detectChanges();
       this.SVServices.signalSave.next('saving');

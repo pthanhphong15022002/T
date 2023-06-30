@@ -298,10 +298,10 @@
                 (eventClicked)="clickStage($event)"
               >
               </codx-carousel-stage>
-              <ng-container *ngIf="tmpTeps">
+              <ng-container *ngIf="tmpDataSteps">
                 <codx-stages-detail
-                  [dataStep]="tmpTeps"
-                  [showColumnControl]="showColumnControl(tmpTeps.stepID)"
+                  [dataStep]="tmpDataSteps"
+                  [showColumnControl]="showColumnControl(tmpDataSteps.stepID)"
                   [formModel]="formModel"
                   [currentStep]="currentNameStep"
                   [instance]="dataSelect"
@@ -328,7 +328,7 @@
                 dataSelect.write &&
                 !dataSelect.closed &&
                 (dataSelect.status == '1' || dataSelect.status == '2') &&
-                tmpTeps.stepStatus < '2'
+                tmpDataSteps.stepStatus < '2'
               "
               [isCreate]="dataSelect.create"
               [isClosed]="dataSelect.closed" -->

@@ -16,7 +16,6 @@
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
-  (searchChanged)="searchChanged($event)"
   (onLoading)="onLoading($event)"
 ></codx-views>
 
@@ -252,12 +251,30 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
+  <!-- Tooltip -->
   <ng-template #tooltipDealName>
     <div class="text-end text-sm-start">
       <strong>{{ gridViewSetup["DealName"]?.headerText }}</strong
       >: {{ data?.dealName }}
     </div>
   </ng-template>
+  <ng-template #toolTipDealValue>
+    <div class="text-end text-sm-start">
+      <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
+      >: {{ data?.dealValue }}
+    </div>
+  </ng-template>
+  <ng-template #toolTipProbability>
+    <div class="text-end text-sm-start">
+      <strong>{{ gridViewSetup["Probability"]?.headerText }}</strong
+      >: {{ data?.probability }}
+    </div>
+  </ng-template>
+
+
+
+
+
 
   <div class="d-flex flex-column w-100">
     <div class="mb-1">
@@ -285,21 +302,18 @@
         "
       ></span>
     </div>
+
+
     <div class="row mb-1 mx-0">
       <div class="col-5 ps-0 d-flex align-items-center line-clamp line-clamp-1">
         <div
-          [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+          [ngbTooltip]="toolTipDealValue"
           class="pe-1 d-flex align-items-center"
         >
           <span class="icon-monetization_on icon-16 text-warning me-1"></span>
-          <span
-            class="text-nowrap"
-            [innerHTML]="
-              data?.dealValue
-                | formatvalue : view.formModel : 'dealValue'
-                | async
-            "
-          ></span>
+          <span class="text-nowrap">
+            {{data?.dealValue}}
+          </span>
         </div>
         <span
           [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
@@ -313,18 +327,9 @@
           "
         ></span>
       </div>
-      <div class="col-3 d-flex align-items-center">
-        <span class="icon-check_circle icon-16 text-green me-1"></span>
-        <span
-          class="line-clamp-menu"
-          [ngbTooltip]="gridViewSetup['Probability']?.headerText"
-          [innerHTML]="
-            data?.probability
-              | formatvalue : view.formModel : 'probability'
-              | async
-          "
-        ></span
-        ><span *ngIf="data?.probability">%</span>
+      <div class="col-3 d-flex align-items-center" [ngbTooltip]="toolTipProbability">
+        <span class="icon-check_circle icon-16 text-green me-1" ></span>
+        <span >{{data?.probability}}%</span>
       </div>
       <div class="col-4 pe-0 d-flex align-items-center">
         <span class="icon-16 icon-av_timer me-1"></span>
@@ -342,18 +347,12 @@
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
-        <div class="me-2 badge badge-light-primary"></div>
         <div
-          *ngIf="data.status != '1'"
+          *ngIf="data.status == '2'; else statusDefault"
           [ngStyle]="{
-            'background-color':
-              data.status == '3' || data.status == '4'
-                ? colorReasonSuccess?.color
-                : data.status == '5' || data.status == '6'
-                ? colorReasonFail?.color
-                : data?.steps['backgroundColor']
+            'background-color': data?.steps['backgroundColor']
           }"
-          class="me-2 badge badge-sm d-flex align-items-center"
+          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
         >
           <span
             [ngClass]="data?.steps['icon']"
@@ -361,23 +360,25 @@
             class="me-1"
           ></span>
           <span
-            class="menu-title fw-bold line-clamp line-clamp-2"
+            class="text-ellipsis line-clamp line-clamp-1"
             [ngbTooltip]="data?.currentStepName"
             [ngStyle]="{ color: data?.steps['textColor'] }"
             >{{ data?.currentStepName }}</span
           >
         </div>
-        <div *ngIf="data.status == '1'">
-          <codx-vll
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-        </div>
+        <ng-template #statusDefault>
+            <codx-vll
+              [name]="gridViewSetup?.Status?.referedValue"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
+        </ng-template>
+
+
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
             [name]="vllApprove"
@@ -450,3 +451,60 @@
 </ng-template>
 
 <!-- toolip dealName -->
+
+<!--Confirm or Refuse-->
+<ng-template #confirmOrRefuseTemp>
+  <codx-form
+    [headerText]="titleAction"
+    [body]="confirmBody"
+    [footer]="confirmFooter"
+    [dialog]="popupConfirm"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #confirmBody>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="ReturnedCmt"
+          formName="CMLeads"
+          gridViewName="grvCMLeads"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="returnedCmt"
+        formName="CMLeads"
+        gridViewName="grvCMLeads"
+        type="text"
+        [crrValue]="returnedCmt"
+        (valueChange)="valueChangeConfirm($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmFooter>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-2"
+      (click)="popupConfirm.close()"
+    >
+      <codx-label
+        fiedName="lblCancel"
+        [formModel]="view.formModel"
+        default="Hủy"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="saveConfirm()">
+      <codx-label
+        name=" lblSuscess"
+        [formModel]="view.formModel"
+        default="Đồng ý"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

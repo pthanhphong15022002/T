@@ -42,20 +42,36 @@
               <div class="d-flex flex-column">
                 <div class="fw-bold text-dark fs-4">
                   <span
-                    [innerHTML]="
-                      itemSelected?.customerID
-                        | formatvalue : formModel : 'customerID'
-                        | async
-                    "
-                  ></span>
-                </div>
-                <div class="d-flex align-items-center mb-1">
-                  <span
                     class="text-gray-600 line-clamp-menu"
                     [ngbTooltip]="itemSelected?.quotationName"
                     [innerHTML]="
                       itemSelected?.quotationName
                         | formatvalue : formModel : 'quotationName'
+                        | async
+                    "
+                  ></span>
+                  <!-- <span
+                    [innerHTML]="
+                      itemSelected?.customerID
+                        | formatvalue : formModel : 'customerID'
+                        | async
+                    "
+                  ></span> -->
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <!-- <span
+                    class="text-gray-600 line-clamp-menu"
+                    [ngbTooltip]="itemSelected?.quotationName"
+                    [innerHTML]="
+                      itemSelected?.quotationName
+                        | formatvalue : formModel : 'quotationName'
+                        | async
+                    "
+                  ></span> -->
+                  <span
+                    [innerHTML]="
+                      itemSelected?.customerID
+                        | formatvalue : formModel : 'customerID'
                         | async
                     "
                   ></span>
@@ -340,9 +356,8 @@
 
 <ng-template #contract let-data>
   <list-contracts
-    [quotationID]="itemSelected?.recID"
-    [listContract]="listContract"
+    [predicates]="'QuotationID==@0'"
+    [dataValues]="itemSelected?.recID"
     [type]="'quotation'"
-  >
-  </list-contracts>
+  ></list-contracts>
 </ng-template>

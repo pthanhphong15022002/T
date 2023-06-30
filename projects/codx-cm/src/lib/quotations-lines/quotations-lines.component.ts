@@ -63,6 +63,13 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     allowDeleting: true,
     mode: 'Normal',
   };
+  editSettingsView: EditSettingsModel = {
+    allowEditing: false,
+    allowAdding: false,
+    allowDeleting: false,
+    // mode: 'Dialog',
+    mode: 'Normal',
+  };
 
   titleActionLine = '';
   columnsGrid = [];
@@ -317,7 +324,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
         this.objectOut.listQuotationLines = this.listQuotationLines;
         this.objectOut.quotationLinesDeleted = this.quotationLinesDeleted;
         this.eventQuotationLines.emit(this.objectOut);
-        this.changeDetector.detectChanges();
+        this.gridQuationsLines.refresh();
+        // this.changeDetector.detectChanges();
       }
     });
   }
@@ -624,20 +632,20 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     //   }
     // });
   }
-  onAddNew(e) {
-    debugger;
-  }
-
-  onEdit(e) {
-    debugger;
-  }
 
   sum(field) {
     let sum = 0;
     this.listQuotationLines.forEach((e) => {
-      sum += e[field];
+      sum += e[field] ?? 0;
     });
 
     return sum;
+  }
+
+  onAddNew(e) {
+    debugger;
+  }
+  onEdit(e) {
+    debugger;
   }
 }

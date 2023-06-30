@@ -899,11 +899,10 @@ export class StagesDetailComponent implements OnInit {
     }
   }
   onSaveReason() {
-    if(this.listReasonsClick.length > 0 && this.listReasonsClick)
-    {
+    if (this.listReasonsClick.length > 0 && this.listReasonsClick) {
       var data = [
         this.instance.recID,
-          this.dataStep.stepID,
+        this.dataStep.stepID,
         this.listReasonsClick,
       ];
       this.dpService.updateListReason(data).subscribe((res) => {

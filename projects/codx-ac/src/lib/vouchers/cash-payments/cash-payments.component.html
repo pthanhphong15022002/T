@@ -3,18 +3,8 @@
   (selectedChange)="changeItemDetail($event)" [isSubView]="true">
 </codx-views>
 <ng-template #templateMore let-data>
-  <div class="d-flex float-end" style="height: 30px">
-    <codx-mfunc
-      [dataItem]="data"
-      (changeDataMF)="changeDataMF($event, data)" [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      type="view"
-      [isBookMark]="false"
-    ></codx-mfunc>
-  </div>
-  <!-- <div class="has-action-menu" style="height: 30px">
-    <codx-mfunc [dataItem]="data" (c [isBookMark]="true" type="view"></codx-mfunc>
-  </div> -->
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMF($event,data)" [formModel]="view.formModel"
+  (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <ng-template #itemTemplate let-data>
   <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
@@ -85,7 +75,7 @@
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div style="position: relative;z-index: 1000;" class="d-flex align-items-center ac-cashID mt-n8 mb-2">
+    <div style="position: relative;z-index: 1000;width: 50%;" class="d-flex align-items-center ac-cashID mt-n8 mb-2">
       <ejs-tooltip id='tooltip' target="#tipsub" position='BottomRight'>
         <div id="tipsub" [style]="'background-color:' + (itemSelected?.subType | vll : 'AC100' : 'color' | async)"
           class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
@@ -141,7 +131,6 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="d-flex align-items-center">
-        <!-- <img src="../assets/themes/ac/default/img/person.svg" class="w-16px h-16px me-2" /> -->
         <span class="fw-bold me-2">Người nhận tiền: </span>
         <span *ngIf="this.view.funcID == 'ACT0410'" #payee [innerHTML]="
             itemSelected?.payee
@@ -161,12 +150,6 @@
       </div>
     </div>
     <div class="d-flex align-items-top mb-1">
-      <!-- <img src="../assets/themes/ac/default/img/financial-book.svg" class="w-16px h-16px me-2" /> -->
-      <!-- <span class="fw-bold text-nowrap me-2">{{'1'| vll : 'AC091' : 'text' | async}}: </span>
-      <span #cashBookID class="text-gray-600"
-        [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
-      <span class="text-gray-600"
-        *ngIf="itemSelected?.cashBookID != '' && itemSelected?.cashBookID != null">&nbsp;-&nbsp;{{cashbookName}}</span> -->
       <span class="fw-bold text-nowrap me-2">{{'1'| vll : 'AC091' : 'text' | async}}: </span>
       <span class="text-gray-600">{{itemSelected?.cashBookID}}</span>
       &nbsp;-&nbsp;
@@ -174,7 +157,6 @@
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
     </div>
     <div class="d-flex align-items-top mb-1">
-      <!-- <img src="../assets/themes/ac/default/img/payment.svg" class="w-16px h-16px me-2" /> -->
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
       </codx-label>
       <span #reasonID class="text-gray-600" [innerHTML]="
@@ -185,26 +167,22 @@
               : reasonID
             | async
         "></span>
-      <!-- <span class="text-gray-600"
-        *ngIf="itemSelected?.reasonID != '' && itemSelected?.reasonID != null">{{reasonName}}</span> -->
     </div>
     <div class="d-flex align-items-top mb-1">
-      <!-- <span class="icon-brush icon-16 me-2"></span> -->
-      <!-- <img src="../assets/themes/ac/default/img/notes.svg" class="w-16px h-16px me-2" /> -->
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
-      <span id="dots" #memo class="text-gray-600 line-clamp line-clamp-1 me-3" [innerHTML]="
+      <ejs-tooltip id='tooltip' target="#tipmemo">
+        <span id="tipmemo" #memo class="text-gray-600 line-clamp line-clamp-1 me-3" [innerHTML]="
           itemSelected?.memo
             | formatvalue : view.formModel : 'memo' : memo
             | async
         "></span>
-      <!-- <div *ngIf="isRead" style="font-style: italic;color: var(--primary-dark);cursor: pointer;" class="b text-start">
-          <codx-label class="text-nowrap" default="Xem thêm" fiedName="lblMemo" [formModel]="view.formModel">
-          </codx-label>
-        </div> -->
+        <ng-template #content>
+          <span id="tipmemo">{{itemSelected?.memo}}</span>
+        </ng-template>
+      </ejs-tooltip>
     </div>
     <div class="d-flex align-items-top mb-1">
-      <!-- <img src="../assets/themes/ac/default/img/notes.svg" class="w-16px h-16px me-2" /> -->
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="refDocs" [formModel]="view.formModel">
       </codx-label>
       <span #refDocs class="text-gray-600" [innerHTML]="

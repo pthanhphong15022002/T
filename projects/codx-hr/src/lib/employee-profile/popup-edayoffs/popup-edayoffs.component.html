@@ -244,6 +244,7 @@
           [formModel]="formModel"
           [Group]="formGroup"
           [showSpinButton]="false"
+          (valueChange)="calTotalDayoff($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -278,7 +279,7 @@
       ></codx-input>
     </div>
 
-    <div class="row mt-5 mb-1">
+    <div class="row mt-5 mb-1" *ngIf="showInfoDayoffType == true">
       <codx-label
         class="fw-bold text-primary fs-5"
         default="THÔNG TIN LOẠI NGHỈ CHẾ ĐỘ"
@@ -479,7 +480,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row" *ngIf="showInfoDayoffType == true">
       <codx-label fiedName="RegimeNote" [formModel]="formModel"></codx-label>
       <codx-input
         field="regimeNote"

@@ -93,7 +93,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -103,7 +102,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.templateItemDetailRight,

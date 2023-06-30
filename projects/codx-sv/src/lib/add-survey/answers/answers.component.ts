@@ -285,7 +285,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     var count = 0 ;
     if(answers && answers.length > 0) 
     var listAnswers =  answers.filter(x=>x.answer);
-    if(listAnswers.length > 0)
+    if(listAnswers && listAnswers.length > 0)
       listAnswers.forEach(elm => {
         count = count + elm.count;
       });
@@ -299,6 +299,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       case "C":
       case "T":
       case "T2":
+      case "R":
         {
           switch(properties)
           {
@@ -398,6 +399,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     }
     return null;
   }
+  
   formatValueDate(data:any)
   {
     if(moment(data, moment.ISO_8601, true).isValid()) return moment(data).format('DD/MM/YYYY');
