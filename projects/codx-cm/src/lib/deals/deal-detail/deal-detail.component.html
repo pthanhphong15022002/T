@@ -100,7 +100,7 @@
                     class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
                   ></span>
                   <span
-                    class="fw-bold line-clamp-menu"
+                    class="fw-bold line-clamp-menu pe-1"
                     *ngIf="dataSelected?.dealValue; else defaultNull"
                     #dealValue
                     [innerHTML]="
@@ -109,6 +109,18 @@
                         | async
                     "
                   ></span>
+                  <span
+                  [ngClass]="dataSelected?.currencyID ? '' : 'line-clamp-menu'"
+                  class="text-gray-700"
+                  [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+                  #currencyID
+                  [innerHTML]="
+                  dataSelected?.currencyID
+                      | formatvalue : formModel : 'currencyID'
+                      | async
+                  "
+                ></span>
+
                 </div>
                 <div
                   class="d-flex align-items-top justify-content-end ps-10 fs-4"

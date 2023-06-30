@@ -526,7 +526,9 @@ export class DealsComponent
     var functionMappings;
     var isDisabled = (eventItem, data) => {
       if (
-        (data.closed &&  data.status != '1' ) ||  data.status == '1' ||  this.checkMoreReason(data)
+        (data.closed && data.status != '1') ||
+        data.status == '1' ||
+        this.checkMoreReason(data)
       ) {
         eventItem.disabled = true;
       }
@@ -547,20 +549,18 @@ export class DealsComponent
       }
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled =
-        data.closed ||  ['0','1'].includes(data.status)
-        this.checkMoreReason(data);
+      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
+      this.checkMoreReason(data);
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled =
-        !data.closed ||  ['1'].includes(data.status)
-        this.checkMoreReason(data);
+      eventItem.disabled = !data.closed || ['1'].includes(data.status);
+      this.checkMoreReason(data);
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled =   !['1'].includes(data.status)
+      eventItem.disabled = !['1'].includes(data.status);
     };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1','2'].includes(data.status);
+      eventItem.disabled = !['1', '2'].includes(data.status);
     };
     var isConfirmOrRefuse = (eventItem, data) => {
       eventItem.disabled = data.status != '0';
@@ -1612,11 +1612,11 @@ export class DealsComponent
   onLoading(e) {
     if (!this.funCrr) return;
     //reload filter
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funCrr != this.funcID) {
-      this.view.pinedFilter.filters = [];
-      this.view.dataService.filter.filters = [];
-    }
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (this.funCrr != this.funcID) {
+    //   this.view.pinedFilter.filters = [];
+    //   this.view.dataService.filter.filters = [];
+    // }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -1682,7 +1682,7 @@ export class DealsComponent
               .confirmOrRefuse(data?.recID, check, '')
               .subscribe((res) => {
                 if (res) {
-                  this.dataSelected.status = '3';
+                  this.dataSelected.status = '1';
                   this.detailViewDeal.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );

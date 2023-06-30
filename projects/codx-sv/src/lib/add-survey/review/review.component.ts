@@ -511,6 +511,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
     });
     let respondQuestion: any = [];
     var check = false;
+    debugger
     lstAnswers.forEach((x) => {
       if (x.answerType) {
         let respondResult: any = [];
