@@ -28,7 +28,16 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    if(changes.listTab || changes.change){
+    if(changes.listTab ){
+      this.listTaskConvert = this.listTab.map((item) => {
+        return {...item, isActive: false}
+      })
+      this.listTaskConvert[0].isActive = true;
+      this.tabOld = this.listTaskConvert[0];
+      this.tab.emit(this.listTaskConvert[0].name); 
+    }
+
+    if(changes.change){
       if(this.isStart){
         this.listTaskConvert = this.listTab.map((item) => {
           return {...item, isActive: false}
