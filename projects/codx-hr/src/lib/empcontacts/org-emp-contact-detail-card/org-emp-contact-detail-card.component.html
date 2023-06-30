@@ -10,7 +10,6 @@
         </codx-card-center>
     </div>
     <ng-container  *ngTemplateOutlet="noData">
-
     </ng-container>
 </div>
 
@@ -31,6 +30,10 @@
 
 <ng-template #noData>
     <span *ngIf="lstData.length <= 0 && !onloading" class="text-gray-700 mt-5">
-        No data loaded
+        <div class="d-flex ms-1">
+            <span class="text-gray-500 fw-bold">
+                {{ "SYS011" | mssg | async }}
+            </span>
+        </div>
     </span> 
 </ng-template>

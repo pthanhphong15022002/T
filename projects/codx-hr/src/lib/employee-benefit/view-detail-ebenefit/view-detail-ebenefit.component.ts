@@ -9,9 +9,12 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { isObservable } from 'rxjs';
 import { AuthStore, FormModel, ViewsComponent } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-view-detail-ebenefit',
@@ -22,7 +25,9 @@ export class ViewDetailEbenefitComponent implements OnInit {
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {}
 
   @ViewChild('attachment') attachment;
@@ -91,7 +96,22 @@ export class ViewDetailEbenefitComponent implements OnInit {
   }
 
   changeDataMF(e: any, data: any) {
-    this.hrService.handleShowHideMF(e, data, this.view);
+    this.hrService.handleShowHideMF(e, data, this.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   clickMF(evt: any, data: any = null) {

@@ -348,21 +348,6 @@
             </td>
           </tr>
         </tbody>
-        <tfoot *ngIf="inventoryJournalLines.length > 0" class="bg-light" style="position: sticky;
-          bottom: 0;">
-          <td></td>
-          <td>
-            <div class="d-flex align-items-center">
-              <span class="fw-bold line-clamp line-clamp-1">{{totalQuantity.toLocaleString('it-IT')}}</span>
-            </div>
-          </td>
-          <td></td>
-          <td>
-            <div class="d-flex align-items-center">
-              <span class="fw-bold line-clamp line-clamp-1">{{totalAmt.toLocaleString('it-IT')}}</span>
-            </div>
-          </td>
-        </tfoot>
       </table>
       <div *ngIf="inventoryJournalLines.length == 0" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100 mt-20">
@@ -375,5 +360,27 @@
         </div>
       </div>
     </div>
+    <table style="table-layout: fixed;border: 1px solid var(--bs-border-color) !important;" class="table mb-0">
+      <tfoot class="bg-light" style="position: sticky;
+        bottom: 0;">
+        <td class="w-50 min-w-350px bg-gray-100"></td>
+        <td class="min-w-100px bg-gray-100">
+          <div class="d-flex align-items-center">
+            <span *ngIf="inventoryJournalLines.length > 0" class="fw-bold line-clamp line-clamp-1">
+              {{totalQuantity.toLocaleString('it-IT')}}</span>
+            <span *ngIf="inventoryJournalLines.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
+          </div>
+        </td>
+        <td class="min-w-125px"></td>
+        <td class="min-w-125px bg-gray-100">
+          <div class="d-flex align-items-center">
+            <span *ngIf="inventoryJournalLines.length > 0" class="fw-bold line-clamp line-clamp-1">
+              {{totalAmt.toLocaleString('it-IT')}}
+            </span>
+            <span *ngIf="inventoryJournalLines.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
+          </div>
+        </td>
+      </tfoot>
+    </table>
   </ng-container>
 </ng-template>

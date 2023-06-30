@@ -105,11 +105,6 @@ export class EmployeeDayOffComponent extends UIComponent {
 
   onInit() {
     this.GetGvSetup();
-    // this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
-    //   if (res) {
-    //     this.grvSetup = res;
-    //   }
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -277,7 +272,7 @@ export class EmployeeDayOffComponent extends UIComponent {
         }
         this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
+      // if (res?.event) this.view.dataService.clear();
     });
   }
   addDayOff(event) {

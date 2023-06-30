@@ -796,7 +796,7 @@ export class CodxDpService {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
-      'MoveStageInDealAsync',
+      'GetMoveStageInDealAsync',
       data
     );
   }
