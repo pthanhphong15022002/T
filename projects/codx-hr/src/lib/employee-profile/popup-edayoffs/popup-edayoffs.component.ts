@@ -31,6 +31,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   lstPregnantType;
   dayoffObj: any;
+  showInfoDayoffType = false;
   //lstDayoffs: any;
   idField = 'RecID';
   successFlag = false;
@@ -224,6 +225,11 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         // else this.notify.notifyCode('SYS021');
       });
     }
+  }
+
+  calTotalDayoff(evt){
+    this.dayoffObj.totalDaysOff = evt.data - this.dayoffObj.totalSubDays;
+    this.formGroup.patchValue({totalDaysOff: this.dayoffObj.totalDaysOff})
   }
 
   HandlePregnantTypeChange(e, pregnantType) {
@@ -420,10 +426,16 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
   checkViewKowTyeGroup() {
     if (this.dayoffObj['kowID']) {
+      this.showInfoDayoffType = false;
       for (let i in this.groupKowTypeView) {
-        this.groupKowTypeView[i].isShow = this.groupKowTypeView[
-          i
-        ].value.includes(this.dayoffObj['kowID']);
+        if(this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID'])){
+          this.groupKowTypeView[i].isShow = true;
+          this.showInfoDayoffType = true;
+        }
+
+        // this.groupKowTypeView[i].isShow = this.groupKowTypeView[
+        //   i
+        // ].value.includes(this.dayoffObj['kowID']);
       }
     } else this.getGroupKowTypeView();
   }

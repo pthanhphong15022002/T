@@ -30,7 +30,6 @@ export class EmpContactsComponent extends UIComponent {
   dataValue = '90';
   columnsGrid = [];
   @ViewChild('chartOrg') chartOrg: CodxListviewComponent;
-  @ViewChild('employList') employList: CodxListviewComponent;
   isShowTree = true;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
@@ -126,7 +125,7 @@ export class EmpContactsComponent extends UIComponent {
     this.request.service = 'HR';
     this.request.assemblyName = 'ERM.Business.HR';
     this.request.className = 'EmployeesBusiness';
-    this.request.method = 'GetModelFormEmployAsyncNew';
+    this.request.method = 'GetListEmployeeAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
     this.request.idField = 'orgUnitID';
@@ -135,7 +134,6 @@ export class EmpContactsComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.grid,
-        active: false,
         sameData: true,
         model: {
           resources: this.columnsGrid,
@@ -145,7 +143,6 @@ export class EmpContactsComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.card,
-        active: true,
         sameData: true,
         model: {
           template: this.cardTemp,
@@ -154,9 +151,7 @@ export class EmpContactsComponent extends UIComponent {
       {
         id: '3',
         type: ViewType.tree_list,
-        active: false,
-        sameData: true,
-        //request: this.request,
+        request: this.request,
         model: {
           resizable: true,
           template: this.tmpTree,
@@ -167,7 +162,6 @@ export class EmpContactsComponent extends UIComponent {
       {
         id: '4',
         type: ViewType.tree_card,
-        active: false,
         sameData: false,
         request: this.request,
         model: {
@@ -216,61 +210,6 @@ export class EmpContactsComponent extends UIComponent {
       this.chartOrg.onChangeSearch();
     }
   }
-  searchEmp($event) {
-    this.employList.searchText = $event;
-    this.employList.onChangeSearch();
-  }
-  async onSelectionChanged($event) {
-    await this.setEmployeePredicate($event.dataItem.orgUnitID);
-    this.employList.onChangeSearch();
-  }
-
-  setEmployeePredicate(orgUnitID): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.loadEOrgChartListChild(orgUnitID)
-        .pipe()
-        .subscribe((response) => {
-          if (response) {
-            var v = '';
-            var p = '';
-            for (let index = 0; index < response.length; index++) {
-              const element = response[index];
-              if (v != '') v = v + ';';
-              if (p != '') p = p + '||';
-              v = v + element;
-              p = p + 'OrgUnitID==@' + index.toString();
-            }
-            this.employList.predicate = p;
-            this.employList.dataValue = v;
-          }
-          resolve('');
-        });
-    });
-  }
-
-  loadEOrgChartListChild(orgUnitID): Observable<any> {
-    return this.api
-      .call(
-        'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
-        'GetOrgChartListChildAsync',
-        orgUnitID
-      )
-      .pipe(
-        map((data: any) => {
-          if (data.error) return;
-          return data.msgBodyData[0];
-        }),
-        catchError((err) => {
-          return of(undefined);
-        }),
-        finalize(() => null)
-      );
-  }
-
-  changeView(evt: any) { }
-
-  requestEnded(evt: any) { }
 
   placeholder(field: string) {
     var headerText = this.grvSetup[field].headerText as string;

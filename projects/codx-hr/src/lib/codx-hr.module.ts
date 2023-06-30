@@ -127,184 +127,185 @@ import { EmployeePolicyalComponent } from './employee-policyal/employee-policyal
 import { PopupPolicyalComponent } from './employee-policyal/popup-policyal/popup-policyal.component';
 import { EmployeePolicybenefitsComponent } from './employee-policybenefits/employee-policybenefits.component';
 import { PopupPolicybenefitsComponent } from './employee-policybenefits/popup-policybenefits/popup-policybenefits.component';
+// import { BasicPrimitivesModule } from 'ngx-basic-primitives';
 import { OrgEmpContactDetailCardComponent } from './empcontacts/org-emp-contact-detail-card/org-emp-contact-detail-card.component';
 import { EmployeeListByOrgComponent } from './employee-list/employee-list-by-org/employee-list-by-org.component';
+import { PopupUpdateStatusComponent } from './employee-list/popup-update-status/popup-update-status.component';
 export const routes: Routes = [
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
       {
-        path: '',
-        component: LayoutNoAsideComponent,
-        children: [
-          {
-            path: 'contactbook/:funcID',
-            component: EmpContactsComponent,
-          },
-        ],
+        path: 'contactbook/:funcID',
+        component: EmpContactsComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'empinfosub/:funcID',
+        // component: EmployeeInfomationComponent,
+        component: EmployeeInfoDetailComponent,
       },
       {
-        path: '',
-        component: LayoutOnlyHeaderComponent,
-        children: [
-          {
-            path: 'empinfosub/:funcID',
-            // component: EmployeeInfomationComponent,
-            component: EmployeeInfoDetailComponent,
+        path: 'employeedetail/:funcID',
+        component: EmployeeInfoDetailComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      // {
+      //   path: 'contactbook/:funcID',
+      //   component: EmpContactsComponent,
+      // },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
+      {
+        path: 'orgchart/:funcID',
+        data: { noReuse: true },
+        component: OrgorganizationComponent,
+      },
+      {
+        path: 'employee/:funcID',
+        data: { noReuse: true },
+        component: EmployeesComponent,
+      },
+      {
+        path: 'employeelist/:funcID',
+        data: { noReuse: true },
+        component: EmployeeListComponent,
+      },
+      {
+        path: 'reportingline/:funcID',
+        data: { noReuse: true },
+        component: ReportinglineComponent,
+      },
+      {
+        path: 'econtracts/:funcID',
+        component: EmployeeContractComponent,
+      },
+      {
+        path: 'ebasicsalaries/:funcID',
+        component: EmployeeBasicSalaryComponent,
+      },
+      {
+        path: 'ejobsalaries/:funcID',
+        component: EmployeeJobSalaryComponent,
+      },
+      {
+        path: 'eawards/:funcID',
+        component: EmployeeAwardsComponent,
+      },
+      {
+        path: 'edisciplines/:funcID',
+        component: EmployeeDisciplineComponent,
+      },
+      {
+        path: 'ebenefits/:funcID',
+        component: EmployeeBenefitComponent,
+      },
+      {
+        path: 'ebusinesstravels/:funcID',
+        component: EmployeeBusinessTravelComponent,
+      },
+      {
+        path: 'edayoffs/:funcID',
+        component: EmployeeDayOffComponent,
+      },
+      {
+        path: 'eappointions/:funcID',
+        component: EmployeeAppointionsComponent,
+      },
+      {
+        path: 'policygeneral/:funcID',
+        component: EmployeePolicygenernalComponent,
+      },
+      {
+        path: 'policyal/:funcID',
+        component: EmployeePolicyalComponent,
+      },
+      {
+        path: 'policybenefits/:funcID',
+        component: EmployeePolicybenefitsComponent,
+      },
+      // {
+      //   path: 'employeeinfomation/:funcID',
+      //   component: EmployeeInfomationComponent,
+      // },
+      {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-hr/src/lib/codx-approvel.module').then(
+            (m) => m.CodxApprovelModule
+          ),
+        data: { noReuse: true },
+      },
 
-          },
-          {
-            path: 'employeedetail/:funcID',
-            component: EmployeeInfoDetailComponent,
-          },
-        ],
-      },
       {
-        path: '',
-        component: LayoutComponent,
+        path: 'setting',
+        component: HRParametersComponent,
         children: [
-          // {
-          //   path: 'contactbook/:funcID',
-          //   component: EmpContactsComponent,
-          // },
           {
-            path: 'report/:funcID',
-            component: CodxReportViewsComponent,
+            path: ':funcID',
+            component: HomeHrparametersComponent,
           },
           {
-            path: 'report/detail/:funcID',
-            component: CodxReportViewDetailComponent,
+            path: 'certificate/:funcID',
+            component: CertificatesComponent,
           },
           {
-            path: 'orgchart/:funcID',
-            data: { noReuse: true },
-            component: OrgorganizationComponent,
+            path: 'nationality/:funcID',
+            component: NationalitiesComponent,
           },
           {
-            path: 'employee/:funcID',
-            data: { noReuse: true },
-            component: EmployeesComponent,
+            path: 'country/:funcID',
+            component: CountriesComponent,
           },
           {
-            path: 'employeelist/:funcID',
-            data: { noReuse: true },
-            component: EmployeeListComponent,
+            path: 'province/:funcID',
+            component: ProvincesComponent,
           },
           {
-            path: 'reportingline/:funcID',
-            data: { noReuse: true },
-            component: ReportinglineComponent,
+            path: 'district/:funcID',
+            component: DistrictsComponent,
           },
           {
-            path: 'econtracts/:funcID',
-            component: EmployeeContractComponent,
+            path: 'competence/:funcID',
+            component: CompetencesComponent,
           },
           {
-            path: 'ebasicsalaries/:funcID',
-            component: EmployeeBasicSalaryComponent,
+            path: 'education/:funcID',
+            component: EducationsComponent,
           },
           {
-            path: 'ejobsalaries/:funcID',
-            component: EmployeeJobSalaryComponent,
+            path: 'organization/:funcID',
+            component: OrganizationsComponent,
           },
           {
-            path: 'eawards/:funcID',
-            component: EmployeeAwardsComponent,
+            path: 'religions/:funcID',
+            component: ReligionsComponent,
           },
           {
-            path: 'edisciplines/:funcID',
-            component: EmployeeDisciplineComponent,
-          },
-          {            
-            path: 'ebenefits/:funcID',
-            component: EmployeeBenefitComponent,
-          },
-          {            
-            path: 'ebusinesstravels/:funcID',
-            component: EmployeeBusinessTravelComponent,
-          },
-          {
-            path: 'edayoffs/:funcID',
-            component: EmployeeDayOffComponent
-          },
-          {
-            path: 'eappointions/:funcID',
-            component: EmployeeAppointionsComponent
-          },
-          {
-            path: 'policygeneral/:funcID',
-            component: EmployeePolicygenernalComponent
-          },
-          {
-            path: 'policyal/:funcID',
-            component: EmployeePolicyalComponent
-          },
-          {
-            path: 'policybenefits/:funcID',
-            component: EmployeePolicybenefitsComponent
-          },
-          // {
-          //   path: 'employeeinfomation/:funcID',
-          //   component: EmployeeInfomationComponent,
-          // },
-          {
-            path: 'approvals/:funcID',
-            loadChildren: () =>
-              import('projects/codx-hr/src/lib/codx-approvel.module').then(
-                (m) => m.CodxApprovelModule
-              ),
-            data: { noReuse: true },
-          },
-
-          {
-            path: 'setting',
-            component: HRParametersComponent,
-            children: [
-              {
-                path: ':funcID',
-                component: HomeHrparametersComponent,
-              },
-              {
-                path: 'certificate/:funcID',
-                component: CertificatesComponent,
-              },
-              {
-                path: 'nationality/:funcID',
-                component: NationalitiesComponent,
-              },
-              {
-                path: 'country/:funcID',
-                component: CountriesComponent,
-              },
-              {
-                path: 'province/:funcID',
-                component: ProvincesComponent,
-              },
-              {
-                path: 'district/:funcID',
-                component: DistrictsComponent,
-              },
-              {
-                path: 'competence/:funcID',
-                component: CompetencesComponent,
-              },
-              {
-                path: 'education/:funcID',
-                component: EducationsComponent,
-              },
-              {
-                path: 'organization/:funcID',
-                component: OrganizationsComponent,
-              },
-              {
-                path: 'religions/:funcID',
-                component: ReligionsComponent,
-              },
-              {
-                path: 'ethnicgroups/:funcID',
-                component: EthnicGroupsComponent,
-              },
-            ],
+            path: 'ethnicgroups/:funcID',
+            component: EthnicGroupsComponent,
           },
         ],
       },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -415,7 +416,8 @@ const T_Component: Type<any>[] = [
   EmployeePolicybenefitsComponent,
   PopupPolicybenefitsComponent,
   OrgEmpContactDetailCardComponent,
-  EmployeeListByOrgComponent
+  EmployeeListByOrgComponent,
+  PopupUpdateStatusComponent
 ];
 @NgModule({
   imports: [
@@ -431,6 +433,7 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     DiagramAllModule,
     NgbModule,
+    //BasicPrimitivesModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,

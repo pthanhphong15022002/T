@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { isObservable } from 'rxjs';
 import {
   ButtonModel,
   DialogRef,
@@ -20,6 +21,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-employee-benefit.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -47,6 +49,8 @@ export class EmployeeBenefitComponent extends UIComponent {
 
   //Object data
   currentEmpObj: any = null;
+  runModeCheck: boolean = false;
+  flagChangeMF: boolean = false;
 
   //More function
   @ViewChild('templateUpdateStatus', { static: true })
@@ -74,7 +78,8 @@ export class EmployeeBenefitComponent extends UIComponent {
     private activedRouter: ActivatedRoute,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private codxODService: CodxOdService
   ) {
     super(inject);
   }
@@ -98,7 +103,6 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -108,7 +112,6 @@ export class EmployeeBenefitComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
@@ -211,7 +214,7 @@ export class EmployeeBenefitComponent extends UIComponent {
               this.view.formModel.entityName,
               this.view.formModel.funcID,
               '',
-              'Phụ cấp - ' + this.itemDetail.decisionNo ,
+              'Phụ cấp - ' + this.itemDetail.decisionNo,
               ''
             )
             .subscribe((result) => {
@@ -302,6 +305,19 @@ export class EmployeeBenefitComponent extends UIComponent {
         this.copyValue(event.text, this.currentEmpObj);
         this.df.detectChanges();
         break;
+
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.df.detectChanges();
+        break;
+      }
     }
   }
 
@@ -315,9 +331,33 @@ export class EmployeeBenefitComponent extends UIComponent {
     });
   }
 
-  changeDataMF(event, data): void {
-    this.hrService.handleShowHideMF(event, data, this.view);
+  changeDataMF(event, data) {
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    this.flagChangeMF = true;
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
   }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    }
+    //  else {
+    //   this.hrService.handleShowHideMF(event, data, this.view.formModel);
+    // }
+  }
+
+  // changeDataMF(event, data): void {
+  //   this.hrService.handleShowHideMF(event, data, this.view);
+  // }
 
   //Open, push data to modal add, update
   HandleEBenefit(actionHeaderText, actionType: string, data: any) {

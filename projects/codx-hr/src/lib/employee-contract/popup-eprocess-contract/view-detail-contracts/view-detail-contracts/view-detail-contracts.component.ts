@@ -129,14 +129,6 @@ export class ViewDetailContractsComponent implements OnInit {
   changeDataMF(e: any, data: any) {
     this.hrService.handleShowHideMF(e, data, this.formModel);
 
-    // this.hrService
-    //   .getFunctionList(this.contractFuncID)
-    //   .subscribe((res: any[]) => {
-    //     if (res[0].runMode == '1') {
-    //       this.shareService.changeMFApproval(e, data);
-    //     }
-    //   });
-
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
     );
@@ -149,7 +141,7 @@ export class ViewDetailContractsComponent implements OnInit {
 
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
-      this.shareService.changeMFApproval(e, data);
+      this.shareService.changeMFApproval(e, data?.unbounds);
     }
   }
   // clickMF(val: any, datas: any = null){

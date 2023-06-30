@@ -1,15 +1,15 @@
 <codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader" [body]="body"
   [footer]="footer" [data]="data" [formModel]="dialog.formModel" [dialog]="dialog">
   <ng-template #subHeader>
-    <div class="d-flex">
+    <div class="w-100 d-flex align-items-center">
       <div class="symbol symbol-circle symbol-30px symbol-vllicon">
         <codx-input class="" type="vllicon" refValue="L1470" field="icon" [crrValue]="data?.icon"
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
 
-      <div class="ms-4">
-        <codx-input class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false" [crrValue]="data?.color"
+      <div class="ms-2">
+        <codx-input type="colorpicker" [showText]="false" [modeSwitcher]="false" [crrValue]="data?.color"
           field="color" (valueChange)="valueChange($event)">
         </codx-input>
       </div>

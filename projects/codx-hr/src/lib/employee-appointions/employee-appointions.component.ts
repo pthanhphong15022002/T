@@ -20,6 +20,8 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEappointionsComponent } from '../employee-profile/popup-eappointions/popup-eappointions.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-employee-appointions',
@@ -54,6 +56,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
   processID;
   cmtStatus: string = '';
   genderGrvSetup: any;
+  flagChangeMF: boolean = false;
+  runModeCheck: boolean = false;
 
   //#region more functions
   actionAddNew = 'HRTPro02A01';
@@ -71,6 +75,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
     private notify: NotificationsService,
     private activatedRoute: ActivatedRoute,
     private codxShareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {
     super(inject);
   }
@@ -95,7 +100,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.templateList,
@@ -106,7 +110,6 @@ export class EmployeeAppointionsComponent extends UIComponent {
         id: '2',
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
         model: {
           template: this.templateListDetail,
           panelRightRef: this.panelRightListDetail,
@@ -254,7 +257,9 @@ export class EmployeeAppointionsComponent extends UIComponent {
               this.view.formModel.entityName,
               this.view.formModel.funcID,
               '',
-              this.view.function.description +' - ' +this.itemDetail.decisionNo ,
+              this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo,
               ''
             )
             .subscribe((result) => {
@@ -349,6 +354,19 @@ export class EmployeeAppointionsComponent extends UIComponent {
         this.CopyValue(event.text, this.currentEmpObj);
         this.df.detectChanges();
         break;
+
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.df.detectChanges();
+        break;
+      }
     }
   }
 
@@ -361,8 +379,25 @@ export class EmployeeAppointionsComponent extends UIComponent {
       );
     });
   }
-  ChangeDataMF(event, data) { 
+  ChangeDataMF(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    this.flagChangeMF = true;
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   //#endregion

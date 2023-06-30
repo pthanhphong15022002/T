@@ -1266,6 +1266,12 @@ export class InstancesComponent
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
+                this.detailViewInstance.loadChangeData();
+              }
+              if (this.detailViewPopup) {
+                this.detailViewPopup.dataSelect = this.dataSelected;
+                this.detailViewPopup.listSteps = this.listStepInstances;
+                this.detailViewPopup.loadChangeData();
               }
 
               this.detectorRef.detectChanges();
@@ -1539,6 +1545,11 @@ export class InstancesComponent
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
 
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
+        }
+
         this.detectorRef.detectChanges();
       } else {
         if (this.kanban) {
@@ -1747,11 +1758,10 @@ export class InstancesComponent
     if (this.filterInstancePredicates)
       this.filterInstancePredicates =
         '( ' + this.filterInstancePredicates + ' )';
-    (this.view.dataService as CRUDService)
-      .setPredicates(
-        [this.filterInstancePredicates],
-        [this.dataValueFilterArr.join(';')]
-      );
+    (this.view.dataService as CRUDService).setPredicates(
+      [this.filterInstancePredicates],
+      [this.dataValueFilterArr.join(';')]
+    );
 
     //kanaban chua loc dc
     // if (this.kanban) {

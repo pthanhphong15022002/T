@@ -73,7 +73,9 @@ export class CodxReportViewDetailComponent
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.pageTitle.setSubTitle('');
+  }
   ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit(): void {

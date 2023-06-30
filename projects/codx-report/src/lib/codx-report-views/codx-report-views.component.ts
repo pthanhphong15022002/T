@@ -57,8 +57,8 @@ export class CodxReportViewsComponent
       if (res) {
         this.funcItem = res;
         this.module = res.module ? res.module.toLowerCase() : '';
-        this.pageTitle.setRootNode('');
-        //this.pageTitle.setChildren([]);
+        this.pageTitle.setSubTitle('');
+        this.pageTitle.setChildren([]);
       }
     });
   }
@@ -101,7 +101,7 @@ export class CodxReportViewsComponent
   }
   viewChanged(e: any) {
     this.funcID = this.router.snapshot.params['funcID'];
-    this.pageTitle.setRootNode('');
+    this.pageTitle.setSubTitle('');
     //this.pageTitle.setTitle(this.funcItem.customName ? this.funcItem.customName : "" );
   }
   onActions(e: any) {

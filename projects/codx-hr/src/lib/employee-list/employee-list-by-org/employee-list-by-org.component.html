@@ -1,9 +1,10 @@
-<div class="container mt-2 h-100">
+<div class="container mt-2 h-100 w-100">
     <ng-container *ngIf="showManager">
         <div class="d-flex align-items-top p-3">
             <div class="me-5">
-                <codx-img [width]="50" [objectId]="manager?.employeeID ? manager?.employeeID : ''"
-                    [objectName]="manager?.employeeName ? manager?.employeeName : ''" [objectType]="'HR_Employees'" [imageType]="'circle'">
+                <codx-img #empAvatar [width]="50" [objectId]="manager?.employeeID ? manager?.employeeID : ''"
+                    [objectName]="manager?.employeeName ? manager?.employeeName : ''" [objectType]="'HR_Employees'"
+                    [imageType]="'circle'">
                 </codx-img>
             </div>
             <div class="d-flex align-items-top w-100 justify-content-between">
@@ -18,14 +19,16 @@
                     </div>
                     <div class="mb-1">
                         <ng-container *ngIf="manager?.positionID; else lblPositionName">
-                            <span class="text-gray-500">{{manager.positionName? manager.positionName: manager.positionID}}</span>
+                            <span class="text-gray-500">{{manager.positionName? manager.positionName:
+                                manager.positionID}}</span>
                         </ng-container>
                         <ng-template #lblPositionName>
                             <span class="place-holder">{{grvSetup['PositionID']?.headerText}}</span>
                         </ng-template>
                         <span class="ms-2 me-2 text-gray-500">|</span>
                         <ng-container *ngIf="manager?.orgUnitID; else lblOrgUnitName">
-                            <span class="text-gray-700">{{manager.orgUnitName? manager.orgUnitName: manager.orgUnitID}}</span>
+                            <span class="text-gray-700">{{manager.orgUnitName? manager.orgUnitName:
+                                manager.orgUnitID}}</span>
                         </ng-container>
                         <ng-template #lblOrgUnitName>
                             <span class="place-holder"> {{grvSetup['OrgUnitID']?.headerText}}</span>
@@ -56,7 +59,7 @@
         </div>
     </ng-container>
 
-    <div class="h-100 org-gridview">
+    <div *ngIf="columnsGrid" class="h-100 org-gridview">
         <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="'HR'"
             [entityName]="'HR_Employees'" assemblyName="ERM.Business.HR" [className]="'EmployeesBusiness'"
             [hideMoreFunc]="true" [method]="'GetEmployeeListByOrgUnitIDGridView'" [dataValues]="orgUnitID"
@@ -115,12 +118,19 @@
     </ng-template>
 </ng-template>
 <ng-template #templateStatus let-item>
-    <div>
+    <div class="d-flex align-items-center has-action-menu">
         <ng-container *ngIf="item.status">
             <codx-vll [formModel]="formModel" [classList]="'badge badge-sm badge-inline'" [name]="'HR003'"
                 [value]="item.status" [showText]="true" [showBgColor]="true">
             </codx-vll>
         </ng-container>
+        <div class="align-self-center" *ngIf="editable">
+            <div style="height: 40px">
+              <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, item)"
+                (changeDataMF)="clickMF($event, item)" [dataItem]="item" type="hover">
+              </codx-mfunc>
+            </div>
+          </div>
     </div>
 </ng-template>
 <ng-template #emptyDataTemplate>

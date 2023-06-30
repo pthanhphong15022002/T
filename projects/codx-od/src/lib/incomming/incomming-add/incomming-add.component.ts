@@ -74,7 +74,8 @@ export class IncommingAddComponent implements OnInit {
   agencyName:any;
   referType = 'source';
   keyField = false; //Kiểm tra số công văn tự động
-  fileModule:any
+  fileModule:any;
+  crrAgencies:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -156,8 +157,9 @@ export class IncommingAddComponent implements OnInit {
     } 
     else if (this.type == 'edit') 
     {
-      if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
-      this.dispatch.agencyName = this.dispatch.agencyName.toString();
+      if(this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
+      if(this.dispatch.agencyName) this.dispatch.agencyName = this.dispatch.agencyName.toString();
+      if(this.dispatch.agencies && this.dispatch.agencies.length > 0) this.crrAgencies = this.dispatch.agencies.map(u=>u.AgencyID).join(";")
       if(this.dispatch.relations && this.dispatch.relations.length>0)
       {
         this.lrelations = this.dispatch.relations.filter(x=>x.relationType == "6")
@@ -342,10 +344,20 @@ export class IncommingAddComponent implements OnInit {
 
   changeValueAgencies(e:any)
   {
-    if(e?.component?.instance?.dataSelected)
+    if(e?.component?.dataSelected && e?.component?.dataSelected.length > 0)
     {
-      
+      var arr = []
+      e?.component?.dataSelected.forEach(elm => {
+
+        var obj = {
+          agencyID : elm?.dataSelected?.AgencyID,
+          agencyName : elm?.dataSelected?.AgencyName
+        };
+        arr.push(obj);
+      });
+      this.dispatch.agencies = arr;
     }
+   
   }
   
   valueChangeDate(event: any) {
@@ -356,12 +368,12 @@ export class IncommingAddComponent implements OnInit {
 
     this.disableSave = true;
 
-    if (!this.checkIsRequired()) return;
+    if (!this.checkIsRequired()) {this.disableSave = false ; return;}
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
     /////////////////////////////////////////////////////////
-    this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    this.dispatch.agencyName = this.dispatch.agencyName ? this.dispatch.agencyName.toString(): "";
     if(this.dispatch.dispatchType == "3" && this.agencyName)  this.dispatch.agencyName = this.agencyName
     this.addRelations();
     if (this.type == 'add' || this.type == 'copy') {
@@ -527,10 +539,15 @@ export class IncommingAddComponent implements OnInit {
   checkIsRequired() {
     var arr = [];
     for (var i = 0; i < this.objRequied.length; i++) {
-      var field = capitalizeFirstLetter(this.objRequied[i]);
-      var data = this.dispatch[field];
-      if(!data)
-        arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
+       var field = capitalizeFirstLetter(this.objRequied[i]);
+      if(this.type == "add" && this.formModel.funcID == 'ODT41' && field == "agencyName"){}
+      else
+      {
+        var data = this.dispatch[field];
+        if(!data)
+          arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
+      }
+     
     }
 
     //Kiểm tra số tự động

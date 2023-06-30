@@ -231,11 +231,32 @@
             </ng-container>
         </div>
     </div>
+    <div class="d-flex align-items-center nav-item w-100 mb-1" *ngIf="showLabelAttachment">
+        <div class="d-flex align-items-center mb-2">
+          <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+          <div class="fw-bold text-primary">
+            <codx-label name="lblAttachments" default="Tài liệu đính kèm">
+            </codx-label>
+          </div>
+        </div>
+      </div>
+    <div>
+        <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [referType]="'image'" hideFolder="1"
+          hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" [showMessage]="0" hideDes="1" type="inline"
+          allowMultiFile="1" referType="source" [formModel]="dialog.formModel" [functionID]="funcID"
+          (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" displayThumb="full">
+        </codx-attachment>
+      </div>
 </ng-template>
 
 <ng-template #footer>
     <div class="offcanvas-footer">
-        <div class="d-flex align-items-center justify-content-end">
+        <div class="d-flex align-items-center justify-content-between">
+            <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
+                <i class="icon-cloud_upload fs-5"></i><span>
+                  <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
+                </span>
+              </button>
             <button type="button" class="btn btn-primary" (click)="Save()">
                 <codx-label [formModel]="dialog.formModel" name="lblFDSumbit" default="Thêm"></codx-label>
             </button>

@@ -16,7 +16,7 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-40 p-2">
+    <div class="w-50 p-2">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -126,16 +126,30 @@
     </div>
 
     <div class="w-25 p-3">
-      <codx-vll
-        [formModel]="view.formModel"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showIcon]="false"
-        [showBgColor]="true"
-        ngClass="badge badge-sm"
-      >
-      </codx-vll>
+      <ng-container *ngIf="flagChangeMF">
+        <ng-container *ngIf="runModeCheck; else elseVll">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            [name]="'ES030'"
+            [value]="data?.unbounds?.statusApproval + data?.unbounds?.stepType"
+            class="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
+        <ng-template #elseVll>
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+            ngClass="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-template>
+      </ng-container>
     </div>
 
     <div class="align-self-center">
@@ -145,7 +159,7 @@
           (clickMF)="clickMF($event, data)"
           (changeDataMF)="changeDataMF($event, data)"
           [dataItem]="data"
-          type="hover"
+          type="view"
         >
         </codx-mfunc>
       </div>
@@ -159,16 +173,13 @@
       <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
     </div>
     <div class="w-25 text-dark p-3 fw-bold fw-500">
-      <codx-label
-        name="lblCategory"
-        [default]="'Loại công tác | Thời gian công tác'"
-      ></codx-label>
+      <codx-label name="lblCategory" [default]="'Loại công tác'"></codx-label>
     </div>
     <div class="w-25 text-dark p-3 fw-bold fw-500">
       <codx-label
-        fiedName="lblApproveStatus"
+        fiedName="lblStatus"
         [formModel]="view.formModel"
-        default="Tình trạng"
+        [default]="grvSetup?.Status?.headerText"
       ></codx-label>
     </div>
   </div>
@@ -258,7 +269,7 @@
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
-    [typeMF]="'hover'"
+    [typeMF]="'view'"
     [title]="data.emp?.employeeName"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
@@ -318,14 +329,40 @@
       ></span>
 
       <div class="mt-1">
-        <codx-vll
+        <ng-container *ngIf="flagChangeMF">
+          <ng-container *ngIf="runModeCheck; else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
+        </ng-container>
+        <!-- <codx-vll
           class="badge badge-sm badge-light-primary me-3"
           [name]="'HRS102'"
           [value]="data?.status"
           [showText]="true"
           [showBgColor]="true"
         >
-        </codx-vll>
+        </codx-vll> -->
       </div>
     </div>
   </ng-template>

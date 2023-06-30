@@ -44,7 +44,6 @@ import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-de
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
-import { NoDataComponent } from './contracts/component/no-data/no-data.component';
 import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
@@ -79,6 +78,8 @@ import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/
 import { TaskComponent } from './deals/step-task/task/task.component';
 import { CustomergroupsComponent } from './customergroups/customergroups.component';
 import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
+import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
+import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 
 const routes: Routes = [
   {
@@ -138,7 +139,6 @@ const routes: Routes = [
         component: SettingProcessCmComponent,
         data: { noReuse: true },
       },
-
     ],
   },
 ];
@@ -174,7 +174,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewDealcompetitorsComponent,
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
-    NoDataComponent,
     CasesComponent,
     CasesDetailComponent,
     PopupAddCasesComponent,
@@ -209,6 +208,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ContractsViewDetailComponent,
     ContractsDetailComponent,
     TaskComponent,
+    PopupOwnerDealComponent,
+    ViewIconGroupComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

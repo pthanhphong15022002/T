@@ -28,6 +28,10 @@
       *ngSwitchCase="tabContract"
       [ngTemplateOutlet]="contract"
     ></some-element>
+    <some-element
+    *ngSwitchCase="tabHistory"
+    [ngTemplateOutlet]="history"
+  ></some-element>
 
     <some-element *ngSwitchDefault></some-element>
   </container-element>
@@ -326,7 +330,10 @@
       [objectType]="'4'"
       [type]="'formDetail'"
       [hidenMF]="
-        !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed
+        !dataSelected?.roles?.isOnwer ||
+        checkMoreReason ||
+        dataSelected?.closed ||
+        dataSelected?.status == '1'
           ? true
           : false
       "
@@ -353,7 +360,10 @@
   <codx-tab-dealcompetitors
     [dealID]="dataSelected.recID"
     [hidenMF]="
-      !dataSelected?.roles?.isOnwer || checkMoreReason || dataSelected.closed
+      !dataSelected?.roles?.isOnwer ||
+      checkMoreReason ||
+      dataSelected.closed ||
+      dataSelected?.status == '1'
         ? true
         : false
     "
@@ -362,7 +372,7 @@
 <ng-template #quotation>
   <codx-quotations-tab-view
     [typeModel]="'deals'"
-    [showButton]="true"
+    [showButton]="!dataSelected?.closed"
     [predicates]="'DealID==@0'"
     [dataValues]="dataSelected.recID"
     [dealID]="dataSelected.recID"
@@ -374,9 +384,25 @@
 
 <ng-template #contract let-data>
   <list-contracts
-    [dealID]="dataSelected?.recID"
-    [listContract]="listContract"
+    [predicates]="'DealID==@0'"
+    [dataValues]="dataSelected?.recID"
     [type]="'deal'"
   ></list-contracts>
 </ng-template>
+
+<ng-template #history>
+  <!-- <div class="d-flex justify-content-start">
+    <div>Flex item</div>
+    <div>Flex item</div>
+    <div class="ms-auto">Margin left auto</div>
+  </div>
+  <div class="d-flex justify-content-start" >hello</div>
+  <div class="d-flex justify-content-between">
+    <div class="first-div">Đây là div đầu tiên</div>
+    <div class="last-div">Đây là div cuối cùng</div>
+  </div> -->
+<codx-no-data></codx-no-data>
+
+</ng-template>
+
 <ng-template #defaultNull> <p class="p-0 m-0">0</p></ng-template>

@@ -7,6 +7,7 @@
   [dataValues]="journalNo"
   (buttonClick)="onClickAdd($event)"
   (selectedChange)="onChange($event)"
+  [isSubView]="true"
 >
 </codx-views>
 
@@ -294,6 +295,22 @@
                 [loading]="loading"
               ></lib-table-line-detail-static>
             </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex me-2">
+                <span
+                  class="icon-i-file-earmark-spreadsheet icon-18 me-2"
+                ></span>
+                <codx-label
+                  class="fw-bold"
+                  fiedName="lblAccounting"
+                  [formModel]="view.formModel"
+                  default="Hoạch toán"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content> </ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>

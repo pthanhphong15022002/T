@@ -27,7 +27,7 @@
     >
       <div class="col-lg-3 col-md-3 col-3" align="center">
         <div id="rounded-container">
-          <ejs-progressbar
+          <!-- <ejs-progressbar
             [id]="newGuid()"
             [type]="'Circular'"
             [maximum]="100"
@@ -39,7 +39,7 @@
             [progressThickness]="10"
             [animation]="{ enable: true, duration: 2000, delay: 0 }"
           >
-          </ejs-progressbar>
+          </ejs-progressbar> -->
         </div>
       </div>
     </div>
@@ -175,6 +175,10 @@
       }"
     >
     </ejs-treemap>
+    <!-- <img
+      style="width: 100%; height: 100%"
+      src="assets/themes/sys/default/img/Empty_TreeMaps.svg"
+    /> -->
   </div>
 </ng-template>
 
@@ -297,58 +301,12 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="8" title="Hiệu suất làm việc">
-    <ejs-circulargauge class="w-100 h-100" centerY="50%" align="center">
-      <e-axes>
-        <e-axis
-          minimum="0"
-          radius="50%"
-          maximum="100"
-          startAngle="270"
-          endAngle="90"
-          [majorTicks]="{
-            height: 1,
-            color: '#000',
-            interval: 25
-          }"
-          [labelStyle]="{
-            position: 'Outside',
-            font: {
-              size: '10px',
-              color: '#000'
-            }
-          }"
-          [lineStyle]="{
-            width: 0
-          }"
-          [minorTicks]="{
-            width: 0
-          }"
-          [annotations]="annotaions"
-        >
-          <e-ranges>
-            <e-range
-              start="0"
-              end="100"
-              radius="50%"
-              roundedCornerRadius="10"
-              color="#F0F0F0"
-              startWidth="20"
-              endWidth="20"
-            >
-            </e-range>
-          </e-ranges>
-          <e-pointers>
-            <e-pointer
-              [value]="toFixed((myDBData.doneHours / myDBData.workHours) * 100)"
-              pointerWidth="20"
-              type="RangeBar"
-              radius="50%"
-              color="#357cd2"
-            ></e-pointer>
-          </e-pointers>
-        </e-axis>
-      </e-axes>
-    </ejs-circulargauge>
+    <div class="d-flex justify-content-center align-items-center">
+      <img
+        style="width: 50%; height: 50%"
+        src="assets/themes/sys/default/img/Empty_CircularGauge.svg"
+      />
+    </div>
   </div>
 </ng-template>
 
@@ -360,7 +318,7 @@
       </div>
       <div class="d-flex justify-content-center align-items-center">
         <div class="fw-bold" style="font-size: 1.75vw">
-          {{ myDBData.doneHours ?? 0 }}
+          {{ myDBData.workPerformance?.actualHours ?? 0 }}
         </div>
         <div class="ms-2" style="font-size: 0.75vw">giờ</div>
       </div>
@@ -376,7 +334,7 @@
       </div>
       <div class="d-flex justify-content-center align-items-center">
         <div class="fw-bold" style="font-size: 1.75vw">
-          {{ myDBData.workHours ?? 0 }}
+          {{ myDBData.workPerformance?.workHours ?? 0 }}
         </div>
         <div class="ms-2" style="font-size: 0.75vw">giờ</div>
       </div>
@@ -454,6 +412,12 @@
               </e-accumulation-series>
             </e-accumulation-series-collection>
           </ejs-accumulationchart>
+          <!-- <div class="d-flex justify-content-center">
+            <img
+              style="width: 70%; height: 70%"
+              src="assets/themes/sys/default/img/Empty_Piechart.svg"
+            />
+          </div> -->
         </div>
       </div>
       <div *ngFor="let data of myDBData?.tasksByGroup" class="mt-4">
@@ -490,7 +454,11 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="12" title="Thống kê công việc hoàn thành và số giờ thực hiện">
+  <div
+    class="w-100 h-100"
+    id="12"
+    title="Thống kê công việc hoàn thành và số giờ thực hiện"
+  >
     <ejs-chart
       style="display: block"
       align="center"
@@ -810,30 +778,22 @@
           </div>
         </div>
       </div>
-      <!-- <div class="topchart-item d-flex align-items-center justify-content-end">
-        <div class="fw-bold me-2">65</div>
-        <div
-          class="topchart-user"
-          style="background-color: #6e6efd; width: 50%; color: #fff"
-        >
-          <span>Nguyễn Ngọc Phú Sỹ</span>
-        </div>
-      </div>
-      <div class="topchart-item d-flex align-items-center justify-content-end">
-        <div class="fw-bold me-2">12</div>
-        <div
-          class="topchart-user"
-          style="background-color: #f5a9ff; width: 22%; color: #000"
-        >
-          <span>Nguyễn Thị Bích Vân</span>
-        </div>
-      </div> -->
     </div>
+    <!-- <div class="d-flex justify-content-center">
+      <img
+        style="width: 100%; height: 100%"
+        src="assets/themes/sys/default/img/Empty_Bar.svg"
+      />
+    </div> -->
   </div>
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="10" title="Thống kê công việc hoàn thành và số giờ thực hiện">
+  <div
+    class="w-100 h-100"
+    id="10"
+    title="Thống kê công việc hoàn thành và số giờ thực hiện"
+  >
     <ejs-chart
       style="display: block"
       align="center"
@@ -865,7 +825,14 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="11" title=""></div>
+  <div id="11" title="">
+    <div class="d-flex justify-content-center align-items-center">
+      <img
+        style="width: 50%; height: 50%"
+        src="assets/themes/sys/default/img/Empty_CircularGauge.svg"
+      />
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #team_dashboard>
@@ -875,7 +842,9 @@
         Tổng thời gian hoàn thành thực tế
       </div>
       <div class="d-flex justify-content-center align-items-center">
-        <div class="fw-bold" style="font-size: 1.75vw">116</div>
+        <div class="fw-bold" style="font-size: 1.75vw">
+          {{ teamDBData.workPerformance.actualHours }}
+        </div>
         <div class="ms-2" style="font-size: 0.75vw">giờ</div>
       </div>
     </div>
@@ -889,7 +858,9 @@
         Tổng thời gian làm việc
       </div>
       <div class="d-flex justify-content-center align-items-center">
-        <div class="fw-bold" style="font-size: 1.75vw">176</div>
+        <div class="fw-bold" style="font-size: 1.75vw">
+          {{ teamDBData.workPerformance.workHours }}
+        </div>
         <div class="ms-2" style="font-size: 0.75vw">giờ</div>
       </div>
     </div>
@@ -1207,6 +1178,10 @@
         </div>
       </div>
     </div>
+    <!-- <img
+      style="width: 100%; height: 100%"
+      src="assets/themes/sys/default/img/Empty_Stack.svg"
+    /> -->
   </div>
 </ng-template>
 
@@ -1255,7 +1230,10 @@
 
 <ng-template #assign_dashboard>
   <div id="10" title="Thống kê công việc theo dự án">
-    <h1>10</h1>
+    <img
+      style="width: 100%; height: 100%"
+      src="assets/themes/sys/default/img/Empty_Piechart.svg"
+    />
   </div>
 </ng-template>
 

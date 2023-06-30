@@ -121,7 +121,6 @@ export class OrgorganizationComponent extends UIComponent {
       //   id: '4',
       //   type: ViewType.tree_orgchart,
       //   sameData: false,
-      //   // active: true,
       //   request: this.request,
       //   model: {
       //     resizable: true,
@@ -135,8 +134,6 @@ export class OrgorganizationComponent extends UIComponent {
     ];
 
     this.detectorRef.detectChanges();
-    // this.dataService.currentComponent =
-    //   this.view?.dataService?.currentComponent;
   }
 
   //loadEmployList
@@ -252,10 +249,14 @@ export class OrgorganizationComponent extends UIComponent {
   // selected change
   onSelectionChanged(evt: any) {
     if (this.view) {
-      // let viewActive = this.view.views.find((e) => e.active == true);
-      // if (viewActive?.id == '1') return;
-      var data = evt.data || evt;
-      this.orgUnitID = data.orgUnitID;
+      //Fix load when click on mode list
+      let viewActive = this.view.views.find((e) => e.active == true);
+      if (viewActive?.id == '1') {
+        return;
+      } else {
+        var data = evt.data || evt;
+        this.orgUnitID = data.orgUnitID;
+      }
       // this.detectorRef.detectChanges();
     }
   }
@@ -348,4 +349,14 @@ export class OrgorganizationComponent extends UIComponent {
   //       }
   //     });
   // }
+
+  // search employee in popup view list employee
+  searchText: string = '';
+  searchUser(event: any) {
+    this.searchText = event;
+  }
+
+  clickOpen(event) {
+    event.stopPropagation();
+  }
 }

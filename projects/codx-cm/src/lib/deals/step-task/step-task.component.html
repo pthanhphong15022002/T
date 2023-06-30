@@ -135,7 +135,7 @@
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
       ></codx-step-task>
-      <div *ngIf="step?.isFailStep || step?.isSuccessStep">
+      <div *ngIf="(step?.isFailStep || step?.isSuccessStep) &&  !['0','1','2'].includes(dataSelected?.status) ">
         <div >
           <div class="d-flex justify-content-start">
             <div
