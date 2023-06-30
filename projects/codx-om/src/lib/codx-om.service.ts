@@ -447,6 +447,15 @@ export class CodxOmService {
       [dataRequest,periodID, interval, year]
     );
   }
+  getSharedPlans(dataRequest:any,periodID: string, interval: string, year: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'GetSharedAsync',
+      [dataRequest,periodID, interval, year]
+    );
+  }
   getOKRPlansByID(recID: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
