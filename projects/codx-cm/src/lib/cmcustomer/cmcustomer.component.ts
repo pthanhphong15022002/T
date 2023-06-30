@@ -173,7 +173,14 @@ export class CmCustomerComponent
       // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
       // this.view.formModel = formMD;
       if (this.funcID == 'CM0101') {
-        this.lstCustGroups = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','CustomerGroupsBusiness','GetListDealCompetitorsAsync'));
+        this.lstCustGroups = await firstValueFrom(
+          this.api.execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CustomerGroupsBusiness',
+            'GetListDealCompetitorsAsync'
+          )
+        );
         this.cache
           .gridViewSetup(fun?.formName, fun?.gridViewName)
           .subscribe((res) => {
@@ -460,31 +467,32 @@ export class CmCustomerComponent
       if (check) {
         this.notiService.notifyCode('CM009');
         return;
-      } else {
-        check = await firstValueFrom(
-          this.api.execSv<any>(
-            'CM',
-            'ERM.Business.CM',
-            'ContractsBusiness',
-            'IsExitsByContractAsync',
-            [data.recID]
-          )
-        );
-        if(!check){
-          check = await firstValueFrom(
-            this.api.execSv<any>(
-              'CM',
-              'ERM.Business.CM',
-              'CustomersBusiness',
-              'IsExitsByQuotationAsync',
-              [data.recID]
-            )
-          );
-        }
-        if (check) {
-          this.notiService.notifyCode('CM011');
-          return;
-        }
+      }
+      check = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'ContractsBusiness',
+          'IsExitsByContractAsync',
+          [data.recID]
+        )
+      );
+      if (check) {
+        this.notiService.notifyCode('CM011');
+        return;
+      }
+      check = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'CustomersBusiness',
+          'IsExitsByQuotationAsync',
+          [data.recID]
+        )
+      );
+      if (check) {
+        this.notiService.notifyCode('CM024');
+        return;
       }
     }
 
@@ -592,8 +600,16 @@ export class CmCustomerComponent
 
   async updateStatusCustomer(status, data) {
     var check = false;
-    check = await firstValueFrom(this.api.execSv<any>('CM','ERM.Business.CM','DealsBusiness','IsExitDealStatusByCustomerIDAsync', data?.recID));
-    if(check){
+    check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'DealsBusiness',
+        'IsExitDealStatusByCustomerIDAsync',
+        data?.recID
+      )
+    );
+    if (check) {
       this.notiService.notifyCode('CM020');
       return;
     }
@@ -608,18 +624,20 @@ export class CmCustomerComponent
       )
       .subscribe((x) => {
         if (x?.event?.status == 'Y') {
-          this.cmSv.updateStatusCustoemr(data.recID, status).subscribe((res) => {
-            if (res) {
-              this.dataSelected.status = status;
-              this.customerDetail.dataSelected = JSON.parse(
-                JSON.stringify(this.dataSelected)
-              );
-              // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
-              this.view.dataService.update(this.dataSelected).subscribe();
-              this.notiService.notifyCode('SYS007');
-              this.detectorRef.detectChanges();
-            }
-          });
+          this.cmSv
+            .updateStatusCustoemr(data.recID, status)
+            .subscribe((res) => {
+              if (res) {
+                this.dataSelected.status = status;
+                this.customerDetail.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
+                // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
+                this.view.dataService.update(this.dataSelected).subscribe();
+                this.notiService.notifyCode('SYS007');
+                this.detectorRef.detectChanges();
+              }
+            });
         }
       });
   }
