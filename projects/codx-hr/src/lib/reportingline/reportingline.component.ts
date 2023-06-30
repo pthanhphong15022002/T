@@ -260,6 +260,7 @@ export class ReportinglineComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.itemSelected = this.view.dataService.data[0];
+          this.notiService.notifyCode('SYS008')
           this.detectorRef.detectChanges();
         }else{
           //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
