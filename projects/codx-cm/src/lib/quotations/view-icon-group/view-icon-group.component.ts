@@ -15,10 +15,14 @@ import { ApiHttpService } from 'codx-core';
 export class ViewIconGroupComponent implements OnInit {
   @ViewChild('noData') noData: TemplateRef<any>;
   @Input() customerID: any;
+  @Input() change = false;
   data: any;
   loaded = false;
   constructor(private api: ApiHttpService) {}
 
+  ngOnChanges() {
+    if (this.change) this.loadData();
+  }
   ngOnInit() {
     this.loadData();
   }

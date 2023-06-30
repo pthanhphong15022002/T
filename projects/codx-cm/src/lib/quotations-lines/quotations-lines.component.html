@@ -16,13 +16,15 @@
         rowHeight="40"
         predicates="TransID==@0"
         [dataValues]="transID"
+        [height]="200"
         (cellChanged)="quotationsLineChanged($event)"
-        (created)="gridCreated($event, gridQuationsLines)"
         [autoAddRow]="true"
+        [editSettings]="typeAdd == '1' ? editSettingsPopup : editSettings"
         (onAddNew)="onAddNew($event)"
         (onEdit)="onEdit($event)"
       ></codx-gridview-v2>
-      <!-- //    [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
+      <!-- //        (created)="gridCreated($event, gridQuationsLines)"
+    [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
       <div
         class="row"
         *ngIf="listQuotationLines?.length == 0"
@@ -32,7 +34,7 @@
   </div>
 
   <div class="d-flex" *ngIf="showButtonAdd">
-    <div class="btn-addline me-3">
+    <div class="btn-addline me-3" *ngIf="typeAdd == '1'">
       <button
         type="button"
         class="btn btn-sm btn-light-primary"
@@ -42,7 +44,7 @@
         <codx-label name="blbAddPopup" default="Thêm"></codx-label>
       </button>
     </div>
-    <div #btnRef class="btn-addline">
+    <div #btnRef class="btn-addline" *ngIf="typeAdd == '2'">
       <button
         type="button"
         class="btn btn-sm btn-light-primary"

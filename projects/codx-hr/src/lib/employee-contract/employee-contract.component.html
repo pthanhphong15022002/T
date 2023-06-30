@@ -116,7 +116,7 @@
     <div class="w-20 min-w-200px px-2">
       <div class="d-flex">
         <ng-container *ngIf="flagChangeMF">
-          <ng-container *ngIf="runModeCheck , else elseVll">
+          <ng-container *ngIf="runModeCheck; else elseVll">
             <codx-vll
               [showText]="true"
               [showBgColor]="true"
@@ -140,7 +140,6 @@
             >
             </codx-vll>
           </ng-template>
-         
         </ng-container>
         <div
           *ngIf="data?.isCurrent && !data?.isExpire"
@@ -239,7 +238,7 @@
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
-    [typeMF]="'hover'"
+    [typeMF]="'view'"
     [title]="data.emp?.employeeName"
     [titleCss]="'fs-6 mb-1'"
     [baseHeaderRightTmp]="titleRight"
@@ -337,16 +336,30 @@
 
       <div class="mt-1">
         <ng-container *ngIf="flagChangeMF">
-          <codx-vll
-            class="badge badge-sm badge-light-primary me-2"
-            [name]="'HRS102'"
-            [value]="
-              runModeCheck ? data?.unbounds?.statusApproval : data?.status
-            "
-            [showText]="true"
-            [showBgColor]="true"
-          >
-          </codx-vll>
+          <ng-container *ngIf="runModeCheck; else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
         </ng-container>
         <span class="me-4" [ngbTooltip]="grvSetup?.SignedDate?.headerText">
           {{ data?.signedDate | fmDT }}
