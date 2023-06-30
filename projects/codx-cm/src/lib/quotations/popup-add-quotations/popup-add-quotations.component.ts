@@ -931,6 +931,5 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotationLinesEdit = e?.quotationLinesEdit;
     this.quotationLinesDeleted = e?.quotationLinesDeleted;
     this.loadTotal();
-    debugger;
   }
 }

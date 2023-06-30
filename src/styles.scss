@@ -3357,3 +3357,11 @@ lib-layoutonlyheader{
   max-height: none;
 }
 
+ejs-datepicker input.e-input {
+  height: 30px !important;
+  line-height: 30px;
+}
+ejs-combobox input.e-input {
+  height: 30px !important;
+  line-height: 30px;
+}
