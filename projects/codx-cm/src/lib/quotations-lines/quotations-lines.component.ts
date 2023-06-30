@@ -37,6 +37,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() contractID: any;
   @Input() exchangeRate: any;
   @Input() currencyID: any;
+  @Input() gridHeight: number = 300; //tinh xong truyefn vào
 
   @Input() listQuotationLines: Array<any> = [];
   @Input() quotationLinesAddNew = [];
@@ -56,7 +57,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     entityName: 'CM_QuotationsLines',
     funcID: 'CM02021',
   };
-  gridHeight: number = 300;
+
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -199,6 +200,8 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
           data.currencyID = this.currencyID;
           data.transID = this.transID;
           this.listQuotationLines.push(data);
+          // if (this.actionParent == 'edit')
+          this.quotationLinesAddNew.push(data);
           // this.gridQuationsLines.addRow(data, idx); //add row gridview
           this.gridQuationsLines.refresh();
         }
@@ -510,6 +513,10 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
         this.loadChange(lineCrr);
         break;
     }
+    if (this.actionParent == 'edit') {
+      this.linesUpdate(e.data);
+    }
+    this.onEdit(lineCrr);
   }
   loadChange(lineCrr) {
     lineCrr['salesAmt'] =
@@ -642,10 +649,22 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
     return sum;
   }
 
-  onAddNew(e) {
-    debugger;
-  }
+  onAddNew(e) {}
+
   onEdit(e) {
-    debugger;
+    let count = this.codxCM.checkValidateForm(
+      this.grvSetupQuotationsLines,
+      e,
+      0
+    );
+    if (count > 0) return;
+    // this.loadTotal();
+    this.objectOut.listQuotationLines = this.listQuotationLines;
+    this.objectOut.quotationLinesAddNew = this.quotationLinesAddNew;
+    this.objectOut.quotationLinesDeleted = this.quotationLinesDeleted;
+    this.objectOut.quotationLinesEdit = this.quotationLinesEdit;
+    this.objectOut['quotationLineIdNew'] = e?.recID; // thuan thêm để lấy quotationLines mới thêm
+    this.eventQuotationLines.emit(this.objectOut);
+    this.changeDetector.detectChanges();
   }
 }

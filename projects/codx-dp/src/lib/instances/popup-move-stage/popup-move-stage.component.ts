@@ -694,6 +694,8 @@ export class PopupMoveStageComponent implements OnInit {
               if (res != null && res.length > 0) {
                 lstOrg = res;
                 this.owner = lstOrg[0]?.userID;
+              }else{
+                this.owner = '';
               }
             });
           break;
@@ -704,6 +706,8 @@ export class PopupMoveStageComponent implements OnInit {
               if (res != null && res.length > 0) {
                 lstOrg = res;
                 this.owner = lstOrg[0]?.userID;
+              }else{
+                this.owner = '';
               }
             });
           break;
@@ -714,6 +718,8 @@ export class PopupMoveStageComponent implements OnInit {
               if (res != null && res.length > 0) {
                 lstOrg = res;
                 this.owner = lstOrg[0]?.userID;
+              }else{
+                this.owner = '';
               }
             });
           break;
@@ -724,6 +730,8 @@ export class PopupMoveStageComponent implements OnInit {
               if (res != null && res.length > 0) {
                 lstOrg = res;
                 this.owner = lstOrg[0]?.userID;
+              }else{
+                this.owner = '';
               }
             });
           break;
