@@ -51,9 +51,10 @@ export class EmployeeListComponent extends UIComponent {
   className = 'EmployeesBusiness';
   method = 'GetListEmployeeAsync';
 
-  constructor( private injector: Injector,
-    private routerActive: ActivatedRoute,
-    ) {
+  constructor(
+    private injector: Injector,
+    private routerActive: ActivatedRoute
+  ) {
     super(injector);
     this.funcID = this.routerActive.snapshot.params['funcID'];
   }
@@ -87,6 +88,7 @@ export class EmployeeListComponent extends UIComponent {
         id: '1',
         type: ViewType.list,
         sameData: true,
+        //active: true,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
@@ -101,7 +103,7 @@ export class EmployeeListComponent extends UIComponent {
           resizable: true,
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
-          resourceModel: { parentIDField: 'ParentID' , idField: 'OrgUnitID'},
+          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
         },
       },
     ];
@@ -213,8 +215,15 @@ export class EmployeeListComponent extends UIComponent {
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
-          this.view.dataService.dataSelected = res? res : this.itemSelected;
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetEmployeeInfoByIDAsync',
+          [data.employeeID]
+        )
+        .subscribe((res) => {
+          this.view.dataService.dataSelected = res ? res : this.itemSelected;
           this.view.dataService.copy().subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view.dataService;
@@ -235,9 +244,7 @@ export class EmployeeListComponent extends UIComponent {
               }
             });
           });
-
-        })
-
+        });
     }
   }
 
@@ -317,7 +324,7 @@ export class EmployeeListComponent extends UIComponent {
       let queryParams = {
         employeeID: data.employeeID,
         page: this.view.dataService.page + 1,
-        totalPage: this.view.dataService.pageCount
+        totalPage: this.view.dataService.pageCount,
       };
       let state = {
         data: this.view.dataService.data.map(function (obj) {
@@ -328,5 +335,4 @@ export class EmployeeListComponent extends UIComponent {
       this.codxService.navigate('', func?.url, queryParams, state, true);
     });
   }
-
 }
