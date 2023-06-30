@@ -634,14 +634,11 @@ export class DealsComponent
   }
 
   checkMoreReason(tmpPermission) {
-    if (
+    return
       !tmpPermission.roleMore.isReasonSuccess &&
       !tmpPermission.roleMore.isReasonFail &&
       !tmpPermission.roleMore.isMoveStage
-    ) {
-      return true;
-    }
-    return false;
+
   }
 
   checkRoleInSystem(tmpRole) {
@@ -649,56 +646,55 @@ export class DealsComponent
   }
 
   clickMF(e, data) {
+    const actions = {
+      SYS03: (data) => {
+        this.edit(data);
+      },
+      SYS04: (data) => {
+        this.copy(data);
+      },
+      SYS02: (data) => {
+        this.delete(data);
+      },
+      CM0201_1: (data) => {
+        this.moveStage(data);
+      },
+      CM0201_2: (data) => {
+        this.handelStartDay(data);
+      },
+      CM0201_3: (data) => {
+        this.moveReason(data, true);
+      },
+      CM0201_4: (data) => {
+        this.moveReason(data, false);
+      },
+      CM0201_8: (data) => {
+        this.openOrCloseDeal(data, true);
+      },
+      CM0201_7: (data) => {
+        this.popupOwnerRoles(data);
+      },
+      CM0201_9: (data) => {
+        this.openOrCloseDeal(data, false);
+      },
+      CM0201_5: (data) => {
+        this.exportFile(data);
+      },
+      CM0201_6: (data) => {
+        this.approvalTrans(data);
+      },
+      CM0201_12: (data) => {
+        this.confirmOrRefuse(true, data);
+      },
+      CM0201_13: (data) => {
+        this.confirmOrRefuse(false, data);
+      },
+    };
     this.dataSelected = data;
     this.titleAction = e.text;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'CM0201_1':
-        this.moveStage(data);
-        break;
-      case 'CM0201_2':
-        this.handelStartDay(data);
-        break;
-      case 'CM0201_3':
-        this.moveReason(data, true);
-        break;
-      case 'CM0201_4':
-        this.moveReason(data, false);
-        break;
-      // Open deal
-      case 'CM0201_8':
-        this.openOrCloseDeal(data, true);
-        break;
-      case 'CM0201_7':
-        this.popupOwnerRoles(data);
-        break;
-      // Close deal
-      case 'CM0201_9':
-        this.openOrCloseDeal(data, false);
-        break;
-      //xuât file
-      case 'CM0201_5':
-        this.exportFile(data);
-        break;
-      case 'CM0201_6':
-        this.approvalTrans(data);
-        break;
-      //Xác nhận
-      case 'CM0201_12':
-        this.confirmOrRefuse(true, data);
-        break;
-      //Từ chối
-      case 'CM0201_13':
-        this.confirmOrRefuse(false, data);
-        break;
+
+    if (actions.hasOwnProperty(e.functionID)) {
+      actions[e.functionID](data);
     }
   }
   changeMF(e) {

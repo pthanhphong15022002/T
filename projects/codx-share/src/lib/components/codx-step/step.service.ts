@@ -40,6 +40,19 @@ export class StepService {
     private codxService: CodxService
   ) {}
 
+  formModelStep: FormModel = {
+    entityName: 'DP_Instances_Steps_Tasks',
+    formName: 'DPInstancesStepsTasks',
+    gridViewName: 'grvDPInstancesStepsTasks',
+  };
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+
   //#region common
   capitalizeFirstLetter(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';

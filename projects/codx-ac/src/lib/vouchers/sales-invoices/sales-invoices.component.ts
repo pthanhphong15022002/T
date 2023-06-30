@@ -135,15 +135,15 @@ export class SalesInvoicesComponent
     this.expanding = false;
     this.loading = true;
     this.lines = [];
-    const options = new DataRequest();
-    options.entityName = 'SM_SalesInvoicesLines';
-    options.predicates = 'TransID=@0';
-    options.dataValues = this.master.recID;
-    options.pageLoading = false;
     this.api
-      .exec('SM', 'SalesInvoicesLinesBusiness', 'GetLinesAsync', options)
+      .exec(
+        'SM',
+        'SalesInvoicesLinesBusiness',
+        'GetLinesAsync',
+        this.master.recID
+      )
       .subscribe((res: any) => {
-        this.lines = res[0];
+        this.lines = res;
         this.loading = false;
       });
   }
