@@ -297,4 +297,9 @@ export class ReportinglineComponent extends UIComponent {
       );
     }
   }
+  // search employee in popup view list employee
+  searchText:string = "";
+  searchUser(event:any){
+    this.searchText = event;
+  }
 }
