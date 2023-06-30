@@ -490,10 +490,6 @@ export class LeadsComponent
           }
         }
       }
-      // else {
-      //  // data.stepID = this.crrStepID;
-      //   this.changeDetectorRef.detectChanges();
-      // }
     }
   }
 
