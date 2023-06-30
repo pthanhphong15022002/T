@@ -4,7 +4,7 @@ import {
   HostListener,
   Injector,
   Optional,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
@@ -299,6 +299,7 @@ export class PopupAddSalesInvoiceComponent
       'lineType',
       'umid',
       'idiM1',
+      'discAmt',
     ];
     if (postFields.includes(e.field)) {
       this.api
