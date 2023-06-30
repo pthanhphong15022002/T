@@ -551,7 +551,8 @@ export class PopupAddJournalComponent
       .closed.subscribe(({ event }) => {
         console.log(event);
 
-        if (!event) {
+        // check undefined only
+        if (event == null) {
           return;
         }
 

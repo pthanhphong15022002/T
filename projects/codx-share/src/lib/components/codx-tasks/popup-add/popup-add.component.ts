@@ -431,9 +431,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTaskResources = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
         this.showLabelAttachment = this.task.attachments > 0 ? true : false;
-       
+
         if (this.action == 'edit' && this.task.category == '2') {
-           //them điều kiện ngày  08/06/2023 tho ý thuong
+          //them điều kiện ngày  08/06/2023 tho ý thuong
           // if (
           //   this.task.owner == this.task.createdBy &&
           //   this.task.verifyControl == '0'
@@ -441,9 +441,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           //   this.disableDueDate = false;
           //   this.readOnly = false;
           // } else {
-            this.disableDueDate = true;
-            if (this.param?.EditControl != '1') this.readOnly = true;
-         // }
+          this.disableDueDate = true;
+          if (this.param?.EditControl != '1') this.readOnly = true;
+          // }
         }
         this.changeDetectorRef.detectChanges();
       }
@@ -456,6 +456,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.listTaskResources = [];
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
+        //giu lại ngươi giao viec theo task isue
+        let assignTo = res[0].assignTo;
+        this.task.assignTo = assignTo;
+        this.listUser = assignTo.split(';');
+        this.listUserDetail = res[1] || [];
+        this.listTaskResources = res[3];
+        if (this.listTaskResources?.length > 0)
+          this.listTaskResources.forEach((x) => (x.recID = Util.uid()));
+        //end
         this.copyListTodo(res[2]);
       }
     });

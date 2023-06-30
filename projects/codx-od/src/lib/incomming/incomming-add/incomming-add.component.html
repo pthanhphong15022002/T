@@ -48,6 +48,7 @@
       </ng-container>
       <ng-template #agencies>
         <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="agencies" [showInput]="true" style="width: 100%" (valueChange)="changeValueAgencies($event)"
+        [crrValue]="crrAgencies"
        >
       </codx-input>
       </ng-template>

@@ -68,6 +68,10 @@
                         | async
                     "
                   ></span> -->
+                  <cm-view-icon-group
+                    [change]="true"
+                    [customerID]="itemSelected?.customerID"
+                  ></cm-view-icon-group>
                   <span
                     [innerHTML]="
                       itemSelected?.customerID

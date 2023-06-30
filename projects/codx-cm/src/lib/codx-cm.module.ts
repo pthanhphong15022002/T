@@ -44,7 +44,6 @@ import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-de
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
 import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
-import { NoDataComponent } from './contracts/component/no-data/no-data.component';
 import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
@@ -175,7 +174,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewDealcompetitorsComponent,
     CodxComboboxComponent,
     QuotationsViewDetailComponent,
-    NoDataComponent,
     CasesComponent,
     CasesDetailComponent,
     PopupAddCasesComponent,

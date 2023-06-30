@@ -286,7 +286,7 @@ export class QuotationsTabViewComponent
       disableCusID: this.disableCusID,
       disableContactsID: this.disableContactsID,
       action: action,
-      headerText: this.titleActionAdd,
+      headerText: action == 'add' ? this.titleActionAdd : this.titleAction,
       copyToRecID: copyToRecID,
     };
     let option = new DialogModel();
