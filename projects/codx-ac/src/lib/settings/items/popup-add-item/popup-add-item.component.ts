@@ -821,7 +821,7 @@ export class PopupAddItemComponent
     this.acService.loadDataAsync(service, option).subscribe((res: any[]) => {
       if (first) {
         const formModel: string = 'fm' + this.acService.toPascalCase(prop);
-        const formGroup: string = prop + 'Service';
+        const formGroup: string = "fg" + this.acService.toPascalCase(prop);
 
         this[prop] = this[formModel].currentData = res[0];
         this[formGroup].patchValue(res[0]);

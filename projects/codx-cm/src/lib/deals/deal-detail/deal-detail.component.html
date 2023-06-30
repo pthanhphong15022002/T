@@ -15,6 +15,18 @@
         >: {{ dataSelected?.dealName }}
       </div>
     </ng-template>
+    <ng-template #toolTipDealValue>
+      <div class="text-end text-sm-start">
+        <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
+        >: {{ dataSelected?.dealValue }}
+      </div>
+    </ng-template>
+    <ng-template #toolTipProbability>
+      <div class="text-end text-sm-start">
+        <strong>{{ gridViewSetup["Probability"]?.headerText }}</strong
+        >: {{ dataSelected?.probability }}
+      </div>
+    </ng-template>
     <ng-template #header let-data>
       <div class="d-flex justify-content-between">
         <div class="text-info d-flex align-items-center">
@@ -83,14 +95,13 @@
           <div class="ms-5 d-flex justify-content-between">
             <div class="d-flex flex-column">
               <div class="d-flex flex-row">
-                <div class="d-flex align-items-top justify-content-end fs-4">
+                <div class="d-flex align-items-top justify-content-end fs-4"  [ngbTooltip]="toolTipDealValue" >
                   <span
                     class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
                   ></span>
                   <span
-                    class="fw-bold line-clamp-menu"
+                    class="fw-bold line-clamp-menu pe-1"
                     *ngIf="dataSelected?.dealValue; else defaultNull"
-                    [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
                     #dealValue
                     [innerHTML]="
                       dataSelected?.dealValue
@@ -98,9 +109,22 @@
                         | async
                     "
                   ></span>
+                  <span
+                  [ngClass]="dataSelected?.currencyID ? '' : 'line-clamp-menu'"
+                  class="text-gray-700"
+                  [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+                  #currencyID
+                  [innerHTML]="
+                  dataSelected?.currencyID
+                      | formatvalue : formModel : 'currencyID'
+                      | async
+                  "
+                ></span>
+
                 </div>
                 <div
                   class="d-flex align-items-top justify-content-end ps-10 fs-4"
+                  [ngbTooltip]="toolTipProbability"
                 >
                   <span
                     class="icon-check_circle text-green icon-16 mt-1 pe-1"

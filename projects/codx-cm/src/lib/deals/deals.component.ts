@@ -511,6 +511,83 @@ export class DealsComponent
     //     }
     //   }
     // }
+
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        if (mappingFunction) {
+          mappingFunction(eventItem, data);
+        }
+      }
+    }
+  }
+  getRoleMoreFunction(type) {
+    var functionMappings;
+    var isDisabled = (eventItem, data) => {
+      if (
+        (data.closed && data.status != '1') ||
+        data.status == '1' ||
+        this.checkMoreReason(data)
+      ) {
+        eventItem.disabled = true;
+      }
+    };
+    var isDelete = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isCopy = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isEdit = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isClosed = (eventItem, data) => {
+      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
+      this.checkMoreReason(data);
+    };
+    var isOpened = (eventItem, data) => {
+      eventItem.disabled = !data.closed || ['1'].includes(data.status);
+      this.checkMoreReason(data);
+    };
+    var isStartDay = (eventItem, data) => {
+      eventItem.disabled = !['1'].includes(data.status);
+    };
+    var isOwner = (eventItem, data) => {
+      eventItem.disabled = !['1', '2'].includes(data.status);
+    };
+    var isConfirmOrRefuse = (eventItem, data) => {
+      eventItem.disabled = data.status != '0';
+    };
+
+    functionMappings = {
+      CM0201_1: isDisabled,
+      CM0201_2: isStartDay,
+      CM0201_3: isDisabled,
+      CM0201_4: isDisabled,
+      CM0201_5: isDisabled,
+      CM0201_6: isDisabled,
+      CM0201_7: isOwner,
+      CM0201_8: isClosed,
+      CM0201_9: isOpened,
+      CM0201_12: isConfirmOrRefuse,
+      CM0201_13: isConfirmOrRefuse,
+      SYS101: isDisabled,
+      SYS103: isEdit,
+      SYS03: isEdit,
+      SYS104: isCopy,
+      SYS04: isCopy,
+      SYS102: isDelete,
+      SYS02: isDelete,
+    };
+
+    return functionMappings[type];
   }
   async executeApiCalls() {
     try {
@@ -1535,11 +1612,11 @@ export class DealsComponent
   onLoading(e) {
     if (!this.funCrr) return;
     //reload filter
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funCrr != this.funcID) {
-      this.view.pinedFilter.filters = [];
-      this.view.dataService.filter.filters = [];
-    }
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (this.funCrr != this.funcID) {
+    //   this.view.pinedFilter.filters = [];
+    //   this.view.dataService.filter.filters = [];
+    // }
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -1605,7 +1682,7 @@ export class DealsComponent
               .confirmOrRefuse(data?.recID, check, '')
               .subscribe((res) => {
                 if (res) {
-                  this.dataSelected.status = '3';
+                  this.dataSelected.status = '1';
                   this.detailViewDeal.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
