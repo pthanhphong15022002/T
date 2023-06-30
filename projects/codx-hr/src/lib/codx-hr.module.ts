@@ -130,6 +130,7 @@ import { PopupPolicybenefitsComponent } from './employee-policybenefits/popup-po
 // import { BasicPrimitivesModule } from 'ngx-basic-primitives';
 import { OrgEmpContactDetailCardComponent } from './empcontacts/org-emp-contact-detail-card/org-emp-contact-detail-card.component';
 import { EmployeeListByOrgComponent } from './employee-list/employee-list-by-org/employee-list-by-org.component';
+import { PopupUpdateStatusComponent } from './employee-list/popup-update-status/popup-update-status.component';
 export const routes: Routes = [
   {
     path: '',
@@ -416,6 +417,7 @@ const T_Component: Type<any>[] = [
   PopupPolicybenefitsComponent,
   OrgEmpContactDetailCardComponent,
   EmployeeListByOrgComponent,
+  PopupUpdateStatusComponent
 ];
 @NgModule({
   imports: [

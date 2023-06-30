@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { isObservable } from 'rxjs';
 import {
   ButtonModel,
   DialogRef,
@@ -19,6 +20,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEDisciplinesComponent } from '../employee-profile/popup-edisciplines/popup-edisciplines.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 
 @Component({
   selector: 'lib-employee-discipline',
@@ -48,6 +50,8 @@ export class EmployeeDisciplineComponent extends UIComponent {
   currentEmpObj: any = null;
   dialogEditStatus: any;
   grvSetup: any;
+  runModeCheck: boolean = false;
+  flagChangeMF: boolean = false;
 
   //#region eDisciplineFuncID
   actionAddNew = 'HRTPro07A01';
@@ -65,7 +69,8 @@ export class EmployeeDisciplineComponent extends UIComponent {
     private activedRouter: ActivatedRoute,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private codxODService: CodxOdService
   ) {
     super(inject);
   }
@@ -128,6 +133,23 @@ export class EmployeeDisciplineComponent extends UIComponent {
 
   changeDataMf(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    this.flagChangeMF = true;
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   ValueChangeComment(evt) {
@@ -189,7 +211,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
         }
         this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
+      // if (res?.event) this.view.dataService.clear();
     });
   }
 
@@ -266,6 +288,19 @@ export class EmployeeDisciplineComponent extends UIComponent {
         this.copyValue(event.text, data, 'eDiscipline');
         this.df.detectChanges();
         break;
+
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        // this.df.detectChanges();
+        break;
+      }
     }
   }
 
@@ -308,8 +343,8 @@ export class EmployeeDisciplineComponent extends UIComponent {
               this.view.formModel.entityName,
               this.view.formModel.funcID,
               '',
-              'Kỷ luật - ' + this.itemDetail.decisionNo ,
-              '',
+              'Kỷ luật - ' + this.itemDetail.decisionNo,
+              ''
             )
             .subscribe((result) => {
               console.log('ok', result);
