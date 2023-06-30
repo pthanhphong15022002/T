@@ -42,6 +42,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       template: null,
     },
   ];
+  objectID: string;
 
   constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
 
@@ -64,7 +65,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res) => {
+    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res: any) => {
       if (res) {
         console.log(res);
         this.data = res;
@@ -80,6 +81,13 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
             this.behavior.push(this.data.behaviorName);
           }
         }
+        this.api.execSv<any>('WP', 'WP', 'CommentsBusiness', 'GetPostByCardIDAsync', [res.recID]).subscribe((postRes) => {
+        if (postRes) {
+          if (postRes.attachments > 0) {
+            this.objectID = postRes.recID;
+          }
+        }
+      });
         this.dt.detectChanges();
       }
       const textElement = document.getElementById('situation');
