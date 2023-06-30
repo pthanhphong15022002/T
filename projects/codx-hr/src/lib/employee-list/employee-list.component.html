@@ -246,10 +246,8 @@
     <div class="w-25 p-3">
       <div class="d-flex flex-column">
         <div class="align-items-center1 mb-1">
-          <span class="text-gray-700 me-1">
-            <codx-label [setRequire]="false" [fiedName]="'Birthday'" [formModel]="view.formModel"
-              default="Ngày sinh:"></codx-label>
-          </span>
+          <codx-label class="text-dark fw-bold label-colon" [setRequire]="false" [fiedName]="'Birthday'" [formModel]="view.formModel"
+              default="Ngày sinh"></codx-label>
           <ng-container *ngIf="data.birthday; else noBirthday">
             <span class="text-gray-700">{{ data.birthday | fmDT}}</span>
           </ng-container>
@@ -258,21 +256,17 @@
           </ng-template>
         </div>
         <div class="align-items-center mb-1">
-          <span class="text-gray-700 me-1">
-            <codx-label [setRequire]="false" [fiedName]="'BirthPlace'" [formModel]="view.formModel"
-              default="Nơi sinh: "></codx-label>
-          </span>
+          <codx-label class="text-dark fw-bold label-colon" [setRequire]="false" [fiedName]="'BirthPlace'" [formModel]="view.formModel"
+              default="Nơi sinh"></codx-label>
           <span class="text-gray-700"
             [innerHTML]="data?.birthPlace | formatvalue : view.formModel : 'birthPlace'| async">
           </span>
         </div>
-        <div class="align-items-center">
-          <span class="text-gray-700 me-1">
-            <codx-label [setRequire]="false" [fiedName]="'DegreeName'" [formModel]="view.formModel"
-              default="Chuyên môn: "></codx-label>
-          </span>
+        <div class="align-items-center fs-7">
+          <codx-label class="label-colon fw-bold text-dark" [setRequire]="false" [fiedName]="'DegreeName'" [formModel]="view.formModel"
+              default="Chuyên môn"></codx-label>
           <ng-container *ngIf="data.degreeName; else noDegreeName">
-            <span class="text-gray-700">{{ data.degreeName }}</span>
+            <span class="text-gray-600">{{ data.degreeName }}</span>
           </ng-container>
           <ng-template #noDegreeName>
             <span class="place-holder">{{grvSetup['DegreeName'].headerText}}</span>
@@ -290,11 +284,9 @@
             </codx-vll>
           </div>
           <div class="align-items-center mb-1">
-            <span class="text-gray-700 me-1">
-              <codx-label [setRequire]="false" [fiedName]="'JoinedOn'" [formModel]="view.formModel"
-                default="Ngày vào làm: ">
+            <codx-label class="label-colon text-dark fw-bold" [setRequire]="false" [fiedName]="'JoinedOn'" [formModel]="view.formModel"
+                default="Ngày vào làm">
               </codx-label>
-            </span>
             <ng-container *ngIf="data.joinedOn; else noJoinedOn">
               <span class="text-gray-700">{{data.joinedOn | fmDT}}</span>
             </ng-container>
@@ -303,11 +295,9 @@
             </ng-template>
           </div>
           <div class="align-items-center">
-            <span class="text-gray-700 me-1">
-              <codx-label name="lblSenioritydate" [fiedName]="'Senioritydate'" [setRequire]="false"
-                [formModel]="view.formModel" default="Thâm niên: ">
+            <codx-label class="label-colon text-dark fw-bold" name="lblSenioritydate" [fiedName]="'Senioritydate'" [setRequire]="false"
+                [formModel]="view.formModel" default="Thâm niên">
               </codx-label>
-            </span>
             <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
               <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>
             </ng-container>
