@@ -56,6 +56,7 @@ export class EmployeeContractComponent extends UIComponent {
   dialog!: DialogRef;
   grvSetup: any;
   runModeCheck: boolean = false;
+  flagChangeMF: boolean = false;
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01';
@@ -74,7 +75,6 @@ export class EmployeeContractComponent extends UIComponent {
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
-    private shareService: CodxShareService,
     private codxODService: CodxOdService,
     private notify: NotificationsService
   ) {
@@ -182,7 +182,6 @@ export class EmployeeContractComponent extends UIComponent {
       }
     });
   }
-  flagChangeMF: boolean = false;
 
   changeDataMf(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
@@ -205,7 +204,7 @@ export class EmployeeContractComponent extends UIComponent {
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
       this.runModeCheck = true;
-      this.shareService.changeMFApproval(e, data?.unbounds);
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
     }
     //  else {
     //   this.hrService.handleShowHideMF(event, data, this.view.formModel);
@@ -250,7 +249,7 @@ export class EmployeeContractComponent extends UIComponent {
         break;
 
       default: {
-        this.shareService.defaultMoreFunc(
+        this.codxShareService.defaultMoreFunc(
           event,
           data,
           null,
@@ -258,6 +257,7 @@ export class EmployeeContractComponent extends UIComponent {
           this.view.dataService,
           this
         );
+        this.df.detectChanges();
         break;
       }
       //Send email

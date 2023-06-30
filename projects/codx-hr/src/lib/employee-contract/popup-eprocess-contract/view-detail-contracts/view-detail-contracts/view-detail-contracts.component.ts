@@ -127,7 +127,7 @@ export class ViewDetailContractsComponent implements OnInit {
   }
 
   changeDataMF(e: any, data: any) {
-    this.hrService.handleShowHideMF(e, data, this.view.formModel);
+    this.hrService.handleShowHideMF(e, data, this.formModel);
 
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
