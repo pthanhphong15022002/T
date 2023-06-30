@@ -75,10 +75,23 @@ function formatDtDis(item:any)
   if(item.relations != null) item.lstUserID = getListImg(item.relations)
   return item;
 }
-function convertHtmlAgency(agencyName: any , headerText: any) {
+function convertHtmlAgency(agencyName: any , headerText: any , agencies:any = null) {
   var divE = document.createElement('div');
   divE.classList.add("d-flex");
-  if(agencyName)
+  if(agencies && agencies.length>0)
+  {
+    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span>';
+    let i=0;
+    agencies.forEach(elm=>{
+      html += '<span class="ms-1">';
+      if(i>0) html += ','
+      html += (elm.AgencyName) + '</span>';
+      i++;
+    })
+    html += '</div>';
+    divE.innerHTML = html;
+  }
+  else if(agencyName)
     divE.innerHTML = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1">' + agencyName + '</span></div>';
   else
   {
@@ -87,12 +100,25 @@ function convertHtmlAgency(agencyName: any , headerText: any) {
   } 
   return divE.outerHTML  || divE.innerText;
 }
-function convertHtmlAgency2(agencyName,txtLstAgency:any)
+function convertHtmlAgency2(agencyName,txtLstAgency:any, agencies:any = null)
 {
-  if(!agencyName && !txtLstAgency)
+  if(!agencyName && !txtLstAgency && !agencies)
     return '<div><span class="tex-gray-300">Tên công ty</span></div>';
   var desc = '<div class="d-flex">';
-  if(agencyName)
+  if(agencies && agencies.length>0)
+  {
+    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span>';
+    let i=0;
+    agencies.forEach(elm=>{
+      html += '<span class="ms-1">';
+      if(i>0) html += ','
+      html += (elm.agencyName) + '</span>';
+      i++;
+    })
+    html += '</div>';
+    desc += html;
+  }
+  else if(agencyName)
     desc += '<div class="d-flex align-items-center me-2"><span class="icon-i-building icon-18"></span><span class="ms-1 fs-6 fw-bold">' +agencyName+'</span></div>';
   if(txtLstAgency)
     desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div>';
