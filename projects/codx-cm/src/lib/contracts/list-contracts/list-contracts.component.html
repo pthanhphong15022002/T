@@ -32,7 +32,7 @@
         </ngx-skeleton-loader>
         <div class="w-100 d-flex flex-column ms-5">
           <ngx-skeleton-loader
-            style="width: 100%; margin-bottom: 5px;"
+            style="width: 100%; margin-bottom: 5px"
             [theme]="{
               'border-radius': '5px',
               height: 'py-2',
@@ -51,7 +51,7 @@
           ></ngx-skeleton-loader>
         </div>
       </div>
-      <hr/>
+      <hr />
     </div>
   </div>
 
@@ -59,77 +59,109 @@
     <table class="table">
       <thead>
         <tr>
-          <th>STT</th>
-          <th>Tên hợp đồng</th>
-          <th>Giá trị hợp đồng</th>
-          <th>Ngày hiệu lực</th>
-          <th>Trạng thái</th>
-          <th></th>
+          <th>
+            <codx-label
+              class="fw-bold"
+              name="lblIndex"
+              [formModel]="formModel"
+              [default]="'STT'"
+            ></codx-label>
+          </th>
+          <th>
+            <codx-label
+              class="fw-bold"
+              name="contractName"
+              [formModel]="formModel"
+              [setRequire]="false"
+            ></codx-label>
+          </th>
+          <th>
+            <codx-label
+              class="fw-bold"
+              name="contractAmt"
+              [formModel]="formModel"
+              [setRequire]="false"
+            ></codx-label>
+          </th>
+          <th>
+            <codx-label
+              class="fw-bold"
+              name="effectiveFrom"
+              [formModel]="formModel"
+              default="Ngày hiệu lực"
+              [setRequire]="false"
+            ></codx-label>
+          </th>
+          <th>
+            <codx-label
+              class="fw-bold"
+              name="status"
+              [formModel]="formModel"
+              [setRequire]="false"
+            ></codx-label>
+          </th>
+          <th style="width: 100px"></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let contract of listContract; let i = index" class="has-action-menu px-5">
-          <td> {{ i + 1 }}</td>
-          <td>{{ contract?.contractName }}</td>
-          <td>john@example.com</td>
-          <td>{{ contract?.effectiveFrom | date : dateFomat }}</td>
-          <td><codx-mfunc
-            [type]="'hover'"
-            [dataItem]="moreDefaut"
-            [formModel]="formModel"
-            (changeDataMF)="changeDataMFTask($event)"
-            (clickMF)="clickMF($event, contract)"
-          >
-          </codx-mfunc></td>
+        <tr
+          *ngFor="let contract of listContract; let i = index"
+          class="has-action-menu px-5"
+        >
+          <td class="text-center text-gray-600">{{ i + 1 }}</td>
+          <td class="fw-bold text-gray-600">{{ contract?.contractName }}</td>
+          <td>
+            <span
+              class="text-gray-600"
+              [innerHTML]="
+                contract?.contractAmt
+                  | formatvalue : formModel : 'ContractAmt'
+                  | async
+              "
+            ></span>
+            <span
+              class="ms-1 text-gray-600"
+              [innerHTML]="
+                contract?.currencyID
+                  | formatvalue : formModel : 'CurrencyID'
+                  | async
+              "
+            ></span>
+          </td>
+          <td>
+            <span
+              class="text-gray-600"
+              [innerHTML]="
+                contract?.effectiveFrom
+                  | formatvalue : formModel : 'EffectiveFrom'
+                  | async
+              "
+            ></span>
+          </td>
+          <td>
+            <codx-vll
+              [name]="'CRM015'"
+              [field]="'Status'"
+              [value]="contract?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-primary badge-sm"
+            ></codx-vll>
+          </td>
+
+          <td>
+            <codx-mfunc
+              [type]="'hover'"
+              [dataItem]="moreDefaut"
+              [formModel]="formModel"
+              (changeDataMF)="changeDataMF($event)"
+              (clickMF)="clickMF($event, contract)"
+            >
+            </codx-mfunc>
+          </td>
         </tr>
       </tbody>
     </table>
-    <div
-      *ngFor="let contract of listContract; let i = index"
-      class="has-action-menu px-5"
-    >
-      <div class="row">
-        <div class="col-1 d-flex justify-content-center align-items-center">
-          {{ i + 1 }}
-        </div>
-        <div class="col-5 d-flex flex-column justify-content-center">
-          <span class="fs-6 fw-bold">{{ contract?.contractName }}</span>
-          <span class="text-gray-600"
-            >Ngày hiệu lực:
-            {{ contract?.effectiveFrom | date : dateFomat }}</span
-          >
-        </div>
-        <div class="col-2 d-flex justify-content-end align-items-center">
-          <i class="icon-money"></i>
-          <span class="fw-bold">{{ contract?.contractAmt }}</span>
-          <span
-            class="fs-7 ms-2"
-            [innerHTML]="
-              contract?.currencyID
-                | formatvalue : formModel : 'CurrencyID'
-                | async
-            "
-          ></span>
-        </div>
-        <div class="col-2 d-flex justify-content-end align-items-center">
-          <span class="text-gray-600">{{
-            contract?.effectiveTo | date : dateFomat
-          }}</span>
-        </div>
-        <div class="col-2 d-flex justify-content-end align-items-center">
-          <span class="badge badge-sm badge-light-primary">Chờ duyệt</span>
-        </div>
-      </div>
-      <codx-mfunc
-        [type]="'hover'"
-        [dataItem]="moreDefaut"
-        [formModel]="formModel"
-        (changeDataMF)="changeDataMFTask($event)"
-        (clickMF)="clickMF($event, contract)"
-      >
-      </codx-mfunc>
-      <hr />
-    </div>
   </div>
 </ng-template>
 

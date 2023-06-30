@@ -5,11 +5,21 @@
   [footer]="footerRightTemp"
   (clickMF)="clickMF($event, contract)"
   (changeDataMF)="changeDataMF($event, contract)"
+  [hideMF]="isView"
   [dataItem]="contract"
   class="overflow-hidden"
 ></codx-detail-tmp>
 
 <ng-template #headerTemp>
+  <div *ngIf="isView" class="d-flex justify-content-end">
+    <button
+        class="button-close d-flex p-3"
+        style="border: none; outline: none; background: none"
+        (click)="dialog.close()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
+  </div>
   <div class="d-flex justify-content-between">
     <div class="flex-grow-1">
       <div class="d-flex align-items-center justify-content-between mb-2">

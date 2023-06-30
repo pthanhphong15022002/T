@@ -155,6 +155,12 @@ export class DealDetailComponent implements OnInit {
         icon: 'icon-sticky_note_2',
         isActive: false,
       },
+      {
+        name: 'History',
+        textDefault: 'Lịch sử hoạt động',
+        icon: 'icon-sticky_note_2',
+        isActive: false,
+      },
 
     ];
   }

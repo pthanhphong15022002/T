@@ -31,7 +31,7 @@
 </ng-template>
 
 <ng-template #column1Template let-data>
-  <div class="d-flex gap-3 align-items-center p-3">
+  <div class="d-flex gap-3 align-items-center py-2">
     <codx-img
       [funcId]="view.formModel.funcID"
       [objectId]="data?.itemID"
@@ -48,10 +48,11 @@
       <div class="fs-8 d-flex gap-3">
         <div>
           <codx-label
-            fiedName="itemGroupID"
+            fiedName="lblItemGroupID"
             [formModel]="view.formModel"
-          ></codx-label
-          >:&nbsp;
+            default="Nhóm"
+            class="label-colon"
+          ></codx-label>
           <span class="text-primary">{{ data?.itemGroupID }}</span>
         </div>
         •
@@ -59,8 +60,8 @@
           <codx-label
             fiedName="productLineID"
             [formModel]="view.formModel"
-          ></codx-label
-          >:&nbsp;
+            class="label-colon"
+          ></codx-label>
           <span class="text-primary">{{ data?.productLineID }}</span>
         </div>
       </div>
@@ -82,8 +83,8 @@
     fiedName="lblPricingMethod"
     [formModel]="view.formModel"
     default="Phương pháp tính giá"
-  ></codx-label
-  >:&nbsp;
+    class="label-colon"
+  ></codx-label>
   <span
     class="fw-bold"
     [innerHTML]="
@@ -99,8 +100,8 @@
     fiedName="lblFollow"
     [formModel]="view.formModel"
     default="Theo dõi"
-  ></codx-label
-  >:&nbsp;
+    class="label-colon"
+  ></codx-label>
   <span
     class="fw-bold"
     [innerHTML]="

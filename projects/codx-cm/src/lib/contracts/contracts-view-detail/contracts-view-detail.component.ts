@@ -1,21 +1,20 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  Injector,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
-import {
-  CallFuncService,
+  DialogData,
+  DialogRef,
   FormModel,
-  NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { CodxCmService } from '../../codx-cm.service';
+import {
+  Input,
+  Injector,
+  OnChanges,
+  Component,
+  SimpleChanges,
+  Optional,
+} from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
 import { CM_Contracts, CM_ContractsPayments, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
-import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-detail.component.html',
@@ -24,6 +23,8 @@ import { firstValueFrom } from 'rxjs';
 export class ContractsViewDetailComponent extends UIComponent implements  OnChanges {
   @Input() contract: CM_Contracts;
   @Input() formModel: FormModel;
+  dialog: DialogRef;
+  isView = false;
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
@@ -43,32 +44,39 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
-    // { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
-    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
   fmQuotationLines: FormModel = {
-    formName: 'CMQuotationsLines',
-    gridViewName: 'grvCMQuotationsLines',
-    entityName: 'CM_QuotationsLines',
     funcID: 'CM02021',
+    formName: 'CMQuotationsLines',
+    entityName: 'CM_QuotationsLines',
+    gridViewName: 'grvCMQuotationsLines',
   };
   fmQuotations: FormModel = {
-    formName: 'CMQuotations',
-    gridViewName: 'grvCMQuotations',
-    entityName: 'CM_Quotations',
     funcID: 'CM02021',
+    formName: 'CMQuotations',
+    entityName: 'CM_Quotations',
+    gridViewName: 'grvCMQuotations',
   };
   constructor(
     private inject: Injector,
-    private callfunc: CallFuncService,
-    private callFunc: CallFuncService,
-    private notiService: NotificationsService,
-    private changeDetector: ChangeDetectorRef,
-    private cmService: CodxCmService,
     private contractService: ContractsService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.dialog = dialog;
     this.listTypeContract = contractService.listTypeContract;
+    if(!this.formModel){
+      this.formModel = dt?.data?.formModel;
+    }
+    if(!this.contract){
+      this.contract = dt?.data?.contract;
+    }
+    this.isView = dt?.data?.isView;
+    if(this.isView){
+      this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
+      this.getPayMentByContractID(this.contract?.recID);
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.contract && this.contract){
@@ -132,6 +140,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
       });
     }
   }
+
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':

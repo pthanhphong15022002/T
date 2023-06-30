@@ -511,6 +511,83 @@ export class DealsComponent
     //     }
     //   }
     // }
+
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        if (mappingFunction) {
+          mappingFunction(eventItem, data);
+        }
+      }
+    }
+  }
+  getRoleMoreFunction(type) {
+    var functionMappings;
+    var isDisabled = (eventItem, data) => {
+      if (
+        (data.closed &&  data.status != '1' ) ||  data.status == '1' ||  this.checkMoreReason(data)
+      ) {
+        eventItem.disabled = true;
+      }
+    };
+    var isDelete = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isCopy = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isEdit = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data)) {
+        eventItem.disabled = true;
+      }
+    };
+    var isClosed = (eventItem, data) => {
+      eventItem.disabled =
+        data.closed ||  ['0','1'].includes(data.status)
+        this.checkMoreReason(data);
+    };
+    var isOpened = (eventItem, data) => {
+      eventItem.disabled =
+        !data.closed ||  ['1'].includes(data.status)
+        this.checkMoreReason(data);
+    };
+    var isStartDay = (eventItem, data) => {
+      eventItem.disabled =   !['1'].includes(data.status)
+    };
+    var isOwner = (eventItem, data) => {
+      eventItem.disabled = !['1','2'].includes(data.status);
+    };
+    var isConfirmOrRefuse = (eventItem, data) => {
+      eventItem.disabled = data.status != '0';
+    };
+
+    functionMappings = {
+      CM0201_1: isDisabled,
+      CM0201_2: isStartDay,
+      CM0201_3: isDisabled,
+      CM0201_4: isDisabled,
+      CM0201_5: isDisabled,
+      CM0201_6: isDisabled,
+      CM0201_7: isOwner,
+      CM0201_8: isClosed,
+      CM0201_9: isOpened,
+      CM0201_12: isConfirmOrRefuse,
+      CM0201_13: isConfirmOrRefuse,
+      SYS101: isDisabled,
+      SYS103: isEdit,
+      SYS03: isEdit,
+      SYS104: isCopy,
+      SYS04: isCopy,
+      SYS102: isDelete,
+      SYS02: isDelete,
+    };
+
+    return functionMappings[type];
   }
   async executeApiCalls() {
     try {

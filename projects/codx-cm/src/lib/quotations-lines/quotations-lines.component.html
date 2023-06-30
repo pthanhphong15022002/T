@@ -18,6 +18,9 @@
         [dataValues]="transID"
         (cellChanged)="quotationsLineChanged($event)"
         (created)="gridCreated($event, gridQuationsLines)"
+        [autoAddRow]="true"
+        (onAddNew)="onAddNew($event)"
+        (onEdit)="onEdit($event)"
       ></codx-gridview-v2>
       <!-- //    [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
       <div
@@ -39,7 +42,7 @@
         <codx-label name="blbAddPopup" default="Thêm"></codx-label>
       </button>
     </div>
-    <!-- <div #btnRef class="btn-addline">
+    <div #btnRef class="btn-addline">
       <button
         type="button"
         class="btn btn-sm btn-light-primary"
@@ -48,7 +51,7 @@
         <i class="icon-playlist_add icon-16"></i>
         <codx-label name="blbAddLines" default="Thêm dòng"></codx-label>
       </button>
-    </div> -->
+    </div>
   </div>
 
   <ng-template #morefunction let-data>
