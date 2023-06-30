@@ -50,7 +50,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
 
   }
   ngOnDestroy(): void {
-
+    this.pageTitle.setSubTitle("");
   }
   ngOnChanges(changes: SimpleChanges): void {
   }

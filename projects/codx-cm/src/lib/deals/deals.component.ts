@@ -1682,7 +1682,7 @@ export class DealsComponent
               .confirmOrRefuse(data?.recID, check, '')
               .subscribe((res) => {
                 if (res) {
-                  this.dataSelected.status = '3';
+                  this.dataSelected.status = '1';
                   this.detailViewDeal.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );

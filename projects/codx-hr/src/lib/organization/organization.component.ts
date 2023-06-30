@@ -349,4 +349,9 @@ export class OrgorganizationComponent extends UIComponent {
   //       }
   //     });
   // }
+
+  searchText:string = "";
+  searchUser(event:any){
+    this.searchText = event;
+  }
 }
