@@ -81,6 +81,10 @@ export class PopupJobGeneralInfoComponent
   }
 
   onSaveForm() {
+    if(this.formGroup.invalid){
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
       if (p != null) {
         this.notitfy.notifyCode('SYS007');

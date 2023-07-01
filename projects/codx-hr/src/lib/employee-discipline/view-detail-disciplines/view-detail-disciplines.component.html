@@ -3,11 +3,11 @@
   [header]="header"
   [hideMF]="hideMF"
   [dataItem]="itemDetail"
+  [footer]="!hideFooter ? footer : null"
   [formModel]="view?.formModel || formModel"
-  class="h-100 dt-es-view"
   (clickMF)="clickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
-  [footer]="!hideFooter ? footer : null"
+  class="h-100 dt-es-view"
 >
   <!-- [body]="body" -->
 

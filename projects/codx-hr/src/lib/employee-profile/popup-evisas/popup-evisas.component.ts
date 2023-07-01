@@ -155,7 +155,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       this.hrService.AddEmployeeVisaInfo(this.visaObj).subscribe((p) => {
         if (p != null) {
           this.visaObj.recID = p.recID;
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(p);
         } else this.notify.notifyCode('SYS023');
       });

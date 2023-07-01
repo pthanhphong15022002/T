@@ -126,16 +126,30 @@
     </div>
 
     <div class="w-25 p-3">
-      <codx-vll
-        [formModel]="view.formModel"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showIcon]="false"
-        [showBgColor]="true"
-        ngClass="badge badge-sm"
-      >
-      </codx-vll>
+      <ng-container *ngIf="flagChangeMF">
+        <ng-container *ngIf="runModeCheck; else elseVll">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            [name]="'ES030'"
+            [value]="data?.unbounds?.statusApproval + data?.unbounds?.stepType"
+            class="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
+        <ng-template #elseVll>
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+            ngClass="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-template>
+      </ng-container>
     </div>
 
     <div class="align-self-center">
@@ -145,7 +159,7 @@
           (clickMF)="clickMF($event, data)"
           (changeDataMF)="changeDataMF($event, data)"
           [dataItem]="data"
-          type="hover"
+          type="view"
         >
         </codx-mfunc>
       </div>
@@ -255,7 +269,7 @@
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
-    [typeMF]="'hover'"
+    [typeMF]="'view'"
     [title]="data.emp?.employeeName"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
@@ -315,14 +329,40 @@
       ></span>
 
       <div class="mt-1">
-        <codx-vll
+        <ng-container *ngIf="flagChangeMF">
+          <ng-container *ngIf="runModeCheck; else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
+        </ng-container>
+        <!-- <codx-vll
           class="badge badge-sm badge-light-primary me-3"
           [name]="'HRS102'"
           [value]="data?.status"
           [showText]="true"
           [showBgColor]="true"
         >
-        </codx-vll>
+        </codx-vll> -->
       </div>
     </div>
   </ng-template>

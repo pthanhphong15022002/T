@@ -82,10 +82,10 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
           }
         }
         this.api.execSv<any>('WP', 'WP', 'CommentsBusiness', 'GetPostByCardIDAsync', [res.recID]).subscribe((postRes) => {
-        if (postRes) {
-          if (postRes.attachments > 0) {
-            this.objectID = postRes.recID;
-          }
+        if (postRes && postRes.attachments > 0) {
+          this.objectID = postRes.recID;
+        } else {
+          this.objectID = undefined;
         }
       });
         this.dt.detectChanges();

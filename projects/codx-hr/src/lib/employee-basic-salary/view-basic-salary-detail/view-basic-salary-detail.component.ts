@@ -11,6 +11,9 @@ import {
 import { AuthStore, CacheService, ViewsComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { isObservable } from 'rxjs';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-view-basic-salary-detail',
@@ -23,7 +26,9 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
     private hrService: CodxHrService,
     private df: ChangeDetectorRef,
     private authStore: AuthStore,
-    private cache: CacheService
+    private cache: CacheService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {
     this.user = this.authStore.get();
   }
@@ -59,8 +64,27 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
   }
 
   changeDataMF(e: any, data: any) {
-    this.hrService.handleShowHideMF(e, data, this.view);
+    this.hrService.handleShowHideMF(e, data, this.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
   }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data?.unbounds);
+    }
+  }
+
+  // changeDataMF(e: any, data: any) {
+  //   this.hrService.handleShowHideMF(e, data, this.view);
+  // }
 
   clickMFunc(event: any, data: any = null) {
     this.clickMF.emit({ event: event, data: data });

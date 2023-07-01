@@ -221,8 +221,8 @@
 </ng-template>
 <!--- Template tree-->
 <ng-template #templateTree let-item>
-  <div class="row px-2 border-bottom has-action-menu">
-    <div class="col-5 py-3">
+  <div class="d-flex px-2 border-bottom has-action-menu w-100">
+    <div class="my-6">
       <div class="text-dark fw-bold fs-6">
         {{ item.orgUnitName }}
       </div>
@@ -246,8 +246,8 @@
       </div>
     </div>
 
-    <div class="col-7 d-flex justify-content-end py-3">
-      <div class="w-50">
+    <div class="d-flex justify-content-end my-4 ms-auto">
+      <div class="p-w-250">
         <div class="d-flex align-items-top justify-content-between">
           <div class="me-3">
             <codx-img
@@ -323,28 +323,30 @@
           </div>
         </div>
       </div>
-      <div class="w-50">
-        <div #c class="mx-6 d-flex flex-column align-items-center">
-          <span class="text-gray-500">
-            <codx-label
-              [formModel]="view.formModel"
-              name="lblStaff"
-              default="Nhân viên"
-            >
-            </codx-label>
-          </span>
-          <div class="fs-2 fw-bold mb-2 text-primary number-users">
-            {{ item.counts ? item.counts : 0 }}
-          </div>
-          <ng-container *ngIf="item.staffEmp?.length > 0">
-            <ng-container
-              *ngTemplateOutlet="
-                templateListEmployee;
-                context: { $implicit: item.staffEmp }
-              "
-            >
+      <div class="p-w-150 d-flex justify-content-end">
+        <div class="d-flex">
+          <div #c class="mx-6 d-flex flex-column align-items-center">
+            <span class="text-gray-500">
+              <codx-label
+                [formModel]="view.formModel"
+                name="lblStaff"
+                default="Nhân viên"
+              >
+              </codx-label>
+            </span>
+            <div class="fs-2 fw-bold mb-2 text-primary number-users">
+              {{ item.counts ? item.counts : 0 }}
+            </div>
+            <ng-container *ngIf="item.staffEmp?.length > 0">
+              <ng-container
+                *ngTemplateOutlet="
+                  templateListEmployee;
+                  context: { $implicit: item.staffEmp }
+                "
+              >
+              </ng-container>
             </ng-container>
-          </ng-container>
+          </div>
         </div>
       </div>
     </div>
@@ -509,6 +511,7 @@
       aria-haspopup="true"
       aria-expanded="false"
       style="padding: 0 !important ; margin-left: 0 !important; border: none"
+      (click)="clickOpen($event)"
     >
       <div class="d-flex align-items-center">
         <codx-img
@@ -537,21 +540,23 @@
     </div>
     <div
       ngbDropdownMenu
-      class="dropdown-menu w-300px p-3 "
+      class="dropdown-menu w-300px p-3"
       aria-labelledby="dropdownMenuButton"
     >
       <div class="">
-        <codx-label
-          default="Danh sách nhân viên"
-          class="fw-bold"
-        ></codx-label>
-        <span class="fw-bold">({{employees?.length}})</span>
+        <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
+        <span class="fw-bold">({{ employees?.length }})</span>
       </div>
       <div class="py-2">
         <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar>
       </div>
       <div class="hr-list-employee">
-        <ng-container *ngFor="let emp of employees | filter : searchText : 'employeeName': '' :''">
+        <ng-container
+          *ngFor="
+            let emp of employees
+              | filter : searchText : 'employeeName' : '' : ''
+          "
+        >
           <div class="d-flex align-items-centerp py-1">
             <codx-img
               [objectId]="emp.employeeID"
