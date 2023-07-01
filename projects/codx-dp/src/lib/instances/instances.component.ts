@@ -80,6 +80,7 @@ export class InstancesComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
+  @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   @Output() valueListID = new EventEmitter<any>();
   @Output() listReasonBySteps = new EventEmitter<any>();
@@ -318,6 +319,14 @@ export class InstancesComponent
           template: this.cardKanban,
           template2: this.viewColumKaban,
           setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.chart,
+        active: false,
+        sameData: false,
+        model: {
+          panelLeftRef: this.dashBoard,
         },
       },
     ];
