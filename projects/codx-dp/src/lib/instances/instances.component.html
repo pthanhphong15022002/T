@@ -17,11 +17,12 @@
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
   [viewActiveType]="viewMode"
+  (filterReportChange)="filterChange($event)"
 >
 </codx-views>
 <!-- Dashboard -->
 <ng-template #dashBoard>
-  <codx-instance-dashboard></codx-instance-dashboard>
+  <codx-instance-dashboard [vllStatus]="vllStatus"></codx-instance-dashboard>
 </ng-template>
 
 <!-- KANBAN -->
