@@ -45,7 +45,7 @@
       <div class="d-flex flex-column">
         <div class="d-flex align-items-center">
           <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file"
-            (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(file, 'float-start')" [imageWidth]="20"
+            [class]="classFile(file, 'float-start')" [imageWidth]="20"
             [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3 cursor-pointer" [title]="
               file.folderName != undefined ? file.folderName : file.fileName
             " cardCss="w-100" [typeMF]="'hover'" [baseHeaderRightTmp]="rightSecurity">

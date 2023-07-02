@@ -172,11 +172,24 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   async selectedFile(e) {
     this.generateGuid();
     if (this.inline == false) {
-      let recID = JSON.parse(JSON.stringify(this.guidID));
-      e.data[0].objectID = recID;
+      for(var i = 0 ; i < e.data.length ; i++)
+      {
+        e.data[i].objectID = JSON.parse(JSON.stringify(this.guidID));
+      }
+     
     } else {
-      if (this.itemAnswer) e.data[0].objectID = this.itemAnswer.recID;
-      else e.data[0].objectID = this.data.recID;
+      if (this.itemAnswer) {
+        for(var i = 0 ; i < e.data.length ; i++)
+        {
+          e.data[i].objectID = this.itemAnswer.recID;
+        }
+      }
+      else {
+        for(var i = 0 ; i < e.data.length ; i++)
+        {
+          e.data[i].objectID = this.data.recID;
+        }
+      }
     }
     let files = e.data;
     // up file
@@ -193,23 +206,52 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     }
     this.ATM_Image.fileUploadList = files;
     (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
-      if (result.data) {
-        if (this.modeFile == 'change') {
-          this.SVServices.deleteFile(
-            this.data.recID,
-            this.functionList.entityName
-          ).subscribe();
+      if(files.length == 1)
+      {
+        if (result.data) {
+          if (this.modeFile == 'change') {
+            this.SVServices.deleteFile(
+              this.data.recID,
+              this.functionList.entityName
+            ).subscribe();
+          }
+          var referType: any;
+          if (files[0]?.referType == 'video') referType = 'V';
+          else referType = 'P';
+          var obj = {
+            referType: referType,
+            dataUpload: files,
+            youtube: false,
+            videoID: null,
+          };
+          this.dialog.close([obj]);
         }
-        var referType: any;
-        if (files[0]?.referType == 'video') referType = 'V';
-        else referType = 'P';
-        var obj = {
-          referType: referType,
-          dataUpload: files,
-          youtube: false,
-          videoID: null,
-        };
-        this.dialog.close(obj);
+      }
+      else if(result && result.length > 0)
+      {
+        var arr = [];
+        for(var i = 0 ; i < result.length ; i++)
+        {
+          if (result[i].data) {
+            if (this.modeFile == 'change') {
+              this.SVServices.deleteFile(
+                this.data.recID,
+                this.functionList.entityName
+              ).subscribe();
+            }
+            var referType: any;
+            if (result[i].data?.referType == 'video') referType = 'V';
+            else referType = 'P';
+            var obj = {
+              referType: referType,
+              dataUpload: files,
+              youtube: false,
+              videoID: null,
+            };
+            arr.push(obj);
+          }
+          this.dialog.close(arr);
+        }
       }
     });
   }

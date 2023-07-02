@@ -1,0 +1,12 @@
+<div *ngIf="dataFile && dataFile.length>0" class="d-flex flex-wrap justify-content-center w-100">
+    <ng-container *ngFor="let item of dataFile , let i = index">
+        <ng-container *ngIf="dataFile.length == 1 , else mfile">
+            <img [src]="getSrcImage(item)" class="w-100" />
+        </ng-container>
+        <ng-template #mfile>
+            <div  class="sv-img-view-file p-1">
+                <img [src]="getSrcImage(item)" class="w-100 h-100" (click)="openPopUpViewFile(i)"/>
+            </div>
+        </ng-template>
+    </ng-container>
+</div>
