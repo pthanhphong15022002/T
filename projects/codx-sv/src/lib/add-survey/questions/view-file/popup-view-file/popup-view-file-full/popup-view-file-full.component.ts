@@ -23,4 +23,9 @@ export class PopupViewFileFullComponent {
     if(data?.avatar) return data?.avatar
     return environment.urlUpload + "/" +data?.pathDisk;
   }
+
+  close()
+  {
+    this.dialog.close()
+  }
 }

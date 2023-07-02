@@ -1119,7 +1119,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
               {
                 this.lstEditIV.push(res.event[0].dataUpload[i]);
               }
-            
+              this.lstEditIV = [...this.lstEditIV];
               this.SVServices.signalSave.next('saving');
               this.setTimeoutSaveData(
                 this.questions[seqNoSession].children[seqNoQuestion],

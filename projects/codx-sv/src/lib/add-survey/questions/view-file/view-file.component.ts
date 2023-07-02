@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
 import { CallFuncService, DialogData, DialogRef } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { PopupViewFileComponent } from './popup-view-file/popup-view-file.component';
@@ -8,7 +8,7 @@ import { PopupViewFileComponent } from './popup-view-file/popup-view-file.compon
   templateUrl: './view-file.component.html',
   styleUrls: ['./view-file.component.scss']
 })
-export class ViewFileComponent implements OnInit{
+export class ViewFileComponent implements OnInit , OnChanges{
  
   @Input() dataFile:any;
   @Input() questionID:any;
@@ -17,6 +17,13 @@ export class ViewFileComponent implements OnInit{
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes?.dataFile && changes.dataFile?.previousValue != changes.dataFile?.currentValue)
+    {
+      this.dataFile = changes.dataFile?.currentValue;
+      this.getDataFile();
+    }
+  }
 
   ngOnInit(): void {
     this.getDataFile();

@@ -1,5 +1,5 @@
 import { S } from '@angular/cdk/keycodes';
-import { AfterViewInit, Component, Input, OnInit, Optional, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, Optional, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { CallFuncService, DialogData, DialogModel, DialogRef } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { PopupViewFileFullComponent } from './popup-view-file-full/popup-view-file-full.component';
@@ -11,7 +11,7 @@ import { PopupViewFileFullComponent } from './popup-view-file-full/popup-view-fi
   encapsulation: ViewEncapsulation.None,
   
 })
-export class PopupViewFileComponent {
+export class PopupViewFileComponent implements OnChanges {
   dataFile: any;
   dialog:any
   scale = 1;
@@ -29,6 +29,12 @@ export class PopupViewFileComponent {
     this.dialog = dialog;
     this.dataFile = dt?.data?.dataFile;
     this.selectedIndex = dt?.data?.selectedIndex;
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes?.dataFile && changes.dataFile?.previousValue != changes.dataFile?.currentValue)
+    {
+      this.dataFile = changes.dataFile?.currentValue;
+    }
   }
 
   getSrcImage(data) {
@@ -89,6 +95,7 @@ export class PopupViewFileComponent {
     this.pointX = 0;
     this.pointY = 0;
     this. start = { x: 0, y: 0 };
+    this.selectedIndex = e?.currentIndex;
     this.zoom(e?.currentIndex);
   }
 
