@@ -303,7 +303,7 @@ export class CodxStepChartComponent
   }
 
   changeViewTimeGant(e) {
-    this.crrViewGant = e.data;
+    this.crrViewGant = e?.data;
     switch (this.crrViewGant) {
       case 'D':
         this.timelineSettings = this.timelineSettingsDays;
