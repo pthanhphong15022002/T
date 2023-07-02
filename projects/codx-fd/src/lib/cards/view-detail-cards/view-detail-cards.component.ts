@@ -19,6 +19,30 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   behavior: any[] = [];
   showmore: boolean = false;
   showSM: boolean = false;
+  tabControl = [
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      icon: '',
+      template: null,
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      icon: '',
+      template: null,
+    },
+    {
+      name: 'Comment',
+      textDefault: 'Bình luận',
+      isActive: false,
+      icon: '',
+      template: null,
+    },
+  ];
+  objectID: string;
 
   constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
 
@@ -41,7 +65,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res) => {
+    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res: any) => {
       if (res) {
         console.log(res);
         this.data = res;
@@ -57,6 +81,13 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
             this.behavior.push(this.data.behaviorName);
           }
         }
+        this.api.execSv<any>('WP', 'WP', 'CommentsBusiness', 'GetPostByCardIDAsync', [res.recID]).subscribe((postRes) => {
+        if (postRes && postRes.attachments > 0) {
+          this.objectID = postRes.recID;
+        } else {
+          this.objectID = undefined;
+        }
+      });
         this.dt.detectChanges();
       }
       const textElement = document.getElementById('situation');

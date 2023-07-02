@@ -228,6 +228,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           return;
       }
     }
+    if(this.formGroup.invalid){
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       if(this.actionType === 'add'){

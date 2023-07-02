@@ -1235,7 +1235,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 //#endregion
  
-//#region progress
+  //#region progress
 async openPopupUpdateProgress(data, type) {
     if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
       return;
@@ -1377,7 +1377,7 @@ async openPopupUpdateProgress(data, type) {
   }
 //#endregion
 
-//#region view 
+  //#region view 
 viewTask(data, type) {
     if (data) {
       let frmModel: FormModel = {

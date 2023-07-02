@@ -1,0 +1,24 @@
+.breadcrumb-dot .breadcrumb-item {
+    padding-right: 0;
+}
+
+.breadcrumb-dot .breadcrumb-item:after {
+    content: "";
+}
+
+.breadcrumb-dash .breadcrumb-item:after {
+    content: "|";
+}
+
+.breadcrumb-text {
+    color: #ff9c86;
+}
+
+.breadcrumb-item .active {
+    color: #f72d00 !important;
+}
+
+.font-12 {
+    font-size: 10px !important;
+    margin-top: 2px;
+}

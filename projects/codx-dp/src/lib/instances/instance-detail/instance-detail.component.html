@@ -415,11 +415,11 @@
 </ng-template>
 
 <ng-template #tempGanchart>
-  <div class="d-flex justify-content-end mb-2">
+  <!-- <div class="d-flex justify-content-end mb-2">
     <div>
-      <!-- <span>
+      <span>
         <codx-label default="Tùy chọn thời gian"></codx-label>
-      </span> -->
+      </span>
       <span class="input-sm">
         <codx-input
           type="valuelist"
@@ -430,9 +430,9 @@
         </codx-input>
       </span>
     </div>
-  </div>
+  </div> -->
   <div class="border border-gray-150">
-    <codx-gantt-chart
+    <!-- <codx-gantt-chart
       [dataSource]="ganttDs"
       [taskFields]="taskFields"
       [taskbarHeight]="60"
@@ -456,7 +456,12 @@
           {{ data.name }}
         </span>
       </div>
-    </ng-template>
+    </ng-template> -->
+    <div class="w-100 h-100" id="tabGantt">
+      <codx-step-chart
+        [instance]="this.dataSelect"
+      ></codx-step-chart>
+    </div>
   </div>
 
   <!-- mô tả -->

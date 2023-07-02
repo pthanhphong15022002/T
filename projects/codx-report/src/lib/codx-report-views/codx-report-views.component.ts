@@ -1,60 +1,77 @@
-
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { NavigationEnd, Route, Router } from '@angular/router';
-import { AuthStore, ButtonModel, CacheService, LayoutService, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  CacheService,
+  LayoutService,
+  PageTitleService,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 
 @Component({
   selector: 'codx-report-views',
   templateUrl: './codx-report-views.component.html',
-  styleUrls: ['./codx-report-views.component.scss']
+  styleUrls: ['./codx-report-views.component.scss'],
 })
-export class CodxReportViewsComponent   extends UIComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild('templateListCard') templateListCard!:TemplateRef<any>;
-  @ViewChild('view') viewBase:ViewsComponent;
-  onInit(): void {
-
-  }
+export class CodxReportViewsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit, OnChanges
+{
+  @ViewChild('templateListCard') templateListCard!: TemplateRef<any>;
+  @ViewChild('view') viewBase: ViewsComponent;
+  onInit(): void {}
 
   views: ViewModel[];
   viewType = ViewType;
-  funcID:any;
-  funcItem:any;
+  funcID: any;
+  funcItem: any;
   button: ButtonModel = {
-    id:'btnAdd'
-  }
-  module:any='';
+    id: 'btnAdd',
+  };
+  module: any = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
-    private cacheSv:CacheService,
+    private cacheSv: CacheService,
     private layout: LayoutService,
     private pageTitle: PageTitleService,
-    private routerNg:Router,
+    private routerNg: Router
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-    this.cacheSv.functionList(this.funcID).subscribe((res:any)=>{
-      if(res){
+    this.cacheSv.functionList(this.funcID).subscribe((res: any) => {
+      if (res) {
         this.funcItem = res;
         this.module = res.module ? res.module.toLowerCase() : '';
-        this.pageTitle.setSubTitle("");
+        this.pageTitle.setSubTitle('');
         this.pageTitle.setChildren([]);
       }
-    })
+    });
   }
-  ngOnChanges(changes: SimpleChanges): void {
-
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit(): void {
-
     this.views = [
       {
         type: ViewType.report,
         sameData: false,
         active: true,
         reportView: true,
-        reportType:'R',
+        reportType: 'R',
         model: {
           //template:this.templateListCard
         },
@@ -71,29 +88,32 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
       //   // },
       // },
     ];
-    this.routerNg.events.subscribe((event: any)=>{
-      if(event instanceof NavigationEnd){
+    this.routerNg.events.subscribe((event: any) => {
+      if (event instanceof NavigationEnd) {
         let arr = event.url.split('/');
-        if(arr.findIndex((item:any)=> item == this.funcID) > -1){
+        if (arr.findIndex((item: any) => item == this.funcID) > -1) {
           this.view.viewChanged.emit(this.view.currentView);
         }
         this.changeDetectorRef.detectChanges();
       }
-    })
+    });
     this.changeDetectorRef.detectChanges();
   }
-  viewChanged(e:any){
+  viewChanged(e: any) {
     this.funcID = this.router.snapshot.params['funcID'];
-    this.pageTitle.setSubTitle("");
+    this.pageTitle.setSubTitle('');
     //this.pageTitle.setTitle(this.funcItem.customName ? this.funcItem.customName : "" );
   }
-  onActions(e:any){
+  onActions(e: any) {
     if (e.type == 'detail') {
-      this.codxService.navigate('', this.module+'/report/detail/' + e.data.reportID);
+      this.codxService.navigate(
+        '',
+        this.module + '/report/detail/' + e.data.reportID
+      );
       this.detectorRef.reattach();
     }
   }
-  cardClick(e:any){
-    this.codxService.navigate("",this.module+"/report/detail/"+e.reportID)
+  cardClick(e: any) {
+    this.codxService.navigate('', this.module + '/report/detail/' + e.reportID);
   }
 }

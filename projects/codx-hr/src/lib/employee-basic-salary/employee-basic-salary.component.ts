@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { isObservable } from 'rxjs';
 import {
   ButtonModel,
   DialogRef,
@@ -21,6 +22,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -48,7 +50,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private codxODService: CodxOdService
   ) {
     super(injector);
   }
@@ -73,6 +76,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   cmtStatus: string = '';
   dataCategory;
   itemDetail;
+  runModeCheck: boolean = false;
+  flagChangeMF: boolean = false;
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
@@ -185,12 +190,45 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         this.copyValue(event.text, data);
         this.df.detectChanges();
         break;
+
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.df.detectChanges();
+        break;
+      }
+    }
+  }
+  changeDataMF(event, data) {
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    this.flagChangeMF = true;
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
     }
   }
 
-  changeDataMF(event, data): void {
-    this.hrService.handleShowHideMF(event, data, this.view);
-  }
+  // changeDataMF(event, data): void {
+  //   this.hrService.handleShowHideMF(event, data, this.view);
+  // }
 
   popupUpdateEBasicSalaryStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);

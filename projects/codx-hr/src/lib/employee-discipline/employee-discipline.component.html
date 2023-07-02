@@ -114,7 +114,33 @@
 
     <div class="w-30 min-w-200px px-2">
       <div class="d-flex flex-row">
-        <codx-vll
+        <ng-container *ngIf="flagChangeMF">
+          <ng-container *ngIf="runModeCheck; else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
+        </ng-container>
+        <!-- <codx-vll
           [formModel]="view.formModel"
           [field]="'Status'"
           [value]="data?.status"
@@ -123,7 +149,7 @@
           [showBgColor]="true"
           ngClass="badge badge-sm"
         >
-        </codx-vll>
+        </codx-vll> -->
       </div>
       <div class="d-flex flex-column">
         <div class="fw-bold" *ngIf="data?.disciplineDate">
@@ -190,7 +216,7 @@
           (clickMF)="clickMF($event, data)"
           (changeDataMF)="changeDataMf($event, data)"
           [dataItem]="data"
-          type="hover"
+          type="view"
         >
         </codx-mfunc>
       </div>
@@ -321,7 +347,7 @@
       [formModel]="view.formModel"
       [dataItem]="data"
       [imgOn]="data?.modifiedOn"
-      [typeMF]="'hover'"
+      [typeMF]="'view'"
       [title]="data.emp?.employeeName"
       [subTitle]="
         data?.emp?.positionID
@@ -393,14 +419,40 @@
         </div>
       </div>
       <div class="d-flex mt-1 align-items-center">
-        <codx-vll
+        <ng-container *ngIf="flagChangeMF">
+          <ng-container *ngIf="runModeCheck; else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
+        </ng-container>
+        <!-- <codx-vll
           class="badge badge-sm me-3"
           [name]="'HRS102'"
           [value]="data?.status"
           [showText]="true"
           [showBgColor]="true"
         >
-        </codx-vll>
+        </codx-vll> -->
         <!-- HRS104 -->
         <span
           *ngIf="data.signedDate"
