@@ -309,6 +309,8 @@ export class InstanceDetailComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.rollHeight();
+   
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {

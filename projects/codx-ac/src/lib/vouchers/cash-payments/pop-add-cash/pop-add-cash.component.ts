@@ -203,6 +203,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.journal = this.cashpayment.unbounds.journal;
       this.modegrid = this.cashpayment.unbounds.journal.inputMode;
     }
+    if (this.action == 'edit') {
+      this.journal = dialogData.data?.journal;
+      this.modegrid = this.journal.inputMode;
+      this.baseCurr = this.journal.unbounds.baseCurr;
+    }
   }
   //#endregion
 
@@ -543,7 +548,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.hideColumns(this.hideFields);
     setTimeout(() => {
       this.loadingform = false;
-    }, 500);
+    }, 1000);
   }
 
   gridCreatedSet() {
@@ -566,7 +571,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridSet.hideColumns(this.hideFieldsSet);
     setTimeout(() => {
       this.loadingform = false;
-    }, 500);
+    }, 1000);
   }
 
   lineChanged(e: any) {
@@ -1375,7 +1380,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
           //#endregion
         }
-        this.loadjounal();
+        //this.loadjounal();
         break;
     }
 
@@ -1391,15 +1396,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
   }
 
-  loadjounal() {
-    this.api
-      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
-      .subscribe((res) => {
-        this.journal = res[0];
-        this.baseCurr = this.journal.unbounds.baseCurr;
-        this.modegrid = this.journal.inputMode;
-      });
-  }
+  // loadjounal() {
+  //   this.api
+  //     .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+  //     .subscribe((res) => {
+  //       this.journal = res[0];
+  //       this.baseCurr = this.journal.unbounds.baseCurr;
+  //       this.modegrid = this.journal.inputMode;
+  //     });
+  // }
 
   requireGrid() {
     const field = ['DIM1', 'DIM2', 'DIM3', 'ProjectID'];

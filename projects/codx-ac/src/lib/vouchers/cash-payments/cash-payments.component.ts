@@ -299,6 +299,7 @@ export class CashPaymentsComponent extends UIComponent {
         var obj = {
           formType: 'edit',
           headerText: this.funcName,
+          journal:this.journal
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;

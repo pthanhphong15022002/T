@@ -715,8 +715,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.setTitle();
     this.dataOKRPlans = null;
     this.dataOKR = null;
-    this.getOKRPlans(this.periodID, this.interval, this.year);
-    this.getSharedPlans(this.periodID, this.interval, this.year);
+    //this.getOKRPlans(this.periodID, this.interval, this.year);
+    //this.getSharedPlans(this.periodID, this.interval, this.year);
     this.detectorRef.detectChanges();
   }
   clickMF(evt: any) {
