@@ -89,8 +89,6 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
         ])
         .subscribe((res) => {
           if (res && res?.data) {
-            this.data = new DP_Processes();
-
             this.data = res.data;
             this.data['_uuid'] = this.data['recID'] ?? Util.uid();
             this.data['idField'] = 'recID';
