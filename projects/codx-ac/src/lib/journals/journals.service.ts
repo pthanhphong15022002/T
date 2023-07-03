@@ -76,7 +76,7 @@ export class JournalService {
     saveFunction: () => void
   ): void {
     if (
-      journal.assignRule !== '0' &&
+      journal.autoAssignRule !== '0' &&
       this.duplicateVoucherNo === '0' &&
       model.voucherNo
     ) {
