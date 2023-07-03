@@ -247,6 +247,7 @@
         | formatvalue : view.formModel : 'PositionID'
         | async
     "
+    [subTitleCss]="'fs-7 text-gray-500'"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
     (changeDataMF)="changeDataMf($event, data)"
@@ -300,7 +301,7 @@
 
   <ng-template #descTmp>
     <span
-      class="mt-1 text-gray-500"
+      class="text-gray-700 mt-1"
       [ngbTooltip]="grvSetup?.ContractTypeID?.headerText"
       [innerHTML]="
         data?.contractTypeID
@@ -312,7 +313,7 @@
 
   <ng-template #desc2Tmp>
     <div>
-      <div class="d-flex align-items-center mb-1">
+      <div class="d-flex align-items-center mt-1">
         <span class="icon-description icon-16 me-1"></span>
         <span class="me-3 fs-7" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
           {{ data.contractNo }}

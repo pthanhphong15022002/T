@@ -627,23 +627,8 @@
     </ng-container>
   </div>
   <div #contentByImage *ngIf="itemQuestion?.qPicture && lstEditIV.length > 0">
-    <div *ngFor="let item of lstEditIV">
-      <div
-        class="w-100 min-h-253px mb-6"
-        *ngIf="item.objectID == itemQuestion.recID"
-      >
-        <!-- [ngClass]="
-            itemQuestion?.alignCenterImg
-              ? 'position-relative w-100 d-flex justify-content-center'
-              : itemQuestion?.alignRightImg
-              ? 'position-relative w-100 d-flex justify-content-end'
-              : 'position-relative w-100 d-flex'
-          " -->
-        <div class="position-relative w-100 d-flex justify-content-center bg-q-img px-6">
-          <img [src]="getSrcImage(item)" />
-        </div>
-      </div>
-    </div>
+    <app-view-file [dataFile]="lstEditIV" [questionID]="itemQuestion.recID">
+    </app-view-file>
   </div>
   <div *ngIf="(itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') ; else tmpL">
     <table class="w-100">

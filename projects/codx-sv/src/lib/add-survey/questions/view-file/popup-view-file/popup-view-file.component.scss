@@ -1,0 +1,90 @@
+#idViewFileSV
+{
+    .indicator-type-section .carousel-sample {
+        margin: -0.5em 0 5.6em 0;
+        height: 200px;
+      }
+      
+      .indicator-type .e-carousel-items .e-carousel-item .img-container {
+        height: 100%;
+      }
+      
+      .indicator-type.e-carousel .e-progress {
+        background: none;
+      }
+      
+      .indicator-type.e-carousel .e-next-icon::before,
+      .indicator-type.e-carousel .e-previous-icon::before {
+        color: black;
+      }
+      
+    
+      
+      .indicator-type .e-slide {
+        height: 100%;
+        width: 100%;
+        font-size: 21px;
+        text-align: center;
+        color: black;
+      }
+      
+      .indicator-type.e-carousel .e-carousel-indicators.e-dynamic .e-indicator-bars .e-indicator-bar:not(.e-active),
+      .indicator-type.e-carousel .e-carousel-indicators.e-default .e-indicator-bars .e-indicator-bar:not(.e-active) div {
+        background-color: gray;
+      }
+      
+      .indicator-type.e-carousel .e-carousel-indicators.e-fraction .e-indicator-bars {
+        color: black;
+      }
+      
+      .indicator-type.e-carousel .e-carousel-items .e-carousel-item {
+        background-color: white;
+      }
+      
+      @media screen and (max-width: 768px) {
+        .indicator-type-section .carousel-sample {
+            margin: 5em 0;
+        }
+      
+        .indicator-type-section .row {
+            margin-top: -5em;
+        }
+      }
+      .e-carousel .e-carousel-indicators .e-indicator-bars .e-indicator-bar .e-indicator div
+      {
+        background-color: #E8EAED ;
+      }
+      .e-carousel .e-carousel-indicators .e-indicator-bar.e-active .e-indicator div
+      {
+        background-color: #0d6efd ;
+      }
+      .zoom{
+        width: 100%;
+        height: 100%;
+        transform-origin: 0px 0px;
+        transform: scale(1) translate(0px, 0px);
+        >img{
+          border-radius: 5px;
+        }
+      }
+      .div-toolbar-sv
+      { 
+        position: absolute;
+        z-index: 1;
+        right: 0;
+        >div{
+          background-color: #F3F2F8;
+          width: 30px;
+          height: 30px;
+          >i{
+            color: black;
+          }
+          
+        }
+        >div.active , >div:hover
+        {
+          background-color: #DADADA;
+        }
+      }
+     
+}

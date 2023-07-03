@@ -40,7 +40,7 @@ import { PopupQuestionOtherComponent } from './template-survey-other.component/p
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-
+import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
@@ -415,6 +415,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     {
       for(var i = 0 ; i < dtS.length ; i++)
       {
+        debugger
         dtS[i].children = dtQ.filter(x=>x.parentID == dtS[i].recID);
         dtQ = dtQ.filter(x=>x.parentID != dtS[i].recID);
         if(dtS[i].children && dtS[i].children.length>0)
@@ -977,7 +978,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                     children: [
                       {
                         seqNo: 0,
-                        question: 'Câu hỏi 1',
+                        question: 'Tiêu đề câu hỏi',
                         answers: [
                           {
                             seqNo: 0,
@@ -1114,8 +1115,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                 this.questions[seqNoSession].children[seqNoQuestion].qPicture =
                   true;
               }
-              debugger
-              this.lstEditIV.push(res.event?.dataUpload[0]);
+              for(var i = 0 ; i < res.event[0].dataUpload.length ; i++)
+              {
+                this.lstEditIV.push(res.event[0].dataUpload[i]);
+              }
+              this.lstEditIV = [...this.lstEditIV];
               this.SVServices.signalSave.next('saving');
               this.setTimeoutSaveData(
                 this.questions[seqNoSession].children[seqNoQuestion],
@@ -1179,10 +1183,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   generateGUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
+    return uuidv4();
   }
 
   addCard(itemActive, seqNoSession = null, category) {
@@ -1199,7 +1200,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.questions[0].children = [];
     var newQ = {
       seqNo: 0,
-      question: 'Câu hỏi 1',
+      question: 'Tiêu đề câu hỏi',
       answers: [
         {
           seqNo: 0,
@@ -1329,7 +1330,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   lstDataAdd: any = [];
   lstDataDelete: any = [];
   addNoSession(itemActive, seqNoSession, category) {
-    this.generateGuid();
     var dataAnswerTemp = {
       seqNo: 0,
       answer: 'Tùy chọn 1',
@@ -1345,14 +1345,15 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     } else {
       tempQuestion.answers = [dataAnswerTemp];
       tempQuestion.answerType = 'O';
-      tempQuestion.question = 'Câu hỏi';
+      tempQuestion.question = 'Tiêu đề câu hỏi';
     }
     tempQuestion.seqNo = itemActive.category == 'S' ? 0 : itemActive.seqNo + 1;
     tempQuestion.category = category;
-    tempQuestion.recID = this.GUID;
+    tempQuestion.recID = this.generateGUID();
     tempQuestion.parentID = this.questions[seqNoSession].recID;
     tempQuestion.other = false;
     delete tempQuestion.id;
+    
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
       0,
@@ -1368,6 +1369,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       true,
       this.questions[seqNoSession].children
     );
+    this.GUID = tempQuestion.recID;
     if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
     else this.questions[seqNoSession].children[itemActive.seqNo].active = false;
     this.questions[seqNoSession].children[
@@ -1424,7 +1426,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       // this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
       //   true;
       //active card video, picture này để phát triển sau, chưa ưu tiên
-        debugger
+        
       if (dataQuestion.category == 'S')
         this.itemActive = this.questions[seqNoSession].children[0];
       else

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { isObservable } from 'rxjs';
 import {
   ButtonModel,
   DialogRef,
@@ -20,6 +21,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEAwardsComponent } from '../employee-profile/popup-eawards/popup-eawards.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 
 @Component({
   selector: 'lib-employee-awards',
@@ -48,7 +50,8 @@ export class EmployeeAwardsComponent extends UIComponent {
     private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private codxODService: CodxOdService
   ) {
     super(injector);
   }
@@ -83,6 +86,8 @@ export class EmployeeAwardsComponent extends UIComponent {
   cmtStatus: string = '';
   dialogAddEdit: DialogRef;
   dataCategory: any;
+  runModeCheck: boolean = false;
+  flagChangeMF: boolean = false;
 
   itemDetail;
 
@@ -202,10 +207,41 @@ export class EmployeeAwardsComponent extends UIComponent {
         this.copyValue(event.text, this.eAwardObj);
         this.df.detectChanges();
         break;
+
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.df.detectChanges();
+        break;
+      }
     }
   }
+
   changeDataMF(event, data) {
-    this.hrService.handleShowHideMF(event, data, this.view);
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    this.flagChangeMF = true;
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   handlerEAwards(actionHeaderText: string, actionType: string, data: any) {

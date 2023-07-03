@@ -54,6 +54,7 @@ import { PopupSelectTempletComponent } from './popup-select-templet/popup-select
 import { X } from '@angular/cdk/keycodes';
 import { PopupAddDealComponent } from 'projects/codx-cm/src/lib/deals/popup-add-deal/popup-add-deal.component';
 import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add-cases/popup-add-cases.component';
+import { GridModels } from './instance-dashboard/instance-dashboard.component';
 
 @Component({
   selector: 'codx-instances',
@@ -80,6 +81,7 @@ export class InstancesComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
+  @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   @Output() valueListID = new EventEmitter<any>();
   @Output() listReasonBySteps = new EventEmitter<any>();
@@ -318,6 +320,17 @@ export class InstancesComponent
           template: this.cardKanban,
           template2: this.viewColumKaban,
           setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.chart,
+        active: false,
+        sameData: false,
+        reportType: 'D',
+        // reportView: true,
+        showFilter: true,
+        model: {
+          panelLeftRef: this.dashBoard,
         },
       },
     ];
@@ -1189,11 +1202,20 @@ export class InstancesComponent
   }
 
   changeView(e) {
-    if (e?.view.type == 2) this.viewsCurrent = 'd-';
-    if (e?.view.type == 6) {
-      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
-      else this.kanban = (this.view.currentView as any).kanban;
-      this.viewsCurrent = 'k-';
+    switch (e?.view.type) {
+      case 2:
+        this.showButtonAdd = true;
+        this.viewsCurrent = 'd-';
+        break;
+      case 6:
+        this.showButtonAdd = true;
+        if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+        else this.kanban = (this.view.currentView as any).kanban;
+        this.viewsCurrent = 'k-';
+        break;
+      case 9:
+        this.showButtonAdd = false;
+        break;
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -2374,5 +2396,33 @@ export class InstancesComponent
       return 'CM0402';
     }
     return null;
+  }
+
+  //dasboad
+  filterChange(e) {
+    // this.isLoaded = false;
+    const { predicates, dataValues } = e[0];
+    const param = e[1];
+    this.getDashboardData(predicates, dataValues, param);
+    this.detectorRef.detectChanges();
+  }
+  getDashboardData(predicates?: string, dataValues?: string, params?: any) {
+    // load data
+    // let model = new GridModels();
+    // model.funcID = this.funcID;
+    // model.entityName = 'TM_Tasks';
+    // model.predicates = predicates;
+    // model.dataValues = dataValues;
+    // this.api
+    //   .exec('DP', 'TaskBusiness', 'GetDataMyDashboardAsync', [model, params])
+    //   .subscribe((res) => {
+    //     this.dataDashBoard = res;
+
+    //     setTimeout(() => {
+    //       this.isLoaded = true;
+    //     }, 500);
+    //   });
+
+    this.detectorRef.detectChanges();
   }
 }

@@ -10,5 +10,7 @@
 </ng-template>
 
 <ng-template #panelRightRef>
-    <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL"></lib-view-detail-cards>
+    <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL"
+        [formModel]="view.formModel"  [cardType]="cardType"
+    ></lib-view-detail-cards>
 </ng-template>

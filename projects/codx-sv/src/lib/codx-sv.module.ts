@@ -33,6 +33,10 @@ import { CopylinkComponent } from './copylink/copylink.component';
 import { SearchSuggestionsComponent } from './home/search-suggestions/search-suggestions.component';
 import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { SharelinkComponent } from './sharelink/sharelink.component';
+import { ViewFileComponent } from './add-survey/questions/view-file/view-file.component';
+import { PopupViewFileComponent } from './add-survey/questions/view-file/popup-view-file/popup-view-file.component';
+import { CarouselAllModule } from '@syncfusion/ej2-angular-navigations';
+import { PopupViewFileFullComponent } from './add-survey/questions/view-file/popup-view-file/popup-view-file-full/popup-view-file-full.component';
 export const routes: Routes = [
   {
     path: '',
@@ -75,7 +79,10 @@ const Component: Type<any>[] = [
   ReviewComponent,
   CopylinkComponent,
   SearchSuggestionsComponent,
-  SharelinkComponent
+  SharelinkComponent,
+  ViewFileComponent,
+  PopupViewFileComponent,
+  PopupViewFileFullComponent
 ];
 
 @NgModule({
@@ -93,6 +100,7 @@ const Component: Type<any>[] = [
     ChartAllModule,
     NgxCaptureModule,
     AccordionModule,
+    CarouselAllModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],

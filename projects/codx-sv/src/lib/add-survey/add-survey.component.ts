@@ -46,6 +46,7 @@ export class AddSurveyComponent extends UIComponent {
   surveys: SV_Surveys = new SV_Surveys();
   primaryColor:any;
   width= "200px";
+  isChangeTmp = false;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -266,7 +267,7 @@ export class AddSurveyComponent extends UIComponent {
 
   getLink()
   {
-    this.dataSV
+    //this.dataSV
   }
   
   changeDataMF(e:any , data:any)
@@ -409,13 +410,17 @@ export class AddSurveyComponent extends UIComponent {
   {
     this.dataSV.setting = e;
   }
-  valueChange(e:any)
+  valueChange(e:any , field:any = null)
   {
     if(e?.field == "title") this.title = e?.data;
-    this.dataSV[e?.field] = e?.data;
+    if(field == "isTemplate") {
+      this.dataSV[field] = e?.target?.checked;
+      this.isChangeTmp = true;
+    }
+    else this.dataSV[e?.field] = e?.data;
     this.SvService.signalSave.next('saving');
     if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
-    this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{ if(item) this.SvService.signalSave.next('done');});
+    this.SvService.updateSV(this.recID,this.dataSV,this.isChangeTmp).subscribe(item=>{ if(item) this.SvService.signalSave.next('done');});
   }
 
   updateSV()

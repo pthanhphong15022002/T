@@ -53,6 +53,7 @@ import { CommonModule } from '@angular/common';
 import { CoreModule } from '@core/core.module';
 import { environment } from 'src/environments/environment';
 import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details-process/views-tabs-details/views-tabs-details.component';
+import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 
 const routes: Routes = [
   {
@@ -144,6 +145,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupEditOwnerstepComponent,
     PopupSelectTempletComponent,
     ViewsTabsDetailsComponent,
+    InstanceDashboardComponent,
   ],
   imports: [
     CommonModule,

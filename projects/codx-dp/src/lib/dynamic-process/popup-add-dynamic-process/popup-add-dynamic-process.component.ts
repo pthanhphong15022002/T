@@ -3046,10 +3046,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           case 'DP20':
           case 'DP24':
           case 'DP26':
+          case 'DP27':
           case 'SYS003':
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
+          case 'DP31':
+          case 'DP30':
+          case 'DP29':
+          case 'DP28':
             res.disabled = true;
             break;
         }

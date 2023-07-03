@@ -35,9 +35,11 @@ export class PopupPolicyalComponent
     mode: 'Normal',
   };
 
-  ejsgrid
+  fieldHeaderTexts;
   loadGridview1 = false;
   dataSourceGridView1 : any = [];
+
+  lstPolicyDetailRecID: any = []
 
   predicate1: any;
   predicate2: any;
@@ -177,11 +179,30 @@ export class PopupPolicyalComponent
         });
   }
 
-  clickMF(event, data){
-
-  }
+  clickMF(event, data, gridNum){
+    this.notify.alertCode('SYS030').subscribe((x) => {
+      if (x.event?.status == 'Y') {
+        this.DeletePolicyDetail(data.recID).subscribe((res) => {
+          if(res == true){
+            this.notify.notifyCode('SYS008');
+            if(gridNum == 1){
+              (this.gridView1?.dataService as CRUDService)?.remove(data).subscribe();
+              this.gridView1.deleteRow(data, true);
+            }
+            else{
+              (this.gridView2?.dataService as CRUDService)?.remove(data).subscribe();
+              this.gridView2.deleteRow(data, true);
+            }
+          }
+        })
+    }
+      }
+    )}
 
   initForm() {
+    this.hrSevice.getHeaderText(this.formModel.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    })
     this.cache
     .gridViewSetup(
       this.formModel.formName,
@@ -334,11 +355,13 @@ export class PopupPolicyalComponent
   }
 
   changeDataMF(evt){
-    debugger
     for(let i = 0; i < evt.length; i++){
       let funcIDStr = evt[i].functionID;
-      if(funcIDStr == ''){
+      if(funcIDStr == 'SYS04'){
         evt[i].disabled = true;
+      }
+      else if(funcIDStr == 'SYS02'){
+        evt[i].disabled = false;
       }
     }
   }
@@ -353,6 +376,50 @@ export class PopupPolicyalComponent
     );
   }
 
+  AddPolicyDetail(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'AddPolicyDetailAsync',
+      data
+    );
+  }
+
+  UpdatePolicyDetail(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'UpdatePolicyDetailAsync',
+      data
+    );
+  }
+
+  DeletePolicyDetail(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'DeletePolicyDetailAsync',
+      data
+    );
+  }
+
+  DeleteListPolicyDetail(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'DeleteListPolicyDetailAsync',
+      this.lstPolicyDetailRecID
+    );
+  }
+
+  onInputPolicyID(evt){
+
+  }
+
   onClickExpandIsMonth(){
     this.expandIsMonth = !this.expandIsMonth;
   }
@@ -362,7 +429,6 @@ export class PopupPolicyalComponent
   }
 
   addRowGrid1(){
-    debugger
     let idx = this.gridView1.dataSource.length;
     // if(idx > 1){
     //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
@@ -374,16 +440,45 @@ export class PopupPolicyalComponent
     let data = {
       recID: Util.uid()
     };
-
-    this.gridView1.addRow(data, idx);
+    this.gridView1.addRow(data, idx, false, true);
   }
 
   onAddNewGrid1(evt){
-    debugger
+    if(!this.alpolicyObj.policyID){
+      this.notify.notifyCode('SYS009',0,this.fieldHeaderTexts['PolicyID'])
+      return
+    }
+    if(!this.alpolicyObj.policyType){
+      this.notify.notifyCode('SYS009',0,this.fieldHeaderTexts['PolicyType'])
+      return
+    }
+    evt.policyID = this.alpolicyObj.policyID;
+    evt.policyType = this.alpolicyObj.policyType;
+    evt.itemType = 'ALFirstMonthType'
+    evt.itemSelect = this.alpolicyObj.firstMonthType
+    this.AddPolicyDetail(evt).subscribe((res) => {
+      if(res){
+        this.lstPolicyDetailRecID.push(res.recID)
+          this.notify.notifyCode('SYS006');
+      }
+      else{
+        (this.gridView1?.dataService as CRUDService)?.remove(evt).subscribe();
+        this.gridView1.deleteRow(evt, true);
+      }
+    })
   }
 
   onEditGrid1(evt){
-    debugger
+    let index = this.gridView1.dataSource.findIndex(v => v.recID == evt.recID)
+    this.UpdatePolicyDetail(evt).subscribe((res) => {
+      if(res && res.oldData){
+        this.gridView1.gridRef.dataSource[index] = res.oldData;
+        this.gridView1.refresh();
+      }
+      else{
+        this.notify.notifyCode('SYS007');
+      }
+    })
   }
 
   onDeleteGrid1(evt){
