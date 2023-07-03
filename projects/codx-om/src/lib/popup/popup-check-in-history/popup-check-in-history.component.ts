@@ -17,6 +17,7 @@ import {
 } from 'codx-core';
 import { CodxOmService } from '../../codx-om.service';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
+import { OMCONST } from '../../codx-om.constant';
 
 @Component({
   selector: 'popup-check-in-history',
@@ -157,14 +158,10 @@ export class PopupCheckInHistoryComponent
     });
   }
   checkIn() {
-    // if (this.dataOKRPlans.status!=OMCONST.VLL.PlanStatus.Ontracking ) {
-    //   this.notificationsService.notify(
-    //     'Bộ mục tiêu chưa được phát hành',
-    //     '3',
-    //     null
-    //   );
-    //   return;
-    // }
+    let type = "1";//Check in theo Plan
+    if(this.data?.frequence =='0'){
+      type = OMCONST.VLL.CHECK_IN_TYPE.RealTime;
+    }
     if (this.data?.assignOKR && this.data?.assignOKR.length > 0) {
       this.notificationsService.notify(
         'Không thể cập nhật tiến độ kết quả đã được phân công',
@@ -187,7 +184,7 @@ export class PopupCheckInHistoryComponent
       800,
       500,
       '',
-      [this.data, "Cập nhật tiến độ", { ...this.groupModel?.checkInsModel }, this.okrFM]
+      [this.data, "Cập nhật tiến độ", { ...this.groupModel?.checkInsModel }, this.okrFM, type]
     );
     dialogCheckIn.closed.subscribe((res) => {
       if (res?.event ) {
