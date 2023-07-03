@@ -48,7 +48,8 @@ export class EditFileComponent implements OnInit {
   titleAuthor = 'Tên tác giả';
   titlePublisher = 'Nhà xuất bản';
   titlePublishyear = 'Năm xuất bản';
-  titlePublishDate = 'Ngày hết hạn';
+  titlePublishDate = 'Ngày phát hành';
+  titleExpiredOn = 'Ngày hết hạn'
   titleSave = 'Lưu';
   historyFile: HistoryFile;
   propertiesFolder: boolean;
@@ -624,6 +625,12 @@ export class EditFileComponent implements OnInit {
           else
             this.fileEditing.publisher = null;  
           break;
+        //Ngày hết hạn
+        case 'expiredOn':
+          {
+            this.fileEditing.expiredOn = $event?.data?.fromDate;
+            break;
+          }
         case 'copyrights':
           if ($event.data.length > 0)
           this.fileEditing.copyRights = $event.data;

@@ -310,7 +310,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
   }
   cbxChange(data) {
-    if (data.data && data.data != '') {
+    if (data.data && data.data.trim() != '') {
       this.task[data.field] = data.data;
       if (data.field === 'taskGroupID')
         this.loadTodoByGroup(this.task.taskGroupID);
@@ -405,15 +405,15 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
     if (this.isHaveFile && this.attachment) {
       //bua cho DP
-      if(this.task.recID == this.task.refID){
+      if (this.task.recID == this.task.refID) {
         this.attachment.objectId = this.task.recID;
-        if(this.attachment.fileUploadList?.length > 0){
-          this.attachment.fileUploadList.forEach(f=>{
-            f.objectID = this.task.recID
-          })
+        if (this.attachment.fileUploadList?.length > 0) {
+          this.attachment.fileUploadList.forEach((f) => {
+            f.objectID = this.task.recID;
+          });
         }
       }
-     
+
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.task.attachments = Array.isArray(res) ? res.length : 1;

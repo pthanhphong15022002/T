@@ -409,7 +409,7 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.KRReviewCheckIn: {
-        this.checkIn(kr, e?.text,'3');
+        this.checkIn(kr, e?.text,'2');
         break;
       }
 
@@ -850,16 +850,22 @@ export class OkrTargetsComponent implements OnInit {
   
   editRender(oldOKR: any, newOKR: any) {
     oldOKR.okrName = newOKR?.okrName;
+    oldOKR.measurement = newOKR?.measurement;
     oldOKR.target = newOKR?.target;
-    oldOKR.owner = newOKR?.owner;
     oldOKR.umid = newOKR?.umid;
     oldOKR.umName = this.getUMName(newOKR?.umid);
     oldOKR.confidence = newOKR?.confidence;
     oldOKR.category = newOKR?.category;
+    oldOKR.plane = newOKR?.plane;
     oldOKR.actual = newOKR?.actual;
     oldOKR.current = newOKR?.current;
     oldOKR.rangeDate = newOKR?.rangeDate;
+    oldOKR.frequence = newOKR?.frequence;
+    oldOKR.checkInControl = newOKR?.checkInControl;
+    oldOKR.checkInMode = newOKR?.checkInMode;
+    oldOKR.owner = newOKR?.owner;
     oldOKR.personIncharge = newOKR?.personIncharge;
+    oldOKR.note = newOKR?.note;
     oldOKR.rangeDateText = this.getRangeDate(newOKR?.rangeDate);
     if (newOKR?.okrTasks != null && newOKR?.okrTasks.length > 0) {
       oldOKR.okrTasks = newOKR?.okrTasks;
@@ -1001,14 +1007,12 @@ export class OkrTargetsComponent implements OnInit {
     });
   }
   checkIn(kr: any, popupTitle: any,type: any) {
-    // if (this.dataOKRPlans.status!=OMCONST.VLL.PlanStatus.Ontracking ) {
-    //   this.notificationsService.notify(
-    //     'Bộ mục tiêu chưa được phát hành',
-    //     '3',
-    //     null
-    //   );
-    //   return;
-    // }
+    if(kr?.frequence =='0' && type ==null){
+      type = OMCONST.VLL.CHECK_IN_TYPE.RealTime;
+    }
+    else if(kr?.frequence =='1' && type ==null){      
+      type = OMCONST.VLL.CHECK_IN_TYPE.Plan;
+    }
     if (kr?.assignOKR && kr?.assignOKR.length > 0) {
       this.notificationsService.notify(
         'Không thể cập nhật tiến độ kết quả đã được phân công',
@@ -1031,7 +1035,7 @@ export class OkrTargetsComponent implements OnInit {
       800,
       500,
       '',
-      [kr, popupTitle, { ...this.groupModel?.checkInsModel }, this.okrFM,type]
+      [kr, popupTitle, { ...this.groupModel?.checkInsModel }, this.okrFM, type]
     );
     dialogCheckIn.closed.subscribe((res) => {
       if (res?.event && res?.event.length != null) {

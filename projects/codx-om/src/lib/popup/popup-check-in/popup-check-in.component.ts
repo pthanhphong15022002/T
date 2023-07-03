@@ -21,6 +21,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { OKRComponent } from '../../okr/okr.component';
+import { OMCONST } from '../../codx-om.constant';
 
 @Component({
   selector: 'popup-check-in',
@@ -62,11 +63,7 @@ export class PopupCheckInComponent
     this.data = dialogData.data[2];
     this.okrFM = dialogData.data[3];
     this.checkType = dialogData.data[4];
-    this.data.status = new Date(this.oldDataKR?.nextCheckIn)< new Date()? '2' :'1';
-    if(this.checkType =='3'){
-      this.data.status='3'
-    }
-    this.data.createdOn = new Date();
+    
     this.curUser = authStore.get();
   }
   //---------------------------------------------------------------------------------//
@@ -107,6 +104,17 @@ export class PopupCheckInComponent
     this.codxOmService.getOKRByID(this.oldDataKR?.recID).subscribe((krModel) => {
       if (krModel) {
         this.dataKR = krModel;
+        if(this.checkType ==OMCONST.VLL.CHECK_IN_TYPE.RealTime){
+          this.data.status=OMCONST.VLL.CHECK_IN_STATUS.RealTime;
+          this.data.checkIn = new Date();
+        }
+        else if(this.checkType==OMCONST.VLL.CHECK_IN_TYPE.Review){
+          this.data.status = OMCONST.VLL.CHECK_IN_STATUS.Review;
+        }
+        else{
+          this.data.status = new Date(this.oldDataKR?.nextCheckIn) < new Date()? OMCONST.VLL.CHECK_IN_STATUS.LatePlan : OMCONST.VLL.CHECK_IN_STATUS.OnPlan;
+        }
+        this.data.createdOn = new Date();
         this.isAfterRender = true;
       }
     });
@@ -162,7 +170,7 @@ export class PopupCheckInComponent
     .subscribe((res: any) => {
       if (res ) {        
         this.notificationsService.notifyCode('SYS034');
-        if(res?.status=='3') {
+        if(res?.status==OMCONST.VLL.CHECK_IN_STATUS.Review) {
           this.dialogRef && this.dialogRef.close(res);
         }
         else{
