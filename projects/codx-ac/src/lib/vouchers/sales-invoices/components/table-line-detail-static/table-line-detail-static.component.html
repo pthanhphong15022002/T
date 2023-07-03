@@ -34,15 +34,16 @@
       </tr>
     </tbody>
 
-    <tbody>
-      <ng-container *ngFor="let line of lines; index as i">
-        <ng-container
-          *ngTemplateOutlet="trTemplate; context: { $implicit: line, index: i }"
-        ></ng-container>
-      </ng-container>
-
-      <tr *ngIf="!hasVerticalScrollbar" class="h-100"></tr>
+    <tbody *ngFor="let line of lines; index as i">
+      <ng-container
+        *ngTemplateOutlet="trTemplate; context: { $implicit: line, index: i }"
+      ></ng-container>
     </tbody>
+
+    <tbody
+      class="h-100"
+      *ngIf="!hasVerticalScrollbar && lines.length > 0"
+    ></tbody>
 
     <tfoot>
       <tr>

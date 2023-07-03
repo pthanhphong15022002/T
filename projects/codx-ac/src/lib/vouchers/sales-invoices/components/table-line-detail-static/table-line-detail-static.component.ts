@@ -48,6 +48,7 @@ export class TableLineDetailStaticComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     // calculate totalRow
+    this.columns.map((col) => (col.sum = 0));
     for (const line of this.lines) {
       for (const th of this.columns) {
         if (th.hasSum) {

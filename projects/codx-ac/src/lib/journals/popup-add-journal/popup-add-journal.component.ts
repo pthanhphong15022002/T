@@ -575,7 +575,7 @@ export class PopupAddJournalComponent
           autoNoCode: this.journal.journalNo,
           description: this.dialogRef.formModel?.entityName,
           disableAssignRule: true,
-          autoAssignRule: this.journal.assignRule,
+          autoAssignRule: this.journal.autoAssignRule,
         }
       )
       .closed.subscribe((res) => {
