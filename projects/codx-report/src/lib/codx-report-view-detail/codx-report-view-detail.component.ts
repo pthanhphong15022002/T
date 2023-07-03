@@ -215,7 +215,7 @@ getReport(funcID:string){
   setBreadCrumb(func:any,deleteChild:boolean=false){
     if(func){
       !deleteChild && this.pageTitle.setSubTitle(func.customName)
-      deleteChild && this.pageTitle.setSubTitle("");
+      //deleteChild && this.pageTitle.setSubTitle("");
       // let eleHeader = document.querySelector('codx-header');
       // if(eleHeader){
       //   let titleEle = eleHeader.querySelector('codx-page-title');
