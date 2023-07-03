@@ -402,8 +402,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   }
 
   add() {
-    if (!this.view.dataService.service)
-      this.view.dataService.service = this.view.service; // bùa cứng
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
