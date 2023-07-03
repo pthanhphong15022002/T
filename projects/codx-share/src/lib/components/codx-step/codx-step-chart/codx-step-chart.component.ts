@@ -188,7 +188,7 @@ export class CodxStepChartComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes.instance) {
       this.getDataGanttChart(
-      this.instance?.recID,
+      this.instance?.refID,
       this.instance?.processID
       );
     }
