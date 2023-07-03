@@ -220,6 +220,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
     if (contractOutput?.event?.contract) {
       if(!this.listContract) this.listContract = [];
       this.listContract.push(contractOutput?.event?.contract);
+      this.isData = this.listContract?.length > 0 ? true : false;
     }
   }
   //#endregion
