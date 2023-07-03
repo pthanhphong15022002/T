@@ -1,3 +1,11 @@
-.org-gridview{
-    height: calc(100% - 80px);
+.manager-gridview {
+    .e-content {
+        height: calc(100vh - 260px) !important;
+    }
+}
+
+.no-manager-gridview {
+    .e-content {
+        height: calc(100vh - 200px) !important;
+    }
 }
