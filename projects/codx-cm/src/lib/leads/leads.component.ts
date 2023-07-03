@@ -335,6 +335,9 @@ export class LeadsComponent
     var isMoveStage = (eventItem, data) => {
       eventItem.disabled =  (data.closed && !['0', '1'].includes(data.status)) || ['0', '1'].includes(data.status) || ( data.status !='13' &&  this.checkMoreReason(data) )
     };
+    var isDisabledDefault = (eventItem, data) => {
+      eventItem.disabled = true
+    };
 
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
@@ -348,12 +351,12 @@ export class LeadsComponent
       CM0205_9: isOwner,
       CM0205_10: isClosed, // close lead
       CM0205_11: isOpened, // open lead
-      SYS101: isDisabled,
-      SYS103: isCRUD,
+      SYS101: isDisabledDefault,
+      SYS103: isDisabledDefault,
       SYS03: isCRUD,
-      SYS104: isCRUD,
+      SYS104: isDisabledDefault,
       SYS04: isCRUD,
-      SYS102: isCRUD,
+      SYS102: isDisabledDefault,
       SYS02: isCRUD,
     };
 
