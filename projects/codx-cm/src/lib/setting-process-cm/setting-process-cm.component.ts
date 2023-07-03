@@ -77,22 +77,25 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
-  async viewChanged(e) {
+  async onLoading(e) {
     this.data = await this.getProcessById();
     if (this.data) {
       this.openPopupEditDynamic('edit');
     } else {
-      this.data = new DP_Processes();
-      this.data.recID = Util.uid();
-      this.data.viewMode = '6';
-      this.data.viewModeDetail = 'S';
-      this.data.addFieldsControl = '1';
-      this.data.allowCopy = true;
-      this.data.approveRule = false;
-      this.data.released = false;
-      this.data.status = '1';
-      this.data.showInstanceControl = '2';
-      this.openPopupEditDynamic('add');
+      this.api
+        .execSv<any>('DP', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+          'DP01',
+          'DP_Processes',
+        ])
+        .subscribe((res) => {
+          if (res && res?.data) {
+            this.data = res.data;
+            this.data['_uuid'] = this.data['recID'] ?? Util.uid();
+            this.data['idField'] = 'recID';
+            this.data.status = '1';
+            this.openPopupEditDynamic('add');
+          }
+        });
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -140,15 +143,16 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
         ? '5'
         : '4';
     this.data.category = '0';
-    this.data.processName = this.funcID == 'CMS0301'
-    ? '[SYS_CRM] Cơ hội'
-    : this.funcID == 'CMS0302'
-    ? '[SYS_CRM] Sự cố'
-    : this.funcID == 'CMS0303'
-    ? '[SYS_CRM] Yêu cầu'
-    : this.funcID == 'CMS0304'
-    ? '[SYS_CRM] Tiềm năng'
-    : '[SYS_CRM] Hợp đồng';
+    this.data.processName =
+      this.funcID == 'CMS0301'
+        ? '[SYS_CRM] Cơ hội'
+        : this.funcID == 'CMS0302'
+        ? '[SYS_CRM] Sự cố'
+        : this.funcID == 'CMS0303'
+        ? '[SYS_CRM] Yêu cầu'
+        : this.funcID == 'CMS0304'
+        ? '[SYS_CRM] Tiềm năng'
+        : '[SYS_CRM] Hợp đồng';
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     dialogModel.zIndex = 999;
