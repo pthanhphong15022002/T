@@ -67,6 +67,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() listUM = [];
   @Input() currentUser;  
   @Input() reloadedMF=true;
+  @Input() sharedView=false;
   @Input() value=new OM_Statistical();
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> = new EventEmitter();
   @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> = new EventEmitter();
