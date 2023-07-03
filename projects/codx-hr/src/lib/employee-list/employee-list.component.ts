@@ -85,6 +85,7 @@ export class EmployeeListComponent extends UIComponent {
     this.views = [
       {
         id: '1',
+        active: true,
         type: ViewType.list,
         sameData:true,
         model: {
@@ -94,6 +95,7 @@ export class EmployeeListComponent extends UIComponent {
       },
       {
         id: '2',
+        active: false,
         type: ViewType.tree_masterdetail,
         request: this.request,
         sameData:false,
