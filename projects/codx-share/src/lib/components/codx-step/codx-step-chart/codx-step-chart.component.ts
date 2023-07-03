@@ -38,6 +38,7 @@ export class CodxStepChartComponent
   timelineSettings: any;
   ownerInstance: string[] = [];
   listColor = [];
+  listTypeTask = [];
   columns = [
     { field: 'name', headerText: 'Tên', width: '250' },
     { field: 'startDate', headerText: 'Ngày bắt đầu' },
@@ -190,6 +191,11 @@ export class CodxStepChartComponent
   }
   ngAfterViewInit() {}
   onInit(): void {
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
