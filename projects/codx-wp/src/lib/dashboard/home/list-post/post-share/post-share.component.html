@@ -120,9 +120,9 @@
 
 <ng-template #tmplateCard>
   <div class="d-flex flex-column flex-grow-1 justify-content-center align-items-center pt-5">
-      <ng-container *ngIf="pattern;else noPattern">
-          <div class="card-img w-300px h-450px" [style.background-img]="pattern.source"
-          style="background-size: 100% auto">
+      <ng-container *ngIf="data.backgroundImg;else noPattern">
+          <div class="card-img w-300px h-450px" [style.background]="'url('+data.backgroundImg+')'"
+          id="pattern-img">
               <ng-container *ngTemplateOutlet="tmpContent"></ng-container>
           </div>
       </ng-container>

@@ -1,6 +1,5 @@
 import { Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { ApiHttpService, CacheService, FormModel } from 'codx-core';
-import { Observable, of, map } from 'rxjs';
 
 @Component({
   selector: 'lib-org-emp-contact-detail-card',

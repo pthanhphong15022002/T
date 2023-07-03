@@ -94,9 +94,9 @@
                       field="voucherNo"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      [disabled]="journal?.assignRule != '0'"
+                      [disabled]="journal?.autoAssignRule != '0'"
                       [placeholder]="
-                        journal?.assignRule == '2'
+                        journal?.autoAssignRule == '2'
                           ? (voucherNoPlaceholderText$ | async)
                           : ''
                       "

@@ -1,11 +1,11 @@
-<div class="ms-5 d-flex flex-wrap">
-    <div class="me-5 mt-5" *ngFor="let data of lstData">
-        <codx-card-center cardCss="border d-flex flex-center flex-column  card-user"
+<div class="ms-5 d-flex flex-wrap card-view">
+    <div class="me-5 mt-5 card-item" *ngFor="let data of lstData">
+        <codx-card-center cardCss="border d-flex flex-center flex-column card-user"
             [imageId]="data.employeeID" imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" 
             [title]="data.employeeName" [imageObjName]="data.employeeName"
             [subTitle]="data.positionName? data.positionName: 
                         (data.positionID? data.positionID : placeholder('PositionID'))" 
-            [dataItem]="data" [imageObjType]="formModel?.entityName"
+            [dataItem]="data" [imageObjType]="formModel?.entityName" [hideMF]="true"
             [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [footer]="footer">
         </codx-card-center>
     </div>

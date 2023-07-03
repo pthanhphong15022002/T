@@ -751,7 +751,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   onSave() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields = [];
-    if (this.journal.assignRule === '2') {
+    if (this.journal.autoAssignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
 

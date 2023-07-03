@@ -146,7 +146,18 @@ export const OMCONST = {
       OB : "DTO",
       KR : "DTR",
       SKR : "DTS",
-    }
+    },
+    CHECK_IN_TYPE:  {
+      RealTime : "0",
+      Plan : "1",
+      Review : "2",
+    },    
+    CHECK_IN_STATUS:  {
+      RealTime : "0",
+      OnPlan : "1",
+      LatePlan : "2",
+      Review: "3",
+    },
   },
   GRVNAME: {},
   FORMMODEL: {},
