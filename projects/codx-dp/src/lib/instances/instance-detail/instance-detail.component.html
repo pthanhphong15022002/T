@@ -278,11 +278,16 @@
           class="pt-2 pe-2 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
         >
           <div>
-            <ng-container
+            <!-- <ng-container
               *ngIf="viewModelDetail == 'G'"
               [ngTemplateOutlet]="
                 dataSelect.status == 1 ? emptyTemplate : tempGanchart
               "
+            >
+            </ng-container> -->
+            <ng-container
+              *ngIf="viewModelDetail == 'G'"
+              [ngTemplateOutlet]=" tempGanchart"
             >
             </ng-container>
             <div
@@ -432,6 +437,12 @@
     </div>
   </div> -->
   <div class="border border-gray-150">
+    <div class="w-100 h-100" id="tabGantt">
+      <codx-step-chart
+        [instance]="this.dataSelect"
+        [type]="'DP'"
+      ></codx-step-chart>
+    </div>
     <!-- <codx-gantt-chart
       [dataSource]="ganttDs"
       [taskFields]="taskFields"
@@ -457,15 +468,10 @@
         </span>
       </div>
     </ng-template> -->
-    <div class="w-100 h-100" id="tabGantt">
-      <codx-step-chart
-        [instance]="this.dataSelect"
-      ></codx-step-chart>
-    </div>
   </div>
 
   <!-- mô tả -->
-  <div class="d-flex flex-wrap pb-2 mt-2">
+  <!-- <div class="d-flex flex-wrap pb-2 mt-2">
     <div
       *ngFor="let item of listTypeTask"
       class="d-flex align-items-center me-6"
@@ -477,10 +483,10 @@
       ></div>
       <span class="text-gray-700 fs-7">{{ item?.text }}</span>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
-<ng-template #emptyTemplate>
+<!-- <ng-template #emptyTemplate>
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
@@ -504,4 +510,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
