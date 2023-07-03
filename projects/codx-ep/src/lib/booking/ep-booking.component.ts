@@ -43,4 +43,9 @@ export class EPBookingComponent extends UIComponent implements AfterViewInit {
   ngAfterViewInit(){
     
   }
+  viewChanged(evt: any) {
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.detectorRef.detectChanges();
+    //this.onLoading(evt);
+  }
 }
