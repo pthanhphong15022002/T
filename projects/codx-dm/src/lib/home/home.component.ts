@@ -814,7 +814,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         // this.fileService.GetFiles(this.dmSV.folderID).subscribe(async (res) => {
         //   if (res != null && res[0] && res[0].length>0) {
         //     this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
-        //     this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+        //     this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);dialogClosed
         //   }
         //   else this.isScrollFile = false;
         // });

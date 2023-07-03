@@ -45,9 +45,9 @@ export class CodxSvService {
   {
     return this.api.execSv("SV","SV","SurveysBusiness","GetItemByRecIDAsync",recID)
   }
-  updateSV(recID:any,data:any)
+  updateSV(recID:any,data:any, isChangeTmp = false)
   {
-    return this.api.execSv("SV","SV","SurveysBusiness","UpdateItemByRecIDAsync",[recID,data])
+    return this.api.execSv("SV","SV","SurveysBusiness","UpdateItemByRecIDAsync",[recID,data,isChangeTmp])
   }
 
   loadFuncByParentID(parentID:any): Observable<any>

@@ -670,13 +670,13 @@ export class DynamicProcessComponent
             }
             break;
           case 'DP01016':
-            if (data.category === '0' || data.released) res.disabled = true;
+            if (data.category === '0' || data.released || !data?.publish) res.disabled = true;
             break;
           case 'DP01017':
-            if (data.category === '0' || !data.released) res.disabled = true;
+            if (data.category === '0' || !data.released || !data?.publish) res.disabled = true;
             break;
           case 'DP01018':
-            if (data.category === '0' || !data.released) res.disabled = true;
+            if (data.category === '0' || !data.released || !data?.publish)  res.disabled = true;
             break;
         }
       });

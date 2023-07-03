@@ -159,7 +159,27 @@ export class IncommingAddComponent implements OnInit {
     {
       if(this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       if(this.dispatch.agencyName) this.dispatch.agencyName = this.dispatch.agencyName.toString();
-      if(this.dispatch.agencies && this.dispatch.agencies.length > 0) this.crrAgencies = this.dispatch.agencies.map(u=>u.AgencyID).join(";")
+      debugger
+      if(this.formModel?.funcID == 'ODT41')
+      {
+        if(this.dispatch.agencies && this.dispatch.agencies.length > 0) {
+          if("agencyID" in this.dispatch.agencies[0]) this.crrAgencies = this.dispatch.agencies.map(u=>(u.agencyID)).join(";");
+          else  this.crrAgencies = this.dispatch.agencies.map(u=>(u.AgencyID)).join(";");
+        }
+        else
+        {
+          this.dispatch.agencies = [{
+            agencyID : this.dispatch.agencyID,
+            agencyName: this.dispatch.agencyName
+          }];
+          this.crrAgencies = this.dispatch.agencyID;
+          this.dispatch.agencyID = "";
+          this.dispatch.agencyName = "";
+
+        }
+      }
+      
+      
       if(this.dispatch.relations && this.dispatch.relations.length>0)
       {
         this.lrelations = this.dispatch.relations.filter(x=>x.relationType == "6")
@@ -540,14 +560,9 @@ export class IncommingAddComponent implements OnInit {
     var arr = [];
     for (var i = 0; i < this.objRequied.length; i++) {
        var field = capitalizeFirstLetter(this.objRequied[i]);
-      if(this.type == "add" && this.formModel.funcID == 'ODT41' && field == "agencyName"){}
-      else
-      {
-        var data = this.dispatch[field];
-        if(!data)
-          arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
-      }
-     
+       var data = this.dispatch[field];
+       if(!data && ((this.formModel?.funcID == "ODT31" && field != "agencies") || (this.formModel?.funcID == "ODT41" && field != "agencyName")))
+         arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
     }
 
     //Kiểm tra số tự động

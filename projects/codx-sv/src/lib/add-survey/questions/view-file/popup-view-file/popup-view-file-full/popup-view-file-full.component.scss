@@ -1,0 +1,16 @@
+.div-sc-view-full-icon
+{
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    background-color: #F3F2F8;
+    width: 30px;
+    height: 30px;
+    >i{
+      color: black;
+    }
+}
+.div-sc-view-full-icon:hover
+{
+  background-color: #DADADA;
+}

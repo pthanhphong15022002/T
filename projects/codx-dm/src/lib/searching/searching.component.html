@@ -1,0 +1,74 @@
+<codx-fulltextsearch #view 
+    [centerTmp]="centerTmp" 
+    [widthItemTmp]="400" 
+    [pageSize]="10" 
+    [widthLeft]="400" 
+    [funcID]="funcID" 
+    [service]="service" 
+    [entityName]="entityName" 
+    (selectedChange)="onSelected($event)">
+</codx-fulltextsearch>
+<!-- <ng-template #menu >
+    <button (click)="testSearch()">test</button>
+</ng-template> -->
+<ng-template #centerTmp let-file>
+    <div class="d-flex flex-column py-4" (click)="dbView(file)">
+        <div class="d-flex align-items-center">
+          <codx-temp-full 
+            [class]="'float-start'" [imageWidth]="20"
+            [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3 cursor-pointer" [title]="
+              file.folderName != undefined ? file.folderName : file.fileName
+            " cardCss="w-100" [typeMF]="'hover'" [baseHeaderRightTmp]="rightSecurity">
+          </codx-temp-full>
+          <ng-template #rightSecurity>
+            <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
+            <span *ngIf="file?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+            <span *ngIf="file?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
+          </ng-template>
+        </div>
+        <div class="d-flex align-items-center text-primary font-size-md mt-1">
+          <span>{{ file.filePath }}</span>
+        </div>
+        <div class="text-dark-50 font-size-md mt-1" *ngIf="file.highlight">
+          <div class="text-dark text-highlight" [innerHtml]="file.highlight"></div>
+        </div>
+        <div class="d-flex align-items-center font-size-md mt-1">
+          <div class="d-flex text-dark-75">
+            <span class="icon-query_builder icon-16"></span>&nbsp;
+            <span class="ml-2">{{ file.createdOn | date: "dd/MM/yyyy" }}</span>
+          </div>
+          <div class="d-flex text-dark-75">
+            {{ this.dmSV.getViews(file.history) }}&nbsp;
+            <codx-label fiedName="" formName="" gridViewName="" default="lượt xem">
+            </codx-label>
+          </div>
+          <!-- <div class="icon-star icon-9 mx-3"></div> -->
+          <!-- <codx-label fiedName="" formName="" gridViewName="" default="đánh giá">&nbsp;
+                </codx-label> -->
+          <div class="rating-group">
+            <div [style.width]="this.dmSV.getRating(file.views)" class="d-flex rating-percent">
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+</ng-template>
+<ng-template #footer let-data>
+    <div class="text-dark" [innerHtml]="data.highlight"></div>
+</ng-template>
+<ng-template #rightTmp>
+    <span class="fs-5 fw-bolder">Tài liệu liên kết</span>
+    <div class="mt-2">
+        <span class="text-muted">Công văn về việc</span>
+    </div>
+    <div class="mt-2 pt-8">
+        <span>Kéo thả liên kết vào vùng này</span>
+    </div>
+</ng-template>
+<ng-container *ngIf="visible">
+    <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
+  </ng-container>

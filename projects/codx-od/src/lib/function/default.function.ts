@@ -80,15 +80,10 @@ function convertHtmlAgency(agencyName: any , headerText: any , agencies:any = nu
   divE.classList.add("d-flex");
   if(agencies && agencies.length>0)
   {
-    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span>';
-    let i=0;
-    agencies.forEach(elm=>{
-      html += '<span class="ms-1">';
-      if(i>0) html += ','
-      html += (elm.AgencyName) + '</span>';
-      i++;
-    })
-    html += '</div>';
+    var name = "";
+    if("agencyID" in agencies[0]) name = agencies.map(u=>(u.agencyName)).join(" , ");
+    else  name = agencies.map(u=>(u.AgencyName)).join(" , ");
+    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1">'+name+'</span></div>';
     divE.innerHTML = html;
   }
   else if(agencyName)
@@ -107,15 +102,10 @@ function convertHtmlAgency2(agencyName,txtLstAgency:any, agencies:any = null)
   var desc = '<div class="d-flex">';
   if(agencies && agencies.length>0)
   {
-    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span>';
-    let i=0;
-    agencies.forEach(elm=>{
-      html += '<span class="ms-1">';
-      if(i>0) html += ','
-      html += (elm.agencyName) + '</span>';
-      i++;
-    })
-    html += '</div>';
+    var name = "";
+    if("agencyID" in agencies[0]) name = agencies.map(u=>(u.agencyName)).join(" , ");
+    else  name = agencies.map(u=>(u.AgencyName)).join(" , ");
+    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1">'+name+'</span></div>';
     desc += html;
   }
   else if(agencyName)
