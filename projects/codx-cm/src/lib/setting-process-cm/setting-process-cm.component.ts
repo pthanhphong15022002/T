@@ -82,18 +82,22 @@ export class SettingProcessCmComponent extends UIComponent implements OnInit {
     if (this.data) {
       this.openPopupEditDynamic('edit');
     } else {
-      this.data = new DP_Processes();
-      this.data.recID = Util.uid();
-      this.data.viewMode = '6';
-      this.data.viewModeDetail = 'S';
-      this.data.addFieldsControl = '1';
-      this.data.allowCopy = true;
-      this.data.approveRule = false;
-      this.data.released = false;
-      this.data.status = '1';
-      this.data.category = '0';
-      this.data.showInstanceControl = '2';
-      this.openPopupEditDynamic('add');
+      this.api
+        .execSv<any>('DP', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+          'DP01',
+          'DP_Processes',
+        ])
+        .subscribe((res) => {
+          if (res && res?.data) {
+            this.data = new DP_Processes();
+
+            this.data = res.data;
+            this.data['_uuid'] = this.data['recID'] ?? Util.uid();
+            this.data['idField'] = 'recID';
+            this.data.status = '1';
+            this.openPopupEditDynamic('add');
+          }
+        });
     }
     this.changeDetectorRef.detectChanges();
   }
