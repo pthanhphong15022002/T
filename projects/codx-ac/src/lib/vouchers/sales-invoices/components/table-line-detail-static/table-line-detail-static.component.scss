@@ -9,10 +9,6 @@ table {
   table-layout: auto;
 }
 
-tbody {
-  border-bottom: 1px solid var(--bs-table-border-color) !important;
-}
-
 @mixin sticky {
   position: sticky;
   z-index: 1;
