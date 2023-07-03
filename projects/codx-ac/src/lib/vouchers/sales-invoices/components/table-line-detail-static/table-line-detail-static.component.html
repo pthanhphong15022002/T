@@ -35,11 +35,11 @@
     </tbody>
 
     <tbody>
-      <tr *ngFor="let line of lines; index as i">
+      <ng-container *ngFor="let line of lines; index as i">
         <ng-container
           *ngTemplateOutlet="trTemplate; context: { $implicit: line, index: i }"
         ></ng-container>
-      </tr>
+      </ng-container>
 
       <tr *ngIf="!hasVerticalScrollbar" class="h-100"></tr>
     </tbody>
