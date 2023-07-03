@@ -259,8 +259,8 @@
                 {{'2' | vll : 'ACL0001' : 'text' | async}}
               </span>
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 bg-gray-100 border-bottom">
-              <span class="fw-bold">
+            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 bg-gray-100 border-bottom ">
+              <span class="fw-bold justify-content-end">
                 {{'3' | vll : 'ACL0001' : 'text' | async}}
               </span>
             </th>
@@ -293,14 +293,15 @@
         </thead>
         <tbody>
           <ng-container *ngFor="let item of acctTrans">
-            <tr *ngIf="!item.crediting">
+            <tr [style]="item.crediting && createLine(item) ? 'border-bottom: 1px solid var(--bs-border-color) !important;' : ''">
               <td class="">
                 <div class="d-flex justify-content-start ps-3">
                   <div class="w-100px min-w-100px">
                     <div class="d-flex align-items-center justify-content-start">
                       <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
                         <span class="d-flex align-items-center mb-2">
-                          <span class="fs-6 fw-bold me-2">N</span>
+                          <span *ngIf="!item.crediting" class="fs-6 fw-bold me-2">N</span>
+                          <span *ngIf="item.crediting" class="fw-bold fs-6 me-2 ms-5">C</span>
                           <span style="margin-top: 1px;" class="fw-bold">{{item.accountID}}</span>
                         </span>
                       </ng-container>
@@ -412,7 +413,7 @@
                 </div>
               </td>
             </tr>
-            <tr *ngIf="item.crediting"
+            <!-- <tr *ngIf="item.crediting"
               [style]="createLine(item) ? 'border-bottom: 1px solid var(--bs-border-color) !important;' : ''">
               <td>
                 <div class="d-flex justify-content-start w-100 ps-3">
@@ -534,7 +535,7 @@
                   </div>
                 </div>
               </td>
-            </tr>
+            </tr> -->
           </ng-container>
         </tbody>
       </table>

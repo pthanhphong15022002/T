@@ -543,7 +543,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.hideColumns(this.hideFields);
     setTimeout(() => {
       this.loadingform = false;
-    }, 1000);
+    }, 500);
   }
 
   gridCreatedSet() {
@@ -566,7 +566,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridSet.hideColumns(this.hideFieldsSet);
     setTimeout(() => {
       this.loadingform = false;
-    }, 1000);
+    }, 500);
   }
 
   lineChanged(e: any) {
@@ -1303,8 +1303,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case '2':
         idx = this.cashpaymentline.length;
         this.dataLine.rowNo = idx + 1;
-
-        //rename -> popupLine
         this.popupLine(this.dataLine);
         break;
     }

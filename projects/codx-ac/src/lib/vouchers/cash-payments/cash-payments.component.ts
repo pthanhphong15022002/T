@@ -756,15 +756,19 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   createLine(item) {
-    var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
-    let index = data
-      .filter((x) => x.crediting == item.crediting)
-      .findIndex((x) => x.recID == item.recID);
-    if (index == data.filter((x) => x.crediting == item.crediting).length - 1) {
-      return true;
-    } else {
-      return false;
+    if (item.crediting) {
+      var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
+      let index = data
+        .filter((x) => x.crediting == item.crediting)
+        .findIndex((x) => x.recID == item.recID);
+      if (index == data.filter((x) => x.crediting == item.crediting).length - 1
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
+    return false;
   }
 
   created(e: any, ele: TabComponent) {

@@ -188,7 +188,7 @@ export class CodxStepChartComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes.instance) {
       this.getDataGanttChart(
-      this.instance?.recID,
+      this.instance?.refID,
       this.instance?.processID
       );
     }
@@ -303,7 +303,7 @@ export class CodxStepChartComponent
   }
 
   changeViewTimeGant(e) {
-    this.crrViewGant = e.data;
+    this.crrViewGant = e?.data;
     switch (this.crrViewGant) {
       case 'D':
         this.timelineSettings = this.timelineSettingsDays;

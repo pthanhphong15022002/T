@@ -91,7 +91,7 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
-    <div class="p-3 bg-gray-100 tab-basic">
+    <div *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'" class="p-3 bg-gray-100 tab-basic">
       <div #itemRef class="row">
         <div class="col-7 ac-left">
           <div class="mw-750px">
@@ -108,27 +108,17 @@
               <div class="col-3">
                 <!-- Số tiền -->
                 <div class="form-group">
-                  <codx-label *ngIf="
-                      form.formModel.funcID == 'ACT0410' ||
-                      form.formModel.funcID == 'ACT0429'
-                    " fiedName="TotalAmt" [formModel]="form.formModel">
+                  <codx-label fiedName="TotalAmt" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-label *ngIf="
-                      form.formModel.funcID == 'ACT0401' ||
-                      form.formModel.funcID == 'ACT0428'
-                    " fiedName="ReceiptAmt" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input *ngIf="
-                      form.formModel.funcID == 'ACT0410' ||
-                      form.formModel.funcID == 'ACT0429'
-                    " [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
-                    (controlBlur)="valueFocusOut($event)"></codx-input>
-                  <codx-input *ngIf="
-                      form.formModel.funcID == 'ACT0401' ||
-                      form.formModel.funcID == 'ACT0428'
-                    " [Group]="form.formGroup" [formModel]="form.formModel" field="receiptAmt" [min]="0"
+                  <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
                     (controlBlur)="valueFocusOut($event)"></codx-input>
                 </div>
+                <!-- <div *ngIf="form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'" class="form-group">
+                  <codx-label fiedName="ReceiptAmt" [formModel]="form.formModel">
+                  </codx-label>    
+                  <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="receiptAmt" [min]="0"
+                    (controlBlur)="valueFocusOut($event)"></codx-input>
+                </div> -->
               </div>
               <div class="col-3">
                 <div class="form-group">
@@ -160,7 +150,7 @@
                         cashpayment.subType == '5' || cashpayment.subType == '9'
                       " fiedName="ObjectID" [formModel]="form.formModel" default="Đối tượng">
                     </codx-label>
-                    <codx-input #cbxObject [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
                       (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -212,18 +202,19 @@
                 " class="col-6 ac-type-1">
                 <div class="form-group">
                   <!-- Người nhận tiền -->
-                  <div *ngIf="form.formModel.funcID == 'ACT0410'" class="form-group">
+                  <div *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'"
+                    class="form-group">
                     <codx-label fiedName="Payee" [formModel]="form.formModel">
                     </codx-label>
                     <codx-input #cbxPayname [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
                       (valueChange)="valueChange($event)"></codx-input>
                   </div>
-                  <div *ngIf="form.formModel.funcID == 'ACT0401'" class="form-group">
+                  <!-- <div *ngIf="form.formModel.funcID == 'ACT0401'" class="form-group">
                     <codx-label fiedName="Payor" [formModel]="form.formModel">
                     </codx-label>
                     <codx-input [crrValue]="cashpayment.payee" [formModel]="form.formModel" field="payor"
                       (valueChange)="valueChange($event)"></codx-input>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -311,8 +302,8 @@
         predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
         [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
         (created)="gridCreated()" rowHeight="35" (onAddNew)="onAddNew($event)" [autoAddRow]="true"
-        (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
-        (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
+        (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
+        [isCustom]="false"></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">

@@ -75,7 +75,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
   idField = 'recID';
-
   //---------------------------------------------------------------------------------//
   viewType = ViewType;
   formModel: FormModel;
@@ -114,20 +113,18 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     private authStore: AuthStore,
     private activatedRoute: ActivatedRoute
   ) {
-    super(injector);    
+    super(injector);       
+    this.funcID = this.activatedRoute.snapshot.params['funcID']; 
     this.curUser =this.authStore.get();
     if(this.curUser==null){
       this.curUser= this.authService?.userValue;
     }
-    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onInit(): void {
-    if (this.funcID == EPCONST.FUNCID.S_Allocate) {
-      this.method = 'GetAllocateStationeryAsync';
-    }
+    
     this.getBaseVariable();
     this.roleCheck();
 
@@ -270,9 +267,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
   getBaseVariable() {
-    if (this.funcID == null) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -379,6 +375,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   viewChanged(evt: any) {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    
     this.getBaseVariable();
     //this.onLoading(evt);
   }

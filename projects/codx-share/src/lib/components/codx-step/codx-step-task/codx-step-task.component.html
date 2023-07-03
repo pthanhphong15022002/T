@@ -38,17 +38,11 @@
         [dataItem]="moreDefaut"
         (changeDataMF)="changeDataMFStep($event, currentStep)"
         (clickMF)="clickMFStep($event, currentStep)"
+        *ngIf="isShowMore && !isClose"
       >
       </codx-mfunc>
     </div>
     <div class="d-flex align-items-center">
-      <span
-      class="date text-nowrap me-2"
-      *ngIf="currentStep?.startDate && currentStep?.endDate"
-    >
-      {{ currentStep?.startDate | date : dateFomat }} -
-      {{ currentStep?.endDate | date : dateFomat }}</span
-    >
       <codx-vll
         [name]="'DP032'"
         [field]="'Status'"
@@ -58,6 +52,13 @@
         class="badge badge-primary badge-sm"
       >
       </codx-vll>
+      <span
+        class="date text-nowrap me-2"
+        *ngIf="currentStep?.startDate && currentStep?.endDate"
+      >
+        {{ currentStep?.startDate | date : dateFomat }} -
+        {{ currentStep?.endDate | date : dateFomat }}</span
+      >
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
@@ -87,18 +88,24 @@
           placement="top bottom"
         ></codx-progressbar>
       </div>
-      <div (click)="toggleElemen()" class="d-flex align-items-center show-step mx-2">
-        <i *ngIf="isShowElement" class="icon-24 icon-expand_less text-primary"></i>
-        <i *ngIf="!isShowElement" class="icon-24 icon-expand_more text-primary"></i>
+      <div
+        (click)="toggleElemen()"
+        class="d-flex align-items-center show-step mx-2"
+      >
+        <i
+          *ngIf="isShowElement"
+          class="icon-24 icon-expand_less text-primary"
+        ></i>
+        <i
+          *ngIf="!isShowElement"
+          class="icon-24 icon-expand_more text-primary"
+        ></i>
       </div>
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
   <!-- [@fadeInOut] -->
-  <div
-    class="main-body"
-    *ngIf="listGroupTask?.length > 0 && isShowElement"
-  >
+  <div class="main-body" *ngIf="listGroupTask?.length > 0 && isShowElement">
     <div
       cdkDropList
       class="list"
@@ -290,7 +297,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore  && !isClose"
+      *ngIf="isShowMore && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
