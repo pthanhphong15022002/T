@@ -144,11 +144,11 @@ export class ViewsTabsDetailsComponent
   onActions(e) {
     switch (e.type) {
       case 'drop':
-        e.data.stepID = this.crrStepID;
+        // e.data.stepID = this.crrStepID;
         break;
       case 'drag':
         ///bắt data khi kéo
-        this.crrStepID = e?.data?.stepID;
+        // this.crrStepID = e?.data?.stepID;
 
         break;
       case 'dbClick':

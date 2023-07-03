@@ -63,7 +63,7 @@
       </div>
       <div
         *ngIf="data.type && data.type != 'G' && data.taskGroupID"
-        class="d-flex align-items-center justify-content-between"
+        class="flex-body d-flex align-items-center justify-content-between w-100"
       >
         <div class="text-danger">
           <span>{{ data?.durationDay }}</span>
@@ -111,7 +111,7 @@
       </ng-container>
     </div>
     <!-- content -->
-    <div *ngIf="data.type == 'G'" class="ms-3">
+    <div *ngIf="data.type == 'G'" class="ms-5">
       <ng-container *ngFor="let item of data?.items">
         <ng-container
           [ngTemplateOutlet]="tempTitle"
@@ -133,7 +133,7 @@
             ><span class="fw-bolb ms-1">
               <codx-label name="lblTime" default="Thời gian:"></codx-label>
             </span>
-            <div class="badge badge-white text-danger my-1 me-3">
+            <div class="badge badge-white text-danger my-1 ms-3">
               <span>{{ data?.durationDay }}</span>
               <codx-label
                 class="mx-1"
