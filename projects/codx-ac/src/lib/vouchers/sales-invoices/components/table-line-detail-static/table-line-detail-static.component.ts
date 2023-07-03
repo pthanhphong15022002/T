@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
-import { TableColumn } from '../../models/TableHeader.model';
+import { TableColumn } from '../../models/TableColumn.model';
 
 @Component({
   selector: 'lib-table-line-detail-static',
