@@ -30,6 +30,7 @@ export class CodxStepChartComponent
   @Input() isShowTypeTime = true;
   @Input() isRoleAll = true;
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() type = 'DP' || 'CM'
 
   crrViewGant = 'W';
   vllViewGannt = 'DP042';
@@ -37,6 +38,7 @@ export class CodxStepChartComponent
   timelineSettings: any;
   ownerInstance: string[] = [];
   listColor = [];
+  listTypeTask = [];
   columns = [
     { field: 'name', headerText: 'Tên', width: '250' },
     { field: 'startDate', headerText: 'Ngày bắt đầu' },
@@ -50,6 +52,12 @@ export class CodxStepChartComponent
     type: 'type',
     color: 'color',
   };
+  formModelInstances = {
+    functionID: "DP21",
+    formName: "DPInstances",
+    entityName: "DP_Instances",
+    gridViewName: "grvDPInstances",
+  }
 
   tags = '';
   //#region timelineSettingsHour
@@ -183,12 +191,18 @@ export class CodxStepChartComponent
   }
   ngAfterViewInit() {}
   onInit(): void {
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.instance) {
+      let instanceID = this.type == "DP" ? this.instance?.recID : this.instance?.refID;
       this.getDataGanttChart(
-      this.instance?.refID,
+        instanceID,
       this.instance?.processID
       );
     }

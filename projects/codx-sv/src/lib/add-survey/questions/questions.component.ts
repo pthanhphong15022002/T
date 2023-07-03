@@ -40,7 +40,7 @@ import { PopupQuestionOtherComponent } from './template-survey-other.component/p
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-// import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
+ import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
@@ -1183,7 +1183,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   generateGUID() {
-    // return uuidv4();
+    return uuidv4();
   }
 
   addCard(itemActive, seqNoSession = null, category) {

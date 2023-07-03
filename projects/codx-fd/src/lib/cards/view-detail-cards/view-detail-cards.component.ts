@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, FormModel } from 'codx-core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-view-detail-cards',
@@ -43,6 +44,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
     },
   ];
   objectID: string;
+  backgroundImg: string;
 
   constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
 
@@ -87,7 +89,14 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
         } else {
           this.objectID = undefined;
         }
-      });
+        });
+        if(!this.data.backgroundColor){
+          this.api.execSv('DM','ERM.Business.DM','FileBussiness','GetFilesByIbjectIDAsync',res.pattern.recID).subscribe((img: any) => {
+            if(img && img.length > 0){
+              this.backgroundImg = environment.urlUpload + "/" + img[0].url;
+            }
+          })
+        };
         this.dt.detectChanges();
       }
       const textElement = document.getElementById('situation');
