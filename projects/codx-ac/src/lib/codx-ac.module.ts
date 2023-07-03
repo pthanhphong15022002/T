@@ -4,7 +4,10 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AccumulationTooltipService, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationTooltipService,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
@@ -66,7 +69,7 @@ import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interes
 import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
 import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
 import { LayloutJournalComponent } from './laylout-journal/laylout-journal.component';
-import { TestJournalComponent } from './test-journal/test-journal.component';
+import { JournalV2Component } from './journal-v2/journal-v2.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { CalculatingCostOfProductComponent } from './periodic/calculating-cost-of-product/calculating-cost-of-product.component';
@@ -113,11 +116,11 @@ export const routes: Routes = [
         component: PurchaseinvoicesComponent,
         data: { noReuse: true },
       },
-      {
-        path: 'journalnames/:funcID',
-        component: JournalsComponent,
-        data: { noReuse: true },
-      },
+      // {
+      //   path: 'journalnames/:funcID',
+      //   component: JournalsComponent,
+      //   data: { noReuse: true },
+      // },
       {
         path: 'cashtranfers/:funcID',
         component: CashTransfersComponent,
@@ -217,12 +220,13 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'test',
+    path: '',
     component: LayloutJournalComponent,
     children: [
       {
-        path: '',
-        component: TestJournalComponent,
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
       },
     ],
   },
@@ -294,7 +298,7 @@ export const routes: Routes = [
     ClosingDataComponent,
     PopAddClosingDataComponent,
     TableLineDetailStaticComponent,
-    TestJournalComponent,
+    JournalV2Component,
     LayloutJournalComponent,
   ],
   exports: [RouterModule],
@@ -317,7 +321,7 @@ export const routes: Routes = [
     ProgressBarModule,
     CircularGaugeModule,
     TooltipModule,
-    ChartAllModule
+    ChartAllModule,
   ],
 })
 export class AcModule {}
