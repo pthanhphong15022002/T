@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import {
   DataRequest,
+  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -19,6 +20,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { CodxAcService } from '../../codx-ac.service';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
+import { SumFormat, TableColumn } from './models/TableHeader.model';
 import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { SalesInvoiceService } from './sales-invoices.service';
 
@@ -46,6 +48,15 @@ export class SalesInvoicesComponent
   journalNo: string;
   master: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
+  fmSalesInvoicesLines: FormModel = {
+    funcID: 'ACT0605', // này là funcID của thằng cha, lấy tạm
+    entityName: 'SM_SalesInvoicesLines',
+    formName: 'SalesInvoicesLines',
+    gridViewName: 'grvSalesInvoicesLines',
+    entityPer: 'SM_SalesInvoicesLines',
+  };
+  gvsSalesInvoicesLines: any;
+  vats: any[] = [];
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -54,9 +65,10 @@ export class SalesInvoicesComponent
   ];
   parent: any;
   loading: boolean = false;
-
   overflowed: boolean = false;
   expanding: boolean = false;
+
+  columns: TableColumn[];
 
   constructor(
     inject: Injector,
@@ -73,6 +85,57 @@ export class SalesInvoicesComponent
         });
       }
     });
+
+    this.vats = salesInvoiceService.vats;
+    this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
+    this.columns = [
+      new TableColumn({
+        labelName: 'Num',
+        headerText: 'STT',
+      }),
+      new TableColumn({
+        labelName: 'Item',
+        headerText:
+          this.gvsSalesInvoicesLines?.ItemID?.headerText ?? 'Mặt hàng',
+        footerText: 'Tổng cộng',
+        footerClass: 'text-end pe-5',
+      }),
+      new TableColumn({
+        labelName: 'Quantity',
+        field: 'quantity',
+        headerText:
+          this.gvsSalesInvoicesLines?.Quantity?.headerText ?? 'Số lượng',
+        headerClass: 'text-end pe-5',
+        footerClass: 'text-end pe-5',
+        hasSum: true,
+      }),
+      new TableColumn({
+        labelName: 'SalesPrice',
+        field: 'salesPrice',
+        headerText:
+          this.gvsSalesInvoicesLines?.SalesPrice?.headerText ?? 'Đơn giá',
+        headerClass: 'text-end pe-5',
+      }),
+      new TableColumn({
+        labelName: 'NetAmt',
+        field: 'netAmt',
+        headerText:
+          this.gvsSalesInvoicesLines?.NetAmt?.headerText ?? 'Thành tiền',
+        headerClass: 'text-end pe-5',
+        footerClass: 'text-end pe-5',
+        hasSum: true,
+        sumFormat: SumFormat.Currency,
+      }),
+      new TableColumn({
+        labelName: 'Vatid',
+        field: 'vatAmt',
+        headerText:
+          this.gvsSalesInvoicesLines?.VATID?.headerText ?? 'Thuế GTGT',
+        headerClass: 'text-end pe-5',
+        hasSum: true,
+        sumFormat: SumFormat.Currency,
+      }),
+    ];
   }
   //#endregion
 
