@@ -1,0 +1,26 @@
+<div id="idViewFileSV" class="w-100 h-100">
+  <div class="control-section indicator-type-section h-100">
+    <div class="d-flex align-items-center div-toolbar-sv p-2">
+      <div class="d-flex align-items-center justify-content-center rounded cursor-pointer" (click)="clickZoom()" [ngClass]="isZoom ? 'active' : ''"><i class="fas fa-hand-paper"></i></div>
+      <div class="d-flex align-items-center justify-content-center rounded ms-2 cursor-pointer"><i class="icon-i-zoom-in"></i></div>
+      <div class="d-flex align-items-center justify-content-center rounded ms-2 cursor-pointer"><i class="icon-i-zoom-out"></i></div>
+      <div class="d-flex align-items-center justify-content-center rounded ms-2 cursor-pointer" (click)="clickFullScreen()"><i class="icon-fullscreen"></i></div>
+      <div class="d-flex align-items-center justify-content-center rounded ms-2 cursor-pointer" (click)="close()"><i class="icon-close"></i></div>
+    </div>
+    <ejs-carousel cssClass = 'indicator-type' indicatorsType = "Default" [autoPlay]="false" [selectedIndex]="selectedIndex" (slideChanged)="slideChanging($event)">
+      <e-carousel-items>
+        <e-carousel-item *ngFor="let item of dataFile , let i = index">
+          <ng-template #template>
+            <div class="e-slide" >
+              <div class="zoom d-flex align-items-center justify-content-center" [id]="'zoom' + i">
+                <!-- <ejs-imageeditor [id]="'image-editor'+i" (created)="created(item,i)"></ejs-imageeditor> -->
+                <img  [src]="getSrcImage(item)" alt="cardinal" style="max-width:100%;max-height:100%;" />
+              </div>
+            </div>
+          </ng-template>
+        </e-carousel-item>
+      </e-carousel-items>
+    </ejs-carousel>
+  </div>
+  
+ </div>

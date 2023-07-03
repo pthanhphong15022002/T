@@ -1,20 +1,18 @@
-import { Observable } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
-  NotificationsService,
   SidebarModel,
   ViewModel,
   ViewType,
   UIComponent,
   CRUDService,
   RequestOption,
-  RequestModel,
   ResourceModel,
 } from 'codx-core';
 import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-employee.component';
 import { ActivatedRoute } from '@angular/router';
-
+import { FormGroup } from '@angular/forms';
+import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 @Component({
   selector: 'lib-employee-list',
   templateUrl: './employee-list.component.html',
@@ -32,6 +30,7 @@ export class EmployeeListComponent extends UIComponent {
   funcIDEmpInfor: string = 'HRT03b';
   orgUnitID: string = '';
   request: ResourceModel;
+  viewActive: string = '';
   // template columns grid
   @ViewChild('colEmployee', { static: true }) colEmployee: TemplateRef<any>;
   @ViewChild('colContact', { static: true }) colContact: TemplateRef<any>;
@@ -51,9 +50,14 @@ export class EmployeeListComponent extends UIComponent {
   className = 'EmployeesBusiness';
   method = 'GetListEmployeeAsync';
 
-  constructor( private injector: Injector,
-    private routerActive: ActivatedRoute,
-    ) {
+  gridViewAction;
+  cmtStatus = '';
+  formGroup: FormGroup;
+  grv2DataChanged: any;
+  constructor(
+    private injector: Injector,
+    private routerActive: ActivatedRoute
+  ) {
     super(injector);
     this.funcID = this.routerActive.snapshot.params['funcID'];
   }
@@ -87,7 +91,8 @@ export class EmployeeListComponent extends UIComponent {
         id: '1',
         active: true,
         type: ViewType.list,
-        sameData:true,
+        sameData: true,
+        //active: true,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
@@ -98,12 +103,12 @@ export class EmployeeListComponent extends UIComponent {
         active: false,
         type: ViewType.tree_masterdetail,
         request: this.request,
-        sameData:false,
+        sameData: false,
         model: {
           resizable: true,
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
-          resourceModel: { parentIDField: 'ParentID' , idField: 'OrgUnitID'},
+          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
         },
       },
     ];
@@ -126,8 +131,8 @@ export class EmployeeListComponent extends UIComponent {
       case 'SYS04': // sao chép
         this.copy(data, moreFunc);
         break;
-      case 'HR0031': // cập nhật tình trạng
-        // this.updateStatus(data, moreFunc.functionID);
+      case 'HRT03a1A07': // cập nhật tình trạng
+        this.updateStatus(data, moreFunc.functionID);
         break;
       case 'HR0032': // xem chi tiết
         break;
@@ -215,8 +220,15 @@ export class EmployeeListComponent extends UIComponent {
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
-          this.view.dataService.dataSelected = res? res : this.itemSelected;
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetEmployeeInfoByIDAsync',
+          [data.employeeID]
+        )
+        .subscribe((res) => {
+          this.view.dataService.dataSelected = res ? res : this.itemSelected;
           this.view.dataService.copy().subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view.dataService;
@@ -237,9 +249,7 @@ export class EmployeeListComponent extends UIComponent {
               }
             });
           });
-
-        })
-
+        });
     }
   }
 
@@ -262,28 +272,37 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   // update status
-  // updateStatus(data: any, funcID: string) {
-  //
-  //   let popup = this.callfc.openForm(
-  //     PopupAddNewHRComponent,
-  //     'Cập nhật tình trạng',
-  //     350,
-  //     200,
-  //     funcID,
-  //     data
-  //   );
-  //   popup.closed.subscribe((e) => {
-  //     if (e?.event) {
-  //       var emp = e.event;
-  //       if (emp.status == '90')
-  //         this.view.dataService.remove(emp).subscribe();
-  //       else
-  //         this.view.dataService.update(emp).subscribe();
-  //     }
-  //     this.detectorRef.detectChanges();
-  //   });
-  // }
+  updateStatus(data: any, funcID: string) {
+    let popup = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      funcID,
+      data
+    );
+    popup.closed.subscribe((e) => {
+      if (e?.event) {
+        var emp = e.event;
+        if (emp.status === '90') this.view.dataService.remove(emp).subscribe();
+        else this.view.dataService.update(emp).subscribe();
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
 
+  viewChanged(event: any) {
+    if (this.grv2DataChanged) {
+      if (event?.view?.id !== '2') {
+        this.view.dataService.data = [];
+        this.view.dataService.parentIdField = '';
+      }
+      this.view.dataService.page = 0;
+      this.viewActive = event.view.id;
+      this.view.currentView.dataService.load().subscribe();
+    }
+    this.grv2DataChanged = false;
+  }
   // export File
   // exportFile() {
   //   var gridModel = new DataRequest();
@@ -319,7 +338,7 @@ export class EmployeeListComponent extends UIComponent {
       let queryParams = {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
-        totalPage: this.view.dataService.pageCount
+        totalPage: this.view.dataService.pageCount,
       };
       let state = {
         data: this.view.dataService.data.map(function (obj) {
@@ -330,5 +349,8 @@ export class EmployeeListComponent extends UIComponent {
       this.codxService.navigate('', func?.url, queryParams, state, true);
     });
   }
-
+  dataChange(event) {
+    console.log(event);
+    this.grv2DataChanged = event?.hasDataChanged ? true : false;
+  }
 }

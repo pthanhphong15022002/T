@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, FormModel } from 'codx-core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-view-detail-cards',
@@ -19,6 +20,31 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   behavior: any[] = [];
   showmore: boolean = false;
   showSM: boolean = false;
+  tabControl = [
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      icon: '',
+      template: null,
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      icon: '',
+      template: null,
+    },
+    {
+      name: 'Comment',
+      textDefault: 'Bình luận',
+      isActive: false,
+      icon: '',
+      template: null,
+    },
+  ];
+  objectID: string;
+  backgroundImg: string;
 
   constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
 
@@ -26,6 +52,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.cardID.currentValue != changes.cardID.previousValue) {
+      this.backgroundImg = undefined;
       this.getDataCard();
     }
   }
@@ -41,7 +68,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res) => {
+    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res: any) => {
       if (res) {
         console.log(res);
         this.data = res;
@@ -57,6 +84,20 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
             this.behavior.push(this.data.behaviorName);
           }
         }
+        this.api.execSv<any>('WP', 'WP', 'CommentsBusiness', 'GetPostByCardIDAsync', [res.recID]).subscribe((postRes) => {
+        if (postRes && postRes.attachments > 0) {
+          this.objectID = postRes.recID;
+        } else {
+          this.objectID = undefined;
+        }
+        });
+        if(!this.data.backgroundColor){
+          this.api.execSv('DM','ERM.Business.DM','FileBussiness','GetFilesByIbjectIDAsync',res.pattern.recID).subscribe((img: any) => {
+            if(img && img.length > 0){
+              this.backgroundImg = environment.urlUpload + "/" + img[0].url;
+            }
+          })
+        };
         this.dt.detectChanges();
       }
       const textElement = document.getElementById('situation');

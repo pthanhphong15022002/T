@@ -19,7 +19,9 @@
   </div>
   <div></div>
 </ng-template>
-<ng-template popup adde #body>
+
+
+<ng-template #body>
   <div class="py-2">
     <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
       hideDes="1" (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
@@ -47,7 +49,8 @@
       </codx-input>
       </ng-container>
       <ng-template #agencies>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="agencies" [showInput]="true" style="width: 100%" (valueChange)="changeValueAgencies($event)"
+        <codx-input field="agencies" [showInput]="true" [refValue]="gridViewSetup['Agencies']['referedValue']" [refType]="gridViewSetup['Agencies']['referedType']" [datatype]="gridViewSetup['Agencies']['controlType']" [multiple]="true" style="width: 100%" (valueChange)="changeValueAgencies($event)"
+        [crrValue]="crrAgencies"
        >
       </codx-input>
       </ng-template>

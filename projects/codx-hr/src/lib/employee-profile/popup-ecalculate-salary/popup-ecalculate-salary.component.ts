@@ -58,6 +58,10 @@ export class PopupECalculateSalaryComponent
   }
 
   onSaveForm() {
+    if(this.formGroup.invalid){
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
       if (p != null) {
         this.notify.notifyCode('SYS007');

@@ -73,7 +73,6 @@ export class PopupAddNewHRComponent implements OnInit, AfterViewInit{
     @Optional() dialogRef?: DialogRef
   ) 
   {
-    debugger
     this.dialogRef = dialogRef;
     this.funcID = dialogRef?.formModel?.funcID;
     this.action = dialogData?.data?.action;

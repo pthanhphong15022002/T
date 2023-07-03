@@ -1455,7 +1455,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   getJSONString(data) {
     return JSON.stringify(data);
   }
-  getSubTitle(relationType: any, agencyName: any, shareBy: any) {
+  getSubTitle(relationType: any, agencyName: any, shareBy: any , agencies = null) {
     if (
       relationType == '1' ||
       (this.formModel.funcID == 'ODT41' && relationType == '2')
@@ -1463,13 +1463,22 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       if (this.formModel.funcID == 'ODT31') {
         var text = this.ms020?.customName;
         if (!text) text = '';
+
+       
         return Util.stringFormat(
           text,
           this.fmTextValuelist(relationType, '6'),
           agencyName
         );
       }
-      return 'Gửi đến ' + agencyName;
+      else
+      {
+        var name = agencyName;
+
+        if(agencies && agencies.length > 0) name = agencies.map(u=>u.agencyName).join(" , ");
+        return 'Gửi đến ' + name;
+      }
+     
     }
 
     return Util.stringFormat(

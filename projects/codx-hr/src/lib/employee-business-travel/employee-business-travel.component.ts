@@ -20,6 +20,8 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-employee-business.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-employee-business-travel',
@@ -55,6 +57,8 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   processID;
   cmtStatus: string = '';
   genderGrvSetup: any;
+  runModeCheck: boolean = false;
+  flagChangeMF: boolean = false;
 
   //#region eBusinessTravelFuncID
   actionAddNew = 'HRTPro10A01';
@@ -71,7 +75,8 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     private activatedRoute: ActivatedRoute,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private codxODService: CodxOdService
   ) {
     super(inject);
   }
@@ -344,6 +349,19 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
         this.copyValue(event.text, this.currentEmpObj);
         this.df.detectChanges();
         break;
+
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.df.detectChanges();
+        break;
+      }
     }
   }
 
@@ -356,8 +374,26 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       );
     });
   }
-  changeDataMF(event, data): void {
-    this.hrService.handleShowHideMF(event, data, this.view);
+
+  changeDataMF(event, data) {
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    this.flagChangeMF = true;
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   //#region Handle detail data

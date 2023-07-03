@@ -30,6 +30,7 @@ export class CodxStepChartComponent
   @Input() isShowTypeTime = true;
   @Input() isRoleAll = true;
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() type = 'DP' || 'CM'
 
   crrViewGant = 'W';
   vllViewGannt = 'DP042';
@@ -37,6 +38,7 @@ export class CodxStepChartComponent
   timelineSettings: any;
   ownerInstance: string[] = [];
   listColor = [];
+  listTypeTask = [];
   columns = [
     { field: 'name', headerText: 'Tên', width: '250' },
     { field: 'startDate', headerText: 'Ngày bắt đầu' },
@@ -50,8 +52,15 @@ export class CodxStepChartComponent
     type: 'type',
     color: 'color',
   };
+  formModelInstances = {
+    functionID: "DP21",
+    formName: "DPInstances",
+    entityName: "DP_Instances",
+    gridViewName: "grvDPInstances",
+  }
 
   tags = '';
+  //#region timelineSettingsHour
   timelineSettingsHour: any = {
     topTier: {
       unit: 'Day',
@@ -162,7 +171,7 @@ export class CodxStepChartComponent
     },
     timelineUnitSize: 100,
   };
-
+  //#endregion
   fmProcductsLines: FormModel = {
     formName: 'CMProducts',
     gridViewName: 'grvCMProducts',
@@ -182,12 +191,18 @@ export class CodxStepChartComponent
   }
   ngAfterViewInit() {}
   onInit(): void {
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.instance) {
+      let instanceID = this.type == "DP" ? this.instance?.recID : this.instance?.refID;
       this.getDataGanttChart(
-      this.instance?.refID,
+        instanceID,
       this.instance?.processID
       );
     }
@@ -274,8 +289,11 @@ export class CodxStepChartComponent
         listIdRoleInstance: this.ownerInstance,
         type: data?.type,
         listRefIDAssign: listRefIDAssign,
-        isRoleAll: this.isRoleAll,
+        isRoleAll: data?.isRole,
         instanceStep: instanceStep,
+        isOnlyView: data?.isOnlyView,
+        isUpdateProgressGroup: data?.progressTaskGroupControl,
+        isUpdateProgressStep: data?.progressStepControl,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -294,56 +312,12 @@ export class CodxStepChartComponent
             this.instance?.processID
             );
         }
-        // let dataProgress = data?.event;
-        // if (dataProgress) {
-        //   let stepFind = this.listSteps.find(
-        //     (step) => step.recID == dataProgress?.stepID
-        //   );
-        //   if (stepFind) {
-        //     if (dataProgress?.type == 'P') {
-        //       stepFind.progress = dataProgress?.progressStep;
-        //       stepFind.note = dataProgress?.note;
-        //       stepFind.actualEnd = dataProgress?.actualEnd;
-        //     } else if (dataProgress?.type == 'G') {
-        //       let groupFind = stepFind?.taskGroups?.find(
-        //         (group) => group?.recID == dataProgress?.groupTaskID
-        //       );
-        //       if (groupFind) {
-        //         groupFind.progress = dataProgress?.progressGroupTask;
-        //         groupFind.note = dataProgress?.note;
-        //         groupFind.actualEnd = dataProgress?.actualEnd;
-        //         if (dataProgress?.isUpdate) {
-        //           stepFind.progress = dataProgress?.progressStep;
-        //         }
-        //       }
-        //     } else {
-        //       let taskFind = stepFind?.tasks?.find(
-        //         (task) => task?.recID == dataProgress?.taskID
-        //       );
-        //       if (taskFind) {
-        //         taskFind.progress = dataProgress?.progressTask;
-        //         taskFind.note = dataProgress?.note;
-        //         taskFind.actualEnd = dataProgress?.actualEnd;
-        //         if (dataProgress?.isUpdate) {
-        //           let groupFind = stepFind?.taskGroups?.find(
-        //             (group) => group?.recID == dataProgress?.groupTaskID
-        //           );
-        //           if (groupFind) {
-        //             groupFind.progress = dataProgress?.progressGroupTask;
-        //           }
-        //           stepFind.progress = dataProgress?.progressStep;
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-        // console.log(dataProgress?.event);
       });
     }
   }
 
   changeViewTimeGant(e) {
-    this.crrViewGant = e.data;
+    this.crrViewGant = e?.data;
     switch (this.crrViewGant) {
       case 'D':
         this.timelineSettings = this.timelineSettingsDays;

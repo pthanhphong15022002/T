@@ -20,6 +20,8 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEdayoffsComponent } from '../employee-profile/popup-edayoffs/popup-edayoffs.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-employee-day-off',
@@ -47,7 +49,9 @@ export class EmployeeDayOffComponent extends UIComponent {
     private activatedRoute: ActivatedRoute,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {
     super(injector);
   }
@@ -101,11 +105,6 @@ export class EmployeeDayOffComponent extends UIComponent {
 
   onInit() {
     this.GetGvSetup();
-    // this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
-    //   if (res) {
-    //     this.grvSetup = res;
-    //   }
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -199,13 +198,45 @@ export class EmployeeDayOffComponent extends UIComponent {
         this.copyValue(event.text, this.itemDetail);
         this.df.detectChanges();
         break;
+      default: {
+        this.shareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
+      }
     }
   }
+  flagChangeMF: boolean = false;
+  runModeCheck: boolean = false;
+
   changeDataMF(event, data) {
-    this.hrService.handleShowHideMF(event, data, this.view);
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+
+    this.flagChangeMF = true;
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(event, data, fc);
+      });
+    } else this.changeDataMFBefore(event, data, funcList);
   }
+
   clickEvent(event) {
     this.clickMF(event?.event, event?.data);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.shareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   //add/edit/copy/delete
@@ -241,7 +272,7 @@ export class EmployeeDayOffComponent extends UIComponent {
         }
         this.df.detectChanges();
       }
-      if (res?.event) this.view.dataService.clear();
+      // if (res?.event) this.view.dataService.clear();
     });
   }
   addDayOff(event) {

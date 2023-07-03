@@ -309,6 +309,8 @@ export class InstanceDetailComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.rollHeight();
+   
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -331,7 +333,7 @@ export class InstanceDetailComponent implements OnInit {
   loadChangeData() {
     this.instanceStatus = this.dataSelect.status;
     this.GetStepsByInstanceIDAsync();
-    this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
+    // this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
     this.listReasonBySteps(this.reasonStepsObject);
     this.maxSize = 4;
     this.isOnlyView = true;
@@ -487,32 +489,32 @@ export class InstanceDetailComponent implements OnInit {
   setHTMLCssStages(oldStage, newStage) {}
 
   //ganttchar
-  getDataGanttChart(instanceID, processID) {
-    this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
-        instanceID,
-        processID,
-      ])
-      .subscribe((res) => {
-        if (res && res?.length > 0) {
-          this.ganttDs = res;
-          this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
-          let test = this.ganttDsClone.map((i) => {
-            return {
-              name: i.name,
-              start: i.startDate,
-              end: i.endDate,
-            };
-          });
+  // getDataGanttChart(instanceID, processID) {
+  //   this.api
+  //     .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
+  //       instanceID,
+  //       processID,
+  //     ])
+  //     .subscribe((res) => {
+  //       if (res && res?.length > 0) {
+  //         this.ganttDs = res;
+  //         this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
+  //         let test = this.ganttDsClone.map((i) => {
+  //           return {
+  //             name: i.name,
+  //             start: i.startDate,
+  //             end: i.endDate,
+  //           };
+  //         });
 
-          this.changeDetec.detectChanges();
-        }
-      });
-  }
-  getColor(recID) {
-    var idx = this.ganttDs.findIndex((x) => x.recID == recID);
-    return this.ganttDs[idx]?.color;
-  }
+  //         this.changeDetec.detectChanges();
+  //       }
+  //     });
+  // }
+  // getColor(recID) {
+  //   var idx = this.ganttDs.findIndex((x) => x.recID == recID);
+  //   return this.ganttDs[idx]?.color;
+  // }
   clickDetailGanchart(recID) {
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
@@ -790,9 +792,9 @@ export class InstanceDetailComponent implements OnInit {
     this.viewModelDetail = e;
     this.isSaving = false;
     this.currentElmID = null;
-    if (this.viewModelDetail == 'G' && this.isChangeData) {
-      this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
-    }
+    // if (this.viewModelDetail == 'G' && this.isChangeData) {
+    //   this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
+    // }
   }
 
   startInstances() {

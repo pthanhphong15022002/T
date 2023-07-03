@@ -370,7 +370,7 @@ export class CatagoryComponent implements OnInit {
                 dialogModel
               )
               .closed.subscribe(({ event }) => {
-                if (!event) {
+                if (event == null) {
                   return;
                 }
 

@@ -17,7 +17,10 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-view-detail-employee-business',
@@ -30,7 +33,9 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
     private hrService: CodxHrService,
     private router: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {
     this.user = this.authStore.get();
   }
@@ -99,7 +104,22 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
   }
 
   changeDataMF(e: any, data: any) {
-    this.hrService.handleShowHideMF(e, data, this.view);
+    this.hrService.handleShowHideMF(e, data, this.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   clickMF(evt: any, data: any = null) {

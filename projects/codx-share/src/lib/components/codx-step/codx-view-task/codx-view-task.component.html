@@ -25,7 +25,7 @@
     <div class="d-flex justify-content-end">
       <div>
         <codx-mfunc
-            [formModel]="grvMoreFunction"
+            [formModel]="formModelStep"
             [isBookMark]="false"
             [dataItem]="moreDefaut"
             (changeDataMF)="changeDataMFStep($event)"
@@ -240,7 +240,7 @@
     <div class="mt-4">
       <codx-label
         class="fs-5 me-3"
-        fiedName="memo"
+        fiedName=""
         [formModel]="frmModel"
         default="Tài liệu:"
         style="font-weight: 500"

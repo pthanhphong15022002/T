@@ -48,6 +48,7 @@ import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { CodxReportComponent } from 'projects/codx-report/src/lib/codx-report.component';
+import { SearchingComponent } from './searching/searching.component';
 //import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
@@ -70,6 +71,10 @@ export const routes: Routes = [
       //   component: HomeComponent
       // },
       {
+        path: 'searching/:funcID',
+        component: SearchingComponent,
+      },
+      {
         path: ':funcID',
         component: HomeComponent,
         data: { noReuse: true },
@@ -90,6 +95,8 @@ export const routes: Routes = [
         path: 'report/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
+     
+      
       // {
       //   path: 'dmdashboard/:funcID',
       //   component: TMDashboardComponent,
@@ -123,6 +130,7 @@ const T_Component: Type<any>[] = [
   MoveComponent,
   VersionComponent,
   ShareComponent,
+  SearchingComponent,
   DragDropFileUploadDirective,
   DragDropFileFolderDirective,
 ];
@@ -146,6 +154,7 @@ const T_Component: Type<any>[] = [
     CoreModule,
     UploaderModule,
     DialogModule,
+    
     //TooltipModule,
     // InfiniteScrollModule
   ],

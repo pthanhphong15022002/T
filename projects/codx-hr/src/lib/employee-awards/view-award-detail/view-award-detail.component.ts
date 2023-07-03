@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { isObservable } from 'rxjs';
 import {
   ApiHttpService,
   AuthStore,
@@ -15,6 +16,8 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-view-award-detail',
@@ -28,7 +31,9 @@ export class ViewAwardDetailComponent {
     private df: ChangeDetectorRef,
     private router: ActivatedRoute,
     private authStore: AuthStore,
-    private cache: CacheService
+    private cache: CacheService,
+    private shareService: CodxShareService,
+    private codxODService: CodxOdService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     // this.user = this.authStore.get();
@@ -86,7 +91,22 @@ export class ViewAwardDetailComponent {
   // }
 
   changeDataMF(e: any, data: any) {
-    this.hrService.handleShowHideMF(e, data, this.view);
+    this.hrService.handleShowHideMF(e, data, this.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data?.unbounds);
+    }
   }
 
   clickMF(evt: any, data: any = null) {

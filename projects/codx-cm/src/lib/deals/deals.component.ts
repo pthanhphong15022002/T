@@ -381,137 +381,6 @@ export class DealsComponent
     this.clickMF(e.e, e.data);
   }
   changeDataMF($event, data) {
-    // if ($event != null && data != null) {
-    //   if (!data?.roles?.isOnwer) {
-    //     for (let more of $event) {
-    //       switch (more.functionID) {
-    //         case 'SYS01':
-    //         case 'SYS101':
-    //         case 'CM0201_1':
-    //         case 'CM0201_3':
-    //         case 'CM0201_4':
-    //         case 'SYS03':
-    //         case 'SYS04':
-    //         case 'SYS02':
-    //         case 'CM0201_2':
-    //         default:
-    //           more.disabled = true;
-    //       }
-    //     }
-    //   } else {
-    //     if (data.status == '1') {
-    //       for (let more of $event) {
-    //         switch (more.functionID) {
-    //           case 'SYS01':
-    //           case 'SYS101':
-    //           case 'CM0201_1':
-    //           case 'CM0201_3':
-    //           case 'CM0201_4':
-    //             more.disabled = true;
-    //             break;
-    //           case 'SYS03':
-    //           case 'SYS04':
-    //           case 'SYS02':
-    //           case 'CM0201_2':
-    //             more.isblur = false;
-    //             break;
-    //           default:
-    //             more.isblur = true;
-    //         }
-    //       }
-    //     } else {
-    //       for (let more of $event) {
-    //         switch (more.functionID) {
-    //           // move stage
-    //           case 'CM0201_1':
-    //             if (this.checkMoreReason(data) || data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           // reason success
-    //           case 'CM0201_3':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roleMore?.isReasonSuccess
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           // reason fail
-    //           case 'CM0201_4':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roleMore?.isReasonFail
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'CM0201_2':
-    //             more.disabled = true;
-    //             break;
-    //           case 'CM0201_7':
-    //             if (data.closed || this.checkMoreReason(data)) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'CM0201_8':
-    //             if (data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'CM0201_9':
-    //             if (!data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'SYS101':
-    //           case 'SYS01':
-    //             if (this.checkMoreReason(data) || data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-
-    //           case 'SYS103':
-    //           case 'SYS03':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roles.write
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-
-    //           case 'SYS102':
-    //           case 'SYS02':
-    //             // if (
-    //             //   this.checkMoreReason(data) ||
-    //             //   data.closed ||
-    //             //   !data.roles.delete
-    //             // ) {
-    //             //   more.disabled = true;
-    //             // }
-    //             more.disabled = false;
-    //             break;
-
-    //           case 'SYS104':
-    //           case 'SYS04':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roles.delete
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-
     if ($event != null && data != null) {
       for (let eventItem of $event) {
         const functionID = eventItem.functionID;
@@ -634,14 +503,8 @@ export class DealsComponent
   }
 
   checkMoreReason(tmpPermission) {
-    if (
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
-    ) {
-      return true;
-    }
-    return false;
+    return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
+
   }
 
   checkRoleInSystem(tmpRole) {
@@ -649,56 +512,55 @@ export class DealsComponent
   }
 
   clickMF(e, data) {
+    const actions = {
+      SYS03: (data) => {
+        this.edit(data);
+      },
+      SYS04: (data) => {
+        this.copy(data);
+      },
+      SYS02: (data) => {
+        this.delete(data);
+      },
+      CM0201_1: (data) => {
+        this.moveStage(data);
+      },
+      CM0201_2: (data) => {
+        this.handelStartDay(data);
+      },
+      CM0201_3: (data) => {
+        this.moveReason(data, true);
+      },
+      CM0201_4: (data) => {
+        this.moveReason(data, false);
+      },
+      CM0201_8: (data) => {
+        this.openOrCloseDeal(data, true);
+      },
+      CM0201_7: (data) => {
+        this.popupOwnerRoles(data);
+      },
+      CM0201_9: (data) => {
+        this.openOrCloseDeal(data, false);
+      },
+      CM0201_5: (data) => {
+        this.exportFile(data);
+      },
+      CM0201_6: (data) => {
+        this.approvalTrans(data);
+      },
+      CM0201_12: (data) => {
+        this.confirmOrRefuse(true, data);
+      },
+      CM0201_13: (data) => {
+        this.confirmOrRefuse(false, data);
+      },
+    };
     this.dataSelected = data;
     this.titleAction = e.text;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'CM0201_1':
-        this.moveStage(data);
-        break;
-      case 'CM0201_2':
-        this.handelStartDay(data);
-        break;
-      case 'CM0201_3':
-        this.moveReason(data, true);
-        break;
-      case 'CM0201_4':
-        this.moveReason(data, false);
-        break;
-      // Open deal
-      case 'CM0201_8':
-        this.openOrCloseDeal(data, true);
-        break;
-      case 'CM0201_7':
-        this.popupOwnerRoles(data);
-        break;
-      // Close deal
-      case 'CM0201_9':
-        this.openOrCloseDeal(data, false);
-        break;
-      //xuât file
-      case 'CM0201_5':
-        this.exportFile(data);
-        break;
-      case 'CM0201_6':
-        this.approvalTrans(data);
-        break;
-      //Xác nhận
-      case 'CM0201_12':
-        this.confirmOrRefuse(true, data);
-        break;
-      //Từ chối
-      case 'CM0201_13':
-        this.confirmOrRefuse(false, data);
-        break;
+
+    if (actions.hasOwnProperty(e.functionID)) {
+      actions[e.functionID](data);
     }
   }
   changeMF(e) {
@@ -744,18 +606,14 @@ export class DealsComponent
 
   dropDeals(data) {
     data.stepID = this.crrStepID;
-    // if (!data.edit) {
-    //   this.notificationsService.notifyCode('SYS032');
-    //   return;
-    // }
-    // if (data.closed) {
-    //   this.notificationsService.notify(
-    //     'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
-    //     '2'
-    //   );
-    //   return;
-    // }
-
+    if (!data?.roles?.isOnwer) {
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
+    if (data.closed) {
+      this.notificationsService.notify('DP038');
+      return;
+    }
     // if (this.moreFuncInstance?.length == 0) {
     //   this.changeDetectorRef.detectChanges();
     //   return;

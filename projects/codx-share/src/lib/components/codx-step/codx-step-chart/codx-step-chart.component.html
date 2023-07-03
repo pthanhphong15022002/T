@@ -1,40 +1,58 @@
-<div class="w-100 d-flex justify-content-end mb-4">
-	<!-- tùy chọn thời gian -->
-	<span class="input-sm" *ngIf="isShowTypeTime">
-	  <codx-input
-		type="valuelist"
-		[crrValue]="crrViewGant"
-		[refValue]="vllViewGannt"
-		(valueChange)="changeViewTimeGant($event)"
-	  >
-	  </codx-input>
-	</span>
+<div *ngIf="instance?.status != '1'">
+  <div class="w-100 d-flex justify-content-end my-1 me-1">
+    <!-- tùy chọn thời gian -->
+    <div class="input-sm" *ngIf="isShowTypeTime">
+      <codx-input
+        type="valuelist"
+        [crrValue]="crrViewGant"
+        [refValue]="vllViewGannt"
+        (valueChange)="changeViewTimeGant($event)"
+      >
+      </codx-input>
+    </div>
   </div>
   <div class="border border-gray-150">
-	<codx-gantt-chart
-	  [dataSource]="ganttDs"
-	  [taskFields]="taskFields"
-	  [taskbarHeight]="60"
-	  [rowHeight]="60"
-	  [readOnly]="true"
-	  [templateTaskbar]="ganttItems"
-	  [timelineSettings]="timelineSettings"
-	  [columns]="columns"
-	  [toolbar]="[]"
-	></codx-gantt-chart>
-	<ng-template #ganttItems let-data>
-	  <div
-		class="d-flex justify-content-center align-items-center"
-		(click)="clickDetailGanchart(data.recID)"
-		[ngStyle]="{
-		  'background-color': getColor(data.recID),
-		  'border-radius': '3px'
-		}"
-	  >
-		<span class="fw-bold text-dark line-clamp line-clamp-1 px-1">
-		  {{ data.name }}
-		</span>
-	  </div>
-	</ng-template>
+    <codx-gantt-chart
+      [dataSource]="ganttDs"
+      [taskFields]="taskFields"
+      [taskbarHeight]="60"
+      [rowHeight]="60"
+      [readOnly]="true"
+      [templateTaskbar]="ganttItems"
+      [timelineSettings]="timelineSettings"
+      [columns]="columns"
+      [toolbar]="[]"
+    ></codx-gantt-chart>
+    <ng-template #ganttItems let-data>
+      <div
+        class="d-flex justify-content-center align-items-center"
+        (click)="clickDetailGanchart(data.recID)"
+        [ngStyle]="{
+          'background-color': getColor(data.recID),
+          'border-radius': '3px'
+        }"
+      >
+        <span class="fw-bold text-dark line-clamp line-clamp-1 px-1">
+          {{ data.name }}
+        </span>
+      </div>
+    </ng-template>
   </div>
- 
+  <div class="d-flex flex-wrap pb-2 mt-2">
+	<div
+	  *ngFor="let item of listTypeTask"
+	  class="d-flex align-items-center me-6"
+	>
+	  <div
+		 class="me-2"
+		 [ngStyle]="{ 'background-color': item?.color }"
+		 style="height: 12px; width: 12px; border-radius: 2px"
+	  ></div>
+	  <span class="text-gray-700 fs-7">{{ item?.text }}</span>
+	</div>
+ </div>
+</div>
+
+<div *ngIf="instance?.status == '1'">
+  <codx-no-data></codx-no-data>
+</div>
