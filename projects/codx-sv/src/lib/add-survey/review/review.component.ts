@@ -515,27 +515,36 @@ export class ReviewComponent extends UIComponent implements OnInit {
     lstAnswers.forEach((x) => {
       if (x.answerType) {
         let respondResult: any = [];
-        x.answers.forEach((y) => {
-          let seqNo = 0;
-          if(y.seqNo) seqNo = y.seqNo;
-          //let answer = '';
-          // if(y.other) answer = (document.getElementById('ip-order-'+x.seqNo+x.recID) as HTMLInputElement).value;
-          // else if(y.answer) answer = y.answer;
-          let objR = {
-            seqNo: seqNo,
-            answer: y.answer,
-            other: y.other,
-            columnNo: false,
-          };
-          respondResult.push(objR);
-
-          if(x.mandatory && !objR.answer)
-          {
-            check = true
-            document.getElementById("formError"+x.recID).innerHTML = this.html;
-            document.getElementById("formId"+x.recID).className += " border-danger";
-          }
-        });
+        if(x.answers && x.answers.length > 0)
+        {
+          x.answers.forEach((y) => {
+            let seqNo = 0;
+            if(y.seqNo) seqNo = y.seqNo;
+            //let answer = '';
+            // if(y.other) answer = (document.getElementById('ip-order-'+x.seqNo+x.recID) as HTMLInputElement).value;
+            // else if(y.answer) answer = y.answer;
+            let objR = {
+              seqNo: seqNo,
+              answer: y.answer,
+              other: y.other,
+              columnNo: false,
+            };
+            respondResult.push(objR);
+  
+            if(x.mandatory && !objR.answer)
+            {
+              check = true
+              document.getElementById("formError"+x.recID).innerHTML = this.html;
+              document.getElementById("formId"+x.recID).className += " border-danger";
+            }
+          });
+        }
+        else if(x.mandatory)
+        {
+          check = true
+          document.getElementById("formError"+x.recID).innerHTML = this.html;
+          document.getElementById("formId"+x.recID).className += " border-danger";
+        }
         if (respondResult) {
           let objQ = {
             questionID: x.recID,
@@ -548,7 +557,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       }
     });
 
-    if(this.repondID)
+    if(this.repondID && !check)
     {
       this.dataSVRepondents.responds = respondQuestion;
       this.SVServices.onUpdate(this.dataSVRepondents).subscribe((res:any) => {
