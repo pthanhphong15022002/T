@@ -380,6 +380,16 @@
         "
       ></span>
     </div> -->
+    <codx-vll
+        *ngIf="data?.group"
+        [name]="'DP032'"
+        [field]="'Status'"
+        [value]="data?.value?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-primary badge-sm"
+      >
+      </codx-vll>
     <span
       class="date text-nowrap"
       *ngIf="data?.value?.startDate && data?.value?.endDate"
