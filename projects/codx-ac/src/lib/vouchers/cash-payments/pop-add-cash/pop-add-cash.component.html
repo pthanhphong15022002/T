@@ -5,7 +5,6 @@
   <ngx-ui-loader [loaderId]="'loader'" [logoUrl]="'../assets/themes/ac/default/img/bussiness-accouting-codx.svg'"></ngx-ui-loader>
 </div> -->
 <div *ngIf="loading" class="ac-load-save">
-  <!-- <img style="width: 5%;" src="../assets/themes/ac/default/img/loader2.gif" alt=""> -->
   <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0" [value]="20"
     width="120" height="120" [animation]="animation" [isIndeterminate]="true" (load)="loadProgressbar($event)">
     <e-progressbar-annotations>
@@ -72,7 +71,7 @@
         <ng-container *ngTemplateOutlet="addLine"></ng-container>
       </div>
     </div>
-    <div *ngIf="loadingform" class="ac-load-form">
+    <!-- <div *ngIf="loadingform" class="ac-load-form">
       <ejs-progressbar #annotationform id='load-form-container' type='Circular' [maximum]='100' [minimum]='0'
         [value]='20' width='120' height='120' [animation]='animation' [isIndeterminate]='true'
         (load)='loadProgressbar($event)'>
@@ -80,7 +79,7 @@
           <e-progressbar-annotation content=" "> </e-progressbar-annotation>
         </e-progressbar-annotations>
       </ejs-progressbar>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 <!-- End: Body -->
