@@ -91,7 +91,7 @@
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
     <!-- Phiếu chi && Ủy nhiệm chi -->
-    <div *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'" class="p-3 bg-gray-100 tab-basic">
+    <div style="height: 230px;" *ngIf="form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'" class="p-3 bg-gray-100 tab-basic">
       <div #itemRef class="row">
         <div class="col-7 ac-left">
           <div class="mw-750px">
@@ -512,8 +512,8 @@
         </div>
       </div>
     </div>
-    <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 30px; background-color: whitesmoke"></div>
   </ng-container>
+  <div class="row" *ngIf="cashpaymentline.length == 0" style="height: 30px; background-color: whitesmoke"></div>
 </ng-template>
 <!-- End: CashPaymentLine -->
 
@@ -613,7 +613,7 @@
       <div class="d-flex align-items-center me-3">
         <div *ngIf="action != 'edit'" class="ms-2">
           <ejs-tooltip id='tooltip' content='Alt + Shift + S' target="#saveadd">
-            <button id="saveadd" [disabled]="loadingform" type="button" class="btn btn-md btn-light-primary"
+            <button id="saveadd" type="button" class="btn btn-md btn-light-primary"
               (click)="onSaveAdd()">
               <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
             </button>
@@ -621,7 +621,7 @@
         </div>
         <div class="ms-2">
           <ejs-tooltip id='tooltip' content='Alt + S' target="#save">
-            <button id="save" [disabled]="loadingform" type="button" class="btn btn-md btn-primary"
+            <button id="save" type="button" class="btn btn-md btn-primary"
               style="min-width: 60px" (click)="onSave()">
               <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
             </button>
@@ -648,7 +648,7 @@
     <ng-container *ngIf="form.formGroup && gridViewSetup">
       <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
         class="input-circle input-border-0 w-400px mt-1 mb-1">
-        <codx-dropdown-select [disabled]="loadingform" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
+        <codx-dropdown-select [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
           cssPopup="h-350px w-400px" [isMulti]="false" type="valuelist" field="subType" [refValue]="gridViewSetup['SubType'].referedValue"
           [value]="cashpayment.subType" emptyText="Loại phiếu"
           (valueChange)="changeType($event)"></codx-dropdown-select>

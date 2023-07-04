@@ -7,9 +7,9 @@ export class TM_Tasks {
   tags: string = '';
   taskType: string = '';
   category: string = '';
-  taskGroupID: string = '';
-  parentID: string = '';
-  projectID: string = '';
+  taskGroupID: string;
+  parentID: string;
+  projectID: string;
   activityID: string = '';
   iterationID: string = '';
   recurrence: boolean;
@@ -43,7 +43,7 @@ export class TM_Tasks {
   completedQty: number;
   duration: number;
   lateCode: string = '';
-  sessionID:string ='';
+  sessionID: string = '';
   refID: any;
   refType: string = '';
   refNo: string = '';
