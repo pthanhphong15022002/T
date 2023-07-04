@@ -7,7 +7,9 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { Layout } from '@syncfusion/ej2-angular-diagrams';
 import { ApiHttpService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -16,7 +18,7 @@ import { ApiHttpService, UIComponent, ViewModel, ViewType } from 'codx-core';
 })
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
-  @ViewChildren('templateDeals') dashboardDeals: QueryList<any>;
+  @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
   funcID = 'DPT01';
   views: Array<ViewModel> = [];
   button = {
@@ -25,12 +27,30 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isEditMode = false;
   panelsDeals: any;
   datasDeals: any;
+  arrVllStatus: any = [];
+  vllStatus = '';
 
-  constructor(inject: Injector) {
+  constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
+    // this.layout.setAside(true);
+    this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
+      if (grv) {
+        this.vllStatus = grv['Status'].referedValue;
+        this.cache.valueList(this.vllStatus).subscribe((res) => {
+          if (res && res.datas) this.arrVllStatus = res.datas;
+        });
+      }
+    });
   }
-  override onInit(): void {}
+  onInit(): void {
+    this.panelsDeals = JSON.parse(
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":8,"minSizeX":32,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"},{"id":"71.14683256767762543_layout","row":11,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Top nhân viên có nhiều cơ hội thành công nhất"},{"id":"81.36639064171709834_layout","row":11,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Lý do thành công"},{"id":"91.06496875406606994_layout","row":11,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Lý do thất bại"},{"id":"101.21519762020962552_layout","row":19,"col":0,"sizeX":32,"sizeY":8,"minSizeX":32,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê hiệu suất trong năm"},{"id":"111.21519762020964252_layout","row":19,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê năng suất nhân viên"}]'
+    );
+    this.datasDeals = JSON.parse(
+      '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.21519762020962552_layout","data":"7"},{"panelId":"81.06496875406606994_layout","data":"8"},{"panelId":"91.14683256767762543_layout","data":"9"},{"panelId":"101.36639064171709834_layout","data":"10"},{"panelId":"11.21519762020964252_layout","data":"11"}]'
+    );
+  }
 
   ngAfterViewInit() {
     this.views = [
@@ -52,4 +72,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   filterChange(e) {}
 
   onActions(e) {}
+
+  getNameStatus(status) {
+    return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
+  }
 }
