@@ -1,3 +1,4 @@
+import { isEditable } from "@syncfusion/ej2-angular-grids";
 import { AppRoutingModule } from "src/app/app-routing.module";
 
 export class DialogAttachmentType {
@@ -171,7 +172,9 @@ export class FileUpload {
     viewThumb:boolean = false;
     rawFile:any;
     entityName:any;
-    expiredOn:any
+    expiredOn:any;
+    isAlert:any;
+    isEmail:any;
 }
 
 

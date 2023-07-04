@@ -75,7 +75,7 @@ export class IncommingAddComponent implements OnInit {
   referType = 'source';
   keyField = false; //Kiểm tra số công văn tự động
   fileModule:any;
-  crrAgencies:any;
+  crrAgencies:any="";
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -159,7 +159,6 @@ export class IncommingAddComponent implements OnInit {
     {
       if(this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       if(this.dispatch.agencyName) this.dispatch.agencyName = this.dispatch.agencyName.toString();
-      debugger
       if(this.formModel?.funcID == 'ODT41')
       {
         if(this.dispatch.agencies && this.dispatch.agencies.length > 0) {
@@ -364,18 +363,37 @@ export class IncommingAddComponent implements OnInit {
 
   changeValueAgencies(e:any)
   {
-    if(e?.component?.dataSelected && e?.component?.dataSelected.length > 0)
+    if(this.gridViewSetup['Agencies']['referedType'] == "P")
     {
-      var arr = []
-      e?.component?.dataSelected.forEach(elm => {
-
-        var obj = {
-          agencyID : elm?.dataSelected?.AgencyID,
-          agencyName : elm?.dataSelected?.AgencyName
-        };
-        arr.push(obj);
-      });
-      this.dispatch.agencies = arr;
+      if(e?.component?.dataSelected && e?.component?.dataSelected.length > 0)
+      {
+        var arr = []
+        e?.component?.dataSelected.forEach(elm => {
+  
+          var obj = {
+            agencyID : elm?.dataSelected?.AgencyID,
+            agencyName : elm?.dataSelected?.AgencyName
+          };
+          arr.push(obj);
+        });
+        this.dispatch.agencies = arr;
+      }
+    }
+    else
+    {
+      if(e?.component?.itemSelected && e?.component?.itemSelected.length > 0)
+      {
+        var arr = []
+        e?.component?.itemSelected.forEach(elm => {
+  
+          var obj = {
+            agencyID : elm?.itemSelected?.AgencyID,
+            agencyName : elm?.itemSelected?.AgencyName
+          };
+          arr.push(obj);
+        });
+        this.dispatch.agencies = arr;
+      }
     }
    
   }
