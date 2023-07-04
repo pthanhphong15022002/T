@@ -239,47 +239,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           }
         }
-
-        // phím tắt nút lưu
-        // if(e.altKey && e.key == 's'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-        //   }else{
-        //     this.onSave();
-        //   }
-        // }
-
-        // phím tắt nút lưu & thêm
-        // if(e.altKey && e.shiftKey && e.key == 'S'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-
-        //   }else{
-        //     this.onSaveAdd();
-        //   }
-        // }
-
-        // phím tắt nút hủy bỏ
-        // if(e.key == 'Delete'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-        //   }else{
-        //     this.onDiscard();
-        //   }
-        // }
-
-        // phím tắt nút đóng
-        // if(e.key == 'Escape'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-        //   }else{
-        //     this.close();
-        //   }
-        // }
       }
     );
     (document.body as HTMLElement).addEventListener('click', (e: any) => {

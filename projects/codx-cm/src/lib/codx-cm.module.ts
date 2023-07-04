@@ -81,6 +81,8 @@ import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup
 import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
+import { TargetsComponent } from './targets/targets.component';
+import { PopupAddTargetComponent } from './targets/popup-add-target/popup-add-target.component';
 
 const routes: Routes = [
   {
@@ -120,6 +122,11 @@ const routes: Routes = [
       {
         path: 'dashboard/:funcID',
         component: CmDashboardComponent,
+      },
+      {
+        path: 'targets/:funcID',
+        component: TargetsComponent,
+        data: { noReuse: true },
       },
       // {
       //   path: 'approvals/:funcID',
@@ -216,6 +223,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupOwnerDealComponent,
     ViewIconGroupComponent,
     CmDashboardComponent,
+    TargetsComponent,
+    PopupAddTargetComponent
   ],
   imports: [
     RouterModule.forChild(routes),
