@@ -8,7 +8,10 @@
   >
     <ng-container *ngFor="let item of TabControl; let i = index">
       <li [ngbNavItem]="i + 1" class="nav-item pe-1">
-        <a ngbNavLink class="nav-link position-relative d-flex align-items-center">
+        <a
+          ngbNavLink
+          class="nav-link position-relative d-flex align-items-center"
+        >
           <ng-container *ngIf="item.icon">
             <span class="me-2 icon-16" [ngClass]="item.icon"></span>
           </ng-container>
@@ -90,8 +93,8 @@
             [actionType]="'C'"
             [addNew]="true"
             [funcID]="funcID"
-            (totalCommentChange)="changeCountFooter($event,'comment')"
-            >
+            (totalCommentChange)="changeCountFooter($event, 'comment')"
+          >
           </codx-tree-comment>
         </div>
       </div>
@@ -135,27 +138,6 @@
         </codx-view-approval-step>
       </ng-container>
     </ng-container>
-    <!-- <ng-container *ngSwitchCase="'quotations'">
-      <ng-container>
-        <codx-quotations
-          [funcID]="funcIDQuotations"
-          [customerID]="customerID"
-          [predicates]="predicates"
-          [dataValues]="dataValues"
-          [salespersonID]="salespersonID"
-          [consultantID]="consultantID"
-        >
-        </codx-quotations>
-      </ng-container>
-    </ng-container> -->
-    <!-- nvthuan add contracts -->
-    <!-- <ng-container *ngSwitchCase="'contract'">
-      <ng-container
-        [ngTemplateOutlet]="tab.template"
-        [ngTemplateOutletContext]="{}"
-      ></ng-container>
-    </ng-container> -->
-
     <ng-container *ngSwitchDefault>
       <ng-container *ngIf="tab.template">
         <ng-container

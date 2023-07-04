@@ -133,6 +133,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.cache.valueList('AC085').subscribe((res) => {
       if (res) {
         this.vll85 = res.datas;
+
       }
     });
     this.cache.valueList('AC086').subscribe((res) => {

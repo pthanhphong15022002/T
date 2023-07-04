@@ -178,7 +178,7 @@
 </ng-template>
 <ng-template #tmpMasterDetail>
   <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [editable]="true"
-    rowHeight="50" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view" [showRowNumber]="false"
+    rowHeight="50" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view" [showRowNumber]="true"
     (dataChange)="dataChange($event)"></lib-employee-list-by-org>
 </ng-template>
 <!-- end tree_masterDetail -->

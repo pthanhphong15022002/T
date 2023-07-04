@@ -52,37 +52,49 @@ export class CodxTabsComponent implements OnInit {
   @Input() approveStatus: string;
   @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
 
-  //Quotations - CM
-  // @Input() customerID : string ;
-  // @Input() funcIDQuotations ='CM0202' ;
-  // @Input() refType: string;
-  // @Input() refID: string;
-  // @Input() predicates : string ;
-  // @Input() dataValues :string;
-  // @Input() salespersonID: string;
-  // @Input() consultantID: string;
-  // @Input() disableRefID = false;
-  // @Input() disableCusID = false;
-  // @Input() disableContactsID = false;
-  
   private all: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true,icon: "icon-i-clock-history" },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false,icon: "icon-i-paperclip" },
-    { name: 'Comment', textDefault: 'Bình luận', isActive: false,icon: "icon-i-chat-right" },
-    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false,icon: "icon-i-clipboard-check" },
-    { name: 'References', textDefault: 'Nguồn công việc', isActive: false,icon: "icon-i-link" },
-    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false,icon: "" },
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      icon: 'icon-i-clock-history',
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      icon: 'icon-i-paperclip',
+    },
+    {
+      name: 'Comment',
+      textDefault: 'Bình luận',
+      isActive: false,
+      icon: 'icon-i-chat-right',
+    },
+    {
+      name: 'AssignTo',
+      textDefault: 'Giao việc',
+      isActive: false,
+      icon: 'icon-i-clipboard-check',
+    },
+    {
+      name: 'References',
+      textDefault: 'Nguồn công việc',
+      isActive: false,
+      icon: 'icon-i-link',
+    },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false, icon: '' },
   ];
 
   oCountFooter: any = {};
   constructor(
     injector: Injector,
     private api: ApiHttpService,
-    private shareService : CodxShareService,
+    private shareService: CodxShareService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     // this.api
     //   .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
     //     this.objectID,
@@ -101,17 +113,15 @@ export class CodxTabsComponent implements OnInit {
       //   else tabModel.isActive = false;
       //   this.TabControl.push(tabModel);
       // });
-    } else 
-    {
+    } else {
       this.activeTabControl();
     }
 
     this.CheckTabControlApproval();
     this.changeDetectorRef.detectChanges();
   }
-  
+
   ngOnChanges() {
-    
     if (this.objectID) {
       this.api
         .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
@@ -127,20 +137,16 @@ export class CodxTabsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  CheckTabControlApproval()
-  {
+  CheckTabControlApproval() {
     var funcList = this.shareService.loadFunctionList(this.funcID) as any;
-    if(isObservable(funcList))
-    {
-      funcList.subscribe((fc : any) => {
-        if(fc.runMode == "1") this.tabcontrolApproval()
-      })
-    }
-    else if(funcList.runMode == "1") this.tabcontrolApproval()
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc: any) => {
+        if (fc.runMode == '1') this.tabcontrolApproval();
+      });
+    } else if (funcList.runMode == '1') this.tabcontrolApproval();
     this.changeDetectorRef.detectChanges();
   }
-  tabcontrolApproval()
-  {
+  tabcontrolApproval() {
     this.TabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
@@ -150,14 +156,17 @@ export class CodxTabsComponent implements OnInit {
     ];
     this.activeTabControl();
   }
-  activeTabControl()
-  {
-    this.TabControl.map(x => x.icon = this.all.find(e => e.name.toLowerCase() == x.name.toLowerCase())?.icon ?? x.icon );
-      this.active = this.TabControl.findIndex(
-        (x: TabModel) => x.isActive == true
-      );
+  activeTabControl() {
+    this.TabControl.map(
+      (x) =>
+        (x.icon =
+          this.all.find((e) => e.name.toLowerCase() == x.name.toLowerCase())
+            ?.icon ?? x.icon)
+    );
+    this.active = this.TabControl.findIndex(
+      (x: TabModel) => x.isActive == true
+    );
   }
-  
 
   fileAdded(e: any) {
     console.log(e);
@@ -193,7 +202,7 @@ export class CodxTabsComponent implements OnInit {
     }
   }
 
-  changeCountFooter(value:number,key:string){
+  changeCountFooter(value: number, key: string) {
     let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
     oCountFooter[key] = value;
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));

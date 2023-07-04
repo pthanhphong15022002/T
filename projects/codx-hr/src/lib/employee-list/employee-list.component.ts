@@ -54,6 +54,7 @@ export class EmployeeListComponent extends UIComponent {
   cmtStatus = '';
   formGroup: FormGroup;
   grv2DataChanged: any;
+  hasChangedData: boolean = false;
   constructor(
     private injector: Injector,
     private routerActive: ActivatedRoute
@@ -181,6 +182,7 @@ export class EmployeeListComponent extends UIComponent {
       popup.closed.subscribe((e) => {
         if (e.event) {
           (this.view.dataService as CRUDService).add(e.event).subscribe();
+          this.hasChangedData = true;
         }
       });
     });
@@ -208,6 +210,7 @@ export class EmployeeListComponent extends UIComponent {
         dialog.closed.subscribe((e) => {
           if (e.event) {
             (this.view.dataService as CRUDService).update(e.event).subscribe();
+            this.hasChangedData = true;
           }
         });
       });
@@ -246,6 +249,7 @@ export class EmployeeListComponent extends UIComponent {
             popup.closed.subscribe((e) => {
               if (e.event) {
                 (this.view.dataService as CRUDService).add(e.event).subscribe();
+                this.hasChangedData = true;
               }
             });
           });
@@ -258,7 +262,7 @@ export class EmployeeListComponent extends UIComponent {
     if (data) {
       this.view.dataService
         .delete([data], true, (opt: any) => this.beforDelete(opt, data))
-        .subscribe();
+        .subscribe(res => { if (res) this.hasChangedData = true });
     }
   }
 
@@ -292,16 +296,17 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   viewChanged(event: any) {
-    if (this.grv2DataChanged) {
+    if (this.grv2DataChanged || this.hasChangedData) {
       if (event?.view?.id !== '2') {
-        this.view.dataService.data = [];
         this.view.dataService.parentIdField = '';
+        this.view.dataService.data = [];
       }
       this.view.dataService.page = 0;
       this.viewActive = event.view.id;
       this.view.currentView.dataService.load().subscribe();
     }
     this.grv2DataChanged = false;
+    this.hasChangedData = false;
   }
   // export File
   // exportFile() {
@@ -350,7 +355,6 @@ export class EmployeeListComponent extends UIComponent {
     });
   }
   dataChange(event) {
-    console.log(event);
     this.grv2DataChanged = event?.hasDataChanged ? true : false;
   }
 }

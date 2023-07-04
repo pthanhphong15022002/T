@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, QueryList, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { ApiHttpService, CacheService } from 'codx-core';
 export class GridModels {
   pageSize: number;
@@ -31,7 +38,7 @@ export class PanelOrder {
   styleUrls: ['./instance-dashboard.component.css'],
 })
 export class InstanceDashboardComponent implements OnInit {
-  @ViewChild('templateDetail') templates: QueryList<any>;
+  @ViewChildren('templateDetail') templates: QueryList<any>;
   @Input() vllStatus: any;
   isEditMode = false;
   datas: any;

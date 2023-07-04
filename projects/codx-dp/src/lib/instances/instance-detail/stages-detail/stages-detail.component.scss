@@ -331,3 +331,10 @@
     height: 90%;
   }
 }
+
+
+
+.instance-info-scroll{
+	height: calc(100vh - 527px);
+	overflow: auto;
+}

@@ -382,7 +382,6 @@ addContracts() {
         }
       });
   }
-  // console.log(this.contracts);
 }
 
 editContract() {
