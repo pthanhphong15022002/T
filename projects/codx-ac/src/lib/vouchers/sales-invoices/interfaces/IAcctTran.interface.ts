@@ -1,0 +1,34 @@
+export interface IAcctTran {
+  recID: string;
+  entryID: number;
+  accountID: string;
+  accountName: string;
+  memo: string;
+  transAmt: number;
+  transAmt2: number;
+  transAmt3: number;
+  illegalAmt: number | null;
+  crediting: boolean;
+  dIM1: string;
+  dIM2: string;
+  dIM3: string;
+  projectID: string;
+  cashBookID: string;
+  assetType: string;
+  assetGroupID: string;
+  objectType: string;
+  objectID: string;
+  loanContractID: string;
+  contractID: string;
+  payee: string;
+  reasonID: string;
+  postType: string;
+  note: string;
+  offsetNote: string;
+  refNo: string;
+  departmentName: string;
+  costCenterName: string;
+  costItemName: string;
+  projectName: string;
+  objectName: string;
+}

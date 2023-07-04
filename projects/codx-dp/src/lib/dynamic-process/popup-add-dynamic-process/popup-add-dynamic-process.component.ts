@@ -63,6 +63,7 @@ import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/c
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -308,6 +309,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   languages: any;
   toolTipSetting: any = '';
   poper: any;
+  isDefaultStep = true;
+  colorDefault = '';
+  themeDatas = {
+    default: '#005DC7',
+    orange: '#f15711',
+    sapphire: '#009384',
+    green: '#0f8633',
+    purple: '#5710b2',
+    navy: '#192440'
+  }
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -320,6 +331,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private auth: AuthService,
     private formBuilder: FormBuilder,
     private codxService: CodxService,
+
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -425,25 +437,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // this.autoHandleStepReason();
     this.loadCbxProccess();
     this.getVllFormat();
+    let theme = this.auth.userValue.theme.split('|')[0];
+    this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
 
-  setDefaultOwner() {
-    var perm = new DP_Processes_Permission();
-    perm.objectID = this.user?.userID;
-    perm.objectName = this.user?.userName;
-    perm.objectType = '1';
-    perm.full = true;
-    perm.create = true;
-    perm.read = true;
-    perm.assign = true;
-    perm.edit = true;
-    perm.delete = true;
-    perm.roleType = 'O';
-    this.permissions = this.checkUserPermission(this.permissions, perm);
-    this.process.permissions = this.permissions;
+  
+  ngOnInit(){
+    this.loading();
   }
 
-  async ngOnInit(): Promise<void> {
+  async loading(): Promise<void> {
     //Tạo formGroup
     this.exportGroup = this.formBuilder.group({
       dataExport: ['all', Validators.required],
@@ -485,6 +488,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //  this.GetListProcessGroups();
   }
 
+  setDefaultOwner() {
+    var perm = new DP_Processes_Permission();
+    perm.objectID = this.user?.userID;
+    perm.objectName = this.user?.userName;
+    perm.objectType = '1';
+    perm.full = true;
+    perm.create = true;
+    perm.read = true;
+    perm.assign = true;
+    perm.edit = true;
+    perm.delete = true;
+    perm.roleType = 'O';
+    this.permissions = this.checkUserPermission(this.permissions, perm);
+    this.process.permissions = this.permissions;
+  }
+  
   GetListProcessGroups() {
     this.dpService.getListProcessGroups().subscribe((res) => {
       if (res && res.length > 0) {
@@ -2791,7 +2810,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     };
     var functionID = 'DPT0206'; //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
-      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe(async (grv) => {
         let option = new SidebarModel();
         let formModel = this.dialog?.formModel;
         formModel.formName = f.formName;
@@ -2802,7 +2821,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         option.Width = '550px';
         option.zIndex = 1001;
         let dialog = this.callfc.openSide(PopupJobComponent, dataInput, option);
-
         dialog.closed.subscribe((e) => {
           if (e?.event) {
             let taskData = e?.event?.data;
@@ -2816,6 +2834,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.listStepEdit.push(taskData?.stepID);
             }
             this.sumTimeStep();
+            this.changeDetectorRef.detectChanges();
           }
         });
         this.groupTaskID = null;
@@ -3020,13 +3039,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  async changeDataMF(e, type) {
+  async changeDataMF(e, type,step?) {
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02':
           case 'SYS03':
           case 'SYS04':
+            if(step && (step?.isSuccessStep || step?.isFailStep)){
+              res.disabled = true;
+            }
             break;
           case 'SYS003':
             break;
@@ -3059,6 +3081,28 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             break;
         }
       });
+    }
+  }
+
+  async changeDataMFReason(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS03':
+            break;
+          default:
+            res.disabled = true;
+        }
+      });
+    }
+  }
+
+  clickReason(e: any, data: any) {
+    switch (e.functionID) {
+      case 'SYS03':
+        this.openPopupStep('edit', data);
+        break;
+     
     }
   }
   // drop
@@ -4251,4 +4295,49 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   clickPopover(e, p, item) {
     this.popoverSelectView(p, item);
   }
+
+  
+  //#region color step
+
+  setColorTestStep(step, index){
+    if(this.isDefaultStep){
+      let countStep = this.stepList?.length || 0;
+        let medium = Math.round(countStep/2);
+        if(index < medium){
+          return { color: '#000000' }
+        }else{
+          return { color:  '#ffffff'}
+        }
+    }else{
+      return { color: step?.textColor }
+    }
+  }
+
+  setColorStep(step, index){
+    if(this.isDefaultStep){
+      let countStep = this.stepList?.length || 0;
+      let opacityDefault = Number((1/countStep).toFixed(2));
+      let opacity = opacityDefault *(index + 1);
+      let color = this.hexToRGB(this.colorDefault,opacity);
+      return {'background-color': color };
+    }else{
+      return {'background-color': step?.backgroundColor };
+    }
+  }
+
+  hexToRGB(hex, opacity) {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    const hexLongRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+    const result = hexLongRegex.exec(hex) || shorthandRegex.exec(hex);
+    if (!result) {
+      return null;
+    }
+    const [r, g, b] = result.slice(1).map(value => parseInt(value, 16));  
+    if (opacity !== undefined) {
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    } else {
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+  }
+  //#endregion
 }

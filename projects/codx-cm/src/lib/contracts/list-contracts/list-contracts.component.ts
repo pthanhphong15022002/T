@@ -218,7 +218,9 @@ export class ListContractsComponent implements OnInit, OnChanges {
     }
     let contractOutput = await this.openPopupContract(null, 'add', contracts);
     if (contractOutput?.event?.contract) {
+      if(!this.listContract) this.listContract = [];
       this.listContract.push(contractOutput?.event?.contract);
+      this.isData = this.listContract?.length > 0 ? true : false;
     }
   }
   //#endregion

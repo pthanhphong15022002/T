@@ -40,7 +40,7 @@ import { PopupQuestionOtherComponent } from './template-survey-other.component/p
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
+ import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
@@ -121,7 +121,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     APPLICATION: 'application',
   };
   defaultMoreFunc: any
-  listMoreFunc = 
+  listMoreFunc =
   [
     {
       id: "T",
@@ -403,8 +403,8 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     ]).subscribe((item:any)=>{
       if(item)
       {
-        
-        this.idSession = item.idSession; 
+
+        this.idSession = item.idSession;
         this.questions[0].children = item.lst;
         this.questions[0].children[0]['active'] = true;
       }
@@ -447,7 +447,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       }
       if(dtS[0].children && dtS[0].children.length>0)
         dtS[0].children[0]['active'] = true;
-      
+
       return dtS;
     }
   }
@@ -487,7 +487,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     seqNoQuestion,
     answerType
   ) {
-    
+
     var dataTemp = JSON.parse(
       JSON.stringify(
         this.questions[seqNoSession].children[seqNoQuestion].answers
@@ -1086,7 +1086,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       900,
       600,
       '',
-      obj, 
+      obj,
       ''
     );
     dialog.closed.subscribe((res) => {
@@ -1303,7 +1303,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       lstDown = lstMain.slice(itemActive.seqNo + 1, lstMain.length);
       //Update lại parentID cho đúng với session mới tạo
       lstUp.forEach((x) => (x.parentID = this.questions[seqNoSession].recID));
-     
+
       if(lstDown.length > 0)
       {
         for(var i = 0 ; i < lstDown.length ; i++)
@@ -1312,7 +1312,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           lstDown[i].seqNo = i ;
         }
       }
-    
+
       this.questions[seqNoSession + 1]['children'] = lstDown;
       this.questions[seqNoSession]['children'] = lstUp;
     }
@@ -1353,7 +1353,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     tempQuestion.parentID = this.questions[seqNoSession].recID;
     tempQuestion.other = false;
     delete tempQuestion.id;
-    
+
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
       0,
@@ -1375,7 +1375,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.questions[seqNoSession].children[
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
     ].active = true;
-    
+
     this.itemActive =
       this.questions[seqNoSession].children[
         itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
@@ -1426,7 +1426,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       // this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
       //   true;
       //active card video, picture này để phát triển sau, chưa ưu tiên
-        
+
       if (dataQuestion.category == 'S')
         this.itemActive = this.questions[seqNoSession].children[0];
       else
@@ -1450,7 +1450,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         isModeAdd
       );
     }
-    
+
     if (!youtube) {
       data[0]['recID'] = data[0].objectID;
       if (referType == 'V' && !data[0]?.srcVideo) {
@@ -1517,7 +1517,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
             };
             data.answers.push(dataAnswerTemp);
           }
-          
+
           if(answerType == 'R')
           {
             data.answers = new Array();
@@ -1533,12 +1533,12 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           //Xóa File
           if (answerType != 'O' && answerType != 'C')
           {
-            this.lstEditIV = [];
-            this.SVServices.deleteFilesByContainRefer(this.recID).subscribe();
+            this.lstEditIV = this.lstEditIV.filter(x=>x.objectID != itemQuestion.recID);
+            this.SVServices.deleteFilesByContainRefer(itemQuestion.recID).subscribe();
           }
-         
-        } 
-        else if (answerType == 'O2' || answerType == 'C2') 
+
+        }
+        else if (answerType == 'O2' || answerType == 'C2')
         {
           if ( itemQuestion.answerType != 'O2' && itemQuestion.answerType != 'C2') {
             data.answers = new Array();
@@ -1599,7 +1599,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     dataTemp.push(dataAnswerTemp);
     this.amountOfRow += 2;
     this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
-    
+
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
       this.questions[seqNoSession].children[seqNoQuestion],
@@ -1623,7 +1623,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     };
     dataTemp.push(dataAnswerTemp);
     this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
-    
+
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
       this.questions[seqNoSession].children[seqNoQuestion],
@@ -1660,7 +1660,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     }
   }
 
-  
+
   changeRating(value, type ,seqNoQuestion = null, itemQuestion = null,itemAnswer = null) {
     debugger
     var valueFrom = "1";
@@ -1679,7 +1679,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     else if(type == "RFROM" ) valueRFrom = value?.data;
     else if(type == "RTO") valueRTo = value?.data;
 
-    var data = 
+    var data =
     {
       data : valueFrom + "/" + valueTo + "/" + valueRFrom + "/" + valueRTo,
       field : "answer"
@@ -1969,7 +1969,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         if (res) {
           this.SVServices.signalSave.next('done');
         }
-      }); 
+      });
     }
   }
 }

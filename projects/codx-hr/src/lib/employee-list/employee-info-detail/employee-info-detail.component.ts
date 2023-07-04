@@ -711,6 +711,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       },
     ];
     this.formModel = this.view.formModel;
+    console.log('form Model ne', this.formModel);
+    
   }
 
   initFormModel() {
@@ -999,12 +1001,29 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   //chua dung
-  navChange(evt: any, index: number = -1) {
-    debugger
+  navChange(evt: any, index: number = -1, btnClick) {
+    let containerList = document.querySelectorAll('.pw-content')
+    let lastDivList = document.querySelectorAll('.div_final')
+    let lastDiv = lastDivList[index]
+    let container = containerList[index]
+    let containerHeight = (container as any).offsetHeight
+    let contentHeight = 0;
+    for(let i = 0; i< container.children.length; i++){
+      contentHeight += (container.children[i] as any).offsetHeight
+    }
+
     if (!evt) return;
     let element = document.getElementById(evt);
+    let distanceToBottom = contentHeight - element.offsetTop;
+    console.log('khoang cach toi bot', distanceToBottom);
+    
+    if(distanceToBottom < containerHeight){
+      console.log('can phai chinh lai');
+      (lastDiv as any).style.width = '200px';
+      (lastDiv as any).style.height = `${containerHeight - distanceToBottom + 50}px`;
+    }
+
     if (index > -1) {
-      // this.active[index] = evt.nextId;
       this.active[index] = evt;
       this.detectorRef.detectChanges();
     }
@@ -2561,6 +2580,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //chua dung
   clickTab(funcList: any) {
+    debugger
     this.crrFuncTab = funcList.functionID;
     switch (this.crrFuncTab) {
       case this.curriculumVitaeFuncID:

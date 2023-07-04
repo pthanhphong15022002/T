@@ -175,3 +175,8 @@ body.tailwind #selected {
 .e-speeddial-popup.e-speeddial-right.e-speeddial-linear {
   right: 0 !important;
 }
+
+.calendar-left{
+  height: calc(100vh - 70px);
+  padding-bottom: 15px;
+}

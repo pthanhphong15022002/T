@@ -93,19 +93,17 @@ export class CardsComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
-    this.callfc.openSide(PopupAddCardsComponent, this.funcID, option);
+    this.callfc.openSide(PopupAddCardsComponent, {funcID: this.funcID}, option);
   }
 
   clickMF(event: any, data: any) {
-    switch (event.functionID) {
-      case "SYS02":
-        break;
-      case "SYS03":
-        break;
-      default:
-        break;
+    console.log(event, data)
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    this.callfc.openSide(PopupAddCardsComponent, {funcID: this.funcID, data: data}, option);
 
-    }
   }
 
   deleteCard(card: any) { }

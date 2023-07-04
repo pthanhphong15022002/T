@@ -24,17 +24,18 @@ import {
 } from 'codx-core';
 import { PopupAddJournalComponent } from '../journals/popup-add-journal/popup-add-journal.component';
 import { NameByIdPipe } from '../pipes/nameById.pipe';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { JournalService } from '../journals/journals.service';
 import { CodxAcService } from '../codx-ac.service';
+import { IJournalPermission } from '../journals/interfaces/IJournalPermission.interface';
 
 @Component({
   selector: 'lib-test-journal',
-  templateUrl: './test-journal.component.html',
-  styleUrls: ['./test-journal.component.css'],
+  templateUrl: './journal-v2.component.html',
+  styleUrls: ['./journal-v2.component.css'],
 })
-export class TestJournalComponent extends UIComponent implements OnInit {
+export class JournalV2Component extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
   subViews: Array<ViewModel> = [];
   viewActive: number = 5;
@@ -116,15 +117,96 @@ export class TestJournalComponent extends UIComponent implements OnInit {
         },
       },
     ];
+
+    this.cache.valueList('AC077').subscribe((func) => {
+      if (func) this.func = func.datas;
+    });
+    this.cache
+      .valueList('AC064')
+      .pipe(
+        tap((t) => console.log('AC064', t)),
+        map((d) => d.datas)
+      )
+      .subscribe((res) => {
+        this.vllJournalTypes064 = res;
+      });
     this.cache.valueList('AC085').subscribe((res) => {
       if (res) {
         this.vll85 = res.datas;
+
       }
     });
     this.cache.valueList('AC086').subscribe((res) => {
       if (res) {
         this.vll86 = res.datas;
       }
+    });
+    combineLatest({
+      users: this.journalService.getUsers(),
+      userGroups: this.journalService.getUserGroups(),
+      userRoles: this.journalService.getUserRoles(),
+      random: this.randomSubject.asObservable(),
+    }).subscribe(({ users, userGroups, userRoles }) => {
+      const options = new DataRequest();
+      options.entityName = 'AC_JournalsPermission';
+      options.pageLoading = false;
+      this.acService
+        .loadDataAsync('AC', options)
+        .subscribe((journalPermissions: IJournalPermission[]) => {
+          let createrMap: Map<string, string[]> = new Map();
+          let posterMap: Map<string, string[]> = new Map();
+
+          for (const permission of journalPermissions) {
+            let name: string;
+            if (permission.objectType === 'U') {
+              name = this.nameByIdPipe.transform(
+                users,
+                'UserID',
+                'UserName',
+                permission.objectID
+              );
+            } else if (permission.objectType === 'UG') {
+              name = this.nameByIdPipe.transform(
+                userGroups,
+                'GroupID',
+                'GroupName',
+                permission.objectID
+              );
+            } else {
+              name = this.nameByIdPipe.transform(
+                userRoles,
+                'RoleID',
+                'RoleName',
+                permission.objectID
+              );
+            }
+
+            if (permission.add === '1') {
+              let creaters: string[] =
+                createrMap.get(permission.journalNo) ?? [];
+              creaters.push(name);
+              createrMap.set(permission.journalNo, creaters);
+            }
+
+            if (permission.post === '1') {
+              let posters: string[] = posterMap.get(permission.journalNo) ?? [];
+              posters.push(name);
+              posterMap.set(permission.journalNo, posters);
+            }
+          }
+
+          this.creaters = Array.from(createrMap, ([key, value]) => ({
+            journalNo: key,
+            value: value.join(', '),
+          }));
+          this.posters = Array.from(posterMap, ([key, value]) => ({
+            journalNo: key,
+            value: value.join(', '),
+          }));
+
+          console.log(this.creaters);
+          console.log(this.posters);
+        });
     });
   }
 

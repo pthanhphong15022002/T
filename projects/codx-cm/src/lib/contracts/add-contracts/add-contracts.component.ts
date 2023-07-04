@@ -382,7 +382,6 @@ addContracts() {
         }
       });
   }
-  // console.log(this.contracts);
 }
 
 editContract() {
@@ -438,13 +437,15 @@ valueChangeText(event) {
       event?.data
     );
   }
-  if (event?.field == 'delPhone' && this.checkPhone) {
+  if (event?.field == 'delPhone') {
     let isPhone = this.stepService.isValidPhoneNumber(event?.data);
-    if (!isPhone) {
+    if (!isPhone && this.checkPhone) {
       this.notiService.notifyCode('RS030');
-      this.checkPhone = !this.checkPhone;
-      return;
     }
+    this.checkPhone = !this.checkPhone;
+  }
+  if (event?.field == 'currencyID' && this.checkPhone) {
+    this.loadExchangeRate(event?.data);
   }
 }
 
@@ -756,6 +757,27 @@ getCustomersDefaults(customerID){
   })
 }
 //#endregion
+
+loadExchangeRate(currencyID) {
+  let day = this.contracts.createdOn ?? new Date();
+  this.cmService
+    .getExchangeRate(currencyID, day)
+    .subscribe((res) => {
+      let exchangeRateNew = res?.exchRate ?? 0;
+      if (exchangeRateNew == 0) {
+        this.notiService.notify(
+          'Tỷ giá tiền tệ "' +
+            this.quotations.currencyID +
+            '" chưa thiết lập xin hay chọn lại !',
+          '3'
+        );
+       
+        return;
+      }else{
+        this.contracts.exchangeRate = exchangeRateNew;
+      }
+    })
+  }
 
 loadComboboxData(comboboxName: string, service: string): Observable<any> {
   const dataRequest = new DataRequest();

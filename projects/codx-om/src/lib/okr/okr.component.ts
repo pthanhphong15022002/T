@@ -123,6 +123,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   useSKR = false;
   reloadedMF = true;
   value = new OM_Statistical();
+  sharedPlan = [];
+  sharedView = false;
+  sharedPlanName='';
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -265,7 +268,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  getCacheData() {    
+  getCacheData() {
     this.cache.valueList('OM004').subscribe((vll) => {
       if (vll) {
         this.okrVll.ob = vll?.datas.filter(
@@ -334,9 +337,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  getOKRPlans(periodID: any, interval: any, year: any) {
-    this.showPlanMF = false;
-    this.loadedData = false;
+  getSharedPlans(periodID: any, interval: any, year: any) {
     if (
       this.periodID != null &&
       this.interval != null &&
@@ -345,9 +346,56 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval != '' &&
       this.year != 0
     ) {
-      
       this.okrService
-        .getOKRPlans(this.dataRequest,periodID, interval, year)
+        .getSharedPlans(this.dataRequest, periodID, interval, year)
+        .subscribe((sharedPlan: any) => {
+          //Reset data View
+          //this.isCollapsed = false;
+          if (sharedPlan) {
+            this.sharedPlan = sharedPlan;
+          }
+        });
+    }
+  }
+  viewSharedPlan(plan: any) {
+    if (plan != null) {
+      this.sharedPlanName=plan?.planName;
+      this.sharedView = true;
+      this.showPlanMF = false;
+      this.loadedData = false;
+      this.dataOKRPlans = plan;
+      //this.createCOObject();
+      this.okrService.getAllOKROfPlan(plan?.recID).subscribe((okrs: any) => {
+        if (okrs) {
+          this.dataOKR = okrs;
+        } else {
+          this.dataOKR = null;
+        }
+        this.calculateStatistical(null);
+        this.isAfterRender = true;
+        //this.showPlanMF = true;
+        this.loadedData = true;
+        this.detectorRef.detectChanges();
+      });
+    }
+  }
+  viewMyPlan(){    
+    this.getOKRPlans(this.periodID, this.interval, this.year);
+  }
+  getOKRPlans(periodID: any, interval: any, year: any) {
+    this.showPlanMF = false;
+    this.loadedData = false;
+    this.sharedView=false;
+    if (
+      this.periodID != null &&
+      this.interval != null &&
+      this.year != null &&
+      this.periodID != '' &&
+      this.interval != '' &&
+      this.year != 0
+    ) {
+      this.okrService
+        .getOKRPlans(this.dataRequest, periodID, interval, year)
         .subscribe((item: any) => {
           //Reset data View
           //this.isCollapsed = false;
@@ -360,17 +408,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .getAllOKROfPlan(item?.recID)
               .subscribe((okrs: any) => {
                 if (okrs) {
-                  this.dataOKR = okrs;                  
-                }
-                else{                  
-                  this.dataOKR = null; 
+                  this.dataOKR = okrs;
+                } else {
+                  this.dataOKR = null;
                 }
                 this.calculateStatistical(null);
-                  this.isAfterRender = true;
-                  this.showPlanMF = true;
-                  this.loadedData = true;
-                  this.getOrgTreeOKR();
-                  this.detectorRef.detectChanges();
+                this.isAfterRender = true;
+                this.showPlanMF = true;
+                this.loadedData = true;
+                this.getOrgTreeOKR();
+                this.detectorRef.detectChanges();
               });
           } else {
             this.dataOKRPlans = null;
@@ -533,7 +580,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           }
         }
       }
-      if(tempValue?.totalOB>0){
+      if (tempValue?.totalOB > 0) {
         tempValue.percentOBNotStart = (
           (countNotStartOB / tempValue?.totalOB) *
           100
@@ -546,12 +593,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           (countDoneOB / tempValue?.totalOB) *
           100
         ).toFixed(1);
-        
-      }
-      else{      
-        tempValue.percentOBNotStart ='0';
-        tempValue.percentOBStarting ='0';
-        tempValue.percentOBDone ='0';
+      } else {
+        tempValue.percentOBNotStart = '0';
+        tempValue.percentOBStarting = '0';
+        tempValue.percentOBDone = '0';
       }
       this.value = tempValue;
       this.detectorRef.detectChanges();
@@ -594,14 +639,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
   }
   //Lấy fucID con
-  funcIDChanged() {    
-    this.dataRequest.entityName = "OM_OKRPlans";
+  funcIDChanged() {
+    this.dataRequest.entityName = 'OM_OKRPlans';
     this.dataRequest.page = 1;
     this.dataRequest.pageSize = 1000;
     this.dataRequest.funcID = this.funcID;
     this.dataRequest.dataValue = 'false;';
     this.dataRequest.predicate = 'Stop==@0 && OKRLevel==@1';
-
 
     switch (this.funcID) {
       case OMCONST.FUNCID.COMP:
@@ -611,10 +655,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.okrLevel = OMCONST.VLL.OKRLevel.COMP;
         this.curOrgID = this.curUser?.employee?.companyID;
         this.curOrgName = this.curUser?.employee?.companyName;
-        this.dataRequest.entityPermission = "OM_OKRCompany";
-        this.dataRequest.gridViewName = "grvOKRCompany";
-        this.dataRequest.formName = "OKRCompany";
-        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.COMP;
+        this.dataRequest.entityPermission = 'OM_OKRCompany';
+        this.dataRequest.gridViewName = 'grvOKRCompany';
+        this.dataRequest.formName = 'OKRCompany';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.COMP;
         break;
       case OMCONST.FUNCID.DEPT:
         this.skrFuncID = OMCONST.SKRFUNCID.DEPT;
@@ -623,10 +667,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.okrLevel = OMCONST.VLL.OKRLevel.DEPT;
         this.curOrgID = this.curUser?.employee?.departmentID;
         this.curOrgName = this.curUser?.employee?.departmentName;
-        this.dataRequest.entityPermission = "OM_OKRDepartment";
-        this.dataRequest.gridViewName = "grvOKRDepartment";
-        this.dataRequest.formName = "OKRDepartment";
-        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.DEPT ;
+        this.dataRequest.entityPermission = 'OM_OKRDepartment';
+        this.dataRequest.gridViewName = 'grvOKRDepartment';
+        this.dataRequest.formName = 'OKRDepartment';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.DEPT;
         break;
       case OMCONST.FUNCID.ORG:
         this.skrFuncID = OMCONST.SKRFUNCID.ORG;
@@ -635,10 +679,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.okrLevel = OMCONST.VLL.OKRLevel.ORG;
         this.curOrgID = this.curUser?.employee?.orgUnitID;
         this.curOrgName = this.curUser?.employee?.orgUnitName;
-        this.dataRequest.entityPermission = "OM_OKRTeam";
-        this.dataRequest.gridViewName = "grvOKRTeam";
-        this.dataRequest.formName = "OKRTeam";
-        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.ORG;
+        this.dataRequest.entityPermission = 'OM_OKRTeam';
+        this.dataRequest.gridViewName = 'grvOKRTeam';
+        this.dataRequest.formName = 'OKRTeam';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.ORG;
         break;
       case OMCONST.FUNCID.PERS:
         this.skrFuncID = OMCONST.SKRFUNCID.PERS;
@@ -647,10 +691,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.okrLevel = OMCONST.VLL.OKRLevel.PERS;
         this.curOrgID = this.curUser?.employee?.employeeID;
         this.curOrgName = this.curUser?.employee?.employeeName;
-        this.dataRequest.entityPermission = "OM_OKRPersonal";
-        this.dataRequest.gridViewName = "grvOKRPersonal";
-        this.dataRequest.formName = "OKRPersonal";
-        this.dataRequest.dataValue+=OMCONST.VLL.OKRLevel.PERS;
+        this.dataRequest.entityPermission = 'OM_OKRPersonal';
+        this.dataRequest.gridViewName = 'grvOKRPersonal';
+        this.dataRequest.formName = 'OKRPersonal';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.PERS;
         break;
     }
 
@@ -671,7 +715,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.setTitle();
     this.dataOKRPlans = null;
     this.dataOKR = null;
-    this.getOKRPlans(this.periodID, this.interval, this.year);
+    //this.getOKRPlans(this.periodID, this.interval, this.year);
+    //this.getSharedPlans(this.periodID, this.interval, this.year);
     this.detectorRef.detectChanges();
   }
   clickMF(evt: any) {
@@ -839,6 +884,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
 
     this.getOKRPlans(this.periodID, this.interval, this.year);
+
+    this.getSharedPlans(this.periodID, this.interval, this.year);
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//

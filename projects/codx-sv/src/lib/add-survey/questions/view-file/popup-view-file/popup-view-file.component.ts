@@ -3,7 +3,7 @@ import { AfterViewInit, Component, Input, OnChanges, OnInit, Optional, SimpleCha
 import { CallFuncService, DialogData, DialogModel, DialogRef } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { PopupViewFileFullComponent } from './popup-view-file-full/popup-view-file-full.component';
-
+import { Browser, getComponent } from '@syncfusion/ej2-base';
 @Component({
   selector: 'app-popup-view-file',
   templateUrl: './popup-view-file.component.html',
@@ -71,7 +71,7 @@ export class PopupViewFileComponent implements OnChanges {
       }
       that.pointX = (e.clientX - that.start.x);
       that.pointY = (e.clientY - that.start.y);
-      zoom.style.transform = "translate(" + that.pointX + "px, " + that.pointY + "px) scale(" + that.scale + ")";
+      if(that.scale >0) zoom.style.transform = "translate(" + that.pointX + "px, " + that.pointY + "px) scale(" + that.scale + ")";
     }
 
     zoom.onwheel = function (e:any) {
@@ -83,8 +83,7 @@ export class PopupViewFileComponent implements OnChanges {
       (delta > 0) ? (that.scale *= 1.2) : (that.scale /= 1.2);
       that.pointX = e.clientX - xs * that.scale;
       that.pointY = e.clientY - ys * that.scale;
-
-      zoom.style.transform = "translate(" + that.pointX + "px, " + that.pointY + "px) scale(" + that.scale + ")";
+      if(that.scale >0) zoom.style.transform = "translate(" + that.pointX + "px, " + that.pointY + "px) scale(" + that.scale + ")";
     }
   }
   slideChanging(e:any)
@@ -120,5 +119,18 @@ export class PopupViewFileComponent implements OnChanges {
   close()
   {
     this.dialog.close();
+  }
+
+  created(item:any,id:any)
+  {
+    const imageEditor: any = getComponent(document.getElementById('image-editor'+id), 'image-editor'+id);
+    if (Browser.isDevice) {
+        imageEditor.open(this.getSrcImage(item));
+    } else {
+        imageEditor.open(this.getSrcImage(item));
+    }
+    if (imageEditor.theme && window.location.href.split('#')[1]) {
+        imageEditor.theme = window.location.href.split('#')[1].split('/')[1];
+    }
   }
 }

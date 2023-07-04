@@ -32,6 +32,7 @@ import {
   DialogModel,
   DialogRef,
   NotificationsService,
+  TenantStore,
   ViewsComponent,
 } from 'codx-core';
 import { OpenFolderComponent } from '../openFolder/openFolder.component';
@@ -202,6 +203,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   public typeProgress: string = 'Circular';
   constructor(
     private api: ApiHttpService,
+    private tenant:TenantStore,
     private changeDetectorRef: ChangeDetectorRef,
     public modalService: NgbModal,
     private auth: AuthStore,
@@ -730,12 +732,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
-    var check = this.CheckTenantFile(this.user.tenant) as any;
+    var check = this.CheckTenantFile(this.tenant.getName()) as any;
     if (isObservable(check)) {
       var tenants = from(check);
       return tenants.pipe(
         mergeMap((value: any, i) => {
-          if (typeof value == 'object' && value.AppId) {
+          if (typeof value == 'object' && value?.AppId) {
             return from(this.fileService.getTotalHdd()).pipe(
               mergeMap((hdd) => {
                 if (hdd) {
@@ -756,10 +758,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 if (hdd) {
                   this.infoHDD.totalHdd = hdd?.totalHdd;
                   this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
-                  var tenants = from(this.RegisterTenantFile(this.user.tenant));
+                  var tenants = from(this.RegisterTenantFile(this.tenant.getName()));
                   return tenants.pipe(
                     mergeMap((val, i) => {
-                      if (typeof val == 'object' && val.Data.AppId) {
+                      if (typeof val == 'object' && val?.Data?.AppId) {
                         return from(
                           this.onMultiFileSaveObservableAfterTenant()
                         ).pipe(
@@ -783,7 +785,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         })
       );
     } else {
-      if (typeof check == 'object' && check.AppId) {
+      if (typeof check == 'object' && check?.AppId) {
         return from(this.fileService.getTotalHdd()).pipe(
           mergeMap((hdd) => {
             if (hdd) {
@@ -804,10 +806,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
             if (hdd) {
               this.infoHDD.totalHdd = hdd?.totalHdd;
               this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
-              var tenants = from(this.RegisterTenantFile(this.user.tenant));
+              var tenants = from(this.RegisterTenantFile(this.tenant.getName()));
               return tenants.pipe(
                 mergeMap((val, i) => {
-                  if (typeof val == 'object' && val.Data.AppId) {
+                  if (typeof val == 'object' && val?.Data?.AppId) {
                     return from(
                       this.onMultiFileSaveObservableAfterTenant()
                     ).pipe(
@@ -939,7 +941,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async onMultiFileSave() {
     this.closeBtnUp = true;
-    var check = this.CheckTenantFile(this.user.tenant);
+    var check = this.CheckTenantFile(this.tenant.getName());
     if (isObservable(check)) {
       check.subscribe(async (item: any) => {
         this.onMultiSaveResult(item);
@@ -948,11 +950,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiSaveResult(item: any) {
-    if (typeof item == 'object' && item.AppId)
+    if (typeof item == 'object' && item?.AppId)
       await this.onMultiSaveAfterTenant();
     else {
-      var regs = await this.RegisterTenantFile(this.user.tenant);
-      if (typeof regs == 'object' && regs.Data.AppId)
+      var regs = await this.RegisterTenantFile(this.tenant.getName());
+      if (typeof regs == 'object' && regs?.Data?.AppId)
         await this.onMultiSaveAfterTenant();
       else {
         this.notificationsService.notify('Đăng ký tenant không thành công');

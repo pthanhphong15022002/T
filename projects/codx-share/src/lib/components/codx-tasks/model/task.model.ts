@@ -101,15 +101,15 @@ export const RangeLineFormGroup = {
 
 //ModelTask
 export class TM_Tasks {
-  recID: string ;
-  taskID: string = '';
-  taskName?: string = '';
+  recID: string;
+  taskID: string;
+  taskName?: string;
   tags: string = '';
   taskType: string = '';
   category: string = '';
-  taskGroupID: string = '';
-  parentID: string = '';
-  projectID: string = '';
+  taskGroupID: string;
+  parentID: string;
+  projectID: string;
   activityID: string = '';
   iterationID: string = '';
   recurrence: boolean;
@@ -133,17 +133,17 @@ export class TM_Tasks {
   assignedOn: Date;
   dueDate: Date;
   startDate: Date;
-  startTime: string = '';
+  startTime: string;
   endDate: Date;
   startedOn: Date;
   percentage: number;
   completed: number;
   completedOn: any;
-  completedTime: string = '';
+  completedTime: string;
   completedQty: number;
   duration: number;
   lateCode: string = '';
-  sessionID:string ='';
+  sessionID: string = '';
   refID: any;
   refType: string = '';
   refNo: string = '';
@@ -192,11 +192,11 @@ export class TM_Tasks {
   departmentID: string = '';
   companyID: string = '';
   write: boolean;
- // sprints: TM_Sprints;
+  // sprints: TM_Sprints;
 }
 
 export class tmpTaskResource {
-  recID: string ;
+  recID: string;
   taskID: string = '';
   resourceID: string = '';
   resourceName: string = '';
@@ -216,7 +216,7 @@ export class tmpTaskResource {
 }
 
 export class TM_TaskExtends {
-  recID: string ;
+  recID: string;
   taskID: string = '';
   extendApprover: string = '';
   extendApproverName: string = '';
@@ -302,6 +302,3 @@ export class TM_TaskGroups {
   stop: boolean;
   createName: string;
 }
-
-
-
