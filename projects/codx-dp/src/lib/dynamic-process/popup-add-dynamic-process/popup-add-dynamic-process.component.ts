@@ -3100,10 +3100,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   clickReason(e: any, data: any) {
     switch (e.functionID) {
       case 'SYS03':
-        this.openPopupStep('edit', data);
+        this.customerReason(data);
         break;
      
     }
+  }
+  isReason = false;
+  customerReason(reason: DP_Steps){
+    this.isReason = true;
+    reason.icon = reason?.isFailStep ? this.iconReasonFail?.icon : this.iconReasonSuccess?.icon;
+    reason.iconColor = reason?.isFailStep ? this.iconReasonFail?.color :this.iconReasonSuccess?.color
+
+    this.stepName = reason?.isFailStep ? this.stepNameFail : this.stepNameSuccess ;
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
+    // this.isReason = false;
   }
   // drop
   async drop(event: CdkDragDrop<string[]>, data = null, isGroup = false) {

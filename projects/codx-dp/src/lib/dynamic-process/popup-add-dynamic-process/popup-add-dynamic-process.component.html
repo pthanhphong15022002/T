@@ -1854,7 +1854,7 @@
                 [dataItem]="moreDefaut"
                 [formModel]="grvMoreFunction"
                 (changeDataMF)="changeDataMFReason($event)"
-                (clickMF)="clickReason($event, viewStepReasonSuccess)"
+                (clickMF)="clickReason($event, stepSuccess)"
                 [type]="'hover'"
               >
               </codx-mfunc>
@@ -1890,7 +1890,7 @@
                 [dataItem]="moreDefaut"
                 [formModel]="grvMoreFunction"
                 (changeDataMF)="changeDataMFReason($event)"
-                (clickMF)="clickReason($event, viewStepReasonSuccess)"
+                (clickMF)="clickReason($event, stepFail)"
               >
               </codx-mfunc>
             </div>
@@ -2301,6 +2301,7 @@
       type="text"
       [crrValue]="stepName"
       (valueChange)="changeNameStep($event)"
+      [disabled]="isReason"
     >
     </codx-input>
 
