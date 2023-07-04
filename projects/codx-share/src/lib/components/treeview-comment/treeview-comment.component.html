@@ -13,7 +13,7 @@
                 <span class="ms-2 fs-6">{{data.totalVote}}</span>
             </ng-container>
         </div>
-        <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments()">
+        <div class="text-hover-primary" (click)="showComments()">
             <ng-container *ngIf="data.totalComment > 0">
                 <span>{{data.totalComment}}</span>
                 <span class="ms-1">
@@ -80,9 +80,9 @@
                 </ng-container>
             </ng-container>
             <ng-container *ngIf="data.listComment?.length > 0 && data.full == false">
-                <div class="ms-16">
-                    <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(data)">
-                        <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
+                <div class="ms-16 mb-3">
+                    <span class="text-hover-primary" (click)="getCommentsAsync(data)">
+                        <codx-label [classList]="'text-gray-600'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
                     </span>
                 </div>
             </ng-container>
@@ -102,9 +102,9 @@
             </codx-comments>
         </div>
         <ng-container *ngIf="comment1.totalComment > 0 && !comment1.full">
-            <div class="ms-16">
-                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(comment1)">
-                    <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
+            <div class="ms-16 mb-3">
+                <span class="text-hover-primary" (click)="getCommentsAsync(comment1)">
+                    <codx-label [classList]="'text-gray-600'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
                 </span>
             </div>
         </ng-container>
@@ -140,9 +140,9 @@
             </codx-comments>
         </div>
         <ng-container *ngIf="comment2.totalComment > 0 && !comment2.full">
-            <div class="ms-16">
-                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(comment2)">
-                    <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
+            <div class="ms-16 mb-3">
+                <span class="text-hover-primary" (click)="getCommentsAsync(comment2)">
+                    <codx-label [classList]="'text-gray-600'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
                 </span>
             </div>
         </ng-container>
@@ -179,9 +179,9 @@
             </codx-comments>
         </div>
         <ng-container *ngIf="comment3.totalComment > 0 && !comment3.full">
-            <div class="ms-16">
-                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(comment3)">
-                    <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
+            <div class="ms-16 mb-3">
+                <span class="text-hover-primary" (click)="getCommentsAsync(comment3)">
+                    <codx-label [classList]="'text-gray-600'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
                 </span>
             </div>
         </ng-container>
