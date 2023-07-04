@@ -49,7 +49,7 @@ export class SalesInvoicesComponent
   journalNo: string;
   master: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
-  acctTranLines: IAcctTran[] = [];
+  acctTranLines: IAcctTran[][] = [[]];
   gvsSalesInvoicesLines: any;
   vats: any[] = [];
   tabControl: TabModel[] = [
@@ -267,8 +267,9 @@ export class SalesInvoicesComponent
         'LoadDataAsync',
         'e973e7b7-10a1-11ee-94b4-00155d035517'
       )
-      .subscribe((res: any) => {
-        console.log(res);
+      .subscribe((acctTrans: IAcctTran[]) => {
+        console.log(acctTrans);
+        console.log(this.groupBy(acctTrans, 'entryID'));
 
         this.acctLoading = false;
       });
@@ -406,5 +407,14 @@ export class SalesInvoicesComponent
   //#endregion
 
   //#region Function
+  groupBy(arr: any[], key: string): any {
+    arr.reduce(
+      (prev, current) => ({
+        ...prev,
+        [current[key]]: [...(prev[current[key]] || []), current],
+      }),
+      {}
+    );
+  }
   //#endregion
 }
