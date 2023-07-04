@@ -4,14 +4,13 @@
 </codx-views>
 
 <ng-template #cardTemp let-data>
-  <codx-card-center cardCss="border d-flex flex-center flex-column  card-user"
-            [imageId]="data.employeeID" imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" 
-            [title]="data.employeeName" [imageObjName]="data.employeeName"
-            [subTitle]="data.positionName? data.positionName: 
-                        (data.positionID? data.positionID : placeholder('PositionID'))" 
-            [dataItem]="data" [imageObjType]="view.formModel.entityName"
-            [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [footer]="footer">
-        </codx-card-center>
+  <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
+    imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" [title]="data.employeeName"
+    [imageObjName]="data.employeeName" [subTitle]="data.positionName? data.positionName: 
+                        (data.positionID? data.positionID : placeholder('PositionID'))" [dataItem]="data"
+    [imageObjType]="view.formModel.entityName" [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')"
+    [footer]="footer" [hideMF]="true">
+  </codx-card-center>
 </ng-template>
 
 <ng-template #footer let-data>
@@ -105,10 +104,10 @@
   </div>
 </ng-template>
 <ng-template #tmpTreeItemDetail let-data>
-  <lib-employee-list-by-org [showManager]="false" [formModel]="view.formModel"
-    [orgUnitID]="itemSelected?.orgUnitID"></lib-employee-list-by-org></ng-template>
+  <lib-employee-list-by-org [showManager]="false" [formModel]="view.formModel" [editable]="false" rowHeight="50"
+    modeView="contact" [orgUnitID]="itemSelected?.orgUnitID" [showRowNumber]="true"></lib-employee-list-by-org></ng-template>
 
 <ng-template #tmpTreeItemDetailCard let-data>
-  <lib-org-emp-contact-detail-card [orgUnitID]="itemSelected?.orgUnitID" [grvSetup]="grvSetup"
+  <lib-org-emp-contact-detail-card [orgUnitID]="itemSelected?.orgUnitID" [grvSetup]="grvSetup" 
     [formModel]="view.formModel"></lib-org-emp-contact-detail-card>
 </ng-template>

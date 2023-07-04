@@ -160,7 +160,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
           this.isEdit
         );
 
-        if (this.journal.assignRule === '2') {
+        if (this.journal.autoAssignRule === '2') {
           this.ignoredFields.push('VoucherNo');
         }
 

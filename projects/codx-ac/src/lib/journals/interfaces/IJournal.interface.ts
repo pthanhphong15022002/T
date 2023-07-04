@@ -12,7 +12,7 @@ export interface IJournal {
   reasonID: string;
   status: string;
   voucherFormat: string;
-  assignRule: string;
+  autoAssignRule: string;
   allowEdited: boolean;
   invoiceForm: string;
   currencyID: string;
@@ -73,5 +73,7 @@ export interface IJournal {
   checkImage: boolean;
   inputMode: string;
   postingMode: string;
-  unbounds:any;
+  unbounds: any;
+  autoNumber: string;
+  postedDateControl: string;
 }

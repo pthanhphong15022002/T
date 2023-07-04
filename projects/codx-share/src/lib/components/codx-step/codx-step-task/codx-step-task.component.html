@@ -7,7 +7,7 @@
       class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
       <div
-        class="d-flex align-items-center pe-4"
+        class="d-flex align-items-center w-30px h-30px"
         [ngStyle]="{
           background: currentStep?.backgroundColor || '#d9e3f7',
           'border-radius': '20px'
@@ -23,7 +23,7 @@
           <span [ngClass]="currentStep?.icon" class="fs-6"></span>
         </div>
         <span
-          class="line-clamp line-clamp-2 fs-5 ms-2"
+          class="line-clamp line-clamp-1 fw-bold ms-3"
           [ngStyle]="{
             color: currentStep?.textColor || 'gray',
             'font-weight': '400'
@@ -42,7 +42,7 @@
       >
       </codx-mfunc>
     </div>
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center ms-5">
       <codx-vll
         [name]="'DP032'"
         [field]="'Status'"

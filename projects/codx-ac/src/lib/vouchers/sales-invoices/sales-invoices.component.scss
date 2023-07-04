@@ -6,3 +6,19 @@
     flex: 1;
   }
 }
+
+:host ::ng-deep tbody:not(:last-of-type) {
+  tr:last-child {
+    border-bottom: 1px solid var(--bs-table-border-color) !important;
+
+    th,
+    td {
+      border-bottom: 1px solid var(--bs-table-border-color) !important;
+    }
+  }
+}
+
+th {
+  text-align: center;
+  font-weight: 500;
+}

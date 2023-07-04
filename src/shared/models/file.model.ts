@@ -171,6 +171,7 @@ export class FileUpload {
     viewThumb:boolean = false;
     rawFile:any;
     entityName:any;
+    expiredOn:any
 }
 
 

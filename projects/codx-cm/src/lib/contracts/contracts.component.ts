@@ -1,45 +1,40 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  Injector,
   Input,
   OnInit,
+  Injector,
   Optional,
-  SimpleChanges,
-  TemplateRef,
+  Component,
   ViewChild,
+  TemplateRef,
+  SimpleChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
-  ButtonModel,
-  CRUDService,
-  CacheService,
-  CallFuncService,
-  DataRequest,
-  DialogModel,
+  ViewType,
+  ViewModel,
   DialogRef,
   FormModel,
-  NotificationsService,
-  RequestOption,
+  ButtonModel,
+  DataRequest,
+  DialogModel,
   UIComponent,
-  Util,
-  ViewModel,
-  ViewType,
+  RequestOption,
+  CallFuncService,
+  NotificationsService,
 } from 'codx-core';
-
-import { firstValueFrom } from 'rxjs';
 import {
   CM_Contracts,
-  CM_ContractsPayments,
   CM_Quotations,
   CM_QuotationsLines,
+  CM_ContractsPayments,
 } from '../models/cm_model';
+import { firstValueFrom } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { CodxCmService } from '../codx-cm.service';
 import { ContractsService } from './service-contracts.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AddContractsComponent } from './add-contracts/add-contracts.component';
 import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'contracts-detail',
@@ -49,61 +44,60 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 export class ContractsComponent extends UIComponent {
   @Input() funcID: string;
   @Input() customerID: string;
-  @ViewChild('contract') contract: TemplateRef<any>;
 
+  @ViewChild('contract') contract: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   //temGird
-  @ViewChild('templateCreatedBy') templateCreatedBy: TemplateRef<any>;
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
-
-  listPayment: CM_ContractsPayments[] = [];
-  listPaymentHistory: CM_ContractsPayments[] = [];
-  listQuotationsLine: CM_QuotationsLines[];
-  quotations: CM_Quotations;
+  @ViewChild('templateCreatedBy') templateCreatedBy: TemplateRef<any>;
 
   listClicked = [];
-  tabClicked = '';
-  fomatDate = 'dd/MM/yyyy';
-  account: any;
-
   views: Array<ViewModel> = [];
+  listPayment: CM_ContractsPayments[] = [];
+  listQuotationsLine: CM_QuotationsLines[];
+  listPaymentHistory: CM_ContractsPayments[] = [];
+
+  account: any;
+  quotations: CM_Quotations;
+
+  tabClicked = '';
+  actionName = '';
+  isAddContract = true;
+
   service = 'CM';
-  assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
+  assemblyName = 'ERM.Business.CM';
   methodLoadData = 'GetListContractsAsync';
 
-  isAddContract = true;
-  actionName = '';
-
   fmQuotations: FormModel = {
-    formName: 'CMQuotations',
-    gridViewName: 'grvCMQuotations',
-    entityName: 'CM_Quotations',
     funcID: 'CM02021',
+    formName: 'CMQuotations',
+    entityName: 'CM_Quotations',
+    gridViewName: 'grvCMQuotations',
   };
 
   fmQuotationLines: FormModel = {
-    formName: 'CMQuotationsLines',
-    gridViewName: 'grvCMQuotationsLines',
-    entityName: 'CM_QuotationsLines',
     funcID: 'CM02021',
+    formName: 'CMQuotationsLines',
+    entityName: 'CM_QuotationsLines',
+    gridViewName: 'grvCMQuotationsLines',
   };
   fmContractsPayments: FormModel = {
-    formName: 'CMContractsPayments',
-    gridViewName: 'grvCMContractsPayments',
-    entityName: 'CM_ContractsPayments',
     funcID: 'CM02041 ',
+    formName: 'CMContractsPayments',
+    entityName: 'CM_ContractsPayments',
+    gridViewName: 'grvCMContractsPayments',
   };
   fmContractsPaymentsHistory: FormModel = {
+    funcID: 'CM02042  ',
+    entityName: 'CM_ContractsPayments',
     formName: 'CMContractsPaymentsHistory',
     gridViewName: 'grvCMContractsPaymentsHistory',
-    entityName: 'CM_ContractsPayments',
-    funcID: 'CM02042  ',
   };
 
   //test
@@ -130,47 +124,55 @@ export class ContractsComponent extends UIComponent {
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
+      template: null,
+      isActive: false,
       name: 'Comment',
       textDefault: 'Thảo luận',
-      isActive: false,
-      template: null,
     },
     {
+      template: null,
+      isActive: false,
       name: 'Attachment',
       textDefault: 'Đính kèm',
-      isActive: false,
-      template: null,
     },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    { 
+      template: null, 
+      isActive: false, 
+      name: 'Task', 
+      textDefault: 'Công việc', 
+    },
     {
+      template: null,
+      isActive: false,
       name: 'Approve',
       textDefault: 'Ký duyệt',
-      isActive: false,
-      template: null,
     },
     {
+      template: null,
+      isActive: false,
       name: 'References',
       textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
     },
     {
+      template: null,
+      isActive: false,
       name: 'Quotations',
       textDefault: 'Báo giá',
-      isActive: false,
-      template: null,
     },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    { 
+      template: null,
+      isActive: false, 
+      name: 'Order', 
+      textDefault: 'Đơn hàng', 
+    },
   ];
+
   constructor(
     private inject: Injector,
-    private callfunc: CallFuncService,
-    private routerActive: ActivatedRoute,
-    private callFunc: CallFuncService,
-    private notiService: NotificationsService,
-    private changeDetector: ChangeDetectorRef,
     private cmService: CodxCmService,
+    private callFunc: CallFuncService,
     private contractService: ContractsService,
+    private notiService: NotificationsService,
     private codxShareService: CodxShareService,
     @Optional() dialog?: DialogRef
   ) {

@@ -176,6 +176,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.action = dialogData.data?.formType;
     this.cashpayment = dialog.dataService.dataSelected;
+    this.journal = dialogData.data?.journal;
+    this.modegrid = this.journal.inputMode;
+    this.baseCurr = this.journal.unbounds.baseCurr;
     switch (this.dialog.formModel.funcID) {
       case 'ACT0429':
       case 'ACT0410':
@@ -196,18 +199,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.dataLine = new CashReceiptsLines();
         break;
     }
-    if (this.cashpayment.unbounds && this.cashpayment.unbounds.baseCurr) {
-      this.baseCurr = this.cashpayment.unbounds.baseCurr;
-    }
-    if (this.cashpayment.unbounds && this.cashpayment.unbounds.journal) {
-      this.journal = this.cashpayment.unbounds.journal;
-      this.modegrid = this.cashpayment.unbounds.journal.inputMode;
-    }
-    if (this.action == 'edit') {
-      this.journal = dialogData.data?.journal;
-      this.modegrid = this.journal.inputMode;
-      this.baseCurr = this.journal.unbounds.baseCurr;
-    }
+    // if (this.cashpayment.unbounds && this.cashpayment.unbounds.baseCurr) {
+    //   this.baseCurr = this.cashpayment.unbounds.baseCurr;
+    // }
+    // if (this.cashpayment.unbounds && this.cashpayment.unbounds.journal) {
+    //   this.journal = this.cashpayment.unbounds.journal;
+    //   this.modegrid = this.cashpayment.unbounds.journal.inputMode;
+    // }
+    // if (this.action == 'edit') {
+    // }
   }
   //#endregion
 
@@ -516,30 +516,39 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   gridCreated() {
     this.hideFields = [];
-    switch (this.action) {
-      case 'add':
-        if (
-          this.cashpayment.unbounds &&
-          this.cashpayment.unbounds.hideFields &&
-          this.cashpayment.unbounds.hideFields.length
-        ) {
-          this.hideFields = [
-            ...(this.cashpayment.unbounds.hideFields as Array<string>),
-          ];
-        }
-        break;
-      case 'edit':
-        if (
-          this.journal.unbounds &&
-          this.journal.unbounds.hideFields &&
-          this.journal.unbounds.hideFields.length
-        ) {
-          this.hideFields = [
-            ...(this.journal.unbounds.hideFields as Array<string>),
-          ];
-        }
-        break;
+    if (
+      this.journal.unbounds &&
+      this.journal.unbounds.hideFields &&
+      this.journal.unbounds.hideFields.length
+    ) {
+      this.hideFields = [
+        ...(this.journal.unbounds.hideFields as Array<string>),
+      ];
     }
+    // switch (this.action) {
+    //   case 'add':
+    //     if (
+    //       this.cashpayment.unbounds &&
+    //       this.cashpayment.unbounds.hideFields &&
+    //       this.cashpayment.unbounds.hideFields.length
+    //     ) {
+    //       this.hideFields = [
+    //         ...(this.cashpayment.unbounds.hideFields as Array<string>),
+    //       ];
+    //     }
+    //     break;
+    //   case 'edit':
+    //     if (
+    //       this.journal.unbounds &&
+    //       this.journal.unbounds.hideFields &&
+    //       this.journal.unbounds.hideFields.length
+    //     ) {
+    //       this.hideFields = [
+    //         ...(this.journal.unbounds.hideFields as Array<string>),
+    //       ];
+    //     }
+    //     break;
+    // }
 
     this.loadVisibleColumn();
     this.loadAccountControl();
@@ -1380,7 +1389,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
           //#endregion
         }
-        //this.loadjounal();
         break;
     }
 
@@ -1395,16 +1403,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
   }
-
-  // loadjounal() {
-  //   this.api
-  //     .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
-  //     .subscribe((res) => {
-  //       this.journal = res[0];
-  //       this.baseCurr = this.journal.unbounds.baseCurr;
-  //       this.modegrid = this.journal.inputMode;
-  //     });
-  // }
 
   requireGrid() {
     const field = ['DIM1', 'DIM2', 'DIM3', 'ProjectID'];
