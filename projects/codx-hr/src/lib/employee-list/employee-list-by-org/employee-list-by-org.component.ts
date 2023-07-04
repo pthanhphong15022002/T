@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService } from 'codx-core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService, CodxService } from 'codx-core';
 import { PopupAddEmployeeComponent } from '../popup/popup-add-employee/popup-add-employee.component';
 
 @Component({
   selector: 'lib-employee-list-by-org',
   templateUrl: './employee-list-by-org.component.html',
-  styleUrls: ['./employee-list-by-org.component.scss']
+  styleUrls: ['./employee-list-by-org.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EmployeeListByOrgComponent {
   @Input() orgUnitID: string = '';
@@ -14,10 +15,14 @@ export class EmployeeListByOrgComponent {
   @Input() view: any;
   @Input() grvSetup: any;
   @Input() editable: boolean = false;
+  @Input() modeView: string = 'employee';
+  @Input() rowHeight: string = '50';
+  @Input() showRowNumber: boolean = false;
   @Output() dataChange: EventEmitter<any> = new EventEmitter();
   totalEmployee: number = 0;
   sysMoreFunc: any[] = [];
   columnsGrid;
+  columnsGridContact;
   manager: any = null;
   @ViewChild('grid') grid: CodxGridviewV2Component;
   @ViewChild('templateName') templateName: TemplateRef<any>;
@@ -30,13 +35,24 @@ export class EmployeeListByOrgComponent {
   @ViewChild('empAvatar') empAvatar: ImageViewerComponent;
 
 
+  @ViewChild('colEmployeeHeader') colEmployeeHeader: TemplateRef<any>;
+  @ViewChild('colContactHeader') colContactHeader: TemplateRef<any>;
+  @ViewChild('colPersonalHeader') colPersonalHeader: TemplateRef<any>;
+  @ViewChild('colStatusHeader') colStatusHeader: TemplateRef<any>; 
+  @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
+  @ViewChild('colContact') colContact: TemplateRef<any>;
+  @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
+  @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
+
+  funcIDEmpInfor: string = 'HRT03b';
   itemSelected;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService) { }
+    private callfc: CallFuncService,
+    private codxService: CodxService) { }
 
   ngOnInit(): void {
     // get more funtion hệ thống
@@ -45,92 +61,85 @@ export class EmployeeListByOrgComponent {
     });
   }
   ngAfterViewInit(): void {
-    if (this.grvSetup) {
-      this.columnsGrid = [
-        {
-          headerText: this.grvSetup['EmployeeName']['headerText'],
-          field: 'EmployeeName',
-          template: this.templateName,
-          width: '200',
-        },
-        {
-          headerText: this.grvSetup['Birthday']['headerText'],
-          field: 'Birthday',
-          template: this.templateBirthday,
-          width: '100',
-        },
-        {
-          headerText: this.grvSetup['Phone']['headerText'],
-          field: 'Phone',
-          template: this.templatePhone,
-          width: '140',
-        },
-        {
-          headerText: this.grvSetup['Email']['headerText'],
-          field: 'Email',
-          template: this.templateEmail,
-          width: '200',
-        },
-        {
-          headerText: this.grvSetup['JoinedOn']['headerText'],
-          field: 'JoinedOn',
-          template: this.templateJoinedOn,
-          width: '100',
-        },
-        {
-          headerText: this.grvSetup['Status']['headerText'],
-          field: 'Status',
-          template: this.templateStatus,
-          width: '100',
-        },
-      ];
+    if (this.grvSetup) { 
+      this.initColumnGrid();
     } else {
       this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
         .subscribe((res: any) => {
           if (res) {
             this.grvSetup = res;
-            this.columnsGrid = [
-              {
-                headerText: this.grvSetup['EmployeeName']['headerText'],
-                field: 'EmployeeName',
-                template: this.templateName,
-                width: '300',
-              },
-              {
-                headerText: this.grvSetup['Birthday']['headerText'],
-                field: 'Birthday',
-                template: this.templateBirthday,
-                width: '150',
-              },
-              {
-                headerText: this.grvSetup['Phone']['headerText'],
-                field: 'Phone',
-                template: this.templatePhone,
-                width: '150',
-              },
-              {
-                headerText: this.grvSetup['Email']['headerText'],
-                field: 'Email',
-                template: this.templateEmail,
-                width: '250',
-              },
-              {
-                headerText: this.grvSetup['JoinedOn']['headerText'],
-                field: 'JoinedOn',
-                template: this.templateJoinedOn,
-                width: '150',
-              },
-              {
-                headerText: this.grvSetup['Status']['headerText'],
-                field: 'Status',
-                template: this.templateStatus,
-                width: '200',
-              },
-            ];
+            this.initColumnGrid();
           }
         });
     }
-
+  }
+  initColumnGrid(){
+    switch (this.modeView){
+      case 'contact':
+        this.columnsGrid = [
+          {
+            headerText: this.grvSetup['EmployeeName']['headerText'],
+            field: 'EmployeeName',
+            template: this.templateName,
+            width: '200',
+          },
+          {
+            headerText: this.grvSetup['Birthday']['headerText'],
+            field: 'Birthday',
+            template: this.templateBirthday,
+            width: '100',
+          },
+          {
+            headerText: this.grvSetup['Phone']['headerText'],
+            field: 'Phone',
+            template: this.templatePhone,
+            width: '140',
+          },
+          {
+            headerText: this.grvSetup['Email']['headerText'],
+            field: 'Email',
+            template: this.templateEmail,
+            width: '200',
+          },
+          {
+            headerText: this.grvSetup['JoinedOn']['headerText'],
+            field: 'JoinedOn',
+            template: this.templateJoinedOn,
+            width: '100',
+          },
+          {
+            headerText: this.grvSetup['Status']['headerText'],
+            field: 'Status',
+            template: this.templateStatus,
+            width: '100',
+          },
+        ];
+        break;
+      case 'employee':
+        this.columnsGrid = [
+          {
+            headerTemplate: this.colEmployeeHeader,
+            template: this.colEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: this.colContactHeader,
+            template: this.colContact,
+            width: '100',
+          },
+          {
+            headerTemplate: this.colPersonalHeader,
+            template: this.colPersonal,
+            width: '150',
+          },
+          {
+            headerTemplate: this.colStatusHeader,
+            template: this.colStatus,
+            width: '120',
+          },
+        ];
+        break;
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.orgUnitID = changes.orgUnitID.currentValue;
@@ -282,5 +291,21 @@ export class EmployeeListByOrgComponent {
         });
       });
     }
+  }
+  clickViewEmpInfo(data: any) {
+    this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
+      let queryParams = {
+        employeeID: data.employeeID,
+        page: this.view.dataService.page,
+        totalPage: this.view.dataService.pageCount,
+      };
+      let state = {
+        data: this.view.dataService.data.map(function (obj) {
+          return { EmployeeID: obj.employeeID };
+        }),
+        request: this.view.dataService.request,
+      };
+      this.codxService.navigate('', func?.url, queryParams, state, true);
+    });
   }
 }

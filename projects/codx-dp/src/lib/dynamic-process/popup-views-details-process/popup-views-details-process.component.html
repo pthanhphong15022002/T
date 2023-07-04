@@ -247,9 +247,8 @@
           </div>
           <div class="me-2">
             <codx-img
-              class
               [width]="20"
-              [objectId]="perm.objectName"
+              [objectId]="perm.objectID"
               objectType="AD_Users"
             >
             </codx-img>
@@ -310,14 +309,14 @@
         <span>{{ data?.durationDay }}</span>
         <codx-label
           class="mx-1"
-          [fiedName]="'day'"
+          [name]="'lbDay'"
           [formModel]="formModelStep"
           default="ngày"
         ></codx-label>
         <span>{{ data?.durationHour }}</span>
         <codx-label
           class="mx-1"
-          [fiedName]="'hour'"
+          [name]="'lbHour'"
           [formModel]="formModelStep"
           default="giờ"
         ></codx-label>

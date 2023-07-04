@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ApiHttpService, CRUDService, CallFuncService, CodxService, DialogModel, FormModel } from 'codx-core';
 import { PopupDetailComponent } from '../popup-detail/popup-detail.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'wp-post-share',
@@ -15,7 +16,6 @@ export class PostShareComponent implements OnInit {
 
   loaded:boolean = false;
   data:any = null;
-  pattern:any = null;
 
   constructor(
     private api: ApiHttpService,
@@ -63,6 +63,9 @@ export class PostShareComponent implements OnInit {
       [this.objectID])
       .subscribe((res:any) => {
         this.loaded = true;
+        if(res.pattern){
+          res.backgroundImg = environment.urlUpload + "/" + res.pattern.url;
+        }
         this.data = res;
         this.dt.detectChanges();
       });

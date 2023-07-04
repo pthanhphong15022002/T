@@ -114,7 +114,7 @@ export class PopupAddSalesInvoiceComponent
       this.editSettings.mode =
         this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
 
-      if (this.journal.assignRule === '2') {
+      if (this.journal.autoAssignRule === '2') {
         this.ignoredFields.push('VoucherNo');
       }
 
