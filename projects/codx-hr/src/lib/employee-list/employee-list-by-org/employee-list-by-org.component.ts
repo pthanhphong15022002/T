@@ -44,7 +44,13 @@ export class EmployeeListByOrgComponent {
   @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
   @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
-
+  service = 'HR';
+  entityName = 'HR_Employees';
+  assemblyName = 'ERM.Business.HR';
+  className = 'EmployeesBusiness';
+  method = 'GetEmployeeListByOrgUnitIDGridView'; 
+  idField = 'employeeID';
+  predicates = '@0.Contains(OrgUnitID)';
   funcIDEmpInfor: string = 'HRT03b';
   itemSelected;
   constructor(
@@ -204,7 +210,7 @@ export class EmployeeListByOrgComponent {
                 //this.grid.dataService.rowCount = 0;
                 clearInterval(ins);
                 this.grid.deleteRow(data, true);
-                this.grid.rowCount = --this.grid.rowCount;
+                this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
                 this.dataChange.emit({ data: res, actionType: 'delete', hasDataChanged: true });
               }
             }, 200);
@@ -246,7 +252,7 @@ export class EmployeeListByOrgComponent {
               if (e.event) {
                 (this.view.dataService as CRUDService).add(e.event).subscribe();
                 //this.grid.addRow(e.event, 0, true);
-                this.grid.refresh();
+                //this.grid.refresh();
                 this.dataChange.emit({ data: e.event, actionType: 'copy', hasDataChanged: true });
               }
             });
@@ -285,7 +291,7 @@ export class EmployeeListByOrgComponent {
             if (e.event?.employeeID === this.manager?.employeeID)
               this.getManager(this.orgUnitID);
             //this.grid.updateRow(index, e.event, false);
-            this.grid.refresh();
+            //this.grid.refresh();
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
         });
