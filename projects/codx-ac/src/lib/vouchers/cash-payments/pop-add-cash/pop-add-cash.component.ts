@@ -154,7 +154,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   authStore: AuthStore;
   typeSet: any;
   loading: any = false;
-  loadingform: any = true;
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   constructor(
     inject: Injector,
@@ -240,47 +239,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           }
         }
-
-        // phím tắt nút lưu
-        // if(e.altKey && e.key == 's'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-        //   }else{
-        //     this.onSave();
-        //   }
-        // }
-
-        // phím tắt nút lưu & thêm
-        // if(e.altKey && e.shiftKey && e.key == 'S'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-
-        //   }else{
-        //     this.onSaveAdd();
-        //   }
-        // }
-
-        // phím tắt nút hủy bỏ
-        // if(e.key == 'Delete'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-        //   }else{
-        //     this.onDiscard();
-        //   }
-        // }
-
-        // phím tắt nút đóng
-        // if(e.key == 'Escape'){
-        //   if (this.gridCash.gridRef.isEdit) {
-        //     this.gridCash.endEdit();
-        //     this.gridCash.autoAddRow = true;
-        //   }else{
-        //     this.close();
-        //   }
-        // }
       }
     );
     (document.body as HTMLElement).addEventListener('click', (e: any) => {
@@ -555,9 +513,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadFormat();
     this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
-    setTimeout(() => {
-      this.loadingform = false;
-    }, 1000);
   }
 
   gridCreatedSet() {
@@ -578,9 +533,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.hideFieldsSet.push('SettledDisc2');
     }
     this.gridSet.hideColumns(this.hideFieldsSet);
-    setTimeout(() => {
-      this.loadingform = false;
-    }, 1000);
   }
 
   lineChanged(e: any) {
@@ -936,36 +888,32 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   autoAddRow(e: any) {
-    if (!this.loadingform || !this.loading) {
-      switch (e.type) {
-        case 'autoAdd':
+    switch (e.type) {
+      case 'autoAdd':
+        this.addRow('1');
+        break;
+      case 'add':
+        if (this.gridCash.autoAddRow) {
           this.addRow('1');
-          break;
-        case 'add':
-          if (this.gridCash.autoAddRow) {
-            this.addRow('1');
-          }
-          break;
-        case 'closeEdit':
-          this.gridCash.autoAddRow = true;
-          break;
-      }
+        }
+        break;
+      case 'closeEdit':
+        this.gridCash.autoAddRow = true;
+        break;
     }
     //this.addRow();
   }
 
   autoAddRowSet(e: any) {
-    if (!this.loadingform || !this.loading) {
-      switch (e.type) {
-        case 'autoAdd':
-          if (this.action == 'add') {
-            this.settlement(0);
-          } else {
-            this.settlement(1);
-          }
+    switch (e.type) {
+      case 'autoAdd':
+        if (this.action == 'add') {
+          this.settlement(0);
+        } else {
+          this.settlement(1);
+        }
 
-          break;
-      }
+        break;
     }
     //this.addRow();
   }

@@ -346,9 +346,7 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <codx-label
                     [default]="titleAvatar"
                     fiedName="lblAvatar"
@@ -373,9 +371,8 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+              
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <codx-label
                     [default]="titletitleCreateSubFolder"
                     [fiedName]="'lblCreateSubFolder'"
@@ -478,9 +475,7 @@
                           (click)="openSubFolder()"
                           colspan="4"
                         >
-                          <div
-                            class="d-flex align-items-center text-primary text-hover-primary"
-                          >
+                          <div class="d-flex align-items-center text-primary text-hover-primary">
                             <span class="icon-add_circle icon-16 me-1"></span>
                             <codx-label
                               [default]="titletitleCreateSubFolder"
@@ -492,6 +487,67 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
+
+                <div class="d-flex flex-column share-item mt-4">
+                  <codx-label
+                    [default]="'Gửi thông báo khi có tệp tin mới tải lên'"
+                    fiedName="lblTitleNotication"
+                    [formName]="'DMTitleNotication'"
+                    [ngClass]="'fw-bold'"
+                  ></codx-label>
+                  <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                      <codx-label
+                        [default]="titleAlert"
+                        fiedName="lblDMAlert"
+                        [formName]="'DMAlert'"
+                      ></codx-label>
+                      <div class="d-flex align-items-center">
+                        <span class="switch pt-1 switch-icon me-2">
+                          <codx-input
+                            class="test-check"
+                            type="switch"
+                            style="width: 100%"
+                            [checked]="alert"
+                            field="createSubFolder"
+                            [disabled]="
+                              this.updateRight == false || this.propertiesFolder
+                            "
+                            (valueChange)="
+                              onSaveRightChanged($event, 'alert')
+                            "
+                          ></codx-input>
+                        </span>
+                        <div class="w-80px"></div>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                      <codx-label
+                        [default]="titleEmail"
+                        fiedName="lblDMEmail"
+                        [formName]="'DMEmail'"
+                      ></codx-label>
+                      <div class="d-flex align-items-center">
+                        <span class="switch pt-1 switch-icon me-2">
+                          <codx-input
+                            class="test-check"
+                            type="switch"
+                            style="width: 100%"
+                            [checked]="email"
+                            field="createSubFolder"
+                            [disabled]="
+                              this.updateRight == false || this.propertiesFolder
+                            "
+                            (valueChange)="
+                              onSaveRightChanged($event, 'email')
+                            "
+                          ></codx-input>
+                        </span>
+                        <div class="w-80px"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
