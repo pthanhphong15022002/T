@@ -1,0 +1,10 @@
+.card-view {
+    height: 100%;
+    //display: flex;
+    overflow: auto;
+    //gap: 10px;
+    //flex-wrap: wrap;
+    //row-gap: 10px;
+    //column-gap: 20px;
+    align-content: flex-start;
+}

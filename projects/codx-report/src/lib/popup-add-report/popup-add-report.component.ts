@@ -9,7 +9,7 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
-import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-angular-inputs';
+import { BeforeUploadEventArgs, RemovingEventArgs, RenderingEventArgs, UploaderComponent } from '@syncfusion/ej2-angular-inputs';
 import {
   ApiHttpService,
   AuthStore,
@@ -29,6 +29,9 @@ import { utils } from 'xlsx';
 import { PopupEditParamComponent } from '../popup-edit-param/popup-edit-param.component';
 import {L10n } from '@syncfusion/ej2-base';
 import { FileInfo } from '@shared/models/file.model';
+
+import { EmitType } from '@syncfusion/ej2-base';
+
 L10n.load({
   vi: {
     "uploader": {
@@ -173,10 +176,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
      //this.getReportParams();
 
     } else this.setDefaut();
+
+
   }
 
   getReport(){
-    debugger
     this.api
     .execSv(
       'rptsys',
@@ -274,7 +278,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   setDefaut() {
-    debugger
     this.recID = Util.uid();
     this.data = {};
     this.data.description = null;
@@ -378,7 +381,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'add',type:'excel',refType:'R',refID:this.reportID},"",op)
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
-        debugger
       }
     })
   }
@@ -389,7 +391,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'edit',type:'excel',refType:'R',refID:this.reportID},"",op)
       dialog.closed.subscribe((res:any)=>{
         if(res.event){
-          debugger
         }
       })
     }
@@ -444,7 +445,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   async saveForm() {
-    debugger
     if (!this.data.recID) {
       this.data.recID = this.recID;
     }
@@ -482,7 +482,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         [this.data, this.fuctionItem]
       )
       .subscribe((res) => {
-        debugger
         this.data.reportContent && this.setDataset();
         this.dialog.close();
       });
@@ -502,12 +501,31 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           .subscribe();
   }
 
-  fileSelected(e:any){
+
+  uploading(e:BeforeUploadEventArgs){
     debugger
+  }
+  beforeUpload(e:BeforeUploadEventArgs){
+    debugger
+  }
+  isBlockBtn:boolean = false;
+  fileSelected(e:any){
+    if(e.filesData.length == 0) return;
+    let type = e.filesData[0].type;
+    if(!type || (type != "rdl" && type != "rdlc"))
+    {
+      this.isBlockBtn = true;
+      this.notiService.notify("File không hợp lệ","2");
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+   
     let file = e.filesData[0].rawFile;
     let reader = new FileReader();
     reader.readAsDataURL(file);
     let t=this;
+    
+    this.isBlockBtn = false;
     reader.onload = function () {
       //me.modelvalue = reader.result;
       console.log(reader.result);
@@ -544,12 +562,11 @@ download(){
                     downloadLink.href = linkSource;
                     downloadLink.download = this.data.reportName;
                     downloadLink.click();
-                  })
+                  });
 
 }
 
 fileRendering(e:any){
-
   let iconEle = document.createElement('i');
   iconEle.classList.add('icon-i-cloud-arrow-down','icon-20','text-hover-primary','icon-download-report')
   iconEle.title = 'download';
@@ -565,7 +582,6 @@ private downloadCustomFile(e:any){
    if(linkSource.split(',').length ==1){
        linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
       }
-      debugger
     const downloadLink = document.createElement("a");
     downloadLink.href = linkSource;
     downloadLink.download = this.data.reportName;

@@ -556,14 +556,16 @@
 // transition: display 12s;
 // }
 
-.step{
-  background: #f0f3f6;
-  border: 1px solid #e2e3ee;
-  border-radius: 3px;
-  border-left-color: #3699ff !important;
-  border-left-width: 4px !important;
-}
-.group{
-  border-left-color: #f64e60 !important;
-  border-left-width: 4px !important;
+.popup-process-detail{
+  .step{
+    background: #f0f3f6;
+    border: 1px solid #e2e3ee;
+    border-radius: 3px;
+    border-left-color: #3699ff !important;
+    border-left-width: 4px !important;
+  }
+  .group{
+    border-left-color: #f64e60 !important;
+    border-left-width: 4px !important;
+  }
 }

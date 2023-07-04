@@ -23,7 +23,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
-    [hideMF]="hideMoreFC"
+    [hideMF]="!data?.roles?.isOnwer"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
