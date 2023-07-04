@@ -800,11 +800,11 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
   loadcacheCbx(){
-    this.cache.combobox('CashBooks').subscribe();
-    this.cache.combobox('ObjectsAC').subscribe();
-    this.cache.combobox('CashPaymentReasonsAC').subscribe();
-    this.cache.combobox('ContactBookNameAC').subscribe();
-    this.cache.combobox('Currencies').subscribe();
+    // this.cache.combobox('CashBooks').subscribe();
+    // this.cache.combobox('ObjectsAC').subscribe();
+    // this.cache.combobox('CashPaymentReasonsAC').subscribe();
+    // this.cache.combobox('ContactBookNameAC').subscribe();
+    // this.cache.combobox('Currencies').subscribe();
   }
   //#endregion
 }
