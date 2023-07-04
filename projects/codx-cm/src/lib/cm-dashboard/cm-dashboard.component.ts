@@ -16,12 +16,15 @@ import { ApiHttpService, UIComponent, ViewModel, ViewType } from 'codx-core';
 })
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
-  @ViewChildren('templateDetail') tempviews: QueryList<any>;
+  @ViewChildren('templateDeals') dashboardDeals: QueryList<any>;
   funcID = 'DPT01';
   views: Array<ViewModel> = [];
   button = {
     id: 'btnAdd',
   };
+  isEditMode = false;
+  panelsDeals: any;
+  datasDeals: any;
 
   constructor(inject: Injector) {
     super(inject);

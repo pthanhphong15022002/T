@@ -8,3 +8,15 @@
   [button]="button"
 >
 </codx-views>
+
+<ng-template #template>
+  <codx-dashboard
+    [templates]="dashboardDeals"
+    [panels]="panelsDeals"
+    [datas]="datasDeals"
+    [isEditMode]="isEditMode"
+    [cellSpacing]="[20, 20]"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #templateDeals></ng-template>
