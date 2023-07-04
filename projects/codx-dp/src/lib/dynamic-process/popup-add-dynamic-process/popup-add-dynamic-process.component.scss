@@ -232,9 +232,12 @@
 }
 
 .click {
-  // background-color: var(--primary-lightest) !important;
   border-left-color: var(--primary) !important;
   border-radius: 0;
+}
+
+.color-defaul {
+  background-color: var(--primary) !important;
 }
 
 .task{
