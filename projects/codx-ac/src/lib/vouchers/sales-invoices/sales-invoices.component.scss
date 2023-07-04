@@ -7,11 +7,18 @@
   }
 }
 
-tr {
-  border-bottom: 1px solid var(--bs-table-border-color) !important;
+:host ::ng-deep tbody {
+  tr:last-child {
+    border-bottom: 1px solid var(--bs-table-border-color) !important;
 
-  th {
-    text-align: center;
-    font-weight: 500;
+    th,
+    td {
+      border-bottom: 1px solid var(--bs-table-border-color) !important;
+    }
   }
+}
+
+th {
+  text-align: center;
+  font-weight: 500;
 }

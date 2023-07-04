@@ -49,9 +49,14 @@ export class ViewsTabsDetailsComponent
   listHeader: any;
   dataDrop: any;
   crrStepID: any;
+  listType: any = [];
 
   constructor(private inject: Injector) {
     super(inject);
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res && res.datas) this.listType = res?.datas;
+    });
+
     // this.cache.viewSettings(this.funcID).subscribe((res) => {});
   }
 
@@ -139,16 +144,40 @@ export class ViewsTabsDetailsComponent
   onActions(e) {
     switch (e.type) {
       case 'drop':
-        e.data.stepID = this.crrStepID;
+        // e.data.stepID = this.crrStepID;
         break;
       case 'drag':
         ///bắt data khi kéo
-        this.crrStepID = e?.data?.stepID;
+        // this.crrStepID = e?.data?.stepID;
 
         break;
       case 'dbClick':
         //xư lý dbClick
         break;
     }
+  }
+  getObjectID(data) {
+    return data.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
+  }
+
+  getObjectName(data) {
+    return data.roles.filter((x) => x.roleType == 'O')[0]?.objectName;
+  }
+
+  getRolesSteps(data) {
+    if (!data.isFailStep && !data.isSuccessStep) {
+      if (this.kanban && this.kanban.columns?.length > 0) {
+        let idx = this.kanban.columns.findIndex(
+          (x) => x.keyField == data.keyField
+        );
+        if (idx != -1) {
+          let roles = this.kanban.columns[idx].dataColums.roles;
+          if (roles?.length > 0) {
+            return roles.filter((x) => x.roleType == 'S')[0];
+          }
+        }
+      }
+    }
+    return null;
   }
 }

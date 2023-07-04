@@ -49,7 +49,7 @@ export class SalesInvoicesComponent
   journalNo: string;
   master: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
-  acctTranLines: IAcctTran[] = [{} as IAcctTran, {} as IAcctTran];
+  acctTranLines: IAcctTran[] = [];
   gvsSalesInvoicesLines: any;
   vats: any[] = [];
   tabControl: TabModel[] = [
@@ -258,15 +258,20 @@ export class SalesInvoicesComponent
         this.loading = false;
       });
 
-    // this.acctLoading = true;
-    // this.acctTranLines = [];
-    // this.api
-    //   .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', this.master.recID)
-    //   .subscribe((res: any) => {
-    //     console.log(res);
+    this.acctLoading = true;
+    this.acctTranLines = [];
+    this.api
+      .exec(
+        'AC',
+        'AcctTransBusiness',
+        'LoadDataAsync',
+        'e973e7b7-10a1-11ee-94b4-00155d035517'
+      )
+      .subscribe((res: any) => {
+        console.log(res);
 
-    //     this.acctLoading = false;
-    //   });
+        this.acctLoading = false;
+      });
   }
 
   onClickAdd(e): void {
