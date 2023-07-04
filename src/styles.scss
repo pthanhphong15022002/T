@@ -52,6 +52,7 @@ erm-quick-links-inner .dropdown-menu {
 .place-holder {
   opacity: 0.35;
   font-style: italic;
+  font-weight: 400;
 }
 .clear {
   clear: both;
@@ -1829,7 +1830,9 @@ codx-listview.card .card-header {
 .e-toolbar .e-tbar-btn:hover span {
   background: transparent !important;
 }
-
+.h-32px{
+  height: 32px;
+}
 #MyFav .h-32px {
   min-height: 26px;
 }
