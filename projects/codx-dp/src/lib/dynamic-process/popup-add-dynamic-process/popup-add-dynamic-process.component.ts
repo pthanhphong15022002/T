@@ -63,6 +63,7 @@ import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/c
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -440,23 +441,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
 
-  setDefaultOwner() {
-    var perm = new DP_Processes_Permission();
-    perm.objectID = this.user?.userID;
-    perm.objectName = this.user?.userName;
-    perm.objectType = '1';
-    perm.full = true;
-    perm.create = true;
-    perm.read = true;
-    perm.assign = true;
-    perm.edit = true;
-    perm.delete = true;
-    perm.roleType = 'O';
-    this.permissions = this.checkUserPermission(this.permissions, perm);
-    this.process.permissions = this.permissions;
+  
+  ngOnInit(){
+    this.loading();
   }
 
-  async ngOnInit(): Promise<void> {
+  async loading(): Promise<void> {
     //Tạo formGroup
     this.exportGroup = this.formBuilder.group({
       dataExport: ['all', Validators.required],
@@ -498,6 +488,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //  this.GetListProcessGroups();
   }
 
+  setDefaultOwner() {
+    var perm = new DP_Processes_Permission();
+    perm.objectID = this.user?.userID;
+    perm.objectName = this.user?.userName;
+    perm.objectType = '1';
+    perm.full = true;
+    perm.create = true;
+    perm.read = true;
+    perm.assign = true;
+    perm.edit = true;
+    perm.delete = true;
+    perm.roleType = 'O';
+    this.permissions = this.checkUserPermission(this.permissions, perm);
+    this.process.permissions = this.permissions;
+  }
+  
   GetListProcessGroups() {
     this.dpService.getListProcessGroups().subscribe((res) => {
       if (res && res.length > 0) {
