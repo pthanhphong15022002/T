@@ -80,6 +80,7 @@ import { CustomergroupsComponent } from './customergroups/customergroups.compone
 import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
 import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
+import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
 
 const routes: Routes = [
   {
@@ -115,6 +116,10 @@ const routes: Routes = [
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
+      },
+      {
+        path: 'dashboard/:funcID',
+        component: CmDashboardComponent,
       },
       // {
       //   path: 'approvals/:funcID',
@@ -210,6 +215,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TaskComponent,
     PopupOwnerDealComponent,
     ViewIconGroupComponent,
+    CmDashboardComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
