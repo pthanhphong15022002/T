@@ -9,6 +9,10 @@ table {
   table-layout: auto;
 }
 
+tbody:hover {
+  background-color: var(--bs-table-hover-bg);
+}
+
 @mixin sticky {
   position: sticky;
   z-index: 1;
