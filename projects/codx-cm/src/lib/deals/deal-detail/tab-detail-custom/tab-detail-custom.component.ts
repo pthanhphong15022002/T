@@ -147,6 +147,9 @@ export class TabDetailCustomComponent
         this.listStep = res;
         this.checkCompletedInstance(this.dataSelected?.status);
       }
+      else {
+        this.listStep = null;
+      }
       this.isDataLoading = false;
     });
   }

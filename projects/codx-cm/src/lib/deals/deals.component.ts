@@ -504,13 +504,7 @@ export class DealsComponent
 
   checkMoreReason(tmpPermission) {
     return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
-
   }
-
-  checkRoleInSystem(tmpRole) {
-    return false;
-  }
-
   clickMF(e, data) {
     const actions = {
       SYS03: (data) => {
@@ -587,12 +581,10 @@ export class DealsComponent
         // xử lý data chuyển công đoạn
         if (this.crrStepID != this.dataDrop.stepID)
           this.dropDeals(this.dataDrop);
-
         break;
       case 'drag':
         ///bắt data khi kéo
         this.crrStepID = e?.data?.stepID;
-
         break;
       case 'dbClick':
         //xư lý dbClick
@@ -611,25 +603,24 @@ export class DealsComponent
       return;
     }
     if (data.closed) {
-      this.notificationsService.notify('DP038');
+      this.notificationsService.notifyCode('DP039');
       return;
     }
-    // if (this.moreFuncInstance?.length == 0) {
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
-    // if (data.status == '1') {
-    //   this.notificationsService.notifyCode('DP038');
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
-    // if (data.status != '1' && data.status != '2') {
-    //   this.notificationsService.notifyCode('DP037');
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
+    if (data.status == '0') {
+      this.notificationsService.notify('Cơ hội chưa được xác nhận');
+      return;
+    }
+    if (data.status == '1') {
+      this.notificationsService.notifyCode('DP038', 0, '"' + data.dealName + '"');
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+    if (data.status != '1' && data.status != '2') {
+      this.notificationsService.notifyCode('DP037', 0, '"' + data.dealName + '"');
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
 
-    // Alo Bao bat dk chặng
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
@@ -648,11 +639,11 @@ export class DealsComponent
             (x) => x.functionID == 'CM0201_1'
           );
           if (idx != -1) {
-            // if (this.checkMoreReason(data)) {
-            //   this.notificationsService.notifyCode('SYS032');
-            //   return;
-            // }
-            this.titleAction = this.moreFuncInstance[idx].text;
+            if (this.checkMoreReason(data)) {
+              this.notificationsService.notifyCode('SYS032');
+              return;
+            }
+            this.titleAction = this.moreFuncInstance[idx].customName;
             this.moveStage(data);
           }
         } else {
@@ -661,11 +652,7 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_3'
             );
             if (idx != -1) {
-              // if (this.checkMoreReason(data)) {
-              //   this.notificationsService.notifyCode('SYS032');
-              //   return;
-              // }
-              this.titleAction = this.moreFuncInstance[idx].text;
+              this.titleAction = this.moreFuncInstance[idx].customName;
               this.moveReason(data, true);
             }
           } else {
@@ -673,20 +660,12 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_4'
             );
             if (idx != -1) {
-              // if (this.checkMoreReason(data)) {
-              //   this.notificationsService.notifyCode('SYS032');
-              //   return;
-              // }
-              this.titleAction = this.moreFuncInstance[idx].text;
+              this.titleAction = this.moreFuncInstance[idx].customName;
               this.moveReason(data, false);
             }
           }
         }
       }
-      // else {
-      //  // data.stepID = this.crrStepID;
-      //   this.changeDetectorRef.detectChanges();
-      // }
     }
   }
 
