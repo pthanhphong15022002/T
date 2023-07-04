@@ -309,8 +309,6 @@ export class InstanceDetailComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.rollHeight();
-   
-    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -757,9 +755,9 @@ export class InstanceDetailComponent implements OnInit {
 
     var maxHeight = heightVD - heightHD - heightFT - heighOut;
     var div = document.getElementById('viewModeDetail');
-    if (div) {
-      div.style.setProperty('max-height', maxHeight + 'px', 'important');
-    }
+    // if (div) {
+    //   div.style.setProperty('max-height', maxHeight + 'px', 'important');
+    // }
   }
   loadTree(recID) {
     this.dpSv.getTree(recID).subscribe((res) => {

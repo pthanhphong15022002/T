@@ -1,0 +1,75 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  [idField]="idField"
+  [autoSearch]="false"
+  (selectedChange)="selectedChange($event)"
+  (viewChanged)="viewChanged($event)"
+  (onLoading)="onLoading($event)"
+  (searchChanged)="searchChanged($event)"
+></codx-views>
+
+<!--Schedule-->
+<!----------------------------------Schedule---------------------------------->
+<ng-template #cardTemplate let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100">
+    <!-- <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img> -->
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <!-- <span class="w-100 text-truncate fw-bold">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span> -->
+      <span class="w-100 text-truncate fw-bold">{{ data?.targetName }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #resourceHeader let-data>
+  <div class="d-flex flex-row ms-5 align-items-center">
+    <codx-img
+      [objectId]="data?.resourceData?.owner"
+      imageType="circle"
+      width="40"
+      [objectType]="'AD_Users'"
+      [objectName]="data?.resourceData?.userName"
+    ></codx-img>
+    <div class="ms-4 d-flex flex-column" style="width: 160px">
+      <span
+        class="fw-bold text-truncate"
+        [title]="data?.resourceData?.userName"
+        >{{ data?.resourceData?.userName }}</span
+      >
+      <div [ngbTooltip]="tooltip" class="line-clamp line-clamp-1">
+        {{ data?.resourceData?.positionName }}
+        <ng-template #tooltip>
+          <div>{{ data?.resourceData?.positionName }}</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!--Popup infomation-->
+<ng-template #contentTmp let-data> </ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-1 me-1">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+      (changeDataMF)="changeDataMF($event, data)"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+<!--end-->

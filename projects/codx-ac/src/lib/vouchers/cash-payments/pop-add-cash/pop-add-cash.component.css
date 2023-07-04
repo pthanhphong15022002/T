@@ -86,14 +86,6 @@
     left: 0;
     align-items: center;
 }
-/* .listcash-content .e-editable-component .e-input-focus{
-    width: 100% !important;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-radius: 0px !important;
-    border-bottom: 1px solid #dee2e6 !important;
-} */
 .ac-btn-input{
     position: absolute;
     margin-left: -38px;
@@ -137,4 +129,25 @@
 }
 .scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
     background: grey !important;
+}
+.ac-input{
+    background-color: white;
+    width: 100%;
+    border: 1px solid #ced4da;
+    height: 34px !important;
+}
+.ac-input-disable{
+    background-color: #e9ecef;
+    width: 100%;
+    border: 1px solid #ced4da;
+    height: 34px !important;
+}
+.ac-input .e-input-group{
+    border: none !important;
+}
+.ac-input-disable .e-input-group {
+    border: none !important;
+}
+.ac-input-disable .codx-text{
+    border: none !important;
 }
