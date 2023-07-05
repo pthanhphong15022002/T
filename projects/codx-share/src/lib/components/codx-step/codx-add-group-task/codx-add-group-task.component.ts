@@ -187,7 +187,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'copyGroupTaskStepAsync',
+      'CopyGroupTaskStepAsync',
       this.taskGroup
     ).subscribe(res => {
       if(res){        
