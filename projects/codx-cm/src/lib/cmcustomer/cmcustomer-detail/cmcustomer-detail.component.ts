@@ -172,7 +172,7 @@ export class CmCustomerDetailComponent implements OnInit {
     setTimeout(() => {
       this.viewTag = this.dataSelected?.tags
     }, 100);
-    // this.listTab(this.funcID);
+    this.listTab(this.funcID);
     this.loaded = true;
   }
 
@@ -215,88 +215,77 @@ export class CmCustomerDetailComponent implements OnInit {
       this.tabDetail = [
         {
           name: 'Information',
-          textDefault: 'Thông tin chung',
+          text: 'Thông tin chung',
           icon: 'icon-info',
-          isActive: true,
         },
         {
           name: 'Contact',
-          textDefault: 'Liên hệ',
+          text: 'Liên hệ',
           icon: 'icon-contact_phone',
-          isActive: false,
         },
         {
           name: 'Address',
-          textDefault: 'Địa chỉ',
+          text: 'Địa chỉ',
           icon: 'icon-location_on',
-          isActive: false,
         },
         {
           name: 'Deal',
-          textDefault: 'Cơ hội',
+          text: 'Cơ hội',
           icon: 'icon-add_shopping_cart',
-          isActive: false,
         },
         {
           name: 'Quotations',
-          textDefault: 'Báo giá',
+          text: 'Báo giá',
           icon: 'icon-monetization_on',
-          isActive: false,
         },
         {
           name: 'Contract',
-          textDefault: 'Hợp đồng',
+          text: 'Hợp đồng',
           icon: 'icon-shopping_bag',
-          isActive: false,
         },
         {
           name: 'task',
-          textDefault: 'Công việc',
+          text: 'Công việc',
           icon: 'icon-more',
-          isActive: false,
         },
       ];
     } else if (funcID == 'CM0102') {
       this.tabDetail = [
         {
+          name: 'Information',
           text: 'Thông tin chung',
           icon: 'icon-info',
         },
         {
           name: 'Address',
-          textDefault: 'Địa chỉ',
+          text: 'Địa chỉ',
           icon: 'icon-location_on',
-          isActive: false,
         },
       ];
     } else if (funcID == 'CM0103') {
       this.tabDetail = [
         {
           name: 'Information',
-          textDefault: 'Thông tin chung',
+          text: 'Thông tin chung',
           icon: 'icon-info',
-          isActive: true,
         },
         {
           name: 'Contact',
-          textDefault: 'Liên hệ',
+          text: 'Liên hệ',
           icon: 'icon-contact_phone',
-          isActive: false,
         },
       ];
     } else {
       this.tabDetail = [
         {
           name: 'Information',
-          textDefault: 'Thông tin chung',
+          text: 'Thông tin chung',
           icon: 'icon-info',
-          isActive: true,
         },
         {
           name: 'DealCompetitors',
-          textDefault: 'Cơ hội liên quan',
+          text: 'Cơ hội liên quan',
           icon: 'icon-shopping_cart',
-          isActive: false,
         },
       ];
     }
