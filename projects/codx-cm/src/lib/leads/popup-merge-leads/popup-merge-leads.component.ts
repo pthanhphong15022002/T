@@ -23,7 +23,6 @@ import { firstValueFrom } from 'rxjs';
 import { PopupRemoveAddContactComponent } from './popup-remove-add-contact/popup-remove-add-contact.component';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { L } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-merge-leads',
@@ -546,15 +545,6 @@ export class PopupMergeLeadsComponent implements OnInit {
           this.leadNew.campaignID = this.leadTwo?.campaignID;
         } else {
           this.leadNew.campaignID = this.leadThree?.campaignID;
-        }
-        break;
-      case 'channelID':
-        if (e.field === 'channelID1' && e.component.checked === true) {
-          this.leadNew.channelID = this.leadOne?.channelID;
-        } else if (e.field === 'channelID2' && e.component.checked === true) {
-          this.leadNew.channelID = this.leadTwo?.channelID;
-        } else {
-          this.leadNew.channelID = this.leadThree?.channelID;
         }
         break;
       case 'channelID':

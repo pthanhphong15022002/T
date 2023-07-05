@@ -19,13 +19,9 @@ import {
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import {
-  BreadcrumbComponent,
-  TabModule,
-} from '@syncfusion/ej2-angular-navigations';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { HomeComponent } from './home/home.component';
 import { CardComponent } from './views/card/card.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CreateFolderComponent } from './createFolder/createFolder.component';
 import { EditFileComponent } from './editFile/editFile.component';
 import { RolesComponent } from './roles/roles.component';
@@ -47,8 +43,8 @@ import { DragDropFileFolderDirective } from './directives/drag-drop-file-folder.
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
-import { CodxReportComponent } from 'projects/codx-report/src/lib/codx-report.component';
 import { SearchingComponent } from './searching/searching.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 //import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
@@ -71,6 +67,22 @@ export const routes: Routes = [
       //   component: HomeComponent
       // },
       {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
+      // {
+      //   path: 'dmdashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
+      {
+        path: 'share/dynamic/:funcID',
+        component: DynamicFormComponent,
+      },
+      {
         path: 'searching/:funcID',
         component: SearchingComponent,
       },
@@ -86,24 +98,6 @@ export const routes: Routes = [
       {
         path: '**',
         redirectTo: 'error/404',
-      },
-      {
-        path: 'report/:funcID',
-        component: CodxReportComponent,
-      },
-      {
-        path: 'report/detail/:funcID',
-        component: CodxReportViewDetailComponent,
-      },
-     
-      
-      // {
-      //   path: 'dmdashboard/:funcID',
-      //   component: TMDashboardComponent,
-      // },
-      {
-        path: 'share/dynamic/:funcID',
-        component: DynamicFormComponent,
       },
       // {
       //   path: '',
@@ -154,7 +148,7 @@ const T_Component: Type<any>[] = [
     CoreModule,
     UploaderModule,
     DialogModule,
-    
+
     //TooltipModule,
     // InfiniteScrollModule
   ],

@@ -1,8 +1,12 @@
-import { Util } from "codx-core";
-import { DP_Processes_Permission, DP_Processes_Ratings, DP_Steps } from "projects/codx-dp/src/lib/models/models";
+import { Util } from 'codx-core';
+import {
+  DP_Processes_Permission,
+  DP_Processes_Ratings,
+  DP_Steps,
+} from 'projects/codx-dp/src/lib/models/models';
 
 export class tmpInstances {
-  recID: string  = Util.uid(); ;
+  recID: string = Util.uid();
   processID: string;
   instanceNo: string;
   stepID: string;
@@ -11,7 +15,7 @@ export class tmpInstances {
   status: string;
   endDate: Date;
   owner: string;
-  startDate: Date
+  startDate: Date;
 }
 
 export class tmpInstancesStepsReasons {
@@ -25,4 +29,15 @@ export class tmpInstancesStepsReasons {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+}
+
+export class GridModels {
+  pageSize: number;
+  entityName: string;
+  entityPermission: string;
+  formName: string;
+  gridViewName: string;
+  funcID: string;
+  dataValues: string;
+  predicates: string;
 }
