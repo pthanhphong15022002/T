@@ -315,6 +315,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.data.description = this.description;
       this.esService.addEditAutoNumbers(this.data, true).subscribe((res) => {
         if (res) {
+          res.autoAssignRule=this.autoDefaultData.autoAssignRule;
           this.dialogAutoNum.patchValue(this.data);
           this.dialog && this.dialog.close(res);
         }
@@ -333,6 +334,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         .addEditAutoNumbers(this.data, this.isAdd)
         .subscribe((res) => {
           if (res) {
+            res.autoAssignRule=this.autoDefaultData.autoAssignRule;
             this.dialogAutoNum.patchValue(this.data);
             this.dialog && this.dialog.close(res);
           }

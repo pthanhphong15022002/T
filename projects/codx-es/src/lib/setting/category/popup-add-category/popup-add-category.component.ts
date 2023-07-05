@@ -449,7 +449,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           newAutoNoCode: this.data.categoryID ?? this.data.recID,
           isAdd: true,
           isSaveNew: '1',
-          disableAssignRule: true,
+          //disableAssignRule: true,
+          autoAssignRule:this.data?.autoAssignRule,
         },
         '',
         { isFull: true } as any
@@ -459,7 +460,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.isAddAutoNumber = true;
           this.setViewAutoNumber(res.event);
           this.data.autoNumber = this.data.categoryID ?? this.data.recID;
-          this.form.formGroup.patchValue({ autoNumber: this.data.autoNumber });
+          this.data.autoAssignRule = res?.event?.autoAssignRule !=null? res?.event?.autoAssignRule : this.data.autoAssignRule;
+          this.form.formGroup.patchValue({ 
+            autoNumber: this.data.autoNumber,
+            autoAssignRule:this.data.autoAssignRule,
+          });          
         }
       });
     } else {
@@ -475,16 +480,19 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           autoNoCode: this.data?.autoNumber,
           isAdd: false,
           description: this.formModel?.entityName,
-          disableAssignRule: true,
+          //disableAssignRule: true,
+          autoAssignRule:this.data?.autoAssignRule,
         }
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
           this.setViewAutoNumber(res.event);
           this.data.autoNumber = this.data.categoryID;
-          this.form.formGroup.patchValue({
+          this.data.autoAssignRule = res?.event?.autoAssignRule !=null? res?.event?.autoAssignRule : this.data.autoAssignRule;          
+          this.form.formGroup.patchValue({ 
             autoNumber: this.data.autoNumber,
-          });
+            autoAssignRule:this.data.autoAssignRule,
+          });            
         }
       });
     }
