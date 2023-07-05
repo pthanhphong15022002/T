@@ -7,7 +7,7 @@ import {
   UrlUtil,
 } from 'codx-core';
 import { CodxTasksService } from '../codx-tasks.service';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
   selector: 'app-popup-update-status',

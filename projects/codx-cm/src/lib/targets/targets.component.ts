@@ -149,7 +149,7 @@ export class TargetsComponent
   click(evt) {
     // this.titleAction = evt.text;
     switch (evt.id) {
-      case 'btnAdd':
+      case this.btnAdd:
         this.add();
         break;
     }
