@@ -1773,11 +1773,6 @@ export class CodxTasksComponent
             )
               x.disabled = true;
             break;
-          //tắt duyệt confirm
-          case 'TMT02016':
-          case 'TMT02017':
-            if (data.confirmStatus != '1') x.disabled = true;
-            break;
           //tắt duyệt xác nhận:
           case 'TMT04032':
           case 'TMT04031':

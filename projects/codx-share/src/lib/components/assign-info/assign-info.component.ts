@@ -959,6 +959,24 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
               this.dataReferences = result;
             }
           });
+        break;        
+        case 'OM_OKRs':
+        this.api
+          .exec<any>('OM', 'OKRBusiness', 'GetOKRByIDAsync', task.refID)
+          .subscribe((okr) => {
+            if (okr) {
+                var ref = new tmpReferences();
+                ref.recIDReferences = okr.recID;
+                ref.refType = 'OM_OKRs';
+                ref.createdOn = okr?.createdOn;
+                ref.memo = okr?.okrName;
+                ref.createdBy = okr?.createdBy;
+                this.dataReferences.unshift(ref);
+                if (listUser.findIndex((p) => p == okr.createdBy) == -1)
+                  listUser.push(ref.createdBy);
+                this.getUserByListCreateBy(listUser);             
+            }
+          });
         break;
     }
   }
