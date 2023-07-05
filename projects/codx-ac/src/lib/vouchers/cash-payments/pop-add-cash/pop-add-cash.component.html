@@ -102,7 +102,7 @@
                   <codx-label fiedName="CashBookID" [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
                       (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -113,7 +113,7 @@
                   <codx-label fiedName="TotalAmt" [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
                       (controlBlur)="valueFocusOut($event)"></codx-input>
                   </div>
                 </div>
@@ -124,7 +124,7 @@
                     <codx-label fiedName="ReasonID" [formModel]="form.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
+                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
                         (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>
@@ -149,7 +149,7 @@
                       " fiedName="ObjectID" [formModel]="form.formModel" default="Đối tượng">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
+                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
                         (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>
@@ -206,7 +206,7 @@
                     <codx-label fiedName="Payee" [formModel]="form.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
+                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
                         (valueChange)="valueChange($event)"></codx-input>
                     </div>
                   </div>
@@ -218,9 +218,11 @@
                 <div class="form-group mb-0">
                   <codx-label fiedName="Memo" [formModel]="form.formModel">
                   </codx-label>
-                  <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+                  <div class="ac-input">
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
                     (valueChange)="valueChange($event)">
                   </codx-input>
+                  </div>    
                 </div>
               </div>
             </div>
@@ -236,7 +238,7 @@
                   <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                   </codx-label>
                   <div [class]="journal.multiCurrency == '0' ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
                       field="currencyID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -248,7 +250,7 @@
                   <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                   </codx-label>
                   <div [class]="journal.multiCurrency == '0' ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
                       field="exchangeRate" [formModel]="form.formModel" (controlBlur)="valueFocusOut($event)">
                     </codx-input>
                   </div>
@@ -262,7 +264,7 @@
                   <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
                       (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -273,7 +275,7 @@
                   <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
                   </codx-label>
                   <div [class]="journal?.autoAssignRule != '0' ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
                       (valueChange)="valueChange($event)" [disabled]="journal?.autoAssignRule != '0'">
                     </codx-input>
                   </div>
@@ -284,7 +286,7 @@
               <codx-label fiedName="PostedDate" [formModel]="form.formModel">
               </codx-label>
               <div class="ac-input">
-                <codx-input [Group]="form.formGroup" field="postedDate" [formModel]="form.formModel"
+                <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup" field="postedDate" [formModel]="form.formModel"
                 (valueChange)="valueChange($event)">
               </codx-input>
               </div>

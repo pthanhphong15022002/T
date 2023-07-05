@@ -151,3 +151,9 @@
 .ac-input-disable .codx-text{
     border: none !important;
 }
+.ac-input codx-input{
+    position: relative;
+}
+.ac-input-disable codx-input{
+    position: relative;
+}

@@ -154,6 +154,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   authStore: AuthStore;
   typeSet: any;
   loading: any = false;
+  loadingform:any = true;
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   constructor(
     inject: Injector,
@@ -483,36 +484,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ...(this.journal.unbounds.hideFields as Array<string>),
       ];
     }
-    // switch (this.action) {
-    //   case 'add':
-    //     if (
-    //       this.cashpayment.unbounds &&
-    //       this.cashpayment.unbounds.hideFields &&
-    //       this.cashpayment.unbounds.hideFields.length
-    //     ) {
-    //       this.hideFields = [
-    //         ...(this.cashpayment.unbounds.hideFields as Array<string>),
-    //       ];
-    //     }
-    //     break;
-    //   case 'edit':
-    //     if (
-    //       this.journal.unbounds &&
-    //       this.journal.unbounds.hideFields &&
-    //       this.journal.unbounds.hideFields.length
-    //     ) {
-    //       this.hideFields = [
-    //         ...(this.journal.unbounds.hideFields as Array<string>),
-    //       ];
-    //     }
-    //     break;
-    // }
-
     this.loadVisibleColumn();
     this.loadAccountControl();
     this.loadFormat();
     this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 500);
   }
 
   gridCreatedSet() {
@@ -533,6 +512,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.hideFieldsSet.push('SettledDisc2');
     }
     this.gridSet.hideColumns(this.hideFieldsSet);
+    setTimeout(() => {
+      this.loadingform = false;
+    }, 500);
   }
 
   lineChanged(e: any) {
