@@ -303,6 +303,16 @@ export class CodxOmService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
+
+  roleCheck() {
+    return this.api.execSv(
+      'OM',
+      'ERM.Business.OM',
+      'OKRPlansBusiness',
+      'AdminModuleCheckAsync',
+      []
+    );
+  }
   //#Setting SYS
   getSettingValue(para: any) {
     return this.api.execSv(
@@ -320,6 +330,16 @@ export class CodxOmService {
       'SettingValuesBusiness',
       'GetByModuleWithCategoryAsync',
       ['OMParameters', category]
+    );
+  }
+
+  getDataValueOfSetting(formName: string, transType: string, category: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetDataValueOfSettingAsync',
+      [formName, transType, category]
     );
   }
 
@@ -409,13 +429,13 @@ export class CodxOmService {
     );
   }
   //đổi trạng thái okr plan
-  changePlanStatus(recID: any, status:string) {
+  changePlanStatus(recID: any, status:string,autoUpdate:boolean) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'ChangePlanStatusAsync',
-      [recID,status]
+      [recID,status,autoUpdate]
     );
   }
   //Xóa Plan
