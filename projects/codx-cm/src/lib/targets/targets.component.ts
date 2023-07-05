@@ -45,7 +45,7 @@ export class TargetsComponent
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
-  funcID = '';
+  funcID = 'CM0601';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
@@ -71,7 +71,6 @@ export class TargetsComponent
       this.queryParams = this.router.snapshot.queryParams;
     }
     this.getSchedule();
-
   }
   ngAfterViewInit(): void {
     this.views = [
