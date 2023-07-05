@@ -14,10 +14,8 @@
       <ng-template #header>
         <div class="d-flex justify-content-between align-items-top">
           <div class="container_detail instance-info">
-            <div class="d-flex justify-content-between">
-              <h2 class="mb-1">
-                {{ dataSelect?.title }}
-              </h2>
+            <div class="fs-4 fw-bold">
+              {{ dataSelect?.title }}
             </div>
 
             <div class="d-flex flex-column">
@@ -177,7 +175,7 @@
               </div>
               <div class="d-flex flex-column">
                 <div
-                  class="badge badge-md d-flex align-items-center p-2"
+                  class="badge badge-sm d-flex align-items-center"
                   [ngStyle]="{
                     'background-color':
                       dataSelect.status == '3' || dataSelect.status == '4'
@@ -190,7 +188,7 @@
                   <span
                     [ngClass]="stepValue['icon']"
                     [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-1"
+                    class="me-2"
                   ></span>
                   <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                     stepName
@@ -215,7 +213,7 @@
                 <codx-progressbar
                   [progress]="progress"
                   [stype]="2"
-                  [size]="34"
+                  [size]="30"
                 ></codx-progressbar>
               </div>
             </div>
@@ -275,14 +273,19 @@
         </div>
         <div
           id="viewModeDetail"
-          class="pt-2 pe-2 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
+          class="pt-1 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
         >
           <div>
-            <ng-container
+            <!-- <ng-container
               *ngIf="viewModelDetail == 'G'"
               [ngTemplateOutlet]="
                 dataSelect.status == 1 ? emptyTemplate : tempGanchart
               "
+            >
+            </ng-container> -->
+            <ng-container
+              *ngIf="viewModelDetail == 'G'"
+              [ngTemplateOutlet]=" tempGanchart"
             >
             </ng-container>
             <div
@@ -432,6 +435,12 @@
     </div>
   </div> -->
   <div class="border border-gray-150">
+    <div class="w-100 h-100" id="tabGantt">
+      <codx-step-chart
+        [instance]="this.dataSelect"
+        [type]="'DP'"
+      ></codx-step-chart>
+    </div>
     <!-- <codx-gantt-chart
       [dataSource]="ganttDs"
       [taskFields]="taskFields"
@@ -457,15 +466,10 @@
         </span>
       </div>
     </ng-template> -->
-    <div class="w-100 h-100" id="tabGantt">
-      <codx-step-chart
-        [instance]="this.dataSelect"
-      ></codx-step-chart>
-    </div>
   </div>
 
   <!-- mô tả -->
-  <div class="d-flex flex-wrap pb-2 mt-2">
+  <!-- <div class="d-flex flex-wrap pb-2 mt-2">
     <div
       *ngFor="let item of listTypeTask"
       class="d-flex align-items-center me-6"
@@ -477,10 +481,10 @@
       ></div>
       <span class="text-gray-700 fs-7">{{ item?.text }}</span>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
-<ng-template #emptyTemplate>
+<!-- <ng-template #emptyTemplate>
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
@@ -504,4 +508,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

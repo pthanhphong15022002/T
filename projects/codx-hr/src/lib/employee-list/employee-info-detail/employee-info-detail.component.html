@@ -74,14 +74,15 @@
                               <div class="d-flex align-items-center">
                                 <span #gender>
                                   <codx-vll
+                                    [name]="'HRGender'"
                                     [showText]="true"
                                     [field]="'Gender'"
                                     [showBgColor]="true"
                                     [formModel]="eInfoFormModel"
                                     [showIcon]="false"
                                     [value]="infoPersonal?.gender"
-                                    class="badge badge-light badge-md fs-body border-0 me-2"
-                                  >
+                                    >
+                                    <!-- class="badge badge-light badge-md fs-body border-0 me-2" -->
                                   </codx-vll>
                                 </span>
                               </div>
@@ -602,7 +603,7 @@
         <ng-container
           *ngFor="let item of lstFuncCurriculumVitae; let i = index"
         >
-          <li class="nav-item" (click)="navChange(item.functionID, 0)">
+          <li class="nav-item" (click)="navChange(item.functionID, 0, $event.target)">
             <a
               class="nav-link"
               [ngClass]="item.functionID == active[0] ? 'active' : ''"
@@ -759,14 +760,15 @@
                 </div>
                 <div>
                   <codx-vll
+                    [name]="'HRGender'"
                     [showText]="true"
                     [showBgColor]="true"
                     [showIcon]="false"
                     [formModel]="eInfoFormModel"
                     [field]="'Gender'"
                     [value]="infoPersonal?.gender"
-                    class="badge badge-light badge-md fs-body"
-                  >
+                    >
+                    <!-- class="badge badge-light badge-md fs-body" -->
                   </codx-vll>
                 </div>
               </div>
@@ -2394,6 +2396,8 @@
           </div> -->
         </div>
       </div>
+
+      <div class="div_final"></div>
     </ng-container>
     <!-- </div> -->
   </div>
@@ -2404,7 +2408,7 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncJobInfo; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 1)" *ngIf="item.functionID != eNeedToSubmitProfileFuncID">
+        <li class="nav-item" (click)="navChange(item.functionID, 1 , $event.target)" *ngIf="item.functionID != eNeedToSubmitProfileFuncID">
           <a
             class="nav-link"
             [ngClass]="item.functionID == active[1] ? 'active' : ''"
@@ -3334,6 +3338,8 @@
           </div>
         </div> -->
       </div>
+
+      <div class="div_final"></div>
     </ng-container>
     <!-- </div> -->
   </div>
@@ -3344,7 +3350,7 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncSalaryBenefit; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 2)">
+        <li class="nav-item" (click)="navChange(item.functionID, 2, $event.target)">
           <a
             class="nav-link"
             [ngClass]="item.functionID == active[2] ? 'active' : ''"
@@ -3859,6 +3865,8 @@
     </div> -->
 
     <!-- </div> -->
+
+      <div class="div_final"></div>
   </div>
 </ng-template>
 
@@ -3867,7 +3875,7 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncHRProcess; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 3)">
+        <li class="nav-item" (click)="navChange(item.functionID, 3, $event.target)">
           <a
             class="nav-link"
             [ngClass]="item.functionID == active[3] ? 'active' : ''"
@@ -4460,6 +4468,8 @@
           </div>
         </div>
       </div>
+
+      <div class="div_final"></div>
     </ng-container>
     <!-- </div> -->
   </div>
@@ -4470,7 +4480,7 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncKnowledge; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 4)">
+        <li class="nav-item" (click)="navChange(item.functionID, 4, $event.target)">
           <a
             class="nav-link"
             [ngClass]="item.functionID == active[4] ? 'active' : ''"
@@ -5043,6 +5053,8 @@
           </div>
         </div>
       </div>
+      <div class="div_final"></div>
+
     </ng-container>
     <!-- </div> -->
   </div>
@@ -5053,7 +5065,7 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncHealth; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 5)">
+        <li class="nav-item" (click)="navChange(item.functionID, 5, $event.target)">
           <a
             class="nav-link"
             [ngClass]="item.functionID == active[5] ? 'active' : ''"
@@ -5439,6 +5451,8 @@
           </div>
         </div>
       </div>
+      <div class="div_final"></div>
+
     </ng-container>
     <!-- </div> -->
   </div>
@@ -5449,11 +5463,11 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncQuitJob; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 6)">
+        <li class="nav-item" (click)="navChange(item.functionID, 6, $event.target)">
           <a
-            class="nav-link"
-            [ngClass]="item.functionID == active[6] ? 'active' : ''"
-          >
+            class="nav-link active"
+            >
+            <!-- [ngClass]="item.functionID == active[6] ? 'active' : ''" -->
             <div class="text-uppercase fw-bold">{{ item.customName }}</div>
           </a>
         </li>
@@ -5722,7 +5736,7 @@
             class="me-3" 
             [checked]="false"
             ></codx-input>
-            <codx-vll
+            <!-- <codx-vll
             [showText]="true"
             [showBgColor]="false"
             [showIcon]="false"
@@ -5730,7 +5744,9 @@
             [field]="'ReturnSIBook'"
             [value]="infoPersonal?.returnSIBook"
           >
-          </codx-vll>
+          </codx-vll> -->
+          <span [innerHTML]="infoPersonal?.returnSIBook | formatvalue : formModel : 'returnSIBook' | async ">
+          </span>
           </div>
 
           <!-- <div class="d-flex flex-wrap mb-2" *ngIf="!infoPersonal?.returnTermination">
@@ -5756,7 +5772,11 @@
             class="me-3" 
             [checked]="false"
             ></codx-input>
-            <codx-vll
+
+            <span [innerHTML]="infoPersonal?.returnTermination | formatvalue : formModel : 'returnTermination' | async ">
+            </span>
+
+            <!-- <codx-vll
             [showText]="true"
             [showBgColor]="false"
             [showIcon]="false"
@@ -5764,7 +5784,7 @@
             [field]="'ReturnTermination'"
             [value]="infoPersonal?.returnTermination"
           >
-          </codx-vll>
+          </codx-vll> -->
           <!-- <codx-label class="ms-3" fiedName="ReturnTermination" [formModel]="formModel"></codx-label> -->
           </div>
 

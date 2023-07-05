@@ -28,6 +28,8 @@ import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/cate
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
+import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
+
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -42,6 +44,7 @@ export class CatagoryComponent implements OnInit {
     cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
     MultiSelectPopupComponent: MultiSelectPopupComponent,
+    PopupAddDynamicProcessComponent: PopupAddDynamicProcessComponent,
   };
   category = '';
   title = '';
@@ -65,6 +68,7 @@ export class CatagoryComponent implements OnInit {
   //labels
   labels = [];
   isOpenSub: boolean = false;
+  lstGroup: any = []; // CM
 
   constructor(
     private api: ApiHttpService,
@@ -166,6 +170,9 @@ export class CatagoryComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       });
+    //cm-VTHAO them ngay 4/07/2023
+    // if (this.function?.functionID == 'CMS')
+    this.getListProcessGroups();
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
@@ -392,6 +399,14 @@ export class CatagoryComponent implements OnInit {
               });
           }
 
+          break;
+        //crm
+        case 'cms0301':
+        case 'cms0302':
+        case 'cms0303':
+        case 'cms0304':
+        case 'cms0305':
+          this.cmOpenPopup(item);
           break;
         default:
           break;
@@ -1029,4 +1044,121 @@ export class CatagoryComponent implements OnInit {
       }
     }
   }
+
+  //CM_Setting popup - VThao - 4/7/2023 - chyen qua từ code của Phúc
+  async cmOpenPopup(item) {
+    let funcID = item.reference;
+    let title = item.title || item.description;
+    this.api
+      .execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'ProcessesBusiness',
+        'GetProcessDefaultAsync',
+        [
+          funcID == 'CMS0301'
+            ? '1'
+            : funcID == 'CMS0302'
+            ? '2'
+            : funcID == 'CMS0303'
+            ? '3'
+            : funcID == 'CMS0304'
+            ? '5'
+            : '4',
+        ]
+      )
+      .subscribe((data) => {
+        if (data) {
+          this.openPopupEditDynamic(data, 'edit', funcID, title);
+        } else {
+          this.api
+            .execSv<any>('DP', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+              'DP01',
+              'DP_Processes',
+            ])
+            .subscribe((res) => {
+              if (res && res?.data) {
+                data = res.data;
+                data['_uuid'] = data['recID'] ?? Util.uid();
+                data['idField'] = 'recID';
+                data.status = '1';
+                this.openPopupEditDynamic(data, 'add', funcID, title);
+              }
+            });
+        }
+      });
+
+    // this.changeDetectorRef.detectChanges();
+  }
+
+  getListProcessGroups() {
+    this.api
+      .exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync')
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          this.lstGroup = res;
+        }
+      });
+  }
+
+  openPopupEditDynamic(data, action, funcID, title) {
+    data.applyFor =
+      funcID == 'CMS0301'
+        ? '1'
+        : funcID == 'CMS0302'
+        ? '2'
+        : funcID == 'CMS0303'
+        ? '3'
+        : funcID == 'CMS0304'
+        ? '5'
+        : '4';
+    data.category = '0';
+    data.processName =
+      funcID == 'CMS0301'
+        ? '[SYS_CRM] Cơ hội'
+        : funcID == 'CMS0302'
+        ? '[SYS_CRM] Sự cố'
+        : funcID == 'CMS0303'
+        ? '[SYS_CRM] Yêu cầu'
+        : funcID == 'CMS0304'
+        ? '[SYS_CRM] Tiềm năng'
+        : '[SYS_CRM] Hợp đồng';
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    let formModel = new FormModel();
+    formModel.entityName = 'DP_Processes';
+    formModel.formName = 'DPProcesses';
+    formModel.gridViewName = 'grvDPProcesses';
+    formModel.funcID = 'DP01';
+    // dialogModel.DataService = this.view?.dataService;
+    dialogModel.FormModel = formModel;
+    this.cache
+      .gridViewSetup('DPProcesses', 'grvDPProcesses')
+      .subscribe((res) => {
+        if (res) {
+          var obj = {
+            action: action,
+            titleAction: title,
+            gridViewSetup: res,
+            lstGroup: this.lstGroup,
+            systemProcess: '1',
+            data: data,
+          };
+
+          var dialog = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            0,
+            0,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialog.closed.subscribe((e) => {});
+        }
+      });
+  }
+  //end CRM
 }

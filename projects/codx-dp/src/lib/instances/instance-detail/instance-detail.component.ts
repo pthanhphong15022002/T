@@ -396,7 +396,7 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpDataSteps = JSON.parse(JSON.stringify(data));
+        this.tmpDataSteps = data;
         this.outStepInstance.emit({ data: this.tmpDataSteps });
         this.stepValue = {
           textColor: data.textColor,
@@ -477,7 +477,7 @@ export class InstanceDetailComponent implements OnInit {
       this.isOnlyView = $event?.isOnlyView;
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
-      this.tmpDataSteps = JSON.parse(JSON.stringify(this.listSteps[indx]));
+      this.tmpDataSteps = this.listSteps[indx];
       this.outStepInstance.emit({ data: this.tmpDataSteps });
       this.lstInv = this.getInvolved(this.tmpDataSteps.roles);
       this.onwer = this.tmpDataSteps?.owner; // nhớ cho phép null cái
@@ -755,9 +755,9 @@ export class InstanceDetailComponent implements OnInit {
 
     var maxHeight = heightVD - heightHD - heightFT - heighOut;
     var div = document.getElementById('viewModeDetail');
-    if (div) {
-      div.style.setProperty('max-height', maxHeight + 'px', 'important');
-    }
+    // if (div) {
+    //   div.style.setProperty('max-height', maxHeight + 'px', 'important');
+    // }
   }
   loadTree(recID) {
     this.dpSv.getTree(recID).subscribe((res) => {

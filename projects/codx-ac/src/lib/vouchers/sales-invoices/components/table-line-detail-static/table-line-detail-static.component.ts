@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
-import { TableColumn } from '../../models/TableHeader.model';
+import { TableColumn } from '../../models/TableColumn.model';
 
 @Component({
   selector: 'lib-table-line-detail-static',
@@ -27,6 +27,7 @@ export class TableLineDetailStaticComponent
   @Input() trTemplate: TemplateRef<any>;
   @Input() formModel: FormModel;
   @Input() columns: TableColumn[] = [];
+  @Input() autoSum: boolean = true;
 
   @ViewChild('myTable') tableRef: ElementRef<HTMLElement>;
 
@@ -48,10 +49,15 @@ export class TableLineDetailStaticComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     // calculate totalRow
+    if (!this.autoSum) {
+      return;
+    }
+
+    this.columns.map((col) => (col.sum = 0));
     for (const line of this.lines) {
       for (const th of this.columns) {
         if (th.hasSum) {
-          th.sum += line[th.field];
+          th.sum += line[th.field] ?? 0;
         }
       }
     }

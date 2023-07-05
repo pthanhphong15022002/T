@@ -21,6 +21,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  TenantStore,
   Util,
 } from 'codx-core';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
@@ -62,6 +63,7 @@ export class CodxShareService {
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private auth: AuthStore,
+    private tenant:TenantStore,
     private authService: AuthService,
     private cache: CacheService,
     private fb: FormBuilder,
@@ -791,11 +793,12 @@ export class CodxShareService {
       else if (width <= 300 * widthThumb) wt = 300;
       else if (width <= 500 * widthThumb) wt = 500;
       else if (width <= 650 * widthThumb) wt = 600;
-
+      
+      let tenant = this.tenant.getName();
       return (
         environment.urlUpload +
         '/api/' +
-        this.user?.tenant+
+        tenant+
         '/thumbs/' +
         uploadID +
         '/' +

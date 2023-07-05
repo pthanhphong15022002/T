@@ -464,6 +464,7 @@ export class PopupPolicyalComponent
       else{
         (this.gridView1?.dataService as CRUDService)?.remove(evt).subscribe();
         this.gridView1.deleteRow(evt, true);
+        this.gridView1.refresh();
       }
     })
   }

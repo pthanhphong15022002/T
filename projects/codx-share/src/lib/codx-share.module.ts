@@ -166,7 +166,6 @@ import { UpdateProgressComponent } from './components/codx-step/codx-progress/co
 import { ProgressbarComponent } from './components/codx-step/codx-progressbar/codx-progressbar.component';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { FillterReferType } from './components/codx-view-files/filterReferPipe.pipe';
-import { CodxQuotationsComponent } from './components/codx-quotations/codx-quotations.component';
 import { CodxBookingComponent } from './components/codx-booking/codx-booking.component';
 import { CodxBookingCarScheduleContentComponent } from './components/codx-booking/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
 import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
@@ -343,7 +342,6 @@ const T_Component: Type<any>[] = [
   CodxTaskbarComponent,
   CodxNoDataComponent,
 
-  CodxQuotationsComponent,
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
   PopupCustomFieldComponent,
@@ -357,7 +355,7 @@ const T_Component: Type<any>[] = [
   SaveNoteComponent,
   UpdateNotePinComponent,
   PopupViewContentComponent,
-  CodxViewContentComponent
+  CodxViewContentComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -421,7 +419,7 @@ const T_Pipe: Type<any>[] = [
     LazyLoadImageModule,
     DragDropModule,
     ProgressBarAllModule,
-    SpeedDialModule
+    SpeedDialModule,
   ],
 })
 export class CodxShareModule {

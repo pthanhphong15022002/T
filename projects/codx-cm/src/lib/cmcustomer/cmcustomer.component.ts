@@ -95,6 +95,7 @@ export class CmCustomerComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {

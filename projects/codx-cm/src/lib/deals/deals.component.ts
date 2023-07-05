@@ -381,137 +381,6 @@ export class DealsComponent
     this.clickMF(e.e, e.data);
   }
   changeDataMF($event, data) {
-    // if ($event != null && data != null) {
-    //   if (!data?.roles?.isOnwer) {
-    //     for (let more of $event) {
-    //       switch (more.functionID) {
-    //         case 'SYS01':
-    //         case 'SYS101':
-    //         case 'CM0201_1':
-    //         case 'CM0201_3':
-    //         case 'CM0201_4':
-    //         case 'SYS03':
-    //         case 'SYS04':
-    //         case 'SYS02':
-    //         case 'CM0201_2':
-    //         default:
-    //           more.disabled = true;
-    //       }
-    //     }
-    //   } else {
-    //     if (data.status == '1') {
-    //       for (let more of $event) {
-    //         switch (more.functionID) {
-    //           case 'SYS01':
-    //           case 'SYS101':
-    //           case 'CM0201_1':
-    //           case 'CM0201_3':
-    //           case 'CM0201_4':
-    //             more.disabled = true;
-    //             break;
-    //           case 'SYS03':
-    //           case 'SYS04':
-    //           case 'SYS02':
-    //           case 'CM0201_2':
-    //             more.isblur = false;
-    //             break;
-    //           default:
-    //             more.isblur = true;
-    //         }
-    //       }
-    //     } else {
-    //       for (let more of $event) {
-    //         switch (more.functionID) {
-    //           // move stage
-    //           case 'CM0201_1':
-    //             if (this.checkMoreReason(data) || data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           // reason success
-    //           case 'CM0201_3':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roleMore?.isReasonSuccess
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           // reason fail
-    //           case 'CM0201_4':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roleMore?.isReasonFail
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'CM0201_2':
-    //             more.disabled = true;
-    //             break;
-    //           case 'CM0201_7':
-    //             if (data.closed || this.checkMoreReason(data)) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'CM0201_8':
-    //             if (data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'CM0201_9':
-    //             if (!data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //           case 'SYS101':
-    //           case 'SYS01':
-    //             if (this.checkMoreReason(data) || data.closed) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-
-    //           case 'SYS103':
-    //           case 'SYS03':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roles.write
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-
-    //           case 'SYS102':
-    //           case 'SYS02':
-    //             // if (
-    //             //   this.checkMoreReason(data) ||
-    //             //   data.closed ||
-    //             //   !data.roles.delete
-    //             // ) {
-    //             //   more.disabled = true;
-    //             // }
-    //             more.disabled = false;
-    //             break;
-
-    //           case 'SYS104':
-    //           case 'SYS04':
-    //             if (
-    //               this.checkMoreReason(data) ||
-    //               data.closed ||
-    //               !data.roles.delete
-    //             ) {
-    //               more.disabled = true;
-    //             }
-    //             break;
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-
     if ($event != null && data != null) {
       for (let eventItem of $event) {
         const functionID = eventItem.functionID;
@@ -634,17 +503,8 @@ export class DealsComponent
   }
 
   checkMoreReason(tmpPermission) {
-    return
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
-
+    return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
   }
-
-  checkRoleInSystem(tmpRole) {
-    return false;
-  }
-
   clickMF(e, data) {
     const actions = {
       SYS03: (data) => {
@@ -721,12 +581,10 @@ export class DealsComponent
         // xử lý data chuyển công đoạn
         if (this.crrStepID != this.dataDrop.stepID)
           this.dropDeals(this.dataDrop);
-
         break;
       case 'drag':
         ///bắt data khi kéo
         this.crrStepID = e?.data?.stepID;
-
         break;
       case 'dbClick':
         //xư lý dbClick
@@ -740,34 +598,29 @@ export class DealsComponent
 
   dropDeals(data) {
     data.stepID = this.crrStepID;
-    // if (!data.edit) {
-    //   this.notificationsService.notifyCode('SYS032');
-    //   return;
-    // }
-    // if (data.closed) {
-    //   this.notificationsService.notify(
-    //     'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
-    //     '2'
-    //   );
-    //   return;
-    // }
+    if (!data?.roles?.isOnwer) {
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
+    if (data.closed) {
+      this.notificationsService.notifyCode('DP039');
+      return;
+    }
+    if (data.status == '0') {
+      this.notificationsService.notify('Cơ hội chưa được xác nhận');
+      return;
+    }
+    if (data.status == '1') {
+      this.notificationsService.notifyCode('DP038', 0, '"' + data.dealName + '"');
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+    if (data.status != '1' && data.status != '2') {
+      this.notificationsService.notifyCode('DP037', 0, '"' + data.dealName + '"');
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
 
-    // if (this.moreFuncInstance?.length == 0) {
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
-    // if (data.status == '1') {
-    //   this.notificationsService.notifyCode('DP038');
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
-    // if (data.status != '1' && data.status != '2') {
-    //   this.notificationsService.notifyCode('DP037');
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
-
-    // Alo Bao bat dk chặng
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
@@ -786,11 +639,11 @@ export class DealsComponent
             (x) => x.functionID == 'CM0201_1'
           );
           if (idx != -1) {
-            // if (this.checkMoreReason(data)) {
-            //   this.notificationsService.notifyCode('SYS032');
-            //   return;
-            // }
-            this.titleAction = this.moreFuncInstance[idx].text;
+            if (this.checkMoreReason(data)) {
+              this.notificationsService.notifyCode('SYS032');
+              return;
+            }
+            this.titleAction = this.moreFuncInstance[idx].customName;
             this.moveStage(data);
           }
         } else {
@@ -799,11 +652,7 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_3'
             );
             if (idx != -1) {
-              // if (this.checkMoreReason(data)) {
-              //   this.notificationsService.notifyCode('SYS032');
-              //   return;
-              // }
-              this.titleAction = this.moreFuncInstance[idx].text;
+              this.titleAction = this.moreFuncInstance[idx].customName;
               this.moveReason(data, true);
             }
           } else {
@@ -811,20 +660,12 @@ export class DealsComponent
               (x) => x.functionID == 'CM0201_4'
             );
             if (idx != -1) {
-              // if (this.checkMoreReason(data)) {
-              //   this.notificationsService.notifyCode('SYS032');
-              //   return;
-              // }
-              this.titleAction = this.moreFuncInstance[idx].text;
+              this.titleAction = this.moreFuncInstance[idx].customName;
               this.moveReason(data, false);
             }
           }
         }
       }
-      // else {
-      //  // data.stepID = this.crrStepID;
-      //   this.changeDetectorRef.detectChanges();
-      // }
     }
   }
 

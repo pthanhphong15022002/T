@@ -49,7 +49,7 @@
       </codx-input>
       </ng-container>
       <ng-template #agencies>
-        <codx-input field="agencies" [showInput]="true" [refValue]="gridViewSetup['Agencies']['referedValue']" [refType]="gridViewSetup['Agencies']['referedType']" [datatype]="gridViewSetup['Agencies']['controlType']" [multiple]="true" style="width: 100%" (valueChange)="changeValueAgencies($event)"
+        <codx-input field="agencies" [showInput]="true" [refValue]="gridViewSetup['Agencies']['referedValue']" [refType]="gridViewSetup['Agencies']['referedType']" [datatype]="gridViewSetup['Agencies']['controlType']" [multiple]="gridViewSetup['Agencies']['multiSelect']" style="width: 100%" (valueChange)="changeValueAgencies($event)"
         [crrValue]="crrAgencies"
        >
       </codx-input>

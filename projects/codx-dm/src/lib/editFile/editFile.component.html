@@ -244,7 +244,10 @@
                     </div>
                     <div class="col-6">
                         <div class="form-group">
-
+                            <codx-label [default]="titleExpiredOn" fiedName="lbltitleExpiredOn" [formName]="formModel?.formName"></codx-label>
+                            <codx-input placeholder="{{titleExpiredOn}}..." class="form-control test-datetime"
+                                type="dateTime" style="width:100%" format="d" [crrValue]="fileEditing?.expiredOn"
+                                (valueChange)="txtValue($event, 'expiredOn')"></codx-input>
                         </div>
                     </div>
                 </div>

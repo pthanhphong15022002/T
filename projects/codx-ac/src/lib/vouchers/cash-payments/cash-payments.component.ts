@@ -148,6 +148,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
+    this.loadcacheCbx();
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
     });
@@ -266,6 +267,7 @@ export class CashPaymentsComponent extends UIComponent {
         var obj = {
           formType: 'add',
           headerText: this.headerText,
+          journal:this.journal
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -299,6 +301,7 @@ export class CashPaymentsComponent extends UIComponent {
         var obj = {
           formType: 'edit',
           headerText: this.funcName,
+          journal:this.journal
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -795,6 +798,13 @@ export class CashPaymentsComponent extends UIComponent {
           break;
       }
     }
+  }
+  loadcacheCbx(){
+    // this.cache.combobox('CashBooks').subscribe();
+    // this.cache.combobox('ObjectsAC').subscribe();
+    // this.cache.combobox('CashPaymentReasonsAC').subscribe();
+    // this.cache.combobox('ContactBookNameAC').subscribe();
+    // this.cache.combobox('Currencies').subscribe();
   }
   //#endregion
 }

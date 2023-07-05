@@ -20,9 +20,10 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { CodxAcService } from '../../codx-ac.service';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
-import { SumFormat, TableColumn } from './models/TableHeader.model';
+import { SumFormat, TableColumn } from './models/TableColumn.model';
 import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { SalesInvoiceService } from './sales-invoices.service';
+import { IAcctTran as IAcctTran } from './interfaces/IAcctTran.interface';
 
 @Component({
   selector: 'lib-sales-invoices',
@@ -48,13 +49,7 @@ export class SalesInvoicesComponent
   journalNo: string;
   master: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
-  fmSalesInvoicesLines: FormModel = {
-    funcID: 'ACT0605', // này là funcID của thằng cha, lấy tạm
-    entityName: 'SM_SalesInvoicesLines',
-    formName: 'SalesInvoicesLines',
-    gridViewName: 'grvSalesInvoicesLines',
-    entityPer: 'SM_SalesInvoicesLines',
-  };
+  acctTranLines: IAcctTran[][] = [[]];
   gvsSalesInvoicesLines: any;
   vats: any[] = [];
   tabControl: TabModel[] = [
@@ -65,15 +60,25 @@ export class SalesInvoicesComponent
   ];
   parent: any;
   loading: boolean = false;
+  acctLoading: boolean = false;
   overflowed: boolean = false;
   expanding: boolean = false;
 
+  fmSalesInvoicesLines: FormModel;
+  fmAcctTrans: FormModel = {
+    entityName: 'AC_AcctTrans',
+    formName: 'AcctTrans',
+    gridViewName: 'grvAcctTrans',
+    entityPer: 'AC_AcctTrans',
+  };
+
   columns: TableColumn[];
+  accountingColumns: TableColumn[];
 
   constructor(
     inject: Injector,
     private acService: CodxAcService,
-    public salesInvoiceService: SalesInvoiceService
+    private salesInvoiceService: SalesInvoiceService
   ) {
     super(inject);
 
@@ -87,7 +92,13 @@ export class SalesInvoicesComponent
     });
 
     this.vats = salesInvoiceService.vats;
+    this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
     this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
+  }
+  //#endregion
+
+  //#region Init
+  onInit(): void {
     this.columns = [
       new TableColumn({
         labelName: 'Num',
@@ -98,15 +109,15 @@ export class SalesInvoicesComponent
         headerText:
           this.gvsSalesInvoicesLines?.ItemID?.headerText ?? 'Mặt hàng',
         footerText: 'Tổng cộng',
-        footerClass: 'text-end pe-5',
+        footerClass: 'text-end',
       }),
       new TableColumn({
         labelName: 'Quantity',
         field: 'quantity',
         headerText:
           this.gvsSalesInvoicesLines?.Quantity?.headerText ?? 'Số lượng',
-        headerClass: 'text-end pe-5',
-        footerClass: 'text-end pe-5',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
         hasSum: true,
       }),
       new TableColumn({
@@ -114,15 +125,15 @@ export class SalesInvoicesComponent
         field: 'salesPrice',
         headerText:
           this.gvsSalesInvoicesLines?.SalesPrice?.headerText ?? 'Đơn giá',
-        headerClass: 'text-end pe-5',
+        headerClass: 'text-end',
       }),
       new TableColumn({
         labelName: 'NetAmt',
         field: 'netAmt',
         headerText:
           this.gvsSalesInvoicesLines?.NetAmt?.headerText ?? 'Thành tiền',
-        headerClass: 'text-end pe-5',
-        footerClass: 'text-end pe-5',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
         hasSum: true,
         sumFormat: SumFormat.Currency,
       }),
@@ -131,16 +142,54 @@ export class SalesInvoicesComponent
         field: 'vatAmt',
         headerText:
           this.gvsSalesInvoicesLines?.VATID?.headerText ?? 'Thuế GTGT',
-        headerClass: 'text-end pe-5',
+        headerClass: 'text-end pe-3',
+        footerClass: 'text-end pe-3',
         hasSum: true,
         sumFormat: SumFormat.Currency,
       }),
     ];
-  }
-  //#endregion
 
-  //#region Init
-  onInit(): void {}
+    this.cache
+      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
+      .subscribe((gvs) => {
+        this.accountingColumns = [
+          new TableColumn({
+            labelName: 'Num',
+            headerText: 'STT',
+          }),
+          new TableColumn({
+            labelName: 'Account',
+            headerText: gvs?.AccountID?.headerText ?? 'Tài khoản',
+            footerText: 'Tổng cộng',
+            footerClass: 'text-end',
+          }),
+          new TableColumn({
+            labelName: 'Debt1',
+            headerText: 'Nợ',
+            field: 'transAmt',
+            headerClass: 'text-end',
+            footerClass: 'text-end',
+            hasSum: true,
+            sumFormat: SumFormat.Currency,
+          }),
+          new TableColumn({
+            labelName: 'Debt2',
+            headerText: 'Có',
+            field: 'transAmt',
+            headerClass: 'text-end',
+            footerClass: 'text-end',
+            hasSum: true,
+            sumFormat: SumFormat.Currency,
+          }),
+          new TableColumn({
+            labelName: 'Memo',
+            headerText: gvs?.Memo?.headerText ?? 'Ghi chú',
+            headerClass: 'pe-3',
+            footerClass: 'pe-3',
+          }),
+        ];
+      });
+  }
 
   ngAfterViewInit(): void {
     console.log(this.view);
@@ -196,6 +245,7 @@ export class SalesInvoicesComponent
     }
 
     this.expanding = false;
+
     this.loading = true;
     this.lines = [];
     this.api
@@ -208,6 +258,44 @@ export class SalesInvoicesComponent
       .subscribe((res: any) => {
         this.lines = res;
         this.loading = false;
+      });
+
+    this.acctLoading = true;
+    this.acctTranLines = [];
+    this.api
+      .exec(
+        'AC',
+        'AcctTransBusiness',
+        'LoadDataAsync',
+        'e973e7b7-10a1-11ee-94b4-00155d035517'
+      )
+      .subscribe((res: IAcctTran[]) => {
+        console.log(res);
+        this.acctTranLines = this.groupBy(res, 'entryID');
+
+        // calculate totalRow
+        const totalRow: { total1: number; total2: number } = {
+          total1: 0,
+          total2: 0,
+        };
+        for (const group of this.acctTranLines) {
+          for (const line of group) {
+            if (!line.crediting) {
+              totalRow.total1 += line.transAmt;
+            } else {
+              totalRow.total2 += line.transAmt;
+            }
+          }
+        }
+        for (const col of this.accountingColumns) {
+          if (col.labelName === 'Debt1') {
+            col.sum = totalRow.total1;
+          } else if (col.labelName === 'Debt2') {
+            col.sum = totalRow.total2;
+          }
+        }
+
+        this.acctLoading = false;
       });
   }
 
@@ -343,5 +431,14 @@ export class SalesInvoicesComponent
   //#endregion
 
   //#region Function
+  groupBy(arr: any[], key: string): any[][] {
+    return Object.values(
+      arr.reduce((acc, current) => {
+        acc[current[key]] = acc[current[key]] ?? [];
+        acc[current[key]].push(current);
+        return acc;
+      }, {})
+    );
+  }
   //#endregion
 }
