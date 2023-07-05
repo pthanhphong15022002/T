@@ -81,7 +81,25 @@
     class="w-100 h-100"
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
-  ></div>
+  >
+    <ejs-treemap
+      align="center"
+      style="display: block"
+      [dataSource]="dataDashBoard?.tasksByRef?.tasksRef"
+      weightValuePath="quantity"
+      rangeColorValuePath="quantity"
+      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+      [leafItemSettings]="{
+        labelPath: 'refName'
+      }"
+      [tooltipSettings]="{
+        visible: true,
+        template:
+          '<div><span >${refName}: </span><span >${quantity}</span></div>'
+      }"
+    >
+    </ejs-treemap>
+  </div>
 </ng-template>
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
 <ng-template #templateDeals>
