@@ -1,16 +1,17 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import {
   ConnectorModel,
   Diagram,
   DiagramComponent,
   DiagramTools,
   NodeModel,
+  ShapeStyleModel,
   SnapConstraints,
   SnapSettingsModel,
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
-import { ApiHttpService, CallFuncService, NotificationsService } from 'codx-core';
-import { threadId } from 'worker_threads';
+import { ApiHttpService, CallFuncService, NotificationsService, RequestOption, SidebarModel } from 'codx-core';
+import { PopupAddPositionsComponent } from '../popup-add-positions/popup-add-positions.component';
 
 @Component({
   selector: 'lib-reportingline-orgchart',
@@ -22,6 +23,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() postion: any = null;
   @Input() positionID: string = "";
   @Input() funcID: string = "";
+  @Input() formModel: any;
+  @Input() view: any;
 
   width: number = 250;
   height: number = 150;
@@ -45,15 +48,25 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   datasetting: any = null;
   data: any = null;
   onDoneLoading: boolean = false;
+  isCorporation: boolean;
   constructor(
     private api: ApiHttpService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private callfc: CallFuncService,
+    private notiService: NotificationsService,
   ) { }
 
   ngOnInit(): void {
+    console.log(this.view);
+    this.api.execSv<any>('SYS', 'AD', 'CompanySettingsBusiness', 'GetAsync')
+    .subscribe((res) => {
+      if (res) {
+        this.isCorporation = res.isCorporation;
+      }
+    });
     this.getDataPositionByID(this.positionID);
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
@@ -63,7 +76,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
 
-  public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
+  public  connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
     connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     // connector.constraints = 0;
@@ -72,8 +85,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     return connector;
   }
 
-  public nodeDefaults(obj: NodeModel): NodeModel {
-    return obj;
+  public nodeDefaults(node: NodeModel): NodeModel {
+    return node;
   }
 
   newDataManager(): any {
@@ -112,7 +125,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
 
   getDataPositionByID(positionID: string) {
     if (positionID) {
-      this.api.execSv("HR","ERM.Business.HR","PositionsBusiness","GetDataOrgChartAsync",[positionID])
+      this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetDataOrgChartAsync", [positionID])
         .subscribe((res: any) => {
           if (res) {
             this.data = res;
@@ -151,7 +164,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
     else {
       if (node.positionID) {
-        this.api.execSv("HR","ERM.Business.HR","PositionsBusiness","GetChildOrgChartAsync",[node.positionID])
+        this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetChildOrgChartAsync", [node.positionID])
           .subscribe((res: any) => {
             if (res) {
               result = this.data.concat(res);
@@ -192,7 +205,104 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
 
+  clickMF(event: any, data: any = null) {
+    if (event) {
+      switch (event.functionID) {
+        case 'SYS03':
+          this.edit(event, data);
+          break;
+        case 'SYS04':
+          this.copy(event, data);
+          break;
+        case 'SYS02':
+          this.delete(data);
+          break;
+      }
+    }
+  }
+  // coppy position
+  copy(event: any, data: any) {
+    if (event && data) {
+      this.view.dataService.dataSelected = data;
+      this.view.dataService.copy().subscribe((res) => {
+        if (res) {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
+          let object = {
+            //dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: res,
+            funcID: this.funcID,
+            isAdd: true,
+            title: event.text + ' ' + this.view.function.description,
+          };
+          this.callfc.openSide(PopupAddPositionsComponent, object, option, this.funcID)
+            .closed.subscribe((res) => {
+              if (res?.event) {
+                let node = res.event;
+              }
+            });
+        }
+      });
+    }
+  }
+  edit(event: any, data: any) {
+    if (this.view && data && event) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((result) => {
+          let object = {
+            //dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: result,
+            funcID: this.funcID,
+            isAdd: false,
+            title: event.text + ' ' + this.view.function.description,
+            isCorporation: this.isCorporation,
+          };
+          this.callfc.openSide(
+            PopupAddPositionsComponent, object, option, this.funcID)
+            .closed.subscribe(res => {
+              if (res) {
 
+              }
+            });
+
+        });
+    }
+  }
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'Delete';
+    opt.className = 'PositionsBusiness';
+    opt.assemblyName = 'ERM.Business.HR';
+    opt.data = itemSelected.positionID;
+    return true;
+  }
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt), null, null, null, null, null
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS008')
+          this.data = this.data.filter((x) => x.positionID !== data.positionID);
+          this.setDataOrg(this.data);
+        }else{
+          //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
+        }
+      });
+
+  }
   // renewData(){
   //   this.data.forEach(element => {
   //     var childCount = this.data.filter(e => e.reportTo === element.positionID 
