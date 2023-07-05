@@ -126,20 +126,22 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   sharedPlan = [];
   sharedView = false;
   sharedPlanName='';
+  adminRole = false;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.auth = inject.get(AuthStore);
     this.curUser = this.auth.get();
+    this.curUser= this.authService.userValue;
     this.okrService = inject.get(CodxOmService);
-
     this.createCOObject();
+
   }
 
   //---------------------------------------------------------------------------------//
@@ -269,6 +271,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
   getCacheData() {
+    this.codxOmService.roleCheck().subscribe(res=>{
+      if(res){
+        this.adminRole=true;
+      }
+    })
     this.cache.valueList('OM004').subscribe((vll) => {
       if (vll) {
         this.okrVll.ob = vll?.datas.filter(
@@ -346,6 +353,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval != '' &&
       this.year != 0
     ) {
+      this.sharedPlan=[];
       this.okrService
         .getSharedPlans(this.dataRequest, periodID, interval, year)
         .subscribe((sharedPlan: any) => {
@@ -601,6 +609,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.value = tempValue;
       this.detectorRef.detectChanges();
     }
+    else{
+      this.value = new OM_Statistical();
+    }
   }
   getOrgTreeOKR() {
     if (this.curUser?.employee != null) {
@@ -640,6 +651,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Lấy fucID con
   funcIDChanged() {
+    
+    this.funcID = this.router.snapshot.params['funcID'];
     this.dataRequest.entityName = 'OM_OKRPlans';
     this.dataRequest.page = 1;
     this.dataRequest.pageSize = 1000;
@@ -715,6 +728,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.setTitle();
     this.dataOKRPlans = null;
     this.dataOKR = null;
+    this.sharedPlan = [];
+    this.calculateStatistical(null);
     //this.getOKRPlans(this.periodID, this.interval, this.year);
     //this.getSharedPlans(this.periodID, this.interval, this.year);
     this.detectorRef.detectChanges();
@@ -851,6 +866,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Thời gian thay đổi
   changeCalendar(data: any) {
+    let newFuncID=this.router.snapshot.params['funcID'];
+    if(newFuncID!=this.funcID){
+      this.viewChanged(null);
+      this.detectorRef.detectChanges();
+    }
+    //this.funcIDChanged();
     let date = new Date(data.toDate);
     this.year = date.getFullYear();
     this.dataDate = {
@@ -873,15 +894,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval = 'M';
     }
     this.setTitle();
-    if (
-      this.dataOKRPlans != null &&
-      this.dataOKRPlans.year == this.year &&
-      this.dataOKRPlans.interval == this.interval &&
-      this.dataOKRPlans.periodID == this.periodID
-    ) {
-      this.isAfterRender = true;
-      return;
-    }
+    // if (
+    //   this.dataOKRPlans != null &&
+    //   this.dataOKRPlans.year == this.year &&
+    //   this.dataOKRPlans.interval == this.interval &&
+    //   this.dataOKRPlans.periodID == this.periodID
+    // ) {
+    //   this.isAfterRender = true;
+    //   return;
+    // }
 
     this.getOKRPlans(this.periodID, this.interval, this.year);
 
@@ -906,9 +927,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   changePlanStatus(status) {
-    this.reloadedMF = false;
-    this.detectorRef.detectChanges();
     if (status == OMCONST.VLL.PlanStatus.NotStarted) {
+      
+      this.reloadedMF = false;
+      this.detectorRef.detectChanges();
       this.codxOmService
         .beforeUnReleasePlan(this.dataOKRPlans?.recID)
         .subscribe((res) => {
@@ -924,7 +946,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             return;
           } else {
             this.codxOmService
-              .changePlanStatus(this.dataOKRPlans.recID, status)
+              .changePlanStatus(this.dataOKRPlans.recID, status,false)
               .subscribe((res) => {
                 if (res) {
                   this.dataOKRPlans.status = status;
@@ -942,27 +964,41 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           }
         });
     } else if (status == OMCONST.VLL.PlanStatus.Ontracking) {
-      this.codxOmService
-        .changePlanStatus(this.dataOKRPlans.recID, status)
-        .subscribe((res) => {
-          if (res) {
-            this.dataOKRPlans.status = status;
-            this.detectorRef.detectChanges();
-            this.reloadedMF = true;
-            this.detectorRef.detectChanges();
-            this.updateOKRPlans(this.dataOKRPlans.recID);
-            this.notificationsService.notifyCode('SYS034'); //thành công
-            if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
-              this.codxOmService
-                .sendMailAfterRelease(this.dataOKRPlans?.recID)
-                .subscribe((res) => {
-                  if (res) {
-                    let x = res;
-                  }
-                });
+      let dialogRelease = this.callfc.openForm(
+        PopupAddVersionComponent,
+        '',
+        600,
+        330,
+        null,
+        [this.dataOKRPlans, "Phát hành bộ mục tiêu", true]
+      );
+      dialogRelease.closed.subscribe(ver=>{
+        if(ver?.event){          
+          this.reloadedMF = false;
+          this.detectorRef.detectChanges();
+          this.codxOmService
+          .changePlanStatus(this.dataOKRPlans.recID, status, ver?.event?.autoUpdate)
+          .subscribe((res) => {
+            if (res) {
+              this.dataOKRPlans.status = status;
+              this.detectorRef.detectChanges();
+              this.reloadedMF = true;
+              this.detectorRef.detectChanges();
+              this.updateOKRPlans(this.dataOKRPlans.recID);
+              this.notificationsService.notifyCode('SYS034'); //thành công
+              if ((status = OMCONST.VLL.PlanStatus.Ontracking)) {
+                this.codxOmService
+                  .sendMailAfterRelease(this.dataOKRPlans?.recID)
+                  .subscribe((res) => {
+                    if (res) {
+                      let x = res;
+                    }
+                  });
+              }
             }
-          }
-        });
+          });
+        }
+      })
     }
   }
   //---------------------------------------------------------------------------------//

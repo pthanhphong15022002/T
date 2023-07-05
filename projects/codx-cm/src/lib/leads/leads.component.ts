@@ -125,6 +125,7 @@ export class LeadsComponent
   crrStepID: any;
   moreFuncInstance: any;
   dataColums: any;
+  viewCrr: any;
 
   constructor(
     private inject: Injector,
@@ -280,6 +281,11 @@ export class LeadsComponent
     if (this.crrFuncID != this.funcID) {
       this.crrFuncID = this.funcID;
     }
+    this.viewCrr = e?.view?.type;
+    if (this.viewCrr == 6) {
+      this.kanban = (this.view?.currentView as any)?.kanban;
+    }
+
   }
 
   click(evt: ButtonModel) {
@@ -314,7 +320,6 @@ export class LeadsComponent
     };
     var isCRUD = (eventItem, data) => {
     eventItem.disabled = data.closed || this.checkMoreReason(data);
-  //eventItem.disabled  = false;
     };
     var isClosed = (eventItem, data) => {
       eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
@@ -328,12 +333,12 @@ export class LeadsComponent
       eventItem.disabled = !['0', '1'].includes(data.status);
     };
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = data.status != '3';
+      eventItem.disabled = !['13', '3'].includes(data.status); ;
     };
     var isOwner = (eventItem, data) => {
       eventItem.disabled = !['0', '1', '2'].includes(data.status);
     };
-    var isMoveStage = (eventItem, data) => {
+    var isFailReason = (eventItem, data) => {
       eventItem.disabled =  (data.closed && !['0', '1'].includes(data.status)) || ['0', '1'].includes(data.status) || ( data.status !='13' &&  this.checkMoreReason(data) )
     };
     var isDisabledDefault = (eventItem, data) => {
@@ -343,10 +348,10 @@ export class LeadsComponent
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
       CM0205_2: isStartDay, // mergeLead
-      CM0205_3: isMoveStage,
+      CM0205_3: isDisabled,
       CM0205_4: isStartDay, // startyDay
       CM0205_5: isDisabled, // success
-      CM0205_6: isDisabled, // fail
+      CM0205_6: isFailReason, // fail
       CM0205_7: isDisabled,
       CM0205_8: isClosed,
       CM0205_9: isOwner,
@@ -360,12 +365,11 @@ export class LeadsComponent
       SYS102: isDisabledDefault,
       SYS02: isCRUD,
     };
-
     return functionMappings[type];
   }
 
   checkMoreReason(tmpPermission) {
-    return !( tmpPermission.roleMore.isReasonSuccess || tmpPermission.roleMore.isReasonFail);
+    return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
   }
 
   onActions(e) {
@@ -821,7 +825,6 @@ export class LeadsComponent
         }
       });
   }
-
   moveStage(data: any) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;

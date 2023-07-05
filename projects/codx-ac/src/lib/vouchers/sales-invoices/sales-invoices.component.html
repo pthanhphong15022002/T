@@ -40,6 +40,13 @@
   </codx-temp-full>
 </ng-template>
 
+<ng-template #titleTmp let-data>
+  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
+  <span class="fw-bold fs-6">{{
+    data.totalAmt | currency : data.currencyID : "code"
+  }}</span>
+</ng-template>
+
 <ng-template #descTmp let-data>
   <div class="fw-bold mt-1">
     {{ data.objectName }}
@@ -49,13 +56,6 @@
 <ng-template #desc2Tmp let-data>
   <span class="text-gray-500 mt-1 line-clamp line-clamp-2">{{
     data?.memo
-  }}</span>
-</ng-template>
-
-<ng-template #titleTmp let-data>
-  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
-  <span class="fw-bold fs-6">{{
-    data.totalAmt | currency : data.currencyID : "code"
   }}</span>
 </ng-template>
 
@@ -509,7 +509,7 @@
                           <span
                             [innerHTML]="
                               line.projectID
-                                | formatvalue : view.formModel : 'projectID'
+                                | formatvalue : fmAcctTrans : 'projectID'
                                 | async
                             "
                           ></span>
