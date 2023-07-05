@@ -223,6 +223,7 @@ export class PdfComponent
   isItalic = false;
   isUnd = false;
   isLineThrough = false;
+  curDecor = '';
   //
 
   //Multi line text
@@ -1769,8 +1770,10 @@ export class PdfComponent
     // [3, 4, 5, 6, 7]
     else {
       isTxt = true;
+      let isChangeText = false;
       if (type != '5') {
         textContent = this.formAnnot.value.content;
+        isChangeText = textContent != curArea.labelValue;
       } else {
         textContent = this.curSignDateType;
       }
@@ -1786,19 +1789,14 @@ export class PdfComponent
         style = 'italic';
       }
 
-      // this.curSelectedArea.attrs.fontStyle = style;
-      // this.curSelectedArea.attrs.textDecoration = this.isUnd
-      //   ? 'line-through'
-      //   : '';
-      let inputW = document.getElementById(recID).clientWidth;
-      console.log('inputW', inputW);
+      let curInput = document.getElementById(recID);
+      let inputW = curInput?.clientWidth ?? this.maxLineW;
       let position = this.curSelectedArea.getPosition();
       let textArea = new Konva.Text({
         text: textContent,
         fontSize: this.curAnnotFontSize,
         fontFamily: this.curAnnotFontStyle,
         fontStyle: style,
-        width: Math.min(this.maxLineW, inputW),
         textDecoration:
           (this.isUnd ? 'underline' : '') +
           (this.isLineThrough ? ' line-through' : ''),
@@ -1810,6 +1808,10 @@ export class PdfComponent
         align: 'left',
         rotation: curArea.location.fileRotate + this.rotate,
       });
+
+      let size = textArea.measureSize(textContent);
+      textArea.width(Math.min(this.maxLineW, inputW, size.width));
+
       textArea.scale(this.curSelectedArea.scale());
       if (isTxt) {
         textArea.on('transform', () => {
@@ -2147,6 +2149,9 @@ export class PdfComponent
         this.isLineThrough = !this.isLineThrough;
         break;
     }
+    this.curDecor =
+      (this.isUnd ? 'underline' : '') +
+      (this.isLineThrough ? ' line-through' : '');
     this.detectorRef.detectChanges();
   }
   changeSignFile(e: any) {

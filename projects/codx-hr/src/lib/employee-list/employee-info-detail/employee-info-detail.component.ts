@@ -686,8 +686,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (this.employeeID) {
         debugger
         if (history.state) {
-          this.listEmp = history.state.data
-          this.request = history.state.request;
+          this.listEmp = history.state.data;
+          if(history.state.request)
+          {
+            this.request = Object.assign(history.state.request);
+            this.request.selector = "EmployeeID;"
+          }
           if (Array.isArray(this.listEmp)) {
             this.crrIndex = this.listEmp.findIndex(
               (x: any) => this.employeeID == x['EmployeeID']
@@ -3773,19 +3777,23 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       // ))
       this.crrIndex += 1;
       if(this.crrIndex == this.listEmp.length - 1){
-        let requestNewEmpPage = new DataRequest();
-        requestNewEmpPage.entityName = this.request.entityName;
-        requestNewEmpPage.gridViewName = this.request.gridViewName;
-        requestNewEmpPage.page = this.request.page + 1;
-        requestNewEmpPage.predicate = this.request.predicate;
-        requestNewEmpPage.dataValue = this.request.dataValue;
-        requestNewEmpPage.selector = "EmployeeID;";
-        requestNewEmpPage.pageSize = this.request.pageSize;
-        this.hrService.loadData('HR', requestNewEmpPage).subscribe((res) =>{
+        // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter 
+
+        // let requestNewEmpPage = new DataRequest();
+        // requestNewEmpPage.entityName = this.request.entityName;
+        // requestNewEmpPage.gridViewName = this.request.gridViewName;
+        // requestNewEmpPage.page = this.request.page + 1;
+        // requestNewEmpPage.predicate = this.request.predicate;
+        // requestNewEmpPage.dataValue = this.request.dataValue;
+        // requestNewEmpPage.selector = "EmployeeID;";
+        // requestNewEmpPage.pageSize = this.request.pageSize;
+        this.request.page += 1;
+
+
+        this.hrService.loadData('HR', this.request).subscribe((res) =>{
           debugger
           if(res && res[0].length > 0){
             this.listEmp.push(...res[0])
-            this.request.page += 1;
             this.navigateEmp(0, true);
           }
           else{
