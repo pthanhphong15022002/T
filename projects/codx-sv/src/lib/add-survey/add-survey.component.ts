@@ -45,6 +45,7 @@ export class AddSurveyComponent extends UIComponent {
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
   primaryColor:any;
+  backgroudColor:any;
   width= "200px";
   isChangeTmp = false;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
@@ -103,6 +104,9 @@ export class AddSurveyComponent extends UIComponent {
     if(data && data.settings) {
       data.settings = JSON.parse(data.settings);
       if(data?.settings?.primaryColor) this.primaryColor = data?.settings?.primaryColor;
+      if(data?.settings?.backgroudColor) {
+        this.backgroudColor = data?.settings?.backgroudColor;
+      }
     }
   }
 

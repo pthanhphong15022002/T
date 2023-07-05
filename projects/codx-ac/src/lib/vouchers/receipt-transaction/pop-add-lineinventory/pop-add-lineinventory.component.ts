@@ -82,61 +82,91 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
 
   valueChange(e: any){
     this.inventoryJournalLine[e.field] = e.data;
-      switch (e.field) 
-      {
-        case 'itemID':
-          this.getUMIDAndItemName(e.data);
-          if(this.idiM0)
+    const postFields: string[] = [
+      'itemID',
+      'costPrice',
+      'quantity',
+      'costAmt',
+      'lineType',
+      'umid',
+      'idiM0',
+      'idiM1',
+      'idiM2',
+      'idiM3',
+      'idiM4',
+      'idiM5',
+      'idiM6',
+      'idiM7',
+      'idiM8',
+      'idiM9',
+    ];
+    if (postFields.includes(e.field)) {
+      this.api
+        .exec('IV', 'InventoryJournalLinesBusiness', 'ValueChangedAsync', [
+          e.field,
+          this.inventoryJournal,
+          this.inventoryJournalLine,
+        ])
+        .subscribe((line) => {
+          console.log(line);
+
+          this.inventoryJournalLine = Object.assign(this.inventoryJournalLine, line);
+          switch (e.field) 
           {
-            (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM0.crrValue = null;
-            this.inventoryJournalLine.idiM0 = null;
-          }
-          if(this.idiM1)
-          {
-            (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM1.crrValue = null;
-            this.inventoryJournalLine.idiM1 = null;
-          }
-          if(this.idiM2)
-          {
-            (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM2.crrValue = null;
-            this.inventoryJournalLine.idiM2 = null;
-          }
-          if(this.idiM3)
-          {
-            (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM3.crrValue = null;
-            this.inventoryJournalLine.idiM3 = null;
-          }
-          if(this.idiM6)
-          {
-            (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM6.crrValue = null;
-            this.inventoryJournalLine.idiM6 = null;
-          }
-          if(this.idiM7)
-          {
-            (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM7.crrValue = null;
-            this.inventoryJournalLine.idiM7 = null;
+            case 'itemID':
+              // this.getUMIDAndItemName(e.data);
+              if(this.idiM0)
+              {
+                (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+                this.idiM0.crrValue = null;
+                this.inventoryJournalLine.idiM0 = null;
+              }
+              if(this.idiM1)
+              {
+                (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+                this.idiM1.crrValue = null;
+                this.inventoryJournalLine.idiM1 = null;
+              }
+              if(this.idiM2)
+              {
+                (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+                this.idiM2.crrValue = null;
+                this.inventoryJournalLine.idiM2 = null;
+              }
+              if(this.idiM3)
+              {
+                (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+                this.idiM3.crrValue = null;
+                this.inventoryJournalLine.idiM3 = null;
+              }
+              if(this.idiM6)
+              {
+                (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+                this.idiM6.crrValue = null;
+                this.inventoryJournalLine.idiM6 = null;
+              }
+              if(this.idiM7)
+              {
+                (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+                this.idiM7.crrValue = null;
+                this.inventoryJournalLine.idiM7 = null;
+              }
+              break;
+            case 'idiM4':
+              if(this.idiM5)
+              {
+                (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+                this.idiM5.crrValue = null;
+                this.inventoryJournalLine.idiM5 = null;
+              }
+            break;
           }
           if(this.form)
           {
             this.form.formGroup.patchValue(this.inventoryJournalLine);
           }
-          break;
-        case 'idiM4':
-          if(this.idiM5)
-          {
-            (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM5.crrValue = null;
-            this.inventoryJournalLine.idiM5 = null;
-            this.form.formGroup.patchValue(this.inventoryJournalLine);
-          }
-        break;
-      }
+        });
+    }
   }
   //endregion Event
 
@@ -248,10 +278,11 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
       switch (e.ControlName) {
         case 'costPrice':
         case 'quantity':
-          this.inventoryJournalLine.costAmt =
-            this.inventoryJournalLine.quantity *
-            this.inventoryJournalLine.costPrice;
-          this.form.formGroup.patchValue(this.inventoryJournalLine);
+        case 'costAmt':
+          this.valueChange({
+            field: e.ControlName,
+            data: e.crrValue,
+          });
           break;
       }
     }
