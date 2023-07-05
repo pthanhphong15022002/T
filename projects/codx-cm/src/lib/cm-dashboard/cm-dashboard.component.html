@@ -85,17 +85,17 @@
     <ejs-treemap
       align="center"
       style="display: block"
-      [dataSource]="dataDashBoard?.tasksByRef?.tasksRef"
+      [dataSource]="dataDashBoard?.tmpCountsBussinessLine"
       weightValuePath="quantity"
       rangeColorValuePath="quantity"
       [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
       [leafItemSettings]="{
-        labelPath: 'refName'
+        labelPath: 'businessLineName'
       }"
       [tooltipSettings]="{
         visible: true,
         template:
-          '<div><span >${refName}: </span><span >${quantity}</span></div>'
+          '<div><span >${businessLineName}: </span><span >${quantity}</span></div>'
       }"
     >
     </ejs-treemap>
