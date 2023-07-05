@@ -3777,8 +3777,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       // ))
       this.crrIndex += 1;
       if(this.crrIndex == this.listEmp.length - 1){
-        // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter 
-
+        // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter từ DSNV ngoài
+        
         // let requestNewEmpPage = new DataRequest();
         // requestNewEmpPage.entityName = this.request.entityName;
         // requestNewEmpPage.gridViewName = this.request.gridViewName;
