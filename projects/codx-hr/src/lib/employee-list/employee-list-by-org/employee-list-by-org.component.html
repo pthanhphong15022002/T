@@ -164,7 +164,7 @@
             </codx-img>
             <ng-container *ngIf="data.gender">
                 <div class="mt-1 mx-auto">
-                    <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true"
+                    <codx-vll [name]="'HRGender'" [value]="data.gender" showText="true" [showBgColor]="true"
                         [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
                 </div>
             </ng-container>
@@ -303,9 +303,6 @@
     </div>
 </ng-template>
 <!-- #end contact -->
-
-
-
 
 <ng-template #emptyDataTemplate>
     <div class="d-flex ms-1">
