@@ -176,6 +176,15 @@ export class CodxAdService {
     );
   }
 
+  changeSignatureEmail(recID, nSignEmail) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'UpdateEmailSignatureAsync',
+      [recID, nSignEmail]
+    );
+  }
   updateInformationCompanySettings(data, option?: any, imageUpload?: any) {
     return this.api.execSv<any>(
       'SYS',
