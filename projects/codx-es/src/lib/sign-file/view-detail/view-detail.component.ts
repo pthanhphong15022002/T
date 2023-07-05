@@ -1,4 +1,4 @@
-import { AssignTaskModel } from './../../../../../codx-share/src/lib/models/assign-task.model';
+import { AssignTaskModel, tmpReferences } from './../../../../../codx-share/src/lib/models/assign-task.model';
 import {
   Component,
   Input,
@@ -174,7 +174,6 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
-    this.dataReferences = [];
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
@@ -198,29 +197,68 @@ export class ViewDetailComponent implements OnInit {
       }
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
-        .subscribe((res) => {
-          if (res) {
-            let x= res;
+        .subscribe((res) => {          
+          this.dataReferences = [];
+          if (res) {            
+            this.itemDetail = res;
             if (res.refType != null) {
               this.esService
-                .getEntity(this.itemDetail?.refType)
-                .subscribe((oEntity) => {
-                  if (oEntity) {
-                    this.esService
+              .getEntity(this.itemDetail?.refType)
+              .subscribe((oEntity) => {
+                if (oEntity!=null) {
+                  
+                  let tempRef= new tmpReferences();                  
+                  tempRef.refType = this.itemDetail?.refType;
+                  switch (oEntity?.entityName){
+                    case 'OD_Dispatches':
+                      this.esService
                       .getod(this.itemDetail?.recID)
-                      .subscribe((res) => {
-                        if(res){
-                          res.refType = this.itemDetail?.refType;
-                          let index = this.dataReferences.findIndex(x=>x.recID == res.recID);
-                          if (index < 0) this.dataReferences.push(res);
+                      .subscribe((ref) => {
+                        if(ref){
+                          tempRef.recIDReferences = ref?.recID;
+                          tempRef.createdOn = ref?.createdOn;
+                          tempRef.memo = ref?.title;
+                          tempRef.createdBy = ref?.createdBy;
+                          this.cache.getCompany(ref?.createdBy).subscribe(user=>{
+                            if(user){                              
+                              tempRef.createByName = user?.employeeName;
+                            }
+                          });
+                          this.dataReferences = [];
+                          this.dataReferences.push(tempRef);
                           this.df.detectChanges();
+
+                          // let index = this.dataReferences.findIndex(x=>x.recID == ref.recID);
+                          // if (index < 0) this.dataReferences.push(ref);
+                          // this.df.detectChanges();
                         }
                         
                       });
+                    break;
+
+                    case 'ES_SignFiles':
+                      this.esService.getDetailSignFile(res?.refID).subscribe(ref=>{
+                        if(ref){
+                          tempRef.recIDReferences = ref?.recID;
+                          tempRef.createdOn = ref?.createdOn;
+                          tempRef.memo = ref?.title;
+                          tempRef.createdBy = ref?.createdBy;
+                          this.cache.getCompany(ref?.createdBy).subscribe(user=>{
+                            if(user){                              
+                              tempRef.createByName = user?.employeeName;
+                            }
+                          });
+                          this.dataReferences = [];
+                          this.dataReferences.push(tempRef);
+                          this.df.detectChanges();
+                        }
+                      })
+                    break;
                   }
-                });
+                  
+                }
+              });
             }
-            this.itemDetail = res;
             this.df.detectChanges();
           }
         });
@@ -368,6 +406,9 @@ export class ViewDetailComponent implements OnInit {
       case 'EST01105': //Gửi duyệt
         this.release();
         break;
+      case 'EST01106': //Tạo signfile từ signfile
+        this.addSignFile(datas);
+        break;
     }
   }
 
@@ -432,6 +473,47 @@ export class ViewDetailComponent implements OnInit {
           }
         }
         this.esService.setupChange.next(true);
+      });
+    });
+  }
+
+  addSignFile(datas) {
+    this.view.dataService.dataSelected = datas;
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if (!res) return;
+      res.refID=datas.recID
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        'Thêm mới',
+        700,
+        650,
+        this.funcID,
+        {
+          isAddNew: true,
+          formModel: this.view?.formModel,
+          option: option,
+          refID:datas?.recID,
+        },
+        '',
+        dialogModel
+      );
+      dialogAdd.closed.subscribe((x) => {
+        if (x.event) {
+          if (x.event?.approved) {
+            this.view.dataService.add(x.event.data, 0).subscribe();
+          } else {
+            delete x.event._uuid;
+            this.view.dataService.add(x.event, 0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
+        }
       });
     });
   }

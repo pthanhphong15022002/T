@@ -922,7 +922,7 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
-  addTask(kr: any, popupTitle: string, mfunc: string) {
+  addTask(kr: any, popupTitle: string, mfunc: any) {
     var task = new TM_Tasks();
     task.refID = kr?.recID;
     task.sessionID = kr?.transID;
