@@ -25,9 +25,11 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-new-i-clipboard-plus.svg'
+      "
       [title]="getNameStatus('1')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countNew ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -37,9 +39,11 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-inprogress-i-clipboard-data.svg'
+      "
       [title]="getNameStatus('2')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countProcessing ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -49,9 +53,11 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-win-i-clipboard-check.svg'
+      "
       [title]="getNameStatus('3')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countSuccess ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -61,9 +67,11 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-fail-i-clipboard-minus.svg'
+      "
       [title]="getNameStatus('5')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countFail ?? 0"
     ></count-chart>
   </div>
 </ng-template>

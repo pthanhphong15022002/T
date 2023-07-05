@@ -410,7 +410,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   resetForm(): void {
     this.masterService
       .addNew(() =>
-        this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
+        this.api.exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [
           this.dialogData.data.journalNo,
         ])
       )

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CodxCmService } from '../../../codx-cm.service';
 import {
   ApiHttpService,
@@ -40,6 +40,7 @@ export class ViewDealcompetitorsComponent implements OnInit {
   colorReasonFail: any;
   currentRecID = '';
   gridViewSetup: any;
+  id: any;
   constructor(
     private cache: CacheService,
     private cmSv: CodxCmService,
@@ -47,8 +48,22 @@ export class ViewDealcompetitorsComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['competitorID']) {
+      if (
+        changes['competitorID']?.currentValue != null &&
+        changes['competitorID']?.currentValue?.trim() != ''
+      ) {
+        if (changes['competitorID']?.currentValue == this.id) return;
+        this.id = changes['competitorID']?.currentValue;
+        this.getListDealAndDealCompetitor();
+      } else {
+        if (!this.loaded) this.loaded = true;
+      }
+    }
+
+  }
   async ngOnInit() {
-    this.getListDealAndDealCompetitor();
     this.fromModelDealCompetitor = await this.cmSv.getFormModel('CM02011');
     this.fromModelDeal = await this.cmSv.getFormModel('CM0201');
     this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.fromModelDeal?.formName, this.fromModelDeal?.gridViewName));

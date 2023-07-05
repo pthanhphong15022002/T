@@ -244,7 +244,7 @@
     [body]="footer"
     [formModel]="view.formModel"
     [footer]="footer"
-    [titleCss]="'text-gray-500 fs-7 fw-normal'"
+    [titleCss]="'text-gray-700 fw-normal'"
     [hideMF]="!data?.roles?.isOnwer"
     [dataItem]="data"
   >
@@ -283,7 +283,7 @@
 
 
   <div class="d-flex flex-column w-100">
-    <div class="mb-1">
+    <div class="my-1">
       <span
         class="text-dark fs-6 fw-bold line-clamp line-clamp-2"
         [ngbTooltip]="tooltipDealName"
@@ -296,9 +296,9 @@
       ></span>
     </div>
     <div class="d-flex align-items-center justify-content-start mb-1">
-      <i class="icon-add_shopping_cart icon-16 text-gray-700 me-2"></i>
+      <i class="icon-add_shopping_cart icon-16 text-gray-500 me-2"></i>
       <span
-        class="text-gray-700 line-clamp-menu"
+        class="text-gray-500 line-clamp-menu"
         #businessLineID
         [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
         [innerHTML]="
@@ -311,8 +311,9 @@
 
 
     <div class="row mb-1 mx-0">
-      <div class="col-5 ps-0 d-flex align-items-center line-clamp line-clamp-1">
-        <div
+      <div class="col-5 ps-0 pe-0">
+        <div class="w-auto d-flex align-items-center text-nowrap line-clamp line-clamp-1">
+        <span
           [ngbTooltip]="toolTipDealValue"
           class="pe-1 d-flex align-items-center"
         >
@@ -330,7 +331,7 @@
           "
         ></span>
 
-        </div>
+        </span>
         <span
           [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
           class="text-gray-700"
@@ -342,6 +343,7 @@
               | async
           "
         ></span>
+      </div>
       </div>
       <div class="col-3 d-flex align-items-center" [ngbTooltip]="toolTipProbability">
         <span class="icon-check_circle icon-16 text-green me-1" ></span>
