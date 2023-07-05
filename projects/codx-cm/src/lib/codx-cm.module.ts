@@ -80,6 +80,14 @@ import { CustomergroupsComponent } from './customergroups/customergroups.compone
 import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
 import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
+import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
+import { TargetsComponent } from './targets/targets.component';
+import { PopupAddTargetComponent } from './targets/popup-add-target/popup-add-target.component';
+import { CommonModule } from '@angular/common';
+import { environment } from 'src/environments/environment';
+import { CoreModule } from '@core/core.module';
+import { CodxTabCmComponent } from './codx-tab-cm/codx-tab-cm.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 const routes: Routes = [
   {
@@ -115,6 +123,15 @@ const routes: Routes = [
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
+      },
+      {
+        path: 'dashboard/:funcID',
+        component: CmDashboardComponent,
+      },
+      {
+        path: 'targets/:funcID',
+        component: TargetsComponent,
+        data: { noReuse: true },
       },
       // {
       //   path: 'approvals/:funcID',
@@ -210,6 +227,10 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TaskComponent,
     PopupOwnerDealComponent,
     ViewIconGroupComponent,
+    CmDashboardComponent,
+    TargetsComponent,
+    PopupAddTargetComponent,
+    CodxTabCmComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -225,8 +246,12 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
+    CoreModule,
+    CommonModule,
+    TreeMapModule,
+    CodxCoreModule.forRoot({ environment }),
   ],
-  exports: [RouterModule, ListContractsComponent],
+  exports: [RouterModule],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -1129,7 +1129,7 @@ export class InstancesComponent
       return;
     }
     if (data.closed) {
-      this.notificationsService.notify('DP038');
+      this.notificationsService.notifyCode('DP039');
       return;
     }
 

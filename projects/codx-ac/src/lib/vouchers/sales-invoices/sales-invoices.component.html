@@ -40,6 +40,13 @@
   </codx-temp-full>
 </ng-template>
 
+<ng-template #titleTmp let-data>
+  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
+  <span class="fw-bold fs-6">{{
+    data.totalAmt | currency : data.currencyID : "code"
+  }}</span>
+</ng-template>
+
 <ng-template #descTmp let-data>
   <div class="fw-bold mt-1">
     {{ data.objectName }}
@@ -49,13 +56,6 @@
 <ng-template #desc2Tmp let-data>
   <span class="text-gray-500 mt-1 line-clamp line-clamp-2">{{
     data?.memo
-  }}</span>
-</ng-template>
-
-<ng-template #titleTmp let-data>
-  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
-  <span class="fw-bold fs-6">{{
-    data.totalAmt | currency : data.currencyID : "code"
   }}</span>
 </ng-template>
 
@@ -300,93 +300,91 @@
                 <ng-template #trTemplate let-line let-index="index">
                   <tr>
                     <th style="width: 30px">
-                      <div class="pt-1">{{ index + 1 }}</div>
+                      {{ index + 1 }}
                     </th>
-                    <td>
-                      <div class="py-1 d-flex flex-column gap-1">
-                        <div class="fw-bold">{{ line.itemName }}</div>
-                        <div>
-                          <codx-label
-                            fiedName="idiM3"
-                            [formModel]="fmSalesInvoicesLines"
-                            class="label-colon"
-                            default="Quy cách"
-                          ></codx-label>
-                          <span
-                            *ngFor="let i of [0, 1, 2, 3]; last as isLast"
-                            class="text-gray-500"
-                          >
-                            <span *ngIf="line['idiM' + i]">{{
-                              line["idiM" + i + "Name"] ?? line["idiM" + i]
-                            }}</span>
-                            <ng-container
-                              *ngIf="
-                                !isLast &&
-                                line['idiM' + i] &&
-                                line['idiM' + (i + 1)]
-                              "
-                              >,&nbsp;
-                            </ng-container>
-                          </span>
-                        </div>
-
-                        <div class="d-flex flex-wrap">
-                          <codx-label
-                            fiedName="lblIdiM4"
-                            [formModel]="fmSalesInvoicesLines"
-                            default="Kho"
-                            class="label-colon"
-                          ></codx-label>
-                          <span
-                            *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast"
-                            class="text-gray-500"
-                          >
-                            <span *ngIf="line['idiM' + i]">{{
-                              line["idiM" + i + "Name"] ?? line["idiM" + i]
-                            }}</span>
-                            <ng-container
-                              *ngIf="
-                                !isLast &&
-                                line['idiM' + i] &&
-                                line['idiM' + (i + 1)]
-                              "
-                              >,&nbsp;
-                            </ng-container>
-                          </span>
-                        </div>
-
-                        <codx-vll
-                          *ngIf="line.lineType !== '1'"
+                    <td class="d-flex flex-column gap-1">
+                      <div class="fw-bold">{{ line.itemName }}</div>
+                      <div>
+                        <codx-label
+                          fiedName="idiM3"
                           [formModel]="fmSalesInvoicesLines"
-                          field="LineType"
-                          [value]="line.lineType"
-                          [showText]="true"
-                          [showBgColor]="true"
-                          class="badge badge-primary align-self-start"
+                          class="label-colon"
+                          default="Quy cách"
+                        ></codx-label>
+                        <span
+                          *ngFor="let i of [0, 1, 2, 3]; last as isLast"
+                          class="text-gray-500"
                         >
-                        </codx-vll>
+                          <span *ngIf="line['idiM' + i]">{{
+                            line["idiM" + i + "Name"] ?? line["idiM" + i]
+                          }}</span>
+                          <ng-container
+                            *ngIf="
+                              !isLast &&
+                              line['idiM' + i] &&
+                              line['idiM' + (i + 1)]
+                            "
+                            >,&nbsp;
+                          </ng-container>
+                        </span>
                       </div>
+
+                      <div class="d-flex flex-wrap">
+                        <codx-label
+                          fiedName="lblIdiM4"
+                          [formModel]="fmSalesInvoicesLines"
+                          default="Kho"
+                          class="label-colon"
+                        ></codx-label>
+                        <span
+                          *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast"
+                          class="text-gray-500"
+                        >
+                          <span *ngIf="line['idiM' + i]">{{
+                            line["idiM" + i + "Name"] ?? line["idiM" + i]
+                          }}</span>
+                          <ng-container
+                            *ngIf="
+                              !isLast &&
+                              line['idiM' + i] &&
+                              line['idiM' + (i + 1)]
+                            "
+                            >,&nbsp;
+                          </ng-container>
+                        </span>
+                      </div>
+
+                      <codx-vll
+                        *ngIf="line.lineType !== '1'"
+                        [formModel]="fmSalesInvoicesLines"
+                        field="LineType"
+                        [value]="line.lineType"
+                        [showText]="true"
+                        [showBgColor]="true"
+                        class="badge badge-primary align-self-start"
+                      >
+                      </codx-vll>
                     </td>
-                    <td class="text-end pe-5">
-                      <div class="d-flex flex-column pt-1 gap-1">
+                    <td class="text-end">
+                      <div class="d-flex flex-column gap-1">
                         <div>{{ line.quantity }}</div>
                         <div>{{ line.umid }}</div>
                       </div>
                     </td>
-                    <td class="text-end pe-5">
-                      <div class="d-flex flex-column pt-1 gap-1">
+                    <td class="text-end">
+                      <div class="d-flex flex-column gap-1">
                         <div>{{ line.salesPrice | currency : "" : "" }}</div>
                         <div>&nbsp;</div>
                       </div>
                     </td>
-                    <td class="text-end pe-5">
-                      <div class="d-flex flex-column pt-1 gap-1">
+                    <td class="text-end">
+                      <div class="d-flex flex-column gap-1">
                         <div>{{ line.netAmt | currency : "" : "" }}</div>
                         <div>&nbsp;</div>
                       </div>
                     </td>
-                    <td class="text-end pe-5">
-                      <div class="d-flex flex-column pt-1 gap-1">
+                    <td class="text-end pe-3">
+                      <div class="d-flex flex-column gap-1">
                         <div>{{ line.vatAmt | currency : "" : "" }}</div>
                         <div
                           *ngIf="
@@ -429,13 +427,111 @@
                 [lines]="acctTranLines"
                 [loading]="acctLoading"
                 [trTemplate]="acctTrTemplate"
+                [autoSum]="false"
               >
-                <ng-template #acctTrTemplate let-line let-index="index">
-                  <!-- <tr>
+                <ng-template #acctTrTemplate let-group let-index="index">
+                  <tr *ngFor="let line of group; first as isFirst">
                     <th style="width: 30px">
-                      <div class="pt-1">{{ index + 1 }}</div>
+                      <ng-container *ngIf="isFirst">
+                        {{ index + 1 }}
+                      </ng-container>
                     </th>
-                  </tr> -->
+                    <td class="d-flex gap-2">
+                      <div
+                        class="d-flex gap-2"
+                        style="min-width: 90px"
+                        [ngClass]="!line.crediting ? '' : 'ps-3'"
+                      >
+                        <span class="fw-bold">{{
+                          !line.creditting ? "N" : "C"
+                        }}</span>
+                        <span class="fw-bold">{{ line.accountID }}</span>
+                      </div>
+                      <div class="d-flex flex-column gap-1">
+                        <div
+                          class="fw-bold line-clamp line-clamp-1"
+                          [title]="line.accountName"
+                        >
+                          {{ line.accountName }}
+                        </div>
+                        <div *ngIf="line.objectName">
+                          <codx-label
+                            fieldName="lblObject"
+                            [formModel]="fmAcctTrans"
+                            default="Khách hàng"
+                            class="label-colon"
+                          ></codx-label>
+                          <span>{{ line.objectName }}</span>
+                        </div>
+                        <div *ngIf="line.diM3">
+                          <codx-label
+                            fieldName="lblDIM3"
+                            [formModel]="fmAcctTrans"
+                            default="Mục phí"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.diM3 }}</span>
+                          <span>&nbsp;- {{ line.costItemName }}</span>
+                        </div>
+                        <div *ngIf="line.diM2">
+                          <codx-label
+                            fieldName="lblDIM2"
+                            [formModel]="fmAcctTrans"
+                            default="TTCP"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.diM2 }}</span>
+                          <span>&nbsp;- {{ line.costCenterName }}</span>
+                        </div>
+                        <div *ngIf="line.diM1">
+                          <codx-label
+                            fieldName="lblDIM1"
+                            [formModel]="fmAcctTrans"
+                            default="Phòng ban"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.diM1 }}</span>
+                          <span>&nbsp;- {{ line.departmentName }}</span>
+                        </div>
+                        <div *ngIf="line.projectID">
+                          <codx-label
+                            fieldName="lblProjectID"
+                            [formModel]="fmAcctTrans"
+                            default="Dự án"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.projectID }}</span>
+                          <span>&nbsp;-&nbsp;</span>
+                          <span
+                            [innerHTML]="
+                              line.projectID
+                                | formatvalue : fmAcctTrans : 'projectID'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-end">
+                      <ng-container *ngIf="!line.crediting">
+                        {{ line.transAmt | currency : "" : "" }}
+                      </ng-container>
+                    </td>
+                    <td class="text-end">
+                      <ng-container *ngIf="line.crediting">
+                        {{ line.transAmt | currency : "" : "" }}
+                      </ng-container>
+                    </td>
+                    <td class="pe-3">
+                      <span class="line-clamp line-clamp-2">{{
+                        line.memo
+                      }}</span>
+                    </td>
+                  </tr>
                 </ng-template>
               </lib-table-line-detail-static>
             </ng-template>

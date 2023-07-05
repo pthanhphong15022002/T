@@ -15,6 +15,7 @@
   [autoSearch]="true"
   (selectedChange)="selectedChange($event)"
   (onLoading)="onLoading($event)"
+  (viewChanged)="changeView($event)"
   (searchChanged)="searchChanged($event)"
   (onActions)="onActions($event)"
   [viewActiveType]="viewMode"
@@ -230,7 +231,7 @@
           #businessLineID
           [innerHTML]="
           data?.businessLineID
-              | formatvalue : formModel : 'businessLineID' : businessLineID
+              | formatvalue : view.formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>

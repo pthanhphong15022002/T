@@ -382,7 +382,6 @@ addContracts() {
         }
       });
   }
-  // console.log(this.contracts);
 }
 
 editContract() {
@@ -438,13 +437,12 @@ valueChangeText(event) {
       event?.data
     );
   }
-  if (event?.field == 'delPhone' && this.checkPhone) {
+  if (event?.field == 'delPhone') {
     let isPhone = this.stepService.isValidPhoneNumber(event?.data);
-    if (!isPhone) {
+    if (!isPhone && this.checkPhone) {
       this.notiService.notifyCode('RS030');
-      this.checkPhone = !this.checkPhone;
-      return;
     }
+    this.checkPhone = !this.checkPhone;
   }
   if (event?.field == 'currencyID' && this.checkPhone) {
     this.loadExchangeRate(event?.data);

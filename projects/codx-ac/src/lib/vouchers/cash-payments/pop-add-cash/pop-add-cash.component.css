@@ -2,6 +2,7 @@
 .tabline-content .e-content{
    height: calc(100vh - 535px)!important;
 }
+
 /* .tabline-content .e-inline-edit{
     background-color: var(--primary-lighter) !important;
     border-color: white !important;
@@ -85,14 +86,6 @@
     left: 0;
     align-items: center;
 }
-/* .listcash-content .e-editable-component .e-input-focus{
-    width: 100% !important;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-radius: 0px !important;
-    border-bottom: 1px solid #dee2e6 !important;
-} */
 .ac-btn-input{
     position: absolute;
     margin-left: -38px;
@@ -104,9 +97,11 @@
 .ac-tab-basic{
     background-color: var(--primary-lighter) !important;
 }
+
 .icon-insert_link:hover{
     color: var(--primary-dark) !important;
 }
+
 .ac-dialog .card-header {
     margin-bottom: 0px !important;
     padding-bottom: 0px !important;
@@ -136,4 +131,42 @@
 }
 .scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
     background: grey !important;
+}
+
+/* css vẽ khung input trước khi init */
+.ac-input{
+    background-color: white;
+    width: 100%;
+    border: 1px solid #ced4da;
+    height: 34px !important;
+}
+.ac-input-disable{
+    background-color: #e9ecef;
+    width: 100%;
+    border: 1px solid #ced4da;
+    height: 34px !important;
+}
+.ac-input .e-input-group{
+    border: none !important;
+}
+
+.ac-input codx-input{
+    position: relative;
+}
+
+.ac-input .codx-text{
+    border: none !important;
+}
+
+.ac-input-disable .e-input-group {
+    border: none !important;
+}
+/* css vẽ khung input trước khi init */
+
+.ac-input-disable .codx-text{
+    border: none !important;
+}
+
+.ac-input-disable codx-input{
+    position: relative;
 }

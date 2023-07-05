@@ -60,12 +60,12 @@
     </ng-container>
 
     <div *ngIf="columnsGrid" class="h-100" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
-        <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="'HR'"
-            [entityName]="'HR_Employees'" assemblyName="ERM.Business.HR" [className]="'EmployeesBusiness'"
-            [hideMoreFunc]="true" [method]="'GetEmployeeListByOrgUnitIDGridView'" [dataValues]="orgUnitID"
-            [emptyTemplate]="emptyDataTemplate" [autoLoad]="false" [showRowNumber]="showRowNumber" [autoFitColumns]="false"
-            [allowResizing]="false" [allowFiltering]="false" [allowSorting]="false" idField="employeeID"
-            [rowHeight]="rowHeight" height="auto"></codx-gridview-v2>
+        <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
+            [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
+            [dataValues]="orgUnitID" [emptyTemplate]="emptyDataTemplate" [autoLoad]="false"
+            [showRowNumber]="showRowNumber" [idField]="idField" [predicates]="predicates" [rowHeight]="rowHeight"
+            height="auto" [autoFitColumns]="false" [allowResizing]="false" [allowFiltering]="false"
+            [allowSorting]="true" [hideMoreFunc]="true"></codx-gridview-v2>
     </div>
 </div>
 
@@ -164,7 +164,7 @@
             </codx-img>
             <ng-container *ngIf="data.gender">
                 <div class="mt-1 mx-auto">
-                    <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true"
+                    <codx-vll [name]="'HRGender'" [value]="data.gender" showText="true" [showBgColor]="true"
                         [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
                 </div>
             </ng-container>
@@ -249,8 +249,8 @@
                 </span>
             </div>
             <div #degreeNameContent class="align-items-center line-clamp line-clamp-2">
-                <codx-label #labelContent class="label-colon fw-bold text-dark" [setRequire]="false" [fiedName]="'DegreeName'"
-                    [formModel]="view.formModel" default="Chuyên môn"></codx-label>
+                <codx-label #labelContent class="label-colon fw-bold text-dark" [setRequire]="false"
+                    [fiedName]="'DegreeName'" [formModel]="view.formModel" default="Chuyên môn"></codx-label>
                 <ng-container *ngIf="data.degreeName; else noDegreeName">
                     <span #dataContent class="text-gray-600">{{ data.degreeName }}</span>
                 </ng-container>
@@ -303,9 +303,6 @@
     </div>
 </ng-template>
 <!-- #end contact -->
-
-
-
 
 <ng-template #emptyDataTemplate>
     <div class="d-flex ms-1">

@@ -1,0 +1,69 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [footer]="footer"
+  [data]="data"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <ng-container *ngIf="form?.formGroup">
+      <div class="row form-group">
+        <div class="col-6">
+          <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="businessLineID"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label [formModel]="form.formModel" fiedName="Interval">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="interval"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-6">
+          <codx-label [formModel]="form.formModel" fiedName="Allocation">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="allocation"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6" *ngIf="data?.interval == 'year'">
+          <codx-label [formModel]="form.formModel" [fiedName]="'Year'">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="year"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Allocation">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="allocation"
+        >
+        </codx-input>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer></ng-template>
+</codx-form>

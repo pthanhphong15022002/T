@@ -388,7 +388,9 @@
             <codx-input
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
-              [disabled]="systemProcess == '1' || process?.category == '0' ? true : false"
+              [disabled]="
+                systemProcess == '1' || process?.category == '0' ? true : false
+              "
               type="text"
               [crrValue]="process.processName"
               (valueChange)="valueChange($event)"
@@ -1686,6 +1688,21 @@
       <codx-label fiedName="settingStep" default="Thiết lập giai đoạn">
       </codx-label>
     </h2>
+    <div class="d-flex align-items-center">
+      <codx-label
+        class="mb-1"
+        name="lblStage"
+        [formModel]="dialog.formModel"
+        default="Thiết lập mặc định"
+      ></codx-label>
+      <codx-input
+        class="ms-1"
+        type="switch"
+        [checked]="isDefaultStep"
+        field="progress"
+      >
+      </codx-input>
+    </div>
   </div>
 </ng-template>
 
@@ -1725,23 +1742,27 @@
               (click)="
                 clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
               "
-              [ngStyle]="{ 'background-color': itemStep?.backgroundColor }"
+              [ngStyle]="setColorStep(itemStep, i)"
               [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             >
               <ng-container
                 *ngIf="!itemStep['isSuccessStep'] && !itemStep['isFailStep']"
               >
-                <div class="d-flex flex-column">
+                <div
+                  class="d-flex flex-column"
+                  [ngStyle]="setColorTestStep(itemStep, i)"
+                >
                   <div class="d-flex">
                     <span
                       *ngIf="itemStep?.icon"
                       class="me-2 d-flex align-items-center"
                       [ngClass]="itemStep?.icon"
-                      [ngStyle]="{ color: itemStep?.iconColor }"
+                      [ngStyle]="
+                        isDefaultStep ? {} : { color: itemStep?.iconColor }
+                      "
                     ></span>
 
                     <div class="d-flex align-items-center" style="width: 240px">
-                      <div></div>
                       <div
                         class="d-inline"
                         [ngbPopover]="itemStep?.stepName"
@@ -1751,17 +1772,14 @@
                         (mouseleave)="pStep.close()"
                         placement="left bottom right top"
                       >
-                        <span
-                          class="fw-bold line-clamp line-clamp-1"
-                          [ngStyle]="{ color: itemStep?.textColor }"
-                        >
+                        <span class="fw-bold line-clamp line-clamp-1">
                           {{ itemStep?.stepName }}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7">
                     <codx-label
                       fiedName="durationTime"
                       [formModel]="dialog.formModel"
@@ -1781,7 +1799,7 @@
                       [default]="strHour"
                     ></codx-label>
                   </div>
-                  <div class="fs-7" [ngStyle]="{ color: itemStep?.textColor }">
+                  <div class="fs-7">
                     <codx-label
                       fiedName="task"
                       [formModel]="dialog.formModel"
@@ -1808,9 +1826,10 @@
               {{ noteResult }}
             </div>
             <div
-              class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom"
+              class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom has-action-menu"
               [ngClass]="viewStepCrr === viewStepReasonSuccess ? 'click' : ''"
               (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
+              [ngStyle]="setColorStep(viewStepReasonSuccess, stepList?.length)"
             >
               <div
                 class="order"
@@ -1830,12 +1849,22 @@
                   {{ noteSuccess }}
                 </div>
               </div>
+              <codx-mfunc
+                *ngIf="grvMoreFunction"
+                [dataItem]="moreDefaut"
+                [formModel]="grvMoreFunction"
+                (changeDataMF)="changeDataMFReason($event)"
+                (clickMF)="clickReason($event, stepSuccess)"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
             </div>
             <!-- Reason fail -->
             <div
-              class="list-stage cursor-pointer drap-drop"
+              class="list-stage cursor-pointer drap-drop has-action-menu"
               [ngClass]="viewStepCrr === viewStepReasonFail ? 'click' : ''"
               (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
+              [ngStyle]="setColorStep(viewStepReasonSuccess, stepList?.length)"
             >
               <div
                 class="order"
@@ -1855,6 +1884,15 @@
                   {{ noteFail }}
                 </div>
               </div>
+              <codx-mfunc
+                *ngIf="grvMoreFunction"
+                [type]="'hover'"
+                [dataItem]="moreDefaut"
+                [formModel]="grvMoreFunction"
+                (changeDataMF)="changeDataMFReason($event)"
+                (clickMF)="clickReason($event, stepFail)"
+              >
+              </codx-mfunc>
             </div>
           </div>
           <!--end danh sách giai đoạn -->
@@ -2086,6 +2124,7 @@
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
+                        *ngIf="task"
                         cdkDrag
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
@@ -2262,6 +2301,7 @@
       type="text"
       [crrValue]="stepName"
       (valueChange)="changeNameStep($event)"
+      [disabled]="isReason"
     >
     </codx-input>
 

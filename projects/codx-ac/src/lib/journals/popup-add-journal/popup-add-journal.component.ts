@@ -260,7 +260,7 @@ export class PopupAddJournalComponent
             .subscribe((vllDFormat) => {
               this.vllDateFormat = vllDFormat.datas;
 
-              this.getAutoNumber(this.journal.journalNo).subscribe(
+              this.getAutoNumber(this.journal.autoNumber).subscribe(
                 (autoNumber) => {
                   this.form.formGroup.patchValue({
                     voucherFormat: this.getAutoNumberFormat(autoNumber),
@@ -572,7 +572,7 @@ export class PopupAddJournalComponent
         (screen.width * 40) / 100,
         '',
         {
-          autoNoCode: this.journal.journalNo,
+          // autoNoCode: this.journal.journalNo,
           description: this.dialogRef.formModel?.entityName,
           disableAssignRule: true,
           autoAssignRule: this.journal.autoAssignRule,
@@ -582,6 +582,7 @@ export class PopupAddJournalComponent
         console.log(res);
 
         if (res.event) {
+          this.journal.autoNumber = res.autoNoCode;
           this.form.formGroup.patchValue({
             voucherFormat: this.getAutoNumberFormat(res.event),
           });

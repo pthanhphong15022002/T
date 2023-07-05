@@ -24,6 +24,8 @@ import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.
 export class JournalsComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('listTemplate') listTemplate: TemplateRef<any>;
+  @ViewChild('listHeaderTemplate') listHeaderTemplate?: TemplateRef<any>;
   @ViewChild('moreTemplate', { static: true }) moreTemplate: TemplateRef<any>;
   @ViewChild('header1Template', { static: true })
   header1Template: TemplateRef<any>;
@@ -192,6 +194,15 @@ export class JournalsComponent extends UIComponent {
             },
           ],
           template2: this.moreTemplate,
+        },
+      },
+      {
+        type: ViewType.list,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.listTemplate,
+          headerTemplate: this.listHeaderTemplate,
         },
       },
     ];

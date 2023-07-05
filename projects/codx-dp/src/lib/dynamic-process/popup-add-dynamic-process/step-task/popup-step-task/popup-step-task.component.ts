@@ -211,9 +211,9 @@ export class PopupJobComponent implements OnInit {
   async changeCombobox(value, key) {
     this.stepsTasks[key] = value;
     let group = this.listGroupTask.find((x) => x.recID === value);
-    this.taskGroupName = group['taskGroupName'];
+    this.taskGroupName = group?.taskGroupName;
     let taskLink = group?.recID
-      ? JSON.parse(JSON.stringify(group['task']))
+      ? JSON.parse(JSON.stringify(group?.task))
       : JSON.parse(JSON.stringify(this.taskList));
     this.dataCombobox = this.mapDataTask(taskLink);
     await this.getTasksWithoutLoop(this.stepsTasks, this.dataCombobox);
@@ -403,7 +403,7 @@ export class PopupJobComponent implements OnInit {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = this.stepsTasks['durationDay'] || 0;
               this.step['durationHour'] = this.stepsTasks['durationHour'] || 0;
-              this.dialog.close({ data: this.stepsTasks, status: this.action });
+              this.dialog?.close({ data: this.stepsTasks, status: this.action });
             } 
           });
         } else {

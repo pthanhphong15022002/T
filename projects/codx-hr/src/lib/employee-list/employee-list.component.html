@@ -43,7 +43,7 @@
           </codx-img>
           <ng-container *ngIf="data.gender">
             <div class="mt-1 mx-auto">
-              <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true"
+              <codx-vll [name]="'HRGender'" [value]="data.gender" [showText]="true" [showBgColor]="true"
                 [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
             </div>
           </ng-container>
@@ -178,7 +178,7 @@
 </ng-template>
 <ng-template #tmpMasterDetail>
   <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [editable]="true"
-    rowHeight="50" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view" [showRowNumber]="false"
+    rowHeight="50" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view" [showRowNumber]="true"
     (dataChange)="dataChange($event)"></lib-employee-list-by-org>
 </ng-template>
 <!-- end tree_masterDetail -->

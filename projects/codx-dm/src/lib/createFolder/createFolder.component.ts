@@ -154,6 +154,8 @@ export class CreateFolderComponent implements OnInit {
   revision = false;
   physical = false;
   viewThumb = false;
+  alert = false;
+  email = false;
   copyrights: any;
   copyrightsControl: any = false;
   approvers: string;
@@ -216,6 +218,8 @@ export class CreateFolderComponent implements OnInit {
   titleSelectObject = 'Chọn đối tượng';
   titlemessage = 'Thông báo';
   titletitleCreateSubFolder = 'Thêm mới cấp thư mục';
+  titleAlert = 'Alert';
+  titleEmail = 'Email';
   titleDelete = 'Xóa';
   titleEdit = 'Sửa';
   titleDesctionSub = 'Diễn giải';
@@ -465,6 +469,8 @@ export class CreateFolderComponent implements OnInit {
         this.copyrightsControl =  false ;//this.dmSV.parentCopyrights;
         this.approval =  false;//this.dmSV.parentApproval;
         this.viewThumb = false;
+        this.alert = false;
+        this.email = false;
         this.location = ""; //this.dmSV.parentLocation;
         this.approvers = ""; //this.dmSV.parentApprovers;
         this.revisionNote = ""; //this.dmSV.parentRevisionNote;
@@ -502,6 +508,8 @@ export class CreateFolderComponent implements OnInit {
     this.approvers = data?.approvers == null ? "" : data?.approvers;
     this.revisionNote = data?.revisionNote == null ? "" : data?.revisionNote;
     this.viewThumb = data?.viewThumb == null ? false : data?.viewThumb;
+    this.alert = data?.isAlert == null ? false : data?.isAlert;
+    this.email = data?.isEmail == null ? false : data?.isEmail;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -540,6 +548,14 @@ export class CreateFolderComponent implements OnInit {
         break;
       case 'titleAvatar':
         this.viewThumb = value;
+        break;
+
+      case 'alert':
+        this.alert = value;
+        break;
+
+      case 'email':
+        this.email = value;
         break;
     }
     this.changeDetectorRef.detectChanges();
@@ -647,6 +663,8 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.icon = this.icon;
     this.fileEditing.subFolder = this.listSubFolder;
     this.fileEditing.viewThumb = this.viewThumb;
+    this.fileEditing.isAlert = this.alert;
+    this.fileEditing.isEmail = this.email;
     var that = this;
     if (!this.edit) {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
