@@ -43,7 +43,7 @@
           </codx-img>
           <ng-container *ngIf="data.gender">
             <div class="mt-1 mx-auto">
-              <codx-vll [name]="'HRGender'" [value]="data.gender" [showText]="true" [showBgColor]="true"
+              <codx-vll [name]="grvSetup['Gender']?.referedValue" [value]="data.gender" [showText]="true" [showBgColor]="true"
                 [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
             </div>
           </ng-container>
@@ -128,7 +128,7 @@
       <div class="d-flex has-action-menu justify-content-between w-100">
         <div class="d-flex flex-column fs-7">
           <div class="d-flex mb-1">
-            <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
+            <codx-vll [name]="grvSetup['Status']?.referedValue" [value]="data.status" [showBgColor]="true" [showText]="true"
               [className]="'badge badge-sm badge-inline'">
             </codx-vll>
           </div>
@@ -178,7 +178,7 @@
 </ng-template>
 <ng-template #tmpMasterDetail>
   <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [editable]="true"
-    rowHeight="50" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view" [showRowNumber]="true"
+    rowHeight="50" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view" [showRowNumber]="false"
     (dataChange)="dataChange($event)"></lib-employee-list-by-org>
 </ng-template>
 <!-- end tree_masterDetail -->
