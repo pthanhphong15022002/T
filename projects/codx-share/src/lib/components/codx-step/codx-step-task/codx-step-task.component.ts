@@ -95,7 +95,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() continueStep = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>();
   @Output() saveAssign = new EventEmitter<any>();
-//#endregion
+  //#endregion
   isEditTimeDefault = false;
   isUpdateProgressGroup = false;
   isUpdateProgressStep = false;
@@ -444,9 +444,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.disabled = true;
             break;
           case 'DP25':
-          case 'DP20':
           case 'DP26':
-          case 'SYS003':
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
@@ -479,6 +477,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               if (task.taskType == 'M') res.disabled = true;
             } else {
               res.disabled = true;
+            }
+            break;
+          case 'DP31': // bắt đầu ngay
+            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+              res.isblur = true;
             }
             break;
         }
@@ -553,14 +556,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.isblur = true;
             }
             break;
-          case 'DP24':
-            res.disabled = true;
-            break;
           case 'DP25':
-          case 'DP20':
           case 'DP24':
           case 'DP26':
-          case 'SYS003':
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
@@ -699,13 +697,30 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region start task
-  startTask(task: DP_Instances_Steps_Tasks){
-    if(task?.taskType == 'Q'){ //báo giá
+  startTask(task: DP_Instances_Steps_Tasks) {
+    if (task?.taskType == 'Q') {
+      //báo giá
       this.addQuotation();
-    }else if(task?.taskType == 'CO'){ // hợp đồng
-      this.openPopupContract('add',);
-    }else{
-
+    } else if (task?.taskType == 'CO') {
+      // hợp đồng
+      this.openPopupContract('add');
+    } else {
+      this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [task?.stepID, task?.recID])
+        .subscribe((res) => {
+          if(res){
+            task.status = "1";
+            task.modifiedBy = this.user.userID;
+            task.modifiedOn = new Date();
+            let taskFind = this.currentStep?.tasks?.find((taskFind) => taskFind.recID == task.recID);
+            if(taskFind){
+              taskFind.status = "1";
+              taskFind.modifiedBy = this.user.userID;
+              taskFind.modifiedOn = new Date();
+            }
+            this.notiService.notifyCode('SYS007');
+          }
+        });
     }
   }
 
@@ -759,7 +774,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       formName: 'CMQuotations',
       gridViewName: 'grvCMQuotations',
       funcID: 'CM0202',
-    }
+    };
     var obj = {
       data: res,
       disableRefID: false,
@@ -781,21 +796,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     );
   }
 
-  async openPopupContract(action, contract?){
+  async openPopupContract(action, contract?) {
     let data = {
       action,
       contract: contract || null,
       // account: this.account,
-      type: 'view'
-    }
+      type: 'view',
+    };
     let formModel: FormModel = {
-      entityName: "CM_Contracts",
-      entityPer: "CM_Contracts",
-      formName: "CMContracts",
-      funcID: "CM0204",
-      gridViewName: "grvCMContracts"
-
-    }
+      entityName: 'CM_Contracts',
+      entityPer: 'CM_Contracts',
+      formName: 'CMContracts',
+      funcID: 'CM0204',
+      gridViewName: 'grvCMContracts',
+    };
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
@@ -872,6 +886,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       this.currentStep?.tasks?.push(data.task);
       this.currentStep['progress'] = data?.progressStep;
+      this.notiService.notifyCode('SYS006');
     }
   }
 
@@ -920,6 +935,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (indexTask >= 0) {
           this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
+        this.notiService.notifyCode('SYS007');
       }
     }
   }
@@ -1023,7 +1039,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
   //#endregion
-  
+
   //#region giao viec
   assignTask(moreFunc, data) {
     if (data?.assigned == '1') {
@@ -1077,7 +1093,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     });
   }
   //#endregion
-  
+
   //#region group tasks
   async addGroupTask() {
     let taskGroup = new DP_Instances_Steps_TaskGroups();
@@ -1233,10 +1249,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
-//#endregion
- 
+  //#endregion
+
   //#region progress
-async openPopupUpdateProgress(data, type) {
+  async openPopupUpdateProgress(data, type) {
     if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
       return;
     let checkUpdate = this.stepService.checkUpdateProgress(
@@ -1311,7 +1327,9 @@ async openPopupUpdateProgress(data, type) {
         //cập nhật group và step
         if (dataProgress?.isUpdate) {
           let groupView = this.listGroupTask.find(
-            (group) => group.recID == dataProgress?.groupTaskID || group.refID == dataProgress?.groupTaskID
+            (group) =>
+              group.recID == dataProgress?.groupTaskID ||
+              group.refID == dataProgress?.groupTaskID
           );
           let groupData = this.currentStep?.taskGroups?.find(
             (group) => group.recID == dataProgress?.groupTaskID
@@ -1375,10 +1393,10 @@ async openPopupUpdateProgress(data, type) {
     }
     return false;
   }
-//#endregion
+  //#endregion
 
-  //#region view 
-viewTask(data, type) {
+  //#region view
+  viewTask(data, type) {
     if (data) {
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
@@ -1440,7 +1458,7 @@ viewTask(data, type) {
       });
     }
   }
-//#endregion
+  //#endregion
 
   getTaskEnd() {
     let countGroup = this.listGroupTask?.length;
@@ -1459,7 +1477,6 @@ viewTask(data, type) {
       }
     }
   }
-
 
   checRoleTask(data, type) {
     return (
@@ -1559,16 +1576,24 @@ viewTask(data, type) {
                       );
                       dialog.closed.subscribe((e) => {
                         if (e?.event) {
-                          if (this.listGroupTask?.length > 0) {                   
-                            let group = this.listGroupTask.find((g) => g.refID == data?.taskGroupID);
+                          if (this.listGroupTask?.length > 0) {
+                            let group = this.listGroupTask.find(
+                              (g) => g.refID == data?.taskGroupID
+                            );
                             if (group) {
-                              let indexTask = group?.task?.findIndex((taskFind) => taskFind.recID == data.recID);
+                              let indexTask = group?.task?.findIndex(
+                                (taskFind) => taskFind.recID == data.recID
+                              );
                               if (indexTask != -1) {
                                 group.task[indexTask].actionStatus = '2';
-                                let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
-                                group.task?.splice(indexTask,1,taskConvert);
-                                let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
-                                if(taskFind){
+                                let taskConvert = JSON.parse(
+                                  JSON.stringify(group.task[indexTask])
+                                );
+                                group.task?.splice(indexTask, 1, taskConvert);
+                                let taskFind = this.currentStep?.task?.find(
+                                  (task) => taskFind.recID == data.recID
+                                );
+                                if (taskFind) {
                                   taskFind['actionStatus'] = '2';
                                 }
                               }
@@ -1674,16 +1699,24 @@ viewTask(data, type) {
             )
             .subscribe((res) => {
               if (res) {
-                if (this.listGroupTask?.length > 0) {                   
-                  let group = this.listGroupTask.find((g) => g.refID == data?.taskGroupID);
+                if (this.listGroupTask?.length > 0) {
+                  let group = this.listGroupTask.find(
+                    (g) => g.refID == data?.taskGroupID
+                  );
                   if (group) {
-                    let indexTask = group?.task?.findIndex((taskFind) => taskFind.recID == data.recID);
+                    let indexTask = group?.task?.findIndex(
+                      (taskFind) => taskFind.recID == data.recID
+                    );
                     if (indexTask != -1) {
                       group.task[indexTask].actionStatus = '2';
-                      let taskConvert = JSON.parse(JSON.stringify(group.task[indexTask]));
-                      group.task?.splice(indexTask,1,taskConvert);
-                      let taskFind = this.currentStep?.task?.find(task => taskFind.recID == data.recID);
-                      if(taskFind){
+                      let taskConvert = JSON.parse(
+                        JSON.stringify(group.task[indexTask])
+                      );
+                      group.task?.splice(indexTask, 1, taskConvert);
+                      let taskFind = this.currentStep?.task?.find(
+                        (task) => taskFind.recID == data.recID
+                      );
+                      if (taskFind) {
                         taskFind['actionStatus'] = '0';
                       }
                     }
@@ -1759,9 +1792,9 @@ viewTask(data, type) {
     }
     return lstUserID;
   }
-//#endregion
-  
-getListUserIDBy(lstId, type) {
+  //#endregion
+
+  getListUserIDBy(lstId, type) {
     return this.api.execSv<any>(
       'HR',
       'HR',

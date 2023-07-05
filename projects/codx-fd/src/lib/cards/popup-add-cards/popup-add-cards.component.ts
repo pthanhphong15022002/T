@@ -119,7 +119,8 @@ export class PopupAddCardsComponent implements OnInit {
     @Optional() dialogRef?: DialogRef,
     @Optional() dd?: DialogData
   ) {
-    this.funcID = dd.data;
+    this.funcID = dd.data.funcID;
+    this.card = dd.data.data;
     this.dialog = dialogRef;
     this.user = this.auth.userValue;
   }
@@ -129,6 +130,7 @@ export class PopupAddCardsComponent implements OnInit {
     this.loadDataAsync(this.funcID);
     this.getMessageNoti("SYS009");
     this.getMyWallet(this.user.userID);
+    console.log(this.card)
   }
 
   loadDataAsync(funcID: string) {
@@ -155,15 +157,17 @@ export class PopupAddCardsComponent implements OnInit {
           if (this.cardType != this.CARDTYPE_EMNUM.Share && this.cardType != this.CARDTYPE_EMNUM.Radio) {
             this.loadDataPattern(this.cardType);
           }
-          this.api.execSv<any>('FD', 'Core', 'DataBusiness', 'GetDefaultAsync', [funcID, 'FD_Cards',])
-          .subscribe((response: any) => {
-            if (response) {
-              var data = response.data;
-              this.card = {
-                ...data,
-              };
-            }
-          })
+          if(!this.card){
+            this.api.execSv<any>('FD', 'Core', 'DataBusiness', 'GetDefaultAsync', [funcID, 'FD_Cards',])
+            .subscribe((response: any) => {
+              if (response) {
+                var data = response.data;
+                this.card = {
+                  ...data,
+                };
+              }
+            })
+          }
         }
       })
     }

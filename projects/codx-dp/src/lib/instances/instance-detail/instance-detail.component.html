@@ -14,10 +14,8 @@
       <ng-template #header>
         <div class="d-flex justify-content-between align-items-top">
           <div class="container_detail instance-info">
-            <div class="d-flex justify-content-between">
-              <h2 class="mb-1">
-                {{ dataSelect?.title }}
-              </h2>
+            <div class="fs-4 fw-bold">
+              {{ dataSelect?.title }}
             </div>
 
             <div class="d-flex flex-column">
@@ -177,7 +175,7 @@
               </div>
               <div class="d-flex flex-column">
                 <div
-                  class="badge badge-md d-flex align-items-center p-2"
+                  class="badge badge-sm d-flex align-items-center"
                   [ngStyle]="{
                     'background-color':
                       dataSelect.status == '3' || dataSelect.status == '4'
@@ -190,7 +188,7 @@
                   <span
                     [ngClass]="stepValue['icon']"
                     [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-1"
+                    class="me-2"
                   ></span>
                   <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                     stepName
@@ -215,7 +213,7 @@
                 <codx-progressbar
                   [progress]="progress"
                   [stype]="2"
-                  [size]="34"
+                  [size]="30"
                 ></codx-progressbar>
               </div>
             </div>
@@ -275,7 +273,7 @@
         </div>
         <div
           id="viewModeDetail"
-          class="pt-2 pe-2 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
+          class="pt-1 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
         >
           <div>
             <!-- <ng-container

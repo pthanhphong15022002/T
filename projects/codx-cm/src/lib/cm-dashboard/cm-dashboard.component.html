@@ -8,3 +8,102 @@
   [button]="button"
 >
 </codx-views>
+
+<ng-template #template>
+  <codx-dashboard
+    [templates]="dashBoardDeals"
+    [panels]="panelsDeals"
+    [datas]="datasDeals"
+    [isEditMode]="isEditMode"
+    [cellSpacing]="[20, 20]"
+  ></codx-dashboard>
+</ng-template>
+
+<!-- cơ hội mới -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="1" title="Count chart - Mới">
+    <count-chart
+      class="w-100 h-100"
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
+      [title]="getNameStatus('1')"
+      [value]="0"
+    ></count-chart>
+  </div>
+</ng-template>
+<!-- cơ hội đang thực hiện -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="2" title="Count chart - Đang thực hiện">
+    <count-chart
+      class="w-100 h-100"
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
+      [title]="getNameStatus('2')"
+      [value]="0"
+    ></count-chart>
+  </div>
+</ng-template>
+<!-- cơ hội thành công  -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="3" title="Count chart - Thành công">
+    <count-chart
+      class="w-100 h-100"
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
+      [title]="getNameStatus('3')"
+      [value]="0"
+    ></count-chart>
+  </div>
+</ng-template>
+<!-- cơ hội thất bại  -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="4" title="Count chart - Thất bại">
+    <count-chart
+      class="w-100 h-100"
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
+      [title]="getNameStatus('5')"
+      [value]="0"
+    ></count-chart>
+  </div>
+</ng-template>
+<!-- Tỷ lệ phân bổ cơ hội theo dòng sản phẩm -->
+<ng-template #templateDeals>
+  <div
+    class="w-100 h-100"
+    id="5"
+    title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
+  ></div>
+</ng-template>
+<!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
+<ng-template #templateDeals>
+  <div
+    class="w-100 h-100"
+    id="6"
+    title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
+  ></div>
+</ng-template>
+<!-- Top nhân viên có nhiều cơ hội thành công nhất -->
+<ng-template #templateDeals>
+  <div
+    class="w-100 h-100"
+    id="7"
+    title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
+  ></div>
+</ng-template>
+<!-- Lý do thành công -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="8" title="Lý do thành công"></div>
+</ng-template>
+<!-- Lý do thất bại -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="9" title="Lý do thất bại "></div>
+</ng-template>
+<!-- Thống kê hiệu suất trong năm -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="10" title=" Thống kê hiệu suất trong năm"></div>
+</ng-template>
+<!-- Thống kê năng suất nhân viên -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="11" title="Thống kê năng suất nhân viên"></div>
+</ng-template>

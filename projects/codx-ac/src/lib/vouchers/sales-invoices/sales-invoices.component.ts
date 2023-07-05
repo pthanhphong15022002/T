@@ -109,15 +109,15 @@ export class SalesInvoicesComponent
         headerText:
           this.gvsSalesInvoicesLines?.ItemID?.headerText ?? 'Mặt hàng',
         footerText: 'Tổng cộng',
-        footerClass: 'text-end pe-5',
+        footerClass: 'text-end',
       }),
       new TableColumn({
         labelName: 'Quantity',
         field: 'quantity',
         headerText:
           this.gvsSalesInvoicesLines?.Quantity?.headerText ?? 'Số lượng',
-        headerClass: 'text-end pe-5',
-        footerClass: 'text-end pe-5',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
         hasSum: true,
       }),
       new TableColumn({
@@ -125,15 +125,15 @@ export class SalesInvoicesComponent
         field: 'salesPrice',
         headerText:
           this.gvsSalesInvoicesLines?.SalesPrice?.headerText ?? 'Đơn giá',
-        headerClass: 'text-end pe-5',
+        headerClass: 'text-end',
       }),
       new TableColumn({
         labelName: 'NetAmt',
         field: 'netAmt',
         headerText:
           this.gvsSalesInvoicesLines?.NetAmt?.headerText ?? 'Thành tiền',
-        headerClass: 'text-end pe-5',
-        footerClass: 'text-end pe-5',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
         hasSum: true,
         sumFormat: SumFormat.Currency,
       }),
@@ -142,8 +142,8 @@ export class SalesInvoicesComponent
         field: 'vatAmt',
         headerText:
           this.gvsSalesInvoicesLines?.VATID?.headerText ?? 'Thuế GTGT',
-        headerClass: 'text-end pe-5',
-        footerClass: 'text-end pe-5',
+        headerClass: 'text-end pe-3',
+        footerClass: 'text-end pe-3',
         hasSum: true,
         sumFormat: SumFormat.Currency,
       }),
@@ -161,14 +161,14 @@ export class SalesInvoicesComponent
             labelName: 'Account',
             headerText: gvs?.AccountID?.headerText ?? 'Tài khoản',
             footerText: 'Tổng cộng',
-            footerClass: 'text-end pe-5',
+            footerClass: 'text-end',
           }),
           new TableColumn({
             labelName: 'Debt1',
             headerText: 'Nợ',
             field: 'transAmt',
-            headerClass: 'text-end pe-5',
-            footerClass: 'text-end pe-5',
+            headerClass: 'text-end',
+            footerClass: 'text-end',
             hasSum: true,
             sumFormat: SumFormat.Currency,
           }),
@@ -176,14 +176,16 @@ export class SalesInvoicesComponent
             labelName: 'Debt2',
             headerText: 'Có',
             field: 'transAmt',
-            headerClass: 'text-end pe-5',
-            footerClass: 'text-end pe-5',
+            headerClass: 'text-end',
+            footerClass: 'text-end',
             hasSum: true,
             sumFormat: SumFormat.Currency,
           }),
           new TableColumn({
             labelName: 'Memo',
             headerText: gvs?.Memo?.headerText ?? 'Ghi chú',
+            headerClass: 'pe-3',
+            footerClass: 'pe-3',
           }),
         ];
       });
@@ -267,9 +269,31 @@ export class SalesInvoicesComponent
         'LoadDataAsync',
         'e973e7b7-10a1-11ee-94b4-00155d035517'
       )
-      .subscribe((acctTrans: IAcctTran[]) => {
-        console.log(acctTrans);
-        console.log(this.groupBy(acctTrans, 'entryID'));
+      .subscribe((res: IAcctTran[]) => {
+        console.log(res);
+        this.acctTranLines = this.groupBy(res, 'entryID');
+
+        // calculate totalRow
+        const totalRow: { total1: number; total2: number } = {
+          total1: 0,
+          total2: 0,
+        };
+        for (const group of this.acctTranLines) {
+          for (const line of group) {
+            if (!line.crediting) {
+              totalRow.total1 += line.transAmt;
+            } else {
+              totalRow.total2 += line.transAmt;
+            }
+          }
+        }
+        for (const col of this.accountingColumns) {
+          if (col.labelName === 'Debt1') {
+            col.sum = totalRow.total1;
+          } else if (col.labelName === 'Debt2') {
+            col.sum = totalRow.total2;
+          }
+        }
 
         this.acctLoading = false;
       });
@@ -407,13 +431,13 @@ export class SalesInvoicesComponent
   //#endregion
 
   //#region Function
-  groupBy(arr: any[], key: string): any {
-    arr.reduce(
-      (prev, current) => ({
-        ...prev,
-        [current[key]]: [...(prev[current[key]] || []), current],
-      }),
-      {}
+  groupBy(arr: any[], key: string): any[][] {
+    return Object.values(
+      arr.reduce((acc, current) => {
+        acc[current[key]] = acc[current[key]] ?? [];
+        acc[current[key]].push(current);
+        return acc;
+      }, {})
     );
   }
   //#endregion
