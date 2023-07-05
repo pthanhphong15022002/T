@@ -351,91 +351,210 @@
             </div>
           </div>
           <div class="instance-select">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="name" class="nav nav-tabs">
-              <ng-container *ngFor="let item of tabDetail; let i = index">
-                <li [ngbNavItem]="item.name" class="nav-item">
-                  <a ngbNavLink class="nav-link">
-                    <div class="d-flex align-items-center">
-                      <i
-                        [ngClass]="
-                          item.icon +
-                          ' ' +
-                          (item.name == name ? 'text-primary' : '')
-                        "
-                        class="me-2"
-                      ></i
-                      ><span class="">
-                        <codx-label
-                          [name]="'tab' + item.name"
-                          [formModel]="'SYS'"
-                          [default]="item.textDefault"
-                        >
-                        </codx-label>
-                      </span>
+            <ejs-tab
+              id="tab_adaptive"
+              #adaptiveTab
+              heightAdjustMode="None"
+              height="250px"
+            >
+              <e-tabitems>
+                <!-- Tab thông tin chứng từ -->
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-info icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Thông tin chung"
+                        [formModel]="formModel"
+                        name="lblInformation"
+                      ></codx-label>
                     </div>
-                  </a>
-                  <ng-template ngbNavContent>
-                    <ng-container
-                      *ngTemplateOutlet="
-                        tabIns;
-                        context: { $implicit: item.name }
-                      "
-                    >
-                    </ng-container>
                   </ng-template>
-                </li>
-              </ng-container>
-            </ul>
-            <div [ngbNavOutlet]="nav" class="pt-4 cmdetail-scroll"></div>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <codx-information
+                        [funcID]="funcID"
+                        [dataSelected]="dataSelected"
+                        [formModel]="formModel"
+                        [gridViewSetup]="gridViewSetup"
+                        [entityName]="entityName"
+                        [listAddress]="listAddress"
+                        [nameCbxCM]="nameCbxCM"
+                      >
+                      </codx-information>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-contact_phone icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Liên hệ"
+                        [formModel]="formModel"
+                        name="lblContact"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <codx-list-contacts
+                        [selectAll]="false"
+                        [funcID]="funcID"
+                        [objectID]="dataSelected.recID"
+                        [objectType]="funcID == 'CM0101' ? '1' : '3'"
+                        [objectName]="
+                          funcID == 'CM0101'
+                            ? dataSelected.customerName
+                            : dataSelected.partnerName
+                        "
+                        [hidenMF]="false"
+                        [type]="'formDetail'"
+                      ></codx-list-contacts>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-location_on icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Địa chỉ"
+                        [formModel]="formModel"
+                        name="lblAddress"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <codx-address-cm
+                        [type]="'formDetail'"
+                        [funcID]="funcID"
+                        [entityName]="entityName"
+                        [id]="dataSelected.recID"
+                        (addressName)="addressName($event)"
+                      ></codx-address-cm>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem *ngIf="funcID == 'CM0101'">
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-add_shopping_cart icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Cơ hội"
+                        [formModel]="formModel"
+                        name="lblDeal"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <codx-list-deals
+                        [customerID]="dataSelected.recID"
+                      ></codx-list-deals>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem *ngIf="funcID == 'CM0101'">
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-monetization_on icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Báo giá"
+                        [formModel]="formModel"
+                        name="lblQuotations"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <codx-quotations-tab-view
+                        [funcID]="'CM0202'"
+                        [showButton]="true"
+                        [customerID]="dataSelected.recID"
+                        [predicates]="'CustomerID==@0'"
+                        [dataValues]="dataSelected.recID"
+                        [disableCusID]="true"
+                      ></codx-quotations-tab-view>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem *ngIf="funcID == 'CM0101'">
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-shopping_bag icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Hợp đồng"
+                        [formModel]="formModel"
+                        name="lblContract"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <ng-container
+                        [ngTemplateOutlet]="contract"
+                        [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+                      >
+                      </ng-container>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem *ngIf="funcID == 'CM0101'">
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-more icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Công việc"
+                        [formModel]="formModel"
+                        name="lblTask"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <ng-container
+                        [ngTemplateOutlet]="taskTemplate"
+                        [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+                      >
+                      </ng-container>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem *ngIf="funcID == 'CM0104'">
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top">
+                      <span class="icon-shopping_cart icon-16 me-1"></span>
+                      <codx-label
+                        class="fw-bold text-dark"
+                        default="Cơ hội liên quan"
+                        [formModel]="formModel"
+                        name="lblDealCompetitors"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <codx-view-dealcompetitors
+                        [competitorID]="dataSelected.recID"
+                      ></codx-view-dealcompetitors>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+              </e-tabitems>
+            </ejs-tab>
           </div>
         </div>
         <ng-template #tabIns let-name>
           <div id="viewModeDetail" class="view-step-box">
-            <ng-container *ngIf="name == 'Information'">
-              <codx-information
-                [funcID]="funcID"
-                [dataSelected]="dataSelected"
-                [formModel]="formModel"
-                [gridViewSetup]="gridViewSetup"
-                [entityName]="entityName"
-                [listAddress]="listAddress"
-                [nameCbxCM]="nameCbxCM"
-              >
-              </codx-information>
-            </ng-container>
-            <ng-container *ngIf="name == 'Contact'">
-              <!-- <div *ngFor="let item of listContacts">
-                <ng-container
-                  [ngTemplateOutlet]="contacts"
-                  [ngTemplateOutletContext]="{ $implicit: item }"
-                >
-                </ng-container>
-              </div> -->
-              <codx-list-contacts
-                [selectAll]="false"
-                [funcID]="funcID"
-                [objectID]="dataSelected.recID"
-                [objectType]="funcID == 'CM0101' ? '1' : '3'"
-                [objectName]="
-                  funcID == 'CM0101'
-                    ? dataSelected.customerName
-                    : dataSelected.partnerName
-                "
-                [hidenMF]="false"
-                [type]="'formDetail'"
-              ></codx-list-contacts>
-            </ng-container>
-            <ng-container *ngIf="name == 'Address'">
-              <div class="mb-1">
-                <codx-address-cm
-                  [type]="'formDetail'"
-                  [funcID]="funcID"
-                  [entityName]="entityName"
-                  [id]="dataSelected.recID"
-                  (addressName)="addressName($event)"
-                ></codx-address-cm>
-              </div>
-            </ng-container>
             <ng-container *ngIf="name == 'Deal'">
               <codx-list-deals
                 [customerID]="dataSelected.recID"
