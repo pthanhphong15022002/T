@@ -45,12 +45,12 @@ export class TargetsComponent
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
-  funcID = 'CM0601';
+  funcID = '';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = '';
+  method: string = 'GetListTargetAsync';
   idField: string = 'recID';
   //#endregion
 
@@ -71,6 +71,7 @@ export class TargetsComponent
       this.queryParams = this.router.snapshot.queryParams;
     }
     this.getSchedule();
+
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -104,9 +105,9 @@ export class TargetsComponent
     //lấy list target để vẽ schedule
     this.schedules = new ResourceModel();
     this.schedules.assemblyName = 'CM';
-    this.schedules.className = 'TargetsBusiness';
+    this.schedules.className = 'TargetsLinesBusiness';
     this.schedules.service = 'CM';
-    this.schedules.method = 'GetListTargetAsync';
+    this.schedules.method = 'GetListTargetLineAsync';
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
       this.schedules.predicate = this.queryParams?.predicate;
       this.schedules.dataValue = this.queryParams?.dataValue;
@@ -121,17 +122,17 @@ export class TargetsComponent
 
     this.scheduleModel = {
       id: 'recID',
-      subject: { name: 'targetName' },
-      // startTime: { name: 'startDate' },
-      // endTime: { name: 'endDate' },
-      resourceId: { name: 'owner' },
+      subject: { name: 'target' },
+      startTime: { name: 'startDate' },
+      endTime: { name: 'endDate' },
+      resourceId: { name: 'salespersonID' },
       status: 'status',
     };
 
     this.scheduleHeaderModel = {
       Name: 'Owners',
-      Field: 'owner',
-      IdField: 'owner',
+      Field: 'salespersonID',
+      IdField: 'salespersonID',
       TextField: 'userName',
       Title: 'Owners',
     };
