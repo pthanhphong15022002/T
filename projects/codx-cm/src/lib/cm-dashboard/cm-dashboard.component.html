@@ -82,10 +82,9 @@
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
   >
-    <ejs-treemap
-      align="center"
+    <!-- <ejs-treemap
       style="display: block"
-      [dataSource]="dataDashBoard?.tmpCountsBussinessLine"
+      [dataSource]="dataDashBoard?.tmpCountsBussinessLine ?? []"
       weightValuePath="quantity"
       rangeColorValuePath="quantity"
       [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
@@ -98,7 +97,7 @@
           '<div><span >${businessLineName}: </span><span >${quantity}</span></div>'
       }"
     >
-    </ejs-treemap>
+    </ejs-treemap> -->
   </div>
 </ng-template>
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
