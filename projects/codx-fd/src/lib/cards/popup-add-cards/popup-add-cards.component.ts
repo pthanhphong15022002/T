@@ -460,23 +460,35 @@ export class PopupAddCardsComponent implements OnInit {
       //   }
       // }
       let post: tmpPost = new tmpPost();
-      post.attachments = this.attachment.fileUploadList.length;
       
-      this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddNewAsync", [this.card, post]).subscribe(async (res: any[]) => {
-        console.log('AddNewAsync',res)
-        if (res && res[0] && res[1] && res[2]) {
-          if (this.attachment && this.attachment.fileUploadList.length){
-            this.attachment.objectId = res[2].recID;
-            (await this.attachment.saveFilesObservable()).subscribe();
+
+      if (this.attachment && this.attachment.fileUploadList.length)
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {
+            let attachments = Array.isArray(res) ? res.length : 1;
+            post.attachments = attachments;
+            this.addCardAPI(post);
           }
-          (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
-          this.dialog.close();
-        }
-        else {
-          this.notifySV.notify(res[1]);
-        }
-      });
+        });
+      else {
+        this.addCardAPI(post);
+      }
+
+      
     }
+  }
+
+  addCardAPI(post: tmpPost){
+    this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddNewAsync", [this.card, post]).subscribe(async (res: any[]) => {
+      console.log('AddNewAsync',res)
+      if (res && res[1]) {
+        (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
+        this.dialog.close();
+      }
+      else {
+        this.notifySV.notify(res[1]);
+      }
+    });
   }
 
   openFormShare(content: any) {
