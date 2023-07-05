@@ -1,28 +1,28 @@
 import {
-  Component,
-  ElementRef,
   OnInit,
   Optional,
   ViewChild,
+  Component,
+  ElementRef,
 } from '@angular/core';
 import {
-  ApiHttpService,
-  AuthStore,
-  CacheService,
-  CallFuncService,
-  DialogData,
-  DialogRef,
-  FormModel,
-  NotificationsService,
   Util,
+  AuthStore,
+  DialogRef,
+  DialogData,
+  CacheService,
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
   DP_Instances_Steps_Tasks,
   DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'codx-add-stask',
@@ -30,45 +30,46 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
   styleUrls: ['./codx-add-task.component.scss'],
 })
 export class CodxAddTaskComponent implements OnInit {
-  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
-  dialog!: DialogRef;
-  typeTask ;
-  isEditTimeDefault = false;
   vllShare = 'BP021';
   linkQuesiton = 'http://';
+  typeTask;
   listGroup = [];
   recIdEmail = '';
   isNewEmails = true;
+  isEditTimeDefault = false;
+
+  dialog!: DialogRef;
+  endDateParent: Date;
+  startDateParent: Date;
+  step: DP_Instances_Steps;
   stepsTasks: DP_Instances_Steps_Tasks;
   listTask: DP_Instances_Steps_Tasks[] = [];
-  step: DP_Instances_Steps;
 
-  fieldsGroup = { text: 'taskGroupName', value: 'refID' };
   fieldsTask = { text: 'taskName', value: 'refID' };
-
-  dataCombobox = [];
-  valueInput = '';
-  litsParentID = [];
-
-  showLabelAttachment = false;
-  isHaveFile = false;
+  fieldsGroup = { text: 'taskGroupName', value: 'refID' };
 
   folderID = '';
-  groupTaskID = null;
-  view = [];
-  isSaveTimeTask = true;
-  isSaveTimeGroup = true;
-  groupTask;
   titleName = '';
-  
-  isLoadDate = false;
-  isTaskDefault = false;
-  startDateParent: Date;
-  endDateParent: Date;
+  valueInput = '';
+  view = [];
+  dataCombobox = [];
+  litsParentID = [];
+
+  user;
+  groupTask;
   isSave = true;
+  groupTaskID = null;
+  isLoadDate = false;
+  isHaveFile = false;
+  isSaveTimeTask = true;
+  isTaskDefault = false;
+  isSaveTimeGroup = true;
+  showLabelAttachment = false;
+
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -76,41 +77,47 @@ export class CodxAddTaskComponent implements OnInit {
     D: 'Share_Departments_Sgl',
     O: 'Share_OrgUnits_Sgl',
   };
-  participant: DP_Instances_Steps_Tasks_Roles[] = [];
   owner: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
-  user;
-  
+  participant: DP_Instances_Steps_Tasks_Roles[] = [];
+
   constructor(
     private cache: CacheService,
+    private api: ApiHttpService,
+    private authStore: AuthStore,
+    private stepService: StepService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
-    private authStore: AuthStore,
-    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.step = dt?.data?.step;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.taskType;
-    this.step = dt?.data?.step;
-    this.listGroup = dt?.data?.listGroup;
     this.listTask = dt?.data?.listTask;
+    this.listGroup = dt?.data?.listGroup;
     this.stepsTasks = dt?.data?.dataTask;
-    this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.groupTaskID = dt?.data?.groupTaskID;
-    this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     this.titleName = dt?.data?.titleName || '';
+    this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
+    this.isSave =
+      dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
   }
 
   ngOnInit(): void {
     this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
     this.roles = this.stepsTasks['roles'] || [];
-    this.startDateParent = new Date(this.step?.startDate || new Date);
-    this.endDateParent = new Date(this.step?.endDate || null);
-    if(!this.stepsTasks?.taskGroupID){
-      this.stepsTasks.startDate = this.startDateParent;
+    if (!this.stepsTasks?.taskGroupID) {
+      this.startDateParent = new Date(this.step?.startDate || new Date());
+      this.endDateParent = new Date(this.step?.endDate || null);
+    } else {
+      this.groupTask = this.listGroup.find(
+        (x) => x.refID === this.stepsTasks?.taskGroupID
+      );
+      this.startDateParent = new Date(this.groupTask['startDate']);
+      this.endDateParent = new Date(this.groupTask['endDate']);
     }
     this.getFormModel();
     if (this.stepsTasks?.parentID) {
@@ -118,11 +125,14 @@ export class CodxAddTaskComponent implements OnInit {
     }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     this.participant = this.roles?.filter((role) => role.roleType === 'P');
-    if(this.action == 'add'){
+    if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
-      this.owner = [role]
+      this.owner = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
+      if (!this.stepsTasks?.taskGroupID) {
+        this.stepsTasks.startDate = this.startDateParent;
+      }
     }
   }
 
@@ -160,13 +170,13 @@ export class CodxAddTaskComponent implements OnInit {
 
   filterText(event, key) {
     this.stepsTasks[key] = event;
-    if(event){
+    if (event) {
       this.groupTask = this.listGroup.find((x) => x.refID === event);
       this.startDateParent = new Date(this.groupTask['startDate']);
       this.endDateParent = new Date(this.groupTask['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
       this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
-    }else{
+    } else {
       this.groupTask = this.listGroup.find((x) => x.recID === null);
       this.startDateParent = new Date(this.step['startDate']);
       this.endDateParent = new Date(this.step['endDate']);
@@ -181,15 +191,15 @@ export class CodxAddTaskComponent implements OnInit {
 
   changeValueDate(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
-    if(this.step){
-      if(this.isLoadDate){
+    if (this.step) {
+      if (this.isLoadDate) {
         this.isLoadDate = !this.isLoadDate;
         return;
       }
-      const startDate =  new Date(this.stepsTasks['startDate']);
+      const startDate = new Date(this.stepsTasks['startDate']);
       const endDate = new Date(this.stepsTasks['endDate']);
-     
-      if (endDate && startDate > endDate){
+
+      if (endDate && startDate > endDate) {
         this.isSaveTimeTask = false;
         this.isLoadDate = !this.isLoadDate;
         this.notiService.notifyCode('DP019');
@@ -199,84 +209,107 @@ export class CodxAddTaskComponent implements OnInit {
       } else {
         this.isSaveTimeTask = true;
       }
-  
-      if (endDate > this.endDateParent) {
+      if (this.stepService.compareDates(this.endDateParent, endDate) < 0) {
         this.isSaveTimeGroup = false;
         this.isLoadDate = !this.isLoadDate;
-        this.notiService.notifyCode('DP020');
+        let start =
+          ' ' +
+          this.stepService.formatDate(
+            this.startDateParent,
+            'dd/MM/yyyy HH:mm'
+          ) +
+          ' ';
+        let end =
+          ' ' +
+          this.stepService.formatDate(this.endDateParent, 'dd/MM/yyyy HH:mm') +
+          ' ';
+        this.notiService.notifyCode('DP020', 0, start, end);
         this.stepsTasks['durationHour'] = 0;
         this.stepsTasks['durationDay'] = 0;
         return;
-      }else{
+      } else {
         this.isSaveTimeGroup = true;
       }
-      
-      if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
+
+      if (this.stepService.compareDates(this.startDateParent, startDate) < 0) {
         this.isSaveTimeGroup = false;
         this.isLoadDate = !this.isLoadDate;
-        this.notiService.notifyCode('DP020');
+        let start =
+          ' ' +
+          this.stepService.formatDate(
+            this.startDateParent,
+            'dd/MM/yyyy HH:mm'
+          ) +
+          ' ';
+        let end =
+          ' ' +
+          this.stepService.formatDate(this.endDateParent, 'dd/MM/yyyy HH:mm') +
+          ' ';
+        this.notiService.notifyCode('DP020', 0, start, end);
         this.stepsTasks['durationHour'] = 0;
         this.stepsTasks['durationDay'] = 0;
         return;
-      }else{
+      } else {
         this.isSaveTimeGroup = true;
       }
       this.isLoadDate = !this.isLoadDate;
     }
-    if(this.stepsTasks['startDate'] && this.stepsTasks['endDate']){
+    if (this.stepsTasks['startDate'] && this.stepsTasks['endDate']) {
       const endDate = new Date(this.stepsTasks['endDate']);
       const startDate = new Date(this.stepsTasks['startDate']);
-      if(endDate >= startDate){
+      if (endDate >= startDate) {
         const duration = endDate.getTime() - startDate.getTime();
-        const time = Number((duration / 60 / 1000/ 60).toFixed(1));
+        const time = Number((duration / 60 / 1000 / 60).toFixed(1));
         let days = 0;
         let hours = 0;
-        if(time < 1){
-           hours = time;
-        }else{
+        if (time < 1) {
+          hours = time;
+        } else {
           hours = Number((time % 24).toFixed(1));
           days = Math.floor(time / 24);
-        }   
+        }
         this.stepsTasks['durationHour'] = hours;
         this.stepsTasks['durationDay'] = days;
       }
-    }else{
+    } else {
       this.stepsTasks['durationHour'] = 0;
       this.stepsTasks['durationDay'] = 0;
     }
   }
 
-  changeRoler(e, type) {    
+  changeRoler(e, type) {
     if (!e || e?.length == 0) return;
     let listUser = e || [];
     let listRole = [];
     listUser.forEach((element) => {
-        listRole.push({
-          objectID: element.objectID,
-          objectName: element.objectName,
-          objectType: element.objectType,
-          roleType: type,
-          taskID: this.stepsTasks['recID'],
-        });
+      listRole.push({
+        objectID: element.objectID,
+        objectName: element.objectName,
+        objectType: element.objectType,
+        roleType: type,
+        taskID: this.stepsTasks['recID'],
+      });
     });
-    if(type == 'P'){
+    if (type == 'P') {
       this.participant = listRole;
       this.removeRoleDuplicate();
-    }else if(type == "O"){
+    } else if (type == 'O') {
       this.owner = listRole;
-      this.stepsTasks['owner']= this.owner?.[0]?.objectID;
+      this.stepsTasks['owner'] = this.owner?.[0]?.objectID;
       this.removeRoleDuplicate();
     }
   }
 
-  removeRoleDuplicate(){
+  removeRoleDuplicate() {
     let roleTypeO = this.owner[0];
-      if(roleTypeO){
-        let index = this.participant?.findIndex(p => p.objectID == roleTypeO?.objectID);
-        if(index >= 0){
-          this.participant?.splice(index,1);
-        }
+    if (roleTypeO) {
+      let index = this.participant?.findIndex(
+        (p) => p.objectID == roleTypeO?.objectID
+      );
+      if (index >= 0) {
+        this.participant?.splice(index, 1);
       }
+    }
   }
 
   onDeleteOwner(objectID, data) {
@@ -285,14 +318,14 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   async saveData() {
-    this.stepsTasks['roles'] = [...this.participant,...this.owner];
+    this.stepsTasks['roles'] = [...this.participant, ...this.owner];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
-    if(!this.isSaveTimeTask){
+    if (!this.isSaveTimeTask) {
       this.notiService.notifyCode('DP019');
       return;
     }
-    if(!this.isSaveTimeGroup){
+    if (!this.isSaveTimeGroup) {
       this.notiService.notifyCode('DP020');
       return;
     }
@@ -312,7 +345,7 @@ export class CodxAddTaskComponent implements OnInit {
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
       return;
-    } 
+    }
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
@@ -323,49 +356,49 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
 
-  save(task){
-    if(this.action == 'add' || this.action == 'copy'){
+  save(task) {
+    if (this.action == 'add' || this.action == 'copy') {
       this.addTask(task);
     }
-    if(this.action == 'edit'){
+    if (this.action == 'edit') {
       this.editTask(task);
     }
   }
 
-  addTask(task){
-    if(this.isSave){
-      this.api.exec<any>(
-        'DP',
-        'InstanceStepsBusiness',
-        'AddTaskStepAsync',
-        task
-      ).subscribe(res => {
-        if(res){        
-          this.dialog.close({ task:res[0],progressGroup: res[1], progressStep: res[2] });
-        }
-      });
-    }else{
+  addTask(task) {
+    if (this.isSave) {
+      this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close({
+              task: res[0],
+              progressGroup: res[1],
+              progressStep: res[2],
+            });
+          }
+        });
+    } else {
       this.dialog.close(task);
     }
-    
   }
 
-  editTask(task){
-    if(this.isSave){
-      this.api.exec<any>(
-        'DP',
-        'InstanceStepsBusiness',
-        'UpdateTaskStepAsync',
-        task
-      ).subscribe(res => {
-        if(res){        
-          this.dialog.close({ task:res, progressGroup: null, progressStep: null });
-        }
-      });
-    }else{
+  editTask(task) {
+    if (this.isSave) {
+      this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', task)
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close({
+              task: res,
+              progressGroup: null,
+              progressStep: null,
+            });
+          }
+        });
+    } else {
       this.dialog.close(task);
     }
-   
   }
 
   handelMail() {
