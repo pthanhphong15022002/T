@@ -30,6 +30,7 @@ export class CodxListDealsComponent implements OnInit {
   colorReasonFail: any;
   currentRecID = '';
   gridViewSetup: any;
+  id: any;
   constructor(
     private cache: CacheService,
     private cmSv: CodxCmService,
@@ -38,12 +39,21 @@ export class CodxListDealsComponent implements OnInit {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
+    if (changes['customerID']) {
+      if (
+        changes['customerID']?.currentValue != null &&
+        changes['customerID']?.currentValue?.trim() != ''
+      ) {
+        if (changes['customerID']?.currentValue == this.id) return;
+        this.id = changes['customerID']?.currentValue;
+        this.getListDealsByCustomerID();
+      } else {
+        if (!this.loaded) this.loaded = true;
+      }
+    }
   }
 
   async ngOnInit() {
-    this.getListDealsByCustomerID();
     this.formModel = await this.cmSv.getFormModel('CM0201');
     this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName));
     this.getColorReason();
