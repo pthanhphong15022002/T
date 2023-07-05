@@ -119,7 +119,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       name: 'Progess',
       textDefault: 'Cập nhật tiến độ',
       isActive: false,
-      icon: "icon-i-hourglass-split",
+      icon: 'icon-i-hourglass-split',
       template: this.templetHistoryProgress,
     });
   }
@@ -230,11 +230,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
               data.extendControl == '0'
             )
               x.disabled = true;
-            break;
-          //tắt duyệt confirm
-          case 'TMT02016':
-          case 'TMT02017':
-            if (data.confirmStatus != '1') x.disabled = true;
             break;
           //tắt duyệt xác nhận:
           case 'TMT04032':

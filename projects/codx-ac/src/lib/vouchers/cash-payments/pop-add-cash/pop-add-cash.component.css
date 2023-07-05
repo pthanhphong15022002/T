@@ -97,9 +97,11 @@
 .ac-tab-basic{
     background-color: var(--primary-lighter) !important;
 }
+
 .icon-insert_link:hover{
     color: var(--primary-dark) !important;
 }
+
 .ac-dialog .card-header {
     margin-bottom: 0px !important;
     padding-bottom: 0px !important;
@@ -130,6 +132,8 @@
 .scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
     background: grey !important;
 }
+
+/* css vẽ khung input trước khi init */
 .ac-input{
     background-color: white;
     width: 100%;
@@ -145,15 +149,24 @@
 .ac-input .e-input-group{
     border: none !important;
 }
-.ac-input-disable .e-input-group {
-    border: none !important;
-}
-.ac-input-disable .codx-text{
-    border: none !important;
-}
+
 .ac-input codx-input{
     position: relative;
 }
+
+.ac-input .codx-text{
+    border: none !important;
+}
+
+.ac-input-disable .e-input-group {
+    border: none !important;
+}
+/* css vẽ khung input trước khi init */
+
+.ac-input-disable .codx-text{
+    border: none !important;
+}
+
 .ac-input-disable codx-input{
     position: relative;
 }

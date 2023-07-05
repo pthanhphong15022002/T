@@ -172,7 +172,7 @@ export class CmCustomerDetailComponent implements OnInit {
     setTimeout(() => {
       this.viewTag = this.dataSelected?.tags
     }, 100);
-    this.listTab(this.funcID);
+    // this.listTab(this.funcID);
     this.loaded = true;
   }
 
@@ -259,10 +259,8 @@ export class CmCustomerDetailComponent implements OnInit {
     } else if (funcID == 'CM0102') {
       this.tabDetail = [
         {
-          name: 'Information',
-          textDefault: 'Thông tin chung',
+          text: 'Thông tin chung',
           icon: 'icon-info',
-          isActive: true,
         },
         {
           name: 'Address',
