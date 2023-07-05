@@ -9,7 +9,7 @@ import {
   UserModel,
   CacheService,
 } from 'codx-core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({

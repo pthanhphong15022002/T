@@ -31,7 +31,7 @@ import {
   TM_TaskExtends,
   TM_TaskGroups,
 } from './model/task.model';
-import * as moment from 'moment';
+import moment from 'moment';
 import { CodxTasksService } from './codx-tasks.service';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { PopupAddComponent } from './popup-add/popup-add.component';

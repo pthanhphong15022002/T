@@ -113,6 +113,7 @@ export class PopupAddSignFileComponent implements OnInit {
   nextClick = false;
   isReleasing=false;
   typeCategory: any;
+  refID: any;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -143,8 +144,9 @@ export class PopupAddSignFileComponent implements OnInit {
     this.disableCateID = data?.data?.disableCateID ?? false;
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
-    this.isTemplate =data?.data?.isTemplate ? true : false;
+    this.isTemplate = data?.data?.isTemplate ? true : false;
     this.refType = data?.data?.refType ?? 'ES_SignFiles';
+    this.refID = data?.data?.refID;
     this.typeCategory = this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType;
     if (this.modeView == '2') {
       this.disableCateID = true;
@@ -774,6 +776,7 @@ export class PopupAddSignFileComponent implements OnInit {
     if (!this.isSaved && this.isAddNew) {
       if(this.data.refType==null || this.data.refType==''){
         this.data.refType = this.refType;
+        this.data.refID = this.refID;
       }
       this.esService.addNewSignFile(this.data).subscribe(async (res) => {
         if (res != null) {

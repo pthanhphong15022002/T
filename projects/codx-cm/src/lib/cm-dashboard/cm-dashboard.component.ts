@@ -61,7 +61,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         reportType: 'D',
         reportView: true,
         showFilter: true,
-
         model: {
           panelRightRef: this.template,
         },

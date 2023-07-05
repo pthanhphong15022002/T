@@ -1,7 +1,6 @@
 import { Injector, Pipe, PipeTransform } from '@angular/core';
 import { AuthStore } from 'codx-core';
-//import { ErmComponent } from '@shared/components/ermcomponent/erm.component';
-import * as moment from 'moment';
+import moment from 'moment';
 import 'moment/src/locale/vi';
 @Pipe({
   name: 'timefrom'
