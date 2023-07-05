@@ -1,13 +1,16 @@
 <codx-views
   #view
-  idField="recID"
   [views]="views"
   [button]="btnAdd"
-  service="AC"
   entityName="AC_CashTranfers"
   predicates="JournalNo=@0"
+  assemblyName="AC"
+  className="CashTranfersBusiness"
+  method="GetAsync"
   [dataValues]="journalNo"
   (buttonClick)="onClickAdd($event)"
+  (selectedChange)="onChange($event)"
+  [isSubView]="true"
 >
 </codx-views>
 
@@ -15,8 +18,374 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="view.formModel"
-    (clickMF)="onClickMoreFuncs($event, data)"
+    (clickMF)="onClickMF($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
+</ng-template>
+
+<ng-template #sider let-data>
+  <codx-temp-full
+    [titleTmp]="titleTmp"
+    [descTmp]="descTmp"
+    [desc2Tmp]="desc2Tmp"
+    cardCss="card-template border-bottom p-3 list-task"
+    [formModel]="view.formModel"
+    [modeImgs]="true"
+    [titleLine]="2"
+    [dataItem]="data"
+    [footer]="siderFooter"
+    [hideMF]="false"
+    typeMF="hover"
+    moreFuncCss="me-15"
+    (clickMF)="onClickMF($event, data)"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #titleTmp let-data>
+  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
+  <span class="fw-bold fs-6">{{
+    data.totalAmt | currency : data.currencyID : "code"
+  }}</span>
+</ng-template>
+
+<ng-template #descTmp let-data>
+  <div class="fw-bold mt-1">
+    {{ data.cashBookName }}
+  </div>
+</ng-template>
+
+<ng-template #desc2Tmp let-data>
+  <span class="text-gray-500 mt-1 line-clamp line-clamp-2">{{
+    data?.memo
+  }}</span>
+</ng-template>
+
+<ng-template #siderFooter let-data>
+  <div class="d-flex align-items-center justify-content-between mt-1">
+    <div class="d-flex align-items-center">
+      <codx-vll
+        [formModel]="view.formModel"
+        field="Status"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm me-3"
+      >
+      </codx-vll>
+      <div class="d-flex align-items-center">
+        <span class="icon-customize icon-16 me-1 text-gray-600"></span>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            data?.voucherDate
+              | formatvalue : view.formModel : 'voucherDate'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <codx-img [objectId]="data?.createdBy" objectType="AD_Users" [width]="30">
+    </codx-img>
+  </div>
+</ng-template>
+
+<ng-template #content>
+  <codx-detail-tmp
+    [header]="header"
+    [body]="body"
+    [hideMF]="false"
+    [formModel]="view.formModel"
+    [dataItem]="master"
+    [footer]="contentFooter"
+    (clickMF)="onClickMF($event, master)"
+  >
+  </codx-detail-tmp>
+</ng-template>
+
+<ng-template #header>
+  <div class="d-flex align-items-center ac-cashID mt-n8">
+    <div
+      class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-2"
+    >
+      <i class="icon-i-file-earmark-text text-white icon-14"></i>
+    </div>
+    <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
+      {{ master?.voucherNo }}
+    </span>
+
+    <div class="d-flex mt-1 ms-5">
+      <codx-label
+        fiedName="lblVoucherDate"
+        [formModel]="view.formModel"
+        default="Ngày chứng từ"
+        class="fw-bold label-colon"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          master?.voucherDate
+            | formatvalue : view.formModel : 'voucherDate'
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #body>
+  <div class="d-flex flex-column h-100">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <span class="fw-bold line-clamp line-clamp-1 fs-4">
+        {{ master.cashBookName }}
+      </span>
+      <codx-vll
+        [formModel]="view.formModel"
+        field="Status"
+        [value]="master?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm border-0 me-3"
+      >
+      </codx-vll>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <div>
+        <codx-label
+          fiedName="lblCashBookID"
+          [formModel]="view.formModel"
+          class="fw-bold label-colon"
+          default="Tài khoản chuyển"
+        ></codx-label>
+        <span>{{ master?.cashBookID }}</span>
+      </div>
+
+      <div class="badge badge-pill badge-primary me-3">
+        <span class="fw-bold fs-6">{{
+          master.totalAmt | currency : master?.currencyID : "code"
+        }}</span>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <codx-label
+        fiedName="lblCashBookID2Name"
+        [formModel]="view.formModel"
+        class="fw-bold label-colon"
+        default="Chuyển đến"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          master?.cashBookID2
+            | formatvalue : view.formModel : 'cashBookID2'
+            | async
+        "
+      ></span>
+    </div>
+
+    <div class="mb-2">
+      <codx-label
+        fiedName="lblCashBookID2"
+        [formModel]="view.formModel"
+        class="fw-bold label-colon"
+        default="Tài khoản nhận"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          !master?.cashBookID2
+            ? (master?.cashBookID2
+              | formatvalue : view.formModel : 'cashBookID2'
+              | async)
+            : master?.cashBookID2
+        "
+      ></span>
+    </div>
+
+    <div class="mb-2" [ngClass]="!expanding ? 'd-flex' : ''">
+      <span #memo [class]="!expanding ? 'text-truncate' : ''">
+        <codx-label
+          fiedName="memo"
+          [formModel]="view.formModel"
+          class="fw-bold label-colon"
+          default="Diễn giải"
+        ></codx-label>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            master?.memo | formatvalue : view.formModel : 'memo' | async
+          "
+        ></span>
+      </span>
+      <codx-label
+        *ngIf="!expanding"
+        fieldName="lblMore"
+        [formModel]="view.formModel"
+        default="&nbsp;Xem thêm"
+        class="text-primary"
+        style="white-space: nowrap"
+        [ngClass]="!overflowed ? 'd-none' : ''"
+        role="button"
+        (click)="expanding = !expanding"
+      ></codx-label>
+      <codx-label
+        *ngIf="expanding"
+        fieldName="lblLess"
+        [formModel]="view.formModel"
+        default="&nbsp;Thu lại"
+        class="text-primary"
+        role="button"
+        (click)="onClickShowLess()"
+      ></codx-label>
+    </div>
+
+    <div class="mt-3 flex-grow-1" style="height: 0">
+      <ejs-tab heightAdjustMode="Fill">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex me-2 gap-2">
+                <span class="icon-i-file-earmark-spreadsheet icon-18"></span>
+                <codx-label
+                  class="fw-bold"
+                  fiedName="lblAccounting"
+                  [formModel]="view.formModel"
+                  default="Hoạch toán"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <lib-table-line-detail-static
+                [columns]="columns"
+                [formModel]="fmAcctTrans"
+                [lines]="lines"
+                [loading]="loading"
+                [trTemplate]="acctTrTemplate"
+                [autoSum]="false"
+              >
+                <ng-template #acctTrTemplate let-group let-index="index">
+                  <tr *ngFor="let line of group; first as isFirst">
+                    <th style="width: 30px">
+                      <ng-container *ngIf="isFirst">
+                        {{ index + 1 }}
+                      </ng-container>
+                    </th>
+                    <td class="d-flex gap-2">
+                      <div
+                        class="d-flex gap-2"
+                        style="min-width: 90px"
+                        [ngClass]="!line.crediting ? '' : 'ps-3'"
+                      >
+                        <span class="fw-bold">{{
+                          !line.creditting ? "N" : "C"
+                        }}</span>
+                        <span class="fw-bold">{{ line.accountID }}</span>
+                      </div>
+                      <div class="d-flex flex-column gap-1">
+                        <div
+                          class="fw-bold line-clamp line-clamp-1"
+                          [title]="line.accountName"
+                        >
+                          {{ line.accountName }}
+                        </div>
+                        <div *ngIf="line.objectName">
+                          <codx-label
+                            fieldName="lblObject"
+                            [formModel]="fmAcctTrans"
+                            default="Khách hàng"
+                            class="label-colon"
+                          ></codx-label>
+                          <span>{{ line.objectName }}</span>
+                        </div>
+                        <div *ngIf="line.diM3">
+                          <codx-label
+                            fieldName="lblDIM3"
+                            [formModel]="fmAcctTrans"
+                            default="Mục phí"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.diM3 }}</span>
+                          <span>&nbsp;- {{ line.costItemName }}</span>
+                        </div>
+                        <div *ngIf="line.diM2">
+                          <codx-label
+                            fieldName="lblDIM2"
+                            [formModel]="fmAcctTrans"
+                            default="TTCP"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.diM2 }}</span>
+                          <span>&nbsp;- {{ line.costCenterName }}</span>
+                        </div>
+                        <div *ngIf="line.diM1">
+                          <codx-label
+                            fieldName="lblDIM1"
+                            [formModel]="fmAcctTrans"
+                            default="Phòng ban"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.diM1 }}</span>
+                          <span>&nbsp;- {{ line.departmentName }}</span>
+                        </div>
+                        <div *ngIf="line.projectID">
+                          <codx-label
+                            fieldName="lblProjectID"
+                            [formModel]="fmAcctTrans"
+                            default="Dự án"
+                            class="label-colon"
+                          >
+                          </codx-label>
+                          <span>{{ line.projectID }}</span>
+                          <span>&nbsp;-&nbsp;</span>
+                          <span
+                            [innerHTML]="
+                              line.projectID
+                                | formatvalue : view.formModel : 'projectID'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-end">
+                      <ng-container *ngIf="!line.crediting">
+                        {{ line.transAmt | currency : "" : "" }}
+                      </ng-container>
+                    </td>
+                    <td class="text-end">
+                      <ng-container *ngIf="line.crediting">
+                        {{ line.transAmt | currency : "" : "" }}
+                      </ng-container>
+                    </td>
+                    <td class="pe-3">
+                      <span class="line-clamp line-clamp-2">{{
+                        line.memo
+                      }}</span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </lib-table-line-detail-static>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contentFooter>
+  <codx-tabs
+    [entityName]="view.formModel.entityName"
+    [formModel]="view.formModel"
+    [objectID]="master.recID"
+    [funcID]="view.formModel.funcID"
+    [TabControl]="tabControl"
+  ></codx-tabs>
 </ng-template>
