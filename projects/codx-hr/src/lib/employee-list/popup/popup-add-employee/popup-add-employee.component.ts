@@ -240,8 +240,9 @@ export class PopupAddEmployeeComponent implements OnInit {
       if (arrFieldName.length > 0) {
         let strFieldUnValid: string = '';
         arrFieldName.forEach((key) => {
-          if (!this.data[Util.camelize(key)])
-            strFieldUnValid += this.grvSetUp[key]['headerText'] + '; ';
+          if (key !== 'EmployeeID')
+            if (!this.data[Util.camelize(key)])
+              strFieldUnValid += this.grvSetUp[key]['headerText'] + '; ';
         });
         if (strFieldUnValid) {
           this.notifySV.notifyCode('SYS009', 0, strFieldUnValid);
@@ -362,7 +363,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   validatePhoneNumber(phone, fieldName) {
     var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
     if (re.test(phone) == false) {
-      this.notifySV.notifyCode('HR022',0, this.grvSetUp[fieldName]?.headerText);
+      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
       return false;
     }
     return true;

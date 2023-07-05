@@ -24,7 +24,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { StatusTaskGoal } from '../model/enum';
 import {
   TaskGoal,

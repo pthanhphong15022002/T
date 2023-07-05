@@ -24,7 +24,7 @@ import {
   NotificationsService,
   ViewsComponent,
 } from 'codx-core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { AttachmentService } from '../attachment/attachment.service';
 
 // import { AuthStore } from '@core/services/auth/auth.store';

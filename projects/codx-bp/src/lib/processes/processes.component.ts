@@ -842,12 +842,6 @@ export class ProcessesComponent
               res.disabled = true;
             }
             break;
-          case 'SYS003': // them phien ban
-            let isCreate = data.write;
-            if (!isCreate || data.deleted) {
-              res.isblur = true;
-            }
-            break;
           case 'SYS03': //sua
           case 'BPT102': //sua ten
           case 'BPT202': //sua ten

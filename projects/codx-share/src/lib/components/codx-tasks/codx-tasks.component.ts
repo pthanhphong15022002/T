@@ -31,7 +31,7 @@ import {
   TM_TaskExtends,
   TM_TaskGroups,
 } from './model/task.model';
-import * as moment from 'moment';
+import moment from 'moment';
 import { CodxTasksService } from './codx-tasks.service';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { PopupAddComponent } from './popup-add/popup-add.component';
@@ -1772,11 +1772,6 @@ export class CodxTasksComponent
               data.extendControl == '0'
             )
               x.disabled = true;
-            break;
-          //tắt duyệt confirm
-          case 'TMT02016':
-          case 'TMT02017':
-            if (data.confirmStatus != '1') x.disabled = true;
             break;
           //tắt duyệt xác nhận:
           case 'TMT04032':

@@ -1,6 +1,6 @@
 import { formatNumber } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import 'moment/src/locale/vi';
 import internal from 'stream';
 

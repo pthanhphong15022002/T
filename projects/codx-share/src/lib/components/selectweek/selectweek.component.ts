@@ -8,7 +8,7 @@ import {
   Input,
 } from '@angular/core';
 import { AuthStore } from 'codx-core';
-import * as moment from 'moment';
+import moment from 'moment';
 import 'moment/locale/vi';
 @Component({
   selector: 'selectweek',

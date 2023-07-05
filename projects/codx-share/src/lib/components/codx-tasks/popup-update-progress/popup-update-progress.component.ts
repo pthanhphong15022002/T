@@ -11,7 +11,7 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { CodxTasksService } from '../codx-tasks.service';
 @Component({
   selector: 'lib-popup-update-progress',
