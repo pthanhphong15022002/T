@@ -1533,8 +1533,8 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           //Xóa File
           if (answerType != 'O' && answerType != 'C')
           {
-            this.lstEditIV = [];
-            this.SVServices.deleteFilesByContainRefer(this.recID).subscribe();
+            this.lstEditIV = this.lstEditIV.filter(x=>x.objectID != itemQuestion.recID);
+            this.SVServices.deleteFilesByContainRefer(itemQuestion.recID).subscribe();
           }
 
         }
