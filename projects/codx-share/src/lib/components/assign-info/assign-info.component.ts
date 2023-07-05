@@ -26,7 +26,7 @@ import {
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import * as moment from 'moment';
+import moment from 'moment';
 import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.model';
 import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
 import { tmpReferences } from '../../models/assign-task.model';

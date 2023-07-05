@@ -24,7 +24,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "preserveSymlinks": true,
             "outputPath": "dist/codx-ui",
@@ -33,6 +33,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules"]
+            },
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -64,10 +67,17 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
+              "crypto",
               "crypto-js",
               "object-path",
               "clipboard.js",
-              "moment"
+              "base64-js",
+              "buffer",
+              "lodash",
+              "moment",
+              "iv-viewer",
+              "ieee754",
+              "html2canvas"
             ]
           },
           "configurations": {
@@ -75,13 +85,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "30mb",
-                  "maximumError": "30mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "30mb",
-                  "maximumError": "30mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "5mb"
                 }
               ],
               "fileReplacements": [
@@ -96,20 +106,16 @@
               "optimization": true,
               "deleteOutputPath": true,
               "commonChunk": true,
-              "vendorChunk": true,
               "extractLicenses": true,
-              "sourceMap": false,
-              "namedChunks": true
+              "sourceMap": false
             },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
               "deleteOutputPath": true,
               "commonChunk": true,
-              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"

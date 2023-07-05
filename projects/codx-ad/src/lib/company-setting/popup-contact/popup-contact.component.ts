@@ -9,7 +9,7 @@ import {
   NotificationsService,
   UrlUtil,
 } from 'codx-core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_CompanySettings } from '../../models/AD_CompanySettings.models';
 
