@@ -590,18 +590,42 @@
                                 'px;' +
                                 'font-family: ' +
                                 curAnnotFontStyle +
+                                ';' +
+                                'text-decoration: ' +
+                                (this.isUnd ? 'underline' : '') +
+                                (this.isLineThrough ? ' line-through' : '') +
                                 ';'
                               "
                               [ngClass]="{
                                 'fw-bolder': isBold,
                                 'fst-italic': isItalic,
-                                'text-decoration-underline': isUnd,
-                                'text-decoration-line-through': isLineThrough,
-
                               }"
                               [defaultValue]="area.labelValue"
                               (keydown)="change($event, 'keydown')"
                             ></textarea>
+                            <!-- <textarea
+                              [id]="area.recID"
+                              type="text"
+                              formControlName="content"
+                              class="form-control w-100"
+                              [style]="
+                                'font-size: ' +
+                                curAnnotFontSize +
+                                'px;' +
+                                'font-family: ' +
+                                curAnnotFontStyle +
+                                ';' +
+                                'text-decoration-line: ' +
+                                curDecor +
+                                ';'
+                              "
+                              [ngClass]="{
+                                'fw-bolder': isBold,
+                                'fst-italic': isItalic,
+                              }"
+                              [defaultValue]="area.labelValue"
+                              (keydown)="change($event, 'keydown')"
+                            ></textarea> -->
                           </div>
 
                           <div

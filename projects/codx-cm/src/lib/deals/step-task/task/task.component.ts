@@ -126,9 +126,14 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             break;
           case 'SYS04': //copy
             break;
-          case 'SYS003': //đính kèm file
-            break;
-          case 'DP20': // tiến độ
+          case 'DP25':
+          case 'DP20':
+          case 'DP26':
+          case 'SYS003'://đính kèm file
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = true;
             break;
           case 'DP13': //giao việc
             if (!task?.createTask) {
@@ -145,15 +150,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'DP24':
             if (task.taskType != 'M') res.disabled = true;
             break;
-          case 'DP25':
-          case 'DP20':
-          case 'DP26':
-          case 'SYS003':
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-            res.disabled = true;
-            break;
+          
           case 'DP27': // đặt xe
             if (task.taskType != 'B') res.disabled = true;
             break;
