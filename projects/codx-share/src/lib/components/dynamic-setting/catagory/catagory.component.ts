@@ -68,7 +68,6 @@ export class CatagoryComponent implements OnInit {
   //labels
   labels = [];
   isOpenSub: boolean = false;
-  lstGroup: any = []; // CM
 
   constructor(
     private api: ApiHttpService,
@@ -170,9 +169,6 @@ export class CatagoryComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       });
-    //cm-VTHAO them ngay 4/07/2023
-    // if (this.function?.functionID == 'CMS')
-    this.getListProcessGroups();
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
@@ -784,7 +780,7 @@ export class CatagoryComponent implements OnInit {
           else this.dataValue[transType] = [];
         }
         if (this.category != '4') {
-          if (this.dataValue[transType][field] == value) {
+          if (this.dataValue[transType][field] == value || !value) {
             this.collapseItem(null, data);
             return;
           }
@@ -865,42 +861,6 @@ export class CatagoryComponent implements OnInit {
                       const tempDataValue = JSON.parse(dt.dataValue);
                       this.updateCustom(tempDataValue, data);
                     }
-
-                    // console.log(tempDataValue);
-
-                    // const requestData = new DataRequest();
-                    // requestData.entityName = 'AD_CompanySettings';
-                    // requestData.pageLoading = false;
-                    // this.api
-                    //   .execSv(
-                    //     'SYS',
-                    //     'Core',
-                    //     'DataBusiness',
-                    //     'LoadDataAsync',
-                    //     requestData
-                    //   )
-                    //   .pipe(
-                    //     tap((r) => console.log(r)),
-                    //     map((r) => r[0]),
-                    //     tap((r) => console.log(r))
-                    //   )
-                    //   .subscribe((res) => {
-                    //     const first = res[0];
-
-                    //     if (first) {
-                    //       first.baseCurr = tempDataValue.BaseCurr;
-                    //       first.secondCurr = tempDataValue.SecondCurr;
-                    //       first.conversionCurr = tempDataValue.LocalCurr;
-
-                    //       this.api
-                    //         .execAction(
-                    //           'AD_CompanySettings',
-                    //           [first],
-                    //           'UpdateAsync'
-                    //         )
-                    //         .subscribe();
-                    //     }
-                    //   });
                   }
                   this.changeDetectorRef.detectChanges();
                   console.log(res);
@@ -1045,7 +1005,7 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
-  //CM_Setting popup - VThao - 4/7/2023 - chyen qua từ code của Phúc
+  //CM_Setting popup - VThao - 4/7/2023 - chuyen qua từ code của Phúc
   async cmOpenPopup(item) {
     let funcID = item.reference;
     let title = item.title || item.description;
@@ -1091,73 +1051,72 @@ export class CatagoryComponent implements OnInit {
     // this.changeDetectorRef.detectChanges();
   }
 
-  getListProcessGroups() {
+  openPopupEditDynamic(data, action, funcID, title) {
     this.api
       .exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync')
-      .subscribe((res) => {
-        if (res && res.length > 0) {
-          this.lstGroup = res;
+      .subscribe((gr) => {
+        let lstGroup = [];
+        if (gr && gr.length > 0) {
+          lstGroup = gr;
         }
-      });
-  }
 
-  openPopupEditDynamic(data, action, funcID, title) {
-    data.applyFor =
-      funcID == 'CMS0301'
-        ? '1'
-        : funcID == 'CMS0302'
-        ? '2'
-        : funcID == 'CMS0303'
-        ? '3'
-        : funcID == 'CMS0304'
-        ? '5'
-        : '4';
-    data.category = '0';
-    data.processName =
-      funcID == 'CMS0301'
-        ? '[SYS_CRM] Cơ hội'
-        : funcID == 'CMS0302'
-        ? '[SYS_CRM] Sự cố'
-        : funcID == 'CMS0303'
-        ? '[SYS_CRM] Yêu cầu'
-        : funcID == 'CMS0304'
-        ? '[SYS_CRM] Tiềm năng'
-        : '[SYS_CRM] Hợp đồng';
-    let dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
-    dialogModel.zIndex = 999;
-    let formModel = new FormModel();
-    formModel.entityName = 'DP_Processes';
-    formModel.formName = 'DPProcesses';
-    formModel.gridViewName = 'grvDPProcesses';
-    formModel.funcID = 'DP01';
-    // dialogModel.DataService = this.view?.dataService;
-    dialogModel.FormModel = formModel;
-    this.cache
-      .gridViewSetup('DPProcesses', 'grvDPProcesses')
-      .subscribe((res) => {
-        if (res) {
-          var obj = {
-            action: action,
-            titleAction: title,
-            gridViewSetup: res,
-            lstGroup: this.lstGroup,
-            systemProcess: '1',
-            data: data,
-          };
+        data.applyFor =
+          funcID == 'CMS0301'
+            ? '1'
+            : funcID == 'CMS0302'
+            ? '2'
+            : funcID == 'CMS0303'
+            ? '3'
+            : funcID == 'CMS0304'
+            ? '5'
+            : '4';
+        data.category = '0';
+        data.processName =
+          funcID == 'CMS0301'
+            ? '[SYS_CRM] Cơ hội'
+            : funcID == 'CMS0302'
+            ? '[SYS_CRM] Sự cố'
+            : funcID == 'CMS0303'
+            ? '[SYS_CRM] Yêu cầu'
+            : funcID == 'CMS0304'
+            ? '[SYS_CRM] Tiềm năng'
+            : '[SYS_CRM] Hợp đồng';
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        let formModel = new FormModel();
+        formModel.entityName = 'DP_Processes';
+        formModel.formName = 'DPProcesses';
+        formModel.gridViewName = 'grvDPProcesses';
+        formModel.funcID = 'DP01';
+        // dialogModel.DataService = this.view?.dataService;
+        dialogModel.FormModel = formModel;
+        this.cache
+          .gridViewSetup('DPProcesses', 'grvDPProcesses')
+          .subscribe((res) => {
+            if (res) {
+              var obj = {
+                action: action,
+                titleAction: title,
+                gridViewSetup: res,
+                lstGroup: lstGroup,
+                systemProcess: '1',
+                data: data,
+              };
 
-          var dialog = this.callfc.openForm(
-            PopupAddDynamicProcessComponent,
-            '',
-            0,
-            0,
-            '',
-            obj,
-            '',
-            dialogModel
-          );
-          dialog.closed.subscribe((e) => {});
-        }
+              var dialog = this.callfc.openForm(
+                PopupAddDynamicProcessComponent,
+                '',
+                0,
+                0,
+                '',
+                obj,
+                '',
+                dialogModel
+              );
+              dialog.closed.subscribe((e) => {});
+            }
+          });
       });
   }
   //end CRM

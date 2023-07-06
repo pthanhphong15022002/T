@@ -32,6 +32,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   vllStatus = '';
   dataDashBoard: any;
   isLoaded: boolean = false;
+  titLeModule = '';
+
+  // setting
+  tooltipSettings = {
+    visible: true,
+    format: '${businessLineName} - TotalCount:${quantity}',
+    template:
+      '<div><span>${businessLineName}</span><span>Total Count: ${quantity}</span></div>',
+  };
+
+  leafItemSettings = {
+    labelPath: 'businessLineName',
+    labelPosition: 'Center',
+    labelFormat: '${businessLineName}<br>${quantity}-(${percentage} %)',
+  };
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -44,6 +59,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           if (res && res.datas) this.arrVllStatus = res.datas;
         });
       }
+    });
+    this.cache.functionList('CM0201').subscribe((fun) => {
+      this.titLeModule = fun?.customName || fun?.description;
     });
   }
   onInit(): void {
@@ -106,5 +124,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
     this.detectorRef.detectChanges();
+  }
+
+  getTitle(status) {
+    return (
+      this.titLeModule +
+      '-' +
+      this.arrVllStatus.filter((x) => x.value == status)[0]?.text
+    );
   }
 }
