@@ -275,7 +275,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(this.itemSelected).subscribe();
+              this.view.dataService.update(res.event['data']).subscribe();
             }
           }
         });
@@ -309,7 +309,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res.event['update']) {
               this.itemSelected = res.event['data'];
               this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(this.itemSelected).subscribe();
+              //this.view.dataService.update(res.event['data']).subscribe();
             }
           }
         });
