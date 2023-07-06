@@ -237,8 +237,8 @@
                 <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                  [disabled]="journal?.autoAssignRule != '0'" [placeholder]="
-                    journal?.autoAssignRule == '2'
+                  [disabled]="journal?.assignRule != '0'" [placeholder]="
+                    journal?.assignRule == '2'
                       ? 'Số chứng từ được tạo tự động'
                       : ''
                   " (valueChange)="valueChange($event)">

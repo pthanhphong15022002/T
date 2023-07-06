@@ -83,7 +83,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   @Input() orgUnitID: string;
   @Input() view: ViewsComponent = null;
   @Input() dataService: CRUDService = null;
-  scaleNumber: number = 1.0;
+  scaleNumber: number = 0.5;
   width = 250;
   height = 350;
   maxWidth = 300;
@@ -169,6 +169,8 @@ export class OrganizationOrgchartComponent implements OnInit {
     }
   }
 
+  // highlightPadding: { left: 4, top: 4, right: 4, bottom: -18 },
+  // cursorPadding: { left: 0, top: 0, right: 0, bottom: 0 }
   ngOnInit(): void {
     // items.push(
     //   new OrgItemConfig({

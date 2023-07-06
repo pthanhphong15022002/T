@@ -236,11 +236,11 @@
     <div class="row mt-6">
       <div class="col-6 form-group">
         <codx-label
-          fiedName="autoAssignRule"
+          fiedName="assignRule"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
-          field="autoAssignRule"
+          field="assignRule"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         ></codx-input>
@@ -260,7 +260,7 @@
               [Group]="form.formGroup"
             ></codx-input>
           </div>
-          <div class="w-auto" *ngIf="journal.autoAssignRule !== '0'">
+          <div class="w-auto" *ngIf="journal.assignRule !== '0'">
             <button
               type="button"
               class="btn btn-icon btn-light-primary"
@@ -751,10 +751,12 @@
     ></lib-group-share>
 
     <!-- <div class="form-group">
-      <codx-label fiedName="creater" [formModel]="form.formModel"></codx-label>
-
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-7 d-flex flex-column gap-1">
+          <codx-label
+            fiedName="creater"
+            [formModel]="form.formModel"
+          ></codx-label>
           <codx-label
             fiedName="lblCreater"
             [formModel]="form.formModel"
@@ -763,7 +765,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-5">
+        <div class="col-4">
           <lib-dropdown-detail
             *ngIf="createrObjectType === 'U' || !createrObjectType"
             [formModel]="form.formModel"

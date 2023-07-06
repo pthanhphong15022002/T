@@ -12,16 +12,32 @@
   overflow: auto;
 }
 
-.table thead {
-  td,
-  th {
-    font-weight: 500;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+table {
+  thead {
+    th,
+    td {
+      font-weight: 500;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    th {
+      border-bottom: 2px solid #ebedf3;
+
+      &:last-of-type {
+        text-align: center;
+      }
+    }
   }
 
-  th {
-    border-bottom: 2px solid #ebedf3;
+  tbody {
+    tr {
+      vertical-align: middle;
+
+      td:last-of-type {
+        text-align: center;
+      }
+    }
   }
 }
 
