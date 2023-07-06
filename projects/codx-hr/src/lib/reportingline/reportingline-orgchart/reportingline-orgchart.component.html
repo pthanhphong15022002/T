@@ -25,8 +25,12 @@
 </ng-container>
 
 <ng-template #template let-data>
-  <div class="w-250px position-relative p-4 rounded-2"
+  <div class="w-250px position-relative p-4 rounded-2 border"
     [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
+    <div class="has-action-menu">
+      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
+      </codx-mfunc>
+    </div>
     <div class="position-relative">
       <ng-container *ngIf="data.employees?.length > 0;else tmpNoEmployee">
         <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.employees }">

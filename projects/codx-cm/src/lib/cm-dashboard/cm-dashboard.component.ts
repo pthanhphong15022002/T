@@ -31,7 +31,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   arrVllStatus: any = [];
   vllStatus = '';
   dataDashBoard: any;
-  isLoaded: boolean;
+  isLoaded: boolean = false;
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -89,6 +89,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
+    this.isLoaded = false;
     let model = new GridModels();
     model.funcID = this.funcID;
     model.entityName = 'CM_Deals';
@@ -99,9 +100,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         this.dataDashBoard = res;
 
-        // setTimeout(() => {
-        //   this.isLoaded = true;
-        // }, 500);
+        setTimeout(() => {
+          this.isLoaded = true;
+        }, 500);
       });
 
     this.detectorRef.detectChanges();

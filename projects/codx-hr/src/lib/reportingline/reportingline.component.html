@@ -11,7 +11,8 @@
 
 
 <ng-template #tmpOrgchart>
-    <lib-reportingline-orgchart [positionID]="positionID" [funcID]="funcID"></lib-reportingline-orgchart>
+    <lib-reportingline-orgchart [positionID]="positionID" [funcID]="funcID"
+    [view]="view"></lib-reportingline-orgchart>
 </ng-template>
 
 <ng-template #tmpList let-data>
@@ -95,7 +96,7 @@
         </div>
         <div class="d-flex align-items-center justify-content-end w-10 min-w-150px">
             <div style="height: 30px" class="has-action-menu">
-                <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
+                <codx-mfunc [formModel]="view?.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
                     [dataItem]="data" type="hover">
                 </codx-mfunc>
             </div>

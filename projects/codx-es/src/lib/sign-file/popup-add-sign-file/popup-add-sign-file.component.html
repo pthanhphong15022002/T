@@ -197,10 +197,20 @@
           <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
             <div class="w-100 form-content mw-500px mx-auto">
               <div class="text-center sign-attachment">
-                <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
+                <div>
+                  <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>              
+                </div>
+                <div class="text-center sign-attachment" *ngIf="oSignFile==null">
+                  <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
+                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
+                    (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
+                  </codx-attachment>                
+                </div>
+
+                <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
                   hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
                   (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign" [tmpRight]="tmpRightAttach">
-                </codx-attachment>
+                </codx-attachment> -->
                 <ng-template #tmpRightAttach let-file>                  
                     <!-- <div *ngIf="eSign"> 
                       <codx-input type="checkbox" [checked]="true" (valueChange)="fileCheckChange($event,file)"></codx-input>
