@@ -36,6 +36,7 @@ import {
   LayoutService,
   CRUDService,
   AuthStore,
+  AuthService,
 } from 'codx-core';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -223,6 +224,15 @@ export class InstancesComponent
   ownerRoles = '';
   dataVll: any;
   dataCM: any;
+  colorDefault = '';
+  themeDatas = {
+    default: '#005DC7',
+    orange: '#f15711',
+    sapphire: '#009384',
+    green: '#0f8633',
+    purple: '#5710b2',
+    navy: '#192440'
+  }
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -233,6 +243,7 @@ export class InstancesComponent
     private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
+    private auth: AuthService,
     // private layoutInstance: LayoutInstancesComponent,
     private layoutDP: LayoutComponent,
     @Optional() dialog: DialogRef,
@@ -296,6 +307,8 @@ export class InstancesComponent
         }
       });
     });
+    let theme = this.auth.userValue.theme.split('|')[0];
+    this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
   ngAfterViewInit() {
     this.views = [
@@ -2425,4 +2438,33 @@ export class InstancesComponent
 
     this.detectorRef.detectChanges();
   }
+
+   setColorStep(step){
+    let index = 0;
+    if(true){
+      let countStep = 6;
+      let opacityDefault = Number((1/countStep).toFixed(2));
+      let opacity = opacityDefault *(index + 1);
+      let color = this.hexToRGB(this.colorDefault,opacity);
+      return {'background-color': color };
+    }else{
+      return {'background-color': step?.backgroundColor };
+    }
+  }
+
+  hexToRGB(hex, opacity) {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    const hexLongRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+    const result = hexLongRegex.exec(hex) || shorthandRegex.exec(hex);
+    if (!result) {
+      return null;
+    }
+    const [r, g, b] = result.slice(1).map(value => parseInt(value, 16));
+    if (opacity !== undefined) {
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    } else {
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+  }
+
 }
