@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -6,7 +7,10 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService } from 'codx-core';
+import { DP_Processes } from '../../models/models';
+import { firstValueFrom } from 'rxjs';
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -40,18 +44,28 @@ export class PanelOrder {
 export class InstanceDashboardComponent implements OnInit {
   @ViewChildren('templateDetail') templates: QueryList<any>;
   @Input() vllStatus: any;
+  @Input() processID = '';
   isEditMode = false;
   datas: any;
   panels: any;
-
+  funcID = '';
+  dataDashBoard: any;
+  isLoaded: boolean = false;
   arrVllStatus = [];
-  constructor(private api: ApiHttpService, private cache: CacheService) {
+  constructor(
+    private api: ApiHttpService, 
+    private cache: CacheService,
+    private router: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {
     this.setting();
   }
   ngOnInit(): void {
     this.cache.valueList(this.vllStatus).subscribe((res) => {
       if (res && res.datas) this.arrVllStatus = res.datas;
     });
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.getDataDashboard('ProcessID==@0',this.processID);
   }
 
   setting() {
@@ -65,5 +79,25 @@ export class InstanceDashboardComponent implements OnInit {
 
   getNameStatus(status) {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
+  }
+
+  async getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
+    let model = new GridModels();
+    model.funcID = this.funcID;
+    model.entityName = 'DP_Instances';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
+    let data = await firstValueFrom(this.api.exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [model, params]));
+    if(data){
+      this.dataDashBoard = data;
+      console.log(this.dataDashBoard);
+      this.isLoaded = true;
+      this.changeDetectorRef.detectChanges();
+    }
+    // this.api
+    //   .exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [model, params])
+    //   .subscribe((res) => {
+       
+    //   });
   }
 }
