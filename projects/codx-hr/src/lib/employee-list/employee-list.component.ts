@@ -107,6 +107,8 @@ export class EmployeeListComponent extends UIComponent {
         sameData: false,
         model: {
           resizable: true,
+          isCustomize:true,
+          
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
           resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },

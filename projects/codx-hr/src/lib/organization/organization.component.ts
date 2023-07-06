@@ -74,6 +74,8 @@ export class OrgorganizationComponent extends UIComponent {
     // this.dataService.idField = 'OrgUnitID';
     // this.dataService.request.entityName = 'HR_OrganizationUnits';
     // this.detectorRef.detectChanges();
+
+    //this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","InitOrgHierarchyAsync").subscribe();
   }
 
   ngAfterViewInit(): void {
