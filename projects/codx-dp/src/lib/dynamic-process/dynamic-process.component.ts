@@ -202,7 +202,6 @@ export class DynamicProcessComponent
           break;
         }
     }
-    this.isButton = false;
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -229,6 +228,7 @@ export class DynamicProcessComponent
 
   // CRUD methods
   add() {
+    this.isButton = false;
     this.view.dataService.addNew().subscribe((res) => {
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -282,6 +282,7 @@ export class DynamicProcessComponent
   }
 
   edit(data: any) {
+    this.isButton = false;
     if (data) {
       this.view.dataService.dataSelected = data;
       this.totalInstance = data.totalInstance;
@@ -574,7 +575,6 @@ export class DynamicProcessComponent
         this.cancelReleaseProcess(data);
         break;
     }
-    this.isButton = false;
   }
 
   changeDataMF(e, data) {
@@ -685,6 +685,7 @@ export class DynamicProcessComponent
 
   //#popup roles
   roles(e: any) {
+    this.isButton = false;
     let dialogModel = new DialogModel();
     let formModel = new FormModel();
     formModel.formName = 'DPProcessesPermissions';
@@ -713,6 +714,7 @@ export class DynamicProcessComponent
   }
 
   properties(data) {
+    this.isButton = false;
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
