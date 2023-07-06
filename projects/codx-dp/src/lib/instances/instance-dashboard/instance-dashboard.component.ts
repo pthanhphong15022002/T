@@ -40,7 +40,7 @@ export class PanelOrder {
 @Component({
   selector: 'codx-instance-dashboard',
   templateUrl: './instance-dashboard.component.html',
-  styleUrls: ['./instance-dashboard.component.css'],
+  styleUrls: ['./instance-dashboard.component.scss'],
 })
 export class InstanceDashboardComponent implements OnInit {
   @ViewChildren('templateDetail') templates: QueryList<any>;
@@ -55,7 +55,7 @@ export class InstanceDashboardComponent implements OnInit {
   arrVllStatus = [];
   public annotations: ChartAnnotationSettingsModel[] = [
     {    
-      content:"<div style='font-Weight:600;font-size:14px'>Browser<br>Market<br>Share</div>",
+      content:"<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>10</div>",
       region: 'Series',
       x: '51%',
       y: '50%',
@@ -69,11 +69,13 @@ export class InstanceDashboardComponent implements OnInit {
     { x: 'UC Browser', y: 4.37, text: '4.37%' },
     { x: 'Edge', y: 7.48, text: '7.48%' },
     { x: 'Others', y: 14.06, text: '14.06%' },
+    { x: 'Others1', y: 14.06, text: '14.06%' },
+    { x: 'Others2', y: 14.06, text: '14.06%' },
   ];
   //Initializing Legend
   public innerRadius: string = '85%';
-  public startAngle: number = 30;
   public radius: string = '100%';
+  public startAngle: number = 30;
   //Initializing Datalabel
   public dataLabel: Object = {
     name: 'text',
@@ -89,7 +91,7 @@ export class InstanceDashboardComponent implements OnInit {
     header: '',
   };
   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
-  paletteColor = ['#06ddb8', '#a6dff5','#0b792c','#3f4144','#5014D0'];
+  paletteColor = ['rgb(2 71 253)', 'rgb(2 71 253 / 85%)','rgb(2 71 253 / 70%)','rgb(2 71 253 / 50%)','rgb(2 71 253 / 30%)'];
   tasksByCategory = [
     {category: '1', quantity: 100},
     {category: '2', quantity: 85},
