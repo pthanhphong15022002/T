@@ -145,4 +145,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this.arrVllStatus.filter((x) => x.value == status)[0]?.text
     );
   }
+
+  clickRadio(id) {}
 }

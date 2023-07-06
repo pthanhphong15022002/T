@@ -125,7 +125,47 @@
     class="w-100 h-100"
     id="7"
     title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
-  ></div>
+  >
+    <div class="mt-5">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          class="btn-group"
+          role="group"
+          aria-label="Basic radio toggle button group"
+        >
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnMinRadio"
+            autocomplete="off"
+            [checked]="true"
+            (click)="clickRadio('btnMinRadio')"
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnMinRadio"
+            default="Thấp nhất"
+          ></codx-label>
+
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnMaxRadio"
+            autocomplete="off"
+            [checked]="false"
+            (click)="clickRadio('btnMinRadio')"
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnMaxRadio"
+            default="Cao nhất"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <!-- Lý do thành công -->
