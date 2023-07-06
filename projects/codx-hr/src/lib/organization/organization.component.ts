@@ -11,6 +11,7 @@ import {
   ButtonModel,
   CRUDService,
   CodxTreeviewComponent,
+  DataRequest,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -74,6 +75,8 @@ export class OrgorganizationComponent extends UIComponent {
     // this.dataService.idField = 'OrgUnitID';
     // this.dataService.request.entityName = 'HR_OrganizationUnits';
     // this.detectorRef.detectChanges();
+
+    //this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","InitOrgHierarchyAsync").subscribe();
   }
 
   ngAfterViewInit(): void {
@@ -85,19 +88,17 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
     this.views = [
-      {
-        id: '1',
-        type: ViewType.list,
-        // active: false,
-        sameData: true,
-        model: {
-          template: this.templateList,
-        },
-      },
+      // {
+      //   id: '1',
+      //   type: ViewType.list,
+      //   sameData: true,
+      //   model: {
+      //     template: this.templateList,
+      //   },
+      // },
       {
         id: '2',
         type: ViewType.listtree,
-        // active: false,
         sameData: false,
         request: this.request,
         model: {
@@ -105,32 +106,32 @@ export class OrgorganizationComponent extends UIComponent {
           // resourceModel: { parentIDField: 'ParentID' },
         },
       },
-      {
-        id: '3',
-        type: ViewType.tree_masterdetail,
-        // active: false,
-        sameData: false,
-        request: this.request,
-        model: {
-          resizable: true,
-          template: this.tempTree,
-          panelRightRef: this.tmpMasterDetail,
-        },
-      },
       // {
-      //   id: '4',
-      //   type: ViewType.tree_orgchart,
+      //   id: '3',
+      //   type: ViewType.tree_masterdetail,
+      //   // active: false,
       //   sameData: false,
       //   request: this.request,
       //   model: {
       //     resizable: true,
       //     template: this.tempTree,
-      //     panelRightRef: this.tmpOrgChart,
-      //     // panelRightRef: this.panelRightLef,
-      //     // template2: this.tmpOrgChart,
-      //     // resourceModel: { parentIDField: 'ParentID' },
+      //     panelRightRef: this.tmpMasterDetail,
       //   },
       // },
+      {
+        id: '4',
+        type: ViewType.tree_orgchart,
+        sameData: false,
+        request: this.request,
+        model: {
+          resizable: true,
+          template: this.tempTree,
+          panelRightRef: this.tmpOrgChart,
+          // panelRightRef: this.panelRightLef,
+          // template2: this.tmpOrgChart,
+          // resourceModel: { parentIDField: 'ParentID' },
+        },
+      },
     ];
 
     this.detectorRef.detectChanges();
@@ -287,6 +288,8 @@ export class OrgorganizationComponent extends UIComponent {
             if (res.event) {
               this.view.dataService.add(res.event).subscribe();
               this.flagLoaded = true;
+
+              this.view.dataService.setDataSelected(res.event);
             }
           });
         }
@@ -295,11 +298,8 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   viewChanged(event: any) {
-    //Prevent load data when click same id and check update data when CRUD or not
-    if (this.viewActive !== event.view.id && event.view.id !== '4') {
-      // if (this.viewActive !== event.view.id && this.flagLoaded) {
-      // console.log(this.view.currentView.dataService.data);
-
+    // if (this.viewActive !== event.view.id) {
+    if (this.viewActive !== event.view.id && this.flagLoaded) {
       if (event?.view?.id === '1') {
         this.view.dataService.data = [];
         this.view.dataService.parentIdField = '';
@@ -307,7 +307,6 @@ export class OrgorganizationComponent extends UIComponent {
         this.view.dataService.parentIdField = 'ParentID';
       }
 
-      //Set data to update mode view tree list
       if (
         this.view.currentView.dataService &&
         this.view.currentView.dataService.currentComponent
@@ -317,17 +316,14 @@ export class OrgorganizationComponent extends UIComponent {
       }
 
       //check update data when CRUD or not
-      // this.flagLoaded = false;
-
+      this.flagLoaded = false;
       this.view.dataService.page = 0;
 
       //Prevent load data when click same id
       this.viewActive = event.view.id;
       this.view.currentView.dataService.load().subscribe();
+      //this.view.dataService.load().subscribe();
     }
-    // if (this.viewActive !== event.view.id && event.view.id === '4') {
-
-    // }
   }
 
   // convert org to tmp

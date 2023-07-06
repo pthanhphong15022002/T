@@ -223,6 +223,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
     ];
     ScrollComponent.reinitialization();
     this.detectorRef.detectChanges();
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      this.functionName = this.acService.toCamelCase(res.defaultName);
+    });
   }
 
   //#region Init
@@ -384,7 +388,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
         console.log(res);
 
         if (res) {
-          this.journalService.deleteAutoNumber(data.journalNo);
+          this.journalService.deleteAutoNumber(data.autoNumber);
           this.acService.deleteFile(data.recID, this.view.formModel.entityName);
           this.api
             .exec(

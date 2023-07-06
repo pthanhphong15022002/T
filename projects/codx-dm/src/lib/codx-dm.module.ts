@@ -87,10 +87,20 @@ export const routes: Routes = [
         component: SearchingComponent,
       },
       {
-        path: ':funcID',
+        path: 'files/:funcID',
         component: HomeComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'shares/:funcID',
+        component: HomeComponent,
+        data: { noReuse: true },
+      },
+      // {
+      //   path: ':funcID',
+      //   component: HomeComponent,
+      //   data: { noReuse: true },
+      // },
       {
         path: ':funcID/:fileID',
         component: ViewFileDialogComponent,

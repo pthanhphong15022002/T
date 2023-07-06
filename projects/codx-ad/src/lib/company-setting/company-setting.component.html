@@ -264,7 +264,33 @@
                 </div>
               </div>
             </div>
-
+            <!-- Signature -->
+            <div class="form-group">
+              <div class="body_detail p-6">
+                <div class="d-flex justify-content-between mb-3">
+                  <codx-label
+                    fiedName="Sinature"
+                    class="fw-bold text-dark"
+                    [formModel]="view.formModel"
+                    default="Chữ ký mẫu email"
+                  >
+                  </codx-label>
+                  <button
+                    class="btn btn-icon btn-white"
+                    (click)="clickEditSignature(data)"
+                  >
+                    <i class="icon-create icon-18"></i>
+                  </button>
+                </div>
+                <div class="row">
+                  <div class="col-5">
+                    <div class="fw-bold mb-2">
+                      <div [innerHTML]="data?.signature"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- Contact Information -->
             <div class="form-group">
               <div class="body_detail p-6">
@@ -309,7 +335,8 @@
                         [default]="'Email: '"
                       ></codx-label>
                       <span class="url-contact text-primary ms-1">
-                        {{ data?.email}}</span>
+                        {{ data?.email }}</span
+                      >
                     </div>
                     <div class="text-gray-600">
                       <codx-label
@@ -641,7 +668,9 @@
             <!-- [predicate]="'ResourceType=@0'" -->
           </div>
           <ng-template #orderTmp let-item>
-            <div class="d-flex justify-content-between border border-gray-150 rounded-2 w-100 h-100px p-3 mb-3">
+            <div
+              class="d-flex justify-content-between border border-gray-150 rounded-2 w-100 h-100px p-3 mb-3"
+            >
               <div class="info d-flex justify-content-between w-100">
                 <codx-temp-full
                   [typeMF]="'hover'"
@@ -709,9 +738,7 @@
                 <codx-label
                   fiedName="lblpaymentCreatedOn"
                   [formModel]="orderFormodel"
-                  [default]="
-                    'Ngày giao dịch: ' + order.paymentCreatedOn ?? ''
-                  "
+                  [default]="'Ngày giao dịch: ' + order.paymentCreatedOn ?? ''"
                 >
                 </codx-label>
               </div>
@@ -819,4 +846,31 @@
       </e-tabitem>
     </e-tabitems>
   </ejs-tab>
+</ng-template>
+
+<ng-template #signatureEmail let-dialog let-data="data">
+  <codx-form [body]="body" [footer]="footer" [dialog]="dialog"> </codx-form>
+  <ng-template #body>
+    <codx-input
+      type="textarea"
+      [crrValue]="data.signature"
+      (valueChange)="editSignature($event)"
+    >
+    </codx-input>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveSignature(dialog)"
+      >
+        <codx-label
+          fiedName="Save"
+          [formModel]="view.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
 </ng-template>
