@@ -28,6 +28,7 @@
           <codx-label
             fiedName="journalType"
             [formModel]="form.formModel"
+            default="Loại nghiệp vụ"
           ></codx-label>
           <codx-input
             field="journalType"
@@ -54,6 +55,7 @@
           <codx-label
             fiedName="periodID"
             [formModel]="form.formModel"
+            default="Kỳ kế toán"
           ></codx-label>
           <codx-input
             #periodID
@@ -84,6 +86,7 @@
       <codx-label
         fiedName="journalDesc"
         [formModel]="form.formModel"
+        default="Diễn giải"
       ></codx-label>
       <codx-input
         field="journalDesc"
@@ -737,7 +740,7 @@
 
 <ng-template #tabRoles>
   <ng-container *ngIf="form.formGroup">
-    <!-- <lib-group-share
+    <lib-group-share
       [formModel]="form.formModel"
       field="creater"
       labelName="lblCreater"
@@ -745,9 +748,9 @@
       [objectType]="createrObjectType"
       [objectId]="creater"
       (change)="onShareInputChange($event)"
-    ></lib-group-share> -->
+    ></lib-group-share>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <codx-label fiedName="creater" [formModel]="form.formModel"></codx-label>
 
       <div class="row align-items-center">
@@ -786,38 +789,35 @@
           [objectType]="createrObjectType"
         ></lib-dropdown-detail>
       </div>
-    </div>
+    </div> -->
 
-    <div class="form-group">
-      <codx-label
-        fiedName="approvalControl"
-        [formModel]="form.formModel"
-      ></codx-label>
+    <div class="form-group row align-items-center">
+      <div class="col-8 d-flex flex-column gap-1">
+        <codx-label
+          fiedName="approvalControl"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-label
+          fiedName="lblApprovalControl"
+          [formModel]="form.formModel"
+          [default]="gvs.ApprovalControl?.description"
+          class="text-gray-500 font-italic fw-normal"
+        ></codx-label>
+      </div>
 
-      <div class="row align-items-center">
-        <div class="col-8">
-          <codx-label
-            fiedName="lblApprovalControl"
-            [formModel]="form.formModel"
-            [default]="gvs.ApprovalControl?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-        </div>
-
-        <div class="col-4 d-flex align-items-center gap-1">
-          <codx-input
-            field="approvalControl"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
-          <button
-            class="btn btn-icon btn-light-primary"
-            *ngIf="journal.approvalControl === '2'"
-            (click)="onCickOpenApprovalProcessPopup()"
-          >
-            <i class="icon-edit-one icon-18"></i>
-          </button>
-        </div>
+      <div class="col-4 d-flex align-items-center gap-1">
+        <codx-input
+          field="approvalControl"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+        <button
+          class="btn btn-icon btn-light-primary"
+          *ngIf="journal.approvalControl === '2'"
+          (click)="onCickOpenApprovalProcessPopup()"
+        >
+          <i class="icon-edit-one icon-18"></i>
+        </button>
       </div>
     </div>
 
@@ -832,16 +832,19 @@
       (change)="onShareInputChange($event)"
     ></lib-group-share>
 
-    <div class="d-flex justify-content-between mb-6">
+    <div
+      *ngIf="journal.approvalControl"
+      class="d-flex justify-content-between mb-6"
+    >
       <codx-label
         *ngIf="['1', '2'].includes(journal.approvalControl)"
-        fiedName="autoPost"
+        fiedName="lblAutoPost"
         [formModel]="form.formModel"
         [default]="gvs.AutoPost.description.split(';')[1]"
       ></codx-label>
       <codx-label
         *ngIf="journal.approvalControl == '0'"
-        fiedName="autoPost"
+        fiedName="lblAutoPost"
         [formModel]="form.formModel"
         [default]="gvs.AutoPost.description.split(';')[0]"
       ></codx-label>

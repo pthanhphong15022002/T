@@ -349,7 +349,7 @@ export class JournalsComponent extends UIComponent {
         console.log(res);
 
         if (res) {
-          this.journalService.deleteAutoNumber(data.journalNo);
+          this.journalService.deleteAutoNumber(data.autoNumber);
           this.acService.deleteFile(data.recID, this.view.formModel.entityName);
           this.api
             .exec(

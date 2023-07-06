@@ -10,13 +10,16 @@
 </codx-views>
 
 <ng-template #template>
-  <codx-dashboard
-    [templates]="dashBoardDeals"
-    [panels]="panelsDeals"
-    [datas]="datasDeals"
-    [isEditMode]="isEditMode"
-    [cellSpacing]="[20, 20]"
-  ></codx-dashboard>
+  <div class="w-100 h-100" *ngIf="isLoaded">
+    <codx-dashboard
+      [templates]="dashBoardDeals"
+      [panels]="panelsDeals"
+      [datas]="datasDeals"
+      [isEditMode]="isEditMode"
+      [cellSpacing]="[20, 20]"
+    ></codx-dashboard>
+  </div>
+  <div class="w-100 h-100" *ngIf="!isLoaded"></div>
 </ng-template>
 
 <!-- cơ hội mới -->
@@ -82,7 +85,7 @@
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
   >
-    <!-- <ejs-treemap
+    <ejs-treemap
       style="display: block"
       [dataSource]="dataDashBoard?.tmpCountsBussinessLine ?? []"
       weightValuePath="quantity"
@@ -91,14 +94,15 @@
       [leafItemSettings]="{
         labelPath: 'businessLineName'
       }"
-      [tooltipSettings]="{
-        visible: true,
-        template:
-          '<div><span >${businessLineName}: </span><span >${quantity}</span></div>'
-      }"
     >
-    </ejs-treemap> -->
+    </ejs-treemap>
   </div>
+  <!-- [tooltipSettings]="{
+    visible: true,
+    template:
+      '<div><span >${businessLineName}: </span><span >${quantity}</span></div>'
+  }" -->
+  <!-- <ng-template #viewTemp> </ng-template> -->
 </ng-template>
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
 <ng-template #templateDeals>
