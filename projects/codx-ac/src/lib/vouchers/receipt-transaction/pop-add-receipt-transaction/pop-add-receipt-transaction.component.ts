@@ -264,6 +264,18 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
+    if (!e.data[e.field]) {
+      return;
+    }
+
+    if (e.field === 'itemID') {
+      this.setPredicatesByItemID(e.data.itemID);
+    }
+
+    if (e.field.toLowerCase() === 'idim4') {
+      this.setPredicateByIDIM4(e.data[e.field]);
+    }
+
     const postFields: string[] = [
       'itemID',
       'costPrice',
@@ -295,29 +307,15 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.inventoryJournalLines[e.idx] = Object.assign(this.inventoryJournalLines[e.idx], line);
         });
     }
-    switch(e.field)
-    {
-      // case "quantity":
-      //   if(e.value == null)
-      //     e.data.quantity = 0;
-      //   e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
-      //   break;
-      // case "costPrice":
-      //   if(e.value == null)
-      //     e.data.costPrice = 0;
-      //   e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
-      //   break;
-      // case "costAmt":
-      //   if(e.value == null)
-      //     e.data.costAmt = 0;
-      //   break;
-      case 'itemID':
-        this.loadItemID(e.value);
-        break;
-      case 'idiM4':
-        this.loadWarehouseID(e.value);
-        break;
-    }
+    // switch(e.field)
+    // {
+    //   case 'itemID':
+    //     this.loadItemID(e.value);
+    //     break;
+    //   case 'idiM4':
+    //     this.loadWarehouseID(e.value);
+    //     break;
+    // }
   }
 
   onAddNew(e: any) {
@@ -921,7 +919,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   checkValidate() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields: string[] = [];
-    if (this.journal.autoAssignRule === '2') {
+    if (this.journal.assignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
@@ -1008,38 +1006,38 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //   }
   // }
   
-  loadItemID(value) {
-    let isFocus = true;
-    let id;
-    let sArray = [
-      'packingspecifications',
-      'styles',
-      'itemcolors',
-      'itembatchs',
-      'itemseries',
-    ];
-    var elements = document
-      .querySelector('.tabLine')
-      .querySelectorAll('codx-inplace');
-    elements.forEach((e) => {
-      var input = window.ng.getComponent(e) as CodxInplaceComponent;
-      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
-        input.value = "";
-        input.predicate = 'ItemID="' + value + '"';
-        input.loadSetting();
-        if(isFocus)
-        {
-          id = e.id;
-          isFocus = false;
-        }
-      }
-    });
-    var element = document.getElementById(id);
-    var codxInplace = window.ng.getComponent(element) as CodxInplaceComponent;
-    setTimeout(() => {
-      codxInplace.enableEditMode();
-    }, 500);
-  }
+  // loadItemID(value) {
+  //   let isFocus = true;
+  //   let id;
+  //   let sArray = [
+  //     'packingspecifications',
+  //     'styles',
+  //     'itemcolors',
+  //     'itembatchs',
+  //     'itemseries',
+  //   ];
+  //   var elements = document
+  //     .querySelector('.tabLine')
+  //     .querySelectorAll('codx-inplace');
+  //   elements.forEach((e) => {
+  //     var input = window.ng.getComponent(e) as CodxInplaceComponent;
+  //     if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+  //       input.value = "";
+  //       input.predicate = 'ItemID="' + value + '"';
+  //       input.loadSetting();
+  //       if(isFocus)
+  //       {
+  //         id = e.id;
+  //         isFocus = false;
+  //       }
+  //     }
+  //   });
+  //   var element = document.getElementById(id);
+  //   var codxInplace = window.ng.getComponent(element) as CodxInplaceComponent;
+  //   setTimeout(() => {
+  //     codxInplace.enableEditMode();
+  //   }, 500);
+  // }
 
   // loadItemID(value) {
   //   let sArray = [
@@ -1112,22 +1110,22 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
   }
 
-  loadWarehouseID(value) {
-    let sArray = [
-      'warehouselocations',
-    ];
-    var element = document
-      .querySelector('.tabLine')
-      .querySelectorAll('codx-inplace');
-    element.forEach((e) => {
-      var input = window.ng.getComponent(e) as CodxInplaceComponent;
-      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
-        input.value = "";
-        input.predicate = 'WarehouseID="' + value + '"';
-        input.loadSetting();
-      }
-    });
-  }
+  // loadWarehouseID(value) {
+  //   let sArray = [
+  //     'warehouselocations',
+  //   ];
+  //   var element = document
+  //     .querySelector('.tabLine')
+  //     .querySelectorAll('codx-inplace');
+  //   element.forEach((e) => {
+  //     var input = window.ng.getComponent(e) as CodxInplaceComponent;
+  //     if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+  //       input.value = "";
+  //       input.predicate = 'WarehouseID="' + value + '"';
+  //       input.loadSetting();
+  //     }
+  //   });
+  // }
 
   setReason(field, text, idx) {
     if (!this.reason.some((x) => x.field == field)) {
@@ -1204,6 +1202,29 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         }
       }
     }, 500);
+  }
+
+  setPredicatesByItemID(dataValue: string): void {
+    for (const v of this.gridInventoryJournalLine.visibleColumns) {
+      if (
+        ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
+          v.fieldName?.toLowerCase()
+        )
+      ) {
+        v.predicate = 'ItemID=@0';
+        v.dataValue = dataValue;
+      }
+    }
+  }
+
+  setPredicateByIDIM4(dataValue: string): void {
+    const idim5 = this.gridInventoryJournalLine.visibleColumns.find(
+      (v) => v.fieldName?.toLowerCase() === 'idim5'
+    );
+    if (idim5) {
+      idim5.predicate = 'WarehouseID=@0';
+      idim5.dataValue = dataValue;
+    }
   }
   //#endregion
 }

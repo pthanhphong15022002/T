@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   Injector,
   Optional,
   TemplateRef,
@@ -40,6 +41,8 @@ export class ReceiptTransactionComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('memoContent', { read: ElementRef })
+  memoContent: ElementRef<HTMLElement>;
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
@@ -60,6 +63,8 @@ export class ReceiptTransactionComponent extends UIComponent {
   funcID: any;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
+  overflowed: boolean = false;
+  expanding: boolean = false;
   fmInventoryJournalLines: FormModel = {
     formName: 'InventoryJournalLines',
     gridViewName: 'grvInventoryJournalLines',
@@ -150,6 +155,11 @@ export class ReceiptTransactionComponent extends UIComponent {
   ngOnDestroy() {
     this.view.setRootNode('');
   }
+
+  ngAfterViewChecked(): void {
+    const element: HTMLElement = this.memoContent?.nativeElement;
+    this.overflowed = element?.scrollWidth > element?.offsetWidth;
+  }
   //#endregion
 
   //#region Event
@@ -177,6 +187,11 @@ export class ReceiptTransactionComponent extends UIComponent {
         this.export(data);
         break;
     }
+  }
+
+  onClickShowLess(): void {
+    this.expanding = !this.expanding;
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -336,6 +351,7 @@ export class ReceiptTransactionComponent extends UIComponent {
         this.loadDatadetail(this.itemSelected);
       }
     }
+    this.expanding = false;
   }
 
   clickChange(data) {

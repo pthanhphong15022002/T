@@ -48,6 +48,9 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.groupData = dialog.dataService!.dataSelected;
+    if (!this.groupData.members) {
+      this.groupData.members = [];
+    }
     console.log('constructor', this.groupData);
 
     this.formType = dt?.data?.formType;
@@ -83,7 +86,10 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   openPopRoles() {
     let option = new DialogModel();
 
-    let needValidate = this.groupData.memberIDs != '';
+    let needValidate = false;
+    if (this.groupData.memberIDs && this.groupData.memberIDs != '') {
+      needValidate = true;
+    }
     let lstUserIDs = [this.groupData.groupID];
     if (needValidate && this.groupData.memberIDs?.split(';').length > 0) {
       lstUserIDs.push(...this.groupData.memberIDs?.split(';'));
@@ -153,6 +159,7 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     this.popAddMemberState = !this.popAddMemberState;
     if (event == null) return;
     if (!this.isSaved) {
+      // this.groupData.memberIDs = event.id;
       this.adServices
         .addUserGroupAsync(this.groupData)
         .subscribe((res: any) => {
@@ -168,11 +175,10 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   addMember(event: any, isOverrideRoles: boolean) {
     let lstMemberIDs = this.groupData.memberIDs;
     this.groupData.memberIDs = event?.id;
-
+    this.detectorRef.detectChanges();
     this.adServices
       .addUserGroupMemberAsync(this.groupData, isOverrideRoles)
       .subscribe((result) => {
-        this.groupData.memberIDs = lstMemberIDs;
         if (result) {
           event?.dataSelected?.forEach((mem) => {
             let tmpGroupMem: GroupMembers = {
@@ -185,12 +191,16 @@ export class AddDecentralGroupMemComponent extends UIComponent {
               positionName: mem.PositionName,
               orgUnitName: mem.OrgUnitName,
             };
-            this.groupData.members.push(tmpGroupMem);
+            if (!this.groupData.members.find((x) => x.memberID == mem.UserID)) {
+              this.groupData.members.push(tmpGroupMem);
+            }
           });
-          if (this.groupData.memberIDs != '') {
-            this.groupData.memberID += ';';
-          }
-          this.groupData.memberID += event?.id;
+          // if (this.groupData.memberIDs != '') {
+          //   this.groupData.memberIDs += ';';
+          // }
+          // this.groupData.memberIDs += event?.id;
+        } else {
+          this.groupData.memberIDs = lstMemberIDs;
         }
       });
   }

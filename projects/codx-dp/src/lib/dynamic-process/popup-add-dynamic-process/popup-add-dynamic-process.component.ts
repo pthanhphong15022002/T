@@ -3240,7 +3240,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   checkSaveNow() {
-    var checkGroup = this.lstGroup.some(
+    var checkGroup = this.lstGroup?.some(
       (x) => x.groupID == this.process?.groupID
     );
     return (

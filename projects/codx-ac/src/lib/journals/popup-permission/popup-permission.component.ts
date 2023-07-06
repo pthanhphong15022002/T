@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { UIComponent } from 'codx-core';
+import { Component, Injector, Optional } from '@angular/core';
+import { DialogRef, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-popup-permission',
@@ -8,6 +8,11 @@ import { UIComponent } from 'codx-core';
 })
 export class PopupPermissionComponent extends UIComponent {
   //#region Constructor
+  users: any[];
+
+  constructor(injector: Injector, @Optional() public dialogRef: DialogRef) {
+    super(injector);
+  }
   //#endregion
 
   //#region Init
@@ -16,7 +21,9 @@ export class PopupPermissionComponent extends UIComponent {
 
   //#region Event
   onChange(e): void {
-    
+    console.log(e);
+
+    this.users = e.data;
   }
   //#endregion
 
