@@ -317,10 +317,10 @@
   [highlightItem]="0"
   [normalLevelShift]="20"
   [dotLevelShift]="10"
-  [lineLevelShift]="10"
-  [normalItemsInterval]="20"
-  [dotItemsInterval]="10"
-  [lineItemsInterval]="5"
+  [lineLevelShift]="20"
+  [normalItemsInterval]="40"
+  [dotItemsInterval]="20"
+  [lineItemsInterval]="50"
   [buttonsPanelSize]="48"
   [itemTitleSecondFontColor]="'#FFFFFF'"
   [leavesPlacementType]="ChildrenPlacementType.Vertical"
@@ -332,22 +332,19 @@
   [templates]="[
     {
       name: 'contactTemplate',
-      itemSize: { width: 220, height: 350 },
-      minimizedItemSize: { width: 3, height: 3 },
-      highlightPadding: { left: 4, top: 4, right: 4, bottom: -18 },
+      itemSize: { width: 250, height: 230 },
       itemTemplate: contactTemplate,
       cursorTemplate: contactCursorTemplate,
       highlightTemplate: contactHighlightTemplate,
-      cursorPadding: { left: 0, top: 0, right: 0, bottom: 0 }
+      minimizedItemSize: { width: 5, height: 5 },
     }
   ]"
 >
 </org-diagram>
 
 <ng-template #contactTemplate let-itemConfig="context" let-isCursor="isCursor">
-  {{ console.log(itemConfig) }}
   <div
-    class="department-card border border-gray-300 w-250px h-350px position-relative"
+    class="department-card border border-gray-300 w-250px h-220px position-relative"
   >
     <div
       class="d-flex align-items-center p-3 w-100"
@@ -397,7 +394,7 @@
             [default]="itemConfig.description || 'Chức vụ'"
           ></codx-label>
         </div>
-        <div class="d-flex align-items-center mt-2">
+        <!-- <div class="d-flex align-items-center mt-2">
           <div class="btn btn-sm btn-light-primary me-3 counter">
             <i class="icon-account_tree icon-16 me-1"></i>
             <span class="fw-bold text-primary">{{
@@ -410,9 +407,9 @@
               itemConfig.filledCounts ? itemConfig.filledCounts : 0
             }}</span>
           </div>
-        </div>
+        </div> -->
       </div>
-      <div class="d-flex justify-content-between mt-5 px-3">
+      <!-- <div class="d-flex justify-content-between mt-5 px-3">
         <div
           class="d-flex flex-column align-items-center counter cursor-pointer"
         >
@@ -452,7 +449,7 @@
             [default]="'Offboard'"
           ></codx-label>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </ng-template>
