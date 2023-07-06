@@ -57,19 +57,14 @@ export class CashPaymentsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
     text: 'Thêm phiếu chi',
   };
-  isRead: any = false;
   headerText: any;
   moreFuncName: any;
   funcName: any;
   journalNo: string;
   itemSelected: any;
-  objectname: any;
-  oData: any;
-  cashbook: any;
   userID: any;
   dataCategory: any;
   journal: IJournal;
-  approval: any;
   totalacct: any = 0;
   totaloff: any = 0;
   totalsettledAmt: any = 0;
@@ -80,9 +75,6 @@ export class CashPaymentsComponent extends UIComponent {
   settledInvoices: any;
   acctTrans: any;
   baseCurr: any;
-  cashbookName: any;
-  reasonName: any;
-  loading: any = false;
   arrEntryID = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -148,7 +140,6 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.loadcacheCbx();
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
     });
@@ -798,13 +789,6 @@ export class CashPaymentsComponent extends UIComponent {
           break;
       }
     }
-  }
-  loadcacheCbx(){
-    // this.cache.combobox('CashBooks').subscribe();
-    // this.cache.combobox('ObjectsAC').subscribe();
-    // this.cache.combobox('CashPaymentReasonsAC').subscribe();
-    // this.cache.combobox('ContactBookNameAC').subscribe();
-    // this.cache.combobox('Currencies').subscribe();
   }
   //#endregion
 }

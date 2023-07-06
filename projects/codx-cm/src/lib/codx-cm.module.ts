@@ -86,6 +86,8 @@ import { PopupAddTargetComponent } from './targets/popup-add-target/popup-add-ta
 import { CommonModule } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from '@core/core.module';
+import { CodxTabCmComponent } from './codx-tab-cm/codx-tab-cm.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 const routes: Routes = [
   {
@@ -228,6 +230,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CmDashboardComponent,
     TargetsComponent,
     PopupAddTargetComponent,
+    CodxTabCmComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -245,6 +248,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     DragDropModule,
     CoreModule,
     CommonModule,
+    TreeMapModule,
     CodxCoreModule.forRoot({ environment }),
   ],
   exports: [RouterModule],

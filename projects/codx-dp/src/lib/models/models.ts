@@ -59,6 +59,7 @@ export class DP_Processes {
   assign: boolean = true;
   delete: boolean = true;
   deleted: boolean = false;
+  stepsColorMode: boolean;
 }
 
 export class DP_Processes_Permission {

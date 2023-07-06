@@ -10,6 +10,7 @@ import {
 import { Layout } from '@syncfusion/ej2-angular-diagrams';
 import { ApiHttpService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { LayoutComponent } from '../_layout/layout.component';
+import { GridModels } from '../models/tmpModel';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -29,6 +30,23 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   datasDeals: any;
   arrVllStatus: any = [];
   vllStatus = '';
+  dataDashBoard: any;
+  isLoaded: boolean = false;
+  titLeModule = '';
+
+  // setting
+  tooltipSettings = {
+    visible: true,
+    format: '${businessLineName} - TotalCount:${quantity}',
+    template:
+      '<div><span>${businessLineName}</span><span>Total Count: ${quantity}</span></div>',
+  };
+
+  leafItemSettings = {
+    labelPath: 'businessLineName',
+    labelPosition: 'Center',
+    labelFormat: '${businessLineName}<br>${quantity}-(${percentage} %)',
+  };
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -41,6 +59,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           if (res && res.datas) this.arrVllStatus = res.datas;
         });
       }
+    });
+    this.cache.functionList('CM0201').subscribe((fun) => {
+      this.titLeModule = fun?.customName || fun?.description;
     });
   }
   onInit(): void {
@@ -66,13 +87,50 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
+
+    this.getDataDashboard();
   }
 
-  filterChange(e) {}
+  filterChange(e: any) {
+    this.isLoaded = false;
+    const { predicates, dataValues } = e[0];
+    const param = e[1];
+    this.getDataDashboard(predicates, dataValues, param);
+
+    this.detectorRef.detectChanges();
+  }
 
   onActions(e) {}
 
   getNameStatus(status) {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
+  }
+
+  getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
+    this.isLoaded = false;
+    let model = new GridModels();
+    model.funcID = this.funcID;
+    model.entityName = 'CM_Deals';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
+    this.api
+      .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
+      .subscribe((res) => {
+        this.dataDashBoard = res;
+
+        setTimeout(() => {
+          this.isLoaded = true;
+        }, 500);
+      });
+
+    this.detectorRef.detectChanges();
+  }
+
+  getTitle(status) {
+    return (
+      this.titLeModule +
+      '-' +
+      this.arrVllStatus.filter((x) => x.value == status)[0]?.text
+    );
   }
 }

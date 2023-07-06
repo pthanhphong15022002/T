@@ -11,7 +11,7 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { StepService } from '../step.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 
@@ -70,6 +70,7 @@ export class CodxViewTaskComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private callfc: CallFuncService,
     private stepService: StepService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -122,6 +123,7 @@ export class CodxViewTaskComponent implements OnInit {
         }
         await this.setDataView();
         this.settingData();
+        this.changeDetectorRef.detectChanges();
       });
     }else{
       await this.setDataView();
@@ -285,6 +287,7 @@ export class CodxViewTaskComponent implements OnInit {
       }
     }
     this.dataProgress = dataPopupOutput?.event;
+    this.changeDetectorRef.detectChanges();
   }
 
   checkUpdateProgress(data, type) {
@@ -409,6 +412,7 @@ export class CodxViewTaskComponent implements OnInit {
     if(groupOutput?.groupTask){
       this.groupTaskAdd = groupOutput?.groupTask;
       this.instanceStep?.taskGroups?.push(groupOutput?.groupTask);
+      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -421,6 +425,7 @@ export class CodxViewTaskComponent implements OnInit {
       if(this.type != "P"){
         this.listDataLink?.push(this.taskAdd);
       }
+      this.changeDetectorRef.detectChanges();
     }
   }
   //#endregion

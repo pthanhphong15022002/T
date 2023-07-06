@@ -7,7 +7,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="showButtonAdd ? button : null"
+  [button]="button"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
@@ -28,7 +28,7 @@
     </codx-img> -->
     <div class="ps-3 d-flex w-100 flex-column pe-12">
       <!-- <span class="w-100 text-truncate fw-bold">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span> -->
-      <span class="w-100 text-truncate fw-bold">{{ data?.targetName }}</span>
+      <span class="w-100 text-truncate fw-bold">{{ data?.target }}</span>
     </div>
   </div>
 </ng-template>
@@ -36,7 +36,7 @@
 <ng-template #resourceHeader let-data>
   <div class="d-flex flex-row ms-5 align-items-center">
     <codx-img
-      [objectId]="data?.resourceData?.owner"
+      [objectId]="data?.resourceData?.salespersonID"
       imageType="circle"
       width="40"
       [objectType]="'AD_Users'"

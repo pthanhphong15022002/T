@@ -20,7 +20,7 @@
         <div class="card-title">
           <div class="d-flex flex-column">
             <div
-              class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase"
+              class="dialog-title line-clamp line-clamp-1 me-3"
             >
               {{ headerText }}
             </div>
@@ -43,12 +43,12 @@
         <div class="ms-2">
           <button
             type="button"
-            class="btn btn-primary"
-            style="min-width: 60px"
+            class="btn btn-sm btn-primary"
+            style="min-width: 75px"
             (click)="onSave()"
           >
             <codx-label
-              class="fs-6 fw-normal"
+              class="fw-normal fs-body"
               fiedName="lblSave"
               default="Lưu"
             ></codx-label>
@@ -68,7 +68,7 @@
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
                 <i class="icon-info icon-18 me-2"></i>
-                <div class="fw-bold fs-6 text-uppercase">
+                <div class="fw-bold fs-5-sm text-uppercase">
                   <codx-label
                     name="lbl"
                     [formName]=""
@@ -90,7 +90,7 @@
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
                 <i class="icon-format_list_numbered icon-18 me-2"></i>
-                <span class="fw-bold fs-6 text-uppercase">
+                <span class="fw-bold fs-5-sm text-uppercase">
                   <codx-label
                     name="detailProducts"
                     [formName]=""
@@ -117,37 +117,88 @@
 
   <!-- Start: Thông tin chung -->
   <ng-template #tabBasicGeneral>
-    <div class="m-5">
+    <div class="mt-5">
       <div class="row">
-        <div class="col-6 row">
-          <div class="form-group col-9">
-            <codx-label
-              fiedName="QuotationName"
-              [formModel]="form.formModel"
-            ></codx-label>
-            <codx-input
-              field="quotationName"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              [crrValue]="quotations.quotationName"
-            ></codx-input>
-          </div>
-          <div class="form-group col-3">
-            <codx-label
-              fiedName="VersionName"
-              [formModel]="form.formModel"
-            ></codx-label>
-            <codx-input
-              field="versionName"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              [disabled]="true"
-            ></codx-input>
+        <div class="col-7 ac-left">
+          <div class="mw-750px">
+            <div class="row">
+              <div class="form-group col-9">
+                <codx-label
+                  fiedName="QuotationName"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="quotationName"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  [crrValue]="quotations.quotationName"
+                ></codx-input>
+              </div>
+              <div class="form-group col-3">
+                <codx-label
+                  fiedName="VersionName"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="versionName"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  [disabled]="true"
+                ></codx-input>
+              </div>
+            </div>
+            <div class="form-group">
+              <codx-label
+                fiedName="DealID"
+                [formModel]="form.formModel"
+              ></codx-label>
+              <codx-input
+                #dealsCbx
+                field="dealID"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                [disabled]="disableDealID"
+                (valueChange)="changeCombox($event)"
+              ></codx-input>
+            </div>
+            <div class="row">
+              <div class="form-group col-6">
+                <codx-label
+                  fiedName="CustomerID"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  #customerCbx
+                  field="customerID"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  [disabled]="disableCusID"
+                  (valueChange)="changeCombox($event)"
+                ></codx-input>
+              </div>
+              <div class="form-group col-6">
+                <codx-label
+                  fiedName="ContactID"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  #contactCbx
+                  field="contactID"
+                  [formModel]="form.formModel"
+                  [crrValue]="quotations.contactID"
+                  [model]="{
+                    objectID: this.quotations.customerID
+                  }"
+                  (valueChange)="changeCombox($event)"
+                ></codx-input>
+              </div>
+              <!-- xoa  [Group]="form.formGroup" de cbx nhan model de -->
+            </div>
           </div>
         </div>
-        <div class="col-6 row">
-          <div class="col-6"></div>
-          <div class="col-6">
+        <div class="col-2 ac-bettween"></div>
+        <div class="col-3 ac-right d-flex justify-content-end">
+          <div class="d-flex flex-column min-w-250px mw-300px">
             <div class="form-group">
               <codx-label
                 fiedName="QuotationID"
@@ -160,120 +211,62 @@
                 [disabled]="true"
               ></codx-input>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 row">
-          <div class="form-group">
-            <codx-label
-              fiedName="DealID"
-              [formModel]="form.formModel"
-            ></codx-label>
-            <codx-input
-              #dealsCbx
-              field="dealID"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              [disabled]="disableDealID"
-              (valueChange)="changeCombox($event)"
-            ></codx-input>
-          </div>
-        </div>
-        <div class="col-6 row">
-          <div class="col-6"></div>
-          <div class="col-6 row">
-            <div class="form-group col-6">
-              <codx-label
-                fiedName="CreatedOn"
-                [formModel]="form.formModel"
-              ></codx-label>
-              <codx-input
-                field="createdOn"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                [disabled]="true"
-              ></codx-input>
+            <div class="row">
+              <div class="form-group col-6">
+                <codx-label
+                  fiedName="CreatedOn"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="createdOn"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  [disabled]="true"
+                ></codx-input>
+              </div>
+              <div class="form-group col-6">
+                <codx-label
+                  fiedName="deadline"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="deadline"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>
+              </div>
             </div>
-            <div class="form-group col-6">
-              <codx-label
-                fiedName="deadline"
-                [formModel]="form.formModel"
-              ></codx-label>
-              <codx-input
-                field="deadline"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                (valueChange)="valueChange($event)"
-              ></codx-input>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 row">
-          <div class="form-group col-6">
-            <codx-label
-              fiedName="CustomerID"
-              [formModel]="form.formModel"
-            ></codx-label>
-            <codx-input
-              #customerCbx
-              field="customerID"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              [disabled]="disableCusID"
-              (valueChange)="changeCombox($event)"
-            ></codx-input>
-          </div>
-          <div class="form-group col-6">
-            <codx-label
-              fiedName="ContactID"
-              [formModel]="form.formModel"
-            ></codx-label>
-            <codx-input
-              #contactCbx
-              field="contactID"
-              [formModel]="form.formModel"
-              [crrValue]="quotations.contactID"
-              [model]="{
-                objectID: this.quotations.customerID
-              }"
-              (valueChange)="changeCombox($event)"
-            ></codx-input>
-          </div>
-          <!-- xoa  [Group]="form.formGroup" de cbx nhan model de -->
-        </div>
-        <div class="col-6 row">
-          <div class="col-6"></div>
-          <div class="col-6 row">
-            <div class="form-group col-6">
-              <codx-label
-                fiedName="CurrencyID"
-                [formModel]="form.formModel"
-              ></codx-label>
-              <codx-input
-                field="currencyID"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                (valueChange)="valueChange($event)"
-              ></codx-input>
-            </div>
-            <div class="form-group col-6">
-              <codx-label
-                fiedName="ExchangeRate"
-                [formModel]="form.formModel"
-              ></codx-label>
-              <codx-input
-                field="exchangeRate"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                [disabled]="true"
-              ></codx-input>
+            <div class="row">
+              <div class="form-group col-6">
+                <codx-label
+                  fiedName="CurrencyID"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="currencyID"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>
+              </div>
+              <div class="form-group col-6">
+                <codx-label
+                  fiedName="ExchangeRate"
+                  [formModel]="form.formModel"
+                ></codx-label>
+                <codx-input
+                  field="exchangeRate"
+                  [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  [disabled]="true"
+                ></codx-input>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </ng-template>
   <!--  End:thêm sản phẩm -->

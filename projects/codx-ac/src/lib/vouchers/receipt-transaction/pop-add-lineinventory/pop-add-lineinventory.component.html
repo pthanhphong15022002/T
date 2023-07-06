@@ -291,7 +291,7 @@
             <codx-input
               [Group]="form.formGroup"
               [formModel]="form.formModel"
-              (valueChange)="valueChange($event)"
+              (controlBlur)="calculateAtm($event)"
               field="costAmt"
             >
             </codx-input>
@@ -598,7 +598,7 @@
             <codx-input
               [Group]="form.formGroup"
               [formModel]="form.formModel"
-              (valueChange)="valueChange($event)"
+              (controlBlur)="calculateAtm($event)"
               field="costAmt"
             >
             </codx-input>

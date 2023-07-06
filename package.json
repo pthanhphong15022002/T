@@ -76,7 +76,7 @@
     "ng-recaptcha": "^11.0.0",
     "ngx-basic-primitives": "^6.5.2",
     "ngx-capture": "^0.13.0",
-    "ngx-extended-pdf-viewer": "^17.0.0-alpha.5",
+    "ngx-extended-pdf-viewer": "17.4.3",
     "ngx-moment": "^6.0.2",
     "ngx-skeleton-loader": "^7.0.0",
     "ngx-ui-loader": "^13.0.0",

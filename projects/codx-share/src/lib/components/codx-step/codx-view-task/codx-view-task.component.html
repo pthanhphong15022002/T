@@ -21,43 +21,43 @@
 </ng-template>
 
 <ng-template #header>
-  <div class="offcanvas-header w-100 ">
+  <div class="offcanvas-header w-100">
     <div class="d-flex justify-content-end">
       <div>
         <codx-mfunc
-            [formModel]="formModelStep"
-            [isBookMark]="false"
-            [dataItem]="moreDefaut"
-            (changeDataMF)="changeDataMFStep($event)"
-            (clickMF)="clickMFStep($event)"
-          ></codx-mfunc>
+          [formModel]="formModelStep"
+          [isBookMark]="false"
+          [dataItem]="moreDefaut"
+          (changeDataMF)="changeDataMFStep($event)"
+          (clickMF)="clickMFStep($event)"
+        ></codx-mfunc>
       </div>
       <div
-      class="btn-extand d-flex align-items-center"
-      [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'"
-    >
-      <ng-container *ngIf="!hideExtend">
-        <!-- <span [style.marginLeft]="'52%'"> -->
-        <span >
-          <codx-label fiedName="InfoExpand" default="Thông tin mở rộng">
-          </codx-label>
-        </span>
-      </ng-container>
-      <a
-        class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
-        (click)="extendShow()"
+        class="btn-extand d-flex align-items-center"
+        [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'"
       >
-        <span *ngIf="hideExtend" class="text-dark me-2">
-          <codx-label
-            fiedName="Expand"
-            [formModel]="form.formModel"
-            default="Mở rộng"
-          >
-          </codx-label>
-        </span>
-        <span class="icon-login icon-20 ext_button"></span>
-      </a>
-    </div>
+        <ng-container *ngIf="!hideExtend">
+          <!-- <span [style.marginLeft]="'52%'"> -->
+          <span>
+            <codx-label fiedName="InfoExpand" default="Thông tin mở rộng">
+            </codx-label>
+          </span>
+        </ng-container>
+        <a
+          class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
+          (click)="extendShow()"
+        >
+          <span *ngIf="hideExtend" class="text-dark me-2">
+            <codx-label
+              fiedName="Expand"
+              [formModel]="form.formModel"
+              default="Mở rộng"
+            >
+            </codx-label>
+          </span>
+          <span class="icon-login icon-20 ext_button"></span>
+        </a>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -187,8 +187,8 @@
       style="font-weight: 500"
     >
     </codx-label>
-    <!-- <ul *ngIf="dataInput['fields']?.length > 0">
-      <li *ngFor="let feild of dataInput['fields']" class="fs-6">
+    <!-- <ul *ngIf="dataView?.fields?.length > 0">
+      <li *ngFor="let feild of dataView?.fields" class="fs-6">
         {{ feild?.fieldName }}: {{ feild?.dataValue }}
       </li>
     </ul> -->
@@ -252,7 +252,7 @@
       <codx-attachment
         #attachment
         [objectType]="dialog.formModel.entityName"
-        [objectId]="dataInput['recID']"
+        [objectId]="dataView?.recID"
         hideFolder="1"
         hideImageUpload="0"
         hideImageThumb="0"
@@ -281,7 +281,7 @@
       style="font-weight: 500"
     >
     </codx-label>
-    <p [innerHTML]="dataInput['memo']"></p>
+    <p [innerHTML]="dataView?.memo"></p>
   </div>
   <hr *ngIf="type !== 'P'" />
 
@@ -332,7 +332,9 @@
       class="fs-5 me-4"
       fiedName="roles"
       [formModel]="frmModel"
-      [default]="type == 'M' ? 'Người phụ trách/chủ trì:' : 'Người đi công tác:'"
+      [default]="
+        type == 'M' ? 'Người phụ trách/chủ trì:' : 'Người đi công tác:'
+      "
       style="font-weight: 500"
     >
     </codx-label>
@@ -405,30 +407,30 @@
 <!-- Phần ngày giờ và thông báo dưới tên -->
 <ng-template #describe>
   <div class="d-flex">
-    <div class="d-flex align-items-center me-2" *ngIf="dataInput['reminders']">
+    <div class="d-flex align-items-center me-2" *ngIf="dataView?.reminders">
       <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
       <span>
-        {{ dataInput["reminders"] }}
+        {{ dataView?.reminders }}
       </span>
     </div>
 
     <div class="d-flex align-items-center me-2">
       <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
-      <span class="date" *ngIf="dataInput['startDate'] && dataInput['endDate']">
-        {{ dataInput["startDate"] | date : dateFomat }} -
-        {{ dataInput["endDate"] | date : dateFomat }}
+      <span class="date" *ngIf="dataView?.startDate && dataView?.endDate">
+        {{ dataView?.startDate | date : dateFomat }} -
+        {{ dataView?.endDate | date : dateFomat }}
       </span>
       <span>(</span>
-      <span class="mx-1 text-primary-500">{{ dataInput["durationDay"] }}</span>
+      <span class="mx-1 text-primary-500">{{ dataView?.durationDay }}</span>
       <codx-label name="durationDay" default="ngày"></codx-label>
-      <span class="mx-1 text-primary-500">{{ dataInput["durationHour"] }}</span>
+      <span class="mx-1 text-primary-500">{{ dataView?.durationHour }}</span>
       <codx-label name="durationHour" default="giờ"></codx-label>
       <span>)</span>
     </div>
 
     <div *ngIf="type == 'C'" class="d-flex align-items-center me-2">
       <span class="icon-local_phone icon-18 me-1"></span>
-      <span class="mx-1 text-primary-500">{{ dataInput["callType"] }}</span>
+      <span class="mx-1 text-primary-500">{{ dataView?.callType }}</span>
     </div>
     <div
       *ngIf="type === 'M'"
@@ -437,7 +439,7 @@
       <codx-input
         type="switch"
         class="test-check me-2 mt-2"
-        [checked]="dataInput['isOnline']"
+        [checked]="dataView?.isOnline"
         field="isOnline"
         [disabled]="true"
       >
@@ -455,14 +457,14 @@
   <div>
     <codx-history
       #history
-      [objectID]="dataInput['recID']"
+      [objectID]="dataView?.recID"
       [formModel]="form.formModel"
     ></codx-history>
   </div>
 </ng-template>
 <ng-template #comment>
   <codx-tree-comment
-    [objectID]="dataInput['recID']"
+    [objectID]="dataView?.recID"
     [actionType]="'C'"
     [addNew]="true"
   >
@@ -473,7 +475,7 @@
     <codx-attachment
       #attachment
       [objectType]="'DP_Steps_Tasks'"
-      [objectId]="dataInput['refID']"
+      [objectId]="dataView?.refID"
       hideFolder="1"
       hideImageUpload="0"
       hideImageThumb="0"
