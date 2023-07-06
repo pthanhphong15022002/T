@@ -140,12 +140,12 @@
             id="btnMinRadio"
             autocomplete="off"
             [checked]="checkBtnMinRadio"
-            (click)="clickRadio('btnMinRadio')"
           />
           <codx-label
             class="btn btn-outline-primary"
             for="btnMinRadio"
             default="Thấp nhất"
+            (click)="clickRadio('btnMinRadio')"
           ></codx-label>
 
           <input
@@ -155,16 +155,42 @@
             id="btnMaxRadio"
             autocomplete="off"
             [checked]="checkBtnMaxRadio"
-            (click)="clickRadio('btnMaxRadio')"
           />
           <codx-label
             class="btn btn-outline-primary"
             for="btnMaxRadio"
             default="Cao nhất"
+            (click)="clickRadio('btnMaxRadio')"
           ></codx-label>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="dataDashBoard?.countsOwner?.length > 0; else noData">
+      <div class="assignchart-group w-100 h-100">
+        <div
+          *ngFor="let ownerCount of dataDashBoard?.countsOwner; let i = index"
+          class="assignchart-item d-flex align-items-center justify-content-end"
+          [title]=""
+        >
+          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+          <div
+            class="assignchart-task"
+            style="color: #000000"
+            [style.background-color]="paletteColor[i]"
+            [style.width]="ownerCount.percentage + '%'"
+          >
+            <codx-vll
+              [name]="'L1456'"
+              [value]="'1'"
+              [showText]="true"
+              [showBgColor]="false"
+              style="width: '25px'; height: '25px'"
+            >
+            </codx-vll>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 

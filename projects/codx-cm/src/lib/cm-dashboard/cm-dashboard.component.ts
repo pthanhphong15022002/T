@@ -159,5 +159,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.checkBtnMaxRadio = true;
         break;
     }
+    this.detectorRef.detectChanges();
   }
 }
