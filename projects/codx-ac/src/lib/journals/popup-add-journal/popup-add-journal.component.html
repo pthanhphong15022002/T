@@ -751,10 +751,12 @@
     ></lib-group-share>
 
     <!-- <div class="form-group">
-      <codx-label fiedName="creater" [formModel]="form.formModel"></codx-label>
-
       <div class="row align-items-center">
-        <div class="col-6">
+        <div class="col-7 d-flex flex-column gap-1">
+          <codx-label
+            fiedName="creater"
+            [formModel]="form.formModel"
+          ></codx-label>
           <codx-label
             fiedName="lblCreater"
             [formModel]="form.formModel"
@@ -763,7 +765,7 @@
           ></codx-label>
         </div>
 
-        <div class="col-5">
+        <div class="col-4">
           <lib-dropdown-detail
             *ngIf="createrObjectType === 'U' || !createrObjectType"
             [formModel]="form.formModel"

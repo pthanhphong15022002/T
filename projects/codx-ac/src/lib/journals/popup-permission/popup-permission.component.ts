@@ -8,6 +8,8 @@ import { DialogRef, UIComponent } from 'codx-core';
 })
 export class PopupPermissionComponent extends UIComponent {
   //#region Constructor
+  users: any[];
+
   constructor(injector: Injector, @Optional() public dialogRef: DialogRef) {
     super(injector);
   }
@@ -18,7 +20,11 @@ export class PopupPermissionComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  onChange(e): void {}
+  onChange(e): void {
+    console.log(e);
+
+    this.users = e.data;
+  }
   //#endregion
 
   //#region Method
