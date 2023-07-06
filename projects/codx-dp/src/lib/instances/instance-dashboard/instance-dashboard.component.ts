@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService } from 'codx-core';
 import { DP_Processes } from '../../models/models';
 import { firstValueFrom } from 'rxjs';
+import { AnimationModel, ChartAnnotationSettingsModel } from '@syncfusion/ej2-angular-charts';
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -52,11 +53,106 @@ export class InstanceDashboardComponent implements OnInit {
   dataDashBoard: any;
   isLoaded: boolean = false;
   arrVllStatus = [];
+  public annotations: ChartAnnotationSettingsModel[] = [
+    {    
+      content:"<div style='font-Weight:600;font-size:14px'>Browser<br>Market<br>Share</div>",
+      region: 'Series',
+      x: '51%',
+      y: '50%',
+    },
+  ];
+  public data: Object[] = [
+    { x: 'Internet Explorer', y: 6.12, text: '6.12%' },
+    { x: 'Chrome', y: 57.28, text: '57.28%' },
+    { x: 'Safari', y: 4.73, text: '4.73%' },
+    { x: 'QQ', y: 5.96, text: '5.96%' },
+    { x: 'UC Browser', y: 4.37, text: '4.37%' },
+    { x: 'Edge', y: 7.48, text: '7.48%' },
+    { x: 'Others', y: 14.06, text: '14.06%' },
+  ];
+  //Initializing Legend
+  public innerRadius: string = '85%';
+  public startAngle: number = 30;
+  public radius: string = '100%';
+  //Initializing Datalabel
+  public dataLabel: Object = {
+    name: 'text',
+    visible: true,
+    font: {
+      fontWeight: '600',
+      color: '#ffffff',
+    },
+  };
+  public tooltip: Object = {
+    enable: true,
+    format: '<b>${point.x}</b><br>Browser Share: <b>${point.y}%</b>',
+    header: '',
+  };
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  paletteColor = ['#06ddb8', '#a6dff5','#0b792c','#3f4144','#5014D0'];
+  tasksByCategory = [
+    {category: '1', quantity: 100},
+    {category: '2', quantity: 85},
+    {category: '3', quantity: 70},
+    {category: '4', quantity: 50},
+    {category: '5', quantity: 30}
+  ]
+  
+  //thóng kê
+  public chartArea: Object = {
+    border: {
+        width: 0
+    }
+};
+    //Initializing Primary X Axis
+    public primaryXAxis: Object = {
+      interval: 1,
+      valueType: 'Category',
+      majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
+      lineStyle: { width: 0 },
+      labelIntersectAction: 'Rotate90',
+  };
+  //Initializing Primary Y Axis
+  public primaryYAxis: Object = {
+      title: 'Frequency of Occurence',
+      minimum: 0,
+      maximum: 25,
+      interval: 5,
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 }, minorTickLines: { width: 0 }
+  };
+  tooltip1: Object = {
+    enable: true,
+    shared: true,
+    format: '${series.name} : <b>${point.y}</b>'    
+};
+public data1: Object[] = [
+  { x: 'Button Defect', y: 23 }, { x: 'Pocket Defect', y: 16 },
+  { x: 'Collar Defect', y: 10 }, { x: 'Cuff Defect', y: 7 },
+  { x: 'Sleeve Defect', y: 6 }, { x: 'Other Defect', y: 2}
+];
+paretoOptions: Object = {
+  marker: {
+      visible: true,
+      isFilled: true,
+      width: 7,
+      height: 7
+  },
+  dashArray: '3,2',
+  width: 2
+  
+}
+public  cornerRadius: Object = { 
+  topLeft: 6, topRight:  6 
+}
+
   constructor(
-    private api: ApiHttpService, 
+    private api: ApiHttpService,
     private cache: CacheService,
     private router: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.setting();
   }
@@ -65,7 +161,7 @@ export class InstanceDashboardComponent implements OnInit {
       if (res && res.datas) this.arrVllStatus = res.datas;
     });
     this.funcID = this.router.snapshot.params['funcID'];
-    this.getDataDashboard('ProcessID==@0',this.processID);
+    this.getDataDashboard('ProcessID==@0', this.processID);
   }
 
   setting() {
@@ -81,14 +177,23 @@ export class InstanceDashboardComponent implements OnInit {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
   }
 
-  async getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
+  async getDataDashboard(
+    predicates?: string,
+    dataValues?: string,
+    params?: any
+  ) {
     let model = new GridModels();
     model.funcID = this.funcID;
     model.entityName = 'DP_Instances';
     model.predicates = predicates;
     model.dataValues = dataValues;
-    let data = await firstValueFrom(this.api.exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [model, params]));
-    if(data){
+    let data = await firstValueFrom(
+      this.api.exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [
+        model,
+        params,
+      ])
+    );
+    if (data) {
       this.dataDashBoard = data;
       console.log(this.dataDashBoard);
       this.isLoaded = true;
@@ -97,7 +202,7 @@ export class InstanceDashboardComponent implements OnInit {
     // this.api
     //   .exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [model, params])
     //   .subscribe((res) => {
-       
+
     //   });
   }
 }
