@@ -1,9 +1,15 @@
-<codx-form [headerText]="'Người nhập liệu'" [body]="body" [footer]="footer">
+<codx-form
+  [headerText]="'Người nhập liệu'"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+>
   <ng-template #body>
     <div class="row h-100">
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 position-relative border-right">
-        <div class="user-mini-nav">
-        </div>
+      <div
+        class="col-xl-4 col-lg-4 col-md-4 col-sm-12 position-relative border-right"
+      >
+        <div class="user-mini-nav"></div>
 
         <div class="position-absolute bottom-0" style="right: 1.5rem">
           <codx-input
@@ -80,7 +86,11 @@
                 ></codx-label>
               </td>
               <td>
-                <codx-input type="input"></codx-input>
+                <codx-input
+                  type="combobox"
+                  refType="2"
+                  refValue="AC120"
+                ></codx-input>
               </td>
             </tr>
             <tr>
@@ -99,7 +109,34 @@
                 ></codx-label>
               </td>
               <td>
-                <codx-input type="input"></codx-input>
+                <codx-input
+                  type="combobox"
+                  refType="2"
+                  refValue="AC120"
+                ></codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <codx-label
+                  fieldName="lblFunctionRow"
+                  [formModel]=""
+                  default="Sửa"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-label
+                  fieldName="lblDescriptionRow"
+                  [formModel]=""
+                  default="Cho phép chỉnh sửa chứng từ"
+                ></codx-label>
+              </td>
+              <td>
+                <codx-input
+                  type="combobox"
+                  refType="2"
+                  refValue="AC120"
+                ></codx-input>
               </td>
             </tr>
             <tr>

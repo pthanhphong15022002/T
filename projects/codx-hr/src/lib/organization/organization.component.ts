@@ -11,6 +11,7 @@ import {
   ButtonModel,
   CRUDService,
   CodxTreeviewComponent,
+  DataRequest,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -117,20 +118,20 @@ export class OrgorganizationComponent extends UIComponent {
           panelRightRef: this.tmpMasterDetail,
         },
       },
-      // {
-      //   id: '4',
-      //   type: ViewType.tree_orgchart,
-      //   sameData: false,
-      //   request: this.request,
-      //   model: {
-      //     resizable: true,
-      //     template: this.tempTree,
-      //     panelRightRef: this.tmpOrgChart,
-      //     // panelRightRef: this.panelRightLef,
-      //     // template2: this.tmpOrgChart,
-      //     // resourceModel: { parentIDField: 'ParentID' },
-      //   },
-      // },
+      {
+        id: '4',
+        type: ViewType.tree_orgchart,
+        sameData: false,
+        request: this.request,
+        model: {
+          resizable: true,
+          template: this.tempTree,
+          panelRightRef: this.tmpOrgChart,
+          // panelRightRef: this.panelRightLef,
+          // template2: this.tmpOrgChart,
+          // resourceModel: { parentIDField: 'ParentID' },
+        },
+      },
     ];
 
     this.detectorRef.detectChanges();
@@ -287,6 +288,8 @@ export class OrgorganizationComponent extends UIComponent {
             if (res.event) {
               this.view.dataService.add(res.event).subscribe();
               this.flagLoaded = true;
+
+              this.view.dataService.setDataSelected(res.event);
             }
           });
         }
