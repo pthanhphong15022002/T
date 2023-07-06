@@ -19,14 +19,12 @@
       [cellSpacing]="[20, 20]"
     ></codx-dashboard>
   </div>
-  <div class="w-100 h-100" *ngIf="!isLoaded">
-    Chưa load xong data----------chắc cần anomation
-  </div>
+  <div class="w-100 h-100" *ngIf="!isLoaded"></div>
 </ng-template>
 
 <!-- cơ hội mới -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="1" [title]="getTitle('1')">
+  <div class="w-100 h-100" id="1" title="Count chart - Mới">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -38,10 +36,9 @@
     ></count-chart>
   </div>
 </ng-template>
-
 <!-- cơ hội đang thực hiện -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="2" [title]="getTitle('2')">
+  <div class="w-100 h-100" id="2" title="Count chart - Đang thực hiện">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -53,10 +50,9 @@
     ></count-chart>
   </div>
 </ng-template>
-
 <!-- cơ hội thành công  -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="3" [title]="getTitle('3')">
+  <div class="w-100 h-100" id="3" title="Count chart - Thành công">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -68,10 +64,9 @@
     ></count-chart>
   </div>
 </ng-template>
-
 <!-- cơ hội thất bại  -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="4" [title]="getTitle('5')">
+  <div class="w-100 h-100" id="4" title="Count chart - Thất bại">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -83,7 +78,6 @@
     ></count-chart>
   </div>
 </ng-template>
-
 <!-- Tỷ lệ phân bổ cơ hội theo dòng sản phẩm -->
 <ng-template #templateDeals>
   <div
@@ -91,34 +85,33 @@
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
   >
-    <ng-container
-      *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
+    <ejs-treemap
+      style="display: block"
+      [dataSource]="dataDashBoard?.tmpCountsBussinessLine ?? []"
+      weightValuePath="quantity"
+      rangeColorValuePath="quantity"
+      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+      [leafItemSettings]="{
+        labelPath: 'businessLineName'
+      }"
     >
-      <ejs-treemap
-        style="display: block"
-        [dataSource]="dataDashBoard?.countsBussinessLines ?? []"
-        weightValuePath="quantity"
-        rangeColorValuePath="quantity"
-        [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
-        [leafItemSettings]="leafItemSettings"
-        [tooltipSettings]="tooltipSettings"
-      >
-      </ejs-treemap>
-    </ng-container>
+    </ejs-treemap>
   </div>
+  <!-- [tooltipSettings]="{
+    visible: true,
+    template:
+      '<div><span >${businessLineName}: </span><span >${quantity}</span></div>'
+  }" -->
+  <!-- <ng-template #viewTemp> </ng-template> -->
 </ng-template>
-
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
 <ng-template #templateDeals>
   <div
     class="w-100 h-100"
     id="6"
     title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
-  >
-    <ng-container *ngIf="false; else noData"></ng-container>
-  </div>
+  ></div>
 </ng-template>
-
 <!-- Top nhân viên có nhiều cơ hội thành công nhất -->
 <ng-template #templateDeals>
   <div
@@ -193,96 +186,19 @@
     </ng-container>
   </div>
 </ng-template>
-
 <!-- Lý do thành công -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="8" title="Lý do thành công">
-    <ng-container
-      *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
-    >
-      <div
-        *ngFor="let data of dataDashBoard?.countsReasonsSuscess"
-        class="mt-4"
-      >
-        <div class="mx-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>
-              <span>{{ data?.reasonName }}</span>
-              <span>&nbsp;(</span>
-              <span>{{ data?.quantity }}</span>
-              <span>)</span>
-            </div>
-            <div>
-              <span>{{ data?.percentage }}</span
-              ><span>% </span>
-            </div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="rounded-4 h-5px"
-                [ngStyle]="{ backgroundColor: colorReasonSuscess }"
-                role="progressbar"
-                [style.width]="data.percentage + '%'"
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+  <div class="w-100 h-100" id="8" title="Lý do thành công"></div>
 </ng-template>
-
 <!-- Lý do thất bại -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="9" title="Lý do thất bại ">
-    <ng-container
-      *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
-    >
-      <div *ngFor="let data of dataDashBoard?.countsReasonsFails" class="mt-4">
-        <div class="mx-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>
-              <span>{{ data?.reasonName }}</span>
-              <span>&nbsp;(</span>
-              <span>{{ data.quantity }}</span>
-              <span>)</span>
-            </div>
-            <div>
-              <span>{{ data?.percentage }}</span
-              ><span>% </span>
-            </div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="rounded-4 h-5px"
-                role="progressbar"
-                [ngStyle]="{ backgroundColor: colorReasonFails }"
-                [style.width]="data.percentage + '%'"
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+  <div class="w-100 h-100" id="9" title="Lý do thất bại "></div>
 </ng-template>
-
 <!-- Thống kê hiệu suất trong năm -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="10" title=" Thống kê hiệu suất trong năm">
-    <ng-container *ngIf="false; else noData"></ng-container>
-  </div>
+  <div class="w-100 h-100" id="10" title=" Thống kê hiệu suất trong năm"></div>
 </ng-template>
-
 <!-- Thống kê năng suất nhân viên -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="11" title="Thống kê năng suất nhân viên">
-    <ng-container *ngIf="false; else noData"></ng-container>
-  </div>
-</ng-template>
-
-<ng-template #noData>
-  <codx-no-data></codx-no-data>
+  <div class="w-100 h-100" id="11" title="Thống kê năng suất nhân viên"></div>
 </ng-template>
