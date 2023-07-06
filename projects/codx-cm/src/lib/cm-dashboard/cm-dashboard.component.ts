@@ -34,7 +34,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataDashBoard: any;
   isLoaded: boolean = false;
   titLeModule = '';
-  paletteColor = [];
+  //mau cố định
+  paletteColor = ['#00BFFF', '#0000FF'];
   // setting
   tooltipSettings = {
     visible: true,
@@ -50,8 +51,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   colorReasonSuscess = '';
   colorReasonFails = '';
-  checkBtnMinRadio: boolean = true;
-  checkBtnMaxRadio: boolean = false;
+  checkBtnMinRadio: boolean = false;
+  checkBtnMaxRadio: boolean = true;
+  maxOwners = [];
+  minOwners = [];
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -131,7 +134,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
       .subscribe((res) => {
         this.dataDashBoard = res;
-
+        this.maxOwners = this.dataDashBoard.countsOwners ?? [];
+        this.minOwners = JSON.parse(JSON.stringify(this.maxOwners));
+        this.minOwners.sort((a, b) => {
+          return a.quantity - b.quantity;
+        });
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);

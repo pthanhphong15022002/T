@@ -20,7 +20,7 @@
     ></codx-dashboard>
   </div>
   <div class="w-100 h-100" *ngIf="!isLoaded">
-    Chưa load xong data----------chắc cần anomation
+    Đang load data ---------- muốn có anomation đẹp
   </div>
 </ng-template>
 
@@ -137,21 +137,6 @@
             type="radio"
             class="btn-check"
             name="btnradio"
-            id="btnMinRadio"
-            autocomplete="off"
-            [checked]="checkBtnMinRadio"
-          />
-          <codx-label
-            class="btn btn-outline-primary"
-            for="btnMinRadio"
-            default="Thấp nhất"
-            (click)="clickRadio('btnMinRadio')"
-          ></codx-label>
-
-          <input
-            type="radio"
-            class="btn-check"
-            name="btnradio"
             id="btnMaxRadio"
             autocomplete="off"
             [checked]="checkBtnMaxRadio"
@@ -162,33 +147,59 @@
             default="Cao nhất"
             (click)="clickRadio('btnMaxRadio')"
           ></codx-label>
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnMinRadio"
+            autocomplete="off"
+            [checked]="checkBtnMinRadio"
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnMinRadio"
+            default="Thấp nhất"
+            (click)="clickRadio('btnMinRadio')"
+          ></codx-label>
         </div>
       </div>
     </div>
-    <ng-container *ngIf="dataDashBoard?.countsOwner?.length > 0; else noData">
-      <!-- [style.background-color]="paletteColor[i]" -->
-      <div class="assignchart-group w-100 h-100">
-        <div
-          *ngFor="let ownerCount of dataDashBoard?.countsOwner; let i = index"
-          class="assignchart-item d-flex align-items-center justify-content-end"
-          [title]=""
-        >
-          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+    <ng-container *ngIf="dataDashBoard?.countsOwners?.length > 0; else noData">
+      <div class="w-100 h-100 mt-3">
+        <ng-container *ngIf="checkBtnMaxRadio">
           <div
-            class="assignchart-task"
-            style="color: #000000"
-            [style.width]="ownerCount.percentage + '%'"
+            *ngFor="let ownerCount of maxOwners; let i = index"
+            class="d-flex align-items-center justify-content-end cursor-pointer"
+            [title]="ownerCount.objectName"
           >
-            <codx-vll
-              [name]="'L1456'"
-              [value]="'1'"
-              [showText]="true"
-              [showBgColor]="false"
-              style="width: '25px'; height: '25px'"
+            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+            <div
+              class="owners-top"
+              style="color: #000000; background-color: aqua"
+              [style.background-color]="paletteColor[i % 2 == 0 ? 0 : 1]"
+              [style.width]="ownerCount.percentage + '%'"
             >
-            </codx-vll>
+              <span class="">{{ ownerCount.objectName }}</span>
+            </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-container *ngIf="checkBtnMinRadio">
+          <div
+            *ngFor="let ownerCount of minOwners; let i = index"
+            class="d-flex align-items-center justify-content-end cursor-pointer"
+            [title]="ownerCount.objectName"
+          >
+            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+            <div
+              class="owners-top"
+              style="color: #000000; background-color: aqua"
+              [style.background-color]="paletteColor[i % 2 == 0 ? 0 : 1]"
+              [style.width]="ownerCount.percentage + '%'"
+            >
+              <span class="">{{ ownerCount.objectName }}</span>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </ng-container>
   </div>
