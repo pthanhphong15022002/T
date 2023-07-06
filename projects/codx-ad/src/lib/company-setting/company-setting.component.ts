@@ -52,6 +52,7 @@ export class CompanySettingComponent
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
+  @ViewChild('signatureEmail') signatureEmail: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   items: any;
@@ -86,6 +87,7 @@ export class CompanySettingComponent
   tenant: any;
   vllL1449;
   setting;
+  curSignEmail = '';
 
   //bought modules
   lstModule: Array<TN_OrderModule> = [];
@@ -180,6 +182,35 @@ export class CompanySettingComponent
         }
       });
     this.changeDetectorRef.detectChanges();
+  }
+
+  saveSignature(dialog) {
+    if (this.curSignEmail != this.data.signature) {
+      this.data.signature = this.curSignEmail;
+      this.adService
+        .changeSignatureEmail(this.data.recID, this.data.signature)
+        .subscribe((res) => {
+          console.log('save', res);
+          dialog.close();
+        });
+    } else {
+      dialog.close();
+    }
+  }
+
+  clickEditSignature(data) {
+    let dialog = this.callfc.openForm(
+      this.signatureEmail,
+      '',
+      900,
+      500,
+      '',
+      data
+    );
+  }
+
+  editSignature(evt) {
+    this.curSignEmail = evt.data;
   }
 
   clickEditInfo(data) {

@@ -1,6 +1,5 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { formatDate } from '@angular/common';
+import {Injectable } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
@@ -37,7 +36,7 @@ export class StepService {
     private callfc: CallFuncService,
     private cache: CacheService,
     private calendarService: CodxCalendarService,
-    private codxService: CodxService
+    private codxService: CodxService,
   ) {}
 
   formModelStep: FormModel = {
@@ -63,6 +62,12 @@ export class StepService {
     return phonePattern.test(phoneNumber);
   }
 
+  formatDate(date, format) {
+    const currentDate = new Date(date);
+    let dayCustom = formatDate(currentDate, format, 'en-US');
+    return dayCustom;
+  }
+
   compareDates(date1, date2, type = 's') {
     date1 = new Date(date1);
     date2 = new Date(date2);
@@ -76,10 +81,9 @@ export class StepService {
       date1.setSeconds(0, 0);
       date2.setSeconds(0, 0);
     }
-
     if (date1.getTime() === date2.getTime()) {
       return 0;
-    } else if (date1 < date2) {
+    } else if (date1.getTime() < date2.getTime()) {
       return -1;
     } else {
       return 1;
@@ -129,16 +133,18 @@ export class StepService {
     return false;
   }
 
-  async getNameFunctionID(functionID){
+  async getNameFunctionID(functionID) {
     let textMore = '';
-    let moreFunction =  await firstValueFrom(this.cache.moreFunction('CoDXSystem', null));
-    if(moreFunction){
+    let moreFunction = await firstValueFrom(
+      this.cache.moreFunction('CoDXSystem', null)
+    );
+    if (moreFunction) {
       let more = moreFunction.find((f) => f.functionID == functionID);
       textMore = more ? more?.customName : '';
     }
     return textMore;
   }
-  
+
   //#endregion
 
   checkTaskLink(task, step) {

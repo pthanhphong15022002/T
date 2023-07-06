@@ -171,8 +171,7 @@ export class CatagoryComponent implements OnInit {
         }
       });
     //cm-VTHAO them ngay 4/07/2023
-    // if (this.function?.functionID == 'CMS')
-    this.getListProcessGroups();
+    if (this.function?.functionID == 'CMS') this.getListProcessGroups();
   }
 
   openPopup(evt: any, item: any, reference: string = '') {

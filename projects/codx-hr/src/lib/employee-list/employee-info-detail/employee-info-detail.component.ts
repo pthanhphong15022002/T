@@ -653,7 +653,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.employeeID = params['employeeID'];
       this.pageNum = params['page'];
       this.maxPageNum = params['totalPage']
-      debugger
 
       if(this.employeeID){
         // Load full thong tin employee
@@ -684,7 +683,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         })
       }
       if (this.employeeID) {
-        debugger
         if (history.state) {
           this.listEmp = history.state.data;
           if(history.state.request)
@@ -2584,7 +2582,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //chua dung
   clickTab(funcList: any) {
-    debugger
     this.crrFuncTab = funcList.functionID;
     switch (this.crrFuncTab) {
       case this.curriculumVitaeFuncID:
@@ -2844,7 +2841,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
         } else if (actionType == 'edit') {
-          debugger
           if(res.event){
             let kq = this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate)
             if(kq == true){
@@ -3053,7 +3049,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.df.detectChanges();
           }
         } else if (actionType == 'edit') {
-          debugger
           if (
             res?.event.issuedDate >= this.crrPassport.issuedDate
           ) {
@@ -3173,7 +3168,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         // (this.passportGridview.dataService as CRUDService).clear();
       } else {
         if (actionType == 'add' || actionType == 'copy') {
-          debugger
           if (
             !this.crrVisa ||
             res?.event.issuedDate > this.crrVisa.issuedDate
@@ -3299,6 +3293,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     actionType: string,
     data: any
   ) {
+    debugger
     if (this.appointionGridView)
       this.appointionGridView.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
@@ -3771,7 +3766,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   nextEmp() {
     if (this.listEmp) {
-      debugger
       // console.log('vi tri tim trong mang', this.listEmp.findIndex(
       //   (x: any) => this.employeeID == x['EmployeeID']
       // ))
@@ -3791,7 +3785,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
 
         this.hrService.loadData('HR', this.request).subscribe((res) =>{
-          debugger
           if(res && res[0].length > 0){
             this.listEmp.push(...res[0])
             this.navigateEmp(0, true);
@@ -3811,7 +3804,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   navigateEmp(isNextEmp, isNextPage?){
     if(isNextPage == true){
-      debugger
       let newPageNum = Number(this.pageNum) + 1
       this.pageNum = newPageNum;
     }

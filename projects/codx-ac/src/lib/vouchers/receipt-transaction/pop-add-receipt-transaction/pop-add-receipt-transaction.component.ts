@@ -171,7 +171,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           e.target.closest('.e-popup') == null &&
           e.target.closest('.edit-value') == null
         ) {
-          if (this.gridInventoryJournalLine.gridRef.isEdit) {
+          if ( this.modeGrid == "1" || this.gridInventoryJournalLine.gridRef.isEdit) {
             this.gridInventoryJournalLine.endEdit();
             this.gridInventoryJournalLine.autoAddRow = false;
           }
@@ -182,7 +182,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         }
       }
     );
-
     this.dt.detectChanges();
   }
 
@@ -265,31 +264,54 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
+    const postFields: string[] = [
+      'itemID',
+      'costPrice',
+      'quantity',
+      'costAmt',
+      'lineType',
+      'umid',
+      'idiM0',
+      'idiM1',
+      'idiM2',
+      'idiM3',
+      'idiM4',
+      'idiM5',
+      'idiM6',
+      'idiM7',
+      'idiM8',
+      'idiM9',
+    ];
+    if (postFields.includes(e.field)) {
+      this.api
+        .exec('IV', 'InventoryJournalLinesBusiness', 'ValueChangedAsync', [
+          e.field,
+          this.inventoryJournal,
+          e.data,
+        ])
+        .subscribe((line) => {
+          console.log(line);
+
+          this.inventoryJournalLines[e.idx] = Object.assign(this.inventoryJournalLines[e.idx], line);
+        });
+    }
     switch(e.field)
     {
-      case "quantity":
-        if(e.value == null)
-          e.data.quantity = 0;
-        e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
-        break;
-      case "costPrice":
-        if(e.value == null)
-          e.data.costPrice = 0;
-        e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
-        break;
-      case "costAmt":
-        if(e.value == null)
-          e.data.costAmt = 0;
-        break;
+      // case "quantity":
+      //   if(e.value == null)
+      //     e.data.quantity = 0;
+      //   e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
+      //   break;
+      // case "costPrice":
+      //   if(e.value == null)
+      //     e.data.costPrice = 0;
+      //   e.data.costAmt = this.calculateNetAmt(e.data.quantity, e.data.costPrice);
+      //   break;
+      // case "costAmt":
+      //   if(e.value == null)
+      //     e.data.costAmt = 0;
+      //   break;
       case 'itemID':
-        this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data.itemID])
-          .subscribe((res: any) => {
-            if (res)
-            {
-              e.data.itemName = res.itemName;
-              e.data.umid = res.umid;
-            }
-          });
         this.loadItemID(e.value);
         break;
       case 'idiM4':
@@ -356,7 +378,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    if (!this.gridInventoryJournalLine.gridRef.isEdit) {
+    if (this.modeGrid == "2" || !this.gridInventoryJournalLine.gridRef.isEdit) {
       if (this.hasSaved) {
         this.dialog.close({
           update: true,
@@ -418,7 +440,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   save(isclose: boolean)
   {
-    if (!this.gridInventoryJournalLine.gridRef.isEdit)
+    if (this.modeGrid == "2" || !this.gridInventoryJournalLine.gridRef.isEdit)
     {
       this.loading = true;
       switch (this.formType) {
@@ -899,7 +921,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   checkValidate() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields: string[] = [];
-    if (this.journal.autoAssignRule === '2') {
+    if (this.journal.assignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());

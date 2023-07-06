@@ -737,7 +737,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       var tenants = from(check);
       return tenants.pipe(
         mergeMap((value: any, i) => {
-          if (typeof value == 'object' && value?.AppId) {
+          if (value && typeof value == 'object' && ("AppId" in value) && value?.AppId) {
             return from(this.fileService.getTotalHdd()).pipe(
               mergeMap((hdd) => {
                 if (hdd) {
@@ -761,7 +761,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   var tenants = from(this.RegisterTenantFile(this.tenant.getName()));
                   return tenants.pipe(
                     mergeMap((val, i) => {
-                      if (typeof val == 'object' && val?.Data?.AppId) {
+                      if (typeof val == 'object' && ("Data" in val) && val?.Data?.AppId) {
                         return from(
                           this.onMultiFileSaveObservableAfterTenant()
                         ).pipe(
@@ -785,7 +785,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         })
       );
     } else {
-      if (typeof check == 'object' && check?.AppId) {
+      if (check && typeof check == 'object' &&  ("AppId" in check) && check?.AppId) {
         return from(this.fileService.getTotalHdd()).pipe(
           mergeMap((hdd) => {
             if (hdd) {
@@ -809,7 +809,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               var tenants = from(this.RegisterTenantFile(this.tenant.getName()));
               return tenants.pipe(
                 mergeMap((val, i) => {
-                  if (typeof val == 'object' && val?.Data?.AppId) {
+                  if (typeof val == 'object' && ("Data" in val) && val?.Data?.AppId) {
                     return from(
                       this.onMultiFileSaveObservableAfterTenant()
                     ).pipe(
@@ -942,6 +942,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   async onMultiFileSave() {
     this.closeBtnUp = true;
     var check = this.CheckTenantFile(this.tenant.getName());
+    debugger
     if (isObservable(check)) {
       check.subscribe(async (item: any) => {
         this.onMultiSaveResult(item);
@@ -950,11 +951,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiSaveResult(item: any) {
-    if (typeof item == 'object' && item?.AppId)
+    if (item && typeof item == 'object' && ("AppId" in item) && item?.AppId)
       await this.onMultiSaveAfterTenant();
     else {
       var regs = await this.RegisterTenantFile(this.tenant.getName());
-      if (typeof regs == 'object' && regs?.Data?.AppId)
+      if (typeof regs == 'object' && ("Data" in regs) && regs?.Data?.AppId)
         await this.onMultiSaveAfterTenant();
       else {
         this.notificationsService.notify('Đăng ký tenant không thành công');

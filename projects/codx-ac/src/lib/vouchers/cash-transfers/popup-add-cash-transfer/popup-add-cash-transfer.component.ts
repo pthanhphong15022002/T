@@ -160,7 +160,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
           this.isEdit
         );
 
-        if (this.journal.autoAssignRule === '2') {
+        if (this.journal.assignRule === '2') {
           this.ignoredFields.push('VoucherNo');
         }
 
@@ -410,7 +410,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   resetForm(): void {
     this.masterService
       .addNew(() =>
-        this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
+        this.api.exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [
           this.dialogData.data.journalNo,
         ])
       )

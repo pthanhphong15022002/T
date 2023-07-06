@@ -108,9 +108,7 @@ export class PopupMoveReasonComponent implements OnInit {
       );
       return;
     }
-    // else {
-      this.beforeSave();
-    // }
+    this.beforeSave();
 
   }
   beforeSave() {
@@ -153,8 +151,6 @@ export class PopupMoveReasonComponent implements OnInit {
 
     }
   }
-
-
   async executeApiCallInstance(){
     try {
       await this.getValueFormModel();
