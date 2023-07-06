@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import {Injectable } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
@@ -37,7 +37,6 @@ export class StepService {
     private cache: CacheService,
     private calendarService: CodxCalendarService,
     private codxService: CodxService,
-    private changeDetectorRef: ChangeDetectorRef,
   ) {}
 
   formModelStep: FormModel = {
@@ -300,7 +299,6 @@ export class StepService {
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
     let type = dataOutput?.event ? dataOutput?.event : null;
-    this.changeDetectorRef.detectChanges();
     return type;
   }
 

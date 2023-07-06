@@ -42,6 +42,8 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { ApproveProcess } from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
+import { CodxImportComponent } from './components/codx-import/codx-import.component';
+import { CodxExportComponent } from './components/codx-export/codx-export.component';
 
 @Injectable({
   providedIn: 'root',
@@ -286,6 +288,45 @@ export class CodxShareService {
             //this.notificationsService.notifyCode('SYS007');
           }
         });
+        break;
+      }
+      //Import file
+      case 'SYS001': {
+        this.callfunc.openForm(
+          CodxImportComponent,
+          null,
+          900,
+          800,
+          '',
+          formModel,
+          null
+        );
+        break;
+      }
+      //Export file
+      case 'SYS002': {
+        var gridModel = new DataRequest();
+        gridModel.formName = formModel.formName;
+        gridModel.entityName = formModel.entityName;
+        gridModel.funcID = formModel.funcID;
+        gridModel.gridViewName = formModel.gridViewName;
+        gridModel.page = dataService.request.page;
+        gridModel.pageSize = dataService.request.pageSize;
+        gridModel.predicate = dataService.request.predicates;
+        gridModel.dataValue = dataService.request.dataValues;
+        gridModel.entityPermission = formModel.entityPer;
+        //Chưa có group
+        gridModel.groupFields = 'createdBy';
+        this.callfunc.openForm(
+          CodxExportComponent,
+          null,
+          900,
+          700,
+          '',
+          [gridModel, data.recID],
+          null
+        );
+        break;
       }
     }
   }

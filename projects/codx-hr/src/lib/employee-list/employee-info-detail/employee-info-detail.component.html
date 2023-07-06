@@ -6694,16 +6694,18 @@
           | async
       "
     ></div>
-    <div class="text-gray-700">
-      Cũ:
-      <span
-        [innerHTML]="
-          data?.oldPositionID
-            | formatvalue : appointionFormModel : 'oldPositionID'
-            | async
-        "
-      ></span>
-    </div>
+    <ng-container *ngIf="data?.oldPositionID">
+      <div class="text-gray-700">
+        Cũ:
+        <span
+          [innerHTML]="
+            data?.oldPositionID
+              | formatvalue : appointionFormModel : 'oldPositionID'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -6717,16 +6719,18 @@
           | async
       "
     ></div>
-    <div class="text-gray-700">
-      Cũ:
-      <span
-        [innerHTML]="
-          data?.oldOrgUnitID
-            | formatvalue : appointionFormModel : 'oldOrgUnitID'
-            | async
-        "
-      ></span>
-    </div>
+    <ng-container *ngIf="data?.oldPositionID">
+      <div class="text-gray-700">
+        Cũ:
+        <span
+          [innerHTML]="
+            data?.oldOrgUnitID
+              | formatvalue : appointionFormModel : 'oldOrgUnitID'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
     <codx-mfunc
       [formModel]="appointionFormModel"
       (clickMF)="clickMF($event, data, 'eAppointions')"
