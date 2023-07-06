@@ -123,11 +123,11 @@
     title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
   ></div>
 </ng-template>
+
 <!-- Lý do thành công -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="8" title="Lý do thành công">
-    Thanh công nè
-    <!-- <ng-container
+    <ng-container
       *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
     >
       <div
@@ -156,17 +156,16 @@
               ></div>
             </div>
           </div>
-        </div> 
+        </div>
       </div>
-    </ng-container>-->
+    </ng-container>
   </div>
 </ng-template>
 
 <!-- Lý do thất bại -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="9" title="Lý do thất bại ">
-    thất bại nè
-    <!-- <ng-container
+    <ng-container
       *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
     >
       <div *ngFor="let data of dataDashBoard?.countsReasonsFails" class="mt-4">
@@ -194,7 +193,7 @@
           </div>
         </div>
       </div>
-    </ng-container> -->
+    </ng-container>
   </div>
 </ng-template>
 
