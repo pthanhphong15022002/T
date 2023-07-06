@@ -245,7 +245,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     );
     (document.body as HTMLElement).addEventListener('click', (e: any) => {
-      console.log(e.target);
       if (
         e.target.closest('.e-grid') == null &&
         e.target.closest('.e-popup') == null &&
