@@ -166,6 +166,7 @@
       </div>
     </div>
     <ng-container *ngIf="dataDashBoard?.countsOwner?.length > 0; else noData">
+      <!-- [style.background-color]="paletteColor[i]" -->
       <div class="assignchart-group w-100 h-100">
         <div
           *ngFor="let ownerCount of dataDashBoard?.countsOwner; let i = index"
@@ -176,7 +177,6 @@
           <div
             class="assignchart-task"
             style="color: #000000"
-            [style.background-color]="paletteColor[i]"
             [style.width]="ownerCount.percentage + '%'"
           >
             <codx-vll

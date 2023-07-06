@@ -34,7 +34,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataDashBoard: any;
   isLoaded: boolean = false;
   titLeModule = '';
-
+  paletteColor = [];
   // setting
   tooltipSettings = {
     visible: true,
