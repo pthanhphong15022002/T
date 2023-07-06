@@ -10,13 +10,16 @@
 </codx-views>
 
 <ng-template #template>
-  <codx-dashboard
-    [templates]="dashBoardDeals"
-    [panels]="panelsDeals"
-    [datas]="datasDeals"
-    [isEditMode]="isEditMode"
-    [cellSpacing]="[20, 20]"
-  ></codx-dashboard>
+  <div class="w-100 h-100" *ngIf="isLoaded">
+    <codx-dashboard
+      [templates]="dashBoardDeals"
+      [panels]="panelsDeals"
+      [datas]="datasDeals"
+      [isEditMode]="isEditMode"
+      [cellSpacing]="[20, 20]"
+    ></codx-dashboard>
+  </div>
+  <div class="w-100 h-100" *ngIf="!isLoaded"></div>
 </ng-template>
 
 <!-- cơ hội mới -->
@@ -81,7 +84,25 @@
     class="w-100 h-100"
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
-  ></div>
+  >
+    <ejs-treemap
+      style="display: block"
+      [dataSource]="dataDashBoard?.tmpCountsBussinessLine ?? []"
+      weightValuePath="quantity"
+      rangeColorValuePath="quantity"
+      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+      [leafItemSettings]="{
+        labelPath: 'businessLineName'
+      }"
+    >
+    </ejs-treemap>
+  </div>
+  <!-- [tooltipSettings]="{
+    visible: true,
+    template:
+      '<div><span >${businessLineName}: </span><span >${quantity}</span></div>'
+  }" -->
+  <!-- <ng-template #viewTemp> </ng-template> -->
 </ng-template>
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
 <ng-template #templateDeals>

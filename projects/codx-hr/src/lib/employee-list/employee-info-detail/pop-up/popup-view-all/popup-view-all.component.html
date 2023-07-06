@@ -363,7 +363,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol3 let-data>
-  <div class="d-flex justify-content-end w-100px">
+  <div class="d-flex justify-content-end w-125px">
     <span class="text-dark"
         [innerHTML]="
           data?.jSalary
@@ -811,13 +811,15 @@
 </ng-template>
 
 <ng-template #headTempBasicSal3>
-  <codx-label
-  [formModel]="formModel"
-  [name]="'lblBasicSalGridCol3'"
-  default="Lương chức danh"
-  class="fw-bold fs-6"
->
-</codx-label>
+  <div class="w-125px d-flex justify-content-end">
+    <codx-label
+    [formModel]="formModel"
+    [name]="'lblBasicSalGridCol3'"
+    default="Lương chức danh"
+    class="fw-bold fs-6"
+    >
+    </codx-label>
+  </div>
 </ng-template>
 
 <ng-template #headTempBasicSal4>
