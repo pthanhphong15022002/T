@@ -783,7 +783,7 @@ export class CatagoryComponent implements OnInit {
           else this.dataValue[transType] = [];
         }
         if (this.category != '4') {
-          if (this.dataValue[transType][field] == value) {
+          if (this.dataValue[transType][field] == value || !value) {
             this.collapseItem(null, data);
             return;
           }
@@ -864,42 +864,6 @@ export class CatagoryComponent implements OnInit {
                       const tempDataValue = JSON.parse(dt.dataValue);
                       this.updateCustom(tempDataValue, data);
                     }
-
-                    // console.log(tempDataValue);
-
-                    // const requestData = new DataRequest();
-                    // requestData.entityName = 'AD_CompanySettings';
-                    // requestData.pageLoading = false;
-                    // this.api
-                    //   .execSv(
-                    //     'SYS',
-                    //     'Core',
-                    //     'DataBusiness',
-                    //     'LoadDataAsync',
-                    //     requestData
-                    //   )
-                    //   .pipe(
-                    //     tap((r) => console.log(r)),
-                    //     map((r) => r[0]),
-                    //     tap((r) => console.log(r))
-                    //   )
-                    //   .subscribe((res) => {
-                    //     const first = res[0];
-
-                    //     if (first) {
-                    //       first.baseCurr = tempDataValue.BaseCurr;
-                    //       first.secondCurr = tempDataValue.SecondCurr;
-                    //       first.conversionCurr = tempDataValue.LocalCurr;
-
-                    //       this.api
-                    //         .execAction(
-                    //           'AD_CompanySettings',
-                    //           [first],
-                    //           'UpdateAsync'
-                    //         )
-                    //         .subscribe();
-                    //     }
-                    //   });
                   }
                   this.changeDetectorRef.detectChanges();
                   console.log(res);
