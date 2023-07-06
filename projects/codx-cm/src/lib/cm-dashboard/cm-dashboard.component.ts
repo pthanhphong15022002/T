@@ -31,7 +31,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   arrVllStatus: any = [];
   vllStatus = '';
   dataDashBoard: any;
-  isLoaded: boolean;
+  isLoaded: boolean = false;
+  titLeModule = '';
+
+  // setting
+  tooltipSettings = {
+    visible: true,
+    format: '${businessLineName} - TotalCount:${quantity}',
+    template:
+      '<div><span>${businessLineName}</span><span>Total Count: ${quantity}</span></div>',
+  };
+
+  leafItemSettings = {
+    labelPath: 'businessLineName',
+    labelPosition: 'Center',
+    labelFormat: '${businessLineName}<br>${quantity}-(${percentage} %)',
+  };
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -44,6 +59,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           if (res && res.datas) this.arrVllStatus = res.datas;
         });
       }
+    });
+    this.cache.functionList('CM0201').subscribe((fun) => {
+      this.titLeModule = fun?.customName || fun?.description;
     });
   }
   onInit(): void {
@@ -89,6 +107,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
+    this.isLoaded = false;
     let model = new GridModels();
     model.funcID = this.funcID;
     model.entityName = 'CM_Deals';
@@ -99,11 +118,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         this.dataDashBoard = res;
 
-        // setTimeout(() => {
-        //   this.isLoaded = true;
-        // }, 500);
+        setTimeout(() => {
+          this.isLoaded = true;
+        }, 500);
       });
 
     this.detectorRef.detectChanges();
+  }
+
+  getTitle(status) {
+    return (
+      this.titLeModule +
+      '-' +
+      this.arrVllStatus.filter((x) => x.value == status)[0]?.text
+    );
   }
 }

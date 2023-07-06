@@ -214,7 +214,7 @@
         </thead>
         <tbody *ngFor="let item of inventoryJournalLines">
           <tr>
-            <td>
+            <!-- <td>
               <div class="d-flex align-items-center me-5 mb-1">
                 <span [ngbTooltip]="item.itemName" class="fw-bold line-clamp line-clamp-2">{{ item.itemName }}</span>
               </div>
@@ -222,7 +222,6 @@
                 <ng-container *ngIf="item.idiM0 != null && item.idiM0 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM0" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM0}}</span>
@@ -232,7 +231,6 @@
                 <ng-container *ngIf="item.idiM1 != null && item.idiM1 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM1" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM1}}</span>
@@ -242,7 +240,6 @@
                 <ng-container *ngIf="item.idiM2 != null && item.idiM2 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM2" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM2}}</span>
@@ -252,7 +249,6 @@
                 <ng-container *ngIf="item.idiM3 != null && item.idiM3 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                   <codx-label class="text-gray-700 label-colon" fiedName="IDIM3" [formModel]="fmInventoryJournalLines">
                   </codx-label>
                   <span class="fs-6 fw-bold">{{item.idiM3}}</span>
@@ -262,7 +258,6 @@
                 <ng-container *ngIf="item.idiM4 != null && item.idiM4 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                   <codx-label [setRequire]="false" class="text-gray-700 label-colon" fiedName="IDIM4" [formModel]="fmInventoryJournalLines">
                   </codx-label>
                   
@@ -286,7 +281,6 @@
                 <ng-container *ngIf="item.idiM5 != null && item.idiM5 != ''">
                  
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM5" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM5}}</span>
@@ -296,7 +290,6 @@
                 <ng-container *ngIf="item.idiM6 != null && item.idiM6 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM6" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM6}}</span>
@@ -306,7 +299,6 @@
                 <ng-container *ngIf="item.idiM7 != null && item.idiM7 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM7" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM7}}</span>
@@ -316,7 +308,6 @@
                 <ng-container *ngIf="item.idiM8 != null && item.idiM8 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM8" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM8}}</span>
@@ -326,17 +317,82 @@
                 <ng-container *ngIf="item.idiM9 != null && item.idiM9 != ''">
                   
                   <div class="d-flex align-items-center mb-1 me-6">
-                    <!-- <span class="icon-i-dot icon-22"></span> -->
                     <codx-label class="text-gray-700 label-colon" fiedName="IDIM9" [formModel]="fmInventoryJournalLines">
                     </codx-label>
                     <span class="fs-6 fw-bold">{{item.idiM9}}</span>
                   </div>
                 </ng-container>
               </div>
+            </td> -->
+            <td class="d-flex flex-column gap-1">
+              <div class="fw-bold">{{ item.itemName }}</div>
+              <div>
+                <codx-label
+                  fiedName="idiM3"
+                  [formModel]="fmInventoryJournalLines"
+                  class="label-colon"
+                  default="Quy cách"
+                ></codx-label>
+                <span
+                  *ngFor="let i of [0, 1, 2, 3]; last as isLast"
+                  class="text-gray-500"
+                >
+                  <span *ngIf="item['idiM' + i]">{{
+                    item["idiM" + i + "Name"] ?? item["idiM" + i]
+                  }}</span>
+                  <ng-container
+                    *ngIf="
+                      !isLast &&
+                      item['idiM' + i] &&
+                      item['idiM' + (i + 1)]
+                    "
+                    >,&nbsp;
+                  </ng-container>
+                </span>
+              </div>
+
+              <div class="d-flex flex-wrap">
+                <codx-label
+                  fiedName="lblIdiM4"
+                  [formModel]="fmInventoryJournalLines"
+                  default="Kho"
+                  class="label-colon"
+                ></codx-label>
+                <span
+                  *ngFor="let i of [4, 5, 6, 7, 8, 9]; last as isLast"
+                  class="text-gray-500"
+                >
+                  <span *ngIf="item['idiM' + i]">{{
+                    item["idiM" + i + "Name"] ?? item["idiM" + i]
+                  }}</span>
+                  <ng-container
+                    *ngIf="
+                      !isLast &&
+                      item['idiM' + i] &&
+                      item['idiM' + (i + 1)]
+                    "
+                    >,&nbsp;
+                  </ng-container>
+                </span>
+              </div>
+
+              <codx-vll
+                *ngIf="item.lineType !== '1'"
+                [formModel]="fmInventoryJournalLines"
+                field="LineType"
+                [value]="item.lineType"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-primary align-self-start"
+              >
+              </codx-vll>
             </td>
             <td>
-              <span *ngIf="item.quantity != null && item.quantity != ''"
-                class="text-nowrap">{{item.quantity}}</span>
+              <div *ngIf="item.quantity != null && item.quantity != ''"
+                class="text-nowrap">
+                <span>{{item.quantity}}</span>
+                <div>{{ item.umid }}</div>
+              </div>
             </td>
             <td>
               <span *ngIf="item.costPrice != null && item.costPrice != ''" class="text-nowrap">{{
