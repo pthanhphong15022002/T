@@ -119,7 +119,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       name: 'Progess',
       textDefault: 'Cập nhật tiến độ',
       isActive: false,
-      icon: "icon-i-hourglass-split",
+      icon: 'icon-i-hourglass-split',
       template: this.templetHistoryProgress,
     });
   }
@@ -230,11 +230,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
               data.extendControl == '0'
             )
               x.disabled = true;
-            break;
-          //tắt duyệt confirm
-          case 'TMT02016':
-          case 'TMT02017':
-            if (data.confirmStatus != '1') x.disabled = true;
             break;
           //tắt duyệt xác nhận:
           case 'TMT04032':
@@ -554,6 +549,24 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           .subscribe((result) => {
             if (result && result?.length > 0) {
               this.dataReferences = result;
+            }
+          });
+        break;
+      case 'OM_OKRs':
+        this.api
+          .exec<any>('OM', 'OKRBusiness', 'GetOKRByIDAsync', task.refID)
+          .subscribe((okr) => {
+            if (okr) {
+              var ref = new tmpReferences();
+              ref.recIDReferences = okr.recID;
+              ref.refType = 'OM_OKRs';
+              ref.createdOn = okr?.createdOn;
+              ref.memo = okr?.okrName;
+              ref.createdBy = okr?.createdBy;
+              this.dataReferences.unshift(ref);
+              if (listUser.findIndex((p) => p == okr.createdBy) == -1)
+                listUser.push(ref.createdBy);
+              this.getUserByListCreateBy(listUser);
             }
           });
         break;

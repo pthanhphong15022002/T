@@ -444,9 +444,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.disabled = true;
             break;
           case 'DP25':
-          case 'DP20':
           case 'DP26':
-          case 'SYS003':
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
@@ -558,14 +556,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.isblur = true;
             }
             break;
-          case 'DP24':
-            res.disabled = true;
-            break;
           case 'DP25':
-          case 'DP20':
           case 'DP24':
           case 'DP26':
-          case 'SYS003':
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':

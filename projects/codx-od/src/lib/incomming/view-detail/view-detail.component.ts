@@ -1761,6 +1761,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
               disableCateID: true,
               refType:this.formModel?.entityName,
+              refID:datas.recID,
               //formModel: this.view?.currentView?.formModel,
             },
             '',

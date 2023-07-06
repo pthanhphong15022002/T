@@ -83,6 +83,11 @@ import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-g
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
 import { TargetsComponent } from './targets/targets.component';
 import { PopupAddTargetComponent } from './targets/popup-add-target/popup-add-target.component';
+import { CommonModule } from '@angular/common';
+import { environment } from 'src/environments/environment';
+import { CoreModule } from '@core/core.module';
+import { CodxTabCmComponent } from './codx-tab-cm/codx-tab-cm.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 const routes: Routes = [
   {
@@ -224,7 +229,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewIconGroupComponent,
     CmDashboardComponent,
     TargetsComponent,
-    PopupAddTargetComponent
+    PopupAddTargetComponent,
+    CodxTabCmComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -240,8 +246,12 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
+    CoreModule,
+    CommonModule,
+    TreeMapModule,
+    CodxCoreModule.forRoot({ environment }),
   ],
-  exports: [RouterModule, ListContractsComponent],
+  exports: [RouterModule],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

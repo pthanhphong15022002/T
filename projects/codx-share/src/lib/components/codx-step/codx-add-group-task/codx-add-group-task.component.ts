@@ -27,6 +27,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
   checkShow = false;
   action = '';
   user;
+  minHourGroups = 0;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -53,6 +54,17 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.setRole(role);
     if(this.action == 'add' || this.action == 'copy'){
       this.taskGroup['roles'] = [role];
+    }
+    if(this.action == 'copy'){
+      let listTast = this.taskGroup?.['task'];
+      if(listTast || listTast?.length > 0){
+        listTast?.forEach((task) => {
+          let time = (task?.durationDay || 0)*24 +  (task?.durationHour || 0)
+          if(this.minHourGroups < time){
+            this.minHourGroups = time;
+          }
+        })        
+      }
     }
   }
 
@@ -120,6 +132,11 @@ export class CodxAddGroupTaskComponent implements OnInit {
       if(endDate >= startDate){
         const duration = endDate.getTime() - startDate.getTime();
         const time = Number((duration / 60 / 1000/ 60).toFixed(1));
+        if(time < this.minHourGroups){
+          this.notiService.notifyCode('DP012');
+          this.checkShow = !this.checkShow;
+          return;
+        }
         let days = 0;
         let hours = 0;
         if(time < 1){
@@ -187,7 +204,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'copyGroupTaskStepAsync',
+      'CopyGroupTaskStepAsync',
       this.taskGroup
     ).subscribe(res => {
       if(res){        

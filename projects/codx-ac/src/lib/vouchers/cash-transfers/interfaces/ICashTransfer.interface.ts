@@ -48,5 +48,7 @@ export interface ICashTransfer {
   modifiedOn: string | null;
   modifiedBy: string;
   exchangeAmt2: number;
-  unbounds: any;
+
+  unbounds?: any;
+  cashBookName?: string;
 }

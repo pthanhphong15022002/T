@@ -406,6 +406,7 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data)) {
         eventItem.disabled = true;
       }
+     // eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data)) {
