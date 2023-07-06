@@ -24,7 +24,7 @@ import {
 } from 'codx-core';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddSegmentComponent } from '../popup-add-segment/popup-add-segment.component';
-import * as moment from 'moment';
+import moment from 'moment';
 @Component({
   selector: 'lib-popup-add-auto-number',
   templateUrl: './popup-add-auto-number.component.html',

@@ -1,8 +1,7 @@
 <div class="form-group">
-  <codx-label [fiedName]="field" [formModel]="formModel"></codx-label>
-
   <div class="row align-items-center">
-    <div class="col-6">
+    <div class="col-7 d-flex flex-column gap-1">
+      <codx-label [fiedName]="field" [formModel]="formModel"></codx-label>
       <codx-label
         [fiedName]="labelName"
         [formModel]="formModel"
@@ -11,7 +10,7 @@
       ></codx-label>
     </div>
 
-    <div class="col-5">
+    <div class="col-4">
       <lib-dropdown-detail
         *ngIf="objectType === 'U' || !objectType"
         [formModel]="formModel"
