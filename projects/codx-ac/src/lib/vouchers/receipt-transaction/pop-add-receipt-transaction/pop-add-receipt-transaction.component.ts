@@ -149,42 +149,39 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.inventoryJournal);
-    if(this.modeGrid == "1")
-    {
-      (this.elementRef.nativeElement as HTMLElement).addEventListener(
-        'keyup',
-        (e: KeyboardEvent) => {
-          if (e.key == 'Tab') {
-            if (this.gridInventoryJournalLine) {
-              this.gridInventoryJournalLine.autoAddRow = true;
-            }  
-            if (document.activeElement.className == 'e-tab-wrap') {
-              var element = document.getElementById('btnadd');
-              element.focus();
-            }
+    (this.elementRef.nativeElement as HTMLElement).addEventListener(
+      'keyup',
+      (e: KeyboardEvent) => {
+        if (e.key == 'Tab') {
+          if (this.gridInventoryJournalLine) {
+            this.gridInventoryJournalLine.autoAddRow = true;
+          }  
+          if (document.activeElement.className == 'e-tab-wrap') {
+            var element = document.getElementById('btnadd');
+            element.focus();
           }
         }
-      );
-      (document.body as HTMLElement).addEventListener(
-        'click',
-        (e: any) => {
-          if (
-            e.target.closest('.e-grid') == null &&
-            e.target.closest('.e-popup') == null &&
-            e.target.closest('.edit-value') == null
-          ) {
-            if (this.gridInventoryJournalLine.gridRef.isEdit) {
-              this.gridInventoryJournalLine.endEdit();
-              this.gridInventoryJournalLine.autoAddRow = false;
-            }
-          }else{
-            if (this.gridInventoryJournalLine) {
-              this.gridInventoryJournalLine.autoAddRow = false;
-            }
+      }
+    );
+    (document.body as HTMLElement).addEventListener(
+      'click',
+      (e: any) => {
+        if (
+          e.target.closest('.e-grid') == null &&
+          e.target.closest('.e-popup') == null &&
+          e.target.closest('.edit-value') == null
+        ) {
+          if ( this.modeGrid == "1" || this.gridInventoryJournalLine.gridRef.isEdit) {
+            this.gridInventoryJournalLine.endEdit();
+            this.gridInventoryJournalLine.autoAddRow = false;
+          }
+        }else{
+          if (this.gridInventoryJournalLine) {
+            this.gridInventoryJournalLine.autoAddRow = false;
           }
         }
-      );
-    }
+      }
+    );
     this.dt.detectChanges();
   }
 

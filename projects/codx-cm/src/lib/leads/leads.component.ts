@@ -125,6 +125,7 @@ export class LeadsComponent
   crrStepID: any;
   moreFuncInstance: any;
   dataColums: any;
+  viewCrr: any;
 
   constructor(
     private inject: Injector,
@@ -280,6 +281,11 @@ export class LeadsComponent
     if (this.crrFuncID != this.funcID) {
       this.crrFuncID = this.funcID;
     }
+    this.viewCrr = e?.view?.type;
+    if (this.viewCrr == 6) {
+      this.kanban = (this.view?.currentView as any)?.kanban;
+    }
+
   }
 
   click(evt: ButtonModel) {
@@ -819,7 +825,6 @@ export class LeadsComponent
         }
       });
   }
-
   moveStage(data: any) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;

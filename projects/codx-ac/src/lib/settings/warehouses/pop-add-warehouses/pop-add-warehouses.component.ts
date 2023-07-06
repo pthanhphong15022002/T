@@ -289,6 +289,8 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.objects.modifiedOn = this.warehouses.modifiedOn;
     this.objects.modifiedBy = this.warehouses.modifiedBy;
     this.objects.buid = this.warehouses.buid;
+    this.objects.postDetail = '0';
+    this.objects.settleInvoice = '0';
   }
   //#endregion
 
