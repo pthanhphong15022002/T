@@ -1,32 +1,30 @@
-<ejs-tab id="tab_adaptive" #adaptiveTab heightAdjustMode="None" height="250px" *ngIf="tabInfo != null && tabInfo.length > 0">
+<ejs-tab
+  id="tab_adaptive"
+  #adaptiveTab
+  heightAdjustMode="None"
+  height="250px"
+  *ngIf="tabInfo != null && tabInfo.length > 0"
+>
   <e-tabitems>
-    <e-tabitem *ngFor="let item of tabInfo; let i = index">
-      <ng-template #headerText>
-        <div class="d-flex align-items-top">
-          <span [ngClass]="item?.icon" class="icon-16 me-1"></span>
-          <codx-label
-            class="fw-bold text-dark"
-            [default]="item?.text"
-            [formModel]="formModel"
-            [name]="'lbl' + item?.name"
-          ></codx-label>
-        </div>
-      </ng-template>
-      <ng-template #content>
-        <div class="mt-5">
-          <ng-container *ngTemplateOutlet="templates[i]"></ng-container>
-          <!-- <codx-information
-            [funcID]="funcID"
-            [dataSelected]="dataSelected"
-            [formModel]="formModel"
-            [gridViewSetup]="gridViewSetup"
-            [entityName]="entityName"
-            [listAddress]="listAddress"
-            [nameCbxCM]="nameCbxCM"
-          >
-          </codx-information> -->
-        </div>
-      </ng-template>
-    </e-tabitem>
+    <ng-container *ngFor="let item of tabInfo; let i = index">
+      <e-tabitem>
+        <ng-template #headerText>
+          <div class="d-flex align-items-top">
+            <span [ngClass]="item?.icon" class="icon-16 me-1"></span>
+            <codx-label
+              class="fw-bold text-dark"
+              [default]="item?.text"
+              [formModel]="formModel"
+              [name]="'lbl' + item?.name"
+            ></codx-label>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <div class="mt-5">
+            <ng-container [ngTemplateOutlet]="templates[i]"></ng-container>
+          </div>
+        </ng-template>
+      </e-tabitem>
+    </ng-container>
   </e-tabitems>
 </ejs-tab>
