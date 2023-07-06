@@ -50,6 +50,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   colorReasonSuscess = '';
   colorReasonFails = '';
+  checkBtnMinRadio: boolean = true;
+  checkBtnMaxRadio: boolean = false;
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -146,5 +148,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  clickRadio(id) {}
+  clickRadio(id) {
+    switch (id) {
+      case 'btnMinRadio':
+        this.checkBtnMinRadio = true;
+        this.checkBtnMaxRadio = false;
+        break;
+      case 'btnMaxRadio':
+        this.checkBtnMinRadio = false;
+        this.checkBtnMaxRadio = true;
+        break;
+    }
+  }
 }

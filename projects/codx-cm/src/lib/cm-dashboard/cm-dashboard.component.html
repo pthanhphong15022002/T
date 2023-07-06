@@ -139,7 +139,7 @@
             name="btnradio"
             id="btnMinRadio"
             autocomplete="off"
-            [checked]="true"
+            [checked]="checkBtnMinRadio"
             (click)="clickRadio('btnMinRadio')"
           />
           <codx-label
@@ -154,8 +154,8 @@
             name="btnradio"
             id="btnMaxRadio"
             autocomplete="off"
-            [checked]="false"
-            (click)="clickRadio('btnMinRadio')"
+            [checked]="checkBtnMaxRadio"
+            (click)="clickRadio('btnMaxRadio')"
           />
           <codx-label
             class="btn btn-outline-primary"
