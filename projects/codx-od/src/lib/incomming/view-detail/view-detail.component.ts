@@ -954,44 +954,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           });
         break;
       }
-      //Import file
-      case 'SYS001': {
-        this.callfunc.openForm(
-          CodxImportComponent,
-          null,
-          900,
-          800,
-          '',
-          this.formModel,
-          null
-        );
-        break;
-      }
-      //Export file
-      case 'SYS002': {
-        var gridModel = new DataRequest();
-        gridModel.formName = this.formModel.formName;
-        gridModel.entityName = this.formModel.entityName;
-        gridModel.funcID = this.formModel.funcID;
-        gridModel.gridViewName = this.formModel.gridViewName;
-        gridModel.page = this.view.dataService.request.page;
-        gridModel.pageSize = this.view.dataService.request.pageSize;
-        gridModel.predicate = this.view.dataService.request.predicates;
-        gridModel.dataValue = this.view.dataService.request.dataValues;
-        gridModel.entityPermission = this.formModel.entityPer;
-        //Chưa có group
-        gridModel.groupFields = 'createdBy';
-        this.callfunc.openForm(
-          CodxExportComponent,
-          null,
-          900,
-          700,
-          '',
-          [gridModel, datas.recID],
-          null
-        );
-        break;
-      }
+      
       //Gửi duyệt
       case 'ODT201':
       case 'ODT3001':
