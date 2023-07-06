@@ -83,30 +83,16 @@ export class PopupAddPositionsComponent implements OnInit {
         if (fg) {
           this.formGroup = fg;
           this.formGroup.patchValue(this.data);
-          //this.cr.detectChanges();
           this.isAfterRender = true;
         }
       });
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
-    this.getFuncName(this.functionID);
     if (this.isAdd)
       this.blocked = this.dialogRef.dataService.keyField ? true : false;
     else this.blocked = true;
   }
   // get function name
-  getFuncName(funcID: string) {
-    if (funcID) {
-      this.cacheService.functionList(funcID).subscribe((func) => {
-        if (func) {
-          this.title = `${this.title} ${func.description}`;
-          // this.cacheService
-          // .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
-          //   console.log('form', gv);
-          // });
-        }
-      });
-    }
-  }
+
   //get grvSetup
   getGrvSetup(fromName: string, grdViewName: string) {
     this.cacheService

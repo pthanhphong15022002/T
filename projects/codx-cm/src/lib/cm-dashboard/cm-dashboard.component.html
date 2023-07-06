@@ -10,13 +10,16 @@
 </codx-views>
 
 <ng-template #template>
-  <codx-dashboard
-    [templates]="dashBoardDeals"
-    [panels]="panelsDeals"
-    [datas]="datasDeals"
-    [isEditMode]="isEditMode"
-    [cellSpacing]="[20, 20]"
-  ></codx-dashboard>
+  <div class="w-100 h-100" *ngIf="isLoaded">
+    <codx-dashboard
+      [templates]="dashBoardDeals"
+      [panels]="panelsDeals"
+      [datas]="datasDeals"
+      [isEditMode]="isEditMode"
+      [cellSpacing]="[20, 20]"
+    ></codx-dashboard>
+  </div>
+  <div class="w-100 h-100" *ngIf="!isLoaded"></div>
 </ng-template>
 
 <!-- cơ hội mới -->
@@ -25,7 +28,9 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-new-i-clipboard-plus.svg'
+      "
       [title]="getNameStatus('1')"
       [value]="dataDashBoard?.counts?.countNew ?? 0"
     ></count-chart>
@@ -37,7 +42,9 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-inprogress-i-clipboard-data.svg'
+      "
       [title]="getNameStatus('2')"
       [value]="dataDashBoard?.counts?.countProcessing ?? 0"
     ></count-chart>
@@ -49,7 +56,9 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-win-i-clipboard-check.svg'
+      "
       [title]="getNameStatus('3')"
       [value]="dataDashBoard?.counts?.countSuccess ?? 0"
     ></count-chart>
@@ -61,7 +70,9 @@
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
+      [iconUrl]="
+        'assets/themes/cm/default/img/dashboard-status-fail-i-clipboard-minus.svg'
+      "
       [title]="getNameStatus('5')"
       [value]="dataDashBoard?.counts?.countFail ?? 0"
     ></count-chart>
@@ -73,7 +84,25 @@
     class="w-100 h-100"
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
-  ></div>
+  >
+    <ejs-treemap
+      style="display: block"
+      [dataSource]="dataDashBoard?.tmpCountsBussinessLine ?? []"
+      weightValuePath="quantity"
+      rangeColorValuePath="quantity"
+      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+      [leafItemSettings]="{
+        labelPath: 'businessLineName'
+      }"
+    >
+    </ejs-treemap>
+  </div>
+  <!-- [tooltipSettings]="{
+    visible: true,
+    template:
+      '<div><span >${businessLineName}: </span><span >${quantity}</span></div>'
+  }" -->
+  <!-- <ng-template #viewTemp> </ng-template> -->
 </ng-template>
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
 <ng-template #templateDeals>
