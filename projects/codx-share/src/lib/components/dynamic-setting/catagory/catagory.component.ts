@@ -1051,16 +1051,6 @@ export class CatagoryComponent implements OnInit {
     // this.changeDetectorRef.detectChanges();
   }
 
-  // getListProcessGroups() {
-  //   this.api
-  //     .exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync')
-  //     .subscribe((res) => {
-  //       if (res && res.length > 0) {
-  //         this.lstGroup = res;
-  //       }
-  //     });
-  // }
-
   openPopupEditDynamic(data, action, funcID, title) {
     this.api
       .exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync')
