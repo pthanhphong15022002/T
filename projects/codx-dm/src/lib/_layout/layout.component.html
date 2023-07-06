@@ -7,7 +7,7 @@
         *ngIf="codxService.asideDisplay"
         [asideMenuHeader]="header"
         [asideMenuFooter]="footer"
-        [hasSecond]="false"
+        [hasSecond]="true"
       >
       </codx-aside>
       <ng-template #header>
@@ -21,12 +21,6 @@
               data-toggle="tooltip"
             >
               <i class="icon-add"></i>
-              <codx-label
-                [default]="titleAddFolder"
-                [fiedName]="'lbltitleAddFolder'"
-                [formName]="'fmLayOutDM'"
-                class="fs-5-sm label-addnew"
-              ></codx-label>
             </button>
           </a>
         </div>
