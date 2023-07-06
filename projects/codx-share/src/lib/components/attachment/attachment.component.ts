@@ -737,7 +737,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       var tenants = from(check);
       return tenants.pipe(
         mergeMap((value: any, i) => {
-          if (typeof value == 'object' && ("AppId" in value) && value?.AppId) {
+          if (value && typeof value == 'object' && ("AppId" in value) && value?.AppId) {
             return from(this.fileService.getTotalHdd()).pipe(
               mergeMap((hdd) => {
                 if (hdd) {
@@ -785,7 +785,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         })
       );
     } else {
-      if (typeof check == 'object' &&  ("AppId" in check) && check?.AppId) {
+      if (check && typeof check == 'object' &&  ("AppId" in check) && check?.AppId) {
         return from(this.fileService.getTotalHdd()).pipe(
           mergeMap((hdd) => {
             if (hdd) {
@@ -951,7 +951,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiSaveResult(item: any) {
-    if (typeof item == 'object' && ("AppId" in item) && item?.AppId)
+    if (item && typeof item == 'object' && ("AppId" in item) && item?.AppId)
       await this.onMultiSaveAfterTenant();
     else {
       var regs = await this.RegisterTenantFile(this.tenant.getName());
