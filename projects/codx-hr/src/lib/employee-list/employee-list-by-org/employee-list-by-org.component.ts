@@ -18,6 +18,7 @@ export class EmployeeListByOrgComponent {
   @Input() modeView: string = 'employee';
   @Input() rowHeight: string = '50';
   @Input() showRowNumber: boolean = false;
+  @Input() funcID: string = 'HRT03a1';
   @Output() dataChange: EventEmitter<any> = new EventEmitter();
   totalEmployee: number = 0;
   sysMoreFunc: any[] = [];
@@ -38,17 +39,16 @@ export class EmployeeListByOrgComponent {
   @ViewChild('colEmployeeHeader') colEmployeeHeader: TemplateRef<any>;
   @ViewChild('colContactHeader') colContactHeader: TemplateRef<any>;
   @ViewChild('colPersonalHeader') colPersonalHeader: TemplateRef<any>;
-  @ViewChild('colStatusHeader') colStatusHeader: TemplateRef<any>; 
+  @ViewChild('colStatusHeader') colStatusHeader: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colContact') colContact: TemplateRef<any>;
   @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
-  @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
   service = 'HR';
   entityName = 'HR_Employees';
   assemblyName = 'ERM.Business.HR';
   className = 'EmployeesBusiness';
-  method = 'GetEmployeeListByOrgUnitIDGridView'; 
+  method = 'GetEmployeeListByOrgUnitIDGridView';
   idField = 'employeeID';
   predicates = '@0.Contains(OrgUnitID)';
   funcIDEmpInfor: string = 'HRT03b';
@@ -67,7 +67,7 @@ export class EmployeeListByOrgComponent {
     });
   }
   ngAfterViewInit(): void {
-    if (this.grvSetup) { 
+    if (this.grvSetup) {
       this.initColumnGrid();
     } else {
       this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -79,8 +79,8 @@ export class EmployeeListByOrgComponent {
         });
     }
   }
-  initColumnGrid(){
-    switch (this.modeView){
+  initColumnGrid() {
+    switch (this.modeView) {
       case 'contact':
         this.columnsGrid = [
           {
@@ -126,22 +126,17 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colEmployeeHeader,
             template: this.colEmployee,
-            width: '150',
+            width: '250',
           },
           {
             headerTemplate: this.colContactHeader,
             template: this.colContact,
-            width: '100',
+            width: '150',
           },
           {
             headerTemplate: this.colPersonalHeader,
             template: this.colPersonal,
             width: '150',
-          },
-          {
-            headerTemplate: this.colStatusHeader,
-            template: this.colStatus,
-            width: '120',
           },
         ];
         break;
@@ -288,10 +283,18 @@ export class EmployeeListByOrgComponent {
         dialog.closed.subscribe((e) => {
           if (e.event) {
             (this.view.dataService as CRUDService).update(e.event).subscribe();
-            if (e.event?.employeeID === this.manager?.employeeID)
-              this.getManager(this.orgUnitID);
+            if (e.event?.employeeID === this.manager?.employeeID) {
+              if (e.event?.positionID === this.manager?.positionID 
+                || e.event?.orgUnitID === this.manager?.orgUnitID) {
+                this.getManager(this.orgUnitID);
+              } else {
+                this.manager.employeeName = e.event?.employeeName;
+                this.manager.phone = e.event?.phone;
+                this.manager.mobile = e.event?.mobile;
+              }
+            }
             //this.grid.updateRow(index, e.event, false);
-            //this.grid.refresh();
+            this.grid.refresh();
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
         });
