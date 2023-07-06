@@ -921,7 +921,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   checkValidate() {
     // tu dong khi luu, khong check voucherNo
     let ignoredFields: string[] = [];
-    if (this.journal.autoAssignRule === '2') {
+    if (this.journal.assignRule === '2') {
       ignoredFields.push('VoucherNo');
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
