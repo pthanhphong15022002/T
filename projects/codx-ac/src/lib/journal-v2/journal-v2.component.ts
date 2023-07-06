@@ -50,6 +50,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   posters: { journalNo: string; value: string }[];
   ViewType = ViewType;
   statusFilter: any = 1;
+  status:string;
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -133,12 +134,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.cache.valueList('AC085').subscribe((res) => {
       if (res) {
         this.vll85 = res.datas;
-
+        
       }
     });
     this.cache.valueList('AC086').subscribe((res) => {
       if (res) {
-        this.vll86 = res.datas;
+        this.vll86 = res.datas; 
+        this.status = res.datas[0].value;
       }
     });
     combineLatest({
