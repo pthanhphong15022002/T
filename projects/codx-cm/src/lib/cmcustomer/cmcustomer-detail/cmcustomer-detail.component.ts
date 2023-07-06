@@ -244,7 +244,7 @@ export class CmCustomerDetailComponent implements OnInit {
           icon: 'icon-shopping_bag',
         },
         {
-          name: 'task',
+          name: 'Task',
           text: 'Công việc',
           icon: 'icon-more',
         },
