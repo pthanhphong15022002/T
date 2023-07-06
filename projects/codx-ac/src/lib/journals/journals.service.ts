@@ -76,7 +76,7 @@ export class JournalService {
     saveFunction: () => void
   ): void {
     if (
-      journal.autoAssignRule !== '0' &&
+      journal.assignRule !== '0' &&
       this.duplicateVoucherNo === '0' &&
       model.voucherNo
     ) {
@@ -94,7 +94,7 @@ export class JournalService {
               'ERM.Business.AC',
               'CommonBusiness',
               'GenerateAutoNumberAsync',
-              journal.journalNo
+              journal.autoNumber
             )
             .subscribe((autoNumber: string) => {
               this.notiService

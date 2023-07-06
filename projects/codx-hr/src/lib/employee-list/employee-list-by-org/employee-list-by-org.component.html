@@ -121,7 +121,8 @@
 <ng-template #templateStatus let-item>
     <div class="d-flex align-items-center has-action-menu">
         <ng-container *ngIf="item.status">
-            <codx-vll [formModel]="formModel" [classList]="'badge badge-sm badge-inline'" [name]="'HR003'"
+            <codx-vll [formModel]="formModel" [classList]="'badge badge-sm badge-inline'" 
+            [name]="grvSetup['Status']?.referedValue"
                 [value]="item.status" [showText]="true" [showBgColor]="true">
             </codx-vll>
         </ng-container>
@@ -141,19 +142,28 @@
 <!-- contact -->
 <!-- header template -->
 <ng-template #colEmployeeHeader>
-    <codx-label [name]="'lblColEmployeeHeader'" [default]="'Nhân viên'"> </codx-label>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="EmployeeID" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
+          [formName]="'employees'" [default]="'Nhân viên'"></codx-label>
+      </div>
 </ng-template>
 <ng-template #colContactHeader>
-    <codx-label [name]="'lblColContactHeader'" [default]="'Liên hệ'">
-    </codx-label>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="Email" [formModel]="view.formModel" [gridViewName]="'grvEmployee'" [formName]="'employees'"
+          [default]="'Liên hệ'"></codx-label>
+      </div>
 </ng-template>
 <ng-template #colPersonalHeader>
-    <codx-label [name]="'lblColPersonalHeader'" [default]="'Thông tin cá nhân'">
-    </codx-label>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="Birthday" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
+          [formName]="'employees'" [default]="'Thông tin cá nhân'"></codx-label>
+      </div>
 </ng-template>
 <ng-template #colStatusHeader>
-    <codx-label [name]="'lblColStatusHeader'" [default]="'Tình trạng'">
-    </codx-label>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="Status" [formModel]="view.formModel" [gridViewName]="'grvEmployee'" [formName]="'employees'"
+          [default]="'Tình Trạng'"></codx-label>
+      </div>
 </ng-template>
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
@@ -164,7 +174,7 @@
             </codx-img>
             <ng-container *ngIf="data.gender">
                 <div class="mt-1 mx-auto">
-                    <codx-vll [name]="'HR001'" [value]="data.gender" showText="true" [showBgColor]="true"
+                    <codx-vll [name]="grvSetup['Gender']?.ref" [value]="data.gender" showText="true" [showBgColor]="true"
                         [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
                 </div>
             </ng-container>
@@ -181,24 +191,20 @@
             </div>
 
             <div class="text-gray-600 mb-1 fs-7">
-                <!-- <span [innerHTML]=" data.positionID| formatvalue : view.formModel : 'positionID' | async"></span> -->
                 <span *ngIf="data.positionID">{{data.positionName? data.positionName : data.positionID}}</span>
             </div>
 
             <div class="text-gray-700 mb-1">
-                <!-- <span [innerHTML]="data.orgUnitID | formatvalue : view.formModel : 'orgUnitID' | async"></span> -->
                 <span *ngIf="data.orgUnitID">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
 
             </div>
 
             <div class="text-gray-600">
-                <!-- <span #departmentName [innerHTML]="data.departmentID| formatvalue : view.formModel : 'departmentID'| async"></span> -->
                 <span *ngIf="data.departmentID">{{data.departmentName? data.departmentName : data.departmentID}}</span>
                 <ng-container *ngIf="data?.departmentID && data.divisionID">
                     <span class="text-gray-400 mx-1">,</span>
                 </ng-container>
                 <ng-container *ngIf="data.divisionID">
-                    <!-- <span #divisionName [innerHTML]="data.divisionID | formatvalue : view.formModel : 'divisionID' | async"></span> -->
                     <span>{{data.divisionName? data.divisionName: data.divisionID }}</span>
                 </ng-container>
             </div>
@@ -232,7 +238,7 @@
     <div (dblclick)="clickViewEmpInfo(data)">
         <div class="d-flex flex-column">
             <div class="align-items-center1 mb-1">
-                <codx-label class="text-dark fw-bold label-colon" [setRequire]="false" [fiedName]="'Birthday'"
+                <codx-label class="text-dark label-colon" [setRequire]="false" [fiedName]="'Birthday'"
                     [formModel]="view.formModel" default="Ngày sinh"></codx-label>
                 <ng-container *ngIf="data.birthday; else noBirthday">
                     <span class="text-gray-700">{{ data.birthday | fmDT}}</span>
@@ -242,14 +248,14 @@
                 </ng-template>
             </div>
             <div class="align-items-center mb-1">
-                <codx-label class="text-dark fw-bold label-colon" [setRequire]="false" [fiedName]="'BirthPlace'"
+                <codx-label class="text-dark label-colon" [setRequire]="false" [fiedName]="'BirthPlace'"
                     [formModel]="view.formModel" default="Nơi sinh"></codx-label>
                 <span class="text-gray-700"
                     [innerHTML]="data?.birthPlace | formatvalue : view.formModel : 'birthPlace'| async">
                 </span>
             </div>
             <div #degreeNameContent class="align-items-center line-clamp line-clamp-2">
-                <codx-label #labelContent class="label-colon fw-bold text-dark" [setRequire]="false"
+                <codx-label #labelContent class="label-colon text-dark" [setRequire]="false"
                     [fiedName]="'DegreeName'" [formModel]="view.formModel" default="Chuyên môn"></codx-label>
                 <ng-container *ngIf="data.degreeName; else noDegreeName">
                     <span #dataContent class="text-gray-600">{{ data.degreeName }}</span>
@@ -271,7 +277,7 @@
                 </codx-vll>
             </div>
             <div class="align-items-center mb-1">
-                <codx-label class="label-colon text-dark fw-bold" [setRequire]="false" [fiedName]="'JoinedOn'"
+                <codx-label class="label-colon text-dark" [setRequire]="false" [fiedName]="'JoinedOn'"
                     [formModel]="view.formModel" default="Ngày vào làm">
                 </codx-label>
                 <ng-container *ngIf="data.joinedOn; else noJoinedOn">
@@ -282,7 +288,7 @@
                 </ng-template>
             </div>
             <div class="align-items-center">
-                <codx-label class="label-colon text-dark fw-bold" name="lblSenioritydate" [fiedName]="'Senioritydate'"
+                <codx-label class="label-colon text-dark" name="lblSenioritydate" [fiedName]="'Senioritydate'"
                     [setRequire]="false" [formModel]="view.formModel" default="Thâm niên">
                 </codx-label>
                 <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
@@ -303,9 +309,6 @@
     </div>
 </ng-template>
 <!-- #end contact -->
-
-
-
 
 <ng-template #emptyDataTemplate>
     <div class="d-flex ms-1">

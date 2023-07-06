@@ -240,7 +240,7 @@ export class PopupAddJournalComponent
       console.log(res);
 
       if (!res.event && !this.isEdit) {
-        this.journalService.deleteAutoNumber(this.journal.journalNo);
+        this.journalService.deleteAutoNumber(this.journal.autoNumber);
 
         if (this.journal.checkImage) {
           this.acService.deleteFile(
@@ -260,7 +260,7 @@ export class PopupAddJournalComponent
             .subscribe((vllDFormat) => {
               this.vllDateFormat = vllDFormat.datas;
 
-              this.getAutoNumber(this.journal.journalNo).subscribe(
+              this.getAutoNumber(this.journal.autoNumber).subscribe(
                 (autoNumber) => {
                   this.form.formGroup.patchValue({
                     voucherFormat: this.getAutoNumberFormat(autoNumber),
@@ -517,7 +517,7 @@ export class PopupAddJournalComponent
   }
 
   onClickOpenPermissionPopup(): void {
-    return;
+    // return;
     this.callfc.openForm(
       PopupPermissionComponent,
       'This param is not working',
@@ -572,16 +572,17 @@ export class PopupAddJournalComponent
         (screen.width * 40) / 100,
         '',
         {
-          autoNoCode: this.journal.journalNo,
+          autoNoCode: this.journal.autoNumber,
           description: this.dialogRef.formModel?.entityName,
           disableAssignRule: true,
-          autoAssignRule: this.journal.autoAssignRule,
+          autoAssignRule: this.journal.assignRule,
         }
       )
       .closed.subscribe((res) => {
         console.log(res);
 
         if (res.event) {
+          this.journal.autoNumber = res.event.autoNoCode;
           this.form.formGroup.patchValue({
             voucherFormat: this.getAutoNumberFormat(res.event),
           });

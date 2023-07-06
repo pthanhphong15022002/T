@@ -1698,8 +1698,9 @@
       <codx-input
         class="ms-1"
         type="switch"
-        [checked]="isDefaultStep"
-        field="progress"
+        [checked]="process?.stepsColorMode"
+        (valueChange)="valueChange($event)"
+        field="stepsColorMode"
       >
       </codx-input>
     </div>

@@ -441,7 +441,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
 
-  
+
   ngOnInit(){
     this.loading();
   }
@@ -503,7 +503,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.permissions = this.checkUserPermission(this.permissions, perm);
     this.process.permissions = this.permissions;
   }
-  
+
   GetListProcessGroups() {
     this.dpService.getListProcessGroups().subscribe((res) => {
       if (res && res.length > 0) {
@@ -3050,8 +3050,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               res.disabled = true;
             }
             break;
-          case 'SYS003':
-            break;
           case 'DP12':
             if (type != 'group') res.disabled = true;
             break;
@@ -3102,7 +3100,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       case 'SYS03':
         this.customerReason(data);
         break;
-     
+
     }
   }
   isReason = false;
@@ -4306,7 +4304,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popoverSelectView(p, item);
   }
 
-  
+
   //#region color step
 
   setColorTestStep(step, index){
@@ -4342,7 +4340,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (!result) {
       return null;
     }
-    const [r, g, b] = result.slice(1).map(value => parseInt(value, 16));  
+    const [r, g, b] = result.slice(1).map(value => parseInt(value, 16));
     if (opacity !== undefined) {
       return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     } else {

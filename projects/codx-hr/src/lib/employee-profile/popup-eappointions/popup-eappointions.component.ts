@@ -56,7 +56,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     //   this.formModel.entityName = 'HR_EAppointions';
     //   this.formModel.gridViewName = 'grvEAppointions';
     // }
-
+    debugger
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
