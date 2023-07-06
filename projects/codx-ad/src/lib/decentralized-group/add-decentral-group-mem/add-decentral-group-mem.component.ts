@@ -86,7 +86,10 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   openPopRoles() {
     let option = new DialogModel();
 
-    let needValidate = this.groupData.memberIDs != '';
+    let needValidate = false;
+    if (this.groupData.memberIDs && this.groupData.memberIDs != '') {
+      needValidate = true;
+    }
     let lstUserIDs = [this.groupData.groupID];
     if (needValidate && this.groupData.memberIDs?.split(';').length > 0) {
       lstUserIDs.push(...this.groupData.memberIDs?.split(';'));
