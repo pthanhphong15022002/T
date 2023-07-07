@@ -44,7 +44,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   openAccordion = [];
   dataOKR = [];
   dataOKRPlans = null;
-  isHiddenChart = true;
+  isHiddenChart = false;
   //title//
   dtCompany = null;
   compName = '';
