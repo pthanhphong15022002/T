@@ -155,8 +155,14 @@ codx-view-list-detail {
 .w-20 {
   width: 20%;
 }
+.w-25 {
+  width: 25%;
+}
 .w-30 {
   width: 30%;
+}
+.w-35 {
+  width: 35%;
 }
 .w-40 {
   width: 40%;
@@ -3138,7 +3144,7 @@ codx-toolbar-report{
 .cal-notes .checkbox-list {
   padding: 7px 16px;
 }
-.h-300px.w-500px{
+.dropdown-menu.h-300px{
   codx-calendar .codx-form .card-footer{
     padding-top: 0;
   }
@@ -3148,6 +3154,11 @@ codx-toolbar-report{
   }
 }
 
+.dropdown-menu.h-400px{
+  .h-375px{
+    height: 325px!important;
+  }
+}
 .h-350px.w-550px{
   codx-calendar .codx-form .card-footer{
     padding-top: 0;
@@ -3397,4 +3408,8 @@ lib-employee-list{
     cursor: none;
     display: none;
   }
+}
+.codx-his.envelop table th, .codx-his.envelop table td{
+  padding: 5px 10px!important;
+  min-width: 100px;
 }
