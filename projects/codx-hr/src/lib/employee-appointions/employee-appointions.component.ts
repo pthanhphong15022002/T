@@ -365,6 +365,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
           this
         );
         this.df.detectChanges();
+        this.view.dataService.load();
         break;
       }
     }
