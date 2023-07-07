@@ -91,21 +91,45 @@
 </ng-template>
 
 <ng-template #footerKanban let-data>
+  <ng-template #toolTipDealValue>
+    <div class="text-end text-sm-start">
+      <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
+      >:
+      <span
+      *ngIf="data?.dealValue; else defaultNull"
+      #dealValue
+      [innerHTML]="
+      data?.dealValue
+          | formatvalue : view.formModel : 'dealValue' : dealValue
+          | async
+      "
+    ></span>
+    </div>
+  </ng-template>
   <div class="d-flex flex-column">
     <div class="d-flex justify-content-between mt-2">
-      <div class="">
-        <span class="icon-monetization_on icon-16 text-warning me-2"></span>
+      <div class="w-auto d-flex align-items-center text-nowrap line-clamp line-clamp-1">
         <span
-          class="text-gray-700 line-clamp-menu"
-          [ngbTooltip]="gridViewSetup['DealValue']?.headerText"
+          [ngbTooltip]="toolTipDealValue"
+          class="pe-1 d-flex align-items-center"
+        >
+          <span class="icon-monetization_on icon-16 text-warning me-1"></span>
+          <span
+          class="text-nowrap line-clamp line-clamp-1"
+          *ngIf="data?.dealValue; else defaultNull"
           #dealValue
           [innerHTML]="
-            data?.dealValue | formatvalue : view.formModel : 'dealValue' | async
+          data?.dealValue
+              | formatvalue : view.formModel : 'dealValue' : dealValue
+              | async
           "
         ></span>
 
+        </span>
         <span
+          [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
           class="text-gray-700"
+          [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
           #currencyID
           [innerHTML]="
             data?.currencyID
@@ -114,7 +138,7 @@
           "
         ></span>
       </div>
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-end" [ngbTooltip]="gridViewSetup['Probability']?.headerText">
         <span class="icon-i-check-all icon-16 text-green me-2"></span>
         <span
           [innerHTML]="
@@ -127,22 +151,52 @@
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
-        <span
-          class="fs-7 text-gray-600 line-clamp-menu"
-          #expectedClosed
-          [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
-          [innerHTML]="
-            data.expectedClosed
-              | formatvalue : view.formModel : 'expectedClosed'
-              | async
-          "
-        ></span>
+      <div class="d-flex align-items-end codx-badge">
+        <div
+          *ngIf="data.status == '2'; else statusDefault"
+          [ngStyle]="{
+            'background-color': data?.steps['backgroundColor']
+          }"
+          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+        >
+          <span
+            [ngClass]="data?.steps['icon']"
+            [ngStyle]="{ color: data?.steps['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span
+            class="text-ellipsis line-clamp line-clamp-1"
+            [ngbTooltip]="data?.currentStepName"
+            [ngStyle]="{ color: data?.steps['textColor'] }"
+            >{{ data?.currentStepName }}</span
+          >
+        </div>
+        <ng-template #statusDefault>
+            <codx-vll
+              [name]="gridViewSetup?.Status?.referedValue"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
+        </ng-template>
+        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+          <codx-vll
+            [name]="vllApprove"
+            [field]="'ApproveStatus'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
       </div>
 
       <div class="d-flex justify-content-end align-items-center">
-        <span class="me-1">
+        <span class="me-1" [ngbTooltip]="gridViewSetup['EndDate']?.headerText">
           <span class="icon-16 icon-av_timer me-1"></span>
           <span
             class="text-gray-700"
@@ -251,7 +305,6 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
-  <!-- Tooltip -->
   <ng-template #tooltipDealName>
     <div class="text-end text-sm-start">
       <strong>{{ gridViewSetup["DealName"]?.headerText }}</strong
@@ -279,8 +332,6 @@
       >: {{ data?.probability }}
     </div>
   </ng-template>
-
-
 
   <div class="d-flex flex-column w-100">
     <div class="my-1">
@@ -318,8 +369,6 @@
           class="pe-1 d-flex align-items-center"
         >
           <span class="icon-monetization_on icon-16 text-warning me-1"></span>
-
-
           <span
           class="text-nowrap line-clamp line-clamp-1"
           *ngIf="data?.dealValue; else defaultNull"
@@ -395,8 +444,6 @@
             >
             </codx-vll>
         </ng-template>
-
-
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
             [name]="vllApprove"

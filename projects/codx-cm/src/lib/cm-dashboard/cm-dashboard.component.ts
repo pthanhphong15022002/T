@@ -56,6 +56,60 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   maxOwners = [];
   minOwners = [];
 
+  //tỉ lệ thanh công that bai tren san pham
+  //Initializing Primary X Axis
+  primaryXAxis: Object = {
+    interval: 1,
+    valueType: 'Category',
+    title: 'Tháng',
+  };
+  //Initializing Primary Y Axis
+  primaryYAxis: Object = {
+    title: 'Tỷ lệ (%)',
+    minimum: 0,
+    maximum: 100,
+    interval: 20,
+    lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+  // tooltip1: Object = {
+  //   enable: true,
+  //   shared: true,
+  //   format: '${series.name} : <b>${point.y}</b>',
+  // };
+  //test data
+  chartData = [
+    { month: '1', sales: 35 },
+    { month: '2', sales: 28 },
+    { month: '3', sales: 34 },
+    { month: '4', sales: 32 },
+    { month: '5', sales: 40 },
+    { month: '6', sales: 32 },
+    { month: '7', sales: 35 },
+    { month: '8', sales: 55 },
+    { month: '9', sales: 38 },
+    { month: '10', sales: 30 },
+    { month: '11', sales: 25 },
+    { month: '12', sales: 32 },
+  ];
+  chartData2 = [
+    { month: '1', sales: 25 },
+    { month: '2', sales: 11 },
+    { month: '3', sales: 3 },
+    { month: '4', sales: 11 },
+    { month: '5', sales: 55 },
+    { month: '6', sales: 11 },
+    { month: '7', sales: 88 },
+    { month: '8', sales: 12 },
+    { month: '9', sales: 6 },
+    { month: '10', sales: 7 },
+    { month: '11', sales: 5 },
+    { month: '12', sales: 100 },
+  ];
+
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -93,11 +147,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.views = [
       {
-        type: ViewType.content,
+        type: ViewType.chart,
         active: true,
         sameData: false,
         reportType: 'D',
-        reportView: true,
+        // reportView: true,
         showFilter: true,
         model: {
           panelRightRef: this.template,

@@ -389,13 +389,13 @@
 </ng-container>
 <ng-template #body let-data>
   <div class="d-flex flex-column">
-    <codx-taskbar
+    <!-- <codx-taskbar
       [listTab]="tabDetail"
       [change]="dataSelected"
       (tab)="changeTab($event)"
       size="18"
       class="mb-3"
-    ></codx-taskbar>
+    ></codx-taskbar> -->
 
     <codx-tab-deal-detail
       [tabClicked]="tabClicked"
@@ -403,6 +403,7 @@
       [formModel]="formModel"
       [checkMoreReason]="checkMoreReason"
       (saveAssign)="saveAssign($event)"
+      [tabDetail]="tabDetail"
     ></codx-tab-deal-detail>
   </div>
 </ng-template>

@@ -74,6 +74,5 @@ export interface IJournal {
   inputMode: string;
   postingMode: string;
   unbounds: any;
-  autoNumber: string;
   postedDateControl: string;
 }

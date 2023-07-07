@@ -10,6 +10,7 @@ import {
   AccumulationChartAllModule,
   AccumulationTooltipService,
   ChartAllModule,
+  ChartModule,
 } from '@syncfusion/ej2-angular-charts';
 import { SharedModule } from '@shared/shared.module';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
@@ -88,6 +89,10 @@ import { environment } from 'src/environments/environment';
 import { CoreModule } from '@core/core.module';
 import { CodxTabCmComponent } from './codx-tab-cm/codx-tab-cm.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import {
+  CategoryService,
+  LineSeriesService,
+} from '@syncfusion/ej2-angular-charts';
 
 const routes: Routes = [
   {
@@ -249,10 +254,11 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CoreModule,
     CommonModule,
     TreeMapModule,
+    ChartModule,
     CodxCoreModule.forRoot({ environment }),
   ],
   exports: [RouterModule],
-  providers: [AccumulationTooltipService],
+  providers: [AccumulationTooltipService, CategoryService, LineSeriesService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxCmModule {

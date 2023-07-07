@@ -106,6 +106,7 @@ export class PopupAddJournalComponent
   vllDateFormat: any;
   vll067: any[] = [];
 
+  journalPermissions: IJournalPermission[] = [];
   creater: string;
   createrObjectType: string;
   approver: string;
@@ -156,6 +157,8 @@ export class PopupAddJournalComponent
       this.acService
         .loadDataAsync('AC', options)
         .subscribe((journalPermissions: IJournalPermission[]) => {
+          this.journalPermissions = journalPermissions;
+
           let creater: string[] = [];
           let approver: string[] = [];
           let poster: string[] = [];
@@ -240,7 +243,7 @@ export class PopupAddJournalComponent
       console.log(res);
 
       if (!res.event && !this.isEdit) {
-        this.journalService.deleteAutoNumber(this.journal.autoNumber);
+        this.journalService.deleteAutoNumber(this.journal.voucherFormat);
 
         if (this.journal.checkImage) {
           this.acService.deleteFile(
@@ -260,13 +263,13 @@ export class PopupAddJournalComponent
             .subscribe((vllDFormat) => {
               this.vllDateFormat = vllDFormat.datas;
 
-              this.getAutoNumber(this.journal.autoNumber).subscribe(
-                (autoNumber) => {
-                  this.form.formGroup.patchValue({
-                    voucherFormat: this.getAutoNumberFormat(autoNumber),
-                  });
-                }
-              );
+              // this.getAutoNumber(this.journal.voucherFormat).subscribe(
+              //   (autoNumber) => {
+              //     this.form.formGroup.patchValue({
+              //       voucherFormat: this.getAutoNumberFormat(autoNumber),
+              //     });
+              //   }
+              // );
             });
         }
       });
@@ -522,7 +525,11 @@ export class PopupAddJournalComponent
       PopupPermissionComponent,
       'This param is not working',
       950,
-      650
+      650,
+      '',
+      {
+        journalPermissions: this.journalPermissions,
+      }
     );
   }
 
@@ -572,7 +579,7 @@ export class PopupAddJournalComponent
         (screen.width * 40) / 100,
         '',
         {
-          autoNoCode: this.journal.autoNumber,
+          autoNoCode: this.journal.voucherFormat,
           description: this.dialogRef.formModel?.entityName,
           disableAssignRule: true,
           autoAssignRule: this.journal.assignRule,
@@ -582,9 +589,8 @@ export class PopupAddJournalComponent
         console.log(res);
 
         if (res.event) {
-          this.journal.autoNumber = res.event.autoNoCode;
           this.form.formGroup.patchValue({
-            voucherFormat: this.getAutoNumberFormat(res.event),
+            voucherFormat: res.event.autoNoCode,
           });
         }
       });

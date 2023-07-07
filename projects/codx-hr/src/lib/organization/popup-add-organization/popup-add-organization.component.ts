@@ -114,6 +114,12 @@ export class PopupAddOrganizationComponent implements OnInit {
   // btn save
   onSave() {
     this.formGroup.patchValue(this.data);
+
+    if (this.data.email && !this.hrSevice.checkEmail(this.data.email)) {
+      this.notifiSV.notifyCode('SYS037');
+      return;
+    }
+
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.dialogRef.formModel);
       return;
