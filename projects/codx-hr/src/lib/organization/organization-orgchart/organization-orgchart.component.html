@@ -313,7 +313,6 @@
   [items]="items"
   [annotations]="annotations"
   [pageFitMode]="PageFitMode.FitToPage"
-  [cursorItem]="0"
   [highlightItem]="0"
   [normalLevelShift]="20"
   [dotLevelShift]="10"
@@ -375,8 +374,14 @@
         <codx-img
           class="symbol symbol-60 symbol-circle me-2"
           [width]="60"
-          [objectId]="itemConfig.context.employeeID"
-          [objectName]="itemConfig.context.employeeName"
+          [objectId]="
+            itemConfig.context.employeeManager &&
+            itemConfig.context.employeeManager.employeeID
+          "
+          [objectName]="
+            itemConfig.context.employeeManager &&
+            itemConfig.context.employeeManager.employeeName
+          "
           [objectType]="'HR_Employees'"
         >
         </codx-img>
@@ -384,14 +389,22 @@
           <codx-label
             [formModel]="formModel"
             name="lblEmployeeName"
-            [default]="itemConfig.context.employeeName || 'Tên Nhân Viên'"
+            [default]="
+              (itemConfig.context.employeeManager &&
+                itemConfig.context.employeeManager.employeeName) ||
+              'Tên Nhân Viên'
+            "
           ></codx-label>
         </div>
         <div class="text-gray-600 mb-3">
           <codx-label
             [formModel]="formModel"
             name="txtPositionName"
-            [default]="itemConfig.description || 'Chức vụ'"
+            [default]="
+              (itemConfig.context.employeeManager &&
+                itemConfig.context.employeeManager.positionName) ||
+              'Chức vụ'
+            "
           ></codx-label>
         </div>
         <!-- <div class="d-flex align-items-center mt-2">

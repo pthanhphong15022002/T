@@ -1,0 +1,31 @@
+.owners-top {
+    border-radius: 4px 0 0 4px;
+    margin-bottom: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 34px;
+  }
+  
+  .owners-top {
+    codx-vll {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: right;
+    }
+  }
+
+  .line-clamp-note {
+    display: inline-block!important;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+  }
+  /* tesst pussh */

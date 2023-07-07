@@ -105,26 +105,12 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
 
   onMouseWheel(evt) {
-    console.log('Wheel event: ', evt.deltaY);
     if (evt.deltaY > 0) {
       this.scaleNumber = this.scaleNumber - 0.1;
     } else {
       this.scaleNumber = this.scaleNumber + 0.1;
     }
-    console.log(this.scaleNumber);
   }
-
-  // getContactTemplate() {
-  //   var result = new TemplateConfig();
-  //   result.name = 'itemTemplate';
-
-  //   result.itemSize = new Size(160, 30);
-  //   result.minimizedItemSize = new Size(3, 3);
-
-  //   result.itemTemplate = this.itemTemplate;
-  //   console.log(result);
-  //   return result;
-  // }
 
   getDataPositionByID(orgUnitID: string) {
     if (orgUnitID) {
@@ -148,11 +134,12 @@ export class OrganizationOrgchartComponent implements OnInit {
                   parent: item.parentID,
                   title: item.orgUnitName,
                   description: item.positionName,
-                  image: this.imgTest,
+                  //image: this.imgTest,
                   templateName: 'contactTemplate',
                   context: {
                     employeeID: item.employeeID,
                     employeeName: item.employeeName,
+                    employeeManager: item.employeeManager,
                   },
                   //itemType: ItemType.Assistant,
                   // adviserPlacementType: AdviserPlacementType.Left,
@@ -162,80 +149,65 @@ export class OrganizationOrgchartComponent implements OnInit {
               );
               // }
             });
-
+            console.log(items);
             this.items = items;
           }
         });
     }
+    this.dt.detectChanges();
   }
 
-  // highlightPadding: { left: 4, top: 4, right: 4, bottom: -18 },
-  // cursorPadding: { left: 0, top: 0, right: 0, bottom: 0 }
   ngOnInit(): void {
-    // items.push(
-    //   new OrgItemConfig({
-    //     id: 14,
-    //     parent: 0,
-    //     title: 'Assistant 4',
-    //     description: 'Assistant Description',
-    //     itemType: ItemType.Assistant,
-    //     adviserPlacementType: AdviserPlacementType.Left,
-    //     groupTitle: 'Audit',
-    //     groupTitleColor: Colors.Olive,
-    //     levelOffset: 1,
-    //   })
-    // );
-    var annotations = [
-      new LevelAnnotationConfig({
-        annotationType: AnnotationType.Level,
-        levels: [0],
-        title: 'CEO',
-        titleColor: Colors.RoyalBlue,
-        offset: new Thickness(0, 0, 0, -1),
-        lineWidth: new Thickness(0, 0, 0, 0),
-        opacity: 0,
-        borderColor: Colors.Gray,
-        fillColor: Colors.Gray,
-        lineType: LineType.Dotted,
-      }),
-      new LevelAnnotationConfig({
-        annotationType: AnnotationType.Level,
-        levels: [1],
-        title: 'Children 1',
-        titleColor: Colors.RoyalBlue,
-        offset: new Thickness(0, 0, 0, -1),
-        lineWidth: new Thickness(0, 0, 0, 0),
-        opacity: 0.08,
-        borderColor: Colors.Gray,
-        fillColor: Colors.Gray,
-        lineType: LineType.Dotted,
-      }),
-      new LevelAnnotationConfig({
-        annotationType: AnnotationType.Level,
-        levels: [2],
-        title: 'Children 2',
-        titleColor: Colors.RoyalBlue,
-        offset: new Thickness(0, 0, 0, -1),
-        lineWidth: new Thickness(0, 0, 0, 0),
-        opacity: 0,
-        borderColor: Colors.Gray,
-        fillColor: Colors.Gray,
-        lineType: LineType.Dotted,
-      }),
-      new LevelAnnotationConfig({
-        annotationType: AnnotationType.Level,
-        levels: [3],
-        title: 'Members',
-        titleColor: Colors.RoyalBlue,
-        offset: new Thickness(0, 0, 0, -1),
-        lineWidth: new Thickness(0, 0, 0, 0),
-        opacity: 0.08,
-        borderColor: Colors.Gray,
-        fillColor: Colors.Gray,
-        lineType: LineType.Dotted,
-      }),
-    ];
-    // this.items = items;
+    // var annotations = [
+    //   new LevelAnnotationConfig({
+    //     annotationType: AnnotationType.Level,
+    //     levels: [0],
+    //     title: 'CEO',
+    //     titleColor: Colors.RoyalBlue,
+    //     offset: new Thickness(0, 0, 0, -1),
+    //     lineWidth: new Thickness(0, 0, 0, 0),
+    //     opacity: 0,
+    //     borderColor: Colors.Gray,
+    //     fillColor: Colors.Gray,
+    //     lineType: LineType.Dotted,
+    //   }),
+    //   new LevelAnnotationConfig({
+    //     annotationType: AnnotationType.Level,
+    //     levels: [1],
+    //     title: 'Children 1',
+    //     titleColor: Colors.RoyalBlue,
+    //     offset: new Thickness(0, 0, 0, -1),
+    //     lineWidth: new Thickness(0, 0, 0, 0),
+    //     opacity: 0.08,
+    //     borderColor: Colors.Gray,
+    //     fillColor: Colors.Gray,
+    //     lineType: LineType.Dotted,
+    //   }),
+    //   new LevelAnnotationConfig({
+    //     annotationType: AnnotationType.Level,
+    //     levels: [2],
+    //     title: 'Children 2',
+    //     titleColor: Colors.RoyalBlue,
+    //     offset: new Thickness(0, 0, 0, -1),
+    //     lineWidth: new Thickness(0, 0, 0, 0),
+    //     opacity: 0,
+    //     borderColor: Colors.Gray,
+    //     fillColor: Colors.Gray,
+    //     lineType: LineType.Dotted,
+    //   }),
+    //   new LevelAnnotationConfig({
+    //     annotationType: AnnotationType.Level,
+    //     levels: [3],
+    //     title: 'Members',
+    //     titleColor: Colors.RoyalBlue,
+    //     offset: new Thickness(0, 0, 0, -1),
+    //     lineWidth: new Thickness(0, 0, 0, 0),
+    //     opacity: 0.08,
+    //     borderColor: Colors.Gray,
+    //     fillColor: Colors.Gray,
+    //     lineType: LineType.Dotted,
+    //   }),
+    // ];
     // this.annotations = annotations;
   }
 
@@ -244,6 +216,7 @@ export class OrganizationOrgchartComponent implements OnInit {
       if (this.orgUnitID) {
         //Function get new orgchart
         this.getDataPositionByID(this.orgUnitID);
+        this.dt.detectChanges();
         //Function get olg orgchart
         // this.dataService.setPredicates([], [this.orgUnitID], (res) => {
         //   if (res) {

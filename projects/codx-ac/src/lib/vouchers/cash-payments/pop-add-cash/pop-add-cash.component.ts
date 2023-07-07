@@ -120,6 +120,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
+  fmCashCashReceiptsLine: FormModel = {
+    formName: 'CashReceiptsLines',
+    gridViewName: 'grvCashReceiptsLines',
+    entityName: 'AC_CashReceiptsLines',
+  };
   gridHeight: any;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -626,7 +631,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case 'add':
         if (this.hasSaved) {
           this.api
-            .exec('AC', 'CashPaymentsBusiness', 'UpdateMasterAsync', [
+            .exec('AC', this.className, 'UpdateMasterAsync', [
               this.cashpayment,
               this.journal,
             ])

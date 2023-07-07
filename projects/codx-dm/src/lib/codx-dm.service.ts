@@ -1349,22 +1349,23 @@ export class CodxDMService {
       case 'DMT0202': // chinh sua thu muc
       case 'DMT0209': 
       { // properties folder
-        var breadcumb = [];
-        var breadcumbLink = [];
-        var treeView = view?.currentView?.currentComponent?.treeView;
-        if (treeView) {
-          treeView.textField = 'folderName';
-          var list = treeView.getBreadCumb(data.recID);
-          breadcumb.push(this.menuActive.getValue());
-          breadcumbLink.push(this.idMenuActive);
-          for (var i = list.length - 1; i >= 0; i--) {
-            breadcumb.push(list[i].text);
-            breadcumbLink.push(list[i].id);
-          }
-          this.breadcumbLink = breadcumbLink;
-          this.breakCumArr = breadcumb;
-          this.breadcumb.next(breadcumb);
-        }
+        //debugger
+        // var breadcumb = [];
+        // var breadcumbLink = [];
+        // var treeView = view?.currentView?.currentComponent?.treeView;
+        // if (treeView) {
+        //   treeView.textField = 'folderName';
+        //   var list = treeView.getBreadCumb(data.recID);
+        //   breadcumb.push(this.menuActive.getValue());
+        //   breadcumbLink.push(this.idMenuActive);
+        //   for (var i = list.length - 1; i >= 0; i--) {
+        //     breadcumb.push(list[i].text);
+        //     breadcumbLink.push(list[i].id);
+        //   }
+        //   this.breadcumbLink = breadcumbLink;
+        //   this.breakCumArr = breadcumb;
+        //   this.breadcumb.next(breadcumb);
+        // }
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1870,11 +1871,17 @@ export class CodxDMService {
         }
       });
   }
+
   getFileName(name:any)
   {
     if(!name) return ""
     var arrName = name.split(".");
     if(arrName.length >1) arrName.splice((arrName.length - 1), 1);
     return arrName.join('.')
+  }
+
+  countFavorite(funcID:any,favsID:any)
+  {
+    return this.api.execSv("DM","DM","FolderBussiness","CountFavoriteAsync",[funcID,favsID])
   }
 }

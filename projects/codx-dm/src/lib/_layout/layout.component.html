@@ -8,6 +8,9 @@
         [asideMenuHeader]="header"
         [asideMenuFooter]="footer"
         [hasSecond]="true"
+        [hasCountFavorite]="true"
+        (countFavorite)="onCountFavarite($event)"
+        (favoriteClick)="onClickFavarite($event)"
       >
       </codx-aside>
       <ng-template #header>
@@ -98,17 +101,7 @@
             <!-- end::Aside mobile toggle -->
             <div class="d-flex align-items-end flex-wrap mt-1">
               <div ngbDropdown class="nav-item dropdown me-1">
-                <button
-                  ngbDropdownToggle
-                  [className]="setClassActive()"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <span class="icon-dashboard icon-20"></span>
-                </button>
+              
                 <div
                   ngbDropdownMenu
                   class="dropdown-menu"

@@ -65,7 +65,6 @@ export class PopupAddVersionComponent extends UIComponent {
   getCache(){
     this.omService.getDataValueOfSetting(OMCONST.OMPARAM,null,'1').subscribe((res:any)=>{
       if(res){
-        debugger
         this.omSetting = JSON.parse(res);
         if(this.omSetting?.AutoUpdate =="1"){
           this.autoUpdate=true;
@@ -78,7 +77,9 @@ export class PopupAddVersionComponent extends UIComponent {
     this.omService.updatePlanVersion(this.dataPlan?.recID, this.data).subscribe((res:any)=>{
       if(res){
         res.autoUpdate = this.autoUpdate;
-        this.notificationsService.notifyCode('SYS034');
+        if(!this.isRelease) {
+          this.notificationsService.notifyCode('SYS034');
+        }
         this.dialogRef && this.dialogRef.close(res);        
       }
     })

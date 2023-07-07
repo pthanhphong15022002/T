@@ -135,6 +135,11 @@
     background: grey !important;
 }
 
+.input-circle .icon-keyboard_arrow_down{
+    display: none;
+}
+
+
 /* css vẽ khung input trước khi init */
 .ac-input{
     background-color: white;
