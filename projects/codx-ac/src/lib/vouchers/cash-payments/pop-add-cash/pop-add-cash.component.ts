@@ -652,7 +652,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.journal,
             this.cashpayment,
             'AC',
-            'AC_CashPayments',
+            this.dialog.formModel.entityName,
             this.form,
             this.action === 'edit',
             () => {
