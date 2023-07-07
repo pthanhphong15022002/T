@@ -60,7 +60,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   primaryXAxis: Object = {
     interval: 1,
     valueType: 'Category',
-    title: 'Tháng',
+    title: 'Tháng triển khai Cơ hội',
   };
   //Initializing Primary Y Axis
   primaryYAxis: Object = {
