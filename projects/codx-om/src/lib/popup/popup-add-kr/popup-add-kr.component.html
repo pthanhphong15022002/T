@@ -6,7 +6,7 @@
       <div class="form-group">
         <codx-label fiedName="ParentID" [formModel]="form?.formModel">
         </codx-label>
-        <codx-input ControlName="parentID" [formModel]="form?.formModel" [Group]="form?.formGroup" >
+        <codx-input ControlName="parentID" [formModel]="form?.formModel" [Group]="form?.formGroup" [disabled]="funcType==editMFunc">
         </codx-input>
       </div>
 
@@ -21,7 +21,7 @@
         <div class="form-group col-4">
           <codx-label fiedName="Measurement" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="measurement" [formModel]="form?.formModel" [Group]="form?.formGroup"></codx-input>
+          <codx-input ControlName="measurement" [formModel]="form?.formModel" [Group]="form?.formGroup" [disabled]="havedCheckIns"></codx-input>
         </div>
 
         <div class="form-group col-4">
@@ -35,7 +35,7 @@
         <div class="form-group col-4 ps-0">
           <codx-label fiedName="UMID" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="umid" [formModel]="form?.formModel" [Group]="form?.formGroup">
+          <codx-input ControlName="umid" [formModel]="form?.formModel" [Group]="form?.formGroup"  [disabled]="havedCheckIns">
           </codx-input>
         </div>
 
@@ -50,9 +50,9 @@
         </div>
 
         <div class="form-group col-6">
-          <codx-label fiedName="Plan" [formModel]="form?.formModel">
+          <codx-label fiedName="Plan" [formModel]="form?.formModel" >
           </codx-label>
-          <codx-input ControlName="plan" [formModel]="form?.formModel" [Group]="form?.formGroup"
+          <codx-input ControlName="plan" [formModel]="form?.formModel" [Group]="form?.formGroup" [disabled]="havedCheckIns"
             (valueChange)="planChange($event)">
           </codx-input>
         </div>
@@ -63,18 +63,18 @@
         <div class="col-4">
           <codx-label fiedName="Frequence" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="frequence" [formModel]="form?.formModel" [Group]="form?.formGroup" >
+          <codx-input ControlName="frequence" [formModel]="form?.formModel" [Group]="form?.formGroup"  [disabled]="havedCheckIns">
           </codx-input>
         </div>
         <div class="col-4">
           <codx-label fiedName="CheckInMode" [formModel]="form?.formModel">
           </codx-label>
-          <codx-input ControlName="checkInMode" [formModel]="form?.formModel" [Group]="form?.formGroup">
+          <codx-input ControlName="checkInMode" [formModel]="form?.formModel" [Group]="form?.formGroup" [disabled]="havedCheckIns">
           </codx-input>
         </div>
         <div class=" col-4">
           <codx-label default="Kiểm soát cập nhật" name="lblCheckInControl"></codx-label>
-          <codx-input field="checkInControl" type="valuelist" refValue="OM015"  [crrValue]="kr?.checkInControl" (valueChange)="valueChange($event)">
+          <codx-input field="checkInControl" type="valuelist" refValue="OM015"  [crrValue]="kr?.checkInControl" (valueChange)="valueChange($event)" [disabled]="havedCheckIns">
           </codx-input>
         </div>
 
@@ -83,26 +83,30 @@
       <div class="row mb-6 mt-2">
         <div class="d-flex align-items-center text-italic"
              *ngIf="kr.frequence=='M'">
-            <span class="text-gray-600 me-1">Ngày <span class="text-primary fw-bold">{{kr?.checkIn?.day}}</span> trong tháng vào lúc <span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span> giờ</span>
-            <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)">
+            <span class="text-gray-600 me-1"> <codx-label default="Ngày" name="lblOMDay"></codx-label> <span class="text-primary fw-bold">{{kr?.checkIn?.day}}</span>
+            <codx-label default="trong tháng vào lúc" name="lblOMMonth"></codx-label><span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span>
+            <codx-label default="giờ" name="lblOMHour"></codx-label></span>
+            <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)" [disabled]="havedCheckIns">
             <i class="icon-edit icon-16"></i></button>
           </div>
 
           <div class="d-flex align-items-center text-italic"
              *ngIf="kr.frequence=='W'">
-            <span class="me-1">Ngày</span>
+            <span class="me-1"> <codx-label default="Ngày" name="lblOMDay"></codx-label> </span>
             <span class="me-1 fw-bold">
               <codx-vll class="text-primary" [showText]="true" [name]="'L0012'" [value]="kr?.checkIn?.day"></codx-vll>
             </span>
-            <span class="text-gray-600 me-1">trong tuần vào lúc <span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span> giờ</span>
-            <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)">
+            <span class="text-gray-600 me-1"> <codx-label default="trong tuần vào lúc" name="lblOMWeek"></codx-label><span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span>
+            <codx-label default="giờ" name="lblOMHour"></codx-label></span>
+            <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)" [disabled]="havedCheckIns">
             <i class="icon-edit icon-16"></i></button>
           </div>
 
           <div class="d-flex align-items-center text-italic"
             *ngIf="kr.frequence=='D'">
-            <span class="text-gray-600 me-1">Trong ngày vào lúc <span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span> giờ</span>
-              <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)">
+            <span class="text-gray-600 me-1"><codx-label default="Trong ngày vào lúc" name="lblOMDay"></codx-label> <span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span> 
+            <codx-label default="giờ" name="lblOMHour"></codx-label></span>
+              <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)"  [disabled]="havedCheckIns">
             <i class="icon-edit icon-16"></i>
           </button>
           </div>

@@ -365,9 +365,7 @@
           <div
             class="ms-auto"
             [ngbTooltip]="
-              item?.type == '1'
-                ? grvSetupQuotation['TotalAmt']?.headerText
-                : grvSetupContract['ContractAmt']?.headerText
+              item?.type == '1' ? grvSetupQuotation['TotalAmt']?.headerText:grvSetupContract['ContractAmt']?.headerText
             "
           >
             <span
