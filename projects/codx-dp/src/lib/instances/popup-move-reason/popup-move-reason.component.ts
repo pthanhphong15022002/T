@@ -224,11 +224,11 @@ export class PopupMoveReasonComponent implements OnInit {
   ) {
     var reason = new DP_Instances_Steps_Reasons();
      reason.processID = this.instances.processID;
-     reason.stepID = this.reasonStep.recID;
+     reason.stepID = stepReason.stepID;
      reason.reasonName = stepReason.reasonName;
      reason.instanceID = this.instances.recID;
      reason.createdBy = this.userId;
-     reason.reasonType = this.reasonStep.isSuccessStep ? '1' : '2';
+     reason.reasonType = this.isReason ? '1' : '2';
     return reason;
   }
 
