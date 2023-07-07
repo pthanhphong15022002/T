@@ -94,7 +94,7 @@ export class JournalService {
               'ERM.Business.AC',
               'CommonBusiness',
               'GenerateAutoNumberAsync',
-              journal.autoNumber
+              journal.voucherFormat
             )
             .subscribe((autoNumber: string) => {
               this.notiService

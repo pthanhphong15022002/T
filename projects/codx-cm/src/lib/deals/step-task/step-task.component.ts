@@ -37,6 +37,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   stepNameReason: any;
   listReasonsClick: any[];
   listStepReason: any[];
+  listStepReasonValue: any[];
   isClosed:boolean = true;
   iconReasonSuccess: any;
   iconReasonFail: any;
@@ -83,7 +84,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.listInstanceStepShow = this.listInstanceStep;
       if( !['0','1','2'].includes(this.dataSelected.status)) {
         this.stepIdReason = this.listInstanceStep[this.listInstanceStep.length - 1].stepID
-        this.listStepReason =this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
+        this.listStepReasonValue =this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
       }
     }
     if (changes.dataSelected) {
@@ -244,7 +245,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       ];
       this.codxCmService.updateListReason(data).subscribe((res) => {
         if (res) {
-          this.listStepReason = this.listReasonsClick;
+          this.listStepReasonValue = JSON.parse(JSON.stringify(this.listReasonsClick));
           this.dialogPopupReason.close();
           this.notiService.notifyCode('SYS007');
           return;

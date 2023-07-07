@@ -96,7 +96,8 @@ db.DM_FolderInfo.updateMany(
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
     private renderer: Renderer2,
-    private cache: CacheService
+    private cache: CacheService,
+   
   ) {
     super(injector);
     this.module = 'DM';
@@ -175,6 +176,36 @@ db.DM_FolderInfo.updateMany(
     this.folderService.options.favoriteID = subid;
     this.fileService.options.favoriteID = subid;
     this.dmSV.refeshData.next(true);
+  }
+
+  onClickFavarite(e:any) {
+   if(e && e?.data)
+   {
+    if(e?.func?.functionID == "DMT05")
+    {
+      var breadcumb = [];
+        breadcumb.push(e?.func?.customName);
+        breadcumb.push(e?.data?.favorite);
+        this.dmSV.idMenuActive = e?.func?.functionID;
+        this.dmSV.page = 0;
+        this.dmSV.breadcumb.next(breadcumb);
+        this.dmSV.menuIdActive.next(e?.func?.functionID);
+        this.dmSV.menuActive.next(e?.func?.customName);
+        this.dmSV.currentNode = '';
+        this.dmSV.folderId.next(e?.func?.functionID);
+        this.dmSV.dmFavoriteID = "2";
+        this.dmSV.folderID = '';
+        this.folderService.options.favoriteID = e?.data?.recID;
+        this.fileService.options.favoriteID = e?.data?.recID;
+        this.dmSV.refeshData.next(true);
+    }
+   }
+  }
+  onCountFavarite(e:any)
+  {
+    if(e) this.dmSV.countFavorite(e?.functionID,e?.favIDs).subscribe(item=>{
+      
+    });
   }
 
   getHDDInformaton(item: any) {
