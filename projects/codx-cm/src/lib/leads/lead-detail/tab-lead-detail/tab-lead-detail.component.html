@@ -263,7 +263,7 @@
         *ngIf="item?.fields?.length > 0 && item?.fields"
         [dataStep]="item"
         [showColumnControl]="showColumnControl(item.stepID)"
-        [isUpdate]="['0', '1','2','13'].includes(dataSelected.status) || dataSelected?.roles?.isOnwer  "
+        [isUpdate]="['0', '1','2','13'].includes(dataSelected.status) && dataSelected?.roles?.isOnwer "
       >
       </codx-fields-detail-temp>
     </ng-container>
