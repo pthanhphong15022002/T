@@ -84,7 +84,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() dataSelected: any;
   name = 'Information';
   id = '';
-  tabDetail = [];
+  tabDetail: { name: string, text: string,  icon: string  }[] = [];
   formModelContact: FormModel;
   formModelAddress: FormModel;
   listAddress = [];
