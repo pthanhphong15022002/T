@@ -420,7 +420,7 @@ export class DealsComponent
       eventItem.disabled = !data.closed || data.status == '0'
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['1'].includes(data.status);
+      eventItem.disabled = !['1'].includes(data.status) || data.closed ;
     };
     var isOwner = (eventItem, data) => {
       eventItem.disabled = !['1', '2'].includes(data.status) || data.closed ;
