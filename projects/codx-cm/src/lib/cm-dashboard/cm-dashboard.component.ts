@@ -34,9 +34,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataDashBoard: any;
   isLoaded: boolean = false;
   titLeModule = '';
+
+  palette = ['#005dc7', '#0078ff', '#3699ff', '#d3e8ff'];
   //mau cố định
   paletteColor = ['#00BFFF', '#0000FF'];
   // setting
+  dataSourceBussnessLine = [];
   tooltipSettings = {
     visible: true,
     format: '${businessLineName} - TotalCount:${quantity}',
@@ -51,8 +54,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   colorReasonSuscess = '';
   colorReasonFails = '';
-  checkBtnMinRadio: boolean = false;
-  checkBtnMaxRadio: boolean = true;
+  checkBtnMinRadio = false;
+  checkBtnMaxRadio = true;
   maxOwners = [];
   minOwners = [];
 
@@ -81,34 +84,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //   format: '${series.name} : <b>${point.y}</b>',
   // };
   //test data
-  chartData = [
-    { month: '1', sales: 35 },
-    { month: '2', sales: 28 },
-    { month: '3', sales: 34 },
-    { month: '4', sales: 32 },
-    { month: '5', sales: 40 },
-    { month: '6', sales: 32 },
-    { month: '7', sales: 35 },
-    { month: '8', sales: 55 },
-    { month: '9', sales: 38 },
-    { month: '10', sales: 30 },
-    { month: '11', sales: 25 },
-    { month: '12', sales: 32 },
-  ];
-  chartData2 = [
-    { month: '1', sales: 25 },
-    { month: '2', sales: 11 },
-    { month: '3', sales: 3 },
-    { month: '4', sales: 11 },
-    { month: '5', sales: 55 },
-    { month: '6', sales: 11 },
-    { month: '7', sales: 88 },
-    { month: '8', sales: 12 },
-    { month: '9', sales: 6 },
-    { month: '10', sales: 7 },
-    { month: '11', sales: 5 },
-    { month: '12', sales: 100 },
-  ];
+  // chartDataSucsses = [];
+  // chartDataFail = [];
+  marker = { visible: true };
+  checkBtnSuscessRadio = true;
+  checkBtnFailRadio = false;
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -188,6 +168,24 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
       .subscribe((res) => {
         this.dataDashBoard = res;
+        if (this.dataDashBoard.countsBussinessLines) {
+          this.palette = this.dataDashBoard.countsBussinessLines?.map(
+            (x) => x.color
+          );
+          debugger;
+          this.dataSourceBussnessLine =
+            this.dataDashBoard.countsBussinessLines?.map((x) => {
+              let data = {
+                color: x.color,
+                businessLineName: x.businessLineName,
+                quantity: x.quantity,
+                percentage: x.percentage,
+              };
+              return data;
+            });
+          //chart
+        }
+
         this.maxOwners = this.dataDashBoard.countsOwners ?? [];
         this.minOwners = JSON.parse(JSON.stringify(this.maxOwners));
         this.minOwners.sort((a, b) => {
