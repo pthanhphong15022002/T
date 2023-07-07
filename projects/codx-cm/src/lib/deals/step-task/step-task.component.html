@@ -52,7 +52,7 @@
         field="viewModeDetail"
         type="valuelist"
         [crrValue]="type"
-        [refValue]="'DP034'"
+        [refValue]="'DP047'"
         (valueChange)="changeValue($event)"
       ></codx-input>
     </div>
@@ -137,7 +137,7 @@
       ></codx-step-task>
       <div *ngIf="(step?.isFailStep || step?.isSuccessStep) &&  !['0','1','2'].includes(dataSelected?.status) ">
         <div >
-          <div class="d-flex justify-content-start">
+          <div class="d-flex justify-content-between">
             <div
               [ngStyle]="{
                 'background-color': getReasonValue(step?.isSuccessStep)?.color
@@ -158,7 +158,6 @@
                 {{ step?.stepName || "" }}
               </span>
             </div>
-            <div></div>
             <div class="ms-5">
               <div class="group-button">
                 <button class="button-custom" (click)="openPopupReason()">
@@ -189,7 +188,7 @@
                 [default]="getNameReason(step?.isSuccessStep)"
               ></codx-label>
             </div>
-            <ng-container *ngFor="let item of listStepReason" class="pb-2">
+            <ng-container *ngFor="let item of listStepReasonValue" class="pb-2">
               <ul class="text-left drap-drop mb-1 has-action-menu">
                 <li>
                   {{ item.reasonName }}
@@ -241,7 +240,7 @@
   <div
     class="form-group mt-3"
     *ngIf="
-      listStepReason?.length > 0 && listStepReason !== null;
+    listStepReason?.length > 0 && listStepReason !== null;
       else dataIsEmpty
     "
   >
@@ -265,7 +264,7 @@
     type="button"
     class="btn btn-primary"
     (click)="onSaveReason()"
-    [disabled]="listReasonsClick.length < 0 && !listReasonsClick"
+    [disabled]="listStepReason.length < 0 && !listStepReason"
   >
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>

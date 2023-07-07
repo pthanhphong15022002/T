@@ -5,7 +5,6 @@
   [funcID]="funcID"
   (filterReportChange)="filterChange($event)"
   (onActions)="onActions($event)"
-  [button]="button"
 >
 </codx-views>
 
@@ -20,7 +19,7 @@
     ></codx-dashboard>
   </div>
   <div class="w-100 h-100" *ngIf="!isLoaded">
-    Chưa load xong data----------chắc cần anomation
+    Đang load data ---------- muốn có anomation đẹp
   </div>
 </ng-template>
 
@@ -96,10 +95,10 @@
     >
       <ejs-treemap
         style="display: block"
-        [dataSource]="dataDashBoard?.countsBussinessLines ?? []"
+        [dataSource]="dataSourceBussnessLine ?? []"
         weightValuePath="quantity"
         rangeColorValuePath="quantity"
-        [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+        [palette]="palette"
         [leafItemSettings]="leafItemSettings"
         [tooltipSettings]="tooltipSettings"
       >
@@ -115,7 +114,109 @@
     id="6"
     title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
   >
-    <ng-container *ngIf="false; else noData"></ng-container>
+    <div class="mt-5">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          class="btn-group"
+          role="group"
+          aria-label="Basic radio toggle button group"
+        >
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="checkBtnSuscessRadio"
+            autocomplete="off"
+            checked
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnSuscessRadio"
+            default="Thành công"
+          ></codx-label>
+
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="checkBtnFailRadio"
+            autocomplete="off"
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnFailRadio"
+            default="Thất bại"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+    <ng-container
+      *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
+    >
+      <div class="row">
+        <!-- <div class="col-10"> -->
+        <ejs-chart
+          id="chart-container"
+          [primaryXAxis]="primaryXAxis"
+          [primaryYAxis]="primaryYAxis"
+          [title]="'Tỉ lệ'"
+        >
+          <e-series-collection>
+            <ng-container
+              *ngFor="let item of dataDashBoard?.countsBussinessLines"
+            >
+              <e-series
+                *ngIf="checkBtnSuscessRadio"
+                [dataSource]="item?.chartDataSuscess ?? []"
+                type="Line"
+                xName="month"
+                yName="percentage"
+                [name]="item.businessLineName"
+                width="3"
+                [fillColor]="item.color"
+              ></e-series>
+
+              <!-- <e-series
+                *ngIf="checkBtnFailRadio"
+                [dataSource]="item?.chartDataFail"
+                type="Line"
+                xName="month"
+                yName="percentage"
+                [name]="item.businessLineName"
+                width="3"
+                [fillColor]="item.color"
+              ></e-series> -->
+            </ng-container>
+          </e-series-collection>
+        </ejs-chart>
+      </div>
+      <!-- <div class="col-2">
+          <div class="mt-5">
+            <div>
+              <codx-label
+                class="fs-5"
+                name="lblChartDescription"
+                default="Chú thích"
+              ></codx-label>
+            </div>
+            <div class="d-flex flex-column">
+              <ng-container
+                *ngFor="let item of dataDashBoard?.countsBussinessLines"
+              >
+                <div class="d-flex align-item-center">
+                  <hr width="25px" [color]="item.color" size="5px" />
+                  <span
+                    class="ms-3 line-clamp-note cursor-pointer d-flex align-item-center"
+                    [ngbTooltip]="item.businessLineName"
+                    >{{ item?.businessLineName }}</span
+                  >
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div> -->
+      <!-- </div> -->
+    </ng-container>
   </div>
 </ng-template>
 
@@ -137,34 +238,71 @@
             type="radio"
             class="btn-check"
             name="btnradio"
-            id="btnMinRadio"
-            autocomplete="off"
-            [checked]="checkBtnMinRadio"
-            (click)="clickRadio('btnMinRadio')"
-          />
-          <codx-label
-            class="btn btn-outline-primary"
-            for="btnMinRadio"
-            default="Thấp nhất"
-          ></codx-label>
-
-          <input
-            type="radio"
-            class="btn-check"
-            name="btnradio"
             id="btnMaxRadio"
             autocomplete="off"
             [checked]="checkBtnMaxRadio"
-            (click)="clickRadio('btnMaxRadio')"
           />
           <codx-label
             class="btn btn-outline-primary"
             for="btnMaxRadio"
             default="Cao nhất"
+            (click)="clickRadio('btnMaxRadio')"
+          ></codx-label>
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnMinRadio"
+            autocomplete="off"
+            [checked]="checkBtnMinRadio"
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnMinRadio"
+            default="Thấp nhất"
+            (click)="clickRadio('btnMinRadio')"
           ></codx-label>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="dataDashBoard?.countsOwners?.length > 0; else noData">
+      <div class="w-100 h-100 mt-3">
+        <ng-container *ngIf="checkBtnMaxRadio">
+          <div
+            *ngFor="let ownerCount of maxOwners; let i = index"
+            class="d-flex align-items-center justify-content-end cursor-pointer"
+            [title]="ownerCount.objectName"
+          >
+            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+            <div
+              class="owners-top"
+              style="color: #000000; background-color: aqua"
+              [style.background-color]="ownerCount?.color"
+              [style.width]="ownerCount.percentage + '%'"
+            >
+              <span class="">{{ ownerCount.objectName }}</span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="checkBtnMinRadio">
+          <div
+            *ngFor="let ownerCount of minOwners; let i = index"
+            class="d-flex align-items-center justify-content-end cursor-pointer"
+            [title]="ownerCount.objectName"
+          >
+            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+            <div
+              class="owners-top"
+              style="color: #000000; background-color: aqua"
+              [style.background-color]="ownerCount?.color"
+              [style.width]="ownerCount.percentage + '%'"
+            >
+              <span class="">{{ ownerCount.objectName }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 

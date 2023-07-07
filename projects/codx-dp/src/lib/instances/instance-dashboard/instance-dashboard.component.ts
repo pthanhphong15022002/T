@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -6,7 +7,11 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService } from 'codx-core';
+import { DP_Processes } from '../../models/models';
+import { firstValueFrom } from 'rxjs';
+import { AnimationModel, ChartAnnotationSettingsModel } from '@syncfusion/ej2-angular-charts';
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -35,23 +40,133 @@ export class PanelOrder {
 @Component({
   selector: 'codx-instance-dashboard',
   templateUrl: './instance-dashboard.component.html',
-  styleUrls: ['./instance-dashboard.component.css'],
+  styleUrls: ['./instance-dashboard.component.scss'],
 })
 export class InstanceDashboardComponent implements OnInit {
   @ViewChildren('templateDetail') templates: QueryList<any>;
   @Input() vllStatus: any;
+  @Input() processID = '';
+
+  CountInsSteps: any;
+  sumStep = 0;
+
   isEditMode = false;
   datas: any;
   panels: any;
-
+  funcID = '';
+  dataDashBoard: any;
+  isLoaded: boolean = false;
   arrVllStatus = [];
-  constructor(private api: ApiHttpService, private cache: CacheService) {
+  content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`;
+  public annotations: ChartAnnotationSettingsModel[] = [
+    {    
+      content: this.content,
+      region: 'Series',
+      x: '51%',
+      y: '50%',
+    },
+  ];
+  public data: Object[] = [
+    { name: 'Giai đoạn 1', count:20, text: '35%' },
+    { name: 'Giai đoạn 2', count:15, text: '35%' },
+    { name: 'Giai đoạn 3', count:5, text: '35%' },
+    { name: 'Giai đoạn 4', count:16, text: '35%' },
+    { name: 'Giai đoạn 5', count:20, text: '35%' },
+    { name: 'Giai đoạn 6', count:35, text: '35%' },
+  ];
+  public tooltip: Object = {
+    enable: true,
+    format: '<b>${point.x}</b><br>Tỷ lệ: <b>${point.text}%</b><br>Số lượng: <b>${point.y}</b>',
+    header: '',
+  };
+  //Initializing Legend
+  public innerRadius: string = '85%';
+  public radius: string = '100%';
+  public startAngle: number = 30;
+  //Initializing Datalabel
+  public dataLabel: Object = {
+    name: 'text',
+    visible: true,
+    font: {
+      fontWeight: '600',
+      color: '#ffffff',
+    },
+  };
+
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  paletteColor = ['rgb(2 71 253)', 'rgb(2 71 253 / 85%)','rgb(2 71 253 / 70%)','rgb(2 71 253 / 50%)','rgb(2 71 253 / 30%)'];
+  tasksByCategory = [
+    {category: '1', quantity: 100},
+    {category: '2', quantity: 85},
+    {category: '3', quantity: 70},
+    {category: '4', quantity: 50},
+    {category: '5', quantity: 30}
+  ]
+  
+  //thóng kê
+  public chartArea: Object = {
+    border: {
+        width: 0
+    }
+};
+    //Initializing Primary X Axis
+    public primaryXAxis: Object = {
+      interval: 1,
+      valueType: 'Category',
+      majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
+      lineStyle: { width: 0 },
+      labelIntersectAction: 'Rotate90',
+  };
+  //Initializing Primary Y Axis
+  public primaryYAxis: Object = {
+      title: '',
+      minimum: 0,
+      maximum: 100,
+      interval: 10,
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 }, minorTickLines: { width: 0 }
+  };
+  tooltip1: Object = {
+    enable: true,
+    shared: true,
+    format: '${series.name} : <b>${point.y}</b>'    
+};
+public data1: Object[] = [
+  { x: 'Button Defect', y: 23 }, { x: 'Pocket Defect', y: 16 },
+  { x: 'Collar Defect', y: 10 }, { x: 'Cuff Defect', y: 7 },
+  { x: 'Sleeve Defect', y: 6 }, { x: 'Other Defect', y: 2}
+];
+paretoOptions: Object = {
+  marker: {
+      visible: true,
+      isFilled: true,
+      width: 7,
+      height: 7
+  },
+  dashArray: '3,2',
+  width: 2
+  
+}
+public  cornerRadius: Object = { 
+  topLeft: 6, topRight:  6 
+}
+
+  constructor(
+    private api: ApiHttpService,
+    private cache: CacheService,
+    private router: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     this.setting();
   }
   ngOnInit(): void {
     this.cache.valueList(this.vllStatus).subscribe((res) => {
       if (res && res.datas) this.arrVllStatus = res.datas;
     });
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.getDataDashboard('ProcessID==@0', this.processID);
   }
 
   setting() {
@@ -65,5 +180,41 @@ export class InstanceDashboardComponent implements OnInit {
 
   getNameStatus(status) {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
+  }
+
+  async getDataDashboard(
+    predicates?: string,
+    dataValues?: string,
+    params?: any
+  ) {
+    let model = new GridModels();
+    model.funcID = this.funcID;
+    model.entityName = 'DP_Instances';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
+    let data = await firstValueFrom(
+      this.api.exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [
+        model,
+        params,
+      ])
+    );
+    if (data) {
+      this.dataDashBoard = data;
+      let counts = this.dataDashBoard?.counts;
+      for (var prop in counts) {
+        if (counts.hasOwnProperty(prop)) {
+          this.sumStep += counts[prop];
+        }
+      }
+      this.content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`
+      console.log(this.dataDashBoard);
+      this.isLoaded = true;
+      this.changeDetectorRef.detectChanges();
+    }
+    // this.api
+    //   .exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [model, params])
+    //   .subscribe((res) => {
+
+    //   });
   }
 }

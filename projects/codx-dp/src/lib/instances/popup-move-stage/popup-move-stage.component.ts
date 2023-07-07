@@ -350,18 +350,16 @@ export class PopupMoveStageComponent implements OnInit {
           var data = JSON.parse(JSON.stringify(res));
           this.updateDataInstance(data);
           this.isStopData = false;
-
         }
-
       }
     });
   }
 
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
-    if(data.owner){
-      this.owner = data.owner;
-    }
+    // if(data.owner ){
+    //   this.owner = data.owner;
+    // }
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
     this.instancesStepOld.actualEnd =  this.checkDuration(this.isDurationControl,this.instancesStepOld?.actualEnd);
     this.listTaskDone = this.instancesStepOld.tasks.filter(

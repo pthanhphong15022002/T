@@ -35,7 +35,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isLoaded: boolean = false;
   titLeModule = '';
 
+  palette = ['#005dc7', '#0078ff', '#3699ff', '#d3e8ff'];
+  //mau cố định
+  paletteColor = ['#00BFFF', '#0000FF'];
   // setting
+  dataSourceBussnessLine = [];
   tooltipSettings = {
     visible: true,
     format: '${businessLineName} - TotalCount:${quantity}',
@@ -50,8 +54,41 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   colorReasonSuscess = '';
   colorReasonFails = '';
-  checkBtnMinRadio: boolean = true;
-  checkBtnMaxRadio: boolean = false;
+  checkBtnMinRadio = false;
+  checkBtnMaxRadio = true;
+  maxOwners = [];
+  minOwners = [];
+
+  //tỉ lệ thanh công that bai tren san pham
+  //Initializing Primary X Axis
+  primaryXAxis: Object = {
+    interval: 1,
+    valueType: 'Category',
+    title: 'Tháng',
+  };
+  //Initializing Primary Y Axis
+  primaryYAxis: Object = {
+    title: 'Tỷ lệ (%)',
+    minimum: 0,
+    maximum: 100,
+    interval: 20,
+    lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+  // tooltip1: Object = {
+  //   enable: true,
+  //   shared: true,
+  //   format: '${series.name} : <b>${point.y}</b>',
+  // };
+  //test data
+  // chartDataSucsses = [];
+  // chartDataFail = [];
+  marker = { visible: true };
+  checkBtnSuscessRadio = true;
+  checkBtnFailRadio = false;
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -90,11 +127,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.views = [
       {
-        type: ViewType.content,
+        type: ViewType.chart,
         active: true,
         sameData: false,
         reportType: 'D',
-        reportView: true,
+        // reportView: true,
         showFilter: true,
         model: {
           panelRightRef: this.template,
@@ -131,7 +168,29 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
       .subscribe((res) => {
         this.dataDashBoard = res;
+        if (this.dataDashBoard.countsBussinessLines) {
+          this.palette = this.dataDashBoard.countsBussinessLines?.map(
+            (x) => x.color
+          );
+          debugger;
+          this.dataSourceBussnessLine =
+            this.dataDashBoard.countsBussinessLines?.map((x) => {
+              let data = {
+                color: x.color,
+                businessLineName: x.businessLineName,
+                quantity: x.quantity,
+                percentage: x.percentage,
+              };
+              return data;
+            });
+          //chart
+        }
 
+        this.maxOwners = this.dataDashBoard.countsOwners ?? [];
+        this.minOwners = JSON.parse(JSON.stringify(this.maxOwners));
+        this.minOwners.sort((a, b) => {
+          return a.quantity - b.quantity;
+        });
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);
@@ -159,5 +218,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.checkBtnMaxRadio = true;
         break;
     }
+    this.detectorRef.detectChanges();
   }
 }

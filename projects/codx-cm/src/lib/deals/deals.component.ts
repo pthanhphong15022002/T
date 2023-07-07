@@ -394,43 +394,36 @@ export class DealsComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if (
-        (data.closed && data.status != '1') ||
-        data.status == '1' ||
-        this.checkMoreReason(data)
-      ) {
+      if (  (data.closed && data.status != '1') || ['1','0'].includes(data.status) ||   this.checkMoreReason(data) ) {
         eventItem.disabled = true;
       }
     };
     var isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
+      if (data.closed || this.checkMoreReason(data) || data.status == '0' ) {
         eventItem.disabled = true;
       }
-     // eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
+      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
     };
     var isEdit = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
+      if (data.closed || this.checkMoreReason(data)|| data.status == '0') {
         eventItem.disabled = true;
       }
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = data.closed || data.status == '0'
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || ['1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = !data.closed || data.status == '0'
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['1'].includes(data.status);
+      eventItem.disabled = !['1'].includes(data.status) || data.closed ;
     };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1', '2'].includes(data.status);
+      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed ;
     };
     var isConfirmOrRefuse = (eventItem, data) => {
       eventItem.disabled = data.status != '0';
@@ -712,7 +705,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: data?.nextStep,
+            nextStep: this.stepIdClick !== data?.stepID ? this.stepIdClick:  data?.nextStep,
           };
           var obj = {
             stepName: data?.currentStepName,
