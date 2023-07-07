@@ -43,6 +43,7 @@ export class EmployeeListByOrgComponent {
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colContact') colContact: TemplateRef<any>;
   @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
+  @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
   service = 'HR';
   entityName = 'HR_Employees';
@@ -126,7 +127,7 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colEmployeeHeader,
             template: this.colEmployee,
-            width: '250',
+            width: '200',
           },
           {
             headerTemplate: this.colContactHeader,
@@ -136,6 +137,11 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colPersonalHeader,
             template: this.colPersonal,
+            width: '150',
+          },
+          {
+            headerTemplate: this.colStatusHeader,
+            template: this.colStatus,
             width: '150',
           },
         ];
@@ -245,9 +251,14 @@ export class EmployeeListByOrgComponent {
             );
             popup.closed.subscribe((e) => {
               if (e.event) {
-                (this.view.dataService as CRUDService).add(e.event).subscribe();
-                //this.grid.addRow(e.event, 0, true);
-                //this.grid.refresh();
+                if (e.event.orgUnitID === this.orgUnitID) {
+                  if (this.showManager)
+                    this.getManager(this.orgUnitID);
+                  this.grid.addRow(e.event, 0, true);
+                  //this.grid.refresh();
+                } else {
+                  (this.view.dataService as CRUDService).add(e.event).subscribe();
+                }
                 this.dataChange.emit({ data: e.event, actionType: 'copy', hasDataChanged: true });
               }
             });
@@ -282,9 +293,8 @@ export class EmployeeListByOrgComponent {
         );
         dialog.closed.subscribe((e) => {
           if (e.event) {
-            (this.view.dataService as CRUDService).update(e.event).subscribe();
             if (e.event?.employeeID === this.manager?.employeeID) {
-              if (e.event?.positionID === this.manager?.positionID 
+              if (e.event?.positionID === this.manager?.positionID
                 || e.event?.orgUnitID === this.manager?.orgUnitID) {
                 this.getManager(this.orgUnitID);
               } else {
@@ -293,8 +303,14 @@ export class EmployeeListByOrgComponent {
                 this.manager.mobile = e.event?.mobile;
               }
             }
-            //this.grid.updateRow(index, e.event, false);
-            this.grid.refresh();
+            if (e.event.orgUnitID === this.orgUnitID) {
+              if (this.showManager)
+                this.getManager(this.orgUnitID);
+              //this.grid.updateRow(index,e.event, true);
+              this.grid.refresh();
+            } else {
+              (this.view.dataService as CRUDService).add(e.event).subscribe();
+            }
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
         });
