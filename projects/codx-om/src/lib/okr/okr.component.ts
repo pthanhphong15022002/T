@@ -21,6 +21,7 @@ import {
   NotificationsService,
   AuthService,
   SidebarModel,
+  PageTitleService,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { ActivatedRoute } from '@angular/router';
@@ -128,7 +129,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   sharedPlanName='';
   adminRole = false;
   constructor(
-    inject: Injector,
+    inject: Injector,    
+    private pageTitle: PageTitleService,
     private activatedRoute: ActivatedRoute,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
@@ -149,6 +151,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
 
   onInit(): void {
+    this.pageTitle.setBreadcrumbs([]);
     if (this.curUser.employee == null) {
       this.codxOmService.getUser([this.curUser?.userID]).subscribe((user) => {
         if (user) {

@@ -63,6 +63,8 @@ export class PopupAddKRComponent extends UIComponent {
   dialogCheckIn: DialogRef;
   okrPlan: any;
   onSaving = false;
+  editMFunc=OMCONST.MFUNCID.Edit;
+  havedCheckIns=false;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -357,6 +359,7 @@ export class PopupAddKRComponent extends UIComponent {
       this.kr?.plan == OMCONST.VLL.Plan.Month
         ? this.monthVLL?.datas
         : this.quarterVLL?.datas;
+    this.havedCheckIns = this.kr?.checkIns?.length>0 ? true : false;
     
   }
   afterOpenCopyForm(krModel: any) {
@@ -388,10 +391,10 @@ export class PopupAddKRComponent extends UIComponent {
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
   openPopupFrequence(template: any) {
-    // if (this.kr?.frequence == null) {
-    //   this.notificationsService.notify('Tần suất cập nhật cần có giá trị', '2');
-    //   return;
-    // }
+    if (this.havedCheckIns) {
+      //Đã có checkin thì ko cho thay đổi
+      return;
+    }
 
     this.dialogCheckIn = this.callfc.openForm(template, '', 450, 300, null);
     this.detectorRef.detectChanges();
