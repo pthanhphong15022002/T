@@ -56,6 +56,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   maxOwners = [];
   minOwners = [];
 
+  primaryXAxis = {
+    interval: 1,
+  };
+  primaryYAxis = {
+    title: 'Tỷ lệ thành công',
+  };
+  chartData = [];
+
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
