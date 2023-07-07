@@ -64,7 +64,7 @@
     </div> -->
 
     <!--Content Statistical-->
-    <div class="d-flex align-items-start justify-content-between " >
+    <div class="d-flex align-items-start justify-content-between " [ngClass]="isHiddenChart ? 'd-none' : 'd-flex'">
       <div class="col-4 px-3 py-3 h-100 om-statistical">
         <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
           <codx-label class="fs-3 fw-bold" name="lblTotal" default="Tổng hợp"></codx-label>

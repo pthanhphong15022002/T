@@ -8,7 +8,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService } from 'codx-core';
+import { ApiHttpService, CacheService, Util } from 'codx-core';
 import { DP_Processes } from '../../models/models';
 import { firstValueFrom } from 'rxjs';
 import { AnimationModel, ChartAnnotationSettingsModel } from '@syncfusion/ej2-angular-charts';
@@ -46,6 +46,18 @@ export class InstanceDashboardComponent implements OnInit {
   @ViewChildren('templateDetail') templates: QueryList<any>;
   @Input() vllStatus: any;
   @Input() processID = '';
+
+  countStep;
+  countInstances;
+  countOwners;
+  countFails;
+  countSuscess;
+
+  CountInsSteps: any;
+  sumStep = 0;
+  colorReasonFails;
+  colorReasonSuscess;
+
   isEditMode = false;
   datas: any;
   panels: any;
@@ -53,25 +65,28 @@ export class InstanceDashboardComponent implements OnInit {
   dataDashBoard: any;
   isLoaded: boolean = false;
   arrVllStatus = [];
+  content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`;
   public annotations: ChartAnnotationSettingsModel[] = [
     {    
-      content:"<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>10</div>",
+      content: this.content,
       region: 'Series',
       x: '51%',
       y: '50%',
     },
   ];
   public data: Object[] = [
-    { x: 'Internet Explorer', y: 6.12, text: '6.12%' },
-    { x: 'Chrome', y: 57.28, text: '57.28%' },
-    { x: 'Safari', y: 4.73, text: '4.73%' },
-    { x: 'QQ', y: 5.96, text: '5.96%' },
-    { x: 'UC Browser', y: 4.37, text: '4.37%' },
-    { x: 'Edge', y: 7.48, text: '7.48%' },
-    { x: 'Others', y: 14.06, text: '14.06%' },
-    { x: 'Others1', y: 14.06, text: '14.06%' },
-    { x: 'Others2', y: 14.06, text: '14.06%' },
+    { name: 'Giai đoạn 1', count:20, text: '35%' },
+    { name: 'Giai đoạn 2', count:15, text: '35%' },
+    { name: 'Giai đoạn 3', count:5, text: '35%' },
+    { name: 'Giai đoạn 4', count:16, text: '35%' },
+    { name: 'Giai đoạn 5', count:20, text: '35%' },
+    { name: 'Giai đoạn 6', count:35, text: '35%' },
   ];
+  public tooltip: Object = {
+    enable: true,
+    format: '<b>${point.x}</b><br>Tỷ lệ: <b>${point.text}%</b><br>Số lượng: <b>${point.y}</b>',
+    header: '',
+  };
   //Initializing Legend
   public innerRadius: string = '85%';
   public radius: string = '100%';
@@ -85,20 +100,9 @@ export class InstanceDashboardComponent implements OnInit {
       color: '#ffffff',
     },
   };
-  public tooltip: Object = {
-    enable: true,
-    format: '<b>${point.x}</b><br>Browser Share: <b>${point.y}%</b>',
-    header: '',
-  };
+
   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
   paletteColor = ['rgb(2 71 253)', 'rgb(2 71 253 / 85%)','rgb(2 71 253 / 70%)','rgb(2 71 253 / 50%)','rgb(2 71 253 / 30%)'];
-  tasksByCategory = [
-    {category: '1', quantity: 100},
-    {category: '2', quantity: 85},
-    {category: '3', quantity: 70},
-    {category: '4', quantity: 50},
-    {category: '5', quantity: 30}
-  ]
   
   //thóng kê
   public chartArea: Object = {
@@ -117,10 +121,10 @@ export class InstanceDashboardComponent implements OnInit {
   };
   //Initializing Primary Y Axis
   public primaryYAxis: Object = {
-      title: 'Frequency of Occurence',
+      title: '',
       minimum: 0,
-      maximum: 25,
-      interval: 5,
+      maximum: 100,
+      interval: 10,
       lineStyle: { width: 0 },
       majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
       minorGridLines: { width: 1 }, minorTickLines: { width: 0 }
@@ -157,6 +161,16 @@ public  cornerRadius: Object = {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.setting();
+    this.cache.valueList('DP036').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.colorReasonSuscess = vll?.datas.filter(
+          (x) => x.value == 'S'
+        )[0]?.color;
+        this.colorReasonFails = vll?.datas.filter(
+          (x) => x.value == 'F'
+        )[0]?.color;
+      }
+    });
   }
   ngOnInit(): void {
     this.cache.valueList(this.vllStatus).subscribe((res) => {
@@ -197,6 +211,20 @@ public  cornerRadius: Object = {
     );
     if (data) {
       this.dataDashBoard = data;
+
+      this.countStep = this.dataDashBoard?.countStep;
+      this.countOwners = this.dataDashBoard?.countsOwners;
+      this.countFails = this.dataDashBoard?.countsReasonsFails;
+      this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
+      this.countInstances = this.dataDashBoard?.countsInstance;
+
+      let counts = this.dataDashBoard?.counts;
+      for (var prop in counts) {
+        if (counts.hasOwnProperty(prop)) {
+          this.sumStep += counts[prop];
+        }
+      }
+      this.content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`
       console.log(this.dataDashBoard);
       this.isLoaded = true;
       this.changeDetectorRef.detectChanges();
@@ -206,5 +234,9 @@ public  cornerRadius: Object = {
     //   .subscribe((res) => {
 
     //   });
+  }
+  setID(){
+    let id = Util.uid();
+    return id;
   }
 }

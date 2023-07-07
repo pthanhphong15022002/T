@@ -16,7 +16,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
       [title]="getNameStatus('1')"
-      [value]="dataDashBoard?.counts?.countNew"
+      [value]="countInstances?.countNew"
     ></count-chart>
   </div>
 </ng-template>
@@ -28,7 +28,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
       [title]="getNameStatus('2')"
-      [value]="dataDashBoard?.counts?.countProcessing ?? 0"
+      [value]="countInstances?.countProcessing ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -40,7 +40,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
       [title]="getNameStatus('3')"
-      [value]="dataDashBoard?.counts?.countSuccess ?? 0"
+      [value]="countInstances?.countSuccess ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -52,18 +52,19 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
       [title]="getNameStatus('5')"
-      [value]="dataDashBoard?.counts?.countFail ?? 0"
+      [value]="countInstances?.countFail ?? 0"
     ></count-chart>
   </div>
 </ng-template>
-<!-- Cơ hội theo giai đoan -->
 
-<!-- Top nhân viên -->
+<!-- Cơ hội theo giai đoan -->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="5" title="Count chart -Top nhân viên">
-    <div class="group-btn">
-      <span class="quantity btn-left py-1">Số lượng</span>
-      <span class="ratio btn-right py-1">Tỷ lệ</span>
+  <div class="w-100 h-100" id="5" title="Count chart -Cơ hội theo giai đoan">
+    <div class="w-100 d-flex justify-content-center">
+      <div class="group-btn">
+        <span class="quantity btn-left py-1">Số lượng</span>
+        <span class="ratio btn-right py-1">Tỷ lệ</span>
+      </div>
     </div>
     <div class="w-100 h-100">
       <ejs-accumulationchart
@@ -74,10 +75,10 @@
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
-            [dataSource]="data"
-            xName="y"
+            [dataSource]="countStep"
+            xName="name"
             [startAngle]="startAngle"
-            yName="y"
+            yName="count"
             [radius]="radius"
             [innerRadius]="innerRadius"
             [dataLabel]="dataLabel"
@@ -88,34 +89,29 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Top nhân viên -->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="6" title="Count chart -Top nhân viên">
-    <div class="group-btn">
-      <span class="quantity btn-left py-1">Thấp nhất</span>
-      <span class="ratio btn-right py-1">Cao nhất</span>
+    <div class="w-100 d-flex justify-content-center mb-4">
+      <div class="group-btn">
+        <span class="quantity btn-left py-1">Số lượng</span>
+        <span class="ratio btn-right py-1">Tỷ lệ</span>
+      </div>
     </div>
     <div class="assignchart-group w-100 " style="height: 30px;">
       <div
-        *ngFor="let tasks of tasksByCategory; let i = index"
+        *ngFor="let owner of countOwners; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end h-100"
       >
-        <div class="fw-bold me-2">{{ tasks.quantity }}</div>
+        <div class="fw-bold me-2">{{ owner.quantity }}</div>
         <div
-          class="assignchart-task h-100"
+          class="assignchart-task h-100 d-flex align-item-center justify-content-end"
           style="color: #000000; border-radius: 5px 0 0 5px;"
           [style.background-color]="paletteColor[i]"
-          [style.width]="
-            (tasks.quantity / tasksByCategory[0].quantity) * 100 + '%'
-          "
+          [style.width]="(owner.quantity / countOwners[0].quantity) * 100 + '%'"
         >
-          <codx-vll
-            [name]="'L1456'"
-            [value]="tasks.category"
-            [showText]="true"
-            [showBgColor]="false"
-            style="width: '25px'; height: '25px'"
-          >
-          </codx-vll>
+         <span class="d-flex align-item-center">{{owner?.objectName}}</span>
         </div>
       </div>
     </div>
@@ -124,7 +120,7 @@
 <!-- năng suất-->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="7" title="Count chart - năng suất">
-    <div class="w-100 h-100" id="9" title="Count chart - Thất bại">
+    <div class="w-100 h-100">
       <div>
         <span>khách hàng thích sản phẩm công ty cung cấp</span>
       </div>
@@ -148,45 +144,63 @@
 <!--Thành công-->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="8" title="Count chart - Thành công">
-    <div>
-      <span>khách hàng thích sản phẩm công ty cung cấp</span>
+    <div *ngFor="let suscess of countSuscess">
+      <div class="mx-2 my-5">
+        <div class="d-flex justify-content-between">
+          <div>
+            <span>{{ suscess?.reasonName }}</span>
+            <span>&nbsp;(</span>
+            <span>{{ suscess.quantity }}</span>
+            <span>)</span>
+          </div>
+          <div>
+            <span>{{ suscess?.percentage }}</span
+            ><span>% </span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center min-w-200px">
+          <div class="h-5px w-100 bg-gray-200 rounded-4">
+            <div
+              class="rounded-4 h-5px"
+              role="progressbar"
+              [ngStyle]="{ backgroundColor: colorReasonSuscess }"
+              [style.width]="suscess.percentage + '%'"
+            ></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <ejs-progressbar
-      #linear1
-      id="linear1"
-      type="Linear"
-      [maximum]="100"
-      [minimum]="0"
-      [value]="90"
-      width="100%"
-      [trackThickness]="12"
-      [progressThickness]="12"
-      height="5"
-      [animation]="animation"
-    >
-    </ejs-progressbar>
   </div>
 </ng-template>
 <!--Thất bại-->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="9" title="Count chart - Thất bại">
-    <div>
-      <span>khách hàng thích sản phẩm công ty cung cấp</span>
+    <div *ngFor="let fails of countFails">
+      <div class="mx-2 my-5">
+        <div class="d-flex justify-content-between">
+          <div>
+            <span>{{ fails?.reasonName }}</span>
+            <span>&nbsp;(</span>
+            <span>{{ fails.quantity }}</span>
+            <span>)</span>
+          </div>
+          <div>
+            <span>{{ fails?.percentage }}</span
+            ><span>% </span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center min-w-200px">
+          <div class="h-5px w-100 bg-gray-200 rounded-4">
+            <div
+              class="rounded-4 h-5px"
+              role="progressbar"
+              [ngStyle]="{ backgroundColor: colorReasonFails }"
+              [style.width]="fails.percentage + '%'"
+            ></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <ejs-progressbar
-      #linear1
-      id="linear"
-      type="Linear"
-      [maximum]="100"
-      [minimum]="0"
-      [value]="90"
-      width="100%"
-      [trackThickness]="12"
-      [progressThickness]="12"
-      height="5"
-      [animation]="animation"
-    >
-    </ejs-progressbar>
   </div>
 </ng-template>
 
@@ -206,12 +220,12 @@
         <e-series
           [dataSource]="data"
           type="Pareto"
-          xName="x"
-          yName="y"
+          xName="name"
+          yName="count"
           name="Defect"
           opacity="0.75"
           [cornerRadius]="cornerRadius"
-          columnWidth="0.4"
+          columnWidth="0.2"
           [paretoOptions]="paretoOptions"
           width="2"
         >
