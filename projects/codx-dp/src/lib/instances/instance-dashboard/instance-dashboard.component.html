@@ -61,9 +61,11 @@
 <!-- Top nhân viên -->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="5" title="Count chart -Top nhân viên">
-    <div class="group-btn">
-      <span class="quantity btn-left py-1">Số lượng</span>
-      <span class="ratio btn-right py-1">Tỷ lệ</span>
+    <div class="w-100 d-flex justify-content-center">
+      <div class="group-btn">
+        <span class="quantity btn-left py-1">Số lượng</span>
+        <span class="ratio btn-right py-1">Tỷ lệ</span>
+      </div>
     </div>
     <div class="w-100 h-100">
       <ejs-accumulationchart
@@ -74,10 +76,10 @@
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
-            [dataSource]="data"
-            xName="y"
+            [dataSource]="dataDashBoard?.countStep"
+            xName="name"
             [startAngle]="startAngle"
-            yName="y"
+            yName="count"
             [radius]="radius"
             [innerRadius]="innerRadius"
             [dataLabel]="dataLabel"
@@ -206,12 +208,12 @@
         <e-series
           [dataSource]="data"
           type="Pareto"
-          xName="x"
-          yName="y"
+          xName="name"
+          yName="count"
           name="Defect"
           opacity="0.75"
           [cornerRadius]="cornerRadius"
-          columnWidth="0.4"
+          columnWidth="0.2"
           [paretoOptions]="paretoOptions"
           width="2"
         >
