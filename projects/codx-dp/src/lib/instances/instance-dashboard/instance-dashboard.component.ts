@@ -8,7 +8,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService } from 'codx-core';
+import { ApiHttpService, CacheService, Util } from 'codx-core';
 import { DP_Processes } from '../../models/models';
 import { firstValueFrom } from 'rxjs';
 import { AnimationModel, ChartAnnotationSettingsModel } from '@syncfusion/ej2-angular-charts';
@@ -47,8 +47,16 @@ export class InstanceDashboardComponent implements OnInit {
   @Input() vllStatus: any;
   @Input() processID = '';
 
+  countStep;
+  countInstances;
+  countOwners;
+  countFails;
+  countSuscess;
+
   CountInsSteps: any;
   sumStep = 0;
+  colorReasonFails;
+  colorReasonSuscess;
 
   isEditMode = false;
   datas: any;
@@ -95,13 +103,6 @@ export class InstanceDashboardComponent implements OnInit {
 
   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
   paletteColor = ['rgb(2 71 253)', 'rgb(2 71 253 / 85%)','rgb(2 71 253 / 70%)','rgb(2 71 253 / 50%)','rgb(2 71 253 / 30%)'];
-  tasksByCategory = [
-    {category: '1', quantity: 100},
-    {category: '2', quantity: 85},
-    {category: '3', quantity: 70},
-    {category: '4', quantity: 50},
-    {category: '5', quantity: 30}
-  ]
   
   //thóng kê
   public chartArea: Object = {
@@ -160,6 +161,16 @@ public  cornerRadius: Object = {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.setting();
+    this.cache.valueList('DP036').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.colorReasonSuscess = vll?.datas.filter(
+          (x) => x.value == 'S'
+        )[0]?.color;
+        this.colorReasonFails = vll?.datas.filter(
+          (x) => x.value == 'F'
+        )[0]?.color;
+      }
+    });
   }
   ngOnInit(): void {
     this.cache.valueList(this.vllStatus).subscribe((res) => {
@@ -200,6 +211,13 @@ public  cornerRadius: Object = {
     );
     if (data) {
       this.dataDashBoard = data;
+
+      this.countStep = this.dataDashBoard?.countStep;
+      this.countOwners = this.dataDashBoard?.countsOwners;
+      this.countFails = this.dataDashBoard?.countsReasonsFails;
+      this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
+      this.countInstances = this.dataDashBoard?.countsInstance;
+
       let counts = this.dataDashBoard?.counts;
       for (var prop in counts) {
         if (counts.hasOwnProperty(prop)) {
@@ -216,5 +234,9 @@ public  cornerRadius: Object = {
     //   .subscribe((res) => {
 
     //   });
+  }
+  setID(){
+    let id = Util.uid();
+    return id;
   }
 }
