@@ -280,14 +280,7 @@
         [customerID]="dataSelected?.customerID"
         [objectType]="'4'"
         [type]="'formDetail'"
-        [hidenMF]="
-          !dataSelected?.roles?.isOnwer ||
-          checkMoreReason ||
-          dataSelected?.closed ||
-          dataSelected?.status == '1'
-            ? true
-            : false
-        "
+        [hidenMF]="!dataSelected?.roles?.isOnwer || dataSelected?.closed ||['1','0','3','5'].includes(dataSelected.status)"
         (contactEvent)="contactChange($event)"
       ></codx-list-contacts>
     </div>
@@ -314,16 +307,11 @@
     <codx-tab-dealcompetitors
       [dealID]="dataSelected.recID"
       [hidenMF]="
-        !dataSelected?.roles?.isOnwer ||
-        checkMoreReason ||
-        dataSelected.closed ||
-        dataSelected?.status == '1'
-          ? true
-          : false
+        !dataSelected?.roles?.isOnwer || dataSelected.closed || ['1','0','3','5'].includes(dataSelected.status)
       "
     ></codx-tab-dealcompetitors>
   </ng-template>
-  <ng-template #quotation>
+  <!-- <ng-template #quotation>
     <codx-quotations-tab-view
       [typeModel]="'deals'"
       [showButton]="!dataSelected?.closed"
@@ -342,10 +330,10 @@
       [dataValues]="dataSelected?.recID"
       [type]="'deal'"
     ></list-contracts>
-  </ng-template>
+  </ng-template> -->
 
   <ng-template #history>
-    <div *ngIf="mergedList.length > 0 && mergedList != null; else noData">
+    <div *ngIf="mergedList?.length > 0 && mergedList != null; else noData">
       <div *ngFor="let item of mergedList" class="p-3" >
         <div class="d-flex justify-content-start">
           <div>
