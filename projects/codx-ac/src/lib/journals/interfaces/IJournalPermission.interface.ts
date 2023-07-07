@@ -4,14 +4,14 @@ export interface IJournalPermission {
     roleType: string;
     objectType: string;
     objectID: string;
-    add: string;
+    add: boolean | string;
     read: string;
     edit: string;
     delete: string;
     assign: string;
     share: string;
     approval: string;
-    post: string;
+    post: boolean | string;
     unPost: string;
     startDate: string | null;
     endDate: string | null;
@@ -21,4 +21,6 @@ export interface IJournalPermission {
     createdBy: string;
     modifiedOn: string | null;
     modifiedBy: string;
+
+    objectName?: string;
 }

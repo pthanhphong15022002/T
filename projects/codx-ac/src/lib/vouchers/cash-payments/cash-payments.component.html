@@ -2,18 +2,18 @@
   (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" [autoLoad]="true"
   (selectedChange)="changeItemDetail($event)" [isSubView]="true">
 </codx-views>
+<!-- templateMore -->
 <ng-template #templateMore let-data>
   <codx-mfunc [dataItem]="data" (changeDataMF)="changeMF($event,data)" [formModel]="view.formModel"
-  (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
+    (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
+<!-- templateMore -->
+
+<!-- template listdetail -->
 <ng-template #itemTemplate let-data>
-  <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
-    [icoCss]="'w-35px symbol h-35px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + (data?.subType | vll : 'AC100' : 'text' | async)"
-    [icoStyle]="setStyles((data?.subType | vll : 'AC100' : 'color' | async))" cardCss="card-template border-bottom p-3"
-    [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2" [dataItem]="data" [status]="data?.status"
-    [date]="data?.voucherDate" [icoDateCss]="'icon-i-calendar2'"
-    [resources]="data?.createdBy != undefined ? data?.createdBy : ''" [resourceObjType]="'AD_Users'"
-    [statusVll]="'AC040'" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
+  <codx-temp-full [titleTmp]="titleTmp" [icoStyle]="setStyles((data?.subType | vll : 'AC100' : 'color' | async))"
+    cardCss="card-template border-bottom p-3" [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2"
+    [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)" (clickMF)="clickMF($event, data)">
   </codx-temp-full>
 </ng-template>
@@ -27,51 +27,85 @@
 </ng-template>
 <ng-template #titleTmp let-data>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center">
-      <!-- <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
-      <i class="text-white icon-16" [class]="data?.subType | vll : 'AC100' : 'text' | async"></i>
-    </div> -->
-      <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
-        data?.voucherNo
-        }}</span>
-    </div>
-    <div>
-      <span *ngIf="journal.multiCurrency == '0' && data?.totalDR != 0"
-        class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="data?.totalDR
-              | formatvalue : view.formModel : 'totalDR' : totalDR
+    <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
+      <div id="tipsub" [style]="'background-color:' + (data?.subType | vll : 'AC100' : 'color' | async)"
+        class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+        <i style="font-size: 16px !important;" class="text-white"
+          [class]="data?.subType | vll : 'AC100' : 'text' | async"></i>
+      </div>
+      <ng-template #content>
+        <span>{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+      </ng-template>
+    </ejs-tooltip>
+    <div class="d-flex flex-column text-content flex-grow-1">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
+            data?.voucherNo
+            }}</span>
+        </div>
+        <div>
+          <span *ngIf="journal.multiCurrency == '0' && data?.totalDR != 0"
+            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="data?.totalDR
+                  | formatvalue : view.formModel : 'totalDR' : totalDR
+                  | async
+              "></span>
+          <span *ngIf="journal.multiCurrency == '1' && data?.totalDR != 0"
+            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="(data?.totalDR
+                  | formatvalue : view.formModel : 'totalDR' : totalDR
+                  | async)+ ' ' +data?.currencyID"></span>
+          <span *ngIf="(journal.multiCurrency == '0') && data?.totalDR == 0"
+            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">0</span>
+          <span *ngIf="(journal.multiCurrency == '1') && data?.totalDR == 0"
+            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' + data?.currencyID}}</span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+          <ejs-tooltip position="BottomCenter" id='tooltip' target="#tipmemo">
+            <span id="tipmemo" class="line-clamp line-clamp-2" #memo [innerHTML]="
+            data?.memo
+              | formatvalue : view.formModel : 'memo' : memo
               | async
           "></span>
-      <span *ngIf="journal.multiCurrency == '1' && data?.totalDR != 0"
-        class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="(data?.totalDR
-              | formatvalue : view.formModel : 'totalDR' : totalDR
-              | async)+ ' ' +data?.currencyID"></span>
-      <span *ngIf="(journal.multiCurrency == '0') && data?.totalDR == 0"
-        class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">0</span>
-      <span *ngIf="(journal.multiCurrency == '1') && data?.totalDR == 0"
-        class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' + data?.currencyID}}</span>
-      <!-- <span *ngIf="journal.multiCurrency == '1'"
-        class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalDR.toLocaleString('it-IT') +'
-        '}}</span> -->
+            <ng-template #content>
+              <span>{{data?.memo}}</span>
+            </ng-template>
+          </ejs-tooltip>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+          <span class="text-gray-600 line-clamp line-clamp-1" #objectName [innerHTML]="
+            data?.objectName
+              | formatvalue : view.formModel : 'objectName' : objectName
+              | async
+          "></span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-1">
+        <div class="d-flex align-items-end codx-badge">
+          <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
+            [showBgColor]="true" class="badge badge-light badge-sm border-0 me-2">
+          </codx-vll>
+          <div class="d-flex align-items-center">
+            <img style="width: 18px;height: 18px;margin-top: -1px;" src="../assets/themes/ac/default/img/calendar.svg"
+              class=" me-2" />
+            <span #voucherDate [innerHTML]="
+      data?.voucherDate
+            | formatvalue : view.formModel : 'voucherDate' : voucherDate
+            | async
+        " class="text-gray-600"></span>
+          </div>
+        </div>
+        <div class="d-flex">
+          <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
+            [objectType]="'AD_Users'" [width]="25" [numberImages]="1">
+          </codx-imgs>
+        </div>
+      </div>
     </div>
   </ng-container>
-</ng-template>
-<ng-template #descTmp let-data>
-  <ejs-tooltip id='tooltip' target="#tipmemo">
-    <span id="tipmemo" class="line-clamp line-clamp-2 mt-1">{{ data?.memo }}</span>
-    <ng-template #content>
-      <span>{{data?.memo}}</span>
-    </ng-template>
-  </ejs-tooltip>
-
-  <!-- <ng-template #memo>
-    <span class="text-gray-600">{{data?.memo}}</span>
-  </ng-template> -->
-</ng-template>
-<ng-template #desc2Tmp let-data>
-  <div *ngIf="data?.objectName" class="d-flex align-items-center mb-1">
-    <!-- <img src="../assets/themes/ac/default/img/company.svg" class="w-15px h-15px me-2" /> -->
-    <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1 mt-1">{{data?.objectName}}</span>
-  </div>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
@@ -90,7 +124,7 @@
         {{ itemSelected?.voucherNo }}
       </span>
       <div class="d-flex align-items-center me-3">
-        <span class="icon-i-calendar2 icon-16 me-1"></span>
+        <img style="width: 18px;height: 18px;" class="me-2" src="../assets/themes/ac/default/img/calendar.svg">
         <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="view.formModel">
         </codx-label>
         <span #voucherDate [innerHTML]="
@@ -144,8 +178,8 @@
           " class="text-gray-600"></span>
       </div>
       <div class="d-flex align-self-center">
-        <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
-          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+        <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
+          [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
       </div>
     </div>
@@ -291,7 +325,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="!isLoadDataAcct">
           <ng-container *ngFor="let item of acctTrans">
             <tr *ngIf="!item.crediting">
               <td class="">
@@ -538,9 +572,9 @@
           </ng-container>
         </tbody>
       </table>
-      <div *ngIf="acctTrans.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100 mt-9">
-          <div style="margin-top: 70px !important;" class="d-flex flex-column flex-center justify-content-center">
+      <div *ngIf="acctTrans.length == 0 && !isLoadDataAcct" class="ac-empty">
+        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-150px" />
             <div class="fs-6 text-dark mt-2 text-center">
               {{ "SYS011" | mssg | async }}
@@ -548,6 +582,26 @@
           </div>
         </div>
       </div>
+      <div *ngIf="isLoadDataAcct" style="background-color: white;" class="ac-empty">
+        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <ejs-progressbar #pgbAcctranst id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
+              [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
+              <e-progressbar-annotations>
+                <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+              </e-progressbar-annotations>
+            </ejs-progressbar>
+          </div>
+        </div>
+      </div>
+      <!-- <div *ngIf="isLoadDataAcct" class="ac-load">
+        <ejs-progressbar #pgbAcctranst id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
+          [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
+          <e-progressbar-annotations>
+            <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+          </e-progressbar-annotations>
+        </ejs-progressbar>
+      </div> -->
     </div>
     <table style="table-layout: fixed;border: 1px solid var(--bs-border-color) !important;" class="table mb-0">
       <tfoot class="bg-light" style="position: sticky;
@@ -555,14 +609,16 @@
         <td class="w-40 bg-gray-100"></td>
         <td class="w-15 bg-gray-100">
           <div class="d-flex align-items-center">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalacct
+            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt
+              [innerHTML]="totalacct
                     | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
             <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
         <td class="w-15 bg-gray-100">
           <div class="d-flex align-items-center">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaloff
+            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt
+              [innerHTML]="totaloff
                     | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
             <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
@@ -681,9 +737,9 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="settledInvoices.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100 mt-9">
-          <div style="margin-top: 70px !important;" class="d-flex flex-column flex-center justify-content-center">
+      <div *ngIf="settledInvoices.length == 0" class="ac-empty">
+        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-150px" />
             <div class="fs-6 text-dark mt-2 text-center">
               {{ "SYS011" | mssg | async }}
@@ -864,9 +920,9 @@
         </tr> -->
       </tbody>
     </table>
-    <div *ngIf="settledInvoices.length == 0" class="container w-90 h-90">
-      <div class="list-empty card card-flush h-100 mt-9">
-        <div style="margin-top: 70px !important;" class="d-flex flex-column flex-center justify-content-center">
+    <div *ngIf="settledInvoices.length == 0" class="ac-empty">
+      <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
           <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-150px" />
           <div class="fs-6 text-dark mt-2 text-center">
             {{ "SYS011" | mssg | async }}
@@ -902,7 +958,9 @@
     </tfoot>
   </table>
 </ng-template>
+<!-- template listdetail -->
 
+<!-- template list -->
 <ng-template #listTemplate let-data>
   <codx-temp-full [descTmp]="listdescTmp" [desc2Tmp]="listdesc2Tmp" [titleTmp]="listtitleTmp"
     [icoCss]="'w-35px symbol h-35px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + (data?.subType | vll : 'AC100' : 'text' | async)"
@@ -1026,3 +1084,4 @@
     </div>
   </div>
 </ng-template>
+<!-- template list -->
