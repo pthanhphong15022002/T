@@ -93,11 +93,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.views = [
       {
-        type: ViewType.content,
+        type: ViewType.chart,
         active: true,
         sameData: false,
         reportType: 'D',
-        reportView: true,
+        // reportView: true,
         showFilter: true,
         model: {
           panelRightRef: this.template,

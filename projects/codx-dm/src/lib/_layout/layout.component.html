@@ -8,6 +8,9 @@
         [asideMenuHeader]="header"
         [asideMenuFooter]="footer"
         [hasSecond]="true"
+        [hasCountFavorite]="true"
+        (countFavorite)="onCountFavarite($event)"
+        (favoriteClick)="onClickFavarite($event)"
       >
       </codx-aside>
       <ng-template #header>
