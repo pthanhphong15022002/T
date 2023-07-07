@@ -114,23 +114,63 @@
     id="6"
     title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
   >
-    <ng-container *ngIf="true; else noData">
-      <ejs-chart
-        id="chart-container"
-        [primaryXAxis]="primaryXAxis"
-        [primaryYAxis]="primaryYAxis"
-        [title]=""
-      >
-        <e-series-collection>
-          <e-series
-            [dataSource]="chartData"
-            type="Line"
-            xName="x"
-            yName="y"
-          ></e-series>
-        </e-series-collection>
-      </ejs-chart>
-    </ng-container>
+    <div class="row mt-5">
+      <div class="col-10">
+        <ng-container *ngIf="false; else noData">
+          <ejs-chart
+            id="chart-container"
+            [primaryXAxis]="primaryXAxis"
+            [primaryYAxis]="primaryYAxis"
+            [title]="'Tỉ lệ'"
+          >
+            <e-series-collection>
+              <e-series
+                [dataSource]="chartData"
+                type="Line"
+                xName="month"
+                yName="sales"
+                fill="blue"
+              ></e-series>
+              <e-series
+                [dataSource]="chartData2"
+                type="Line"
+                xName="month"
+                yName="sales"
+                fill="orange"
+              ></e-series>
+            </e-series-collection>
+          </ejs-chart>
+        </ng-container>
+      </div>
+      <div class="col-2">
+        <div>
+          <codx-label
+            class="fs-5"
+            name="lblChartDescription"
+            default="Chú thích"
+          ></codx-label>
+        </div>
+        <div
+          *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
+          class="d-flex flex-column"
+        >
+          <ng-container
+            *ngFor="let item of dataDashBoard?.countsBussinessLines"
+          >
+            <div class="d-flex align-item-center">
+              <span>
+                <hr width="20px" [style.color]="item?.color" size="5px" />
+              </span>
+              <span
+                class="ms-3 line-clamp-note cursor-pointer"
+                [ngbTooltip]="item.businessLineName"
+                >{{ item?.businessLineName }}</span
+              >
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
