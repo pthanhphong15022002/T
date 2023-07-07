@@ -280,8 +280,6 @@
     </div>
   </ng-template>
 
-
-
   <div class="d-flex flex-column w-100">
     <div class="my-1">
       <span
@@ -318,8 +316,6 @@
           class="pe-1 d-flex align-items-center"
         >
           <span class="icon-monetization_on icon-16 text-warning me-1"></span>
-
-
           <span
           class="text-nowrap line-clamp line-clamp-1"
           *ngIf="data?.dealValue; else defaultNull"
@@ -395,8 +391,6 @@
             >
             </codx-vll>
         </ng-template>
-
-
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
             [name]="vllApprove"

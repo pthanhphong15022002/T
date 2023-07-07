@@ -3681,6 +3681,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           view === this.viewStepReasonSuccess
             ? this.stepSuccess
             : this.stepFail;
+      this.dataValueview = view;
       } else {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {

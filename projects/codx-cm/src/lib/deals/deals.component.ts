@@ -406,7 +406,7 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data)) {
         eventItem.disabled = true;
       }
-     // eventItem.disabled = false;
+    //  eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data)) {
@@ -419,18 +419,16 @@ export class DealsComponent
       }
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = data.closed
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || ['1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = !data.closed
     };
     var isStartDay = (eventItem, data) => {
       eventItem.disabled = !['1'].includes(data.status);
     };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1', '2'].includes(data.status);
+      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed ;
     };
     var isConfirmOrRefuse = (eventItem, data) => {
       eventItem.disabled = data.status != '0';
