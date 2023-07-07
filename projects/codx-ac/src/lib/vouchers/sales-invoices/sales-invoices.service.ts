@@ -36,7 +36,7 @@ export class SalesInvoiceService {
       });
 
     this.acService
-      .loadComboboxData('VATCodesAC', 'BS')
+      .loadComboboxData('VATCodesAC', 'AC')
       .subscribe((res) => (this.vats = res));
   }
 

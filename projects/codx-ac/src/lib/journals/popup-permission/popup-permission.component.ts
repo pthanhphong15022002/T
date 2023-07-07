@@ -1,5 +1,6 @@
 import { Component, Injector, Optional } from '@angular/core';
-import { DialogRef, UIComponent } from 'codx-core';
+import { DialogData, DialogRef, UIComponent } from 'codx-core';
+import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 
 @Component({
   selector: 'lib-popup-permission',
@@ -8,10 +9,18 @@ import { DialogRef, UIComponent } from 'codx-core';
 })
 export class PopupPermissionComponent extends UIComponent {
   //#region Constructor
-  users: any[];
+  objects: any[] = [];
+  selectedIndex: number;
+  journalPermissions: IJournalPermission[] = [];
 
-  constructor(injector: Injector, @Optional() public dialogRef: DialogRef) {
+  constructor(
+    injector: Injector,
+    @Optional() public dialogRef: DialogRef,
+    @Optional() public dialogData: DialogData
+  ) {
     super(injector);
+
+    this.journalPermissions = dialogData.data?.journalPermissions;
   }
   //#endregion
 
@@ -23,7 +32,7 @@ export class PopupPermissionComponent extends UIComponent {
   onChange(e): void {
     console.log(e);
 
-    this.users = e.data;
+    this.objects = e.data;
   }
   //#endregion
 
