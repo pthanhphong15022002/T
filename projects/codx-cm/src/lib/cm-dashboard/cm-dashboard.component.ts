@@ -46,12 +46,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     template:
       '<div><span>${businessLineName}</span><span>Total Count: ${quantity}</span></div>',
   };
+  leafItemSettings: any;
 
-  leafItemSettings = {
-    labelPath: 'businessLineName',
-    labelPosition: 'Center',
-    labelFormat: '${businessLineName}<br>${quantity}-(${percentage} %)',
-  };
   colorReasonSuscess = '';
   colorReasonFails = '';
   checkBtnMinRadio = false;
@@ -113,6 +109,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
     this.cache.functionList('CM0201').subscribe((fun) => {
       this.titLeModule = fun?.customName || fun?.description;
+      this.leafItemSettings = {
+        labelPath: 'businessLineName',
+        labelPosition: 'Center',
+        labelFormat:
+          '${businessLineName}<br>${quantity} ' +
+          this.titLeModule +
+          '-(${percentage} %)',
+      };
     });
   }
   onInit(): void {
