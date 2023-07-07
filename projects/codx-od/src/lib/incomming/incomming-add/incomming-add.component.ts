@@ -322,8 +322,8 @@ export class IncommingAddComponent implements OnInit {
           this.dispatch.agencyID = data.AgencyID;
           this.dispatch.agencyName = data.AgencyName;
           //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
-        } else if (event.component.itemsSelected[0][0].AgencyID) {
-          var data = event.component.itemsSelected[0][0];
+        } else if (event.component.itemsSelected[0].AgencyID) {
+          var data = event.component.itemsSelected[0];
           this.dispatch.agencyID = data.AgencyID;
           this.dispatch.agencyName = data.AgencyName;
           //this.dispatchForm.controls.agencyID.setValue(data.AgencyID)

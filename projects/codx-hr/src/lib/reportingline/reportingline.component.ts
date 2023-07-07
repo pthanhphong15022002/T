@@ -73,7 +73,7 @@ export class ReportinglineComponent extends UIComponent {
   getFunction(funcID: string) {
     if (funcID) {
       this.cache.functionList(funcID).subscribe((func: any) => {
-        if (func) this.funcID = func;
+        //if (func) this.funcID = func;
         if (func?.formName && func?.gridViewName) {
           this.cache
             .gridViewSetup(func.formName, func.gridViewName)

@@ -699,7 +699,7 @@ export class EmployeeDetailComponent extends UIComponent {
           {
             headerText: this.eJobSalaryHeaderText['EffectedDate'],
             template: this.jobSalaryCol2,
-            width: '150',
+            width: '125',
           },
           {
             headerText:

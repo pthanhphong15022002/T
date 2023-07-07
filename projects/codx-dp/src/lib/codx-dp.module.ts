@@ -146,6 +146,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupSelectTempletComponent,
     ViewsTabsDetailsComponent,
     InstanceDashboardComponent,
+
   ],
   imports: [
     CommonModule,

@@ -7,7 +7,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="showButtonAdd ? button : null"
+  [button]="button"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
@@ -70,6 +70,25 @@
       type="hover"
       (changeDataMF)="changeDataMF($event, data)"
     ></codx-mfunc>
+  </div>
+</ng-template>
+<!--end-->
+
+<!--Schedule-->
+<ng-template #panelRight>
+  <div class="w-100 h-100 bg-white rounded-2 pt-5 d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-end">
+      <codx-dropdown-calendar
+        cssPopup="h-500px w-800px"
+        [value]="date"
+        [selectedType]="'y'"
+        [displayOption]="ops"
+        cssClass="w-100 om-calendar"
+        class="me-2"
+        (valueChange)="changeCalendar($event)"
+        (change)="changeCalendar($event)"
+      ></codx-dropdown-calendar>
+    </div>
   </div>
 </ng-template>
 <!--end-->

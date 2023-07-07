@@ -134,6 +134,16 @@
       </ng-template>
       
   </div>
+  <ng-container >
+    <div class="wp-contents-files mt-3">
+      <codx-view-files 
+        [objectID]="data?.recID" 
+        [objectType]="'FD_Cards'" 
+        [formModel]="formModel" 
+        (selectFile)="clickViewDetail($event)">
+      </codx-view-files>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #tmpContent>
   <div class="card-body text-center">

@@ -24,7 +24,6 @@ export class EmployeeListComponent extends UIComponent {
   columnsGrid = [];
   funcID: string = '';
   itemSelected: any;
-  function: any = null;
   sysMoreFunc: any[] = [];
   grvSetup: any;
   funcIDEmpInfor: string = 'HRT03b';
@@ -107,6 +106,8 @@ export class EmployeeListComponent extends UIComponent {
         sameData: false,
         model: {
           resizable: true,
+          isCustomize:true,
+          
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
           resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
@@ -147,7 +148,6 @@ export class EmployeeListComponent extends UIComponent {
   getFunction(funcID: string) {
     if (funcID) {
       this.cache.functionList(funcID).subscribe((func: any) => {
-        if (func) this.function = func;
         if (func?.formName && func?.gridViewName) {
           this.cache
             .gridViewSetup(func.formName, func.gridViewName)

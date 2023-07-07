@@ -281,7 +281,7 @@
                         [ngClass]="!line.crediting ? '' : 'ps-3'"
                       >
                         <span class="fw-bold">{{
-                          !line.creditting ? "N" : "C"
+                          !line.crediting ? "N" : "C"
                         }}</span>
                         <span class="fw-bold">{{ line.accountID }}</span>
                       </div>
@@ -347,7 +347,7 @@
                           <span
                             [innerHTML]="
                               line.projectID
-                                | formatvalue : view.formModel : 'projectID'
+                                | formatvalue : fmAcctTrans : 'projectID'
                                 | async
                             "
                           ></span>

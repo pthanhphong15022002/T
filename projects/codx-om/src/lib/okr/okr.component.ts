@@ -353,6 +353,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval != '' &&
       this.year != 0
     ) {
+      this.sharedPlan=[];
       this.okrService
         .getSharedPlans(this.dataRequest, periodID, interval, year)
         .subscribe((sharedPlan: any) => {
@@ -650,6 +651,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Lấy fucID con
   funcIDChanged() {
+    
+    this.funcID = this.router.snapshot.params['funcID'];
     this.dataRequest.entityName = 'OM_OKRPlans';
     this.dataRequest.page = 1;
     this.dataRequest.pageSize = 1000;
@@ -863,6 +866,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Thời gian thay đổi
   changeCalendar(data: any) {
+    let newFuncID=this.router.snapshot.params['funcID'];
+    if(newFuncID!=this.funcID){
+      this.viewChanged(null);
+      this.detectorRef.detectChanges();
+    }
+    //this.funcIDChanged();
     let date = new Date(data.toDate);
     this.year = date.getFullYear();
     this.dataDate = {

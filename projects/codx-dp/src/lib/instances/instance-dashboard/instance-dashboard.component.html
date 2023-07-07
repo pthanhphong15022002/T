@@ -1,5 +1,6 @@
 <div class="w-100 h-100">
   <codx-dashboard
+    *ngIf="isLoaded"
     [templates]="templates"
     [panels]="panels"
     [datas]="datas"
@@ -15,7 +16,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
       [title]="getNameStatus('1')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countNew"
     ></count-chart>
   </div>
 </ng-template>
@@ -27,7 +28,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
       [title]="getNameStatus('2')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countProcessing ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -39,7 +40,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
       [title]="getNameStatus('3')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countSuccess ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -51,7 +52,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
       [title]="getNameStatus('5')"
-      [value]="0"
+      [value]="dataDashBoard?.counts?.countFail ?? 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -59,28 +60,163 @@
 
 <!-- Top nhân viên -->
 <ng-template #templateDetail>
+  <div class="w-100 h-100" id="5" title="Count chart -Top nhân viên">
+    <div class="group-btn">
+      <span class="quantity btn-left py-1">Số lượng</span>
+      <span class="ratio btn-right py-1">Tỷ lệ</span>
+    </div>
+    <div class="w-100 h-100">
+      <ejs-accumulationchart
+        id="donut-container"
+        [tooltip]="tooltip"
+        selectionMode="Point"
+        [annotations]="annotations"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="data"
+            xName="y"
+            [startAngle]="startAngle"
+            yName="y"
+            [radius]="radius"
+            [innerRadius]="innerRadius"
+            [dataLabel]="dataLabel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateDetail>
   <div class="w-100 h-100" id="6" title="Count chart -Top nhân viên">
-    Top nhân viên
+    <div class="group-btn">
+      <span class="quantity btn-left py-1">Thấp nhất</span>
+      <span class="ratio btn-right py-1">Cao nhất</span>
+    </div>
+    <div class="assignchart-group w-100 " style="height: 30px;">
+      <div
+        *ngFor="let tasks of tasksByCategory; let i = index"
+        class="assignchart-item d-flex align-items-center justify-content-end h-100"
+      >
+        <div class="fw-bold me-2">{{ tasks.quantity }}</div>
+        <div
+          class="assignchart-task h-100"
+          style="color: #000000; border-radius: 5px 0 0 5px;"
+          [style.background-color]="paletteColor[i]"
+          [style.width]="
+            (tasks.quantity / tasksByCategory[0].quantity) * 100 + '%'
+          "
+        >
+          <codx-vll
+            [name]="'L1456'"
+            [value]="tasks.category"
+            [showText]="true"
+            [showBgColor]="false"
+            style="width: '25px'; height: '25px'"
+          >
+          </codx-vll>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 <!-- năng suất-->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="7" title="Count chart - năng suất">
-    năng suất
+    <div class="w-100 h-100" id="9" title="Count chart - Thất bại">
+      <div>
+        <span>khách hàng thích sản phẩm công ty cung cấp</span>
+      </div>
+      <ejs-progressbar
+        #linear1
+        id="linear"
+        type="Linear5"
+        [maximum]="100"
+        [minimum]="0"
+        [value]="90"
+        width="100%"
+        [trackThickness]="12"
+        [progressThickness]="12"
+        height="5"
+        [animation]="animation"
+      >
+      </ejs-progressbar>
+    </div>
   </div>
 </ng-template>
 <!--Thành công-->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="8" title="Count chart - Thành công">
-    Thành công
+    <div>
+      <span>khách hàng thích sản phẩm công ty cung cấp</span>
+    </div>
+    <ejs-progressbar
+      #linear1
+      id="linear1"
+      type="Linear"
+      [maximum]="100"
+      [minimum]="0"
+      [value]="90"
+      width="100%"
+      [trackThickness]="12"
+      [progressThickness]="12"
+      height="5"
+      [animation]="animation"
+    >
+    </ejs-progressbar>
   </div>
 </ng-template>
 <!--Thất bại-->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="9" title="Count chart - Thất bại">Thất bại</div>
+  <div class="w-100 h-100" id="9" title="Count chart - Thất bại">
+    <div>
+      <span>khách hàng thích sản phẩm công ty cung cấp</span>
+    </div>
+    <ejs-progressbar
+      #linear1
+      id="linear"
+      type="Linear"
+      [maximum]="100"
+      [minimum]="0"
+      [value]="90"
+      width="100%"
+      [trackThickness]="12"
+      [progressThickness]="12"
+      height="5"
+      [animation]="animation"
+    >
+    </ejs-progressbar>
+  </div>
 </ng-template>
 
 <!--Thống kê-->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="10" title="Count chart - Thống kê">Thống kê</div>
+  <div class="w-100 h-100" id="10" title="Count chart - Thống kê">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="'90%'"
+      id="chartcontainer"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [tooltip]="tooltip1"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="data"
+          type="Pareto"
+          xName="x"
+          yName="y"
+          name="Defect"
+          opacity="0.75"
+          [cornerRadius]="cornerRadius"
+          columnWidth="0.4"
+          [paretoOptions]="paretoOptions"
+          width="2"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
 </ng-template>

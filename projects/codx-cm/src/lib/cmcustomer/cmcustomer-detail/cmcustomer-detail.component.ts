@@ -84,7 +84,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() dataSelected: any;
   name = 'Information';
   id = '';
-  tabDetail = [];
+  tabDetail: { name: string, text: string,  icon: string  }[] = [];
   formModelContact: FormModel;
   formModelAddress: FormModel;
   listAddress = [];
@@ -244,7 +244,7 @@ export class CmCustomerDetailComponent implements OnInit {
           icon: 'icon-shopping_bag',
         },
         {
-          name: 'task',
+          name: 'Task',
           text: 'Công việc',
           icon: 'icon-more',
         },
