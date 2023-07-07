@@ -330,7 +330,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   buttons: Array<ButtonModel> = [];
 
   constructor(inject: Injector,private pageTitle: PageTitleService,private routerActive: ActivatedRoute,) {
-
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
   }

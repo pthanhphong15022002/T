@@ -296,11 +296,6 @@ export class EmployeesComponent extends UIComponent {
         [data],
         true,
         (option: any) => this.beforeDel(option),
-        null,
-        null,
-        null,
-        null,
-        false
       )
       .subscribe();
     this.detectorRef.detectChanges();
@@ -382,7 +377,8 @@ export class EmployeesComponent extends UIComponent {
       if (e?.event) {
         var emp = e.event;
         if (emp.status === '90') this.view.dataService.remove(emp).subscribe();
-        else this.view.dataService.update(emp).subscribe();
+        else this.view.dataService.update(emp).subscribe(
+        );
       }
       this.detectorRef.detectChanges();
     });

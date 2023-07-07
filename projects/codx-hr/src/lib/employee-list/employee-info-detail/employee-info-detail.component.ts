@@ -553,9 +553,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   crrIndex: number = 0;
 
   currentYear = new Date().getFullYear();
- firstDay = new Date(this.currentYear, 0, 1);
- lastDay = new Date(this.currentYear, 11, 31);
- dayOffInitPredicate =  `(EmployeeID=@0 and (BeginDate>="${this.firstDay.toISOString()}" and EndDate<="${this.lastDay.toISOString()}"))`
+  firstDay = new Date(this.currentYear, 0, 1);
+  lastDay = new Date(this.currentYear, 11, 31);
+  dayOffInitPredicate =  `(EmployeeID=@0 and (BeginDate>="${this.firstDay.toISOString()}" and EndDate<="${this.lastDay.toISOString()}"))`
 
   //#region headerTextString
   addHeaderText;
@@ -713,18 +713,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       },
     ];
     this.formModel = this.view.formModel;
-    console.log('form Model ne', this.formModel);
     
   }
-
+  eInfoHeaderText:any = null;
   initFormModel() {
     this.hrService.getFormModel(this.eContractFuncID).then((res) => {
       this.eContractFormModel = res;
     });
 
-    this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
-      this.eInfoFormModel = res;
-    });
+    if(this.eInfoFuncID)
+    {
+      this.hrService.getHeaderText(this.eInfoFuncID).then((headerText) => 
+      {
+        debugger
+        this.eInfoHeaderText = headerText;
+      });
+      this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
+        this.eInfoFormModel = res;
+      });
+    }
+    
 
     this.hrService.getFormModel(this.eFamiliesFuncID).then((res) => {
       this.eFamilyFormModel = res;
@@ -1094,7 +1102,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     //   }
     //   this.df.detectChanges();
     // }
-
+    
     if (!this.eDegreeColumnsGrid) {
       this.hrService.getHeaderText(this.eDegreeFuncID).then((res) => {
         this.eDegreeHeaderText = res;
@@ -3293,9 +3301,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     actionType: string,
     data: any
   ) {
-    debugger
     if (this.appointionGridView)
       this.appointionGridView.dataService.dataSelected = this.infoPersonal;
+
     let option = new SidebarModel();
     option.DataService = this.appointionGridView?.dataService;
     option.FormModel = this.appointionFormModel;
@@ -3307,6 +3315,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         employeeId: this.employeeID,
         funcID: this.appointionFuncID,
         appointionObj: data,
+        empObj:this.infoPersonal,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.appointionFuncID),
       },

@@ -1,0 +1,26 @@
+.group-btn{
+	display: inline-flex;
+    white-space: nowrap;
+}
+.quantity{
+	background-color: var(--primary-active);
+	color:#ffffff;
+}
+.ratio{
+	background-color: var(--primary-light);
+	color: #000000;
+}
+.btn-left{
+	border-radius: 15px 0 0 15px;
+	min-width: 80px;
+	display: flex;
+	justify-content: center;
+	cursor: pointer;
+}
+.btn-right{
+	border-radius: 0 15px 15px 0;
+	min-width: 80px;
+	display: flex;
+	justify-content: center;
+	cursor: pointer;
+}

@@ -3240,7 +3240,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   checkSaveNow() {
-    var checkGroup = this.lstGroup.some(
+    var checkGroup = this.lstGroup?.some(
       (x) => x.groupID == this.process?.groupID
     );
     return (
@@ -3681,6 +3681,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           view === this.viewStepReasonSuccess
             ? this.stepSuccess
             : this.stepFail;
+      this.dataValueview = view;
       } else {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
@@ -4307,29 +4308,39 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#region color step
 
-  setColorTestStep(step, index){
-    if(this.isDefaultStep){
-      let countStep = this.stepList?.length || 0;
+  setColorTestStep(step){
+    if(this.process?.stepsColorMode){
+      if(step.isFailStep || step.isSuccessStep){
+        return { color:  '#ffffff'}
+      }else{
+        let countStep = this.stepList?.length || 0;
         let medium = Math.round(countStep/2);
-        if(index < medium){
+        if(step?.stepNo < medium){
           return { color: '#000000' }
         }else{
           return { color:  '#ffffff'}
         }
+      }
     }else{
-      return { color: step?.textColor }
+      return { color: step?.textColor || 'gray'  }
     }
   }
 
-  setColorStep(step, index){
-    if(this.isDefaultStep){
-      let countStep = this.stepList?.length || 0;
-      let opacityDefault = Number((1/countStep).toFixed(2));
-      let opacity = opacityDefault *(index + 1);
-      let color = this.hexToRGB(this.colorDefault,opacity);
-      return {'background-color': color };
+  setColorStep(step:DP_Steps){
+    if(this.process?.stepsColorMode){
+      if(step.isFailStep ){
+        return {'background-color':  this.iconReasonFail?.color};
+      }else if(step.isSuccessStep){      
+        return {'background-color':  this.iconReasonSuccess?.color};
+      }else{
+        let countStep = this.stepList?.length || 0;
+        let opacityDefault = Number((1/countStep).toFixed(2));
+        let opacity = opacityDefault * Number(step?.stepNo || 1);
+        let color = this.hexToRGB(this.colorDefault,opacity);
+        return {'background-color': color };
+      }
     }else{
-      return {'background-color': step?.backgroundColor };
+      return {'background-color': step?.backgroundColor};
     }
   }
 
