@@ -320,10 +320,7 @@ export class LeadsComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      eventItem.disabled =
-        (data.closed && !['0', '1'].includes(data.status)) ||
-        ['0', '1'].includes(data.status) ||
-        this.checkMoreReason(data);
+      eventItem.disabled = (data.closed && !['0', '1'].includes(data.status)) ||  ['0', '1'].includes(data.status) ||this.checkMoreReason(data);
     };
     var isCRUD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
@@ -335,7 +332,7 @@ export class LeadsComponent
       eventItem.disabled = !data.closed
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['0', '1'].includes(data.status);
+      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed ;
     };
     var isConvertLead = (eventItem, data) => {
       eventItem.disabled = !['13', '3'].includes(data.status);

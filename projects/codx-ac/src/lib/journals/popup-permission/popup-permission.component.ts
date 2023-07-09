@@ -9,9 +9,8 @@ import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 })
 export class PopupPermissionComponent extends UIComponent {
   //#region Constructor
-  objects: any[] = [];
+  permissions: IJournalPermission[] = [];
   selectedIndex: number;
-  journalPermissions: IJournalPermission[] = [];
 
   constructor(
     injector: Injector,
@@ -20,7 +19,12 @@ export class PopupPermissionComponent extends UIComponent {
   ) {
     super(injector);
 
-    this.journalPermissions = dialogData.data?.journalPermissions;
+    this.permissions = dialogData.data?.journalPermissions;
+    this.permissions.map((p) => {
+      p.add = p.add == '1';
+      p.post = p.post == '1';
+    });
+    this.selectedIndex = this.permissions.length > 0 ? 0 : -1;
   }
   //#endregion
 
@@ -29,10 +33,38 @@ export class PopupPermissionComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  onChange(e): void {
+  onObjectListChange(e): void {
     console.log(e);
 
-    this.objects = e.data;
+    this.permissions = e.data.map(
+      (d) =>
+        ({
+          journalNo: this.dialogData.data?.journalNo,
+          objectType: d.objectType,
+          objectName: d.text,
+          objectID: d.id,
+          add: true,
+          read: '1',
+          edit: '1',
+          delete: '1',
+          post: true,
+        } as IJournalPermission)
+    );
+    this.selectedIndex = this.permissions.length > 0 ? 0 : -1;
+  }
+
+  onClickRemove(index: number): void {
+    this.permissions.splice(index, 1);
+  }
+
+  onInputChange(e): void {
+    console.log('onInputChange', e);
+
+    this.permissions[this.selectedIndex][e.field] = e.data;
+  }
+
+  onClickSave(): void {
+    this.dialogRef.close()
   }
   //#endregion
 

@@ -378,14 +378,16 @@
           </a>
           <ng-template ngbNavContent>
             <ng-container>
-              <div class="d-flex flex-wrap">
-                <div class="d-flex align-items-center mb-2 min-w-50">
+              <div class="d-flex align-items-center mt-3 mb-3">
+                <div class="w-125px">
                   <codx-label
                     fiedName="MainSalary"
                     [formModel]="formModel"
                     class="text-gray-600 label-colon"
                   >
                   </codx-label>
+                </div>
+                <div class="w-100px d-flex justify-content-end">
                   <span
                     class="fw-bold text-dark"
                     [innerHTML]="
@@ -396,14 +398,18 @@
                   >
                   </span>
                 </div>
+              </div>
 
-                <div class="d-flex align-items-center mb-2 min-w-50">
+              <div class="d-flex align-items-center mb-3">
+                <div class="w-125px">
                   <codx-label
                     fiedName="JobSalary"
                     [formModel]="formModel"
                     class="text-gray-600 label-colon"
                   >
                   </codx-label>
+                </div>
+                <div class="w-100px d-flex justify-content-end">
                   <span
                     class="fw-bold text-dark"
                     [innerHTML]="
@@ -415,29 +421,33 @@
                   </span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap" *ngFor="let item of lstBenefit">
-                <div class="d-flex align-items-center mb-2 min-w-50">
-                  <span
+              <div class="d-flex flex-wrap w-100 mb-3" *ngFor="let item of lstBenefit">
+                
+                <div class="d-flex align-items-center w-125px">
+                  <span class="text-gray-600"
                     [innerHTML]="
                       item?.BenefitID
                         | formatvalue : benefitFormModel : 'benefitID'
                         | async
                     "
                   >
-                  </span>
+                  </span>:
+
                 </div>
-                <div class="d-flex align-items-center mb-2 min-w-50">
+                <div class="d-flex align-items-center">
+                  <div class="w-100px d-flex justify-content-end">
+                    <span class="text-dark fw-bold"
+                      [innerHTML]="
+                        item?.BenefitAmt
+                          | formatvalue : benefitFormModel : 'benefitAmt'
+                          | async
+                      "
+                    >
+                    </span>
+                  </div>
+                  <span class="text-gray-400 mx-2">/</span>
                   <span
-                    [innerHTML]="
-                      item?.BenefitAmt
-                        | formatvalue : benefitFormModel : 'benefitAmt'
-                        | async
-                    "
-                  >
-                  </span>
-                  <span>/ </span>
-                  <span
-                    class="text-dark"
+                    class="text-gray-600"
                     [innerHTML]="
                       item?.BenefitNorm
                         | formatvalue : benefitFormModel : 'benefitNorm'
@@ -445,6 +455,7 @@
                     "
                   ></span>
                 </div>
+             
               </div>
             </ng-container>
           </ng-template>

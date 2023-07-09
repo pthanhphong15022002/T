@@ -83,10 +83,10 @@ export class TabDetailCustomComponent
 
   recIdOld: string = '';
   isDataLoading = true;
-  grvSetupQuotation: any;
+  grvSetupQuotation: any[]=[];
   vllStatusQuotation: any;
   mergedList: any[]=[];
-  grvSetupContract: any;
+  grvSetupContract: any[]=[];
   vllStatusContract: any;
 
   constructor(
