@@ -63,7 +63,6 @@ export class LayoutComponent
   showtitle = true;
   public mssgTotalUsed;
   public mssgTotalHdd;
-
   // @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   // @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   public funcs$: Observable<any>;
@@ -97,10 +96,12 @@ db.DM_FolderInfo.updateMany(
     private changeDetectorRef: ChangeDetectorRef,
     private renderer: Renderer2,
     private cache: CacheService,
-   
+    private elRef: ElementRef,
   ) {
     super(injector);
     this.module = 'DM';
+   
+
     this.fileService.getTotalHdd().subscribe((item) => {
       //  totalUsed: any;
       // totalHdd: any;
@@ -117,15 +118,7 @@ db.DM_FolderInfo.updateMany(
   }
 
   onInit(): void {
-    this.codxService.asideDisplay = this.layout.getProp(
-      'aside.display'
-    ) as boolean;
-    this.codxService.asideCSSClasses = this.layout.getStringCSSClasses('aside');
-    this.codxService.contentContainerClasses =
-      this.layout.getStringCSSClasses('contentContainer');
-    this.codxService.headerCSSClasses =
-      this.layout.getStringCSSClasses('header');
-    this.codxService.headerLeft = this.layout.getProp('header.left') as string;
+    this.layoutModel.asideDisplay = true;
     this.user = this.auth.userValue;
     this.dmSV.isMenuIdActive.subscribe((res) => {
       this.submenu = res;
@@ -181,7 +174,7 @@ db.DM_FolderInfo.updateMany(
   onClickFavarite(e:any) {
    if(e && e?.data)
    {
-    if(e?.func?.functionID == "DMT05")
+    if(e?.func?.functionID == "DMT05" || e?.func?.functionID == "DMT06" || e?.func?.functionID == "DMT07")
     {
       var breadcumb = [];
         breadcumb.push(e?.func?.customName);
@@ -196,7 +189,11 @@ db.DM_FolderInfo.updateMany(
         this.dmSV.dmFavoriteID = "2";
         this.dmSV.folderID = '';
         this.folderService.options.favoriteID = e?.data?.recID;
+        this.folderService.options.predicate = e?.data?.predicate;
+        this.folderService.options.dataValue = e?.data?.dataValue;
         this.fileService.options.favoriteID = e?.data?.recID;
+        this.fileService.options.predicate = e?.data?.predicate;
+        this.fileService.options.dataValue = e?.data?.dataValue;
         this.dmSV.refeshData.next(true);
     }
    }
