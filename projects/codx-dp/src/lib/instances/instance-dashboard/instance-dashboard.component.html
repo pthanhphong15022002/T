@@ -60,10 +60,34 @@
 <!-- Cơ hội theo giai đoan -->
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="5" title="Count chart -Cơ hội theo giai đoan">
-    <div class="w-100 d-flex justify-content-center">
-      <div class="group-btn">
-        <span class="quantity btn-left py-1">Số lượng</span>
-        <span class="ratio btn-right py-1">Tỷ lệ</span>
+    <div
+      class="w-100 d-flex justify-content-center"
+      style="position: absolute; left: 25%"
+    >
+      <div class="group-btn" style="z-index: 10">
+        <div
+          [ngClass]="isQuantity ? 'lblDetail' : 'lblRatio'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+          (click)="setQuantity(true)"
+        >
+          <codx-label
+            name="lblDetail"
+            [formModel]="formModel"
+            default="Số lượng"
+          >
+          </codx-label>
+        </div>
+        <div
+          [ngClass]="isQuantity ? 'lblRatio' : 'lblDetail'"
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+          (click)="setQuantity(false)"
+        >
+          <codx-label
+            name="lblRatio"
+            [formModel]="formModel"
+            default="Tỷ lệ"
+          ></codx-label>
+        </div>
       </div>
     </div>
     <div class="w-100 h-100">
@@ -94,24 +118,53 @@
 <ng-template #templateDetail>
   <div class="w-100 h-100" id="6" title="Count chart -Top nhân viên">
     <div class="w-100 d-flex justify-content-center mb-4">
-      <div class="group-btn">
-        <span class="quantity btn-left py-1">Số lượng</span>
-        <span class="ratio btn-right py-1">Tỷ lệ</span>
+      <div class="group-btn" style="z-index: 10">
+        <div
+          [ngClass]="isTallest ? 'lblDetail' : 'lblRatio'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+          (click)="setTallest(true)"
+        >
+          <codx-label
+            name="lblDetail"
+            [formModel]="formModel"
+            default="Cao nhất "
+          >
+          </codx-label>
+        </div>
+        <div
+          [ngClass]="isTallest ? 'lblRatio' : 'lblDetail'"
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+          (click)="setTallest(false)"
+        >
+          <codx-label
+            name="lblRatio"
+            [formModel]="formModel"
+            default="Thấp nhất"
+          >
+          </codx-label>
+        </div>
       </div>
     </div>
-    <div class="assignchart-group w-100 " style="height: 30px;">
+    <div class="assignchart-group w-100" style="height: 30px">
       <div
         *ngFor="let owner of countOwners; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end h-100"
       >
-        <div class="fw-bold me-2">{{ owner.quantity }}</div>
+        <div class="fw-bold me-2 quantity">{{ owner.quantity }}</div>
         <div
           class="assignchart-task h-100 d-flex align-item-center justify-content-end"
-          style="color: #000000; border-radius: 5px 0 0 5px;"
-          [style.background-color]="paletteColor[i]"
           [style.width]="(owner.quantity / countOwners[0].quantity) * 100 + '%'"
         >
-         <span class="d-flex align-item-center">{{owner?.objectName}}</span>
+          <div
+            class="d-flex align-item-center justify-content-end proress h-100"
+            [style.background-color]="paletteColor[i]"
+            style="color: #000000; border-radius: 5px 0 0 5px"
+          >
+            <span
+              class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 me-2"
+              >{{ owner?.objectName }}</span
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -163,9 +216,13 @@
             <div
               class="rounded-4 h-5px"
               role="progressbar"
-              [ngStyle]="{ backgroundColor: colorReasonSuscess }"
               [style.width]="suscess.percentage + '%'"
-            ></div>
+            >
+              <div
+                class="proress h-100 rounded-4"
+                [ngStyle]="{ backgroundColor: colorReasonSuscess }"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
@@ -194,9 +251,13 @@
             <div
               class="rounded-4 h-5px"
               role="progressbar"
-              [ngStyle]="{ backgroundColor: colorReasonFails }"
               [style.width]="fails.percentage + '%'"
-            ></div>
+            >
+              <div
+                class="proress h-100 rounded-4"
+                [ngStyle]="{ backgroundColor: colorReasonFails }"
+              ></div>
+            </div>
           </div>
         </div>
       </div>

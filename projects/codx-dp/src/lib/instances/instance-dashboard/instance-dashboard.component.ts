@@ -8,7 +8,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, Util } from 'codx-core';
+import { ApiHttpService, CacheService, FormModel, Util } from 'codx-core';
 import { DP_Processes } from '../../models/models';
 import { firstValueFrom } from 'rxjs';
 import { AnimationModel, ChartAnnotationSettingsModel } from '@syncfusion/ej2-angular-charts';
@@ -153,7 +153,16 @@ paretoOptions: Object = {
 public  cornerRadius: Object = { 
   topLeft: 6, topRight:  6 
 }
+formModel: FormModel = {
+  entityName: "DP_Instances",
+  entityPer: "DP_Instances",
+  formName: "DPInstances",
+  funcID: "DPT04",
+  gridViewName: "grvDPInstances",
+}
 
+  isQuantity = false;
+  isTallest = true;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -178,6 +187,12 @@ public  cornerRadius: Object = {
     });
     this.funcID = this.router.snapshot.params['funcID'];
     this.getDataDashboard('ProcessID==@0', this.processID);
+  }
+  setQuantity(data){
+    this.isQuantity = data;
+  }
+  setTallest(data){
+    this.isTallest = data;
   }
 
   setting() {
