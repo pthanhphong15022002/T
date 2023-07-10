@@ -80,29 +80,37 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // get comment
   getCommentsAsync(data:any){ 
-    if(!Array.isArray(data.listComment))
+    if(!data.listComment)
       data.listComment = [];
-    if(data.pageIndex && data.totalPage && data.totalPage < data.pageIndex)
-      return;
-    let pageIndex = data.pageIndex == null ? 1 : data.pageIndex + 1;
-    data.pageIndex = pageIndex;
-    this.api.execSv(
-    "WP",
-    "ERM.Business.WP",
-    "CommentsBusiness",
-    "GetCommentsAsync",
-    [data.recID,pageIndex])
-    .subscribe((res:any[]) => {
-      if(Array.isArray(res[0]))
-      {
-        data.listComment = data.listComment.concat(res[0]);
-        if(!data.totalPage)
-          data.totalPage = Math.ceil(res[1]/5);
-      }
-      // data.full = data.listComment.length == res[1];
-      data.load = false;
-      data.full = data.totalPage == data.pageIndex;
-    });
+    if(!data.pageIndex)
+      data.pageIndex = 0;
+    if(!data.totalPage)
+      data.totalPage = 0;  
+    if(data.pageIndex >= data.totalPage)
+    {
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "CommentsBusiness",
+        "GetCommentsAsync",
+        [data.recID,data.pageIndex + 1])
+        .subscribe((res:any[]) => {
+          debugger
+          data.loading = false;
+          if(res)
+          {
+            let datas = res[0];
+            let total = res[1];
+            if(datas?.length > 0)
+              data.listComment = data.listComment.concat(datas);
+            if(!data.totalPage)
+                data.totalPage = Math.ceil(res[1]/5);
+            data.full = data.listComment.length == total;
+            this.dt.detectChanges();
+          }
+        });
+    }
+    
   }
   // click show votes
   showVotes(data: any) {
@@ -170,10 +178,10 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // click show comment
   showComments() {
-    debugger
     this.data.isShowComment = this.data.isShowComment ? !this.data.isShowComment : true;
-    if(!this.data.load){
-      this.data.load = true;
+    if(this.data.isShowComment && !this.data.loading)
+    {
+      this.data.loading = true;
       this.getCommentsAsync(this.data);
     }
   }
@@ -264,7 +272,6 @@ export class TreeviewCommentComponent implements OnInit {
   // doubleclick votes
   defaulVote:any = null;
   dbLikePost(data){
-    debugger
     if(data && this.defaulVote){
       this.votePost(data,this.defaulVote.value);
     }
