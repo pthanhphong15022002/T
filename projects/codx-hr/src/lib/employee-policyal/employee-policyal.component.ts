@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType, FormModel } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -109,6 +109,20 @@ export class EmployeePolicyalComponent extends UIComponent{
     );
   }
 
+  deleteFile(data){
+      //code xóa file luôn khi record chứa file bị xóa
+      return this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'DeleteByObjectIDAsync',
+          [data.policyID, this.view.formModel.entityName, true]
+        );
+  }
+
+
+
   clickMF(event, data){
     switch(event.functionID){
       case 'SYS03': //add
@@ -116,7 +130,11 @@ export class EmployeePolicyalComponent extends UIComponent{
         break;
 
       case 'SYS02': //delete
-      this.view.dataService.delete([data]).subscribe();
+      this.view.dataService.delete([data]).subscribe((res)=>{
+        this.deleteFile(data).subscribe((res) => {
+          debugger
+        })
+      });
         break;
 
       case 'SYS04': //copy
@@ -135,7 +153,44 @@ export class EmployeePolicyalComponent extends UIComponent{
     });
   }
 
+  Give example:
+  - For instance,
+  - for example,
+  - S for instance,
+  - S for example, 
+  - A case in point is N
+  - An illustration for this is N
 
+  Cause:
+  - The reason for this is 
+  - The reason behind this is 
+  - What caused this is
+
+  Effect 
+  - As a consequence, 
+  - Consequently
+  - As a result 
+
+  Without linking word
+  Case: This stem from 
+      The reason for this is 
+      This rise from 
+      this result from 
+  
+      Effect:
+      - This can lead to
+      - This can giverise to 
+      - This can result in 
+  Example: 
+    - This can be seen in, 
+    - This has been examplified in
+    - Such + N , This + N
+
+    to be more extractContent, 
+    in more details 
+    specifically
+    that would beforeAll, abosolutely yes, no i dont
+  
 
   HandlePolicyAL(actionHeaderText, actionType: string, data: any){
     let option = new SidebarModel();
