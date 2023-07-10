@@ -35,7 +35,7 @@
 
 #kt_aside_menu_header+div {
   margin-bottom: 0 !important;
-  height: calc(100vh - 220px)!important;
+  height: calc(100vh - 205px)!important;
   //border: 1px aqua solid;
 }
 
@@ -46,6 +46,11 @@
 
 .progress-bar {
   background-color: #00bcd4;
+}
+
+#kt_aside_footer{
+  height: 60px;
+  justify-content: space-evenly;
 }
 
 /**** module OD ****/
@@ -292,13 +297,6 @@ codx-views#dm .content-tree codx-mfunc .btn {
 }
 
 
-
-
-.page-dm .aside.aside-light{
-  .svg-icon svg [fill]:not(.permanent):not(g) {
-    fill: var(--primary-lighter)!important;
-  }
-}
 
 .page-dm .btn .badge {
   top: auto !important;

@@ -189,11 +189,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           //chart
         }
 
-        this.maxOwners = this.dataDashBoard.countsOwners ?? [];
-        this.minOwners = JSON.parse(JSON.stringify(this.maxOwners));
-        this.minOwners.sort((a, b) => {
-          return a.quantity - b.quantity;
-        });
+        this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
+        this.minOwners = this.dataDashBoard?.CountsOwnersTopLowToHight ?? [];
+
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);

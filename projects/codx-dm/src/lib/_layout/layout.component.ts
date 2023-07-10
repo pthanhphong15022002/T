@@ -63,7 +63,6 @@ export class LayoutComponent
   showtitle = true;
   public mssgTotalUsed;
   public mssgTotalHdd;
-
   // @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   // @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   public funcs$: Observable<any>;
@@ -97,10 +96,12 @@ db.DM_FolderInfo.updateMany(
     private changeDetectorRef: ChangeDetectorRef,
     private renderer: Renderer2,
     private cache: CacheService,
-   
+    private elRef: ElementRef,
   ) {
     super(injector);
     this.module = 'DM';
+   
+
     this.fileService.getTotalHdd().subscribe((item) => {
       //  totalUsed: any;
       // totalHdd: any;
@@ -117,17 +118,13 @@ db.DM_FolderInfo.updateMany(
   }
 
   onInit(): void {
-    this.codxService.asideDisplay = this.layout.getProp(
-      'aside.display'
-    ) as boolean;
-    this.codxService.asideCSSClasses = this.layout.getStringCSSClasses('aside');
-    this.codxService.contentContainerClasses =
-      this.layout.getStringCSSClasses('contentContainer');
-    this.codxService.headerCSSClasses =
-      this.layout.getStringCSSClasses('header');
-    this.codxService.headerLeft = this.layout.getProp('header.left') as string;
+    this.layoutModel.asideDisplay = true;
     this.user = this.auth.userValue;
-    this.dmSV.isMenuIdActive.subscribe((res) => {
+   
+  }
+
+  override ngAfterViewInit(): void {
+     this.dmSV.isMenuIdActive.subscribe((res) => {
       this.submenu = res;
       this.changeDetectorRef.detectChanges();
     });
@@ -181,7 +178,7 @@ db.DM_FolderInfo.updateMany(
   onClickFavarite(e:any) {
    if(e && e?.data)
    {
-    if(e?.func?.functionID == "DMT05")
+    if(e?.func?.functionID == "DMT05" || e?.func?.functionID == "DMT06" || e?.func?.functionID == "DMT07")
     {
       var breadcumb = [];
         breadcumb.push(e?.func?.customName);
@@ -196,7 +193,11 @@ db.DM_FolderInfo.updateMany(
         this.dmSV.dmFavoriteID = "2";
         this.dmSV.folderID = '';
         this.folderService.options.favoriteID = e?.data?.recID;
+        this.folderService.options.predicate = e?.data?.predicate;
+        this.folderService.options.dataValue = e?.data?.dataValue;
         this.fileService.options.favoriteID = e?.data?.recID;
+        this.fileService.options.predicate = e?.data?.predicate;
+        this.fileService.options.dataValue = e?.data?.dataValue;
         this.dmSV.refeshData.next(true);
     }
    }
@@ -251,8 +252,6 @@ db.DM_FolderInfo.updateMany(
         );
 
         this.data = [
-          /* {  Product : msUsed, Percentage : this.titleHddUsed_small, TextMapping :msUsed},
-        {  Product : msHdd, Percentage : this.titleHddUsed_small, TextMapping :msUsed} */
           {
             Product: msUsed,
             Percentage: this.titleHddUsed_small,
@@ -300,37 +299,15 @@ db.DM_FolderInfo.updateMany(
   }
 
   onAfterViewInit(): void {
-    if (this.codxHeader) {
-      for (const key in this.codxService.headerHTMLAttributes) {
-        if (this.codxService.headerHTMLAttributes.hasOwnProperty(key)) {
-          this.codxHeader.nativeElement.attributes[key] =
-            this.codxService.headerHTMLAttributes[key];
-        }
-      }
-    }
+   
   }
 
   disable() {
     return this.disableInput;
   }
 
-  //   onAfterViewInit(): void {
-  //     this.cache.message("DM060").subscribe(item => {
-  //       if (item != null) {
-  //         this.titleAddFolder = item.description;
-  //       }
-  //     });
-
-  //     this.cache.message("DM061").subscribe(item => {
-  //       if (item != null) {
-  //         this.titleStorage = item.description;
-  //       }
-  //     });
-  //   }
-
   AddFolder() {
-    //this.dmSV.openCreateFolder.next(true);
-    //this.dmSV.folderID = ""
+
     let option = new SidebarModel();
     option.DataService = this.dmSV.dataService;
     option.FormModel = this.dmSV.formModel;
@@ -342,14 +319,8 @@ db.DM_FolderInfo.updateMany(
     this.callfc.openSide(CreateFolderComponent, data, option);
   }
 
-  // public reloadAvatar(data: any): void {
-  //   this.imageViewer?.reloadImageWhenUpload();
-  // }
-
   public contentResized(size: any) {
-    // if(size){
-    //   console.log(JSON.stringify(size));
-    // }
+
   }
 
   openFormNoteDrawer() {
@@ -377,138 +348,5 @@ db.DM_FolderInfo.updateMany(
       this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0, 1);
     this.changeDetectorRef.detectChanges();
   }
-  /* public funcs$: Observable<any> = of([
-    {
-      functionID: 'OD',
-      customName: 'Quản lý công văn',
-      separator: true
-    },
-    {
-      functionID: 'ODT1',
-      customName: 'Dashboard',
-      smallIcon: 'assets/Icons_Final/P006_Hosonhanvien.svg',
-      comingSoon: false,
-      separator: false,
-      childs: [],
-      url:"/od/home"
-    },
-    {
-      functionID: 'OTD2',
-      customName: 'Báo cáo',
-      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-      comingSoon: false,
-      separator: false,
-      childs: [],
-      url:"/od/incomming/funcID=OD"
-    },
-    {
-      functionID: '',
-      customName: '',
-      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-      comingSoon: false,
-      separator: true,
-    },
-    {
-      functionID: 'ODT3',
-      customName: 'Công văn đến',
-      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-      comingSoon: false,
-      separator: false,
-      childs: [],
-      url:"/od/incomming"
-    },
-    {
-      functionID: 'ODT4',
-      customName: 'Công văn đi',
-      smallIcon: 'assets/Icons_Final/C007_Tailieuso.svg',
-      comingSoon: false,
-      separator: false,
-      url:"/od/subhome",
-      childs: []
-    },
-    {
-      functionID: 'ODT5',
-      customName: 'Công văn nội bộ',
-      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-      comingSoon: false,
-      separator: false,
-      childs: [],
-      url:"/od/incomming"
-    },
-    {
-      functionID: 'ODT6',
-      customName: 'Tìm kiếm văn bản',
-      smallIcon: 'assets/Icons_Final/C007_Tailieuso.svg',
-      comingSoon: false,
-      separator: false,
-      url:"/od/subhome",
-      childs: []
-    }
-  ]); */
+ 
 }
-
-// import { Component, OnInit, Injector } from '@angular/core';
-// import {
-//   CacheService,
-//   CallFuncService,
-//   DialogRef,
-//   LayoutBaseComponent,
-//   SidebarModel,
-//   UIComponent,
-//   ViewModel
-// } from 'codx-core';
-// import { Observable } from 'rxjs';
-// import { CodxDMService } from '../codx-dm.service';
-// import { CreateFolderComponent } from '../createFolder/createFolder.component';
-// @Component({
-//   selector: 'lib-layout',
-//   templateUrl: './layout.component.html',
-//   styleUrls: ['./layout.component.css']
-// })
-// export class LayoutComponent extends LayoutBaseComponent {
-//   module = 'DM';
-//   public titleAddFolder = 'Tạo thư mục';
-//   public titleStorage = 'Dung lượng lưu trữ';
-//   public titleHddUsed = 'Đã sử dụng 203.63MB trong tổng số 50.00 GB';
-//   constructor(
-//     inject: Injector,
-//     public cache: CacheService,
-//     private callfc: CallFuncService,
-//     private dmSV: CodxDMService) {
-//     super(inject);
-//     this.codxService.init(this.module);
-//   }
-
-//   onInit(): void {
-//     this.codxService.modulesOb$.subscribe(res => {
-//       console.log(res);
-//     })
-
-//   }
-
-//   onAfterViewInit(): void {
-//     this.cache.message("DM060").subscribe(item => {
-//       if (item != null) {
-//         this.titleAddFolder = item.description;
-//       }
-//     });
-
-//     this.cache.message("DM061").subscribe(item => {
-//       if (item != null) {
-//         this.titleStorage = item.description;
-//       }
-//     });
-//   }
-
-//   AddFolder() {
-//     //this.dmSV.openCreateFolder.next(true);
-//     let option = new SidebarModel();
-//     option.DataService = this.dmSV.dataService;
-//     option.FormModel = this.dmSV.formModel;
-//     option.Width = '550px';
-//     let data = {} as any;
-//     data.title = this.titleAddFolder;
-//     this.callfc.openSide(CreateFolderComponent, data, option);
-//   }
-
-// }

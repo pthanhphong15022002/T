@@ -235,7 +235,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.view.viewChange(this.viewActive);
         this.codxview.currentView.viewModel.model.panelLeftHide = false;
 
-        if(this.funcID == "DMT04")
+        if(this.funcID == "DMT04" || this.funcID == "DMT05")
           this.codxview.currentView.viewModel.model.panelLeftHide = true;
         if (tree) {
           tree.textField = 'folderName';
@@ -322,6 +322,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
               this.dmSV.breadcumb.next(breadcumb);
             }
           });
+        }
+        else if(this.funcID == "DMT05")
+        {
+          this.dmSV.getRight(res);
+          this.refeshData();
+          this.getDataFolder(res.recID);
+          var breadcumb = this.dmSV.breadcumb.getValue();
+          breadcumb.push(res.folderName);
+          if(!this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = [""];
+          this.dmSV.breadcumbLink.push(res.recID);
+          this.dmSV.breadcumb.next(breadcumb);
         }
         else
         {
@@ -670,8 +681,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         else this.getDataByFuncID00();
         this.setBreadCumb();
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
-          this.fileService.options.favoriteID = "1";
-          this.folderService.options.favoriteID = "1";
+          this.fileService.options.favoriteID = "";
+          this.folderService.options.favoriteID = "";
         };
         if(this.funcID == "DMT03" || this.funcID == "DMT02" || this.funcID == "DMT00") {
           this.viewActive.model.panelLeftHide = false;

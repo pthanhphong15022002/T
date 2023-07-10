@@ -387,6 +387,7 @@ export class OkrTargetsComponent implements OnInit {
     switch (funcID) {
       case OMCONST.MFUNCID.Edit: {
         this.editKR(kr, popupTitle, isSKR);
+        //this.viewKR(kr, popupTitle, isSKR);
         break;
       }
       case OMCONST.MFUNCID.Copy: {
@@ -534,7 +535,7 @@ export class OkrTargetsComponent implements OnInit {
         )){
           func.disabled = true;
         }
-
+        
       });
     }
   } 
@@ -1196,6 +1197,26 @@ export class OkrTargetsComponent implements OnInit {
         this.renderKR(res?.event, _isEdit);
       }
     });
+  }
+  
+  viewKR(kr: any, popupTitle: any, isSubKR = false) {
+    let option = new SidebarModel();
+    option.FormModel = isSubKR ? this.okrFM?.skrFM : this.okrFM?.krFM;
+
+    let dialogEditKR = this.callfunc.openSide(
+      PopupAddKRComponent,
+      [
+        this.krFuncID,
+        OMCONST.MFUNCID.View,
+        popupTitle,
+        kr,
+        isSubKR,
+        this.groupModel,
+        this.dataOKRPlans,
+      ],
+      option
+    );
+    
   }
 
   copyKR(kr: any, popupTitle: any, isSubKR = false) {

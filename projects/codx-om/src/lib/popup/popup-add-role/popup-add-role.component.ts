@@ -59,10 +59,11 @@ export class PopupAddRoleComponent extends UIComponent {
   ////
   okrPlan: any;
   userID: any;
-  permissonActiveId: any;
   user: import('codx-core').UserModel;
-  currentPemission: any;
+  selectedPermission: any;
+  curPer=0;
   objectType: any;
+  isSetFull =false;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -95,38 +96,36 @@ export class PopupAddRoleComponent extends UIComponent {
       .getOKRPlansByID(this.oldPlan?.recID)
       .subscribe((res: any) => {
         if (res) {
-          this.okrPlan = res;
-          this.isAfterRender = true;
+          this.okrPlan = res;          
           this.changePermission(0);
+          this.isAfterRender = true;
+          this.detectorRef.detectChanges();
         }
       });
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
-  onSaveRightChanged($event, ctrl, index) {
+  controlFocus(isFull) {
+    this.isSetFull = isFull;
+    this.detectorRef.detectChanges();
+  }
+  changeRole($event, ctrl, index) {
     let value = $event.data;
-    switch (ctrl) {
+    switch (ctrl) { 
       case 'full':
         this.okrPlan.permissions[index].full = value;
-        this.okrPlan.permissions[index].create = value;
-        this.okrPlan.permissions[index].read = value;
-        this.okrPlan.permissions[index].edit = value;
-        this.okrPlan.permissions[index].publish = value;
-        this.okrPlan.permissions[index].assign = value;
-        this.okrPlan.permissions[index].delete = value;
-        this.okrPlan.permissions[index].share = value;
-        this.okrPlan.permissions[index].upload = value;
-        this.full = value;
-        this.create = value;
-        this.read = value;
-        this.edit = value;
-        this.publish = value;
-        this.assign = value;
-        this.delete = value;
-        this.share = value;
-        this.upload = value;
-        break;
+        if(this.isSetFull){
+          this.okrPlan.permissions[index].create = value;
+          this.okrPlan.permissions[index].read = value;
+          this.okrPlan.permissions[index].edit = value;
+          this.okrPlan.permissions[index].publish = value;
+          this.okrPlan.permissions[index].assign = value;
+          this.okrPlan.permissions[index].delete = value;
+          this.okrPlan.permissions[index].share = value;
+          this.okrPlan.permissions[index].upload = value;
+        }
+        break;     
       case 'fromdate':
         if (value != null)
           this.okrPlan.permissions[index].startDate = value.fromDate;
@@ -136,11 +135,17 @@ export class PopupAddRoleComponent extends UIComponent {
           this.okrPlan.permissions[index].endDate = value.fromDate;
         break;
       default:
-        this.okrPlan.permissions[index][ctrl] = value;
+        if(ctrl!='full'){
+          this.isSetFull = false;
+          this.okrPlan.permissions[index][ctrl] = value;   
+          
+        }
         break;
     }
-
-    if (
+    if(!value && ctrl!='full' && ctrl!='todate' && ctrl!='fromdate'){
+      this.okrPlan.permissions[index].full = false;
+    }
+    else if(
       this.okrPlan.permissions[index].create &&
       this.okrPlan.permissions[index].read &&
       this.okrPlan.permissions[index].edit &&
@@ -149,59 +154,33 @@ export class PopupAddRoleComponent extends UIComponent {
       this.okrPlan.permissions[index].delete &&
       this.okrPlan.permissions[index].share &&
       this.okrPlan.permissions[index].upload
-    ) {
+    ){            
       this.okrPlan.permissions[index].full = true;
-    } else {
-      this.okrPlan.permissions[index].full = false;
     }
+    
     this.detectorRef.detectChanges();
   }
 
-  checkCurrentRightUpdate(owner = true) {}
+  disabledEdit(permissions){
+    if(permissions?.objectID==this.okrPlan?.owner || permissions?.objectID==this.okrPlan?.createdBy || permissions?.objectType=='7'){
+      return true;
+    }
+    else{
+      return false
+    }
+  }
 
   changePermission(index) {
-    if (this.okrPlan.permissions == null) {
+    this.isSetFull=false;
+    if (this.okrPlan?.permissions == null ) {
       return;
     }
-    if (this.okrPlan.permissions[index] != null) {
-      this.full =
-        this.okrPlan.permissions[index].create &&
-        this.okrPlan.permissions[index].read &&
-        this.okrPlan.permissions[index].edit &&
-        this.okrPlan.permissions[index].publish &&
-        this.okrPlan.permissions[index].assign &&
-        this.okrPlan.permissions[index].delete &&
-        this.okrPlan.permissions[index].share &&
-        this.okrPlan.permissions[index].upload;
-
-      this.create = this.okrPlan.permissions[index].create;
-      this.read = this.okrPlan.permissions[index].read;
-      this.edit = this.okrPlan.permissions[index].edit;
-      this.publish = this.okrPlan.permissions[index].publish;
-      this.assign = this.okrPlan.permissions[index].assign;
-      this.delete = this.okrPlan.permissions[index].delete;
-      this.share = this.okrPlan.permissions[index].share;
-      this.upload = this.okrPlan.permissions[index].upload;
-
+    if (this.okrPlan?.permissions[index] != null) {
+      this.selectedPermission=this.okrPlan.permissions[index];
       this.startDate = this.okrPlan.permissions[index].startDate;
       this.endDate = this.okrPlan.permissions[index].endDate;
-      this.currentPemission = index;
-      this.userID = this.okrPlan.permissions[index].objectID;
-      this.objectType = this.okrPlan.permissions[index].objectType;
-      this.permissonActiveId = index;
-    } else {
-      this.full = false;
-      this.create = false;
-      this.read = false;
-      this.edit = false;
-      this.publish = false;
-      this.assign = false;
-      this.delete = false;
-      this.share = false;
-      this.upload = false;
-      this.currentPemission = index;
-      this.permissonActiveId = index;
-    }
+      this.curPer= index;
+    } 
     this.detectorRef.detectChanges();
   }
 
@@ -227,26 +206,26 @@ export class PopupAddRoleComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   onSaveRole(evt: any) {
     if (evt?.data) {
-      var data = evt?.data.filter(
+      let data = evt?.data.filter(
         (element) =>
           !this.okrPlan.permissions.find((item) => item.objectID === element.id)
       );
-      if (data != null && data.length > 0) {
-        for (var i = 0; i < data.length; i++) {
-          var item = data[i];
-          var perm = { ...this.okrPlan.permissions[0] };
+      if (data != null && data?.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          let item = data[i];
+          let perm = { ...this.okrPlan.permissions[0] };
           perm.startDate = null;
           perm.endDate = null;
           perm.isActive = true;
-          perm.objectName = item.text != null ? item.text : item.objectName;
-          perm.objectID = item.id;
-          perm.objectType = item.objectType;
-          perm.read = true;
+          perm.objectName = item?.text != null ? item?.text : item?.objectName;
+          perm.objectID = item?.id;
+          perm.objectType = item?.objectType;
+          perm.full = true;
+          delete perm.recID;
+          delete perm.id;
           this.okrPlan.permissions.push(perm);
-          this.currentPemission = this.okrPlan.permissions.length - 1;
         }
-
-        this.changePermission(this.currentPemission);
+        this.changePermission(this.okrPlan.permissions?.length-1);
       } else {
         return;
       }
