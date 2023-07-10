@@ -256,9 +256,10 @@
         </div>
       </div>
     </div>
-    <ng-container *ngIf="dataDashBoard?.countsOwners?.length > 0; else noData">
-      <div class="w-100 h-100 mt-3">
-        <ng-container *ngIf="checkBtnMaxRadio">
+
+    <div class="w-100 h-100 mt-3">
+      <ng-container *ngIf="checkBtnMaxRadio">
+        <ng-container *ngIf="maxOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of maxOwners; let i = index"
             class="d-flex align-items-center justify-content-end cursor-pointer"
@@ -275,7 +276,9 @@
             </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="checkBtnMinRadio">
+      </ng-container>
+      <ng-container *ngIf="checkBtnMinRadio">
+        <ng-container *ngIf="minOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of minOwners; let i = index"
             class="d-flex align-items-center justify-content-end cursor-pointer"
@@ -292,8 +295,8 @@
             </div>
           </div>
         </ng-container>
-      </div>
-    </ng-container>
+      </ng-container>
+    </div>
   </div>
 </ng-template>
 
