@@ -112,6 +112,7 @@ export class TargetsComponent
         },
       },
     ];
+    this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
 
     this.detectorRef.checkNoChanges();
@@ -166,8 +167,7 @@ export class TargetsComponent
   //#endregion setting schedule
 
   //#region change Calendar ejs
-  changeCalendar(data: any) {
-  }
+  changeCalendar(data: any) {}
   //#endregion
   //#region event codx-view
   viewChanged(e) {}
@@ -198,7 +198,17 @@ export class TargetsComponent
     }
   }
 
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS04':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
   //#endregion
 
   //#region CRUD
@@ -215,10 +225,6 @@ export class TargetsComponent
       var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e && e.event != null) {
-          this.detectorRef.detectChanges();
-          // this.customerDetail.listTab(this.funcID);
-        }
       });
     });
   }

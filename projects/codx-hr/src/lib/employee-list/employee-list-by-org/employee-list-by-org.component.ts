@@ -153,7 +153,6 @@ export class EmployeeListByOrgComponent {
     this.orgUnitID = changes.orgUnitID.currentValue;
     if (this.showManager) {
       this.getManager(this.orgUnitID);
-      //this.empAvatar.refreshAvatar();
     }
     let ins = setInterval(() => {
       if (this.grid) {
@@ -210,7 +209,6 @@ export class EmployeeListByOrgComponent {
             this.getManager(this.orgUnitID);
             let ins = setInterval(() => {
               if (this.grid) {
-                //this.grid.dataService.rowCount = 0;
                 clearInterval(ins);
                 this.grid.deleteRow(data, true);
                 this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
@@ -255,9 +253,7 @@ export class EmployeeListByOrgComponent {
               if (e.event) {
                 if (e.event.orgUnitID === this.orgUnitID) {
                   this.grid.addRow(e.event, 0, true);
-                  //this.grid.refresh();
                 } else {
-                  //(this.view.dataService as CRUDService).add(e.event).subscribe();
                   this.orgUnitID = e.event.orgUnitID;
                   let ins = setInterval(() => {
                     if (this.grid) {
@@ -303,20 +299,7 @@ export class EmployeeListByOrgComponent {
         );
         dialog.closed.subscribe((e) => {
           if (e.event) {
-            if (e.event?.employeeID === this.manager?.employeeID) {
-              if (e.event?.positionID === this.manager?.positionID
-                || e.event?.orgUnitID === this.manager?.orgUnitID) {
-                this.getManager(this.orgUnitID);
-              } else {
-                this.manager.employeeName = e.event?.employeeName;
-                this.manager.phone = e.event?.phone;
-                this.manager.mobile = e.event?.mobile;
-              }
-            }
             if (e.event.orgUnitID === this.orgUnitID) {
-              if (this.showManager)
-                this.getManager(this.orgUnitID);
-              //this.grid.updateRow(index,e.event, true);
               this.grid.refresh();
             } else {
               this.orgUnitID = e.event.orgUnitID;
@@ -328,6 +311,8 @@ export class EmployeeListByOrgComponent {
                 }
               }, 100);
             }
+            if (this.showManager)
+              this.getManager(this.orgUnitID);
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
         });
@@ -365,14 +350,12 @@ export class EmployeeListByOrgComponent {
         if (emp.status === '90') {
           let ins = setInterval(() => {
             if (this.grid) {
-              //this.grid.dataService.rowCount = 0;
               clearInterval(ins);
               this.grid.deleteRow(data, true);
               this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
             }
           }, 200);
         }
-        //else this.view.dataService.update(emp).subscribe();
         this.dataChange.emit({ data: emp, actionType: 'edit', hasDataChanged: true });
       }
     });

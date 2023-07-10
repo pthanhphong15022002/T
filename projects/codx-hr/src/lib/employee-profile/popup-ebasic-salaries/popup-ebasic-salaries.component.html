@@ -37,7 +37,10 @@
               "
             ></span>
           </div>
-          <div class="text-gray-700">
+          <span class="text-gray-700" *ngIf="employeeObj.orgUnitName">{{
+            employeeObj?.orgUnitName
+          }}</span>
+          <!-- <div class="text-gray-700">
             <span
               [innerHTML]="
                 employeeObj?.orgUnitID
@@ -45,7 +48,7 @@
                   | async
               "
             ></span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

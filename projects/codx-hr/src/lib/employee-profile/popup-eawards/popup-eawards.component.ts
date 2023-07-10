@@ -55,7 +55,9 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     this.fromListView = data?.data?.fromListView;
     this.formModel = this.dialog.formModel;
-    this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
+    if (data?.data?.dataInput) {
+      this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
+    }
     if (this.awardObj) {
       this.valueYear = this.awardObj.inYear;
     }
@@ -125,8 +127,14 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        if (fieldName === 'employeeID') this.empObj = emp[0][0];
-        else if (fieldName === 'signerID') {
+        if (fieldName === 'employeeID') {
+          this.empObj = emp[0][0];
+          this.hrService
+            .getOrgUnitID(this.empObj?.orgUnitID ?? this.empObj?.emp?.orgUnitID)
+            .subscribe((res) => {
+              this.empObj.orgUnitName = res.orgUnitName;
+            });
+        } else if (fieldName === 'signerID') {
           this.awardObj.signer = emp[0][0]?.employeeName;
           if (emp[0][0]?.positionID) {
             this.hrService
@@ -155,6 +163,14 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
+    this.hrService
+      .getOrgUnitID(this.empObj?.orgUnitID ?? this.empObj?.emp?.orgUnitID)
+      .subscribe((res) => {
+        if (res?.orgUnitName) {
+          this.empObj.orgUnitName = res.orgUnitName;
+        }
+      });
+
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
