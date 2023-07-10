@@ -570,6 +570,7 @@ export class CodxDMService {
   }
 
   openItem(data: any) {
+    debugger
     if (!data.fileName) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');

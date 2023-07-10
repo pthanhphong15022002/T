@@ -70,7 +70,6 @@ export class BreadcumbComponent implements OnInit {
   }
 
   onJump(index:any) {
-    debugger
     this.dmSV.isTree = false;
     this.dmSV.parentFolderId = this.linkList[index];
     this.dmSV.currentNode = '';
