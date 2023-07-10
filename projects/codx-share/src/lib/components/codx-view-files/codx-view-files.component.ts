@@ -166,7 +166,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // add files
   selectFiles(files:any[]){
-    debugger
     if(Array.isArray(files)){
       files.map((f:any) => {
         f.recID = Util.uid();
@@ -197,7 +196,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // remove files
   removeFiles(event:any,data: any) {
-    debugger
     event.preventDefault();
     event.stopPropagation();
     if(this.files.length > 0){
@@ -219,7 +217,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // save
   save():Observable<boolean>{
-    debugger
     if(this.objectID)
     {
       let lstFileAdd = this.files.filter(x => x.isNew);
@@ -233,7 +230,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // delete files
   deleteFiles(files:any[]) :Observable<boolean>{
-    debugger
     if(files.length > 0)
     {
       let _fileIDs = files.map(x => x.recID);

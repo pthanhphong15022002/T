@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType, FormModel } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -109,6 +109,20 @@ export class EmployeePolicyalComponent extends UIComponent{
     );
   }
 
+  deleteFile(data){
+      //code xóa file luôn khi record chứa file bị xóa
+      return this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'DeleteByObjectIDAsync',
+          [data.policyID, this.view.formModel.entityName, true]
+        );
+  }
+
+
+
   clickMF(event, data){
     switch(event.functionID){
       case 'SYS03': //add
@@ -116,7 +130,11 @@ export class EmployeePolicyalComponent extends UIComponent{
         break;
 
       case 'SYS02': //delete
-      this.view.dataService.delete([data]).subscribe();
+      this.view.dataService.delete([data]).subscribe((res)=>{
+        this.deleteFile(data).subscribe((res) => {
+          debugger
+        })
+      });
         break;
 
       case 'SYS04': //copy
@@ -132,9 +150,7 @@ export class EmployeePolicyalComponent extends UIComponent{
         'copy',
         res
       );
-    });
-  }
-
+    });}
 
 
   HandlePolicyAL(actionHeaderText, actionType: string, data: any){

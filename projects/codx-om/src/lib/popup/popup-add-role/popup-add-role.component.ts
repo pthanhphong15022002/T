@@ -138,31 +138,40 @@ export class PopupAddRoleComponent extends UIComponent {
         if(ctrl!='full'){
           this.isSetFull = false;
           this.okrPlan.permissions[index][ctrl] = value;   
-          if(!value){
-            this.okrPlan.permissions[index].full = false;
-          }
-          else if(
-            this.okrPlan.permissions[index].create &&
-            this.okrPlan.permissions[index].read &&
-            this.okrPlan.permissions[index].edit &&
-            this.okrPlan.permissions[index].publish &&
-            this.okrPlan.permissions[index].assign &&
-            this.okrPlan.permissions[index].delete &&
-            this.okrPlan.permissions[index].share &&
-            this.okrPlan.permissions[index].upload
-          ){            
-            this.okrPlan.permissions[index].full = true;
-          }
+          
         }
         break;
     }
-
+    if(!value && ctrl!='full' && ctrl!='todate' && ctrl!='fromdate'){
+      this.okrPlan.permissions[index].full = false;
+    }
+    else if(
+      this.okrPlan.permissions[index].create &&
+      this.okrPlan.permissions[index].read &&
+      this.okrPlan.permissions[index].edit &&
+      this.okrPlan.permissions[index].publish &&
+      this.okrPlan.permissions[index].assign &&
+      this.okrPlan.permissions[index].delete &&
+      this.okrPlan.permissions[index].share &&
+      this.okrPlan.permissions[index].upload
+    ){            
+      this.okrPlan.permissions[index].full = true;
+    }
     
     this.detectorRef.detectChanges();
   }
 
+  disabledEdit(permissions){
+    if(permissions?.objectID==this.okrPlan?.owner || permissions?.objectID==this.okrPlan?.createdBy || permissions?.objectType=='7'){
+      return true;
+    }
+    else{
+      return false
+    }
+  }
 
   changePermission(index) {
+    this.isSetFull=false;
     if (this.okrPlan?.permissions == null ) {
       return;
     }
