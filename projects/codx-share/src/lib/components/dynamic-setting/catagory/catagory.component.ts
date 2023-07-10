@@ -329,7 +329,7 @@ export class CatagoryComponent implements OnInit {
                     {
                       data: category,
                       isAdd: false,
-                      headerText: /*"Sửa" + ' ' +*/ func?.customName ?? '',
+                      headerText: item.tilte ?? '', // /*"Sửa" + ' ' +*/ func?.customName ?? '',
                     },
                     option
                   );

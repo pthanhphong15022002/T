@@ -141,7 +141,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   // click moreFC
   clickMF(event: any, post: any) {
-    debugger
     if (event && post) {
       switch (event.functionID) {
         case 'WP001': // cập nhật
