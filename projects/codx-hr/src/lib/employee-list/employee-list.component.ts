@@ -290,6 +290,7 @@ export class EmployeeListComponent extends UIComponent {
         var emp = e.event;
         if (emp.status === '90') this.view.dataService.remove(emp).subscribe();
         else this.view.dataService.update(emp).subscribe();
+        this.hasChangedData = true;
       }
       this.detectorRef.detectChanges();
     });

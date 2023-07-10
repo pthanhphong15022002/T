@@ -64,7 +64,9 @@ export class PopupAddKRComponent extends UIComponent {
   okrPlan: any;
   onSaving = false;
   editMFunc=OMCONST.MFUNCID.Edit;
+  viewMFunc=OMCONST.MFUNCID.View;
   havedCheckIns=false;
+  viewMode= false;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -89,6 +91,9 @@ export class PopupAddKRComponent extends UIComponent {
       this.funcType == OMCONST.MFUNCID.Copy
     ) {
       this.typePlan = this.oldKR.plan;
+    }
+    if(this.funcType == OMCONST.MFUNCID.View){
+      this.viewMode=true;
     }
     
     this.curUser = authStore.get();
@@ -165,7 +170,7 @@ export class PopupAddKRComponent extends UIComponent {
     } else {
       this.codxOmService.getOKRByID(this.oldKR.recID).subscribe((krModel) => {
         if (krModel) {
-          if (this.funcType == OMCONST.MFUNCID.Edit) {
+          if (this.funcType == OMCONST.MFUNCID.Edit || this.funcType == OMCONST.MFUNCID.View) {
             this.afterOpenEditForm(krModel);
           } else {
             this.afterOpenCopyForm(krModel);
@@ -419,7 +424,7 @@ export class PopupAddKRComponent extends UIComponent {
         this.editTargets.push({ ...this.kr.targets[i] });
       }
     }    
-    let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 500 : 240;
+    let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 500 : 250;
     this.dialogTargets = this.callfc.openForm(template, '', 650, popUpHeight, null);
     this.detectorRef.detectChanges();
   }

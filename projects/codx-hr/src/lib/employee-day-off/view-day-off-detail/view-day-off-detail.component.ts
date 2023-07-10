@@ -60,7 +60,7 @@ export class ViewDayOffDetailComponent implements OnChanges {
   grvSetup: any = {};
   itemDetailStt;
   itemDetailDataStt;
-  gridViewSetup: any = {};
+  // gridViewSetup: any = {};
   knowType = {
     type1: ['N20', 'N22', 'N23', 'N24', 'N25', 'N26', 'N35'],
     type2: ['N21'],
@@ -73,13 +73,13 @@ export class ViewDayOffDetailComponent implements OnChanges {
   ngOnInit(): void {
     this.itemDetailStt = 1;
     this.itemDetailDataStt = 1;
-    if (this.formModel) {
-      this.cache
-        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-        .subscribe((res) => {
-          if (res) this.gridViewSetup = res;
-        });
-    }
+    // if (this.formModel) {
+    //   this.cache
+    //     .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+    //     .subscribe((res) => {
+    //       if (res) this.gridViewSetup = res;
+    //     });
+    // }
   }
   ngAfterViewInit() {
     this.tabControl = [
@@ -92,7 +92,7 @@ export class ViewDayOffDetailComponent implements OnChanges {
   }
 
   changeDataMF(e: any, data: any) {
-    this.hrService.handleShowHideMF(e, data, this.view.formModel);
+    this.hrService.handleShowHideMF(e, data, this.formModel);
 
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
