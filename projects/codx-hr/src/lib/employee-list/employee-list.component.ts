@@ -48,6 +48,7 @@ export class EmployeeListComponent extends UIComponent {
   entityName = 'HR_Employees';
   className = 'EmployeesBusiness';
   method = 'GetListEmployeeAsync';
+  idField ='employeeID';
 
   gridViewAction;
   cmtStatus = '';
@@ -89,7 +90,6 @@ export class EmployeeListComponent extends UIComponent {
     this.views = [
       {
         id: '1',
-        active: true,
         type: ViewType.list,
         sameData: true,
         //active: true,
@@ -100,7 +100,6 @@ export class EmployeeListComponent extends UIComponent {
       },
       {
         id: '2',
-        active: false,
         type: ViewType.tree_masterdetail,
         request: this.request,
         sameData: false,

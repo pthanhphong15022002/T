@@ -69,7 +69,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
-    this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    if (data?.data?.empObj) {
+      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    }
     this.actionType = data?.data?.actionType;
     this.lstDiscipline = data?.data?.lstDiscipline;
     this.indexSelected = data?.data?.indexSelected ?? -1;
@@ -77,6 +79,16 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
+    this.hrService
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        if (res.orgUnitName) {
+          this.employeeObj.orgUnitName = res.orgUnitName;
+        }
+      });
+
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -130,7 +142,18 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0];
-          this.cr.detectChanges();
+
+          this.hrService
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              if (res.orgUnitName) {
+                this.employeeObj.orgUnitName = res.orgUnitName;
+              }
+            });
+
+          //this.cr.detectChanges();
         }
       });
     }

@@ -217,7 +217,14 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Event
   onInputChange(e): void {
-    let field: string = e.field.toLowerCase();
+    console.log("onInputChange", e);
+
+    // e.data for valueChange and e.crrValue for controlBlur
+    if (!e.data && !e.crrValue) {
+      return;
+    }
+
+    const field: string = e.field.toLowerCase();
 
     if (field === 'cashbookid2') {
       this.cashBookName2 = e.component.itemsSelected[0]?.CashBookName;

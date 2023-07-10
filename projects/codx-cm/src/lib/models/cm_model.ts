@@ -768,5 +768,7 @@ export class CM_TargetsLines{
   createdOn: Date = new Date;
   createdBy: string;
   modifiedOn: Date;
-  ModifiedBy: string;
+  modifiedBy: string;
+  text: string;
+  isExit: boolean = false;
 }
