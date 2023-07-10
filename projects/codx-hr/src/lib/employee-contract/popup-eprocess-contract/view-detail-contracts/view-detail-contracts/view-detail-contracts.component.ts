@@ -40,7 +40,7 @@ export class ViewDetailContractsComponent implements OnInit {
     APPLICATION: 'application',
   };
   lstFile: any[] = [];
-  userID: any;
+  // userID: any;
 
   constructor(
     private authStore: AuthStore,
@@ -76,7 +76,7 @@ export class ViewDetailContractsComponent implements OnInit {
   active = 1;
 
   ngOnInit(): void {
-    this.userID = this.authStore.get().userID;
+    // this.userID = this.authStore.get().userID;
 
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {

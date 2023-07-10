@@ -480,7 +480,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP31': // bắt đầu ngay
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView && task?.dependRule == "0")) {
               res.isblur = true;
             }
             break;
@@ -709,12 +709,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [task?.stepID, task?.recID])
         .subscribe((res) => {
           if(res){
-            task.status = "1";
+            task.status = "2";
             task.modifiedBy = this.user.userID;
             task.modifiedOn = new Date();
             let taskFind = this.currentStep?.tasks?.find((taskFind) => taskFind.recID == task.recID);
             if(taskFind){
-              taskFind.status = "1";
+              taskFind.status = "2";
               taskFind.modifiedBy = this.user.userID;
               taskFind.modifiedOn = new Date();
             }
@@ -1635,7 +1635,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (f) {
           this.cache.gridView(f.gridViewName).subscribe((res) => {
             this.cache
-              .gridViewSetup(f.formName, f.gridViewName)
+                .gridViewSetup(f.formName, f.gridViewName)
               .subscribe((grvSetup) => {
                 if (grvSetup) {
                   formModel.funcID = 'TMT0501';

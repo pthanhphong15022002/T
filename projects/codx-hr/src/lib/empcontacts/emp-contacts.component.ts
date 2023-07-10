@@ -30,9 +30,6 @@ export class EmpContactsComponent extends UIComponent {
   dataValue = '90';
   columnsGrid = [];
   @ViewChild('chartOrg') chartOrg: CodxListviewComponent;
-  isShowTree = true;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   // @ViewChild('chart') chart: TemplateRef<any>;
   // @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
@@ -51,6 +48,9 @@ export class EmpContactsComponent extends UIComponent {
   @ViewChild('tmpTreeItemDetailCard') tmpTreeItemDetailCard: TemplateRef<any>;
 
 
+  @ViewChild('templateList') templateList: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
 
@@ -58,6 +58,13 @@ export class EmpContactsComponent extends UIComponent {
   itemSelected: any;
   grvSetup: any;
   funcID: string = '';
+
+  service = 'HR';
+  assemblyName = 'ERM.Business.HR';
+  entityName = 'HR_Employees';
+  className = 'EmployeesBusiness';
+  method = 'GetListEmployeeAsync';
+  idField ='employeeID';
 
   constructor(inject: Injector,
     //private changedt: ChangeDetectorRef,
@@ -131,13 +138,21 @@ export class EmpContactsComponent extends UIComponent {
     this.request.idField = 'orgUnitID';
 
     this.views = [
+      // {
+      //   id: '1',
+      //   type: ViewType.grid,
+      //   sameData: true,
+      //   model: {
+      //     resources: this.columnsGrid,
+      //   },
+      // },
       {
         id: '1',
-        type: ViewType.grid,
+        type: ViewType.list,
         sameData: true,
         model: {
-          resources: this.columnsGrid,
-          panelLeftRef: this.panelLeftRef,
+          template: this.templateList,
+          headerTemplate: this.headerTemplate,
         },
       },
       {

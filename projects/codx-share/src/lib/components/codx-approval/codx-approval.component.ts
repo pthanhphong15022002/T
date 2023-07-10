@@ -428,8 +428,9 @@ export class CodxApprovalComponent
             .codxApprove(
               data?.recID,
               status,
-              oComment.comment,
-              oComment.reasonID
+              oComment?.comment,
+              oComment?.reasonID,
+              null,
             )
             .subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
@@ -449,8 +450,9 @@ export class CodxApprovalComponent
           .codxApprove(
             data?.recID,
             status,
-            '',
-            '',
+            null,
+            null,
+            null,
           )
           .subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
@@ -469,7 +471,7 @@ export class CodxApprovalComponent
       }
     }
     if (funcID == 'SYS207') {
-      this.codxShareService.codxUndo(data?.recID).subscribe((res) => {
+      this.codxShareService.codxUndo(data?.recID,null).subscribe((res) => {
         if (res != null) {
           data = res;
           this.view.dataService.update(data).subscribe();

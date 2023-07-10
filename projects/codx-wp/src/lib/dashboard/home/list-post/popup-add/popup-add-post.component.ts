@@ -178,11 +178,16 @@ export class PopupAddPostComponent implements OnInit {
   // click show popup gắn thẻ
   clickTagsUser() {
     this.showCBB = !this.showCBB;
-    Array.from<any>(this.data.permissions).forEach((x) => {
-      if (x.memberType == this.MEMBERTYPE.TAGS) {
-        this.crrPermisionTag += x.objectID + ';';
-      }
-    });
+    if(this.data.permissions)
+    {
+      let arr = Array.from<any>(this.data.permissions)
+      .filter(x => x.memberType == this.MEMBERTYPE.TAGS && x.objectID);
+      if(arr.length == 1)
+        this.crrPermisionTag = arr[0].objectID;
+      else
+        this.crrPermisionTag = arr.map(x=>x.objectID).join(";");
+
+    }
   }
 
   // click uploadFile
@@ -222,7 +227,6 @@ export class PopupAddPostComponent implements OnInit {
 
   // publich Post
   publishPost() {
-    debugger;
     if (!this.data.contents && this.codxViewFiles.files.length == 0) {
       this.notifySvr.notifyCode(
         'SYS009',
@@ -257,7 +261,6 @@ export class PopupAddPostComponent implements OnInit {
 
   // edit post
   editPost() {
-    debugger;
     if (
       !this.data.contents &&
       this.codxViewFiles.files.length == 0 &&
@@ -296,7 +299,6 @@ export class PopupAddPostComponent implements OnInit {
 
   // share post
   sharePost() {
-    debugger;
     this.loaded = true;
     this.data.category = this.CATEGORY.SHARE;
     this.data.approveControl = this.data.shares.isActive ? "0" : "1";
@@ -323,17 +325,19 @@ export class PopupAddPostComponent implements OnInit {
 
   // chia sẻ người dùng
   addPerrmissonShares(event: any) {
-    debugger;
-    if (Array.isArray(event)) {
-      let arrPermisison = Array.from<any>(event);
+    let arrPermisison = Array.from<any>(event);
+    if(arrPermisison?.length > 0)
+    {
       let fisrtPermission = arrPermisison[0];
-      this.data.shareControl = fisrtPermission.objectType;
-      if (!Array.isArray(this.data.permissions)) this.data.permissions = [];
+      let shareControl = arrPermisison[0].objectType;
+      this.data.shareControl = shareControl;
+      if (!this.data.permissions) 
+        this.data.permissions = [];
       else
         this.data.permissions = this.data.permissions.filter(
           (e: any) => e.memberType != this.MEMBERTYPE.SHARE
         );
-      switch (this.data.shareControl) {
+      switch (shareControl) {
         case this.SHARECONTROLS.OWNER:
           break;
         case this.SHARECONTROLS.EVERYONE:
@@ -346,7 +350,7 @@ export class PopupAddPostComponent implements OnInit {
             memberType: this.MEMBERTYPE.SHARE,
             objectID: '',
             objectName: '',
-            objectType: this.data.shareControl,
+            objectType: shareControl,
           };
           this.data.permissions.push(permission);
           this.data.shareName = '';
@@ -367,21 +371,24 @@ export class PopupAddPostComponent implements OnInit {
             this.data.permissions.push(permission);
           });
           // WP001 chia sẻ 1 - WP002 chia sẻ nhiều người
-          let mssgCodeShare = arrPermisison.length == 1 ? 'WP001' : 'WP002';
-          this.cache.message(mssgCodeShare).subscribe((mssg: any) => {
-            if (mssg) {
+          let mssgCode = arrPermisison.length == 1 ? 'WP001' : 'WP002';
+          this.cache.message(mssgCode)
+          .subscribe((mssg: any) => {
+            if (mssg?.customName) 
+            {
               if (arrPermisison.length == 1) {
                 // chia sẻ 1 người
                 this.data.shareName = Util.stringFormat(
-                  mssg.defaultName,
+                  mssg.customName,
                   `<b>${fisrtPermission.text}</b>`
                 );
-              } else {
+              } else 
+              {
                 // chia sẻ nhiều người
                 let count = arrPermisison.length - 1;
                 let type = fisrtPermission.objectName;
                 this.data.shareName = Util.stringFormat(
-                  mssg.defaultName,
+                  mssg.customName,
                   `<b>${fisrtPermission.text}</b>`,
                   count,
                   type
@@ -393,57 +400,69 @@ export class PopupAddPostComponent implements OnInit {
         default:
           break;
       }
-      this.dt.detectChanges();
     }
+    else
+    {
+      this.data.shareName = "";
+    }
+    this.dt.detectChanges();
   }
 
   // gắn thẻ người dùng
 
   addPerrmissonTags(event: any) {
-    debugger;
-    if (event) {
-      let arrPermission = Array.from<any>(event.dataSelected);
-      if (Array.isArray(arrPermission)) {
-        if (!Array.isArray(this.data.permissions)) this.data.permissions = [];
-        else
-          this.data.permissions = this.data.permissions.filter(
-            (x) => x.memberType !== this.MEMBERTYPE.TAGS
-          );
-        this.crrPermisionTag = arrPermission.map((x) => x.UserID).join(';');
-        arrPermission.forEach((x: any) => {
-          let p = {
-            memberType: this.MEMBERTYPE.TAGS,
-            objectID: x.UserID,
-            objectName: x.UserName,
-            objectType: 'U',
-          };
-          this.data.permissions.push(p);
-        });
-        let fisrtPermission = arrPermission[0];
-        // WP018 gắn thẻ 1 - WP019 gắn thẻ nhiều người
-        let mssgCodeTag = arrPermission.length == 1 ? 'WP018' : 'WP019';
-        this.cache.message(mssgCodeTag).subscribe((mssg: any) => {
-          if (mssg) {
-            if (arrPermission.length == 1) {
-              // gắn thẻ 1 người
-              this.data.tagName = Util.stringFormat(
-                mssg.defaultName,
-                `<b>${fisrtPermission.UserName}</b>`
-              );
-            } else {
-              // gắn thẻ nhiều người
-              this.data.tagName = Util.stringFormat(
-                mssg.defaultName,
-                `<b>${fisrtPermission.UserName}</b>`,
-                arrPermission.length - 1
-              );
-            }
+    let arrPermission = Array.from<any>(event.dataSelected);
+    if (arrPermission?.length > 0) 
+    {
+      if (!this.data.permissions) 
+        this.data.permissions = [];
+      else
+        this.data.permissions = this.data.permissions.filter(
+          (x) => x.memberType !== this.MEMBERTYPE.TAGS
+        );
+      this.crrPermisionTag = arrPermission.map((x) => x.UserID).join(';');
+      arrPermission.forEach((x: any) => {
+        let p = {
+          memberType: this.MEMBERTYPE.TAGS,
+          objectID: x.UserID,
+          objectName: x.UserName,
+          objectType: 'U',
+        };
+        this.data.permissions.push(p);
+      });
+      // WP018 gắn thẻ 1 - WP019 gắn thẻ nhiều người
+      let mssgCodeTag = arrPermission.length == 1 ? 'WP018' : 'WP019';
+      this.cache.message(mssgCodeTag)
+      .subscribe((mssg: any) => {
+        if (mssg?.customName) 
+        {
+          if (arrPermission.length == 1) {
+            // gắn thẻ 1 người
+            this.data.tagName = Util.stringFormat(
+              mssg.customName,
+              `<b>${arrPermission[0].UserName}</b>`
+            );
+          } 
+          else 
+          {
+            // gắn thẻ nhiều người
+            this.data.tagName = Util.stringFormat(
+              mssg.customName,
+              `<b>${arrPermission[0].UserName}</b>`,
+              arrPermission.length - 1
+            );
           }
-        });
-        this.dt.detectChanges();
-      }
+        }
+      });
+      this.dt.detectChanges();
     }
-
+    else
+    {
+      this.data.tagName = null;
+      this.crrPermisionTag = "";
+      if (this.data.permissions?.length > 0) 
+        this.data.permissions = this.data.permissions.filter((x:any) => x.memberType !== this.MEMBERTYPE.TAGS);
+    }
     this.showCBB = false;
   }
   // get getSettingValue

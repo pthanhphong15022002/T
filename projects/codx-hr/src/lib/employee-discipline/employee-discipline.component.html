@@ -63,7 +63,19 @@
               "
             ></span>
           </div>
-          <div class="text-gray-700">
+          <span
+            *ngIf="
+              data.orgUnitName || data?.emp?.orgUnitName;
+              else noOrgUnitName
+            "
+            >{{ data.orgUnitName || data.emp.orgUnitName }}</span
+          >
+          <ng-template #noOrgUnitName>
+            <span class="place-holder">{{
+              grvSetup["OrgUnitID"].headerText
+            }}</span>
+          </ng-template>
+          <!-- <div class="text-gray-700">
             <span
               [innerHTML]="
                 data?.emp.orgUnitID
@@ -71,7 +83,7 @@
                   | async
               "
             ></span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

@@ -99,6 +99,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.list,
         sameData: true,
         model: {
@@ -107,6 +108,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
         sameData: true,
         model: {
@@ -127,7 +129,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       PopupEmployeeBusinessComponent,
       {
         funcID: this.view.funcID,
-        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         headerText: actionHeaderText,
         empObj: this.currentEmpObj,
         actionType: actionType,
@@ -138,6 +140,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
+          console.log(res.event);
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
@@ -150,7 +153,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   }
 
   addBusinessTravel(event): void {
-    this.currentEmpObj = this.itemDetail.emp;
+    this.currentEmpObj = this.itemDetail?.emp;
     if (event.id == 'btnAdd') {
       this.HandleEBusinessTravel(
         event.text + ' ' + this.view.function.description,

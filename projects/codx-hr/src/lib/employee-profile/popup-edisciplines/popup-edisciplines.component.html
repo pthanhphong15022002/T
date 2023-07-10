@@ -323,7 +323,10 @@
                 "
               ></span>
             </div>
-            <div
+            <span class="text-gray-700" *ngIf="employeeObj?.orgUnitName">{{
+              employeeObj?.orgUnitName
+            }}</span>
+            <!-- <div
               class="text-gray-700"
               *ngIf="employeeObj?.orgUnitID || employeeObj?.emp?.orgUnitID"
             >
@@ -334,7 +337,7 @@
                     | async
                 "
               ></span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
