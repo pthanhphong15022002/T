@@ -480,9 +480,10 @@ codx-aside .menu-item .separator {
   margin-top: 20px;
 }
 
-[data-kt-aside-minimize="on"] .aside .menu-column {
-  overflow: hidden;
-}
+// [data-kt-aside-minimize="on"] .aside .menu-column {
+//   overflow: hidden;
+//   border: 1px aqua solid;
+// }
 
 /****/
 codx-views > .container-fluid.h-100 {
