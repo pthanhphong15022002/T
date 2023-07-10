@@ -211,9 +211,6 @@ export class EmployeeDayOffComponent extends UIComponent {
           this.view.dataService,
           this
         );
-        // console.log(this.view);
-        //this.view.dataService.dataSelected = this.itemDetail;
-        //this.df.detectChanges();
         break;
       }
     }

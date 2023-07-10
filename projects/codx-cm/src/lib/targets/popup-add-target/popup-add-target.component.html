@@ -26,7 +26,7 @@
           <codx-input
             [formModel]="form.formModel"
             [crrValue]="data?.target"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueChangeTarget($event, 'input')"
             field="target"
           >
           </codx-input>
@@ -43,6 +43,7 @@
             [displayOption]="ops"
             cssClass="w-100 om-calendar"
             class="me-2"
+            [selectedType]="selectedType"
             (valueChange)="changeCalendar($event)"
             (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
@@ -60,7 +61,7 @@
                 [field]="'allocation'"
                 [crrValue]="isAllocation"
                 type="checkbox"
-                [disabled]="isPeriod"
+                [disabled]="isPeriod || isExitTarget"
                 (valueChange)="valueChange($event)"
               ></codx-input>
             </div>
@@ -150,45 +151,199 @@
     </div>
   </ng-template>
   <ng-template #templateOwners>
-    <div class="px-6 h-30">
-      <div class="row mb-2">
-        <div class="col-4"></div>
-        <div class="col-8" *ngIf="lstTime != null && lstTime.length > 0" style="overflow-x: auto !important;">
-          <div class="d-flex justify-content-between">
-            <div *ngFor="let item of lstTime">
-              <span class="text-nowrap pe-5">{{ item?.text }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr />
-      <div *ngFor="let item of lstOwners">
-        <div
-          class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2"
-        >
-          <div class="d-flex justify-content-between list-title">
-            <div class="d-flex align-items-top me-2">
-              <codx-img
-                class=""
-                [objectId]="item?.userID"
-                objectType="AD_Users"
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="z-index: 100"></th>
+            <!-- Loop through lstTime -->
+            <th *ngFor="let time of lstTime">
+              {{ time?.text }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through lstOwners -->
+          <tr *ngFor="let item of lstOwners">
+            <td>
+              <div
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2"
               >
-              </codx-img>
-            </div>
-            <div class="d-flex flex-column me-2">
-              <div class="text-dark fw-bold fs-6">
-                {{ item?.userName }}
+                <div class="d-flex justify-content-between list-title">
+                  <div class="d-flex align-items-top me-2">
+                    <codx-img
+                      class=""
+                      [objectId]="item?.userID"
+                      objectType="AD_Users"
+                    >
+                    </codx-img>
+                  </div>
+                  <div class="d-flex flex-column me-2">
+                    <div class="text-dark fw-bold fs-6">
+                      {{ item?.userName }}
+                    </div>
+                    <div class="text-gray-700">{{ item?.positionName }}</div>
+                  </div>
+                </div>
               </div>
-              <div class="text-gray-700">{{ item?.positionName }}</div>
+            </td>
+            <!-- Loop through lstTime and display target values -->
+            <td *ngFor="let time of lstTime">
+              <ng-container *ngIf="isAllocation">
+                <ng-container *ngFor="let line of time?.lines">
+                  <span *ngIf="line.salespersonID == item?.userID" class="">
+                    <span
+                      *ngIf="
+                        !isEditing(line?.recID, isAllocation) || !isEditLine
+                      "
+                      (click)="dbClick(line?.recID)"
+                    >
+                      <input
+                        type="text"
+                        #lblTarget
+                        name="lblTarget"
+                        [value]="targetToFixed(line?.target)"
+                        [disabled]="true"
+                        class="no-border text-gray-600"
+                        style="margin-left: 0px"
+                      />
+                    </span>
+                    <span
+                      *ngIf="isEditing(line?.recID, isAllocation) && isEditLine"
+                      ><input
+                        type="text"
+                        #lblTarget
+                        name="lblTarget"
+                        matInput
+                        autofocus
+                        [value]="line?.target"
+                        (blur)="
+                          updateTarget(
+                            lblTarget.value,
+                            line?.recID,
+                            isAllocation
+                          )
+                        "
+                        (keydown.enter)="
+                          updateTarget(
+                            lblTarget.value,
+                            line?.recID,
+                            isAllocation
+                          )
+                        "
+                        class="no-border text-gray-600"
+                        style="margin-left: 0px"
+                    /></span>
+                  </span>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="!isAllocation">
+                <span
+                  *ngIf="!isEditing(item?.userID, isAllocation) || !isEditLine"
+                  (click)="dbClick(item?.userID)"
+                >
+                  <input
+                    type="text"
+                    #lblTarget
+                    name="lblTarget"
+                    [value]="targetToFixed(item?.target / lstTime.length)"
+                    [disabled]="true"
+                    class="no-border text-gray-600"
+                    style="margin-left: 0px"
+                  />
+<!--
+                  <span
+                    [innerHTML]="targetToFixed(item?.target / lstTime.length)"
+                  ></span> -->
+                </span>
+                <span
+                  *ngIf="isEditing(item?.userID, isAllocation) && isEditLine"
+                  class=""
+                >
+                  <input
+                    type="text"
+                    #lblTarget
+                    name="lblTarget"
+                    matInput
+                    autofocus
+                    [value]="item?.target / lstTime.length"
+                    (blur)="
+                      updateTarget(lblTarget.value, item?.userID, isAllocation)
+                    "
+                    (keydown.enter)="
+                      updateTarget(lblTarget.value, item?.userID, isAllocation)
+                    "
+                    class="no-border text-gray-600"
+                    style="margin-left: 0px"
+                  />
+                </span>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- <div class="px-6 h-30">
+      <div class="row">
+        <div class="col-4">
+          <div class="mb-2"></div>
+          <div style="margin-top: 18px">
+            <div *ngFor="let item of lstOwners">
+              <div
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2"
+              >
+                <div class="d-flex justify-content-between list-title">
+                  <div class="d-flex align-items-top me-2">
+                    <codx-img
+                      class=""
+                      [objectId]="item?.userID"
+                      objectType="AD_Users"
+                    >
+                    </codx-img>
+                  </div>
+                  <div class="d-flex flex-column me-2">
+                    <div class="text-dark fw-bold fs-6">
+                      {{ item?.userName }}
+                    </div>
+                    <div class="text-gray-700">{{ item?.positionName }}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="d-flex justify-content-end me-3">
-            <span class="text-dark text-gray-700">
-              {{ item?.target }}
-            </span>
+        </div>
+        <div
+          class="col-8"
+          *ngIf="lstTime != null && lstTime.length > 0"
+          style="overflow-x: auto !important"
+        >
+          <div
+            [ngClass]="
+              isAllocation && data?.category != '3'
+                ? 'd-flex justify-content-between'
+                : 'd-flex justify-content-end'
+            "
+            class="mb-2"
+          >
+            <div class="d-flex flex-column" *ngFor="let item of lstTime">
+              <div
+                class="text-dark fw-bold text-nowrap pe-5"
+                style="margin-right: 20px"
+              >
+                {{ item?.text }}
+              </div>
+              <div class="mb-1" *ngFor="let item of lstOwners">
+                <div
+                  class="text-gray-700 text-nowrap pe-5"
+                  style="margin-right: 20px;margin-top: 6px;"
+                >
+                  {{ item?.target / lstTime.length }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </ng-template>
 </codx-form>

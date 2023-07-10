@@ -460,7 +460,7 @@
         [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
         predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
         [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-        (created)="gridCreated()" [preSaveCheck]="false" rowHeight="35" (onAddNew)="onAddNew($event)" [autoAddRow]="true"
+        (created)="gridCreated()" [preSaveCheck]="false" rowHeight="35" (onAddNew)="onAddNew($event)"
         (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
         [isCustom]="false"></codx-gridview-v2>
 
@@ -501,7 +501,7 @@
         [entityName]="fmCashCashReceiptsLine.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
         predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
         [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-        (created)="gridCreated()" [preSaveCheck]="false" rowHeight="35" (onAddNew)="onAddNew($event)" [autoAddRow]="true"
+        (created)="gridCreated()" [preSaveCheck]="false" rowHeight="35" (onAddNew)="onAddNew($event)"
         (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
         [isCustom]="false"></codx-gridview-v2>
 

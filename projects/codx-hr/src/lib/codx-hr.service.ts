@@ -98,8 +98,6 @@ export class CodxHrService {
     // );
   }
 
-
-
   loadPosInfo(positionID: string): Observable<any> {
     return this.api
       .call(
@@ -170,7 +168,7 @@ export class CodxHrService {
     );
   }
 
-  getListApprovalAsync(dtRequest, bussiness){
+  getListApprovalAsync(dtRequest, bussiness) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -210,7 +208,7 @@ export class CodxHrService {
     );
   }
 
-  SaveEmployeeQuitJobInfo(data){
+  SaveEmployeeQuitJobInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -219,7 +217,6 @@ export class CodxHrService {
       data
     );
   }
-
 
   saveEmployeeUnionAndPartyInfo(data) {
     return this.api.execSv<any>(
@@ -277,7 +274,7 @@ export class CodxHrService {
 
   //#region EPassportsBusiness
 
-  getEmpTotalPassportNum(){
+  getEmpTotalPassportNum() {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -305,7 +302,7 @@ export class CodxHrService {
     );
   }
 
-  GetEmpCurrentPassport(empID: string){
+  GetEmpCurrentPassport(empID: string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -370,7 +367,7 @@ export class CodxHrService {
   //#endregion
 
   //#region EmpVisasBusiness
-  getEmpTotalVisaNum(){
+  getEmpTotalVisaNum() {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -428,7 +425,7 @@ export class CodxHrService {
     );
   }
 
-  GetEmpCurrentVisa(empID: string){
+  GetEmpCurrentVisa(empID: string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -524,7 +521,7 @@ export class CodxHrService {
   //   );
   // }
 
-  GetEmpCurrentWorkpermit(empID: string){
+  GetEmpCurrentWorkpermit(empID: string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -533,8 +530,6 @@ export class CodxHrService {
       [empID]
     );
   }
-
-  
 
   getListWorkPermitByEmployeeID(data) {
     return this.api.execSv<any>(
@@ -565,8 +560,7 @@ export class CodxHrService {
     );
   }
 
-
-  loadDataEDisciplines(data){
+  loadDataEDisciplines(data) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1701,7 +1695,7 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_EContracts
-  getEContractQuitFortelDays(data){
+  getEContractQuitFortelDays(data) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1740,8 +1734,6 @@ export class CodxHrService {
       data
     );
   }
-
-
 
   addEContract(data: any) {
     return this.api.execSv<any>(
@@ -1974,8 +1966,7 @@ export class CodxHrService {
 
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
-      this.cache.functionList(functionID)
-      .subscribe((funcList) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
         var formModel = new FormModel();
         if (funcList) {
           formModel.entityName = funcList.entityName;
@@ -1984,8 +1975,7 @@ export class CodxHrService {
           formModel.funcID = funcList.functionID;
           formModel.entityPer = funcList.entityPer;
 
-          this.cache.gridView(formModel.gridViewName)
-          .subscribe((gridView) => {
+          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
             this.cache.setGridView(formModel.gridViewName, gridView);
             this.cache
               .gridViewSetup(formModel.formName, formModel.gridViewName)
@@ -2195,62 +2185,64 @@ export class CodxHrService {
     }
 
     //#region code cũ
-      if (
-        data.status == '0' ||
-        data.status == '2' ||
-        data.status == '4' ||
-        data.status == '5' ||
-        data.status == '6' ||
-        data.status == '9'
-      ) {
-        for (let i = 0; i < evt.length; i++) {
-          let funcIDStr = evt[i].functionID;
-          let IDCompare = funcIDStr.substr(funcIDStr.length - 3)
-          switch (IDCompare) {
-            case this.actionSubmit:
-            case this.actionUpdateCanceled:
-            case this.actionUpdateInProgress:
-            case this.actionUpdateRejected:
-            case this.actionUpdateApproved:
-            case this.actionUpdateClosed:
-            case this.actionEdit:
-            case this.actionDelete:
-              evt[i].disabled = true;
-              break;
-          }
-          if(IDCompare == this.actionDelete && (data.status == '0' || data.status == '4')){
-              evt[i].disabled = false;
-          }
-          else if(IDCompare == this.actionSubmit && data.status == '6'){
-            evt[i].disabled = false;
-          }
+    if (
+      data.status == '0' ||
+      data.status == '2' ||
+      data.status == '4' ||
+      data.status == '5' ||
+      data.status == '6' ||
+      data.status == '9'
+    ) {
+      for (let i = 0; i < evt.length; i++) {
+        let funcIDStr = evt[i].functionID;
+        let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+        switch (IDCompare) {
+          case this.actionSubmit:
+          case this.actionUpdateCanceled:
+          case this.actionUpdateInProgress:
+          case this.actionUpdateRejected:
+          case this.actionUpdateApproved:
+          case this.actionUpdateClosed:
+          case this.actionEdit:
+          case this.actionDelete:
+            evt[i].disabled = true;
+            break;
         }
-      } else if (data.status == '3') {
-        for (let i = 0; i < evt.length; i++) {
-          let funcIDStr = evt[i].functionID;
-          let IDCompare = funcIDStr.substr(funcIDStr.length - 3)
-          switch (IDCompare) {
-            case this.actionSubmit:
-            case this.actionUpdateInProgress:
-            case this.actionEdit:
-            case this.actionDelete:
-              evt[i].disabled = true;
-              break;
-          }
-          // let found = evt.find(
-          //   (val) =>
-          //     val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
-          // );
-          // found.disabled = true;
-  
-          // let found2 = evt.find(
-          //   (val) =>
-          //     val.functionID.substr(val.functionID.length - 3) ==
-          //     this.actionUpdateInProgress
-          // );
-          // found2.disabled = true;
+        if (
+          IDCompare == this.actionDelete &&
+          (data.status == '0' || data.status == '4')
+        ) {
+          evt[i].disabled = false;
+        } else if (IDCompare == this.actionSubmit && data.status == '6') {
+          evt[i].disabled = false;
         }
-      } 
+      }
+    } else if (data.status == '3') {
+      for (let i = 0; i < evt.length; i++) {
+        let funcIDStr = evt[i].functionID;
+        let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+        switch (IDCompare) {
+          case this.actionSubmit:
+          case this.actionUpdateInProgress:
+          case this.actionEdit:
+          case this.actionDelete:
+            evt[i].disabled = true;
+            break;
+        }
+        // let found = evt.find(
+        //   (val) =>
+        //     val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
+        // );
+        // found.disabled = true;
+
+        // let found2 = evt.find(
+        //   (val) =>
+        //     val.functionID.substr(val.functionID.length - 3) ==
+        //     this.actionUpdateInProgress
+        // );
+        // found2.disabled = true;
+      }
+    }
   }
 
   handleUpdateRecordStatus(functionID, data) {
@@ -2280,7 +2272,7 @@ export class CodxHrService {
 
   //#endregion
 
-  countEmpTotalRecord(empId, business){
+  countEmpTotalRecord(empId, business) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -2300,7 +2292,6 @@ export class CodxHrService {
     );
   }
 
-
   getOrgTreeByOrgID(orgID: string, level: number) {
     return this.api.execSv<any>(
       'HR',
@@ -2319,6 +2310,17 @@ export class CodxHrService {
       'PositionsBusiness',
       'GetAsync',
       positionID
+    );
+  }
+
+  //#region HR_OrganizationUnits
+  getOrgUnitID(orgID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetOrgUnitID',
+      orgID
     );
   }
 
@@ -2347,7 +2349,6 @@ export class CodxHrService {
       return 0;
     });
   }
-  
 
   addNew(funcID: string, entityName: string, idField: string) {
     return this.api.execSv<any>(
@@ -2402,8 +2403,6 @@ export class CodxHrService {
       [formName, category]
     );
   }
-
-  
 }
 
 import { Pipe, PipeTransform } from '@angular/core';
