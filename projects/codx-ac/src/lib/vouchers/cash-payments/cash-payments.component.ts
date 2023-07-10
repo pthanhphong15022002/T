@@ -275,13 +275,8 @@ export class CashPaymentsComponent extends UIComponent {
           this.view.funcID
         );
         this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(res.event['data']).subscribe();
-            }
-          }
+          this.itemSelected = this.view.dataService.dataSelected;
+          this.loadDatadetail(this.itemSelected);
         });
       });
   }
@@ -309,13 +304,8 @@ export class CashPaymentsComponent extends UIComponent {
           this.view.funcID
         );
         this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-              //this.view.dataService.update(res.event['data']).subscribe();
-            }
-          }
+          this.itemSelected = this.view.dataService.dataSelected;
+          this.loadDatadetail(this.itemSelected);
         });
       });
   }
