@@ -732,7 +732,7 @@ export class PdfComponent
         //     resolve(status);
         //   });
         this.codxShareService
-          .codxApprove(this.transRecID, mode, '', comment)
+          .codxApprove(this.transRecID, mode, null, comment,null)
           .subscribe((res: any) => {
             if (res?.msgCodeError == null) {
               resolve(true);

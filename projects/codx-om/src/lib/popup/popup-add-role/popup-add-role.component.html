@@ -6,22 +6,25 @@
           <div *ngIf="okrPlan != null && okrPlan?.permissions != null">
             <ng-container *ngFor="let perm of okrPlan?.permissions; index as i;">
               <ng-container
-                *ngIf="perm?.isActive != false">
+                *ngIf="perm?.isActive != false && perm?.objectType != '7'">
                 <div (click)="changePermission(i)"
-                  [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+                  [ngClass]="i == curPer ?'user-nav-active':null"
                   class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
                   <div class="d-flex align-items-center w-100">
                     <div class="symbol symbol-30 symbol-circle me-3">
+                      <!-- <div
+                        *ngIf="perm?.objectID == null || perm?.objectID == '' || perm?.objectID == '7'; then thenAvatar1 else elsethenAvatar1">
+                      </div> -->
                       <div
-                        *ngIf="perm?.objectID == null || perm?.objectID == ''; then thenAvatar1 else elsethenAvatar1">
+                        *ngIf="perm?.objectType == 'U'; then userAvatar else defaultAvatar">
                       </div>
-                      <ng-template #thenAvatar1>
+                      <ng-template #defaultAvatar>
                         <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="25"
                           imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="perm?.objectName"
                           [descLine]="1">
                         </codx-temp-full>
                       </ng-template>
-                      <ng-template #elsethenAvatar1>
+                      <ng-template #userAvatar>
                         <codx-temp-full [imageId]="perm?.objectID" imageObjType="AD_Users"
                           imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25"
                           [title]="perm?.objectName">
@@ -65,7 +68,7 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <!-- <tbody>
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label default="Toàn quyền" name="lblFull"
@@ -77,7 +80,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="full" field="full"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'full',currentPemission)"
+                     (valueChange)="changeRole($event, 'full',selectedPermission)"
                     >
                   </codx-input>
                 </td>
@@ -94,7 +97,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'create',currentPemission)">
+                     (valueChange)="changeRole($event, 'create',selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -108,7 +111,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="read" [checked]="read"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'read',currentPemission)">
+                     (valueChange)="changeRole($event, 'read',selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -123,7 +126,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="edit" [checked]="edit"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'edit',currentPemission)">
+                     (valueChange)="changeRole($event, 'edit',selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -139,7 +142,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="publish" [checked]="publish"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'publish',currentPemission)">
+                     (valueChange)="changeRole($event, 'publish',selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -153,7 +156,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="assign" [checked]="assign"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'assign',currentPemission)">
+                     (valueChange)="changeRole($event, 'assign',selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -168,7 +171,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete" field="delete"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'delete',currentPemission)">
+                     (valueChange)="changeRole($event, 'delete',selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -184,7 +187,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'share',currentPemission)">
+                     (valueChange)="changeRole($event, 'share',selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -200,7 +203,150 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload" field="upload"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'upload',currentPemission)">
+                     (valueChange)="changeRole($event, 'upload',selectedPermission)">
+                  </codx-input>
+                </td>
+              </tr>
+
+            </tbody> -->
+            <tbody>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Toàn quyền" name="lblFull"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Người dùng có tất cả quyền " name="lblFullDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" 
+                  [checked]="selectedPermission?.full
+                  " field="full" (focus)="controlFocus(true)"
+                     (valueChange)="changeRole($event, 'full', curPer)"
+                    >
+                  </codx-input>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Tạo mới" name="lblCreate"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép tạo mới" name="lblCreateDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.create" field="create"
+                     (valueChange)="changeRole($event, 'create',curPer)">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Xem" name="lblView" [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép xem bộ mục tiêu" name="lblViewDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="read" [checked]="selectedPermission?.read"
+                     (valueChange)="changeRole($event, 'read',curPer)">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Chỉnh sửa" name="lblEdit"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép chỉnh sửa bộ mục tiêu" name="lblEditDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="edit" [checked]="selectedPermission?.edit"
+                     (valueChange)="changeRole($event, 'edit',curPer)">
+                  </codx-input>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Phát hành" name="lblPublish"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép phát hành bộ mục tiêu" name="lblPublishDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="publish" [checked]="selectedPermission?.publish"
+                     (valueChange)="changeRole($event, 'publish',curPer)">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Phân bổ" name="lblAssign" [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép phân bổ bộ mục tiêu" name="lblAssignDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="assign" [checked]="selectedPermission?.assign"
+                     (valueChange)="changeRole($event, 'assign',curPer)">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Xóa" name="lblDelete"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép xóa bộ mục tiêu" name="lblDeleteDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.delete" field="delete"
+                     (valueChange)="changeRole($event, 'delete',curPer)">
+                  </codx-input>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Chia sẻ" name="lblShare"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép chia sẻ bộ mục tiêu" name="lblShareDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.share" field="share"
+                     (valueChange)="changeRole($event, 'share',curPer)">
+                  </codx-input>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Đính kèm" name="lblUpload"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép đính kèm tệp" name="lblUploadDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.upload" field="upload"
+                     (valueChange)="changeRole($event, 'upload',curPer)">
                   </codx-input>
                 </td>
               </tr>
@@ -217,8 +363,8 @@
               </label>
               <div class="col-12">
                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
-                  [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
-                  (valueChange)="onSaveRightChanged($event, 'fromdate')"></codx-input>
+                  [crrValue]="startDate" 
+                  (valueChange)="changeRole($event, 'fromdate')"></codx-input>
               </div>
             </div>
           </div>
@@ -230,8 +376,8 @@
               </label>
               <div class="col-12">
                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
-                  [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"
-                  (valueChange)="onSaveRightChanged($event, 'todate')">
+                  [crrValue]="endDate" 
+                  (valueChange)="changeRole($event, 'todate')">
                 </codx-input>
               </div>
             </div>
