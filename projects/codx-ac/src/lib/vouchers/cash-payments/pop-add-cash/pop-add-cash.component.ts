@@ -181,7 +181,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
     this.headerText = dialogData.data?.headerText;
     this.action = dialogData.data?.formType;
-    this.cashpayment = dialog.dataService.dataSelected;
+    this.cashpayment = { ...dialog.dataService.dataSelected };
     this.journal = dialogData.data?.journal;
     this.modegrid = this.journal.inputMode;
     this.baseCurr = this.journal.unbounds.baseCurr;
@@ -268,19 +268,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Event
   close() {
-    // if (
-    //   (this.gridCash && !this.gridCash.gridRef.isEdit) ||
-    //   (this.gridSet && !this.gridSet.gridRef.isEdit)
-    // ) {
-    //   if (this.hasSaved) {
-    //     this.dialog.close({
-    //       update: true,
-    //       data: this.cashpayment,
-    //     });
-    //   } else {
-    //     this.dialog.close();
-    //   }
-    // }
     this.dialog.close();
   }
 
@@ -405,7 +392,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             break;
           case 'reasonid':
             if (e.component.dataService.currentComponent.previousItemData) {
-              this.oldValue = e.component.dataService.currentComponent.previousItemData.ReasonID;
+              this.oldValue =
+                e.component.dataService.currentComponent.previousItemData.ReasonID;
             } else {
               this.oldValue = e.component.itemsSelected[0].ReasonID;
             }
@@ -435,6 +423,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.form.formGroup.patchValue(res);
               if (res.unbounds && res.unbounds.lsline) {
                 this.cashpaymentline = res.unbounds.lsline;
+                this.dialog.dataService.update(this.cashpayment).subscribe();
               }
             }
           });
@@ -532,7 +521,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'cr2',
       'reasonid',
       'referenceno',
-      'note'
+      'note',
     ];
     if (field.includes(e.field.toLowerCase()) && e.value) {
       this.api
@@ -734,17 +723,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               break;
           }
           this.api
-            .execAction<any>(this.entityNameLine, [data], 'DeleteAsync')
-            .subscribe((res) => {
-              if (res) {
-                this.hasSaved = true;
-                this.api
-                  .exec('AC', this.classNameLine, 'UpdateAfterDelete', [
-                    this.cashpaymentline,
-                  ])
-                  .subscribe((res) => {});
-              }
-            });
+            .exec('AC', this.classNameLine, 'UpdateAfterDelete', [data,this.cashpaymentline])
+            .subscribe((res) => {});
         }
       }
     });
@@ -844,17 +824,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           this.hasSaved = true;
+          this.dialog.dataService.update(this.cashpayment).subscribe();
           this.gridCash.autoAddRow = true;
           if (this.cashpayment.totalAmt != 0) {
             if (this.total > this.cashpayment.totalAmt) {
               this.notification.notifyCode('AC0012');
             }
           }
-          this.dialog.dataService.update(this.cashpayment).subscribe();
-          // if (res.unbounds.lineDefault != null) {
-          //   this.dataLine = res.unbounds.lineDefault;
-          // }
-          // this.loadGrid();
         }
       });
   }
@@ -866,6 +842,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           this.hasSaved = true;
+          this.dialog.dataService.update(this.cashpayment).subscribe();
           if (this.cashpayment.totalAmt != 0) {
             if (this.total > this.cashpayment.totalAmt) {
               this.notification.notifyCode('AC0012');
@@ -1071,10 +1048,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 if (res && res.update.data != null) {
                   this.loading = false;
-                  this.dialog.close({
-                    update: true,
-                    data: res.update.data,
-                  });
+                  this.dialog.close();
                   this.dt.detectChanges();
                 } else {
                   this.loading = false;
@@ -1101,14 +1075,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 })
                 .subscribe((res) => {
                   if (res && res.update.data != null) {
-                    this.dialog.close({
-                      update: true,
-                      data: res.update,
-                    });
+                    this.dialog.close();
                     this.dt.detectChanges();
                   } else {
                     this.loading = false;
-                    this.cashpayment.unbounds.isAddNew = true;
                   }
                 });
             }

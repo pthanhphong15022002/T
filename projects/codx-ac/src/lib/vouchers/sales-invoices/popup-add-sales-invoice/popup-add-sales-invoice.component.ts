@@ -404,17 +404,42 @@ export class PopupAddSalesInvoiceComponent
         this.setPredicateByIDIM4(e.data.idiM4);
       }
     }
+
+    // add a new row after pressing tab on the last column 
+    // if (e.type === "add") {
+    //   this.onClickAddRow();
+    // }
   }
 
   // ❌
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
-    if (e.shiftKey || e.key !== 'Tab') {
+    if (e.key !== 'Tab') {
       return;
     }
 
-    if (document.activeElement.className === 'e-tab-wrap') {
+    if (!e.shiftKey && document.activeElement.className === 'e-tab-wrap') {
       document.getElementById('btnAddLine').focus();
+    }
+
+    if (e.shiftKey) {
+      if (
+        document.activeElement.className === 'e-lastrowcell' ||
+        document.activeElement.id === 'gridViewV2'
+      ) {
+        document
+          .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
+          .focus();
+
+        return;
+      }
+
+      const nodes = document.querySelectorAll('ejs-grid #dropdownMenuButton');
+      if (nodes[nodes.length - 1] === document.activeElement) {
+        document
+          .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
+          .focus();
+      }
     }
   }
   //#endregion

@@ -99,6 +99,7 @@ export class EmployeeContractComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.list,
         sameData: true,
         model: {
@@ -107,6 +108,7 @@ export class EmployeeContractComponent extends UIComponent {
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
         sameData: true,
         model: {

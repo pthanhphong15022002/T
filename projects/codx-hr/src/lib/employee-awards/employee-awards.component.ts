@@ -109,6 +109,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.list,
         sameData: true,
         model: {
@@ -117,6 +118,7 @@ export class EmployeeAwardsComponent extends UIComponent {
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
         sameData: true,
         model: {

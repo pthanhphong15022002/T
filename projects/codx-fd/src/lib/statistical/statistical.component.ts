@@ -1,57 +1,69 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  ChangeDetectorRef,
   Component,
-  OnInit,
   Injector,
   TemplateRef,
   ViewChild,
+  AfterViewInit,
 } from '@angular/core';
 import {
-  ApiHttpService,
   CacheService,
   DataRequest,
+  PageTitleService,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { LayoutModel } from '@shared/models/layout.model';
 import { ChartComponent } from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
 import {
   AnimationModel,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-statistical',
   templateUrl: './statistical.component.html',
   styleUrls: ['./statistical.component.scss'],
 })
-export class StatisticalComponent extends UIComponent implements OnInit {
+export class StatisticalComponent extends UIComponent implements AfterViewInit {
   @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('linear') linear: ProgressBar;
+  @ViewChild('chart') chart: ChartComponent;
+
+  readonly TYPE_Ballot = {
+    ALL: '0',
+    Ballot_RECEIVED: '2',
+    Ballot_SENDED: '1',
+  };
+
+  readonly TYPE_TIME = {
+    TEMP: '',
+    MONTH: 'm',
+    QUARTER: 'q',
+    YEAR: 'y',
+  };
 
   //Column Chart
-  public primaryXAxis: Object = {
+  primaryXAxis: Object = {
     valueType: 'Category',
     interval: 1,
     crosshairTooltip: { enable: true },
   };
-  public primaryYAxis: Object = {
+
+  primaryYAxis: Object = {
     title: '',
     labelFormat: '{value}',
   };
-  public tooltip: Object = { enable: true, shared: true };
-  @ViewChild('chart')
-  public chart: ChartComponent;
-  public width: string = Browser.isDevice ? '100%' : '100%';
-  public height: string = Browser.isDevice ? '100%' : '60%';
 
-  public legendSettings: Object = {
+  tooltip: Object = { enable: true, shared: true };
+
+  width: string = Browser.isDevice ? '100%' : '100%';
+  height: string = Browser.isDevice ? '100%' : '60%';
+
+  legendSettings: Object = {
     visible: true,
   };
   startAngle: number = 0;
@@ -59,37 +71,21 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   //Column Chart
 
   //ProgressBar
-  public typeProgress: string = 'Linear';
-  public widthProgress: string = '100%';
-  public heightProgress: string = '40';
-  public trackThickness: number = 4;
-  public progressThickness: number = 4;
-  public min: number = 0;
-  public max: number = 100;
-  public showProgressValue: boolean = true;
-  public animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
+  typeProgress: string = 'Linear';
+  widthProgress: string = '100%';
+  heightProgress: string = '40';
+  trackThickness: number = 4;
+  progressThickness: number = 4;
+  min: number = 0;
+  max: number = 100;
+  showProgressValue: boolean = true;
+  animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
 
-  @ViewChild('linear')
-  public linear: ProgressBar;
-  //ProgressBar
-
-  readonly TYPE_Ballot = {
-    ALL: '0',
-    Ballot_RECEIVED: '2',
-    Ballot_SENDED: '1',
-  };
-  TYPE_TIME = {
-    TEMP: '',
-    MONTH: 'm',
-    QUARTER: 'q',
-    YEAR: 'y',
-  };
   selectTopBehaviors: number;
   modeView = '1';
   typeBallot = '0';
   cardType = '';
   typeTime = '1';
-  typeTimeName = this.TYPE_TIME.MONTH;
   fromDate: any = '';
   toDate = '';
   today: any = new Date();
@@ -117,8 +113,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     },
   };
   colors_empty: string[] = ['#A9A9A9'];
-
-  public barChartOptions = {
+  barChartOptions = {
     responsive: true,
     legend: {
       position: 'right',
@@ -158,13 +153,13 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       ],
     },
   };
-  public barChartLabels: any[] = [];
-  public barChartLegend = true;
-  public barChartPlugins = [];
-  public barChartData: any[] = [];
-  public dataReceived = [];
-  public dataSended = [];
-  public barChartOptions_Behavior = {
+  barChartLabels: any[] = [];
+  barChartLegend = true;
+  barChartPlugins = [];
+  barChartData: any[] = [];
+  dataReceived = [];
+  dataSended = [];
+  barChartOptions_Behavior = {
     cornerRadius: 50,
     legend: {
       display: false,
@@ -239,16 +234,21 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   options = new DataRequest();
   funcID = '';
   functionList: any;
+  ballot_SENDED = false;
+  ballot_RECEIVED = false;
+
+  columns: number = 6;
+  cellSpacing: number[] = [5, 5];
+  aspectRatio: any = 100 / 85;
 
   constructor(
     private injector: Injector,
-    private changeDf: ChangeDetectorRef,
     private cacheService: CacheService,
     private modalService: NgbModal,
-    private route: ActivatedRoute
+    private pageTitle: PageTitleService
   ) {
     super(injector);
-    this.route.params.subscribe((param) => {
+    this.router.params.subscribe((param) => {
       if (param) this.funcID = param['funcID'];
     });
     this.cacheService.functionList(this.funcID).subscribe((res) => {
@@ -260,6 +260,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     var lastDayInMonth = new Date(year, month + 1, 0);
     this.fromDate = this.dateTimeToString(firstDayInMonth);
     this.toDate = this.dateTimeToString(lastDayInMonth);
+    this.pageTitle.setBreadcrumbs([]);
   }
 
   onInit(): void {
@@ -279,10 +280,22 @@ export class StatisticalComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.views = [
+      // {
+      //   type: ViewType.content,
+      //   active: true,
+      //   sameData: false,
+      //   reportType: 'D',
+      //   reportView: true,
+      //   showFilter: true,
+
+      //   model: {
+      //     panelRightRef: this.panelLeftRef,
+      //   },
+      // },
       {
         type: ViewType.content,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           panelLeftRef: this.panelLeftRef,
         },
@@ -319,6 +332,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     if (totalCoinReceiver < totalCoinSend) return 'text-danger';
     return '';
   }
+
   dateTimeToString(date: Date) {
     var yyyy = date.getFullYear().toString();
     var mm = (date.getMonth() + 1).toString();
@@ -335,13 +349,12 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       (ddChars[1] ? dd : '0' + ddChars[0])
     );
   }
+
   changeCardType(data) {
     this.cardType = data.data;
     this.reloadAllChart();
   }
 
-  ballot_SENDED = false;
-  ballot_RECEIVED = false;
   changeTypeCoins(typeBallot) {
     if (typeBallot == this.TYPE_Ballot.Ballot_SENDED) {
       this.ballot_SENDED = !this.ballot_SENDED;
@@ -355,11 +368,13 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.typeBallot = typeBallot;
     this.reloadAllChart();
   }
+
   reloadAllChart() {
     this.setPredicate();
     this.getDataChartA();
     this.getDataChartB();
   }
+
   open(content) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -367,6 +382,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       size: 'sm',
     });
   }
+
   getDataChartB() {
     var listBehavior_Temp = [];
     var listBehavior = [];
@@ -386,7 +402,10 @@ export class StatisticalComponent extends UIComponent implements OnInit {
           this.lstTotalCoin = res.totalCoin;
           listBehavior_Temp = res.resultBehaviors;
           this.selectTopBehaviors = res.selectTopBehaviors;
-          this.totalBehavior = res.resultBehaviors.reduce((sum, current) => sum + current.count, 0);
+          this.totalBehavior = res.resultBehaviors.reduce(
+            (sum, current) => sum + current.count,
+            0
+          );
           // this.totalBehavior = _.sumBy(res.resultBehaviors, function (o) {
           //   return o.count;
           // });
@@ -419,6 +438,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         return a + c;
       });
   }
+
   setChartBehavior(data: Array<any>) {
     // this.barChartLabels_Behavior = [];
     // this.barChartData_Behavior[0].data = [];
@@ -427,6 +447,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     //     this.barChartData_Behavior[0].data.push(item.count);
     // })
   }
+
   getDataSet() {
     this.chartDatas = [];
     this.chartLabels = [];
@@ -459,10 +480,12 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.chart_Datas = chartDatasTemp;
     console.log('check chart_Datas', this.chart_Datas);
   }
+
   getLabelName(key) {
-    let oData = this.dataStore.filter(x=>x.value==key);
+    let oData = this.dataStore.filter((x) => x.value == key);
     return oData[0].text;
   }
+
   getDataChartA() {
     var arrReceived = [];
     var arrSended = [];
@@ -507,13 +530,13 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.dataSended = dtSended;
     console.log('check dataReceived', this.dataReceived);
     console.log('check dataSended', this.dataSended);
-    this.changeDf.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   dateChange(evt: any) {
     if (evt?.fromDate || evt?.toDate) {
-      this.fromDateDropdown = new Date(evt.fromDate).toISOString()
-      this.toDateDropdown = new Date(evt.toDate).toISOString()
+      this.fromDateDropdown = new Date(evt.fromDate).toISOString();
+      this.toDateDropdown = new Date(evt.toDate).toISOString();
       this.reloadAllChart();
     }
   }
@@ -619,5 +642,35 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         ctx.fillText(value + ' phiếu', centerX, centerY);
       },
     };
+  }
+
+  newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
+
+  onActions(e: any) {
+    // if (e.type == 'reportLoaded') {
+    //   this.arrReport = e.data;
+    //   if (this.arrReport.length) {
+    //     let arrChildren: any = [];
+    //     for (let i = 0; i < this.arrReport.length; i++) {
+    //       arrChildren.push({
+    //         title: this.arrReport[i].customName,
+    //         path: 'tm/tmdashboard/TMD?reportID=' + this.arrReport[i].reportID,
+    //       });
+    //     }
+    //     this.pageTitle.setSubTitle(arrChildren[0].title);
+    //     this.pageTitle.setChildren(arrChildren);
+    //     this.codxService.navigate('', arrChildren[0].path);
+    //   }
+    // }
+    // this.isLoaded = false;
   }
 }
