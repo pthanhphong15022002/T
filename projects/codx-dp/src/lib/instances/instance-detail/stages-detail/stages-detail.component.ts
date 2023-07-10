@@ -1,14 +1,13 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
-  TemplateRef,
   ViewChild,
+  Component,
+  TemplateRef,
+  EventEmitter,
+  SimpleChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   CdkDragDrop,
@@ -17,33 +16,28 @@ import {
 } from '@angular/cdk/drag-drop';
 import {
   AuthStore,
-  CacheService,
-  CallFuncService,
   DialogRef,
   FormModel,
-  NotificationsService,
+  CacheService,
   SidebarModel,
+  CallFuncService,
+  NotificationsService,
   Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import {
   DP_Instances_Steps,
+  DP_Instances_Steps_Tasks,
   DP_Instances_Steps_Reasons,
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_TaskGroups_Roles,
-  DP_Instances_Steps_Tasks,
-  DP_Instances_Steps_Tasks_Roles,
 } from '../../../models/models';
-import { CodxDpService } from '../../../codx-dp.service';
-import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
-import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
-import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
-import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
-import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
-import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
-import { InstancesComponent } from '../../instances.component';
 import { firstValueFrom } from 'rxjs';
+import { CodxDpService } from '../../../codx-dp.service';
+import { InstancesComponent } from '../../instances.component';
+import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
+import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -395,7 +389,7 @@ export class StagesDetailComponent implements OnInit {
 
   //task -- nvthuan
   openTypeTask() {
-    this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
+    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 400, 400);
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event?.value) {
         this.jobType = value?.event;
