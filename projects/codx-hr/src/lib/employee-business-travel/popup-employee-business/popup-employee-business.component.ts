@@ -71,7 +71,9 @@ export class PopupEmployeeBusinessComponent
     this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
-    this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    if (data?.data?.empObj) {
+      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    }
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
 
@@ -86,6 +88,16 @@ export class PopupEmployeeBusinessComponent
   }
 
   initForm() {
+    this.hrService
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        if (res.orgUnitName) {
+          this.employeeObj.orgUnitName = res?.orgUnitName;
+        }
+      });
+
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -129,7 +141,14 @@ export class PopupEmployeeBusinessComponent
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0];
-          this.df.detectChanges();
+
+          this.hrService
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              this.employeeObj.orgUnitName = res.orgUnitName;
+            });
         }
       });
     } else {
@@ -291,6 +310,7 @@ export class PopupEmployeeBusinessComponent
       this.hrService.addEBusinessTravels(this.data).subscribe((res) => {
         if (res) {
           this.notitfy.notifyCode('SYS006');
+          res.emp = this.employeeObj;
           this.dialog && this.dialog.close(res);
         }
       });
@@ -298,6 +318,7 @@ export class PopupEmployeeBusinessComponent
       this.hrService.editEBusinessTravels(this.data).subscribe((res) => {
         if (res) {
           this.notitfy.notifyCode('SYS007');
+          res.emp = this.employeeObj;
           this.dialog && this.dialog.close(res);
         }
       });
