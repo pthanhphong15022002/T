@@ -1,0 +1,12 @@
+
+.row.mb-2 {
+  display: flex;
+}
+
+.scroll-container1 {
+  overflow-x: auto !important;
+}
+
+.inner-row {
+  display: flex;
+}

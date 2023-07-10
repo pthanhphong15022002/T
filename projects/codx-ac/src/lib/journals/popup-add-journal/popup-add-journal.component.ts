@@ -156,7 +156,7 @@ export class PopupAddJournalComponent
       options.pageLoading = false;
       this.acService
         .loadDataAsync('AC', options)
-        .subscribe((journalPermissions: IJournalPermission[]) => {
+        .subscribe(async (journalPermissions: IJournalPermission[]) => {
           this.journalPermissions = journalPermissions;
 
           let creater: string[] = [];
@@ -166,6 +166,11 @@ export class PopupAddJournalComponent
           let sharer: string[] = [];
 
           for (const permission of journalPermissions) {
+            permission.objectName = await this.getObjectNameAsync(
+              permission.objectType,
+              permission.objectID
+            );
+
             if (permission.add === '1') {
               this.createrObjectType = permission.objectType;
               creater.push(permission.objectID);
@@ -529,6 +534,7 @@ export class PopupAddJournalComponent
       '',
       {
         journalPermissions: this.journalPermissions,
+        journalNo: this.journal.journalNo,
       }
     );
   }
@@ -791,6 +797,45 @@ export class PopupAddJournalComponent
     }
 
     return true;
+  }
+
+  async getObjectNameAsync(
+    objectType: string,
+    objectId: string
+  ): Promise<string> {
+    if (objectType === 'U') {
+      const users = await lastValueFrom(
+        this.acService.loadComboboxData(
+          'Share_Users',
+          'AD',
+          'UserID=@0',
+          objectId
+        )
+      );
+      return users[0]?.UserName;
+    } else if (objectType === 'UG') {
+      const userGroups = await lastValueFrom(
+        this.acService.loadComboboxData(
+          'Share_GroupUsers',
+          'AD',
+          'GroupID=@0',
+          objectId
+        )
+      );
+      return userGroups[0]?.GroupName;
+    } else if (objectType === 'R') {
+      const userRoles = await lastValueFrom(
+        this.acService.loadComboboxData(
+          'Share_UserRoles',
+          'AD',
+          'RoleID=@0',
+          objectId
+        )
+      );
+      return userRoles[0]?.RoleName;
+    }
+
+    return '';
   }
   //#endregion
 }

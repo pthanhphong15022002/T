@@ -11,7 +11,7 @@
       >
         <div class="h-100 overflow-auto me-2">
           <div
-            *ngFor="let object of objects; index as i"
+            *ngFor="let permission of permissions; index as i"
             class="item d-flex justify-content-between p-2 mb-1"
             [ngClass]="selectedIndex == i ? 'active' : ''"
             role="button"
@@ -20,16 +20,17 @@
             <div class="d-flex align-items-center gap-3">
               <codx-img
                 [width]="25"
-                [objectId]="object.id"
+                [objectId]="permission.objectID"
                 objectType="AD_Users"
               >
               </codx-img>
-              <div class="text-dark fw-bold">{{ object.text }}</div>
+              <div class="text-dark fw-bold">{{ permission.objectName }}</div>
             </div>
 
             <div
               class="item__close-btn d-flex justify-content-center align-items-center bg-white"
               role="button"
+              (click)="onClickRemove(i)"
             >
               <i class="icon-close text-danger icon-16"></i>
             </div>
@@ -43,7 +44,7 @@
           field="creater"
           refValue="AC068"
           [showInput]="false"
-          (valueChange)="onChange($event)"
+          (valueChange)="onObjectListChange($event)"
         >
         </codx-input>
       </div>
@@ -94,7 +95,10 @@
               <td>
                 <codx-input
                   type="switch"
-                  [disabled]="objects.length === 0"
+                  field="add"
+                  [disabled]="permissions.length === 0"
+                  [checked]="permissions[selectedIndex]?.add"
+                  (valueChange)="onInputChange($event)"
                 ></codx-input>
               </td>
             </tr>
@@ -118,7 +122,10 @@
                   type="combobox"
                   refType="2"
                   refValue="AC120"
-                  [disabled]="objects.length === 0"
+                  [disabled]="permissions.length === 0"
+                  field="read"
+                  [crrValue]="permissions[selectedIndex]?.read"
+                  (valueChange)="onInputChange($event)"
                 ></codx-input>
               </td>
             </tr>
@@ -142,7 +149,10 @@
                   type="combobox"
                   refType="2"
                   refValue="AC120"
-                  [disabled]="objects.length === 0"
+                  [disabled]="permissions.length === 0"
+                  field="delete"
+                  [crrValue]="permissions[selectedIndex]?.delete"
+                  (valueChange)="onInputChange($event)"
                 ></codx-input>
               </td>
             </tr>
@@ -166,7 +176,10 @@
                   type="combobox"
                   refType="2"
                   refValue="AC120"
-                  [disabled]="objects.length === 0"
+                  [disabled]="permissions.length === 0"
+                  field="edit"
+                  [crrValue]="permissions[selectedIndex]?.edit"
+                  (valueChange)="onInputChange($event)"
                 ></codx-input>
               </td>
             </tr>
@@ -188,7 +201,7 @@
               <td>
                 <codx-input
                   type="switch"
-                  [disabled]="objects.length === 0"
+                  [disabled]="permissions.length === 0"
                 ></codx-input>
               </td>
             </tr>
@@ -210,7 +223,10 @@
               <td>
                 <codx-input
                   type="switch"
-                  [disabled]="objects.length === 0"
+                  field="post"
+                  [disabled]="permissions.length === 0"
+                  [checked]="permissions[selectedIndex]?.post"
+                  (valueChange)="onInputChange($event)"
                 ></codx-input>
               </td>
             </tr>
@@ -221,7 +237,7 @@
   </ng-template>
 
   <ng-template #footer>
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" (click)="(onClickSave)">
       <codx-label
         [fiedName]="'titleSave'"
         [formModel]=""
