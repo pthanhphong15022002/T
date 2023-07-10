@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService, CodxService } from 'codx-core';
 import { PopupAddEmployeeComponent } from '../popup/popup-add-employee/popup-add-employee.component';
+import { PopupUpdateStatusComponent } from '../popup-update-status/popup-update-status.component';
 
 @Component({
   selector: 'lib-employee-list-by-org',
@@ -189,8 +190,8 @@ export class EmployeeListByOrgComponent {
       case 'SYS04': // sao chép
         this.copy(data, moreFunc);
         break;
-      case 'HR0031': // cập nhật tình trạng
-        // this.updateStatus(data, moreFunc.functionID);
+      case 'HRT03a1A07': // cập nhật tình trạng
+        this.updateStatus(data, moreFunc.functionID);
         break;
       case 'HR0032': // xem chi tiết
         break;
@@ -331,6 +332,33 @@ export class EmployeeListByOrgComponent {
         request: this.view.dataService.request,
       };
       this.codxService.navigate('', func?.url, queryParams, state, true);
+    });
+  }
+  updateStatus(data: any, funcID: string) {
+    let popup = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      funcID,
+      data
+    );
+    popup.closed.subscribe((e) => {
+      if (e?.event) {
+        var emp = e.event;
+        if (emp.status === '90') {
+          let ins = setInterval(() => {
+            if (this.grid) {
+              //this.grid.dataService.rowCount = 0;
+              clearInterval(ins);
+              this.grid.deleteRow(data, true);
+              this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
+            }
+          }, 200);
+        }
+        //else this.view.dataService.update(emp).subscribe();
+        this.dataChange.emit({ data: emp, actionType: 'edit', hasDataChanged: true });
+      }
     });
   }
 }
