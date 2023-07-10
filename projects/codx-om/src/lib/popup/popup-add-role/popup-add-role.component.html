@@ -6,7 +6,7 @@
           <div *ngIf="okrPlan != null && okrPlan?.permissions != null">
             <ng-container *ngFor="let perm of okrPlan?.permissions; index as i;">
               <ng-container
-                *ngIf="perm?.isActive != false && perm?.objectType != '7'">
+                *ngIf="perm?.isActive != false">
                 <div (click)="changePermission(i)"
                   [ngClass]="i == curPer ?'user-nav-active':null"
                   class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
@@ -223,7 +223,7 @@
                   <codx-input class="test-check" type="switch" style="width:100%" 
                   [checked]="selectedPermission?.full
                   " field="full" (focus)="controlFocus(true)"
-                     (valueChange)="changeRole($event, 'full', curPer)"
+                     (valueChange)="changeRole($event, 'full', curPer)" [disabled]="disabledEdit(selectedPermission)"
                     >
                   </codx-input>
                 </td>
@@ -240,7 +240,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.create" field="create"
-                     (valueChange)="changeRole($event, 'create',curPer)">
+                     (valueChange)="changeRole($event, 'create',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -254,7 +254,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="read" [checked]="selectedPermission?.read"
-                     (valueChange)="changeRole($event, 'read',curPer)">
+                     (valueChange)="changeRole($event, 'read',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -269,7 +269,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="edit" [checked]="selectedPermission?.edit"
-                     (valueChange)="changeRole($event, 'edit',curPer)">
+                     (valueChange)="changeRole($event, 'edit',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -285,7 +285,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="publish" [checked]="selectedPermission?.publish"
-                     (valueChange)="changeRole($event, 'publish',curPer)">
+                     (valueChange)="changeRole($event, 'publish',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -299,7 +299,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="assign" [checked]="selectedPermission?.assign"
-                     (valueChange)="changeRole($event, 'assign',curPer)">
+                     (valueChange)="changeRole($event, 'assign',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -314,7 +314,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.delete" field="delete"
-                     (valueChange)="changeRole($event, 'delete',curPer)">
+                     (valueChange)="changeRole($event, 'delete',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -330,7 +330,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.share" field="share"
-                     (valueChange)="changeRole($event, 'share',curPer)">
+                     (valueChange)="changeRole($event, 'share',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
@@ -346,7 +346,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="selectedPermission?.upload" field="upload"
-                     (valueChange)="changeRole($event, 'upload',curPer)">
+                     (valueChange)="changeRole($event, 'upload',curPer)" [disabled]="disabledEdit(selectedPermission)">
                   </codx-input>
                 </td>
               </tr>
