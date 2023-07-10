@@ -980,4 +980,18 @@ export class StagesDetailComponent implements OnInit {
   saveAssignStepTask(e) {
     this.saveAssign.emit(e);
   }
+
+  setIdAndUserRole(data, type){
+    var result = '';
+    var index = -1;
+    if(data != null && data.length > 0){
+      index = data.findIndex(x => x.roleType == 'S');
+    }
+
+    if(index != -1){
+      result = type == 'id' ? data[index]?.objectID : data[index]?.objectName;
+    }
+    console.log(result);
+    return result;
+  }
 }

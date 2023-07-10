@@ -84,7 +84,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: true,
+        active: false,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -93,7 +93,7 @@ export class TargetsComponent
       {
         sameData: false,
         type: ViewType.schedule,
-        active: false,
+        active: true,
         request2: this.scheduleHeader,
         request: this.schedules,
         toolbarTemplate: this.footerButton,
@@ -206,6 +206,8 @@ export class TargetsComponent
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '800px';
       var obj = {
         action: 'add',
         title: this.titleAction,

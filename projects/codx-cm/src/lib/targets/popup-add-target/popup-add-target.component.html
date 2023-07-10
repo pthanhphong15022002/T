@@ -21,49 +21,174 @@
           </codx-input>
         </div>
         <div class="col-6">
-          <codx-label [formModel]="form.formModel" fiedName="Interval">
+          <codx-label [formModel]="form.formModel" fiedName="Target">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="interval"
+            [crrValue]="data?.target"
+            (valueChange)="valueChange($event)"
+            field="target"
           >
           </codx-input>
         </div>
       </div>
       <div class="row form-group">
         <div class="col-6">
-          <codx-label [formModel]="form.formModel" fiedName="Allocation">
+          <codx-label [formModel]="form.formModel" [fiedName]="'Period'">
           </codx-label>
-          <codx-input
+          <codx-dropdown-calendar
+            cssPopup="h-500px w-800px"
+            [value]="date"
+            [selectedType]="'y'"
+            [displayOption]="ops"
+            cssClass="w-100 om-calendar"
+            class="me-2"
+            (valueChange)="changeCalendar($event)"
+            (change)="changeCalendar($event)"
+          ></codx-dropdown-calendar>
+          <!-- <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            field="allocation"
+            field="period"
           >
-          </codx-input>
+          </codx-input> -->
         </div>
-        <div class="col-6" *ngIf="data?.interval == 'year'">
-          <codx-label [formModel]="form.formModel" [fiedName]="'Year'">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="year"
-          >
-          </codx-input>
+        <div class="col-6">
+          <div class="d-flex justify-content-between" style="margin-top: 19px">
+            <div class="me-3">
+              <codx-input
+                [field]="'allocation'"
+                [crrValue]="isAllocation"
+                type="checkbox"
+                [disabled]="isPeriod"
+                (valueChange)="valueChange($event)"
+              ></codx-input>
+            </div>
+            <div class="w-100">
+              <codx-label [formModel]="form.formModel" fiedName="Allocation">
+              </codx-label>
+            </div>
+          </div>
         </div>
       </div>
+      <ng-container>
+        <div
+          class="d-flex align-items-center justify-content-between mt-4 mb-2"
+        >
+          <div class="d-flex align-items-center">
+            <span class="icon-person icon-18 me-2 text-primary"></span>
+            <div class="text-primary">
+              <codx-label
+                class="fw-bold fs-6"
+                name="lblSalesperson"
+                [formModel]="form.formModel"
+                default="Nhân viên bán hàng"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end align-content-center">
+            <button
+              type="button"
+              class="btn btn-sm btn-icon text-primary text-hover-primary"
+              (click)="openPopup()"
+            >
+              <i
+                class="icon-person_add_alt_1 text-hover-primary icon-18 me-1"
+              ></i>
+            </button>
+            <ng-container *ngIf="isPopup">
+              <codx-combobox-popup
+                [comboboxName]="'Users'"
+                [field]="'owner'"
+                [multiple]="true"
+                [width]="700"
+                [height]="600"
+                [value]=""
+                (clickSave)="eventApply($event)"
+              >
+              </codx-combobox-popup>
+            </ng-container>
+          </div>
+
+          <!-- <codx-input
+            type="Share"
+            refValue="DP0331"
+            (valueChange)="eventApply($event)"
+            field="owner"
+            [dataShared]="[]"
+            [multiple]="true"
+            [showInput]="false"
+          >
+          </codx-input> -->
+        </div>
+        <ng-container *ngIf="lstOwners != null && lstOwners.length > 0">
+          <ng-container [ngTemplateOutlet]="templateOwners"></ng-container>
+        </ng-container>
+      </ng-container>
+
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Allocation">
-        </codx-label>
+        <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="allocation"
+          field="memo"
         >
         </codx-input>
       </div>
     </ng-container>
   </ng-template>
-  <ng-template #footer></ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+  <ng-template #templateOwners>
+    <div class="px-6 h-30">
+      <div class="row mb-2">
+        <div class="col-4"></div>
+        <div class="col-8" *ngIf="lstTime != null && lstTime.length > 0" style="overflow-x: auto !important;">
+          <div class="d-flex justify-content-between">
+            <div *ngFor="let item of lstTime">
+              <span class="text-nowrap pe-5">{{ item?.text }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div *ngFor="let item of lstOwners">
+        <div
+          class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2"
+        >
+          <div class="d-flex justify-content-between list-title">
+            <div class="d-flex align-items-top me-2">
+              <codx-img
+                class=""
+                [objectId]="item?.userID"
+                objectType="AD_Users"
+              >
+              </codx-img>
+            </div>
+            <div class="d-flex flex-column me-2">
+              <div class="text-dark fw-bold fs-6">
+                {{ item?.userName }}
+              </div>
+              <div class="text-gray-700">{{ item?.positionName }}</div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end me-3">
+            <span class="text-dark text-gray-700">
+              {{ item?.target }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </codx-form>
