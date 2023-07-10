@@ -114,8 +114,8 @@ export class PopupAddRoleComponent extends UIComponent {
     let value = $event.data;
     switch (ctrl) { 
       case 'full':
+        this.okrPlan.permissions[index].full = value;
         if(this.isSetFull){
-          this.okrPlan.permissions[index].full = value;
           this.okrPlan.permissions[index].create = value;
           this.okrPlan.permissions[index].read = value;
           this.okrPlan.permissions[index].edit = value;
@@ -138,70 +138,49 @@ export class PopupAddRoleComponent extends UIComponent {
         if(ctrl!='full'){
           this.isSetFull = false;
           this.okrPlan.permissions[index][ctrl] = value;   
-          if(!value){
-            this.okrPlan.permissions[index].full = false;
-          }
-          else if(
-            this.okrPlan.permissions[index].create &&
-            this.okrPlan.permissions[index].read &&
-            this.okrPlan.permissions[index].edit &&
-            this.okrPlan.permissions[index].publish &&
-            this.okrPlan.permissions[index].assign &&
-            this.okrPlan.permissions[index].delete &&
-            this.okrPlan.permissions[index].share &&
-            this.okrPlan.permissions[index].upload
-          ){            
-            this.okrPlan.permissions[index].full = true;
-          }
+          
         }
         break;
     }
-
+    if(!value && ctrl!='full' && ctrl!='todate' && ctrl!='fromdate'){
+      this.okrPlan.permissions[index].full = false;
+    }
+    else if(
+      this.okrPlan.permissions[index].create &&
+      this.okrPlan.permissions[index].read &&
+      this.okrPlan.permissions[index].edit &&
+      this.okrPlan.permissions[index].publish &&
+      this.okrPlan.permissions[index].assign &&
+      this.okrPlan.permissions[index].delete &&
+      this.okrPlan.permissions[index].share &&
+      this.okrPlan.permissions[index].upload
+    ){            
+      this.okrPlan.permissions[index].full = true;
+    }
     
     this.detectorRef.detectChanges();
   }
 
+  disabledEdit(permissions){
+    if(permissions?.objectID==this.okrPlan?.owner || permissions?.objectID==this.okrPlan?.createdBy || permissions?.objectType=='7'){
+      return true;
+    }
+    else{
+      return false
+    }
+  }
 
   changePermission(index) {
+    this.isSetFull=false;
     if (this.okrPlan?.permissions == null ) {
       return;
     }
     if (this.okrPlan?.permissions[index] != null) {
-      // this.full =
-      //   this.okrPlan.permissions[index].create &&
-      //   this.okrPlan.permissions[index].read &&
-      //   this.okrPlan.permissions[index].edit &&
-      //   this.okrPlan.permissions[index].publish &&
-      //   this.okrPlan.permissions[index].assign &&
-      //   this.okrPlan.permissions[index].delete &&
-      //   this.okrPlan.permissions[index].share &&
-      //   this.okrPlan.permissions[index].upload;
-
-      // this.create = this.okrPlan.permissions[index].create;
-      // this.read = this.okrPlan.permissions[index].read;
-      // this.edit = this.okrPlan.permissions[index].edit;
-      // this.publish = this.okrPlan.permissions[index].publish;
-      // this.assign = this.okrPlan.permissions[index].assign;
-      // this.delete = this.okrPlan.permissions[index].delete;
-      // this.share = this.okrPlan.permissions[index].share;
-      // this.upload = this.okrPlan.permissions[index].upload;
       this.selectedPermission=this.okrPlan.permissions[index];
       this.startDate = this.okrPlan.permissions[index].startDate;
       this.endDate = this.okrPlan.permissions[index].endDate;
       this.curPer= index;
-    } else {
-      // this.full = false;
-      // this.create = false;
-      // this.read = false;
-      // this.edit = false;
-      // this.publish = false;
-      // this.assign = false;
-      // this.delete = false;
-      // this.share = false;
-      // this.upload = false;
-      // this.selectedPermission = index;
-      // this.permissonActiveId = index;
-    }
+    } 
     this.detectorRef.detectChanges();
   }
 
