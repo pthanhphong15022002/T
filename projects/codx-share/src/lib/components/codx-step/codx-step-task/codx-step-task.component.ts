@@ -418,7 +418,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView && task?.status != "1")) {
               res.isblur = true;
             }
             break;
@@ -440,8 +440,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP24': //Tạo cuộc họp
-            if (task.taskType != 'M' || task?.actionStatus == '2')
+            if (task.taskType != 'M' || task?.actionStatus == '2'){
               res.disabled = true;
+            }else if(task?.status == "1"){
+              res.isblur = true;
+            }
             break;
           case 'DP25':
           case 'DP26':
@@ -480,9 +483,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP31': // bắt đầu ngay
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView && task?.dependRule == "0")) {
-              res.isblur = true;
-            }
+            if(task?.dependRule != "0" || task?.status != "1"){
+              res.disabled = true;
+            }else if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+                res.isblur = true;
+              }           
             break;
         }
       });
@@ -667,7 +672,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.addBookingCar();
         break;
       case 'DP31':
-        this.startTask(task);
+        this.startTask(task,groupTask);
         break;
     }
   }
@@ -697,7 +702,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region start task
-  startTask(task: DP_Instances_Steps_Tasks) {
+  startTask(task: DP_Instances_Steps_Tasks, groupTask) {
     if (task?.taskType == 'Q') {
       //báo giá
       this.addQuotation();
@@ -709,9 +714,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [task?.stepID, task?.recID])
         .subscribe((res) => {
           if(res){
+            let indexTaskView = groupTask?.task?.findIndex(taskFind => taskFind?.recID == task?.recID);
             task.status = "2";
             task.modifiedBy = this.user.userID;
             task.modifiedOn = new Date();
+            if(indexTaskView >= 0){
+              groupTask?.task?.splice(indexTaskView,1,JSON.parse(JSON.stringify(task)));
+            }
             let taskFind = this.currentStep?.tasks?.find((taskFind) => taskFind.recID == task.recID);
             if(taskFind){
               taskFind.status = "2";
