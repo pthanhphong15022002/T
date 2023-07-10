@@ -14,7 +14,7 @@
                             <span class="fw-bold text-dark fs-5">{{manager.employeeName}}</span>
                         </ng-container>
                         <ng-template #lblEmployeeName>
-                            <span class="place-holder">{{grvSetup['EmployeeName']?.headerText}}</span>
+                            <span class="place-holder-text-color">{{grvSetup['EmployeeName']?.headerText}}</span>
                         </ng-template>
                     </div>
                     <div class="mb-1">
@@ -23,7 +23,7 @@
                                 manager.positionID}}</span>
                         </ng-container>
                         <ng-template #lblPositionName>
-                            <span class="place-holder">{{grvSetup['PositionID']?.headerText}}</span>
+                            <span class="place-holder-text-color">{{grvSetup['PositionID']?.headerText}}</span>
                         </ng-template>
                         <span class="ms-2 me-2 text-gray-500">|</span>
                         <ng-container *ngIf="manager?.orgUnitID; else lblOrgUnitName">
@@ -31,7 +31,7 @@
                                 manager.orgUnitID}}</span>
                         </ng-container>
                         <ng-template #lblOrgUnitName>
-                            <span class="place-holder"> {{grvSetup['OrgUnitID']?.headerText}}</span>
+                            <span class="place-holder-text-color"> {{grvSetup['OrgUnitID']?.headerText}}</span>
                         </ng-template>
                     </div>
                     <div>
@@ -39,14 +39,14 @@
                             <span class="text-gray-700">{{ manager?.phone }}</span>
                         </ng-container>
                         <ng-template #lblPhone>
-                            <span class="place-holder"> {{grvSetup['Phone']?.headerText}}</span>
+                            <span class="place-holder-text-color"> {{grvSetup['Phone']?.headerText}}</span>
                         </ng-template>
                         <span class="mx-2">|</span>
                         <ng-container *ngIf="manager?.email; else lblEmail">
                             <span class="text-gray-700">{{ manager.email }}</span>
                         </ng-container>
                         <ng-template #lblEmail>
-                            <span class="place-holder"> {{grvSetup['Email']?.headerText}}</span>
+                            <span class="place-holder-text-color"> {{grvSetup['Email']?.headerText}}</span>
                         </ng-template>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                     <span>{{data.positionName? data.positionName : data.positionID}}</span>
                 </span>
                 <ng-template #noPosName>
-                    <span class="place-holder fs-7">
+                    <span class="fs-7">
                         <span>{{grvSetup['PositionID']?.headerText}}</span>
                     </span>
                 </ng-template>
@@ -94,37 +94,35 @@
 </ng-template>
 <ng-template #templateBirthday let-item>
     <ng-container *ngIf="item.birthday; else noBirthday">
-        <span class="text-gray-700">{{ item.birthday | fmDT }}</span>
+        <span class="data-text-color">{{ item.birthday | fmDT }}</span>
     </ng-container>
     <ng-template #noBirthday>
-        <span class="place-holder">{{ grvSetup["Birthday"]?.headerText }}</span>
+        <span class="place-holder-text-color">{{ grvSetup["Birthday"]?.headerText }}</span>
     </ng-template>
 </ng-template>
 <ng-template #templatePhone let-data>
     <div class="d-flex align-items-center employee-add">
         <span *ngIf="formModel.formName != 'EmployeeInfomation'" class="icon-phone_android icon-16 me-2"></span>
-        <span class="text-gray-600" [innerHTML]="data.phone | formatvalue: formModel:'phone' | async"></span>
+        <span class="data-text-color" [innerHTML]="data.phone | formatvalue: formModel:'phone' | async"></span>
     </div>
 </ng-template>
 <ng-template #templateEmail let-data>
     <div class="d-flex align-items-center employee-email">
         <span *ngIf="formModel.formName != 'EmployeeInfomation'" class="icon-email icon-16 me-2"> </span>
-        <span class="text-gray-600" [innerHTML]="data.email | formatvalue: formModel:'email' | async"></span>
+        <span class="data-text-color" [innerHTML]="data.email | formatvalue: formModel:'email' | async"></span>
     </div>
 </ng-template>
 <ng-template #templateJoinedOn let-item>
-    <div *ngIf="item.joinedOn; else noJoinedOn">{{item.joinedOn | fmDT}}</div>
+    <div class="data-text-color" *ngIf="item.joinedOn; else noJoinedOn">{{item.joinedOn | fmDT}}</div>
     <ng-template #noJoinedOn>
-        <div class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</div>
+        <div class="place-holder-text-color">{{grvSetup['JoinedOn']?.headerText}}</div>
     </ng-template>
 </ng-template>
 <ng-template #templateStatus let-item>
     <div class="d-flex align-items-center has-action-menu">
-        <ng-container *ngIf="item.status">
             <codx-vll [formModel]="formModel" [classList]="'badge badge-sm badge-inline'"
-                [name]="grvSetup['Status']?.referedValue" [value]="item.status" [showText]="true" [showBgColor]="true">
+                [name]="'HR003'" [value]="item.status" [showText]="true" [showBgColor]="true">
             </codx-vll>
-        </ng-container>
         <div class="align-self-center" *ngIf="editable">
             <div style="height: 40px">
                 <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, item)"
@@ -273,7 +271,7 @@
                     <span class="data-text-color">{{ data.birthday | fmDT}}</span>
                 </ng-container>
                 <ng-template #noBirthday>
-                    <span class="place-holder place-holder-text-color">{{grvSetup?.Birthday.headerText}}</span>
+                    <span class="place-holder-text-color">{{grvSetup?.Birthday.headerText}}</span>
                 </ng-template>
             </div>
             <div class="align-items-center mb-1">
@@ -299,7 +297,7 @@
                     </ng-template>
                 </div>
                 <ng-template #noDegreeName>
-                    <span class="place-holder place-holder-text-color">{{grvSetup['DegreeName'].headerText}}</span>
+                    <span class="place-holder-text-color">{{grvSetup['DegreeName'].headerText}}</span>
                 </ng-template>
             </div>
         </div>
@@ -322,7 +320,7 @@
                     <span class="text-gray-700">{{data.joinedOn | fmDT}}</span>
                 </ng-container>
                 <ng-template #noJoinedOn>
-                    <span class="place-holder">{{grvSetup['JoinedOn'].headerText}}</span>
+                    <span class="place-holder-text-color">{{grvSetup['JoinedOn'].headerText}}</span>
                 </ng-template>
             </div>
             <div class="align-items-center">
@@ -333,7 +331,7 @@
                     <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>
                 </ng-container>
                 <ng-template #noSeniorityDate>
-                    <span class="place-holder">{{grvSetup['Senioritydate'].headerText}}</span>
+                    <span class="place-holder-text-color">{{grvSetup['Senioritydate'].headerText}}</span>
                 </ng-template>
             </div>
         </div>
