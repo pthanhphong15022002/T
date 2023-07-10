@@ -150,47 +150,8 @@ export class EmployeePolicyalComponent extends UIComponent{
         'copy',
         res
       );
-    });
-  }
+    });}
 
-  Give example:
-  - For instance,
-  - for example,
-  - S for instance,
-  - S for example, 
-  - A case in point is N
-  - An illustration for this is N
-
-  Cause:
-  - The reason for this is 
-  - The reason behind this is 
-  - What caused this is
-
-  Effect 
-  - As a consequence, 
-  - Consequently
-  - As a result 
-
-  Without linking word
-  Case: This stem from 
-      The reason for this is 
-      This rise from 
-      this result from 
-  
-      Effect:
-      - This can lead to
-      - This can giverise to 
-      - This can result in 
-  Example: 
-    - This can be seen in, 
-    - This has been examplified in
-    - Such + N , This + N
-
-    to be more extractContent, 
-    in more details 
-    specifically
-    that would beforeAll, abosolutely yes, no i dont
-  
 
   HandlePolicyAL(actionHeaderText, actionType: string, data: any){
     let option = new SidebarModel();
