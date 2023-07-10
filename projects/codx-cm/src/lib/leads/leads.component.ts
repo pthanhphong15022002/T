@@ -335,7 +335,7 @@ export class LeadsComponent
       eventItem.disabled = !['0', '1'].includes(data.status) || data.closed ;
     };
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = !['13', '3'].includes(data.status);
+      eventItem.disabled = !['13', '3'].includes(data.status) || data.closed ;
     };
     var isOwner = (eventItem, data) => {
       eventItem.disabled = !['0', '1', '2'].includes(data.status) || data.closed ;

@@ -220,6 +220,7 @@ export class EPApprovalComponent extends UIComponent {
     this.scheduleEvent.className = 'BookingsBusiness';
     this.scheduleEvent.service = 'EP';
     this.scheduleEvent.method = 'GetListApprovalAsync';
+    //this.scheduleEvent.method = 'GetListApprovalScheduleAsync';
     this.scheduleEvent.idField = 'recID';
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
       this.scheduleEvent.predicate = this.queryParams?.predicate;
@@ -448,7 +449,7 @@ export class EPApprovalComponent extends UIComponent {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   undo(data: any) {
-    this.codxShareService.codxUndo(data?.approvalTransRecID).subscribe((res: any) => {
+    this.codxShareService.codxUndo(data?.approvalTransRecID,null).subscribe((res: any) => {
       if (res != null) {
         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
         data.approveStatus = '3';
@@ -464,8 +465,9 @@ export class EPApprovalComponent extends UIComponent {
       .codxApprove(
         data?.approvalTransRecID, //ApprovelTrans.RecID
         '5',
-        '',
-        ''
+        null,
+        null,
+        null,
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
@@ -489,8 +491,9 @@ export class EPApprovalComponent extends UIComponent {
       .codxApprove(
         data?.approvalTransRecID, //ApprovelTrans.RecID
         '4',
-        '',
-        ''
+        null,
+        null,
+        null,
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {

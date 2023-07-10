@@ -99,6 +99,7 @@ export class EmployeeContractComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.list,
         sameData: true,
         model: {
@@ -107,6 +108,7 @@ export class EmployeeContractComponent extends UIComponent {
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
         sameData: true,
         model: {
@@ -213,6 +215,7 @@ export class EmployeeContractComponent extends UIComponent {
 
   clickMF(event, data) {
     this.itemDetail = data;
+    debugger
 
     switch (event.functionID) {
       case this.actionSubmit:
@@ -345,7 +348,8 @@ export class EmployeeContractComponent extends UIComponent {
   beforeRelease() {
     let category = '4';
     let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+    this.hrService.getSettingValue(formName, category)
+    .subscribe((res) => {
       if (res) {
         let parsedJSON = JSON.parse(res?.dataValue);
         let index = parsedJSON.findIndex(

@@ -1,10 +1,11 @@
 <ng-template #subHeader let-form>
   <codx-tag
     field="tags"
-    [entityName]="formModel.entityName"
+    [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
-    (valueChange)="valueChange($event)"
+    [value]="lead?.tags"
+    (valueChange)="valueTagChange($event)"
   ></codx-tag>
 </ng-template>
 
@@ -116,8 +117,8 @@
         </codx-label>
         <codx-input
           field="companyPhone"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          type="number"
+          [crrValue]="lead?.companyPhone"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -134,8 +135,8 @@
         >
         </codx-label>
         <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
+          type="number"
+          [crrValue]="lead?.faxNo"
           field="faxNo"
           (valueChange)="valueChange($event)"
         >

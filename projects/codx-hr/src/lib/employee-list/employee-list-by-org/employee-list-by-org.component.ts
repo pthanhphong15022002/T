@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService, CodxService } from 'codx-core';
 import { PopupAddEmployeeComponent } from '../popup/popup-add-employee/popup-add-employee.component';
+import { PopupUpdateStatusComponent } from '../popup-update-status/popup-update-status.component';
 
 @Component({
   selector: 'lib-employee-list-by-org',
@@ -43,6 +44,7 @@ export class EmployeeListByOrgComponent {
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colContact') colContact: TemplateRef<any>;
   @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
+  @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
   service = 'HR';
   entityName = 'HR_Employees';
@@ -126,7 +128,7 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colEmployeeHeader,
             template: this.colEmployee,
-            width: '250',
+            width: '200',
           },
           {
             headerTemplate: this.colContactHeader,
@@ -138,6 +140,11 @@ export class EmployeeListByOrgComponent {
             template: this.colPersonal,
             width: '150',
           },
+          {
+            headerTemplate: this.colStatusHeader,
+            template: this.colStatus,
+            width: '150',
+          },
         ];
         break;
     }
@@ -146,7 +153,6 @@ export class EmployeeListByOrgComponent {
     this.orgUnitID = changes.orgUnitID.currentValue;
     if (this.showManager) {
       this.getManager(this.orgUnitID);
-      //this.empAvatar.refreshAvatar();
     }
     let ins = setInterval(() => {
       if (this.grid) {
@@ -183,8 +189,8 @@ export class EmployeeListByOrgComponent {
       case 'SYS04': // sao chép
         this.copy(data, moreFunc);
         break;
-      case 'HR0031': // cập nhật tình trạng
-        // this.updateStatus(data, moreFunc.functionID);
+      case 'HRT03a1A07': // cập nhật tình trạng
+        this.updateStatus(data, moreFunc.functionID);
         break;
       case 'HR0032': // xem chi tiết
         break;
@@ -196,19 +202,19 @@ export class EmployeeListByOrgComponent {
 
   delete(data: any) {
     if (data) {
-      this.view.dataService
+      (this.grid.dataService as CRUDService)
         .delete([data], true, (opt: any) => this.beforDelete(opt, data))
         .subscribe(res => {
           if (res) {
+            this.getManager(this.orgUnitID);
             let ins = setInterval(() => {
               if (this.grid) {
-                //this.grid.dataService.rowCount = 0;
                 clearInterval(ins);
                 this.grid.deleteRow(data, true);
                 this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
                 this.dataChange.emit({ data: res, actionType: 'delete', hasDataChanged: true });
               }
-            }, 200);
+            }, 100);
           }
         });
     }
@@ -228,8 +234,8 @@ export class EmployeeListByOrgComponent {
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
       this.api
         .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
-          this.view.dataService.dataSelected = res ? res : this.itemSelected;
-          this.view.dataService.copy().subscribe((res: any) => {
+          (this.grid.dataService as CRUDService).dataSelected = res ? res : this.itemSelected;
+          (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view.dataService;
             option.FormModel = this.view.formModel;
@@ -245,9 +251,20 @@ export class EmployeeListByOrgComponent {
             );
             popup.closed.subscribe((e) => {
               if (e.event) {
-                (this.view.dataService as CRUDService).add(e.event).subscribe();
-                //this.grid.addRow(e.event, 0, true);
-                //this.grid.refresh();
+                if (e.event.orgUnitID === this.orgUnitID) {
+                  this.grid.addRow(e.event, 0, true);
+                } else {
+                  this.orgUnitID = e.event.orgUnitID;
+                  let ins = setInterval(() => {
+                    if (this.grid) {
+                      this.grid.dataService.rowCount = 0;
+                      clearInterval(ins);
+                      this.grid.refresh();
+                    }
+                  }, 100);
+                }
+                if (this.showManager)
+                  this.getManager(this.orgUnitID);
                 this.dataChange.emit({ data: e.event, actionType: 'copy', hasDataChanged: true });
               }
             });
@@ -266,7 +283,7 @@ export class EmployeeListByOrgComponent {
       );
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS03');
-      this.view.dataService.edit(data).subscribe((res: any) => {
+        (this.grid.dataService as CRUDService).edit(data).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
@@ -282,19 +299,20 @@ export class EmployeeListByOrgComponent {
         );
         dialog.closed.subscribe((e) => {
           if (e.event) {
-            (this.view.dataService as CRUDService).update(e.event).subscribe();
-            if (e.event?.employeeID === this.manager?.employeeID) {
-              if (e.event?.positionID === this.manager?.positionID 
-                || e.event?.orgUnitID === this.manager?.orgUnitID) {
-                this.getManager(this.orgUnitID);
-              } else {
-                this.manager.employeeName = e.event?.employeeName;
-                this.manager.phone = e.event?.phone;
-                this.manager.mobile = e.event?.mobile;
-              }
+            if (e.event.orgUnitID === this.orgUnitID) {
+              this.grid.refresh();
+            } else {
+              this.orgUnitID = e.event.orgUnitID;
+              let ins = setInterval(() => {
+                if (this.grid) {
+                  this.grid.dataService.rowCount = 0;
+                  clearInterval(ins);
+                  this.grid.refresh();
+                }
+              }, 100);
             }
-            //this.grid.updateRow(index, e.event, false);
-            this.grid.refresh();
+            if (this.showManager)
+              this.getManager(this.orgUnitID);
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
         });
@@ -315,6 +333,31 @@ export class EmployeeListByOrgComponent {
         request: this.view.dataService.request,
       };
       this.codxService.navigate('', func?.url, queryParams, state, true);
+    });
+  }
+  updateStatus(data: any, funcID: string) {
+    let popup = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      funcID,
+      data
+    );
+    popup.closed.subscribe((e) => {
+      if (e?.event) {
+        var emp = e.event;
+        if (emp.status === '90') {
+          let ins = setInterval(() => {
+            if (this.grid) {
+              clearInterval(ins);
+              this.grid.deleteRow(data, true);
+              this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
+            }
+          }, 200);
+        }
+        this.dataChange.emit({ data: emp, actionType: 'edit', hasDataChanged: true });
+      }
     });
   }
 }

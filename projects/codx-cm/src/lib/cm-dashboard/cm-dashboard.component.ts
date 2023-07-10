@@ -74,14 +74,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     minorGridLines: { width: 1 },
     minorTickLines: { width: 0 },
   };
-  // tooltip1: Object = {
-  //   enable: true,
-  //   shared: true,
-  //   format: '${series.name} : <b>${point.y}</b>',
-  // };
-  //test data
-  // chartDataSucsses = [];
-  // chartDataFail = [];
+  tooltipChartLine: Object = {
+    enable: true,
+    shared: true,
+    format: '${series.name} : <b>${point.y}%</b>',
+  };
+
   marker = { visible: true };
   checkBtnSuscessRadio = true;
   checkBtnFailRadio = false;
@@ -189,11 +187,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           //chart
         }
 
-        this.maxOwners = this.dataDashBoard.countsOwners ?? [];
-        this.minOwners = JSON.parse(JSON.stringify(this.maxOwners));
-        this.minOwners.sort((a, b) => {
-          return a.quantity - b.quantity;
-        });
+        this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
+        this.minOwners = this.dataDashBoard?.CountsOwnersTopLowToHight ?? [];
+
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);
