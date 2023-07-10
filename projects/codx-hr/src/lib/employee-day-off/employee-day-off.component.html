@@ -215,7 +215,7 @@
           <codx-vll
             [formModel]="view.formModel"
             [field]="'Status'"
-            [value]="data?.status"
+            [value]="data?.approveStatus ? data?.approveStatus : data?.status"
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
@@ -243,7 +243,7 @@
           (clickMF)="clickMF($event, data)"
           (changeDataMF)="changeDataMF($event, data)"
           [dataItem]="data"
-          type="hover"
+          type="view"
         >
         </codx-mfunc>
       </div>
@@ -367,7 +367,9 @@
               <codx-vll
                 [formModel]="view.formModel"
                 [field]="'Status'"
-                [value]="data?.status"
+                [value]="
+                  data?.approveStatus ? data?.approveStatus : data?.status
+                "
                 [showText]="true"
                 [showIcon]="false"
                 [showBgColor]="true"
@@ -521,10 +523,9 @@
 
 <ng-template #templateItemDetailRight let-data>
   <lib-view-day-off-detail
-    #viewDetail
     [itemDetail]="itemDetail"
-    [formModel]="view?.formModel"
     [view]="view"
+    [formModel]="view?.formModel"
     (clickMFunction)="clickEvent($event)"
   >
   </lib-view-day-off-detail>

@@ -268,19 +268,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Event
   close() {
-    if (
-      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
-      (this.gridSet && !this.gridSet.gridRef.isEdit)
-    ) {
-      if (this.hasSaved) {
-        this.dialog.close({
-          update: true,
-          data: this.cashpayment,
-        });
-      } else {
-        this.dialog.close();
-      }
-    }
+    // if (
+    //   (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+    //   (this.gridSet && !this.gridSet.gridRef.isEdit)
+    // ) {
+    //   if (this.hasSaved) {
+    //     this.dialog.close({
+    //       update: true,
+    //       data: this.cashpayment,
+    //     });
+    //   } else {
+    //     this.dialog.close();
+    //   }
+    // }
+    this.dialog.close();
   }
 
   clickMF(e: any, data) {
@@ -849,6 +850,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.notification.notifyCode('AC0012');
             }
           }
+          this.dialog.dataService.update(this.cashpayment).subscribe();
           // if (res.unbounds.lineDefault != null) {
           //   this.dataLine = res.unbounds.lineDefault;
           // }

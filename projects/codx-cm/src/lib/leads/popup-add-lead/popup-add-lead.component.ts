@@ -584,4 +584,7 @@ export class PopupAddLeadComponent
       }
     }
   }
+  valueTagChange(e) {
+    this.lead.tags = e.data;
+  }
 }

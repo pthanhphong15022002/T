@@ -141,7 +141,7 @@
           <codx-vll
             [formModel]="view.formModel"
             [field]="'Status'"
-            [value]="data?.status"
+            [value]="data?.approveStatus ? data?.approveStatus : data?.status"
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
@@ -346,7 +346,7 @@
             <codx-vll
               [formModel]="view.formModel"
               [field]="'Status'"
-              [value]="data?.status"
+              [value]="data?.approveStatus ? data?.approveStatus : data?.status"
               [showText]="true"
               [showIcon]="false"
               [showBgColor]="true"

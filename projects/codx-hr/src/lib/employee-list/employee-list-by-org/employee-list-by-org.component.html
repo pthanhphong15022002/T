@@ -158,6 +158,12 @@
             [formName]="'employees'" [default]="'Thông tin cá nhân'"></codx-label>
     </div>
 </ng-template>
+<ng-template #colStatusHeader>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="Status" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
+            [formName]="'employees'" [default]="'Tình Trạng'"></codx-label>
+    </div>
+</ng-template>
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
     <div class="d-flex align-items-center cursor-pointer hover-active" (dblclick)="clickViewEmpInfo(data)">
@@ -294,6 +300,40 @@
                 </div>
                 <ng-template #noDegreeName>
                     <span class="place-holder place-holder-text-color">{{grvSetup['DegreeName'].headerText}}</span>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #colStatus let-data>
+    <div (dblclick)="clickViewEmpInfo(data)" class="d-flex has-action-menu justify-content-between w-100">
+        <div class="d-flex flex-column">
+            <div class="d-flex mb-1">
+                <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
+                    [className]="'badge badge-sm badge-inline'">
+                </codx-vll>
+            </div>
+            <div class="align-items-center mb-1">
+                <codx-label class="label-colon text-dark" [setRequire]="false" [fiedName]="'JoinedOn'"
+                    [formModel]="view.formModel" default="Ngày vào làm">
+                </codx-label>
+                <ng-container *ngIf="data.joinedOn; else noJoinedOn">
+                    <span class="text-gray-700">{{data.joinedOn | fmDT}}</span>
+                </ng-container>
+                <ng-template #noJoinedOn>
+                    <span class="place-holder">{{grvSetup['JoinedOn'].headerText}}</span>
+                </ng-template>
+            </div>
+            <div class="align-items-center">
+                <codx-label class="label-colon text-dark" name="lblSenioritydate" [fiedName]="'Senioritydate'"
+                    [setRequire]="false" [formModel]="view.formModel" default="Thâm niên">
+                </codx-label>
+                <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
+                    <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>
+                </ng-container>
+                <ng-template #noSeniorityDate>
+                    <span class="place-holder">{{grvSetup['Senioritydate'].headerText}}</span>
                 </ng-template>
             </div>
         </div>
