@@ -303,19 +303,7 @@ export class EmployeeListByOrgComponent {
         );
         dialog.closed.subscribe((e) => {
           if (e.event) {
-            if (e.event?.employeeID === this.manager?.employeeID) {
-              if (e.event?.positionID === this.manager?.positionID
-                || e.event?.orgUnitID === this.manager?.orgUnitID) {
-                this.getManager(this.orgUnitID);
-              } else {
-                this.manager.employeeName = e.event?.employeeName;
-                this.manager.phone = e.event?.phone;
-                this.manager.mobile = e.event?.mobile;
-              }
-            }
             if (e.event.orgUnitID === this.orgUnitID) {
-              if (this.showManager)
-                this.getManager(this.orgUnitID);
               //this.grid.updateRow(index,e.event, true);
               this.grid.refresh();
             } else {
@@ -328,6 +316,8 @@ export class EmployeeListByOrgComponent {
                 }
               }, 100);
             }
+            if (this.showManager)
+              this.getManager(this.orgUnitID);
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
         });
