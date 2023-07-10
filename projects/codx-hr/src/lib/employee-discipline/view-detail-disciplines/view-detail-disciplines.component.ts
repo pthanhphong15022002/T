@@ -28,18 +28,14 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   styleUrls: ['./view-detail-disciplines.component.css'],
 })
 export class ViewDetailDisciplinesComponent {
-  console = console;
   constructor(
-    private authStore: AuthStore,
     private hrService: CodxHrService,
     private router: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
     private shareService: CodxShareService,
     private codxODService: CodxOdService
-  ) {
-    this.user = this.authStore.get();
-  }
+  ) {}
 
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
@@ -53,7 +49,6 @@ export class ViewDetailDisciplinesComponent {
   @Output() uploaded = new EventEmitter();
   @Output() clickMFunction = new EventEmitter();
 
-  user: any; //user loggin
   tabControl: TabModel[] = [];
   renderFooter = false;
   isAfterRender = true;
