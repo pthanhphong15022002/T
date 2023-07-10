@@ -203,10 +203,11 @@ export class EmployeeListByOrgComponent {
 
   delete(data: any) {
     if (data) {
-      this.view.dataService
+      (this.grid.dataService as CRUDService)
         .delete([data], true, (opt: any) => this.beforDelete(opt, data))
         .subscribe(res => {
           if (res) {
+            this.getManager(this.orgUnitID);
             let ins = setInterval(() => {
               if (this.grid) {
                 //this.grid.dataService.rowCount = 0;
@@ -215,7 +216,7 @@ export class EmployeeListByOrgComponent {
                 this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
                 this.dataChange.emit({ data: res, actionType: 'delete', hasDataChanged: true });
               }
-            }, 200);
+            }, 100);
           }
         });
     }
@@ -235,8 +236,8 @@ export class EmployeeListByOrgComponent {
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
       this.api
         .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
-          this.view.dataService.dataSelected = res ? res : this.itemSelected;
-          this.view.dataService.copy().subscribe((res: any) => {
+          (this.grid.dataService as CRUDService).dataSelected = res ? res : this.itemSelected;
+          (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view.dataService;
             option.FormModel = this.view.formModel;
@@ -253,13 +254,21 @@ export class EmployeeListByOrgComponent {
             popup.closed.subscribe((e) => {
               if (e.event) {
                 if (e.event.orgUnitID === this.orgUnitID) {
-                  if (this.showManager)
-                    this.getManager(this.orgUnitID);
                   this.grid.addRow(e.event, 0, true);
                   //this.grid.refresh();
                 } else {
-                  (this.view.dataService as CRUDService).add(e.event).subscribe();
+                  //(this.view.dataService as CRUDService).add(e.event).subscribe();
+                  this.orgUnitID = e.event.orgUnitID;
+                  let ins = setInterval(() => {
+                    if (this.grid) {
+                      this.grid.dataService.rowCount = 0;
+                      clearInterval(ins);
+                      this.grid.refresh();
+                    }
+                  }, 100);
                 }
+                if (this.showManager)
+                  this.getManager(this.orgUnitID);
                 this.dataChange.emit({ data: e.event, actionType: 'copy', hasDataChanged: true });
               }
             });
@@ -278,7 +287,7 @@ export class EmployeeListByOrgComponent {
       );
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS03');
-      this.view.dataService.edit(data).subscribe((res: any) => {
+        (this.grid.dataService as CRUDService).edit(data).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
@@ -310,7 +319,14 @@ export class EmployeeListByOrgComponent {
               //this.grid.updateRow(index,e.event, true);
               this.grid.refresh();
             } else {
-              (this.view.dataService as CRUDService).add(e.event).subscribe();
+              this.orgUnitID = e.event.orgUnitID;
+              let ins = setInterval(() => {
+                if (this.grid) {
+                  this.grid.dataService.rowCount = 0;
+                  clearInterval(ins);
+                  this.grid.refresh();
+                }
+              }, 100);
             }
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
