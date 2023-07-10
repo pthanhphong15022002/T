@@ -755,7 +755,7 @@ export class EditFileComponent implements OnInit {
     return "";    
 
   }
-
+ 
   getAvatar(filename: string) {
     if (filename == "" || filename == null)
       return "";

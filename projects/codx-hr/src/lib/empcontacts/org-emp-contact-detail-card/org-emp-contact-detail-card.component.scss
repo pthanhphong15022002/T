@@ -1,9 +1,40 @@
 .card-view {
     height: 100%;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    row-gap: 10px;
-    column-gap: 20px;
+    //display: flex;
+    overflow: auto;
+    //gap: 10px;
+    //flex-wrap: wrap;
+    //row-gap: 10px;
+    //column-gap: 20px;
     align-content: flex-start;
 }
+
+.card-body span{
+    -webkit-line-clamp: 2;
+    width: 200px;
+}
+
+.card-user {
+    width: 220px;
+    height: 220px;
+  
+    .card-body {
+      padding: 0 !important;
+    }
+  
+    .symbol {
+      margin-bottom: 16px !important;
+    }
+  
+    .line-clamp {
+      margin-bottom: 4px !important;
+    }
+  
+    .d-phone {
+      margin-bottom: 4px !important;
+    }
+  
+    .line-clamp.fw-bold {
+      font-size: 13.3px !important;
+    }
+  }

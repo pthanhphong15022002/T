@@ -358,14 +358,14 @@
             <div class="d-flex flex-center">
               <div class="fs-5-sm d-flex align-items-center">
                 <span class="icon-qr_code_scanner icon-16 me-2"></span>
-                <span style="margin-top: 2px" #id>{{ employeeID }}</span>
+                <span style="margin-top: 2px" #id placement="bottom" [ngbTooltip]="eInfoHeaderText?.EmployeeID">{{ employeeID }}</span>
                 <span
                   class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"
                 ></span>
-                <span class="fw-bold">{{ infoPersonal?.employeeName }}</span>
+                <span class="fw-bold" placement="bottom" [ngbTooltip]="eInfoHeaderText?.EmployeeName">{{ infoPersonal?.employeeName }}</span>
               </div>
             </div>
-            <div
+            <div placement="bottom" [ngbTooltip]="eInfoHeaderText?.PositionID"
               class="text-gray-500 mb-1"
               *ngIf="infoPersonal"
               >
@@ -405,7 +405,7 @@
             <div class="d-flex flex-wrap mb-1">
               <div class="d-flex align-items-center text-gray-700 me-5">
                 <span class="icon-date_range icon-16 me-2"></span>
-                <span
+                <span placement="bottom" [ngbTooltip]="eInfoHeaderText?.JoinedOn"
                   #joinedOn
                   *ngIf="eInfoFormModel"
                   [innerHTML]="
@@ -415,7 +415,7 @@
                   "
                 ></span>
               </div>
-              <div *ngIf="eInfoFormModel">
+              <div *ngIf="eInfoFormModel" placement="bottom" [ngbTooltip]="eInfoHeaderText?.Status">
                 <codx-vll
                   class="badge"
                   [field]="'Status'"
@@ -428,7 +428,7 @@
             </div>
             <div class="d-flex align-items-center mb-1">
               <span class=""></span>
-              <span class="text-dark">
+              <span class="text-dark" placement="bottom" [ngbTooltip]="eInfoHeaderText?.Email">
                 <span
                   #email
                   *ngIf="eInfoFormModel"
@@ -442,7 +442,7 @@
             </div>
             <div class="d-flex align-items-center mb-1">
               <span class=""></span>
-              <span
+              <span placement="bottom" [ngbTooltip]="eInfoHeaderText?.Phone"
                 class="text-dark me-3"
                 [innerHTML]="
                   infoPersonal?.phone
@@ -452,7 +452,7 @@
               ></span>
               <span class=""></span>
               <span class="text-dark">
-                <span
+                <span placement="bottom" [ngbTooltip]="eInfoHeaderText?.Mobile"
                   *ngIf="eInfoFormModel"
                   [innerHTML]="
                     infoPersonal?.mobile
@@ -1589,10 +1589,10 @@
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center">
-                    <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
+                  <div class="d-flex align-items-center" [innerHTML]="crrPassport?.issuedDate | formatvalue : ePassportFormModel : 'issuedDate'| async">
+                    <!-- <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
                       {{ crrPassport?.issuedDate | fmDT }}
-                    </span>
+                    </span> -->
                   </div>
                 </div>
                 <div class="col has-action-menu">
@@ -1604,10 +1604,10 @@
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center">
-                    <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
+                  <div class="d-flex align-items-center" [innerHTML]="crrPassport?.expiredDate | formatvalue : ePassportFormModel : 'expiredDate'| async">
+                    <!-- <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
                       {{ crrPassport?.expiredDate | fmDT }}
-                    </span>
+                    </span> -->
                   </div>
                   <codx-mfunc
                     *ngIf="crrPassport"
@@ -1710,10 +1710,21 @@
                       >
                       </codx-label>
                     </div>
-                    <div class="d-flex align-items-center">
-                      <span [ngClass]="crrVisa ? 'fw-bold text-dark' : ''">
+                    <div class="d-flex align-items-center" >
+                      <!-- <span [ngClass]="crrVisa ? 'fw-bold text-dark' : ''">
                         {{ crrVisa?.effectedDate | fmDT }} -
                         {{ crrVisa?.expiredDate | fmDT }}
+
+                        
+                      </span> -->
+                      <span [innerHTML]="crrVisa?.effectedDate
+                        | formatvalue : eVisaFormModel : 'effectedDate'
+                        | async">
+                      </span>
+                      <span class="mx-1" [ngClass]="crrVisa ? 'fw-bold text-dark' : 'text-muted'">-</span>
+                      <span [innerHTML]="crrVisa?.expiredDate
+                        | formatvalue : eVisaFormModel : 'expiredDate'
+                        | async">
                       </span>
                     </div>
                     <codx-mfunc
@@ -1959,7 +1970,7 @@
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center" *ngIf="crrWorkpermit?.fromDate || crrWorkpermit?.toDate">
                     <span [ngClass]="crrWorkpermit ? 'fw-bold text-dark' : ''">
                       {{ crrWorkpermit?.fromDate | fmDT }} -
                       {{ crrWorkpermit?.toDate | fmDT }}
@@ -2157,6 +2168,7 @@
                       [imageId]="item.recID"
                       [imageObjType]="'HR_EFamilies'"
                       [imageWidth]="35"
+                      [imgCss]="'me-3 '"
                       [title]="item?.relationName"
                       [titleCss]="'fs-6 mb-1'"
                       [subTitleTmp]="subtitleTmp"
@@ -2185,7 +2197,7 @@
                                 [formModel]="eFamilyFormModel"
                               >
                               </codx-label>
-                              <span class="text-dark">
+                              <span class="text-dark" *ngIf="item.birthday">
                                 {{ item.birthday | fmDT }}</span
                               >
                             </span>
@@ -3479,8 +3491,8 @@
                       </codx-label>
                     </div>
                   </div>
-                  <div class="col-4">
-                    <div class="mb-3 d-flex justify-content-center">
+                  <div class="col-2">
+                    <div class="mb-3 d-flex justify-content-end">
                       <span
                         class="fw-bold text-dark"
                         [innerHTML]="
@@ -3491,7 +3503,7 @@
                       >
                       </span>
                     </div>
-                    <div class="mb-3 d-flex justify-content-center">
+                    <div class="mb-3 d-flex justify-content-end">
                       <span
                         class="fw-bold text-dark"
                         [innerHTML]="
@@ -3502,7 +3514,7 @@
                       >
                       </span>
                     </div>
-                    <div class="mb-0 d-flex justify-content-center">
+                    <div class="mb-0 d-flex justify-content-end">
                       <span class="fw-bold text-dark">
                         <span
                           [innerHTML]="
@@ -5522,10 +5534,13 @@
                 <codx-label fiedName="submitDate" [formModel]="formModel">
                 </codx-label>
               </div>
-              <div class="d-flex align-items-center">
-                <span class="ms-7 text-dark fw-bold">
+              <div class="d-flex align-items-center ms-7" [innerHTML]="
+              infoPersonal?.submitDate
+              | formatvalue : formModel : 'submitDate'
+              | async">
+                <!-- <span class="ms-7 text-dark fw-bold">
                   {{ infoPersonal?.submitDate | fmDT }}
-                </span>
+                </span> -->
               </div>
             </div>
             <div class="col">
@@ -5533,10 +5548,13 @@
                 <codx-label fiedName="StoppedOn" [formModel]="formModel">
                 </codx-label>
               </div>
-              <div class="d-flex align-items-center">
-                <span class="text-dark fw-bold">
+              <div class="d-flex align-items-center" [innerHTML]="
+              infoPersonal?.stoppedOn
+              | formatvalue : formModel : 'stoppedOn'
+              | async">
+                <!-- <span class="text-dark fw-bold">
                   {{ infoPersonal?.stoppedOn | fmDT }}</span
-                >
+                > -->
               </div>
             </div>
             <div class="col has-action-menu">
@@ -5544,10 +5562,13 @@
                 <codx-label fiedName="ViolatedDays" [formModel]="formModel">
                 </codx-label>
               </div>
-              <div class="d-flex align-items-center">
-                <span class="text-dark fw-bold">
+              <div class="d-flex align-items-center" [innerHTML]="
+                infoPersonal?.violatedDays
+                | formatvalue : formModel : 'violatedDays'
+                | async">
+                <!-- <span class="text-dark fw-bold">
                   {{ infoPersonal?.violatedDays }}
-                </span>
+                </span> -->
               </div>
             </div>
           </div>
@@ -6685,30 +6706,32 @@
 
 <ng-template #templateAppointionGridCol2 let-data>
   <div class="py-1">
-    <div
+    <div 
+      placement="bottom" [ngbTooltip]="appointionHeaderTexts.PositionID" container="body"
       class="mb-2 text-dark fw-bold"
       [innerHTML]="
         data?.positionID
           | formatvalue : appointionFormModel : 'positionID'
           | async
-      "
-    ></div>
-    <div class="text-gray-700">
-      Cũ:
-      <span
-        [innerHTML]="
-          data?.oldPositionID
-            | formatvalue : appointionFormModel : 'oldPositionID'
-            | async
-        "
-      ></span>
-    </div>
+      "></div>
+    <ng-container *ngIf="data?.oldPositionID">
+      <div class="text-gray-700" placement="bottom" [ngbTooltip]="appointionHeaderTexts.OldPositionID" container="body">
+        <span
+          [innerHTML]="
+            data?.oldPositionID
+              | formatvalue : appointionFormModel : 'oldPositionID'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateAppointionGridCol3 let-data>
   <div class="has-action-menu py-1">
     <div
+      placement="bottom" [ngbTooltip]="appointionHeaderTexts.OrgUnitID" container="body"
       class="mb-2 text-dark fw-bold"
       [innerHTML]="
         data?.orgUnitID
@@ -6716,16 +6739,17 @@
           | async
       "
     ></div>
-    <div class="text-gray-700">
-      Cũ:
-      <span
-        [innerHTML]="
-          data?.oldOrgUnitID
-            | formatvalue : appointionFormModel : 'oldOrgUnitID'
-            | async
-        "
-      ></span>
-    </div>
+    <ng-container *ngIf="data?.oldPositionID">
+      <div class="text-gray-700" placement="bottom" [ngbTooltip]="appointionHeaderTexts.OldPositionID" container="body">
+        <span
+          [innerHTML]="
+            data?.oldOrgUnitID
+              | formatvalue : appointionFormModel : 'oldOrgUnitID'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
     <codx-mfunc
       [formModel]="appointionFormModel"
       (clickMF)="clickMF($event, data, 'eAppointions')"

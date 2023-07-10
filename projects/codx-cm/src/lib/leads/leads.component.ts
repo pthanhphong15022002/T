@@ -125,6 +125,7 @@ export class LeadsComponent
   crrStepID: any;
   moreFuncInstance: any;
   dataColums: any;
+  viewCrr: any;
 
   constructor(
     private inject: Injector,
@@ -138,10 +139,12 @@ export class LeadsComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    this.getProcessSetting();
     this.executeApiCalls();
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+
+
+  }
 
   onInit(): void {
     this.button = {
@@ -195,6 +198,7 @@ export class LeadsComponent
     try {
       await this.getFuncID(this.funcID);
       await this.getColorReason();
+      await this.getProcessSetting();
     } catch (error) {}
   }
   async getProcessSetting() {
@@ -258,10 +262,12 @@ export class LeadsComponent
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
-        this.getGridViewSetup(
+       this.getGridViewSetup(
           this.funcIDCrr.formName,
           this.funcIDCrr.gridViewName
         );
+        this.getMoreFunction( this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName);
       }
     });
   }
@@ -279,6 +285,10 @@ export class LeadsComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFuncID != this.funcID) {
       this.crrFuncID = this.funcID;
+    }
+    this.viewCrr = e?.view?.type;
+    if (this.viewCrr == 6) {
+      this.kanban = (this.view?.currentView as any)?.kanban;
     }
   }
 
@@ -310,42 +320,43 @@ export class LeadsComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-        eventItem.disabled =  (data.closed && !['0', '1'].includes(data.status)) || ['0', '1'].includes(data.status) || this.checkMoreReason(data)
+      eventItem.disabled = (data.closed && !['0', '1'].includes(data.status)) ||  ['0', '1'].includes(data.status) ||this.checkMoreReason(data);
     };
     var isCRUD = (eventItem, data) => {
-        eventItem.disabled = data.closed || this.checkMoreReason(data);
+      eventItem.disabled = data.closed || this.checkMoreReason(data);
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = data.closed
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || ['0', '1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = !data.closed
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['0', '1'].includes(data.status);
+      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed ;
     };
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = data.status != '3';
+      eventItem.disabled = !['13', '3'].includes(data.status) || data.closed ;
     };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['0', '1', '2'].includes(data.status);
+      eventItem.disabled = !['0', '1', '2'].includes(data.status) || data.closed ;
     };
-    var isMoveStage = (eventItem, data) => {
-      eventItem.disabled =  (data.closed && !['0', '1'].includes(data.status)) || ['0', '1'].includes(data.status) || ( data.status !='13' &&  this.checkMoreReason(data) )
+    var isFailReason = (eventItem, data) => {
+      eventItem.disabled =
+        (data.closed && !['0', '1'].includes(data.status)) ||
+        ['0', '1'].includes(data.status) ||
+        (data.status != '13' && this.checkMoreReason(data));
     };
     var isDisabledDefault = (eventItem, data) => {
-      eventItem.disabled = true
+      eventItem.disabled = true;
     };
 
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
       CM0205_2: isStartDay, // mergeLead
-      CM0205_3: isMoveStage,
+      CM0205_3: isDisabled,
       CM0205_4: isStartDay, // startyDay
       CM0205_5: isDisabled, // success
-      CM0205_6: isDisabled, // fail
+      CM0205_6: isFailReason, // fail
       CM0205_7: isDisabled,
       CM0205_8: isClosed,
       CM0205_9: isOwner,
@@ -359,12 +370,15 @@ export class LeadsComponent
       SYS102: isDisabledDefault,
       SYS02: isCRUD,
     };
-
     return functionMappings[type];
   }
 
   checkMoreReason(tmpPermission) {
-    return !( tmpPermission.roleMore.isReasonSuccess || tmpPermission.roleMore.isReasonFail);
+    return (
+      !tmpPermission.roleMore.isReasonSuccess &&
+      !tmpPermission.roleMore.isReasonFail &&
+      !tmpPermission.roleMore.isMoveStage
+    );
   }
 
   onActions(e) {
@@ -391,77 +405,82 @@ export class LeadsComponent
 
   dropLeads(data) {
     data.stepID = this.crrStepID;
-    if (!data.edit) {
+    if (!data?.roles?.isOnwer) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
     if (data.closed) {
-      this.notificationsService.notify('DP038');
+      this.notificationsService.notifyCode('DP039');
       return;
     }
-    // if (this.moreFuncInstance?.length == 0) {
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
-    if (data.status == '1' || data.status == '3') {
-      this.notificationsService.notifyCode('DP037');
+    if (data.status == '1' || data.status == '0') {
+      this.notificationsService.notifyCode(
+        'DP038',
+        0,
+        '"' + data.leadName + '"'
+      );
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (data.status != '1' && data.status != '3' && data.status != '5') {
-      this.notificationsService.notifyCode('DP037', 0, '"' + data.title + '"');
+    if (data.status == '3' || data.status == '5') {
+      this.notificationsService.notifyCode(
+        'DP037',
+        0,
+        '"' + data.leadName + '"'
+      );
       this.changeDetectorRef.detectChanges();
       return;
     }
-
-    if (
-      this.kanban &&
-      this.kanban.columns?.length > 0 &&
-      this.dataColums.length == 0
-    )
-      this.dataColums = this.kanban.columns;
-
+    if (data.status == '11') {
+      this.notificationsService.notifyCode('Tiềm năng đã chuyển đổi');
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+    this.dataColums = this.kanban.columns;
     if (this.dataColums.length > 0) {
       var idx = this.dataColums.findIndex(
         (x) => x.dataColums.recID == this.stepIdClick
       );
-      if (idx != -1) {
+
+      if (data.status == '13' && idx != -1) {
+        var stepCrr = this.dataColums[idx].dataColums;
+        if (!stepCrr?.isFailStep) {
+          this.notificationsService.notifyCode(
+            'Tiềm năng đã bị từ chối không thể đánh dấu được'
+          );
+          return;
+        } else {
+          this.moveStage(data);
+        }
+      } else if (idx != -1) {
         var stepCrr = this.dataColums[idx].dataColums;
         if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
           idx = this.moreFuncInstance.findIndex(
-            (x) => x.functionID == 'CM0201_1'
+            (x) => x.functionID == 'CM0205_3'
           );
           if (idx != -1) {
             if (this.checkMoreReason(data)) {
               this.notificationsService.notifyCode('SYS032');
               return;
             }
-            this.titleAction = this.moreFuncInstance[idx].text;
+            this.titleAction = this.moreFuncInstance[idx].customName;
             this.moveStage(data);
           }
         } else {
           if (stepCrr?.isSuccessStep) {
             idx = this.moreFuncInstance.findIndex(
-              (x) => x.functionID == 'CM0201_3'
+              (x) => x.functionID == 'CM0205_5'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
-              this.titleAction = this.moreFuncInstance[idx].text;
+              this.titleAction = this.moreFuncInstance[idx].customName;
               this.moveReason(data, true);
             }
           } else {
             idx = this.moreFuncInstance.findIndex(
-              (x) => x.functionID == 'CM0201_4'
+              (x) => x.functionID == 'CM0205_6'
             );
             if (idx != -1) {
-              if (this.checkMoreReason(data)) {
-                this.notificationsService.notifyCode('SYS032');
-                return;
-              }
-              this.titleAction = this.moreFuncInstance[idx].text;
+              this.titleAction = this.moreFuncInstance[idx].customName;
               this.moveReason(data, false);
             }
           }
@@ -648,9 +667,6 @@ export class LeadsComponent
   }
 
   delete(data: any) {
-    //   this.cache.functionList(this.funcID).subscribe((fun) => {
-
-    // });
     this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (opt) =>
@@ -824,7 +840,6 @@ export class LeadsComponent
         }
       });
   }
-
   moveStage(data: any) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -846,7 +861,7 @@ export class LeadsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: data?.nextStep,
+            nextStep: this.stepIdClick !== data?.stepID ? this.stepIdClick:  data?.nextStep,
           };
           var obj = {
             stepName: data?.currentStepName,

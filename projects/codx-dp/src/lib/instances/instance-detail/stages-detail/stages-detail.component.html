@@ -8,7 +8,7 @@
 >
   <div class="header-job py-3 px-5">
     <div class="d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-top mb-2">
+      <div class="d-flex align-items-top">
         <span class="fw-bold fs-4 text-dark me-2">{{
           dataStep?.stepName
         }}</span>
@@ -51,7 +51,7 @@
         </button>
       </div>
     </div>
-    <div class="mb-3 mt-2">
+    <div class="my-2">
       <div class="d-flex justify-content-between flex-wrap">
         <div class="d-flex align-items-center">
           <codx-label
@@ -96,7 +96,7 @@
           >
         </div>
       </div>
-      <div class="d-flex justify-content-between mt-3">
+      <div class="d-flex justify-content-between mt-2">
         <div class="d-flex align-items-center">
           <i class="icon-work_outline icon-16 me-1"></i>
           <codx-label
@@ -175,7 +175,8 @@
         ></codx-label>
         <div class="h-25px" *ngIf="dataStep.owner">
           <codx-imgs
-            [objectId]="dataStep.owner"
+            [objectId]="setIdAndUserRole(dataStep?.roles, 'id')"
+            [objectName]="setIdAndUserRole(dataStep?.roles, 'name')"
             [isToolTip]="true"
             [width]="25"
             objectType="AD_Users"
@@ -225,7 +226,7 @@
   </div>
 </div>
 
-<div
+<div class="instance-info-scroll"
   *ngIf="
     (dataStep.stepStatus !== '' && dataStep.stepStatus !== null) ||
     dataStep.stepStatus === 0

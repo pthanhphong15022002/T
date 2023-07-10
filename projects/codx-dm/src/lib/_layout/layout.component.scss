@@ -96,36 +96,9 @@
   display: none;
 }
 
-[data-kt-aside-minimize="on"] .progress-circle {
-  display: block;
-}
 
-[data-kt-aside-minimize="on"] {
-  .btn-add {
-    .btn {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
 
-      i {
-        padding-right: 0 !important;
-        font-size: 24px !important;
-      }
-    }
 
-    .fs-5 {
-      display: none;
-    }
-
-  }
-
-  #kt_aside_menu_header .justify-content-start.ps-6 {
-    justify-content: center !important;
-    padding-left: 0 !important;
-  }
-}
 
 #kt_aside_menu_header {
   margin-bottom: 15px;
@@ -197,7 +170,7 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
 }
 codx-layout:not([data-kt-aside-minimize="on"]){
   #kt_aside_menu_header+div {
-    padding-left: 12px;
+    //padding-left: 12px;
   }
   
 }
@@ -222,39 +195,7 @@ codx-layout:not([data-kt-aside-minimize="on"]){
   }
 }
 
-[data-kt-aside-minimize="on"] #kt_aside_menu{
-  .menu-item .menu-link{
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    &.active{
-      background-color: var(--gray-100);
-      border-radius: 0!important;
-      .menu-title {
-          color: var(--primary-dark) !important;
-      }
-      .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
-          fill: var(--primary-dark)!important;
-      }
-    }
-
-    .menu-title {
-      font-size: 12px;
-      flex-grow: inherit!important;
-    }
-    &:hover{
-      background-color: #ffffff25!important;
-      .menu-title {
-        color: var(--primary-lighter) !important;
-      }
-      .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
-        fill: var(--primary-lighter)!important;
-      }
-    }
-  }
-}
 .dms-card-icon span[class*="icon-"] {
   font-size: 16px !important;
   height: 16px !important;
@@ -349,13 +290,8 @@ codx-views#dm .content-tree codx-mfunc .btn {
   padding-top: 8px !important;
   background-color: var(--bghover);
 }
-codx-layout[data-kt-aside-minimize="on"]{
-.btn-add.without-sub{
-  .label-addnew{
-    display: none;
-  }
-}
-}
+
+
 
 
 .page-dm .aside.aside-light{
@@ -370,3 +306,12 @@ codx-layout[data-kt-aside-minimize="on"]{
 }
 
 /****************/
+.btn-dm-add
+{
+  width: 40px;
+  height: 40px;
+  i 
+  {
+    padding-right: 0 !important;
+  }
+}

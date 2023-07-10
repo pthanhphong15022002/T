@@ -62,6 +62,7 @@ export class LeadDetailComponent implements OnInit {
   request: ResourceModel;
   formModelDeal: FormModel;
   isBlock:boolean;
+  viewTag: string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -134,6 +135,7 @@ export class LeadDetailComponent implements OnInit {
         this.tmpDeal = null;
       }
       this.afterLoad();
+      this.getTags(this.dataSelected);
     }
   }
 
@@ -232,5 +234,11 @@ export class LeadDetailComponent implements OnInit {
     }
     return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
 
+  }
+  getTags(data){
+    this.viewTag = '';
+    setTimeout(() => {
+      this.viewTag = this.dataSelected?.tags
+    }, 100);
   }
 }

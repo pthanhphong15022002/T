@@ -28,6 +28,9 @@ import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/cate
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
+import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
+import { firstValueFrom } from 'rxjs';
+
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -42,6 +45,7 @@ export class CatagoryComponent implements OnInit {
     cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
     MultiSelectPopupComponent: MultiSelectPopupComponent,
+    PopupAddDynamicProcessComponent: PopupAddDynamicProcessComponent,
   };
   category = '';
   title = '';
@@ -166,6 +170,8 @@ export class CatagoryComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       });
+    //cm-VTHAO them ngay 4/07/2023
+    // if (this.function?.functionID == 'CMS')
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
@@ -392,6 +398,14 @@ export class CatagoryComponent implements OnInit {
               });
           }
 
+          break;
+        //crm
+        case 'cms0301':
+        case 'cms0302':
+        case 'cms0303':
+        case 'cms0304':
+        case 'cms0305':
+          this.cmOpenPopup(item);
           break;
         default:
           break;
@@ -769,7 +783,7 @@ export class CatagoryComponent implements OnInit {
           else this.dataValue[transType] = [];
         }
         if (this.category != '4') {
-          if (this.dataValue[transType][field] == value) {
+          if (this.dataValue[transType][field] == value || !value) {
             this.collapseItem(null, data);
             return;
           }
@@ -850,42 +864,6 @@ export class CatagoryComponent implements OnInit {
                       const tempDataValue = JSON.parse(dt.dataValue);
                       this.updateCustom(tempDataValue, data);
                     }
-
-                    // console.log(tempDataValue);
-
-                    // const requestData = new DataRequest();
-                    // requestData.entityName = 'AD_CompanySettings';
-                    // requestData.pageLoading = false;
-                    // this.api
-                    //   .execSv(
-                    //     'SYS',
-                    //     'Core',
-                    //     'DataBusiness',
-                    //     'LoadDataAsync',
-                    //     requestData
-                    //   )
-                    //   .pipe(
-                    //     tap((r) => console.log(r)),
-                    //     map((r) => r[0]),
-                    //     tap((r) => console.log(r))
-                    //   )
-                    //   .subscribe((res) => {
-                    //     const first = res[0];
-
-                    //     if (first) {
-                    //       first.baseCurr = tempDataValue.BaseCurr;
-                    //       first.secondCurr = tempDataValue.SecondCurr;
-                    //       first.conversionCurr = tempDataValue.LocalCurr;
-
-                    //       this.api
-                    //         .execAction(
-                    //           'AD_CompanySettings',
-                    //           [first],
-                    //           'UpdateAsync'
-                    //         )
-                    //         .subscribe();
-                    //     }
-                    //   });
                   }
                   this.changeDetectorRef.detectChanges();
                   console.log(res);
@@ -1029,4 +1007,66 @@ export class CatagoryComponent implements OnInit {
       }
     }
   }
+
+  //CM_Setting popup - VThao - 4/7/2023 - chuyen qua từ code của Phúc
+  async cmOpenPopup(item) {
+    let funcID = item.reference;
+    let title = item.title || item.description;
+    this.api
+      .execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'ProcessesBusiness',
+        'GetProcessDefaultSettingAsync',
+        [
+          funcID == 'CMS0301'
+            ? '1'
+            : funcID == 'CMS0302'
+            ? '2'
+            : funcID == 'CMS0303'
+            ? '3'
+            : funcID == 'CMS0304'
+            ? '5'
+            : '4',
+        ]
+      )
+      .subscribe((data) => {
+        if (data != null && data.length > 0) {
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          dialogModel.zIndex = 999;
+          let formModel = new FormModel();
+          formModel.entityName = 'DP_Processes';
+          formModel.formName = 'DPProcesses';
+          formModel.gridViewName = 'grvDPProcesses';
+          formModel.funcID = 'DP01';
+          // dialogModel.DataService = this.view?.dataService;
+          dialogModel.FormModel = formModel;
+          var obj = {
+            action: data[3],
+            titleAction: title,
+            gridViewSetup: data[1],
+            lstGroup: data[2],
+            systemProcess: '1',
+            data: data[0],
+          };
+
+          var dialog = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            0,
+            0,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialog.closed.subscribe((e) => {});
+        }
+      });
+
+    // this.changeDetectorRef.detectChanges();
+  }
+
+  //end CRM
 }

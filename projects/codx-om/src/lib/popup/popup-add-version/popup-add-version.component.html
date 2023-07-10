@@ -29,6 +29,13 @@
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
+    <div class="form-group" *ngIf="isRelease">
+      <codx-input type="checkbox" [crrValue]="autoUpdate" (valueChange)="autoUpdateChange($event)">
+      </codx-input>
+      <codx-label class="ps-2" [formModel]="form.formModel" default="Tự động cập nhật chỉ tiêu cho mục tiêu/kết quả được phân công/phân bổ.">
+      </codx-label>
+      
+    </div>
   </ng-template>
 
   <ng-template #footer>

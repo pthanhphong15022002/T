@@ -106,6 +106,7 @@ export class PopupAddJournalComponent
   vllDateFormat: any;
   vll067: any[] = [];
 
+  journalPermissions: IJournalPermission[] = [];
   creater: string;
   createrObjectType: string;
   approver: string;
@@ -155,7 +156,9 @@ export class PopupAddJournalComponent
       options.pageLoading = false;
       this.acService
         .loadDataAsync('AC', options)
-        .subscribe((journalPermissions: IJournalPermission[]) => {
+        .subscribe(async (journalPermissions: IJournalPermission[]) => {
+          this.journalPermissions = journalPermissions;
+
           let creater: string[] = [];
           let approver: string[] = [];
           let poster: string[] = [];
@@ -163,6 +166,11 @@ export class PopupAddJournalComponent
           let sharer: string[] = [];
 
           for (const permission of journalPermissions) {
+            permission.objectName = await this.getObjectNameAsync(
+              permission.objectType,
+              permission.objectID
+            );
+
             if (permission.add === '1') {
               this.createrObjectType = permission.objectType;
               creater.push(permission.objectID);
@@ -240,7 +248,7 @@ export class PopupAddJournalComponent
       console.log(res);
 
       if (!res.event && !this.isEdit) {
-        this.journalService.deleteAutoNumber(this.journal.journalNo);
+        this.journalService.deleteAutoNumber(this.journal.voucherFormat);
 
         if (this.journal.checkImage) {
           this.acService.deleteFile(
@@ -260,13 +268,13 @@ export class PopupAddJournalComponent
             .subscribe((vllDFormat) => {
               this.vllDateFormat = vllDFormat.datas;
 
-              this.getAutoNumber(this.journal.journalNo).subscribe(
-                (autoNumber) => {
-                  this.form.formGroup.patchValue({
-                    voucherFormat: this.getAutoNumberFormat(autoNumber),
-                  });
-                }
-              );
+              // this.getAutoNumber(this.journal.voucherFormat).subscribe(
+              //   (autoNumber) => {
+              //     this.form.formGroup.patchValue({
+              //       voucherFormat: this.getAutoNumberFormat(autoNumber),
+              //     });
+              //   }
+              // );
             });
         }
       });
@@ -517,12 +525,17 @@ export class PopupAddJournalComponent
   }
 
   onClickOpenPermissionPopup(): void {
-    return;
+    // return;
     this.callfc.openForm(
       PopupPermissionComponent,
       'This param is not working',
       950,
-      650
+      650,
+      '',
+      {
+        journalPermissions: this.journalPermissions,
+        journalNo: this.journal.journalNo,
+      }
     );
   }
 
@@ -572,10 +585,10 @@ export class PopupAddJournalComponent
         (screen.width * 40) / 100,
         '',
         {
-          autoNoCode: this.journal.journalNo,
+          autoNoCode: this.journal.voucherFormat,
           description: this.dialogRef.formModel?.entityName,
           disableAssignRule: true,
-          autoAssignRule: this.journal.autoAssignRule,
+          autoAssignRule: this.journal.assignRule,
         }
       )
       .closed.subscribe((res) => {
@@ -583,7 +596,7 @@ export class PopupAddJournalComponent
 
         if (res.event) {
           this.form.formGroup.patchValue({
-            voucherFormat: this.getAutoNumberFormat(res.event),
+            voucherFormat: res.event.autoNoCode,
           });
         }
       });
@@ -784,6 +797,45 @@ export class PopupAddJournalComponent
     }
 
     return true;
+  }
+
+  async getObjectNameAsync(
+    objectType: string,
+    objectId: string
+  ): Promise<string> {
+    if (objectType === 'U') {
+      const users = await lastValueFrom(
+        this.acService.loadComboboxData(
+          'Share_Users',
+          'AD',
+          'UserID=@0',
+          objectId
+        )
+      );
+      return users[0]?.UserName;
+    } else if (objectType === 'UG') {
+      const userGroups = await lastValueFrom(
+        this.acService.loadComboboxData(
+          'Share_GroupUsers',
+          'AD',
+          'GroupID=@0',
+          objectId
+        )
+      );
+      return userGroups[0]?.GroupName;
+    } else if (objectType === 'R') {
+      const userRoles = await lastValueFrom(
+        this.acService.loadComboboxData(
+          'Share_UserRoles',
+          'AD',
+          'RoleID=@0',
+          objectId
+        )
+      );
+      return userRoles[0]?.RoleName;
+    }
+
+    return '';
   }
   //#endregion
 }

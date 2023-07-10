@@ -97,7 +97,9 @@ export class TabLeadDetailComponent
         this.listStep = res;
         this.checkCompletedInstance(this.dataSelected?.status);
         this.leadDetailComponent.pushTabFields((this.checkHaveField(this.listStep)));
-
+      }
+      else {
+        this.listStep = null;
       }
       this.isDataLoading = false;
     });

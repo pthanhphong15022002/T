@@ -457,7 +457,6 @@ export class PopupAddPostComponent implements OnInit {
         ['WPParameters']
       ).subscribe((res: any) => {
         if (res) {
-          debugger
           let _param = JSON.parse(res);
           //default mode coppy
           if (_param["CopyFormat"] === '1') this.copyFormat = 'keepFormat';

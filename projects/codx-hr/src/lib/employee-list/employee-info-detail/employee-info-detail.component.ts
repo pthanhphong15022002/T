@@ -553,9 +553,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   crrIndex: number = 0;
 
   currentYear = new Date().getFullYear();
- firstDay = new Date(this.currentYear, 0, 1);
- lastDay = new Date(this.currentYear, 11, 31);
- dayOffInitPredicate =  `(EmployeeID=@0 and (BeginDate>="${this.firstDay.toISOString()}" and EndDate<="${this.lastDay.toISOString()}"))`
+  firstDay = new Date(this.currentYear, 0, 1);
+  lastDay = new Date(this.currentYear, 11, 31);
+  dayOffInitPredicate =  `(EmployeeID=@0 and (BeginDate>="${this.firstDay.toISOString()}" and EndDate<="${this.lastDay.toISOString()}"))`
 
   //#region headerTextString
   addHeaderText;
@@ -653,7 +653,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.employeeID = params['employeeID'];
       this.pageNum = params['page'];
       this.maxPageNum = params['totalPage']
-      debugger
 
       if(this.employeeID){
         // Load full thong tin employee
@@ -684,10 +683,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         })
       }
       if (this.employeeID) {
-        debugger
         if (history.state) {
-          this.listEmp = history.state.data
-          this.request = history.state.request;
+          this.listEmp = history.state.data;
+          if(history.state.request)
+          {
+            this.request = Object.assign(history.state.request);
+            this.request.selector = "EmployeeID;"
+          }
           if (Array.isArray(this.listEmp)) {
             this.crrIndex = this.listEmp.findIndex(
               (x: any) => this.employeeID == x['EmployeeID']
@@ -711,18 +713,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       },
     ];
     this.formModel = this.view.formModel;
-    console.log('form Model ne', this.formModel);
     
   }
-
+  eInfoHeaderText:any = null;
   initFormModel() {
     this.hrService.getFormModel(this.eContractFuncID).then((res) => {
       this.eContractFormModel = res;
     });
 
-    this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
-      this.eInfoFormModel = res;
-    });
+    if(this.eInfoFuncID)
+    {
+      this.hrService.getHeaderText(this.eInfoFuncID).then((headerText) => 
+      {
+        debugger
+        this.eInfoHeaderText = headerText;
+      });
+      this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
+        this.eInfoFormModel = res;
+      });
+    }
+    
 
     this.hrService.getFormModel(this.eFamiliesFuncID).then((res) => {
       this.eFamilyFormModel = res;
@@ -1092,7 +1102,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     //   }
     //   this.df.detectChanges();
     // }
-
+    
     if (!this.eDegreeColumnsGrid) {
       this.hrService.getHeaderText(this.eDegreeFuncID).then((res) => {
         this.eDegreeHeaderText = res;
@@ -2580,7 +2590,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //chua dung
   clickTab(funcList: any) {
-    debugger
     this.crrFuncTab = funcList.functionID;
     switch (this.crrFuncTab) {
       case this.curriculumVitaeFuncID:
@@ -2840,7 +2849,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
         } else if (actionType == 'edit') {
-          debugger
           if(res.event){
             let kq = this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate)
             if(kq == true){
@@ -3049,7 +3057,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.df.detectChanges();
           }
         } else if (actionType == 'edit') {
-          debugger
           if (
             res?.event.issuedDate >= this.crrPassport.issuedDate
           ) {
@@ -3169,7 +3176,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         // (this.passportGridview.dataService as CRUDService).clear();
       } else {
         if (actionType == 'add' || actionType == 'copy') {
-          debugger
           if (
             !this.crrVisa ||
             res?.event.issuedDate > this.crrVisa.issuedDate
@@ -3297,6 +3303,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   ) {
     if (this.appointionGridView)
       this.appointionGridView.dataService.dataSelected = this.infoPersonal;
+
     let option = new SidebarModel();
     option.DataService = this.appointionGridView?.dataService;
     option.FormModel = this.appointionFormModel;
@@ -3308,6 +3315,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         employeeId: this.employeeID,
         funcID: this.appointionFuncID,
         appointionObj: data,
+        empObj:this.infoPersonal,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.appointionFuncID),
       },
@@ -3767,25 +3775,27 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   nextEmp() {
     if (this.listEmp) {
-      debugger
       // console.log('vi tri tim trong mang', this.listEmp.findIndex(
       //   (x: any) => this.employeeID == x['EmployeeID']
       // ))
       this.crrIndex += 1;
       if(this.crrIndex == this.listEmp.length - 1){
-        let requestNewEmpPage = new DataRequest();
-        requestNewEmpPage.entityName = this.request.entityName;
-        requestNewEmpPage.gridViewName = this.request.gridViewName;
-        requestNewEmpPage.page = this.request.page + 1;
-        requestNewEmpPage.predicate = this.request.predicate;
-        requestNewEmpPage.dataValue = this.request.dataValue;
-        requestNewEmpPage.selector = "EmployeeID;";
-        requestNewEmpPage.pageSize = this.request.pageSize;
-        this.hrService.loadData('HR', requestNewEmpPage).subscribe((res) =>{
-          debugger
+        // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter từ DSNV ngoài
+        
+        // let requestNewEmpPage = new DataRequest();
+        // requestNewEmpPage.entityName = this.request.entityName;
+        // requestNewEmpPage.gridViewName = this.request.gridViewName;
+        // requestNewEmpPage.page = this.request.page + 1;
+        // requestNewEmpPage.predicate = this.request.predicate;
+        // requestNewEmpPage.dataValue = this.request.dataValue;
+        // requestNewEmpPage.selector = "EmployeeID;";
+        // requestNewEmpPage.pageSize = this.request.pageSize;
+        this.request.page += 1;
+
+
+        this.hrService.loadData('HR', this.request).subscribe((res) =>{
           if(res && res[0].length > 0){
             this.listEmp.push(...res[0])
-            this.request.page += 1;
             this.navigateEmp(0, true);
           }
           else{
@@ -3803,7 +3813,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   navigateEmp(isNextEmp, isNextPage?){
     if(isNextPage == true){
-      debugger
       let newPageNum = Number(this.pageNum) + 1
       this.pageNum = newPageNum;
     }

@@ -9,6 +9,7 @@ import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons, DP_Steps,
   styleUrls: ['./popup-move-reason.component.css']
 })
 export class PopupMoveReasonComponent implements OnInit {
+  [x: string]: any;
 
   dialog: any;
   formModel:any;
@@ -51,6 +52,7 @@ export class PopupMoveReasonComponent implements OnInit {
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
   gridViewSetup: any;
+  stepNameSuccess: any;
 
   constructor(
     private cache: CacheService,
@@ -89,6 +91,7 @@ export class PopupMoveReasonComponent implements OnInit {
     }
     this.dataCM = dt?.data?.dataCM;
     this.recID = this.dataCM ? this.dataCM?.refID: this.instances?.recID;
+    this.getValueListReason();
   }
 
   ngOnInit(): void {
@@ -108,9 +111,7 @@ export class PopupMoveReasonComponent implements OnInit {
       );
       return;
     }
-    // else {
-      this.beforeSave();
-    // }
+    this.beforeSave();
 
   }
   beforeSave() {
@@ -149,12 +150,11 @@ export class PopupMoveReasonComponent implements OnInit {
       await this.getValueListMoveProcess();
       await this.getListMoveReason(this.dataCM);
       await this.getValueFormModel();
+
     } catch (error) {
 
     }
   }
-
-
   async executeApiCallInstance(){
     try {
       await this.getValueFormModel();
@@ -228,11 +228,11 @@ export class PopupMoveReasonComponent implements OnInit {
   ) {
     var reason = new DP_Instances_Steps_Reasons();
      reason.processID = this.instances.processID;
-     reason.stepID = this.reasonStep.recID;
+     reason.stepID = stepReason.stepID;
      reason.reasonName = stepReason.reasonName;
      reason.instanceID = this.instances.recID;
      reason.createdBy = this.userId;
-     reason.reasonType = this.reasonStep.isSuccessStep ? '1' : '2';
+     reason.reasonType = this.isReason ? '1' : '2';
     return reason;
   }
 
@@ -251,6 +251,39 @@ export class PopupMoveReasonComponent implements OnInit {
     if (e != null) {
       this.ownerMove = e?.id; // thêm check null cái;
     }
+  }
+
+  async getValueListReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.stepNameSuccess = item?.text;
+          } else if (item.value === 'F') {
+            this.stepNameFail = item?.text;
+          }
+           else if (item.value === 'R') {
+          this.stepNameReason = item?.text;
+         }
+      }
+      this.getNameReason(this.isReason);
+      }
+    });
+  }
+
+  getNameReason(isReason){
+    this.titleReasonClick = isReason ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess): !isReason
+    ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+    : '';
+  }
+  joinTwoString(valueFrist, valueTwo) {
+    valueTwo = this.LowercaseFirstPipe(valueTwo);
+    if (!valueFrist || !valueTwo) return '';
+    return valueFrist + ' ' + valueTwo;
+  }
+  LowercaseFirstPipe(value) {
+    if (!value) return '';
+    return value.charAt(0).toLowerCase() + value.slice(1);
   }
 }
 

@@ -81,7 +81,9 @@ export class DecentralizedGroupComponent extends UIComponent {
           option
         );
         dialogAddGroup.closed.subscribe((e) => {
-          console.log('event', e);
+          this.view.dataService.update(e.event).subscribe((data) => {
+            console.log('event', e);
+          });
         });
       }
     });
@@ -113,7 +115,9 @@ export class DecentralizedGroupComponent extends UIComponent {
     this.view.dataService.dataSelected = data;
     this.adService.removeGroupAsync(data.groupID).subscribe((res) => {
       if (res) {
-        this.view.dataService.delete(data);
+        this.view.dataService.delete([data]).subscribe((res) => {
+          this.detectorRef.detectChanges();
+        });
       }
     });
   }

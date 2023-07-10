@@ -15,6 +15,7 @@
   [autoSearch]="true"
   (selectedChange)="selectedChange($event)"
   (onLoading)="onLoading($event)"
+  (viewChanged)="changeView($event)"
   (searchChanged)="searchChanged($event)"
   (onActions)="onActions($event)"
   [viewActiveType]="viewMode"
@@ -29,6 +30,7 @@
     [imageWidth]="35"
     imgCss="me-3"
     [imageObjName]="data?.leadName"
+    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
     [imageObjType]="'CM_Leads'"
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
@@ -230,7 +232,7 @@
           #businessLineID
           [innerHTML]="
           data?.businessLineID
-              | formatvalue : formModel : 'businessLineID' : businessLineID
+              | formatvalue : view.formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
@@ -252,7 +254,7 @@
 </ng-template>
 
 <ng-template #footerKanban let-data>
-  <div class="d-flex flex-column">
+  <!-- <div class="d-flex flex-column">
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex justify-content-end align-items-center">
         <span class="me-1">
@@ -276,6 +278,85 @@
         >
         </codx-imgs>
       </div>
+    </div>
+  </div> -->
+
+  <div class="d-flex justify-content-end">
+    <div class="me-auto">
+      <div class="d-flex align-items-end codx-badge">
+        <div
+          *ngIf="data.status == '2'; else statusDefault"
+          [ngStyle]="{
+            'background-color': data?.steps['backgroundColor']
+          }"
+          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+        >
+          <span
+            [ngClass]="data?.steps['icon']"
+            [ngStyle]="{ color: data?.steps['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span
+            class="text-ellipsis line-clamp line-clamp-1"
+            [ngbTooltip]="data?.currentStepName"
+            [ngStyle]="{ color: data?.steps['textColor'] }"
+            >{{ data?.currentStepName }}</span
+          >
+        </div>
+        <ng-template #statusDefault>
+          <div [ngbTooltip]="data?.status == '13' ? popupCustGroupID : ''">
+            <ng-template #popupCustGroupID>
+              <div class="text-end text-sm-start">
+                <codx-label
+                  [setRequire]="false"
+                  class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
+                  fiedName="ReturnedCmt"
+                  [formModel]="view.formModel"
+                ></codx-label>
+                <span
+                  class="d-flex align-items-start inline"
+                  [innerHTML]="
+                    data?.returnedCmt
+                      | formatvalue : view.formModel : 'ReturnedCmt'
+                      | async
+                  "
+                ></span>
+              </div>
+            </ng-template>
+            <codx-vll
+              [name]="gridViewSetup?.Status?.referedValue"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="pe-1">
+      <span class="icon-16 icon-av_timer me-1"></span>
+      <span
+        class="text-gray-700"
+        #modifiedOn
+        [innerHTML]="
+          data?.modifiedOn
+            | formatvalue : view.formModel : 'modifiedOn'
+            | async
+        "
+      ></span>
+    </div>
+    <div>
+      <codx-imgs
+      [isToolTip]="true"
+      [width]="25"
+      [objectId]="data?.owner"
+      objectType="AD_Users"
+      [numberImages]="1"
+    >
+    </codx-imgs>
     </div>
   </div>
 </ng-template>

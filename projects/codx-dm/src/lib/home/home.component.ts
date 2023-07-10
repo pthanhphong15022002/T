@@ -670,8 +670,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         else this.getDataByFuncID00();
         this.setBreadCumb();
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
-          this.fileService.options.favoriteID = "1";
-          this.folderService.options.favoriteID = "1";
+          this.fileService.options.favoriteID = "";
+          this.folderService.options.favoriteID = "";
         };
         if(this.funcID == "DMT03" || this.funcID == "DMT02" || this.funcID == "DMT00") {
           this.viewActive.model.panelLeftHide = false;

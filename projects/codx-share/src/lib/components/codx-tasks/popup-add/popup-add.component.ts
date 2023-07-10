@@ -24,7 +24,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { StatusTaskGoal } from '../model/enum';
 import {
   TaskGoal,
@@ -1234,6 +1234,24 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           .subscribe((result) => {
             if (result && result?.length > 0) {
               this.dataReferences = result;
+            }
+          });
+        break;
+      case 'OM_OKRs':
+        this.api
+          .exec<any>('OM', 'OKRBusiness', 'GetOKRByIDAsync', task.refID)
+          .subscribe((okr) => {
+            if (okr) {
+              var ref = new tmpReferences();
+              ref.recIDReferences = okr.recID;
+              ref.refType = 'OM_OKRs';
+              ref.createdOn = okr?.createdOn;
+              ref.memo = okr?.okrName;
+              ref.createdBy = okr?.createdBy;
+              this.dataReferences.unshift(ref);
+              if (listUser.findIndex((p) => p == okr.createdBy) == -1)
+                listUser.push(ref.createdBy);
+              this.getUserByListCreateBy(listUser);
             }
           });
         break;

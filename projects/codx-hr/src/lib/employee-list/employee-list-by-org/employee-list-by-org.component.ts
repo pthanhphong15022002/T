@@ -18,6 +18,7 @@ export class EmployeeListByOrgComponent {
   @Input() modeView: string = 'employee';
   @Input() rowHeight: string = '50';
   @Input() showRowNumber: boolean = false;
+  @Input() funcID: string = 'HRT03a1';
   @Output() dataChange: EventEmitter<any> = new EventEmitter();
   totalEmployee: number = 0;
   sysMoreFunc: any[] = [];
@@ -38,13 +39,19 @@ export class EmployeeListByOrgComponent {
   @ViewChild('colEmployeeHeader') colEmployeeHeader: TemplateRef<any>;
   @ViewChild('colContactHeader') colContactHeader: TemplateRef<any>;
   @ViewChild('colPersonalHeader') colPersonalHeader: TemplateRef<any>;
-  @ViewChild('colStatusHeader') colStatusHeader: TemplateRef<any>; 
+  @ViewChild('colStatusHeader') colStatusHeader: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colContact') colContact: TemplateRef<any>;
   @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
   @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
-
+  service = 'HR';
+  entityName = 'HR_Employees';
+  assemblyName = 'ERM.Business.HR';
+  className = 'EmployeesBusiness';
+  method = 'GetEmployeeListByOrgUnitIDGridView';
+  idField = 'employeeID';
+  predicates = '@0.Contains(OrgUnitID)';
   funcIDEmpInfor: string = 'HRT03b';
   itemSelected;
   constructor(
@@ -61,7 +68,7 @@ export class EmployeeListByOrgComponent {
     });
   }
   ngAfterViewInit(): void {
-    if (this.grvSetup) { 
+    if (this.grvSetup) {
       this.initColumnGrid();
     } else {
       this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -73,8 +80,8 @@ export class EmployeeListByOrgComponent {
         });
     }
   }
-  initColumnGrid(){
-    switch (this.modeView){
+  initColumnGrid() {
+    switch (this.modeView) {
       case 'contact':
         this.columnsGrid = [
           {
@@ -120,12 +127,12 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colEmployeeHeader,
             template: this.colEmployee,
-            width: '150',
+            width: '200',
           },
           {
             headerTemplate: this.colContactHeader,
             template: this.colContact,
-            width: '100',
+            width: '150',
           },
           {
             headerTemplate: this.colPersonalHeader,
@@ -135,7 +142,7 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colStatusHeader,
             template: this.colStatus,
-            width: '120',
+            width: '150',
           },
         ];
         break;
@@ -204,7 +211,7 @@ export class EmployeeListByOrgComponent {
                 //this.grid.dataService.rowCount = 0;
                 clearInterval(ins);
                 this.grid.deleteRow(data, true);
-                this.grid.rowCount = --this.grid.rowCount;
+                this.grid.dataService.rowCount = this.grid.dataService.rowCount - 1;
                 this.dataChange.emit({ data: res, actionType: 'delete', hasDataChanged: true });
               }
             }, 200);
@@ -244,9 +251,14 @@ export class EmployeeListByOrgComponent {
             );
             popup.closed.subscribe((e) => {
               if (e.event) {
-                (this.view.dataService as CRUDService).add(e.event).subscribe();
-                //this.grid.addRow(e.event, 0, true);
-                this.grid.refresh();
+                if (e.event.orgUnitID === this.orgUnitID) {
+                  if (this.showManager)
+                    this.getManager(this.orgUnitID);
+                  this.grid.addRow(e.event, 0, true);
+                  //this.grid.refresh();
+                } else {
+                  (this.view.dataService as CRUDService).add(e.event).subscribe();
+                }
                 this.dataChange.emit({ data: e.event, actionType: 'copy', hasDataChanged: true });
               }
             });
@@ -281,11 +293,24 @@ export class EmployeeListByOrgComponent {
         );
         dialog.closed.subscribe((e) => {
           if (e.event) {
-            (this.view.dataService as CRUDService).update(e.event).subscribe();
-            if (e.event?.employeeID === this.manager?.employeeID)
-              this.getManager(this.orgUnitID);
-            //this.grid.updateRow(index, e.event, false);
-            this.grid.refresh();
+            if (e.event?.employeeID === this.manager?.employeeID) {
+              if (e.event?.positionID === this.manager?.positionID
+                || e.event?.orgUnitID === this.manager?.orgUnitID) {
+                this.getManager(this.orgUnitID);
+              } else {
+                this.manager.employeeName = e.event?.employeeName;
+                this.manager.phone = e.event?.phone;
+                this.manager.mobile = e.event?.mobile;
+              }
+            }
+            if (e.event.orgUnitID === this.orgUnitID) {
+              if (this.showManager)
+                this.getManager(this.orgUnitID);
+              //this.grid.updateRow(index,e.event, true);
+              this.grid.refresh();
+            } else {
+              (this.view.dataService as CRUDService).add(e.event).subscribe();
+            }
             this.dataChange.emit({ data: e.event, oldData: data, actionType: 'edit', hasDataChanged: true });
           }
         });

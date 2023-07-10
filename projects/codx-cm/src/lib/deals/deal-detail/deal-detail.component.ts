@@ -78,25 +78,34 @@ export class DealDetailComponent implements OnInit {
   contactPerson:any;
 
   tabDetail = [];
+  viewTag: string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private api: ApiHttpService,
     private cache: CacheService,
   ) {
-    this.listTab(this.funcID);
     this.executeApiCalls();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.listTab();
+  }
 
   ngAfterViewInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.dataSelected) {
-      this.dataSelected = this.dataSelected;
-      this.promiseAllAsync();
+
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+        this.dataSelected = this.dataSelected;
+        this.promiseAllAsync();
+        this.getTags(this.dataSelected);
+      }
     }
   }
 
@@ -111,55 +120,37 @@ export class DealDetailComponent implements OnInit {
   }
 
 
-  listTab(funcID) {
-    this.tabDetail = [
+  listTab() {
+     this.tabDetail = [
       {
         name: 'Information',
-        textDefault: 'Thông tin chung',
+        text: 'Thông tin chung',
         icon: 'icon-info',
-        isActive: true,
       },
       {
         name: 'Field',
-        textDefault: 'Thông tin mở rộng',
+        text: 'Thông tin mở rộng',
         icon: 'icon-add_to_photos',
-        isActive: false,
       },
       {
         name: 'Contact',
-        textDefault: 'Liên hệ',
+        text: 'Liên hệ',
         icon: 'icon-contact_phone',
-        isActive: false,
       },
       {
         name: 'Opponent',
-        textDefault: 'Đối thủ',
+        text: 'Đối thủ',
         icon: 'icon-people_alt',
-        isActive: false,
       },
       {
         name: 'Task',
-        textDefault: 'Công việc',
+        text: 'Công việc',
         icon: 'icon-more',
-        isActive: false,
-      },
-      {
-        name: 'Quotation',
-        textDefault: 'Báo giá',
-        icon: 'icon-monetization_on',
-        isActive: false,
-      },
-      {
-        name: 'Contract',
-        textDefault: 'Hợp đồng',
-        icon: 'icon-sticky_note_2',
-        isActive: false,
       },
       {
         name: 'History',
-        textDefault: 'Lịch sử hoạt động',
+        text: 'Lịch sử hoạt động',
         icon: 'icon-sticky_note_2',
-        isActive: false,
       },
 
     ];
@@ -215,5 +206,13 @@ export class DealDetailComponent implements OnInit {
       this.contactPerson = $event?.isDefault ? $event: null;
       this.changeDetectorRef.detectChanges();
     }
+  }
+
+  getTags(data){
+    this.viewTag = '';
+    setTimeout(() => {
+      this.viewTag = this.dataSelected?.tags
+    }, 100);
+     //this.viewTag = this.dataSelected?.tags
   }
 }

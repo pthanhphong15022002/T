@@ -275,6 +275,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
 
     if(this.data?.extension.includes("doc"))
     {
+      debugger
       this.isShow = true;
       let http: XMLHttpRequest = new XMLHttpRequest();
       let content = { fileUrl:  this.linkFile};

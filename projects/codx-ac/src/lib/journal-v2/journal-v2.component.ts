@@ -50,6 +50,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   posters: { journalNo: string; value: string }[];
   ViewType = ViewType;
   statusFilter: any = 1;
+  status:string;
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -133,11 +134,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.cache.valueList('AC085').subscribe((res) => {
       if (res) {
         this.vll85 = res.datas;
+        
       }
     });
     this.cache.valueList('AC086').subscribe((res) => {
       if (res) {
-        this.vll86 = res.datas;
+        this.vll86 = res.datas; 
+        this.status = res.datas[0].value;
       }
     });
     combineLatest({
@@ -222,6 +225,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
     ];
     ScrollComponent.reinitialization();
     this.detectorRef.detectChanges();
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      this.functionName = this.acService.toCamelCase(res.defaultName);
+    });
   }
 
   //#region Init
@@ -383,7 +390,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
         console.log(res);
 
         if (res) {
-          this.journalService.deleteAutoNumber(data.journalNo);
+          this.journalService.deleteAutoNumber(data.autoNumber);
           this.acService.deleteFile(data.recID, this.view.formModel.entityName);
           this.api
             .exec(
