@@ -773,24 +773,30 @@ export class CodxDMService {
         } else {
           //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
-          if (type == 'DM_FolderInfo') {
-            if (this.folderService.options.favoriteID == '1') list = 'DMT0226;DMT0227';
-            else if (this.folderService.options.favoriteID == '3')  {
-              if(data?.approvalStatus == '8') list = 'DMT0226'
-              else list = 'DMT0233'
-            }
-            else list = 'DMT0227';
-          } else {
-            if (this.fileService.options.favoriteID == '1') list = 'DMT0230;DMT0231';
-            else if (this.fileService.options.favoriteID == '3') 
-            {
-              if(data?.approvalStatus == '8') list = 'DMT0230'
-              else list = 'DMT0233'
-            }
-            else list = 'DMT0231';
+          //Chờ duyệt 
+          if (data.approvalStatus == "3"){
+            if(data?.hasApproval) list = 'DMT0230;DMT0231';
+            else list = 'DMT0232'
+          } 
+           //Chờ duyệt phát hành
+          else if(data.approvalStatus == "1") {
+            if((data.createdBy == this.user?.userID && data?.hasApproval) || data?.hasApproval)list = 'DMT0240;DMT0241'
+            else list = 'SYS02'
           }
+          //Đã duyệt
+          else if (data.approvalStatus == '5')  {
+            if(data?.approvalStatus == '8') list = 'DMT0226'
+            else list = 'DMT0233'
+          }
+           //Đã duyệt phát hành
+          else if (data.approvalStatus == '6')  {
+           list = 'DMT0243'
+          }
+          else list = 'DMT0227';
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = false;
+
+            if(data.approvalStatus == "1" ) e[i].isbookmark = false;
           } else {
             e[i].disabled = true;
           }
@@ -894,7 +900,6 @@ export class CodxDMService {
               break;
             case 'DMT0204': // di chuyen thu muc
             case 'DMT0216': // di chuyen file
-              debugger
               if (!data.moveable) e[i].isblur = true; // duoc view
               break;
             case 'DMT0206': //delete
@@ -1235,8 +1240,20 @@ export class CodxDMService {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
     switch ($event.functionID) {
+      // Hủy chờ xét duyệt
+      case "DMT0232":
+        {
+          this.setRequest(
+            type,
+            data.recID,
+            data.id,
+            '-2',
+            true)
+          break;
+        }
       //Rút lại quyền sau khi đã duyệt
       case 'DMT0233':
+      case 'DMT0243':
         {
           this.setRequest(
             type,
@@ -1249,6 +1266,7 @@ export class CodxDMService {
         }
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file
+      case 'DMT0240':
         this.setRequest(
           type,
           data.recID,
@@ -1259,6 +1277,7 @@ export class CodxDMService {
         break;
       case 'DMT0227': // tu choi xet duyet thu muc
       case 'DMT0231': // tu choi xet duyet file
+      case 'DMT0241':
         this.setRequest(
           type,
           data.recID,
@@ -1343,6 +1362,7 @@ export class CodxDMService {
 
       case 'DMT0206': // xoa thu muc
       case 'DMT0219': // xoa file
+      case 'SYS02':
         this.deleteFile(data, type);
         break;
 
