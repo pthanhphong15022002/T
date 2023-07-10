@@ -422,7 +422,6 @@ export class StagesDetailComponent implements OnInit {
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     let dataProgress = dataPopupOutput?.event;
-    console.log(dataProgress);
     if (dataProgress) {
       this.step.progress = dataProgress?.progressStep;
       this.step.note = dataProgress?.note;

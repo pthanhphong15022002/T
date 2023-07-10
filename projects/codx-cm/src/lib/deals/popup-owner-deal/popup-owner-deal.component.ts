@@ -20,8 +20,6 @@ export class PopupOwnerDealComponent {
   processID:any;
   owner:any;
   ownerOld:any;
-  isBlock: boolean = false;
-
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   constructor(
     private codxCmService: CodxCmService,
@@ -55,7 +53,6 @@ export class PopupOwnerDealComponent {
       if(res){
         this.listParticipants = await this.getListPermissionInGroup(res[0]);
         this.owner = this.ownerOld;
-        this.isBlock = true;
       }
     })
   }

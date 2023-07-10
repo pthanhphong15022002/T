@@ -1,26 +1,57 @@
 .group-btn{
 	display: inline-flex;
     white-space: nowrap;
+	cursor: pointer;
 }
-.quantity{
+.lblDetail{
 	background-color: var(--primary-active);
 	color:#ffffff;
 }
-.ratio{
+.lblRatio{
 	background-color: var(--primary-light);
 	color: #000000;
 }
 .btn-left{
 	border-radius: 15px 0 0 15px;
 	min-width: 80px;
+	height: 22px;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	cursor: pointer;
 }
 .btn-right{
 	border-radius: 0 15px 15px 0;
 	min-width: 80px;
+	height: 22px;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	cursor: pointer;
 }
+.proress{
+	width: 0px;
+	position: relative;
+	-webkit-animation: myfirst 2s linear 0s 1 forwards;
+	-moz-animation: myfirst 2s linear 0s 1 forwards;
+	animation: myfirst 2s linear 0s 1 forwards;
+  }
+  
+  @keyframes myfirst {
+	0%   {width: 0%;}
+	25%  {width: 25%;}
+	50%  {width: 50%;}
+	75%  {width: 75%;}
+	100% {width: 100%;}
+  }
+
+  .quantity{
+	opacity: 0;
+	-webkit-animation: myfirst 2s linear 0s 1 forwards;
+	-moz-animation: myfirst 2s linear 0s 1 forwards;
+	animation: myQuantity 2s linear 0s 1 forwards;
+  }
+  
+  @keyframes myQuantity {
+	100% {opacity: 1;}
+  }

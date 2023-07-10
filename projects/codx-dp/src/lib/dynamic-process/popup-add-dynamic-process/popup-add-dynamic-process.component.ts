@@ -3104,6 +3104,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   isReason = false;
+  
   customerReason(reason: DP_Steps){
     this.isReason = true;
     reason.icon = reason?.isFailStep ? this.iconReasonFail?.icon : this.iconReasonSuccess?.icon;
@@ -3681,6 +3682,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           view === this.viewStepReasonSuccess
             ? this.stepSuccess
             : this.stepFail;
+      this.dataValueview = view;
       } else {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {

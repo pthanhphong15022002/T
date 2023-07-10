@@ -5,7 +5,6 @@
   [funcID]="funcID"
   (filterReportChange)="filterChange($event)"
   (onActions)="onActions($event)"
-  [button]="button"
 >
 </codx-views>
 
@@ -91,15 +90,22 @@
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
   >
+    <div>
+      <codx-label
+        class="fs-5 fw-bold"
+        name="lblPercentageOfBusinessLinesByDeals"
+        default="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
+      ></codx-label>
+    </div>
     <ng-container
       *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
     >
       <ejs-treemap
         style="display: block"
-        [dataSource]="dataDashBoard?.countsBussinessLines ?? []"
+        [dataSource]="dataSourceBussnessLine ?? []"
         weightValuePath="quantity"
         rangeColorValuePath="quantity"
-        [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+        [palette]="palette"
         [leafItemSettings]="leafItemSettings"
         [tooltipSettings]="tooltipSettings"
       >
@@ -115,7 +121,88 @@
     id="6"
     title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
   >
-    <ng-container *ngIf="false; else noData"></ng-container>
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblChartBusinessLines"
+      default="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
+    ></codx-label>
+    <div class="mt-5">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          class="btn-group"
+          role="group"
+          aria-label="Basic radio toggle button group"
+        >
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="checkBtnSuscessRadio"
+            autocomplete="off"
+            checked
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnSuscessRadio"
+            default="Thành công"
+          ></codx-label>
+
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="checkBtnFailRadio"
+            autocomplete="off"
+          />
+          <codx-label
+            class="btn btn-outline-primary"
+            for="btnFailRadio"
+            default="Thất bại"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+    <ng-container
+      *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
+    >
+      <div class="row w-100 h-100">
+        <!-- <div class="col-10"> -->
+        <ejs-chart
+          id="chart-container"
+          [primaryXAxis]="primaryXAxis"
+          [primaryYAxis]="primaryYAxis"
+          [title]=""
+        >
+          <e-series-collection>
+            <ng-container
+              *ngFor="let item of dataDashBoard?.countsBussinessLines"
+            >
+              <e-series
+                *ngIf="checkBtnSuscessRadio"
+                [dataSource]="item?.chartDataSuscess ?? []"
+                type="Line"
+                xName="month"
+                yName="percentage"
+                [name]="item.businessLineName"
+                width="3"
+                [fillColor]="item.color"
+              ></e-series>
+
+              <e-series
+                *ngIf="checkBtnFailRadio"
+                [dataSource]="item?.chartDataFail ?? []"
+                type="Line"
+                xName="month"
+                yName="percentage"
+                [name]="item.businessLineName"
+                width="3"
+                [fillColor]="item.color"
+              ></e-series>
+            </ng-container>
+          </e-series-collection>
+        </ejs-chart>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -124,8 +211,13 @@
   <div
     class="w-100 h-100"
     id="7"
-    title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
+    title="Top nhân viên có nhiều cơ hội thành công nhất"
   >
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblChartOwners"
+      default="Top nhân viên có nhiều cơ hội thành công nhất"
+    ></codx-label>
     <div class="mt-5">
       <div class="d-flex justify-content-center align-items-center">
         <div
@@ -176,7 +268,7 @@
             <div
               class="owners-top"
               style="color: #000000; background-color: aqua"
-              [style.background-color]="paletteColor[i % 2 == 0 ? 0 : 1]"
+              [style.background-color]="ownerCount?.color"
               [style.width]="ownerCount.percentage + '%'"
             >
               <span class="">{{ ownerCount.objectName }}</span>
@@ -193,7 +285,7 @@
             <div
               class="owners-top"
               style="color: #000000; background-color: aqua"
-              [style.background-color]="paletteColor[i % 2 == 0 ? 0 : 1]"
+              [style.background-color]="ownerCount?.color"
               [style.width]="ownerCount.percentage + '%'"
             >
               <span class="">{{ ownerCount.objectName }}</span>
@@ -208,6 +300,11 @@
 <!-- Lý do thành công -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="8" title="Lý do thành công">
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblReasonSuscess"
+      default="Lý do thành công"
+    ></codx-label>
     <ng-container
       *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
     >
@@ -247,6 +344,11 @@
 <!-- Lý do thất bại -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="9" title="Lý do thất bại ">
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblReasonFails"
+      default="Lý do thất bại"
+    ></codx-label>
     <ng-container
       *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
     >
@@ -283,6 +385,11 @@
 <!-- Thống kê hiệu suất trong năm -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="10" title=" Thống kê hiệu suất trong năm">
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblEfficiency"
+      default="Thống kê hiệu suất trong năm"
+    ></codx-label>
     <ng-container *ngIf="false; else noData"></ng-container>
   </div>
 </ng-template>
@@ -290,6 +397,11 @@
 <!-- Thống kê năng suất nhân viên -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="11" title="Thống kê năng suất nhân viên">
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblProductivityOfOwners"
+      default="Thống kê năng suất nhân viên"
+    ></codx-label>
     <ng-container *ngIf="false; else noData"></ng-container>
   </div>
 </ng-template>

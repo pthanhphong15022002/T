@@ -1,17 +1,18 @@
 <div class="ms-5 d-flex flex-wrap card-view">
     <div class="me-5 mt-5 card-item" *ngFor="let data of lstData">
-        <codx-card-center cardCss="border d-flex flex-center flex-column card-user"
-            [imageId]="data.employeeID" imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" 
-            [title]="data.employeeName" [imageObjName]="data.employeeName"
+        <codx-card-center cardCss="border d-flex flex-center flex-column card-user" [imageId]="data.employeeID"
+            imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" [title]="data.employeeName"
+            [imageObjName]="data.employeeName" 
             [subTitle]="data.positionName? data.positionName: 
-                        (data.positionID? data.positionID : placeholder('PositionID'))" 
-            [dataItem]="data" [imageObjType]="formModel?.entityName" [hideMF]="true"
+                        (data.positionID? data.positionID : placeholder('PositionID'))" [dataItem]="data"
+            [imageObjType]="formModel?.entityName" [hideMF]="true"
             [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [footer]="footer">
         </codx-card-center>
     </div>
-    <ng-container  *ngTemplateOutlet="noData">
+    <ng-container *ngTemplateOutlet="noData">
     </ng-container>
 </div>
+
 
 <ng-template #footer let-data>
     <div class="d-flex align-items-center flex-center d-phone">
@@ -35,5 +36,5 @@
                 {{ "SYS011" | mssg | async }}
             </span>
         </div>
-    </span> 
+    </span>
 </ng-template>
