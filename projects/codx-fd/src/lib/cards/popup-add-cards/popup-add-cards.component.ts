@@ -108,6 +108,7 @@ export class PopupAddCardsComponent implements OnInit {
   card = new FED_Card();
   isHaveFile = false;
   showLabelAttachment = false;
+  type = "add";
 
   constructor(
     private api: ApiHttpService,
@@ -121,6 +122,8 @@ export class PopupAddCardsComponent implements OnInit {
   ) {
     this.funcID = dd.data.funcID;
     this.card = dd.data.data;
+    this.title = dd.data.title;
+    this.type = dd.data.type;
     this.dialog = dialogRef;
     this.user = this.auth.userValue;
   }
@@ -130,7 +133,7 @@ export class PopupAddCardsComponent implements OnInit {
     this.loadDataAsync(this.funcID);
     this.getMessageNoti("SYS009");
     this.getMyWallet(this.user.userID);
-    console.log(this.card)
+    console.log('this.card', this.card)
   }
 
   loadDataAsync(funcID: string) {
@@ -141,7 +144,11 @@ export class PopupAddCardsComponent implements OnInit {
           this.formName = func.formName;
           this.gridViewName = func.gridViewName;
           this.entityName = func.entityName;
-          this.title = func.description;
+          if(this.type === 'copy'){
+            this.title = this.title + ' ' + func.description;
+          } else {
+            this.title = func.description;
+          }
           this.cache.gridViewSetup(this.formName, this.gridViewName).subscribe((grdSetUp: any) => {
             if (grdSetUp && grdSetUp?.Rating?.referedValue) {
               console.log(grdSetUp)
@@ -232,6 +239,12 @@ export class PopupAddCardsComponent implements OnInit {
         this.lstPattern = res;
         let patternDefault = this.lstPattern.find((e: any) => e.isDefault == true);
         this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0];
+        if(this.card?.pattern){
+          const temp = this.lstPattern.find((e: any) => e.recID === this.card.pattern);
+          if(temp){
+            this.patternSelected = temp;
+          }
+        }
         this.dt.detectChanges();
       }
     });
@@ -247,9 +260,9 @@ export class PopupAddCardsComponent implements OnInit {
 
   initForm() {
     this.form = new FormGroup({
-      receiver: new FormControl(null),
-      behavior: new FormControl(null),
-      situation: new FormControl(""),
+      receiver: new FormControl(this.card?.receiver?this.card?.receiver:null),
+      behavior: new FormControl(this.card?.behavior?this.card?.behavior:null),
+      situation: new FormControl(this.card?.situation?this.card?.situation:""),
       industry: new FormControl(null),
       patternID: new FormControl(""),
       rating: new FormControl(""),
@@ -479,6 +492,9 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   addCardAPI(post: tmpPost){
+    if(this.type == "copy"){
+      this.card.recID = undefined;
+    }
     this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddNewAsync", [this.card, post]).subscribe(async (res: any[]) => {
       console.log('AddNewAsync',res)
       if (res && res[1]) {
