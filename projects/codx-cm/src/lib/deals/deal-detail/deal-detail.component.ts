@@ -78,6 +78,7 @@ export class DealDetailComponent implements OnInit {
   contactPerson:any;
 
   tabDetail = [];
+  viewTag: string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -96,8 +97,15 @@ export class DealDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.dataSelected) {
-      this.dataSelected = this.dataSelected;
-      this.promiseAllAsync();
+
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+        this.dataSelected = this.dataSelected;
+        this.promiseAllAsync();
+        this.getTags(this.dataSelected);
+      }
     }
   }
 
@@ -198,5 +206,13 @@ export class DealDetailComponent implements OnInit {
       this.contactPerson = $event?.isDefault ? $event: null;
       this.changeDetectorRef.detectChanges();
     }
+  }
+
+  getTags(data){
+    this.viewTag = '';
+    setTimeout(() => {
+      this.viewTag = this.dataSelected?.tags
+    }, 100);
+     //this.viewTag = this.dataSelected?.tags
   }
 }

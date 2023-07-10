@@ -153,14 +153,14 @@
                     "
                   ></span>
                 </div>
-                <div class="mb-1">
+                <div class="mb-1"  *ngIf="viewTag && viewTag != ''">
                   <codx-tag
-                    [entityName]="formModel.entityName"
-                    [disabled]="true"
-                    [isEdit]="false"
-                    [value]="dataSelected?.tags"
-                  >
-                  </codx-tag>
+                  [entityName]="formModel.entityName"
+                  [disabled]="true"
+                  [isEdit]="false"
+                  [value]="viewTag"
+                >
+                </codx-tag>
                 </div>
                 <div class="d-flex flex-wrap align-items-top mb-1">
                   <div class="d-flex flex-column">
