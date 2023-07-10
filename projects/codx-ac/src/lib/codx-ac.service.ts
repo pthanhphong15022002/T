@@ -235,10 +235,17 @@ export class CodxAcService {
     return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
 
-  loadComboboxData(comboboxName: string, service: string): Observable<any[]> {
+  loadComboboxData(
+    comboboxName: string,
+    service: string,
+    predicates?: string,
+    dataValues?: string
+  ): Observable<any[]> {
     const dataRequest = new DataRequest();
     dataRequest.comboboxName = comboboxName;
     dataRequest.pageLoading = false;
+    dataRequest.predicates = predicates ?? '';
+    dataRequest.dataValues = dataValues ?? '';
     return this.api
       .execSv(
         service,

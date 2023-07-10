@@ -730,3 +730,43 @@ export class CM_Leads {
   exchangeRate: number;
   dealValue: number;
 }
+
+export class CM_Targets{
+  recID: string;
+  targetID: string;
+  targetName: string;
+  category: string = '0';
+  businessLineID: string;
+  interval: number = 0;
+  year: number = 0;
+  period: number = 0;
+  allocation: string = '0';
+  status: string = '0';
+  target: number = 0;
+  currencyID: string;
+  memo: string;
+  owner: string;
+  buid: string;
+  createdOn: Date = new Date;
+  createdBy: string;
+  modifiedOn: Date;
+  ModifiedBy: string;
+}
+
+export class CM_TargetsLines{
+  recID: string;
+  transID: string;
+  salespersonID: string;
+  businessLineID: string;
+  productID: string;
+  period: number = 0;
+  startDate: Date;
+  endDate: Date;
+  currencyID: number;
+  target: number = 0;
+  note: string;
+  createdOn: Date = new Date;
+  createdBy: string;
+  modifiedOn: Date;
+  ModifiedBy: string;
+}

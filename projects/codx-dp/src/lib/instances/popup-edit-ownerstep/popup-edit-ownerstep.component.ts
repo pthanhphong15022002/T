@@ -33,10 +33,11 @@ export class PopupEditOwnerstepComponent {
     this.data = dt?.data[2];
 
     this.applyFor = dt?.data[3];
+    this.dataCM = dt?.data[4];
     var recID =  this.dataCM  ? this.dataCM.refID : this.data?.recID;
     var stepID =  this.dataCM  ? this.dataCM.stepID : this.data?.stepID;
     if(this.applyFor != '0') {
-      this.dataCM = dt?.data[4];
+
       this.getListPermission(this.dataCM.processID,this.applyFor,stepID);
     }
     else {
@@ -115,8 +116,8 @@ export class PopupEditOwnerstepComponent {
   setRoles() {
     var tmp = this.lstParticipants.find((x) => x.userID == this.owner);
     if (
-      this.step.roles != null &&
-      this.step.roles.length > 0
+      this.step?.roles != null &&
+      this.step?.roles?.length > 0
     ) {
       var index = this.step.roles.findIndex(
         (x) => x.roleType == 'S'

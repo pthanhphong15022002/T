@@ -28,6 +28,10 @@ export class CardsComponent extends UIComponent {
   selectedID: string = "";
   grdViewSetup: any = null;
   ratingVLL: string = "";
+  service = 'FD';
+  assemblyName = 'ERM.Business.FD';
+  className = 'CardsBusiness';
+  method = 'GetListDataByWebAsync';
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
 
