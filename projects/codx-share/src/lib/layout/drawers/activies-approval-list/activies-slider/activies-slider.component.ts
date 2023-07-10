@@ -136,8 +136,9 @@ export class ActiviesSliderComponent implements OnInit {
         .codxApprove(
             item.transID,
             status,
-            '',
-            ''
+            null,
+            null,
+            null,
           )
           .subscribe((res: any) => {
           if (!res?.msgCodeError) 

@@ -38,6 +38,7 @@ export class AddEditComponent implements OnInit {
     private api: ApiHttpService,
     private cache: CacheService,
     private callfc: CallFuncService,
+    private notiSevice: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -102,6 +103,8 @@ export class AddEditComponent implements OnInit {
   //#region master
   // beforeSave(op: any) {
   //   var data = [this.master];
+  //   op.service = 'BS';
+  //   op.assemblyName = 'BS';
   //   op.className = 'RangesBusiness';
   //   if (this.action === 'add') {
   //     op.method = 'AddAsync';
@@ -112,9 +115,19 @@ export class AddEditComponent implements OnInit {
   //   op.data = data;
   //   return true;
   // }
+
   onSave() {
     if (!this.master['updateColumn']) {
       this.dialog.close(true);
+      return;
+    }
+    //V-Thao bắt riquire fix ngày 10/7/2023
+    if (!this.master.rangeName || this.master.rangeName.trim() == '') {
+      this.notiSevice.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['RangeName'].headerText + '"'
+      );
       return;
     }
 
@@ -125,7 +138,7 @@ export class AddEditComponent implements OnInit {
         opt.className = 'RangesBusiness';
         if (this.action == 'add') opt.methodName = 'AddAsync';
         else opt.methodName = 'UpdateAsync';
-        
+
         if (!this.master.rangeID)
           this.master.rangeID = this.dialog.dataService?.dataSelected?.rangeID;
         opt.data = this.master;
@@ -142,15 +155,33 @@ export class AddEditComponent implements OnInit {
   //#endregion
   //#region line
   addLine(template: any) {
+    //V-Thao bắt riquire fix ngày 10/7/2023
+    if (!this.master.rangeName || this.master.rangeName.trim() == '') {
+      this.notiSevice.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['RangeName'].headerText + '"'
+      );
+      return;
+    }
     if (this.action == 'add') {
-      this.dialog.dataService.save().subscribe((res) => {
-        if ((res && !res.save.error) || !res.save.error.isError) {
-          this.line.rangeID = this.master.rangeID =
-            this.dialog.dataService.dataSelected.rangeID;
-          this.dialog.dataService.hasSaved = true;
-          this.callfc.openForm(template, '', 500, 400);
-        }
-      });
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.service = 'BS';
+          opt.assemblyName = 'BS';
+          opt.className = 'RangesBusiness';
+          opt.methodName = 'AddAsync';
+          opt.data = this.master;
+          return true;
+        }, 0)
+        .subscribe((res) => {
+          if ((res && !res.save.error) || !res.save.error.isError) {
+            this.line.rangeID = this.master.rangeID =
+              this.dialog.dataService.dataSelected.rangeID;
+            this.dialog.dataService.hasSaved = true;
+            this.callfc.openForm(template, '', 500, 400);
+          }
+        });
     } else {
       this.callfc.openForm(template, '', 500, 400);
     }
@@ -206,5 +237,6 @@ export class AddEditComponent implements OnInit {
   valueChange(data) {
     this.line[data.field] = data.data;
   }
+
   //#endregion
 }

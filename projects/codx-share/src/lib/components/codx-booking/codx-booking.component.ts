@@ -336,6 +336,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.scheduleEvent.className = 'BookingsBusiness';
     this.scheduleEvent.service = 'EP';
     this.scheduleEvent.method = 'GetListBookingAsync';
+    //this.scheduleEvent.method = 'GetListBookingScheduleAsync';
     this.scheduleEvent.predicate = 'ResourceType=@0';
     this.scheduleEvent.dataValue = this.resourceType;
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
@@ -767,7 +768,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
       this.codxShareService
-        .codxCancel('EP',data?.recID, this.formModel.entityName, '')
+        .codxCancel('EP',data?.recID, this.formModel.entityName, null,null)
         .subscribe((res: any) => {
           if (res && res?.msgCodeError == null) {
             this.notificationsService.notifyCode(EPCONST.MES_CODE.Success); //đã hủy gửi duyệt
@@ -1063,8 +1064,9 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                 .codxApprove(
                   item?.recID, 
                   this.allocateStatus,
-                  '',
-                  ''
+                  null,
+                  null,
+                  null,
                 )
                 .subscribe((res: any) => {
                   if (res?.msgCodeError == null && res?.rowCount >= 0) {
