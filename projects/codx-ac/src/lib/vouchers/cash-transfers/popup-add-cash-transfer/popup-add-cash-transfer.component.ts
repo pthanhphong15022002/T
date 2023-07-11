@@ -1,4 +1,5 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { SwitchComponent } from '@syncfusion/ej2-angular-buttons';
 import {
   CRUDService,
@@ -8,17 +9,16 @@ import {
   DialogData,
   DialogRef,
   FormModel,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable, map } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
+import { CashTransferService } from '../cash-transfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
-import { CashTransferService } from '../cash-transfers.service';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
@@ -139,6 +139,23 @@ export class PopupAddCashTransferComponent extends UIComponent {
       .subscribe((res) => {
         this.journal = res;
 
+        // co dinh, danh sach
+        // if (['1', '2'].includes(this.journal.drAcctControl)) {
+        //   (
+        //     this.cbxCashAcctID.ComponentCurrent as CodxComboboxComponent
+        //   ).dataService.setPredicates(
+        //     [`@0.Contains(AccountID)`],
+        //     [`[${this.journal.drAcctID}]`]
+        //   );
+        // }
+
+        // mac dinh, co dinh
+        // if (['0', '1'].includes(this.journal.drAcctControl) && !this.isEdit) {
+        //   this.form.formGroup?.patchValue({
+        //     cashAcctID: this.journal.drAcctID,
+        //   });
+        // }
+
         this.journalService.loadComboboxBy067(
           this.journal,
           'drAcctControl',
@@ -217,7 +234,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Event
   onInputChange(e): void {
-    console.log("onInputChange", e);
+    console.log('onInputChange', e);
 
     // e.data for valueChange and e.crrValue for controlBlur
     if (!e.data && !e.crrValue) {
@@ -252,6 +269,18 @@ export class PopupAddCashTransferComponent extends UIComponent {
           }
         });
     }
+  }
+
+  // for switch only
+  onKeyUpEnter(): void {
+    this.form.formGroup.patchValue({
+      feeControl: !this.cashTransfer.feeControl,
+    });
+  }
+
+  // for switch only
+  onKeyUpEnter2(): void {
+    this.switchHasInvoice.toggle();
   }
 
   /** Switch is checked if master data was saved successfully.*/
