@@ -1327,11 +1327,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         data.progress = dataProgress?.progressTask;
         data.note = dataProgress?.note;
         data.actualEnd = dataProgress?.actualEnd;
+        data.status = dataProgress?.progressTask == 100 ? "3" : "2";
         let taskFind = this.currentStep?.tasks?.find(
           (task) => task.recID == dataProgress.taskID
         );
         if (taskFind) {
           taskFind.progress = dataProgress?.progressTask;
+          taskFind.progress = dataProgress?.progressTask;
+          taskFind.note = dataProgress?.note;
+          taskFind.actualEnd = dataProgress?.actualEnd;
+          taskFind.status = dataProgress?.progressTask == 100 ? "3" : "2"; // cập nhật trạng thái
         }
         //cập nhật group và step
         if (dataProgress?.isUpdate) {
