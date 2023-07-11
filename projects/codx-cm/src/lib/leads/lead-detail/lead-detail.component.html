@@ -56,58 +56,6 @@
             </div>
           </div>
           <div class="ms-5 d-flex justify-content-between">
-            <!-- <div class="d-flex flex-column">
-              <div class="d-flex flex-row">
-                <ng-template #tooltipDealValue>
-                  <div class="text-end text-sm-start">
-                    <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
-                    >: {{ dataSelected?.dealValue }}
-                  </div>
-                </ng-template>
-                <div
-                  [ngbTooltip]="tooltipDealValue"
-                  class="d-flex align-items-top justify-content-end ps-10 fs-3"
-                >
-                  <span
-                    class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
-                  ></span>
-                  <span
-                    class="fw-bold line-clamp-menu pe-1"
-                    #dealValue
-                    [innerHTML]="
-                      dataSelected?.dealValue
-                        | formatvalue : formModel : 'dealValue' : dealValue
-                        | async
-                    "
-                  ></span>
-                  <span
-                    class="fw-bold line-clamp-menu"
-                    [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
-                    #currencyID
-                    [innerHTML]="
-                      dataSelected?.currencyID
-                        | formatvalue : formModel : 'currencyID' : currencyID
-                        | async
-                    "
-                  ></span>
-                </div>
-              </div>
-              <div class="d-flex justify-content-end">
-                <span
-                class="text-gray-600 line-clamp-menu"
-                #endDate
-                [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
-                [innerHTML]="
-                  dataSelected?.endDate
-                    | formatvalue
-                      : formModel
-                      : 'endDate'
-                      : endDate
-                    | async
-                "
-              ></span>
-              </div>
-            </div> -->
           </div>
         </div>
 
@@ -153,7 +101,7 @@
                     "
                   ></span>
                 </div>
-                <div class="mb-1"  *ngIf="viewTag && viewTag != ''">
+                <div class="mb-1 mt-2"  *ngIf="viewTag && viewTag != ''">
                   <codx-tag
                   [entityName]="formModel.entityName"
                   [disabled]="true"

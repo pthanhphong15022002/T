@@ -418,7 +418,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView && task?.status != "1")) {
               res.isblur = true;
             }
             break;
@@ -440,8 +440,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP24': //Tạo cuộc họp
-            if (task.taskType != 'M' || task?.actionStatus == '2')
+            if (task.taskType != 'M' || task?.actionStatus == '2'){
               res.disabled = true;
+            }else if(task?.status == "1"){
+              res.isblur = true;
+            }
             break;
           case 'DP25':
           case 'DP26':
@@ -480,9 +483,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP31': // bắt đầu ngay
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
-              res.isblur = true;
-            }
+            if(task?.dependRule != "0" || task?.status != "1"){
+              res.disabled = true;
+            }else if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+                res.isblur = true;
+              }           
             break;
         }
       });
@@ -667,7 +672,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.addBookingCar();
         break;
       case 'DP31':
-        this.startTask(task);
+        this.startTask(task,groupTask);
         break;
     }
   }
@@ -697,7 +702,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region start task
-  startTask(task: DP_Instances_Steps_Tasks) {
+  startTask(task: DP_Instances_Steps_Tasks, groupTask) {
     if (task?.taskType == 'Q') {
       //báo giá
       this.addQuotation();
@@ -709,12 +714,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [task?.stepID, task?.recID])
         .subscribe((res) => {
           if(res){
-            task.status = "1";
+            let indexTaskView = groupTask?.task?.findIndex(taskFind => taskFind?.recID == task?.recID);
+            task.status = "2";
             task.modifiedBy = this.user.userID;
             task.modifiedOn = new Date();
+            if(indexTaskView >= 0){
+              groupTask?.task?.splice(indexTaskView,1,JSON.parse(JSON.stringify(task)));
+            }
             let taskFind = this.currentStep?.tasks?.find((taskFind) => taskFind.recID == task.recID);
             if(taskFind){
-              taskFind.status = "1";
+              taskFind.status = "2";
               taskFind.modifiedBy = this.user.userID;
               taskFind.modifiedOn = new Date();
             }
@@ -1318,11 +1327,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         data.progress = dataProgress?.progressTask;
         data.note = dataProgress?.note;
         data.actualEnd = dataProgress?.actualEnd;
+        data.status = dataProgress?.progressTask == 100 ? "3" : "2";
         let taskFind = this.currentStep?.tasks?.find(
           (task) => task.recID == dataProgress.taskID
         );
         if (taskFind) {
           taskFind.progress = dataProgress?.progressTask;
+          taskFind.progress = dataProgress?.progressTask;
+          taskFind.note = dataProgress?.note;
+          taskFind.actualEnd = dataProgress?.actualEnd;
+          taskFind.status = dataProgress?.progressTask == 100 ? "3" : "2"; // cập nhật trạng thái
         }
         //cập nhật group và step
         if (dataProgress?.isUpdate) {
@@ -1635,7 +1649,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (f) {
           this.cache.gridView(f.gridViewName).subscribe((res) => {
             this.cache
-              .gridViewSetup(f.formName, f.gridViewName)
+                .gridViewSetup(f.formName, f.gridViewName)
               .subscribe((grvSetup) => {
                 if (grvSetup) {
                   formModel.funcID = 'TMT0501';

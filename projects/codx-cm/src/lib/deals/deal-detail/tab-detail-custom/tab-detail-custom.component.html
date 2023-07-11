@@ -280,7 +280,11 @@
         [customerID]="dataSelected?.customerID"
         [objectType]="'4'"
         [type]="'formDetail'"
-        [hidenMF]="!dataSelected?.roles?.isOnwer || dataSelected?.closed ||['1','0','3','5'].includes(dataSelected.status)"
+        [hidenMF]="
+          !dataSelected?.roles?.isOnwer ||
+          dataSelected?.closed ||
+          ['1', '0', '3', '5'].includes(dataSelected.status)
+        "
         (contactEvent)="contactChange($event)"
       ></codx-list-contacts>
     </div>
@@ -293,10 +297,8 @@
           *ngIf="item?.fields?.length > 0"
           [dataStep]="item"
           [showColumnControl]="showColumnControl(item.stepID)"
-          [isUpdate]="
-            ['1', '2'].includes(dataSelected.status) &&
-            dataSelected?.roles?.isOnwer
-          "
+          [isUpdate]=" ['1', '2'].includes(dataSelected.status) && dataSelected?.roles?.isOnwer"
+          (saveDataStep)="saveDataStep($event)"
         >
         </codx-fields-detail-temp>
       </ng-container>
@@ -307,34 +309,15 @@
     <codx-tab-dealcompetitors
       [dealID]="dataSelected.recID"
       [hidenMF]="
-        !dataSelected?.roles?.isOnwer || dataSelected.closed || ['1','0','3','5'].includes(dataSelected.status)
+        !dataSelected?.roles?.isOnwer ||
+        dataSelected.closed ||
+        ['1', '0', '3', '5'].includes(dataSelected.status)
       "
     ></codx-tab-dealcompetitors>
   </ng-template>
-  <!-- <ng-template #quotation>
-    <codx-quotations-tab-view
-      [typeModel]="'deals'"
-      [showButton]="!dataSelected?.closed"
-      [predicates]="'DealID==@0'"
-      [dataValues]="dataSelected.recID"
-      [dealID]="dataSelected.recID"
-      [disableDealID]="true"
-      [disableCusID]="true"
-      [customerID]="dataSelected.customerID"
-    ></codx-quotations-tab-view>
-  </ng-template>
-
-  <ng-template #contract let-data>
-    <list-contracts
-      [predicates]="'DealID==@0'"
-      [dataValues]="dataSelected?.recID"
-      [type]="'deal'"
-    ></list-contracts>
-  </ng-template> -->
-
   <ng-template #history>
     <div *ngIf="mergedList?.length > 0 && mergedList != null; else noData">
-      <div *ngFor="let item of mergedList" class="p-3" >
+      <div *ngFor="let item of mergedList" class="p-3">
         <div class="d-flex justify-content-start">
           <div>
             <i
@@ -365,7 +348,9 @@
           <div
             class="ms-auto"
             [ngbTooltip]="
-              item?.type == '1' ? grvSetupQuotation['TotalAmt']?.headerText:grvSetupContract['ContractAmt']?.headerText
+              item?.type == '1'
+                ? grvSetupQuotation['TotalAmt']?.headerText
+                : grvSetupContract['ContractAmt']?.headerText
             "
           >
             <span
@@ -438,12 +423,8 @@
       </div>
     </div>
     <ng-template #noData>
-      <codx-no-data>
-
-      </codx-no-data>
+      <codx-no-data> </codx-no-data>
     </ng-template>
-
   </ng-template>
-
   <ng-template #defaultNull> <p class="p-0 m-0">0</p></ng-template>
 </codx-tab-cm>

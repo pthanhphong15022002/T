@@ -224,43 +224,43 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment);
-    (document.body as HTMLElement).addEventListener(
-      'keyup',
-      (e: KeyboardEvent) => {
-        console.log(e);
-        if (e.key == 'Tab') {
-          if (this.gridCash) {
-            this.gridCash.autoAddRow = true;
-          }
-          if (document.activeElement.className == 'e-tab-wrap') {
-            switch (this.cashpayment.subType) {
-              case '1':
-              case '3':
-              case '4':
-                var element = document.getElementById('btnadd');
-                element.focus();
-                break;
-              case '2':
-                var element = document.getElementById('btnset');
-                element.focus();
-                break;
-            }
-          }
-        }
-      }
-    );
-    (document.body as HTMLElement).addEventListener('click', (e: any) => {
-      if (
-        e.target.closest('.e-grid') == null &&
-        e.target.closest('.e-popup') == null &&
-        e.target.closest('.edit-value') == null
-      ) {
-        if (this.gridCash && this.gridCash.gridRef.isEdit) {
-          this.gridCash.autoAddRow = false;
-          this.gridCash.endEdit();
-        }
-      }
-    });
+    // (document.body as HTMLElement).addEventListener(
+    //   'keyup',
+    //   (e: KeyboardEvent) => {
+    //     console.log(e);
+    //     if (e.key == 'Tab') {
+    //       if (this.gridCash) {
+    //         this.gridCash.autoAddRow = true;
+    //       }
+    //       if (document.activeElement.className == 'e-tab-wrap') {
+    //         switch (this.cashpayment.subType) {
+    //           case '1':
+    //           case '3':
+    //           case '4':
+    //             var element = document.getElementById('btnadd');
+    //             element.focus();
+    //             break;
+    //           case '2':
+    //             var element = document.getElementById('btnset');
+    //             element.focus();
+    //             break;
+    //         }
+    //       }
+    //     }
+    //   }
+    // );
+    // (document.body as HTMLElement).addEventListener('click', (e: any) => {
+    //   if (
+    //     e.target.closest('.e-grid') == null &&
+    //     e.target.closest('.e-popup') == null &&
+    //     e.target.closest('.edit-value') == null
+    //   ) {
+    //     if (this.gridCash && this.gridCash.gridRef.isEdit) {
+    //       this.gridCash.autoAddRow = false;
+    //       this.gridCash.endEdit();
+    //     }
+    //   }
+    // });
 
     this.dt.detectChanges();
   }
@@ -268,7 +268,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Event
   close() {
-    this.dialog.close();
+    if (
+      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+      (this.gridSet && !this.gridSet.gridRef.isEdit)
+    ) {
+      this.dialog.close();
+    }
   }
 
   clickMF(e: any, data) {
@@ -288,6 +293,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var bm = e.filter(
       (x: { functionID: string }) =>
         x.functionID == 'ACT042901' ||
+        x.functionID == 'ACT041010' ||
+        x.functionID == 'ACT041003' || // ghi sổ
+        x.functionID == 'ACT041002' || // gửi duyệt
+        x.functionID == 'ACT041004' || // hủy yêu cầu duyệt
+        x.functionID == 'ACT041008' || // khôi phục
+        x.functionID == 'ACT042901' || // chuyển tiền điện tử
+        x.functionID == 'ACT041010' || // in
+        x.functionID == 'ACT041009' ||
         x.functionID == 'SYS003' ||
         x.functionID == 'SYS004' ||
         x.functionID == 'SYS005' ||
@@ -635,6 +648,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 } else {
                   this.popupSettledInvoices(this.typeSet);
                 }
+                this.dialog.dataService.update(this.cashpayment).subscribe();
               }
             });
         } else {
@@ -691,6 +705,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               } else {
                 this.popupSettledInvoices(this.typeSet);
               }
+              this.dialog.dataService.update(this.cashpayment).subscribe();
             }
           });
         break;
@@ -723,7 +738,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               break;
           }
           this.api
-            .exec('AC', this.classNameLine, 'UpdateAfterDelete', [data,this.cashpaymentline])
+            .exec('AC', this.classNameLine, 'UpdateAfterDelete', [
+              data,
+              this.cashpaymentline,
+            ])
             .subscribe((res) => {});
         }
       }
@@ -815,6 +833,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   onAddNew(e: any) {
     this.loadTotal();
+    this.dialog.dataService.update(this.cashpayment).subscribe();
     this.api
       .exec('AC', this.classNameLine, 'SaveAsync', [
         this.cashpayment,
@@ -824,8 +843,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           this.hasSaved = true;
-          this.dialog.dataService.update(this.cashpayment).subscribe();
-          this.gridCash.autoAddRow = true;
           if (this.cashpayment.totalAmt != 0) {
             if (this.total > this.cashpayment.totalAmt) {
               this.notification.notifyCode('AC0012');
@@ -837,12 +854,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   onEdit(e: any) {
     this.loadTotal();
+    this.dialog.dataService.update(this.cashpayment).subscribe();
     this.api
       .exec('AC', this.classNameLine, 'UpdateAsync', [this.cashpayment, e])
       .subscribe((res: any) => {
         if (res) {
           this.hasSaved = true;
-          this.dialog.dataService.update(this.cashpayment).subscribe();
           if (this.cashpayment.totalAmt != 0) {
             if (this.total > this.cashpayment.totalAmt) {
               this.notification.notifyCode('AC0012');
@@ -1452,6 +1469,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadFormSubType('1');
         break;
       case '1':
+      case '11':
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.loadFormSubType('1');
@@ -1588,6 +1606,41 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       args.progressBar.annotations[0].content =
         '<img style="width: 50px;height:50px" src="../assets/themes/ac/default/img/file.gif" alt="">';
     }
+  }
+  @HostListener('keyup', ['$event'])
+  onKeyUp(e: KeyboardEvent): void {
+    if (e.key == 'Tab') {
+      // if (this.gridCash) {
+      //   this.gridCash.autoAddRow = true;
+      // }
+      if (document.activeElement.className == 'e-tab-wrap') {
+        switch (this.cashpayment.subType) {
+          case '1':
+          case '3':
+          case '4':
+            var element = document.getElementById('btnadd');
+            element.focus();
+            break;
+          case '2':
+            var element = document.getElementById('btnset');
+            element.focus();
+            break;
+        }
+      }
+    }
+  }
+  @HostListener('click', ['$event'])
+  onClick(e) {
+      if (
+        e.target.closest('.e-grid') == null &&
+        e.target.closest('.e-popup') == null &&
+        e.target.closest('.edit-value') == null
+      ) {
+        if (this.gridCash && this.gridCash.gridRef.isEdit) {
+          this.gridCash.autoAddRow = false;
+          this.gridCash.endEdit();
+        }
+      }
   }
   //#endregion
 }

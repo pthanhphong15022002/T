@@ -373,7 +373,7 @@ export class EmployeeBenefitComponent extends UIComponent {
         dataObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
       },
@@ -395,7 +395,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   addBenefit(event): void {
-    this.currentEmpObj = this.itemDetail.emp;
+    this.currentEmpObj = this.itemDetail?.emp;
     if (event.id == 'btnAdd') {
       this.HandleEBenefit(
         event.text + ' ' + this.view.function.description,

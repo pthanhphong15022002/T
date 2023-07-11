@@ -6,7 +6,7 @@ import { WPService } from '@core/services/signalr/apiwp.service';
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Permission } from '@shared/models/file.model';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ButtonModel, ViewModel, CodxListviewComponent, ViewsComponent, ApiHttpService, NotificationsService, AuthStore, CallFuncService, FilesService, CacheService, DataRequest, ViewType, UIComponent, SidebarModel, AuthService } from 'codx-core';
+import { ButtonModel, ViewModel, CodxListviewComponent, ViewsComponent, ApiHttpService, NotificationsService, AuthStore, CallFuncService, FilesService, CacheService, DataRequest, ViewType, UIComponent, SidebarModel, AuthService, CRUDService } from 'codx-core';
 import { FD_Permissions } from '../models/FD_Permissionn.model';
 import { FED_Card } from '../models/FED_Card.model';
 import { CardType, FunctionName, Valuelist } from '../models/model';
@@ -39,6 +39,7 @@ export class CardsComponent extends UIComponent {
     private inject: Injector,
     private notifiSV: NotificationsService,
     private auth: AuthService,
+    private notiService: NotificationsService,
   ) {
     super(inject);
     this.user = this.auth.userValue;
@@ -101,15 +102,34 @@ export class CardsComponent extends UIComponent {
   }
 
   clickMF(event: any, data: any) {
-    console.log(event, data)
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.Width = '550px';
-    this.callfc.openSide(PopupAddCardsComponent, {funcID: this.funcID, data: data}, option);
-
+    if(event.functionID === "SYS04"){ // copy
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.callfc.openSide(PopupAddCardsComponent, {funcID: this.funcID, data: data, title: 'Sao chép phiếu', type: 'copy'}, option);
+    } else if(event.functionID === "SYS02"){ // delete
+      (this.view.dataService as CRUDService).delete([data]).subscribe((res: any) => {
+        if(res && res.data){
+          this.api.execSv('FD', 'ERM.Business.FD', 'CardsBusiness', 'DeleteCardAsync', data.recID).subscribe((result) => {
+            if (result) {
+              this.notiService.notifyCode('SYS008');
+            }
+          })
+        }
+        this.detectorRef.detectChanges();
+      });
+    }
   }
 
   deleteCard(card: any) { }
 
+  changeDataMF(event: any){
+    if(event?.length > 0){
+      const mf = event.find(i => i.functionID === 'SYS03');
+      if(mf){
+        mf.disabled = true;
+      }
+    }
+  }
 }

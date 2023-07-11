@@ -74,14 +74,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     minorGridLines: { width: 1 },
     minorTickLines: { width: 0 },
   };
-  // tooltip1: Object = {
-  //   enable: true,
-  //   shared: true,
-  //   format: '${series.name} : <b>${point.y}</b>',
-  // };
-  //test data
-  // chartDataSucsses = [];
-  // chartDataFail = [];
+  tooltipChartLine: Object = {
+    enable: true,
+    shared: true,
+    format: '${series.name} : <b>${point.y}%</b>',
+  };
+
   marker = { visible: true };
   checkBtnSuscessRadio = true;
   checkBtnFailRadio = false;

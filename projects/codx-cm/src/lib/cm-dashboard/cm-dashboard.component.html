@@ -89,6 +89,7 @@
     class="w-100 h-100"
     id="5"
     title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
+    style="overflow: hidden"
   >
     <div>
       <codx-label
@@ -172,6 +173,7 @@
           [primaryXAxis]="primaryXAxis"
           [primaryYAxis]="primaryYAxis"
           [title]=""
+          [tooltip]="tooltipChartLine"
         >
           <e-series-collection>
             <ng-container
@@ -212,6 +214,7 @@
     class="w-100 h-100"
     id="7"
     title="Top nhân viên có nhiều cơ hội thành công nhất"
+    style="overflow: hidden"
   >
     <codx-label
       class="fs-5 fw-bold"
@@ -302,7 +305,12 @@
 
 <!-- Lý do thành công -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="8" title="Lý do thành công">
+  <div
+    class="w-100 h-100"
+    id="8"
+    title="Lý do thành công"
+    style="overflow: hidden"
+  >
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonSuscess"
@@ -346,7 +354,12 @@
 
 <!-- Lý do thất bại -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="9" title="Lý do thất bại ">
+  <div
+    class="w-100 h-100"
+    id="9"
+    title="Lý do thất bại "
+    style="overflow: hidden"
+  >
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonFails"
@@ -387,7 +400,12 @@
 
 <!-- Thống kê hiệu suất trong năm -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="10" title=" Thống kê hiệu suất trong năm">
+  <div
+    class="w-100 h-100"
+    id="10"
+    title=" Thống kê hiệu suất trong năm"
+    style="overflow: hidden"
+  >
     <codx-label
       class="fs-5 fw-bold"
       name="lblEfficiency"
@@ -399,7 +417,12 @@
 
 <!-- Thống kê năng suất nhân viên -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="11" title="Thống kê năng suất nhân viên">
+  <div
+    class="w-100 h-100"
+    id="11"
+    title="Thống kê năng suất nhân viên"
+    style="overflow: hidden"
+  >
     <codx-label
       class="fs-5 fw-bold"
       name="lblProductivityOfOwners"

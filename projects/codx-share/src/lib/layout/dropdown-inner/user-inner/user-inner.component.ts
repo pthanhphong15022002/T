@@ -123,7 +123,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     // document.location.reload();
   }
 
+  isUpdate: boolean = false;
   updateSettting(lang: string, theme: string, themeMode: string) {
+    if (this.isUpdate) return;
+    this.isUpdate = true;
     let l = '',
       t = '';
     if (lang) {
@@ -147,6 +150,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         user.theme = t;
         this.auth.userSubject.next(user);
         this.authstore.set(user);
+        this.isUpdate = false;
         if (lang) document.location.reload();
       });
   }

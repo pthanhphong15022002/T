@@ -1,6 +1,6 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
   [entityName]="entityName" [className]="className" [method]="method" [button]="button" (buttonClick)="add()"
-  idField="employeeID" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
+  [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
   (viewChanged)="viewChanged($event)">
 </codx-views>
 <!-- <codx-views #view [views]="views" [button]="button" (buttonClick)="add()" service="HR" idField="employeeID"
@@ -12,20 +12,16 @@
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
     <div class="w-40 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="EmployeeID" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-        [formName]="'employees'" [default]="'Nhân viên'"></codx-label>
+      <codx-label fiedName="EmployeeID" [setRequire]="false" [formModel]="view.formModel" [default]="'Nhân viên'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="Email" [formModel]="view.formModel" [gridViewName]="'grvEmployee'" [formName]="'employees'"
-        [default]="'Liên hệ'"></codx-label>
+      <codx-label fiedName="Email" [setRequire]="false" [formModel]="view.formModel" [default]="'Liên hệ'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="Birthday" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-        [formName]="'employees'" [default]="'Thông tin cá nhân'"></codx-label>
+      <codx-label fiedName="Birthday" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin cá nhân'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="Status" [formModel]="view.formModel" [gridViewName]="'grvEmployee'" [formName]="'employees'"
-        [default]="'Tình Trạng'"></codx-label>
+      <codx-label fiedName="Status" [setRequire]="false" [formModel]="view.formModel" [default]="'Tình Trạng'"></codx-label>
     </div>
   </div>
 </ng-template>
@@ -113,8 +109,8 @@
             [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
           </span>
           <ng-template #emailTooltip>
-              <span>{{grvSetup['Email'].headerText}}</span>
-              <!-- <span>{{data.email}}</span> -->
+            <span>{{grvSetup['Email'].headerText}}</span>
+            <!-- <span>{{data.email}}</span> -->
           </ng-template>
         </div>
         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
@@ -139,7 +135,7 @@
             <span class="data-text-color">{{ data.birthday | fmDT}}</span>
           </ng-container>
           <ng-template #noBirthday>
-            <span class="place-holder place-holder-text-color">{{grvSetup?.Birthday.headerText}}</span>
+            <span class="place-holder">{{grvSetup?.Birthday.headerText}}</span>
           </ng-template>
         </div>
         <div class="align-items-center mb-1">
@@ -159,13 +155,16 @@
               <div class="d-flex flex-column">
                 <span>{{ grvSetup?.DegreeName?.headerText }}</span>
                 <span [style.display]=" titleContent.scrollHeight <= degreeField.clientHeight? 'none': ''">
-                  {{ data?.degreeName }}
+                  <span>
+
+                    {{ data?.degreeName }}
+                  </span>
                 </span>
               </div>
             </ng-template>
           </div>
           <ng-template #noDegreeName>
-            <span class="place-holder place-holder-text-color">{{grvSetup['DegreeName'].headerText}}</span>
+            <span class="place-holder">{{grvSetup['DegreeName'].headerText}}</span>
           </ng-template>
         </div>
       </div>
@@ -187,18 +186,18 @@
               <span class="data-text-color">{{data.joinedOn | fmDT}}</span>
             </ng-container>
             <ng-template #noJoinedOn>
-              <span class="place-holder place-holder-text-color">{{grvSetup['JoinedOn'].headerText}}</span>
+              <span class="place-holder">{{grvSetup['JoinedOn'].headerText}}</span>
             </ng-template>
           </div>
           <div class="d-flex align-items-center">
-            <codx-label class="label-colon label-text-color" name="lblHR_SenioritydateCal" 
-              [setRequire]="false" [formModel]="view.formModel" default="Thâm niên">
+            <codx-label class="label-colon label-text-color" name="lblHR_SenioritydateCal" [setRequire]="false"
+              [formModel]="view.formModel" default="Thâm niên">
             </codx-label>
             <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
               <span class="data-text-color">{{ data.senioritydate | timeAgo }}</span>
             </ng-container>
             <ng-template #noSeniorityDate>
-              <span class="place-holder place-holder-text-color">{{grvSetup['Senioritydate'].headerText}}</span>
+              <span class="place-holder">{{grvSetup['Senioritydate'].headerText}}</span>
             </ng-template>
           </div>
         </div>

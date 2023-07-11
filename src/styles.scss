@@ -7,6 +7,8 @@
 :root {
   --fs-body: 13px;
   --speeddialVertDist: 98px;
+  
+  --bs-primary-rgb: var(--primary);
 
   .e-grid .e-rowcell {
     font-size: var(--fs-body);
@@ -907,6 +909,7 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  width: 100px;
 }
 
 .breadcrum-box .breadcumb-extend {
@@ -1092,6 +1095,7 @@ codx-layout-add .codx-tab .tab-content {
 .dialog-extend codx-layout-add .codx-tab .tab-content{
   right: 360px;
 }
+
 codx-layout-add .card-header {
   height: 99px !important;
   min-height: 99px !important;
@@ -2261,10 +2265,11 @@ codx-tasks {
   }
 }
 
-.pin-bar {
+//.pin-bar {
   /* width: calc(100% - 400px); */
-  width: 100%!important;
-}
+  //width: 100%!important;
+//}
+
 .pin-bar .codx-text.e-input {
   border-radius: 20px !important;
   padding-left: 12px;
@@ -2520,6 +2525,7 @@ codx-valuelist .btn.select-icon {
   }
 }
 
+
 // control calendar
 codx-calendar {
   .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
@@ -2564,6 +2570,9 @@ codx-calendar {
 }
 .border-bottom {
   border-bottom-width: 1px !important;
+}
+.border-bottom-2 {
+  border-bottom-width: 2px !important;
 }
 .border-top {
   border-top-width: 1px !important;
@@ -3413,4 +3422,9 @@ lib-employee-list{
 .codx-his.envelop table th, .codx-his.envelop table td{
   padding: 5px 10px!important;
   min-width: 100px;
+}
+
+//
+.e-hscroll-bar{
+  margin: 0 5px;
 }
