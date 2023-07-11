@@ -211,6 +211,11 @@ export class CashTransfersComponent
       )
       .subscribe((res: IAcctTran[]) => {
         console.log(res);
+        if (!res) {
+          this.loading = false;
+          return;
+        }
+        
         this.lines = this.groupBy(res, 'entryID');
 
         // calculate totalRow

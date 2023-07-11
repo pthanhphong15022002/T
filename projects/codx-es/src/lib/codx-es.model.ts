@@ -56,7 +56,7 @@ export class ES_SignFile {
   qrCode = null;
   recID: string = null;
   refDate = null;
-  refId: string = null;
+  refID: string = null;
   refNo: string = null;
   refType: string = null;
   share: boolean = true;
