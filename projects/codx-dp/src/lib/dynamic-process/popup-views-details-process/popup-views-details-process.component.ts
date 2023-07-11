@@ -122,7 +122,7 @@ export class PopupViewsDetailsProcessComponent
       this.listType = data ? data?.datas : [];
     }
     //47
-    this.offset = '65px';
+    this.offset = '47px';
   }
   ngAfterViewInit(): void {
     setTimeout(() => {
