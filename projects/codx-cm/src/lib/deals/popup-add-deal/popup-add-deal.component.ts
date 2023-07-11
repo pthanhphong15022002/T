@@ -1012,6 +1012,8 @@ export class PopupAddDealComponent
         }
       });
     }
-
+  }
+  valueTagChange(e) {
+    this.deal.tags = e.data;
   }
 }

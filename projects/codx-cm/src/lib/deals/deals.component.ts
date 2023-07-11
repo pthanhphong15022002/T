@@ -1,3 +1,4 @@
+import { comment } from './../../../../codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
@@ -394,43 +395,36 @@ export class DealsComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if (
-        (data.closed && data.status != '1') ||
-        data.status == '1' ||
-        this.checkMoreReason(data)
-      ) {
+      if (  (data.closed && data.status != '1') || ['1','0'].includes(data.status) ||   this.checkMoreReason(data) ) {
         eventItem.disabled = true;
       }
     };
     var isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
+      if (data.closed || this.checkMoreReason(data) || data.status == '0' ) {
         eventItem.disabled = true;
       }
-     // eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
+      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
     };
     var isEdit = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)) {
+      if (data.closed || this.checkMoreReason(data)|| data.status == '0') {
         eventItem.disabled = true;
       }
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || ['0', '1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = data.closed || data.status == '0'
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || ['1'].includes(data.status);
-      this.checkMoreReason(data);
+      eventItem.disabled = !data.closed || data.status == '0'
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['1'].includes(data.status);
+      eventItem.disabled = !['1'].includes(data.status) || data.closed ;
     };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1', '2'].includes(data.status);
+      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed ;
     };
     var isConfirmOrRefuse = (eventItem, data) => {
       eventItem.disabled = data.status != '0';
@@ -704,6 +698,8 @@ export class DealsComponent
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
+          let oldStatus = data.status;
+          let oldStepId = data.stepID;
           var stepReason = {
             isUseFail: false,
             isUseSuccess: false,
@@ -712,7 +708,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -748,8 +744,7 @@ export class DealsComponent
                   nextStep = listStep[index]?.stepID;
                 }
               }
-
-              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res[0];
@@ -826,6 +821,8 @@ export class DealsComponent
     formMD.entityName = fun.entityName;
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
+    let oldStatus = data.status;
+    let oldStepId = data.stepID;
     var dataCM = {
       refID: data?.refID,
       processID: data?.processID,
@@ -852,7 +849,7 @@ export class DealsComponent
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
         data = this.updateReasonDeal(e.event?.instance, data);
-        var datas = [data];
+        var datas = [data,oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
             data = res[0];
@@ -1264,7 +1261,8 @@ export class DealsComponent
                         'CM',
                         dt?.recID,
                         this.view.formModel.entityName,
-                        ''
+                        null,
+                        null,
                       )
                       .subscribe((res3) => {
                         if (res3) {

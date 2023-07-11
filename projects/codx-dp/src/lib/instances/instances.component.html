@@ -22,7 +22,7 @@
 </codx-views>
 <!-- Dashboard -->
 <ng-template #dashBoard>
-  <codx-instance-dashboard [vllStatus]="vllStatus"></codx-instance-dashboard>
+  <codx-instance-dashboard [vllStatus]="vllStatus" [processID]="processID"></codx-instance-dashboard>
 </ng-template>
 
 <!-- KANBAN -->
@@ -49,7 +49,6 @@
   <div
     class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
     [id]="data?.keyField"
-    [ngStyle]="setColorStep(data)"
   >
     <div class="line-colums d-flex align-items-center">
       <span

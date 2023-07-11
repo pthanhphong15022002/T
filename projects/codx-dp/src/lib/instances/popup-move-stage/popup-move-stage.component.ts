@@ -1,3 +1,4 @@
+import { comment } from './../../../../../codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import {
   DP_Instances_Permissions,
   DP_Instances_Steps_Roles,
@@ -166,7 +167,6 @@ export class PopupMoveStageComponent implements OnInit {
 
 
   eventAutoClick(){
-   //
     this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
   }
 
@@ -350,18 +350,16 @@ export class PopupMoveStageComponent implements OnInit {
           var data = JSON.parse(JSON.stringify(res));
           this.updateDataInstance(data);
           this.isStopData = false;
-
         }
-
       }
     });
   }
 
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
-    if(data.owner){
-      this.owner = data.owner;
-    }
+    // if(data.owner ){
+    //   this.owner = data.owner;
+    // }
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
     this.instancesStepOld.actualEnd =  this.checkDuration(this.isDurationControl,this.instancesStepOld?.actualEnd);
     this.listTaskDone = this.instancesStepOld.tasks.filter(
@@ -480,6 +478,7 @@ export class PopupMoveStageComponent implements OnInit {
           listStep: this.listStep,
           instance: this.instance,
           isReason: this.isReason,
+          comment: this.instancesStepOld?.note,
         };
         this.stepIdClick = '';
         this.stepIdOld = '';

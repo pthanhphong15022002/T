@@ -1,11 +1,13 @@
 <ng-template #subHeader let-form>
   <codx-tag
     field="tags"
-    [entityName]="formModel.entityName"
+    [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
-    (valueChange)="valueChange($event)"
+    [value]="deal?.tags"
+    (valueChange)="valueTagChange($event)"
   ></codx-tag>
+
 </ng-template>
 <ng-template #body let-form>
   <div class="row">

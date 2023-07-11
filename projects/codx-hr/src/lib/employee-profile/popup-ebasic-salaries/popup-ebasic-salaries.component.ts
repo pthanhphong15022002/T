@@ -148,8 +148,17 @@ export class PopupEBasicSalariesComponent
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
-        else if (fieldName === 'signerID') {
+        if (fieldName === 'employeeID') {
+          this.employeeObj = emp[0][0];
+
+          this.hrService
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              this.employeeObj.orgUnitName = res.orgUnitName;
+            });
+        } else if (fieldName === 'signerID') {
           if (emp[0][0]?.positionID) {
             this.hrService
               .getPositionByID(emp[0][0]?.positionID)
@@ -175,6 +184,13 @@ export class PopupEBasicSalariesComponent
   }
 
   initForm() {
+    this.hrService
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        this.employeeObj.orgUnitName = res.orgUnitName;
+      });
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -244,7 +260,7 @@ export class PopupEBasicSalariesComponent
             this.notify.notifyCode('SYS006');
             p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
-          };
+          }
         });
     } else {
       this.hrService
@@ -254,7 +270,7 @@ export class PopupEBasicSalariesComponent
             this.notify.notifyCode('SYS007');
             p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
-          };
+          }
         });
     }
   }

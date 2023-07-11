@@ -89,7 +89,6 @@
     <!-- Ten Cong Viec -->
     <div
       class="form-group d-flex justify-content-between align-item-center w-100"
-      *ngIf="typeTask?.value != 'Q'"
     >
       <!-- name -->
       <div class="step-name w-100" [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''">
@@ -362,7 +361,6 @@
       <codx-user
         *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
         [fiedName]="'roles'"
-        [formModel]="form?.formModel"
         [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
         [dataSource]="participant"
         [icon]="'icon-connection-point'"

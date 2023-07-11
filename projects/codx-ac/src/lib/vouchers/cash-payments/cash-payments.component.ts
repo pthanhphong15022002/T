@@ -51,6 +51,9 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('accountRef') accountRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
+  @ViewChild('pgbAcctranst') pgbAcctranst: ProgressBar;
+  @ViewChild('pgbSet') pgbSet: ProgressBar;
+  @ViewChild('pgbVat') pgbVat: ProgressBar;
   dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -76,6 +79,7 @@ export class CashPaymentsComponent extends UIComponent {
   acctTrans: any;
   baseCurr: any;
   arrEntryID = [];
+  isLoadDataAcct: any = true;
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -258,7 +262,7 @@ export class CashPaymentsComponent extends UIComponent {
         var obj = {
           formType: 'add',
           headerText: this.headerText,
-          journal:this.journal
+          journal: this.journal,
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -270,15 +274,6 @@ export class CashPaymentsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-        this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(res.event['data']).subscribe();
-            }
-          }
-        });
       });
   }
 
@@ -292,7 +287,7 @@ export class CashPaymentsComponent extends UIComponent {
         var obj = {
           formType: 'edit',
           headerText: this.funcName,
-          journal:this.journal
+          journal: this.journal,
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -305,13 +300,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.view.funcID
         );
         this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-              //this.view.dataService.update(res.event['data']).subscribe();
-            }
-          }
+          console.log(this.itemSelected);
         });
       });
   }
@@ -607,17 +596,22 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-          return;
-        } else {
-          this.itemSelected = event?.data;
-          this.loadDatadetail(this.itemSelected);
-        }
+        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        //   this.itemSelected = event?.data;
+        //   return;
+        // } else {
+
+        // }
+        this.isLoadDataAcct = true;
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
       }
     }
   }
 
   loadDatadetail(data) {
+    this.acctTrans = [];
+    this.settledInvoices = [];
     switch (data.subType) {
       case '9':
       case '2':
@@ -634,6 +628,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res: any) => {
         this.acctTrans = res;
         this.loadTotal();
+        this.isLoadDataAcct = false;
       });
     this.changeTab(data.subType);
   }
@@ -669,7 +664,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   cancelRelease(data: any) {
     this.shareService
-      .codxCancel('AC', data?.recID, this.view.formModel.entityName, '')
+      .codxCancel('AC', data?.recID, this.view.formModel.entityName, null,null)
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
@@ -755,7 +750,9 @@ export class CashPaymentsComponent extends UIComponent {
       let index = data
         .filter((x) => x.crediting == item.crediting)
         .findIndex((x) => x.recID == item.recID);
-      if (index == data.filter((x) => x.crediting == item.crediting).length - 1
+      if (
+        index ==
+        data.filter((x) => x.crediting == item.crediting).length - 1
       ) {
         return true;
       } else {
@@ -776,6 +773,7 @@ export class CashPaymentsComponent extends UIComponent {
         case '1':
         case '3':
         case '4':
+        case '11':
           ele.hideTab(1, true);
           ele.hideTab(2, true);
           break;

@@ -15,10 +15,8 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input,
   OnInit,
   Optional,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -54,16 +52,13 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
-import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
-import { lastValueFrom, firstValueFrom, Observable, finalize, map } from 'rxjs';
-import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
+import { firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
-import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -3104,6 +3099,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   isReason = false;
+  
   customerReason(reason: DP_Steps){
     this.isReason = true;
     reason.icon = reason?.isFailStep ? this.iconReasonFail?.icon : this.iconReasonSuccess?.icon;
@@ -3240,7 +3236,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   checkSaveNow() {
-    var checkGroup = this.lstGroup.some(
+    var checkGroup = this.lstGroup?.some(
       (x) => x.groupID == this.process?.groupID
     );
     return (
@@ -3681,6 +3677,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           view === this.viewStepReasonSuccess
             ? this.stepSuccess
             : this.stepFail;
+      this.dataValueview = view;
       } else {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
@@ -4307,29 +4304,39 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#region color step
 
-  setColorTestStep(step, index){
-    if(this.isDefaultStep){
-      let countStep = this.stepList?.length || 0;
+  setColorTestStep(step){
+    if(this.process?.stepsColorMode){
+      if(step.isFailStep || step.isSuccessStep){
+        return { color:  '#ffffff'}
+      }else{
+        let countStep = this.stepList?.length || 0;
         let medium = Math.round(countStep/2);
-        if(index < medium){
+        if(step?.stepNo < medium){
           return { color: '#000000' }
         }else{
           return { color:  '#ffffff'}
         }
+      }
     }else{
-      return { color: step?.textColor }
+      return { color: step?.textColor || 'gray'  }
     }
   }
 
-  setColorStep(step, index){
-    if(this.isDefaultStep){
-      let countStep = this.stepList?.length || 0;
-      let opacityDefault = Number((1/countStep).toFixed(2));
-      let opacity = opacityDefault *(index + 1);
-      let color = this.hexToRGB(this.colorDefault,opacity);
-      return {'background-color': color };
+  setColorStep(step:DP_Steps){
+    if(this.process?.stepsColorMode){
+      if(step.isFailStep ){
+        return {'background-color':  this.iconReasonFail?.color};
+      }else if(step.isSuccessStep){      
+        return {'background-color':  this.iconReasonSuccess?.color};
+      }else{
+        let countStep = this.stepList?.length || 0;
+        let opacityDefault = Number((1/countStep).toFixed(2));
+        let opacity = opacityDefault * Number(step?.stepNo || 1);
+        let color = this.hexToRGB(this.colorDefault,opacity);
+        return {'background-color': color };
+      }
     }else{
-      return {'background-color': step?.backgroundColor };
+      return {'background-color': step?.backgroundColor};
     }
   }
 

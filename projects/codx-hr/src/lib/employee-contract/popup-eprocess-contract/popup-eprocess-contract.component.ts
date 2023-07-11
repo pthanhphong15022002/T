@@ -107,9 +107,6 @@ export class PopupEProcessContractComponent
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
-    // console.log(this.employeeObj);
-    // orgUnitID
-    // positionID
 
     if (this.data?.benefits) {
       this.tempBenefitArr = JSON.parse(this.data.benefits);
@@ -221,6 +218,14 @@ export class PopupEProcessContractComponent
   }
 
   initForm() {
+    this.hrSevice
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        this.employeeObj.orgUnitName = res.orgUnitName;
+      });
+
     if (this.actionType == 'add') {
       this.hrSevice
         .getDataDefault(
@@ -233,7 +238,6 @@ export class PopupEProcessContractComponent
             this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
             this.df.detectChanges();
-            console.log('get default contract', res);
 
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
@@ -264,6 +268,7 @@ export class PopupEProcessContractComponent
           this.data.effectedDate = null;
         }
       }
+
       if (this.actionType == 'edit' && this.data.isAppendix == false) {
         let rqSubContract = new DataRequest();
         rqSubContract.entityName = this.formModel.entityName;
@@ -331,6 +336,7 @@ export class PopupEProcessContractComponent
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
                           result[0].emp = this.employeeObj;
+                          console.log(result[0]);
                           this.dialog && this.dialog.close(result[0]);
                         }
                       });
@@ -344,6 +350,7 @@ export class PopupEProcessContractComponent
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
                           result[0].emp = this.employeeObj;
+                          console.log(result[0]);
                           this.dialog && this.dialog.close(result[0]);
                         }
                       });
@@ -433,6 +440,14 @@ export class PopupEProcessContractComponent
         if (fieldName === 'employeeID') {
           this.employeeObj = emp[0][0];
 
+          this.hrSevice
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              this.employeeObj.orgUnitName = res.orgUnitName;
+            });
+
           //Set employee data to field
           this.formGroup.patchValue({
             orgUnitID: this.employeeObj.orgUnitID,
@@ -443,7 +458,6 @@ export class PopupEProcessContractComponent
         }
         if (fieldName === 'signerID') {
           this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-            console.log(emp);
             if (emp[1] > 0) {
               let positionID = emp[0][0].positionID;
 

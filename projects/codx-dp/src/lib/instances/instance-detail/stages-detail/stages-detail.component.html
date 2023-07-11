@@ -175,7 +175,8 @@
         ></codx-label>
         <div class="h-25px" *ngIf="dataStep.owner">
           <codx-imgs
-            [objectId]="dataStep.owner"
+            [objectId]="setIdAndUserRole(dataStep?.roles, 'id')"
+            [objectName]="setIdAndUserRole(dataStep?.roles, 'name')"
             [isToolTip]="true"
             [width]="25"
             objectType="AD_Users"

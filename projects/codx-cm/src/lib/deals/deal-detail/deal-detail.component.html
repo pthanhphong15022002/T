@@ -124,7 +124,7 @@
                 </div>
                 <div
                   class="d-flex align-items-top justify-content-end ps-10 fs-4"
-                  [ngbTooltip]="toolTipProbability"
+                  [ngbTooltip]="gridViewSetup['Probability']?.headerText"
                 >
                   <span
                     class="icon-check_circle text-green icon-16 mt-1 pe-1"
@@ -207,14 +207,14 @@
                     "
                   ></span>
                 </div>
-                <div class="mb-1">
+                <div class="mb-1"  *ngIf="viewTag && viewTag != ''">
                   <codx-tag
-                    [entityName]="formModel.entityName"
-                    [disabled]="true"
-                    [isEdit]="false"
-                    [value]="dataSelected?.tags"
-                  >
-                  </codx-tag>
+                  [entityName]="formModel.entityName"
+                  [disabled]="true"
+                  [isEdit]="false"
+                  [value]="viewTag"
+                >
+                </codx-tag>
                 </div>
                 <div class="d-flex flex-wrap align-items-top mb-1">
                   <div class="d-flex flex-column">
@@ -299,34 +299,27 @@
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
                     <div
-                      *ngIf="dataSelected.status != '1'"
-                      [ngStyle]="{
-                        'background-color':
-                          dataSelected.status == '3' ||
-                          dataSelected.status == '4'
-                            ? colorReasonSuccess?.color
-                            : dataSelected.status == '5' ||
-                              dataSelected.status == '6'
-                            ? colorReasonFail?.color
-                            : dataSelected?.steps['backgroundColor']
-                      }"
-                      class="me-2 badge badge-sm d-flex align-items-center"
+                    *ngIf="dataSelected.status == '2'; else statusDefault"
+                    [ngStyle]="{
+                      'background-color': dataSelected?.steps['backgroundColor']
+                    }"
+                    class="badge badge-sm d-flex align-items-center"
+                  >
+                    <span
+                      [ngClass]="dataSelected?.steps['icon']"
+                      [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                      class="me-1"
+                    ></span>
+                    <span
+                      class="text-ellipsis line-clamp line-clamp-1"
+                      [ngbTooltip]="dataSelected?.currentStepName"
+                      [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
+                      >{{ dataSelected?.currentStepName }}</span
                     >
-                      <span
-                        [ngClass]="dataSelected?.steps['icon']"
-                        [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                        class="me-1"
-                      ></span>
-                      <span
-                        class="menu-title fw-bold line-clamp line-clamp-2"
-                        [ngbTooltip]="dataSelected?.currentStepName"
-                        [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                        >{{ dataSelected?.currentStepName }}</span
-                      >
-                    </div>
-                    <div *ngIf="dataSelected.status == '1'">
+                  </div>
+                  <ng-template #statusDefault>
                       <codx-vll
-                        [name]="'DP028'"
+                        [name]="gridViewSetup?.Status?.referedValue"
                         [field]="'Status'"
                         [value]="dataSelected?.status"
                         [showText]="true"
@@ -334,8 +327,9 @@
                         class="badge badge-light badge-sm"
                       >
                       </codx-vll>
-                    </div>
+                  </ng-template>
                   </div>
+
                   <div
                     class="d-flex flex-column align-items-top"
                     style="margin-top: 2.25rem !important"
@@ -389,13 +383,13 @@
 </ng-container>
 <ng-template #body let-data>
   <div class="d-flex flex-column">
-    <codx-taskbar
+    <!-- <codx-taskbar
       [listTab]="tabDetail"
       [change]="dataSelected"
       (tab)="changeTab($event)"
       size="18"
       class="mb-3"
-    ></codx-taskbar>
+    ></codx-taskbar> -->
 
     <codx-tab-deal-detail
       [tabClicked]="tabClicked"
@@ -403,6 +397,7 @@
       [formModel]="formModel"
       [checkMoreReason]="checkMoreReason"
       (saveAssign)="saveAssign($event)"
+      [tabDetail]="tabDetail"
     ></codx-tab-deal-detail>
   </div>
 </ng-template>

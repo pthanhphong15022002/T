@@ -31,6 +31,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   stepViews: any[];
   dialogGuide: DialogRef;
   funcID: any;
+  formModel: any;
   // override aside = false;
   // override toolbarFixed = false;
   constructor(
@@ -44,13 +45,9 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.module = 'DP';
   }
 
-  onInit(): void {
-   
-  }
+  onInit(): void {}
 
-  onAfterViewInit(): void {
-   
-  }
+  onAfterViewInit(): void {}
 
   openFormNoteDrawer() {
     let option = new SidebarModel();
@@ -75,8 +72,8 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.changDef.detectChanges();
   }
 
-  hidenNameProcess(){
-    this.processView =null ;
+  hidenNameProcess() {
+    this.processView = null;
     this.stepViews = [];
   }
 

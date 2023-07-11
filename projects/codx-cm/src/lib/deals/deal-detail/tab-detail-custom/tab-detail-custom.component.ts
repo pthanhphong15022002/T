@@ -19,7 +19,8 @@ import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { DealsComponent } from '../../deals.component';
 import { DealDetailComponent } from '../deal-detail.component';
 import { CodxListContactsComponent } from '../../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
-import { CM_Contacts, CM_Contracts } from '../../../models/cm_model';
+import { CM_Contacts, CM_Contracts, CM_Quotations } from '../../../models/cm_model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -47,7 +48,7 @@ export class TabDetailCustomComponent
 
   listContractRef: CM_Contracts[];
   // listQ
-
+  @Input()  tabDetail = [];
 
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
@@ -61,11 +62,18 @@ export class TabDetailCustomComponent
   readonly tabContract: string = 'Contract';
   readonly tabHistory: string = 'History';
 
+  listContracts: CM_Contracts[];
+  listQuotations: CM_Quotations[];
 
-  fmProcductsLines: FormModel = {
-    formName: 'CMProducts',
-    gridViewName: 'grvCMProducts',
-    entityName: 'CM_Products',
+  formModelQuotations: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    entityName: 'CM_Quotations',
+  };
+  formModelContract: FormModel = {
+    formName: 'CMContracts',
+    gridViewName: 'grvCMContracts',
+    entityName: 'CM_Contracts',
   };
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -75,6 +83,11 @@ export class TabDetailCustomComponent
 
   recIdOld: string = '';
   isDataLoading = true;
+  grvSetupQuotation: any[]=[];
+  vllStatusQuotation: any;
+  mergedList: any[]=[];
+  grvSetupContract: any[]=[];
+  vllStatusContract: any;
 
   constructor(
     private inject: Injector,
@@ -95,35 +108,33 @@ export class TabDetailCustomComponent
     if (changes.dataSelected) {
       this.isDataLoading = true;
       this.dataSelected = this.dataSelected;
-      if(this.tabClicked === this.tabContact )
-      {
-        this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
-      }
-      if(this.tabClicked === this.tabHistory) {
-        this.getHistoryByDeaID();
-      }
+      // if(this.tabClicked === this.tabContact )
+      // {
+      //   this.loadContactDeal.getListContactsByObjectId(this.dataSelected.recID);
+      // }
       this.getListInstanceStep();
+      this.getHistoryByDeaID();
     }
   }
 
-  async getContractByDeaID() {
-    if (this.dataSelected?.recID) {
-      var data = [this.dataSelected?.recID];
-      this.codxCmService.getListContractByDealID(data).subscribe((res) => {
-        if (res) {
-          this.listContract = res;
-        } else {
-          this.listContract = [];
-        }
-      });
-    }
-  }
+  // async getContractByDeaID() {
+  //   if (this.dataSelected?.recID) {
+  //     var data = [this.dataSelected?.recID];
+  //     this.codxCmService.getListContractByDealID(data).subscribe((res) => {
+  //       if (res) {
+  //         this.listContract = res;
+  //       } else {
+  //         this.listContract = [];
+  //       }
+  //     });
+  //   }
+  // }
   async getHistoryByDeaID() {
     if (this.dataSelected?.recID) {
       var data = [this.dataSelected?.recID];
       this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
         if (res) {
-          console.log('có data nha');
+        this.mergedList = res[0];
         }
       });
     }
@@ -131,9 +142,23 @@ export class TabDetailCustomComponent
   async executeApiCalls() {
     try {
       await this.getValueList();
+      await this.getGridViewQuotation();
+      await this.getGridVieContract();
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
+  }
+  async getGridViewQuotation(){
+    this.grvSetupQuotation = await firstValueFrom(
+      this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
+    );
+    this.vllStatusQuotation = this.grvSetupQuotation['Status'].referedValue;
+  }
+  async getGridVieContract(){
+    this.grvSetupContract = await firstValueFrom(
+      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
+    );
+    this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
   }
   //nvthuan
   getListInstanceStep() {
@@ -325,6 +350,19 @@ export class TabDetailCustomComponent
         this.dealComponent.autoMoveStage(this.dataSelected);
       }
     });
+  }
+
+
+  getHeaderText(){
+
+  }
+
+  saveDataStep(e) {
+    if(e){
+      debugger;
+    }
+    // this.listSteps = e;
+    // this.outDataStep.emit(this.dataStep);
   }
 
 }

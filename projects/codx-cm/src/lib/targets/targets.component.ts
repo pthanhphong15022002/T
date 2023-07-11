@@ -10,6 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -36,12 +37,15 @@ export class TargetsComponent
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+  @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   button?: ButtonModel;
   scheduleHeader?: ResourceModel;
   schedules?: ResourceModel;
+  requestTree?: ResourceModel;
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
@@ -53,8 +57,12 @@ export class TargetsComponent
   method: string = 'GetListTargetAsync';
   idField: string = 'recID';
   //#endregion
-
+  titleAction = '';
+  dataSelected: any;
   readonly btnAdd: string = 'btnAdd';
+  //calendar - tháng - quý - năm
+  date: any = new Date();
+  ops = ['m', 'q', 'y'];
 
   constructor(private inject: Injector, private activedRouter: ActivatedRoute) {
     super(inject);
@@ -71,10 +79,17 @@ export class TargetsComponent
       this.queryParams = this.router.snapshot.queryParams;
     }
     this.getSchedule();
-
   }
   ngAfterViewInit(): void {
     this.views = [
+      {
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        model: {
+          panelRightRef: this.panelRight,
+        },
+      },
       {
         sameData: false,
         type: ViewType.schedule,
@@ -97,6 +112,9 @@ export class TargetsComponent
         },
       },
     ];
+    this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
+    this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
+
     this.detectorRef.checkNoChanges();
   }
 
@@ -119,7 +137,6 @@ export class TargetsComponent
     this.scheduleHeader.className = 'TargetsBusiness';
     this.scheduleHeader.service = 'CM';
     this.scheduleHeader.method = 'GetListUserAsync';
-
     this.scheduleModel = {
       id: 'recID',
       subject: { name: 'target' },
@@ -136,9 +153,22 @@ export class TargetsComponent
       TextField: 'userName',
       Title: 'Owners',
     };
+
+    //Vẽ tree
+
+    this.requestTree = new ResourceModel();
+    this.requestTree.assemblyName = 'CM';
+    this.requestTree.className = 'TargetsBusiness';
+    this.requestTree.service = 'CM';
+    this.requestTree.method = 'GetListTargetAsync';
+    this.requestTree.autoLoad = false;
+    this.requestTree.parentIDField = 'Year';
   }
   //#endregion setting schedule
 
+  //#region change Calendar ejs
+  changeCalendar(data: any) {}
+  //#endregion
   //#region event codx-view
   viewChanged(e) {}
   onLoading(e) {}
@@ -148,7 +178,7 @@ export class TargetsComponent
 
   //#region more
   click(evt) {
-    // this.titleAction = evt.text;
+    this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:
         this.add();
@@ -156,9 +186,29 @@ export class TargetsComponent
     }
   }
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    if (e.functionID) {
+      switch (e.functionID) {
+        case 'SYS02':
+          this.deleteTargetLine(data);
+          break;
+      }
+    }
+  }
 
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS04':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
   //#endregion
 
   //#region CRUD
@@ -166,19 +216,43 @@ export class TargetsComponent
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '800px';
       var obj = {
         action: 'add',
-        // title: this.titleAction,
+        title: this.titleAction,
       };
       var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e && e.event != null) {
-          this.detectorRef.detectChanges();
-          // this.customerDetail.listTab(this.funcID);
-        }
       });
     });
+  }
+
+  deleteTargetLine(data) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeletedTargetLineAsync';
+    opt.assemblyName = 'ERM.Business.CM';
+    opt.className = 'TargetsLinesBusiness';
+    opt.service = 'CM';
+    opt.data = [itemSelected.recID];
+    return true;
   }
   //#endregion
 }

@@ -64,7 +64,7 @@
     </div> -->
 
     <!--Content Statistical-->
-    <div class="d-flex align-items-start justify-content-between " >
+    <div class="d-flex align-items-start justify-content-between " [ngClass]="isHiddenChart ? 'd-none' : 'd-flex'">
       <div class="col-4 px-3 py-3 h-100 om-statistical">
         <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
           <codx-label class="fs-3 fw-bold" name="lblTotal" default="Tổng hợp"></codx-label>
@@ -78,8 +78,8 @@
                   </span>
                 </span>
                 <ejs-progressbar id="plan-progress" [type]="'Circular'" [maximum]="100" [minimum]="0"
-                  [value]="value?.percentOBDone" [width]="'110px'" [height]="'110px'"
-                  [trackThickness]="10" [progressThickness]="10" [progressColor]="'#08ad9d'">
+                  [value]="value?.percentOBDone" [width]="'110px'" [height]="'110px'" [trackThickness]="10"
+                  [progressThickness]="10" [progressColor]="'#08ad9d'">
                   <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
                 </ejs-progressbar>
               </div>
@@ -90,11 +90,11 @@
                 <codx-label class=" ps-2 fs-6 fw-bold" name="lblObjectNotStart" default="Chưa bắt đầu"></codx-label>
               </div>
               <div class="pb-2 d-flex flex-row">
-                <span class="fs-6 fw-bold blue-primary" >{{value?.percentOBStarting+'%'}}</span>
+                <span class="fs-6 fw-bold blue-primary">{{value?.percentOBStarting+'%'}}</span>
                 <codx-label class="ps-2 fs-6 fw-bold " name="lblObjectStarting" default="Đang thực hiện"></codx-label>
               </div>
               <div class=" d-flex flex-row">
-                <span class="fs-6 fw-bold plan-progress-color" >{{value?.percentOBDone+'%'}}</span>
+                <span class="fs-6 fw-bold plan-progress-color">{{value?.percentOBDone+'%'}}</span>
                 <codx-label class="ps-2 fs-6 fw-bold" name="lblObjectDone" default="Đã hoàn tất"></codx-label>
               </div>
             </div>
@@ -113,7 +113,8 @@
               </div>
               <div class="d-flex flex-column pt-4 col-6 ps-3">
                 <span class="fs-2 fw-bold">{{value?.totalHighOB}}</span>
-                <codx-label class="fs-6 fw-bold " name="lblImportantObject" default="Mục tiêu quan trọng"></codx-label>
+                <codx-label class="fs-6 fw-bold " name="lblImportantObject"
+                  default="Mục tiêu quan trọng"></codx-label>
               </div>
             </div>
             <div class="flex-row d-flex ">
@@ -211,7 +212,7 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 </div>
 <ng-template #templateTreeView let-item>
@@ -321,7 +322,7 @@
             <span *ngIf="item?.umid != '%'&& item?.current>0" class="me-1" [innerHTML]="
                 item?.current | formatvalue : okrFM?.krFM : 'target' | async
               "></span>
-              <span *ngIf=" item?.current==0" class="me-1" [innerHTML]="
+            <span *ngIf=" item?.current==0" class="me-1" [innerHTML]="
               item?.current 
             "></span>
             <span [innerHTML]="item?.umName"></span>
@@ -340,7 +341,7 @@
             <span *ngIf=" item?.actual==0" class="me-1" [innerHTML]="
               item?.actual 
             "></span>
-              
+
             <span [innerHTML]="item?.umName"></span>
           </div>
         </div>
@@ -359,7 +360,7 @@
     <div class="d-flex align-items-center justify-content-end col-7 ps-5">
       <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText"
         [ngbTooltip]="'Kế hoạch chỉ tiêu: ' + item?.rangeDateText"></span>
-      <div class="position-relative col-3" ngbTooltip="Người chịu trách nhiệm" (click)="showOKRLink($event,item)">        
+      <div class="position-relative col-3" ngbTooltip="Người chịu trách nhiệm" (click)="showOKRLink($event,item)">
         <!-- Phân bổ-->
 
         <div *ngIf="item?.hasAssign != null && item?.okrLink?.length>=2" class="d-flex flex-row">
@@ -417,29 +418,20 @@
 
       </div>
       <div class="d-flex ps-9 align-items-center justify-content-center">
-        <div class="d-flex flex-row align-items-center kr-process w-150px me-7 pb-2" [ngbTooltip]="'Tiến độ'">
-          <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
-            <div class="rounded-4 h-5px" [ngClass]="
-                item?.actual >= item?.current ? 'bg-success' : 'bg-danger'
-              " role="progressbar" [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-              aria-valuemax="100"></div>
-            <span class="progress-node border-2px position-absolute rounded-circle border me-1" [ngClass]="[
-                item?.actual >= item?.current
-                  ? 'border-success'
-                  : 'border-danger'
-              ]" [style.left]="item?.progress - 2 + '%'">
-
+        <div class="d-flex flex-row align-items-center kr-process w-150px me-7 pb-2" [ngbTooltip]="'Tiến độ'" >
+          <div class="h-5px w-100 position-relative bg-gray-200 rounded-4" >
+            <div class="rounded-4 h-5px" [ngClass]=" item?.actual >= item?.current ? 'bg-success' : 'bg-danger' " role="progressbar"
+              [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+            </div>
+            <span class="progress-node border-2px position-absolute rounded-circle border me-1"
+              [ngClass]="[ item?.actual >= item?.current? 'border-success': 'border-danger']" [style.left]="item?.progress - 2 + '%'">        
             </span>
-            <span *ngIf="item?.notiCheckIn && dataOKRPlans?.status=='2'" class="icon-notifications noti-checkin text-warning position-absolute "
+            <span *ngIf="item?.notiCheckIn" class="icon-notifications noti-checkin text-warning position-absolute "  [ngbTooltip]="'Trễ hạn cập nhật'"
               [style.left]="item?.progress - 3 + '%'">
             </span>
           </div>
           <span class="ps-4">
-            <span class="mb-1" *ngIf="item?.progress != 0" [innerHTML]="
-            (item?.progress
-              | formatvalue : okrFM?.krFM : 'progress'
-              | async) + '%'
-          "></span>
+            <span class="mb-1" *ngIf="item?.progress != 0" [innerHTML]="(item?.progress| formatvalue : okrFM?.krFM : 'progress'| async) + '%'"></span>
             <span class="mb-1" *ngIf="item?.progress == 0" [innerHTML]="item?.progress + '%'"></span>
           </span>
 

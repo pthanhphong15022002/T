@@ -50,54 +50,29 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if (!this.formModel) {
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'EAppointions';
-    //   this.formModel.entityName = 'HR_EAppointions';
-    //   this.formModel.gridViewName = 'grvEAppointions';
-    // }
-    debugger
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.EAppointionObj = JSON.parse(JSON.stringify(data?.data?.appointionObj));
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.employeeObj = JSON.parse(
-      JSON.stringify(data.data.empObj ? data.data.empObj : null)
-    );
     this.isUseEmployee = data?.data?.isUseEmployee;
+    if (data?.data?.appointionObj)
+      this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
+
+    if (data?.data?.empObj)
+      this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
     this.formModel = dialog.formModel;
-    //this.lstEAppointions = data?.data?.lstEAppointions;
-
-    // this.indexSelected =
-    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.EAppointionObj = JSON.parse(
-    //     JSON.stringify(this.lstEAppointions[this.indexSelected])
-    //   );
-    //   // this.formModel.currentData = this.EAppointionObj
-    // }
   }
 
   initForm() {
-    // this.hrService
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((item) => {
-    //     this.formGroup = item;
-    //     if(this.actionType == 'add'){
-    //       this.hrService.getEmployeePassportModel().subscribe(p => {
-    //         console.log('thong tin ho chieu', p);
-    //         this.EAppointionObj = p;
-    //         this.formModel.currentData = this.EAppointionObj
-    //         // this.dialog.dataService.dataSelected = this.data
-    //         console.log('du lieu formmodel',this.formModel.currentData);
-    //       })
-    //     }
-    //     this.formGroup.patchValue(this.EAppointionObj)
-    //     this.isAfterRender = true
-    //   });
+    this.hrService
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        this.employeeObj.orgUnitName = res.orgUnitName;
+      });
+
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -107,26 +82,27 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
-            if (res.key) {
-              this.autoNumField = res.key;
-            }
-
-            this.EAppointionObj = res?.data;
+            if (res.key) this.autoNumField = res.key;
+            this.EAppointionObj = res.data;
             this.EAppointionObj.effectedDate = null;
-            this.EAppointionObj.employeeID = this.employId;
+            if (this.employeeObj) {
+              this.EAppointionObj.employeeID = this.employeeObj.employeeID;
+              this.EAppointionObj.orgUnitID = this.employeeObj.positionID;
+              this.EAppointionObj.orgUnitID = this.employeeObj.orgUnitID;
+              this.EAppointionObj.jobLevel = this.employeeObj.jobLevel;
+              this.EAppointionObj.locationID = this.employeeObj.locationID;
+            }
             this.formModel.currentData = this.EAppointionObj;
             this.formGroup.patchValue(this.EAppointionObj);
             this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
-    } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formGroup.patchValue(this.EAppointionObj);
-        this.formModel.currentData = this.EAppointionObj;
-        this.isAfterRender = true;
-        this.cr.detectChanges();
-      }
+    } else if (this.actionType === 'edit' || this.actionType === 'copy') {
+      this.formGroup.patchValue(this.EAppointionObj);
+      this.formModel.currentData = this.EAppointionObj;
+      this.isAfterRender = true;
+      this.cr.detectChanges();
     }
   }
 
@@ -138,7 +114,16 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'employeeID') {
+          this.employeeObj = emp[0][0];
+          this.hrService
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              this.employeeObj.orgUnitName = res.orgUnitName;
+            });
+        }
         if (fieldName === 'SignerID') {
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
             if (emp[1] > 0) {
@@ -188,20 +173,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     //Update Employee Information when CRUD then render
     if (this.employId != null)
       this.getEmployeeInfoById(this.employId, 'employeeID');
-
-    // this.hrService.getFormModel(this.funcID).then((formModel) => {
-    //   if (formModel) {
-    //     this.formModel = formModel;
-    //     this.hrService
-    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //       .then((fg) => {
-    //         if (fg) {
-    //           this.formGroup = fg;
-    //           this.initForm();
-    //         }
-    //       });
-    //   }
-    // });
   }
 
   handleSelectEmp(evt) {

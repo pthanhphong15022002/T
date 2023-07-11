@@ -102,6 +102,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.list,
         sameData: true,
         model: {
@@ -110,6 +111,7 @@ export class EmployeeBenefitComponent extends UIComponent {
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
         sameData: true,
         model: {
@@ -371,7 +373,7 @@ export class EmployeeBenefitComponent extends UIComponent {
         dataObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
       },
@@ -393,7 +395,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   addBenefit(event): void {
-    this.currentEmpObj = this.itemDetail.emp;
+    this.currentEmpObj = this.itemDetail?.emp;
     if (event.id == 'btnAdd') {
       this.HandleEBenefit(
         event.text + ' ' + this.view.function.description,

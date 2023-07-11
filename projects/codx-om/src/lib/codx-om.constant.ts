@@ -44,6 +44,7 @@ export const OMCONST = {
     Delete: 'SYS02',
     Edit: 'SYS03',
     Copy: 'SYS04',
+    View: 'View',
     //Plan
     ReleasePlanCOMP:'OMT011',
     UnReleasePlanCOMP:'OMT012',

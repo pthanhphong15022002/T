@@ -347,9 +347,13 @@ export class InstancesComponent
         },
       },
     ];
-
+    this.setColorKanban();
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
+
+  // ngAfterViewChecked(){
+  //   this.setColorKanban();
+  // }
   onInit() {
     this.button = {
       id: 'btnAdd',
@@ -434,6 +438,15 @@ export class InstancesComponent
     return find ? find[type] : '';
   }
 
+  setColorKanban(){
+    let listInsStep = this.kanban?.columns?.filter((column) =>{column?.dataColums?.isSuccessStep && column?.dataColums?.isFailStep})
+    // let listInsStep = this.kanban?.columns?.filter((column) =>{column?.dataColums?.isSuccessStep && column?.dataColums?.isFailStep})
+    this.kanban?.columns?.forEach((column) => {
+      let a = this.hexToRGB(column?.dataColums);
+      column.color = this.hexToRGB(column?.dataColums,5);
+    })
+  }
+
   getPropertyColumn() {
     let dataColumns =
       this.kanban?.columns?.map((column) => {
@@ -445,7 +458,6 @@ export class InstancesComponent
           textColor: column['dataColums']?.textColor || null,
         };
       }) || [];
-
     return dataColumns;
   }
 
@@ -2318,7 +2330,8 @@ export class InstancesComponent
                     'DP',
                     dt?.recID,
                     this.view.formModel.entityName,
-                    ''
+                    null,
+                    null,
                   )
                   .subscribe((res3) => {
                     if (res3) {
@@ -2439,20 +2452,10 @@ export class InstancesComponent
     this.detectorRef.detectChanges();
   }
 
-   setColorStep(step){
-    let index = 0;
-    if(true){
-      let countStep = 6;
-      let opacityDefault = Number((1/countStep).toFixed(2));
-      let opacity = opacityDefault *(index + 1);
-      let color = this.hexToRGB(this.colorDefault,opacity);
-      return {'background-color': color };
-    }else{
-      return {'background-color': step?.backgroundColor };
-    }
-  }
-
-  hexToRGB(hex, opacity) {
+  hexToRGB(step,countStep = 1) {
+    let hex = this.colorDefault;
+    let opacityDefault = Number((1/countStep).toFixed(2));
+    let opacity = opacityDefault * Number(step?.stepNo || 1);
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     const hexLongRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
     const result = hexLongRegex.exec(hex) || shorthandRegex.exec(hex);

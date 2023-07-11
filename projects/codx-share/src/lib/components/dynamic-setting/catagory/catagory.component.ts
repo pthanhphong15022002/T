@@ -29,6 +29,7 @@ import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-catagory',
@@ -169,6 +170,8 @@ export class CatagoryComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       });
+    //cm-VTHAO them ngay 4/07/2023
+    // if (this.function?.functionID == 'CMS')
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
@@ -326,7 +329,7 @@ export class CatagoryComponent implements OnInit {
                     {
                       data: category,
                       isAdd: false,
-                      headerText: /*"Sửa" + ' ' +*/ func?.customName ?? '',
+                      headerText: item.tilte ?? '', // /*"Sửa" + ' ' +*/ func?.customName ?? '',
                     },
                     option
                   );
@@ -1014,7 +1017,7 @@ export class CatagoryComponent implements OnInit {
         'DP',
         'ERM.Business.DP',
         'ProcessesBusiness',
-        'GetProcessDefaultAsync',
+        'GetProcessDefaultSettingAsync',
         [
           funcID == 'CMS0301'
             ? '1'
@@ -1028,96 +1031,42 @@ export class CatagoryComponent implements OnInit {
         ]
       )
       .subscribe((data) => {
-        if (data) {
-          this.openPopupEditDynamic(data, 'edit', funcID, title);
-        } else {
-          this.api
-            .execSv<any>('DP', 'Core', 'DataBusiness', 'GetDefaultAsync', [
-              'DP01',
-              'DP_Processes',
-            ])
-            .subscribe((res) => {
-              if (res && res?.data) {
-                data = res.data;
-                data['_uuid'] = data['recID'] ?? Util.uid();
-                data['idField'] = 'recID';
-                data.status = '1';
-                this.openPopupEditDynamic(data, 'add', funcID, title);
-              }
-            });
+        if (data != null && data.length > 0) {
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          dialogModel.zIndex = 999;
+          let formModel = new FormModel();
+          formModel.entityName = 'DP_Processes';
+          formModel.formName = 'DPProcesses';
+          formModel.gridViewName = 'grvDPProcesses';
+          formModel.funcID = 'DP01';
+          // dialogModel.DataService = this.view?.dataService;
+          dialogModel.FormModel = formModel;
+          var obj = {
+            action: data[3],
+            titleAction: title,
+            gridViewSetup: data[1],
+            lstGroup: data[2],
+            systemProcess: '1',
+            data: data[0],
+          };
+
+          var dialog = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            0,
+            0,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialog.closed.subscribe((e) => {});
         }
       });
 
     // this.changeDetectorRef.detectChanges();
   }
 
-  openPopupEditDynamic(data, action, funcID, title) {
-    this.api
-      .exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync')
-      .subscribe((gr) => {
-        let lstGroup = [];
-        if (gr && gr.length > 0) {
-          lstGroup = gr;
-        }
-
-        data.applyFor =
-          funcID == 'CMS0301'
-            ? '1'
-            : funcID == 'CMS0302'
-            ? '2'
-            : funcID == 'CMS0303'
-            ? '3'
-            : funcID == 'CMS0304'
-            ? '5'
-            : '4';
-        data.category = '0';
-        data.processName =
-          funcID == 'CMS0301'
-            ? '[SYS_CRM] Cơ hội'
-            : funcID == 'CMS0302'
-            ? '[SYS_CRM] Sự cố'
-            : funcID == 'CMS0303'
-            ? '[SYS_CRM] Yêu cầu'
-            : funcID == 'CMS0304'
-            ? '[SYS_CRM] Tiềm năng'
-            : '[SYS_CRM] Hợp đồng';
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-        dialogModel.zIndex = 999;
-        let formModel = new FormModel();
-        formModel.entityName = 'DP_Processes';
-        formModel.formName = 'DPProcesses';
-        formModel.gridViewName = 'grvDPProcesses';
-        formModel.funcID = 'DP01';
-        // dialogModel.DataService = this.view?.dataService;
-        dialogModel.FormModel = formModel;
-        this.cache
-          .gridViewSetup('DPProcesses', 'grvDPProcesses')
-          .subscribe((res) => {
-            if (res) {
-              var obj = {
-                action: action,
-                titleAction: title,
-                gridViewSetup: res,
-                lstGroup: lstGroup,
-                systemProcess: '1',
-                data: data,
-              };
-
-              var dialog = this.callfc.openForm(
-                PopupAddDynamicProcessComponent,
-                '',
-                0,
-                0,
-                '',
-                obj,
-                '',
-                dialogModel
-              );
-              dialog.closed.subscribe((e) => {});
-            }
-          });
-      });
-  }
   //end CRM
 }
