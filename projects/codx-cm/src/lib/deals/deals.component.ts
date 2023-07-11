@@ -1,3 +1,4 @@
+import { comment } from './../../../../codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
@@ -697,6 +698,8 @@ export class DealsComponent
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
+          let oldStatus = data.status;
+          let oldStepId = data.stepID;
           var stepReason = {
             isUseFail: false,
             isUseSuccess: false,
@@ -705,7 +708,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick !== data?.stepID ? this.stepIdClick:  data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -741,8 +744,7 @@ export class DealsComponent
                   nextStep = listStep[index]?.stepID;
                 }
               }
-
-              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res[0];
@@ -819,6 +821,8 @@ export class DealsComponent
     formMD.entityName = fun.entityName;
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
+    let oldStatus = data.status;
+    let oldStepId = data.stepID;
     var dataCM = {
       refID: data?.refID,
       processID: data?.processID,
@@ -845,7 +849,7 @@ export class DealsComponent
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
         data = this.updateReasonDeal(e.event?.instance, data);
-        var datas = [data];
+        var datas = [data,oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
             data = res[0];

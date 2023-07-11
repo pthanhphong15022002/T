@@ -527,7 +527,6 @@ export class PopupAddLeadComponent
   }
   changeAvatarContact() {
     this.avatarChangeContact = true;
-
     if (this.action === this.actionCopy && !this.isCopyAvtContact) {
       this.lead.contactID = Util.uid();
       this.contactId = this.lead.contactID;
