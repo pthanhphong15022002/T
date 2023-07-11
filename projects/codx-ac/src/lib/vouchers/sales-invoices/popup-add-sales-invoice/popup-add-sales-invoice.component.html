@@ -396,70 +396,72 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ejs-tab heightAdjustMode="Fill" class="overflow-auto">
-      <e-tabitems>
-        <e-tabitem>
-          <ng-template #headerText>
-            <i class="icon-format_list_numbered icon-20 me-2"></i>
-            <codx-label
-              class="fw-bold fs-6"
-              fiedName="lblDetail"
-              [formModel]="form.formModel"
-              default="Chi tiết"
-            ></codx-label>
-          </ng-template>
-          <ng-template #content>
-            <div class="position-relative h-100">
-              <codx-gridview-v2
-                #grid
-                *ngIf="editSettings.mode === 'Normal'; else dialogMode"
-                [formName]="fmSalesInvoicesLines.formName"
-                [gridViewName]="fmSalesInvoicesLines.gridViewName"
-                [entityName]="fmSalesInvoicesLines.entityName"
-                service="SM"
-                [templateMore]="more"
-                [editSettings]="editSettings"
-                [allowFiltering]="true"
-                [allowSorting]="true"
-                [autoLoad]="false"
-                [dataSource]="lines"
-                [rowHeight]="35"
-                (cellChanged)="onCellChange($event)"
-                (created)="onCreate($event)"
-                (onAddNew)="onEndAddNew($event)"
-                (onEdit)="onEndEdit($event)"
-                (eventAction)="onActionEvent($event)"
-              ></codx-gridview-v2>
-              <ng-template #dialogMode>
-                <lib-table-line-detail
-                  #tableLineDetail
-                  [gvs]="gvsSalesInvoicesLines"
-                  [transID]="master.recID"
-                  [hiddenFields]="hiddenFields"
-                  [hasMF]="true"
-                  [dataService]="detailService"
-                ></lib-table-line-detail>
-              </ng-template>
+    <div class="flex-grow-1">
+      <ejs-tab heightAdjustMode="Fill" class="overflow-auto">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <i class="icon-format_list_numbered icon-20 me-2"></i>
+              <codx-label
+                class="fw-bold fs-6"
+                fiedName="lblDetail"
+                [formModel]="form.formModel"
+                default="Chi tiết"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <div class="position-relative h-100">
+                <codx-gridview-v2
+                  #grid
+                  *ngIf="editSettings.mode === 'Normal'; else dialogMode"
+                  [formName]="fmSalesInvoicesLines.formName"
+                  [gridViewName]="fmSalesInvoicesLines.gridViewName"
+                  [entityName]="fmSalesInvoicesLines.entityName"
+                  service="SM"
+                  [templateMore]="more"
+                  [editSettings]="editSettings"
+                  [allowFiltering]="true"
+                  [allowSorting]="true"
+                  [autoLoad]="false"
+                  [dataSource]="lines"
+                  [rowHeight]="35"
+                  (cellChanged)="onCellChange($event)"
+                  (created)="onCreate($event)"
+                  (onAddNew)="onEndAddNew($event)"
+                  (onEdit)="onEndEdit($event)"
+                  (eventAction)="onActionEvent($event)"
+                ></codx-gridview-v2>
+                <ng-template #dialogMode>
+                  <lib-table-line-detail
+                    #tableLineDetail
+                    [gvs]="gvsSalesInvoicesLines"
+                    [transID]="master.recID"
+                    [hiddenFields]="hiddenFields"
+                    [hasMF]="true"
+                    [dataService]="detailService"
+                  ></lib-table-line-detail>
+                </ng-template>
 
-              <button
-                id="btnAddLine"
-                class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
-                style="top: -28px"
-                (click)="onClickAddRow()"
-                (keyup.enter)="onClickAddRow()"
-              >
-                <i class="icon-add icon-16 ms-n1"></i>
-                <codx-label
-                  fiedName="lblAddLine"
-                  [formModel]="fmSalesInvoicesLines"
-                  default="Thêm dòng"
-                ></codx-label>
-              </button>
-            </div>
-          </ng-template>
-        </e-tabitem>
-      </e-tabitems>
-    </ejs-tab>
+                <button
+                  id="btnAddLine"
+                  class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
+                  style="top: -28px"
+                  (click)="onClickAddRow()"
+                  (keyup.enter)="onClickAddRow()"
+                >
+                  <i class="icon-add icon-16 ms-n1"></i>
+                  <codx-label
+                    fiedName="lblAddLine"
+                    [formModel]="fmSalesInvoicesLines"
+                    default="Thêm dòng"
+                  ></codx-label>
+                </button>
+              </div>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
 
     <div class="row pt-5 mw-750px">
       <div class="col-3 form-group">

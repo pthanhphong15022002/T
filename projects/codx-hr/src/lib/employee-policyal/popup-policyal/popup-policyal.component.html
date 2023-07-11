@@ -659,7 +659,102 @@
       </div>
 </ng-template>
 
-<ng-template #applyObj> </ng-template>
+<ng-template #applyObj>
+  <div class="form-group row">
+    <div class="col-6 d-flex flex-column">
+        <codx-label
+            fiedName="HasIncludeObjects"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-label
+        [name]="'HasIncludeObjects'"
+        [default]="grvSetup.HasIncludeObjects.headerNote"
+        [formModel]="formModel"
+></codx-label>
+    </div>
+    <div class="col-6 d-flex flex-row">
+        <codx-input
+            class="mt-2"
+            field="hasIncludeObjects"
+            [formModel]="formModel"
+            [Group]="formGroup"
+            (valueChange)="ValChangeHasInclueObj($event)"
+        ></codx-input>
+        <!-- <codx-input
+        class="mt-2"
+        field="includeObjects"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        (valueChange)="ValChangeSelectObj($event)"
+    ></codx-input> -->
+        <button
+        class="btn btn-icon ms-3"
+        (click)="onClickOpenSelectIncludeObj()"
+      >
+        <i class="icon-edit-one icon-18" 
+        [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+        ></i>
+      </button>
+    </div>
+</div>
+<span *ngIf="alpolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
+    <span *ngFor="let obj of lstSelectedObj">
+      <!-- <span
+      class="badge badge-success border-0 ms-2"
+      [innerHTML]="obj
+          | formatvalue : benefitFormModel : 'benefitID'
+          | async"
+    ></span> -->
+        <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        name="HRObject"
+        [value]="obj"
+        class="badge badge-success border-0 ms-2"
+      >
+      </codx-vll>
+    </span>
+</span>
+
+    <!-- <codx-combobox-popup
+    *ngIf="!isHidden && alpolicyObj.hasIncludeObjects"
+    [comboboxName]="'HRObject'"
+    [multiple]="true"
+    [width]="600"
+    [height]="500"
+    [value]="alpolicyObj.includeObjects"
+    (clickSave)="onClickHideComboboxPopup($event)"
+    >
+    </codx-combobox-popup> -->
+
+    <div class="form-group row">
+      <div class="col-6 d-flex flex-column">
+          <codx-label
+              fiedName="HasIncludeObjects"
+              [formModel]="formModel"
+              [default]="'Chi tiết Đối tượng áp dụng'"
+          ></codx-label>
+      </div>
+      <div class="col-6 d-flex flex-row">
+          <button
+          class="btn btn-icon ms-3"
+          >
+          <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+          <i class="icon-arrow_drop_down icon-18" 
+          [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+          ></i>
+        </button>
+        <button
+        class="btn btn-icon ms-3"
+        >
+        <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+        <i class="icon-arrow_drop_up icon-18" 
+        [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+        ></i>
+      </button>
+      </div>
+  </div>
+</ng-template>
 
 <ng-template #subtractObj> </ng-template>
 

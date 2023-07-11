@@ -52,21 +52,21 @@
 //   }
 // }
 
-// /***/
-// .popup-process-detail {
-//   codx-views>.container-fluid {
-//       height: calc(100vh - 110px) !important;
-//       overflow: hidden;
-//   }
-//   .process-views-detail {
-//       height: calc(100vh - 68px) !important;
-//       overflow: hidden;
+/***/
+.popup-process-detail {
+  codx-views>.container-fluid {
+      height: calc(100vh - 110px) !important;
+      overflow: hidden;
+  }
+  .process-views-detail {
+      height: calc(100vh - 68px) !important;
+      overflow: hidden;
 
-//   }
+  }
 
-//   .view-details-main {
-//       height: calc(100vh - 52px);
-//   }
+  .view-details-main {
+      height: calc(100vh - 52px);
+  }
 
 //   .toolbar {
 //       display: flex;
@@ -217,7 +217,7 @@
 //   border-radius: 0px 3px 3px 0px;
 //   box-shadow: none;
 // }
-// }
+ }
 
 // .kanban-board {
 // -ms-flex-negative: 0;

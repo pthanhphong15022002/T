@@ -123,13 +123,15 @@ export class PopupMoveStageComponent implements OnInit {
 
     if(this.applyFor == '0'){
       this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
+      this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
       this.listStepProccess = dt?.data?.listStepProccess;
-      this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
+
       this.isDurationControl = dt?.data?.isDurationControl;
       this.getIdReason();
     }
     else if(this.applyFor != '0' ){
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
+      this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.dataCM?.listStepCbx));
       this.executeApiCalls();
       this.isLoad = true;
     }

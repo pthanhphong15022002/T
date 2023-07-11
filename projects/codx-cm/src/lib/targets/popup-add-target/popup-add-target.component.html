@@ -14,8 +14,10 @@
           <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
           </codx-label>
           <codx-input
+            [disabled]="action == 'edit'"
             [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [crrValue]="data?.businessLineID"
+            (valueChange)="valueChange($event)"
             field="businessLineID"
           >
           </codx-input>
@@ -37,14 +39,14 @@
           <codx-label [formModel]="form.formModel" [fiedName]="'Period'">
           </codx-label>
           <codx-dropdown-calendar
+            #dropCalendar
+            [disabled]="action == 'edit'"
             cssPopup="h-500px w-800px"
             [value]="date"
-            [selectedType]="'y'"
             [displayOption]="ops"
             cssClass="w-100 om-calendar"
             class="me-2"
             [selectedType]="selectedType"
-            (valueChange)="changeCalendar($event)"
             (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
           <!-- <codx-input
@@ -167,7 +169,7 @@
           <tr *ngFor="let item of lstOwners">
             <td>
               <div
-                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2"
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od mb-1 p-2"
               >
                 <div class="d-flex justify-content-between list-title">
                   <div class="d-flex align-items-top me-2">
@@ -192,11 +194,17 @@
               <ng-container *ngIf="isAllocation">
                 <ng-container *ngFor="let line of time?.lines">
                   <span *ngIf="line.salespersonID == item?.userID" class="">
-                    <span
+                    <div
+                      [ngClass]="
+                        line?.recID == this.editingItem
+                          ? 'user-nav-active'
+                          : null
+                      "
                       *ngIf="
                         !isEditing(line?.recID, isAllocation) || !isEditLine
                       "
                       (click)="dbClick(line?.recID)"
+                      class="user-nav-item"
                     >
                       <input
                         type="text"
@@ -207,10 +215,17 @@
                         class="no-border text-gray-600"
                         style="margin-left: 0px"
                       />
-                    </span>
-                    <span
+                    </div>
+                    <div
+                      [ngClass]="
+                        line?.recID == this.editingItem
+                          ? 'user-nav-active'
+                          : null
+                      "
+                      class="user-nav-item"
                       *ngIf="isEditing(line?.recID, isAllocation) && isEditLine"
-                      ><input
+                    >
+                      <input
                         type="text"
                         #lblTarget
                         name="lblTarget"
@@ -233,7 +248,8 @@
                         "
                         class="no-border text-gray-600"
                         style="margin-left: 0px"
-                    /></span>
+                      />
+                    </div>
                   </span>
                 </ng-container>
               </ng-container>
@@ -251,7 +267,7 @@
                     class="no-border text-gray-600"
                     style="margin-left: 0px"
                   />
-<!--
+                  <!--
                   <span
                     [innerHTML]="targetToFixed(item?.target / lstTime.length)"
                   ></span> -->

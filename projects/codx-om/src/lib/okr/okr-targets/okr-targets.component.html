@@ -276,7 +276,7 @@
               item?.okrTasks?.length : 0 }}</span>
           </div>
           <codx-comment-temp [objectID]="item?.recID" [viewType]="3" ngbTooltip="Bình luận"></codx-comment-temp> -->
-          <span class="me-2" *ngIf="okrFM?.obFM && reloadedMF && !sharedView">
+          <span class="me-2 d-flex justify-content-start" *ngIf="okrFM?.obFM && reloadedMF && showOKRMF">
             <codx-mfunc [formModel]="okrFM?.obFM" type="view" [dataItem]="item" (clickMF)="clickMF($event, item)"
               (changeDataMF)="changeDataOBMF($event, item)"></codx-mfunc>
           </span>
@@ -456,12 +456,12 @@
             : 0 }}</span>
         </div>
         <codx-comment-temp [objectID]="item?.recID" [viewType]="3" ngbTooltip="Bình luận"></codx-comment-temp>
-        <span class="me-2" *ngIf="item?.okrType == krType && okrFM?.krFM && reloadedMF && !sharedView">
+        <span class="me-2 d-flex justify-content-start" *ngIf="item?.okrType == krType && okrFM?.krFM && reloadedMF && showOKRMF">
           <codx-mfunc [formModel]="okrFM?.krFM " type="view" [dataItem]="item"
             (clickMF)="clickKRMF($event, item, false)"
             (changeDataMF)="changeDataKRMF($event, item, false)"></codx-mfunc>
         </span>
-        <span class="me-2" *ngIf="item?.okrType == skrType && okrFM?.skrFM && reloadedMF && !sharedView">
+        <span class="me-2 d-flex justify-content-start" *ngIf="item?.okrType == skrType && okrFM?.skrFM && reloadedMF && showOKRMF">
           <codx-mfunc [formModel]="okrFM?.skrFM " type="view" [dataItem]="item"
             (clickMF)="clickKRMF($event, item, true)" (changeDataMF)="changeDataKRMF($event, item, false)"></codx-mfunc>
         </span>
