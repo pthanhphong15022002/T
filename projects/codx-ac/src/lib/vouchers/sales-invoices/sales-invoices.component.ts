@@ -271,6 +271,11 @@ export class SalesInvoicesComponent
       )
       .subscribe((res: IAcctTran[]) => {
         console.log(res);
+        if (!res) {
+          this.acctLoading = false;
+          return;
+        }
+
         this.acctTranLines = this.groupBy(res, 'entryID');
 
         // calculate totalRow

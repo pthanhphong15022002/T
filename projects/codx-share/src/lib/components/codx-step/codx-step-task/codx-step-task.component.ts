@@ -1,15 +1,12 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
+  Component,
+  OnChanges,
+  EventEmitter,
   SimpleChanges,
-  TemplateRef,
-  ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -24,7 +21,7 @@ import {
   SidebarModel,
   Util,
 } from 'codx-core';
-
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { firstValueFrom } from 'rxjs';
 import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
 import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
@@ -37,23 +34,14 @@ import {
 } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddGroupTaskComponent } from '../codx-add-group-task/codx-add-group-task.component';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
-import { group } from 'console';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 import { StepService } from '../step.service';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { FormGroup } from '@angular/forms';
 import { CodxCalendarService } from '../../codx-calendar/codx-calendar.service';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
-import { CM_Quotations } from 'projects/codx-cm/src/lib/models/cm_model';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 
 @Component({
@@ -418,7 +406,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView && task?.status != "1")) {
               res.isblur = true;
             }
             break;
@@ -440,8 +428,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP24': //Tạo cuộc họp
-            if (task.taskType != 'M' || task?.actionStatus == '2')
+            if (task.taskType != 'M' || task?.actionStatus == '2'){
               res.disabled = true;
+            }else if(task?.status == "1"){
+              res.isblur = true;
+            }
             break;
           case 'DP25':
           case 'DP26':
@@ -480,9 +471,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP31': // bắt đầu ngay
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView && task?.dependRule == "0")) {
-              res.isblur = true;
-            }
+            if(task?.dependRule != "0" || task?.status != "1"){
+              res.disabled = true;
+            }else if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+                res.isblur = true;
+              }           
             break;
         }
       });
@@ -667,7 +660,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.addBookingCar();
         break;
       case 'DP31':
-        this.startTask(task);
+        this.startTask(task,groupTask);
         break;
     }
   }
@@ -697,7 +690,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region start task
-  startTask(task: DP_Instances_Steps_Tasks) {
+  startTask(task: DP_Instances_Steps_Tasks, groupTask) {
     if (task?.taskType == 'Q') {
       //báo giá
       this.addQuotation();
@@ -709,9 +702,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [task?.stepID, task?.recID])
         .subscribe((res) => {
           if(res){
+            let indexTaskView = groupTask?.task?.findIndex(taskFind => taskFind?.recID == task?.recID);
             task.status = "2";
             task.modifiedBy = this.user.userID;
             task.modifiedOn = new Date();
+            if(indexTaskView >= 0){
+              groupTask?.task?.splice(indexTaskView,1,JSON.parse(JSON.stringify(task)));
+            }
             let taskFind = this.currentStep?.tasks?.find((taskFind) => taskFind.recID == task.recID);
             if(taskFind){
               taskFind.status = "2";
@@ -1296,44 +1293,68 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
 
+  updateDataProgress(data, dataProgress) {
+    if(dataProgress?.type == 'P'){
+      data.progress = dataProgress?.progressStep;
+    }else if(dataProgress?.type == 'G'){
+      data.progress = dataProgress?.progressGroupTask;
+    }else{
+      data.progress = dataProgress?.progressTask;
+      data.status = dataProgress?.progressTask == 100 ? "3" : "2";
+    }
+    data.note = dataProgress?.note;
+    data.actualEnd = dataProgress?.actualEnd;
+  }
+
+  startTaskAuto(task) {
+    const taskFinds = this.currentStep?.tasks?.filter(taskF => taskF.parentID.includes(task?.refID));
+    if (taskFinds && taskFinds.length > 0) {
+      taskFinds.forEach(element => {
+        if(element?.dependRule == "1"){
+          const listIDTask = element?.parentID?.split(";");
+        const areAllTasksCompleted = listIDTask.every(idTask => {
+          const taskF = this.currentStep?.tasks?.find(taskF => taskF.refID === idTask);
+          return taskF && taskF.progress >= 100;
+        });
+        if (areAllTasksCompleted){
+          element.status = "2";
+          let groupView = this.listGroupTask.find((group) =>group.refID == element?.taskGroupID);
+          if(groupView && groupView?.task?.length > 0){
+            let taskViewIndex = groupView?.task?.findIndex(t => t?.recID == element?.recID);
+            if(taskViewIndex >= 0){
+              groupView?.task?.splice(taskViewIndex,1,JSON.parse(JSON.stringify(element)));
+            }
+          }
+        }
+        }
+      });
+    }
+  }
+
   handelProgress(data, dataProgress) {
     if (dataProgress) {
       if (dataProgress?.type == 'P') {
-        data.progress = dataProgress?.progressStep;
+        this.updateDataProgress(data,dataProgress);
       } else if (dataProgress?.type == 'G') {
-        data.progress = dataProgress?.progressGroupTask;
-        data.note = dataProgress?.note;
-        data.actualEnd = dataProgress?.actualEnd;
-        let groupData = this.currentStep?.taskGroups?.find(
-          (group) => group.recID == dataProgress?.groupTaskID
-        );
-        groupData.progress = dataProgress?.progressGroupTask;
-        groupData.note = dataProgress?.note;
-        groupData.actualEnd = dataProgress?.actualEnd;
+        this.updateDataProgress(data,dataProgress);
+        let groupData = this.currentStep?.taskGroups?.find((group) => group.recID == dataProgress?.groupTaskID);
+        if(groupData){
+          this.updateDataProgress(groupData,dataProgress);
+        }
         if (dataProgress?.isUpdate) {
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
         }
       } else {
-        data.progress = dataProgress?.progressTask;
-        data.note = dataProgress?.note;
-        data.actualEnd = dataProgress?.actualEnd;
-        let taskFind = this.currentStep?.tasks?.find(
-          (task) => task.recID == dataProgress.taskID
-        );
+        this.updateDataProgress(data,dataProgress);
+        let taskFind = this.currentStep?.tasks?.find((task) => task.recID == dataProgress.taskID);
         if (taskFind) {
-          taskFind.progress = dataProgress?.progressTask;
+          this.updateDataProgress(taskFind,dataProgress);
         }
         //cập nhật group và step
         if (dataProgress?.isUpdate) {
-          let groupView = this.listGroupTask.find(
-            (group) =>
-              group.recID == dataProgress?.groupTaskID ||
-              group.refID == dataProgress?.groupTaskID
-          );
-          let groupData = this.currentStep?.taskGroups?.find(
-            (group) => group.recID == dataProgress?.groupTaskID
-          );
+          let groupView = this.listGroupTask.find((group) =>group.recID == dataProgress?.groupTaskID ||group.refID == dataProgress?.groupTaskID);
+          let groupData = this.currentStep?.taskGroups?.find((group) => group.recID == dataProgress?.groupTaskID);
           if (groupView) {
             groupView.progress = dataProgress?.progressGroupTask;
           }
@@ -1345,9 +1366,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
-        let groupFind = this.listGroupTask.find(
-          (group) => group.refID == dataCopy?.taskGroupID
-        );
+        let groupFind = this.listGroupTask.find((group) => group.refID == dataCopy?.taskGroupID);
         if (groupFind) {
           let index = groupFind?.task?.findIndex(
             (taskFind) => taskFind.recID == dataCopy?.recID
@@ -1359,6 +1378,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (dataProgress?.progressTask == 100) {
           let isTaskEnd = dataProgress.taskID == this.idTaskEnd ? true : false;
           this.continueStep.emit(isTaskEnd);
+        }
+        //Bắt đầu công việc khi công việc cha hoàn tất
+        if( dataProgress?.progressTask == 100){
+          this.startTaskAuto(data);
         }
       }
       this.valueChangeProgress.emit(dataProgress);
@@ -1377,6 +1400,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           ? true
           : false;
       } else {
+        if(dataUpdate.status == "1"){
+          return false;
+        }
         let isGroup = false;
         let isTask = false;
         if (!this.isRoleAll) {

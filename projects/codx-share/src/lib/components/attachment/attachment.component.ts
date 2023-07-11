@@ -942,7 +942,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   async onMultiFileSave() {
     this.closeBtnUp = true;
     var check = this.CheckTenantFile(this.tenant.getName());
-    debugger
     if (isObservable(check)) {
       check.subscribe(async (item: any) => {
         this.onMultiSaveResult(item);

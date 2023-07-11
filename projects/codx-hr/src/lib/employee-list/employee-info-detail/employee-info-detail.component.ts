@@ -47,7 +47,9 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  LayoutService,
   NotificationsService,
+  PageTitleService,
   SidebarModel,
   SortModel,
   UIComponent,
@@ -588,6 +590,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     private hrService: CodxHrService,
     private auth: AuthStore,
     private df: ChangeDetectorRef,
+    private layout: LayoutService,
+    private pageTitle: PageTitleService,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
     public override api: ApiHttpService,
@@ -600,6 +604,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
 
   onInit(): void {
+    //ẩn logo
+    this.layout.setLogo(null);
+
+    //ẩn số đếm tổng nhân viên
+    // this.pageTitle.setBreadcrumbs([]);
+
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res: any[]) => {
         if (res && res[1] > 0) {

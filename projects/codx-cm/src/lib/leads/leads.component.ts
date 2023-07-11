@@ -861,7 +861,7 @@ export class LeadsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick !== data?.stepID ? this.stepIdClick:  data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
           };
           var obj = {
             stepName: data?.currentStepName,

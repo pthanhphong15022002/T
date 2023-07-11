@@ -95,7 +95,6 @@ export class TreeviewCommentComponent implements OnInit {
         "GetCommentsAsync",
         [data.recID,data.pageIndex + 1])
         .subscribe((res:any[]) => {
-          debugger
           data.loading = false;
           if(res)
           {
@@ -131,7 +130,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // send comment
   sendComment(event:any,data:any = null){
-    debugger
     this.data.totalComment += 1;
     event.showReply = false;
     if(data)
