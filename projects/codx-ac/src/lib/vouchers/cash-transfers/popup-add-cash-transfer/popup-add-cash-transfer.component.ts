@@ -9,7 +9,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable, map } from 'rxjs';
