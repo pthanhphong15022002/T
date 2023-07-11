@@ -114,6 +114,12 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
+    this.hrSevice
+      .getOrgUnitID(this.empObj?.orgUnitID ?? this.empObj?.emp?.orgUnitID)
+      .subscribe((res) => {
+        this.empObj.orgUnitName = res.orgUnitName;
+      });
+
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((p) => {
@@ -207,7 +213,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           p.emp = this.empObj;
           this.successFlag = true;
           this.dialog && this.dialog.close(p);
-        } 
+        }
         // else this.notify.notifyCode('SYS023');
       });
     } else {
@@ -221,15 +227,15 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
           // }
-        } 
+        }
         // else this.notify.notifyCode('SYS021');
       });
     }
   }
 
-  calTotalDayoff(evt){
+  calTotalDayoff(evt) {
     this.dayoffObj.totalDaysOff = evt.data - this.dayoffObj.totalSubDays;
-    this.formGroup.patchValue({totalDaysOff: this.dayoffObj.totalDaysOff})
+    this.formGroup.patchValue({ totalDaysOff: this.dayoffObj.totalDaysOff });
   }
 
   HandlePregnantTypeChange(e, pregnantType) {
@@ -327,8 +333,15 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     empRequest.pageLoading = false;
     this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        if (fieldName === 'employeeID') this.empObj = emp[0][0];
-        else if (fieldName === 'signerID') {
+        if (fieldName === 'employeeID') {
+          this.empObj = emp[0][0];
+
+          this.hrSevice
+            .getOrgUnitID(this.empObj?.orgUnitID ?? this.empObj?.emp?.orgUnitID)
+            .subscribe((res) => {
+              this.empObj.orgUnitName = res.orgUnitName;
+            });
+        } else if (fieldName === 'signerID') {
           this.dayoffObj.signer = emp[0][0]?.employeeName;
           if (emp[0][0]?.positionID) {
             this.hrSevice
@@ -428,7 +441,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     if (this.dayoffObj['kowID']) {
       this.showInfoDayoffType = false;
       for (let i in this.groupKowTypeView) {
-        if(this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID'])){
+        if (this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID'])) {
           this.groupKowTypeView[i].isShow = true;
           this.showInfoDayoffType = true;
         }

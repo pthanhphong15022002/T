@@ -1,3 +1,4 @@
+import { comment } from './../../../../../codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { AuthStore, CacheService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
@@ -135,6 +136,7 @@ export class PopupMoveReasonComponent implements OnInit {
           var obj ={
             listStep: this.listStep,
             instance: this.instances,
+            comment: this.reasonStep.memo,
           };
           this.dialog.close(obj);
         }

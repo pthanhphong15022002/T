@@ -196,7 +196,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
         dataInput: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empDisciplinesProcess',
       },
@@ -218,7 +218,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   }
 
   addDiscipline(evt) {
-    this.currentEmpObj = this.itemDetail.emp;
+    this.currentEmpObj = this.itemDetail?.emp;
     if (evt.id == 'btnAdd') {
       this.HandleEDisciplineInfo(
         evt.text + ' ' + this.view.function.description,

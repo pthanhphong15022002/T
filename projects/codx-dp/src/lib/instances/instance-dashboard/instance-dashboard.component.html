@@ -16,7 +16,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
       [title]="getNameStatus('1')"
-      [value]="countInstances?.countNew"
+      [value]="countInstances?.countNew || 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -28,7 +28,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
       [title]="getNameStatus('2')"
-      [value]="countInstances?.countProcessing ?? 0"
+      [value]="countInstances?.countProcessing || 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -40,7 +40,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
       [title]="getNameStatus('3')"
-      [value]="countInstances?.countSuccess ?? 0"
+      [value]="countInstances?.countSuccess || 0"
     ></count-chart>
   </div>
 </ng-template>
@@ -52,23 +52,29 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
       [title]="getNameStatus('5')"
-      [value]="countInstances?.countFail ?? 0"
+      [value]="countInstances?.countFail || 0"
     ></count-chart>
   </div>
 </ng-template>
 
 <!-- Cơ hội theo giai đoan -->
 <ng-template #templateDetail>
-  <div class="h-100" id="5" title="Count chart -Cơ hội theo giai đoan" style="overflow: hidden;">
-    <div class=" mb-2">
+  <div
+    class="h-100"
+    id="5"
+    title="Count chart -Cơ hội theo giai đoan"
+    style="overflow: hidden"
+  >
+    <div class="mb-2">
       <codx-label
-      class="fs-5 fw-bold"
-      name="header-countStep"
-      [formModel]="formModel"
-      default="Cơ hội theo giai đoạn"
-    ></codx-label>
+        class="fs-5 fw-bold"
+        name="header-countStep"
+        [formModel]="formModel"
+        default="Cơ hội theo giai đoạn"
+      ></codx-label>
     </div>
     <div
+      *ngIf="countStep"
       class="w-100 d-flex justify-content-center"
       style="position: absolute; left: 25%"
     >
@@ -98,7 +104,7 @@
         </div>
       </div>
     </div>
-    <div class="h-100">
+    <div class="h-100"  *ngIf="countStep; else tempNoData">
       <ejs-accumulationchart
         id="donut-container"
         [tooltip]="tooltip"
@@ -123,16 +129,21 @@
 </ng-template>
 <!-- Top nhân viên -->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="6" title="Count chart -Top nhân viên" style="overflow: hidden;">
-    <div class=" mb-2">
+  <div
+    class="w-100 h-100"
+    id="6"
+    title="Count chart -Top nhân viên"
+    style="overflow: hidden"
+  >
+    <div class="mb-2">
       <codx-label
-      class="fs-5 fw-bold"
-      name="header-countStep"
-      [formModel]="formModel"
-      default="Top nhân viên có nhiều cơ hội thành công nhất"
-    ></codx-label>
+        class="fs-5 fw-bold"
+        name="header-countStep"
+        [formModel]="formModel"
+        default="Top nhân viên có nhiều cơ hội thành công nhất"
+      ></codx-label>
     </div>
-    <div class="w-100 d-flex justify-content-center mb-4">
+    <div class="w-100 d-flex justify-content-center mb-4"  *ngIf="countOwners">
       <div class="group-btn" style="z-index: 10">
         <div
           [ngClass]="isTallest ? 'lblDetail' : 'lblRatio'"
@@ -160,7 +171,7 @@
         </div>
       </div>
     </div>
-    <div class="assignchart-group w-100" style="overflow-y: auto;">
+    <div class="assignchart-group w-100" style="overflow-y: auto"  *ngIf="countOwners; else tempNoData">
       <div
         *ngFor="let owner of countOwners; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end h-30px"
@@ -187,16 +198,21 @@
 </ng-template>
 <!-- năng suất-->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="7" title="Count chart - Năng suất" style="overflow: hidden;">
+  <div
+    class="w-100 h-100"
+    id="7"
+    title="Count chart - Năng suất"
+    style="overflow: hidden"
+  >
     <div>
       <codx-label
-      class="fs-5 fw-bold"
-      name="header-countStep"
-      [formModel]="formModel"
-      default="Thống kê năng suất nhân viên"
-    ></codx-label>
+        class="fs-5 fw-bold"
+        name="header-countStep"
+        [formModel]="formModel"
+        default="Thống kê năng suất nhân viên"
+      ></codx-label>
     </div>
-    <div style="overflow-y: auto; max-height: 230px">
+    <div style="overflow-y: auto; max-height: 230px" *ngIf="productivityOwner; else tempNoData">
       <div *ngFor="let productivity of productivityOwner; let i = index">
         <div class="mx-2 my-3">
           <div class="d-flex justify-content-between">
@@ -204,22 +220,30 @@
               <span class="fw-bold">{{ productivity?.name }}</span>
             </div>
             <div class="d-flex align-items-end">
-              <span class="text-gray-400">{{ productivity?.money | currency: 'VND'  }}</span>
+              <span class="text-gray-400">{{
+                productivity?.money | currency : "VND"
+              }}</span>
             </div>
           </div>
           <div class="d-flex align-items-center min-w-200px">
-            <div class="w-100 bg-gray-200 rounded-4" style="height: 15px;">
+            <div class="w-100 bg-gray-200 rounded-4" style="height: 15px">
               <div
                 class="rounded-4"
-                style="height: 15px;"
+                style="height: 15px"
                 role="progressbar"
                 [style.width]="productivity.percentage + '%'"
               >
                 <div
                   class="proress h-100 rounded-4 d-flex align-item-center justify-content-end"
-                  [ngStyle]="i < 3 ? {backgroundColor: '#187de4'} :  {backgroundColor: colorReasonFails}"                
+                  [ngStyle]="
+                    i < 3
+                      ? { backgroundColor: '#187de4' }
+                      : { backgroundColor: colorReasonFails }
+                  "
                 >
-                <span class="fw-bold me-5 text-light">{{productivity.percentage + '%'}}</span>
+                  <span class="fw-bold me-5 text-light">{{
+                    productivity.percentage + "%"
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -231,16 +255,21 @@
 </ng-template>
 <!--Thành công-->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="8" title="Count chart - Thành công" style="overflow: hidden;">
+  <div
+    class="w-100 h-100"
+    id="8"
+    title="Count chart - Thành công"
+    style="overflow: hidden"
+  >
     <div>
       <codx-label
-      class="fs-5 fw-bold"
-      name="header-countStep"
-      [formModel]="formModel"
-      default="Lý do thành công"
-    ></codx-label>
+        class="fs-5 fw-bold"
+        name="header-countStep"
+        [formModel]="formModel"
+        default="Lý do thành công"
+      ></codx-label>
     </div>
-    <div style="overflow-y: auto;  max-height: 130px;">
+    <div style="overflow-y: auto; max-height: 130px" *ngIf="countSuscess; else tempNoDataMin">
       <div *ngFor="let suscess of countSuscess">
         <div class="mx-2 my-2">
           <div class="d-flex justify-content-between">
@@ -272,21 +301,25 @@
         </div>
       </div>
     </div>
-   
   </div>
 </ng-template>
 <!--Thất bại-->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="9" title="Count chart - Thất bại" style="overflow: hidden;">
+  <div
+    class="w-100 h-100"
+    id="9"
+    title="Count chart - Thất bại"
+    style="overflow: hidden"
+  >
     <div>
       <codx-label
-      class="fs-5 fw-bold"
-      name="header-countStep"
-      [formModel]="formModel"
-      default="Lý do thất bại"
-    ></codx-label>
+        class="fs-5 fw-bold"
+        name="header-countStep"
+        [formModel]="formModel"
+        default="Lý do thất bại"
+      ></codx-label>
     </div>
-    <div style=" max-height: 130px; overflow: scroll;">
+    <div style="max-height: 130px; overflow: scroll" *ngIf="countFails; else tempNoDataMin">
       <div *ngFor="let fails of countFails">
         <div class="mx-2 my-2">
           <div class="d-flex justify-content-between">
@@ -323,16 +356,22 @@
 
 <!--Thống kê-->
 <ng-template #templateDetail>
-  <div class="w-100 h-100" id="10" title="Count chart - Thống kê" style="overflow: hidden;">
+  <div
+    class="w-100 h-100"
+    id="10"
+    title="Count chart - Thống kê"
+    style="overflow: hidden"
+  >
     <div>
       <codx-label
-      class="fs-5 fw-bold"
-      name="header-countStep"
-      [formModel]="formModel"
-      default="Thống kê hiệu suất trong năm"
-    ></codx-label>
+        class="fs-5 fw-bold"
+        name="header-countStep"
+        [formModel]="formModel"
+        default="Thống kê hiệu suất trong năm"
+      ></codx-label>
     </div>
-    <ejs-chart
+    <div *ngIf="data; else tempNoData">
+      <ejs-chart
       style="display: block"
       [chartArea]="chartArea"
       [width]="'90%'"
@@ -357,5 +396,13 @@
         </e-series>
       </e-series-collection>
     </ejs-chart>
+    </div>
   </div>
+</ng-template>
+
+<ng-template #tempNoData>
+  <codx-no-data></codx-no-data>
+</ng-template>
+<ng-template #tempNoDataMin>
+  <codx-no-data [size]="100"></codx-no-data>
 </ng-template>

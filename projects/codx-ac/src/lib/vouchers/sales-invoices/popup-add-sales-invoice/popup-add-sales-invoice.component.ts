@@ -28,6 +28,7 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
+import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -405,15 +406,29 @@ export class PopupAddSalesInvoiceComponent
       }
     }
 
-    // add a new row after pressing tab on the last column 
+    // add a new row after pressing tab on the last column
     // if (e.type === "add") {
     //   this.onClickAddRow();
     // }
   }
 
+  onChangeMF(e): void {
+    console.log(
+      'onChangeMF',
+      e.filter((m) => !m.disabled)
+    );
+    for (const mf of e) {
+      if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
+        mf.disabled = true;
+      }
+    }
+  }
+
   // ❌
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
+    console.log(e);
+
     if (e.key !== 'Tab') {
       return;
     }
@@ -440,6 +455,13 @@ export class PopupAddSalesInvoiceComponent
           .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
           .focus();
       }
+    }
+  }
+
+  @HostListener('click', ['$event.target'])
+  onClick(e: HTMLElement): void {
+    if (this.grid.gridRef.isEdit && !e.closest('.e-gridcontent')) {
+      this.grid.endEdit();
     }
   }
   //#endregion

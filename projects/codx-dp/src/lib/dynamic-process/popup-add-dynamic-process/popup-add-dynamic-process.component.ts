@@ -15,10 +15,8 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input,
   OnInit,
   Optional,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -54,16 +52,13 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
-import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
-import { lastValueFrom, firstValueFrom, Observable, finalize, map } from 'rxjs';
-import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
+import { firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
-import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',

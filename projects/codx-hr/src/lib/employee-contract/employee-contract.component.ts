@@ -215,7 +215,6 @@ export class EmployeeContractComponent extends UIComponent {
 
   clickMF(event, data) {
     this.itemDetail = data;
-
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
