@@ -118,6 +118,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
     this.options.gridViewName = 'grvKudosTrans';
     this.options.formName = 'KudosTrans';
     this.options.funcID = this.funcID;
+    this.options.page = 1;
     this.setPredicate();
   }
 
@@ -268,8 +269,8 @@ export class AchievementComponent extends UIComponent implements OnInit {
   }
 
   setPredicate() {
-    this.options.predicate = '(TransType=@0) && ';
-    this.options.dataValue = '3';
+    this.options.predicate = '';
+    this.options.dataValue = '';
     this.predicate = '';
     this.dataValue = '';
     var arrTemp = [];
@@ -299,7 +300,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
         value: this.emloyeeID,
         dropdownCalendar: false,
       });
-    let i = 1;
+    let i = 0;
     var t = this;
     arrTemp.forEach(function (element) {
       if (!element) return;
@@ -348,7 +349,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
       } else t.dataValue = dtValue;
     });
     this.options.predicate += this.predicate;
-    this.options.dataValue += ';' + this.dataValue;
+    this.options.dataValue += this.dataValue;
 
     this.loadList = true;
     if (this.listview) {
