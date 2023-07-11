@@ -55,12 +55,24 @@ export class PopupEmployeeBenefitComponent
     this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
-    this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    if (data.data.empObj) {
+      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    }
     this.actionType = data?.data?.actionType;
     this.currentEJobSalaries = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
   initForm() {
+    this.hrSevice
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        if (res.orgUnitName) {
+          this.employeeObj.orgUnitName = res.orgUnitName;
+        }
+      });
+
     this.hrSevice
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
@@ -122,7 +134,16 @@ export class PopupEmployeeBenefitComponent
     empRequest.pageLoading = false;
     this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'employeeID') {
+          this.employeeObj = emp[0][0];
+          this.hrSevice
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              this.employeeObj.orgUnitName = res.orgUnitName;
+            });
+        }
         if (fieldName === 'SignerID') {
           this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
             if (emp[1] > 0) {

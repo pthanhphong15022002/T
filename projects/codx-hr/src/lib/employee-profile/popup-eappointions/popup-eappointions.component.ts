@@ -56,16 +56,23 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.isUseEmployee = data?.data?.isUseEmployee;
-    if(data?.data?.appointionObj)
+    if (data?.data?.appointionObj)
       this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
 
-    if(data?.data?.empObj)
+    if (data?.data?.empObj)
       this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
     this.formModel = dialog.formModel;
-
   }
 
   initForm() {
+    this.hrService
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        this.employeeObj.orgUnitName = res.orgUnitName;
+      });
+
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -74,14 +81,11 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           this.idField
         )
         .subscribe((res: any) => {
-          if (res)
-          {
-            debugger
-            if (res.key) 
-              this.autoNumField = res.key;
+          if (res) {
+            if (res.key) this.autoNumField = res.key;
             this.EAppointionObj = res.data;
             this.EAppointionObj.effectedDate = null;
-            if(this.employeeObj){
+            if (this.employeeObj) {
               this.EAppointionObj.employeeID = this.employeeObj.employeeID;
               this.EAppointionObj.orgUnitID = this.employeeObj.positionID;
               this.EAppointionObj.orgUnitID = this.employeeObj.orgUnitID;
@@ -94,9 +98,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
             this.cr.detectChanges();
           }
         });
-    } 
-    else if (this.actionType === 'edit' || this.actionType === 'copy')
-    {
+    } else if (this.actionType === 'edit' || this.actionType === 'copy') {
       this.formGroup.patchValue(this.EAppointionObj);
       this.formModel.currentData = this.EAppointionObj;
       this.isAfterRender = true;
@@ -112,7 +114,16 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'employeeID') {
+          this.employeeObj = emp[0][0];
+          this.hrService
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              this.employeeObj.orgUnitName = res.orgUnitName;
+            });
+        }
         if (fieldName === 'SignerID') {
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
             if (emp[1] > 0) {
@@ -162,8 +173,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     //Update Employee Information when CRUD then render
     if (this.employId != null)
       this.getEmployeeInfoById(this.employId, 'employeeID');
-
-  
   }
 
   handleSelectEmp(evt) {

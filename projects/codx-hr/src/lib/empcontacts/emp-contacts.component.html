@@ -1,32 +1,174 @@
-<codx-views #view service="HR" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-  method="GetListEmployeeAsync" [views]="views" [selectedFirst]="true" idField="employeeID" [buttons]="buttons"
+<codx-views #view service="HR" [assemblyName]="assemblyName" [className]="className" [idField]="idField"
+  [method]="method" [views]="views" [entityName]="entityName" [selectedFirst]="true" [buttons]="buttons"
   [viewActiveType]="'2'" (selectedChange)="selectedChange($event)">
 </codx-views>
+
+
+<!-- #region ListView-Mode -->
+<!-- header -->
+<ng-template #headerTemplate let-data>
+  <div class="d-flex w-100 ps-2 pe-4">
+    <div class="w-40 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="EmployeeName" [setRequire]="false" [formModel]="view.formModel"
+        [gridViewName]="'grvEmpContacts'" [formName]="'EmpContacts'" [default]="'Họ và tên'"></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="BirthDay" [setRequire]="false" [formModel]="view.formModel"
+        [gridViewName]="'grvEmpContacts'" [formName]="'EmpContacts'" [default]="'Ngày sinh'"></codx-label>
+    </div>
+    <div class="w-20 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="Phone" [setRequire]="false" [formModel]="view.formModel" [gridViewName]="'grvEmpContacts'"
+        [formName]="'EmpContacts'" [default]="'Di động'"></codx-label>
+    </div>
+    <div class="w-20 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="Email" [setRequire]="false" [formModel]="view.formModel" [gridViewName]="'grvEmpContacts'"
+        [formName]="'EmpContacts'" [default]="'Email'"></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="JoinedOn" [setRequire]="false" [formModel]="view.formModel"
+        [gridViewName]="'grvEmpContacts'" [formName]="'EmpContacts'" [default]="'Ngày vào làm'"></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="Status" [setRequire]="false" [formModel]="view.formModel" [gridViewName]="'grvEmpContacts'"
+        [formName]="'EmpContacts'" [default]="'Trạng thái'"></codx-label>
+    </div>
+  </div>
+</ng-template>
+<!-- end header -->
+
+<!-- template list -->
+<ng-template #templateList let-data>
+  <div class="d-flex align-items-center border-bottom">
+    <!-- Nhân viên -->
+    <div class="w-40 p-3 ">
+      <div class="d-flex align-items-center">
+        <codx-img class="me-3" [width]="30" [objectId]="data.employeeID" [objectName]="data.employeeName"
+          objectType="HR_Employees" [referType]="'avt'">
+        </codx-img>
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="d-flex align-items-center">
+            <div class="text-dark fw-bold me-2">{{ data.employeeName }}</div>
+          </div>
+          <div class="mt-1">
+            <span class="text-gray-600 fs-7">
+              <span #positionName
+                [innerHTML]=" data.positionName| formatvalue: view.formModel:'PositionName' | async"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Ngày sinh -->
+    <div class="w-10 p-3">
+      <div class="d-flex align-items-center1">
+        <span class="data-text-color" *ngIf="data.birthday; else noBirthDay">
+          {{data.birthday| fmDT}}
+        </span>
+        <ng-template #noBirthDay>
+          <span class="place-holder">
+            {{grvSetup['Birthday']?.headerText}}
+          </span>
+        </ng-template>
+      </div>
+    </div>
+    <!-- Di động -->
+    <div class="w-20 p-3">
+      <div class="d-flex align-items-center">
+        <span class="icon-phone_android icon-16 me-2"></span>
+        <span class="data-text-color" *ngIf="data.phone; else noPhone">
+          <span [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
+        </span>
+        <ng-template #noPhone>
+          <span class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
+        </ng-template>
+      </div>
+    </div>
+    <!-- Email -->
+    <div class="w-20 p-3">
+      <div class="d-flex align-items-center ">
+        <span class="icon-email icon-16 me-2"></span>
+        <span class="data-text-color" *ngIf="data.email; else noEmail">
+          <span class="line-clamp line-clamp-1" [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
+        </span>
+        <ng-template #noEmail>
+          <span class="place-holder">{{grvSetup['Email']?.headerText}}</span>
+        </ng-template>
+      </div>
+    </div>
+    <!-- Ngày vào làm -->
+    <div class="w-10 p-3">
+      <div class="d-flex align-items-center">
+        <span class="data-text-color" *ngIf="data.joinedOn; else noJoinedOn">
+          {{data.joinedOn | fmDT}}
+        </span>
+        <ng-template #noJoinedOn>
+          <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
+        </ng-template>
+      </div>
+    </div>
+    <!-- Tình trạng -->
+    <div class="w-10 p-3">
+      <codx-vll [value]="data.status" [name]="'HR003'" [showText]="true" [showBgColor]="true"
+        [className]="'badge badge-success badge-sm badge-inline'"></codx-vll>
+    </div>
+  </div>
+</ng-template>
+<!-- end template list -->
+<!-- #endregion ListView-Mode -->
+
+
+
+
+
+
+
+
+
 
 <ng-template #cardTemp let-data>
   <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
     imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" [title]="data.employeeName"
-    [imageObjName]="data.employeeName" [subTitle]="data.positionName? data.positionName: 
-                        (data.positionID? data.positionID : placeholder('PositionID'))" [dataItem]="data"
-    [imageObjType]="view.formModel.entityName" [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')"
-    [footer]="footer" [hideMF]="true">
+    [dataItem]="data" [imageObjType]="view.formModel.entityName" [hideMF]="true" [footer]="footer"
+    [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [imageObjName]="data.employeeName"
+    [subTitle]="data.positionName? data.positionName: 
+                        (data.positionID? data.positionID : placeholder('PositionID'))">
   </codx-card-center>
+  <ng-template #footer let-data>
+    <div class="d-flex align-items-center flex-center d-phone">
+      <!-- <span class="icon-phone_android icon-16 me-2"></span> -->
+      <span class="text-gray-700">
+        <span #phone [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
+      </span>
+    </div>
+    <div class="d-flex align-items-center flex-center d-mail">
+      <!-- <span class="icon-email icon-16 me-2"> </span> -->
+      <span class="text-gray-700">
+        <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
+      </span>
+    </div>
+  </ng-template>
 </ng-template>
 
-<ng-template #footer let-data>
-  <div class="d-flex align-items-center flex-center d-phone">
-    <!-- <span class="icon-phone_android icon-16 me-2"></span> -->
-    <span class="text-gray-700">
-      <span #phone [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
-    </span>
-  </div>
-  <div class="d-flex align-items-center flex-center d-mail">
-    <!-- <span class="icon-email icon-16 me-2"> </span> -->
-    <span class="text-gray-700">
-      <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
-    </span>
+
+
+
+<ng-template #tmpTree let-data>
+  <div class="d-flex align-items-center py-1">
+    <i class="icon-home me-2"></i><span>{{ data.orgUnitName }}</span>
   </div>
 </ng-template>
+<ng-template #tmpTreeItemDetail let-data>
+  <lib-employee-list-by-org [showManager]="false" [formModel]="view.formModel" [editable]="false" rowHeight="50"
+    modeView="contact" [orgUnitID]="itemSelected?.orgUnitID" [showRowNumber]="true">
+  </lib-employee-list-by-org>
+</ng-template>
+
+<ng-template #tmpTreeItemDetailCard let-data>
+  <lib-org-emp-contact-detail-card [orgUnitID]="itemSelected?.orgUnitID" [grvSetup]="grvSetup"
+    [formModel]="view.formModel"></lib-org-emp-contact-detail-card>
+</ng-template>
+
+
 
 <ng-template #itemEmployee let-data>
   <div class="d-flex align-items-center emp-list">
@@ -38,17 +180,9 @@
         <div class="text-dark fw-bold me-2">{{ data.employeeName }}</div>
       </div>
       <div class="mt-1">
-        <!-- <div class="text-dark-50 font-size-sm mt-1" *ngIf="data.positionName != '---'">
-          {{data.positionName}}</div>
-        <div class="text-muted font-size-sm mt-1" *ngIf="data.positionName != '---'">
-          <codx-label formName="Employees" name="" default="Bộ phận">
-          </codx-label>
-        </div> -->
-
         <span class="text-gray-600 fs-7">
-          <span #positionName [innerHTML]=" data.positionName
-        | formatvalue: view.formModel:'PositionName'
-          | async"></span>
+          <span #positionName
+            [innerHTML]=" data.positionName| formatvalue: view.formModel:'PositionName' | async"></span>
         </span>
       </div>
     </div>
@@ -63,51 +197,49 @@
 <ng-template #itemBirthDay let-data>
   <div class="d-flex flex-column employee-info">
     <div class="d-flex align-items-center1">
-      <span class="text-gray-600">
-        <span #birthday [innerHTML]="data.birthday
-        | formatvalue: view.formModel:'Birthday'
-        | async"></span>
+      <span class="data-text-color" *ngIf="data.birthday; else noBirthDay">
+        {{data.birthday| fmDT}}
       </span>
+      <ng-template #noBirthDay>
+        <span class="place-holder">
+          {{grvSetup['Birthday']?.headerText}}
+        </span>
+      </ng-template>
     </div>
   </div>
 </ng-template>
 
 <ng-template #itemJoinOn let-data>
   <div class="d-flex align-items-center">
-    <span class="text-gray-600">
-      <span #joinedOn [innerHTML]="data.joinedOn | formatvalue: view.formModel:'JoinedOn' | async"></span>
+    <span class="data-text-color" *ngIf="data.joinedOn; else noJoinedOn">
+      {{data.joinedOn | fmDT}}
     </span>
+    <ng-template #noJoinedOn>
+      <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
+    </ng-template>
   </div>
 </ng-template>
 
 <ng-template #itemPhone let-data>
   <div class="d-flex align-items-center employee-add">
     <span class="icon-phone_android icon-16 me-2"></span>
-    <span class="text-gray-600">
-      <span #phone [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
+    <span class="data-text-color" *ngIf="data.phone; else noPhone">
+      <span [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
     </span>
+    <ng-template #noPhone>
+      <span class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
+    </ng-template>
   </div>
 </ng-template>
 
 <ng-template #itemEmail let-data>
   <div class="d-flex align-items-center employee-email">
     <span class="icon-email icon-16 me-2"></span>
-    <span class="text-gray-600">
+    <span class="data-text-color" *ngIf="data.email; else noEmail">
       <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
     </span>
+    <ng-template #noEmail>
+      <span class="place-holder">{{grvSetup['Email']?.headerText}}</span>
+    </ng-template>
   </div>
-</ng-template>
-
-<ng-template #tmpTree let-data>
-  <div class="d-flex align-items-center py-1">
-    <i class="icon-home me-2"></i><span>{{ data.orgUnitName }}</span>
-  </div>
-</ng-template>
-<ng-template #tmpTreeItemDetail let-data>
-  <lib-employee-list-by-org [showManager]="false" [formModel]="view.formModel" [editable]="false" rowHeight="50"
-    modeView="contact" [orgUnitID]="itemSelected?.orgUnitID" [showRowNumber]="true"></lib-employee-list-by-org></ng-template>
-
-<ng-template #tmpTreeItemDetailCard let-data>
-  <lib-org-emp-contact-detail-card [orgUnitID]="itemSelected?.orgUnitID" [grvSetup]="grvSetup" 
-    [formModel]="view.formModel"></lib-org-emp-contact-detail-card>
 </ng-template>

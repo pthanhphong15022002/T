@@ -92,6 +92,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   isTemplate: boolean; // signfile dạng template
   refType: string; // EntityName của nghiệp vụ mặc định là "ES_SignFiles"
+  refID: any;
 
   disableContinue: boolean = false;
   disableCateID: boolean = false;
@@ -113,7 +114,6 @@ export class PopupAddSignFileComponent implements OnInit {
   nextClick = false;
   isReleasing = false;
   typeCategory: any;
-  refID: any;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -146,10 +146,10 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
     this.isTemplate = data?.data?.isTemplate ? true : false;
-    this.refType = data?.data?.refType ?? 'ES_SignFiles';
-    this.refID = data?.data?.refID;
+    this.refType = data?.data?.refType ?? 'ES_SignFiles';// Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
+    this.refID = data?.data?.refID;// Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
     this.typeCategory =
-      this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType;
+      this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType;//Dùng để lấy Category của Module
     if (this.modeView == '2') {
       this.disableCateID = true;
     }
@@ -177,7 +177,7 @@ export class PopupAddSignFileComponent implements OnInit {
         (this.data?.approveStatus != 1 && this.data?.approveStatus != 2) ||
         this.modeView == '1'
       ) {
-        this.currentTab = 2;
+        this.currentTab = 1;
         this.processTab = 3;
       }
     }

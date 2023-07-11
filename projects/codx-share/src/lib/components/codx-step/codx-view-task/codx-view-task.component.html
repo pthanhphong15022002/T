@@ -12,7 +12,7 @@
   <div
     class="d-flex justify-content-between align-items-center w-100 py-1 mt-2"
   >
-    <span class="fs-3 fw-bold">{{ title }}</span>
+    <span class="fw-bold text-dark fs-5">{{ title }}</span>
     <span
       class="icon-close icon-18 cursor-pointer p-1"
       (click)="closePopup()"
@@ -145,18 +145,18 @@
 </ng-template>
 
 <ng-template #nav>
-  <div class="d-flex justify-content-between align-items-center py-1">
-    <div class="d-flex align-items-center">
-      <div class="icon-container" [ngStyle]="getColor(dataView)">
+  <div class="d-flex justify-content-between align-items-top py-1">
+    <div class="d-flex align-items-center ms-5">
+      <div class="icon-container me-4" [ngStyle]="getColor(dataView)">
         <span
-          class="icon-22 font-weight-bold"
+          class="icon-20"
           [ngClass]="getIconTask(dataView)"
         ></span>
       </div>
-      <div class="ms-2">
-        <span class="fs-4 fw-bold text-dark">{{
+      <div class="d-flex flex-column">
+        <div class="fs-5-sm text-dark fw-bold mb-5px">{{
           dataView?.taskName || dataView?.taskGroupName || dataView?.stepName
-        }}</span>
+        }}</div>
         <ng-container [ngTemplateOutlet]="describe"></ng-container>
       </div>
     </div>
@@ -180,11 +180,10 @@
   <hr />
   <div *ngIf="type == 'P'">
     <codx-label
-      class="fs-5"
+      class="fw-bold text-dark"
       fiedName=""
       [formModel]="frmModel"
       default="Trường nhập liệu:"
-      style="font-weight: 500"
     >
     </codx-label>
     <!-- <ul *ngIf="dataView?.fields?.length > 0">
@@ -237,13 +236,12 @@
     class="d-flex justify-content-start"
     *ngIf="type !== 'G' && type !== 'P'"
   >
-    <div class="mt-4">
+    <div class="mt-2">
       <codx-label
-        class="fs-5 me-3"
+        class="text-dark fw-bold me-3"
         fiedName=""
         [formModel]="frmModel"
         default="Tài liệu:"
-        style="font-weight: 500"
       >
       </codx-label>
     </div>
@@ -274,11 +272,10 @@
 
   <div *ngIf="type !== 'P'">
     <codx-label
-      class="fs-5"
+      class="text-dark fw-bold me-3"
       fiedName="memo"
       [formModel]="frmModel"
       default="Ghi chú: "
-      style="font-weight: 500"
     >
     </codx-label>
     <p [innerHTML]="dataView?.memo"></p>
@@ -288,20 +285,18 @@
   <div *ngIf="type !== 'P'">
     <codx-label
       *ngIf="type !== 'G'"
-      class="fs-5"
+      class="fs-6 fw-bold me-3"
       fiedName="parentID"
       [formModel]="frmModel"
       default="Công việc liên kết:"
-      style="font-weight: 500"
     >
     </codx-label>
     <codx-label
       *ngIf="type === 'G'"
-      class="fs-5"
+      class="text-dark fw-bold me-3"
       fiedName=""
       [formModel]="frmModel"
       default="Công việc:"
-      style="font-weight: 500"
     >
     </codx-label>
     <div>
@@ -316,7 +311,7 @@
           ></span>
         </div>
         <div class="d-flex align-items-center ms-2">
-          <span class="" style="font-size: 1.2rem; font-weight: 500">{{
+          <span class="fs-6 fw-bold">{{
             task?.taskName
           }}</span>
         </div>
@@ -329,13 +324,12 @@
   <!-- Chủ quy trình -->
   <div class="d-flex align-items-center" *ngIf="type == 'M' || type == 'B'">
     <codx-label
-      class="fs-5 me-4"
+      class="text-dark fw-bold me-4"
       fiedName="roles"
       [formModel]="frmModel"
       [default]="
         type == 'M' ? 'Người phụ trách/chủ trì:' : 'Người đi công tác:'
       "
-      style="font-weight: 500"
     >
     </codx-label>
     <div>
@@ -349,11 +343,10 @@
 
   <div class="d-flex align-items-center" *ngIf="type != 'M' && type != 'B'">
     <codx-label
-      class="fs-5 font-weight-normal me-4"
+      class="fw-bold text-dark me-4"
       fiedName="roles"
       [formModel]="frmModel"
       default="Người phụ trách:"
-      style="font-weight: 500"
     >
     </codx-label>
     <div>
@@ -367,7 +360,7 @@
   <!-- Người tham gia -->
   <div class="d-flex mt-4" *ngIf="type == 'M' || type == 'B'">
     <codx-label
-      class="fs-5 font-weight-normal me-4"
+      class="fw-bold text-dark me-4"
       fiedName="roles"
       [formModel]="frmModel"
       [default]="type == 'M' ? 'Người tham gia:' : 'Người đi cùng:'"
@@ -385,11 +378,10 @@
   <!-- Người liên quan -->
   <div class="d-flex mt-4" *ngIf="type == 'P'">
     <codx-label
-      class="fs-5 font-weight-normal me-4"
+      class="fw-bold text-dark me-4"
       fiedName="roles"
       [formModel]="frmModel"
       default="Người liên quan:"
-      style="font-weight: 500"
     >
     </codx-label>
     <div *ngIf="connection.length > 0">
@@ -498,19 +490,16 @@
 <ng-template #showUser let-data="users">
   <div>
     <ng-container *ngFor="let item of data; index as i">
-      <div class="user-mini-nav">
-        <span>
+      <div class="d-flex align-item-center">
+        <span class="me-3">
           <codx-img
             [width]="30"
-            class="me-2"
             [objectId]="item?.objectID"
             objectType="item?.objectType"
             [objectName]="item?.objectName"
           ></codx-img>
         </span>
-        <div>
-          <h4 class="m-0">{{ item?.objectName }}</h4>
-        </div>
+        <div class="fw-bold">{{ item?.objectName }}</div>
       </div>
     </ng-container>
   </div>

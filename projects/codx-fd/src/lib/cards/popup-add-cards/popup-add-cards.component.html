@@ -45,7 +45,7 @@
                             <codx-label [formModel]="dialog.formModel" name="Behavior" default="Qui tắc ứng xử">
                             </codx-label>
                             <codx-input type="combobox" name="Behaviors_Grp"
-                                [crrValue]="form.controls['behavior'].value" field="behavior"
+                                [crrValue]="form.controls['behavior']?.value" field="behavior"
                                 [refValue]="'Behaviors_Grp'" (valueChange)="valueChange($event)">
                             </codx-input>
                         </div>
@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <codx-label [formModel]="dialog.formModel" name="Behavior" default="Hành vi ứng xử">
                             </codx-label>
-                            <codx-input type="combobox" name="Behaviors" [crrValue]="form.controls['behavior'].value"
+                            <codx-input type="combobox" name="Behaviors" [crrValue]="form.controls['behavior']?.value"
                                 field="behavior" [refValue]="'Behaviors'" (valueChange)="valueChange($event)">
                             </codx-input>
                         </div>

@@ -254,7 +254,10 @@
                 "
               ></span>
             </div>
-            <div class="text-gray-700" *ngIf="empObj?.orgUnitID">
+            <span class="text-gray-700" *ngIf="empObj.orgUnitName">{{
+              empObj?.orgUnitName
+            }}</span>
+            <!-- <div class="text-gray-700" *ngIf="empObj?.orgUnitID">
               <span
                 [innerHTML]="
                   empObj?.orgUnitID
@@ -262,7 +265,7 @@
                     | async
                 "
               ></span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
