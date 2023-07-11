@@ -1188,4 +1188,15 @@ export class CodxCmService {
       bussinessID
     );
   }
+
+  //#region target and targetLines
+  getTargetAndLinesAsync(bussinessID) {
+    return this.api.exec<any>(
+      'CM',
+      'TargetsBusiness',
+      'GetTargetAndLinesAsync',
+      bussinessID
+    );
+  }
+  //#region
 }
