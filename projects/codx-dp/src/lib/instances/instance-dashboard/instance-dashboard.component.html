@@ -74,7 +74,7 @@
       ></codx-label>
     </div>
     <div
-      *ngIf="isQuantity; else tempNoData"
+      *ngIf="countStep"
       class="w-100 d-flex justify-content-center"
       style="position: absolute; left: 25%"
     >
@@ -104,7 +104,7 @@
         </div>
       </div>
     </div>
-    <div class="h-100">
+    <div class="h-100"  *ngIf="countStep; else tempNoData">
       <ejs-accumulationchart
         id="donut-container"
         [tooltip]="tooltip"
