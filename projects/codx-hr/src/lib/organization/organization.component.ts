@@ -301,8 +301,8 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   viewChanged(event: any) {
-    // if (this.viewActive !== event.view.id) {
-    if (this.viewActive !== event.view.id && this.flagLoaded) {
+    if (this.viewActive !== event.view.id) {
+      // if (this.viewActive !== event.view.id && this.flagLoaded) {
       if (event?.view?.id === '1') {
         this.view.dataService.data = [];
         this.view.dataService.parentIdField = '';
@@ -319,7 +319,7 @@ export class OrgorganizationComponent extends UIComponent {
       }
 
       //check update data when CRUD or not
-      this.flagLoaded = false;
+      // this.flagLoaded = false;
       this.view.dataService.page = 0;
 
       //Prevent load data when click same id
