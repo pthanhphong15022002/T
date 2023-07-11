@@ -860,6 +860,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['taskGroupID'] = groupID || null;
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
+    task['dependRule'] = "0";
 
     let taskOutput = await this.openPopupTask('add', task, groupID);
     if (taskOutput?.event.task) {
@@ -945,6 +946,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       taskCopy['progress'] = 0;
       taskCopy['isTaskDefault'] = false;
       taskCopy['requireCompleted'] = false;
+      taskCopy['dependRule'] = "0";
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskCopy?.taskType
       );
