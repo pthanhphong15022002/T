@@ -68,6 +68,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() currentUser;  
   @Input() reloadedMF=true;
   @Input() sharedView=false;
+  @Input() adminRole=false;
+  @Input() showOKRMF=true;
   @Input() value=new OM_Statistical();
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> = new EventEmitter();
   @Output('updateOKRPlans') updateOKRPlans: EventEmitter<any> = new EventEmitter();
@@ -352,7 +354,13 @@ export class OkrTargetsComponent implements OnInit {
         this.showOB(ob, e?.text);
         break;
       case OMCONST.MFUNCID.Edit: {
-        this.editOB(ob, e?.text + ' ' + this.obTitle);
+        if(this.adminRole || this.fullRoleCheck(ob) ){
+          this.editOB(ob, e?.text + ' ' + this.obTitle);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
       case OMCONST.MFUNCID.Copy: {
@@ -360,22 +368,46 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.Delete: {
-        this.deleteOB(ob);
+        if(this.adminRole || this.fullRoleCheck(ob) ){
+          this.deleteOB(ob);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
       case OMCONST.MFUNCID.OBEditKRWeight: {
-        this.editOKRWeight(ob, e?.text);
+        if(this.adminRole || this.fullRoleCheck(ob) ){
+          this.editOKRWeight(ob, e?.text);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
       //phân bổ OB
       case OMCONST.MFUNCID.OBDistribute: {
-        this.distributeOKR(ob, e?.text);
+        if(this.adminRole || this.fullRoleCheck(ob) ){
+          this.distributeOKR(ob, e?.text);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
 
       //phân công OB
       case OMCONST.MFUNCID.OBAssign: {
-        this.assignmentOKR(ob, e?.text);
+        if(this.adminRole || this.fullRoleCheck(ob) ){
+          this.assignmentOKR(ob, e?.text);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
     }
@@ -386,16 +418,35 @@ export class OkrTargetsComponent implements OnInit {
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.Edit: {
-        this.editKR(kr, popupTitle, isSKR);
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.editKR(kr, popupTitle, isSKR);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         //this.viewKR(kr, popupTitle, isSKR);
         break;
       }
       case OMCONST.MFUNCID.Copy: {
-        this.copyKR(kr, popupTitle, isSKR);
+        
+        if(true){
+          this.copyKR(kr, popupTitle, isSKR);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
       case OMCONST.MFUNCID.Delete: {
-        this.deleteKR(kr, isSKR);
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.deleteKR(kr, isSKR);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
 
@@ -406,34 +457,72 @@ export class OkrTargetsComponent implements OnInit {
       }
       case OMCONST.MFUNCID.KRCheckIn:
       case OMCONST.MFUNCID.SKRCheckIn: {
-        this.checkIn(kr, e?.text,null);
+        
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.checkIn(kr, e?.text,null);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
       case OMCONST.MFUNCID.KRReviewCheckIn: {
-        this.checkIn(kr, e?.text,'2');
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.checkIn(kr, e?.text,'2');
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
 
       case OMCONST.MFUNCID.KRChagneAssignTarget: {
-        this.changeAssignTarget(kr, e?.text);
+        
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.changeAssignTarget(kr, e?.text);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
 
       case OMCONST.MFUNCID.KREditSKRWeight: {
-        this.editSKRWeight(kr, e?.text);
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.editSKRWeight(kr, e?.text);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
       //phân bổ KR
       case OMCONST.MFUNCID.KRDistribute: {
-        this.distributeOKR(kr, e?.text);
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.distributeOKR(kr, e?.text);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
 
       //phân công KR
       case OMCONST.MFUNCID.SKRAssign:
       case OMCONST.MFUNCID.KRAssign: {
-        this.assignmentOKR(kr, e.text);
-        //this.distributeOKR(kr, e?.text);
+        if(this.adminRole || this.fullRoleCheck(kr) ){
+          this.assignmentOKR(kr, e.text);
+          //this.distributeOKR(kr, e?.text);
+        }
+        else{
+          this.notificationsService.notifyCode('SYS032');
+          return;
+        }
         break;
       }
       //Giao việc
@@ -641,7 +730,16 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//
   //---------------------------------------------------------------------------------//
-
+  fullRoleCheck(okr: any) {
+    if (
+      okr?.owner == this.currentUser?.userID ||
+      okr?.createdBy == this.currentUser?.userID
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//

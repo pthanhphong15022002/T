@@ -1193,6 +1193,9 @@ export class CalendarNotesComponent
     var isPin = !data.isPin;
     data.isPin = isPin;
     data.isNote = true;
+    if ((data as any).data != null) {
+      data.createdOn = (data as any).data.createdOn;
+    }
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         data?.transID,

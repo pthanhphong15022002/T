@@ -1698,7 +1698,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           signFile.recID = datas.recID;
           signFile.title = datas.title;
           signFile.categoryID = res2?.categoryID;
-          signFile.refId = datas.recID;
+          signFile.refID = datas.recID;
           signFile.refDate = datas.refDate;
           signFile.refNo = datas.refNo;
           signFile.priority = datas.urgency;

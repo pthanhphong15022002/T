@@ -12,8 +12,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ApiHttpService, DialogRef } from 'codx-core';
-import { log } from 'console';
-import {ImageViewer,FullScreenViewer} from 'iv-viewer';
+import { ImageViewer,FullScreenViewer } from 'iv-viewer';
 import { environment } from 'src/environments/environment';
 @Component({
     selector: 'codx-image-viewer',
@@ -181,7 +180,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         return this.images
             && this.images.length > 0;
     }
-
+    fileSelected:any = null;
     inicializarImageViewer() {
         let _index = 0;
         _index =  this.images.findIndex(x => x.recID == this.fileID);
@@ -193,9 +192,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
             this.indexImage = 0;
         }
         this.totalImagens = this.images.length;
-
         if (this.viewer) {
-
             this.wrapper.querySelector('.total').innerHTML = this.totalImagens;
             return;
         }
@@ -212,7 +209,42 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     showImage() {
         this.prepararTrocaImagem();
         let imgObj = this.isURlImagem();
+        this.fileSelected = this.images[this.indexImage];
         this.viewer.load(imgObj, imgObj);
+        if(this.fileSelected.referType == "video"){
+                var ele = document.getElementById(this.idContainer).getElementsByClassName('iv-image-wrap');
+                if(ele){
+                    var eleVideo = document.createElement('video');
+                    var eleSource = document.createElement('source');
+
+                    eleVideo.className = "iv-image-wrap iv-large-image w-100 h-100 ";
+                    eleVideo.style.width = "800";
+                    eleVideo.style.height = "500";
+                    eleVideo.style.minHeight = "";
+                    eleVideo.autoplay = true;
+
+                    eleSource.src = imgObj;
+                    eleSource.type = "video/mp4";
+                    eleVideo.appendChild(eleSource);
+
+                    ele[0].children[0].remove();
+                    ele[0].appendChild(eleVideo);
+                    this.setStyleClass('iv-loader', 'visibility', 'hidden');
+                    //this.setStyleClass('options-image-viewer', 'visibility', 'hidden');
+                }
+        }
+        else
+        {
+            var ele = document.getElementById(this.idContainer).getElementsByClassName('iv-image-wrap');
+            if(ele)
+            {
+                var length = ele[0].children.length;
+                for (let index = 0; index < length; index++) {
+                    var element = ele[index];
+                    element.tagName.toLocaleLowerCase() == "video" ? element.remove() : null;
+                } 
+            }
+        }
         this.curSpan.innerHTML = this.indexImage + 1;
     }
 
@@ -243,7 +275,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     limparCacheElementos() {
-
         const container = document.getElementById(this.idContainer);
         const iframeElement = document.getElementById(this.getIdIframe());
         const ivLargeImage = document.getElementById(this.idContainer).getElementsByClassName('iv-large-image').item(0);
@@ -416,5 +447,8 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         if(this.dialog){
             this.dialog.close();
         }
+    }
+    video(){
+        
     }
 }
