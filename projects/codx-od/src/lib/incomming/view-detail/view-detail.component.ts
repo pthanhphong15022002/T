@@ -1026,7 +1026,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                   'OD',
                                   item?.recID, 
                                   this.formModel.entityName,
-                                  '',
+                                  null,
+                                  null,
                                 )
                                 .subscribe((res3) => {
                                     if (res3) {

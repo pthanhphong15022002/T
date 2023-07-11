@@ -28,6 +28,7 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
+import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -404,17 +405,63 @@ export class PopupAddSalesInvoiceComponent
         this.setPredicateByIDIM4(e.data.idiM4);
       }
     }
+
+    // add a new row after pressing tab on the last column
+    // if (e.type === "add") {
+    //   this.onClickAddRow();
+    // }
+  }
+
+  onChangeMF(e): void {
+    console.log(
+      'onChangeMF',
+      e.filter((m) => !m.disabled)
+    );
+    for (const mf of e) {
+      if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
+        mf.disabled = true;
+      }
+    }
   }
 
   // ❌
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
-    if (e.shiftKey || e.key !== 'Tab') {
+    console.log(e);
+
+    if (e.key !== 'Tab') {
       return;
     }
 
-    if (document.activeElement.className === 'e-tab-wrap') {
+    if (!e.shiftKey && document.activeElement.className === 'e-tab-wrap') {
       document.getElementById('btnAddLine').focus();
+    }
+
+    if (e.shiftKey) {
+      if (
+        document.activeElement.className === 'e-lastrowcell' ||
+        document.activeElement.id === 'gridViewV2'
+      ) {
+        document
+          .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
+          .focus();
+
+        return;
+      }
+
+      const nodes = document.querySelectorAll('ejs-grid #dropdownMenuButton');
+      if (nodes[nodes.length - 1] === document.activeElement) {
+        document
+          .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
+          .focus();
+      }
+    }
+  }
+
+  @HostListener('click', ['$event.target'])
+  onClick(e: HTMLElement): void {
+    if (this.grid.gridRef.isEdit && !e.closest('.e-gridcontent')) {
+      this.grid.endEdit();
     }
   }
   //#endregion

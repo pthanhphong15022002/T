@@ -140,28 +140,27 @@
     </codx-label>
   </div>
 
-  <div class="d-none">
+  <div class=" flex-nowrap">
     <codx-attachment
       #attachment
-      hideImageUpload="0"
+      [objectType]="formModel?.entityName"
       showMessage="0"
       hideBtnSave="1"
-      [functionID]="funcID"
       hideFolder="1"
       hideUploadBtn="1"
       hideDes="1"
-      (fileAdded)="fileAdded($event)"
-      isDeleteTemp="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      [objectId]="alpolicyObj?.policyID"
       [allowMultiFile]="1"
       [idBrowse]="'add'"
-      hideMoreF="0"
-      [formModel]="formModel"
-      [idField]="'RecID'"
-      [referType]="'source'"
-      [objectType]="formModel?.entityName"
-      [objectId]="alpolicyObj?.recID"
+      displayThumb="full"
+      [functionID]="funcID"
       (fileAdded)="addFiles($event)">
-    >
+      [referType]="'source'"
+      >
+      <!-- [formModel]="formModel"
+      [idField]="'RecID'" -->
     <!-- (fileDelete)="handleDelete($event)"
     (fileCount)="getfileCount($event)"
     (fileGet)="getfileCount($event)" -->
@@ -335,10 +334,6 @@
       (onEdit)="onEditGrid1($event)"
       (onDelete)="onDeleteGrid1($event)"
       >
-      <!-- [service]="'HR'"
-      [assemblyName]="'Core'"
-      [className]="'DataBusiness'"
-      [method]="'LoadDataAsync'" -->
         </codx-gridview-v2>
         <div class="d-flex justify-content-end mt-5">
           <button
@@ -532,8 +527,38 @@
         </codx-label>
     </div>
 
-    <div class="form-group row">
-        bo cai bang data 2 vao day
+    <div class="form-group row ms-6" *ngIf="alpolicyObj.seniorityType == '1' && loadGridview2 == true">
+      <codx-gridview-v2
+      #gridView2
+      [columnsGrid]="columnGrid2"
+      [formModel]="fmPolicyDetail"
+      [formName]="fmPolicyDetail.formName"
+      [gridViewName]="fmPolicyDetail.gridViewName"
+      [entityName]="fmPolicyDetail.entityName"
+      [hideMoreFunc]="true"
+      [editSettings]="editSettings"
+      [dataSource]="dataSourceGridView2"
+      rowHeight="35"
+      (onAddNew)="onAddNewGrid2($event)"
+      [autoAddRow]="true"
+      (onEdit)="onEditGrid2($event)"
+      (onDelete)="onDeleteGrid2($event)"
+      >
+        </codx-gridview-v2>
+        <div class="d-flex justify-content-end mt-5">
+          <button
+          class="btn btn-sm btn-light-primary"
+          (click)="addRowGrid2()"
+        >
+    <i class="icon-add icon-16 ms-n1"></i>
+        <codx-label
+        name="lblAddBtnGrid2"
+        default="Thêm"
+        [formModel]="formModel"
+      >
+    </codx-label>
+        </button>
+        </div>
     </div>
 
     <div class="form-group row">
@@ -696,6 +721,46 @@
     [dataItem]="data"
     [formModel]="formModel"
     (clickMF)="clickMF($event, data, 1)"
+    (changeDataMF)="changeDataMF($event)"
+    type="hover"
+  ></codx-mfunc>
+  </div>
+</ng-template>
+
+
+<ng-template #headTmpGrid2Col1>
+  <codx-label
+    [formModel]="formModel"
+    [name]="'lblGridCol1'"
+    default="Số tháng làm việc từ (>=)"
+    class="fw-bold fs-6 text-gray-800"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #headTmpGrid2Col2>
+  <codx-label
+    [formModel]="formModel"
+    [name]="'lblGridCol2'"
+    default="Số ngày phép được tăng thêm"
+    class="fw-bold fs-6 text-gray-800"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #tmpGrid2Col1 let-data>
+  <div class="d-flex align-items-center mb-2">
+    {{data.fromValue}}
+  </div>
+</ng-template>
+
+<ng-template #tmpGrid2Col2 let-data>
+  <div class="d-flex align-items-center mb-2 has-action-menu">
+    {{data.days}}
+    <codx-mfunc
+    [dataItem]="data"
+    [formModel]="formModel"
+    (clickMF)="clickMF($event, data, 2)"
     (changeDataMF)="changeDataMF($event)"
     type="hover"
   ></codx-mfunc>

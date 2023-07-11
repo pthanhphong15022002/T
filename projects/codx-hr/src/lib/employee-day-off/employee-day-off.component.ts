@@ -22,6 +22,7 @@ import { PopupEdayoffsComponent } from '../employee-profile/popup-edayoffs/popup
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable } from 'rxjs';
+import { ViewDayOffDetailComponent } from './view-day-off-detail/view-day-off-detail.component';
 
 @Component({
   selector: 'lib-employee-day-off',
@@ -34,6 +35,7 @@ export class EmployeeDayOffComponent extends UIComponent {
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
+  @ViewChild('viewdetail') viewdetail: ViewDayOffDetailComponent;
   @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
   @ViewChild('templateItemDetailRight')
   templateItemDetailRight?: TemplateRef<any>;
@@ -47,7 +49,6 @@ export class EmployeeDayOffComponent extends UIComponent {
     injector: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
-    private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
     private shareService: CodxShareService,
@@ -91,6 +92,8 @@ export class EmployeeDayOffComponent extends UIComponent {
   itemDetail;
   currentEmpObj: any;
   eDayOff: any;
+  flagChangeMF: boolean = false;
+  runModeCheck: boolean = false;
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
@@ -110,6 +113,7 @@ export class EmployeeDayOffComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.list,
         sameData: true,
         model: {
@@ -118,6 +122,7 @@ export class EmployeeDayOffComponent extends UIComponent {
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
         sameData: true,
         model: {
@@ -126,7 +131,6 @@ export class EmployeeDayOffComponent extends UIComponent {
         },
       },
     ];
-    this.view.dataService.methodDelete = 'DeleteEmployeeDayOffInfoAsync';
   }
   ngAfterViewChecked() {
     if (!this.formGroup?.value) {
@@ -211,8 +215,6 @@ export class EmployeeDayOffComponent extends UIComponent {
       }
     }
   }
-  flagChangeMF: boolean = false;
-  runModeCheck: boolean = false;
 
   changeDataMF(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view.formModel);
@@ -378,7 +380,7 @@ export class EmployeeDayOffComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService
+          this.shareService
             .codxRelease(
               'HR',
               this.itemDetail.recID,

@@ -70,7 +70,19 @@
               "
             ></span>
           </div>
-          <div class="text-gray-700">
+          <span
+            *ngIf="
+              data.orgUnitName || data?.emp?.orgUnitName;
+              else noOrgUnitName
+            "
+            >{{ data.orgUnitName || data.emp.orgUnitName }}</span
+          >
+          <ng-template #noOrgUnitName>
+            <span class="place-holder">{{
+              grvSetup["OrgUnitID"].headerText
+            }}</span>
+          </ng-template>
+          <!-- <div class="text-gray-700">
             <span
               [innerHTML]="
                 data?.emp?.orgUnitID
@@ -78,7 +90,7 @@
                   | async
               "
             ></span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -306,7 +318,7 @@
     [imgCss]="'me-2'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-10'"
+    [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
     [imageWidth]="40"
@@ -361,7 +373,7 @@
 
   <ng-template #desc2Tmp>
     <div>
-      <div class="d-flex align-items-center mt-1">
+      <div class="d-flex align-items-center mt-1 flex-wrap">
         <span class="icon-description icon-15 me-1"></span>
         <span class="me-3" [ngbTooltip]="grvSetup?.DecisionNo?.headerText">
           {{ data.decisionNo }}

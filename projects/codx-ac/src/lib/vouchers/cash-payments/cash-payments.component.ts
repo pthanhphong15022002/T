@@ -274,15 +274,6 @@ export class CashPaymentsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-        this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-              this.view.dataService.update(res.event['data']).subscribe();
-            }
-          }
-        });
       });
   }
 
@@ -309,13 +300,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.view.funcID
         );
         this.dialog.closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.itemSelected = res.event['data'];
-              this.loadDatadetail(this.itemSelected);
-              //this.view.dataService.update(res.event['data']).subscribe();
-            }
-          }
+          console.log(this.itemSelected);
         });
       });
   }
@@ -611,13 +596,15 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-          return;
-        } else {
-          this.isLoadDataAcct = true;
-          this.itemSelected = event?.data;
-          this.loadDatadetail(this.itemSelected);
-        }
+        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        //   this.itemSelected = event?.data;
+        //   return;
+        // } else {
+
+        // }
+        this.isLoadDataAcct = true;
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
       }
     }
   }
@@ -677,7 +664,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   cancelRelease(data: any) {
     this.shareService
-      .codxCancel('AC', data?.recID, this.view.formModel.entityName, '')
+      .codxCancel('AC', data?.recID, this.view.formModel.entityName, null,null)
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
@@ -786,6 +773,7 @@ export class CashPaymentsComponent extends UIComponent {
         case '1':
         case '3':
         case '4':
+        case '11':
           ele.hideTab(1, true);
           ele.hideTab(2, true);
           break;
