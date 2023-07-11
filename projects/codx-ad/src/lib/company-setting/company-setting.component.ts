@@ -470,17 +470,25 @@ export class CompanySettingComponent
     let mapMD: Map<string, number> = new Map();
     mapMD.set(module.boughtModule.moduleID, 1);
     let md_qty = JSON.stringify(Object.fromEntries(mapMD));
-    this.adService.buyNewModule(md_qty, mode).subscribe((endDate: string) => {
-      window.location.reload();
+    this.adService
+      .buyNewModule(md_qty, mode, module.boughtModule.moduleName)
+      .subscribe((respose: any[]) => {
+        console.log('res', respose);
+        if (respose?.length > 0) {
+          window.location.reload();
+        }
+        // if (respose.error) {
 
-      // this.lstNotInstallModule = this.lstNotInstallModule.filter(
-      //   (x) => x.boughtModule.moduleID != module.boughtModule.moduleID
-      // );
-      // module.bought = true;
-      // module.expiredOn = endDate;
-      // this.lstInstalledModule.push(module);
-      // this.detectorRef.detectChanges();
-    });
+        // }
+
+        // this.lstNotInstallModule = this.lstNotInstallModule.filter(
+        //   (x) => x.boughtModule.moduleID != module.boughtModule.moduleID
+        // );
+        // module.bought = true;
+        // module.expiredOn = endDate;
+        // this.lstInstalledModule.push(module);
+        // this.detectorRef.detectChanges();
+      });
   }
 
   popupOrderInfo(order) {
