@@ -209,7 +209,7 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     let lstMDID = [];
     let lstMDS = [];
 
-    this.groupData.groupRoles.forEach((role) => {
+    this.groupData?.groupRoles?.forEach((role) => {
       lstMDID.push(role.module);
       if (!lstMDS.includes(role.moduleSales)) {
         lstMDS.push(role.moduleSales);
