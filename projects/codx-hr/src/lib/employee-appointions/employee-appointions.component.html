@@ -39,13 +39,25 @@
             "
           ></span>
           <span
+            *ngIf="
+              data.orgUnitName || data?.emp?.orgUnitName;
+              else noOrgUnitName
+            "
+            >{{ data.orgUnitName || data.emp.orgUnitName }}</span
+          >
+          <ng-template #noOrgUnitName>
+            <span class="place-holder">{{
+              grvSetup["OrgUnitID"].headerText
+            }}</span>
+          </ng-template>
+          <!-- <span
             class="mt-1"
             [innerHTML]="
               data?.emp?.orgUnitID
                 | formatvalue : view.formModel : 'orgUnitID'
                 | async
             "
-          ></span>
+          ></span> -->
         </div>
       </div>
     </div>
@@ -145,7 +157,7 @@
           <codx-vll
             [formModel]="view.formModel"
             [field]="'Status'"
-            [value]="data?.approveStatus ? data?.approveStatus : data?.status"
+            [value]="data?.status"
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
@@ -292,7 +304,7 @@
     [imgCss]="'me-2'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-10'"
+    [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
     [imageWidth]="40"
@@ -394,10 +406,9 @@
           </ng-container>
           <ng-template #elseVll>
             <codx-vll
-              [name]="'HRS102'"
               [formModel]="view.formModel"
               [field]="'Status'"
-              [value]="data?.approveStatus ? data?.approveStatus : data?.status"
+              [value]="data?.status"
               [showText]="true"
               [showIcon]="false"
               [showBgColor]="true"

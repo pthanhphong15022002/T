@@ -252,7 +252,8 @@ export class CodxShareService {
                 data?.unbounds?.approvalRecID,
                 status,
                 oComment.comment,
-                oComment.reasonID
+                oComment.reasonID,
+                null,
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
                   data.unbounds.statusApproval = status;
@@ -266,8 +267,9 @@ export class CodxShareService {
             this.codxApprove(
               data?.unbounds?.approvalRecID,
               status,
-              '',
-              ''
+              null,
+              null,
+              null,
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
                 data.unbounds.statusApproval = status;
@@ -281,7 +283,7 @@ export class CodxShareService {
         break;
       }
       case 'SYS207': {
-        this.codxUndo(data?.unbounds?.approvalRecID).subscribe((res: any) => {
+        this.codxUndo(data?.unbounds?.approvalRecID,null).subscribe((res: any) => {
           if (res) {
             data.unbounds.statusApproval = res?.status;
             dataService.update(data).subscribe();
@@ -1109,13 +1111,15 @@ export class CodxShareService {
     module: string, //Tên service
     recID: string, //RecID nghiệp vụ gốc
     entityName: string, //EntityName nghiệp vụ gốc
-    comment: string //ghi chú (ko bắt buộc)
+    comment: string, //ghi chú (ko bắt buộc)
+    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
     approveProcess.entityName = entityName;
     approveProcess.module = module;
     approveProcess.comment = comment;
+    approveProcess.userID = userID;
 
     return this.api.execSv(
       module,
@@ -1128,10 +1132,13 @@ export class CodxShareService {
 
   //-------------------------------------------Khôi phục--------------------------------------------//
   codxUndo(
-    tranRecID: string //RecID của ES_ApprovalTrans hiện hành
+    tranRecID: string, //RecID của ES_ApprovalTrans hiện hành
+    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
+
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.tranRecID = tranRecID;
+    approveProcess.userID = userID;
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -1145,13 +1152,15 @@ export class CodxShareService {
     tranRecID: any, //RecID của ES_ApprovalTrans hiện hành
     status: string, //Trạng thái
     reasonID: string, //Mã lí do (ko bắt buộc)
-    comment: string //Bình luận (ko bắt buộc)
+    comment: string, //Bình luận (ko bắt buộc)
+    userID: string, //Người thực hiện (ko bắt buộc)
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.tranRecID = tranRecID;
     approveProcess.status = status;
     approveProcess.reasonID = reasonID;
     approveProcess.comment = comment;
+    approveProcess.userID = userID;
 
     return this.api.execSv(
       'ES',

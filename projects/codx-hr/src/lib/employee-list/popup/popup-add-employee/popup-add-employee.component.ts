@@ -239,10 +239,12 @@ export class PopupAddEmployeeComponent implements OnInit {
       let arrFieldName = arrFieldRequire.map((x: any) => x.fieldName);
       if (arrFieldName.length > 0) {
         let strFieldUnValid: string = '';
+        let hasManyValue = false;
         arrFieldName.forEach((key) => {
           if (key !== 'EmployeeID')
             if (!this.data[Util.camelize(key)])
-              strFieldUnValid += this.grvSetUp[key]['headerText'] + '; ';
+              strFieldUnValid += (hasManyValue ? ', ' : '') + this.grvSetUp[key]['headerText'];
+          if (strFieldUnValid.length > 0) hasManyValue = true;
         });
         if (strFieldUnValid) {
           this.notifySV.notifyCode('SYS009', 0, strFieldUnValid);

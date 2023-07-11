@@ -357,4 +357,12 @@ export class TabDetailCustomComponent
 
   }
 
+  saveDataStep(e) {
+    if(e){
+      debugger;
+    }
+    // this.listSteps = e;
+    // this.outDataStep.emit(this.dataStep);
+  }
+
 }

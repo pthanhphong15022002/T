@@ -140,28 +140,27 @@
     </codx-label>
   </div>
 
-  <div class="d-none">
+  <div class=" flex-nowrap">
     <codx-attachment
       #attachment
-      hideImageUpload="0"
+      [objectType]="formModel?.entityName"
       showMessage="0"
       hideBtnSave="1"
-      [functionID]="funcID"
       hideFolder="1"
       hideUploadBtn="1"
       hideDes="1"
-      (fileAdded)="fileAdded($event)"
-      isDeleteTemp="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      [objectId]="alpolicyObj?.policyID"
       [allowMultiFile]="1"
       [idBrowse]="'add'"
-      hideMoreF="0"
-      [formModel]="formModel"
-      [idField]="'RecID'"
-      [referType]="'source'"
-      [objectType]="formModel?.entityName"
-      [objectId]="alpolicyObj?.recID"
+      displayThumb="full"
+      [functionID]="funcID"
       (fileAdded)="addFiles($event)">
-    >
+      [referType]="'source'"
+      >
+      <!-- [formModel]="formModel"
+      [idField]="'RecID'" -->
     <!-- (fileDelete)="handleDelete($event)"
     (fileCount)="getfileCount($event)"
     (fileGet)="getfileCount($event)" -->

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CRUDService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent, Util } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
@@ -15,6 +15,29 @@ export class PopupPolicyalComponent
   extends UIComponent
   implements OnInit
 {
+
+  @HostListener('click', ['$event.target']) onClick(e) {
+    if(this.gridView2){
+      if(this.gridView2.gridRef.isEdit == true){
+        //this.gridView2.isEdit = false;
+        //this.gridView2.isAdd = false;
+        this.gridView2.endEdit();
+      }else{
+       //
+      }
+    }
+
+    if(this.gridView1){
+      if(this.gridView1.gridRef.isEdit == true){
+        //this.gridView2.isEdit = false;
+        //this.gridView2.isAdd = false;
+        this.gridView1.endEdit();
+      }else{
+       //
+      }
+    }
+  }
+
   @ViewChild('gridView1') gridView1: CodxGridviewV2Component;
   @ViewChild('gridView2') gridView2: CodxGridviewV2Component;
 
@@ -69,7 +92,9 @@ export class PopupPolicyalComponent
   autoNumField: string;
   headerText: string;
   alpolicyObj: any;
-  grvSetup // chua viet code lay grvsetup
+  grvSetup
+  grvSetupPolicyDetail
+
 
   fmPolicyDetail: FormModel = {
     formName: 'PolicyDetails',
@@ -134,8 +159,9 @@ export class PopupPolicyalComponent
     this.attachment.uploadFile();
   }
 
-  addFiles(evt){
+  async addFiles(evt){
     this.alpolicyObj.attachments = evt.data.length;
+
   }
 
   fileAdded(evt){
@@ -246,6 +272,19 @@ export class PopupPolicyalComponent
       this.grvSetup = res;
       console.log('grv setup ne', this.grvSetup);
     });
+
+    this.cache
+    .gridViewSetup(
+      'PolicyDetails',
+      'grvPolicyDetails'
+    )
+    .subscribe((res) => {
+      this.grvSetupPolicyDetail = res;
+      console.log('grv policydetail', this.grvSetupPolicyDetail);
+
+    });
+
+
     if (this.actionType == 'add') {
       this.hrSevice
         .getDataDefault(
@@ -261,7 +300,7 @@ export class PopupPolicyalComponent
               res.activeOn = null;
             }
             this.alpolicyObj = res?.data;
-
+            debugger
             this.formModel.currentData = this.alpolicyObj;
             this.formGroup.patchValue(this.alpolicyObj);
             this.cr.detectChanges();
@@ -284,6 +323,8 @@ export class PopupPolicyalComponent
             this.alpolicyObj.activeOn = null;
           }
         }
+        debugger
+
         this.formGroup.patchValue(this.alpolicyObj);
         this.formModel.currentData = this.alpolicyObj;
         this.cr.detectChanges();
@@ -297,7 +338,7 @@ export class PopupPolicyalComponent
   }
 
   ValChangeTransferNextYear(event){
-    debugger
+    
     if(event.data == true){
       this.expandTransferNextYear = true;
       this.transferNextYearDisabled = false;
@@ -327,7 +368,7 @@ export class PopupPolicyalComponent
   }
 
   validateMonthDate(month, day){
-    debugger
+    
     if(month == 4 || month == 6 || month == 9 || month == 11){
       if(day > 30){
         this.notify.notifyCode('HR016');
@@ -394,7 +435,6 @@ export class PopupPolicyalComponent
   }
 
   changeDataMF(evt){
-    debugger
     for(let i = 0; i < evt.length; i++){
       let funcIDStr = evt[i].functionID;
       if(funcIDStr == 'SYS04' || funcIDStr == 'SYS03'){
@@ -474,9 +514,18 @@ export class PopupPolicyalComponent
     this.expandIsMonth = !this.expandIsMonth;
   }
 
-  onSaveForm(){
-
-  }
+  async onSaveForm(){
+    if(
+      this.attachment.fileUploadList &&
+      this.attachment.fileUploadList.length > 0
+      ) {
+      this.attachment.objectId=this.alpolicyObj?.recID;
+      (await (this.attachment.saveFilesObservable())).subscribe(
+      (item2:any)=>{
+            debugger
+          });
+      }
+}
 
   addRowGrid1(){
     let idx = this.gridView1.dataSource.length;
@@ -516,6 +565,30 @@ export class PopupPolicyalComponent
     if(!this.alpolicyObj.policyType){
       this.notify.notifyCode('SYS009',0,this.fieldHeaderTexts['PolicyType'])
       return
+    }
+    if(!evt.fromValue){
+      this.notify.notifyCode('HR023');
+      let legth = this.gridView1.dataSource.length
+      let index = legth - 1
+      setTimeout(() => {
+        this.gridView1.deleteRow(this.gridView1.dataSource[index], true);
+        this.gridView1.dataSource.splice(index, 1);
+        (this.gridView1.gridRef.dataSource as any).splice(index, 1);
+        this.gridView1.refresh();
+      }, 200);
+      return;
+    }
+    if(!evt.days){
+      this.notify.notifyCode('HR024');
+      let legth = this.gridView1.dataSource.length
+      let index = legth - 1
+      setTimeout(() => {
+        this.gridView1.deleteRow(this.gridView1.dataSource[index], true);
+        // this.gridView1.dataSource.splice(index, 1);
+        (this.gridView1.gridRef.dataSource as any).splice(index, 1);
+        this.gridView1.refresh();
+      }, 200);
+      return;
     }
     evt.policyID = this.alpolicyObj.policyID;
     evt.policyType = this.alpolicyObj.policyType;
@@ -560,10 +633,46 @@ export class PopupPolicyalComponent
       this.notify.notifyCode('SYS009',0,this.fieldHeaderTexts['PolicyType'])
       return
     }
+    if(!evt.fromValue){
+      this.notify.notifyCode('HR025');
+      let legth = this.gridView2.dataSource.length
+      let index =legth - 1;
+
+      // (this.gridView2?.dataService as CRUDService)?.remove(this.gridView2.dataSource[index]).subscribe();
+      // this.gridView2.deleteRow(this.gridView2.dataSource[index], true);
+
+      setTimeout(() => {
+        this.gridView2.deleteRow(this.gridView2.dataSource[index], true);
+        this.gridView2.dataSource.splice(index, 1);
+        (this.gridView2.gridRef.dataSource as any).splice(index, 1);
+        this.gridView2.refresh();
+      }, 200);
+      // this.gridView2.refresh();
+      return;
+    }
+    if(!evt.days){
+      
+      this.notify.notifyCode('HR026');
+      let legth = this.gridView2.dataSource.length
+      let index =legth - 1;
+
+      // (this.gridView2?.dataService as CRUDService)?.remove(this.gridView2.dataSource[index]).subscribe();
+      // this.gridView2.deleteRow(this.gridView2.dataSource[index], true);
+
+      setTimeout(() => {
+        this.gridView2.deleteRow(this.gridView2.dataSource[index], true);
+        this.gridView2.dataSource.splice(index, 1);
+        (this.gridView2.gridRef.dataSource as any).splice(index, 1);
+        this.gridView2.refresh();
+      }, 200);
+      // this.gridView2.refresh();
+      return;
+    }
     evt.policyID = this.alpolicyObj.policyID;
     evt.policyType = this.alpolicyObj.policyType;
     evt.itemType = 'ALSeniorityType'
     evt.itemSelect = '1'
+    
     this.AddPolicyDetail(evt).subscribe((res) => {
       if(res){
         this.lstPolicyDetailRecID.push(res.recID)
@@ -578,6 +687,7 @@ export class PopupPolicyalComponent
   }
 
   onEditGrid2(evt){
+    
     let index = this.gridView2.dataSource.findIndex(v => v.recID == evt.recID)
     this.UpdatePolicyDetail(evt).subscribe((res) => {
       if(res && res.oldData){
