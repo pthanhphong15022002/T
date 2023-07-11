@@ -85,14 +85,14 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
     this.views = [
-      // {
-      //   id: '1',
-      //   type: ViewType.list,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateList,
-      //   },
-      // },
+      {
+        id: '1',
+        type: ViewType.list,
+        sameData: true,
+        model: {
+          template: this.templateList,
+        },
+      },
       {
         id: '2',
         type: ViewType.listtree,

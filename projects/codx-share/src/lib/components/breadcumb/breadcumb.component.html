@@ -2,7 +2,7 @@
     <div *ngIf="breadcumb.length <= max; then thenBlockList  else thenBlockListElse">
     </div>
     <ng-template #thenBlockList>
-        <div class="breadcumb-item d-flex align-items-center breadcumb-full">
+        <div class="breadcumb-item h-30px d-flex align-items-center breadcumb-full">
             <ng-container *ngFor="let item of getBreadCumList(); let i = index">
                 <ng-container *ngIf="i >= start">
                     <span *ngIf="i > 0" class="icon-keyboard_arrow_right text-gray-700 icon-18"></span>
