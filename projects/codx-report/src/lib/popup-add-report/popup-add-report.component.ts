@@ -162,7 +162,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // this.realHub.startConnection('wp')(x=>{
     //   x.asObjectserable().subscribe(z=>{
-    
+
     //   });
     // });
   }
@@ -470,7 +470,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if (!this.data.service) {
       this.data.service = this.data.assemblyName;
     }
-    if(this.data.reportContent.split(',').length >1){
+    if(this.data.reportContent && this.data.reportContent.split(',').length >1){
       this.data.reportContent = this.data.reportContent.split(',')[1];
     }
     this.api
@@ -519,12 +519,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-   
+
     let file = e.filesData[0].rawFile;
     let reader = new FileReader();
     reader.readAsDataURL(file);
     let t=this;
-    
+
     this.isBlockBtn = false;
     reader.onload = function () {
       //me.modelvalue = reader.result;

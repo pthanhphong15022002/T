@@ -51,6 +51,8 @@ export class CodxTmmeetingsComponent
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
   @Input() listResources?: string;
+  @Input() refID?: string;
+  @Input() refType?: string;
 
   // @Output() resourcesNew = new EventEmitter<string>();
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -486,6 +488,11 @@ export class CodxTmmeetingsComponent
         this.view.dataService.dataSelected.refID = this.projectID;
         this.disabledProject = true;
       } else this.disabledProject = false;
+      // set cho OM
+      if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
+      if (this.refType)
+        this.view.dataService.dataSelected.refType = this.refType;
+
       let obj = {
         action: 'add',
         titleAction: this.titleAction,

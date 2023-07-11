@@ -433,7 +433,6 @@ export class InstanceDashboardComponent implements OnInit {
     );
     if (data) {
       this.dataDashBoard = data;
-
       this.countStep = this.dataDashBoard?.countStep;
       this.countOwners = this.dataDashBoard?.countsOwners;
       this.countFails = this.dataDashBoard?.countsReasonsFails;
@@ -450,12 +449,14 @@ export class InstanceDashboardComponent implements OnInit {
       console.log(this.dataDashBoard);
       this.isLoaded = true;
       this.changeDetectorRef.detectChanges();
+    }else{
+      this.countStep = null;
+      this.countOwners = null;
+      this.countFails = null;
+      this.countSuscess = null;
+      this.countInstances = null;
+      this.isLoaded = true;
     }
-    // this.api
-    //   .exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [model, params])
-    //   .subscribe((res) => {
-
-    //   });
   }
   setID() {
     let id = Util.uid();

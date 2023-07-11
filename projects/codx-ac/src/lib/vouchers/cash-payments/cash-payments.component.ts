@@ -274,10 +274,6 @@ export class CashPaymentsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-        this.dialog.closed.subscribe((res) => {
-          this.itemSelected = this.view.dataService.dataSelected;
-          this.loadDatadetail(this.itemSelected);
-        });
       });
   }
 
@@ -304,8 +300,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.view.funcID
         );
         this.dialog.closed.subscribe((res) => {
-          this.itemSelected = this.view.dataService.dataSelected;
-          this.loadDatadetail(this.itemSelected);
+          console.log(this.itemSelected);
         });
       });
   }
@@ -601,13 +596,15 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-          return;
-        } else {
-          this.isLoadDataAcct = true;
-          this.itemSelected = event?.data;
-          this.loadDatadetail(this.itemSelected);
-        }
+        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        //   this.itemSelected = event?.data;
+        //   return;
+        // } else {
+
+        // }
+        this.isLoadDataAcct = true;
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
       }
     }
   }
@@ -776,6 +773,7 @@ export class CashPaymentsComponent extends UIComponent {
         case '1':
         case '3':
         case '4':
+        case '11':
           ele.hideTab(1, true);
           ele.hideTab(2, true);
           break;
