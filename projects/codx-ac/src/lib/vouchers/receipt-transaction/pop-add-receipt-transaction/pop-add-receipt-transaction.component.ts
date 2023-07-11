@@ -264,17 +264,17 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
-    if (!e.data[e.field]) {
-      return;
-    }
+    // if (!e.data[e.field]) {
+    //   return;
+    // }
 
-    if (e.field === 'itemID') {
-      this.setPredicatesByItemID(e.data.itemID);
-    }
+    // if (e.field === 'itemID') {
+    //   this.setPredicatesByItemID(e.data.itemID);
+    // }
 
-    if (e.field.toLowerCase() === 'idim4') {
-      this.setPredicateByIDIM4(e.data[e.field]);
-    }
+    // if (e.field.toLowerCase() === 'idim4') {
+    //   this.setPredicateByIDIM4(e.data[e.field]);
+    // }
 
     const postFields: string[] = [
       'itemID',
@@ -303,7 +303,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         ])
         .subscribe((line) => {
           console.log(line);
-
+          
           this.inventoryJournalLines[e.idx] = Object.assign(this.inventoryJournalLines[e.idx], line);
         });
     }
@@ -372,7 +372,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onDoubleClick(data)
   {
-    this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data.rowData);
+    // this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data.rowData);
   }
 
   close() {
@@ -394,7 +394,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onSaveAdd(){
     this.checkValidate();
-    this.checkTransLimit();
+    this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -405,7 +405,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onSave() {
     this.checkValidate();
-    this.checkTransLimit();
+    this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -416,6 +416,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onSaveMaster(){
     this.checkValidate();
+    this.checkTransLimit(false);
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -722,7 +723,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               idx = this.gridInventoryJournalLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridInventoryJournalLine.addRow(res, idx);
-              this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, res);
+              // this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, res);
               break;
             case '2':
               idx = this.inventoryJournalLines.length;
@@ -786,7 +787,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case '1':
         this.gridInventoryJournalLine.gridRef.selectRow(Number(data.index));
         this.gridInventoryJournalLine.gridRef.startEdit();
-        this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data);
+        // this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data);
         break;
       case '2':
         let index = this.inventoryJournalLines.findIndex(
@@ -853,7 +854,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.gridInventoryJournalLine.addRow(res, idx);
-              this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data);
+              // this.loadPredicate(this.gridInventoryJournalLine.visibleColumns, data);
               break;
             case '2':
               idx = this.inventoryJournalLines.length;
@@ -975,10 +976,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  checkTransLimit(){
+  checkTransLimit(isShowNotify : boolean){
     if(this.journal.transLimit && this.inventoryJournal.totalAmt > this.journal.transLimit)
     {
-      this.notification.notifyCode('AC0016');
+      if(isShowNotify)
+        this.notification.notifyCode('AC0016');
       this.validate++ ;
     }
   }
