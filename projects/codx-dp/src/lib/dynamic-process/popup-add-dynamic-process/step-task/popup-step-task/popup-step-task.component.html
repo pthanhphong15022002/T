@@ -12,11 +12,11 @@
 ></codx-form>
 
 <ng-template #header>
-  <div class="pt-2 px-2 w-100">
+  <div class="py-2 w-100">
     <div class="d-flex justify-content-between align-items-center w-100">
       <div class="d-flex align-items-center w-100 job">
         <span
-            class="icon-18 me-2 circle"
+            class="icon-18 me-3 circle"
             [ngClass]="typeTask?.icon"
             [ngStyle]="{'color' : (typeTask?.color || 'gray'), 'border': '2px solid'}"
           ></span>
@@ -373,7 +373,7 @@
       ></codx-user>
     </div>
 
-    <div class="form-group">
+    <div class="form-group border-bottom pb-1">
       <div>
         <codx-label
           fiedName="assignControl"
