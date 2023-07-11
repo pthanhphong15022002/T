@@ -452,15 +452,15 @@ valueChangeText(event) {
 valueChangeCombobox(event) {
   this.contracts[event?.field] = event?.data;
   if (event?.field == 'dealID' && event?.data) {
-    this.getCustomerByDealID(event?.data);
-    this.setValueComboboxQuotation();
     if (!this.contracts.customerID) {
+      this.getCustomerByDealID(event?.data);
+      this.setValueComboboxQuotation();
     }
   }
   if (event?.field == 'quotationID' && event?.data) {
-    this.getDataByQuotationID(event?.data);
-    this.setValueComboboxDeal();
     if (!this.contracts.customerID) {
+      this.getDataByQuotationID(event?.data);
+      this.setValueComboboxDeal();
     }
   }
   if (event?.field == 'customerID' && event?.data) {
