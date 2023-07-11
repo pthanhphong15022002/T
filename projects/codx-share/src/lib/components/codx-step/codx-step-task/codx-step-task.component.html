@@ -7,28 +7,14 @@
       class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
       <div
-        class="d-flex align-items-center w-auto h-30px pe-6"
-        [ngStyle]="{
-          background: currentStep?.backgroundColor || '#d9e3f7',
-          'border-radius': '20px'
-        }"
-      >
+        class="d-flex align-items-center w-auto h-30px text-primary border-bottom border-bottom-2 border-primary">
         <div
-          class="cricle"
-          [ngStyle]="{
-            color: currentStep?.iconColor || 'gray',
-            border: '2px solid'
-          }"
-        >
-          <span [ngClass]="currentStep?.icon" class="fs-6"></span>
+          class="w-20px me-2"
+          >
+          <span [ngClass]="currentStep?.icon" class="fs-5-sm"></span>
         </div>
         <span
-          class="line-clamp line-clamp-1 fs-6 fw-bold ms-3"
-          [ngStyle]="{
-            color: currentStep?.textColor || 'gray',
-            'font-weight': '400'
-          }"
-        >
+          class="line-clamp line-clamp-1 fs-6 fw-bold">
           {{ currentStep.stepName || "" }}</span
         >
       </div>
@@ -105,7 +91,7 @@
   </div>
   <!-- drap drop công việc ngoài-->
   <!-- [@fadeInOut] -->
-  <div class="main-body" *ngIf="listGroupTask?.length > 0 && isShowElement">
+  <div class="main-body ms-6" *ngIf="listGroupTask?.length > 0 && isShowElement">
     <div
       cdkDropList
       class="list"
@@ -387,7 +373,7 @@
         [value]="data?.value?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-sm"
+        class="badge badge-primary badge-sm w-95px"
       >
       </codx-vll>
     <span

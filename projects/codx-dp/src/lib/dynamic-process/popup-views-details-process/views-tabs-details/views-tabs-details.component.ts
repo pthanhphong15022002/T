@@ -111,6 +111,7 @@ export class ViewsTabsDetailsComponent
       //   },
       // },
     ];
+    debugger;
     this.detectorRef.detectChanges();
   }
   viewChanged(e) {

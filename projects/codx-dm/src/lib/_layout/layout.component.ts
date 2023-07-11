@@ -204,9 +204,18 @@ db.DM_FolderInfo.updateMany(
   }
   onCountFavarite(e:any)
   {
-    if(e) this.dmSV.countFavorite(e?.functionID,e?.favIDs).subscribe(item=>{
-      
-    });
+    if(e) {
+      var favIDs: any[] = [];
+      e.favs.forEach((x: any) => {
+        favIDs.push(x.recID);
+      });
+      this.dmSV.countFavorite(e?.functionID,favIDs).subscribe(item=>{
+        e.favs.forEach((x: any) => {
+          x.count = 0;
+          if (item[x.recID]) x.count = item[x.recID];
+        });
+      });
+    }
   }
 
   getHDDInformaton(item: any) {
