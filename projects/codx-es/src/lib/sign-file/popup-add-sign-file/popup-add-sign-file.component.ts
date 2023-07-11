@@ -232,8 +232,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.title = this.oSignFile?.title;
               this.data.categoryID = this.oSignFile?.categoryID;
               this.data.files = this.oSignFile?.files;
-              this.data.refId = this.oSignFile?.refId;
-              this.data.refID = this.oSignFile.refId;
+              this.data.refID = this.oSignFile.refID;
               this.data.refType = this.oSignFile?.refType;
               this.data.refDate = this.oSignFile?.refDate;
               this.data.refNo = this.oSignFile?.refNo;
@@ -268,8 +267,7 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.data.title = this.oSignFile.title;
                     this.data.categoryID = this.oSignFile.categoryID;
                     this.data.files = this.oSignFile.files;
-                    this.data.refId = this.oSignFile.refId;
-                    this.data.refID = this.oSignFile.refId;
+                    this.data.refID = this.oSignFile.refID;
                     this.data.refDate = this.oSignFile.refDate;
                     this.data.refNo = this.oSignFile.refNo;
                     this.data.priority = this.oSignFile.priority;
@@ -453,7 +451,7 @@ export class PopupAddSignFileComponent implements OnInit {
                     if (this.data.files[0].fileName[i - 1] === '.') break;
                   }
                 }
-                this.updateNodeStatus(0, 1);
+                //this.updateNodeStatus(0, 1);
               }
             } else {
               let sfRecID = this.data?.recID;
@@ -491,7 +489,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.cr.detectChanges();
                   if (this.oSignFile) {
                     this.eSign = true;
-                    this.updateNodeStatus(0, 1);
+                    //this.updateNodeStatus(0, 1);
                   }
                 }
               });
