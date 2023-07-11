@@ -113,9 +113,10 @@ export class DecentralizedGroupComponent extends UIComponent {
 
   deleteGroup(data) {
     this.view.dataService.dataSelected = data;
-    this.adService.removeGroupAsync(data.groupID).subscribe((res) => {
-      if (res) {
-        this.view.dataService.delete([data]).subscribe((res) => {
+    this.view.dataService.delete([data]).subscribe((res2) => {
+      console.log('res2', res2);
+      if (res2) {
+        this.adService.removeGroupAsync(data.groupID).subscribe((res) => {
           this.detectorRef.detectChanges();
         });
       }
