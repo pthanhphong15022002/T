@@ -121,10 +121,10 @@ export class PopupViewsDetailsProcessComponent
       let data = await firstValueFrom(this.cache.valueList('DP004'));
       this.listType = data ? data?.datas : [];
     }
-    this.offset = '47px';
+    //47
+    this.offset = '65px';
   }
   ngAfterViewInit(): void {
-    debugger;
     setTimeout(() => {
       this.loadedFigureOut = true;
     }, 500);
