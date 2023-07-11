@@ -7,6 +7,8 @@
 :root {
   --fs-body: 13px;
   --speeddialVertDist: 98px;
+  
+  --bs-primary-rgb: var(--primary);
 
   .e-grid .e-rowcell {
     font-size: var(--fs-body);
@@ -2564,6 +2566,9 @@ codx-calendar {
 }
 .border-bottom {
   border-bottom-width: 1px !important;
+}
+.border-bottom-2 {
+  border-bottom-width: 2px !important;
 }
 .border-top {
   border-top-width: 1px !important;
