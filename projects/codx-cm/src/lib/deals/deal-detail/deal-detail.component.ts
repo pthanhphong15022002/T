@@ -147,11 +147,6 @@ export class DealDetailComponent implements OnInit {
        icon: 'icon-info',
      },
      {
-       name: 'Field',
-       text: 'Thông tin mở rộng',
-       icon: 'icon-add_to_photos',
-     },
-     {
        name: 'Contact',
        text: 'Liên hệ',
        icon: 'icon-contact_phone',
@@ -257,6 +252,7 @@ export class DealDetailComponent implements OnInit {
       } else {
         this.listSteps = null;
       }
+      this.pushTabFields((this.checkHaveField(this.listSteps)));
     });
   }
   checkCompletedInstance(dealStatus: any) {
@@ -267,5 +263,33 @@ export class DealDetailComponent implements OnInit {
   deleteListReason(listStep: any): void {
     listStep.pop();
     listStep.pop();
+  }
+  checkHaveField(listStep: any){
+    var isCheck = false;
+    for(let item of listStep) {
+        if(item?.fields?.length > 0 && item?.fields) {
+          isCheck = true;
+          return isCheck;
+        }
+    }
+    return isCheck;
+  }
+  pushTabFields(isCheck) {
+    var index = this.tabDetail.findIndex(x=>x.name == 'Field');
+    if (isCheck) {
+      if(index == -1) {
+        var objField = {
+            name: 'Field',
+            text: 'Thông tin mở rộng',
+            icon: 'icon-add_to_photos',
+        };
+        this.tabDetail.splice(1, 0, objField);
+        this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
+      }
+    }
+    else {
+      index != -1 && this.tabDetail.splice(index, 1);
+      this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
+    }
   }
 }
