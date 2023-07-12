@@ -200,6 +200,10 @@ input.e-input {
   height: 32px !important;
   line-height: 32px;
 }
+input.e-input.codx-number{
+  height: 30px !important;
+  line-height: 30px;
+}
 
 input.e-input::placeholder,
 textarea.e-input::placeholder,
@@ -2071,6 +2075,9 @@ a.nav-link {
 }
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
   margin-right: 15px;
+}
+.personal-menu .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+  margin-right: 0;
 }
 .codx-nav {
   border-bottom: 1px var(--gray-150) solid;
