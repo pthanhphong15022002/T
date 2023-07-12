@@ -22,7 +22,7 @@ import {
   Util,
 } from 'codx-core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom} from 'rxjs';
 import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
 import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
 import { TM_Tasks } from '../../codx-tasks/model/task.model';
@@ -1430,24 +1430,31 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return false;
   }
 
-  setProgress(data){
-    if(!this.isMoveStage){
+  setProgress(data, type) {
+    if (!this.isMoveStage) {
       return data?.progress;
-    }else{
-      if(this.isSuccessAllTask){
-        return 100;
-      }
-      if(this.isSuccessTaskDefault){
-        if(data?.requireCompleted){
+    }
+    if (this.isSuccessAllTask) {
+      return 100;
+    }
+    if (this.isSuccessTaskDefault) {
+      if (type === "G" && data?.task?.length > 0) {
+        const countDefault = data.task.filter(t => t?.requireCompleted).length;
+        const countTask = data.task.length;
+  
+        if (!countDefault || countDefault === 0) {
+          return data?.progress;
+        }
+        return Number(((100 / countTask) * countDefault || 0).toFixed(1));
+      } else {
+        if (data?.requireCompleted) {
           return 100;
-        }else{
+        } else {
           return data?.progress;
         }
       }
-      if(!this.isSuccessTaskDefault && !this.isSuccessAllTask){
-        return data?.progress;
-      }     
     } 
+    return data?.progress;
   }
   //#endregion
 

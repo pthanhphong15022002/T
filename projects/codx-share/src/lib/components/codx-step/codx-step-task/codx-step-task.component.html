@@ -405,7 +405,7 @@
       "
     >
       <codx-progressbar
-        [progress]="setProgress(data?.value)"
+        [progress]="setProgress(data?.value,data?.type)"
         #p="ngbPopover"
         [ngbPopover]="'Cập nhật tiến độ'"
         (mouseenter)="p.open()"

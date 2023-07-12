@@ -361,20 +361,21 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   // region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      if (!res.quotationsID) {
-        this.api
-          .execSv<any>(
-            'SYS',
-            'AD',
-            'AutoNumbersBusiness',
-            'GenAutoNumberAsync',
-            [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-          )
-          .subscribe((id) => {
-            res.quotationID = id;
-            this.openPopup(res);
-          });
-      } else this.openPopup(res);
+      this.openPopup(res);
+      // if (!res.quotationsID) {
+      //   this.api
+      //     .execSv<any>(
+      //       'SYS',
+      //       'AD',
+      //       'AutoNumbersBusiness',
+      //       'GenAutoNumberAsync',
+      //       [this.formModel.funcID, this.formModel.entityName, 'QuotationID']
+      //     )
+      //     .subscribe((id) => {
+      //       res.quotationID = id;
+      //       this.openPopup(res);
+      //     });
+      // } else this.openPopup(res);
     });
   }
 
@@ -626,7 +627,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                         dt?.recID,
                         this.view.formModel.entityName,
                         null,
-                        null,
+                        null
                       )
                       .subscribe((res3) => {
                         if (res3) {

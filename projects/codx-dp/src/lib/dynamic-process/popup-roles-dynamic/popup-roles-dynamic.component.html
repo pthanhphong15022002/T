@@ -3,7 +3,7 @@
   <ng-template #body>
     <div class="row" style="height: 100% !important;">
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
-        <div class="user-mini-nav">
+        <div class="h-100 scroll-y">
           <div *ngIf="process.permissions != null && process.permissions.length > 0">
             <ng-container *ngFor="let perm of process.permissions; index as i;">
               <div *ngIf="roleType != 'full' && perm.roleType == roleType" class="d-flex justify-content-between list-title w-100" (click)="changePermission(i)"

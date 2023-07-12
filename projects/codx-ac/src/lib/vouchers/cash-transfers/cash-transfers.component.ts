@@ -18,11 +18,10 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
+import { IAcctTran } from '../sales-invoices/interfaces/IAcctTran.interface';
 import { CashTransferService } from './cash-transfers.service';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
 import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
-import { SumFormat, TableColumn } from '../sales-invoices/models/TableColumn.model';
-import { IAcctTran } from '../sales-invoices/interfaces/IAcctTran.interface';
 
 @Component({
   selector: 'lib-cash-transfers',
@@ -54,15 +53,16 @@ export class CashTransfersComponent
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
 
-  columns: TableColumn[];
   lines: IAcctTran[][] = [[]];
   loading: boolean = false;
+  isFirstChange: boolean = true;
   fmAcctTrans: FormModel = {
     entityName: 'AC_AcctTrans',
     formName: 'AcctTrans',
     gridViewName: 'grvAcctTrans',
     entityPer: 'AC_AcctTrans',
   };
+  gvsAcctTrans: any;
 
   overflowed: boolean = false;
   expanding: boolean = false;
@@ -90,42 +90,7 @@ export class CashTransfersComponent
     this.cache
       .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
       .subscribe((gvs) => {
-        this.columns = [
-          new TableColumn({
-            labelName: 'Num',
-            headerText: 'STT',
-          }),
-          new TableColumn({
-            labelName: 'Account',
-            headerText: gvs?.AccountID?.headerText ?? 'Tài khoản',
-            footerText: 'Tổng cộng',
-            footerClass: 'text-end',
-          }),
-          new TableColumn({
-            labelName: 'Debt1',
-            headerText: 'Nợ',
-            field: 'transAmt',
-            headerClass: 'text-end',
-            footerClass: 'text-end',
-            hasSum: true,
-            sumFormat: SumFormat.Currency,
-          }),
-          new TableColumn({
-            labelName: 'Debt2',
-            headerText: 'Có',
-            field: 'transAmt',
-            headerClass: 'text-end',
-            footerClass: 'text-end',
-            hasSum: true,
-            sumFormat: SumFormat.Currency,
-          }),
-          new TableColumn({
-            labelName: 'Memo',
-            headerText: gvs?.Memo?.headerText ?? 'Ghi chú',
-            headerClass: 'pe-3',
-            footerClass: 'pe-3',
-          }),
-        ];
+        this.gvsAcctTrans = gvs;
       });
   }
 
@@ -200,6 +165,14 @@ export class CashTransfersComponent
       return;
     }
 
+    // prevent this function from being called twice on the first run
+    if (this.isFirstChange) {
+      this.isFirstChange = false;
+      return;
+    }
+
+    this.expanding = false;
+
     this.loading = true;
     this.lines = [];
     this.api
@@ -211,33 +184,8 @@ export class CashTransfersComponent
       )
       .subscribe((res: IAcctTran[]) => {
         console.log(res);
-        if (!res) {
-          this.loading = false;
-          return;
-        }
-        
-        this.lines = this.groupBy(res, 'entryID');
-
-        // calculate totalRow
-        const totalRow: { total1: number; total2: number } = {
-          total1: 0,
-          total2: 0,
-        };
-        for (const group of this.lines) {
-          for (const line of group) {
-            if (!line.crediting) {
-              totalRow.total1 += line.transAmt;
-            } else {
-              totalRow.total2 += line.transAmt;
-            }
-          }
-        }
-        for (const col of this.columns) {
-          if (col.labelName === 'Debt1') {
-            col.sum = totalRow.total1;
-          } else if (col.labelName === 'Debt2') {
-            col.sum = totalRow.total2;
-          }
+        if (res) {
+          this.lines = this.groupBy(res, 'entryID');
         }
 
         this.loading = false;
