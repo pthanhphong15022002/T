@@ -97,6 +97,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   grvSetupQuotationsLines: any;
   crrCustomerID: string;
   copyToRecID: any;
+  disabledShowInput: boolean = false;
+  planceHolderAutoNumber: any = '';
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -177,6 +179,30 @@ export class PopupAddQuotationsComponent implements OnInit {
       .subscribe((res) => {
         this.grvSetupQuotations = res;
       });
+
+    if (this.action != 'edit') {
+      this.codxCM
+        .getFieldAutoNoDefault('CM0202', 'CM_Quotations')
+        .subscribe((res) => {
+          if (res && !res.stop) {
+            this.disabledShowInput = true;
+            this.cache.message('AD019').subscribe((mes) => {
+              if (mes)
+                this.planceHolderAutoNumber =
+                  mes?.customName || mes?.description;
+            });
+          } else {
+            this.disabledShowInput = false;
+            if (!this.quotations.quotationID)
+              this.codxCM
+                .genAutoNumberDefault('CM0202', 'CM_Quotations', 'QuotationID')
+                .subscribe((autoNum) => {
+                  this.quotations.quotationID = autoNum;
+                  // this.form.formGroup.patchValue(this.quotations);
+                });
+          }
+        });
+    } else this.disabledShowInput = true;
   }
 
   beforeSave(op: RequestOption) {

@@ -475,7 +475,9 @@
                     <div class="mt-5">
                       <codx-quotations-tab-view
                         [funcID]="'CM0202'"
-                        [showButton]="true"
+                        [showButton]="
+                          dataSelected.status == '99' ? false : true
+                        "
                         [customerID]="dataSelected.recID"
                         [predicates]="'CustomerID==@0'"
                         [dataValues]="dataSelected.recID"
@@ -642,7 +644,6 @@
                 </ng-container>
               </ng-template>
             </codx-tab-cm>  -->
-
           </div>
         </div>
         <ng-template #tabIns let-name>

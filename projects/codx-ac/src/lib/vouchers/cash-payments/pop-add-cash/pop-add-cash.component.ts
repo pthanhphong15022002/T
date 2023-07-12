@@ -92,6 +92,32 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('grid') public grid: GridComponent;
   @ViewChild('annotationsave') annotationsave: ProgressBar;
   @ViewChild('annotationform') annotationform: ProgressBar;
+  @ViewChild('cbxCashBook') cbxCashBook: any;
+  @ViewChild('tExchange')
+  set tExchange(eleExchange: any) {
+    setTimeout(() => {
+      if (eleExchange) {
+        var ele = eleExchange.elRef.nativeElement.firstElementChild
+          .firstElementChild.firstElementChild as any;
+        if (ele && ele.readOnly) {
+          ele.setAttribute('tabindex', '-1');
+        }
+        console.log();
+      }
+    }, 1000);
+  }
+  @ViewChild('tVourcherNo')
+  set tVourcherNo(eleVourcherNo: any) {
+    setTimeout(() => {
+      if (eleVourcherNo) {
+        var ele = eleVourcherNo.elRef.nativeElement.firstElementChild
+          .firstElementChild as any;
+        if (ele && ele.readOnly) {
+          ele.setAttribute('tabindex', '-1');
+        }
+      }
+    }, 1000);
+  }
   headerText: string;
   dialog!: DialogRef;
   cashpayment: any;
@@ -183,7 +209,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.action = dialogData.data?.formType;
     this.cashpayment = { ...dialog.dataService.dataSelected };
     this.journal = dialogData.data?.journal;
-    this.modegrid = this.journal.inputMode;
+    this.modegrid = this.journal.addNewMode;
     this.baseCurr = this.journal.unbounds.baseCurr;
     switch (this.dialog.formModel.funcID) {
       case 'ACT0429':
@@ -495,6 +521,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.predicateControl(this.gridCash.visibleColumns);
     this.gridCash.hideColumns(this.hideFields);
     setTimeout(() => {
+      if (this.cbxCashBook) {
+        var ele = this.cbxCashBook.elRef.nativeElement.firstElementChild
+          .firstElementChild.firstElementChild.children[1] as HTMLInputElement;
+        if (ele) {
+          ele.focus();
+          ele.setSelectionRange(0, 1000);
+        }
+      }
       this.loadingform = false;
     }, 500);
   }
@@ -518,6 +552,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     this.gridSet.hideColumns(this.hideFieldsSet);
     setTimeout(() => {
+      if (this.cbxCashBook) {
+        var ele = this.cbxCashBook.elRef.nativeElement.firstElementChild
+          .firstElementChild.firstElementChild.children[1] as HTMLInputElement;
+        if (ele) {
+          ele.focus();
+          ele.setSelectionRange(0, 1000);
+        }
+      }
       this.loadingform = false;
     }, 500);
   }
@@ -557,7 +599,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 break;
               case 'dr':
               case 'cr':
-                if (this.journal.brigdeAcctControl == '2') {
+                if (this.journal.entryMode == '2') {
                   this.requireFields = res.requireFields;
                   this.lockFields = res.lockField;
                   this.requireGrid();
@@ -1483,7 +1525,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   loadAccountControl() {
-    if (this.journal.brigdeAcctControl == '1') {
+    if (this.journal.entryMode == '1') {
       this.hideFields.push('CR2');
       this.hideFields.push('CR');
       if (this.cashpayment.currencyID == this.baseCurr) {
@@ -1612,9 +1654,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     console.log(e);
     console.log((e as any).srcElement.nextElementSibling);
     if (e.key == 'Tab') {
-      // if (this.gridCash) {
-      //   this.gridCash.autoAddRow = true;
-      // }
       if (document.activeElement.className == 'e-tab-wrap') {
         switch (this.cashpayment.subType) {
           case '1':
@@ -1639,16 +1678,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
   @HostListener('click', ['$event'])
   onClick(e) {
-      if (
-        e.target.closest('.e-grid') == null &&
-        e.target.closest('.e-popup') == null &&
-        e.target.closest('.edit-value') == null
-      ) {
-        if (this.gridCash && this.gridCash.gridRef.isEdit) {
-          this.gridCash.autoAddRow = false;
-          this.gridCash.endEdit();
-        }
+    if (
+      e.target.closest('.e-grid') == null &&
+      e.target.closest('.e-popup') == null &&
+      e.target.closest('.edit-value') == null
+    ) {
+      if (this.gridCash && this.gridCash.gridRef.isEdit) {
+        this.gridCash.autoAddRow = false;
+        this.gridCash.endEdit();
       }
+    }
   }
   //#endregion
 }

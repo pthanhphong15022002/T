@@ -47,6 +47,7 @@ export class TabDetailCustomComponent
   @Input() checkMoreReason = true;
   @Input() mergedList: any[] = [];
   @Input() listSteps: any;
+  @Input() isUpdateTab: any;
   @Output() saveAssign = new EventEmitter<any>();
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   // @Output() contactEvent = new EventEmitter<any>();
@@ -86,6 +87,7 @@ export class TabDetailCustomComponent
   vllStatusQuotation: any;
   grvSetupContract: any[] = [];
   vllStatusContract: any;
+  modifiedOn: any;
   constructor(
     private inject: Injector,
     private codxCmService: CodxCmService,
@@ -103,7 +105,13 @@ export class TabDetailCustomComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
       this.isDataLoading=true;
-      this.dataSelected = this.dataSelected;
+      // if (!this.modifiedOn) {
+      //   this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
+      // }
+      // if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
+      //   this.dataSelected = changes.dataSelected.currentValue;
+      // }
+      this.dataSelected = changes.dataSelected.currentValue;
       this.loadContactDeal?.getListContactsByObjectId(this.dataSelected?.recID);
     }
     if (changes?.listSteps) {

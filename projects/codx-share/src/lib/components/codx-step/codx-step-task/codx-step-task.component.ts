@@ -22,7 +22,7 @@ import {
   Util,
 } from 'codx-core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom} from 'rxjs';
 import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
 import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
 import { TM_Tasks } from '../../codx-tasks/model/task.model';
@@ -60,9 +60,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
-  @Input() isShowMore = true; // show more function
   @Input() isShowStep = false;
-  @Input() isShowButton = true;
   @Input() isShowFile = true;
   @Input() isShowComment = true;
   @Input() isDeepCopy = true; // copy sâu
@@ -75,9 +73,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isStart = true; // bắt đầu ngay
   @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isRoleAll = true;
-  @Input() isViewStep = false;
   @Input() isShowElement = true;
   @Input() isAddTask = false;
+
+  @Input() isViewStep = false;// chỉ xem 
+
+  @Input() isMoveStage = false;// chuyển giai đoạn
+  @Input() isSuccessAllTask = false;// dành cho chuyển giai đoạn
+  @Input() isSuccessTaskDefault = false;//dành cho chuyển giai đoạn
 
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -1252,8 +1255,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region progress
   async openPopupUpdateProgress(data, type) {
-    if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
+    if ((!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep) && !this.isMoveStage){
       return;
+    }
     let checkUpdate = this.stepService.checkUpdateProgress(
       data,
       type,
@@ -1389,7 +1393,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.valueChangeProgress.emit(dataProgress);
     }
   }
+
   checkUpdateProgress(dataUpdate, type) {
+    if(this.isMoveStage) {
+      return true;
+    }
     if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
       if (type == 'P') {
         return this.isUpdateProgressStep && this.isRoleAll ? true : false;
@@ -1420,6 +1428,33 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     }
     return false;
+  }
+
+  setProgress(data, type) {
+    if (!this.isMoveStage) {
+      return data?.progress;
+    }
+    if (this.isSuccessAllTask) {
+      return 100;
+    }
+    if (this.isSuccessTaskDefault) {
+      if (type === "G" && data?.task?.length > 0) {
+        const countDefault = data.task.filter(t => t?.requireCompleted).length;
+        const countTask = data.task.length;
+  
+        if (!countDefault || countDefault === 0) {
+          return data?.progress;
+        }
+        return Number(((100 / countTask) * countDefault || 0).toFixed(1));
+      } else {
+        if (data?.requireCompleted) {
+          return 100;
+        } else {
+          return data?.progress;
+        }
+      }
+    } 
+    return data?.progress;
   }
   //#endregion
 

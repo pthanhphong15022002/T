@@ -87,7 +87,7 @@ export class PopupViewsDetailsProcessComponent
   dataFile: any;
   heightFlowChart = 700;
   loadFlow = false;
-  offset = '0px';
+  offset = '0px'; //47
   loadedFigureOut = false;
 
   constructor(
