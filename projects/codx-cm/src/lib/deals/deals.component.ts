@@ -943,6 +943,8 @@ export class DealsComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
+          data.modifiedOn = new Date();
+          this.dataSelected = data;
           this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
