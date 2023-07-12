@@ -732,26 +732,26 @@ export class PopupPolicyalComponent
     }
   }
 
-  onClickHideComboboxPopup(e): void {
-    if(e == null){
-    this.detectorRef.detectChanges();
-      return;
-    }
-    if(e.id){
-        this.alpolicyObj.hasIncludeObjects = e.id;
-    }
-    else{
-      this.alpolicyObj.hasIncludeObjects = null;
-    }
+  // onClickHideComboboxPopup(e): void {
+  //   if(e == null){
+  //   this.detectorRef.detectChanges();
+  //     return;
+  //   }
+  //   if(e.id){
+  //       this.alpolicyObj.hasIncludeObjects = e.id;
+  //   }
+  //   else{
+  //     this.alpolicyObj.hasIncludeObjects = null;
+  //   }
 
-    if(this.alpolicyObj.hasIncludeObjects){
-      this.lstApplyObj = this.alpolicyObj.hasIncludeObjects.split(';')  
-    }
-    else{
-      this.lstApplyObj = [];
-    }
-    this.detectorRef.detectChanges();
-  }
+  //   if(this.alpolicyObj.hasIncludeObjects){
+  //     this.lstApplyObj = this.alpolicyObj.hasIncludeObjects.split(';')  
+  //   }
+  //   else{
+  //     this.lstApplyObj = [];
+  //   }
+  //   this.detectorRef.detectChanges();
+  // }
 
   onClickOpenSelectIncludeObj(){
     if(this.alpolicyObj.hasIncludeObjects){

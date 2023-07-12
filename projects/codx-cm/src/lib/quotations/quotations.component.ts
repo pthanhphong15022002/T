@@ -383,7 +383,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     res.versionNo = res.versionNo ?? 'V1';
     res.revision = res.revision ?? 0;
     res.versionName = res.versionNo + '.' + res.revision;
-    res.status = res.status ?? '0';
+    // res.status = res.status ?? '0';
     res.exchangeRate = res.exchangeRate ?? this.exchangeRateDefault;
     res.totalAmt = res.totalAmt ?? 0;
     res.currencyID = res.currencyID ?? this.currencyIDDefault;
