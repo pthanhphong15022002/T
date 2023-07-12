@@ -576,26 +576,28 @@ export class PopupAddDealComponent
     if ($event && $event.data) {
       this.deal.businessLineID = $event.data;
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
-        var processId =
-          !$event.component.itemsSelected[0].ProcessID && this.processIdDefault
-            ? this.processIdDefault
-            : $event.component.itemsSelected[0].ProcessID;
-        if (processId) {
-          this.deal.processID = processId;
-          var result = this.checkProcessInList(processId);
-          if (result) {
-            this.listInstanceSteps = result?.steps;
-            this.listParticipants = result?.permissions;
-            this.deal.dealID = result?.dealId;
-            this.deal.endDate = this.HandleEndDate(
-              this.listInstanceSteps,
-              this.action,
-              null
-            );
-            this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
-            this.changeDetectorRef.detectChanges();
-          } else {
-            this.getListInstanceSteps(processId);
+        if(!$event.component?.itemsSelected[0]?.ProcessID && !this.processIdDefault ){
+          this.getParamatersProcessDefault();
+        }
+        else {
+          var processId = !$event.component.itemsSelected[0].ProcessID && this.processIdDefault? this.processIdDefault: $event.component.itemsSelected[0].ProcessID;
+          if (processId) {
+            this.deal.processID = processId;
+            var result = this.checkProcessInList(processId);
+            if (result) {
+              this.listInstanceSteps = result?.steps;
+              this.listParticipants = result?.permissions;
+              this.deal.dealID = result?.dealId;
+              this.deal.endDate = this.HandleEndDate(
+                this.listInstanceSteps,
+                this.action,
+                null
+              );
+              this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
+              this.changeDetectorRef.detectChanges();
+            } else {
+              this.getListInstanceSteps(processId);
+            }
           }
         }
         this.changeDetectorRef.detectChanges();
