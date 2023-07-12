@@ -122,6 +122,9 @@ export class AddContractsComponent implements OnInit {
     entityName: 'CM_ContractsPayments',
     gridViewName: 'grvCMContractsPayments',
   };
+  disabledShowInput: boolean = false;
+  planceHolderAutoNumber: any = '';
+  grvSetup: any;
 
   constructor(
     private cache: CacheService,
@@ -154,6 +157,36 @@ export class AddContractsComponent implements OnInit {
         }
       }
     });
+    this.cache
+      .gridViewSetup(
+        this.dialog?.formModel.formName,
+        this.dialog?.formModel.gridViewName
+      )
+      .subscribe((grv) => {
+        this.grvSetup = grv;
+      });
+    this.cmService
+      .getFieldAutoNoDefault(
+        this.dialog?.formModel.funcID,
+        this.dialog?.formModel.entityName
+      )
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.disabledShowInput = false;
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes)
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          });
+        } else {
+          this.disabledShowInput = true;
+          if (this.action == 'add' || this.action == 'copy')
+            this.cmService
+              .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
+              .subscribe((autoNum) => {
+                this.contracts.contractID = autoNum;
+              });
+        }
+      });
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
@@ -180,13 +213,7 @@ export class AddContractsComponent implements OnInit {
       this.contracts.pmtStatus = '1';
       this.contracts.delStatus = '1';
       this.contracts.pmtMethodID = 'ATM';
-      this.contracts.contractID = await firstValueFrom(
-        this.cmService.genAutoNumberDefault(
-          'CM0204',
-          'CM_Contracts',
-          'contractID'
-        )
-      );
+
       // this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
       this.contracts.pmtStatus = this.contracts.pmtStatus
         ? this.contracts.pmtStatus
@@ -210,13 +237,14 @@ export class AddContractsComponent implements OnInit {
       this.contracts = data;
       delete this.contracts['id'];
       this.contracts.recID = Util.uid();
-      this.contracts.contractID = await firstValueFrom(
-        this.cmService.genAutoNumberDefault(
-          'CM0204',
-          'CM_Contracts',
-          'contractID'
-        )
-      );
+
+      // this.contracts.contractID = await firstValueFrom(
+      //   this.cmService.genAutoNumberDefault(
+      //     'CM0204',
+      //     'CM_Contracts',
+      //     'contractID'
+      //   )
+      // );
       // this.contracts.contractID =
       //   'HD-' + (Math.random() * 10000000000).toFixed(0);
       this.getQuotationsLinesInContract(
