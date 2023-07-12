@@ -47,6 +47,7 @@ export class TabDetailCustomComponent
   @Input() checkMoreReason = true;
   @Input() mergedList: any[] = [];
   @Input() listSteps: any;
+  @Input() isUpdateTab: any;
   @Output() saveAssign = new EventEmitter<any>();
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   // @Output() contactEvent = new EventEmitter<any>();

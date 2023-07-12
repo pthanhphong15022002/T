@@ -1133,7 +1133,7 @@ export class CodxCmService {
     noValidCout,
     ignoredFields: string[] = []
   ) {
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase()); ///1 so truogn hợp ko check bên ngoai là bỏ qua
     var keygrid = Object.keys(grvSetup);
     var keymodel = Object.keys(model);
     for (let index = 0; index < keygrid.length; index++) {
