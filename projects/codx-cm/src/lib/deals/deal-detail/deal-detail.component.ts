@@ -93,6 +93,7 @@ export class DealDetailComponent implements OnInit {
   mergedList: any[] = [];
   viewTag: string = '';
   modifiedOn: any;
+  isUpdateTab:boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -252,6 +253,7 @@ export class DealDetailComponent implements OnInit {
       } else {
         this.listSteps = null;
       }
+      this.isUpdateTab = this.checkHaveField(this.listSteps);
       this.pushTabFields((this.checkHaveField(this.listSteps)));
     });
   }
