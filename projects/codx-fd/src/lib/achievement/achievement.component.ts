@@ -269,8 +269,8 @@ export class AchievementComponent extends UIComponent implements OnInit {
   }
 
   setPredicate() {
-    this.options.predicate = '';
-    this.options.dataValue = '';
+    this.options.predicate = '(TransType=@0) && ';
+    this.options.dataValue = '3';
     this.predicate = '';
     this.dataValue = '';
     var arrTemp = [];
@@ -300,7 +300,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
         value: this.emloyeeID,
         dropdownCalendar: false,
       });
-    let i = 0;
+    let i = 1;
     var t = this;
     arrTemp.forEach(function (element) {
       if (!element) return;
@@ -349,7 +349,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
       } else t.dataValue = dtValue;
     });
     this.options.predicate += this.predicate;
-    this.options.dataValue += this.dataValue;
+    this.options.dataValue += ';' + this.dataValue;
 
     this.loadList = true;
     if (this.listview) {
