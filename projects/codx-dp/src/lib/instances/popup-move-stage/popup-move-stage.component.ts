@@ -775,7 +775,7 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.progress = taskOld.progress;
     taskNew.modifiedOn = new Date();
     taskNew.modifiedBy = this.user.userID;
-    taskNew.isUpdate = taskNew.isUpdate;
+    taskNew.isUpdate = taskOld.isUpdate;
   }
   updateDataGroup(groupNew: any, groupOld: any) {
     groupNew.progress = groupOld?.progress;
