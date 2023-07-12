@@ -60,9 +60,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
-  @Input() isShowMore = true; // show more function
   @Input() isShowStep = false;
-  @Input() isShowButton = true;
   @Input() isShowFile = true;
   @Input() isShowComment = true;
   @Input() isDeepCopy = true; // copy sâu
@@ -75,9 +73,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isStart = true; // bắt đầu ngay
   @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isRoleAll = true;
-  @Input() isViewStep = false;
   @Input() isShowElement = true;
   @Input() isAddTask = false;
+
+  @Input() isViewStep = false;// chỉ xem 
+
+  @Input() isMoveStage = false;// chuyển giai đoạn
+  @Input() isSuccessAllTask = false;// dành cho chuyển giai đoạn
+  @Input() isSuccessTaskDefault = false;//dành cho chuyển giai đoạn
 
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -1252,8 +1255,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region progress
   async openPopupUpdateProgress(data, type) {
-    if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
+    if ((!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep) && !this.isMoveStage){
       return;
+    }
     let checkUpdate = this.stepService.checkUpdateProgress(
       data,
       type,
@@ -1389,7 +1393,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.valueChangeProgress.emit(dataProgress);
     }
   }
+
   checkUpdateProgress(dataUpdate, type) {
+    if(this.isMoveStage) {
+      return true;
+    }
     if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
       if (type == 'P') {
         return this.isUpdateProgressStep && this.isRoleAll ? true : false;
@@ -1420,6 +1428,26 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     }
     return false;
+  }
+
+  setProgress(data){
+    if(!this.isMoveStage){
+      return data?.progress;
+    }else{
+      if(this.isSuccessAllTask){
+        return 100;
+      }
+      if(this.isSuccessTaskDefault){
+        if(data?.requireCompleted){
+          return 100;
+        }else{
+          return data?.progress;
+        }
+      }
+      if(!this.isSuccessTaskDefault && !this.isSuccessAllTask){
+        return data?.progress;
+      }     
+    } 
   }
   //#endregion
 

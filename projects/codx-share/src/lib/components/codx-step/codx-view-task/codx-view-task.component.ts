@@ -370,6 +370,13 @@ export class CodxViewTaskComponent implements OnInit {
               res.disabled = true;
             }
             break;
+          case 'DP31': // bắt đầu ngay
+            if((this.dataView?.dependRule != "0" || this.dataView?.status != "1")){
+              res.disabled = true;
+            }else if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
+                res.isblur = true;
+              }           
+            break;
         }
       });
     }
