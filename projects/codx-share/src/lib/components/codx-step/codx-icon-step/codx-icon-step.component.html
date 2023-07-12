@@ -6,12 +6,12 @@
     border: '2px solid'
   }"
 >
-  <span [ngClass]="icon" class="fs-6"></span>
+  <span [ngClass]="icon" class="text-primary"></span>
 </div>
 
 <div class="d-flex align-items-center " *ngIf="!isStep">
   <span
-      class="me-4 cricle"
+      class="me-3 cricle"
       [ngClass]="task?.icon + ' icon-' + sizeIcon"
       [ngStyle]="{'color' : (task?.color || 'gray'), 'border': '2px solid', 'width': sizeBoder, 'height': sizeBoder}"
     ></span>  
