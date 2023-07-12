@@ -792,7 +792,7 @@ export class DealsComponent
             if (res) {
               data.closed = check ? true : false;
               data.closedOn = check ? new Date() : data.ClosedOn;
-              data.ModifiedOn = new Date();
+              data.modifiedOn = new Date();
               this.dataSelected = data;
               this.view.dataService.update(data).subscribe();
               this.notificationsService.notifyCode(
@@ -1525,6 +1525,7 @@ export class DealsComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.status = '1';
+                  this.dataSelected.nodifiedBy = new Date();
                   this.detailViewDeal.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
