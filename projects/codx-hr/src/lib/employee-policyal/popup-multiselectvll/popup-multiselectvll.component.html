@@ -1,0 +1,32 @@
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body]="body"
+    [footer]="footer"
+    [dialog]="dialog"
+>
+<ng-template #body>
+    <div class="form-group row mt-5">
+        <div *ngFor="let data of lstData" class="mb-3">
+            <codx-input
+              type="checkbox"
+              class="check-circle"
+              [label]="data.text"
+              [checked]="data.checked"
+              field="dim"
+              (valueChange)="onChangeSelect($event, data)"
+            ></codx-input>
+          </div>
+    </div>
+
+</ng-template>
+</codx-form>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>

@@ -353,13 +353,13 @@ export class CodxAdService {
   }
 
   //1 = trial - 2 = hire - 0 = extend
-  buyNewModule(moduleSales: string, mode: string) {
+  buyNewModule(moduleSales: string, mode: string, moduleName: string) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
       'UsersBusiness',
       'BuyNewModuleAsync',
-      [moduleSales, mode]
+      [moduleSales, mode, moduleName]
     );
   }
 

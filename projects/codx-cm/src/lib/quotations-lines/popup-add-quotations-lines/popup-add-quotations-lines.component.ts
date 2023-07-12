@@ -6,6 +6,7 @@ import {
   CodxInputComponent,
   DialogData,
   DialogRef,
+  NotificationsService,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 
@@ -31,6 +32,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
 
   constructor(
     private codxCM: CodxCmService,
+    private notiService: NotificationsService,
     private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -62,6 +64,9 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
     );
     if (count > 0) return;
 
+    if (!this.quotationsLine.quantity || this.quotationsLine.quantity <= 0) {
+      this.notiService.notifyCode('CM025');
+    }
     this.dialog.close(this.quotationsLine);
   }
 

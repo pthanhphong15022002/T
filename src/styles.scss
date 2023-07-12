@@ -586,10 +586,10 @@ codx-user-inner .top-100.start-100 {
 }
 
 .role-group ejs-listview .e-ul > li .d-flex.user-card {
-  margin-top: 2px;
-  border-radius: 4px;
+  margin-top: 1px;
+  border-radius: 2px;
   margin-bottom: 0px;
-  padding: 4px 8px !important;
+  padding: 8px !important;
 }
 
 .role-group ejs-listview .e-ul > li .d-flex.user-card:hover {
@@ -909,6 +909,7 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  width: 100px;
 }
 
 .breadcrum-box .breadcumb-extend {
@@ -1094,6 +1095,7 @@ codx-layout-add .codx-tab .tab-content {
 .dialog-extend codx-layout-add .codx-tab .tab-content{
   right: 360px;
 }
+
 codx-layout-add .card-header {
   height: 99px !important;
   min-height: 99px !important;
@@ -2263,10 +2265,11 @@ codx-tasks {
   }
 }
 
-.pin-bar {
+//.pin-bar {
   /* width: calc(100% - 400px); */
-  width: 100%!important;
-}
+  //width: 100%!important;
+//}
+
 .pin-bar .codx-text.e-input {
   border-radius: 20px !important;
   padding-left: 12px;
@@ -2521,6 +2524,7 @@ codx-valuelist .btn.select-icon {
     transition: rotate 0.2s ease-in-out;
   }
 }
+
 
 // control calendar
 codx-calendar {

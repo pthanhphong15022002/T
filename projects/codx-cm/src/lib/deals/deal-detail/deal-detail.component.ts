@@ -9,12 +9,16 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ApiHttpService, CRUDService, CacheService, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CRUDService,
+  CacheService,
+  FormModel,
+} from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
-import { CM_Contacts } from '../../models/cm_model';
-import { async } from '@angular/core/testing';
-import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CM_Contracts } from '../../models/cm_model';
+
 
 @Component({
   selector: 'codx-deal-detail',
@@ -25,13 +29,14 @@ export class DealDetailComponent implements OnInit {
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() gridViewSetup: any;
-
+  @Input() listSteps: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
+  @Output() listInstanceStep = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('tabDetailViewDetail')
@@ -39,6 +44,7 @@ export class DealDetailComponent implements OnInit {
   @ViewChild('quotations') quotations: TemplateRef<any>;
   @ViewChild('contract') contract: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -54,7 +60,12 @@ export class DealDetailComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false, template: null },
+    {
+      name: 'AssignTo',
+      textDefault: 'Giao việc',
+      isActive: false,
+      template: null,
+    },
     {
       name: 'Approve',
       textDefault: 'Ký duyệt',
@@ -75,86 +86,90 @@ export class DealDetailComponent implements OnInit {
 
   nameDetail = '';
   tabClicked = '';
-  contactPerson:any;
+  contactPerson: any;
 
   tabDetail = [];
+  listContract: CM_Contracts[];
+  mergedList: any[] = [];
   viewTag: string = '';
+  modifiedOn: any;
+  isUpdateTab:boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private api: ApiHttpService,
-    private cache: CacheService,
+    private cache: CacheService
   ) {
     this.executeApiCalls();
+
   }
 
   ngOnInit(): void {
-    this.listTab();
+     this.listTab();
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.dataSelected) {
-
       if (
         changes['dataSelected'].currentValue != null &&
         changes['dataSelected'].currentValue?.recID
       ) {
-        this.dataSelected = this.dataSelected;
-        this.promiseAllAsync();
         this.getTags(this.dataSelected);
+        this.dataSelected = this.dataSelected;
+        if (!this.modifiedOn) {
+          this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
+          this.promiseAllAsync();
+        }
+        if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
+          this.promiseAllAsync();
+          this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
+        }
       }
     }
   }
 
   async promiseAllAsync() {
     try {
-    await this.getTree() ; //ve cay giao viec
-    await this.getContactByDeaID(this.dataSelected.recID);
-
+      await this.getTree(); //ve cay giao viec
+      await this.getListInstanceStep();
+      await this.getContactByDeaID(this.dataSelected.recID)
+      await this.getHistoryByDeaID();
 
     } catch (error) {}
-
   }
-
 
   listTab() {
-     this.tabDetail = [
-      {
-        name: 'Information',
-        text: 'Thông tin chung',
-        icon: 'icon-info',
-      },
-      {
-        name: 'Field',
-        text: 'Thông tin mở rộng',
-        icon: 'icon-add_to_photos',
-      },
-      {
-        name: 'Contact',
-        text: 'Liên hệ',
-        icon: 'icon-contact_phone',
-      },
-      {
-        name: 'Opponent',
-        text: 'Đối thủ',
-        icon: 'icon-people_alt',
-      },
-      {
-        name: 'Task',
-        text: 'Công việc',
-        icon: 'icon-more',
-      },
-      {
-        name: 'History',
-        text: 'Lịch sử hoạt động',
-        icon: 'icon-sticky_note_2',
-      },
+    this.tabDetail = [
+     {
+       name: 'Information',
+       text: 'Thông tin chung',
+       icon: 'icon-info',
+     },
+     {
+       name: 'Contact',
+       text: 'Liên hệ',
+       icon: 'icon-contact_phone',
+     },
+     {
+       name: 'Opponent',
+       text: 'Đối thủ',
+       icon: 'icon-people_alt',
+     },
+     {
+       name: 'Task',
+       text: 'Công việc',
+       icon: 'icon-more',
+     },
+     {
+       name: 'History',
+       text: 'Lịch sử hoạt động',
+       icon: 'icon-sticky_note_2',
+     },
 
-    ];
-  }
+   ];
+ }
   async executeApiCalls() {
     try {
       this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
@@ -177,42 +192,106 @@ export class DealDetailComponent implements OnInit {
     });
   }
 
-  changeFooter(e) {
-  }
+  changeFooter(e) {}
 
-  async getContactByDeaID(recID){
+  async getHistoryByDeaID() {
+    if (this.dataSelected?.recID) {
+      var data = [this.dataSelected?.recID];
+      this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
+        if (res) {
+          this.mergedList = res[0];
+        }
+      });
+    }
+  }
+  async getContactByDeaID(recID) {
     this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
       if (res) {
         this.contactPerson = res;
-      }
-      else {
+      } else {
         this.contactPerson = null;
       }
+
     });
   }
- //load giao việc
- async  getTree() {
+  //load giao việc
+  async getTree() {
     let seesionID = this.dataSelected.refID;
     this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
       this.treeTask = tree || [];
     });
   }
-  saveAssign(e){
-    if(e) this.getTree();
+  saveAssign(e) {
+    if (e) this.getTree();
   }
 
-  getContactPerson($event){
-    if($event) {
-      this.contactPerson = $event?.isDefault ? $event: null;
+  getContactPerson($event) {
+    if ($event) {
+      this.contactPerson = $event?.isDefault ? $event : null;
       this.changeDetectorRef.detectChanges();
     }
   }
 
-  getTags(data){
+  getTags(data) {
     this.viewTag = '';
     setTimeout(() => {
-      this.viewTag = this.dataSelected?.tags
+      this.viewTag = this.dataSelected?.tags;
     }, 100);
-     //this.viewTag = this.dataSelected?.tags
+  }
+
+  getListInstanceStep() {
+    var data = [
+      this.dataSelected?.refID,
+      this.dataSelected?.processID,
+      this.dataSelected?.status,
+    ];
+    this.codxCmService.getStepInstance(data).subscribe((res) => {
+      if (res) {
+        this.listSteps = res;
+        this.listInstanceStep.emit({ listStep: this.listSteps });
+        this.checkCompletedInstance(this.dataSelected?.status);
+      } else {
+        this.listSteps = null;
+      }
+      this.isUpdateTab = this.checkHaveField(this.listSteps);
+      this.pushTabFields((this.checkHaveField(this.listSteps)));
+    });
+  }
+  checkCompletedInstance(dealStatus: any) {
+    if (dealStatus == '1' || dealStatus == '2') {
+      this.deleteListReason(this.listSteps);
+    }
+  }
+  deleteListReason(listStep: any): void {
+    listStep.pop();
+    listStep.pop();
+  }
+  checkHaveField(listStep: any){
+    var isCheck = false;
+    for(let item of listStep) {
+        if(item?.fields?.length > 0 && item?.fields) {
+          isCheck = true;
+          return isCheck;
+        }
+    }
+    return isCheck;
+  }
+  pushTabFields(isCheck) {
+    var index = this.tabDetail.findIndex(x=>x.name == 'Field');
+    if (isCheck) {
+      if(index == -1) {
+        var objField = {
+            name: 'Field',
+            text: 'Thông tin mở rộng',
+            icon: 'icon-add_to_photos',
+        };
+        this.tabDetail.splice(1, 0, objField);
+        this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
+      }
+    }
+    else {
+      index != -1 && this.tabDetail.splice(index, 1);
+      this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
+    }
   }
 }

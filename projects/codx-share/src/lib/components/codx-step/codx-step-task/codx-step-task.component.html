@@ -24,7 +24,7 @@
         [dataItem]="moreDefaut"
         (changeDataMF)="changeDataMFStep($event, currentStep)"
         (clickMF)="clickMFStep($event, currentStep)"
-        *ngIf="isShowMore && !isClose"
+        *ngIf="!isMoveStage && !isClose"
       >
       </codx-mfunc>
     </div>
@@ -193,7 +193,7 @@
     </div>
   </div>
   <ng-container
-    *ngIf="isShowButton && isStart && !isClose"
+    *ngIf="!isMoveStage && isStart && !isClose"
     [ngTemplateOutlet]="buttonTemplate"
     [ngTemplateOutletContext]="{ value: '' }"
   ></ng-container>
@@ -236,7 +236,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && !isClose"
+      *ngIf="!isMoveStage && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -283,7 +283,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && !isClose"
+      *ngIf="!isMoveStage && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -367,13 +367,13 @@
       ></span>
     </div> -->
     <codx-vll
-        *ngIf="data?.group"
+        *ngIf="(data?.group && !isMoveStage)"
         [name]="'DP048'"
         [field]="'Status'"
         [value]="data?.value?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-sm"
+        class="badge badge-primary badge-sm w-95px"
       >
       </codx-vll>
     <span
@@ -405,7 +405,7 @@
       "
     >
       <codx-progressbar
-        [progress]="data?.value?.progress"
+        [progress]="setProgress(data?.value)"
         #p="ngbPopover"
         [ngbPopover]="'Cập nhật tiến độ'"
         (mouseenter)="p.open()"

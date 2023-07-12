@@ -135,11 +135,11 @@ export class ContractsComponent extends UIComponent {
       name: 'Attachment',
       textDefault: 'Đính kèm',
     },
-    { 
-      template: null, 
-      isActive: false, 
-      name: 'Task', 
-      textDefault: 'Công việc', 
+    {
+      template: null,
+      isActive: false,
+      name: 'Task',
+      textDefault: 'Công việc',
     },
     {
       template: null,
@@ -159,11 +159,11 @@ export class ContractsComponent extends UIComponent {
       name: 'Quotations',
       textDefault: 'Báo giá',
     },
-    { 
+    {
       template: null,
-      isActive: false, 
-      name: 'Order', 
-      textDefault: 'Đơn hàng', 
+      isActive: false,
+      name: 'Order',
+      textDefault: 'Đơn hàng',
     },
   ];
 
@@ -578,7 +578,7 @@ export class ContractsComponent extends UIComponent {
                         dt?.recID,
                         this.view.formModel.entityName,
                         null,
-                        null,
+                        null
                       )
                       .subscribe((res3) => {
                         if (res3) {
