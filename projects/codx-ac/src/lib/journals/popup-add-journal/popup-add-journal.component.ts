@@ -203,6 +203,20 @@ export class PopupAddJournalComponent
           this.unposter = unposter.join(';');
           this.sharer = sharer.join(';');
         });
+    } else {
+      // assign default idimControl in SYS_SettingValues to journal.idimControl
+      this.cache
+        .viewSettingValues('ACParameters')
+        .pipe(
+          map((arr) => arr.filter((f) => f.category === '1')?.[0]),
+          map((data) => JSON.parse(data.dataValue)?.IDIMControl)
+        )
+        .subscribe((defaultIdimControl) => {
+          this.journal.idimControl = defaultIdimControl;
+          this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
+            this.journal.idimControl?.split(';').includes(d.value)
+          );
+        });
     }
 
     this.cache.valueList('AC069').subscribe((res) => {
@@ -421,8 +435,11 @@ export class PopupAddJournalComponent
       this.journal.invoiceForm = null;
     }
 
+    if (!this.journalTypes110.includes(this.journal.journalType)) {
+      this.journal.idimControl = null;
+    }
+
     let tempJournal: IJournal = { ...this.journal };
-    tempJournal.autoPost = this.journal.approvalControl;
 
     // ghi so tu dong khi luu
     if (this.journal.approvalControl === '0') {

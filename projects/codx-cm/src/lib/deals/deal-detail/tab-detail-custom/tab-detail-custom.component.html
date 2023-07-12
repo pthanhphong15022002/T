@@ -1,3 +1,32 @@
+<!-- <div class="main-right">
+  <container-element [ngSwitch]="tabClicked">
+    <some-element
+      *ngSwitchCase="tabInformation"
+      [ngTemplateOutlet]="information"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabField"
+      [ngTemplateOutlet]="field"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabTask"
+      [ngTemplateOutlet]="task"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabContact"
+      [ngTemplateOutlet]="contact"
+    ></some-element>
+    <some-element
+      *ngSwitchCase="tabOpponent"
+      [ngTemplateOutlet]="opponent"
+    ></some-element>
+    <some-element
+    *ngSwitchCase="tabHistory"
+    [ngTemplateOutlet]="history"
+  ></some-element>
+    <some-element *ngSwitchDefault></some-element>
+  </container-element>
+</div> -->
 <codx-tab-cm
   [tabInfo]="tabDetail"
   [formModel]="formModel"
@@ -5,14 +34,16 @@
 >
   <!-- nvthuan công việc -->
   <ng-template #task let-data="value">
-    <step-task
+    <div *ngIf="listSteps?.length > 0 && listSteps">
+      <step-task
       [isDataLoading]="isDataLoading"
       [dataSelected]="dataSelected"
-      [listInstanceStep]="listStep"
+      [listInstanceStep]="listSteps"
       [applyFor]="'1'"
       (continueStep)="continueStep($event)"
       (saveAssignTask)="saveAssignTask($event)"
     ></step-task>
+    </div>
   </ng-template>
   <!-- nvthuan sản phẩm -->
 
@@ -292,7 +323,7 @@
 
   <ng-template #field>
     <div class="d-flex flex-column">
-      <ng-container *ngFor="let item of listStep">
+      <ng-container *ngFor="let item of listSteps">
         <codx-fields-detail-temp
           *ngIf="item?.fields?.length > 0"
           [dataStep]="item"

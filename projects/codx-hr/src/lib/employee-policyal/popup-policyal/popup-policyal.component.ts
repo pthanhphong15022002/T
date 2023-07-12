@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, HostListener, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CRUDService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent, Util } from 'codx-core';
+import { CRUDService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent, Util } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import {
   EditSettingsModel,
 } from '@syncfusion/ej2-angular-grids';
+import { PopupMultiselectvllComponent } from '../popup-multiselectvll/popup-multiselectvll.component';
 @Component({
   selector: 'lib-popup-policyal',
   templateUrl: './popup-policyal.component.html',
@@ -68,6 +69,11 @@ export class PopupPolicyalComponent
   fieldHeaderTexts;
   loadGridview1 = false;
   loadGridview2 = false;
+
+  lstSelectedObj: any = [];
+
+  //list chi tiet doi tuong ap dung
+  lstApplyObj: any =[]
 
   dataSourceGridView1 : any = [];
   dataSourceGridView2 : any = [];
@@ -151,8 +157,6 @@ export class PopupPolicyalComponent
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    console.log('data nhan vao', this,this.alpolicyObj);
-    
   }
 
   openFormUploadFile() {
@@ -166,6 +170,16 @@ export class PopupPolicyalComponent
 
   fileAdded(evt){
 
+  }
+
+  GetApplyObjs(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'GetApplyObjsAsync',
+      ['AL', this.alpolicyObj.policyID, 0]
+    );
   }
 
   onInit(): void {
@@ -310,7 +324,12 @@ export class PopupPolicyalComponent
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         console.log('data nhan vao', this.alpolicyObj);
-        
+        this.GetApplyObjs().subscribe((res) => {
+          this.lstApplyObj = res;
+        })
+        this.GetPolicyDetailBySeniorityType().subscribe((res) => {
+          this.dataSourceGridView2 = res;
+        });
         if(this.alpolicyObj.isTransferNextYear == true){
           this.transferNextYearDisabled = false;
         }
@@ -323,7 +342,6 @@ export class PopupPolicyalComponent
             this.alpolicyObj.activeOn = null;
           }
         }
-        debugger
 
         this.formGroup.patchValue(this.alpolicyObj);
         this.formModel.currentData = this.alpolicyObj;
@@ -331,10 +349,8 @@ export class PopupPolicyalComponent
         this.isAfterRender = true;
       }
     }
-    this.GetPolicyDetailBySeniorityType().subscribe((res) => {
-      this.dataSourceGridView2 = res;
-      this.loadGridview2 = true;
-    });
+
+    this.loadGridview2 = true;
   }
 
   ValChangeTransferNextYear(event){
@@ -525,6 +541,10 @@ export class PopupPolicyalComponent
             debugger
           });
       }
+
+      if(this.alpolicyObj.hasIncludeObjects == false){
+        this.alpolicyObj.includeObjects = ''
+      }
 }
 
   addRowGrid1(){
@@ -703,5 +723,68 @@ export class PopupPolicyalComponent
   onDeleteGrid2(evt){
 
   }
+
+  ValChangeHasInclueObj(event){
+    let flag = event.data;
+
+    if(flag == false){
+      this.alpolicyObj.hasIncludeObjects = false;
+    }
+  }
+
+  onClickHideComboboxPopup(e): void {
+    if(e == null){
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.alpolicyObj.hasIncludeObjects = e.id;
+    }
+    else{
+      this.alpolicyObj.hasIncludeObjects = null;
+    }
+
+    if(this.alpolicyObj.hasIncludeObjects){
+      this.lstApplyObj = this.alpolicyObj.hasIncludeObjects.split(';')  
+    }
+    else{
+      this.lstApplyObj = [];
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  onClickOpenSelectIncludeObj(){
+    if(this.alpolicyObj.hasIncludeObjects){
+      let opt = new DialogModel();
+      let popup = this.callfunc.openForm(
+        PopupMultiselectvllComponent,
+        null,
+        400,
+        450,
+        null,
+        {
+          headerText: 'Chọn đối tượng áp dụng',
+          vllName : 'HRObject',
+          formModel: this.formModel,
+          dataSelected: this.alpolicyObj.includeObjects
+        },
+        null,
+        opt
+      );
+      popup.closed.subscribe((res) => {
+        this.alpolicyObj.includeObjects = res.event
+        this.lstSelectedObj = res.event.split(';')
+        this.df.detectChanges();
+      });
+    }
+  }
+
+  // ValChangeSelectObj(event){
+  //   this.lstApplyObj = this.alpolicyObj.includeObjects.split(';')  
+  //   this.cache.valueList('HRObject').subscribe((res) => {
+  //     debugger
+  //     res.datas
+  //   })
+  // }
 }
 

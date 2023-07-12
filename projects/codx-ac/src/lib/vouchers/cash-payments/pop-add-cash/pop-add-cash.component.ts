@@ -1609,6 +1609,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
+    console.log(e);
+    console.log((e as any).srcElement.nextElementSibling);
     if (e.key == 'Tab') {
       // if (this.gridCash) {
       //   this.gridCash.autoAddRow = true;
@@ -1628,6 +1630,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       }
     }
+    // if (e.key == 'ArrowDown') {
+    //   var eArrowDown = ((e as any).srcElement.nextElementSibling) as HTMLElement;
+    //   var classname = eArrowDown.classList;
+    //   classname.add('button');
+    //   eArrowDown.click();
+    // }
   }
   @HostListener('click', ['$event'])
   onClick(e) {

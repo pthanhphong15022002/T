@@ -339,7 +339,6 @@
       <codx-role
         *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
         [fiedName]="'roles'"
-        [formModel]="form?.formModel"
         [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
         [dataSource]="participant"
         [icon]="'icon-connection-point'"

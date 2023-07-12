@@ -32,15 +32,24 @@
   </codx-card-img>
 
   <ng-template #cardTitleTmp let-data>
-    <codx-temp-full
-      style="width: 100%"
-      [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
-      [titleTmp]="tempTitle"
-      [descTmp]="descTmp"
-      [dataItem]="data"
-      [rootData]="data"
+    <div
+      [class]="
+        data.type != 'G' && data.taskGroupID
+          ? 'tmp-item-kanban p-2 mb-2 '
+          : 'w-100'
+      "
     >
-    </codx-temp-full>
+      <codx-temp-full
+        style="width: 100%"
+        [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+        [titleTmp]="tempTitle"
+        [descTmp]="descTmp"
+        [footer]="data.type != 'G' && data.taskGroupID ? footerKanban : null"
+        [dataItem]="data"
+        [rootData]="data"
+      >
+      </codx-temp-full>
+    </div>
   </ng-template>
 
   <ng-template #tempTitle let-data>
@@ -62,6 +71,29 @@
         </span>
       </div>
       <div
+        *ngIf="data.type && data.type != 'G' && data?.recID"
+        ng
+        class="flex-body d-flex align-items-center justify-content-between w-100"
+      >
+        <codx-attachment
+          #attachment
+          hideMoreF="0"
+          hideDelete="1"
+          [objectType]="'DP_Steps_Tasks'"
+          [objectId]="data.recID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          referType="source"
+          displayThumb="full"
+        >
+        </codx-attachment>
+      </div>
+      <!-- <div
         *ngIf="data.type && data.type != 'G' && data.taskGroupID"
         class="flex-body d-flex align-items-center justify-content-between w-100"
       >
@@ -95,7 +127,7 @@
           >
           </codx-img>
         </div>
-      </div>
+      </div> -->
     </div>
   </ng-template>
 
@@ -111,10 +143,10 @@
       </ng-container>
     </div>
     <!-- content -->
-    <div *ngIf="data.type == 'G'" class="ms-5">
+    <div *ngIf="data.type == 'G'" class="ms-1 me-1 w-100">
       <ng-container *ngFor="let item of data?.items">
         <ng-container
-          [ngTemplateOutlet]="tempTitle"
+          [ngTemplateOutlet]="cardTitleTmp"
           [ngTemplateOutletContext]="{ $implicit: item }"
         ></ng-container>
       </ng-container>
