@@ -352,16 +352,12 @@
         <div class="d-flex justify-content-start">
           <div>
             <i
-              [class]="
-                (item?.type == '1'
-                  ? 'icon-monetization_on'
-                  : 'icon-sticky_note_2') + ' icon-18 me-2 text-gray-700'
-              "
+              [class]="getSettingValue(item?.type,'icon')"
             ></i>
           </div>
           <div class="d-flex align-items-stretch">
             <codx-label
-              [default]="item?.type == '1' ? 'Báo giá' : 'Hợp đồng'"
+              [default]="getSettingValue(item?.type,'headerText')"
               class="pe-2"
             ></codx-label>
             <span
@@ -378,11 +374,7 @@
           </div>
           <div
             class="ms-auto"
-            [ngbTooltip]="
-              item?.type == '1'
-                ? grvSetupQuotation['TotalAmt']?.headerText
-                : grvSetupContract['ContractAmt']?.headerText
-            "
+            [ngbTooltip]="getSettingValue(item?.type,'deadValue')"
           >
             <span
               class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
@@ -401,19 +393,20 @@
               #currencyID
               [innerHTML]="
                 item?.currencyID
-                  | formatvalue : formModelQuotations : 'currencyID'
+                  | formatvalue : getSettingValue(item?.type,'formModel') : 'currencyID'
                   | async
               "
             ></span>
           </div>
         </div>
-        <div class="d-flex justify-content-start">{{ item?.name }}</div>
+        <div class="d-flex justify-content-start"
+        > <span [ngbTooltip]="getSettingValue(item?.type,'name')">
+          {{ item?.name }}
+        </span> </div>
         <div class="d-flex justify-content-between">
           <div class="first-div d-flex align-items-start">
             <codx-vll
-              [name]="
-                item?.status == '1' ? vllStatusQuotation : vllStatusContract
-              "
+              [name]="getSettingValue(item?.type,'status')"
               [field]="'Status'"
               [value]="item?.status"
               [showText]="true"
@@ -422,11 +415,7 @@
             >
             </codx-vll>
             <div
-              [ngbTooltip]="
-                item?.type == '1'
-                  ? grvSetupQuotation['CreatedOn']?.headerText
-                  : grvSetupContract['CreatedOn']?.headerText
-              "
+              [ngbTooltip]="getSettingValue(item?.type,'createOn')"
             >
               <span class="icon-16 icon-av_timer me-1"></span>
               <span
@@ -434,7 +423,7 @@
                 #createdOn
                 [innerHTML]="
                   item?.createdOn
-                    | formatvalue : formModelQuotations : 'createdOn'
+                    | formatvalue : getSettingValue(item?.type,'formModel') : 'createdOn'
                     | async
                 "
               ></span>
