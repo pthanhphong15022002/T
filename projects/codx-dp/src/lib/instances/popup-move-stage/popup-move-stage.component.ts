@@ -95,6 +95,8 @@ export class PopupMoveStageComponent implements OnInit {
   fieldsNull = [];
   dateMessage: any;
   applyFor:any;
+  progressDefault = false;
+  progressAll = false;
 
   // CM
   dataCM:any;
@@ -847,5 +849,20 @@ export class PopupMoveStageComponent implements OnInit {
       this.isDurationControl = true;
     }
     return actualEnd;
+  }
+
+  checkRadioProgress(event) {
+    if (event?.field == "progressAll") {
+      this.progressAll = event?.data;
+      if(this.progressAll){
+        this.progressDefault = !this.progressAll;
+      }
+    }
+    if (event?.field == "progressDefault") {
+      this.progressDefault = event?.data;
+      if(this.progressDefault){
+        this.progressAll = !this.progressDefault;
+      }
+    }
   }
 }

@@ -13,6 +13,7 @@ import {
   ButtonModel,
   CallFuncService,
   DataRequest,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -37,6 +38,7 @@ import {
   ILoadedEventArgs,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
+import { PopUpCashReportComponent } from './pop-up-cash-report/pop-up-cash-report.component';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -242,6 +244,9 @@ export class CashPaymentsComponent extends UIComponent {
         break;
       case 'ACT041003':
         this.post(data);
+        break;
+      case 'ACT041010':
+        this.print(data, e.functionID);
         break;
     }
   }
@@ -786,6 +791,51 @@ export class CashPaymentsComponent extends UIComponent {
           break;
       }
     }
+  }
+
+  print(data: any, reportID: any)
+  {
+    this.api
+    .execSv(
+      'rptsys',
+      'Codx.RptBusiniess.SYS',
+      'ReportListBusiness',
+      'GetListReportByIDandType',
+      reportID,
+    )
+    .subscribe((res: any) => {
+      if (res != null ) {
+        if(res.length > 1)
+        {
+          this.openPopupCashReport(data, res);
+        }
+        else if(res.length == 1)
+        {
+          this.codxService.navigate('', 'ac/report/detail/' + `${res[0].reportID}`);
+        }
+      }
+    });
+  }
+
+  openPopupCashReport(data: any, reportList: any)
+  {
+    var obj = {
+      formType: 'Insert',
+      headerText: this.funcName,
+      data: data,
+      reportList: reportList,
+    };
+    let opt = new DialogModel();
+    this.dialog = this.callfunc.openForm(
+      PopUpCashReportComponent,
+      '',
+      400,
+      600,
+      '',
+      obj,
+      '',
+      opt
+    );
   }
   //#endregion
 }

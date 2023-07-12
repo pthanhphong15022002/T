@@ -44,6 +44,8 @@ import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { CodxExportComponent } from './components/codx-export/codx-export.component';
+import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
+import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 
 @Injectable({
   providedIn: 'root',
@@ -65,7 +67,7 @@ export class CodxShareService {
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private auth: AuthStore,
-    private tenant:TenantStore,
+    private tenant: TenantStore,
     private authService: AuthService,
     private cache: CacheService,
     private fb: FormBuilder,
@@ -253,7 +255,7 @@ export class CodxShareService {
                 status,
                 oComment.comment,
                 oComment.reasonID,
-                null,
+                null
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
                   data.unbounds.statusApproval = status;
@@ -269,7 +271,7 @@ export class CodxShareService {
               status,
               null,
               null,
-              null,
+              null
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
                 data.unbounds.statusApproval = status;
@@ -283,13 +285,15 @@ export class CodxShareService {
         break;
       }
       case 'SYS207': {
-        this.codxUndo(data?.unbounds?.approvalRecID,null).subscribe((res: any) => {
-          if (res) {
-            data.unbounds.statusApproval = res?.status;
-            dataService.update(data).subscribe();
-            //this.notificationsService.notifyCode('SYS007');
+        this.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
+          (res: any) => {
+            if (res) {
+              data.unbounds.statusApproval = res?.status;
+              dataService.update(data).subscribe();
+              //this.notificationsService.notifyCode('SYS007');
+            }
           }
-        });
+        );
         break;
       }
       //Import file
@@ -836,12 +840,12 @@ export class CodxShareService {
       else if (width <= 300 * widthThumb) wt = 300;
       else if (width <= 500 * widthThumb) wt = 500;
       else if (width <= 650 * widthThumb) wt = 600;
-      
+
       let tenant = this.tenant.getName();
       return (
         environment.urlUpload +
         '/api/' +
-        tenant+
+        tenant +
         '/thumbs/' +
         uploadID +
         '/' +
@@ -1074,7 +1078,15 @@ export class CodxShareService {
     listApproveMF.push(ll, tc);
     return listApproveMF;
   }
-
+  getCategoryByProcess(processID: string): any {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetByProcessIDAsync',
+      [processID]
+    );
+  }
   //#region Codx Quy trình duyệt
   //-------------------------------------------Gửi duyệt--------------------------------------------//
   codxRelease(
@@ -1105,6 +1117,60 @@ export class CodxShareService {
       [approveProcess]
     );
   }
+  codxESignRelease(
+    module: string, //Tên service
+    recID: any, //RecID nghiệp vụ gốc
+    processID: any, //Mã quy trình duyệt
+    entityName: string, //EntityName nghiệp vụ gốc
+    funcID: string, //FunctionID nghiệp vụ gốc
+    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
+    title: string, //Tiêu đề (truyền kiểu chuỗi thường)
+    customEntityName: string //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+  ) {
+    if (processID?.eSign) {
+      if (
+        processID?.releaseControl == null ||
+        processID?.releaseControl == '1'
+      ) {
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        //trình ký
+        let signFile = new ES_SignFile();
+        signFile.recID = recID;
+        signFile.categoryID = processID?.categoryID;
+        signFile.refID = recID;
+        signFile.refType = entityName;
+        let dialogApprove = this.callfunc.openForm(
+          PopupAddSignFileComponent,
+          'Chỉnh sửa',
+          700,
+          650,
+          '',
+          {
+            oSignFile: signFile,
+            files: [],
+            //cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
+            disableCateID: true,
+            refType: entityName,
+            refID: recID,
+            //formModel: this.view?.currentView?.formModel,
+          },
+          '',
+          dialogModel
+        );
+        dialogApprove.closed.subscribe((res) => {
+          if (res.event && res.event?.approved == true) {
+            return { msgCodeError: null, rowCount: 1 };
+          } else {
+            return null;
+          }
+        });
+      } else {
+        // Xử lí mới
+        return null;
+      }
+    }
+  }
 
   //-------------------------------------------Hủy yêu cầu duyệt--------------------------------------------//
   codxCancel(
@@ -1112,7 +1178,7 @@ export class CodxShareService {
     recID: string, //RecID nghiệp vụ gốc
     entityName: string, //EntityName nghiệp vụ gốc
     comment: string, //ghi chú (ko bắt buộc)
-    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
+    userID: string //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
@@ -1133,8 +1199,7 @@ export class CodxShareService {
   //-------------------------------------------Khôi phục--------------------------------------------//
   codxUndo(
     tranRecID: string, //RecID của ES_ApprovalTrans hiện hành
-    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
-
+    userID: string //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.tranRecID = tranRecID;
@@ -1153,7 +1218,7 @@ export class CodxShareService {
     status: string, //Trạng thái
     reasonID: string, //Mã lí do (ko bắt buộc)
     comment: string, //Bình luận (ko bắt buộc)
-    userID: string, //Người thực hiện (ko bắt buộc)
+    userID: string //Người thực hiện (ko bắt buộc)
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.tranRecID = tranRecID;
@@ -1173,7 +1238,10 @@ export class CodxShareService {
   //#endregion Codx Quy trình duyệt
 }
 //#region Model
-
+export class ResponseModel {
+  rowCount: number;
+  msgCodeError: string;
+}
 export class Approvers {
   recID: string;
   roleType: string;

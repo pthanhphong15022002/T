@@ -1,4 +1,4 @@
-<div id="{{idContainer}}" class="image-gallery-2" (keydown)="onKeypress($event)">
+<div id="{{idContainer}}" class="image-gallery-2">
     <div class="image-container"></div>
     <div class="inline-icon">
         <div class="moreFC-top px-5">
@@ -7,13 +7,13 @@
                     <i class="icon-close icon-20 text-danger"></i>
                 </button>
                 <div class="d-flex">
-                    <span (click)="zoomIn()" class="btn rounded-circle btn-icon btn-primary ms-2 cursor-pointer">
+                    <span (click)="clickZoomIn()" class="btn rounded-circle btn-icon btn-primary ms-2 cursor-pointer">
                         <i class="icon-zoom_in icon-20"></i>
                     </span>
-                    <span (click)="zoomOut()" class="btn btn-icon rounded-circle btn-primary ms-2 cursor-pointer">
+                    <span (click)="clickZoomOut()" class="btn btn-icon rounded-circle btn-primary ms-2 cursor-pointer">
                         <i class="icon-zoom_out icon-20"></i>
                     </span>
-                    <span (click)="mostrarFullscreen()"
+                    <span (click)="clickFullscreen()"
                         class="btn btn-icon rounded-circle bt-primary ms-2 cursor-pointer">
                         <i class="icon-i-arrows-angle-expand icon-18"></i>
                     </span>
