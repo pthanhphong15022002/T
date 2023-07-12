@@ -66,6 +66,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
 
     if (!this.quotationsLine.quantity || this.quotationsLine.quantity <= 0) {
       this.notiService.notifyCode('CM025');
+      return;
     }
     this.dialog.close(this.quotationsLine);
   }
