@@ -249,20 +249,21 @@ export class QuotationsTabViewComponent
         data['_uuid'] = data['quotationsID'] ?? Util.uid();
         data['idField'] = 'quotationsID';
         this.quotation = data;
-        if (!this.quotation.quotationsID) {
-          this.api
-            .execSv<any>(
-              'SYS',
-              'AD',
-              'AutoNumbersBusiness',
-              'GenAutoNumberAsync',
-              [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-            )
-            .subscribe((id) => {
-              this.quotation.quotationID = id;
-              this.openPopup(this.quotation, 'add');
-            });
-        } else this.openPopup(this.quotation, 'add');
+        this.openPopup(this.quotation, 'add');
+        // if (!this.quotation.quotationsID) {
+        //   this.api
+        //     .execSv<any>(
+        //       'SYS',
+        //       'AD',
+        //       'AutoNumbersBusiness',
+        //       'GenAutoNumberAsync',
+        //       [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
+        //     )
+        //     .subscribe((id) => {
+        //       this.quotation.quotationID = id;
+        //       this.openPopup(this.quotation, 'add');
+        //     });
+        // } else this.openPopup(this.quotation, 'add');
       }
     });
   }
@@ -364,20 +365,21 @@ export class QuotationsTabViewComponent
         });
       }
       this.quotation = data;
-      if (!this.quotation.quotationsID) {
-        this.api
-          .execSv<any>(
-            'SYS',
-            'AD',
-            'AutoNumbersBusiness',
-            'GenAutoNumberAsync',
-            [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-          )
-          .subscribe((id) => {
-            res.quotationID = id;
-            this.openPopup(this.quotation, 'copy', copyToRecID);
-          });
-      } else this.openPopup(this.quotation, 'copy', copyToRecID);
+      this.openPopup(this.quotation, 'copy', copyToRecID);
+      // if (!this.quotation.quotationsID) {
+      //   this.api
+      //     .execSv<any>(
+      //       'SYS',
+      //       'AD',
+      //       'AutoNumbersBusiness',
+      //       'GenAutoNumberAsync',
+      //       [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
+      //     )
+      //     .subscribe((id) => {
+      //       res.quotationID = id;
+      //       this.openPopup(this.quotation, 'copy', copyToRecID);
+      //     });
+      // } else this.openPopup(this.quotation, 'copy', copyToRecID);
     });
   }
 
@@ -553,7 +555,7 @@ export class QuotationsTabViewComponent
                         dt?.recID,
                         this.view.formModel.entityName,
                         null,
-                        null,
+                        null
                       )
                       .subscribe((res3) => {
                         if (res3) {

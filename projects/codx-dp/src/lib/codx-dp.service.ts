@@ -122,23 +122,6 @@ export class CodxDpService {
     });
   }
 
-  getAutonumber(formName, functionID, entityName, fieldName): Observable<any> {
-    var subject = new Subject<any>();
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.AD',
-        'AutoNumbersBusiness',
-        'GenAutoNumberAsync',
-        [formName, functionID, entityName, fieldName]
-      )
-      .subscribe((item) => {
-        if (item) subject.next(item);
-        else subject.next(null);
-      });
-    return subject.asObservable();
-  }
-
   GetInstanceByRecID(recID) {
     return this.api.execSv<any>(
       'DP',

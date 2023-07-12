@@ -30,7 +30,7 @@
 <codx-tab-cm
   [tabInfo]="tabDetail"
   [formModel]="formModel"
-  [templates]="[information, field, contact, opponent, task, history]"
+  [templates]="isUpdateTab ?[information, field, contact, opponent, task, history]: [information, contact, opponent, task, history]"
 >
   <!-- nvthuan công việc -->
   <ng-template #task let-data="value">
