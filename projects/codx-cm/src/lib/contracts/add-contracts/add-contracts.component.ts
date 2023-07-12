@@ -172,13 +172,13 @@ export class AddContractsComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res && !res.stop) {
-          this.disabledShowInput = false;
+          this.disabledShowInput = true;
           this.cache.message('AD019').subscribe((mes) => {
             if (mes)
               this.planceHolderAutoNumber = mes?.customName || mes?.description;
           });
         } else {
-          this.disabledShowInput = true;
+          this.disabledShowInput = false;
           if (this.action == 'add' || this.action == 'copy')
             this.cmService
               .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
