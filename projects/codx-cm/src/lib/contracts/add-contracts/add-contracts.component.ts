@@ -166,10 +166,7 @@ export class AddContractsComponent implements OnInit {
         this.grvSetup = grv;
       });
     this.cmService
-      .getFieldAutoNoDefault(
-        this.dialog?.formModel.funcID,
-        this.dialog?.formModel.entityName
-      )
+      .getFieldAutoNoDefault('CM0204', 'CM_Contracts')
       .subscribe((res) => {
         if (res && !res.stop) {
           this.disabledShowInput = true;

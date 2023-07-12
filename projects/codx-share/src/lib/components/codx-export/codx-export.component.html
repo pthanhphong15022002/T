@@ -12,6 +12,7 @@
   <div class="d-flex align-items-center mt-2">
     <div class="radio-list text-dark">
       <codx-input
+        *ngIf="type != 'word'"
         type="radio"
         name="radio-dtexport"
         class="me-4 mb-2"
@@ -25,6 +26,7 @@
     </div>
     <div class="radio-list text-dark">
       <codx-input
+        *ngIf="type != 'word'"
         type="radio"
         name="radio-dtexport"
         class="me-4 mb-2"

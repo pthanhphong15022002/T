@@ -82,6 +82,7 @@ import { ClosingDataComponent } from './periodic/closing-data/closing-data.compo
 import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { PopUpCashReportComponent } from './vouchers/cash-payments/pop-up-cash-report/pop-up-cash-report.component';
+import { TableAccountingComponent } from './vouchers/sales-invoices/components/table-accounting/table-accounting.component';
 
 export const routes: Routes = [
   {
@@ -302,6 +303,7 @@ export const routes: Routes = [
     JournalV2Component,
     LayloutJournalComponent,
     PopUpCashReportComponent,
+    TableAccountingComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
