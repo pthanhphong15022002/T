@@ -38,6 +38,8 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     option = {
         a : 0
     }
+    fileSelected:any = null;
+
     @Input() dialog:DialogRef;
     @Input() idContainer;
     @Input() rotate = true;
@@ -187,7 +189,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         return this.images
             && this.images.length > 0;
     }
-    fileSelected:any = null;
     inicializarImageViewer() {
         let _index = 0;
         _index =  this.images.findIndex(x => x.recID == this.fileID);
