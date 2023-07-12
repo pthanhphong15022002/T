@@ -40,7 +40,6 @@ const irrPropNames: string[] = [
   'diM2',
   'diM3',
   'idimControl',
-  'vatType',
 ];
 @Component({
   selector: 'lib-popup-add-journal',
@@ -131,11 +130,11 @@ export class PopupAddJournalComponent
     this.dataService = dialogRef.dataService;
     this.journal = { ...this.journal, ...this.dataService?.dataSelected };
     this.oldJournal = { ...this.journal };
-    this.journal.multiCurrency =
-      this.journal.multiCurrency == '1' ? true : false;
-    this.journal.autoPost = ['1', '2'].includes(this.journal.autoPost)
-      ? true
-      : false;
+    // this.journal.multiCurrency =
+    //   this.journal.multiCurrency == '1' ? true : false;
+    // this.journal.autoPost = ['1', '2'].includes(this.journal.autoPost)
+    //   ? true
+    //   : false;
     this.isEdit = dialogData.data.formType === 'edit';
   }
   //#endregion
@@ -264,7 +263,7 @@ export class PopupAddJournalComponent
       if (!res.event && !this.isEdit) {
         this.journalService.deleteAutoNumber(this.journal.voucherFormat);
 
-        if (this.journal.checkImage) {
+        if (this.journal.hasImage) {
           this.acService.deleteFile(
             this.journal.recID,
             this.form.formModel.entityName
@@ -442,18 +441,18 @@ export class PopupAddJournalComponent
     let tempJournal: IJournal = { ...this.journal };
 
     // ghi so tu dong khi luu
-    if (this.journal.approvalControl === '0') {
-      tempJournal.autoPost = this.journal.autoPost ? '2' : '0';
-    } else {
-      tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
-    }
-    tempJournal.multiCurrency = tempJournal.multiCurrency ? '1' : '0';
+    // if (this.journal.approvalControl === '0') {
+    //   tempJournal.autoPost = this.journal.autoPost ? '2' : '0';
+    // } else {
+    //   tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
+    // }
+    // tempJournal.multiCurrency = tempJournal.multiCurrency ? '1' : '0';
 
     const dataValueObj = {};
     for (const prop of this.dataValueProps088) {
       dataValueObj[prop] = tempJournal[prop];
     }
-    tempJournal.dataValue = JSON.stringify(dataValueObj);
+    tempJournal.extras = JSON.stringify(dataValueObj);
 
     // don't allow editing some fields if this journal has any vouchers.
     if (this.isEdit && this.hasVouchers) {
@@ -486,7 +485,7 @@ export class PopupAddJournalComponent
       );
       const uploaded = await lastValueFrom(uploaded$);
       if (uploaded) {
-        this.journal.checkImage = tempJournal.checkImage = true;
+        this.journal.hasImage = tempJournal.hasImage = 1;
       }
     }
 

@@ -118,11 +118,11 @@
             <ng-template>
               <div class="form-group">
                 <codx-label
-                  fiedName="inputMode"
+                  fiedName="addNewMode"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <codx-input
-                  field="inputMode"
+                  field="addNewMode"
                   [formModel]="form.formModel"
                   [Group]="form.formGroup"
                 ></codx-input>
@@ -130,11 +130,11 @@
 
               <div class="form-group">
                 <codx-label
-                  fiedName="brigdeAcctControl"
+                  fiedName="entryMode"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <codx-input
-                  field="brigdeAcctControl"
+                  field="entryMode"
                   [formModel]="form.formModel"
                   [Group]="form.formGroup"
                 ></codx-input>
@@ -192,11 +192,11 @@
                 *ngIf="journalTypes104.includes(journal.journalType)"
               >
                 <codx-label
-                  fiedName="vatType"
+                  fiedName="subType"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <codx-input
-                  field="vatType"
+                  field="subType"
                   [formModel]="form.formModel"
                   [Group]="form.formGroup"
                 ></codx-input>
@@ -320,12 +320,12 @@
           <div class="mb-1">
             <codx-label
               class="fw-bold"
-              fiedName="exchangeType"
+              fiedName="exchType"
               [formModel]="form.formModel"
             ></codx-label>
           </div>
           <codx-label
-            fiedName="exchangeType"
+            fiedName="exchType"
             [formModel]="form.formModel"
             [default]="gvs.CurrSourceType?.description"
             class="text-gray-500 font-italic fw-normal"
@@ -335,7 +335,7 @@
         <div class="col-4 d-flex align-items-center justify-content-end">
           <div class="w-100 me-1">
             <codx-input
-              field="exchangeType"
+              field="exchType"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [placeholder]="' '"

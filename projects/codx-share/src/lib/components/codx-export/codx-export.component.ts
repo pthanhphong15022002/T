@@ -331,7 +331,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
           )
           .subscribe((item) => {
             if (item) {
-              //this.downloadFile(item);
+              this.downloadFile(item);
             }
           });
         break;
@@ -361,8 +361,11 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
 
   saveByteArray(reportName, byte) {
+    var dataType =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    if (this.type == 'word') dataType = 'application/msword';
     var blob = new Blob([byte], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      type: dataType,
     });
     var link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
@@ -386,18 +389,22 @@ export class CodxExportComponent implements OnInit, OnChanges {
     var id;
     switch (e?.nextId) {
       case '1':
+        this.type = 'excel';
         id = 'excel';
         break;
 
       case '2':
+        this.type = '';
         //id= "word";
         break;
 
       case '3':
+        this.type = 'word';
         id = 'word';
         break;
 
       case '4':
+        this.type = '';
         id = 'pdf';
         break;
 
@@ -410,6 +417,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
       case '6':
         this.type = 'word';
         this.show = true;
+        this.exportGroup.controls['dataExport'].setValue('selected');
         this.load();
         break;
     }
