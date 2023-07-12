@@ -1,8 +1,10 @@
+import { style } from '@angular/animations';
 import {
     AfterViewInit,
     Component,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     OnChanges,
     OnInit,
@@ -25,6 +27,11 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     @HostBinding('class') get class() {
         return "w-100 h-100";
       }
+
+    @HostListener('keydown',['$event']) keydown(event:any) {
+        debugger
+        this.onKeypress(event);
+    }
     BASE_64_IMAGE = 'data:image/png;base64,';
     BASE_64_PNG = `${this.BASE_64_IMAGE} `;
     ROTACAO_PADRAO_GRAUS = 90;
@@ -86,10 +93,10 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     ngAfterViewInit() {
     }
     onKeypress(e:any){
-        if(e.code=='ArrowRight'){
+        if(e?.code?.toLocaleLowerCase() == 'arrowright'){
             this.proximaImagem();
         }
-        if(e.code=='ArrowLeft'){
+        if(e?.code?.toLocaleLowerCase() == 'arrowleft'){
             this.imagemAnterior();
         }
     }
@@ -125,12 +132,12 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         this.defaultDownloadNameChange(changes);
     }
 
-    zoomIn() {
+    clickZoomIn() {
         this.zoomPercent += 10;
         this.viewer.zoom(this.zoomPercent);
     }
 
-    zoomOut() {
+    clickZoomOut() {
         if (this.zoomPercent === 100) {
             return;
         }
@@ -211,26 +218,25 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         let imgObj = this.isURlImagem();
         this.fileSelected = this.images[this.indexImage];
         this.viewer.load(imgObj, imgObj);
-        if(this.fileSelected.referType == "video"){
+        if(this.fileSelected.referType == "video")
+        {
                 var ele = document.getElementById(this.idContainer).getElementsByClassName('iv-image-wrap');
                 if(ele){
-                    var eleVideo = document.createElement('video');
-                    var eleSource = document.createElement('source');
-
-                    eleVideo.className = "iv-image-wrap iv-large-image w-100 h-100 ";
-                    eleVideo.style.width = "800";
-                    eleVideo.style.height = "500";
-                    eleVideo.style.minHeight = "";
-                    eleVideo.autoplay = true;
-
-                    eleSource.src = imgObj;
-                    eleSource.type = "video/mp4";
-                    eleVideo.appendChild(eleSource);
-
-                    ele[0].children[0].remove();
-                    ele[0].appendChild(eleVideo);
+                    var video = document.createElement('video');
+                    video.className = "iv-image-wrap iv-large-image";
+                    video.autoplay = true;
+                    video.controls = true;
+                    video.src = imgObj;
+                    video.id = this.fileSelected.recID;
+                    var eleBody = document.getElementsByClassName("iv-image-view");
+                    var eleFooter = document.getElementsByClassName("footer-info");
+                    if(eleBody && eleFooter)
+                        video.height = eleBody[0].clientHeight - eleFooter[0].clientHeight;
+                    else
+                        video.height = eleBody[0].clientHeight - 50;
+                    ele[0].firstChild.remove();
+                    ele[0].appendChild(video);
                     this.setStyleClass('iv-loader', 'visibility', 'hidden');
-                    //this.setStyleClass('options-image-viewer', 'visibility', 'hidden');
                 }
         }
         else
@@ -401,15 +407,22 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         this.setStyleClass(componente, 'transition', `0.5s linear`);
     }
 
-    mostrarFullscreen() {
-        const timeout = this.resetarZoom();
-        setTimeout(() => {
-
-            this.viewerFullscreen = new FullScreenViewer();
-            let imgSrc = this.isURlImagem();
-            this.viewerFullscreen.show(imgSrc, imgSrc);
-            this.atualizarRotacao(false);
-        }, timeout);
+    clickFullscreen() {
+        debugger
+        if(this.fileSelected.referType =='video'){
+            document.getElementById(this.fileSelected.recID)?.requestFullscreen();
+        }
+        else
+        {
+            const timeout = this.resetarZoom();
+            setTimeout(() => {
+                this.viewerFullscreen = new FullScreenViewer();
+                let imgSrc = this.isURlImagem();
+                this.viewerFullscreen.show(imgSrc, imgSrc);
+                this.atualizarRotacao(false);
+            }, timeout);
+        }
+        
     }
 
     getImagemAtual() {
