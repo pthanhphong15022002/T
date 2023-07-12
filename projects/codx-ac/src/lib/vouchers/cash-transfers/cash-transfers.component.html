@@ -259,119 +259,12 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <lib-table-line-detail-static
-                [columns]="columns"
-                [formModel]="fmAcctTrans"
+              <lib-table-accounting
                 [lines]="lines"
                 [loading]="loading"
-                [trTemplate]="acctTrTemplate"
-                [autoSum]="false"
-              >
-                <ng-template #acctTrTemplate let-group let-index="index">
-                  <tr *ngFor="let line of group; first as isFirst">
-                    <th style="width: 30px">
-                      <ng-container *ngIf="isFirst">
-                        {{ index + 1 }}
-                      </ng-container>
-                    </th>
-                    <td class="d-flex gap-2">
-                      <div
-                        class="d-flex gap-2"
-                        style="min-width: 90px"
-                        [ngClass]="!line.crediting ? '' : 'ps-3'"
-                      >
-                        <span class="fw-bold">{{
-                          !line.crediting ? "N" : "C"
-                        }}</span>
-                        <span class="fw-bold">{{ line.accountID }}</span>
-                      </div>
-                      <div class="d-flex flex-column gap-1">
-                        <div
-                          class="fw-bold line-clamp line-clamp-1"
-                          [title]="line.accountName"
-                        >
-                          {{ line.accountName }}
-                        </div>
-                        <div *ngIf="line.objectName">
-                          <codx-label
-                            fieldName="lblObject"
-                            [formModel]="fmAcctTrans"
-                            default="Khách hàng"
-                            class="label-colon"
-                          ></codx-label>
-                          <span>{{ line.objectName }}</span>
-                        </div>
-                        <div *ngIf="line.diM3">
-                          <codx-label
-                            fieldName="lblDIM3"
-                            [formModel]="fmAcctTrans"
-                            default="Mục phí"
-                            class="label-colon"
-                          >
-                          </codx-label>
-                          <span>{{ line.diM3 }}</span>
-                          <span>&nbsp;- {{ line.costItemName }}</span>
-                        </div>
-                        <div *ngIf="line.diM2">
-                          <codx-label
-                            fieldName="lblDIM2"
-                            [formModel]="fmAcctTrans"
-                            default="TTCP"
-                            class="label-colon"
-                          >
-                          </codx-label>
-                          <span>{{ line.diM2 }}</span>
-                          <span>&nbsp;- {{ line.costCenterName }}</span>
-                        </div>
-                        <div *ngIf="line.diM1">
-                          <codx-label
-                            fieldName="lblDIM1"
-                            [formModel]="fmAcctTrans"
-                            default="Phòng ban"
-                            class="label-colon"
-                          >
-                          </codx-label>
-                          <span>{{ line.diM1 }}</span>
-                          <span>&nbsp;- {{ line.departmentName }}</span>
-                        </div>
-                        <div *ngIf="line.projectID">
-                          <codx-label
-                            fieldName="lblProjectID"
-                            [formModel]="fmAcctTrans"
-                            default="Dự án"
-                            class="label-colon"
-                          >
-                          </codx-label>
-                          <span>{{ line.projectID }}</span>
-                          <span>&nbsp;-&nbsp;</span>
-                          <span
-                            [innerHTML]="
-                              line.projectID
-                                | formatvalue : fmAcctTrans : 'projectID'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-end">
-                      <ng-container *ngIf="!line.crediting">
-                        {{ line.transAmt | currency : "" : "" }}
-                      </ng-container>
-                    </td>
-                    <td class="text-end">
-                      <ng-container *ngIf="line.crediting">
-                        {{ line.transAmt | currency : "" : "" }}
-                      </ng-container>
-                    </td>
-                    <td class="pe-3">
-                      <span class="line-clamp line-clamp-2">{{
-                        line.memo
-                      }}</span>
-                    </td>
-                  </tr>
-                </ng-template>
-              </lib-table-line-detail-static>
+                [formModel]="fmAcctTrans"
+                [gvs]="gvsAcctTrans"
+              ></lib-table-accounting>
             </ng-template>
           </e-tabitem>
         </e-tabitems>
