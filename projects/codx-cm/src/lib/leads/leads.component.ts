@@ -302,6 +302,7 @@ export class LeadsComponent
   }
 
   clickMoreFunc(e) {
+
     this.clickMF(e.e, e.data);
   }
 

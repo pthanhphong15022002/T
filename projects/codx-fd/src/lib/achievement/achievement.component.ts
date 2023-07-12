@@ -118,6 +118,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
     this.options.gridViewName = 'grvKudosTrans';
     this.options.formName = 'KudosTrans';
     this.options.funcID = this.funcID;
+    this.options.page = 1;
     this.setPredicate();
   }
 

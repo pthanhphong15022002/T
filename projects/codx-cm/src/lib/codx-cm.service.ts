@@ -527,7 +527,6 @@ export class CodxCmService {
     );
   }
 
-
   getListChannels() {
     return this.api.exec<any>('CM', 'ChannelsBusiness', 'GetListChannelsAsync');
   }
@@ -535,7 +534,12 @@ export class CodxCmService {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync', data);
   }
   getOneTmpDeal(data) {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneTmpDealAsync', data);
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetOneTmpDealAsync',
+      data
+    );
   }
   async getListUserByOrg(list = []) {
     var lstOrg = [];
@@ -864,7 +868,7 @@ export class CodxCmService {
     );
   }
 
-  getListPermissionOwner(data){
+  getListPermissionOwner(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -872,7 +876,7 @@ export class CodxCmService {
       data
     );
   }
-  updateOwnerLead(data){
+  updateOwnerLead(data) {
     return this.api.exec<any>(
       'CM',
       'LeadsBusiness',
@@ -880,7 +884,7 @@ export class CodxCmService {
       data
     );
   }
-  updateOwnerDeal(data){
+  updateOwnerDeal(data) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -889,7 +893,7 @@ export class CodxCmService {
     );
   }
 
-  getDataTabHistoryDealAsync(data){
+  getDataTabHistoryDealAsync(data) {
     return this.api.exec<any>(
       'CM',
       'DealsBusiness',
@@ -897,7 +901,6 @@ export class CodxCmService {
       data
     );
   }
-
 
   //#endregion -- Bao
 
@@ -1130,7 +1133,7 @@ export class CodxCmService {
     noValidCout,
     ignoredFields: string[] = []
   ) {
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase()); ///1 so truogn hợp ko check bên ngoai là bỏ qua
     var keygrid = Object.keys(grvSetup);
     var keymodel = Object.keys(model);
     for (let index = 0; index < keygrid.length; index++) {
@@ -1160,6 +1163,51 @@ export class CodxCmService {
     }
     return noValidCout;
   }
+
+  ///gen AutoNum - Không hiểu thì hỏi ?
+  // async genAutoNum(funcID: any, entityName: string, key: string, view = false) {
+  //   let autoNo = await firstValueFrom(
+  //     this.getFieldAutoNoDefault(funcID, entityName)
+  //   );
+  //   if (!autoNo.stop) {
+  //     let autoNoNumber = await firstValueFrom(
+  //       this.genAutoNumberByAutoNoCode(funcID)
+  //     );
+  //     if (view && autoNoNumber) {
+  //       return this.genAutoNumberDefault(funcID, entityName, key);
+  //     } else return autoNoNumber;
+  //   } else return this.genAutoNumberDefault(funcID, entityName, key);
+  // }
+
+  getFieldAutoNoDefault(funcID: any, entityName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetFieldAutoNoAsync',
+      [funcID, entityName]
+    );
+  }
+
+  genAutoNumberDefault(funcID: any, entityName: string, key: any) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'GenAutoNumberAsync',
+      [funcID, entityName, key]
+    );
+  }
+
+  genAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
+    return this.api.exec(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [autoNoCode, null, true, null]
+    );
+  }
+  //end
 
   //gettree by sessionID
   getTreeBySessionID(recID) {

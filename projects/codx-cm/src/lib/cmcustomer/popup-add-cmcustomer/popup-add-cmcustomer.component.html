@@ -646,9 +646,10 @@
         <codx-label [formModel]="form.formModel" [fiedName]="'CustomerID'">
         </codx-label>
         <codx-input
-          [disabled]="true"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="disabledShowInput"
+          [placeholder]="planceHolderAutoNumber"
           field="customerID"
         >
         </codx-input>
@@ -906,7 +907,8 @@
           </codx-label>
           <codx-input
             [field]="'contactID'"
-            [disabled]="true"
+            [disabled]="disabledShowInput"
+            [placeholder]="planceHolderAutoNumber"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           >
@@ -1138,7 +1140,8 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [disabled]="true"
+          [disabled]="disabledShowInput"
+          [placeholder]="planceHolderAutoNumber"
           [field]="funcID == 'CM0103' ? 'partnerID' : 'competitorID'"
         >
         </codx-input>
