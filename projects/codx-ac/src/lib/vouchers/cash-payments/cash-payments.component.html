@@ -62,18 +62,18 @@
             }}</span>
         </div>
         <div>
-          <span *ngIf="journal.multiCurrency == '0' && data?.totalDR != 0"
+          <span *ngIf="!journal.multiCurrency && data?.totalDR != 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="data?.totalDR
                   | formatvalue : view.formModel : 'totalDR' : totalDR
                   | async
               "></span>
-          <span *ngIf="journal.multiCurrency == '1' && data?.totalDR != 0"
+          <span *ngIf="journal.multiCurrency && data?.totalDR != 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="(data?.totalDR
                   | formatvalue : view.formModel : 'totalDR' : totalDR
                   | async)+ ' ' +data?.currencyID"></span>
-          <span *ngIf="(journal.multiCurrency == '0') && data?.totalDR == 0"
+          <span *ngIf="!journal.multiCurrency && data?.totalDR == 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">0</span>
-          <span *ngIf="(journal.multiCurrency == '1') && data?.totalDR == 0"
+          <span *ngIf="journal.multiCurrency && data?.totalDR == 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' + data?.currencyID}}</span>
         </div>
       </div>
@@ -163,15 +163,15 @@
       </div>
       <div class="d-flex align-self-center">
         <span class="badge badge-pill badge-primary me-3">
-          <span *ngIf="journal.multiCurrency == '0' && itemSelected?.totalDR != 0" class="fw-bold" #totalDR [innerHTML]="itemSelected?.totalDR
+          <span *ngIf="!journal.multiCurrency && itemSelected?.totalDR != 0" class="fw-bold" #totalDR [innerHTML]="itemSelected?.totalDR
               | formatvalue : view.formModel : 'totalDR' : totalDR
               | async
           "></span>
-          <span *ngIf="journal.multiCurrency == '1' && itemSelected?.totalDR != 0" class="fw-bold" #totalDR [innerHTML]="(itemSelected?.totalDR
+          <span *ngIf="journal.multiCurrency && itemSelected?.totalDR != 0" class="fw-bold" #totalDR [innerHTML]="(itemSelected?.totalDR
               | formatvalue : view.formModel : 'totalDR' : totalDR
               | async)+ ' ' +itemSelected?.currencyID"></span>
-          <span *ngIf="(journal.multiCurrency == '0') && itemSelected?.totalDR == 0" class="fw-bold">0</span>
-          <span *ngIf="(journal.multiCurrency == '1') && itemSelected?.totalDR == 0" class="fw-bold">{{'0 '+
+          <span *ngIf="!journal.multiCurrency && itemSelected?.totalDR == 0" class="fw-bold">0</span>
+          <span *ngIf="journal.multiCurrency && itemSelected?.totalDR == 0" class="fw-bold">{{'0 '+
             itemSelected?.currencyID}}</span>
         </span>
       </div>
@@ -1065,18 +1065,18 @@
       </div>
       <div class="col-3">
         <div class="d-flex align-items-center">
-          <span *ngIf="journal.multiCurrency == '0' && data?.totalDR != 0"
+          <span *ngIf="!journal.multiCurrency && data?.totalDR != 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="data?.totalDR
                 | formatvalue : view.formModel : 'totalDR' : totalDR
                 | async
             "></span>
-          <span *ngIf="journal.multiCurrency == '1' && data?.totalDR != 0"
+          <span *ngIf="journal.multiCurrency && data?.totalDR != 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="(data?.totalDR
                 | formatvalue : view.formModel : 'totalDR' : totalDR
                 | async)+ ' ' +data?.currencyID"></span>
-          <span *ngIf="(journal.multiCurrency == '0') && data?.totalDR == 0"
+          <span *ngIf="!journal.multiCurrency && data?.totalDR == 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">0</span>
-          <span *ngIf="(journal.multiCurrency == '1') && data?.totalDR == 0"
+          <span *ngIf="journal.multiCurrency && data?.totalDR == 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' + data?.currencyID}}</span>
         </div>
         <div class="d-flex align-items-center">

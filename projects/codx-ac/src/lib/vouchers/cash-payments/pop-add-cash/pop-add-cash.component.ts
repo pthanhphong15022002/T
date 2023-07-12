@@ -209,7 +209,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.action = dialogData.data?.formType;
     this.cashpayment = { ...dialog.dataService.dataSelected };
     this.journal = dialogData.data?.journal;
-    this.modegrid = this.journal.inputMode;
+    this.modegrid = this.journal.addNewMode;
     this.baseCurr = this.journal.unbounds.baseCurr;
     switch (this.dialog.formModel.funcID) {
       case 'ACT0429':
@@ -599,7 +599,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 break;
               case 'dr':
               case 'cr':
-                if (this.journal.brigdeAcctControl == '2') {
+                if (this.journal.entryMode == '2') {
                   this.requireFields = res.requireFields;
                   this.lockFields = res.lockField;
                   this.requireGrid();
@@ -1525,7 +1525,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   loadAccountControl() {
-    if (this.journal.brigdeAcctControl == '1') {
+    if (this.journal.entryMode == '1') {
       this.hideFields.push('CR2');
       this.hideFields.push('CR');
       if (this.cashpayment.currencyID == this.baseCurr) {

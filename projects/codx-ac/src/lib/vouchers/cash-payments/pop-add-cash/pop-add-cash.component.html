@@ -226,8 +226,8 @@
                   <div class="form-group">
                     <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                     </codx-label>
-                    <div [class]="journal.multiCurrency == '0' ? 'ac-input-disable' : 'ac-input'">
-                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                    <div [class]="!journal.multiCurrency ? 'ac-input-disable' : 'ac-input'">
+                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="!journal.multiCurrency" [Group]="form.formGroup"
                         field="currencyID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>
@@ -238,8 +238,8 @@
                   <div class="form-group">
                     <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                     </codx-label>
-                    <div [class]="journal.multiCurrency == '0' ? 'ac-input-disable' : 'ac-input'">
-                      <codx-input #tExchange [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                    <div [class]="!journal.multiCurrency ? 'ac-input-disable' : 'ac-input'">
+                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="!journal.multiCurrency" [Group]="form.formGroup"
                         field="exchangeRate" [formModel]="form.formModel" (controlBlur)="valueFocusOut($event)">
                       </codx-input>
                     </div>
@@ -384,8 +384,8 @@
                 <div class="form-group">
                   <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                   </codx-label>
-                  <div [class]="journal.multiCurrency == '0' ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                  <div [class]="!journal.multiCurrency ? 'ac-input-disable' : 'ac-input'">
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="!journal.multiCurrency" [Group]="form.formGroup"
                       field="currencyID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -396,8 +396,8 @@
                 <div class="form-group">
                   <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                   </codx-label>
-                  <div [class]="journal.multiCurrency == '0' ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="journal.multiCurrency == '0' ? true : false" [Group]="form.formGroup"
+                  <div [class]="!journal.multiCurrency ? 'ac-input-disable' : 'ac-input'">
+                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [disabled]="!journal.multiCurrency" [Group]="form.formGroup"
                       field="exchangeRate" [formModel]="form.formModel" (controlBlur)="valueFocusOut($event)">
                     </codx-input>
                   </div>
