@@ -742,7 +742,7 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  changeProgress(event) {
+  changeProgress(event) {// type A = all, D=default, R = required (-_-) Bảo cố lên anh tin bảo 😁
     if (event) {
       if (event?.taskID) {
         var task = this.listTaskDone.find((x) => x.recID === event?.taskID);
