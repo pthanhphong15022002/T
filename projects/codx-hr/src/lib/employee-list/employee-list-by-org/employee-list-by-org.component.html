@@ -62,7 +62,7 @@
     <div *ngIf="columnsGrid" class="h-100" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
         <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
-            [dataValues]="orgUnitID" [emptyTemplate]="emptyDataTemplate" [autoLoad]="false"
+            [dataValues]="orgUnitID" [autoLoad]="false"
             [showRowNumber]="showRowNumber" [idField]="idField" [predicates]="predicates" [rowHeight]="rowHeight"
             height="auto" [autoFitColumns]="false" [allowResizing]="false" [allowFiltering]="false"
             [allowSorting]="true" [hideMoreFunc]="true"></codx-gridview-v2>
