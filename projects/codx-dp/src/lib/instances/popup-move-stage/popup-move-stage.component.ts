@@ -140,12 +140,13 @@ export class PopupMoveStageComponent implements OnInit {
 
       this.isDurationControl = dt?.data?.isDurationControl;
       this.getIdReason();
+      this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
     }
     else if(this.applyFor != '0' ){
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
       this.probability = dt?.data?.deal?.probability;
       this.expectedClosed = dt?.data?.deal?.expectedClosed;
-      this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.dataCM?.listStepCbx));
+      // this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.dataCM?.listStepCbx));
       this.executeApiCalls();
       this.isLoad = true;
     }
@@ -158,7 +159,6 @@ export class PopupMoveStageComponent implements OnInit {
       this.lstParticipants = dt?.data.lstParticipants;
     }
     this.stepIdOld = this.stepID;
-    this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
     this.codxDpService.getFirstIntance(this.processID).subscribe((res) => {
       if (res) {
         this.firstInstance = res;
@@ -189,7 +189,6 @@ export class PopupMoveStageComponent implements OnInit {
   async executeApiCalls(){
     try {
       await this.getListMoveStage(this.dataCM);
-   //   this.formModelDeal = await this.codxCmService.getFormModel('CM0201');
     } catch (error) {
 
     }
@@ -205,6 +204,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.getIdReason();
         this.eventAutoClick();
         this.removeReasonInStepsAuto(res[3],res[4],res[1]);
+        this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
         this.changeDetectorRef.detectChanges();
       }
 
