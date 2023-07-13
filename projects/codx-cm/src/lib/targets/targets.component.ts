@@ -10,6 +10,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  DataRequest,
+  FormModel,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -19,13 +21,13 @@ import {
 } from 'codx-core';
 import { PopupAddTargetComponent } from './popup-add-target/popup-add-target.component';
 import { DecimalPipe } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-targets',
   templateUrl: './targets.component.html',
-  styleUrls: ['./targets.component.css'],
+  styleUrls: ['./targets.component.scss'],
   providers: [DecimalPipe],
 })
 export class TargetsComponent
@@ -43,13 +45,23 @@ export class TargetsComponent
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
 
+  lstDataTree = [];
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   button?: ButtonModel;
   scheduleHeader?: ResourceModel;
   schedules?: ResourceModel;
-  requestTree?: ResourceModel;
+  //#region tree request
+  requestTree = new DataRequest();
+  serviceTree: string = 'CM';
+  assemblyNameTree: string = 'ERM.Business.CM';
+  entityNameTree: string = 'CM_TargetsLines';
+  classNameTree: string = 'TargetsLinesBusiness';
+  methodTree: string = 'GetListTreeTargetLineAsync';
+  loadedTree: boolean;
+  fmTargetLines: FormModel;
+  //#endregion
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
@@ -93,7 +105,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -102,7 +114,7 @@ export class TargetsComponent
       {
         sameData: false,
         type: ViewType.schedule,
-        active: true,
+        active: false,
         request2: this.scheduleHeader,
         request: this.schedules,
         toolbarTemplate: this.footerButton,
@@ -164,23 +176,73 @@ export class TargetsComponent
       Title: 'Owners',
     };
 
-    //Vẽ tree
-
-    this.requestTree = new ResourceModel();
-    this.requestTree.assemblyName = 'CM';
-    this.requestTree.className = 'TargetsBusiness';
-    this.requestTree.service = 'CM';
-    this.requestTree.method = 'GetListTargetAsync';
-    this.requestTree.autoLoad = false;
-    this.requestTree.parentIDField = 'Year';
   }
   //#endregion setting schedule
 
+  //#region load tree
+  loadTreeData(year){
+    this.loadedTree = false;
+    var resource = new DataRequest();
+    resource.predicates = 'Period=@0';
+    resource.dataValues = year;
+    resource.funcID = 'CM0601';
+    resource.pageLoading = false;
+    this.requestTree = resource;
+    this.fetch().subscribe((item) => {
+      this.lstDataTree = item;
+
+      this.loadedTree = true;
+    });
+  }
+
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.serviceTree,
+        this.assemblyNameTree,
+        this.classNameTree,
+        this.methodTree,
+        this.requestTree
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response ? response[0] : [];
+        })
+      );
+  }
+
+  clickTreeNode(evt: any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+
+  selectionChange(parent) {
+    if (parent.isItem) {
+      parent.data.items= parent?.data?.items;
+    }
+  }
+  //#endregion
+
   //#region change Calendar ejs
-  changeCalendar(data: any) {}
+  changeCalendar(data: any) {
+    var year = parseInt(data?.fromDate?.getFullYear());
+    this.loadTreeData(year?.toString());
+  }
   //#endregion
   //#region event codx-view
-  viewChanged(e) {}
+  viewChanged(e) {
+    console.log(e);
+    var formModel = new FormModel();
+    formModel.formName = 'CMTargetsLines';
+    formModel.gridViewName = 'grvCMTargetsLines';
+    formModel.entityName = 'CM_TargetsLines';
+    this.fmTargetLines = formModel;
+    this.detectorRef.detectChanges();
+  }
   onLoading(e) {}
   searchChanged(e) {}
   selectedChange(e) {}
