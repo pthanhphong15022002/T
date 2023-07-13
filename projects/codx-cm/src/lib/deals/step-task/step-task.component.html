@@ -57,8 +57,8 @@
       ></codx-input>
     </div>
   </header>
-  <main class="main-step">
-    <ng-container
+  <main class="main-step" [ngStyle]="{'max-height': taskHeight}">
+      <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"
     ></ng-container>
