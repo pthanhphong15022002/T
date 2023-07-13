@@ -74,7 +74,7 @@ export class TabLeadDetailComponent
     //nvthuan
     if (changes.dataSelected) {
       this.isDataLoading = true;
-      this.getListInstanceStep();
+  
     }
   }
 
@@ -86,24 +86,7 @@ export class TabLeadDetailComponent
     }
   }
 
-  getListInstanceStep() {
-    var data = [
-      this.dataSelected?.refID,
-      this.dataSelected?.processID,
-      this.dataSelected?.status,
-    ];
-    this.codxCmService.getStepInstance(data).subscribe((res) => {
-      if (res) {
-        this.listStep = res;
-        this.checkCompletedInstance(this.dataSelected?.status);
-        this.leadDetailComponent.pushTabFields((this.checkHaveField(this.listStep)));
-      }
-      else {
-        this.listStep = null;
-      }
-      this.isDataLoading = false;
-    });
-  }
+
   checkCompletedInstance(dealStatus: any) {
     if (dealStatus == '1' || dealStatus == '2') {
       this.deleteListReason(this.listStep);

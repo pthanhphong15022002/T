@@ -502,7 +502,6 @@ export class DealsComponent
     return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
   }
   clickMF(e, data) {
-    debugger;
     const actions = {
       SYS03: (data) => {
         this.edit(data);
@@ -714,7 +713,7 @@ export class DealsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
-            listStepCbx: this.lstStepInstances
+            listStepCbx: this.lstStepInstances,
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -751,7 +750,7 @@ export class DealsComponent
                   nextStep = listStep[index]?.stepID;
                 }
               }
-              var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment];
+              var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment,e.event?.expectedClosed,e.event?.probability];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res[0];
