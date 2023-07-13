@@ -85,7 +85,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
   public created(): void {
-    debugger
     if(this.diagram) this.diagram.fitToPage();
   }
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
