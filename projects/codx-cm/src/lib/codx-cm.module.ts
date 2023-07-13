@@ -93,6 +93,7 @@ import {
   CategoryService,
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
+import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
 
 const routes: Routes = [
   {
@@ -236,6 +237,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TargetsComponent,
     PopupAddTargetComponent,
     CodxTabCmComponent,
+    ViewTreeTargetsComponent
   ],
   imports: [
     RouterModule.forChild(routes),

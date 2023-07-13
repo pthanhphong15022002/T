@@ -40,7 +40,7 @@
           </codx-label>
           <codx-dropdown-calendar
             #dropCalendar
-            [disabled]="action == 'edit'"
+            [disabled]="action == 'edit' || isBusiness"
             cssPopup="h-500px w-800px"
             [value]="date"
             [displayOption]="ops"

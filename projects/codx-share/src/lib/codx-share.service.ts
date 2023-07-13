@@ -1097,7 +1097,8 @@ export class CodxShareService {
     funcID: string, //FunctionID nghiệp vụ gốc
     userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
-    customEntityName: string //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+    customEntityName: string, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+    approvers: Array<string> =null, //Danh sách userID của RO
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
@@ -1108,6 +1109,7 @@ export class CodxShareService {
     approveProcess.htmlView = '<div>' + title + '</div>';
     approveProcess.module = module;
     approveProcess.customEntityName = customEntityName;
+    approveProcess.approvers = approvers;
 
     return this.api.execSv(
       module,

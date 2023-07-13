@@ -133,7 +133,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   async ngOnInit() {
     this.getTab();
-    // this.getAutoNumber(this.autoNumber);
     this.api
       .execSv<any>(
         'SYS',
@@ -145,6 +144,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       .subscribe((res) => {
         if (res && !res.stop) {
           this.disabledShowInput = true;
+          this.getAutoNumber(this.autoNumber);
           this.cache.message('AD019').subscribe((mes) => {
             if (mes)
               this.planceHolderAutoNumber = mes?.customName || mes?.description;
