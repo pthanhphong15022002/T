@@ -121,6 +121,9 @@ export class AddApproversComponent extends UIComponent {
   }
 
   onSave() {
+    if (this.form.formGroup.status == 'INVALID') {
+      return;
+    }
     if (this.dialog.dataService.hasSaved) {
       this.dialog.dataService.hasSaved = false;
       if (this.members.length)

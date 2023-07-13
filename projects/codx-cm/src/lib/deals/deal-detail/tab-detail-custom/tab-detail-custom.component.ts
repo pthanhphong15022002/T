@@ -45,7 +45,7 @@ export class TabDetailCustomComponent
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() checkMoreReason = true;
-  @Input() mergedList: any[] = [];
+  // @Input() mergedList: any[] = [];
   @Input() listSteps: any;
   @Input() isUpdateTab: any;
   @Output() saveAssign = new EventEmitter<any>();
@@ -65,21 +65,7 @@ export class TabDetailCustomComponent
   readonly tabContact: string = 'Contact';
   readonly tabOpponent: string = 'Opponent';
   readonly tabHistory: string = 'History';
-  formModelQuotations: FormModel = {
-    formName: 'CMQuotations',
-    gridViewName: 'grvCMQuotations',
-    entityName: 'CM_Quotations',
-  };
-  formModelContract: FormModel = {
-    formName: 'CMContracts',
-    gridViewName: 'grvCMContracts',
-    entityName: 'CM_Contracts',
-  };
-  formModelLead: FormModel = {
-    formName: 'CMLeads',
-    gridViewName: 'grvCMLeads',
-    entityName: 'CM_Leads',
-  };
+
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -138,32 +124,14 @@ export class TabDetailCustomComponent
   async executeApiCalls() {
     try {
       await this.getValueList();
-      await this.getGridViewQuotation();
-      await this.getGridViewContract();
-      await this.getGridViewLead();
+      // await this.getGridViewQuotation();
+      // await this.getGridViewContract();
+      // await this.getGridViewLead();
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
   }
-  async getGridViewQuotation() {
-    this.grvSetupQuotation = await firstValueFrom(
-      this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
-    );
-    this.vllStatusQuotation = this.grvSetupQuotation['Status'].referedValue;
-  }
-  async getGridViewContract() {
-    this.grvSetupContract = await firstValueFrom(
-      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
-    );
-    this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
-  }
-  async getGridViewLead() {
-    this.grvSetupLead = await firstValueFrom(
-      this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
-    );
-    this.vllStatusLead = this.grvSetupLead['Status'].referedValue;
-    this.settingViewValue();
-  }
+
   async getValueList() {
     this.cache.valueList('CRM010').subscribe((res) => {
       if (res.datas) {
@@ -172,38 +140,38 @@ export class TabDetailCustomComponent
     });
   }
 
-  settingViewValue() {
-    this.viewSettings = {
-      '1': {
-        icon: 'icon-monetization_on',
-        headerText: 'Báo giá',
-        deadValue: this.grvSetupQuotation['TotalAmt']?.headerText,
-        formModel: this.formModelQuotations,
-        status: this.vllStatusQuotation,
-        gridViewSetup: this.grvSetupQuotation,
-        name: this.grvSetupQuotation['QuotationName']?.headerText
+  // settingViewValue() {
+  //   this.viewSettings = {
+  //     '1': {
+  //       icon: 'icon-monetization_on',
+  //       headerText: 'Báo giá',
+  //       deadValue: this.grvSetupQuotation['TotalAmt']?.headerText,
+  //       formModel: this.formModelQuotations,
+  //       status: this.vllStatusQuotation,
+  //       gridViewSetup: this.grvSetupQuotation,
+  //       name: this.grvSetupQuotation['QuotationName']?.headerText
 
-      },
-      '2': {
-        icon: 'icon-sticky_note_2',
-        headerText: 'Hợp đồng',
-        deadValue:  this.grvSetupContract['ContractAmt']?.headerText,
-        formModel: this.formModelContract,
-        status: this.vllStatusContract,
-        gridViewSetup: this.grvSetupContract,
-        name: this.grvSetupContract['ContractName']?.headerText
-      },
-      '3': {
-        icon: 'icon-monetization_on',
-        headerText: 'Tiềm năng',
-        deadValue:  this.grvSetupLead['DealValue']?.headerText,
-        formModel: this.formModelLead,
-        status: this.vllStatusLead,
-        gridViewSetup: this.grvSetupLead,
-        name: this.grvSetupLead['LeadName']?.headerText
-      },
-    };
-  }
+  //     },
+  //     '2': {
+  //       icon: 'icon-sticky_note_2',
+  //       headerText: 'Hợp đồng',
+  //       deadValue:  this.grvSetupContract['ContractAmt']?.headerText,
+  //       formModel: this.formModelContract,
+  //       status: this.vllStatusContract,
+  //       gridViewSetup: this.grvSetupContract,
+  //       name: this.grvSetupContract['ContractName']?.headerText
+  //     },
+  //     '3': {
+  //       icon: 'icon-monetization_on',
+  //       headerText: 'Tiềm năng',
+  //       deadValue:  this.grvSetupLead['DealValue']?.headerText,
+  //       formModel: this.formModelLead,
+  //       status: this.vllStatusLead,
+  //       gridViewSetup: this.grvSetupLead,
+  //       name: this.grvSetupLead['LeadName']?.headerText
+  //     },
+  //   };
+  // }
 
   getNameCategory(categoryId: string) {
     return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
@@ -363,28 +331,28 @@ export class TabDetailCustomComponent
     // this.outDataStep.emit(this.dataStep);
   }
 
-  getSettingValue(type: string, fieldName: string): any {
-    const obj = this.viewSettings[type];
-    if (obj) {
-      switch (fieldName) {
-        case 'icon':
-          return obj.icon + ' icon-22 me-2 text-gray-700';
-        case 'name':
-          return obj.name;
-        case 'headerText':
-          return obj.headerText;
-        case 'deadValue':
-          return obj.deadValue;
-        case 'formModel':
-          return obj.formModel;
-        case 'status':
-          return obj.status;
-        case 'gridViewSetup':
-          return obj.gridViewSetup;
-        case 'createOn':
-          return obj.gridViewSetup['CreatedOn']?.headerText;
-      }
-    }
-    return '';
-  }
+  // getSettingValue(type: string, fieldName: string): any {
+  //   const obj = this.viewSettings[type];
+  //   if (obj) {
+  //     switch (fieldName) {
+  //       case 'icon':
+  //         return obj.icon + ' icon-22 me-2 text-gray-700';
+  //       case 'name':
+  //         return obj.name;
+  //       case 'headerText':
+  //         return obj.headerText;
+  //       case 'deadValue':
+  //         return obj.deadValue;
+  //       case 'formModel':
+  //         return obj.formModel;
+  //       case 'status':
+  //         return obj.status;
+  //       case 'gridViewSetup':
+  //         return obj.gridViewSetup;
+  //       case 'createOn':
+  //         return obj.gridViewSetup['CreatedOn']?.headerText;
+  //     }
+  //   }
+  //   return '';
+  // }
 }

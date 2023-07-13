@@ -81,7 +81,6 @@ export class PopupAddTargetComponent {
   }
 
   ngOnInit(): void {
-
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.selectedType = this.getFormatCalendar(null);
@@ -192,11 +191,12 @@ export class PopupAddTargetComponent {
         let year = this.data?.year;
         this.data = JSON.parse(JSON.stringify(this.dataOld));
         this.data.businessLineID = businessLine;
+        this.data.owner = null;
         this.data.year = year;
         this.data.category = '1';
         this.isPeriod = false;
 
-        this.lstTime.forEach(x => x.lines = []);
+        this.lstTime.forEach((x) => (x.lines = []));
         this.lstOwners = [];
       }
     });
@@ -367,6 +367,7 @@ export class PopupAddTargetComponent {
     var year = parseInt(this.startDate.getFullYear());
     if (e?.type == 'year') {
       this.data.category = '1'; //năm
+      this.data.period = year;
     } else if (e?.type == 'quarter') {
       this.data.category = '2'; // quý
       this.data.interval = this.setPeriod(month);
@@ -482,17 +483,14 @@ export class PopupAddTargetComponent {
     var i = 0;
 
     if (e == '' || e.trim() == '' || parseInt(e?.trim()) <= 0) {
+      var math = 0;
       if (isAllo) {
         if (index != -1) {
           if (this.lstTargetLines[index].target <= i) {
-            Math.round((this.data.target += 0));
+            math = this.data.target += 0;
           } else {
             i = this.lstTargetLines[index].target - i;
-
-            this.data.target -=
-              this.lstTargetLines[index].target > 0
-                ? Math.round(this.data.target)
-                : 0;
+            math = this.data.target -= this.lstTargetLines[index].target;
           }
           this.lstTargetLines[index].target = 0;
         }
@@ -506,14 +504,13 @@ export class PopupAddTargetComponent {
       } else {
         if (index != -1) {
           if (this.lstOwners[index].target > 0) {
-            this.data.target -=
-              this.lstOwners[index].target > 0
-                ? Math.round(this.data.target)
-                : 0;
+            math = this.data.target -= this.lstOwners[index].target;
           }
           this.lstOwners[index].target = 0;
         }
       }
+      this.data.target = math > 0 ? Math.round(math) : 0;
+
       index = -1;
       this.isEditLine = false;
       this.changedetectorRef.detectChanges();

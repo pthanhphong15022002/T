@@ -73,6 +73,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isShowStep = false;
   @Input() isShowElement = true;
   @Input() isShowComment = true;
+  @Input() isShowBtnAddTask = true;
   @Input() isSaveProgress = true; // lưu progress vào db
   @Input() askUpdateProgressStep = false; // lưu progress vào db
 
@@ -1432,7 +1433,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.askUpdateProgressStep = false;
         let check = this.listRecIDGroupUpdateProgress.some(id => id == data?.recID);
         if(!check){
-          this.listRecIDGroupUpdateProgress.push(data?.recID);
+          this.listRecIDGroupUpdateProgress.push(data?.refID);
         }
       }
       if (type != 'P' && type != 'G' && checkUpdateGroup) {

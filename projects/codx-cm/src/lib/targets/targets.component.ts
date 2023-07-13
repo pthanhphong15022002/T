@@ -175,12 +175,11 @@ export class TargetsComponent
       TextField: 'userName',
       Title: 'Owners',
     };
-
   }
   //#endregion setting schedule
 
   //#region load tree
-  loadTreeData(year){
+  loadTreeData(year) {
     this.loadedTree = false;
     var resource = new DataRequest();
     resource.predicates = 'Period=@0';
@@ -222,7 +221,7 @@ export class TargetsComponent
 
   selectionChange(parent) {
     if (parent.isItem) {
-      parent.data.items= parent?.data?.items;
+      parent.data.items = parent?.data?.items;
     }
   }
   //#endregion
@@ -273,16 +272,28 @@ export class TargetsComponent
     }
   }
 
-  changeDataMF(e, data) {
+  changeDataMF(e, data, type = 'schedule') {
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS04':
             res.disabled = true;
             break;
+          case 'SYS02':
+            if (type == 'tree') res.disabled = true;
+
+            break;
         }
       });
     }
+  }
+
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  changeMoreMF(e) {
+    this.changeDataMF(e.e, e.data, e.type);
   }
   //#endregion
 
@@ -323,7 +334,7 @@ export class TargetsComponent
           action: 'edit',
           title: this.titleAction,
           lstOwners: lstOwners,
-          lstTargetLines: lstTargetLines
+          lstTargetLines: lstTargetLines,
         };
         var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
         dialog.closed.subscribe((e) => {
