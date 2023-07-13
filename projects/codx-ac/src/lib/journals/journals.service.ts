@@ -47,20 +47,27 @@ export class JournalService {
   }
 
   getJournal(journalNo: string): Observable<IJournal> {
-    const journalOptions = new DataRequest();
-    journalOptions.entityName = 'AC_Journals';
-    journalOptions.predicates = 'JournalNo=@0';
-    journalOptions.dataValues = journalNo;
-    journalOptions.pageLoading = false;
-    return this.acService
-      .loadDataAsync('AC', journalOptions)
+    return this.apiService
+      .exec<any>('AC', 'JournalsBusiness', 'GetAsync', journalNo)
       .pipe(
-        map((res) =>
-          res[0]?.dataValue
-            ? { ...JSON.parse(res[0].dataValue), ...res[0] }
-            : res[0]
-        )
+        tap(),
+        map((r) => r)
       );
+
+    // const journalOptions = new DataRequest();
+    // journalOptions.entityName = 'AC_Journals';
+    // journalOptions.predicates = 'JournalNo=@0';
+    // journalOptions.dataValues = journalNo;
+    // journalOptions.pageLoading = false;
+    // return this.acService
+    //   .loadDataAsync('AC', journalOptions)
+    //   .pipe(
+    //     map((res) =>
+    //       res[0]?.dataValue
+    //         ? { ...JSON.parse(res[0].dataValue), ...res[0] }
+    //         : res[0]
+    //     )
+    //   );
   }
 
   /**
