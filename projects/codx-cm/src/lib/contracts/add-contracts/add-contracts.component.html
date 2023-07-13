@@ -28,12 +28,12 @@
         ></codx-label>
       </button>
       <button
-      class="button-close d-flex p-3"
-      style="border: none; outline: none; background: none"
-      (click)="dialog.close()"
-    >
-      <i class="icon-close icon-18 text-hover-danger p-1"></i>
-    </button>
+        class="button-close d-flex p-3"
+        style="border: none; outline: none; background: none"
+        (click)="dialog.close()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
     </div>
   </header>
   <main class="px-6 h-100">
@@ -109,7 +109,11 @@
               field="contractID"
               type="text"
               [crrValue]="contracts?.contractID"
+              [placeholder]="
+                planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
+              "
               (valueChange)="valueChangeText($event)"
+              [disabled]="disabledShowInput"
             >
             </codx-input>
           </div>
@@ -150,7 +154,7 @@
             <codx-input
               #inputQuotation
               [formModel]="dialog.formModel"
-              field="quotationID"        
+              field="quotationID"
               [crrValue]="contracts?.quotationID"
               (valueChange)="valueChangeCombobox($event)"
               [model]="customerID"
@@ -522,16 +526,12 @@
 </ng-template>
 
 <!-- Gia hạn -->
-<ng-template #extendTemplate let-data="value">
-
-</ng-template>
+<ng-template #extendTemplate let-data="value"> </ng-template>
 
 <!-- điều khoản hợp đồng -->
 <ng-template #termsAndRelatedTemplate let-data="value">
   <div class="d-flex justify-content-between mt-5">
-    <div
-      class="d-flex align-items-center nav-item w-100 mb-1"
-    >
+    <div class="d-flex align-items-center nav-item w-100 mb-1">
       <div class="d-flex align-items-center mb-2">
         <span class="icon-attach_file icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary">
@@ -805,7 +805,9 @@
               type="combobox"
               (valueChange)="valueChangeCombobox($event)"
               [crrValue]="contracts?.customerID"
-              [disabled]="type == 'deal' || type == 'quotation' || type == 'customer'"
+              [disabled]="
+                type == 'deal' || type == 'quotation' || type == 'customer'
+              "
             >
             </codx-input>
           </div>
@@ -1225,6 +1227,4 @@
     [listPaymentDelete]="listPaymentDelete"
     [listPaymentHistory]="listPaymentHistory"
   ></view-payment>
-  
 </ng-template>
-

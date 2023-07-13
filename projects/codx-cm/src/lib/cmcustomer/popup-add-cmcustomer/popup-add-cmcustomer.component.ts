@@ -80,7 +80,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
   count = 0;
   avatarChange = false;
   autoNumber: any;
-
+  disabledShowInput = false;
+  planceHolderAutoNumber = '';
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
     {
@@ -132,7 +133,26 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   async ngOnInit() {
     this.getTab();
-    this.getAutoNumber(this.autoNumber);
+    this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.funcID, this.dialog?.formModel?.entityName]
+      )
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.disabledShowInput = true;
+          this.getAutoNumber(this.autoNumber);
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes)
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          });
+        } else {
+          this.disabledShowInput = false;
+        }
+      });
     this.checkContact = await firstValueFrom(
       this.api.execSv<any>(
         'CM',

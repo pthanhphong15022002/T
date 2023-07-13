@@ -211,7 +211,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
-      this.modegrid = this.journal.inputMode;
+      this.modegrid = this.journal.addNewMode;
     });
   }
 

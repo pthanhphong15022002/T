@@ -115,6 +115,7 @@
     <ejs-combobox
       [dataSource]="lstContactCbx"
       [fields]="fieldContact"
+      [placeholder]="gridViewSetup?.ContactID?.description"
       [value]="contactID"
       (valueChange)="cbxContact($event)"
     ></ejs-combobox>

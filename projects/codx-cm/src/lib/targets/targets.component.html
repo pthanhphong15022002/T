@@ -28,7 +28,10 @@
     </codx-img> -->
     <div class="ps-3 d-flex w-100 flex-column pe-12">
       <!-- <span class="w-100 text-truncate fw-bold">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span> -->
-      <span class="w-100 text-truncate fw-bold">{{ data?.target }}</span>
+      <span
+        class="w-100 text-truncate fw-bold"
+        [innerHTML]="targetToFixed(data?.target)"
+      ></span>
     </div>
   </div>
 </ng-template>
@@ -61,6 +64,13 @@
 <!--Popup infomation-->
 <ng-template #contentTmp let-data> </ng-template>
 
+<ng-template #resourceTootip let-data>
+  <span
+    class="w-100 text-truncate fw-bold"
+    [innerHTML]="targetToFixed(data?.target)"
+  ></span>
+</ng-template>
+
 <ng-template #mfButton let-data>
   <div class="mt-1 me-1">
     <codx-mfunc
@@ -89,6 +99,14 @@
         (change)="changeCalendar($event)"
       ></codx-dropdown-calendar>
     </div>
+    <div class="mt-2 om-ejs-tab">
+      <div class="container treeview">
+        <codx-view-tree-targets [dataTree]="lstDataTree" [fmTargetLines]="fmTargetLines"></codx-view-tree-targets>
+      </div>
+    </div>
   </div>
 </ng-template>
+
+
+<ng-template #templateBusiTreeView let-busi> </ng-template>
 <!--end-->

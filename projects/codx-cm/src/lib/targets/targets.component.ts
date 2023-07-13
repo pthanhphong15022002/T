@@ -10,6 +10,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  DataRequest,
+  FormModel,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -18,11 +20,15 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddTargetComponent } from './popup-add-target/popup-add-target.component';
+import { DecimalPipe } from '@angular/common';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-targets',
   templateUrl: './targets.component.html',
-  styleUrls: ['./targets.component.css'],
+  styleUrls: ['./targets.component.scss'],
+  providers: [DecimalPipe],
 })
 export class TargetsComponent
   extends UIComponent
@@ -39,13 +45,23 @@ export class TargetsComponent
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
 
+  lstDataTree = [];
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   button?: ButtonModel;
   scheduleHeader?: ResourceModel;
   schedules?: ResourceModel;
-  requestTree?: ResourceModel;
+  //#region tree request
+  requestTree = new DataRequest();
+  serviceTree: string = 'CM';
+  assemblyNameTree: string = 'ERM.Business.CM';
+  entityNameTree: string = 'CM_TargetsLines';
+  classNameTree: string = 'TargetsLinesBusiness';
+  methodTree: string = 'GetListTreeTargetLineAsync';
+  loadedTree: boolean;
+  fmTargetLines: FormModel;
+  //#endregion
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
@@ -64,7 +80,12 @@ export class TargetsComponent
   date: any = new Date();
   ops = ['m', 'q', 'y'];
 
-  constructor(private inject: Injector, private activedRouter: ActivatedRoute) {
+  constructor(
+    private inject: Injector,
+    private activedRouter: ActivatedRoute,
+    private decimalPipe: DecimalPipe,
+    private cmSv: CodxCmService
+  ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -84,7 +105,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -93,7 +114,7 @@ export class TargetsComponent
       {
         sameData: false,
         type: ViewType.schedule,
-        active: true,
+        active: false,
         request2: this.scheduleHeader,
         request: this.schedules,
         toolbarTemplate: this.footerButton,
@@ -104,7 +125,7 @@ export class TargetsComponent
           resourceModel: this.scheduleHeaderModel, //resource
           template: this.cardTemplate,
           template4: this.resourceHeader,
-          //template5: this.resourceTootip,//tooltip
+          template5: this.resourceTootip, //tooltip
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
@@ -114,6 +135,7 @@ export class TargetsComponent
     ];
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
+    this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
 
     this.detectorRef.checkNoChanges();
   }
@@ -134,7 +156,7 @@ export class TargetsComponent
     //lấy list user vẽ header schedule
     this.scheduleHeader = new ResourceModel();
     this.scheduleHeader.assemblyName = 'CM';
-    this.scheduleHeader.className = 'TargetsBusiness';
+    this.scheduleHeader.className = 'TargetsLinesBusiness';
     this.scheduleHeader.service = 'CM';
     this.scheduleHeader.method = 'GetListUserAsync';
     this.scheduleModel = {
@@ -154,23 +176,73 @@ export class TargetsComponent
       Title: 'Owners',
     };
 
-    //Vẽ tree
-
-    this.requestTree = new ResourceModel();
-    this.requestTree.assemblyName = 'CM';
-    this.requestTree.className = 'TargetsBusiness';
-    this.requestTree.service = 'CM';
-    this.requestTree.method = 'GetListTargetAsync';
-    this.requestTree.autoLoad = false;
-    this.requestTree.parentIDField = 'Year';
   }
   //#endregion setting schedule
 
+  //#region load tree
+  loadTreeData(year){
+    this.loadedTree = false;
+    var resource = new DataRequest();
+    resource.predicates = 'Period=@0';
+    resource.dataValues = year;
+    resource.funcID = 'CM0601';
+    resource.pageLoading = false;
+    this.requestTree = resource;
+    this.fetch().subscribe((item) => {
+      this.lstDataTree = item;
+
+      this.loadedTree = true;
+    });
+  }
+
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.serviceTree,
+        this.assemblyNameTree,
+        this.classNameTree,
+        this.methodTree,
+        this.requestTree
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response ? response[0] : [];
+        })
+      );
+  }
+
+  clickTreeNode(evt: any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+
+  selectionChange(parent) {
+    if (parent.isItem) {
+      parent.data.items= parent?.data?.items;
+    }
+  }
+  //#endregion
+
   //#region change Calendar ejs
-  changeCalendar(data: any) {}
+  changeCalendar(data: any) {
+    var year = parseInt(data?.fromDate?.getFullYear());
+    this.loadTreeData(year?.toString());
+  }
   //#endregion
   //#region event codx-view
-  viewChanged(e) {}
+  viewChanged(e) {
+    console.log(e);
+    var formModel = new FormModel();
+    formModel.formName = 'CMTargetsLines';
+    formModel.gridViewName = 'grvCMTargetsLines';
+    formModel.entityName = 'CM_TargetsLines';
+    this.fmTargetLines = formModel;
+    this.detectorRef.detectChanges();
+  }
   onLoading(e) {}
   searchChanged(e) {}
   selectedChange(e) {}
@@ -193,6 +265,9 @@ export class TargetsComponent
       switch (e.functionID) {
         case 'SYS02':
           this.deleteTargetLine(data);
+          break;
+        case 'SYS03':
+          this.edit(data);
           break;
       }
     }
@@ -229,6 +304,34 @@ export class TargetsComponent
     });
   }
 
+  async edit(data) {
+    var res = await firstValueFrom(
+      this.cmSv.getTargetAndLinesAsync(data?.businessLineID)
+    );
+    var lstOwners = res[2];
+    var lstTargetLines = res[1];
+    this.view.dataService.dataSelected = res[0];
+
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        var obj = {
+          action: 'edit',
+          title: this.titleAction,
+          lstOwners: lstOwners,
+          lstTargetLines: lstTargetLines
+        };
+        var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
+        dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+        });
+      });
+  }
+
   deleteTargetLine(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -255,4 +358,8 @@ export class TargetsComponent
     return true;
   }
   //#endregion
+
+  targetToFixed(data) {
+    return data ? this.decimalPipe.transform(data, '1.0-0') : '0';
+  }
 }
