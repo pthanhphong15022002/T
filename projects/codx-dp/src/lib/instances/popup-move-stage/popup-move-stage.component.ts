@@ -95,6 +95,8 @@ export class PopupMoveStageComponent implements OnInit {
   fieldsNull = [];
   dateMessage: any;
   applyFor:any;
+  progressDefault = false;
+  progressAll = false;
 
   // CM
   dataCM:any;
@@ -740,7 +742,7 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  changeProgress(event) {
+  changeProgress(event) {// type A = all, D=default, R = required (-_-) Bảo cố lên anh tin bảo 😁
     if (event) {
       if (event?.taskID) {
         var task = this.listTaskDone.find((x) => x.recID === event?.taskID);
@@ -773,7 +775,7 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.progress = taskOld.progress;
     taskNew.modifiedOn = new Date();
     taskNew.modifiedBy = this.user.userID;
-    taskNew.isUpdate = taskNew.isUpdate;
+    taskNew.isUpdate = taskOld.isUpdate;
   }
   updateDataGroup(groupNew: any, groupOld: any) {
     groupNew.progress = groupOld?.progress;
@@ -847,5 +849,20 @@ export class PopupMoveStageComponent implements OnInit {
       this.isDurationControl = true;
     }
     return actualEnd;
+  }
+
+  checkRadioProgress(event) {
+    if (event?.field == "progressAll") {
+      this.progressAll = event?.data;
+      if(this.progressAll){
+        this.progressDefault = !this.progressAll;
+      }
+    }
+    if (event?.field == "progressDefault") {
+      this.progressDefault = event?.data;
+      if(this.progressDefault){
+        this.progressAll = !this.progressDefault;
+      }
+    }
   }
 }

@@ -9,39 +9,39 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {
-  AlertConfirmInputConfig,
-  ApiHttpService,
   AuthStore,
-  CacheService,
-  CallFuncService,
-  CodxService,
-  DialogModel,
   FormModel,
-  NotificationsService,
+  DialogModel,
+  CodxService,
+  CacheService,
+  ApiHttpService,
   SidebarModel,
+  CallFuncService,
+  NotificationsService,
+  AlertConfirmInputConfig,
   Util,
 } from 'codx-core';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { firstValueFrom } from 'rxjs';
-import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
-import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
-import { TM_Tasks } from '../../codx-tasks/model/task.model';
-import { AssignTaskModel } from '../../../models/assign-task.model';
-import { AssignInfoComponent } from '../../assign-info/assign-info.component';
 import {
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
-import { CodxAddGroupTaskComponent } from '../codx-add-group-task/codx-add-group-task.component';
+import { firstValueFrom } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+import { StepService } from '../step.service';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { TM_Tasks } from '../../codx-tasks/model/task.model';
+import { AssignTaskModel } from '../../../models/assign-task.model';
+import { CodxEmailComponent } from '../../codx-email/codx-email.component';
+import { AssignInfoComponent } from '../../assign-info/assign-info.component';
+import { CodxCalendarService } from '../../codx-calendar/codx-calendar.service';
+import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
+import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
-import { StepService } from '../step.service';
+import { CodxAddGroupTaskComponent } from '../codx-add-group-task/codx-add-group-task.component';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
-import { CodxEmailComponent } from '../../codx-email/codx-email.component';
-import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
-import { FormGroup } from '@angular/forms';
-import { CodxCalendarService } from '../../codx-calendar/codx-calendar.service';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
+import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 
 @Component({
@@ -57,56 +57,64 @@ import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region Input
-  @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
-  @Input() isShowMore = true; // show more function
-  @Input() isShowStep = false;
-  @Input() isShowButton = true;
-  @Input() isShowFile = true;
-  @Input() isShowComment = true;
-  @Input() isDeepCopy = true; // copy sâu
-  @Input() isLockSuccess = false; // lọc cái task 100%
-  @Input() isSaveProgress = true; // lưu progress vào db
-  @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
+  @Input() formModel: FormModel;
   @Input() taskAdd: DP_Instances_Steps_Tasks;
+  @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
 
-  @Input() isClose = false; // đóng nhiệm vụ
   @Input() isStart = true; // bắt đầu ngay
-  @Input() isOnlyView = true; // đang ở giai đoạn nào
+  @Input() isClose = false; // đóng nhiệm vụ
   @Input() isRoleAll = true;
-  @Input() isViewStep = false;
-  @Input() isShowElement = true;
+  @Input() isOnlyView = true; // đang ở giai đoạn nào
+  @Input() isShowFile = true;
+  @Input() isDeepCopy = true; // copy sâu
   @Input() isAddTask = false;
+  @Input() isShowStep = false;
+  @Input() isShowElement = true;
+  @Input() isShowComment = true;
+  @Input() isSaveProgress = true; // lưu progress vào db
+  @Input() askUpdateProgressStep = false; // lưu progress vào db
 
-  @Output() isChangeProgress = new EventEmitter<any>();
-  @Output() continueStep = new EventEmitter<any>();
-  @Output() valueChangeProgress = new EventEmitter<any>();
+  @Input() isViewStep = false; // chỉ xem
+  @Input() isMoveStage = false; // chuyển giai đoạn
+  @Input() isLockSuccess = false; // lọc cái task 100%
+  @Input() isSuccessAllTask = false; // dành cho chuyển giai đoạn
+  @Input() isSuccessTaskDefault = false; //dành cho chuyển giai đoạn
+
   @Output() saveAssign = new EventEmitter<any>();
+  @Output() continueStep = new EventEmitter<any>();
+  @Output() isChangeProgress = new EventEmitter<any>();
+  @Output() valueChangeProgress = new EventEmitter<any>(); // type A = all, D=default, R = required
   //#endregion
-  isEditTimeDefault = false;
-  isUpdateProgressGroup = false;
-  isUpdateProgressStep = false;
 
-  currentStep: any;
   isUpdate;
   user: any;
-  dateFomat = 'dd/MM/yyyy';
-  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
-  listTaskType = [];
-  listTask = [];
-  listGroupTask = [];
-  grvMoreFunction: FormModel;
-  idTaskEnd = null;
-  progressTaskEnd = 0;
-
+  id: string;
   taskType: any;
+  listTask = [];
+  idStepOld = '';
+  addCarTitle = '';
+  carFG: FormGroup;
+  carFM: FormModel;
+  currentStep: any;
+  idTaskEnd = null;
+  listTaskType = [];
+  listGroupTask = [];
+  progressTaskEnd = 0;
+  titleAction: any = '';
+  dataPopupProgress: any;
+  dateFomat = 'dd/MM/yyyy';
+  grvMoreFunction: FormModel;
+  isEditTimeDefault = false;
+  isOpenPopupProgress = false;
+  isUpdateProgressStep = false;
+  isUpdateProgressGroup = false;
+  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
+  listRecIDGroupUpdateProgress:string[] = []
+
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
-
-  isOpenPopupProgress = false;
-  dataPopupProgress: any;
-  idStepOld = '';
 
   moreDefaut = {
     share: true,
@@ -115,22 +123,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     download: true,
     delete: true,
   };
-  titleAction: any = '';
-  id: string;
-  carFG: FormGroup;
-  carFM: FormModel;
-  addCarTitle = '';
 
   constructor(
-    private callfc: CallFuncService,
-    private notiService: NotificationsService,
     private cache: CacheService,
-    private authStore: AuthStore,
-    private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
+    private authStore: AuthStore,
+    private callfc: CallFuncService,
+    private codxService: CodxService,
     private stepService: StepService,
-    private calendarService: CodxCalendarService,
-    private codxService: CodxService
+    private notiService: NotificationsService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private calendarService: CodxCalendarService
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -144,14 +147,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
     this.frmModelInstancesGroup = {
-      entityName: 'DP_Instances_Steps_TaskGroups',
       formName: 'DPInstancesStepsTaskGroups',
+      entityName: 'DP_Instances_Steps_TaskGroups',
       gridViewName: 'grvDPInstancesStepsTaskGroups',
     };
     this.frmModelInstancesTask = {
-      entityName: 'DP_Instances_Steps_Tasks',
-      formName: 'DPInstancesStepsTasks',
       funcID: 'DPT040102',
+      formName: 'DPInstancesStepsTasks',
+      entityName: 'DP_Instances_Steps_Tasks',
       gridViewName: 'grvDPInstancesStepsTasks',
     };
   }
@@ -193,6 +196,107 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     ) {
       this.chooseTypeTask();
     }
+
+    if (changes?.isSuccessAllTask) {
+      if (changes?.isSuccessAllTask?.firstChange) {
+        this.listGroupTask?.forEach((group) => {
+          group?.task?.forEach((task) => {
+            task['progressOld'] = task.progress;
+          });
+          group['progressOld'] = group.progress;
+        });
+      } else {
+        let progressData = [];
+        if (changes?.isSuccessAllTask?.currentValue) {
+          this.listGroupTask?.forEach((group) => {
+            group?.task?.forEach((task) => {
+              task.progress = 100;
+              progressData.push(this.setProgressOutput(task, group));
+            });
+            group.progress = 100;
+            if (group?.recID) {
+              progressData.push(this.setProgressOutput(null, group));
+            }
+          });
+          this.valueChangeProgress.emit({ type: 'A', data: progressData });
+        } else {
+          this.listGroupTask?.forEach((group) => {
+            group?.task?.forEach((task) => {
+              task.progress = task?.progressOld;
+            });
+            group.progress = group?.progressOld;
+          });
+          this.valueChangeProgress.emit({ type: 'A', data: progressData });
+        }
+      }
+    }
+
+    if (
+      changes?.isSuccessTaskDefault &&
+      !changes?.isSuccessTaskDefault?.firstChange
+    ) {
+      let progressData = [];
+      if (changes?.isSuccessTaskDefault?.currentValue) {
+        this.listGroupTask?.forEach((group) => {
+          let countTask = group?.task?.length;
+          if (countTask > 0) {
+            let sumProgress = 0;
+            let check = false;
+            group?.task?.forEach((task) => {
+              if (task?.requireCompleted) {
+                task.progress = 100;
+                progressData.push(this.setProgressOutput(task, group));
+                check = true;
+              }
+              sumProgress += task.progress;
+            });
+            if (check) {
+              group.progress = Number((sumProgress / countTask).toFixed(2));
+              progressData.push(this.setProgressOutput(null, group));
+            }
+          }
+        });
+        this.valueChangeProgress.emit({ type: 'R', data: progressData });
+      } else {
+        this.listGroupTask?.forEach((group) => {
+          let countTask = group?.task?.length;
+          if (countTask > 0) {
+            group?.task?.forEach((task) => {
+              if (task?.requireCompleted) {
+                task.progress = task?.progressOld;
+              }
+            });
+            group.progress = group?.progressOld;
+          }
+        });
+        this.valueChangeProgress.emit({ type: 'R', data: progressData });
+      }
+    }
+  }
+
+  setProgressOutput(task, group) {
+    let dataOutput = {};
+    if (task) {
+      dataOutput['isUpdate'] = true;
+      dataOutput['actualEnd'] = new Date();
+      dataOutput['note'] = null;
+      dataOutput['type'] = 'T';
+      dataOutput['progressTask'] = task?.progress;
+      dataOutput['taskID'] = task?.recID;
+      dataOutput['groupTaskID'] = group?.recID;
+      dataOutput['stepID'] = this.currentStep?.recID;
+    } else {
+      dataOutput['isUpdate'] = true;
+      dataOutput['actualEnd'] = new Date();
+      dataOutput['note'] = null;
+      dataOutput['type'] = 'G';
+      dataOutput['progressTask'] = null;
+      dataOutput['taskID'] = task?.recID;
+      dataOutput['groupTaskID'] = group?.recID;
+      dataOutput['stepID'] = this.currentStep?.recID;
+      dataOutput['progressGroupTask'] = group?.progress;
+    }
+    return dataOutput;
   }
 
   ngAfterViewInit() {
@@ -312,7 +416,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   toggleTask(e, idGroup) {
     let elementGroup = document.getElementById(idGroup.toString());
-    // let elementGroup = document.querySelector('#' + this.id + '#' + idGroup.toString() );
     let children = e.currentTarget.children[0];
     let isClose = elementGroup.classList.contains('hiddenTask');
     if (isClose) {
@@ -406,7 +509,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView && task?.status != "1")) {
+            if (
+              !(
+                (this.isRoleAll || isGroup || isTask) &&
+                this.isOnlyView &&
+                task?.status != '1'
+              )
+            ) {
               res.isblur = true;
             }
             break;
@@ -428,9 +537,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP24': //Tạo cuộc họp
-            if (task.taskType != 'M' || task?.actionStatus == '2'){
+            if (task.taskType != 'M' || task?.actionStatus == '2') {
               res.disabled = true;
-            }else if(task?.status == "1"){
+            } else if (task?.status == '1') {
               res.isblur = true;
             }
             break;
@@ -471,11 +580,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP31': // bắt đầu ngay
-            if(task?.dependRule != "0" || task?.status != "1"){
+            if (task?.dependRule != '0' || task?.status != '1') {
               res.disabled = true;
-            }else if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
-                res.isblur = true;
-              }           
+            } else if (
+              !((this.isRoleAll || isGroup || isTask) && this.isOnlyView)
+            ) {
+              res.isblur = true;
+            }
             break;
         }
       });
@@ -660,7 +771,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.addBookingCar();
         break;
       case 'DP31':
-        this.startTask(task,groupTask);
+        this.startTask(task, groupTask);
         break;
     }
   }
@@ -699,19 +810,30 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.openPopupContract('add');
     } else {
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [task?.stepID, task?.recID])
+        .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [
+          task?.stepID,
+          task?.recID,
+        ])
         .subscribe((res) => {
-          if(res){
-            let indexTaskView = groupTask?.task?.findIndex(taskFind => taskFind?.recID == task?.recID);
-            task.status = "2";
+          if (res) {
+            let indexTaskView = groupTask?.task?.findIndex(
+              (taskFind) => taskFind?.recID == task?.recID
+            );
+            task.status = '2';
             task.modifiedBy = this.user.userID;
             task.modifiedOn = new Date();
-            if(indexTaskView >= 0){
-              groupTask?.task?.splice(indexTaskView,1,JSON.parse(JSON.stringify(task)));
+            if (indexTaskView >= 0) {
+              groupTask?.task?.splice(
+                indexTaskView,
+                1,
+                JSON.parse(JSON.stringify(task))
+              );
             }
-            let taskFind = this.currentStep?.tasks?.find((taskFind) => taskFind.recID == task.recID);
-            if(taskFind){
-              taskFind.status = "2";
+            let taskFind = this.currentStep?.tasks?.find(
+              (taskFind) => taskFind.recID == task.recID
+            );
+            if (taskFind) {
+              taskFind.status = '2';
               taskFind.modifiedBy = this.user.userID;
               taskFind.modifiedOn = new Date();
             }
@@ -860,7 +982,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['taskGroupID'] = groupID || null;
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
-    task['dependRule'] = "0";
+    task['dependRule'] = '0';
 
     let taskOutput = await this.openPopupTask('add', task, groupID);
     if (taskOutput?.event.task) {
@@ -946,7 +1068,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       taskCopy['progress'] = 0;
       taskCopy['isTaskDefault'] = false;
       taskCopy['requireCompleted'] = false;
-      taskCopy['dependRule'] = "0";
+      taskCopy['dependRule'] = '0';
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskCopy?.taskType
       );
@@ -1252,29 +1374,45 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region progress
   async openPopupUpdateProgress(data, type) {
-    if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep)
-      return;
-    let checkUpdate = this.stepService.checkUpdateProgress(
-      data,
-      type,
-      this.currentStep,
-      this.isRoleAll,
-      this.isOnlyView,
-      this.isUpdateProgressGroup,
-      this.isUpdateProgressStep,
-      this.user
-    );
-    if (!checkUpdate) return;
+    if (!this.isMoveStage) {
+      if (
+        !this.isOnlyView ||
+        !this.isStart ||
+        this.isClose ||
+        this.isViewStep
+      ) {
+        return;
+      }
+      let checkUpdate = this.stepService.checkUpdateProgress(
+        data,
+        type,
+        this.currentStep,
+        this.isRoleAll,
+        this.isOnlyView,
+        this.isUpdateProgressGroup,
+        this.isUpdateProgressStep,
+        this.user
+      );
+      if (!checkUpdate) return;
+    }
+    let askUpdateParent = false;
+    let checkUpdateGroup =this.listRecIDGroupUpdateProgress.some(id => id == data?.taskGroupID);
     if (type != 'P' && type != 'G') {
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
         this.currentStep
       );
       if (!checkTaskLink) return;
+      checkUpdateGroup =this.listRecIDGroupUpdateProgress.some(id => id == data?.taskGroupID);
+      askUpdateParent = checkUpdateGroup || this.askUpdateProgressStep ? true : false;
+    }
+    if(type == 'G'){
+      askUpdateParent = this.askUpdateProgressStep;
     }
     let dataInput = {
       data,
       type,
+      isUpdateParent: askUpdateParent,
       step: this.currentStep,
       isSave: this.isSaveProgress,
     };
@@ -1290,44 +1428,70 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     let dataProgress = dataPopupOutput?.event;
     if (dataProgress) {
+      if(type == 'G'){
+        this.askUpdateProgressStep = false;
+        let check = this.listRecIDGroupUpdateProgress.some(id => id == data?.recID);
+        if(!check){
+          this.listRecIDGroupUpdateProgress.push(data?.recID);
+        }
+      }
+      if (type != 'P' && type != 'G' && checkUpdateGroup) {
+        this.askUpdateProgressStep = false;
+        let index = this.listRecIDGroupUpdateProgress?.findIndex(id => id == data?.taskGroupID);
+        if(index >=0 ){
+          this.listRecIDGroupUpdateProgress?.splice(index,1);
+        }
+      }
       this.handelProgress(data, dataProgress);
     }
     return dataPopupOutput;
   }
 
   updateDataProgress(data, dataProgress) {
-    if(dataProgress?.type == 'P'){
+    if (dataProgress?.type == 'P') {
       data.progress = dataProgress?.progressStep;
-    }else if(dataProgress?.type == 'G'){
+    } else if (dataProgress?.type == 'G') {
       data.progress = dataProgress?.progressGroupTask;
-    }else{
+    } else {
       data.progress = dataProgress?.progressTask;
-      data.status = dataProgress?.progressTask == 100 ? "3" : "2";
+      data.status = dataProgress?.progressTask == 100 ? '3' : '2';
     }
     data.note = dataProgress?.note;
     data.actualEnd = dataProgress?.actualEnd;
   }
 
   startTaskAuto(task) {
-    const taskFinds = this.currentStep?.tasks?.filter(taskF => taskF.parentID.includes(task?.refID));
+    const taskFinds = this.currentStep?.tasks?.filter((taskF) =>
+      taskF.parentID.includes(task?.refID)
+    );
     if (taskFinds && taskFinds.length > 0) {
-      taskFinds.forEach(element => {
-        if(element?.dependRule == "1"){
-          const listIDTask = element?.parentID?.split(";");
-        const areAllTasksCompleted = listIDTask.every(idTask => {
-          const taskF = this.currentStep?.tasks?.find(taskF => taskF.refID === idTask);
-          return taskF && taskF.progress >= 100;
-        });
-        if (areAllTasksCompleted){
-          element.status = "2";
-          let groupView = this.listGroupTask.find((group) =>group.refID == element?.taskGroupID);
-          if(groupView && groupView?.task?.length > 0){
-            let taskViewIndex = groupView?.task?.findIndex(t => t?.recID == element?.recID);
-            if(taskViewIndex >= 0){
-              groupView?.task?.splice(taskViewIndex,1,JSON.parse(JSON.stringify(element)));
+      taskFinds.forEach((element) => {
+        if (element?.dependRule == '1') {
+          const listIDTask = element?.parentID?.split(';');
+          const areAllTasksCompleted = listIDTask.every((idTask) => {
+            const taskF = this.currentStep?.tasks?.find(
+              (taskF) => taskF.refID === idTask
+            );
+            return taskF && taskF.progress >= 100;
+          });
+          if (areAllTasksCompleted) {
+            element.status = '2';
+            let groupView = this.listGroupTask.find(
+              (group) => group.refID == element?.taskGroupID
+            );
+            if (groupView && groupView?.task?.length > 0) {
+              let taskViewIndex = groupView?.task?.findIndex(
+                (t) => t?.recID == element?.recID
+              );
+              if (taskViewIndex >= 0) {
+                groupView?.task?.splice(
+                  taskViewIndex,
+                  1,
+                  JSON.parse(JSON.stringify(element))
+                );
+              }
             }
           }
-        }
         }
       });
     }
@@ -1336,29 +1500,45 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   handelProgress(data, dataProgress) {
     if (dataProgress) {
       if (dataProgress?.type == 'P') {
-        this.updateDataProgress(data,dataProgress);
+        this.updateDataProgress(data, dataProgress);
       } else if (dataProgress?.type == 'G') {
-        this.updateDataProgress(data,dataProgress);
-        let groupData = this.currentStep?.taskGroups?.find((group) => group.recID == dataProgress?.groupTaskID);
-        if(groupData){
-          this.updateDataProgress(groupData,dataProgress);
+        this.updateDataProgress(data, dataProgress);
+        let groupData = this.currentStep?.taskGroups?.find(
+          (group) => group.recID == dataProgress?.groupTaskID
+        );
+        if (groupData) {
+          this.updateDataProgress(groupData, dataProgress);
         }
         if (dataProgress?.isUpdate) {
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
         }
       } else {
-        this.updateDataProgress(data,dataProgress);
-        let taskFind = this.currentStep?.tasks?.find((task) => task.recID == dataProgress.taskID);
+        this.updateDataProgress(data, dataProgress);
+        if (this.isMoveStage) {
+          data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
+        }
+        let taskFind = this.currentStep?.tasks?.find(
+          (task) => task.recID == dataProgress.taskID
+        );
         if (taskFind) {
-          this.updateDataProgress(taskFind,dataProgress);
+          this.updateDataProgress(taskFind, dataProgress);
         }
         //cập nhật group và step
         if (dataProgress?.isUpdate) {
-          let groupView = this.listGroupTask.find((group) =>group.recID == dataProgress?.groupTaskID ||group.refID == dataProgress?.groupTaskID);
-          let groupData = this.currentStep?.taskGroups?.find((group) => group.recID == dataProgress?.groupTaskID);
+          let groupView = this.listGroupTask.find(
+            (group) =>
+              group.recID == dataProgress?.groupTaskID ||
+              group.refID == dataProgress?.groupTaskID
+          );
+          let groupData = this.currentStep?.taskGroups?.find(
+            (group) => group.recID == dataProgress?.groupTaskID
+          );
           if (groupView) {
             groupView.progress = dataProgress?.progressGroupTask;
+            if (this.isMoveStage) {
+              groupView.progressOld = dataProgress?.progressGroupTask; // dành cho cập nhật tất cả
+            }
           }
           if (groupData) {
             groupData.progress = dataProgress?.progressGroupTask;
@@ -1368,7 +1548,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
-        let groupFind = this.listGroupTask.find((group) => group.refID == dataCopy?.taskGroupID);
+        let groupFind = this.listGroupTask.find(
+          (group) => group.refID == dataCopy?.taskGroupID
+        );
         if (groupFind) {
           let index = groupFind?.task?.findIndex(
             (taskFind) => taskFind.recID == dataCopy?.recID
@@ -1382,14 +1564,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.continueStep.emit(isTaskEnd);
         }
         //Bắt đầu công việc khi công việc cha hoàn tất
-        if( dataProgress?.progressTask == 100){
+        if (dataProgress?.progressTask == 100) {
           this.startTaskAuto(data);
         }
       }
-      this.valueChangeProgress.emit(dataProgress);
+      this.valueChangeProgress.emit({ type: 'D', data: [dataProgress] });
     }
   }
+
   checkUpdateProgress(dataUpdate, type) {
+    if (this.isMoveStage) {
+      return true;
+    }
     if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
       if (type == 'P') {
         return this.isUpdateProgressStep && this.isRoleAll ? true : false;
@@ -1402,7 +1588,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           ? true
           : false;
       } else {
-        if(dataUpdate.status == "1"){
+        if (dataUpdate.status == '1') {
           return false;
         }
         let isGroup = false;
@@ -1663,7 +1849,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (f) {
           this.cache.gridView(f.gridViewName).subscribe((res) => {
             this.cache
-                .gridViewSetup(f.formName, f.gridViewName)
+              .gridViewSetup(f.formName, f.gridViewName)
               .subscribe((grvSetup) => {
                 if (grvSetup) {
                   formModel.funcID = 'TMT0501';

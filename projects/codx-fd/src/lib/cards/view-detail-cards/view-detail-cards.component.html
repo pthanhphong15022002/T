@@ -31,6 +31,21 @@
                             <div class="card-title fw-bold fs-1 pb-9" [style.color]="data.headerColor">
                                 {{data?.cardType | vll:'L1422':'text'|async}}
                             </div>
+                            <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
+                                <!-- <div class="d-flex align-items-center me-3" *ngIf="data.rating">
+                                    <img class="w-25px h-25px"
+                                        src="/assets/themes/fd/default/img/{{data.rating | vll:ratingVLL:'icon' | async}}" />
+                                    <span class="ms-2">
+                                        {{data?.rating | vll:ratingVLL:'text'|async}}
+                                    </span>
+                                </div> -->
+                                <div class="d-flex align-items-start">
+                                    <img src="/assets/img/feedback/gift 1.png" *ngIf="data.hasGift"
+                                        class="symbol-image icon-surface1 h-20px me-2" />
+                                    <img src="/assets/img/feedback/money-1.png" *ngIf="data.hasPoint"
+                                        class="symbol-image icon-money-1 h-20px me-2" />
+                                </div>
+                            </div>
                             <div class="d-flex align-items-center justify-content-center">
                                 <codx-img class="symbol-circle" [objectId]="data.senderID" objectType="AD_Users" [isDefaulImg]="true" [width]="35">
                                 </codx-img>
@@ -46,22 +61,6 @@
                                 </div>
                                 <div class="mx-2 cursor-pointer" (click)="showMore()" *ngIf="showSM">
                                 <codx-label default="Xem thêm"  [fiedName]="'lblSVMore'" [formName]="'SVMore'"></codx-label>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
-                                <div class="d-flex align-items-center me-3" *ngIf="data.rating">
-                                    <img class="w-25px h-25px"
-                                        src="/assets/themes/fd/default/img/{{data.rating | vll:ratingVLL:'icon' | async}}" />
-                                    <span class="ms-2">
-                                        {{data?.rating | vll:ratingVLL:'text'|async}}
-                                    </span>
-                                </div>
-        
-                                <div class="d-flex align-items-start">
-                                    <img src="/assets/img/feedback/gift 1.png" *ngIf="data.hasGift"
-                                        class="symbol-image icon-surface1 h-20px me-2" />
-                                    <img src="/assets/img/feedback/money-1.png" *ngIf="data.hasPoint"
-                                        class="symbol-image icon-money-1 h-20px me-2" />
                                 </div>
                             </div>
                         </div>
@@ -170,21 +169,21 @@
                         <div class="text-primary fw-bold">
                             <codx-label formName="" name="lblGift" default="Quà tặng"></codx-label>
                         </div>
-                        <ng-container *ngIf="data.gifts">
-                            <div class="mt-9 group-gifts">
+                        <ng-container *ngIf="data.gifts?.length > 0">
+                            <div class="mt-9 group-gifts" *ngFor="let item of data.gifts">
                                 <div class="d-flex ms-2">
                                     <div class="me-5">
-                                        <codx-img [objectId]="data.gifts.giftID" objectType="FD_Gifts" [width]="100"
+                                        <codx-img [objectId]="item.giftID" objectType="FD_Gifts" [width]="100"
                                             imageType="square">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column">
-                                        <div class="fw-bold mb-3">{{data.gifts.giftName}}</div>
+                                        <div class="fw-bold mb-3">{{item.giftName}}</div>
                                         <div class="mb-2">
                                             <span class="fw-normal text-gray-500">
                                                 <codx-label formName="" name="lblPrice" default="Giá:"></codx-label>
                                             </span>
-                                            <span class="ms-1">{{data.gifts.price}}</span>
+                                            <span class="ms-1">{{item.price}}</span>
                                             <span class="ms-1">
                                                 <codx-label formName="" name="lblCoin" default="xu"></codx-label>
                                             </span>
@@ -193,19 +192,19 @@
                                             <span class="fw-normal">
                                                 <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
                                             </span>
-                                            <span>{{data.gifts.memo}}</span>
+                                            <span>{{item.memo}}</span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="fw-normal text-gray-500 me-1">
                                                 <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
                                             </span>
-                                            <span>{{data.gifts.quantity}}</span>
+                                            <span>{{item.quantity}}</span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="p-2 b rounded-pill"
-                                                [style.color]="data.gifts.status | vll:'L1428':'color' | async"
-                                                [style.background-color]="(data.gifts.status | vll:'L1428':'color' | async) + '30'">
-                                                {{data.gifts.status |vll:"L1428":"text" | async}}
+                                                [style.color]="item.status | vll:'L1428':'color' | async"
+                                                [style.background-color]="(item.status | vll:'L1428':'color' | async) + '30'">
+                                                {{item.status |vll:"L1428":"text" | async}}
                                             </span>
                                         </div>
                                     </div>

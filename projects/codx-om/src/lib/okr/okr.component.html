@@ -145,11 +145,8 @@
         <div class="symbol symbol-30px symbol-circle cursor-pointer d-flex justify-content-start"
           *ngIf="formModelPlan  && reloadedMF && showPlanMF">
           <span class="symbol-label bg-om-gray">
-
             <codx-mfunc [formModel]="formModelPlan" (changeDataMF)="changeDataMF($event)" 
               (clickMF)="clickMF($event)"></codx-mfunc>
-
-
           </span>
         </div>
       </div>
@@ -244,7 +241,7 @@
                   <codx-tasks-share
                     class="tasks-share-content w-100"
                     [funcID]="'OMT014'"
-                    [dataValue]="dataOKRPlans.recID"
+                    [dataValue]="dataOKRPlans?.recID"
                     [predicate]="'SessionID==@0'"
                     [showButtonAdd]="true"
                     [showMoreFunc]="true"
@@ -271,7 +268,7 @@
                     <codx-tmmeetings
                       funcID="OMT017"
                       [dataObj]="refIDMeeting"
-                      [projectID]="dataOKRPlans?.recID"
+                      [refID]="dataOKRPlans?.recID"
                       [refType]="'OM_OKRPlans'"
                     ></codx-tmmeetings>
                   </div>

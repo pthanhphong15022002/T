@@ -47,6 +47,7 @@ export class TabDetailCustomComponent
   @Input() checkMoreReason = true;
   @Input() mergedList: any[] = [];
   @Input() listSteps: any;
+  @Input() isUpdateTab: any;
   @Output() saveAssign = new EventEmitter<any>();
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   // @Output() contactEvent = new EventEmitter<any>();
@@ -55,7 +56,7 @@ export class TabDetailCustomComponent
   // isUpdate = true; //xư lý cho edit trung tuy chinh ko
   listStepsProcess = [];
   listCategory = [];
-  @Input()  tabDetail = [];
+  @Input() tabDetail = [];
 
   // titleDefault= "Trường tùy chỉnh"//truyen vay da
   readonly tabInformation: string = 'Information';
@@ -74,6 +75,11 @@ export class TabDetailCustomComponent
     gridViewName: 'grvCMContracts',
     entityName: 'CM_Contracts',
   };
+  formModelLead: FormModel = {
+    formName: 'CMLeads',
+    gridViewName: 'grvCMLeads',
+    entityName: 'CM_Leads',
+  };
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -86,6 +92,11 @@ export class TabDetailCustomComponent
   vllStatusQuotation: any;
   grvSetupContract: any[] = [];
   vllStatusContract: any;
+  grvSetupLead: any[] = [];
+  vllStatusLead: any;
+  modifiedOn: any;
+
+  viewSettings: any;
   constructor(
     private inject: Injector,
     private codxCmService: CodxCmService,
@@ -98,12 +109,19 @@ export class TabDetailCustomComponent
     this.executeApiCalls();
   }
   ngAfterViewInit() {}
-  onInit(): void {}
+  onInit(): void {
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSelected) {
-      this.isDataLoading=true;
-      this.dataSelected = this.dataSelected;
+      this.isDataLoading = true;
+      // if (!this.modifiedOn) {
+      //   this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
+      // }
+      // if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
+      //   this.dataSelected = changes.dataSelected.currentValue;
+      // }
+      this.dataSelected = changes.dataSelected.currentValue;
       this.loadContactDeal?.getListContactsByObjectId(this.dataSelected?.recID);
     }
     if (changes?.listSteps) {
@@ -111,7 +129,7 @@ export class TabDetailCustomComponent
         changes?.listSteps?.currentValue?.length > 0 &&
         changes?.listSteps?.currentValue !== null
       ) {
-        this.isDataLoading=false;
+        this.isDataLoading = false;
         this.listSteps = changes?.listSteps.currentValue;
       }
     }
@@ -121,7 +139,8 @@ export class TabDetailCustomComponent
     try {
       await this.getValueList();
       await this.getGridViewQuotation();
-      await this.getGridVieContract();
+      await this.getGridViewContract();
+      await this.getGridViewLead();
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
@@ -132,19 +151,58 @@ export class TabDetailCustomComponent
     );
     this.vllStatusQuotation = this.grvSetupQuotation['Status'].referedValue;
   }
-  async getGridVieContract() {
+  async getGridViewContract() {
     this.grvSetupContract = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
     );
     this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
   }
-
+  async getGridViewLead() {
+    this.grvSetupLead = await firstValueFrom(
+      this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
+    );
+    this.vllStatusLead = this.grvSetupLead['Status'].referedValue;
+    this.settingViewValue();
+  }
   async getValueList() {
     this.cache.valueList('CRM010').subscribe((res) => {
       if (res.datas) {
         this.listCategory = res?.datas;
       }
     });
+  }
+
+  settingViewValue() {
+    this.viewSettings = {
+      '1': {
+        icon: 'icon-monetization_on',
+        headerText: 'Báo giá',
+        deadValue: this.grvSetupQuotation['TotalAmt']?.headerText,
+        formModel: this.formModelQuotations,
+        status: this.vllStatusQuotation,
+        gridViewSetup: this.grvSetupQuotation,
+        name: this.grvSetupQuotation['QuotationName']?.headerText
+
+      },
+      '2': {
+        icon: 'icon-sticky_note_2',
+        headerText: 'Hợp đồng',
+        deadValue:  this.grvSetupContract['ContractAmt']?.headerText,
+        formModel: this.formModelContract,
+        status: this.vllStatusContract,
+        gridViewSetup: this.grvSetupContract,
+        name: this.grvSetupContract['ContractName']?.headerText
+      },
+      '3': {
+        icon: 'icon-monetization_on',
+        headerText: 'Tiềm năng',
+        deadValue:  this.grvSetupLead['DealValue']?.headerText,
+        formModel: this.formModelLead,
+        status: this.vllStatusLead,
+        gridViewSetup: this.grvSetupLead,
+        name: this.grvSetupLead['LeadName']?.headerText
+      },
+    };
   }
 
   getNameCategory(categoryId: string) {
@@ -303,5 +361,30 @@ export class TabDetailCustomComponent
     }
     // this.listSteps = e;
     // this.outDataStep.emit(this.dataStep);
+  }
+
+  getSettingValue(type: string, fieldName: string): any {
+    const obj = this.viewSettings[type];
+    if (obj) {
+      switch (fieldName) {
+        case 'icon':
+          return obj.icon + ' icon-22 me-2 text-gray-700';
+        case 'name':
+          return obj.name;
+        case 'headerText':
+          return obj.headerText;
+        case 'deadValue':
+          return obj.deadValue;
+        case 'formModel':
+          return obj.formModel;
+        case 'status':
+          return obj.status;
+        case 'gridViewSetup':
+          return obj.gridViewSetup;
+        case 'createOn':
+          return obj.gridViewSetup['CreatedOn']?.headerText;
+      }
+    }
+    return '';
   }
 }

@@ -220,7 +220,6 @@ export class LeadDetailComponent implements OnInit {
       index != -1 && this.tabDetail.splice(index, 1);
       this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
     }
-
   }
   getIcon($event){
     if($event == '1') {
