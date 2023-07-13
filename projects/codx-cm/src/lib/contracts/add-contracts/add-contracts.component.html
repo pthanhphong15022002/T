@@ -112,7 +112,7 @@
               [placeholder]="
                 planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
               "
-              (valueChange)="valueChangeText($event)"
+              (controlBlur)="changeAutoNum($event)"
               [disabled]="disabledShowInput"
             >
             </codx-input>
