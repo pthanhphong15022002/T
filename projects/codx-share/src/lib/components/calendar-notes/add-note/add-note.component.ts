@@ -408,11 +408,16 @@ export class AddNoteComponent implements OnInit {
   }
 
   checkPinWithFormAdd() {
+    let isValid = true;
     if (this.checkPin == true) {
       if (this.countNotePin + 1 > this.maxPinNotes) {
         this.openFormUpdateIsPin(this.note);
+        isValid = false;
+      } else {
+        isValid = true;
       }
-    } else {
+    }
+    if (isValid) {
       this.onCreateNote();
     }
   }
