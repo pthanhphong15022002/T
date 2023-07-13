@@ -292,7 +292,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       dataOutput['type'] = 'T';
       dataOutput['progressTask'] = task?.progress;
       dataOutput['taskID'] = task?.recID;
-      dataOutput['groupTaskID'] = group?.recID;
+      dataOutput['groupTaskID'] = group?.refID;
       dataOutput['stepID'] = this.currentStep?.recID;
     } else {
       dataOutput['isUpdate'] = true;
