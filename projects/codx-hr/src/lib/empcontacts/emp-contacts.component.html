@@ -135,13 +135,13 @@
   </codx-card-center>
   <ng-template #footer let-data>
     <div class="d-flex align-items-center flex-center d-phone">
-      <!-- <span class="icon-phone_android icon-16 me-2"></span> -->
+      <span class="icon-phone_android icon-16 me-2"></span>
       <span class="text-gray-700">
         <span #phone [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
       </span>
     </div>
     <div class="d-flex align-items-center flex-center d-mail">
-      <!-- <span class="icon-email icon-16 me-2"> </span> -->
+      <span class="icon-email icon-16 me-2"> </span>
       <span class="text-gray-700">
         <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
       </span>

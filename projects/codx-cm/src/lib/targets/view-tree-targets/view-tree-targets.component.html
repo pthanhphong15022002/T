@@ -18,13 +18,20 @@
 
 <ng-template #templateTree let-item>
   <div class="mb-2" (click)="clickTreeNode($event)">
-    <div class="d-flex justify-content-between">
-      <div class="d-flex justify-content-between">
-        <span class="text-dark" [ngClass]="item?.fontSize != null && item?.fontSize?.trim() != '' ? item?.fontSize : ''">
+    <div class="d-flex justify-content-between has-action-menu">
+      <div class="w-250px min-w-250px d-flex justify-content-between">
+        <span
+          class="text-dark"
+          [ngClass]="
+            item?.fontSize != null && item?.fontSize?.trim() != ''
+              ? item?.fontSize
+              : ''
+          "
+        >
           {{ item?.targetName }}
         </span>
       </div>
-      <div class="d-flex justify-content-end">
+      <div class="w-250px min-w-250px d-flex justify-content-end">
         <div
           style="margin-right: 40px"
           *ngIf="item?.owner != null && item?.owner.trim() != ''"
@@ -39,13 +46,27 @@
           </codx-imgs>
         </div>
         <div
-          class="ms-3 fw-bold"
-          style="min-width: 100px;"
-          [ngStyle]="(item?.color != null && item?.color?.trim() != '') ? {color: item?.color} : {color: '#1d1f1f'} "
+          class="ms-3 fw-bold d-flex justify-content-end"
+          style="min-width: 100px"
+          [ngStyle]="
+            item?.color != null && item?.color?.trim() != ''
+              ? { color: item?.color }
+              : { color: '#1d1f1f' }
+          "
           [innerHTML]="
             item?.target | formatvalue : fmTargetLines : 'Target' | async
           "
         ></div>
+        <codx-mfunc
+          *ngIf="item?.parentID == null"
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, item)"
+          (changeDataMF)="changeDataMF($event, item)"
+          [isBookMark]="false"
+          [dataItem]="item"
+          type="hover"
+        >
+        </codx-mfunc>
       </div>
     </div>
   </div>
