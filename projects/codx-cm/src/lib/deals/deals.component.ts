@@ -141,7 +141,6 @@ export class DealsComponent
   processIDDefault: string;
   crrProcessID = '';
   returnedCmt = '';
-  lstStepInstances: any[]=[];
   dataColums: any = [];
   listHeader: any = [];
   listSteps:any[]=[];
@@ -554,12 +553,6 @@ export class DealsComponent
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
-  updateListSteps(e) {
-   if(e){
-    this.lstStepInstances = e?.listStep;
-   }
-  }
-
   handelStartDay(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
@@ -713,7 +706,7 @@ export class DealsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
-            listStepCbx: this.lstStepInstances,
+            // listStepCbx: this.lstStepInstances,
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -735,8 +728,8 @@ export class DealsComponent
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
               var instance = e.event.instance;
-              this.listSteps = e.event?.listStep;
-              var index =
+            var listSteps = e.event?.listStep;
+             var index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
@@ -744,10 +737,9 @@ export class DealsComponent
                     !x.isFailStep
                 ) + 1;
               var nextStep = '';
-              if (index != -1) {
+              if (index != -1 && !listSteps[index]?.isSuccessStep && !listSteps[index]?.isFailStep ) {
                 if (index != e.event.listStep.length) {
-                  var listStep = e.event.listStep;
-                  nextStep = listStep[index]?.stepID;
+                  nextStep = listSteps[index]?.stepID;
                 }
               }
               var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment,e.event?.expectedClosed,e.event?.probability];
@@ -790,7 +782,7 @@ export class DealsComponent
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
             if (res) {
               data.closed = check ? true : false;
-              data.closedOn = check ? new Date() : data.ClosedOn;
+              data.closedOn = check ? new Date() : data.closedOn;
               data.modifiedOn = new Date();
               this.dataSelected = data;
               this.view.dataService.update(data).subscribe();
