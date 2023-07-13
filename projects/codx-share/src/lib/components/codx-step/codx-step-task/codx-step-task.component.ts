@@ -224,8 +224,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.listGroupTask?.forEach((group) => {
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
+                progressData.push(this.setProgressOutput(task, group));
             });
             group.progress = group?.progressOld;
+              progressData.push(this.setProgressOutput(null, group));
           });
           this.valueChangeProgress.emit({ type: 'A', data: progressData });
         }
@@ -265,9 +267,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
+                  progressData.push(this.setProgressOutput(null, group));              
               }
             });
             group.progress = group?.progressOld;
+              progressData.push(this.setProgressOutput(null, group));
           }
         });
         this.valueChangeProgress.emit({ type: 'R', data: progressData });

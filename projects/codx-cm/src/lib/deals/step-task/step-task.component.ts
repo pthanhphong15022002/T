@@ -308,7 +308,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#region Kanban
 
   //#endregion
-  ngAf
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: Event) {
@@ -316,13 +315,14 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   setHeight(){
-    const main = document.querySelector('.codx-detail-main')as HTMLElement ;
-    const listTask = document.querySelector('.main-step')as HTMLElement ;
-    const mainHeight = main.offsetHeight;
-    let taskHeight = mainHeight - 330;
-    if(taskHeight){
-      this.taskHeight = taskHeight.toString() + 'px'
-      // this.renderer.setStyle(listTask, 'height', taskHeight.toString() + 'px');
-    }
+    setTimeout(() => {
+      const main = document.querySelector('.codx-detail-main')as HTMLElement ;
+      const mainHeight = main.offsetHeight;
+      let taskHeight = mainHeight - 330;
+      if(taskHeight){
+        this.taskHeight = taskHeight.toString() + 'px'
+        // this.renderer.setStyle(listTask, 'height', taskHeight.toString() + 'px');
+      }
+    }, 500);
   }
 }
