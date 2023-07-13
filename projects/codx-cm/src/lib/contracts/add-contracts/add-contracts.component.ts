@@ -494,7 +494,11 @@ export class AddContractsComponent implements OnInit {
     }
 
     if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
-      this.notiService.notifyCode('CM026');
+      this.notiService.notifyCode(
+        'CM026',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
       return;
     }
 
@@ -891,7 +895,11 @@ export class AddContractsComponent implements OnInit {
         this.contracts.contractID &&
         this.contracts.contractID.includes(' ')
       ) {
-        this.notiService.notifyCode('CM026');
+        this.notiService.notifyCode(
+          'CM026',
+          0,
+          '"' + this.grvSetup['ContractID'].headerText + '"'
+        );
         return;
       }
       this.cmService
