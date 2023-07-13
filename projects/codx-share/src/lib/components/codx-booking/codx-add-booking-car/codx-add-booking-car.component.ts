@@ -86,6 +86,7 @@ export class CodxAddBookingCarComponent
   title: string;
   attendeesList = [];
   onSaving =false;
+  resourceOwner=null;
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('form') form: any;
   @ViewChild('cusCBB') cusCBB: any;
@@ -435,6 +436,7 @@ export class CodxAddBookingCarComponent
           if (res) {
             this.useCard=res?.useCard;
             this.carCapacity = res?.capacity;
+            this.resourceOwner = [res?.owner];
           } else {
             this.carCapacity = 0;
           }
@@ -569,6 +571,7 @@ export class CodxAddBookingCarComponent
       });
       if (selectResource) {
         this.carCapacity = selectResource[0]?.capacity;
+        this.resourceOwner = [selectResource[0]?.owner];
         this.useCard=selectResource[0]?.useCard;
         this.tmplstDevice = [];
         if (selectResource[0].equipments != null) {
@@ -823,6 +826,10 @@ export class CodxAddBookingCarComponent
     return true;
   }
   onSaveForm(approval: boolean = false) {
+    if(approval && this.funcType == _editMF && this.authService?.userValue?.userID != this.data.createdBy){      
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
     if (!this.onSaving) {
       this.onSaving=true;
       this.data.bookingOn = this.data.startDate;
@@ -1019,7 +1026,8 @@ export class CodxAddBookingCarComponent
                     this.formModel.funcID,
                     this.returnData?.createdBy,
                     this.returnData?.title,
-                    null
+                    null,                    
+                    this.resourceOwner
                   )
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
@@ -1182,6 +1190,7 @@ export class CodxAddBookingCarComponent
             tmpRes.resourceID = item?.resourceID;
             tmpRes.resourceName = item?.resourceName;
             tmpRes.capacity = item?.capacity;
+            tmpRes.owner = item?.owner;
             tmpRes.equipments = item?.equipments;
             tmpRes.useCard= item?.useCard;
             this.cbbResource.push(tmpRes);

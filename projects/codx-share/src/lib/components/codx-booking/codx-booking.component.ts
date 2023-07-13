@@ -104,6 +104,9 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   categoryID = '';
   allocateStatus: string;
   curUser: import("codx-core").UserModel;
+  lstWarehourse=[];
+  lstResourceOwner=[];
+  resourceOwner = null;
   constructor(
     injector: Injector,
     private codxShareService: CodxShareService,
@@ -127,7 +130,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     
     this.getBaseVariable();
     this.roleCheck();
-
+    this.getCache();
     this.buttons = {
       id: 'btnAdd',
     };
@@ -266,6 +269,19 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
+  getCache(){
+    this.codxBookingService.getListWarehouse().subscribe((res:any)=>{
+      if(res){
+        this.lstWarehourse=res;
+      }
+    });
+    this.codxBookingService.getListRO().subscribe((res:any)=>{
+      if(res){
+        this.lstResourceOwner=res;
+      }
+    });
+    
+  }
   getBaseVariable() {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     
@@ -704,9 +720,28 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   release(data: any) {
     if (
-      this.curUser?.userID == data?.createdBy ||
-      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+      this.curUser?.userID == data?.createdBy
     ) {
+      if(this.resourceType== EPCONST.VLL.ResourceType.Room || this.resourceType== EPCONST.VLL.ResourceType.Car ){
+        this.resourceOwner=null;
+        let curRes = this.lstResourceOwner.filter(x=>x.resourceID == data.resourceID);
+        if(curRes?.length>0){
+          this.resourceOwner = curRes[0]?.owner;
+        }
+      }
+      else{
+        this.resourceOwner=null;
+        let curWarehourse= this.lstWarehourse.filter(x=>x.warehouseID == data?.warehouseID);
+        if(curWarehourse?.length>0){
+          this.resourceOwner =curWarehourse[0]?.owner;
+        }
+        else{
+          curWarehourse= this.lstWarehourse.filter(x=>x.isSystem == true);
+          if(curWarehourse?.length>0){
+            this.resourceOwner = curWarehourse[0]?.owner;
+          }
+        }
+      }
       if (data.approval != '0') {
         this.codxBookingService
           .getProcessByCategoryID(this.categoryIDProcess)
@@ -720,7 +755,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               this.formModel.funcID,
               data?.createdBy,
               data?.title,
-              null
+              null,
+              [this.resourceOwner]
             )
               .subscribe((res:any) => {
                 if (res?.msgCodeError == null && res?.rowCount) {

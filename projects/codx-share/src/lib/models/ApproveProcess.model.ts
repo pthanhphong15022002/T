@@ -12,5 +12,6 @@ export class ApproveProcess {
   processID :string ;     //ProcessID của quy trình hiện hành
   data :string ;     //Data của nghiệp vụ gốc
   tenant :string ;     //ProcessID của quy trình hiện hành
-  comment :string ;     //Data của nghiệp vụ gốc
+  comment :string ;     //Ghi chú
+  approvers : Array<string> ;     //Danh sách userID của Approver
 }

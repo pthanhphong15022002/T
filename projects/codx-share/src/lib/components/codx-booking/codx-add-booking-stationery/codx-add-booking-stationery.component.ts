@@ -11,6 +11,7 @@ import {
   UserModel,
   AuthStore,
   CRUDService,
+  AuthService,
 } from 'codx-core';
 const _copyMF = 'SYS04';
 const _addMF = 'SYS01';
@@ -76,12 +77,14 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   onSaving = false;
   categoryID: any;
   subFuncID = EPCONST.FUNCID.S_Category;
+  lstWarehourse=[];
   constructor(
     private injector: Injector,
     private auth: AuthStore,
     private codxBookingService: CodxBookingService,
     private codxShareService: CodxShareService,
     private notificationsService: NotificationsService,
+    private authService: AuthService,
     @Optional() dialogRef: DialogRef,
     @Optional() dialogData: DialogData
   ) {
@@ -114,6 +117,11 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
 
   onInit(): void {
     this.user = this.auth.get();
+    this.codxBookingService.getListWarehouse().subscribe((res:any)=>{
+      if(res){
+        this.lstWarehourse=res;
+      }
+    });
 
     this.codxBookingService.getStationeryGroup().subscribe((res) => {
       this.groupStationery = res[0];
@@ -355,6 +363,10 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   //#endregion "Validate function before booking stationery"
 
   onSaveForm(approval: boolean = false) {
+    if(approval && this.funcType == _editMF && this.authService?.userValue?.userID != this.data.createdBy){      
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
     if (!this.onSaving) {
       this.onSaving = true;
       if (this.dialogAddBookingStationery.invalid == true) {
@@ -464,6 +476,17 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((category: any) => {
                   this.returnData.forEach((item) => {
+                    let curRO = null;
+                    let curWarehourse= this.lstWarehourse.filter(x=>x.warehouseID == item?.warehouseID);
+                    if(curWarehourse?.length>0){
+                      curRO =curWarehourse[0]?.owner;
+                    }
+                    else{
+                      curWarehourse= this.lstWarehourse.filter(x=>x.isSystem == true);
+                      if(curWarehourse?.length>0){
+                        curRO = curWarehourse[0]?.owner;
+                      }
+                    }
                     this.codxShareService
                       .codxRelease(
                         'EP',
@@ -473,7 +496,8 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                         this.formModel.funcID,
                         item?.createdBy,
                         item?.title,
-                        null
+                        null,
+                        [curRO],
                       )
                       .subscribe((res:any) => {
                         if (res?.msgCodeError == null && res?.rowCount >= 0) {
