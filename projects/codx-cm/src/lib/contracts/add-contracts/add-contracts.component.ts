@@ -125,6 +125,7 @@ export class AddContractsComponent implements OnInit {
   disabledShowInput: boolean = false;
   planceHolderAutoNumber: any = '';
   grvSetup: any;
+  isExitAutoNum: any = false;
 
   constructor(
     private cache: CacheService,
@@ -176,12 +177,12 @@ export class AddContractsComponent implements OnInit {
           });
         } else {
           this.disabledShowInput = false;
-          if (this.action == 'add' || this.action == 'copy')
-            this.cmService
-              .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
-              .subscribe((autoNum) => {
-                this.contracts.contractID = autoNum;
-              });
+          // if (this.action == 'add' || this.action == 'copy')
+          //   this.cmService
+          //     .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
+          //     .subscribe((autoNum) => {
+          //       this.contracts.contractID = autoNum;
+          //     });
         }
       });
   }
@@ -480,13 +481,22 @@ export class AddContractsComponent implements OnInit {
       this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
     ) {
       return;
-    } else if (
+    }
+    if (
       this.contracts?.delPhone &&
       !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
     ) {
       this.notiService.notifyCode('RS030');
       return;
     } else {
+      if (this.isExitAutoNum) {
+        this.notiService.notifyCode(
+          'CM003',
+          0,
+          '"' + this.grvSetup['ContractID'].headerText + '"'
+        );
+        return;
+      }
       switch (this.action) {
         case 'add':
         case 'copy':
@@ -863,5 +873,23 @@ export class AddContractsComponent implements OnInit {
         map((p) => JSON.parse(p[0])),
         tap((p) => console.log(p))
       );
+  }
+
+  //check auto
+  changeAutoNum(e) {
+    if (!this.disabledShowInput && e) {
+      this.contracts.contractID = e?.crrValue;
+      this.cmService
+        .isExitsAutoCodeNumber('ContractsBusiness', this.contracts.contractID)
+        .subscribe((res) => {
+          this.isExitAutoNum = res;
+          if (this.isExitAutoNum)
+            this.notiService.notifyCode(
+              'CM003',
+              0,
+              '"' + this.grvSetup['ContractID'].headerText + '"'
+            );
+        });
+    }
   }
 }
