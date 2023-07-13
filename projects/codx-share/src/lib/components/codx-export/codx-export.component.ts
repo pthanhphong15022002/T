@@ -187,7 +187,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.loaded = true; */
         }),
         map((response: any) => {
-          return response[0];
+          if (response) return response[0];
         })
       );
   }
