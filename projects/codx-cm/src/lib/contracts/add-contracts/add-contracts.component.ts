@@ -491,32 +491,29 @@ export class AddContractsComponent implements OnInit {
     ) {
       this.notiService.notifyCode('RS030');
       return;
-    } else {
-      if (
-        this.contracts.contractID &&
-        this.contracts.contractID.includes(' ')
-      ) {
-        this.notiService.notifyCode('CM026');
-        return;
-      }
+    }
 
-      if (this.isExitAutoNum) {
-        this.notiService.notifyCode(
-          'CM003',
-          0,
-          '"' + this.grvSetup['ContractID'].headerText + '"'
-        );
-        return;
-      }
-      switch (this.action) {
-        case 'add':
-        case 'copy':
-          this.addContracts();
-          break;
-        case 'edit':
-          this.editContract();
-          break;
-      }
+    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
+      this.notiService.notifyCode('CM026');
+      return;
+    }
+
+    if (this.isExitAutoNum) {
+      this.notiService.notifyCode(
+        'CM003',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
+      return;
+    }
+    switch (this.action) {
+      case 'add':
+      case 'copy':
+        this.addContracts();
+        break;
+      case 'edit':
+        this.editContract();
+        break;
     }
   }
   //#endregion
