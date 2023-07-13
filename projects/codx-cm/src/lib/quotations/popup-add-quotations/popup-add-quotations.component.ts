@@ -306,7 +306,11 @@ export class PopupAddQuotationsComponent implements OnInit {
       this.quotations.quotationID &&
       this.quotations.quotationID.includes(' ')
     ) {
-      this.notiService.notifyCode('CM026');
+      this.notiService.notifyCode(
+        'CM026',
+        0,
+        '"' + this.grvSetupQuotations['QuotationID'].headerText + '"'
+      );
       return;
     }
 
@@ -676,7 +680,11 @@ export class PopupAddQuotationsComponent implements OnInit {
         this.quotations.quotationID &&
         this.quotations.quotationID.includes(' ')
       ) {
-        this.notiService.notifyCode('CM026');
+        this.notiService.notifyCode(
+          'CM026',
+          0,
+          '"' + this.grvSetupQuotations['QuotationID'].headerText + '"'
+        );
         return;
       }
       this.codxCM
