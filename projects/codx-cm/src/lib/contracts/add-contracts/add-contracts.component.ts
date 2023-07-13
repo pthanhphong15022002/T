@@ -492,6 +492,14 @@ export class AddContractsComponent implements OnInit {
       this.notiService.notifyCode('RS030');
       return;
     } else {
+      if (
+        this.contracts.contractID &&
+        this.contracts.contractID.includes(' ')
+      ) {
+        this.notiService.notifyCode('CM026');
+        return;
+      }
+
       if (this.isExitAutoNum) {
         this.notiService.notifyCode(
           'CM003',
@@ -882,6 +890,13 @@ export class AddContractsComponent implements OnInit {
   changeAutoNum(e) {
     if (!this.disabledShowInput && e) {
       this.contracts.contractID = e?.crrValue;
+      if (
+        this.contracts.contractID &&
+        this.contracts.contractID.includes(' ')
+      ) {
+        this.notiService.notifyCode('CM026');
+        return;
+      }
       this.cmService
         .isExitsAutoCodeNumber('ContractsBusiness', this.contracts.contractID)
         .subscribe((res) => {
@@ -894,5 +909,9 @@ export class AddContractsComponent implements OnInit {
             );
         });
     }
+  }
+
+  checkSpace(text: string) {
+    return text.includes(' ');
   }
 }
