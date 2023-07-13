@@ -346,12 +346,12 @@
               </div>
             </div>
           </div>
-          
+
         </div>
       </ng-template>
       <ng-template #body let-data>
         <div class="cm-scroll">
-          
+
           <div class="instance-select">
             <ejs-tab
               id="tab_adaptive"
@@ -411,7 +411,7 @@
                             ? dataSelected.customerName
                             : dataSelected.partnerName
                         "
-                        [hidenMF]="false"
+                        [hidenMF]="dataSelected?.status == '99' ? true : false"
                         [type]="'formDetail'"
                       ></codx-list-contacts>
                     </div>
@@ -436,6 +436,7 @@
                         [funcID]="funcID"
                         [entityName]="entityName"
                         [id]="dataSelected.recID"
+                        [hidden]="dataSelected?.status == '99' ? true : false"
                         (addressName)="addressName($event)"
                       ></codx-address-cm>
                     </div>
