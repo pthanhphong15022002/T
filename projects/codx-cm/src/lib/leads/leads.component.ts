@@ -809,11 +809,10 @@ export class LeadsComponent
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedLead(datas).subscribe((res) => {
             if (res) {
-              data.closed = check ? true : false;
-              data.closedOn = check ? new Date() : data.closedOn;
-              data.modifiedOn = new Date();
-              this.dataSelected = data;
-              this.detailViewLead.dataSelected = JSON.parse(
+              // data.closedOn = check ? new Date() : data.closedOn;
+              // data.modifiedOn = new Date();
+              this.dataSelected.closed = check;
+              this.dataSelected = JSON.parse(
                 JSON.stringify(this.dataSelected)
               );
               this.view.dataService.update(this.dataSelected).subscribe();

@@ -781,11 +781,14 @@ export class DealsComponent
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
             if (res) {
-              data.closed = check ? true : false;
-              data.closedOn = check ? new Date() : data.closedOn;
-              data.modifiedOn = new Date();
-              this.dataSelected = data;
-              this.view.dataService.update(data).subscribe();
+              // data.closed = check ? true : false;
+              // data.closedOn = check ? new Date() : data.closedOn;
+              // data.modifiedOn = new Date();
+              this.dataSelected.closed = check;
+              this.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.view.dataService.update(this.dataSelected).subscribe();
               this.notificationsService.notifyCode(
                 check ? 'DP016' : 'DP017',
                 0,
