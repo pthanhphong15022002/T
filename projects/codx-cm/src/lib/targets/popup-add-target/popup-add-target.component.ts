@@ -37,7 +37,7 @@ export class PopupAddTargetComponent {
   lstOwnersOld = [];
   //calendar - tháng - quý - năm
   date: any = new Date();
-  ops = ['m', 'q', 'y'];
+  ops = ['y'];
   selectedType: string;
   startDate: any;
   endDate: any;
@@ -56,6 +56,7 @@ export class PopupAddTargetComponent {
   editingItem: any;
   typeChange = 'input';
   isBusiness = false;
+  dataOld: CM_Targets;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -80,7 +81,9 @@ export class PopupAddTargetComponent {
   }
 
   ngOnInit(): void {
+
     if (this.action == 'add') {
+      this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.selectedType = this.getFormatCalendar(null);
       this.data.owner = null;
     } else {
@@ -108,9 +111,9 @@ export class PopupAddTargetComponent {
   beforeSave(op) {
     var data = [];
 
-    if (this.action === 'add' ) {
+    if (this.action === 'add') {
       op.method = 'AddTargetAndTargetLineAsync';
-    }else{
+    } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
     }
     op.className = 'TargetsLinesBusiness';
@@ -173,7 +176,7 @@ export class PopupAddTargetComponent {
       if (res != null) {
         this.data = res[0];
         if (this.data != null) {
-          this.isAllocation = this.data.allocation == '1' ? true : false;
+          this.isAllocation = this.data?.allocation == '1' ? true : false;
           this.selectedType = this.getFormatCalendar(this.data?.category);
           this.isBusiness = true;
         }
@@ -183,6 +186,18 @@ export class PopupAddTargetComponent {
         this.typeChange = 'noInput';
         // this.setTargetToLine();
         this.getListTimeCalendar(this.text);
+      } else {
+        this.lstTargetLines = [];
+        let businessLine = this.data?.businessLineID;
+        let year = this.data?.year;
+        this.data = JSON.parse(JSON.stringify(this.dataOld));
+        this.data.businessLineID = businessLine;
+        this.data.year = year;
+        this.data.category = '1';
+        this.isPeriod = false;
+
+        this.lstTime.forEach(x => x.lines = []);
+        this.lstOwners = [];
       }
     });
   }
@@ -439,7 +454,7 @@ export class PopupAddTargetComponent {
   //#endregion
 
   //#region dblick Edit targetLine
-  onOutsideClick(){
+  onOutsideClick() {
     this.editingItem = null;
   }
 
