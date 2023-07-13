@@ -84,13 +84,9 @@
 </ng-template>
 
 <!-- Tỷ lệ phân bổ cơ hội theo dòng sản phẩm -->
+<!-- title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm" -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="5"
-    title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="5" style="overflow: hidden">
     <div>
       <codx-label
         class="fs-5 fw-bold"
@@ -109,7 +105,13 @@
         rangeColorValuePath="quantity"
         [palette]="palette"
         [leafItemSettings]="leafItemSettings"
-        [tooltipSettings]="tooltipChartMap"
+        [tooltipSettings]="{
+          visible: true,
+          format:
+            '${businessLineName}<br>${quantity} ' +
+            this.titLeModule +
+            '-(${percentage} %)'
+        }"
       >
       </ejs-treemap>
     </ng-container>
@@ -117,13 +119,9 @@
 </ng-template>
 
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
+<!-- title="Thống kê tỷ lệ thành công ,thất bại trong năm theo dòng sản phẩm" -->
 <ng-template #templateDeals>
-  <div
-    class="chartBusinessLines w-100 h-100"
-    id="6"
-    title="Thống kê tỷ lệ thành công ,thất bại trong năm theo dòng sản phẩm"
-    style="overflow: hidden"
-  >
+  <div class="chartBusinessLines w-100 h-100" id="6" style="overflow: hidden">
     <codx-label
       id="chartBusinessLinesHeader"
       class="fs-5 fw-bold"
@@ -201,12 +199,9 @@
 </ng-template>
 
 <!-- Top nhân viên có nhiều cơ hội thành công nhất -->
+<!-- title="Top nhân viên có nhiều cơ hội thành công nhất" -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="7"
-    title="Top nhân viên có nhiều cơ hội thành công nhất"
-  >
+  <div class="w-100 h-100" id="7">
     <codx-label
       class="fs-5 fw-bold"
       name="lblChartOwners"
@@ -228,7 +223,7 @@
         <div
           [ngClass]="checkBtnMin ? 'button-selected' : 'button-no-selected'"
           class="btn-right py-1 d-flex justify-content-center align-items-center"
-          (click)="clickButton('btnMinRadio')"
+          (click)="clickButton('btnMin')"
         >
           <codx-label
             name="btnMin"
@@ -283,19 +278,16 @@
 </ng-template>
 
 <!-- Lý do thành công -->
+<!-- title="Lý do thành công" -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="8"
-    title="Lý do thành công"
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="8" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonSuscess"
       default="Lý do thành công"
     ></codx-label>
-    <ng-container
+    <div
+      style="overflow-y: auto; max-height: 95%"
       *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
     >
       <div
@@ -327,24 +319,21 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 </ng-template>
 
 <!-- Lý do thất bại -->
+<!-- title="Lý do thất bại " -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="9"
-    title="Lý do thất bại "
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="9" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonFails"
       default="Lý do thất bại"
     ></codx-label>
-    <ng-container
+    <div
+      style="overflow-y: auto; max-height: 95%"
       *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
     >
       <div *ngFor="let data of dataDashBoard?.countsReasonsFails" class="mt-4">
@@ -373,7 +362,7 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 </ng-template>
 

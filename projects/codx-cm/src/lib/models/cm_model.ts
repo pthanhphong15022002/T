@@ -501,6 +501,7 @@ export class CM_Contracts {
   delAddress: string; // Địa chỉ giao hàng
   delPhone: string;
   delContactID: string; // Liên hệ giao hàng
+  processID: string; // Liên hệ giao hàng
 
   // Điều khoản hồ sơ liên quan -- memo
 }
