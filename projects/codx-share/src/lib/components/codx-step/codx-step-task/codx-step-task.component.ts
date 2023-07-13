@@ -224,8 +224,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.listGroupTask?.forEach((group) => {
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
+                progressData.push(this.setProgressOutput(task, group));
             });
             group.progress = group?.progressOld;
+            if (group?.recID) {
+              progressData.push(this.setProgressOutput(null, group));
+            }
           });
           this.valueChangeProgress.emit({ type: 'A', data: progressData });
         }
@@ -251,7 +255,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               }
               sumProgress += task.progress;
             });
-            if (check) {
+            if (check && group?.recID) {
               group.progress = Number((sumProgress / countTask).toFixed(2));
               progressData.push(this.setProgressOutput(null, group));
             }
@@ -265,9 +269,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
+                  progressData.push(this.setProgressOutput(null, group));              
               }
             });
             group.progress = group?.progressOld;
+            if (group?.recID) {
+              progressData.push(this.setProgressOutput(null, group));
+            }
           }
         });
         this.valueChangeProgress.emit({ type: 'R', data: progressData });
@@ -284,7 +292,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       dataOutput['type'] = 'T';
       dataOutput['progressTask'] = task?.progress;
       dataOutput['taskID'] = task?.recID;
-      dataOutput['groupTaskID'] = group?.recID;
+      dataOutput['groupTaskID'] = group?.refID;
       dataOutput['stepID'] = this.currentStep?.recID;
     } else {
       dataOutput['isUpdate'] = true;
