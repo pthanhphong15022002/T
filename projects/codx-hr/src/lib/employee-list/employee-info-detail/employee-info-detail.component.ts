@@ -3365,7 +3365,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.eCertificateGrid?.dataService;
     option.FormModel = this.eCertificateFormModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {

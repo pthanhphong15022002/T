@@ -1,3 +1,4 @@
+import { concat } from 'rxjs';
 import { style } from '@angular/animations';
 import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import {
@@ -18,7 +19,7 @@ import {
   ConnectionPointOrigin,
 
 } from '@syncfusion/ej2-diagrams';
-import { ApiHttpService, CRUDService, CallFuncService, NotificationsService, RequestOption, SidebarModel } from 'codx-core';
+import { ApiHttpService, CRUDService, CallFuncService, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { PopupAddPositionsComponent } from '../popup-add-positions/popup-add-positions.component';
 import { DataManager } from '@syncfusion/ej2-data';
 Diagram.Inject(DataBinding, ComplexHierarchicalTree, LineDistribution);
@@ -34,7 +35,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() positionID: string = "";
   @Input() funcID: string = "";
   @Input() formModel: any;
-  @Input() view: any;
+  @Input() view: ViewsComponent;
 
   width: number = 250;
   height: number = 150;
@@ -245,7 +246,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   copy(event: any, data: any) {
     if (event && data) {
       this.view.dataService.dataSelected = data;
-      this.view.dataService.copy().subscribe((res) => {
+      (this.view.dataService as CRUDService).copy().subscribe((res) => {
         if (res) {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -263,6 +264,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
             .closed.subscribe((res) => {
               if (res?.event) {
                 let node = res.event;
+
               }
             });
         }
@@ -276,7 +278,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '800px';
-      this.view.dataService
+      (this.view.dataService as CRUDService)
         .edit(this.view.dataService.dataSelected)
         .subscribe((result) => {
           let object = {
@@ -292,7 +294,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
             PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe(res => {
               if (res) {
-
+                if(res.positionID === this.positionID){
+                  this.data = this.data.filter(x => x.positionID !== data.positionID).concat(res.event);
+                  this.setDataOrg(this.data);
+                }
               }
             });
 
@@ -308,7 +313,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     return true;
   }
   delete(data: any) {
-    this.view.dataService
+    (this.view.dataService as CRUDService)
       .delete([data], true, (opt) =>
         this.beforeDel(opt), null, null, null, null, null
       )
