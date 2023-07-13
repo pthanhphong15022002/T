@@ -9,19 +9,9 @@
         >
           <span class="icon-arrow_back icon-18"></span>
         </button>
-        <span class="mt-1 me-1" (click)="showGuide(p)">
-          <span
-            class="icon-event_notes text-hover-primary cursor-pointer"
-            [ngbPopover]="popperMemo"
-            #p="ngbPopover"
-            (mouseenter)="process.memo ? p.open() : ''"
-            (mouseleave)="p.close()"
-            placement="right bottom left"
-            container="body"
-          ></span
-        ></span>
+
         <span
-          class="text-dark fw-bold fs-4 me-4 line-clamp-process-name"
+          class="text-dark fw-bold fs-4 me-3 line-clamp-process-name"
           #processName
           [ngbTooltip]="process.processName"
           [innerHTML]="
@@ -34,6 +24,17 @@
                 : 'grvDPProcesses'
               | async
           "
+        ></span>
+        <span class="mt-1" (click)="showGuide(p)">
+          <span
+            class="icon-event_notes text-hover-primary cursor-pointer"
+            [ngbPopover]="popperMemo"
+            #p="ngbPopover"
+            (mouseenter)="process.memo ? p.open() : ''"
+            (mouseleave)="p.close()"
+            placement="bottom right left"
+            container="body"
+          ></span
         ></span>
       </div>
       <div class="d-flex align-items-center">
@@ -59,31 +60,48 @@
       </div>
     </div>
     <div class="d-flex tab-header">
-      <codx-taskbar
+      <!-- <codx-taskbar
         [listTab]="tabControl"
         (tab)="clickMenu($event)"
-      ></codx-taskbar>
+      ></codx-taskbar> -->
+
+      <ng-container *ngFor="let item of tabControl; let i = index">
+        <a
+          (click)="clickMenu(item)"
+          [class]="
+            'tab-item text-dark fw-bold d-flex align-items-center justify-content-center' +
+            ' ' +
+            (item.isActive ? 'tab-active' : '')
+          "
+        >
+          <span [class]="item?.icon"></span>
+          <span class="ms-2">
+            <codx-label
+              [name]="'lbl' + item.name"
+              [formName]="'SYS'"
+              [default]="item.textDefault"
+            >
+            </codx-label>
+          </span>
+        </a>
+      </ng-container>
     </div>
   </div>
   <!-- </div> -->
   <div class="w-100 view-details-main pt-3 bg-gray-100">
     <div class="dp-process-main rounded-3 bg-body scroll-y pt-2 mx-5 h-100">
       <div class="view-details-content m-0 h-100">
-        <!-- <div
+        <div
+          id="view-detail-process"
           class="process-views-detail"
           data-kt-scroll="true"
           data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto"
           data-kt-scroll-dependencies=".popup-process-header"
-          data-kt-scroll-wrappers=".process-body .no-header ."
-          [attr.data-kt-scroll-offset]="'120px'"
-        > -->
-        <div>
-          <!-- <ng-container
-            *ngIf="name == 'Dashboard'"
-            [ngTemplateOutlet]="viewDashboard"
-          >
-          </ng-container> -->
+          data-kt-scroll-wrappers=".process-body .popup-process-detail .no-header .page-viewdetail"
+          [attr.data-kt-scroll-offset]="offset"
+        >
+          <!-- <div > -->
           <ng-container
             *ngIf="name == 'Detail' && process"
             [ngTemplateOutlet]="viewDetail"
@@ -93,6 +111,11 @@
           <ng-container
             *ngIf="name == 'Kanban'"
             [ngTemplateOutlet]="viewKanban"
+          >
+          </ng-container>
+          <ng-container
+            *ngIf="name == 'FlowChart'"
+            [ngTemplateOutlet]="flowChart"
           >
           </ng-container>
         </div>
@@ -143,7 +166,7 @@
 </ng-template>
 <!-- viewDetail -->
 <ng-template #viewDetail>
-  <div class="card">
+  <div class="card" *ngIf="loadedFigureOut">
     <div>
       <!-- drop -->
       <ng-container>
@@ -350,7 +373,7 @@
   </ng-template>
 </ng-template>
 <ng-template #viewTask let-data="task">
-  <div class="mb-2 mt-4">
+  <div class="mb-2 mt-2">
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <codx-icon-step
@@ -414,10 +437,115 @@
   ></process-views-tabs-details>
 </ng-template>
 
-<!-- viewDasboard -->
-<!-- <ng-template #viewDashboard>
-  <ng-container>Dashboard - tính toán vẽ ra</ng-container>
-</ng-template> -->
+<!-- view Flowchart -->
+<ng-template #flowChart>
+  <div class="h-100 d-flex flex-column">
+    <div id="menu-flowchart" class="d-flex justify-content-between mb-5">
+      <div></div>
+      <div>
+        <div class="d-flex bd-highlight">
+          <div
+            type="button"
+            class="me-1 btn btn-sm btn-white d-flex align-items-center"
+            (click)="download()"
+          >
+            <span class="icon-arrow_downward icon-16 me-1"></span>
+            <codx-label
+              default="Tải về"
+              [fiedName]="'Download'"
+              class="me-2"
+            ></codx-label>
+          </div>
+
+          <div
+            type="button"
+            class="me-1 btn btn-sm btn-white d-flex align-items-center"
+            (click)="printFlowchart()"
+          >
+            <span class="icon-print icon-16 me-1"></span>
+            <codx-label
+              default="In"
+              [fiedName]="'Print'"
+              class="me-2"
+            ></codx-label>
+          </div>
+          <div class="me-1" *ngIf="!hideMoreFC">
+            <div
+              type="button"
+              class="btn btn-sm btn-light-primary d-flex align-items-center"
+              (click)="addFile($event)"
+            >
+              <i class="icon-upload icon-16"></i
+              ><span>
+                <codx-label
+                  name="UploadFile"
+                  formName="Processes"
+                  gridViewName="grvProcesses"
+                  default="Tải ảnh"
+                >
+                </codx-label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- chua co referedType -->
+    <ng-container>
+      <codx-attachment
+        #addFlowchart
+        [objectType]="'DP_Processes'"
+        [objectId]="process?.recID"
+        [hideFolder]="1"
+        [hideImageUpload]="1"
+        [hideImageThumb]="1"
+        [hideUploadBtn]="1"
+        [hideDes]="1"
+        [type]="'inline'"
+        referType="Flowchart"
+        [allowMultiFile]="0"
+        [isSaveSelected]="1"
+        allowExtensions=".jpg,.png"
+        (fileSave)="fileSave($event)"
+        displayThumb="full"
+      >
+      </codx-attachment>
+    </ng-container>
+    <div>
+      <ng-container *ngIf="loadFlow">
+        <ng-container *ngIf="dataFile; else noData">
+          <div class="dropzone dropzone-default dropzone-primary h-100">
+            <pinch-zoom
+              #myPinch="pinchZoom"
+              [limit-zoom]="2"
+              [transition-duration]="500"
+              [backgroundColor]="'none'"
+              [draggableImage]="true"
+              [double-tap]="false"
+              [double-tap-scale]="4"
+            >
+              <img [src]="linkFile" [draggable]="true" [height]="getHeight()" />
+            </pinch-zoom>
+
+            <!-- <div class="actions">
+      <button
+        class="btn btn-small btn-outline btn-rounded"
+        (click)="myPinch.toggleZoom()"
+      >
+        toggleZoom()
+      </button>
+    </div> -->
+
+            <div [hidden]="true" id="output"></div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <ng-template #noData>
+      <codx-no-data></codx-no-data>
+    </ng-template>
+  </div>
+</ng-template>
 
 <ng-template #dayTem let-data="data">
   <div>

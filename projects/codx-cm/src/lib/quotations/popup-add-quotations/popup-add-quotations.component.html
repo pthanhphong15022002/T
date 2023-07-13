@@ -19,9 +19,7 @@
         </div>
         <div class="card-title">
           <div class="d-flex flex-column">
-            <div
-              class="dialog-title line-clamp line-clamp-1 me-3"
-            >
+            <div class="dialog-title line-clamp line-clamp-1 me-3">
               {{ headerText }}
             </div>
           </div>
@@ -208,7 +206,13 @@
                 field="quotationID"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
-                [disabled]="true"
+                [placeholder]="
+                  disabledShowInput
+                    ? planceHolderAutoNumber
+                    : grvSetupQuotations['QuotationID']?.description
+                "
+                [disabled]="disabledShowInput"
+                (controlBlur)="changeAutoNum($event)"
               ></codx-input>
             </div>
             <div class="row">
@@ -266,7 +270,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </ng-template>
   <!--  End:thêm sản phẩm -->

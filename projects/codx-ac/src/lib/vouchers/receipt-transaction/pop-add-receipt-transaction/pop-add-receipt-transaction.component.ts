@@ -632,7 +632,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
-      this.modeGrid = this.journal.inputMode;
+      this.modeGrid = this.journal.addNewMode;
     });
   }
 

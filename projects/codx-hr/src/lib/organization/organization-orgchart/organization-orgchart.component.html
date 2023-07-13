@@ -282,9 +282,9 @@
 
 <!-- (wheel)="onMouseWheel($event)" -->
 
-<button class="btn btn-primary" (click)="onScale(0.5)">50%</button>
+<!-- <button class="btn btn-primary" (click)="onScale(0.5)">50%</button>
 <button class="btn btn-primary mx-2" (click)="onScale(1)">100%</button>
-<button class="btn btn-primary" (click)="onScale(1.5)">150%</button>
+<button class="btn btn-primary" (click)="onScale(1.5)">150%</button> -->
 
 <!-- <org-diagram
   [items]="items"
@@ -305,75 +305,239 @@
   [hasSelectorCheckbox]="Enabled.False"
   [centerOnCursor]="true"
   [connectorType]="ConnectorType"
-  [scale]="scaleNumber" 
+  [scale]="scaleNumber"
+  [templates]="[
+  {
+    name: 'contactTemplate',
+    itemTemplate: contactTemplate,
+    itemSize: { width: 150, height: 150 },
+  }
+]"
 >
 </org-diagram> -->
 
-<org-diagram
-  [items]="items"
-  [annotations]="annotations"
-  [pageFitMode]="PageFitMode.FitToPage"
-  [highlightItem]="0"
-  [normalLevelShift]="20"
-  [dotLevelShift]="10"
-  [lineLevelShift]="20"
-  [normalItemsInterval]="40"
-  [dotItemsInterval]="20"
-  [lineItemsInterval]="50"
-  [buttonsPanelSize]="48"
-  [itemTitleSecondFontColor]="'#FFFFFF'"
-  [leavesPlacementType]="ChildrenPlacementType.Vertical"
-  [arrowsDirection]="GroupByType.Children"
-  [hasSelectorCheckbox]="Enabled.False"
-  [centerOnCursor]="true"
-  [connectorType]="ConnectorType"
-  [scale]="scaleNumber"
-  [templates]="[
+<input
+  min="1"
+  max="100"
+  value="50"
+  step="1"
+  #ref
+  (change)="showVal(ref.value)"
+  type="range"
+  [style]="stylesObj"
+/>
+
+<div ngbDropdown class="symbol-more" [container]="'body'">
+  <div
+    ngbDropdownToggle
+    class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
+    type="button"
+    id="dropdownMenuButton"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+    style="padding: 0 !important ; margin-left: 0 !important; border: none"
+  >
+    Thiết lập mode view
+  </div>
+  <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+    <select #teams (change)="onSelected(teams.value)">
+      <option default>Chọn mode view</option>
+      <option>Không có quản lý</option>
+      <option>Có quản lý</option>
+    </select>
+
+    <p>Page fit mode</p>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="flexRadioDefault"
+        id="pageFitModeNone"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="pageFitModeNone"> None </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="flexRadioDefault"
+        id="pageFitModeFit"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="pageFitModeFit"> FitToPage </label>
+    </div>
+
+    <p>Orientation Type</p>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="orientation"
+        id="orientationTop"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="orientationTop"> Top </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="orientation"
+        id="orientationBottom"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="orientationBottom"> Bottom </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="orientation"
+        id="orientationLeft"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="orientationLeft"> Left </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="orientation"
+        id="orientationRight"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="orientationRight"> Right </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="orientation"
+        id="orientationNone"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="orientationNone"> None </label>
+    </div>
+
+    <p>Placement Type</p>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="childrenPlacementAuto"
+        name="placement"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="childrenPlacementAuto"> Auto </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="childrenPlacementVertical"
+        name="placement"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="childrenPlacementVertical">
+        Vertical
+      </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="childrenPlacementHorizontal"
+        name="placement"
+        (change)="changeMode($event)"
+      />
+      <label class="form-check-label" for="childrenPlacementHorizontal">
+        Horizontal
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="sample">
+  <org-diagram
+    [items]="items"
+    [annotations]="annotations"
+    [pageFitMode]="pagefit"
+    [orientationType]="orientationType"
+    [highlightItem]="0"
+    [normalLevelShift]="20"
+    [dotLevelShift]="10"
+    [lineLevelShift]="20"
+    [normalItemsInterval]="40"
+    [dotItemsInterval]="20"
+    [lineItemsInterval]="50"
+    [buttonsPanelSize]="48"
+    [showFrame]="true"
+    [itemTitleSecondFontColor]="'#FFFFFF'"
+    [childrenPlacementType]="childrenPlacementType"
+    [arrowsDirection]="GroupByType.Children"
+    [hasSelectorCheckbox]="Enabled.False"
+    [centerOnCursor]="true"
+    [connectorType]="ConnectorType"
+    [scale]="scaleNumber"
+    [templates]="[
     {
       name: 'contactTemplate',
-      itemSize: { width: 250, height: 230 },
+      itemSize: { width: 170, height: 150 },
       itemTemplate: contactTemplate,
-      cursorTemplate: contactCursorTemplate,
-      highlightTemplate: contactHighlightTemplate,
       minimizedItemSize: { width: 5, height: 5 },
     }
   ]"
->
-</org-diagram>
+  >
+  </org-diagram>
+</div>
 
 <ng-template #contactTemplate let-itemConfig="context" let-isCursor="isCursor">
-  <div
-    class="department-card border border-gray-300 w-250px h-220px position-relative"
-  >
-    <div
-      class="d-flex align-items-center p-3 w-100"
-      [style.background-color]="
-        itemConfig.colorStatus ? itemConfig.colorStatus : headerColor
-      "
-    >
-      <i
-        class="text-white me-2"
-        [ngClass]="itemConfig.icon ? itemConfig.icon : 'icon-business icon-18'"
-      ></i>
-      <div class="d-flex flex-grow-1 text-white fs-5">
-        {{ itemConfig.title }}
+  <div class="border border-gray-300">
+    <ng-container *ngFor="let item of dataVll">
+      <div
+        *ngIf="itemConfig.context.orgUnitType === item.value"
+        class="d-flex align-items-center p-2 w-100"
+        [style.background-color]="item.color"
+      >
+        <i class="text-white me-2" [ngClass]="item.icon"></i>
+        <div>
+          <span
+            #departmentField
+            class="line-clamp line-clamp-1 text-white fs-6"
+            [ngbTooltip]="
+              departmentField.scrollHeight > departmentField.clientHeight
+                ? departmentTooltip
+                : null
+            "
+          >
+            {{ itemConfig.title }}
+          </span>
+        </div>
+
+        <ng-template #departmentTooltip>
+          <div class="d-flex flex-column">
+            <span> {{ itemConfig.title }}</span>
+          </div>
+        </ng-template>
+        <div class="ms-auto">
+          <codx-mfunc
+            [formModel]="view.formModel"
+            (clickMF)="clickMF($event, itemConfig)"
+            [isBookMark]="false"
+            [dataItem]="itemConfig"
+            type="view"
+          >
+          </codx-mfunc>
+        </div>
       </div>
-      <div>
-        <codx-mfunc
-          [formModel]="formModel"
-          (clickMF)="clickMF($event, itemConfig)"
-          [isBookMark]="false"
-          [dataItem]="itemConfig"
-          type="view"
-        >
-        </codx-mfunc>
-      </div>
-    </div>
-    <div class="p-3 department-card-main mb-1">
-      <div class="d-flex flex-column flex-grow-1 align-items-center mt-2">
+    </ng-container>
+    <div class="p-1 mb-1">
+      <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
         <codx-img
           class="symbol symbol-60 symbol-circle me-2"
-          [width]="60"
+          [width]="35"
           [objectId]="
             itemConfig.context.employeeManager &&
             itemConfig.context.employeeManager.employeeID
@@ -385,8 +549,14 @@
           [objectType]="'HR_Employees'"
         >
         </codx-img>
-        <div class="text-dark fs-4 fw-bold mt-4 mb-2">
-          <codx-label
+        <div class="text-dark fs-6 fw-bold mt-2 mb-2">
+          <span>
+            {{
+              itemConfig.context.employeeManager &&
+                itemConfig.context.employeeManager.employeeName
+            }}
+          </span>
+          <!-- <codx-label
             [formModel]="formModel"
             name="lblEmployeeName"
             [default]="
@@ -394,10 +564,16 @@
                 itemConfig.context.employeeManager.employeeName) ||
               'Tên Nhân Viên'
             "
-          ></codx-label>
+          ></codx-label> -->
         </div>
-        <div class="text-gray-600 mb-3">
-          <codx-label
+        <div class="text-gray-600 mb-1 fs-6">
+          <span>
+            {{
+              itemConfig.context.employeeManager &&
+                itemConfig.context.employeeManager.positionName
+            }}
+          </span>
+          <!-- <codx-label
             [formModel]="formModel"
             name="txtPositionName"
             [default]="
@@ -405,7 +581,7 @@
                 itemConfig.context.employeeManager.positionName) ||
               'Chức vụ'
             "
-          ></codx-label>
+          ></codx-label> -->
         </div>
         <!-- <div class="d-flex align-items-center mt-2">
           <div class="btn btn-sm btn-light-primary me-3 counter">

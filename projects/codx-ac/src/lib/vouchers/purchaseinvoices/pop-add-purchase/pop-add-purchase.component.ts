@@ -971,8 +971,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       .pipe(map((r) => r[0]))
       .subscribe((res) => {
         this.journal = res[0];
-        this.modegrid = this.journal.inputMode;
-        this.VATType = this.journal.vatType;
+        this.modegrid = this.journal.addNewMode;
+        this.VATType = this.journal.subType;
       if (this.VATType == '1' || this.VATType == '2') {
         this.cache
           .gridViewSetup('VATInvoices', 'grvVATInvoices')

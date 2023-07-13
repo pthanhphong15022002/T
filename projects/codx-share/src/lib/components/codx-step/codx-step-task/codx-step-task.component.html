@@ -7,28 +7,14 @@
       class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
       <div
-        class="d-flex align-items-center w-auto h-30px pe-6"
-        [ngStyle]="{
-          background: currentStep?.backgroundColor || '#d9e3f7',
-          'border-radius': '20px'
-        }"
-      >
+        class="d-flex align-items-center w-auto h-30px text-primary border-bottom border-bottom-2 border-primary">
         <div
-          class="cricle"
-          [ngStyle]="{
-            color: currentStep?.iconColor || 'gray',
-            border: '2px solid'
-          }"
-        >
-          <span [ngClass]="currentStep?.icon" class="fs-6"></span>
+          class="w-20px me-2"
+          >
+          <span [ngClass]="currentStep?.icon" class="fs-5-sm"></span>
         </div>
         <span
-          class="line-clamp line-clamp-1 fs-6 fw-bold ms-3"
-          [ngStyle]="{
-            color: currentStep?.textColor || 'gray',
-            'font-weight': '400'
-          }"
-        >
+          class="line-clamp line-clamp-1 fs-6 fw-bold">
           {{ currentStep.stepName || "" }}</span
         >
       </div>
@@ -38,7 +24,7 @@
         [dataItem]="moreDefaut"
         (changeDataMF)="changeDataMFStep($event, currentStep)"
         (clickMF)="clickMFStep($event, currentStep)"
-        *ngIf="isShowMore && !isClose"
+        *ngIf="!isMoveStage && !isClose"
       >
       </codx-mfunc>
     </div>
@@ -105,7 +91,7 @@
   </div>
   <!-- drap drop công việc ngoài-->
   <!-- [@fadeInOut] -->
-  <div class="main-body" *ngIf="listGroupTask?.length > 0 && isShowElement">
+  <div class="main-body ms-6" *ngIf="listGroupTask?.length > 0 && isShowElement">
     <div
       cdkDropList
       class="list"
@@ -207,7 +193,7 @@
     </div>
   </div>
   <ng-container
-    *ngIf="isShowButton && isStart && !isClose"
+    *ngIf="!isMoveStage && isStart && !isClose"
     [ngTemplateOutlet]="buttonTemplate"
     [ngTemplateOutletContext]="{ value: '' }"
   ></ng-container>
@@ -250,7 +236,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && !isClose"
+      *ngIf="!isMoveStage && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -297,7 +283,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && !isClose"
+      *ngIf="!isMoveStage && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -329,20 +315,7 @@
 </ng-template>
 
 <ng-template #buttonTemplate let-data="value">
-  <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView">
-    <!-- <button
-      type="button"
-      class="btn btn-outline-primary me-2"
-      (click)="addGroupTask()"
-    >
-      <i class="icon-add icon-18 text-primary"></i>
-      <codx-label
-        [name]="'lblAddGroup'"
-        [formName]="'DPStepsFields'"
-        [gridViewName]="'grvDPStepsFields'"
-        [default]="'Thêm nhóm công việc'"
-      ></codx-label>
-    </button> -->
+  <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView && isShowBtnAddTask">
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
@@ -381,13 +354,13 @@
       ></span>
     </div> -->
     <codx-vll
-        *ngIf="data?.group"
+        *ngIf="(data?.group && !isMoveStage)"
         [name]="'DP048'"
         [field]="'Status'"
         [value]="data?.value?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-sm"
+        class="badge badge-primary badge-sm w-95px"
       >
       </codx-vll>
     <span

@@ -7,6 +7,8 @@
 :root {
   --fs-body: 13px;
   --speeddialVertDist: 98px;
+  
+  --bs-primary-rgb: var(--primary);
 
   .e-grid .e-rowcell {
     font-size: var(--fs-body);
@@ -197,6 +199,10 @@ textarea.e-input,
 input.e-input {
   height: 32px !important;
   line-height: 32px;
+}
+input.e-input.codx-number{
+  height: 30px !important;
+  line-height: 30px;
 }
 
 input.e-input::placeholder,
@@ -584,10 +590,10 @@ codx-user-inner .top-100.start-100 {
 }
 
 .role-group ejs-listview .e-ul > li .d-flex.user-card {
-  margin-top: 2px;
-  border-radius: 4px;
+  margin-top: 1px;
+  border-radius: 2px;
   margin-bottom: 0px;
-  padding: 4px 8px !important;
+  padding: 8px !important;
 }
 
 .role-group ejs-listview .e-ul > li .d-flex.user-card:hover {
@@ -907,6 +913,7 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  width: 100px;
 }
 
 .breadcrum-box .breadcumb-extend {
@@ -1092,6 +1099,7 @@ codx-layout-add .codx-tab .tab-content {
 .dialog-extend codx-layout-add .codx-tab .tab-content{
   right: 360px;
 }
+
 codx-layout-add .card-header {
   height: 99px !important;
   min-height: 99px !important;
@@ -2068,6 +2076,9 @@ a.nav-link {
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
   margin-right: 15px;
 }
+.personal-menu .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+  margin-right: 0;
+}
 .codx-nav {
   border-bottom: 1px var(--gray-150) solid;
   .nav-link {
@@ -2261,10 +2272,11 @@ codx-tasks {
   }
 }
 
-.pin-bar {
+//.pin-bar {
   /* width: calc(100% - 400px); */
-  width: 100%!important;
-}
+  //width: 100%!important;
+//}
+
 .pin-bar .codx-text.e-input {
   border-radius: 20px !important;
   padding-left: 12px;
@@ -2520,6 +2532,7 @@ codx-valuelist .btn.select-icon {
   }
 }
 
+
 // control calendar
 codx-calendar {
   .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
@@ -2564,6 +2577,9 @@ codx-calendar {
 }
 .border-bottom {
   border-bottom-width: 1px !important;
+}
+.border-bottom-2 {
+  border-bottom-width: 2px !important;
 }
 .border-top {
   border-top-width: 1px !important;

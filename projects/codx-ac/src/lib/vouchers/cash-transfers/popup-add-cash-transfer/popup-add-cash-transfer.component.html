@@ -181,6 +181,7 @@
                         field="feeControl"
                         [formModel]="form.formModel"
                         [Group]="form.formGroup"
+                        (keyup.enter)="onKeyUpEnter()"
                       ></codx-input>
                     </div>
                   </div>
@@ -202,7 +203,7 @@
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                       (valueChange)="onInputChange($event)"
-                      [disabled]="journal?.multiCurrency === '0'"
+                      [disabled]="!journal?.multiCurrency"
                     ></codx-input>
                   </div>
                   <div class="col-6 form-group">
@@ -215,7 +216,7 @@
                       field="exchangeRate"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      [disabled]="journal?.multiCurrency === '0'"
+                      [disabled]="!journal?.multiCurrency"
                     ></codx-input>
                   </div>
                 </div>
@@ -262,6 +263,7 @@
               class="me-1"
               [(checked)]="hasInvoice"
               (change)="onSwitchChange($event)"
+              (keyup.enter)="onKeyUpEnter2()"
             ></ejs-switch>
             <codx-label
               class="fw-bold fs-6"

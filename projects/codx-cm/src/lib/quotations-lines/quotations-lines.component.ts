@@ -670,6 +670,11 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       0
     );
     if (count > 0) return;
+
+    if (!e?.quantity || e?.quantity <= 0) {
+      this.notiService.notifyCode('CM025');
+      return;
+    }
     // this.loadTotal();
     this.objectOut.listQuotationLines = this.listQuotationLines;
     this.objectOut.quotationLinesAddNew = this.quotationLinesAddNew;

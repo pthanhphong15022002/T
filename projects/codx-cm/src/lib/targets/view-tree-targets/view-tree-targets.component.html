@@ -1,0 +1,52 @@
+<div class="treeview">
+  <codx-treeview
+    id="tree"
+    #treeView
+    [itemTemplate]="templateTree"
+    [data]="dataTree"
+    [enableCheck]="false"
+    idField="recID"
+    parentIdField="parentID"
+    fieldCheck="hasChildren"
+    [autoLoad]="false"
+    [isOutput]="true"
+    [isLoadChild]="true"
+    (selectionChange)="selectionChange($event)"
+  >
+  </codx-treeview>
+</div>
+
+<ng-template #templateTree let-item>
+  <div class="mb-2" (click)="clickTreeNode($event)">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between">
+        <span class="text-dark" [ngClass]="item?.fontSize != null && item?.fontSize?.trim() != '' ? item?.fontSize : ''">
+          {{ item?.targetName }}
+        </span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div
+          style="margin-right: 40px"
+          *ngIf="item?.owner != null && item?.owner.trim() != ''"
+        >
+          <codx-imgs
+            [width]="30"
+            [objectId]="item?.owner"
+            objectType="AD_Users"
+            [numberImages]="3"
+            class=""
+          >
+          </codx-imgs>
+        </div>
+        <div
+          class="ms-3 fw-bold"
+          style="min-width: 100px;"
+          [ngStyle]="(item?.color != null && item?.color?.trim() != '') ? {color: item?.color} : {color: '#1d1f1f'} "
+          [innerHTML]="
+            item?.target | formatvalue : fmTargetLines : 'Target' | async
+          "
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>

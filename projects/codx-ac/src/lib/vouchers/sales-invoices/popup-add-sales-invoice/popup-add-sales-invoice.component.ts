@@ -28,7 +28,6 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { SalesInvoiceService } from '../sales-invoices.service';
-import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -113,7 +112,7 @@ export class PopupAddSalesInvoiceComponent
       this.journal = res;
 
       this.editSettings.mode =
-        this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
+        this.journal.addNewMode == '2' ? 'Dialog' : 'Normal';
 
       if (this.journal.assignRule === '2') {
         this.ignoredFields.push('VoucherNo');
@@ -232,7 +231,7 @@ export class PopupAddSalesInvoiceComponent
         return;
       }
 
-      if (this.journal.inputMode === '2') {
+      if (this.journal.addNewMode === '2') {
         return;
       }
 
