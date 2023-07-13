@@ -60,10 +60,20 @@ export class PopupViewsDetailsProcessComponent
       name: 'Detail',
       textDefault: 'Chi tiết quy trình',
       isActive: false,
-      icon: '',
+      icon: 'icon-storage',
     },
-    { name: 'Kanban', textDefault: 'Kanban', isActive: true, icon: '' },
-    { name: 'FlowChart', textDefault: 'Biểu đồ', isActive: false, icon: '' },
+    {
+      name: 'Kanban',
+      textDefault: 'Kanban',
+      isActive: true,
+      icon: 'icon-table_chart',
+    },
+    {
+      name: 'FlowChart',
+      textDefault: 'Biểu đồ',
+      isActive: false,
+      icon: 'icon-wallpaper',
+    },
   ];
   listType = [];
   // value

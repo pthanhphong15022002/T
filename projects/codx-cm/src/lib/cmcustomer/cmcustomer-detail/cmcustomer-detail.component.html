@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="container_detail">
-          <div class="d-flex w-100 cm-scroll-top">
+          <div class="d-flex w-100 cm-scroll-top mb-2">
             <div class="me-3">
               <codx-img
                 [objectId]="dataSelected.recID"
@@ -238,10 +238,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </ng-template>
-      <ng-template #body let-data>
-        <div class="cm-scroll">
           <div
             [ngClass]="
               funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''
@@ -350,6 +346,12 @@
               </div>
             </div>
           </div>
+          
+        </div>
+      </ng-template>
+      <ng-template #body let-data>
+        <div class="cm-scroll">
+          
           <div class="instance-select">
             <ejs-tab
               id="tab_adaptive"

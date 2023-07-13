@@ -984,7 +984,6 @@ export class StagesDetailComponent implements OnInit {
     if(index != -1){
       result = type == 'id' ? data[index]?.objectID : data[index]?.objectName;
     }
-    console.log(result);
     return result;
   }
 }
