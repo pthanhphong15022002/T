@@ -40,6 +40,7 @@
         </div>
         <div
           class="ms-3 fw-bold"
+          style="min-width: 100px;"
           [ngStyle]="(item?.color != null && item?.color?.trim() != '') ? {color: item?.color} : {color: '#1d1f1f'} "
           [innerHTML]="
             item?.target | formatvalue : fmTargetLines : 'Target' | async
