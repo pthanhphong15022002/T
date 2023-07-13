@@ -35,27 +35,39 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isLoaded: boolean = false;
   titLeModule = '';
 
+  // setting  //chart tree
+  dataSourceBussnessLine = [];
   palette = ['#005dc7', '#0078ff', '#3699ff', '#d3e8ff'];
   //mau cố định
   paletteColor = ['#00BFFF', '#0000FF'];
-  // setting
-  dataSourceBussnessLine = [];
+
+  leafItemSettings = {
+    labelPath: 'businessLineName',
+    lableWidth: '100%',
+    labelPosition: 'Center',
+    labelFormat: '${businessLineName}',
+  };
+  // highlightSettings = {
+  //   enable: true,
+  //   border: { width: '1px', color: 'black' },
+  //   opacity: '1',
+  // };
   // tooltipSettings = {
   //   visible: true,
   //   format: '${businessLineName} - TotalCount:${quantity}',
   //   template:
   //     '<div><span>${businessLineName}</span><span>Total Count: ${quantity}</span></div>',
   // };
-  tooltipChartMap: Object = {
-    visible: true,
-    enable: true,
-    template:
-      '<div><span>${businessLineName}</span><span>${quantity}-(${percentage} %)</span></div>',
-    format:
-      '<div><span>${businessLineName}</span><span>${quantity}-(${percentage} %)</span></div>',
-  };
+  // tooltipChartMap: Object = {
+  //   visible: true,
 
-  leafItemSettings: any;
+  //   // template:
+  //   //   '<div><span>${businessLineName}</span><span>${quantity}-(${percentage} %)</span></div>',
+  //    format:
+  //     '<div><span>${businessLineName}</span><span>${quantity}-(${percentage} %)</span></div>',
+  // };
+
+  //leafItemSettings: any;
 
   colorReasonSuscess = '';
   colorReasonFails = '';
@@ -64,7 +76,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   maxOwners = [];
   minOwners = [];
 
-  //tỉ lệ thanh công that bai tren san pham
+  //chart line tỉ lệ thanh công that bai tren san pham
   //Initializing Primary X Axis
   primaryXAxis: Object = {
     interval: 1,
@@ -116,14 +128,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
     this.cache.functionList('CM0201').subscribe((fun) => {
       this.titLeModule = fun?.customName || fun?.description;
-      this.leafItemSettings = {
-        labelPath: 'businessLineName',
-        labelPosition: 'Center',
-        labelFormat:
-          '${businessLineName}<br>${quantity} ' +
-          this.titLeModule +
-          '-(${percentage} %)',
-      };
+      // this.leafItemSettings = {
+      //   labelPath: 'businessLineName',
+      //   lableWidth: '100%',
+      //   labelPosition: 'Center',
+      //   labelFormat: '${businessLineName}
+      //    <br>${quantity} ' +
+      //    this.titLeModule +
+      //    '-(${percentage} %)',
+      // };
     });
   }
   onInit(): void {
@@ -217,11 +230,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   clickButton(id) {
     switch (id) {
-      case 'btnMinRadio':
+      case 'btnMin':
         this.checkBtnMin = true;
         this.checkBtnMax = false;
         break;
-      case 'btnMaxRadio':
+      case 'btnMax':
         this.checkBtnMin = false;
         this.checkBtnMax = true;
         break;
