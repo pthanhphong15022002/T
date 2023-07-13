@@ -21,7 +21,25 @@ export class CodxBookingService {
     private notificationsService: NotificationsService
 
     ) {}
+  getListWarehouse() {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'WarehousesBusiness',
+      'GetListAsync',
+      []
+    );
+  }
 
+  getListRO() {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListOwnerAsync',
+      []
+    );
+  }
   getResourceEquipments(resourceID: any) {
     return this.api.execSv(
       'EP',

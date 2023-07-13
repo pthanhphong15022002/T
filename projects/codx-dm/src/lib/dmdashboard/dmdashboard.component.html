@@ -1,0 +1,93 @@
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  [funcID]="funcID"
+  (filterReportChange)="filterChange($event)"
+  (onActions)="onActions($event)"
+  [moreFuncs]="buttons"
+>
+</codx-views>
+
+<ng-template #template>
+  <ejs-dashboardlayout
+    id="defaultLayout"
+    [columns]="12"
+    #defaultLayout
+    [cellSpacing]="[10, 10]"
+  >
+    <e-panels>
+      <e-panel id="1" [sizeX]="3" [sizeY]="6" [row]="0" [col]="0"
+        ><ng-template #header>
+          <div>Thống kê dung lượng tài liệu tải lên</div>
+        </ng-template>
+        <ng-template #content>
+          <!-- <div class="d-flex justify-content-center">
+            <div id="text" class="e-btn-group">
+              <input type="radio" id="left" name="align" value="left" />
+              <label class="e-btn bg-primary" for="left">Loại file</label>
+              <input type="radio" id="center" name="align" value="center" />
+              <label class="e-btn bg-primary" for="center">Ứng dụng</label>
+              <input type="radio" id="right" name="align" value="right" />
+              <label class="e-btn bg-primary" for="right">Phân loại</label>
+            </div>
+          </div>
+          <div id="column">
+            <ejs-chart id="column" height="162px" [primaryXAxis]="primaryXAxis">
+              <e-series-collection>
+                <e-series
+                  [dataSource]="chartData"
+                  type="Column"
+                  xName="month"
+                  yName="sales"
+                >
+                </e-series>
+              </e-series-collection>
+            </ejs-chart>
+          </div> -->
+          <!-- <div>
+            <ng-template
+              ngFor
+              let-item
+              [ngForOf]="items"
+              let-i="index"
+              [ngForTrackBy]="trackByFn"
+            >
+            </ng-template>
+          </div> -->
+        </ng-template>
+      </e-panel>
+      <e-panel id="2" [sizeX]="3" [sizeY]="3" [row]="0" [col]="3"
+        ><ng-template #header>
+          <div>Tài liệu theo phân hệ</div>
+        </ng-template>
+        <ng-template #content>
+          <!-- <ejs-treemap
+            id="treemap"
+            style="display: block"
+            height="100%"
+            [dataSource]="data"
+            weightValuePath="Count"
+            [leafItemSettings]="leafItemSettings"
+          >
+          </ejs-treemap> -->
+        </ng-template>
+      </e-panel>
+      <e-panel id="3" [sizeX]="3" [sizeY]="3" [row]="0" [col]="6">
+        <ng-template #header>
+          <div>Thống kê tài liệu theo bộ phận</div>
+        </ng-template>
+      </e-panel>
+      <e-panel id="4" [sizeX]="6" [sizeY]="3" [row]="3" [col]="3"
+        ><ng-template #header>
+          <div>Thống kê mức độ sử dụng tài liệu theo bộ phận</div>
+        </ng-template></e-panel
+      >
+      <e-panel id="5" [sizeX]="3" [sizeY]="6" [row]="0" [col]="9"
+        ><ng-template #header>
+          <div>Top tài liệu</div>
+        </ng-template></e-panel
+      >
+    </e-panels>
+  </ejs-dashboardlayout>
+</ng-template>
