@@ -84,13 +84,9 @@
 </ng-template>
 
 <!-- Tỷ lệ phân bổ cơ hội theo dòng sản phẩm -->
+<!-- title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm" -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="5"
-    title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="5" style="overflow: hidden">
     <div>
       <codx-label
         class="fs-5 fw-bold"
@@ -102,13 +98,20 @@
       *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
     >
       <ejs-treemap
+        class="w-100"
         style="display: block"
         [dataSource]="dataSourceBussnessLine ?? []"
         weightValuePath="quantity"
         rangeColorValuePath="quantity"
         [palette]="palette"
         [leafItemSettings]="leafItemSettings"
-        [tooltipSettings]="tooltipSettings"
+        [tooltipSettings]="{
+          visible: true,
+          format:
+            '${businessLineName}<br>${quantity} ' +
+            this.titLeModule +
+            '-(${percentage} %)'
+        }"
       >
       </ejs-treemap>
     </ng-container>
@@ -116,60 +119,47 @@
 </ng-template>
 
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
+<!-- title="Thống kê tỷ lệ thành công ,thất bại trong năm theo dòng sản phẩm" -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="6"
-    title="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
-  >
+  <div class="chartBusinessLines w-100 h-100" id="6" style="overflow: hidden">
     <codx-label
+      id="chartBusinessLinesHeader"
       class="fs-5 fw-bold"
       name="lblChartBusinessLines"
-      default="Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm"
+      default="Thống kê tỷ lệ thành công, thất bại trong năm theo dòng sản phẩm"
     ></codx-label>
-    <div class="mt-5">
+    <div id="chartBusinessLinesButton" class="mt-3">
       <div class="d-flex justify-content-center align-items-center">
         <div
-          class="btn-group"
-          role="group"
-          aria-label="Basic radio toggle button group"
+          [ngClass]="checkBtnSuscess ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
         >
-          <input
-            type="radio"
-            class="btn-check"
-            name="btnradio"
-            id="checkBtnSuscessRadio"
-            autocomplete="off"
-            checked
-          />
           <codx-label
-            class="btn btn-outline-primary"
-            for="btnSuscessRadio"
+            name="btSuccess"
+            formModel=""
             default="Thành công"
           ></codx-label>
-
-          <input
-            type="radio"
-            class="btn-check"
-            name="btnradio"
-            id="checkBtnFailRadio"
-            autocomplete="off"
-          />
+        </div>
+        <div
+          [ngClass]="checkBtnFail ? 'button-selected' : 'button-no-selected'"
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+        >
           <codx-label
-            class="btn btn-outline-primary"
-            for="btnFailRadio"
+            name="btFail"
+            formModel=""
             default="Thất bại"
           ></codx-label>
         </div>
       </div>
     </div>
+
     <ng-container
       *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
     >
-      <div class="row w-100 h-100">
-        <!-- <div class="col-10"> -->
+      <div class="w-100" [style.height]="'92%'">
         <ejs-chart
           id="chart-container"
+          class="w-100"
           [primaryXAxis]="primaryXAxis"
           [primaryYAxis]="primaryYAxis"
           [title]=""
@@ -180,7 +170,7 @@
               *ngFor="let item of dataDashBoard?.countsBussinessLines"
             >
               <e-series
-                *ngIf="checkBtnSuscessRadio"
+                *ngIf="checkBtnSuscess"
                 [dataSource]="item?.chartDataSuscess ?? []"
                 type="Line"
                 xName="month"
@@ -191,7 +181,7 @@
               ></e-series>
 
               <e-series
-                *ngIf="checkBtnFailRadio"
+                *ngIf="checkBtnFail"
                 [dataSource]="item?.chartDataFail ?? []"
                 type="Line"
                 xName="month"
@@ -209,12 +199,9 @@
 </ng-template>
 
 <!-- Top nhân viên có nhiều cơ hội thành công nhất -->
+<!-- title="Top nhân viên có nhiều cơ hội thành công nhất" -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="7"
-    title="Top nhân viên có nhiều cơ hội thành công nhất"
-  >
+  <div class="w-100 h-100" id="7">
     <codx-label
       class="fs-5 fw-bold"
       name="lblChartOwners"
@@ -223,44 +210,32 @@
     <div class="mt-5">
       <div class="d-flex justify-content-center align-items-center">
         <div
-          class="btn-group"
-          role="group"
-          aria-label="Basic radio toggle button group"
+          [ngClass]="checkBtnMax ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+          (click)="clickButton('btnMax')"
         >
-          <input
-            type="radio"
-            class="btn-check"
-            name="btnradio"
-            id="btnMaxRadio"
-            autocomplete="off"
-            [checked]="checkBtnMaxRadio"
-          />
           <codx-label
-            class="btn btn-outline-primary"
-            for="btnMaxRadio"
+            name="btnMax"
+            formModel=""
             default="Cao nhất"
-            (click)="clickRadio('btnMaxRadio')"
           ></codx-label>
-          <input
-            type="radio"
-            class="btn-check"
-            name="btnradio"
-            id="btnMinRadio"
-            autocomplete="off"
-            [checked]="checkBtnMinRadio"
-          />
+        </div>
+        <div
+          [ngClass]="checkBtnMin ? 'button-selected' : 'button-no-selected'"
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+          (click)="clickButton('btnMin')"
+        >
           <codx-label
-            class="btn btn-outline-primary"
-            for="btnMinRadio"
+            name="btnMin"
+            formModel=""
             default="Thấp nhất"
-            (click)="clickRadio('btnMinRadio')"
           ></codx-label>
         </div>
       </div>
     </div>
 
     <div class="mt-3">
-      <ng-container *ngIf="checkBtnMaxRadio">
+      <ng-container *ngIf="checkBtnMax">
         <ng-container *ngIf="maxOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of maxOwners; let i = index"
@@ -270,7 +245,7 @@
             <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
             <div
               class="owners-top"
-              style="color: #000000; background-color: aqua"
+              style="color: #000000"
               [style.background-color]="ownerCount?.color"
               [style.width]="ownerCount.percentage + '%'"
             >
@@ -279,7 +254,7 @@
           </div>
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="checkBtnMinRadio">
+      <ng-container *ngIf="checkBtnMin">
         <ng-container *ngIf="minOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of minOwners; let i = index"
@@ -303,19 +278,16 @@
 </ng-template>
 
 <!-- Lý do thành công -->
+<!-- title="Lý do thành công" -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="8"
-    title="Lý do thành công"
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="8" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonSuscess"
       default="Lý do thành công"
     ></codx-label>
-    <ng-container
+    <div
+      style="overflow-y: auto; max-height: 95%"
       *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
     >
       <div
@@ -347,24 +319,21 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 </ng-template>
 
 <!-- Lý do thất bại -->
+<!-- title="Lý do thất bại " -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="9"
-    title="Lý do thất bại "
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="9" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonFails"
       default="Lý do thất bại"
     ></codx-label>
-    <ng-container
+    <div
+      style="overflow-y: auto; max-height: 95%"
       *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
     >
       <div *ngFor="let data of dataDashBoard?.countsReasonsFails" class="mt-4">
@@ -393,7 +362,7 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 </ng-template>
 
