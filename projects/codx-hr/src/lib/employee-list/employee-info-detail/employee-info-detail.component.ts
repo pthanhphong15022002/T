@@ -47,7 +47,9 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  LayoutService,
   NotificationsService,
+  PageTitleService,
   SidebarModel,
   SortModel,
   UIComponent,
@@ -113,6 +115,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   lstFamily: any = [];
   lstOrg: any; //view bo phan
   lstBtnAdd: any = []; //nut add chung
+  orgUnitStr: any;
+  DepartmentStr: any;
 
   //Kinh nghiem
   lstExperiences: any;
@@ -588,6 +592,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     private hrService: CodxHrService,
     private auth: AuthStore,
     private df: ChangeDetectorRef,
+    private layout: LayoutService,
+    private pageTitle: PageTitleService,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
     public override api: ApiHttpService,
@@ -600,6 +606,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
 
   onInit(): void {
+    //ẩn logo
+    this.layout.setLogo(null);
+
+    //ẩn số đếm tổng nhân viên
+    // this.pageTitle.setBreadcrumbs([]);
+
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res: any[]) => {
         if (res && res[1] > 0) {
@@ -661,7 +673,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             console.log('info nv',  res[0]);
             this.infoPersonal = res[0];
             this.infoPersonal.PositionName = res[1]
-            this.lstOrg = res[2]
+            // this.lstOrg = res[2]
+            this.orgUnitStr = res[2]
+            this.DepartmentStr = res[3]
             this.LoadedEInfo = true;
             this.df.detectChanges();
           }
@@ -673,6 +687,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.crrVisa = res[1];
             this.crrWorkpermit = res[2];
             this.lstFamily = res[3];
+            this.calculateEFamilyAge();
             this.lstExperiences = res[4];
             this.crrEBSalary = res[5];
             this.loadedESalary = true;
@@ -725,7 +740,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     {
       this.hrService.getHeaderText(this.eInfoFuncID).then((headerText) => 
       {
-        debugger
         this.eInfoHeaderText = headerText;
       });
       this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
@@ -3018,10 +3032,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       else {
         if (actionType == 'add' || actionType == 'copy') {
           this.lstFamily.push(res?.event);
+
         } else {
           let index = this.lstFamily.indexOf(data);
           this.lstFamily[index] = res?.event;
         }
+        this.calculateEFamilyAge();
       }
       this.df.detectChanges();
     });
@@ -3323,8 +3339,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        this.LoadedEInfo = false;
         this.updateGridView(this.appointionGridView, actionType, res.event);
-        this.df.detectChanges();
+        this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
+          if(res){
+            debugger
+            this.infoPersonal = res[0];
+            this.infoPersonal.PositionName = res[1]
+            // this.lstOrg = res[2]
+            this.orgUnitStr = res[2]
+            this.DepartmentStr = res[3]
+            this.LoadedEInfo = true;
+            this.df.detectChanges();
+          }
+        })
       }
     });
   }
@@ -4981,6 +5009,30 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
     }
     return '#000205';
+  }
+
+  calculateEFamilyAge(){
+    for(let i = 0; i < this.lstFamily.length; i++){
+      if(this.lstFamily[i].birthday){
+        let birth = new Date(this.lstFamily[i].birthday);
+        let birthYear = birth.getFullYear();
+    
+        let currentDay = new Date();
+        let currentYear = currentDay.getFullYear();
+    
+        if(birthYear < currentYear){
+          this.lstFamily[i].age = `${currentYear - birthYear}`
+        }
+        else{
+          let birthMonth = birth.getMonth();
+          let currentMonth = currentDay.getMonth();
+          this.lstFamily[i].age = `${currentMonth - birthMonth} tháng`
+        }
+      }
+      else{
+        this.lstFamily[i].age = ''
+      }
+    }
   }
 
   close2(dialog: DialogRef) {

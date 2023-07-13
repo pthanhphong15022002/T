@@ -49,6 +49,8 @@ export class ReceiptTransactionComponent extends UIComponent {
   funcName: any;
   parentID: string;
   journalNo: string;
+  totalacct: any = 0;
+  totaloff: any = 0;
   totalQuantity: any = 0;
   totalAmt: any = 0;
   width: any;
@@ -61,10 +63,12 @@ export class ReceiptTransactionComponent extends UIComponent {
   gridViewLines: any;
   entityName: any;
   funcID: any;
+  acctTrans: any;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   overflowed: boolean = false;
   expanding: boolean = false;
+  isLoadDataAcct: any = true;
   fmInventoryJournalLines: FormModel = {
     formName: 'InventoryJournalLines',
     gridViewName: 'grvInventoryJournalLines',
@@ -81,6 +85,11 @@ export class ReceiptTransactionComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+  fmAccTrans: FormModel = {
+    formName: 'AcctTrans',
+    gridViewName: 'grvAcctTrans',
+    entityName: 'AC_AcctTrans',
+  };
   parent: any;
   constructor(
     private inject: Injector,
@@ -331,6 +340,7 @@ export class ReceiptTransactionComponent extends UIComponent {
     return true;
   }
   loadDatadetail(data) {
+    this.acctTrans = [];
     this.api
       .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
         data.recID,
@@ -338,6 +348,14 @@ export class ReceiptTransactionComponent extends UIComponent {
       .subscribe((res: any) => {
         this.inventoryJournalLines = res;
         this.loadTotal();
+      });
+    this.api
+      .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', 'e973e7b7-10a1-11ee-94b4-00155d035517')
+      // .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.acctTrans = res;
+        this.loadAcctTransTotal();
+        this.isLoadDataAcct = false;
       });
   }
   changeItemDetail(event) {
@@ -347,6 +365,7 @@ export class ReceiptTransactionComponent extends UIComponent {
       if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
         return;
       } else {
+        this.isLoadDataAcct = true;
         this.itemSelected = event?.data;
         this.loadDatadetail(this.itemSelected);
       }
@@ -378,6 +397,36 @@ export class ReceiptTransactionComponent extends UIComponent {
         this.totalAmt += item.costAmt;
       }
     });
+  }
+
+  loadAcctTransTotal() {
+    this.totalacct = 0;
+    this.totaloff = 0;
+    for (let index = 0; index < this.acctTrans.length; index++) {
+      if (!this.acctTrans[index].crediting) {
+        this.totalacct = this.totalacct + this.acctTrans[index].transAmt;
+      } else {
+        this.totaloff = this.totaloff + this.acctTrans[index].transAmt;
+      }
+    }
+  }
+
+  createLine(item) {
+    if (item.crediting) {
+      var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
+      let index = data
+        .filter((x) => x.crediting == item.crediting)
+        .findIndex((x) => x.recID == item.recID);
+      if (
+        index ==
+        data.filter((x) => x.crediting == item.crediting).length - 1
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
   }
   //#endregion
 }

@@ -7,3 +7,8 @@
     white-space: nowrap;
     max-width: 200px;
   }
+
+  .tmp-item-kanban {
+    border: 1px solid;
+    border-radius: 3% 3% 3% 3% !important;
+  }

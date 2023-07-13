@@ -70,7 +70,6 @@ export class DealsComponent
 
   @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
   @ViewChild('confirmOrRefuseTemp') confirmOrRefuseTemp: TemplateRef<any>;
-
   popupConfirm: DialogRef;
 
   // extension core
@@ -112,30 +111,28 @@ export class DealsComponent
   vllApprove = '';
   vllStatus = '';
   crrFuncID = '';
+  nameModule: string = '';
+  currencyIDDefault: any = 'VND';
+  exchangeRateDefault: any = 1;
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
-  listHeader: any = [];
   colorReasonSuccess: any;
   colorReasonFail: any;
   processID: any;
   dataDrop: any;
   stepIdClick: any;
   crrStepID: any;
-  dataColums: any = [];
   moreFuncInstance: any;
   funCrr: any;
   viewCrr: any;
   viewsDefault: any;
   gridViewSetup: any;
   functionModule: any;
-  nameModule: string = '';
   paramDefault: any;
-  currencyIDDefault: any = 'VND';
-  exchangeRateDefault: any = 1;
   fiterOption: any;
   orgFilter: any;
   orgPin: any;
@@ -144,6 +141,10 @@ export class DealsComponent
   processIDDefault: string;
   crrProcessID = '';
   returnedCmt = '';
+  lstStepInstances: any[]=[];
+  dataColums: any = [];
+  listHeader: any = [];
+  listSteps:any[]=[];
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -501,6 +502,7 @@ export class DealsComponent
     return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
   }
   clickMF(e, data) {
+    debugger;
     const actions = {
       SYS03: (data) => {
         this.edit(data);
@@ -545,15 +547,18 @@ export class DealsComponent
         this.confirmOrRefuse(false, data);
       },
     };
-    this.dataSelected = data;
     this.titleAction = e.text;
-
     if (actions.hasOwnProperty(e.functionID)) {
       actions[e.functionID](data);
     }
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
+  }
+  updateListSteps(e) {
+   if(e){
+    this.lstStepInstances = e?.listStep;
+   }
   }
 
   handelStartDay(data) {
@@ -709,6 +714,7 @@ export class DealsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
+            listStepCbx: this.lstStepInstances
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -730,6 +736,7 @@ export class DealsComponent
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
               var instance = e.event.instance;
+              this.listSteps = e.event?.listStep;
               var index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -750,7 +757,6 @@ export class DealsComponent
                   data = res[0];
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
-
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
@@ -786,7 +792,7 @@ export class DealsComponent
             if (res) {
               data.closed = check ? true : false;
               data.closedOn = check ? new Date() : data.ClosedOn;
-              data.ModifiedOn = new Date();
+              data.modifiedOn = new Date();
               this.dataSelected = data;
               this.view.dataService.update(data).subscribe();
               this.notificationsService.notifyCode(
@@ -937,6 +943,8 @@ export class DealsComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
+          data.modifiedOn = new Date();
+          this.dataSelected = data;
           this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
@@ -1519,6 +1527,7 @@ export class DealsComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.status = '1';
+                  this.dataSelected.nodifiedBy = new Date();
                   this.detailViewDeal.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );

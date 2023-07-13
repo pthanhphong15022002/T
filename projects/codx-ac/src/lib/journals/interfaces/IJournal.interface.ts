@@ -50,7 +50,7 @@ export interface IJournal {
   otherControl: string;
   approvalControl: string;
   approver: any;
-  autoPost: any;
+  autoPost: boolean;
   unpostControl: boolean;
   unPostDays: number | null;
   exported: boolean;
@@ -66,13 +66,13 @@ export interface IJournal {
   transLimit: number | null;
   transControl: string;
   transConfirmUser: string;
-  exchangeType: string;
-  multiCurrency: any;
-  vatType: string;
-  dataValue: string;
-  checkImage: boolean;
-  inputMode: string;
+  exchType: string;
+  multiCurrency: boolean;
+  extras: string;
+  hasImage: number;
+  addNewMode: string;
   postingMode: string;
   unbounds: any;
   postedDateControl: string;
+  entryMode: string;
 }

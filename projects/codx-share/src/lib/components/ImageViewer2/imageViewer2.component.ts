@@ -1,8 +1,10 @@
+import { style } from '@angular/animations';
 import {
     AfterViewInit,
     Component,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     OnChanges,
     OnInit,
@@ -12,8 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ApiHttpService, DialogRef } from 'codx-core';
-import { log } from 'console';
-import {ImageViewer,FullScreenViewer} from 'iv-viewer';
+import { ImageViewer,FullScreenViewer } from 'iv-viewer';
 import { environment } from 'src/environments/environment';
 @Component({
     selector: 'codx-image-viewer',
@@ -26,12 +27,19 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     @HostBinding('class') get class() {
         return "w-100 h-100";
       }
+
+    @HostListener('keydown',['$event']) keydown(event:any) {
+        debugger
+        this.onKeypress(event);
+    }
     BASE_64_IMAGE = 'data:image/png;base64,';
     BASE_64_PNG = `${this.BASE_64_IMAGE} `;
     ROTACAO_PADRAO_GRAUS = 90;
     option = {
         a : 0
     }
+    fileSelected:any = null;
+
     @Input() dialog:DialogRef;
     @Input() idContainer;
     @Input() rotate = true;
@@ -87,10 +95,10 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     ngAfterViewInit() {
     }
     onKeypress(e:any){
-        if(e.code=='ArrowRight'){
+        if(e?.code?.toLocaleLowerCase() == 'arrowright'){
             this.proximaImagem();
         }
-        if(e.code=='ArrowLeft'){
+        if(e?.code?.toLocaleLowerCase() == 'arrowleft'){
             this.imagemAnterior();
         }
     }
@@ -126,12 +134,12 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         this.defaultDownloadNameChange(changes);
     }
 
-    zoomIn() {
+    clickZoomIn() {
         this.zoomPercent += 10;
         this.viewer.zoom(this.zoomPercent);
     }
 
-    zoomOut() {
+    clickZoomOut() {
         if (this.zoomPercent === 100) {
             return;
         }
@@ -181,7 +189,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         return this.images
             && this.images.length > 0;
     }
-
     inicializarImageViewer() {
         let _index = 0;
         _index =  this.images.findIndex(x => x.recID == this.fileID);
@@ -193,9 +200,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
             this.indexImage = 0;
         }
         this.totalImagens = this.images.length;
-
         if (this.viewer) {
-
             this.wrapper.querySelector('.total').innerHTML = this.totalImagens;
             return;
         }
@@ -212,7 +217,41 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     showImage() {
         this.prepararTrocaImagem();
         let imgObj = this.isURlImagem();
+        this.fileSelected = this.images[this.indexImage];
         this.viewer.load(imgObj, imgObj);
+        if(this.fileSelected.referType == "video")
+        {
+                var ele = document.getElementById(this.idContainer).getElementsByClassName('iv-image-wrap');
+                if(ele){
+                    var video = document.createElement('video');
+                    video.className = "iv-image-wrap iv-large-image";
+                    video.autoplay = true;
+                    video.controls = true;
+                    video.src = imgObj;
+                    video.id = this.fileSelected.recID;
+                    var eleBody = document.getElementsByClassName("iv-image-view");
+                    var eleFooter = document.getElementsByClassName("footer-info");
+                    if(eleBody && eleFooter)
+                        video.height = eleBody[0].clientHeight - eleFooter[0].clientHeight;
+                    else
+                        video.height = eleBody[0].clientHeight - 50;
+                    ele[0].firstChild.remove();
+                    ele[0].appendChild(video);
+                    this.setStyleClass('iv-loader', 'visibility', 'hidden');
+                }
+        }
+        else
+        {
+            var ele = document.getElementById(this.idContainer).getElementsByClassName('iv-image-wrap');
+            if(ele)
+            {
+                var length = ele[0].children.length;
+                for (let index = 0; index < length; index++) {
+                    var element = ele[index];
+                    element.tagName.toLocaleLowerCase() == "video" ? element.remove() : null;
+                } 
+            }
+        }
         this.curSpan.innerHTML = this.indexImage + 1;
     }
 
@@ -243,7 +282,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     limparCacheElementos() {
-
         const container = document.getElementById(this.idContainer);
         const iframeElement = document.getElementById(this.getIdIframe());
         const ivLargeImage = document.getElementById(this.idContainer).getElementsByClassName('iv-large-image').item(0);
@@ -370,15 +408,22 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         this.setStyleClass(componente, 'transition', `0.5s linear`);
     }
 
-    mostrarFullscreen() {
-        const timeout = this.resetarZoom();
-        setTimeout(() => {
-
-            this.viewerFullscreen = new FullScreenViewer();
-            let imgSrc = this.isURlImagem();
-            this.viewerFullscreen.show(imgSrc, imgSrc);
-            this.atualizarRotacao(false);
-        }, timeout);
+    clickFullscreen() {
+        debugger
+        if(this.fileSelected.referType =='video'){
+            document.getElementById(this.fileSelected.recID)?.requestFullscreen();
+        }
+        else
+        {
+            const timeout = this.resetarZoom();
+            setTimeout(() => {
+                this.viewerFullscreen = new FullScreenViewer();
+                let imgSrc = this.isURlImagem();
+                this.viewerFullscreen.show(imgSrc, imgSrc);
+                this.atualizarRotacao(false);
+            }, timeout);
+        }
+        
     }
 
     getImagemAtual() {
@@ -416,5 +461,8 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         if(this.dialog){
             this.dialog.close();
         }
+    }
+    video(){
+        
     }
 }

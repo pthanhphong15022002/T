@@ -148,49 +148,49 @@
 <ng-template #tmpContent>
   <div class="card-body text-center">
       <div color="bg-transparent" class="text-center">
-          <h2 class="fw-bolderer mb-6 mt-3" [style.color]="data.headerColor">
-              {{ data.cardType | vll: "L1422":"text" | async }}
+          <h2 class="fw-bolderer mb-6 mt-3" [style.color]="data?.headerColor">
+              {{ data?.cardType | vll: "L1422":"text" | async }}
           </h2>
       </div>
+      <div class="d-flex align-items-center justify-content-center mt-6">
+        <ng-container *ngIf="data?.rating">
+            <div class="symbol symbol-30 me-2">
+                <ng-container *ngIf="data?.cardType == '2'">
+                    <img class="w-100" src="/assets/themes/fd/default/img/{{
+                        data?.rating | vll: 'L1419':'icon' | async
+                    }}" />
+                </ng-container>
+                <ng-template>
+                    <img class="w-100" src="/assets/themes/fd/default/img/{{
+                        data?.rating | vll: 'L1424':'icon' | async
+                    }}" />
+                </ng-template>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="data?.hasGift">
+            <div class="">
+                <img src="/assets/themes/fd/default/img/img_HasGifts.svg" />
+            </div>
+        </ng-container>
+        <ng-container *ngIf="data?.hasPoint">
+            <div class="ms-2">
+                <img src="/assets/themes/fd/default/img/img_HasCoins.svg" />
+            </div>
+        </ng-container>
+      </div>
       <div class="d-flex justify-content-center align-items-center">
-          <codx-img [width]="40" [objectId]="data.senderID" [objectName]="data.senderName" [referType]="'avt'" objectType="AD_Users">
+          <codx-img [width]="40" [objectId]="data?.senderID" [objectName]="data?.senderName" [referType]="'avt'" objectType="AD_Users">
           </codx-img>
       <div class="w-50px text-center ion-justify-content-between">
           <img class="icon-mail ion-margin-top-8" src="/assets/themes/fd/default/img/img_SendCard.svg" />
       </div>
       <div>
-          <codx-img [width]="40" [referType]="'avt'" [objectId]="data.receiverID" [objectName]="data.receiverName" objectType="AD_Users">
+          <codx-img [width]="40" [referType]="'avt'" [objectId]="data?.receiverID" [objectName]="data?.receiverName" objectType="AD_Users">
           </codx-img>
       </div>
       </div>
       <div class="text-dark text-feed mt-6">
-          <div [innerHTML]="data.situation" [style.color]="data.textColor"></div>
-      </div>
-      <div class="d-flex align-items-center justify-content-center mt-6">
-          <ng-container *ngIf="data.rating">
-              <div class="symbol symbol-30 me-2">
-                  <ng-container *ngIf="data.cardType == '2'">
-                      <img class="w-100" src="/assets/themes/fd/default/img/{{
-                          data.rating | vll: 'L1419':'icon' | async
-                      }}" />
-                  </ng-container>
-                  <ng-template>
-                      <img class="w-100" src="/assets/themes/fd/default/img/{{
-                          data.rating | vll: 'L1424':'icon' | async
-                      }}" />
-                  </ng-template>
-              </div>
-          </ng-container>
-          <ng-container *ngIf="data.hasGift">
-              <div class="">
-                  <img src="/assets/themes/fd/default/img/img_HasGifts.svg" />
-              </div>
-          </ng-container>
-          <ng-container *ngIf="data.hasPoint">
-              <div class="ms-2">
-                  <img src="/assets/themes/fd/default/img/img_HasCoins.svg" />
-              </div>
-          </ng-container>
+          <div [innerHTML]="data?.situation" [style.color]="data?.textColor"></div>
       </div>
   </div>
 </ng-template>

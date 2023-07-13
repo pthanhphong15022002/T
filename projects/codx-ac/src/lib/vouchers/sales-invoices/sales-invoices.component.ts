@@ -18,12 +18,12 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
+import { IAcctTran } from './interfaces/IAcctTran.interface';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
 import { SumFormat, TableColumn } from './models/TableColumn.model';
 import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { SalesInvoiceService } from './sales-invoices.service';
-import { IAcctTran as IAcctTran } from './interfaces/IAcctTran.interface';
 
 @Component({
   selector: 'lib-sales-invoices',
@@ -63,6 +63,7 @@ export class SalesInvoicesComponent
   acctLoading: boolean = false;
   overflowed: boolean = false;
   expanding: boolean = false;
+  isFirstChange: boolean = true;
 
   fmSalesInvoicesLines: FormModel;
   fmAcctTrans: FormModel = {
@@ -71,9 +72,9 @@ export class SalesInvoicesComponent
     gridViewName: 'grvAcctTrans',
     entityPer: 'AC_AcctTrans',
   };
+  gvsAcctTrans: any;
 
   columns: TableColumn[];
-  accountingColumns: TableColumn[];
 
   constructor(
     inject: Injector,
@@ -152,42 +153,7 @@ export class SalesInvoicesComponent
     this.cache
       .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
       .subscribe((gvs) => {
-        this.accountingColumns = [
-          new TableColumn({
-            labelName: 'Num',
-            headerText: 'STT',
-          }),
-          new TableColumn({
-            labelName: 'Account',
-            headerText: gvs?.AccountID?.headerText ?? 'Tài khoản',
-            footerText: 'Tổng cộng',
-            footerClass: 'text-end',
-          }),
-          new TableColumn({
-            labelName: 'Debt1',
-            headerText: 'Nợ',
-            field: 'transAmt',
-            headerClass: 'text-end',
-            footerClass: 'text-end',
-            hasSum: true,
-            sumFormat: SumFormat.Currency,
-          }),
-          new TableColumn({
-            labelName: 'Debt2',
-            headerText: 'Có',
-            field: 'transAmt',
-            headerClass: 'text-end',
-            footerClass: 'text-end',
-            hasSum: true,
-            sumFormat: SumFormat.Currency,
-          }),
-          new TableColumn({
-            labelName: 'Memo',
-            headerText: gvs?.Memo?.headerText ?? 'Ghi chú',
-            headerClass: 'pe-3',
-            footerClass: 'pe-3',
-          }),
-        ];
+        this.gvsAcctTrans = gvs;
       });
   }
 
@@ -244,6 +210,12 @@ export class SalesInvoicesComponent
       return;
     }
 
+    // prevent this function from being called twice on the first run
+    if (this.isFirstChange) {
+      this.isFirstChange = false;
+      return;
+    }
+
     this.expanding = false;
 
     this.loading = true;
@@ -271,33 +243,8 @@ export class SalesInvoicesComponent
       )
       .subscribe((res: IAcctTran[]) => {
         console.log(res);
-        if (!res) {
-          this.acctLoading = false;
-          return;
-        }
-
-        this.acctTranLines = this.groupBy(res, 'entryID');
-
-        // calculate totalRow
-        const totalRow: { total1: number; total2: number } = {
-          total1: 0,
-          total2: 0,
-        };
-        for (const group of this.acctTranLines) {
-          for (const line of group) {
-            if (!line.crediting) {
-              totalRow.total1 += line.transAmt;
-            } else {
-              totalRow.total2 += line.transAmt;
-            }
-          }
-        }
-        for (const col of this.accountingColumns) {
-          if (col.labelName === 'Debt1') {
-            col.sum = totalRow.total1;
-          } else if (col.labelName === 'Debt2') {
-            col.sum = totalRow.total2;
-          }
+        if (res) {
+          this.acctTranLines = this.groupBy(res, 'entryID');
         }
 
         this.acctLoading = false;
