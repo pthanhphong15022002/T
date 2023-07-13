@@ -18,6 +18,7 @@ export class Equipments {
     capacity: number;
     useCard: boolean;
     equipments: Array<object>;
+    owner :string;
   }
   
   export class ResourceTrans {

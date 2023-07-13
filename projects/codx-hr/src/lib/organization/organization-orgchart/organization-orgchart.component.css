@@ -62,3 +62,11 @@
 .codx-bghover:hover {
   cursor: pointer !important;
 }
+
+.sample {
+  width: 76%;
+  min-width: auto;
+  height: 95%;
+  overflow-y: auto;
+  position: fixed;
+}

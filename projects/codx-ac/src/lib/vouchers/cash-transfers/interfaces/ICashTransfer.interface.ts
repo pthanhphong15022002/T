@@ -14,11 +14,9 @@ export interface ICashTransfer {
   multi: boolean;
   totalAmt: number;
   totalAmt2: number;
-  exchangeRate2: number;
   exchangeAmt: number;
   objectType: string;
   objectID: string;
-  objectName: string;
   payeeID: string;
   payee: string;
   pmtMethodID: string;

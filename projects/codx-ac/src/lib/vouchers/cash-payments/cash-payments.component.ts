@@ -39,6 +39,7 @@ import {
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { PopUpCashReportComponent } from './pop-up-cash-report/pop-up-cash-report.component';
+import { MasterDetailComponent } from '../../master-detail/master-detail.component';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -601,15 +602,14 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-        //   this.itemSelected = event?.data;
-        //   return;
-        // } else {
-
-        // }
-        this.isLoadDataAcct = true;
-        this.itemSelected = event?.data;
-        this.loadDatadetail(this.itemSelected);
+        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+          this.itemSelected = event?.data;
+          return;
+        } else {
+          this.isLoadDataAcct = true;
+          this.itemSelected = event?.data;
+          this.loadDatadetail(this.itemSelected);
+        }
       }
     }
   }
@@ -669,7 +669,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   cancelRelease(data: any) {
     this.shareService
-      .codxCancel('AC', data?.recID, this.view.formModel.entityName, null,null)
+      .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
@@ -794,32 +794,30 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-  print(data: any, reportID: any)
-  {
+  print(data: any, reportID: any) {
     this.api
-    .execSv(
-      'rptsys',
-      'Codx.RptBusiniess.SYS',
-      'ReportListBusiness',
-      'GetListReportByIDandType',
-      reportID,
-    )
-    .subscribe((res: any) => {
-      if (res != null ) {
-        if(res.length > 1)
-        {
-          this.openPopupCashReport(data, res);
+      .execSv(
+        'rptsys',
+        'Codx.RptBusiniess.SYS',
+        'ReportListBusiness',
+        'GetListReportByIDandType',
+        reportID
+      )
+      .subscribe((res: any) => {
+        if (res != null) {
+          if (res.length > 1) {
+            this.openPopupCashReport(data, res);
+          } else if (res.length == 1) {
+            this.codxService.navigate(
+              '',
+              'ac/report/detail/' + `${res[0].reportID}`
+            );
+          }
         }
-        else if(res.length == 1)
-        {
-          this.codxService.navigate('', 'ac/report/detail/' + `${res[0].reportID}`);
-        }
-      }
-    });
+      });
   }
 
-  openPopupCashReport(data: any, reportList: any)
-  {
+  openPopupCashReport(data: any, reportList: any) {
     var obj = {
       formType: 'Insert',
       headerText: this.funcName,

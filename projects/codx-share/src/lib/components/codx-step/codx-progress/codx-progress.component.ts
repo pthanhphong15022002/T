@@ -171,13 +171,15 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   }
 
   async handeleUpdate() {
-    let isUpdate = false;
+    let isUpdate = true;
     if (this.type === 'P') {
       this.updateProgress();
     } else if (this.type === 'G') {
-      const check = await this.beforeUpdate('DP031'); // hỏi có cập nhật step
-      if (check == undefined) return;
-      isUpdate = check == "Y" ? true : false;
+      if(this.isUpdateParent){
+        const check = await this.beforeUpdate('DP031'); // hỏi có cập nhật step
+        if (check == undefined) return;
+        isUpdate = check == "Y" ? true : false;
+      }
       this.updateProgress(isUpdate);
     } else {
       if(this.isUpdateParent){

@@ -376,24 +376,32 @@
                   | formatvalue : eInfoFormModel : 'positionID'
                   | async
               " -->
-            <div class="d-flex flex-center">
-              <div style="line-height: 20px;" class="text-dark d-flex flex-wrap h-40px border-gray-150 line-clamp line-clamp-2" *ngIf="lstOrg">
-                <div
+            <div class="d-flex flex-column flex-center">
+              <div
+              [ngbTooltip]="eInfoHeaderText?.OrgUnitID"
+            class="text-gray-500 mb-1"
+            *ngIf="infoPersonal"
+              >{{orgUnitStr}}</div>
+
+              <div
+              [ngbTooltip]="eInfoHeaderText?.DepartmentID"
+            class="text-gray-500 mb-1"
+            *ngIf="infoPersonal"
+              >{{DepartmentStr}}</div>
+            </div>
+              <!-- <div style="line-height: 20px;" class="text-dark d-flex flex-wrap h-40px border-gray-150 line-clamp line-clamp-2"> -->
+                <!-- <div
                   *ngFor="let org of lstOrg; let i = index"
                   class="d-flex align-items-center"
                 >
-                  <!-- <span
-                      class="icon-connection-point icon-16 me-1"
-                      *ngIf="i == 0"
-                    ></span> -->
                   <span
                     class="icon-i-info-circle-fill icon-4 mx-2 text-gray-500"
                     *ngIf="i > 0"
                   ></span>
                   <span>{{ org.orgUnitName }}</span>
-                </div>
-              </div>
-            </div>
+                </div> -->
+
+             <!-- </div> -->
           </div>
           <!-- </div> -->
 
@@ -2189,9 +2197,8 @@
                                 | vll : "HR006" : "text"
                                 | async
                             }}</span>
-                            <span> | </span>
                             <span>
-                              <codx-label
+                              <!-- <codx-label
                                 class="text-gray-600 label-colon ms-1"
                                 fiedName="Birthday"
                                 [formModel]="eFamilyFormModel"
@@ -2199,7 +2206,16 @@
                               </codx-label>
                               <span class="text-dark" *ngIf="item.birthday">
                                 {{ item.birthday | fmDT }}</span
-                              >
+                              > -->
+                              <span *ngIf="data.birthday">
+                                <codx-label
+                                  [default]="'| Tuổi:'"
+                                  [name]="'lblNameEFam'"
+                                  [formModel]="formModel"
+                                >
+                                </codx-label>
+                                {{data.age}}
+                              </span>
                             </span>
                           </div>
                         </div>
@@ -2211,10 +2227,10 @@
                                   | formatvalue : eFamilyFormModel : 'mobile'
                                   | async
                               "
-                            ></span
-                          >
+                            ></span>
 
-                          <span class="mb-1"
+
+                          <!-- <span class="mb-1"
                           [innerHTML]="
                           data?.personalEmail
                                       | formatvalue
@@ -2222,7 +2238,7 @@
                                         : 'personalEmail'
                                       | async
                                   "
-                          ></span>
+                          ></span> -->
                         </div>
                       </div>
                     </ng-template>
@@ -2237,7 +2253,7 @@
                         placement="left"
                         [ngbPopover]="popIsDependent"
                         [style.color]="'#FFA800'"
-                        class="icon-bookmark icon-16 ms-auto"
+                        class="icon-attribution icon-18 ms-auto"
                       ></div>
 
                       <ng-template #popIsDependent>
@@ -2322,6 +2338,9 @@
                           </div>
                           <div class="stepper-desc text-gray-500 ">
                             {{ item?.position }}
+                          </div>
+                          <div class="stepper-desc text-gray-500 ">
+                            {{ item?.note }}
                           </div>
 
                           <codx-mfunc
@@ -3185,7 +3204,7 @@
                   ></codx-input>
                 </div>
               </div>
-              <div class="col-8">
+              <!-- <div class="col-8">
                 <div class="text-gray-600 pb-1">
                   <codx-label
                     fiedName="AdvanceAmount"
@@ -3205,7 +3224,7 @@
                   >
                   </span>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -4136,6 +4155,7 @@
                 [service]="'HR'"
                 [assemblyName]="'Core'"
                 [className]="'DataBusiness'"
+                [autoFitColumns]="false"
                 [hideMoreFunc]="true"
                 [sorts]="[appointionSortModel]"
                 [method]="'LoadDataAsync'"
@@ -4246,6 +4266,7 @@
             [service]="'HR'"
             [sorts]="[dayOffSortModel]"
             [assemblyName]="'Core'"
+            [autoFitColumns]="false"
             [className]="'DataBusiness'"
             [hideMoreFunc]="true"
             [method]="'LoadDataAsync'"
@@ -4330,6 +4351,7 @@
                 [service]="'HR'"
                 [assemblyName]="'Core'"
                 [className]="'DataBusiness'"
+                [autoFitColumns]="false"
                 [hideMoreFunc]="true"
                 [method]="'LoadDataAsync'"
                 [predicates]="'EmployeeID=@0'"
@@ -4395,6 +4417,7 @@
                 [service]="'HR'"
                 [assemblyName]="'Core'"
                 [className]="'DataBusiness'"
+                [autoFitColumns]="false"
                 [hideMoreFunc]="true"
                 [sorts]='[eAwardsSortModel1, eAwardsSortModel2]'
                 [method]="'LoadDataAsync'"
@@ -4469,6 +4492,7 @@
               [sorts]="[disciplinesSortModel]"
               [service]="'HR'"
               [assemblyName]="'Core'"
+              [autoFitColumns]="false"
               [className]="'DataBusiness'"
               [hideMoreFunc]="true"
               [method]="'LoadDataAsync'"
@@ -4630,6 +4654,7 @@
               [formModel]="eDegreeFormModel"
               [columnsGrid]="eDegreeColumnsGrid"
               [service]="'HR'"
+              [autoFitColumns]="false"
               [sorts]="[issuedDateSortModel]"
               [assemblyName]="'Core'"
               [className]="'DataBusiness'"
@@ -4754,6 +4779,7 @@
               <codx-gridview-v2
               #eCertificateGridView
               [formModel]="eCertificateFormModel"
+              [autoFitColumns]="false"
               [columnsGrid]="eCertificateColumnGrid"
               [sorts]="[issuedDateSortModel]"
               [service]="'HR'"
@@ -4830,6 +4856,7 @@
 
             <codx-gridview-v2
             #eSkillGridViewID
+            [autoFitColumns]="false"
             [formModel]="eSkillFormmodel"
             [columnsGrid]="eSkillColumnGrid"
             [service]="'HR'"
@@ -5032,6 +5059,7 @@
 
               <codx-gridview-v2
               #eTrainCourseGridView
+              [autoFitColumns]="false"
               [formModel]="eTrainCourseFormModel"
               [columnsGrid]="eTrainCourseColumnGrid"
               [sorts]="[TrainFromDateSortModel]"
@@ -5175,6 +5203,7 @@
             <codx-gridview-v2
             #eAccidentGridView
             [formModel]="eAccidentsFormModel"
+            [autoFitColumns]="false"
             [columnsGrid]="eAccidentsColumnsGrid"
             [sorts]="[accidentDateSortModel]"
             [service]="'HR'"
@@ -5263,6 +5292,7 @@
             [columnsGrid]="eDiseasesColumnsGrid"
             [sorts]="[diseasesFromDateSortModel]"
             [service]="'HR'"
+            [autoFitColumns]="false"
             [assemblyName]="'Core'"
             [className]="'DataBusiness'"
             [hideMoreFunc]="true"
@@ -5358,6 +5388,7 @@
               [columnsGrid]="eHealthColumnGrid"
               [sorts]="[healthDateSortModel]"
               [service]="'HR'"
+              [autoFitColumns]="false"
               [assemblyName]="'Core'"
               [className]="'DataBusiness'"
               [hideMoreFunc]="true"
@@ -5451,6 +5482,7 @@
             [formModel]="eVaccineFormModel"
             [columnsGrid]="eVaccineColumnGrid"
             [service]="'HR'"
+            [autoFitColumns]="false"
             [assemblyName]="'Core'"
             [className]="'DataBusiness'"
             [sorts]="[injectDateSortModel]"

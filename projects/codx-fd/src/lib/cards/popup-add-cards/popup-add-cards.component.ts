@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild,
 import { FormGroup, FormControl } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DialogData, DialogRef, NotificationsService, Util, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DialogData, DialogRef, NotificationsService, UserModel, Util, ViewsComponent } from 'codx-core';
 import { FD_Permissions } from '../../models/FD_Permissionn.model';
 import { FED_Card } from '../../models/FED_Card.model';
 import { CardType, Valuelist } from '../../models/model';
@@ -29,7 +29,7 @@ export class PopupAddCardsComponent implements OnInit {
   gifts: any[] = [];
 
   patternSelected: any;
-  user: any;
+  user: UserModel;
   wallet: any;
   lstRating: any = null;
   myWallet: any = null;
@@ -48,7 +48,7 @@ export class PopupAddCardsComponent implements OnInit {
   funcID: string = "";
   gridViewName: string = "";
   formName: string = "";
-  shareControl: string = "9";
+  shareControl: string = "1";
   entityName: string = "FD_Cards"
   refValue: string = "Behaviors_Grp";
 
@@ -428,6 +428,13 @@ export class PopupAddCardsComponent implements OnInit {
       this.card.cardType = this.cardType;
       this.card.shareControl = this.shareControl;
       this.card.objectType = this.objectType;
+      if(this.lstShare.length === 0){
+        let p = new FD_Permissions();
+        p.objectType = '1'; // chỉ mình tôi
+        p.objectID = this.user.userID;
+        p.objectName = this.user.userName;
+        this.lstShare.push(p);
+      }
       this.card.listShare = this.lstShare;
 
       if (this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement || this.cardType != this.CARDTYPE_EMNUM.Share) {
@@ -496,7 +503,6 @@ export class PopupAddCardsComponent implements OnInit {
       this.card.recID = undefined;
     }
     this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddNewAsync", [this.card, post]).subscribe(async (res: any[]) => {
-      console.log('AddNewAsync',res)
       if (res && res[1]) {
         (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
         this.dialog.close();

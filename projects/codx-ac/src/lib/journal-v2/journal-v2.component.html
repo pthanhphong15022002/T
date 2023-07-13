@@ -67,7 +67,7 @@
 
 <ng-template #templateListCard let-data>
     <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-225px" [imageSrc]="
-      !data.checkImage
+      !data.hasImage
         ? 'assets/themes/ac/default/img/' +
           (data.journalType | vll : 'AC078' : 'text' | async)
         : ''
@@ -108,7 +108,7 @@
 <ng-template #column1Template let-data>
     <div class="d-flex gap-5 p-2">
         <codx-img [imgSource]="
-          !data.checkImage
+          !data.hasImage
             ? 'assets/themes/ac/default/img/' +
               (data.journalType | vll : 'AC078' : 'text' | async)
             : ''
