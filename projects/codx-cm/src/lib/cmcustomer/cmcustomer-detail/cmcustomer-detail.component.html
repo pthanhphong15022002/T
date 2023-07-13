@@ -11,7 +11,7 @@
       (clickMF)="clickMF($event, dataSelected)"
     >
       <ng-template #header let-data>
-        <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-2">
           <div *ngIf="funcID == 'CM0101'">
             <div
               *ngIf="
@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="container_detail">
-          <div class="d-flex w-100 cm-scroll-top">
+          <div class="d-flex w-100 cm-scroll-top mb-2">
             <div class="me-3">
               <codx-img
                 [objectId]="dataSelected.recID"
@@ -238,10 +238,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </ng-template>
-      <ng-template #body let-data>
-        <div class="cm-scroll">
           <div
             [ngClass]="
               funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''
@@ -350,6 +346,12 @@
               </div>
             </div>
           </div>
+
+        </div>
+      </ng-template>
+      <ng-template #body let-data>
+        <div class="cm-scroll">
+
           <div class="instance-select">
             <ejs-tab
               id="tab_adaptive"
@@ -409,7 +411,7 @@
                             ? dataSelected.customerName
                             : dataSelected.partnerName
                         "
-                        [hidenMF]="false"
+                        [hidenMF]="dataSelected?.status == '99' ? true : false"
                         [type]="'formDetail'"
                       ></codx-list-contacts>
                     </div>
@@ -434,6 +436,7 @@
                         [funcID]="funcID"
                         [entityName]="entityName"
                         [id]="dataSelected.recID"
+                        [hidden]="dataSelected?.status == '99' ? true : false"
                         (addressName)="addressName($event)"
                       ></codx-address-cm>
                     </div>

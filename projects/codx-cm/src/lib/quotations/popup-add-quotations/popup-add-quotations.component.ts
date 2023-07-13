@@ -301,6 +301,19 @@ export class PopupAddQuotationsComponent implements OnInit {
       0
     );
     if (count > 0) return;
+
+    if (
+      this.quotations.quotationID &&
+      this.quotations.quotationID.includes(' ')
+    ) {
+      this.notiService.notifyCode(
+        'CM026',
+        0,
+        '"' + this.grvSetupQuotations['QuotationID'].headerText + '"'
+      );
+      return;
+    }
+
     if (this.isExitAutoNum) {
       this.notiService.notifyCode(
         'CM003',
@@ -663,6 +676,17 @@ export class PopupAddQuotationsComponent implements OnInit {
   changeAutoNum(e) {
     if (!this.disabledShowInput && e) {
       this.quotations.quotationID = e?.crrValue;
+      if (
+        this.quotations.quotationID &&
+        this.quotations.quotationID.includes(' ')
+      ) {
+        this.notiService.notifyCode(
+          'CM026',
+          0,
+          '"' + this.grvSetupQuotations['QuotationID'].headerText + '"'
+        );
+        return;
+      }
       this.codxCM
         .isExitsAutoCodeNumber(
           'QuotationsBusiness',
