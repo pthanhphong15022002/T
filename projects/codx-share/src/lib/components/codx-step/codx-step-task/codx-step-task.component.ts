@@ -227,7 +227,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 progressData.push(this.setProgressOutput(task, group));
             });
             group.progress = group?.progressOld;
+            if (group?.recID) {
               progressData.push(this.setProgressOutput(null, group));
+            }
           });
           this.valueChangeProgress.emit({ type: 'A', data: progressData });
         }
@@ -253,7 +255,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               }
               sumProgress += task.progress;
             });
-            if (check) {
+            if (check && group?.recID) {
               group.progress = Number((sumProgress / countTask).toFixed(2));
               progressData.push(this.setProgressOutput(null, group));
             }
@@ -271,7 +273,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               }
             });
             group.progress = group?.progressOld;
+            if (group?.recID) {
               progressData.push(this.setProgressOutput(null, group));
+            }
           }
         });
         this.valueChangeProgress.emit({ type: 'R', data: progressData });
