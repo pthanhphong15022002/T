@@ -347,7 +347,7 @@
     ></codx-tab-dealcompetitors>
   </ng-template>
   <ng-template #history>
-    <div *ngIf="mergedList?.length > 0 && mergedList != null; else noData">
+    <!-- <div *ngIf="mergedList?.length > 0 && mergedList != null; else noData">
       <div *ngFor="let item of mergedList" class="p-3">
         <div class="d-flex justify-content-start">
           <div>
@@ -441,10 +441,11 @@
           </div>
         </div>
       </div>
-    </div>
-    <ng-template #noData>
-      <codx-no-data> </codx-no-data>
-    </ng-template>
+    </div> -->
+    <!-- <ng-template #noData>
+
+    </ng-template> -->
+    <codx-no-data> </codx-no-data>
   </ng-template>
   <ng-template #defaultNull> <p class="p-0 m-0">0</p></ng-template>
 </codx-tab-cm>

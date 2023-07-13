@@ -447,54 +447,88 @@
     <!-- <div *ngIf="item?.transType == 'TM_Tasks'"> -->
     <div
       *ngIf="item?.transType == 'TM_MyTasks'"
-      (click)="redirectToFuncID(item)"
+      class="note-quickinfo"
+      [ngStyle]="{
+        'background-color': TM_TasksParam?.ShowBackground,
+        'border-left': '3px ' + TM_TasksParam?.ShowColor + ' solid'
+      }"
     >
-      <div
-        [ngStyle]="{
-          'background-color': TM_TasksParam?.ShowBackground,
-          'border-left': '3px ' + TM_TasksParam?.ShowColor + ' solid'
-        }"
-      >
-        <div class="checkbox-list">
-          <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item.description"></span>
+      <div (click)="redirectToFuncID(item)">
+        <div>
+          <div class="checkbox-list">
+            <div class="d-flex flex-column note-option">
+              <span [innerHTML]="item.description"></span>
+            </div>
           </div>
         </div>
       </div>
+      <button
+        type="button"
+        [ngbTooltip]="toolTip"
+        (click)="quickInfo(item)"
+        class="btn btn-sm btn-icon btn-light btn-quickinfo"
+        [ngbPopover]="tmpHover"
+        #popoverList="ngbPopover"
+        placement="left bottom"
+        container="body"
+        autoClose="outside"
+        [openDelay]="500"
+      >
+        <i class="icon-visibility icon-16"></i>
+        <!-- <codx-label name="lblQuickInfo" default="Xem nhanh"></codx-label> -->
+      </button>
     </div>
+
     <div
       *ngIf="item?.transType == 'CO_Meetings'"
-      (click)="redirectToFuncID(item)"
+      [ngStyle]="{
+        'background-color': CO_MeetingsParam?.ShowBackground,
+        'border-left': '3px ' + CO_MeetingsParam?.ShowColor + ' solid'
+      }"
+      class="note-quickinfo"
     >
-      <div
-        [ngStyle]="{
-          'background-color': CO_MeetingsParam?.ShowBackground,
-          'border-left': '3px ' + CO_MeetingsParam?.ShowColor + ' solid'
-        }"
-      >
-        <div class="checkbox-list">
-          <div class="d-flex flex-column note-option">
-            <span
-              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
-            ></span>
-          </div>
-          <div class="d-flex flex-column note-option">
-            {{ item?.data?.location }}
+      <div (click)="redirectToFuncID(item)">
+        <div>
+          <div class="checkbox-list">
+            <div class="d-flex flex-column note-option">
+              <span
+                [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+              ></span>
+            </div>
+            <div class="d-flex flex-column note-option">
+              {{ item?.data?.location }}
 
-            <!-- <ng-container
+              <!-- <ng-container
               *ngTemplateOutlet="
                 fieldValue;
                 context: { data: getFieldValue(item?.memo, item?.data) }
               "
             >
             </ng-container> -->
-          </div>
-          <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item.title"></span>
+            </div>
+            <div class="d-flex flex-column note-option">
+              <span [innerHTML]="item.title"></span>
+            </div>
           </div>
         </div>
       </div>
+      <button
+        type="button"
+        [ngbTooltip]="toolTip"
+        (click)="quickInfo(item)"
+        class="btn btn-sm btn-icon btn-light btn-quickinfo"
+        [ngbPopover]="tmpHover"
+        #popoverList="ngbPopover"
+        placement="left bottom"
+        container="body"
+        autoClose="outside"
+        [openDelay]="500"
+      >
+        <i class="icon-visibility icon-16"></i>
+        <!-- <codx-label name="lblQuickInfo" default="Xem nhanh"></codx-label> -->
+      </button>
     </div>
+
     <div
       class="note-quickinfo"
       *ngIf="item?.transType == 'EP_BookingRooms'"
@@ -640,6 +674,26 @@
       [recID]="curHoverItem?.transID"
     ></codx-booking-room-schedule-content>
   </div>
+  <div
+    *ngIf="
+      curHoverItem?.transType == 'TM_MyTasks' ||
+      curHoverItem?.transType == 'TM_AssignTasks'
+    "
+  >
+    <codx-view-detail-little
+      [recID]="curHoverItem?.transID"
+      [service]="'TM'"
+    ></codx-view-detail-little>
+  </div>
+  <div *ngIf="curHoverItem?.transType == 'CO_Meetings'">
+    <codx-view-detail-little
+      [recID]="curHoverItem?.transID"
+      [service]="'CO'"
+    ></codx-view-detail-little>
+  </div>
+  <!-- <div *ngIf="curHoverItem?.transType == 'WP_Notes'">
+
+  </div> -->
 </ng-template>
 <ng-template #toolTip>
   <codx-label

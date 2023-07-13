@@ -57,7 +57,7 @@
       ></codx-input>
     </div>
   </header>
-  <main>
+  <main class="main-step">
     <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"
@@ -123,7 +123,7 @@
       <codx-step-task
         *ngIf="!step?.isSuccessStep && !step?.isFailStep"
         [dataSources]="step"
-        [isShowButton]="false"
+        [isShowBtnAddTask]="false"
         [isShowMore]="true"
         [isDeepCopy]="false"
         [isShowStep]="true"

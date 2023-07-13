@@ -99,6 +99,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   copyToRecID: any;
   disabledShowInput: boolean = false;
   planceHolderAutoNumber: any = '';
+  isExitAutoNum: any = false;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -193,13 +194,14 @@ export class PopupAddQuotationsComponent implements OnInit {
             });
           } else {
             this.disabledShowInput = false;
-            if (!this.quotations.quotationID)
-              this.codxCM
-                .genAutoNumberDefault('CM0202', 'CM_Quotations', 'QuotationID')
-                .subscribe((autoNum) => {
-                  this.quotations.quotationID = autoNum;
-                  // this.form.formGroup.patchValue(this.quotations);
-                });
+            // if (!this.quotations.quotationID) {
+            //   this.codxCM
+            //     .genAutoNumberDefault('CM0202', 'CM_Quotations', 'QuotationID')
+            //     .subscribe((autoNum) => {
+            //       this.quotations.quotationID = autoNum;
+            //       this.form.formGroup.patchValue(this.quotations);
+            //     });
+            // }
           }
         });
     } else this.disabledShowInput = true;
@@ -299,6 +301,23 @@ export class PopupAddQuotationsComponent implements OnInit {
       0
     );
     if (count > 0) return;
+
+    if (
+      this.quotations.quotationID &&
+      this.quotations.quotationID.includes(' ')
+    ) {
+      this.notiService.notifyCode('CM026');
+      return;
+    }
+
+    if (this.isExitAutoNum) {
+      this.notiService.notifyCode(
+        'CM003',
+        0,
+        '"' + this.grvSetupQuotations['QuotationID'].headerText + '"'
+      );
+      return;
+    }
     if (!(this.listQuotationLines?.length > 0)) {
       this.notiService.notifyCode('CM013');
       return;
@@ -400,316 +419,6 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
     //grid.disableField(this.lockFields);
   }
-
-  // region QuotationLines ========== DA CHUYEN QUOTIONLINES========
-  // clickMFQuotationLines(e, data) {
-  //   this.titleActionLine = e.text;
-  //   switch (e.functionID) {
-  //     case 'SYS02':
-  //       this.deleteLine(data);
-  //       break;
-  //     case 'SYS03':
-  //       this.editLine(data);
-  //       break;
-  //     case 'SYS04':
-  //       this.copyLine(data);
-  //       break;
-  //   }
-  // }
-
-  // addPopup() {
-  //   let idx = this.gridQuationsLines.dataSource?.length;
-  //   this.genData(idx);
-  //   // cu
-  //   // let data = this.genData(idx) ;
-  //   // this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
-  //   //   this.cache
-  //   //     .gridViewSetup(
-  //   //       this.fmQuotationLines.formName,
-  //   //       this.fmQuotationLines.gridViewName
-  //   //     )
-  //   //     .subscribe((res) => {
-  //   //       var obj = {
-  //   //         headerText: 'Thêm sản phẩm báo giá',
-  //   //         quotationsLine: data,
-  //   //         listQuotationLines: this.listQuotationLines,
-  //   //       };
-  //   //       let opt = new DialogModel();
-  //   //       opt.zIndex = 1000;
-  //   //       opt.FormModel = this.fmQuotationLines;
-
-  //   //       let dialogQuotations = this.callFc.openForm(
-  //   //         PopupAddQuotationsLinesComponent,
-  //   //         '',
-  //   //         650,
-  //   //         850,
-  //   //         '',
-  //   //         obj,
-  //   //         '',
-  //   //         opt
-  //   //       );
-  //   //       dialogQuotations.closed.subscribe((res) => {
-  //   //         if (res?.event) {
-  //   //           data = res?.event;
-  //   //           this.quotationLinesAddNew.push(data);
-  //   //           this.listQuotationLines.push(data);
-  //   //           this.gridQuationsLines.refresh();
-  //   //           this.loadTotal();
-  //   //           this.changeDetector.detectChanges();
-  //   //         }
-  //   //       });
-  //   //     });
-  //   // });
-  // }
-  // addRow() {
-  //   this.addPopup(); //tam add popup
-  //   // let idx = this.gridQuationsLines.dataSource?.length;
-  //   // let data = this.genData(idx);
-  //   // this.gridQuationsLines.addRow(data, idx); //add row gridview
-  // }
-
-  // genData(idx) {
-  //   this.codxCM
-  //     .getDefault(
-  //       'CM',
-  //       this.fmQuotationLines.funcID,
-  //       this.fmQuotationLines.entityName
-  //     )
-  //     .subscribe((dt) => {
-  //       if (dt && dt.data) {
-  //         //this.gridQuationsLines.formGroup.value = dt.data
-  //         let data = dt.data; //ddooi tuong
-
-  //         data.recID = Util.uid();
-  //         data.transID = this.quotations.recID;
-  //         data.write = true;
-  //         data.delete = true;
-  //         data.read = true;
-  //         data.rowNo = idx + 1;
-
-  //         //add tam do loi
-  //         data.salesAmt = data.salesAmt ?? 0;
-  //         data.quantity = data.quantity ?? 0;
-  //         data.discPct = data.discPct ?? 0;
-  //         data.discAmt = data.discAmt ?? 0;
-  //         data.vatBase = data.vatBase ?? 0;
-  //         data.vatAmt = data.vatAmt ?? 0;
-  //         data.vatRate = data.vatRate ?? 0;
-  //         data.exchangeRate = this.quotations?.exchangeRate;
-  //         data.currencyID = this.quotations?.currencyID;
-  //         data.transID = this.quotations?.recID;
-
-  //         this.cache
-  //           .functionList(this.fmQuotationLines.funcID)
-  //           .subscribe((f) => {
-  //             this.cache
-  //               .gridViewSetup(
-  //                 this.fmQuotationLines.formName,
-  //                 this.fmQuotationLines.gridViewName
-  //               )
-  //               .subscribe((res) => {
-  //                 var obj = {
-  //                   headerText: 'Thêm sản phẩm báo giá',
-  //                   quotationsLine: data,
-  //                   listQuotationLines: this.listQuotationLines,
-  //                   grvSetup: this.grvSetupQuotationsLines,
-  //                 };
-  //                 let opt = new DialogModel();
-  //                 opt.zIndex = 1000;
-  //                 opt.FormModel = this.fmQuotationLines;
-
-  //                 let dialogQuotations = this.callFc.openForm(
-  //                   PopupAddQuotationsLinesComponent,
-  //                   '',
-  //                   650,
-  //                   850,
-  //                   '',
-  //                   obj,
-  //                   '',
-  //                   opt
-  //                 );
-  //                 dialogQuotations.closed.subscribe((res) => {
-  //                   if (res?.event) {
-  //                     data = res?.event;
-  //                     this.quotationLinesAddNew.push(data);
-  //                     this.listQuotationLines.push(data);
-  //                     this.gridQuationsLines.refresh();
-  //                     this.loadTotal();
-  //                     this.changeDetector.detectChanges();
-  //                   }
-  //                 });
-  //               });
-  //           });
-  //       }
-  //     });
-  // }
-
-  // deleteLine(data) {
-  //   this.notiService.alertCode('SYS030').subscribe((res) => {
-  //     if (res.event.status === 'Y') {
-  //       //=> delete fe
-  //       this.gridQuationsLines.deleteRow(data);
-  //       if (this.action == 'edit') {
-  //         this.quotationLinesDeleted.push(data);
-  //         let indexAdd = this.quotationLinesAddNew.findIndex(
-  //           (x) => x.recID == data.recID
-  //         );
-  //         if (indexAdd != -1) this.quotationLinesAddNew.splice(indexAdd, 1); //xóa 1 pt trong mang
-  //         let indexEdit = this.quotationLinesEdit.findIndex(
-  //           (x) => x.recID == data.recID
-  //         );
-  //         if (indexEdit != -1) this.quotationLinesEdit.splice(indexAdd, 1);
-  //       }
-  //       if (this.gridQuationsLines.dataSource.length > 0) {
-  //         for (let i = 0; i < this.gridQuationsLines.dataSource.length; i++) {
-  //           if (
-  //             this.gridQuationsLines.dataSource[i].rowNo != i + 1 &&
-  //             this.action == 'edit'
-  //           ) {
-  //             this.linesUpdate(this.gridQuationsLines.dataSource[i]);
-  //           }
-  //           this.gridQuationsLines.dataSource[i].rowNo = i + 1;
-  //         }
-  //       }
-  //       this.listQuotationLines = this.gridQuationsLines.dataSource;
-  //       this.loadTotal();
-  //       this.changeDetector.detectChanges();
-  //     }
-  //   });
-  // }
-
-  // editLine(dt) {
-  //   this.cache.functionList(this.fmQuotationLines.funcID).subscribe((f) => {
-  //     this.cache
-  //       .gridViewSetup(
-  //         this.fmQuotationLines.formName,
-  //         this.fmQuotationLines.gridViewName
-  //       )
-  //       .subscribe((res) => {
-  //         var obj = {
-  //           headerText: this.titleActionLine + f?.customName || f?.description,
-  //           quotationsLine: dt,
-  //           listQuotationLines: this.listQuotationLines,
-  //           grvSetup: this.grvSetupQuotationsLines,
-  //         };
-  //         let opt = new DialogModel();
-  //         opt.zIndex = 1000;
-  //         opt.FormModel = this.fmQuotationLines;
-
-  //         let dialogQuotations = this.callFc.openForm(
-  //           PopupAddQuotationsLinesComponent,
-  //           '',
-  //           650,
-  //           570,
-  //           '',
-  //           obj,
-  //           '',
-  //           opt
-  //         );
-  //         dialogQuotations.closed.subscribe((res) => {
-  //           if (res?.event) {
-  //             let data = res?.event;
-  //             let idxUp = this.listQuotationLines.findIndex(
-  //               (x) => x.recID == data.recID
-  //             );
-  //             if (idxUp != -1) {
-  //               this.listQuotationLines[idxUp] = data;
-  //               if (this.action == 'edit') {
-  //                 this.linesUpdate(data);
-  //               }
-
-  //               this.gridQuationsLines.refresh();
-  //               // this.dialog.dataService.updateDatas.set(
-  //               //   this.quotations['_uuid'],
-  //               //   this.quotations
-  //               // );
-  //               this.loadTotal();
-  //               this.changeDetector.detectChanges();
-  //             }
-  //           }
-  //         });
-  //       });
-  //   });
-  // }
-
-  // copyLine(dataCopy) {
-  //   //gọi alow copy
-  //   this.codxCM
-  //     .getDefault(
-  //       'CM',
-  //       this.fmQuotationLines.funcID,
-  //       this.fmQuotationLines.entityName
-  //     )
-  //     .subscribe((dt) => {
-  //       if (dt && dt.data) {
-  //         let data = dt.data;
-
-  //         let arrField = Object.values(this.grvSetupQuotationsLines).filter(
-  //           (x: any) => x.allowCopy
-  //         );
-  //         if (Array.isArray(arrField)) {
-  //           arrField.forEach((v: any) => {
-  //             let field = Util.camelize(v.fieldName);
-  //             data[field] = dataCopy[field];
-  //           });
-  //         }
-
-  //         data.rowNo = this.listQuotationLines.length + 1;
-  //         data.exchangeRate = this.quotations?.exchangeRate;
-  //         data.currencyID = this.quotations?.currencyID;
-  //         data.transID = this.quotations?.recID;
-
-  //         this.cache
-  //           .functionList(this.fmQuotationLines.funcID)
-  //           .subscribe((f) => {
-  //             this.cache
-  //               .gridViewSetup(
-  //                 this.fmQuotationLines.formName,
-  //                 this.fmQuotationLines.gridViewName
-  //               )
-  //               .subscribe((res) => {
-  //                 let title = f?.customName || f?.description;
-  //                 var obj = {
-  //                   headerText:
-  //                     this.titleActionLine +
-  //                     ' ' +
-  //                     title.charAt(0).toLowerCase() +
-  //                     title.slice(1),
-  //                   quotationsLine: data,
-  //                   listQuotationLines: this.listQuotationLines,
-  //                   grvSetup: this.grvSetupQuotationsLines,
-  //                 };
-  //                 let opt = new DialogModel();
-  //                 opt.zIndex = 1000;
-  //                 opt.FormModel = this.fmQuotationLines;
-
-  //                 let dialogQuotations = this.callFc.openForm(
-  //                   PopupAddQuotationsLinesComponent,
-  //                   '',
-  //                   650,
-  //                   570,
-  //                   '',
-  //                   obj,
-  //                   '',
-  //                   opt
-  //                 );
-  //                 dialogQuotations.closed.subscribe((res) => {
-  //                   if (res?.event) {
-  //                     if (res?.event) {
-  //                       data = res?.event;
-  //                       this.quotationLinesAddNew.push(data);
-  //                       this.listQuotationLines.push(data);
-  //                       this.gridQuationsLines.refresh();
-  //                       this.loadTotal();
-  //                       this.changeDetector.detectChanges();
-  //                     }
-  //                   }
-  //                 });
-  //               });
-  //           });
-  //       }
-  //     });
-  // }
 
   linesUpdate(data) {
     let indexAdd = this.quotationLinesAddNew.findIndex(
@@ -957,5 +666,33 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.quotationLinesEdit = e?.quotationLinesEdit;
     this.quotationLinesDeleted = e?.quotationLinesDeleted;
     this.loadTotal();
+  }
+
+  //check auto
+  changeAutoNum(e) {
+    if (!this.disabledShowInput && e) {
+      this.quotations.quotationID = e?.crrValue;
+      if (
+        this.quotations.quotationID &&
+        this.quotations.quotationID.includes(' ')
+      ) {
+        this.notiService.notifyCode('CM026');
+        return;
+      }
+      this.codxCM
+        .isExitsAutoCodeNumber(
+          'QuotationsBusiness',
+          this.quotations.quotationID
+        )
+        .subscribe((res) => {
+          this.isExitAutoNum = res;
+          if (this.isExitAutoNum)
+            this.notiService.notifyCode(
+              'CM003',
+              0,
+              '"' + this.grvSetupQuotations['QuotationID'].headerText + '"'
+            );
+        });
+    }
   }
 }
