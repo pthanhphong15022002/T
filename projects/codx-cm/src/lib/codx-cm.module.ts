@@ -88,7 +88,10 @@ import { CommonModule } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from '@core/core.module';
 import { CodxTabCmComponent } from './codx-tab-cm/codx-tab-cm.component';
-import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import {
+  TreeMapAllModule,
+  TreeMapModule,
+} from '@syncfusion/ej2-angular-treemap';
 import {
   CategoryService,
   LineSeriesService,
@@ -237,7 +240,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TargetsComponent,
     PopupAddTargetComponent,
     CodxTabCmComponent,
-    ViewTreeTargetsComponent
+    ViewTreeTargetsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -256,6 +259,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CoreModule,
     CommonModule,
     TreeMapModule,
+    TreeMapAllModule,
     ChartModule,
     CodxCoreModule.forRoot({ environment }),
   ],

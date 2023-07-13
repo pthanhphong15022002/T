@@ -211,7 +211,8 @@
                     ? planceHolderAutoNumber
                     : grvSetupQuotations['QuotationID']?.description
                 "
-                [disabled]="true"
+                [disabled]="disabledShowInput"
+                (controlBlur)="changeAutoNum($event)"
               ></codx-input>
             </div>
             <div class="row">

@@ -57,6 +57,11 @@ export class PopupAddTargetComponent {
   typeChange = 'input';
   isBusiness = false;
   dataOld: CM_Targets;
+  quarter1: number = 0;
+  quarter2: number = 0;
+  quarter3: number = 0;
+  quarter4: number = 0;
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -81,7 +86,6 @@ export class PopupAddTargetComponent {
   }
 
   ngOnInit(): void {
-
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.selectedType = this.getFormatCalendar(null);
@@ -157,15 +161,50 @@ export class PopupAddTargetComponent {
   }
 
   valueChangeTarget(e, type) {
-    if (e?.field == 'target' && this.typeChange === type) {
-      this.data.target = Math.round(e?.data);
-      if (parseInt(e?.data) <= 0) this.data.target = 0;
-      this.setTargetToLine();
-      this.getListTimeCalendar(this.text);
+    if (this.typeChange === type) {
+      switch (e?.field) {
+        case 'target':
+          if (e?.data !== this.data.target) {
+            this.data.target = Math.round(e?.data);
+            if (parseInt(e?.data) <= 0) this.data.target = 0;
+            this.setQuarters(this.data.target);
+          }
+
+          break;
+        default:
+          if (parseInt(e?.data) <= 0) {
+            this.sumTargetAll(0, this[e?.field]);
+            this[e?.field] = 0;
+          } else {
+            this.sumTargetAll(e?.data, this[e?.field]);
+            this[e?.field] = Math.round(e?.data);
+          }
+          this.setTargetToLine();
+          this.setTagetByQuarter('noAuto', e?.field);
+          this.getListTimeCalendar(this.text);
+          break;
+      }
     } else {
       this.typeChange = 'input';
     }
     this.changedetectorRef.detectChanges();
+  }
+
+  setQuarters(target) {
+    this.quarter1 = Math.round(target / 4);
+    this.quarter2 = Math.round(target / 4);
+    this.quarter3 = Math.round(target / 4);
+    this.quarter4 = Math.round(target / 4);
+  }
+
+  sumTargetAll(targetQuarter: number = 0, quaterOld: number = 0) {
+    if (quaterOld == 0) {
+      this.data.target += targetQuarter;
+    } else {
+      var target = 0;
+      target = Math.round(this.data.target - quaterOld + targetQuarter);
+      this.data.target = target > 0 ? target : 0;
+    }
   }
   //#endregion
 
@@ -186,17 +225,21 @@ export class PopupAddTargetComponent {
         this.typeChange = 'noInput';
         // this.setTargetToLine();
         this.getListTimeCalendar(this.text);
+        this.setQuarters(this.data?.target);
+        this.setTagetByQuarter();
       } else {
         this.lstTargetLines = [];
         let businessLine = this.data?.businessLineID;
         let year = this.data?.year;
         this.data = JSON.parse(JSON.stringify(this.dataOld));
         this.data.businessLineID = businessLine;
+        this.data.owner = null;
         this.data.year = year;
         this.data.category = '1';
         this.isPeriod = false;
+        this.setQuarters(0);
 
-        this.lstTime.forEach(x => x.lines = []);
+        this.lstTime.forEach((x) => (x.lines = []));
         this.lstOwners = [];
       }
     });
@@ -255,66 +298,37 @@ export class PopupAddTargetComponent {
 
   setTargetToLine() {
     if (this.lstOwners != null && this.lstOwners.length > 0) {
-      var target =
-        this.data?.target != null
-          ? Math.round(this.data?.target / this.lstOwners.length)
-          : 0;
+      let target = 0;
+      target = Math.round(
+        this.quarter1 + this.quarter2 + this.quarter3 + this.quarter4
+      );
       this.lstOwners.every((item) => (item.target = target));
       this.setListTargetLine();
+      this.setTagetByQuarter();
     }
   }
 
   setListTargetLine() {
     var lstLines = [];
-    var intTarget = 1;
+    var intTarget = 12;
     if (this.data?.category == '1') {
       intTarget = 12;
       for (var item of this.lstOwners) {
-        lstLines = this.setLine(lstLines, item?.userID, intTarget, 1, 12);
-      }
-    } else if (this.data?.category == '2') {
-      intTarget = 3;
-
-      var i =
-        this.data?.interval == 1
-          ? 1
-          : this.data?.interval == 2
-          ? 4
-          : this.data?.interval == 3
-          ? 7
-          : 10;
-      var j = i + 2;
-      for (var item of this.lstOwners) {
-        lstLines = this.setLine(lstLines, item?.userID, intTarget, i, j);
-      }
-    } else {
-      intTarget = 1;
-      for (var item of this.lstOwners) {
-        lstLines = this.setLine(
-          lstLines,
-          item?.userID,
-          intTarget,
-          this.month,
-          this.month
-        );
+        lstLines = this.setLine(lstLines, item?.userID, 1, 12);
       }
     }
     this.intTarget = intTarget;
-
     this.lstTargetLines = lstLines;
     console.log('lstTargets: ', this.lstTargetLines);
   }
 
-  setLine(lstLines = [], userID, intTarget = 1, i = 1, index = 12) {
+  setLine(lstLines = [], userID, i = 1, index = 12) {
     for (let j = i; j <= index; j++) {
       var line = new CM_TargetsLines();
       line.recID = Util.uid();
       line.salespersonID = userID;
       line.transID = this.data?.recID;
       line.period = this.data?.period;
-      line.target = Math.round(
-        this.data?.target / this.lstOwners?.length / intTarget
-      );
       //Thời gian console.log ra đúng nhưng lưu db sai, tạm thời để như vậy. Hiện tại lưu db sai muốn đúng cộng 1 ngày cho startDate
       var month = j - 1;
       var daysInMonth = this.getTotalDaysInMonth(month, this.data.year);
@@ -333,6 +347,57 @@ export class PopupAddTargetComponent {
       if (j > 12) j = 1;
     }
     return lstLines;
+  }
+
+  setTagetByQuarter(type: string = 'auto', field = '') {
+    if (type === 'auto') {
+      if (this.lstTargetLines != null && this.lstTargetLines.length > 0) {
+        for (var item of this.lstTargetLines) {
+          var startDate = new Date(item.startDate);
+          let month = startDate.getMonth() + 1;
+          var target = 0;
+          if (month >= 1 && month < 4) {
+            target += Math.round(this.quarter1 / this.lstOwners.length / 3);
+          } else if (month >= 4 && month < 7) {
+            target += Math.round(this.quarter2 / this.lstOwners.length / 3);
+          } else if (month >= 7 && month < 10) {
+            target += Math.round(this.quarter3 / this.lstOwners.length / 3);
+          } else {
+            target += Math.round(this.quarter4 / this.lstOwners.length / 3);
+          }
+          item.target = target > 0 ? target : 0;
+        }
+      }
+    } else {
+      if (this.lstTargetLines != null && this.lstTargetLines.length > 0) {
+        for (var item of this.lstTargetLines) {
+          var startDate = new Date(item.startDate);
+          let month = startDate.getMonth() + 1;
+          var target = 0;
+          if (field === 'quarter1') {
+            if (month >= 1 && month < 4) {
+              target = Math.round(this.quarter1 / this.lstOwners.length / 3);
+              item.target = target > 0 ? target : 0;
+            }
+          } else if (field === 'quarter2') {
+            if (month >= 4 && month < 7) {
+              target = Math.round(this.quarter2 / this.lstOwners.length / 3);
+              item.target = target > 0 ? target : 0;
+            }
+          } else if (field === 'quarter3') {
+            if (month >= 7 && month < 9) {
+              target = Math.round(this.quarter3 / this.lstOwners.length / 3);
+              item.target = target > 0 ? target : 0;
+            }
+          } else {
+            if (month >= 10 && month <= 12) {
+              target = Math.round(this.quarter4 / this.lstOwners.length / 3);
+              item.target = target > 0 ? target : 0;
+            }
+          }
+        }
+      }
+    }
   }
 
   getTotalDaysInMonth(month, year) {
@@ -365,17 +430,18 @@ export class PopupAddTargetComponent {
     var month = parseInt(this.startDate.getMonth() + 1);
     this.month = month;
     var year = parseInt(this.startDate.getFullYear());
-    if (e?.type == 'year') {
-      this.data.category = '1'; //năm
-    } else if (e?.type == 'quarter') {
-      this.data.category = '2'; // quý
-      this.data.interval = this.setPeriod(month);
-    } else {
-      this.data.category = '3'; // tháng
-      this.data.interval = this.setPeriod(month);
-      this.data.period = month;
-      this.isPeriod = true;
-    }
+    this.data.category = '1'; //năm
+    this.data.period = year;
+
+    // } else if (e?.type == 'quarter') {
+    //   this.data.category = '2'; // quý
+    //   this.data.interval = this.setPeriod(month);
+    // } else {
+    //   this.data.category = '3'; // tháng
+    //   this.data.interval = this.setPeriod(month);
+    //   this.data.period = month;
+    //   this.isPeriod = true;
+    // }
     this.data.year = year;
     this.text = e?.text;
     if (this.typeChange != 'noInput') {
@@ -409,30 +475,30 @@ export class PopupAddTargetComponent {
   getListTimeCalendar(text) {
     var lst = [];
     var year = this.data?.year;
-    var i =
-      this.data?.interval == 1
-        ? 1
-        : this.data?.interval == 2
-        ? 4
-        : this.data?.interval == 3
-        ? 7
-        : 10;
-    var init =
-      this.data?.category == '1'
-        ? 12
-        : this.data?.category == '2'
-        ? i + 2
-        : this.month;
-    var j =
-      this.data?.category == '2'
-        ? i
-        : this.data?.category == '3'
-        ? this.month
-        : 1;
+    // var i =
+    //   this.data?.interval == 1
+    //     ? 1
+    //     : this.data?.interval == 2
+    //     ? 4
+    //     : this.data?.interval == 3
+    //     ? 7
+    //     : 10;
+    // var init =
+    //   this.data?.category == '1'
+    //     ? 12
+    //     : this.data?.category == '2'
+    //     ? i + 2
+    //     : this.month;
+    // var j =
+    //   this.data?.category == '2'
+    //     ? i
+    //     : this.data?.category == '3'
+    //     ? this.month
+    //     : 1;
     var tmp = {};
 
     if (this.isAllocation) {
-      for (var idex = j; idex <= init; idex++) {
+      for (var idex = 1; idex <= 12; idex++) {
         var month = idex;
         var time = month + '/' + year;
         tmp['text'] = time.toString();
@@ -482,17 +548,14 @@ export class PopupAddTargetComponent {
     var i = 0;
 
     if (e == '' || e.trim() == '' || parseInt(e?.trim()) <= 0) {
+      var math = 0;
       if (isAllo) {
         if (index != -1) {
           if (this.lstTargetLines[index].target <= i) {
-            Math.round((this.data.target += 0));
+            math = this.data.target += 0;
           } else {
             i = this.lstTargetLines[index].target - i;
-
-            this.data.target -=
-              this.lstTargetLines[index].target > 0
-                ? Math.round(this.data.target)
-                : 0;
+            math = this.data.target -= this.lstTargetLines[index].target;
           }
           this.lstTargetLines[index].target = 0;
         }
@@ -506,14 +569,13 @@ export class PopupAddTargetComponent {
       } else {
         if (index != -1) {
           if (this.lstOwners[index].target > 0) {
-            this.data.target -=
-              this.lstOwners[index].target > 0
-                ? Math.round(this.data.target)
-                : 0;
+            math = this.data.target -= this.lstOwners[index].target;
           }
           this.lstOwners[index].target = 0;
         }
       }
+      this.data.target = math > 0 ? Math.round(math) : 0;
+
       index = -1;
       this.isEditLine = false;
       this.changedetectorRef.detectChanges();

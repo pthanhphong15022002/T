@@ -112,7 +112,7 @@
               [placeholder]="
                 planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
               "
-              (valueChange)="valueChangeText($event)"
+              (controlBlur)="changeAutoNum($event)"
               [disabled]="disabledShowInput"
             >
             </codx-input>
@@ -232,21 +232,21 @@
           <div>
             <codx-label
               [formModel]="dialog.formModel"
-              fiedName="useType"
-              default="Hợp đồng sử dụng"
-            >
+              fiedName="processID"
+              >
+              <!-- default="Hợp đồng sử dụng" -->
             </codx-label>
           </div>
           <div class="">
             <codx-input
               [formModel]="dialog.formModel"
-              field="useType"
-              type="valuelist"
-              refValue="CRM033"
-              [crrValue]="contracts?.useType"
+              field="processID"
+              [crrValue]="contracts?.processID"
               (valueChange)="valueChangeCombobox($event)"
             >
             </codx-input>
+            <!-- type="valuelist"
+            refValue="CRM033" -->
           </div>
         </div>
         <div class="col-6">

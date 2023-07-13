@@ -703,7 +703,7 @@ export class CalendarNotesComponent
     this.onSwitchCountEven('WP_Notes');
     this.WP_Notes = [];
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
-      this.countNotePin = 0;
+      // this.countNotePin = 0;
       this.countNotePin = res[1];
       if (res) {
         this.getModelShare(res[0], param.Template, 'WP_Notes');
@@ -959,6 +959,7 @@ export class CalendarNotesComponent
       currentDate: this.dateSelected,
       component: 'calendar-notes',
       maxPinNotes: this.maxPinNotes,
+      countNotePin: this.countNotePin,
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
@@ -1274,13 +1275,16 @@ export class CalendarNotesComponent
   }
 
   getStart_EndTime(sStart, sEnd) {
-    let startDate = new Date(sStart);
-    let endDate = new Date(sEnd);
-    let rHtml =
-      this.datePipe.transform(startDate, 'H:mm') +
-      ' - ' +
-      this.datePipe.transform(endDate, 'H:mm');
-    return rHtml;
+    if (sStart && sEnd) {
+      let startDate = new Date(sStart);
+      let endDate = new Date(sEnd);
+      let rHtml =
+        this.datePipe.transform(startDate, 'H:mm') +
+        ' - ' +
+        this.datePipe.transform(endDate, 'H:mm');
+      return rHtml;
+    }
+    return '';
   }
 
   getFieldValue(field: string, data): tmpBookingCalendar {

@@ -12,7 +12,8 @@ import {
 import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-employee.component';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+import { PopupUpdateStatusComponent } from './popup/popup-update-status/popup-update-status.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 @Component({
   selector: 'lib-employee-list',
   templateUrl: './employee-list.component.html',
@@ -57,7 +58,8 @@ export class EmployeeListComponent extends UIComponent {
   hasChangedData: boolean = false;
   constructor(
     private injector: Injector,
-    private routerActive: ActivatedRoute
+    private routerActive: ActivatedRoute,
+    private shareService: CodxShareService,
   ) {
     super(injector);
     this.funcID = this.routerActive.snapshot.params['funcID'];
@@ -135,10 +137,20 @@ export class EmployeeListComponent extends UIComponent {
       case 'HRT03a1A07': // cập nhật tình trạng
         this.updateStatus(data, moreFunc.functionID);
         break;
-      case 'HR0032': // xem chi tiết
-        break;
-      case 'SYS002':
-        // this.exportFile();
+      // case 'HR0032': // xem chi tiết
+      //   break;
+      // case 'SYS002':
+      //   // this.exportFile();
+      //   break;
+      default:
+        this.shareService.defaultMoreFunc(
+          moreFunc,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
         break;
     }
   }
