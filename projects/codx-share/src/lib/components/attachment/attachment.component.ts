@@ -1729,10 +1729,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
     );
     dialogs.closed.subscribe((item) => {
       if (item.event) {
-        var index = this.fileUploadList.findIndex(
-          (x) => x.recID == item.event.recID
-        );
-        if (index >= 0) this.fileUploadList[index] = item.event;
+        // var index = this.fileUploadList.findIndex(
+        //   (x) => x.recID == item.event.recID
+        // );
+        // if (index >= 0) this.fileUploadList[index] = item.event;
+        this.fileUploadList[index] = item.event
         this.isCopyRight--;
       }
     });
@@ -2588,6 +2589,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
       case 'mpe':
         return 'video/mpeg';
       case 'mpeg':
+        return 'video/mpeg';
+      case 'mvi':
         return 'video/mpeg';
       case 'mpf':
         return 'application/vnd.ms-mediapackage';
