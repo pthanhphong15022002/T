@@ -380,8 +380,15 @@
             </codx-vll>
           </ng-template>
         </ng-container>
-        <span class="me-4" [ngbTooltip]="grvSetup?.SignedDate?.headerText">
-          {{ data?.signedDate | fmDT }}
+        <span
+          class="me-4"
+          [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+          [innerHTML]="
+            data?.signedDate
+              | formatvalue : view.formModel : 'signedDate'
+              | async
+          "
+        >
         </span>
       </div>
     </div>
