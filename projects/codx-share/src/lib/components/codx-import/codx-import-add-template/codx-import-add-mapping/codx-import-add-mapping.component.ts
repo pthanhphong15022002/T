@@ -23,6 +23,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { MouseEventArgs } from '@syncfusion/ej2-base';
 import { IETables } from '../../models/import.model';
@@ -315,7 +316,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   createData() {
     if (this.type == 'new') {
       this.dataIETable = new IETables();
-      this.dataIETable.recID = crypto.randomUUID();
+      this.dataIETable.recID = Util.uid();
       this.dataIETable.sessionID = this.dataIEConnection.recID;
     }
   }
