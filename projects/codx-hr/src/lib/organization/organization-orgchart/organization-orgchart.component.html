@@ -315,6 +315,7 @@
 ]"
 >
 </org-diagram> -->
+<!-- <button class="btn btn-primary" (click)="openSetting()">Setting</button> -->
 
 <input
   min="1"
@@ -327,137 +328,163 @@
   [style]="stylesObj"
 />
 
-<div ngbDropdown class="symbol-more" [container]="'body'">
-  <div
-    ngbDropdownToggle
-    class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
-    type="button"
-    id="dropdownMenuButton"
-    data-toggle="dropdown"
-    aria-haspopup="true"
-    aria-expanded="false"
-    style="padding: 0 !important ; margin-left: 0 !important; border: none"
-  >
-    Thiết lập mode view
+<ng-template #templateUpdateStatus let-dialog1>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label
+              class="dialog-title line-clamp line-clamp-1"
+              name="lblEquipment"
+              default="Thiết lập mode view"
+              [formModel]="view.formModel"
+            ></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button
+            type="button"
+            class="btn btn-flex text-dark-75 px-0"
+            (click)="CloseDialog(dialog1)"
+          >
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
+      type="button"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+      style="padding: 0 !important ; margin-left: 0 !important; border: none"
+    >
+      Thiết lập mode view
+    </div>
+    <div>
+      <select #teams (change)="onSelected(teams.value)">
+        <!-- <option default>Chọn mode view</option> -->
+        <option>Không có quản lý</option>
+        <option default>Có quản lý</option>
+      </select>
+
+      <p>Page fit mode</p>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeNone"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeNone"> None </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeFit"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeFit"> FitToPage </label>
+      </div>
+
+      <p>Orientation Type</p>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationTop"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationTop"> Top </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationBottom"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationBottom"> Bottom </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationLeft"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationLeft"> Left </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationRight"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationRight"> Right </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationNone"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationNone"> None </label>
+      </div>
+
+      <p>Placement Type</p>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementAuto"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementAuto">
+          Auto
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementVertical"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementVertical">
+          Vertical
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementHorizontal"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementHorizontal">
+          Horizontal
+        </label>
+      </div>
+    </div>
   </div>
-  <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-    <select #teams (change)="onSelected(teams.value)">
-      <option default>Chọn mode view</option>
-      <option>Không có quản lý</option>
-      <option>Có quản lý</option>
-    </select>
-
-    <p>Page fit mode</p>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="flexRadioDefault"
-        id="pageFitModeNone"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="pageFitModeNone"> None </label>
-    </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="flexRadioDefault"
-        id="pageFitModeFit"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="pageFitModeFit"> FitToPage </label>
-    </div>
-
-    <p>Orientation Type</p>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="orientation"
-        id="orientationTop"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="orientationTop"> Top </label>
-    </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="orientation"
-        id="orientationBottom"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="orientationBottom"> Bottom </label>
-    </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="orientation"
-        id="orientationLeft"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="orientationLeft"> Left </label>
-    </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="orientation"
-        id="orientationRight"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="orientationRight"> Right </label>
-    </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="orientation"
-        id="orientationNone"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="orientationNone"> None </label>
-    </div>
-
-    <p>Placement Type</p>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        id="childrenPlacementAuto"
-        name="placement"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="childrenPlacementAuto"> Auto </label>
-    </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        id="childrenPlacementVertical"
-        name="placement"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="childrenPlacementVertical">
-        Vertical
-      </label>
-    </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        id="childrenPlacementHorizontal"
-        name="placement"
-        (change)="changeMode($event)"
-      />
-      <label class="form-check-label" for="childrenPlacementHorizontal">
-        Horizontal
-      </label>
-    </div>
-  </div>
-</div>
+</ng-template>
 
 <div class="sample">
   <org-diagram
@@ -482,22 +509,30 @@
     [connectorType]="ConnectorType"
     [scale]="scaleNumber"
     [templates]="[
-    {
-      name: 'contactTemplate',
-      itemSize: { width: 170, height: 150 },
-      itemTemplate: contactTemplate,
-      minimizedItemSize: { width: 5, height: 5 },
-    }
-  ]"
+      {
+        name: 'contactTemplate',
+        itemSize: { width: 170, height: 150 },
+        itemTemplate: contactTemplate,
+        minimizedItemSize: { width: 5, height: 5 },
+        cursorTemplate: contactCursorTemplate,
+        highlightTemplate: contactHighlightTemplate
+      }
+    ]"
   >
   </org-diagram>
 </div>
 
 <ng-template #contactTemplate let-itemConfig="context" let-isCursor="isCursor">
-  <div class="border border-gray-300">
-    <ng-container *ngFor="let item of dataVll">
+  <ng-container *ngFor="let item of dataVll">
+    <div
+      *ngIf="itemConfig.context.orgUnitType === item.value"
+      [style]="
+        (!isCursor ? itemConfig.id === orgUnitID : isCursor)
+          ? stylesObjChart
+          : stylesObjChart1
+      "
+    >
       <div
-        *ngIf="itemConfig.context.orgUnitType === item.value"
         class="d-flex align-items-center p-2 w-100"
         [style.background-color]="item.color"
       >
@@ -524,39 +559,39 @@
         <div class="ms-auto">
           <codx-mfunc
             [formModel]="view.formModel"
-            (clickMF)="clickMF($event, itemConfig)"
+            (clickMF)="clickMF($event, itemConfig.context.data)"
             [isBookMark]="false"
-            [dataItem]="itemConfig"
+            [dataItem]="itemConfig.context.data"
             type="view"
           >
           </codx-mfunc>
         </div>
       </div>
-    </ng-container>
-    <div class="p-1 mb-1">
-      <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
-        <codx-img
-          class="symbol symbol-60 symbol-circle me-2"
-          [width]="35"
-          [objectId]="
-            itemConfig.context.employeeManager &&
-            itemConfig.context.employeeManager.employeeID
-          "
-          [objectName]="
-            itemConfig.context.employeeManager &&
-            itemConfig.context.employeeManager.employeeName
-          "
-          [objectType]="'HR_Employees'"
-        >
-        </codx-img>
-        <div class="text-dark fs-6 fw-bold mt-2 mb-2">
-          <span>
-            {{
+      <div class="p-1 mb-1">
+        <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
+          <codx-img
+            class="symbol symbol-60 symbol-circle me-2"
+            [width]="35"
+            [objectId]="
               itemConfig.context.employeeManager &&
-                itemConfig.context.employeeManager.employeeName
-            }}
-          </span>
-          <!-- <codx-label
+              itemConfig.context.employeeManager.employeeID
+            "
+            [objectName]="
+              itemConfig.context.employeeManager &&
+              itemConfig.context.employeeManager.employeeName
+            "
+            [objectType]="'HR_Employees'"
+          >
+          </codx-img>
+          <div class="text-dark fs-6 fw-bold mt-2 mb-2">
+            <span>
+              {{
+                (itemConfig.context.employeeManager &&
+                  itemConfig.context.employeeManager.employeeName) ||
+                  "Tên Nhân Viên"
+              }}
+            </span>
+            <!-- <codx-label
             [formModel]="formModel"
             name="lblEmployeeName"
             [default]="
@@ -565,15 +600,16 @@
               'Tên Nhân Viên'
             "
           ></codx-label> -->
-        </div>
-        <div class="text-gray-600 mb-1 fs-6">
-          <span>
-            {{
-              itemConfig.context.employeeManager &&
-                itemConfig.context.employeeManager.positionName
-            }}
-          </span>
-          <!-- <codx-label
+          </div>
+          <div class="text-gray-600 mb-1 fs-6">
+            <span>
+              {{
+                (itemConfig.context.employeeManager &&
+                  itemConfig.context.employeeManager.positionName) ||
+                  "Chức vụ"
+              }}
+            </span>
+            <!-- <codx-label
             [formModel]="formModel"
             name="txtPositionName"
             [default]="
@@ -582,8 +618,8 @@
               'Chức vụ'
             "
           ></codx-label> -->
-        </div>
-        <!-- <div class="d-flex align-items-center mt-2">
+          </div>
+          <!-- <div class="d-flex align-items-center mt-2">
           <div class="btn btn-sm btn-light-primary me-3 counter">
             <i class="icon-account_tree icon-16 me-1"></i>
             <span class="fw-bold text-primary">{{
@@ -597,8 +633,8 @@
             }}</span>
           </div>
         </div> -->
-      </div>
-      <!-- <div class="d-flex justify-content-between mt-5 px-3">
+        </div>
+        <!-- <div class="d-flex justify-content-between mt-5 px-3">
         <div
           class="d-flex flex-column align-items-center counter cursor-pointer"
         >
@@ -639,10 +675,28 @@
           ></codx-label>
         </div>
       </div> -->
+      </div>
+
+      <!-- <div class="p-node">
+        <span
+          #icon
+          class="icon-20"
+          [classList]="
+            itemConfig.id === 'ORG-0156'
+              ? 'icon-do_disturb_on'
+              : 'icon-add_circle_outline'
+          "
+          (click)="loadDataChild(itemConfig, icon)"
+        ></span>
+      </div> -->
     </div>
-  </div>
+  </ng-container>
 </ng-template>
-<ng-template #contactCursorTemplate let-itemConfig="context"> </ng-template>
+<ng-template #contactCursorTemplate let-itemConfig="context">
+  <div class="bg-dark"></div>
+  <!-- {{ itemConfig }} -->
+</ng-template>
 <ng-template #contactHighlightTemplate let-itemConfig="context">
-  <div class="highlight-frame"></div>
+  <div class="bg-dark"></div>
+  <!-- <div class="highlight-frame">{{ itemConfig }}</div> -->
 </ng-template>
