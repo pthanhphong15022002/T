@@ -63,7 +63,7 @@
           <div class="w-100 d-flex flex-column">
             <div class="d-flex align-items-top justify-content-between">
               <div class="w-100 d-flex flex-column">
-                <div class="d-flex align-items-top mb-1">
+                <div class="d-flex align-items-top">
                   <codx-label
                     fiedName="Industries"
                     class="text-dark fw-bold me-2 label-colon"
@@ -85,7 +85,7 @@
                     "
                   ></span>
                 </div>
-                <div class="d-flex align-items-top justify-content-start mb-1">
+                <div class="d-flex align-items-top">
                   <codx-label
                     default="Nhu cầu:"
                     class="text-dark fw-bold me-2 text-nowrap"
@@ -101,7 +101,7 @@
                     "
                   ></span>
                 </div>
-                <div class="mb-1 mt-2"  *ngIf="viewTag && viewTag != ''">
+                <div class="mt-2"  *ngIf="viewTag && viewTag != ''">
                   <codx-tag
                   [entityName]="formModel.entityName"
                   [disabled]="true"
@@ -110,51 +110,12 @@
                 >
                 </codx-tag>
                 </div>
-                <div class="d-flex flex-wrap align-items-top mb-1">
-                  <div class="d-flex flex-column">
-                    <div class="mb-2">
-                      <codx-label
-                        class="text-dark fw-bold"
-                        default="Liên hệ chính:"
-                      ></codx-label>
-                    </div>
-                    <div class="d-flex align-items-start">
-                      <div class="me-3">
-                        <codx-img
-                          [objectId]="dataSelected?.contactID"
-                          [objectName]="dataSelected?.contactName"
-                          [imgOn]="dataSelected?.modifiedOn"
-                          [objectType]="formModel?.entityName"
-                          [width]="60"
-                        >
-                        </codx-img>
-                      </div>
-                      <div class="d-flex flex-column">
-                        <div class="fw-bold text-dark fs-6 mb-1">
-                          {{ dataSelected?.contactName }}
-                        </div>
-                        <div class="fs-7 text-gray-600 mb-1">
-                          {{ dataSelected?.jobTitle }}
-                        </div>
-                        <div class="d-flex align-items-start">
-                          <div class="d-flex align-items-center me-5" *ngIf="dataSelected?.phone">
-                            <span class="icon-phone_android text-primary icon-16 me-2"></span>
-                            <span class="text-gray-800 fs-7">{{ dataSelected?.phone }}</span>
-                          </div>
-                          <div class="d-flex align-items-center" *ngIf="dataSelected?.email">
-                            <span class="icon-email icon-16 text-primary icon-16 me-2"></span>
-                            <span class="text-gray-800 fs-7">{{ dataSelected?.email }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
-              <div class="w-175px min-w-175px d-flex flex-column">
+              <div class="ms-6 d-flex flex-column">
                 <div class="d-flex flex-column">
                   <div
-                    class="mb-2 d-flex align-items-center justify-content-end"
+                    class="mb-1 d-flex align-items-center justify-content-end"
                   >
                     <div
                       *ngIf="dataSelected.status == '2'; else statusDefault"
@@ -267,84 +228,132 @@
                   </ng-template>
 
 
-                  <div class="d-flex flex-column align-items-top" style="margin-top: 2.25rem !important;">
-                    <div class="d-flex justify-content-end">
-                      <codx-label
-                        default="Thông tin bán hàng"
-                        class="text-dark fw-bold mb-2"
-                      ></codx-label>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="d-flex align-items-top justify-content-between mt-2">
+              <div class="d-flex flex-wrap align-items-top w-100">
+                <div class="d-flex flex-column">
+                  <div class="mb-1">
+                    <codx-label
+                      class="text-dark fw-bold"
+                      default="Liên hệ chính:"
+                    ></codx-label>
+                  </div>
+                  <div class="d-flex align-items-start">
+                    <div class="me-3">
+                      <codx-img
+                        [objectId]="dataSelected?.contactID"
+                        [objectName]="dataSelected?.contactName"
+                        [imgOn]="dataSelected?.modifiedOn"
+                        [objectType]="formModel?.entityName"
+                        [width]="40"
+                      >
+                      </codx-img>
                     </div>
-                    <div class="d-flex justify-content-end">
-                      <div style="position: relative" [ngbTooltip]="tooltipOwner">
-                        <codx-imgs
-                          [width]="30"
-                          [objectId]="dataSelected?.owner"
-                          ojectType="AD_Users"
-                          [numberImages]="1"
-
-                          [isToolTip]="false"
-                        >
-                        </codx-imgs>
-                        <div
-                          style="position: absolute; right: 0px; bottom: 0px"
-                        >
-                          <span
-                            ><img
-                              src="/assets/themes/cm/default/img/{{
-                                getIcon('1')
-                              }}"
-                              alt=""
-                          /></span>
+                    <div class="d-flex flex-column">
+                      <div class="fw-bold text-dark fs-6 mb-1">
+                        {{ dataSelected?.contactName }}
+                      </div>
+                      <div class="d-flex flex-wrap align-items-center">
+                        <div class="fs-7 text-gray-600 me-2">
+                          {{ dataSelected?.jobTitle }}
+                        </div>
+                        <div class="d-flex align-items-start fs-7">
+                          <div class="d-flex align-items-center me-3" *ngIf="dataSelected?.phone">
+                            <span class="icon-phone_android text-primary icon-14 me-1"></span>
+                            <span class="text-gray-800 fs-7">{{ dataSelected?.phone }}</span>
+                          </div>
+                          <div class="d-flex align-items-center" *ngIf="dataSelected?.email">
+                            <span class="icon-email icon-16 text-primary icon-14 me-1"></span>
+                            <span class="text-gray-800 fs-7">{{ dataSelected?.email }}</span>
+                          </div>
                         </div>
                       </div>
-
-                      <div style="position: relative"  [ngbTooltip]="tooltipSalesperson">
-                        <codx-img
-                          [width]="30"
-
-                          [objectId]="dataSelected.salespersonID"
-                          objectType="AD_Users"
-                          [referType]="'avt'"
-                          [numberImages]="1"
-                        >
-                        </codx-img>
-                        <div
-                          style="position: absolute; right: 0px; bottom: 0px"
-                        >
-                          <span
-                            ><img
-                              src="/assets/themes/cm/default/img/{{
-                                getIcon('3')
-                              }}"
-                              alt=""
-                          /></span>
-                        </div>
-                      </div>
-
-                      <div style="position: relative"  [ngbTooltip]="tooltipConsultant">
-                        <codx-imgs
-                          [width]="30"
-                          [objectId]="dataSelected?.consultantID"
-                          ojectType="AD_Users"
-                          [numberImages]="1"
-                          [isToolTip]="false"
-                        >
-                        </codx-imgs>
-                        <div
-                          style="position: absolute; right: 0px; bottom: 0px"
-                        >
-                          <span
-                            ><img
-                              src="/assets/themes/cm/default/img/{{
-                                getIcon('5')
-                              }}"
-                              alt=""
-                          /></span>
-                        </div>
-                      </div>
-
-
+                      
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-125px min-w-125px d-flex flex-column">
+                <div class="d-flex flex-column">
+                  <div class="d-flex justify-content-end">
+                    <codx-label
+                      default="Thông tin bán hàng"
+                      class="text-dark fw-bold mb-1"
+                    ></codx-label>
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <div style="position: relative" [ngbTooltip]="tooltipOwner">
+                      <codx-imgs
+                        [width]="30"
+                        [objectId]="dataSelected?.owner"
+                        ojectType="AD_Users"
+                        [numberImages]="1"
+
+                        [isToolTip]="false"
+                      >
+                      </codx-imgs>
+                      <div
+                        style="position: absolute; right: 0px; bottom: 0px"
+                      >
+                        <span
+                          ><img
+                            src="/assets/themes/cm/default/img/{{
+                              getIcon('1')
+                            }}"
+                            alt=""
+                        /></span>
+                      </div>
+                    </div>
+
+                    <div style="position: relative"  [ngbTooltip]="tooltipSalesperson">
+                      <codx-img
+                        [width]="30"
+
+                        [objectId]="dataSelected.salespersonID"
+                        objectType="AD_Users"
+                        [referType]="'avt'"
+                        [numberImages]="1"
+                      >
+                      </codx-img>
+                      <div
+                        style="position: absolute; right: 0px; bottom: 0px"
+                      >
+                        <span
+                          ><img
+                            src="/assets/themes/cm/default/img/{{
+                              getIcon('3')
+                            }}"
+                            alt=""
+                        /></span>
+                      </div>
+                    </div>
+
+                    <div style="position: relative"  [ngbTooltip]="tooltipConsultant">
+                      <codx-imgs
+                        [width]="30"
+                        [objectId]="dataSelected?.consultantID"
+                        ojectType="AD_Users"
+                        [numberImages]="1"
+                        [isToolTip]="false"
+                      >
+                      </codx-imgs>
+                      <div
+                        style="position: absolute; right: 0px; bottom: 0px"
+                      >
+                        <span
+                          ><img
+                            src="/assets/themes/cm/default/img/{{
+                              getIcon('5')
+                            }}"
+                            alt=""
+                        /></span>
+                      </div>
+                    </div>
+
+
                   </div>
                 </div>
               </div>
@@ -357,7 +366,7 @@
                   [change]="dataSelected"
                   (tab)="changeTab($event)"
                   size="18"
-                  class="mb-3 fw-bold"
+                  class=""
                 ></codx-taskbar>
                 </div>
               </div>
@@ -372,6 +381,7 @@
   <codx-tab-lead-detail
     [tabClicked]="tabClicked"
     [dataSelected]="dataSelected"
+    [listSteps]="listSteps"
     [formModel]="formModel"
   ></codx-tab-lead-detail>
 </ng-template>

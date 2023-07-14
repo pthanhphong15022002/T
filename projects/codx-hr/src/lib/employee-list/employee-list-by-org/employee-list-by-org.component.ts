@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService, CodxService } from 'codx-core';
 import { PopupAddEmployeeComponent } from '../popup/popup-add-employee/popup-add-employee.component';
-import { PopupUpdateStatusComponent } from '../popup-update-status/popup-update-status.component';
+import { PopupUpdateStatusComponent } from '../popup/popup-update-status/popup-update-status.component';
 
 @Component({
   selector: 'lib-employee-list-by-org',

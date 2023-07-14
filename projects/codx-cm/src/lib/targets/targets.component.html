@@ -102,10 +102,17 @@
     <div class="mt-2 om-ejs-tab">
       <ng-container *ngIf="loadedTree">
         <div *ngIf="lstDataTree != null && lstDataTree.length > 0; else noData">
-          <div class="container treeview" *ngIf="loadedTree">
+          <div
+            class="container treeview"
+            *ngIf="loadedTree"
+            style="padding-right: 100px; padding-left: 100px"
+          >
             <codx-view-tree-targets
               [dataTree]="lstDataTree"
               [fmTargetLines]="fmTargetLines"
+              [formModel]="view.formModel"
+              (clickMoreFunc)="clickMoreFunc($event)"
+              (changeMoreMF)="changeMoreMF($event)"
             ></codx-view-tree-targets>
           </div>
         </div>

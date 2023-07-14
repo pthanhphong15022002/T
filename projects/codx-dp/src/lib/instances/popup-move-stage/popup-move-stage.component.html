@@ -45,7 +45,7 @@
             default="Phân bổ lại cho"
           >
           </codx-label>
-          <div *ngIf="stepCurrent != null">
+          <div>
             <codx-popup-participants
               [lstParticipants]="lstParticipants"
               [dialog]="dialog"
@@ -78,6 +78,48 @@
         </div>
       </div>
     </div>
+    <div class="row" *ngIf="applyFor == '1'">
+      <div class="col-6">
+        <div class="form-group">
+          <div class="form-group">
+            <codx-label
+              [formModel]="formModelDeal"
+              fiedName="Probability"
+            >
+            </codx-label>
+            <codx-input
+            type="number"
+            [min]="0"
+            [max]="100"
+            [placeholder]="gridViewInstanceStep?.Probability?.description"
+            field="probability"
+            [crrValue]="probability"
+            (valueChange)="valueChangeDataCM($event)"
+          >
+          </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="ExpectedClosed"
+            [formModel]="formModelDeal"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="expectedClosed"
+            format="d"
+            [crrValue]="expectedClosed"
+            (valueChange)="valueChangeDataCM($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group">
       <codx-label
         fiedName="Note"
@@ -144,7 +186,7 @@
                 <codx-input
                   type="checkbox"
                   [checked]="progressAll"
-                  field="progressAll"
+                  field="all"
                   (valueChange)="checkRadioProgress($event)"
                 >
                 </codx-input>
@@ -162,7 +204,7 @@
                 <codx-input
                   type="checkbox"
                   [checked]="progressDefault"
-                  field="progressDefault"
+                  field="required"
                   (valueChange)="checkRadioProgress($event)"
                 >
                 </codx-input>

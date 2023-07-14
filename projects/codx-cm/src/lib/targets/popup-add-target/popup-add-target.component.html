@@ -22,19 +22,36 @@
           >
           </codx-input>
         </div>
+
         <div class="col-6">
-          <codx-label [formModel]="form.formModel" fiedName="Target">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [crrValue]="data?.target"
-            (valueChange)="valueChangeTarget($event, 'input')"
-            field="target"
-          >
-          </codx-input>
+          <div class="row">
+            <div class="col-8">
+              <codx-label [formModel]="form.formModel" fiedName="Target">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [crrValue]="data?.target"
+                [min]="0"
+                (valueChange)="valueChangeTarget($event, 'input')"
+                field="target"
+              >
+              </codx-input>
+            </div>
+            <div class="col-4">
+              <codx-label [formModel]="form.formModel" fiedName="CurrencyID">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [crrValue]="data?.currencyID"
+                (valueChange)="valueChange($event)"
+                field="currencyID"
+              >
+              </codx-input>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row form-group">
+      <div class="form-group row">
         <div class="col-6">
           <codx-label [formModel]="form.formModel" [fiedName]="'Period'">
           </codx-label>
@@ -49,12 +66,6 @@
             [selectedType]="selectedType"
             (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
-          <!-- <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="period"
-          >
-          </codx-input> -->
         </div>
         <div class="col-6">
           <div class="d-flex justify-content-between" style="margin-top: 19px">
@@ -72,6 +83,68 @@
               </codx-label>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-3">
+          <codx-label
+            [formModel]="form.formModel"
+            name="lblQuarter1"
+            default="Quý 1"
+          >
+          </codx-label>
+          <codx-input
+            type="number"
+            [crrValue]="quarter1"
+            [min]="0"
+            (valueChange)="valueChangeTarget($event, 'input')"
+            field="quarter1"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-label
+            [formModel]="form.formModel"
+            name="lblQuarter2"
+            default="Quý 2"
+          >
+          </codx-label>
+          <codx-input
+            type="number"
+            [crrValue]="quarter2"
+            [min]="0"
+            (valueChange)="valueChangeTarget($event, 'input')"
+            field="quarter2"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-label
+            [formModel]="form.formModel"
+            name="lblQuarter3"
+            default="Quý 3"
+          >
+          </codx-label>
+          <codx-input
+            type="number"
+            [crrValue]="quarter3"
+            [min]="0"
+            (valueChange)="valueChangeTarget($event, 'input')"
+            field="quarter3"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-label type="number" name="lblQuarter4" default="Quý 4">
+          </codx-label>
+          <codx-input
+            type="number"
+            [crrValue]="quarter4"
+            [min]="0"
+            (valueChange)="valueChangeTarget($event, 'input')"
+            field="quarter4"
+          >
+          </codx-input>
         </div>
       </div>
       <ng-container>
@@ -255,6 +328,10 @@
               </ng-container>
               <ng-container *ngIf="!isAllocation">
                 <span
+                  [ngClass]="
+                    item?.userID == this.editingItem ? 'user-nav-active' : null
+                  "
+                  class="user-nav-item"
                   *ngIf="!isEditing(item?.userID, isAllocation) || !isEditLine"
                   (click)="dbClick(item?.userID)"
                 >
@@ -274,7 +351,10 @@
                 </span>
                 <span
                   *ngIf="isEditing(item?.userID, isAllocation) && isEditLine"
-                  class=""
+                  [ngClass]="
+                    item?.userID == this.editingItem ? 'user-nav-active' : null
+                  "
+                  class="user-nav-item"
                 >
                   <input
                     type="text"
