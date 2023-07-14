@@ -152,11 +152,13 @@ const routes: Routes = [
       },
     ],
   },
-  {
-    path: '',
-    loadChildren: () =>
-      import('./settings/settings.module').then((m) => m.SettingsModule),
-  },
+
+  // {
+  //   path: '',
+  //   loadChildren: () =>
+  //     import('./settings/settings.module').then((m) => m.SettingsModule),
+  // },
+
   // {
   //   path: '',
   //   component: LayoutNoAsideComponent,
