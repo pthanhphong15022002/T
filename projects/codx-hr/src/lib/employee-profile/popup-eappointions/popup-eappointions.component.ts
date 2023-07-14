@@ -40,14 +40,24 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   eAppointionHeaderTexts: any;
 
   originUnitID: any;
-  originJobLevel: any;
-  originPosition: any;
-  originLocation: any;
+  originJobLevelID: any;
+  originPositionID: any;
+  originLocationID: any;
 
   editedUnitID: any;
   editedJobLevel: any;
   editedPosition: any;
   editedLocation: any;
+
+  editedUnitIDStr: any;
+  editedJobLevelStr: any;
+  editedPositionStr: any;
+  editedLocationStr: any;
+
+  oldUnitIDStr: any;
+  oldJobLevelStr: any;
+  oldPositionStr: any;
+  oldLocationStr: any;
 
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -75,9 +85,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     {
       this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
       this.originUnitID =  this.employeeObj.orgUnitID;
-      this.originJobLevel = this.employeeObj.jobLevel;
-      this.originPosition = this.employeeObj.positionID;
-      this.originLocation = this.employeeObj.locationID;
+      this.originJobLevelID = this.employeeObj.jobLevel;
+      this.originPositionID = this.employeeObj.positionID;
+      this.originLocationID = this.employeeObj.locationID;
 
       this.editedUnitID =  this.employeeObj.orgUnitID;
       this.editedJobLevel = this.employeeObj.jobLevel;
@@ -180,7 +190,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   onInit(): void {
     this.hrService.getHeaderText(this.funcID).then((res)=>{
       this.eAppointionHeaderTexts = res;
-      debugger
     })
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -212,16 +221,18 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeOrgUnitID(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
     if(this.actionType == 'edit'){
       this.notify.alertCode('HR027',null,...[
         this.eAppointionHeaderTexts.OrgUnitID, 
-        this.editedUnitID, 
-        event.data, 
+        this.editedUnitIDStr, 
+        newVal, 
         this.EAppointionObj.oldOrgUnitID, 
         this.EAppointionObj.oldOrgUnitID, 
         this.originUnitID]).subscribe((x) => {
         if (x.event?.status == 'Y') {
-          //do nothing
+          this.editedUnitIDStr = newVal;
         }
         else{
           if(event.data != this.originUnitID && this.originUnitID){
@@ -248,22 +259,24 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeJobLevel(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
     if(this.actionType == 'edit'){
       this.notify.alertCode('HR027',null,...[
         this.eAppointionHeaderTexts.JobLevel, 
-        this.editedJobLevel, 
-        event.data, 
+        this.editedJobLevelStr, 
+        newVal, 
         this.EAppointionObj.oldJobLevel, 
         this.EAppointionObj.oldJobLevel, 
-        this.originJobLevel]).subscribe((x) => {
+        this.originJobLevelID]).subscribe((x) => {
         if (x.event?.status == 'Y') {
-          //do nothing
+          this.editedJobLevelStr = newVal;
         }
         else{
-          if(event.data != this.originJobLevel && this.originJobLevel){
-            this.EAppointionObj.oldJobLevel = this.originJobLevel;
+          if(event.data != this.originJobLevelID && this.originJobLevelID){
+            this.EAppointionObj.oldJobLevel = this.originJobLevelID;
           }
-          else if(event.data == this.originJobLevel){
+          else if(event.data == this.originJobLevelID){
             this.EAppointionObj.oldJobLevel = '';
           }
           this.formGroup.patchValue(this.EAppointionObj);
@@ -271,10 +284,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         }})
     }
     else{
-      if(event.data != this.originJobLevel && this.originJobLevel){
-        this.EAppointionObj.oldJobLevel = this.originJobLevel;
+      if(event.data != this.originJobLevelID && this.originJobLevelID){
+        this.EAppointionObj.oldJobLevel = this.originJobLevelID;
       }
-      else if(event.data == this.originJobLevel){
+      else if(event.data == this.originJobLevelID){
         this.EAppointionObj.oldJobLevel = '';
       }
       this.formGroup.patchValue(this.EAppointionObj);
@@ -284,22 +297,25 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangePosition(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
+
     if(this.actionType == 'edit'){
       this.notify.alertCode('HR027',null,...[
         this.eAppointionHeaderTexts.PositionID, 
-        this.editedPosition, 
-        event.data, 
+        this.editedPositionStr, 
+        newVal, 
         this.EAppointionObj.oldPositionID, 
         this.EAppointionObj.oldPositionID, 
-        this.originPosition]).subscribe((x) => {
+        this.originPositionID]).subscribe((x) => {
         if (x.event?.status == 'Y') {
-          //do nothing
+          this.editedPositionStr = newVal;
         }
         else{
-          if(event.data != this.originPosition && this.originPosition){
-            this.EAppointionObj.oldPositionID = this.originPosition;
+          if(event.data != this.originPositionID && this.originPositionID){
+            this.EAppointionObj.oldPositionID = this.originPositionID;
           }
-          else if(event.data == this.originPosition){
+          else if(event.data == this.originPositionID){
             this.EAppointionObj.oldPositionID = '';
           }
           this.formGroup.patchValue(this.EAppointionObj);
@@ -307,10 +323,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         }})
     }
     else{
-      if(event.data != this.originPosition && this.originPosition){
-        this.EAppointionObj.oldPositionID = this.originPosition;
+      if(event.data != this.originPositionID && this.originPositionID){
+        this.EAppointionObj.oldPositionID = this.originPositionID;
       }
-      else if(event.data == this.originPosition){
+      else if(event.data == this.originPositionID){
         this.EAppointionObj.oldPositionID = '';
       }
       this.formGroup.patchValue(this.EAppointionObj);
@@ -320,22 +336,25 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeLocation(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
+
     if(this.actionType == 'edit'){
       this.notify.alertCode('HR027',null,...[
         this.eAppointionHeaderTexts.LocationID, 
-        this.editedLocation, 
-        event.data, 
+        this.editedLocationStr, 
+        newVal, 
         this.EAppointionObj.oldLocationID, 
         this.EAppointionObj.oldLocationID, 
-        this.originLocation]).subscribe((x) => {
+        this.originLocationID]).subscribe((x) => {
         if (x.event?.status == 'Y') {
-          //do nothing
+          this.editedLocationStr = newVal;
         }
         else{
-          if(event.data != this.originLocation && this.originLocation){
-            this.EAppointionObj.oldLocationID = this.originLocation;
+          if(event.data != this.originLocationID && this.originLocationID){
+            this.EAppointionObj.oldLocationID = this.originLocationID;
           }
-          else if(event.data == this.originLocation){
+          else if(event.data == this.originLocationID){
             this.EAppointionObj.oldLocationID = '';
           }
           this.formGroup.patchValue(this.EAppointionObj);
@@ -343,10 +362,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         }})
     }
     else{
-      if(event.data != this.originLocation && this.originLocation){
-        this.EAppointionObj.oldLocationID = this.originLocation;
+      if(event.data != this.originLocationID && this.originLocationID){
+        this.EAppointionObj.oldLocationID = this.originLocationID;
       }
-      else if(event.data == this.originLocation){
+      else if(event.data == this.originLocationID){
         this.EAppointionObj.oldLocationID = '';
       }
       this.formGroup.patchValue(this.EAppointionObj);
@@ -378,6 +397,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
+
 
   onSaveForm() {
     if (this.formGroup.invalid) {

@@ -302,7 +302,6 @@ export class LeadsComponent
   }
 
   clickMoreFunc(e) {
-
     this.clickMF(e.e, e.data);
   }
 
@@ -529,7 +528,6 @@ export class LeadsComponent
         this.popupOwnerRoles(data);
       },
     };
-    this.dataSelected = data;
     this.titleAction = e.text;
     if (actions.hasOwnProperty(e.functionID)) {
       actions[e.functionID](data);
@@ -811,11 +809,13 @@ export class LeadsComponent
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedLead(datas).subscribe((res) => {
             if (res) {
-              data.closed = check ? true : false;
-              data.closedOn = check ? new Date() : data.ClosedOn;
-              data.ModifiedOn = new Date();
-              this.dataSelected = data;
-              this.view.dataService.update(data).subscribe();
+              // data.closedOn = check ? new Date() : data.closedOn;
+              // data.modifiedOn = new Date();
+              this.dataSelected.closed = check;
+              this.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.view.dataService.update(this.dataSelected).subscribe();
               this.notificationsService.notifyCode(
                 check ? 'DP016' : 'DP017',
                 0,
@@ -829,7 +829,7 @@ export class LeadsComponent
                 data.showInstanceControl === '2'
               ) {
                 this.view.dataService.remove(this.dataSelected).subscribe();
-                this.dataSelected = this.view.dataService.data[0];
+                 this.dataSelected = this.view.dataService.data[0];
                 this.view.dataService.onAction.next({
                   type: 'delete',
                   data: data,
@@ -884,7 +884,8 @@ export class LeadsComponent
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
               var instance = e.event.instance;
-              var index =
+              var listSteps = e.event?.listStep;
+             var index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
@@ -892,10 +893,9 @@ export class LeadsComponent
                     !x.isFailStep
                 ) + 1;
               var nextStep = '';
-              if (index != -1) {
+              if (index != -1 && !listSteps[index]?.isSuccessStep && !listSteps[index]?.isFailStep ) {
                 if (index != e.event.listStep.length) {
-                  var listStep = e.event.listStep;
-                  nextStep = listStep[index]?.stepID;
+                  nextStep = listSteps[index]?.stepID;
                 }
               }
 

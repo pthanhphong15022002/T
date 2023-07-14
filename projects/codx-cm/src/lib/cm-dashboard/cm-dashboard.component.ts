@@ -15,7 +15,7 @@ import { GridModels } from '../models/tmpModel';
 @Component({
   selector: 'lib-cm-dashboard',
   templateUrl: './cm-dashboard.component.html',
-  styleUrls: ['./cm-dashboard.component.css'],
+  styleUrls: ['./cm-dashboard.component.scss'],
 })
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
@@ -35,27 +35,48 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isLoaded: boolean = false;
   titLeModule = '';
 
+  // setting  //chart tree
+  dataSourceBussnessLine = [];
   palette = ['#005dc7', '#0078ff', '#3699ff', '#d3e8ff'];
   //mau cố định
   paletteColor = ['#00BFFF', '#0000FF'];
-  // setting
-  dataSourceBussnessLine = [];
-  tooltipSettings = {
-    visible: true,
-    format: '${businessLineName} - TotalCount:${quantity}',
-    template:
-      '<div><span>${businessLineName}</span><span>Total Count: ${quantity}</span></div>',
+
+  leafItemSettings = {
+    labelPath: 'businessLineName',
+    lableWidth: '100%',
+    labelPosition: 'Center',
+    labelFormat: '${businessLineName}',
   };
-  leafItemSettings: any;
+  // highlightSettings = {
+  //   enable: true,
+  //   border: { width: '1px', color: 'black' },
+  //   opacity: '1',
+  // };
+  // tooltipSettings = {
+  //   visible: true,
+  //   format: '${businessLineName} - TotalCount:${quantity}',
+  //   template:
+  //     '<div><span>${businessLineName}</span><span>Total Count: ${quantity}</span></div>',
+  // };
+  // tooltipChartMap: Object = {
+  //   visible: true,
+
+  //   // template:
+  //   //   '<div><span>${businessLineName}</span><span>${quantity}-(${percentage} %)</span></div>',
+  //    format:
+  //     '<div><span>${businessLineName}</span><span>${quantity}-(${percentage} %)</span></div>',
+  // };
+
+  //leafItemSettings: any;
 
   colorReasonSuscess = '';
   colorReasonFails = '';
-  checkBtnMinRadio = false;
-  checkBtnMaxRadio = true;
+  checkBtnMin = false;
+  checkBtnMax = true;
   maxOwners = [];
   minOwners = [];
 
-  //tỉ lệ thanh công that bai tren san pham
+  //chart line tỉ lệ thanh công that bai tren san pham
   //Initializing Primary X Axis
   primaryXAxis: Object = {
     interval: 1,
@@ -81,8 +102,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
 
   marker = { visible: true };
-  checkBtnSuscessRadio = true;
-  checkBtnFailRadio = false;
+  checkBtnSuscess = true;
+  checkBtnFail = false;
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -107,19 +128,20 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
     this.cache.functionList('CM0201').subscribe((fun) => {
       this.titLeModule = fun?.customName || fun?.description;
-      this.leafItemSettings = {
-        labelPath: 'businessLineName',
-        labelPosition: 'Center',
-        labelFormat:
-          '${businessLineName}<br>${quantity} ' +
-          this.titLeModule +
-          '-(${percentage} %)',
-      };
+      // this.leafItemSettings = {
+      //   labelPath: 'businessLineName',
+      //   lableWidth: '100%',
+      //   labelPosition: 'Center',
+      //   labelFormat: '${businessLineName}
+      //    <br>${quantity} ' +
+      //    this.titLeModule +
+      //    '-(${percentage} %)',
+      // };
     });
   }
   onInit(): void {
     this.panelsDeals = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":8,"minSizeX":32,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":11,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"81.36639064171709834_layout","row":11,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"91.06496875406606994_layout","row":11,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020962552_layout","row":19,"col":0,"sizeX":32,"sizeY":8,"minSizeX":32,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"111.21519762020964252_layout","row":19,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"81.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"91.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":8,"minSizeX":32,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"111.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.36639064171709834_layout","data":"8"},{"panelId":"91.06496875406606994_layout","data":"9"},{"panelId":"101.21519762020962552_layout","data":"10"},{"panelId":"111.21519762020964252_layout","data":"11"}]'
@@ -206,17 +228,35 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  clickRadio(id) {
+  clickButton(id) {
     switch (id) {
-      case 'btnMinRadio':
-        this.checkBtnMinRadio = true;
-        this.checkBtnMaxRadio = false;
+      case 'btnMin':
+        this.checkBtnMin = true;
+        this.checkBtnMax = false;
         break;
-      case 'btnMaxRadio':
-        this.checkBtnMinRadio = false;
-        this.checkBtnMaxRadio = true;
+      case 'btnMax':
+        this.checkBtnMin = false;
+        this.checkBtnMax = true;
         break;
     }
     this.detectorRef.detectChanges();
+  }
+  getHeightChart() {
+    let viewChart = document.getElementById('6');
+    let chartBusinessLinesButton = document.getElementById(
+      'chartBusinessLinesButton'
+    );
+    let chartBusinessLinesHeader = document.getElementById(
+      'chartBusinessLinesHeader'
+    );
+    if (viewChart && chartBusinessLinesButton && chartBusinessLinesHeader) {
+      return (
+        viewChart.offsetHeight -
+        chartBusinessLinesHeader.offsetHeight -
+        chartBusinessLinesButton.offsetHeight +
+        ' px'
+      );
+    }
+    return '90%'; //vi no chua bat dc
   }
 }

@@ -125,6 +125,7 @@ export class AddContractsComponent implements OnInit {
   disabledShowInput: boolean = false;
   planceHolderAutoNumber: any = '';
   grvSetup: any;
+  isExitAutoNum: any = false;
 
   constructor(
     private cache: CacheService,
@@ -165,25 +166,28 @@ export class AddContractsComponent implements OnInit {
       .subscribe((grv) => {
         this.grvSetup = grv;
       });
-    this.cmService
-      .getFieldAutoNoDefault('CM0204', 'CM_Contracts')
-      .subscribe((res) => {
-        if (res && !res.stop) {
-          this.disabledShowInput = true;
-          this.cache.message('AD019').subscribe((mes) => {
-            if (mes)
-              this.planceHolderAutoNumber = mes?.customName || mes?.description;
-          });
-        } else {
-          this.disabledShowInput = false;
-          if (this.action == 'add' || this.action == 'copy')
-            this.cmService
-              .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
-              .subscribe((autoNum) => {
-                this.contracts.contractID = autoNum;
-              });
-        }
-      });
+    if (this.action != 'edit') {
+      this.cmService
+        .getFieldAutoNoDefault('CM0204', 'CM_Contracts')
+        .subscribe((res) => {
+          if (res && !res.stop) {
+            this.disabledShowInput = true;
+            this.cache.message('AD019').subscribe((mes) => {
+              if (mes)
+                this.planceHolderAutoNumber =
+                  mes?.customName || mes?.description;
+            });
+          } else {
+            this.disabledShowInput = false;
+            // if (this.action == 'add' || this.action == 'copy')
+            //   this.cmService
+            //     .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
+            //     .subscribe((autoNum) => {
+            //       this.contracts.contractID = autoNum;
+            //     });
+          }
+        });
+    } else this.disabledShowInput = true;
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
@@ -480,22 +484,40 @@ export class AddContractsComponent implements OnInit {
       this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
     ) {
       return;
-    } else if (
+    }
+    if (
       this.contracts?.delPhone &&
       !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
     ) {
       this.notiService.notifyCode('RS030');
       return;
-    } else {
-      switch (this.action) {
-        case 'add':
-        case 'copy':
-          this.addContracts();
-          break;
-        case 'edit':
-          this.editContract();
-          break;
-      }
+    }
+
+    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
+      this.notiService.notifyCode(
+        'CM026',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
+      return;
+    }
+
+    if (this.isExitAutoNum) {
+      this.notiService.notifyCode(
+        'CM003',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
+      return;
+    }
+    switch (this.action) {
+      case 'add':
+      case 'copy':
+        this.addContracts();
+        break;
+      case 'edit':
+        this.editContract();
+        break;
     }
   }
   //#endregion
@@ -863,5 +885,38 @@ export class AddContractsComponent implements OnInit {
         map((p) => JSON.parse(p[0])),
         tap((p) => console.log(p))
       );
+  }
+
+  //check auto
+  changeAutoNum(e) {
+    if (!this.disabledShowInput && e) {
+      this.contracts.contractID = e?.crrValue;
+      if (
+        this.contracts.contractID &&
+        this.contracts.contractID.includes(' ')
+      ) {
+        this.notiService.notifyCode(
+          'CM026',
+          0,
+          '"' + this.grvSetup['ContractID'].headerText + '"'
+        );
+        return;
+      }
+      this.cmService
+        .isExitsAutoCodeNumber('ContractsBusiness', this.contracts.contractID)
+        .subscribe((res) => {
+          this.isExitAutoNum = res;
+          if (this.isExitAutoNum)
+            this.notiService.notifyCode(
+              'CM003',
+              0,
+              '"' + this.grvSetup['ContractID'].headerText + '"'
+            );
+        });
+    }
+  }
+
+  checkSpace(text: string) {
+    return text.includes(' ');
   }
 }

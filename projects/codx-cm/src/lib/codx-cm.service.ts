@@ -1165,19 +1165,15 @@ export class CodxCmService {
   }
 
   ///gen AutoNum - Không hiểu thì hỏi ?
-  // async genAutoNum(funcID: any, entityName: string, key: string, view = false) {
-  //   let autoNo = await firstValueFrom(
-  //     this.getFieldAutoNoDefault(funcID, entityName)
-  //   );
-  //   if (!autoNo.stop) {
-  //     let autoNoNumber = await firstValueFrom(
-  //       this.genAutoNumberByAutoNoCode(funcID)
-  //     );
-  //     if (view && autoNoNumber) {
-  //       return this.genAutoNumberDefault(funcID, entityName, key);
-  //     } else return autoNoNumber;
-  //   } else return this.genAutoNumberDefault(funcID, entityName, key);
-  // }
+  isExitsAutoCodeNumber(className, ID) {
+    return this.api.execSv<any>(
+      'CM',
+      'CM',
+      className,
+      'IsExitsAutoCodeNumberAsync',
+      ID
+    );
+  }
 
   getFieldAutoNoDefault(funcID: any, entityName: string) {
     return this.api.execSv<any>(

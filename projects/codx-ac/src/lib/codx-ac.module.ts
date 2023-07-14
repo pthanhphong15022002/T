@@ -83,7 +83,6 @@ import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-clos
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { PopUpCashReportComponent } from './vouchers/cash-payments/pop-up-cash-report/pop-up-cash-report.component';
 import { TableAccountingComponent } from './vouchers/sales-invoices/components/table-accounting/table-accounting.component';
-
 export const routes: Routes = [
   {
     path: '',

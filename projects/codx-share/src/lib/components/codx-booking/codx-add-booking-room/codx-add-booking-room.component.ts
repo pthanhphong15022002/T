@@ -139,6 +139,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   onSaving = false;
   isEP = true;
   categoryID: any;
+  resourceOwner=null;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -446,7 +447,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         .getResourceByID(this.data.resourceID)
         .subscribe((res: any) => {
           if (res) {
-            this.roomCapacity = res.capacity;
+            this.roomCapacity = res?.capacity;
+            this.resourceOwner = [res?.owner];
           }
         });
     }
@@ -970,6 +972,10 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
+    if(approval && this.funcType == _editMF && this.authService?.userValue?.userID != this.data.createdBy){      
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
     if (!this.onSaving) {
       this.onSaving = true;
       if (this.funcType == _addMF) {
@@ -1288,6 +1294,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       });
       if (selectResource) {
         this.roomCapacity = selectResource[0].capacity;
+        this.resourceOwner = [selectResource[0].owner];
         this.data.resourceID = evt;
         this.tmplstDevice = [];
         if (
@@ -1462,7 +1469,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               this.formModel.funcID,
               this.returnData?.createdBy,
               this.returnData?.title,
-              null
+              null,
+              this.resourceOwner
             )
             .subscribe((res) => {
               if (res?.msgCodeError == null && res?.rowCount) {
@@ -1520,10 +1528,11 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.cbbResource = [];
           Array.from(res).forEach((item: any) => {
             let tmpRes = new Resource();
-            tmpRes.resourceID = item.resourceID;
-            tmpRes.resourceName = item.resourceName;
-            tmpRes.capacity = item.capacity;
-            tmpRes.equipments = item.equipments;
+            tmpRes.resourceID = item?.resourceID;
+            tmpRes.resourceName = item?.resourceName;
+            tmpRes.capacity = item?.capacity;
+            tmpRes.equipments = item?.equipments;
+            tmpRes.owner=item?.owner
             this.cbbResource.push(tmpRes);
           });
           let resourceStillAvailable = false;
