@@ -28,6 +28,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { PopAddReceiptTransactionComponent } from './pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { InventoryJournalLines } from '../../models/InventoryJournalLines.model';
+import { VouchersLines } from '../../models/VouchersLines.model';
 
 @Component({
   selector: 'lib-receipt-transaction',
@@ -60,8 +61,11 @@ export class ReceiptTransactionComponent extends UIComponent {
   objectname: any;
   oData: any;
   lsVatCode: any;
-  gridViewLines: any;
   entityName: any;
+  receiptsFormName: string = 'VouchersReceipts';
+  receiptsGrvName: string = 'grvVouchersReceipts';
+  issuesFormName: string = 'VouchersIssues';
+  issuesGrvName: string = 'grvVouchersIssues';
   funcID: any;
   acctTrans: any;
   vllReceipt: any = 'AC116';
@@ -69,12 +73,17 @@ export class ReceiptTransactionComponent extends UIComponent {
   overflowed: boolean = false;
   expanding: boolean = false;
   isLoadDataAcct: any = true;
-  fmInventoryJournalLines: FormModel = {
-    formName: 'InventoryJournalLines',
-    gridViewName: 'grvInventoryJournalLines',
-    entityName: 'IV_InventoryJournalLines',
+  fmInventoryJournal: FormModel = {
+    formName: '',
+    gridViewName: '',
+    entityName: 'IV_Vouchers',
   };
-  inventoryJournalLines: Array<InventoryJournalLines> = [];
+  fmInventoryJournalLines: FormModel = {
+    formName: '',
+    gridViewName: '',
+    entityName: 'IV_VouchersLines',
+  };
+  inventoryJournalLines: Array<VouchersLines> = [];
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -111,23 +120,50 @@ export class ReceiptTransactionComponent extends UIComponent {
     this.funcID = this.routerActive.snapshot.params['funcID'];
     switch (this.funcID) {
       case 'ACT0708':
-        this.cache.valueList(this.vllReceipt).subscribe((res) => {
-          this.entityName = res?.datas[0].value;
+        this.cache.moreFunction(this.receiptsFormName, this.receiptsGrvName).subscribe((res: any) => {
+          if (res && res.length) {
+            let m = res.find((x) => x.functionID == 'ACT070801');
+            if (m)
+            {
+              this.fmInventoryJournal.formName = m.formName;
+              this.fmInventoryJournal.gridViewName = m.gridViewName;
+            }
+
+            let n = res.find((x) => x.functionID == 'ACT070800');
+            if (n) this.funcName = n.defaultName;
+
+            let o = res.find((x) => x.functionID == 'ACT070802');
+            if(o)
+            {
+              this.fmInventoryJournalLines.formName = 'VouchersLinesReceipts';
+              this.fmInventoryJournalLines.gridViewName = 'grvVouchersLinesReceipts';
+            }
+          }
         });
         break;
       case 'ACT0714':
-        this.cache.valueList(this.vllIssue).subscribe((res) => {
-          this.entityName = res?.datas[0].value;
+        this.cache.moreFunction(this.issuesFormName, this.issuesGrvName).subscribe((res: any) => {
+          if (res && res.length) {
+            let m = res.find((x) => x.functionID == 'ACT071401');
+            if (m)
+            {
+              this.fmInventoryJournal.formName = m.formName;
+              this.fmInventoryJournal.gridViewName = m.gridViewName;
+            }
+
+            let n = res.find((x) => x.functionID == 'ACT071400');
+            if (n) this.funcName = n.defaultName;
+
+            let o = res.find((x) => x.functionID == 'ACT071402');
+            if(o)
+            {
+              this.fmInventoryJournalLines.formName = 'VouchersLinesIssues';
+              this.fmInventoryJournalLines.gridViewName = 'grvVouchersLinesIssues';
+            }
+          }
         });
         break;
     }
-    this.cache
-      .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewLines = res;
-        }
-      });
   }
   //#endregion
 
@@ -136,9 +172,6 @@ export class ReceiptTransactionComponent extends UIComponent {
   onInit(): void {}
 
   ngAfterViewInit() {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
-    });
     this.views = [
       {
         type: ViewType.grid,
@@ -207,7 +240,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   //#region Method
 
   setDefault(o) {
-    return this.api.exec('IV', 'InventoryJournalsBusiness', 'SetDefaultAsync', [
+    return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
@@ -221,7 +254,8 @@ export class ReceiptTransactionComponent extends UIComponent {
           var obj = {
             formType: 'add',
             headerText: this.headerText,
-            entityMaster: this.entityName,
+            formModelMaster: this.fmInventoryJournal,
+            formModelLine: this.fmInventoryJournalLines,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -248,7 +282,8 @@ export class ReceiptTransactionComponent extends UIComponent {
           var obj = {
             formType: 'edit',
             headerText: this.funcName,
-            entityMaster: this.entityName,
+            formModelMaster: this.fmInventoryJournal,
+            formModelLine: this.fmInventoryJournalLines,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -283,7 +318,8 @@ export class ReceiptTransactionComponent extends UIComponent {
           var obj = {
             formType: 'copy',
             headerText: this.funcName,
-            entityMaster: this.entityName,
+            formModelMaster: this.fmInventoryJournal,
+            formModelLine: this.fmInventoryJournalLines,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -333,7 +369,7 @@ export class ReceiptTransactionComponent extends UIComponent {
 
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
-    opt.className = 'InventoryJournalsBusiness';
+    opt.className = 'VouchersBusiness';
     opt.assemblyName = 'IV';
     opt.service = 'IV';
     opt.data = data;
@@ -342,7 +378,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   loadDatadetail(data) {
     this.acctTrans = [];
     this.api
-      .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+      .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
         data.recID,
       ])
       .subscribe((res: any) => {
@@ -359,6 +395,8 @@ export class ReceiptTransactionComponent extends UIComponent {
       });
   }
   changeItemDetail(event) {
+    if (event?.data == null)
+      return;
     if (event?.data.data || event?.data.error) {
       return;
     } else {
