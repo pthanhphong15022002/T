@@ -22,24 +22,10 @@
           >
           </codx-input>
         </div>
+
         <div class="col-6">
           <div class="row">
-            <div class="col-6">
-              <codx-label [formModel]="form.formModel" [fiedName]="'Period'">
-              </codx-label>
-              <codx-dropdown-calendar
-                #dropCalendar
-                [disabled]="action == 'edit' || isBusiness"
-                cssPopup="h-500px w-800px"
-                [value]="date"
-                [displayOption]="ops"
-                cssClass="w-100 om-calendar"
-                class="me-2"
-                [selectedType]="selectedType"
-                (change)="changeCalendar($event)"
-              ></codx-dropdown-calendar>
-            </div>
-            <div class="col-6">
+            <div class="col-8">
               <codx-label [formModel]="form.formModel" fiedName="Target">
               </codx-label>
               <codx-input
@@ -51,18 +37,44 @@
               >
               </codx-input>
             </div>
+            <div class="col-4">
+              <codx-label [formModel]="form.formModel" fiedName="CurrencyID">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [crrValue]="data?.currencyID"
+                (valueChange)="valueChange($event)"
+                field="currencyID"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group row">
         <div class="col-6">
-          <div class="d-flex justify-content-between">
+          <codx-label [formModel]="form.formModel" [fiedName]="'Period'">
+          </codx-label>
+          <codx-dropdown-calendar
+            #dropCalendar
+            [disabled]="action == 'edit' || isBusiness"
+            cssPopup="h-500px w-800px"
+            [value]="date"
+            [displayOption]="ops"
+            cssClass="w-100 om-calendar"
+            class="me-2"
+            [selectedType]="selectedType"
+            (change)="changeCalendar($event)"
+          ></codx-dropdown-calendar>
+        </div>
+        <div class="col-6">
+          <div class="d-flex justify-content-between" style="margin-top: 19px">
             <div class="me-3">
               <codx-input
                 [field]="'allocation'"
                 [crrValue]="isAllocation"
                 type="checkbox"
-                [disabled]="isPeriod || isExitTarget"
+                [disabled]="isExitTarget"
                 (valueChange)="valueChange($event)"
               ></codx-input>
             </div>
@@ -316,6 +328,10 @@
               </ng-container>
               <ng-container *ngIf="!isAllocation">
                 <span
+                  [ngClass]="
+                    item?.userID == this.editingItem ? 'user-nav-active' : null
+                  "
+                  class="user-nav-item"
                   *ngIf="!isEditing(item?.userID, isAllocation) || !isEditLine"
                   (click)="dbClick(item?.userID)"
                 >
@@ -335,7 +351,10 @@
                 </span>
                 <span
                   *ngIf="isEditing(item?.userID, isAllocation) && isEditLine"
-                  class=""
+                  [ngClass]="
+                    item?.userID == this.editingItem ? 'user-nav-active' : null
+                  "
+                  class="user-nav-item"
                 >
                   <input
                     type="text"

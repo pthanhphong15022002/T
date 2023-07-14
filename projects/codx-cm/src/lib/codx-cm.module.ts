@@ -44,8 +44,6 @@ import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-de
 import { PopupAddDealcompetitorComponent } from './deals/deal-detail/codx-tab-dealcompetitors/popup-add-dealcompetitor/popup-add-dealcompetitor.component';
 import { ViewDealcompetitorsComponent } from './cmcustomer/cmcustomer-detail/view-dealcompetitors/view-dealcompetitors.component';
 import { QuotationsViewDetailComponent } from './quotations/quotations-view-detail/quotations-view-detail.component';
-import { CodxComboboxComponent } from './contracts/component/codx-combobox/codx-combobox.component';
-import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { CasesComponent } from './cases/cases.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
@@ -62,7 +60,6 @@ import { PopupAddPaymentComponent } from './contracts/payment/popup-add-payment/
 import { PopupAddPaymentHistoryComponent } from './contracts/payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from './contracts/payment/popup-view-payment-history/popup-view-payment-history.component';
 import { PopupMergeLeadsComponent } from './leads/popup-merge-leads/popup-merge-leads.component';
-import { ViewQuotationsComponent } from './contracts/component/view-quotations/view-quotations.component';
 import { ViewImgContactComponent } from './leads/popup-merge-leads/view-img-contact/view-img-contact.component';
 import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-remove-add-contact/popup-remove-add-contact.component';
 import { ViewPaymentComponent } from './contracts/payment/view-payment/view-payment.component';
@@ -72,13 +69,10 @@ import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/ta
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
 import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
-import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
 import { TaskComponent } from './deals/step-task/task/task.component';
-import { CustomergroupsComponent } from './customergroups/customergroups.component';
-import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
 import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
@@ -97,6 +91,10 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
+import { CustomergroupsComponent } from './customergroups/customergroups.component';
+import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
+import { CodxDpModule } from 'projects/codx-dp/src/public-api';
+import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 
 const routes: Routes = [
   {
@@ -156,16 +154,11 @@ const routes: Routes = [
       },
     ],
   },
+
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'setting/settingprocess/:funcID',
-        component: SettingProcessCmComponent,
-        data: { noReuse: true },
-      },
-    ],
+    loadChildren: () =>
+      import('./settings/settings.module').then((m) => m.SettingsCmModule),
   },
 ];
 
@@ -198,7 +191,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxTabDealcompetitorsComponent,
     PopupAddDealcompetitorComponent,
     ViewDealcompetitorsComponent,
-    CodxComboboxComponent,
     QuotationsViewDetailComponent,
     CasesComponent,
     CasesDetailComponent,
@@ -214,11 +206,11 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupStatusCompetitorComponent,
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
-    ViewQuotationsComponent,
     ContractsComponent,
     CustomergroupsComponent,
     PopupAddCustgroupComponent,
     //test
+    SettingProcessCmComponent,
     CodxAsideCustomComponent,
     PopupAddPaymentComponent,
     PopupAddPaymentHistoryComponent,
@@ -229,10 +221,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewPaymentComponent,
     GanttChartComponent,
     StepTaskComponent,
-    SettingProcessCmComponent,
     QuotationsTabViewComponent,
     ContractsViewDetailComponent,
-    ContractsDetailComponent,
     TaskComponent,
     PopupOwnerDealComponent,
     ViewIconGroupComponent,

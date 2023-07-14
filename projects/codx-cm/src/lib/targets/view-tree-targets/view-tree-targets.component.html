@@ -1,4 +1,4 @@
-<div class="treeview">
+<div class="treeview" style="padding-right: 100px; padding-left: 100px">
   <codx-treeview
     id="tree"
     #treeView
@@ -40,33 +40,58 @@
             [width]="30"
             [objectId]="item?.owner"
             objectType="AD_Users"
-            [numberImages]="3"
+            [numberImages]="5"
             class=""
           >
           </codx-imgs>
         </div>
         <div
           class="ms-3 fw-bold d-flex justify-content-end"
-          style="min-width: 100px"
-          [ngStyle]="
-            item?.color != null && item?.color?.trim() != ''
-              ? { color: item?.color }
-              : { color: '#1d1f1f' }
-          "
-          [innerHTML]="
-            item?.target | formatvalue : fmTargetLines : 'Target' | async
-          "
-        ></div>
-        <codx-mfunc
-          *ngIf="item?.parentID == null"
-          [formModel]="formModel"
-          (clickMF)="clickMF($event, item)"
-          (changeDataMF)="changeDataMF($event, item)"
-          [isBookMark]="false"
-          [dataItem]="item"
-          type="hover"
+          style="min-width: 150px"
         >
-        </codx-mfunc>
+          <span
+            *ngIf="item?.target > 0"
+            [ngStyle]="
+              item?.color != null && item?.color?.trim() != ''
+                ? { color: item?.color }
+                : { color: '#1d1f1f' }
+            "
+            [innerHTML]="
+              item?.target | formatvalue : fmTargetLines : 'Target' | async
+            "
+          ></span>
+          <span
+            *ngIf="item?.target == 0"
+            [ngStyle]="
+              item?.color != null && item?.color?.trim() != ''
+                ? { color: item?.color }
+                : { color: '#1d1f1f' }
+            "
+          >
+            0
+          </span>
+        </div>
+        <div class="w-100px min-w-100px ms-2">
+          <span
+            class="fw-bold me-2"
+            [innerHTML]="
+              item?.currencyID
+                | formatvalue : fmTargetLines : 'CurrencyID'
+                | async
+            "
+          >
+          </span>
+          <codx-mfunc
+            *ngIf="item?.parentID == null"
+            [formModel]="formModel"
+            (clickMF)="clickMF($event, item)"
+            (changeDataMF)="changeDataMF($event, item)"
+            [isBookMark]="false"
+            [dataItem]="item"
+            type="hover"
+          >
+          </codx-mfunc>
+        </div>
       </div>
     </div>
   </div>

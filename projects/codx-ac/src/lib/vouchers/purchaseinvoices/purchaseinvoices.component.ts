@@ -7,20 +7,19 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  UIComponent,
-  ViewModel,
-  DialogRef,
   ButtonModel,
   CallFuncService,
-  ViewType,
-  RequestOption,
-  SidebarModel,
+  DialogRef,
   FormModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
 } from 'codx-core';
-import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
-import { PurchaseInvoices } from '../../models/PurchaseInvoices.model';
+import { IPurchaseInvoice } from './interfaces/IPurchaseInvoice.inteface';
+import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -42,10 +41,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   totalAmt: any = 0;
   totalQuantity: any = 0;
   totalVat: any = 0;
-  width: any;
-  height: any;
-  innerWidth: any;
-  itemSelected: any;
+  master: IPurchaseInvoice;
   objectname: any;
   oData: any;
   itemName: any;
@@ -68,6 +64,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   parent: any;
+
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -121,12 +118,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
+      this.funcName = res.defaultName;
     });
+
     this.views = [
       {
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template2: this.templateMore,
@@ -142,6 +140,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         },
       },
     ];
+
     this.view.setRootNode(this.parent?.customName);
   }
 
@@ -151,13 +150,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  toolBarClick(e) {
-    switch (e.id) {
-      case 'btnAdd':
-        this.add(e);
-        break;
-    }
-  }
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -171,18 +163,19 @@ export class PurchaseinvoicesComponent extends UIComponent {
         break;
     }
   }
+
   setDefault(o) {
     return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
-  add(e) {
+
+  onClickAdd(e) {
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
       .subscribe((res: any) => {
-        if(res)
-        {
+        if (res) {
           var obj = {
             formType: 'add',
             headerText: this.headerText,
@@ -200,6 +193,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         }
       });
   }
+
   edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -207,8 +201,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
-        if(res)
-        {
+        if (res) {
           var obj = {
             formType: 'edit',
             headerText: this.funcName,
@@ -226,8 +219,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
           this.dialog.closed.subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data'];
-                this.loadDatadetail(this.itemSelected);
+                this.master = res.event['data'];
+                this.loadDatadetail(this.master);
               }
             }
           });
@@ -241,8 +234,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .copy((o) => this.setDefault(o))
       .subscribe((res: any) => {
-        if(res)
-        {
+        if (res) {
           var obj = {
             formType: 'copy',
             headerText: this.funcName,
@@ -277,29 +269,28 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //#endregion
 
   //#region Function
-  changeItemDetail(event) {
+  onSelectChange(event) {
     if (event?.data.data || event?.data.error) {
       return;
     } else {
-      if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+      if (this.master && this.master.recID == event?.data.recID) {
         return;
       } else {
-        this.itemSelected = event?.data;
-        this.loadDatadetail(this.itemSelected);
+        this.master = event?.data;
+        this.loadDatadetail(this.master);
       }
     }
   }
 
   clickChange(data) {
-    this.itemSelected = data;
+    this.master = data;
     this.loadDatadetail(data);
   }
 
   changeDataMF() {
-    if(this.view.dataService.dataSelected.recID)
-    {
-      this.itemSelected = this.view.dataService.dataSelected;
-      this.loadDatadetail(this.itemSelected);
+    if (this.view.dataService.dataSelected.recID) {
+      this.master = this.view.dataService.dataSelected;
+      this.loadDatadetail(this.master);
     }
   }
   loadDatadetail(data) {
@@ -318,13 +309,12 @@ export class PurchaseinvoicesComponent extends UIComponent {
       });
   }
 
-  loadTotal(){
+  loadTotal() {
     this.totalAmt = 0;
     this.totalQuantity = 0;
     this.totalVat = 0;
     this.purchaseInvoicesLines.forEach((item) => {
-      if(item)
-      {
+      if (item) {
         this.totalQuantity += item.quantity;
         this.totalAmt += item.netAmt;
         this.totalVat += item.vatAmt;

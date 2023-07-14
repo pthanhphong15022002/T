@@ -186,7 +186,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       'rptsys',
       'Codx.RptBusiniess.SYS',
       'ReportListBusiness',
-      'GetByReportIDAsync',
+      'GetAsync',
       this.reportID
     )
     .subscribe((res: any) => {
@@ -378,7 +378,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 
   excelTemplate(){
     let op = new DialogModel();
-    let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'add',type:'excel',refType:'R',refID:this.reportID},"",op)
+    let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,"",{action:'add',type:'excel',refType:'R',refID:this.reportID},"",op)
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
       }
@@ -553,7 +553,7 @@ download(){
                   'Codx.RptBusiniess.SYS',
                   'ReportBusiness',
                   'GetRootFileAsync',
-                  this.data.reportID).subscribe((res:any)=>{
+                  this.data.recID).subscribe((res:any)=>{
                     let linkSource = res;
                     if(linkSource.split(',').length ==1){
                       linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`

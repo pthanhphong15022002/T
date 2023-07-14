@@ -818,6 +818,10 @@ export class CodxDMService {
             else if (data.approvalStatus == '7')  {
               list = 'DMT0243'
               }
+            //Đã thu hồi quyền , từ chối
+            else if (data.approvalStatus == '8' || data.approvalStatus == '4')  {
+              list = 'DMT0230'
+              }
             else list = 'DMT0227';
             if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
               e[i].disabled = false;
@@ -1297,7 +1301,7 @@ export class CodxDMService {
             type,
             data.recID,
             data.id,
-            '-1',
+            this.idMenuActive == 'DMT06' ? '9' : '8',
             true
           );
           break;

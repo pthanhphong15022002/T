@@ -15,8 +15,9 @@ import { Post } from 'src/shared/models/post';
   providedIn: 'root',
 })
 export class SignalRService {
-  private hubConnection: signalR.HubConnection;
+  public hubConnection: signalR.HubConnection;
   connectionId: string;
+  logOut:boolean = false;
   userConnect = new EventEmitter<any>();
   disConnected = new EventEmitter<any>();
 
@@ -31,8 +32,9 @@ export class SignalRService {
     this.createConnection();
     this.registerOnServerEvents();
   }
-
+  
   public createConnection() {
+    this.logOut = false;
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/hubwp/chat', {
         skipNegotiation: true,
@@ -87,5 +89,15 @@ export class SignalRService {
   // send to server
   sendData(methodName: string, ...args: any[]) {
     this.hubConnection.invoke(methodName, ...args);
+  }
+
+  disconnect(user:any){
+    debugger
+    let ele = document.getElementsByTagName('codx-chat-container');
+      if (ele?.length > 0) {
+        ele[0].remove();
+      }
+    this.logOut = true;
+    this.hubConnection.invoke('LogOutAsync',user?.userID,user?.tenant);
   }
 }
