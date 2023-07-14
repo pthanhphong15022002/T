@@ -77,8 +77,6 @@ import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quo
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
 import { TaskComponent } from './deals/step-task/task/task.component';
-import { CustomergroupsComponent } from './customergroups/customergroups.component';
-import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
 import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
@@ -97,6 +95,8 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
+import { CustomergroupsComponent } from './customergroups/customergroups.component';
+import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
 
 const routes: Routes = [
   {
@@ -158,15 +158,20 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'setting/settingprocess/:funcID',
-        component: SettingProcessCmComponent,
-        data: { noReuse: true },
-      },
-    ],
+    loadChildren: () =>
+      import('./settings/settings.module').then((m) => m.SettingsModule),
   },
+  // {
+  //   path: '',
+  //   component: LayoutNoAsideComponent,
+  //   children: [
+  //     {
+  //       path: 'setting/settingprocess/:funcID',
+  //       component: SettingProcessCmComponent,
+  //       data: { noReuse: true },
+  //     },
+  //   ],
+  // },
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];
