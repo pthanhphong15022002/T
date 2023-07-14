@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import { CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { InventoryJournalLines } from '../../../models/InventoryJournalLines.model';
-import { InventoryJournals } from '../../../models/InventoryJournals.model';
+import { Vouchers } from '../../../models/Vouchers.model';
+import { VouchersLines } from '../../../models/VouchersLines.model';
 
 @Component({
   selector: 'lib-pop-add-lineinventory',
@@ -30,11 +30,15 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   objectIdim: any;
   lockFields: any;
   itemName: any;
-  entityLine: any;
   funcID: any;
-  inventoryJournalLine: InventoryJournalLines;
-  inventoryJournal: InventoryJournals;
-  objectInventoryJournalLines: Array<InventoryJournalLines> = [];
+  inventoryJournalLine: VouchersLines;
+  inventoryJournal: Vouchers;
+  objectInventoryJournalLines: Array<VouchersLines> = [];
+  fmInventoryJournalLines: FormModel = {
+    formName: '',
+    gridViewName: '',
+    entityName: '',
+  };
 
   constructor(
     inject: Injector,
@@ -47,7 +51,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     this.inventoryJournalLine = dialogData.data?.data;
     this.inventoryJournal = dialogData.data?.dataInventoryJournal;
     this.objectInventoryJournalLines = dialogData.data?.dataline;
-    this.entityLine = dialogData.data?.entityLine;
+    this.fmInventoryJournalLines = dialogData.data?.formModelLine;
     this.lockFields = dialogData.data?.lockFields;
     this.funcID = dialogData.data?.funcID;
     if (this.lockFields == null) {
@@ -56,7 +60,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
     this.cache
-      .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
+      .gridViewSetup(this.fmInventoryJournalLines.formName, this.fmInventoryJournalLines.gridViewName)
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -99,10 +103,11 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
       'idiM7',
       'idiM8',
       'idiM9',
+      'lineType'
     ];
     if (postFields.includes(e.field)) {
       this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'ValueChangedAsync', [
+        .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
           e.field,
           this.inventoryJournal,
           this.inventoryJournalLine,
@@ -182,7 +187,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         case 'add':
           this.api
             .execAction<any>(
-              this.entityLine,
+              this.fmInventoryJournalLines.entityName,
               [this.inventoryJournalLine],
               'SaveAsync'
             )
@@ -195,7 +200,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         case 'edit':
           this.api
             .execAction<any>(
-              this.entityLine,
+              this.fmInventoryJournalLines.entityName,
               [this.inventoryJournalLine],
               'UpdateAsync'
             )
@@ -217,7 +222,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     } else {
       this.api
         .execAction<any>(
-          this.entityLine,
+          this.fmInventoryJournalLines.entityName,
           [this.inventoryJournalLine],
           'SaveAsync'
         )
@@ -290,9 +295,9 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
 
   clearInventoryJournalLines() {
     let idx = this.objectInventoryJournalLines.length;
-    let data = new InventoryJournalLines();
+    let data = new VouchersLines();
     this.api
-      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
+      .exec<any>('IV', 'VouchersLinesBusiness', 'SetDefaultAsync', [
         this.inventoryJournal,
         data,
       ])

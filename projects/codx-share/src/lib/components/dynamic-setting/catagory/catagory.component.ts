@@ -1051,7 +1051,7 @@ export class CatagoryComponent implements OnInit {
             data: data[0],
           };
 
-          var dialog = this.callfc.openForm(
+          this.callfc.openForm(
             PopupAddDynamicProcessComponent,
             '',
             0,
@@ -1061,7 +1061,6 @@ export class CatagoryComponent implements OnInit {
             '',
             dialogModel
           );
-          dialog.closed.subscribe((e) => {});
         }
       });
 

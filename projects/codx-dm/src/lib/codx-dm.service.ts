@@ -1301,7 +1301,7 @@ export class CodxDMService {
             type,
             data.recID,
             data.id,
-            '-1',
+            this.idMenuActive == 'DMT06' ? '9' : '8',
             true
           );
           break;

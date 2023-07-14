@@ -204,6 +204,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           group?.task?.forEach((task) => {
             task['progressOld'] = task.progress;
             task['isChange'] = false;
+            task['isChangeAuto'] = false;
           });
           group['progressOld'] = group.progress;
           group['isChange'] = false;
@@ -224,13 +225,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.valueChangeProgress.emit({ type: 'A', data: progressData });
         } else {
           this.listGroupTask?.forEach((group) => {
+            let countTask = group?.task?.length;
+            let sumProgress = 0;
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
+              sumProgress += task?.progress;
               if(task?.isChange){
                 progressData.push(this.setProgressOutput(task, group));
               }
             });
-            group.progress = group?.progressOld;
+            group.progress = Number((sumProgress / countTask).toFixed(2));
+            // group.progress = group?.progressOld;
             if (group?.recID && group?.isChange) {
               progressData.push(this.setProgressOutput(null, group));
             }
@@ -270,15 +275,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.listGroupTask?.forEach((group) => {
           let countTask = group?.task?.length;
           if (countTask > 0) {
+            let sumProgress = 0;
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
+                sumProgress += task.progress;
                 if(task?.isChange){
                   progressData.push(this.setProgressOutput(null, group));              
                 }
               }
             });
-            group.progress = group?.progressOld;
+            // group.progress = group?.progressOld;
+            group.progress = Number((sumProgress / countTask).toFixed(2));
             if (group?.recID && group?.isChange) {
               progressData.push(this.setProgressOutput(null, group));
             }
