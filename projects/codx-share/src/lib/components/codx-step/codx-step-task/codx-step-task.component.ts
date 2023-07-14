@@ -1528,6 +1528,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
         }
+        if (this.isMoveStage) {
+          data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
+          data.isChange = true;
+        }
       } else {
         this.updateDataProgress(data, dataProgress);
         if (this.isMoveStage) {
