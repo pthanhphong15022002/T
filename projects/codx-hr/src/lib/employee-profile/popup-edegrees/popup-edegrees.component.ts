@@ -13,6 +13,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 @Component({
   selector: 'lib-popup-edegrees',
   templateUrl: './popup-edegrees.component.html',
@@ -44,6 +45,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   levelText: string;
   trainFieldText: string;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
+
   //@ViewChild('listView') listView: CodxListviewComponent;
   ops = ['m', 'y'];
   date = new Date();
@@ -95,6 +98,27 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       }
       this.degreeObj.trainToDate = event.fromDate;
     }
+  }
+
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'degreeOveralInf',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Thông tin thêm',
+      name: 'degreeMoreInf',
+    }
+  ];
+
+  async addFiles(evt){
+    this.degreeObj.attachments = evt.data.length;
+  }
+
+  openFormUploadFile() {
+    this.attachment.uploadFile();
   }
 
   ngAfterViewInit() {
@@ -197,9 +221,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     })
   }
 
-  onSaveForm() {
+  async onSaveForm() {
     this.degreeObj.employeeID = this.employId;
-    console.log('data chuan bi luu', this.degreeObj);
     
     let ddd = new Date();
     if(this.degreeObj.issuedDate > ddd.toISOString()){
@@ -218,20 +241,31 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       }
     }
 
-    if(this.degreeObj.expiredDate && this.degreeObj.effectedDate){
-      if (this.degreeObj.expiredDate < this.degreeObj.effectedDate) {
-        this.hrService.notifyInvalidFromTo(
-          'ExpiredDate',
-          'EffectedDate',
-          this.formModel
-          )
-          return;
-      }
-    }
+    // if(this.degreeObj.expiredDate && this.degreeObj.effectedDate){
+    //   if (this.degreeObj.expiredDate < this.degreeObj.effectedDate) {
+    //     this.hrService.notifyInvalidFromTo(
+    //       'ExpiredDate',
+    //       'EffectedDate',
+    //       this.formModel
+    //       )
+    //       return;
+    //   }
+    // }
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
+
+    if(
+      this.attachment.fileUploadList &&
+      this.attachment.fileUploadList.length > 0
+      ) {
+      this.attachment.objectId=this.degreeObj?.recID;
+      (await (this.attachment.saveFilesObservable())).subscribe(
+      (item2:any)=>{
+            debugger
+          });
+      }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       if(this.actionType === 'add'){
@@ -303,9 +337,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           this.cr.detectChanges();
         }
       }
-    } else {
-      this.notify.notifyCode('Nhap thong tin noi dao tao');
-    }
+    } 
+    // else {
+    //   this.notify.notifyCode('Nhap thong tin noi dao tao');
+    // }
   }
 
   valueChange(event) {
