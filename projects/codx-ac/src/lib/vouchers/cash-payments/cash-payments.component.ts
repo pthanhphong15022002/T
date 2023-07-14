@@ -33,7 +33,7 @@ import {
   AnimationModel,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
-import { PopUpCashReportComponent } from './pop-up-cash-report/pop-up-cash-report.component';
+import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -788,39 +788,39 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-  print(data: any, reportID: any) {
+  print(data: any, reportID: any, reportType: string = 'V') {
+    
     this.api
-      .execSv(
-        'rptsys',
-        'Codx.RptBusiniess.SYS',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        reportID
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          if (res.length > 1) {
-            this.openPopupCashReport(data, res);
-          } else if (res.length == 1) {
-            this.codxService.navigate(
-              '',
-              'ac/report/detail/' + `${res[0].reportID}`
-            );
-          }
+    .execSv(
+      'rptsys',
+      'Codx.RptBusiniess.SYS',
+      'ReportListBusiness',
+      'GetListReportByIDandType',
+      [reportID, reportType]
+    )
+    .subscribe((res: any) => {
+      if (res != null ) {
+        if(res.length > 1)
+        {
+          this.openPopupCashReport(data, res);
         }
-      });
+        else if(res.length == 1)
+        {
+          this.codxService.navigate('', 'ac/report/detail/' + `${res[0].recID}`);
+        }
+      }
+    });
   }
 
   openPopupCashReport(data: any, reportList: any) {
     var obj = {
-      formType: 'Insert',
-      headerText: this.funcName,
       data: data,
       reportList: reportList,
+      url: 'ac/report/detail/',
     };
     let opt = new DialogModel();
     this.dialog = this.callfunc.openForm(
-      PopUpCashReportComponent,
+      CodxListReportsComponent,
       '',
       400,
       600,
