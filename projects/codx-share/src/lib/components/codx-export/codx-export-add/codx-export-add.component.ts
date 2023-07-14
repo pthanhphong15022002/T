@@ -108,6 +108,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         .execSv('SYS', 'AD', 'WordTemplatesBusiness', 'GetDefaultAsync', [
           'WordTemplates',
           'grvWordTemplates',
+          this.action == 'add',
         ])
         .subscribe((res: any) => {
           if (!res) return;
@@ -119,22 +120,28 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             'grvWordTemplates',
             gridviewSetup
           );
-          if (!this.data) this.data = res.data;
-          this.exportAddForm = this.formBuilder.group({
-            templatetID: [this.data?.templatetID],
-            templateName: [this.data?.templateName, Validators.required],
-            description: this.data?.description,
-            pWControl: '',
-            pWDefault: '',
-            owner: this.data?.owner,
-            buid: this.data?.buid,
-            createdOn: this.data?.createdOn,
-          });
-          // this.exportAddForm = this.codxService.buildFormGroup(
-          //   'WordTemplates',
-          //   'grvWordTemplates',
-          //   this.data
-          // );
+          if (this.action == 'add') {
+            this.data = res.data;
+            this.exportAddForm = this.formBuilder.group({
+              templatetID: [this.data?.templatetID],
+              templateName: [this.data?.templateName, Validators.required],
+              description: this.data?.description,
+              pWControl: '',
+              pWDefault: '',
+              owner: this.data?.owner,
+              buid: this.data?.buid,
+              createdOn: this.data?.createdOn,
+            });
+          } else {
+            this.exportAddForm = this.codxService.buildFormGroup(
+              'WordTemplates',
+              'grvWordTemplates',
+              'AD_WordTemplates',
+              this.data
+            );
+            // this.exportAddForm.addControl('pWControl', new FormControl(''));
+            // this.exportAddForm.addControl('pWDefault', new FormControl(''));
+          }
         });
     }
   }
@@ -221,9 +228,16 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
-        this.exportAddForm.value.recID = this.data.recID;
-        this.exportAddForm.value.refID = this.data.refID; // Thảo thêm để thêm biến lưu cho temEx
-        this.exportAddForm.value.refType = this.data.refType; // Thảo thêm để thêm biến lưu cho temEx
+        this.exportAddForm.value.docFile = null;
+        this.exportAddForm.value.xmlFile = null;
+        this.exportAddForm.value.xmlSchemaFile = null;
+        this.exportAddForm.value.xsltStylessheet = null;
+        if (!this.exportAddForm.value.isDefault)
+          this.exportAddForm.value.isDefault = false;
+        if (!this.exportAddForm.value.isLocal)
+          this.exportAddForm.value.isLocal = false;
+        if (!this.exportAddForm.value.isSystem)
+          this.exportAddForm.value.isSystem = false;
         this.api
           .execActionData<any>(
             'AD_WordTemplates',
@@ -232,6 +246,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           )
           .subscribe((item) => {
             debugger;
+            if (!item) return;
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
               this.attachment.objectId = item[1][0].recID;

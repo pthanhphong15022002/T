@@ -1148,7 +1148,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Thêm mới bộ mục tiêu
   addEditOKRPlans(isAdd: boolean) {
-    if (!this.adminRole && !this.fullRolePlan) {
+    let allow=false;
+    if(isAdd){
+      allow=true;
+    }
+    else{
+      if(this.adminRole || this.fullRolePlan){        
+        allow=true;
+      }
+    }
+    if(!allow) {      
       this.notificationsService.notifyCode('SYS032');
       return;
     }

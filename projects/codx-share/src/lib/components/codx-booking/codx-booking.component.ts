@@ -36,6 +36,7 @@ import { CodxInviteRoomAttendeesComponent } from './codx-invite-room-attendees/c
 // import { PopupRescheduleBookingComponent } from './popup-reschedule-booking/popup-reschedule-booking.component';
 import { ɵglobal as global } from '@angular/core';
 import { CodxBookingService } from './codx-booking.service';
+import { CodxBookingViewDetailComponent } from './codx-booking-view-detail/codx-booking-view-detail.component';
 
 @Component({
   selector: 'codx-booking',
@@ -67,7 +68,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   @ViewChild('gridNote') gridNote: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   ngCmp: any = global;
-
   //---------------------------------------------------------------------------------//
   service = 'EP';
   assemblyName = 'EP';
@@ -88,25 +88,28 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   columnGrids = [];
   scheduleEvtModel: any;
   scheduleHeaderModel: any;
+  popupBookingComponent: any;
+  curUser: import("codx-core").UserModel;
   //---------------------------------------------------------------------------------//
-  popupTitle = '';
-  itemDetail: any;
-  funcIDName;
-  optionalData;
   navigated = false;
   isAdmin = false;
   isAfterRender = false;
   isAllocateStationery = false;
-  popupBookingComponent: any;
-  crrViewMode: any;
   allocateFuncID = EPCONST.FUNCID.S_Allocate;
-  categoryIDProcess = '';
-  categoryID = '';
-  allocateStatus: string;
-  curUser: import("codx-core").UserModel;
+  //---------------------------------------------------------------------------------//
   lstWarehourse=[];
   lstResourceOwner=[];
   resourceOwner = null;
+  //---------------------------------------------------------------------------------//
+  optionalData:any;
+  itemDetail: any;
+  //---------------------------------------------------------------------------------//
+  crrViewMode: any;
+  popupTitle = '';
+  funcIDName='';
+  categoryIDProcess = '';
+  categoryID = '';
+  allocateStatus: string;
   constructor(
     injector: Injector,
     private codxShareService: CodxShareService,

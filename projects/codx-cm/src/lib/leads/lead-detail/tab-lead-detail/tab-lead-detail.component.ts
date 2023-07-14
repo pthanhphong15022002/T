@@ -27,9 +27,10 @@ export class TabLeadDetailComponent
   @Input() tabClicked: any;
   @Input() dataSelected: any;
   @Input() formModel: any;
+  @Input() listSteps: any;
   @Output() saveAssign = new EventEmitter<any>();
   titleAction: string = '';
-  listStep = [];
+
   isUpdate = true;
   listStepsProcess = [];
   // listCategory = [];
@@ -74,8 +75,18 @@ export class TabLeadDetailComponent
     //nvthuan
     if (changes.dataSelected) {
       this.isDataLoading = true;
-      this.getListInstanceStep();
+      this.dataSelected = changes.dataSelected.currentValue;
     }
+    if (changes?.listSteps) {
+      if (
+        changes?.listSteps?.currentValue?.length > 0 &&
+        changes?.listSteps?.currentValue !== null
+      ) {
+        this.isDataLoading = false;
+        this.listSteps = changes?.listSteps.currentValue;
+      }
+    }
+
   }
 
   async executeApiCalls() {
@@ -86,43 +97,8 @@ export class TabLeadDetailComponent
     }
   }
 
-  getListInstanceStep() {
-    var data = [
-      this.dataSelected?.refID,
-      this.dataSelected?.processID,
-      this.dataSelected?.status,
-    ];
-    this.codxCmService.getStepInstance(data).subscribe((res) => {
-      if (res) {
-        this.listStep = res;
-        this.checkCompletedInstance(this.dataSelected?.status);
-        this.leadDetailComponent.pushTabFields((this.checkHaveField(this.listStep)));
-      }
-      else {
-        this.listStep = null;
-      }
-      this.isDataLoading = false;
-    });
-  }
-  checkCompletedInstance(dealStatus: any) {
-    if (dealStatus == '1' || dealStatus == '2') {
-      this.deleteListReason(this.listStep);
-    }
-  }
-  deleteListReason(listStep: any): void {
-    listStep.pop();
-    listStep.pop();
-  }
-  checkHaveField(listStep: any){
-    var isCheck = false;
-    for(let item of listStep) {
-        if(item?.fields?.length > 0 && item?.fields) {
-          isCheck = true;
-          return isCheck;
-        }
-    }
-    return isCheck;
-  }
+
+
   // async getValueList() {
   //   this.cache.valueList('CRM010').subscribe((res) => {
   //     if (res.datas) {

@@ -106,6 +106,9 @@
             <codx-view-tree-targets
               [dataTree]="lstDataTree"
               [fmTargetLines]="fmTargetLines"
+              [formModel]="view.formModel"
+              (clickMoreFunc)="clickMoreFunc($event)"
+              (changeMoreMF)="changeMoreMF($event)"
             ></codx-view-tree-targets>
           </div>
         </div>

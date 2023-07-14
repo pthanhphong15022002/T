@@ -80,22 +80,26 @@
                 <div class="text-gray-600">
                   {{ dataSelected.customerName }}
                 </div>
-                <div class="fw-bold text-dark fs-5"
-                    [ngbTooltip]="tooltipDealName"
-                    #dealName
-                    [innerHTML]="
-                      dataSelected?.dealName
-                        | formatvalue : formModel : 'dealName' : dealName
-                        | async
-                    "
-                  ></div>
+                <div
+                  class="fw-bold text-dark fs-5"
+                  [ngbTooltip]="tooltipDealName"
+                  #dealName
+                  [innerHTML]="
+                    dataSelected?.dealName
+                      | formatvalue : formModel : 'dealName' : dealName
+                      | async
+                  "
+                ></div>
               </div>
             </div>
           </div>
           <div class="ms-5 d-flex justify-content-between">
             <div class="d-flex flex-column">
               <div class="d-flex flex-row">
-                <div class="d-flex align-items-top justify-content-end fs-4"  [ngbTooltip]="toolTipDealValue" >
+                <div
+                  class="d-flex align-items-top justify-content-end fs-4"
+                  [ngbTooltip]="toolTipDealValue"
+                >
                   <span
                     class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
                   ></span>
@@ -110,20 +114,23 @@
                     "
                   ></span>
                   <span
-                  [ngClass]="dataSelected?.currencyID ? '' : 'line-clamp-menu'"
-                  class="text-gray-700"
-                  [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
-                  #currencyID
-                  [innerHTML]="
-                  dataSelected?.currencyID
-                      | formatvalue : formModel : 'currencyID'
-                      | async
-                  "
-                ></span>
-
+                    [ngClass]="
+                      dataSelected?.currencyID ? '' : 'line-clamp-menu'
+                    "
+                    class="text-gray-700"
+                    [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+                    #currencyID
+                    [innerHTML]="
+                      dataSelected?.currencyID
+                        | formatvalue : formModel : 'currencyID'
+                        | async
+                    "
+                  ></span>
                 </div>
+              </div>
+              <div class="d-flex justify-content-end">
                 <div
-                  class="d-flex align-items-top justify-content-end ps-10 fs-4"
+                  class="d-flex align-items-top justify-content-end ps-10 fs-6"
                   [ngbTooltip]="gridViewSetup['Probability']?.headerText"
                 >
                   <span
@@ -142,10 +149,9 @@
                   ></span
                   >%
                 </div>
-              </div>
-              <div class="d-flex justify-content-end">
+
                 <span
-                  class="text-gray-600 line-clamp-menu"
+                  class="text-gray-600 line-clamp-menu ps-3"
                   #expectedClosed
                   [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
                   [innerHTML]="
@@ -207,14 +213,14 @@
                     "
                   ></span>
                 </div>
-                <div class="mb-1"  *ngIf="viewTag && viewTag != ''">
+                <div class="mb-1" *ngIf="viewTag && viewTag != ''">
                   <codx-tag
-                  [entityName]="formModel.entityName"
-                  [disabled]="true"
-                  [isEdit]="false"
-                  [value]="viewTag"
-                >
-                </codx-tag>
+                    [entityName]="formModel.entityName"
+                    [disabled]="true"
+                    [isEdit]="false"
+                    [value]="viewTag"
+                  >
+                  </codx-tag>
                 </div>
                 <div class="d-flex flex-wrap align-items-top mb-1">
                   <div class="d-flex flex-column">
@@ -299,25 +305,26 @@
                     class="mb-2 d-flex align-items-center justify-content-end"
                   >
                     <div
-                    *ngIf="dataSelected.status == '2'; else statusDefault"
-                    [ngStyle]="{
-                      'background-color': dataSelected?.steps['backgroundColor']
-                    }"
-                    class="badge badge-sm d-flex align-items-center"
-                  >
-                    <span
-                      [ngClass]="dataSelected?.steps['icon']"
-                      [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                      class="me-1"
-                    ></span>
-                    <span
-                      class="text-ellipsis line-clamp line-clamp-1"
-                      [ngbTooltip]="dataSelected?.currentStepName"
-                      [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                      >{{ dataSelected?.currentStepName }}</span
+                      *ngIf="dataSelected.status == '2'; else statusDefault"
+                      [ngStyle]="{
+                        'background-color':
+                          dataSelected?.steps['backgroundColor']
+                      }"
+                      class="badge badge-sm d-flex align-items-center"
                     >
-                  </div>
-                  <ng-template #statusDefault>
+                      <span
+                        [ngClass]="dataSelected?.steps['icon']"
+                        [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                        class="me-1"
+                      ></span>
+                      <span
+                        class="text-ellipsis line-clamp line-clamp-1"
+                        [ngbTooltip]="dataSelected?.currentStepName"
+                        [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
+                        >{{ dataSelected?.currentStepName }}</span
+                      >
+                    </div>
+                    <ng-template #statusDefault>
                       <codx-vll
                         [name]="gridViewSetup?.Status?.referedValue"
                         [field]="'Status'"
@@ -327,7 +334,7 @@
                         class="badge badge-light badge-sm"
                       >
                       </codx-vll>
-                  </ng-template>
+                    </ng-template>
                   </div>
 
                   <div
@@ -430,13 +437,11 @@
     <div *ngFor="let item of mergedList" class="p-3">
       <div class="d-flex justify-content-start">
         <div>
-          <i
-            [class]="getSettingValue(item?.type,'icon')"
-          ></i>
+          <i [class]="getSettingValue(item?.type, 'icon')"></i>
         </div>
         <div class="d-flex align-items-stretch">
           <codx-label
-            [default]="getSettingValue(item?.type,'headerText')"
+            [default]="getSettingValue(item?.type, 'headerText')"
             class="pe-2"
           ></codx-label>
           <span
@@ -453,7 +458,7 @@
         </div>
         <div
           class="ms-auto"
-          [ngbTooltip]="getSettingValue(item?.type,'deadValue')"
+          [ngbTooltip]="getSettingValue(item?.type, 'deadValue')"
         >
           <span
             class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
@@ -472,20 +477,23 @@
             #currencyID
             [innerHTML]="
               item?.currencyID
-                | formatvalue : getSettingValue(item?.type,'formModel') : 'currencyID'
+                | formatvalue
+                  : getSettingValue(item?.type, 'formModel')
+                  : 'currencyID'
                 | async
             "
           ></span>
         </div>
       </div>
-      <div class="d-flex justify-content-start"
-      > <span [ngbTooltip]="getSettingValue(item?.type,'name')">
-        {{ item?.name }}
-      </span> </div>
+      <div class="d-flex justify-content-start">
+        <span [ngbTooltip]="getSettingValue(item?.type, 'name')">
+          {{ item?.name }}
+        </span>
+      </div>
       <div class="d-flex justify-content-between">
         <div class="first-div d-flex align-items-start">
           <codx-vll
-            [name]="getSettingValue(item?.type,'status')"
+            [name]="getSettingValue(item?.type, 'status')"
             [field]="'Status'"
             [value]="item?.status"
             [showText]="true"
@@ -493,16 +501,16 @@
             class="badge badge-light badge-sm"
           >
           </codx-vll>
-          <div
-            [ngbTooltip]="getSettingValue(item?.type,'createOn')"
-          >
+          <div [ngbTooltip]="getSettingValue(item?.type, 'createOn')">
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
               class="text-gray-700 line-clamp-menu"
               #createdOn
               [innerHTML]="
                 item?.createdOn
-                  | formatvalue : getSettingValue(item?.type,'formModel') : 'createdOn'
+                  | formatvalue
+                    : getSettingValue(item?.type, 'formModel')
+                    : 'createdOn'
                   | async
               "
             ></span>
@@ -526,5 +534,3 @@
   </ng-template>
 </ng-template>
 <ng-template #defaultNull> <p>0</p></ng-template>
-
-

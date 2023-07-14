@@ -37,7 +37,6 @@ export class DealDetailComponent implements OnInit {
   @Input() checkMoreReason = true;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-  @Output() listInstanceStep = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('tabDetailViewDetail')
@@ -246,7 +245,7 @@ export class DealDetailComponent implements OnInit {
 
   changeDataMF(e, data) {
     this.changeMF.emit({
-      e: e,
+      e:  e,
       data: data,
     });
   }
@@ -307,7 +306,6 @@ export class DealDetailComponent implements OnInit {
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
-        this.listInstanceStep.emit({ listStep: this.listSteps });
         this.checkCompletedInstance(this.dataSelected?.status);
       } else {
         this.listSteps = null;

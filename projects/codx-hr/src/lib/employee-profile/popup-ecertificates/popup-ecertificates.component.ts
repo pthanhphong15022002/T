@@ -11,6 +11,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -41,8 +42,12 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
 
+  displayForeignCert = false;
+
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
+  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  fieldHeaderTexts: any;
 
   constructor(
     private injector: Injector,
@@ -65,6 +70,19 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
   }
+
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'cerOveralInf',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Thông tin thêm',
+      name: 'cerMoreInf',
+    }
+  ];
 
   initForm() {
     this.cache
@@ -108,6 +126,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       this.isNullFrom = true;
       this.isNullTo = true;
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        if(this.certificateObj.certificateType == '3'){
+          this.displayForeignCert = true;
+        }
         this.formGroup.patchValue(this.certificateObj);
         this.formModel.currentData = this.certificateObj;
         this.cr.detectChanges();
@@ -128,6 +149,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.hrService.getHeaderText(this.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    })
     this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
@@ -144,6 +168,11 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    if(!this.certificateObj.foreignLanguage && this.certificateObj.certificateType == '3'){
+      this.notify.notifyCode('SYS009', null, this.fieldHeaderTexts['ForeignLanguage']);
+      return;
+    }
+
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -198,6 +227,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   valueChange(event, cbxComponent: any = null) {
+    if(event.data == '3'){
+      this.displayForeignCert = true;
+    }
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         case 'certificateType': {
@@ -226,8 +258,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
           this.cr.detectChanges();
         }
       }
-    } else {
-      this.notify.notifyCode('Nhap thong tin noi dao tao');
     }
   }
 
