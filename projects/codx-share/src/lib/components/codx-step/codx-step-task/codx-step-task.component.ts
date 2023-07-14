@@ -203,8 +203,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.listGroupTask?.forEach((group) => {
           group?.task?.forEach((task) => {
             task['progressOld'] = task.progress;
+            task['isChange'] = false;
           });
           group['progressOld'] = group.progress;
+          group['isChange'] = false;
         });
       } else {
         let progressData = [];
@@ -224,8 +226,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.listGroupTask?.forEach((group) => {
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
+              if(task?.isChange){
+                progressData.push(this.setProgressOutput(task, group));
+              }
             });
             group.progress = group?.progressOld;
+            if (group?.recID && group?.isChange) {
+              progressData.push(this.setProgressOutput(null, group));
+            }
           });
           this.valueChangeProgress.emit({ type: 'A', data: progressData });
         }
@@ -251,7 +259,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               }
               sumProgress += task.progress;
             });
-            if (check) {
+            if (check && group?.recID) {
               group.progress = Number((sumProgress / countTask).toFixed(2));
               progressData.push(this.setProgressOutput(null, group));
             }
@@ -265,9 +273,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
+                if(task?.isChange){
+                  progressData.push(this.setProgressOutput(null, group));              
+                }
               }
             });
             group.progress = group?.progressOld;
+            if (group?.recID && group?.isChange) {
+              progressData.push(this.setProgressOutput(null, group));
+            }
           }
         });
         this.valueChangeProgress.emit({ type: 'R', data: progressData });
@@ -284,7 +298,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       dataOutput['type'] = 'T';
       dataOutput['progressTask'] = task?.progress;
       dataOutput['taskID'] = task?.recID;
-      dataOutput['groupTaskID'] = group?.recID;
+      dataOutput['groupTaskID'] = group?.refID;
       dataOutput['stepID'] = this.currentStep?.recID;
     } else {
       dataOutput['isUpdate'] = true;
@@ -1514,10 +1528,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
         }
+        if (this.isMoveStage) {
+          data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
+          data.isChange = true;
+        }
       } else {
         this.updateDataProgress(data, dataProgress);
         if (this.isMoveStage) {
           data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
+          data.isChange = true;
         }
         let taskFind = this.currentStep?.tasks?.find(
           (task) => task.recID == dataProgress.taskID
@@ -1539,6 +1558,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             groupView.progress = dataProgress?.progressGroupTask;
             if (this.isMoveStage) {
               groupView.progressOld = dataProgress?.progressGroupTask; // dành cho cập nhật tất cả
+              groupView.isChange = true;
             }
           }
           if (groupData) {

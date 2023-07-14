@@ -126,12 +126,11 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    debugger
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-
-    debugger
 
     let ddd = new Date();
     if(this.visaObj.issuedDate > ddd.toISOString()){

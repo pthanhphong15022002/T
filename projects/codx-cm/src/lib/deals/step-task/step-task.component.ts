@@ -1,5 +1,5 @@
 import { filter } from 'rxjs';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, DialogRef, FormModel, NotificationsService,} from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 import { CodxCmService } from '../../codx-cm.service';
@@ -12,8 +12,9 @@ import { tmpInstancesStepsReasons } from '../../models/tmpModel';
 })
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('task') task : CodxStepTaskComponent;
-  @Input() typeTask = 1;
-  @Input() customerID = 1;
+  @Input() typeTask = 1; // 2 = hợp đồng
+  @Input() customerID = '';
+  @Input() isPause = false;
   @Input() applyFor;
   @Input() isDataLoading: any;
   @Input() dataSelected: any;
@@ -57,6 +58,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     download: true,
     delete: true,
   };
+  elementRef: any;
+  renderer: any;
+  taskHeight = '415px'
 
   constructor(
     private cache: CacheService,
@@ -94,7 +98,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-
+    this.setHeight();
   }
   changeValue(e){
     this.type = e.data;
@@ -306,5 +310,20 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   //#endregion
 
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(event: Event) {
+   this.setHeight();
+  }
 
+  setHeight(){
+    setTimeout(() => {
+      const main = document.querySelector('.codx-detail-main')as HTMLElement ;
+      const mainHeight = main.offsetHeight;
+      let taskHeight = mainHeight - 330;
+      if(taskHeight){
+        this.taskHeight = taskHeight.toString() + 'px'
+        // this.renderer.setStyle(listTask, 'height', taskHeight.toString() + 'px');
+      }
+    }, 500);
+  }
 }
