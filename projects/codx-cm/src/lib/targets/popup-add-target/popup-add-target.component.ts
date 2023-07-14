@@ -7,6 +7,7 @@ import {
 import {
   ApiHttpService,
   AuthStore,
+  CRUDService,
   CacheService,
   CodxDropdownCalendarComponent,
   DialogData,
@@ -82,6 +83,8 @@ export class PopupAddTargetComponent {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTargetLines = data?.data?.lstTargetLines;
+      this.getListTimeCalendar(this.text);
+      this.setQuartersByTargetOrLines('lines');
     }
   }
 
@@ -90,9 +93,11 @@ export class PopupAddTargetComponent {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.selectedType = this.getFormatCalendar(null);
       this.data.owner = null;
+      this.data.currencyID = 'VND';
     } else {
       this.selectedType = this.getFormatCalendar(this.data?.category);
       this.isBusiness = true;
+      this.isExitTarget = true;
       this.typeChange = 'noInput';
     }
     this.isAllocation = this.data?.allocation == '1' ? true : false;
@@ -137,8 +142,25 @@ export class PopupAddTargetComponent {
       });
   }
 
+  onUpdate() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe(async (res) => {
+        if (res && res.update) {
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+
+          this.dialog.close(res.update);
+        }
+      });
+  }
   onSave() {
-    this.onAdd();
+    if (this.action == 'add') {
+      this.onAdd();
+    } else {
+      this.onUpdate();
+    }
   }
 
   //#endregion
@@ -167,9 +189,9 @@ export class PopupAddTargetComponent {
           if (this.data.target !== e.data) {
             this.data.target = this.convertToFixelNumber(e?.data);
             this.setTargetToLine();
-            this.getListTimeCalendar(this.text);
-            this.setQuarters('target');
+            this.setQuartersByTargetOrLines('target');
             this.setListTargetLine();
+            this.getListTimeCalendar(this.text);
           }
           break;
         default:
@@ -191,40 +213,6 @@ export class PopupAddTargetComponent {
       this.typeChange = 'input';
     }
     this.changedetectorRef.detectChanges();
-  }
-
-  setQuarters(type) {
-    if (type == 'target') {
-      this.quarter1 = this.convertToFixelNumber(this.data.target / 4);
-      this.quarter2 = this.convertToFixelNumber(this.data.target / 4);
-      this.quarter3 = this.convertToFixelNumber(this.data.target / 4);
-      this.quarter4 = this.convertToFixelNumber(this.data.target / 4);
-      this.setTagetByQuarter();
-    } else {
-      if (this.lstTargetLines != null && this.lstTargetLines.length > 0) {
-        for (let i = 1; i <= 4; i++) {
-          var total = 0;
-          let index = i == 1 ? 1 : i == 2 ? 4 : i == 3 ? 7 : 10;
-          for (let j = index; j <= index + 2; j++) {
-            for (var item of this.lstTargetLines) {
-              let month = item?.startDate.getMonth() + 1;
-              if (month == j) {
-                total = this.convertToFixelNumber((total += item.target));
-              }
-            }
-          }
-          if (i === 1) {
-            this.quarter1 = this.convertToFixelNumber(total);
-          } else if (i === 2) {
-            this.quarter2 = this.convertToFixelNumber(total);
-          } else if (i === 3) {
-            this.quarter3 = this.convertToFixelNumber(total);
-          } else {
-            this.quarter4 = this.convertToFixelNumber(total);
-          }
-        }
-      }
-    }
   }
 
   sumTargetAll(targetQuarter: number = 0, quaterOld: number = 0) {
@@ -344,16 +332,16 @@ export class PopupAddTargetComponent {
   setTargetLine(month) {
     var target = 0;
     if (month >= 1 && month < 4) {
-      target = Math.round(this.quarter1 / this.lstOwners.length / 3);
+      target = this.convertToFixelNumber(this.quarter1 / this.lstOwners.length / 3);
     }
     if (month >= 4 && month < 7) {
-      target = Math.round(this.quarter2 / this.lstOwners.length / 3);
+      target = this.convertToFixelNumber(this.quarter2 / this.lstOwners.length / 3);
     }
     if (month >= 7 && month < 10) {
-      target = Math.round(this.quarter3 / this.lstOwners.length / 3);
+      target = this.convertToFixelNumber(this.quarter3 / this.lstOwners.length / 3);
     }
     if (month >= 10 && month <= 12) {
-      target = Math.round(this.quarter4 / this.lstOwners.length / 3);
+      target = this.convertToFixelNumber(this.quarter4 / this.lstOwners.length / 3);
     }
     return target;
   }
@@ -366,23 +354,57 @@ export class PopupAddTargetComponent {
         var target = 0;
         if (field === 'quarter1') {
           if (month >= 1 && month < 4) {
-            target = Math.round(this.quarter1 / this.lstOwners.length / 3);
+            target = this.convertToFixelNumber(this.quarter1 / this.lstOwners.length / 3);
             item.target = target > 0 ? target : 0;
           }
         } else if (field === 'quarter2') {
           if (month >= 4 && month < 7) {
-            target = Math.round(this.quarter2 / this.lstOwners.length / 3);
+            target = this.convertToFixelNumber(this.quarter2 / this.lstOwners.length / 3);
             item.target = target > 0 ? target : 0;
           }
         } else if (field === 'quarter3') {
           if (month >= 7 && month < 10) {
-            target = Math.round(this.quarter3 / this.lstOwners.length / 3);
+            target = this.convertToFixelNumber(this.quarter3 / this.lstOwners.length / 3);
             item.target = target > 0 ? target : 0;
           }
         } else {
           if (month >= 10 && month <= 12) {
-            target = Math.round(this.quarter4 / this.lstOwners.length / 3);
+            target = this.convertToFixelNumber(this.quarter4 / this.lstOwners.length / 3);
             item.target = target > 0 ? target : 0;
+          }
+        }
+      }
+    }
+  }
+
+  setQuartersByTargetOrLines(type) {
+    if (type == 'target') {
+      this.quarter1 = this.convertToFixelNumber(this.data.target / 4);
+      this.quarter2 = this.convertToFixelNumber(this.data.target / 4);
+      this.quarter3 = this.convertToFixelNumber(this.data.target / 4);
+      this.quarter4 = this.convertToFixelNumber(this.data.target / 4);
+      this.setTagetByQuarter();
+    } else {
+      if (this.lstTargetLines != null && this.lstTargetLines.length > 0) {
+        for (let i = 1; i <= 4; i++) {
+          var total = 0;
+          let index = i == 1 ? 1 : i == 2 ? 4 : i == 3 ? 7 : 10;
+          for (let j = index; j <= index + 2; j++) {
+            for (var item of this.lstTargetLines) {
+              let month = new Date(item?.startDate)?.getMonth() + 1;
+              if (month == j) {
+                total = this.convertToFixelNumber(total += item.target);
+              }
+            }
+          }
+          if (i === 1) {
+            this.quarter1 = this.convertToFixelNumber(total);
+          } else if (i === 2) {
+            this.quarter2 = this.convertToFixelNumber(total);
+          } else if (i === 3) {
+            this.quarter3 = this.convertToFixelNumber(total);
+          } else {
+            this.quarter4 = this.convertToFixelNumber(total);
           }
         }
       }
@@ -409,7 +431,8 @@ export class PopupAddTargetComponent {
   }
 
   convertToFixelNumber(target: number) {
-    return Math.round(target);
+    let roundedNumber: number = Math.round(target * Math.pow(10, 1)) / Math.pow(10, 1);
+    return roundedNumber;
   }
   //#endregion
 
@@ -421,6 +444,7 @@ export class PopupAddTargetComponent {
         this.data = res[0];
         if (this.data != null) {
           this.isAllocation = this.data?.allocation == '1' ? true : false;
+          this.isExitTarget = true;
           this.selectedType = this.getFormatCalendar(this.data?.category);
           this.isBusiness = true;
         }
@@ -430,7 +454,7 @@ export class PopupAddTargetComponent {
         this.typeChange = 'noInput';
         // this.setTargetToLine();
         this.getListTimeCalendar(this.text);
-        this.setQuarters('noTarget');
+        this.setQuartersByTargetOrLines('lines');
       } else {
         this.lstTargetLines = [];
         let businessLine = this.data?.businessLineID;
@@ -464,7 +488,7 @@ export class PopupAddTargetComponent {
     this.isPeriod = false;
     this.startDate = new Date(e?.fromDate);
     this.endDate = new Date(e?.toDate);
-    var month = parseInt(this.startDate.getMonth() + 1);
+    var month = parseInt(this.startDate?.getMonth() + 1);
     this.month = month;
     var year = parseInt(this.startDate.getFullYear());
     this.data.category = '1'; //năm
@@ -597,36 +621,37 @@ export class PopupAddTargetComponent {
         if (this.lstTargetLines[index].target !== target) {
           if (this.lstTargetLines[index].target < target) {
             i = target - this.lstTargetLines[index].target;
-            Math.round((this.data.target += i));
+            this.data.target = this.convertToFixelNumber(this.data.target += i);
           } else {
             i = this.lstTargetLines[index].target - target;
-            Math.round((this.data.target -= i));
+            this.convertToFixelNumber((this.data.target -= i));
           }
           this.lstTargetLines[index].target = target;
           if (indexTime != -1) {
             this.lstTime[indexTime]?.lines.forEach((element) => {
               if (element?.recID == id) {
-                element.target = Math.round(target);
+                element.target = this.convertToFixelNumber(target);
               }
             });
           }
-          this.setQuarters('noTarget');
+          this.isExitTarget = true;
+          this.setQuartersByTargetOrLines('noTarget');
           this.setTargetToLine();
         }
       } else {
         if (this.lstOwners[index].target !== target) {
           if (this.lstOwners[index].target < target) {
             i = target - this.lstOwners[index].target;
-            this.data.target = Math.round((this.data.target += i));
+            this.data.target = this.convertToFixelNumber((this.data.target += i));
           } else {
             i = this.lstOwners[index].target - target;
-            this.data.target = Math.round((this.data.target -= i));
+            this.data.target = this.convertToFixelNumber((this.data.target -= i));
           }
 
-          this.lstOwners[index].target = Math.round(target);
+          this.lstOwners[index].target = this.convertToFixelNumber(target);
           this.lstTargetLines[index].isExit = true;
           this.isExitTarget = true;
-          this.setQuarters('target');
+          this.setQuartersByTargetOrLines('target');
           this.setListTargetLine();
         }
       }

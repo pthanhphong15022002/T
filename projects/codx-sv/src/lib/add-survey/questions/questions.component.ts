@@ -24,6 +24,7 @@ import {
   NotificationsService,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -40,7 +41,6 @@ import { PopupQuestionOtherComponent } from './template-survey-other.component/p
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-//  import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
@@ -1183,7 +1183,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   generateGUID() {
-    // return uuidv4();
+     return Util.uid();
   }
 
   addCard(itemActive, seqNoSession = null, category) {
@@ -1971,5 +1971,17 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         }
       });
     }
+  }
+}
+class GuId {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }
