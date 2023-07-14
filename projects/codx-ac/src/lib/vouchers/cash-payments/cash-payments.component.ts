@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  HostListener,
   Injector,
   Optional,
   TemplateRef,
@@ -27,19 +26,14 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
-import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
-import { SettledInvoices } from '../../models/SettledInvoices.model';
-import { map } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   AnimationModel,
-  ILoadedEventArgs,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { PopUpCashReportComponent } from './pop-up-cash-report/pop-up-cash-report.component';
-import { MasterDetailComponent } from '../../master-detail/master-detail.component';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
