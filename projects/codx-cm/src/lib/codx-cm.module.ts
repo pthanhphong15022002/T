@@ -93,6 +93,7 @@ import {
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
 import { CustomergroupsComponent } from './customergroups/customergroups.component';
 import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
+import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 
 const routes: Routes = [
   {
@@ -159,17 +160,17 @@ const routes: Routes = [
   //     import('./settings/settings.module').then((m) => m.SettingsModule),
   // },
 
-  // {
-  //   path: '',
-  //   component: LayoutNoAsideComponent,
-  //   children: [
-  //     {
-  //       path: 'setting/settingprocess/:funcID',
-  //       component: SettingProcessCmComponent,
-  //       data: { noReuse: true },
-  //     },
-  //   ],
-  // },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'setting/settingprocess/:funcID',
+        component: SettingProcessCmComponent,
+        data: { noReuse: true },
+      },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];
@@ -220,6 +221,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CustomergroupsComponent,
     PopupAddCustgroupComponent,
     //test
+    SettingProcessCmComponent,
     CodxAsideCustomComponent,
     PopupAddPaymentComponent,
     PopupAddPaymentHistoryComponent,
