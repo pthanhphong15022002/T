@@ -300,7 +300,8 @@ export class PopupAddTargetComponent {
     if (this.lstOwners != null && this.lstOwners.length > 0) {
       let target = 0;
       target = Math.round(
-        this.quarter1 + this.quarter2 + this.quarter3 + this.quarter4
+        (this.quarter1 + this.quarter2 + this.quarter3 + this.quarter4) /
+          this.lstOwners.length
       );
       this.lstOwners.every((item) => (item.target = target));
       this.setListTargetLine();
@@ -416,7 +417,7 @@ export class PopupAddTargetComponent {
   }
 
   targetToFixed(data) {
-    return data ? this.decimalPipe.transform(data, '1.0-0') : '0';
+    return data ? this.decimalPipe.transform(data, '1.0-0') : 0;
   }
 
   getTarget() {}
@@ -536,6 +537,8 @@ export class PopupAddTargetComponent {
 
   updateTarget(e, id, isAllo) {
     this.typeChange = 'noInput';
+    var valid = /\D/;
+
     var index = -1;
     var indexTime = -1;
     var month = 0;
@@ -546,8 +549,13 @@ export class PopupAddTargetComponent {
       x.lines?.some((y) => y.recID == id)
     );
     var i = 0;
-
-    if (e == '' || e.trim() == '' || parseInt(e?.trim()) <= 0) {
+    var targetOld = 0;
+    if(e?.match(valid) || e == '' || e.trim() == '' || parseInt(e) < 0){
+      this.lstOwners = JSON.parse(JSON.stringify(this.lstOwners));
+      this.lstTime = JSON.parse(JSON.stringify(this.lstTime));
+      return;
+    }
+    if (parseInt(e?.trim()) <= 0) {
       var math = 0;
       if (isAllo) {
         if (index != -1) {
@@ -575,7 +583,12 @@ export class PopupAddTargetComponent {
         }
       }
       this.data.target = math > 0 ? Math.round(math) : 0;
-
+      if (index != -1) {
+        var month =
+          new Date(this.lstTargetLines[index].startDate).getMonth() + 1;
+        if (month >= 1 && month < 4) {
+        }
+      }
       index = -1;
       this.isEditLine = false;
       this.changedetectorRef.detectChanges();
@@ -603,11 +616,12 @@ export class PopupAddTargetComponent {
       } else {
         if (this.lstOwners[index].target < target) {
           i = target - this.lstOwners[index].target;
-          Math.round((this.data.target += i));
+          this.data.target = Math.round((this.data.target += i));
         } else {
           i = this.lstOwners[index].target - target;
-          Math.round((this.data.target -= i));
+          this.data.target = Math.round((this.data.target -= i));
         }
+        this.setQuarters(this.data.target);
         this.lstOwners[index].target = Math.round(target);
       }
       this.lstTargetLines[index].isExit = true;
