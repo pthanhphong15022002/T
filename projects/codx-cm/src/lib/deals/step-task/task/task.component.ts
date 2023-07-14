@@ -35,6 +35,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
+  @Input() isPause = false;
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
   taskType;
@@ -84,6 +85,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res?.length > 0) {
           this.listActivitie = res;
+          this.isNoData = false;
         } else {
           this.isNoData = true;
         }
@@ -385,6 +387,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async openPopupUpdateProgress(task, type) {
+    if(this.isPause){
+      return
+    }
     let dataInput = {
       data: task,
       type,
