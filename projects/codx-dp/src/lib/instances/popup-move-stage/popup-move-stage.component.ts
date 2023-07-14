@@ -865,19 +865,20 @@ export class PopupMoveStageComponent implements OnInit {
 
   checkRadioProgress(event) {
     if (event?.field == "all") {
-      this.progressAll = event?.data;
-      if(this.progressAll){
-        this.progressDefault = !this.progressAll;
+      if(event?.data){
+        this.progressDefault = false;     
       }
+      setTimeout(() => {
+        this.progressAll = event?.data;
+      },0);
     }
     if (event?.field == "required") {
-      this.progressDefault = event?.data;
-      if(this.progressDefault){
-        this.progressAll = !this.progressDefault;
+      if(event?.data){
+          this.progressAll = false;
       }
+      setTimeout(() => {
+        this.progressDefault = event?.data;
+      },0);   
     }
-    // if(event) {
-    //   this.progressAll = event?.data;
-    // }
   }
 }

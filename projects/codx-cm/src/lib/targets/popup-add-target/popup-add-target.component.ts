@@ -164,17 +164,16 @@ export class PopupAddTargetComponent {
     if (this.typeChange === type) {
       switch (e?.field) {
         case 'target':
-          if (e.data !== this.data.target) {
+          if (this.data.target !== e.data) {
             this.data.target = this.convertToFixelNumber(e?.data);
             this.setTargetToLine();
-            this.setListTargetLine();
             this.getListTimeCalendar(this.text);
-            this.setQuarters();
+            this.setQuarters('target');
+            this.setListTargetLine();
           }
-
           break;
         default:
-          if (e.data !== this[e?.field]) {
+          if (this[e?.field] !== e.data) {
             if (parseInt(e?.data) <= 0) {
               this.sumTargetAll(0, this[e?.field]);
               this[e?.field] = 0;
@@ -182,8 +181,8 @@ export class PopupAddTargetComponent {
               this.sumTargetAll(e?.data, this[e?.field]);
               this[e?.field] = this.convertToFixelNumber(e?.data);
             }
-            this.setTargetToLine();
             this.setTagetByQuarter('noAuto', e?.field);
+            this.setTargetToLine();
           }
 
           break;
@@ -194,35 +193,37 @@ export class PopupAddTargetComponent {
     this.changedetectorRef.detectChanges();
   }
 
-  setQuarters() {
-    if (this.lstTargetLines != null && this.lstTargetLines.length > 0) {
-      for (let i = 1; i <= 4; i++) {
-        var total = 0;
-        let index = i == 1 ? 1 : i == 2 ? 4 : i == 3 ? 7 : 10;
-        for (let j = index; j <= index + 2; j++) {
-          for (var item of this.lstTargetLines) {
-            let month = item?.startDate.getMonth() + 1;
-            if (month == j) {
-              total = this.convertToFixelNumber((total += item.target));
-            }
-          }
-        }
-        if (i === 1) {
-          this.quarter1 = this.convertToFixelNumber(total);
-        } else if (i === 2) {
-          this.quarter2 = this.convertToFixelNumber(total);
-        } else if (i === 3) {
-          this.quarter3 = this.convertToFixelNumber(total);
-        } else {
-          this.quarter4 = this.convertToFixelNumber(total);
-        }
-      }
-    } else {
+  setQuarters(type) {
+    if (type == 'target') {
       this.quarter1 = this.convertToFixelNumber(this.data.target / 4);
       this.quarter2 = this.convertToFixelNumber(this.data.target / 4);
       this.quarter3 = this.convertToFixelNumber(this.data.target / 4);
       this.quarter4 = this.convertToFixelNumber(this.data.target / 4);
       this.setTagetByQuarter();
+    } else {
+      if (this.lstTargetLines != null && this.lstTargetLines.length > 0) {
+        for (let i = 1; i <= 4; i++) {
+          var total = 0;
+          let index = i == 1 ? 1 : i == 2 ? 4 : i == 3 ? 7 : 10;
+          for (let j = index; j <= index + 2; j++) {
+            for (var item of this.lstTargetLines) {
+              let month = item?.startDate.getMonth() + 1;
+              if (month == j) {
+                total = this.convertToFixelNumber((total += item.target));
+              }
+            }
+          }
+          if (i === 1) {
+            this.quarter1 = this.convertToFixelNumber(total);
+          } else if (i === 2) {
+            this.quarter2 = this.convertToFixelNumber(total);
+          } else if (i === 3) {
+            this.quarter3 = this.convertToFixelNumber(total);
+          } else {
+            this.quarter4 = this.convertToFixelNumber(total);
+          }
+        }
+      }
     }
   }
 
@@ -238,49 +239,6 @@ export class PopupAddTargetComponent {
       );
       this.data.target = target > 0 ? target : 0;
     }
-  }
-  //#endregion
-
-  //#region get target and targetLine
-
-  getTargetAndLinesAsync(businessLineID) {
-    this.cmSv.getTargetAndLinesAsync(businessLineID).subscribe((res) => {
-      if (res != null) {
-        this.data = res[0];
-        if (this.data != null) {
-          this.isAllocation = this.data?.allocation == '1' ? true : false;
-          this.selectedType = this.getFormatCalendar(this.data?.category);
-          this.isBusiness = true;
-        }
-        this.lstOwners = res[2];
-        this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
-        this.lstTargetLines = res[1];
-        this.typeChange = 'noInput';
-        // this.setTargetToLine();
-        this.getListTimeCalendar(this.text);
-        this.setTagetByQuarter();
-      } else {
-        this.lstTargetLines = [];
-        let businessLine = this.data?.businessLineID;
-        let year = this.data?.year;
-        this.data = JSON.parse(JSON.stringify(this.dataOld));
-        this.data.businessLineID = businessLine;
-        this.data.owner = null;
-        this.data.year = year;
-        this.data.category = '1';
-        this.isPeriod = false;
-
-        this.lstTime.forEach((x) => (x.lines = []));
-        this.lstOwners = [];
-      }
-    });
-  }
-  getFormatCalendar(trainFrom: string) {
-    let resultDate = '';
-    if (trainFrom) {
-      resultDate = trainFrom == '1' ? 'y' : trainFrom == '2' ? 'q' : 'm';
-      return resultDate;
-    } else return 'y';
   }
   //#endregion
 
@@ -325,7 +283,6 @@ export class PopupAddTargetComponent {
     this.setListTargetLine();
     this.setTagetByQuarter();
     this.getListTimeCalendar(this.text);
-    this.setQuarters();
 
     this.changedetectorRef.detectChanges();
     console.log(this.data.owner);
@@ -352,6 +309,7 @@ export class PopupAddTargetComponent {
     }
     this.intTarget = intTarget;
     this.lstTargetLines = lstLines;
+    this.setTagetByQuarter();
     console.log('lstTargets: ', this.lstTargetLines);
   }
 
@@ -372,6 +330,7 @@ export class PopupAddTargetComponent {
 
       endDate.setMonth(month);
       endDate.setDate(endDate.getDate() + daysInMonth);
+      line.target = this.setTargetLine(j);
       line.startDate = startDate;
       line.endDate = endDate;
       line.createdOn = new Date(Date.now());
@@ -380,6 +339,23 @@ export class PopupAddTargetComponent {
       if (j > 12) j = 1;
     }
     return lstLines;
+  }
+
+  setTargetLine(month) {
+    var target = 0;
+    if (month >= 1 && month < 4) {
+      target = Math.round(this.quarter1 / this.lstOwners.length / 3);
+    }
+    if (month >= 4 && month < 7) {
+      target = Math.round(this.quarter2 / this.lstOwners.length / 3);
+    }
+    if (month >= 7 && month < 10) {
+      target = Math.round(this.quarter3 / this.lstOwners.length / 3);
+    }
+    if (month >= 10 && month <= 12) {
+      target = Math.round(this.quarter4 / this.lstOwners.length / 3);
+    }
+    return target;
   }
 
   setTagetByQuarter(type: string = 'auto', field = '') {
@@ -399,7 +375,7 @@ export class PopupAddTargetComponent {
             item.target = target > 0 ? target : 0;
           }
         } else if (field === 'quarter3') {
-          if (month >= 7 && month < 9) {
+          if (month >= 7 && month < 10) {
             target = Math.round(this.quarter3 / this.lstOwners.length / 3);
             item.target = target > 0 ? target : 0;
           }
@@ -434,6 +410,52 @@ export class PopupAddTargetComponent {
 
   convertToFixelNumber(target: number) {
     return Math.round(target);
+  }
+  //#endregion
+
+  //#region get target and targetLine
+
+  getTargetAndLinesAsync(businessLineID) {
+    this.cmSv.getTargetAndLinesAsync(businessLineID).subscribe((res) => {
+      if (res != null) {
+        this.data = res[0];
+        if (this.data != null) {
+          this.isAllocation = this.data?.allocation == '1' ? true : false;
+          this.selectedType = this.getFormatCalendar(this.data?.category);
+          this.isBusiness = true;
+        }
+        this.lstOwners = res[2];
+        this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
+        this.lstTargetLines = res[1];
+        this.typeChange = 'noInput';
+        // this.setTargetToLine();
+        this.getListTimeCalendar(this.text);
+        this.setQuarters('noTarget');
+      } else {
+        this.lstTargetLines = [];
+        let businessLine = this.data?.businessLineID;
+        let year = this.data?.year;
+        this.data = JSON.parse(JSON.stringify(this.dataOld));
+        this.data.businessLineID = businessLine;
+        this.data.owner = null;
+        this.data.year = year;
+        this.data.category = '1';
+        this.isPeriod = false;
+        this.quarter1 = 0;
+        this.quarter2 = 0;
+        this.quarter3 = 0;
+        this.quarter4 = 0;
+        this.lstTime.forEach((x) => (x.lines = []));
+        this.lstOwners = [];
+      }
+    });
+  }
+  getFormatCalendar(trainFrom: string) {
+    let resultDate = '';
+    if (trainFrom) {
+      resultDate = trainFrom == '1' ? 'y' : trainFrom == '2' ? 'q' : 'm';
+      return resultDate;
+    } else return 'y';
   }
   //#endregion
 
@@ -588,8 +610,8 @@ export class PopupAddTargetComponent {
               }
             });
           }
-          this.setListTargetLine();
-          this.setQuarters();
+          this.setQuarters('noTarget');
+          this.setTargetToLine();
         }
       } else {
         if (this.lstOwners[index].target !== target) {
@@ -604,8 +626,8 @@ export class PopupAddTargetComponent {
           this.lstOwners[index].target = Math.round(target);
           this.lstTargetLines[index].isExit = true;
           this.isExitTarget = true;
+          this.setQuarters('target');
           this.setListTargetLine();
-          this.setQuarters();
         }
       }
     }

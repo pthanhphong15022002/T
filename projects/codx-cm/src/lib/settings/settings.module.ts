@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomerGroupsComponent } from './customer-groups/customer-groups.component';
 import { PopupAddCustomerGroupsComponent } from './customer-groups/popup-add-customer-groups/popup-add-customer-groups.component';
+import { CodxDpModule } from 'projects/codx-dp/src/public-api';
 
 var routes: Routes = [
   {
@@ -35,4 +36,4 @@ var routes: Routes = [
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class SettingsModule {}
+export class SettingsCmModule {}
