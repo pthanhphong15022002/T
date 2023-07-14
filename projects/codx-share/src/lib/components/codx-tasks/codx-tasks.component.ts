@@ -552,33 +552,33 @@ export class CodxTasksComponent
     }
     if (data.category == '1' || data.category == '2') {
       this.editConfirm(data);
-      return;
-    }
-
-    var isCanEdit = true;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTaskChildDetailAsync',
-        data.taskID
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '00' && element.status != '10') {
-              isCanEdit = false;
-              return;
+    } else {
+      var isCanEdit = true;
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTaskChildDetailAsync',
+          data.taskID
+        )
+        .subscribe((res: any) => {
+          if (res && res?.length) {
+            for (let i = 0; i <= res.length; i++) {
+              let element = res[i];
+              if (element.status != '00' && element.status != '10') {
+                isCanEdit = false;
+                break;
+              }
             }
-          });
-          if (!isCanEdit) {
-            this.notiService.notifyCode('TM016');
-          } else {
-            this.editConfirm(data);
+            if (!isCanEdit) {
+              this.notiService.notifyCode('TM016');
+            } else {
+              this.editConfirm(data);
+            }
           }
-        }
-      });
+        });
+    }
   }
 
   copy(data) {

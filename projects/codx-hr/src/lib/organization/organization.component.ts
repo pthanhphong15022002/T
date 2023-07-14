@@ -22,6 +22,7 @@ import {
 } from 'codx-core';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
 import { CodxHrService } from '../codx-hr.service';
+import { OrganizationOrgchartComponent } from './organization-orgchart/organization-orgchart.component';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
@@ -60,6 +61,8 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
+  @ViewChild(OrganizationOrgchartComponent)
+  child: OrganizationOrgchartComponent;
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
   // inject: Injector;
@@ -292,6 +295,8 @@ export class OrgorganizationComponent extends UIComponent {
           popup.closed.subscribe((res: any) => {
             if (res.event) {
               this.view.dataService.add(res.event, 0).subscribe();
+              //Update view chart diagram
+              this.child.GetChartDiagram();
               this.flagLoaded = true;
             }
           });
