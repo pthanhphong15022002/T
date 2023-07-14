@@ -231,7 +231,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.isSaveTimeGroup = true;
       }
 
-      if (this.stepService.compareDates(this.startDateParent, startDate) < 0) {
+      if (this.stepService.compareDates(startDate, this.startDateParent) < 0) {
         this.isSaveTimeGroup = false;
         this.isLoadDate = !this.isLoadDate;
         let start =

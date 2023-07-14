@@ -137,10 +137,9 @@ export class PopupMoveStageComponent implements OnInit {
       this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
       this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
       this.listStepProccess = dt?.data?.listStepProccess;
-
       this.isDurationControl = dt?.data?.isDurationControl;
       this.getIdReason();
-      this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
+
     }
     else if(this.applyFor != '0' ){
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
@@ -169,6 +168,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+    this.applyFor == '0' && this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
     this.getGrvInstanceStep();
   }
 
@@ -865,19 +865,20 @@ export class PopupMoveStageComponent implements OnInit {
 
   checkRadioProgress(event) {
     if (event?.field == "all") {
-      this.progressAll = event?.data;
-      if(this.progressAll){
-        this.progressDefault = !this.progressAll;
+      if(event?.data){
+        this.progressDefault = false;     
       }
+      setTimeout(() => {
+        this.progressAll = event?.data;
+      },0);
     }
     if (event?.field == "required") {
-      this.progressDefault = event?.data;
-      if(this.progressDefault){
-        this.progressAll = !this.progressDefault;
+      if(event?.data){
+          this.progressAll = false;
       }
+      setTimeout(() => {
+        this.progressDefault = event?.data;
+      },0);   
     }
-    // if(event) {
-    //   this.progressAll = event?.data;
-    // }
   }
 }

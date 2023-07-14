@@ -2,7 +2,8 @@
   #view
   [views]="views"
   [button]="btnAdd"
-  entityName="SM_SalesInvoices"
+  entityName="AC_SalesInvoices"
+  service="AC"
   predicates="JournalNo=@0"
   [dataValues]="journalNo"
   (buttonClick)="onClickAdd($event)"

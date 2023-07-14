@@ -165,7 +165,6 @@ export class PopupPolicyalComponent
 
   async addFiles(evt){
     this.alpolicyObj.attachments = evt.data.length;
-
   }
 
   fileAdded(evt){
@@ -535,7 +534,7 @@ export class PopupPolicyalComponent
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
       ) {
-      this.attachment.objectId=this.alpolicyObj?.recID;
+      this.attachment.objectId=this.alpolicyObj?.policyID;
       (await (this.attachment.saveFilesObservable())).subscribe(
       (item2:any)=>{
             debugger

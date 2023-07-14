@@ -138,23 +138,23 @@ export class EmpContactsComponent extends UIComponent {
     this.request.idField = 'orgUnitID';
 
     this.views = [
-      // {
-      //   id: '1',
-      //   type: ViewType.grid,
-      //   sameData: true,
-      //   model: {
-      //     resources: this.columnsGrid,
-      //   },
-      // },
       {
         id: '1',
-        type: ViewType.list,
+        type: ViewType.grid,
         sameData: true,
         model: {
-          template: this.templateList,
-          headerTemplate: this.headerTemplate,
+          resources: this.columnsGrid,
         },
       },
+      // {
+      //   id: '1',
+      //   type: ViewType.list,
+      //   sameData: true,
+      //   model: {
+      //     template: this.templateList,
+      //     headerTemplate: this.headerTemplate,
+      //   },
+      // },
       {
         id: '2',
         type: ViewType.card,

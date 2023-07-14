@@ -12,7 +12,7 @@
 <ng-template #subHeader> </ng-template>
 <ng-template #body>
   <div class="title-step mt-3">
-    <div class="fs-5 fw-bold text-primary">{{ stepName }}</div>
+    <div class="fs-6 fw-bold text-primary">{{ stepName }}</div>
   </div>
   <div class="content-step mt-2">
     <div class="row">
@@ -45,7 +45,7 @@
             default="Phân bổ lại cho"
           >
           </codx-label>
-          <div *ngIf="stepCurrent">
+          <div>
             <codx-popup-participants
               [lstParticipants]="lstParticipants"
               [dialog]="dialog"
@@ -131,6 +131,7 @@
       <codx-input
         type="textarea"
         field="note"
+        [rows]="2"
         [crrValue]="instancesStepOld?.note"
         (valueChange)="valueChange($event)"
       >
@@ -148,7 +149,7 @@
           >
           </codx-label>
         </div>
-        <div class="pt-3 row">
+        <div class="pt-2 row">
           <ng-container *ngFor="let item of fieldsNull">
             <div class="col-6">
               <codx-input-custom-field
@@ -170,8 +171,8 @@
       *ngIf="checkListDoneIsNull(listTaskDone, listTaskGroupDone)"
     >
       <div>
-        <div class="w-100 fs-6 d-flex justify-content-between">
-          <div class="fs-5 text-primary fw-bold">
+        <div class="w-100 d-flex justify-content-between">
+          <div class="fs-6 text-primary fw-bold">
             <codx-label
               fiedName="taskNo"
               [formModel]="form.formModel"
@@ -219,7 +220,7 @@
             </div>
           </div>
         </div>
-        <div class="pt-2 ms-5">
+        <div class="pt-2 red">
           <div class="accordion" id="accordion1">
             <codx-step-task
               [dataSources]="instancesStepOld"

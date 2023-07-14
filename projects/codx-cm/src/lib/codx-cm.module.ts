@@ -69,13 +69,10 @@ import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/ta
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
 import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
-import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
 import { TaskComponent } from './deals/step-task/task/task.component';
-import { CustomergroupsComponent } from './customergroups/customergroups.component';
-import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
 import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
@@ -94,6 +91,10 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
+import { CustomergroupsComponent } from './customergroups/customergroups.component';
+import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
+import { CodxDpModule } from 'projects/codx-dp/src/public-api';
+import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 
 const routes: Routes = [
   {
@@ -153,16 +154,11 @@ const routes: Routes = [
       },
     ],
   },
+
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'setting/settingprocess/:funcID',
-        component: SettingProcessCmComponent,
-        data: { noReuse: true },
-      },
-    ],
+    loadChildren: () =>
+      import('./settings/settings.module').then((m) => m.SettingsCmModule),
   },
 ];
 
@@ -214,6 +210,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CustomergroupsComponent,
     PopupAddCustgroupComponent,
     //test
+    SettingProcessCmComponent,
     CodxAsideCustomComponent,
     PopupAddPaymentComponent,
     PopupAddPaymentHistoryComponent,
@@ -224,7 +221,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewPaymentComponent,
     GanttChartComponent,
     StepTaskComponent,
-    SettingProcessCmComponent,
     QuotationsTabViewComponent,
     ContractsViewDetailComponent,
     TaskComponent,

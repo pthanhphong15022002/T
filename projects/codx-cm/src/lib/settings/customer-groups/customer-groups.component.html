@@ -1,0 +1,109 @@
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [idField]="idField"
+  [moreFuncs]="moreFuncs"
+  [button]="buttons"
+  [className]="className"
+  [method]="method"
+  (buttonClick)="click($event)"
+  (viewChanged)="viewChanged($event, view)"
+  (onLoading)="onLoading($event)"
+>
+</codx-views>
+
+<ng-template #custGroupID let-data>
+  <div
+    #custGroupID
+    class="text-dark"
+    [innerHTML]="
+      data?.custGroupID | formatvalue : view.formModel : 'custGroupID' | async
+    "
+  ></div>
+</ng-template>
+
+<ng-template #custGroupName let-data>
+  <div
+    #custGroupName
+    class="text-dark"
+    [innerHTML]="
+      data?.custGroupName
+        | formatvalue : view.formModel : 'custGroupName'
+        | async
+    "
+  ></div>
+</ng-template>
+<ng-template #note let-data>
+  <div
+    #note
+    class="text-dark"
+    [innerHTML]="data?.note | formatvalue : view.formModel : 'note' | async"
+  ></div>
+</ng-template>
+
+<ng-template #icon let-data>
+  <div class="d-flex justify-content-left">
+    <i
+      [ngClass]="data?.icon"
+      [style.background]="data?.iconColor"
+      [style.color]="'white'"
+      class="fs-5 d-flex align-items-center justify-content-center h-35px w-35px rounded-circle p-3 m-1"
+    ></i>
+  </div>
+</ng-template>
+<ng-template #createdBy let-data>
+  <div
+    #createdBy
+    class="text-dark"
+    [innerHTML]="
+      data?.createdBy | formatvalue : view.formModel : 'createdBy' | async
+    "
+  ></div>
+</ng-template>
+<ng-template #createdOn let-data>
+  <div
+    #createdOn
+    class="text-dark"
+    [innerHTML]="
+      data?.createdOn | formatvalue : view.formModel : 'createdOn' | async
+    "
+  ></div>
+</ng-template>
+<ng-template #modifiedOn let-data>
+  <div
+    #modifiedOn
+    class="text-dark"
+    [innerHTML]="
+      data?.modifiedOn | formatvalue : view.formModel : 'ModifiedOn' | async
+    "
+  ></div>
+</ng-template>
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #morefunction let-data>
+  <div class="d-flex float-end" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      type="view"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
