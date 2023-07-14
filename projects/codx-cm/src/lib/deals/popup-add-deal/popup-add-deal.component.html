@@ -44,7 +44,7 @@
           [formModel]="form.formModel"
           field="businessLineID"
           [crrValue]="deal?.businessLineID"
-          [disabled]="deal?.processID"
+          [disabled]="deal?.processID || action === actionEdit "
           [model]="{ProcessID: deal?.processID }"
           (valueChange)="valueChangeBusinessLine($event)"
         >
@@ -54,6 +54,7 @@
           <codx-input
           [formModel]="form.formModel"
           field="businessLineID"
+          [disabled]="action === actionEdit "
           [crrValue]="deal?.businessLineID"
           (valueChange)="valueChangeBusinessLine($event)"
         >

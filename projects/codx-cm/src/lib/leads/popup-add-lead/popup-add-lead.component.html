@@ -118,6 +118,7 @@
         <codx-input
           field="companyPhone"
           type="number"
+          [placeholder]="gridViewSetup?.CompanyPhone?.description"
           [crrValue]="lead?.companyPhone"
           (valueChange)="valueChange($event)"
         >
@@ -137,6 +138,7 @@
         <codx-input
           type="number"
           [crrValue]="lead?.faxNo"
+          [placeholder]="gridViewSetup?.FaxNo?.description"
           field="faxNo"
           (valueChange)="valueChange($event)"
         >

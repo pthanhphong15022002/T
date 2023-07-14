@@ -1,4 +1,4 @@
-<div class="treeview">
+<div class="treeview" style="padding-right: 100px; padding-left: 100px">
   <codx-treeview
     id="tree"
     #treeView
@@ -40,23 +40,35 @@
             [width]="30"
             [objectId]="item?.owner"
             objectType="AD_Users"
-            [numberImages]="3"
+            [numberImages]="5"
             class=""
           >
           </codx-imgs>
         </div>
         <div
           class="ms-3 fw-bold d-flex justify-content-end"
-          style="min-width: 100px"
-          [ngStyle]="
-            item?.color != null && item?.color?.trim() != ''
-              ? { color: item?.color }
-              : { color: '#1d1f1f' }
-          "
-          [innerHTML]="
-            item?.target | formatvalue : fmTargetLines : 'Target' | async
-          "
-        ></div>
+          style="min-width: 150px"
+        >
+          <span
+            [ngStyle]="
+              item?.color != null && item?.color?.trim() != ''
+                ? { color: item?.color }
+                : { color: '#1d1f1f' }
+            "
+            [innerHTML]="
+              item?.target | formatvalue : fmTargetLines : 'Target' | async
+            "
+          ></span>
+          <span
+            class="fw-bold ms-1"
+            [innerHTML]="
+              item?.currencyID
+                | formatvalue : fmTargetLines : 'CurrencyID'
+                | async
+            "
+          >
+          </span>
+        </div>
         <codx-mfunc
           *ngIf="item?.parentID == null"
           [formModel]="formModel"
