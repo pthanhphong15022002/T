@@ -1,5 +1,6 @@
 <div class="list-contracts po">
   <button
+    *ngIf="!isPause"
     type="button"
     class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
     (click)="addContract()"
@@ -151,6 +152,7 @@
 
           <td>
             <codx-mfunc
+              *ngIf="!isPause"
               [type]="'hover'"
               [dataItem]="moreDefaut"
               [formModel]="formModel"

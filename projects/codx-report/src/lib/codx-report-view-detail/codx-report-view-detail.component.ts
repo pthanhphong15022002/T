@@ -24,6 +24,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   @Input() predicate:any = "";
   @Input() dataValue:any="";
   @Input() print:any="false";
+  reportID:string;
   _paramString:any="";
   _labelString:any="";
   orgReportList:any=[];
@@ -47,7 +48,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-
   }
   ngOnDestroy(): void {
     this.pageTitle.setSubTitle("");
@@ -80,37 +80,35 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       // },
     ];
 
-    // this.routerNg.events.subscribe((event: any)=>{
-    //   if(event instanceof NavigationEnd){
-    //     if(event.url.includes('detail')){
-    //       debugger
-    //       let funcID = event.url.split('/').pop();
-    //       this.funcID = funcID;
-    //       //this.pageTitle.setBreadcrumbs([]);
-    //       this.layout.showIconBack = true;
-    //       this.pageTitle.setRootNode(this.rootFunction.customName);
+    this.routerNg.events.subscribe((event: any)=>{
+      if(event instanceof NavigationEnd){
+        if(event.url.includes('detail')){
+          let funcID = event.url.split('/').pop();
+          this.funcID = funcID;
+          //this.pageTitle.setBreadcrumbs([]);
+          this.layout.showIconBack = true;
+          this.pageTitle.setRootNode(this.rootFunction.customName);
 
-    //       //this.funcID = this.router.snapshot.params['funcID'];
-    //       this.getReport(funcID);
-    //     }
-    //     else if(event.url.includes(this.rootFunction.funtionID)){
+          //this.funcID = this.router.snapshot.params['funcID'];
+          this.getReport(funcID);
+        }
+        else if(event.url.includes(this.rootFunction.funtionID)){
 
-    //       //this.pageTitle.setTitle(this.rootFunction.customName);
-    //       //this.pageTitle.setSubTitle(this.rootFunction.customName);
-    //       //this.pageTitle.setBreadcrumbs([]);
-    //       this.setBreadCrumb(this.funcItem,true)
-    //     }
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // })
+          //this.pageTitle.setTitle(this.rootFunction.customName);
+          //this.pageTitle.setSubTitle(this.rootFunction.customName);
+          //this.pageTitle.setBreadcrumbs([]);
+          //this.setBreadCrumb(this.funcItem,true)
+        }
+        this.changeDetectorRef.detectChanges();
+      }
+    })
 
 
   }
   viewChanged(e:any){
-    this.funcID = this.router.snapshot.params['funcID'];
+    //this.funcID = this.router.snapshot.params['funcID'];
     this.viewBase.moreFuncs = this.moreFc;
     //this.pageTitle.setBreadcrumbs([]);
-
     if(this.funcID){
       this.getReport(this.funcID);
     }
@@ -149,7 +147,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       '',
       screen.width,
       screen.height,
-      this.funcID,
+      " ",
       this.funcID,
       '',
       option
@@ -199,13 +197,13 @@ getReport(funcID:string){
       'rptsys',
       'Codx.RptBusiniess.SYS',
       'ReportListBusiness',
-      'GetByReportIDAsync',
+      'GetAsync',
       funcID
     )
     .subscribe((res: any) => {
       if (res) {
         this.funcItem = res;
-
+        this.reportID = res.reportID;
         this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
         this.pageTitle.setSubTitle("")
 
@@ -216,23 +214,6 @@ getReport(funcID:string){
     if(func){
       !deleteChild && this.pageTitle.setSubTitle(func.customName)
       deleteChild && this.pageTitle.setSubTitle("");
-      // let eleHeader = document.querySelector('codx-header');
-      // if(eleHeader){
-      //   let titleEle = eleHeader.querySelector('codx-page-title');
-      //     if(titleEle){
-      //       (titleEle as HTMLElement).innerHTML='';
-
-      //       if(!titleEle.querySelector('#clonedBreadCrumb') && !deleteChild){
-      //         let clone = this.breadCrumb.nativeElement
-      //         clone.id = 'clonedBreadCrumb';
-      //         if(clone.classList.contains('invisible')) clone.classList.remove('invisible')
-      //         titleEle.appendChild(clone);
-      //       }
-      //       if(deleteChild){
-      //         titleEle.querySelector('#clonedBreadCrumb')?.remove();
-      //       }
-      //     }
-      // }
     }
   }
   getReportList(moduleID:string,reportType:string){
@@ -242,20 +223,20 @@ getReport(funcID:string){
       for(let i=0 ;i< this.orgReportList.length;i++){
         let pageLink: PageLink = {
           title: this.orgReportList[i].customName,
-          path:this.rootFunction.module.toLowerCase()+'/report/detail/' + this.orgReportList[i].reportID
+          path:this.rootFunction.module.toLowerCase()+'/report/detail/' + this.orgReportList[i].recID
         };
        arrChildren.push(pageLink);
       }
       this.pageTitle.setChildren(arrChildren);
-      this.reportList = this.orgReportList.filter((x:any)=>x.reportID != this.funcItem.reportID);
+      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.funcItem.recID);
       this.setBreadCrumb(this.funcItem);
     })
   }
   itemSelect(e:any){
     if(e){
       this.funcItem = e;
-      this.codxService.navigate('', e.moduleID.toLowerCase()+'/report/detail/' + e.reportID);
-      this.reportList = this.orgReportList.filter((x:any)=>x.reportID != this.funcItem.reportID);
+      this.codxService.navigate('', e.moduleID.toLowerCase()+'/report/detail/' + e.recID);
+      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.funcItem.recID);
     }
   }
   homeClick(){

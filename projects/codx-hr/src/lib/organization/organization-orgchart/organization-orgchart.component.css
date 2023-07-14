@@ -70,3 +70,9 @@
   overflow-y: auto;
   position: fixed;
 }
+
+.p-node {
+  position: absolute;
+  left: 44%;
+  bottom: -6%;
+}

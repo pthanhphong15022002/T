@@ -219,26 +219,26 @@ export class InstanceDashboardComponent implements OnInit {
   countSuscess;
   productivityOwner = [
     {
-      name: 'Nguyễn thảo',
+      name: 'Trương Đặng Ngọc Phúc',
       percentage: 90,
       money:5000000,
     },
     {
-      name: 'Nguyễn thảo',
+      name: 'Nguyễn Thanh Dung',
       percentage: 70,
       money:5000000,
     },
     {
-      name: 'Nguyễn thảo',
+      name: 'Trần Công Sơn',
       percentage: 60,
       money:5000000,
     },
     {
-      name: 'Nguyễn thảo',
+      name: 'Hồ Thị Trang Ngân',
       percentage: 30,
       money:5000000,
     }, {
-      name: 'Nguyễn thảo',
+      name: 'Lê Nguyên Trí',
       percentage: 20,
       money:5000000,
     },

@@ -38,6 +38,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
   @Input() dealID: string;
   @Input() quotationID: string;
   @Input() type: 'view' | 'deal' | 'quotation' | 'customer';
+  @Input() isPause = false;
 
   @Input() funcID: string = 'CM0202';
   @Input() predicates: any; //

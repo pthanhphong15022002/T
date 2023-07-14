@@ -3467,13 +3467,18 @@ codx-views[ng-reflect-func-i-d="CM0104"]{
 
 codx-lead-detail{
   .codx-detail-body{
-     height: calc(100vh - 465px) !important;
-    codx-tab-lead-detail{
-      height: 100%;
-      overflow: auto;
-    }
+
+    height: calc(100vh - 424px)!important;
+    overflow: auto;
+
+    // .mb-5px, .mb-1, .mb-2, .mb-3{
+    //   margin-bottom: 50px!important;
+    // }
+
   }
 }
+
+
 
 /*
 codx-deal-detail{
