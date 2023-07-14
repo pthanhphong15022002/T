@@ -563,8 +563,8 @@ export class CodxTasksComponent
           data.taskID
         )
         .subscribe((res: any) => {
-          if (res && res?.length) {
-            for (let i = 0; i <= res.length; i++) {
+          if (res && res?.length > 0) {
+            for (let i = 0; i < res.length; i++) {
               let element = res[i];
               if (element.status != '00' && element.status != '10') {
                 isCanEdit = false;
