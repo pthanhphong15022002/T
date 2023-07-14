@@ -155,6 +155,7 @@
                       <codx-label
                         fiedName="invoiceName"
                         [formModel]="form.formModel"
+                        default="test"
                       ></codx-label>
                       <codx-input
                         field="invoiceName"
@@ -416,7 +417,6 @@
                 [formName]="fmSalesInvoicesLines.formName"
                 [gridViewName]="fmSalesInvoicesLines.gridViewName"
                 [entityName]="fmSalesInvoicesLines.entityName"
-                service="SM"
                 [templateMore]="more"
                 [editSettings]="editSettings"
                 [allowFiltering]="true"
