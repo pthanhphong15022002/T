@@ -196,10 +196,6 @@ var childAuthRoutes: Routes = [
         path: 'dynamic/:funcID',
         component: DynamicFormComponent,
       },
-      {
-        path: 'custgroups/:funcID',
-        component: CustomergroupsComponent,
-      },
     ],
   },
   {
