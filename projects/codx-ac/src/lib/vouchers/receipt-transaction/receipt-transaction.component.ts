@@ -21,13 +21,11 @@ import {
   ViewType,
 } from 'codx-core';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
-import { InventoryJournals } from '../../models/InventoryJournals.model';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService } from '../../codx-ac.service';
 import { PopAddReceiptTransactionComponent } from './pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { InventoryJournalLines } from '../../models/InventoryJournalLines.model';
 import { VouchersLines } from '../../models/VouchersLines.model';
 
 @Component({
