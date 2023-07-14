@@ -39,9 +39,9 @@
                       </ng-container>
                     </div>
                     <div class="d-flex text-info-date">
-                      <div class="text-gray-500 me-2">{{data.createdOn | timefrom}}</div>
+                      <div class="text-gray-600 me-2">{{data.createdOn | timefrom}}</div>
                       <ng-container *ngIf="data.approveControl == '1' && data.approveStatus == '3'">
-                        <div title="Bài viết chưa được xét duyệt" class="icon-security text-primary icon-16 me-2"></div>
+                        <div [title]="mssgWP038" class="icon-security text-primary icon-16 me-2"></div>
                       </ng-container>
                       <div class="d-flex align-items-center justify-content-start ">
                         <ng-container *ngIf="data.shareControl">
@@ -79,9 +79,11 @@
                     <codx-img 
                       [objectId]="data.recID" 
                       [objectType]="'WP_News'" 
-                      [referType]="'image'"
+                      [cssClass]="'cssClass dev truyền vào'"
                       [width]="400" 
                       [isFull]="true"
+                      [isDefaulImg]="true"
+                      [referType]="'image'"
                       imageType="square">
                     </codx-img>
                   </ng-container>
@@ -98,7 +100,7 @@
                     </div>
                   </ng-container>
                   <ng-container *ngIf="data.createdOn">
-                    <div class="text-gray-400 mt-1" [innerHTML]="data.createdOn | formatvalue:formModel:'CreatedOn' | async">
+                    <div class="text-gray-600 mt-1" [innerHTML]="data.createdOn | formatvalue:formModel:'CreatedOn' | async">
                     </div>
                   </ng-container>
                 </div>

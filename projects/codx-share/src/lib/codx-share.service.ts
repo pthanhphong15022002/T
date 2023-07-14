@@ -59,7 +59,6 @@ export class CodxShareService {
   public caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
   //
-  user;
   //
   //listApproveMF = [];
   constructor(
@@ -76,7 +75,6 @@ export class CodxShareService {
     private signalRSV: SignalRService,
     private httpClient: HttpClient
   ) {
-    this.user = this.auth.get();
   }
   loadFunctionList(funcID: any): Observable<any> {
     let paras = ['FuncID', funcID];
@@ -915,17 +913,8 @@ export class CodxShareService {
   }
 
   logout() {
-    if (this.user) {
-      let ele = document.getElementsByTagName('codx-chat-container');
-      if (ele.length > 0) {
-        ele[0].remove();
-      }
-      this.signalRSV.sendData(
-        'LogOutAsync',
-        this.user.tenant,
-        this.user.userID
-      );
-    }
+    let user = this.auth.get();
+    this.signalRSV.disconnect(user);
     this.redirect('HCS', '', '', true);
     this.authService.logout('');
     // document.location.reload();

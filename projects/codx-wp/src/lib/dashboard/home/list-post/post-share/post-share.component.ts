@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { ApiHttpService, CRUDService, CallFuncService, CodxService, DialogModel, FormModel } from 'codx-core';
+import { ApiHttpService, CRUDService, CacheService, CallFuncService, CodxService, DialogModel, FormModel } from 'codx-core';
 import { PopupDetailComponent } from '../popup-detail/popup-detail.component';
 import { environment } from 'src/environments/environment';
 
@@ -16,16 +16,21 @@ export class PostShareComponent implements OnInit {
 
   loaded:boolean = false;
   data:any = null;
-
+  mssgWP038:string ="";
   constructor(
     private api: ApiHttpService,
     private codxService: CodxService,
     private callFC:CallFuncService,
+    private cache:CacheService,
     private dt: ChangeDetectorRef,
   ){
 
   }
   ngOnInit(): void {
+    // message bài viết đang được xét duyệt
+    this.cache.message('WP038').subscribe((mssg: any) => {
+      if (mssg?.customName) this.mssgWP038 = mssg.customName;
+    });
     this.getData();
   }
 

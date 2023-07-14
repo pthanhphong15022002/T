@@ -61,7 +61,7 @@
           <span class="d-flex align-items-center me-2">
             <span class="text-gray-700 me-3">{{item.createdOn | timefrom}}</span>
             <ng-container *ngIf="item.approveControl == '1' && item.approveStatus == '3'">
-              <span title="Bài viết chưa được xét duyệt" class="icon-security text-primary icon-16 me-2"></span>
+              <span [title]="mssgWP038" class="icon-security text-primary icon-16 me-2"></span>
             </ng-container>
             <ng-container *ngIf="item.shareControl">
               <span class="badge badge-md badge-light rounded-1 px-2 fs-7 badge-listpost">
@@ -163,7 +163,7 @@
 <!-- template empty data -->
 <ng-template #empty>
   <div class="p-6 bg-body">
-    <div [innerHTML]="mssgEmtyData">
+    <div [innerHTML]="mssgWP035">
     </div>
     <div class="mt-2">
       <img class="w-100" src="assets/themes/wp/default/img/Portal_NoData.png" />
