@@ -108,7 +108,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
-    this.dataSource = dt.data.dataSource;
+    this.dataSource = dt.data?.[2];
   }
   ngOnInit(): void {
     //Tạo formGroup

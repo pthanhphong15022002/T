@@ -48,14 +48,15 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
     connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
-    verticalSpacing: 50,
-    horizontalSpacing: 50,
+    verticalSpacing: 70,
+    horizontalSpacing: 40,
     enableAnimation: true,
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
+  firstLoadDiagram: boolean = true;
   @ViewChild('diagram') diagram: DiagramComponent;
   datasetting: any = null;
   data: any = null;
@@ -81,12 +82,16 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     if (changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
       this.positionID = changes.positionID.currentValue;
+      this.firstLoadDiagram = true;
       this.getDataPositionByID(this.positionID);
       this.changeDetectorRef.detectChanges();
     }
   }
   public created(): void {
-    if(this.diagram) this.diagram.fitToPage();
+    if(this.diagram){
+      this.diagram.fitToPage();
+      this.firstLoadDiagram = false;
+    }
   }
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
     //connector.targetDecorator.shape = 'None';
@@ -189,23 +194,18 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
         this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetChildOrgChartAsync", [node.positionID, listPos])
           .subscribe((res: any) => {
             if (res) {
-              result = this.data.concat(res);
-              if (result.length > 0) {
-                result.forEach(element => {
-                  if (element.positionID == node.positionID) {
-                    element.loadChildrent = true;
-                  }
-                });
-                this.data = JSON.parse(JSON.stringify(result))
-                // this.data.filter((e , index) => {
-                //   this.data.indexOf(e) === index
-
-                //   return this.data;
-                // })
+              if (res.length > 0) {
+                result = this.data.concat(res);
               }
-              //this.renewData();
-              this.setDataOrg(this.data);
-            }
+            } else result = this.data;
+            result.forEach(element => {
+              if (element.positionID == node.positionID) {
+                element.loadChildrent = true;
+              }
+            });
+            this.data = JSON.parse(JSON.stringify(result))
+            //this.renewData();
+            this.setDataOrg(this.data);
           });
       }
     }
@@ -294,7 +294,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
             PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe(res => {
               if (res) {
-                if(res.positionID === this.positionID){
+                if (res.positionID === this.positionID) {
                   this.data = this.data.filter(x => x.positionID !== data.positionID).concat(res.event);
                   this.setDataOrg(this.data);
                 }
@@ -336,6 +336,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //     else element.loadChildrent = true;
   //   });
   // }
-
+  searchText: string = "";
+  searchUser(event: any) {
+    this.searchText = event;
+  }
 
 }
