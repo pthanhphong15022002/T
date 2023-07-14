@@ -11,8 +11,8 @@
       (clickMF)="clickMF($event, dataSelected)"
     >
       <ng-template #header let-data>
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <div *ngIf="funcID == 'CM0101'">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="mb-2" *ngIf="funcID == 'CM0101'">
             <div
               *ngIf="
                 dataSelected?.custGroupID != null &&
@@ -72,7 +72,7 @@
               </div>
             </ng-template>
           </div>
-          <div class="d-flex justify-content-end" *ngIf="funcID == 'CM0101'">
+          <div class="d-flex justify-content-end mb-2" *ngIf="funcID == 'CM0101'">
             <codx-mfunc
               [hideMF]="false"
               [dataItem]="dataSelected"
@@ -101,7 +101,7 @@
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
                   <div
-                    class="fw-bold fs-5-sm text-dark line-clamp line-clamp-1 mb-1"
+                    class="fw-bold fs-6 text-dark line-clamp line-clamp-1"
                   >
                     {{
                       funcID == "CM0101"
@@ -114,7 +114,7 @@
                     }}
                   </div>
                   <div
-                    class="d-flex flex-wrap me-4 mb-1"
+                    class="d-flex flex-wrap me-4"
                     *ngIf="funcID == 'CM0102'"
                   >
                     <div

@@ -88,15 +88,15 @@ export class CodxReportViewsComponent
       //   // },
       // },
     ];
-    this.routerNg.events.subscribe((event: any) => {
-      if (event instanceof NavigationEnd) {
-        let arr = event.url.split('/');
-        if (arr.findIndex((item: any) => item == this.funcID) > -1) {
-          this.view.viewChanged.emit(this.view.currentView);
-        }
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+    // this.routerNg.events.subscribe((event: any) => {
+    //   if (event instanceof NavigationEnd) {
+    //     let arr = event.url.split('/');
+    //     if (arr.findIndex((item: any) => item == this.funcID) > -1) {
+    //       this.view.viewChanged.emit(this.view.currentView);
+    //     }
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
     this.changeDetectorRef.detectChanges();
   }
   viewChanged(e: any) {
@@ -108,12 +108,12 @@ export class CodxReportViewsComponent
     if (e.type == 'detail') {
       this.codxService.navigate(
         '',
-        this.module + '/report/detail/' + e.data.reportID
+        this.module + '/report/detail/' + e.data.recID
       );
       this.detectorRef.reattach();
     }
   }
   cardClick(e: any) {
-    this.codxService.navigate('', this.module + '/report/detail/' + e.reportID);
+    this.codxService.navigate('', this.module + '/report/detail/' + e.recID);
   }
 }

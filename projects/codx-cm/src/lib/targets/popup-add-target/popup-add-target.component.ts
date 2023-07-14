@@ -168,6 +168,10 @@ export class PopupAddTargetComponent {
             this.data.target = Math.round(e?.data);
             if (parseInt(e?.data) <= 0) this.data.target = 0;
             this.setQuarters(this.data.target);
+            this.setTargetToLine();
+            this.setListTargetLine();
+            this.setTagetByQuarter('noAuto', e?.field);
+            this.getListTimeCalendar(this.text);
           }
 
           break;
@@ -181,7 +185,6 @@ export class PopupAddTargetComponent {
           }
           this.setTargetToLine();
           this.setTagetByQuarter('noAuto', e?.field);
-          this.getListTimeCalendar(this.text);
           break;
       }
     } else {
@@ -291,6 +294,8 @@ export class PopupAddTargetComponent {
     }
     this.data.owner = id;
     this.setTargetToLine();
+    this.setListTargetLine();
+    this.setTagetByQuarter();
     this.getListTimeCalendar(this.text);
     this.changedetectorRef.detectChanges();
     console.log(this.data.owner);
@@ -299,13 +304,9 @@ export class PopupAddTargetComponent {
   setTargetToLine() {
     if (this.lstOwners != null && this.lstOwners.length > 0) {
       let target = 0;
-      target = Math.round(
-        (this.quarter1 + this.quarter2 + this.quarter3 + this.quarter4) /
-          this.lstOwners.length
-      );
+      target = this.data.target;
       this.lstOwners.every((item) => (item.target = target));
-      this.setListTargetLine();
-      this.setTagetByQuarter();
+
     }
   }
 
@@ -538,7 +539,6 @@ export class PopupAddTargetComponent {
   updateTarget(e, id, isAllo) {
     this.typeChange = 'noInput';
     var valid = /\D/;
-
     var index = -1;
     var indexTime = -1;
     var month = 0;
@@ -550,82 +550,49 @@ export class PopupAddTargetComponent {
     );
     var i = 0;
     var targetOld = 0;
-    if(e?.match(valid) || e == '' || e.trim() == '' || parseInt(e) < 0){
+    if (e?.match(valid) || e == '' || e.trim() == '' || parseInt(e) < 0) {
       this.lstOwners = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTime = JSON.parse(JSON.stringify(this.lstTime));
-      return;
-    }
-    if (parseInt(e?.trim()) <= 0) {
-      var math = 0;
-      if (isAllo) {
-        if (index != -1) {
-          if (this.lstTargetLines[index].target <= i) {
-            math = this.data.target += 0;
-          } else {
-            i = this.lstTargetLines[index].target - i;
-            math = this.data.target -= this.lstTargetLines[index].target;
-          }
-          this.lstTargetLines[index].target = 0;
-        }
-        if (indexTime != -1) {
-          this.lstTime[indexTime]?.lines?.forEach((element) => {
-            if (element?.recID == id) {
-              element.target = 0;
-            }
-          });
-        }
-      } else {
-        if (index != -1) {
-          if (this.lstOwners[index].target > 0) {
-            math = this.data.target -= this.lstOwners[index].target;
-          }
-          this.lstOwners[index].target = 0;
-        }
-      }
-      this.data.target = math > 0 ? Math.round(math) : 0;
-      if (index != -1) {
-        var month =
-          new Date(this.lstTargetLines[index].startDate).getMonth() + 1;
-        if (month >= 1 && month < 4) {
-        }
-      }
-      index = -1;
-      this.isEditLine = false;
-      this.changedetectorRef.detectChanges();
       return;
     }
 
     let target = parseInt(e?.trim());
     if (index != -1) {
       if (isAllo) {
-        if (this.lstTargetLines[index].target < target) {
-          i = target - this.lstTargetLines[index].target;
-          Math.round((this.data.target += i));
-        } else {
-          i = this.lstTargetLines[index].target - target;
-          Math.round((this.data.target -= i));
-        }
-        this.lstTargetLines[index].target = target;
-        if (indexTime != -1) {
-          this.lstTime[indexTime]?.lines.forEach((element) => {
-            if (element?.recID == id) {
-              element.target = Math.round(target);
-            }
-          });
+        if (this.lstTargetLines[index].target !== target) {
+          if (this.lstTargetLines[index].target < target) {
+            i = target - this.lstTargetLines[index].target;
+            Math.round((this.data.target += i));
+          } else {
+            i = this.lstTargetLines[index].target - target;
+            Math.round((this.data.target -= i));
+          }
+          this.lstTargetLines[index].target = target;
+          if (indexTime != -1) {
+            this.lstTime[indexTime]?.lines.forEach((element) => {
+              if (element?.recID == id) {
+                element.target = Math.round(target);
+              }
+            });
+          }
         }
       } else {
-        if (this.lstOwners[index].target < target) {
-          i = target - this.lstOwners[index].target;
-          this.data.target = Math.round((this.data.target += i));
-        } else {
-          i = this.lstOwners[index].target - target;
-          this.data.target = Math.round((this.data.target -= i));
+        if (this.lstOwners[index].target !== target) {
+          if (this.lstOwners[index].target < target) {
+            i = target - this.lstOwners[index].target;
+            this.data.target = Math.round((this.data.target += i));
+          } else {
+            i = this.lstOwners[index].target - target;
+            this.data.target = Math.round((this.data.target -= i));
+          }
+
+          this.setQuarters(this.data.target);
+          this.lstOwners[index].target = Math.round(target);
+          this.lstTargetLines[index].isExit = true;
+          this.isExitTarget = true;
         }
-        this.setQuarters(this.data.target);
-        this.lstOwners[index].target = Math.round(target);
       }
-      this.lstTargetLines[index].isExit = true;
-      this.isExitTarget = true;
+
     }
     this.isEditLine = false;
     this.changedetectorRef.detectChanges();
