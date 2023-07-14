@@ -203,8 +203,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.listGroupTask?.forEach((group) => {
           group?.task?.forEach((task) => {
             task['progressOld'] = task.progress;
+            task['isChange'] = false;
           });
           group['progressOld'] = group.progress;
+          group['isChange'] = false;
         });
       } else {
         let progressData = [];
@@ -224,10 +226,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.listGroupTask?.forEach((group) => {
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
+              if(task?.isChange){
                 progressData.push(this.setProgressOutput(task, group));
+              }
             });
             group.progress = group?.progressOld;
-            if (group?.recID) {
+            if (group?.recID && group?.isChange) {
               progressData.push(this.setProgressOutput(null, group));
             }
           });
@@ -269,11 +273,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
+                if(task?.isChange){
                   progressData.push(this.setProgressOutput(null, group));              
+                }
               }
             });
             group.progress = group?.progressOld;
-            if (group?.recID) {
+            if (group?.recID && group?.isChange) {
               progressData.push(this.setProgressOutput(null, group));
             }
           }
@@ -1526,6 +1532,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.updateDataProgress(data, dataProgress);
         if (this.isMoveStage) {
           data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
+          data.isChange = true;
         }
         let taskFind = this.currentStep?.tasks?.find(
           (task) => task.recID == dataProgress.taskID
@@ -1547,6 +1554,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             groupView.progress = dataProgress?.progressGroupTask;
             if (this.isMoveStage) {
               groupView.progressOld = dataProgress?.progressGroupTask; // dành cho cập nhật tất cả
+              data.isChange = true;
             }
           }
           if (groupData) {
