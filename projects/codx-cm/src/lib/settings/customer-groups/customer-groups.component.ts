@@ -189,12 +189,18 @@ export class CustomerGroupsComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
+      let customName =
+        this.funcList?.customName || this.funcList?.description || '';
       let popupAdd = this.callfunc.openSide(
         PopupAddCustomerGroupsComponent,
         {
           data: this.view.dataService.dataSelected,
           action: 'add',
-          headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+          headerText:
+            evt.text +
+            ' ' +
+            customName.charAt(0).toLowerCase() +
+            customName.slice(1),
           gridViewSetup: this.gridViewSetup,
         },
         option
@@ -220,12 +226,18 @@ export class CustomerGroupsComponent extends UIComponent {
           option.Width = '550px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.view?.formModel;
+          let customName =
+            this.funcList?.customName || this.funcList?.description || '';
           let popupEdit = this.callfunc.openSide(
             PopupAddCustomerGroupsComponent,
             {
               data: data,
               isAdd: 'edit',
-              headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+              headerText:
+                evt.text +
+                ' ' +
+                customName.charAt(0).toLowerCase() +
+                customName.slice(1),
               gridViewSetup: this.gridViewSetup,
             },
             option
@@ -252,12 +264,18 @@ export class CustomerGroupsComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
+      let customName =
+        this.funcList?.customName || this.funcList?.description || '';
       let popupCopy = this.callfunc.openSide(
         PopupAddCustomerGroupsComponent,
         {
           data: data,
           isAdd: 'copy',
-          headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+          headerText:
+            evt.text +
+            ' ' +
+            customName.charAt(0).toLowerCase() +
+            customName.slice(1),
           gridViewSetup: this.gridViewSetup,
         },
         option
