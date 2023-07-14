@@ -57,6 +57,7 @@ export class LeadDetailComponent implements OnInit {
   tabControl = [];
   contactPerson: any;
   listRoles = [];
+  listSteps = [];
   tmpDeal: any;
   gridViewSetupDeal:any;
   request: ResourceModel;
@@ -116,8 +117,13 @@ export class LeadDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
-      this.dataSelected = this.dataSelected;
-      if (this.dataSelected.dealID) {
+
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+
+        this.dataSelected = this.dataSelected;
         var index = this.tabControl.findIndex((x) => x.name === 'Deal');
         if (index != -1) {
           this.tabControl.splice(index, 1);
@@ -190,6 +196,43 @@ export class LeadDetailComponent implements OnInit {
       )
     );
     await this.getTmpDeal();
+    await this.getListInstanceStep();
+  }
+  getListInstanceStep() {
+    var data = [
+      this.dataSelected?.refID,
+      this.dataSelected?.processID,
+      this.dataSelected?.status,
+    ];
+    this.codxCmService.getStepInstance(data).subscribe((res) => {
+      if (res) {
+        this.listSteps = res;
+        this.checkCompletedInstance(this.dataSelected?.status);
+        this.pushTabFields((this.checkHaveField(this.listSteps)));
+      }
+      else {
+        this.listSteps = null;
+      }
+    });
+  }
+  checkCompletedInstance(dealStatus: any) {
+    if (dealStatus == '1' || dealStatus == '2') {
+      this.deleteListReason(this.listSteps);
+    }
+  }
+  deleteListReason(listStep: any): void {
+    listStep.pop();
+    listStep.pop();
+  }
+  checkHaveField(listStep: any){
+    var isCheck = false;
+    for(let item of listStep) {
+        if(item?.fields?.length > 0 && item?.fields) {
+          isCheck = true;
+          return isCheck;
+        }
+    }
+    return isCheck;
   }
 
   async getTmpDeal() {
@@ -220,7 +263,6 @@ export class LeadDetailComponent implements OnInit {
       index != -1 && this.tabDetail.splice(index, 1);
       this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
     }
-
   }
   getIcon($event){
     if($event == '1') {

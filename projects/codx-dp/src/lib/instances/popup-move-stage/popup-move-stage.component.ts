@@ -96,12 +96,24 @@ export class PopupMoveStageComponent implements OnInit {
   dateMessage: any;
   applyFor:any;
 
+  progressAll = false;
+  progressDefault = false;
+  progressAction: string ='';
+
   // CM
   dataCM:any;
   recID:any;
   processID:any;
   stepID:any;
+  probability:any;
+  expectedClosed:any;
   isLoad: boolean = false;
+  formModelDeal: FormModel = {
+    formName: 'CMDeals',
+    gridViewName: 'grvCMDeals',
+    entityName: 'CM_Deals',
+  };
+
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -128,10 +140,13 @@ export class PopupMoveStageComponent implements OnInit {
 
       this.isDurationControl = dt?.data?.isDurationControl;
       this.getIdReason();
+      this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
     }
     else if(this.applyFor != '0' ){
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
-      this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.dataCM?.listStepCbx));
+      this.probability = dt?.data?.deal?.probability;
+      this.expectedClosed = dt?.data?.deal?.expectedClosed;
+      // this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.dataCM?.listStepCbx));
       this.executeApiCalls();
       this.isLoad = true;
     }
@@ -144,7 +159,6 @@ export class PopupMoveStageComponent implements OnInit {
       this.lstParticipants = dt?.data.lstParticipants;
     }
     this.stepIdOld = this.stepID;
-    this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
     this.codxDpService.getFirstIntance(this.processID).subscribe((res) => {
       if (res) {
         this.firstInstance = res;
@@ -190,6 +204,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.getIdReason();
         this.eventAutoClick();
         this.removeReasonInStepsAuto(res[3],res[4],res[1]);
+        this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
         this.changeDetectorRef.detectChanges();
       }
 
@@ -481,6 +496,8 @@ export class PopupMoveStageComponent implements OnInit {
           instance: this.instance,
           isReason: this.isReason,
           comment: this.instancesStepOld?.note,
+          probability: this.probability,
+          expectedClosed: this.expectedClosed
         };
         this.stepIdClick = '';
         this.stepIdOld = '';
@@ -536,6 +553,16 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld[$event.field] = $event.data.fromDate;
     }
     this.changeDetectorRef.detectChanges();
+  }
+  valueChangeDataCM($event) {
+    if ($event) {
+      if($event.field === 'expectedClosed') {
+        this.expectedClosed = $event.data.fromDate;
+      }
+      else if($event.field === 'probability'){
+        this.probability = $event.data;
+      }
+    }
   }
 
   autoClickedSteps(listStep: any, stepName: string) {
@@ -668,22 +695,6 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
   }
-
-  // getColorTask(item, view): string {
-  //   var check = 'd-none';
-  //   if (item?.requireCompleted) {
-  //     check = 'text-danger';
-  //   }
-  //   else if (view == this.viewTask) {
-  //     for (let tasks of this.listTaskDone) {
-  //       if (tasks.parentID?.includes(item.refID)) {
-  //         check = 'text-orange'
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   return check;
-  // }
   getOwnerByListRoles(lstRoles, objectType) {
     var lstOrg = [];
     if (lstRoles != null && lstRoles.length > 0) {
@@ -741,28 +752,31 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   changeProgress(event) {
+    // type A = all, D=default, R = required
     if (event) {
-      if (event?.taskID) {
-        var task = this.listTaskDone.find((x) => x.recID === event?.taskID);
-        var taskNew = {
-          progress: event?.progressTask,
-          actualEnd: event?.actualEnd,
-          isUpdate: event?.isUpdate,
-          note: event?.note,
-        };
-        this.updateDataTask(task, taskNew);
-      }
-      if (event?.groupTaskID) {
-        var group = this.listTaskGroupDone.find(
-          (x) => x.refID === event?.groupTaskID
-        );
-        var groupNew = {
-          progress: event?.progressGroupTask,
-          isUpdate: event?.isUpdate,
-          actualEnd: event?.actualEnd,
-          note: event?.note,
-        };
-        this.updateDataGroup(group, groupNew);
+      for(let item of event.data) {
+        if (item.taskID && item.type === 'T') {
+          var task = this.listTaskDone.find((x) => x.recID === item?.taskID);
+          var taskNew = {
+            progress: item?.progressTask,
+            actualEnd: item?.actualEnd,
+            isUpdate: item?.isUpdate,
+            note: item?.note,
+          };
+          this.updateDataTask(task, taskNew);
+        }
+        if (item?.groupTaskID && item.type === 'G') {
+          var group = this.listTaskGroupDone.find(
+            (x) => x.recID === item?.groupTaskID
+          );
+          var groupNew = {
+            progress: item?.progressGroupTask,
+            isUpdate: item?.isUpdate,
+            actualEnd: item?.actualEnd,
+            note: item?.note,
+          };
+          this.updateDataGroup(group, groupNew);
+        }
       }
     }
   }
@@ -773,7 +787,7 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.progress = taskOld.progress;
     taskNew.modifiedOn = new Date();
     taskNew.modifiedBy = this.user.userID;
-    taskNew.isUpdate = taskNew.isUpdate;
+    taskNew.isUpdate = taskOld.isUpdate;
   }
   updateDataGroup(groupNew: any, groupOld: any) {
     groupNew.progress = groupOld?.progress;
@@ -847,5 +861,23 @@ export class PopupMoveStageComponent implements OnInit {
       this.isDurationControl = true;
     }
     return actualEnd;
+  }
+
+  checkRadioProgress(event) {
+    if (event?.field == "all") {
+      this.progressAll = event?.data;
+      if(this.progressAll){
+        this.progressDefault = !this.progressAll;
+      }
+    }
+    if (event?.field == "required") {
+      this.progressDefault = event?.data;
+      if(this.progressDefault){
+        this.progressAll = !this.progressDefault;
+      }
+    }
+    // if(event) {
+    //   this.progressAll = event?.data;
+    // }
   }
 }

@@ -28,7 +28,10 @@
     </codx-img> -->
     <div class="ps-3 d-flex w-100 flex-column pe-12">
       <!-- <span class="w-100 text-truncate fw-bold">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span> -->
-      <span class="w-100 text-truncate fw-bold" [innerHTML]="targetToFixed(data?.target)"></span>
+      <span
+        class="w-100 text-truncate fw-bold"
+        [innerHTML]="targetToFixed(data?.target)"
+      ></span>
     </div>
   </div>
 </ng-template>
@@ -62,7 +65,10 @@
 <ng-template #contentTmp let-data> </ng-template>
 
 <ng-template #resourceTootip let-data>
-  <span class="w-100 text-truncate fw-bold" [innerHTML]="targetToFixed(data?.target)"></span>
+  <span
+    class="w-100 text-truncate fw-bold"
+    [innerHTML]="targetToFixed(data?.target)"
+  ></span>
 </ng-template>
 
 <ng-template #mfButton let-data>
@@ -92,6 +98,43 @@
         (valueChange)="changeCalendar($event)"
         (change)="changeCalendar($event)"
       ></codx-dropdown-calendar>
+    </div>
+    <div class="mt-2 om-ejs-tab">
+      <ng-container *ngIf="loadedTree">
+        <div *ngIf="lstDataTree != null && lstDataTree.length > 0; else noData">
+          <div
+            class="container treeview"
+            *ngIf="loadedTree"
+            style="padding-right: 100px; padding-left: 100px"
+          >
+            <codx-view-tree-targets
+              [dataTree]="lstDataTree"
+              [fmTargetLines]="fmTargetLines"
+              [formModel]="view.formModel"
+              (clickMoreFunc)="clickMoreFunc($event)"
+              (changeMoreMF)="changeMoreMF($event)"
+            ></codx-view-tree-targets>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noData>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>

@@ -206,7 +206,13 @@
                 field="quotationID"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
-                [disabled]="true"
+                [placeholder]="
+                  disabledShowInput
+                    ? planceHolderAutoNumber
+                    : grvSetupQuotations['QuotationID']?.description
+                "
+                [disabled]="disabledShowInput"
+                (controlBlur)="changeAutoNum($event)"
               ></codx-input>
             </div>
             <div class="row">

@@ -24,7 +24,7 @@
         [dataItem]="moreDefaut"
         (changeDataMF)="changeDataMFStep($event, currentStep)"
         (clickMF)="clickMFStep($event, currentStep)"
-        *ngIf="isShowMore && !isClose"
+        *ngIf="!isMoveStage && !isClose"
       >
       </codx-mfunc>
     </div>
@@ -193,7 +193,7 @@
     </div>
   </div>
   <ng-container
-    *ngIf="isShowButton && isStart && !isClose"
+    *ngIf="!isMoveStage && isStart && !isClose"
     [ngTemplateOutlet]="buttonTemplate"
     [ngTemplateOutletContext]="{ value: '' }"
   ></ng-container>
@@ -236,7 +236,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && !isClose"
+      *ngIf="!isMoveStage && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -283,7 +283,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="isShowMore && !isClose"
+      *ngIf="!isMoveStage && !isClose"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -315,20 +315,7 @@
 </ng-template>
 
 <ng-template #buttonTemplate let-data="value">
-  <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView">
-    <!-- <button
-      type="button"
-      class="btn btn-outline-primary me-2"
-      (click)="addGroupTask()"
-    >
-      <i class="icon-add icon-18 text-primary"></i>
-      <codx-label
-        [name]="'lblAddGroup'"
-        [formName]="'DPStepsFields'"
-        [gridViewName]="'grvDPStepsFields'"
-        [default]="'Thêm nhóm công việc'"
-      ></codx-label>
-    </button> -->
+  <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView && isShowBtnAddTask">
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
@@ -367,7 +354,7 @@
       ></span>
     </div> -->
     <codx-vll
-        *ngIf="data?.group"
+        *ngIf="(data?.group && !isMoveStage)"
         [name]="'DP048'"
         [field]="'Status'"
         [value]="data?.value?.status"

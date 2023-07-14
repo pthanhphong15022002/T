@@ -1,0 +1,22 @@
+.treeview{
+  .content-tree{
+      padding: 0;
+
+      .nochild {
+          width: 22px;
+      }
+      .collapse-conent{
+          margin-top: 16px;
+          margin-right: 2px;
+      }
+  }
+
+}
+
+.action-menu-od {
+  opacity: 0;
+}
+
+.has-action-menu-od:hover .action-menu-od {
+  opacity: 1;
+}

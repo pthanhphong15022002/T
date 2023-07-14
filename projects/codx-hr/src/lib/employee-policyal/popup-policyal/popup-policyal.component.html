@@ -713,8 +713,33 @@
         class="badge badge-success border-0 ms-2"
       >
       </codx-vll>
+      <button
+      class="btn btn-icon ms-3"
+      (click)="onClickOpenSelectIncludeObj()"
+    >
+      <i class="icon-edit-one icon-18" 
+      [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+      ></i>
+    </button>
     </span>
 </span>
+
+<div *ngFor="let obj of lstApplyObj">
+  <div>obj.priority</div>
+  <div *ngFor="let detail of lstSelectedObj">
+    <div class="d-flex justify-content-around">
+      <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        name="HRObject"
+        [value]="obj"
+        class="badge badge-success border-0 ms-2"
+      >
+      </codx-vll>
+
+    </div>
+  </div>
+</div>
 
     <!-- <codx-combobox-popup
     *ngIf="!isHidden && alpolicyObj.hasIncludeObjects"

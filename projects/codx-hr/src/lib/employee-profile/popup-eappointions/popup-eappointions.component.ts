@@ -37,6 +37,28 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   employeeObj: any;
   decisionNoDisable: boolean = false;
   autoNumField: string;
+  eAppointionHeaderTexts: any;
+
+  originUnitID: any;
+  originJobLevelID: any;
+  originPositionID: any;
+  originLocationID: any;
+
+  editedUnitID: any;
+  editedJobLevel: any;
+  editedPosition: any;
+  editedLocation: any;
+
+  editedUnitIDStr: any;
+  editedJobLevelStr: any;
+  editedPositionStr: any;
+  editedLocationStr: any;
+
+  oldUnitIDStr: any;
+  oldJobLevelStr: any;
+  oldPositionStr: any;
+  oldLocationStr: any;
+
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
@@ -60,7 +82,18 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
 
     if (data?.data?.empObj)
+    {
       this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
+      this.originUnitID =  this.employeeObj.orgUnitID;
+      this.originJobLevelID = this.employeeObj.jobLevel;
+      this.originPositionID = this.employeeObj.positionID;
+      this.originLocationID = this.employeeObj.locationID;
+
+      this.editedUnitID =  this.employeeObj.orgUnitID;
+      this.editedJobLevel = this.employeeObj.jobLevel;
+      this.editedPosition = this.employeeObj.positionID;
+      this.editedLocation = this.employeeObj.locationID;
+    }
     this.formModel = dialog.formModel;
   }
 
@@ -155,6 +188,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.hrService.getHeaderText(this.funcID).then((res)=>{
+      this.eAppointionHeaderTexts = res;
+    })
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((fg) => {
@@ -184,6 +220,160 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
+  onChangeOrgUnitID(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
+    if(this.actionType == 'edit'){
+      this.notify.alertCode('HR027',null,...[
+        this.eAppointionHeaderTexts.OrgUnitID, 
+        this.editedUnitIDStr, 
+        newVal, 
+        this.EAppointionObj.oldOrgUnitID, 
+        this.EAppointionObj.oldOrgUnitID, 
+        this.originUnitID]).subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.editedUnitIDStr = newVal;
+        }
+        else{
+          if(event.data != this.originUnitID && this.originUnitID){
+            this.EAppointionObj.oldOrgUnitID = this.originUnitID;
+          }
+          else if(event.data == this.originUnitID){
+            this.EAppointionObj.oldOrgUnitID = '';
+          }
+          this.formGroup.patchValue(this.EAppointionObj);
+          this.detectorRef.detectChanges();
+        }})
+    }
+    else{
+      if(event.data != this.originUnitID && this.originUnitID){
+        this.EAppointionObj.oldOrgUnitID = this.originUnitID;
+      }
+      else if(event.data == this.originUnitID){
+        this.EAppointionObj.oldOrgUnitID = '';
+      }
+      this.formGroup.patchValue(this.EAppointionObj);
+      this.detectorRef.detectChanges();
+    }
+    this.editedUnitID = event.data;
+  }
+
+  onChangeJobLevel(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
+    if(this.actionType == 'edit'){
+      this.notify.alertCode('HR027',null,...[
+        this.eAppointionHeaderTexts.JobLevel, 
+        this.editedJobLevelStr, 
+        newVal, 
+        this.EAppointionObj.oldJobLevel, 
+        this.EAppointionObj.oldJobLevel, 
+        this.originJobLevelID]).subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.editedJobLevelStr = newVal;
+        }
+        else{
+          if(event.data != this.originJobLevelID && this.originJobLevelID){
+            this.EAppointionObj.oldJobLevel = this.originJobLevelID;
+          }
+          else if(event.data == this.originJobLevelID){
+            this.EAppointionObj.oldJobLevel = '';
+          }
+          this.formGroup.patchValue(this.EAppointionObj);
+          this.detectorRef.detectChanges();
+        }})
+    }
+    else{
+      if(event.data != this.originJobLevelID && this.originJobLevelID){
+        this.EAppointionObj.oldJobLevel = this.originJobLevelID;
+      }
+      else if(event.data == this.originJobLevelID){
+        this.EAppointionObj.oldJobLevel = '';
+      }
+      this.formGroup.patchValue(this.EAppointionObj);
+      this.detectorRef.detectChanges();
+    }
+    this.editedJobLevel = event.data;
+  }
+
+  onChangePosition(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
+
+    if(this.actionType == 'edit'){
+      this.notify.alertCode('HR027',null,...[
+        this.eAppointionHeaderTexts.PositionID, 
+        this.editedPositionStr, 
+        newVal, 
+        this.EAppointionObj.oldPositionID, 
+        this.EAppointionObj.oldPositionID, 
+        this.originPositionID]).subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.editedPositionStr = newVal;
+        }
+        else{
+          if(event.data != this.originPositionID && this.originPositionID){
+            this.EAppointionObj.oldPositionID = this.originPositionID;
+          }
+          else if(event.data == this.originPositionID){
+            this.EAppointionObj.oldPositionID = '';
+          }
+          this.formGroup.patchValue(this.EAppointionObj);
+          this.detectorRef.detectChanges();
+        }})
+    }
+    else{
+      if(event.data != this.originPositionID && this.originPositionID){
+        this.EAppointionObj.oldPositionID = this.originPositionID;
+      }
+      else if(event.data == this.originPositionID){
+        this.EAppointionObj.oldPositionID = '';
+      }
+      this.formGroup.patchValue(this.EAppointionObj);
+      this.detectorRef.detectChanges();
+    }
+    this.editedPosition = event.data;
+  }
+
+  onChangeLocation(event){
+    let viewMem = event.component?.setting.viewMember
+    let newVal = event.component.itemsSelected[0][viewMem]
+
+    if(this.actionType == 'edit'){
+      this.notify.alertCode('HR027',null,...[
+        this.eAppointionHeaderTexts.LocationID, 
+        this.editedLocationStr, 
+        newVal, 
+        this.EAppointionObj.oldLocationID, 
+        this.EAppointionObj.oldLocationID, 
+        this.originLocationID]).subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.editedLocationStr = newVal;
+        }
+        else{
+          if(event.data != this.originLocationID && this.originLocationID){
+            this.EAppointionObj.oldLocationID = this.originLocationID;
+          }
+          else if(event.data == this.originLocationID){
+            this.EAppointionObj.oldLocationID = '';
+          }
+          this.formGroup.patchValue(this.EAppointionObj);
+          this.detectorRef.detectChanges();
+        }})
+    }
+    else{
+      if(event.data != this.originLocationID && this.originLocationID){
+        this.EAppointionObj.oldLocationID = this.originLocationID;
+      }
+      else if(event.data == this.originLocationID){
+        this.EAppointionObj.oldLocationID = '';
+      }
+      this.formGroup.patchValue(this.EAppointionObj);
+      this.detectorRef.detectChanges();
+    }
+    this.editedLocation = event.data;
+  }
+
   valueChange(event) {
     if (!event.data) {
       this.EAppointionObj.signerPosition = '';
@@ -207,6 +397,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
+
 
   onSaveForm() {
     if (this.formGroup.invalid) {

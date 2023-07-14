@@ -1,0 +1,38 @@
+<codx-form
+  #form
+  [headerText]=""
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  subToolbarCss="text-end"
+  [customToolbar]="subToolbar"
+>
+</codx-form>
+<ng-template #body>
+    <ng-container *ngFor=" let report of listReport">
+    <div class="d-flex justify-content-end me-3">
+        <button type="button" class="btn btn-light-primary w-100 text-center" (click)="testReport(report)">
+            {{ report.reportName }}
+        </button>
+    </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #subToolbar>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-2">
+      <div class="d-flex justify-content-start me-2">
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="ms-2">
+          <div
+            class="btn btn-icon btn-sm btn-light-primary btn-circle bg"
+            (click)="close()"
+          >
+            <i class="icon-close icon-16"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

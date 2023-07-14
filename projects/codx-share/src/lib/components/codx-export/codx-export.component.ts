@@ -93,8 +93,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
     },
   ];
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @Input() refType : any;
-  @Input() refID : any; 
+  @Input() refType: any;
+  @Input() refID: any;
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -155,8 +155,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges) {}
   load() {
-    this.loadEx();
-    //this.loadWord();
+    if (this.type == 'word') this.loadWord();
+    else this.loadEx();
   }
   loadEx() {
     this.request.entityName = 'AD_ExcelTemplates';
@@ -187,7 +187,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.loaded = true; */
         }),
         map((response: any) => {
-          return response[0];
+          if (response) return response[0];
         })
       );
   }
@@ -206,7 +206,12 @@ export class CodxExportComponent implements OnInit, OnChanges {
             900,
             700,
             null,
-            { action: val, type: this.type , refType: this.refType , refID: this.refID},
+            {
+              action: val,
+              type: this.type,
+              refType: this.refType,
+              refID: this.refID,
+            },
             '',
             option
           )
@@ -275,19 +280,21 @@ export class CodxExportComponent implements OnInit, OnChanges {
     var idTemp = null;
     var value = this.exportGroup.value;
     var splitFormat = value?.format.split('_');
+    if (splitFormat.length > 1 && splitFormat[1]) idTemp = splitFormat[1];
     switch (splitFormat[0]) {
       case 'excel':
-      case 'excelTemp': {
+      case 'excelTemp':
         if (value?.dataExport == 'all') {
           this.gridModel.page = 1;
           this.gridModel.pageSize = -1;
+          this.gridModel.pageLoading = false;
           this.gridModel.predicates = null;
           this.gridModel.dataValues = null;
         } else if (value?.dataExport == 'selected') {
           this.gridModel.predicates = this.idField + '=@0';
           this.gridModel.dataValues = [this.recID].join(';');
         }
-        if (splitFormat[1]) idTemp = splitFormat[1];
+
         this.api
           .execSv<any>(
             this.services,
@@ -302,7 +309,32 @@ export class CodxExportComponent implements OnInit, OnChanges {
             }
           });
         break;
-      }
+      case 'wordTemp':
+        if (value?.dataExport == 'all') {
+          this.gridModel.page = 1;
+          this.gridModel.pageSize = -1;
+          this.gridModel.pageLoading = false;
+          this.gridModel.predicates = null;
+          this.gridModel.dataValues = null;
+        } else if (value?.dataExport == 'selected') {
+          this.gridModel.predicates = this.idField + '=@0';
+          this.gridModel.dataValues = [this.recID].join(';');
+        }
+
+        this.api
+          .execSv<any>(
+            this.services,
+            'Core',
+            'ExportWordBusiness',
+            'ExportWordTemplateAsync',
+            [this.gridModel, idTemp]
+          )
+          .subscribe((item) => {
+            if (item) {
+              this.downloadFile(item);
+            }
+          });
+        break;
     }
 
     /*    */
@@ -329,8 +361,11 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
 
   saveByteArray(reportName, byte) {
+    var dataType =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    if (this.type == 'word') dataType = 'application/msword';
     var blob = new Blob([byte], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      type: dataType,
     });
     var link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
@@ -353,32 +388,38 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.show = false;
     var id;
     switch (e?.nextId) {
-      case '1': {
+      case '1':
+        this.type = 'excel';
         id = 'excel';
         break;
-      }
-      case '2': {
+
+      case '2':
+        this.type = '';
         //id= "word";
         break;
-      }
-      case '3': {
+
+      case '3':
+        this.type = 'word';
         id = 'word';
         break;
-      }
-      case '4': {
+
+      case '4':
+        this.type = '';
         id = 'pdf';
         break;
-      }
-      case '5': {
+
+      case '5':
         this.type = 'excel';
         this.show = true;
+        this.load();
         break;
-      }
-      case '6': {
+
+      case '6':
         this.type = 'word';
         this.show = true;
+        this.exportGroup.controls['dataExport'].setValue('selected');
+        this.load();
         break;
-      }
     }
     this.exportGroup.controls['format'].setValue(id);
   }

@@ -141,7 +141,6 @@ export class DealsComponent
   processIDDefault: string;
   crrProcessID = '';
   returnedCmt = '';
-  lstStepInstances: any[]=[];
   dataColums: any = [];
   listHeader: any = [];
   listSteps:any[]=[];
@@ -502,7 +501,6 @@ export class DealsComponent
     return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
   }
   clickMF(e, data) {
-    debugger;
     const actions = {
       SYS03: (data) => {
         this.edit(data);
@@ -555,12 +553,6 @@ export class DealsComponent
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
-  updateListSteps(e) {
-   if(e){
-    this.lstStepInstances = e?.listStep;
-   }
-  }
-
   handelStartDay(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
@@ -714,7 +706,7 @@ export class DealsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
-            listStepCbx: this.lstStepInstances
+            // listStepCbx: this.lstStepInstances,
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -736,8 +728,8 @@ export class DealsComponent
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
               var instance = e.event.instance;
-              this.listSteps = e.event?.listStep;
-              var index =
+            var listSteps = e.event?.listStep;
+             var index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
@@ -745,13 +737,12 @@ export class DealsComponent
                     !x.isFailStep
                 ) + 1;
               var nextStep = '';
-              if (index != -1) {
+              if (index != -1 && !listSteps[index]?.isSuccessStep && !listSteps[index]?.isFailStep ) {
                 if (index != e.event.listStep.length) {
-                  var listStep = e.event.listStep;
-                  nextStep = listStep[index]?.stepID;
+                  nextStep = listSteps[index]?.stepID;
                 }
               }
-              var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment];
+              var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment,e.event?.expectedClosed,e.event?.probability];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res[0];
@@ -790,11 +781,14 @@ export class DealsComponent
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
             if (res) {
-              data.closed = check ? true : false;
-              data.closedOn = check ? new Date() : data.ClosedOn;
-              data.ModifiedOn = new Date();
-              this.dataSelected = data;
-              this.view.dataService.update(data).subscribe();
+              // data.closed = check ? true : false;
+              // data.closedOn = check ? new Date() : data.closedOn;
+              // data.modifiedOn = new Date();
+              this.dataSelected.closed = check;
+              this.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.view.dataService.update(this.dataSelected).subscribe();
               this.notificationsService.notifyCode(
                 check ? 'DP016' : 'DP017',
                 0,
@@ -943,6 +937,8 @@ export class DealsComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
+          data.modifiedOn = new Date();
+          this.dataSelected = data;
           this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
@@ -1525,6 +1521,7 @@ export class DealsComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.status = '1';
+                  this.dataSelected.nodifiedBy = new Date();
                   this.detailViewDeal.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );

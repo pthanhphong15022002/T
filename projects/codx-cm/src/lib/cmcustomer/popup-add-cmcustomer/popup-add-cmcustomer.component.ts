@@ -122,18 +122,15 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.recID = dt?.data[2];
     }
     this.recID = dt?.data[2];
-    if (this.action == 'edit' || this.action == 'copy') {
-      if (this.data?.objectType == '1') {
-        this.refValueCbx = 'CMCustomers';
-      } else {
-        this.refValueCbx = 'CMPartners';
-      }
+    if (this.data?.objectType == '1') {
+      this.refValueCbx = 'CMCustomers';
+    } else {
+      this.refValueCbx = 'CMPartners';
     }
   }
 
   async ngOnInit() {
     this.getTab();
-    // this.getAutoNumber(this.autoNumber);
     this.api
       .execSv<any>(
         'SYS',
@@ -145,6 +142,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       .subscribe((res) => {
         if (res && !res.stop) {
           this.disabledShowInput = true;
+          this.getAutoNumber(this.autoNumber);
           this.cache.message('AD019').subscribe((mes) => {
             if (mes)
               this.planceHolderAutoNumber = mes?.customName || mes?.description;
@@ -363,7 +361,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   valueChangeIndustries(e) {
-    if (e?.data != this.data?.industries){
+    if (e?.data != this.data?.industries) {
       this.data[e.field] = e?.data;
     }
   }

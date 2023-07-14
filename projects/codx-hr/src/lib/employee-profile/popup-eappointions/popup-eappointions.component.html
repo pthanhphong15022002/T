@@ -72,24 +72,19 @@
         </codx-input>
       </div>
     </div>
-
     <div class="form-group row mt-5">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
-        <codx-input
-          [disabled]="autoNumField === 'DecisionNo'"
-          field="decisionNo"
+        <codx-vll
+          *ngIf="EAppointionObj.status"
           [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="signedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
+          [field]="'Status'"
+          [value]="EAppointionObj?.status"
+          [showText]="true"
+          [showIcon]="false"
+          [showBgColor]="true"
+          ngClass="badge badge-sm badge-light"
+        >
+        </codx-vll>
       </div>
     </div>
 
@@ -131,6 +126,7 @@
           field="orgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="onChangeOrgUnitID($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -154,6 +150,7 @@
           field="jobLevel"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="onChangeJobLevel($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -174,6 +171,7 @@
           field="positionID"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="onChangePosition($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -197,6 +195,7 @@
           field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="onChangeLocation($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -207,6 +206,35 @@
         <codx-input
           [disabled]="true"
           field="oldLocationID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="note"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row mt-5">
+      <div class="col-6">
+        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          [disabled]="autoNumField === 'DecisionNo'"
+          field="decisionNo"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="signedDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -236,21 +264,12 @@
         [Group]="formGroup"
       ></codx-input>
     </div>
-
-    <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="note"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
   </ng-template>
 </codx-form>
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

@@ -47,13 +47,13 @@
                   </div>
                   <div class="col-4 form-group">
                     <codx-label
-                      fiedName="cashBookName"
+                      fiedName="cashBookName1"
                       [formModel]="form.formModel"
                       default="Đối tượng chuyển"
                     ></codx-label>
                     <codx-input
                       type="text"
-                      field="cashBookName"
+                      field="cashBookName1"
                       [disabled]="true"
                       [formModel]="form.formModel"
                       [crrValue]="cashBookName1"
@@ -203,7 +203,7 @@
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                       (valueChange)="onInputChange($event)"
-                      [disabled]="journal?.multiCurrency === '0'"
+                      [disabled]="!journal?.multiCurrency"
                     ></codx-input>
                   </div>
                   <div class="col-6 form-group">
@@ -216,7 +216,7 @@
                       field="exchangeRate"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      [disabled]="journal?.multiCurrency === '0'"
+                      [disabled]="!journal?.multiCurrency"
                     ></codx-input>
                   </div>
                 </div>

@@ -200,6 +200,10 @@ input.e-input {
   height: 32px !important;
   line-height: 32px;
 }
+input.e-input.codx-number{
+  height: 30px !important;
+  line-height: 30px;
+}
 
 input.e-input::placeholder,
 textarea.e-input::placeholder,
@@ -2072,6 +2076,9 @@ a.nav-link {
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
   margin-right: 15px;
 }
+.personal-menu .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+  margin-right: 0;
+}
 .codx-nav {
   border-bottom: 1px var(--gray-150) solid;
   .nav-link {
@@ -3424,7 +3431,69 @@ lib-employee-list{
   min-width: 100px;
 }
 
+
 //
 .e-hscroll-bar{
   margin: 0 5px;
 }
+
+
+.cm-scroll .e-content{
+  padding-bottom: 30px;
+  overflow: auto;
+}
+codx-views[ng-reflect-func-i-d="CM0101"]{
+  .cm-scroll .e-content{
+    height: calc(100vh - 402px)!important;
+  }
+}
+codx-views[ng-reflect-func-i-d="CM0102"]{
+  .cm-scroll .e-content{
+    height: calc(100vh - 300px)!important;
+  }
+}
+codx-views[ng-reflect-func-i-d="CM0103"]{
+  .cm-scroll .e-content{
+    height: calc(100vh - 350px)!important;
+  }
+}
+codx-views[ng-reflect-func-i-d="CM0104"]{
+  .cm-scroll .e-content{
+    height: calc(100vh - 340px)!important;
+  }
+}
+
+//////
+
+codx-lead-detail{
+  .codx-detail-body{
+     height: calc(100vh - 465px) !important;
+    codx-tab-lead-detail{
+      height: 100%;
+      overflow: auto;
+    }
+  }
+}
+/*
+codx-deal-detail{
+  .codx-detail-body .e-content{
+    border: 1px red solid!important;
+  }
+}
+lib-quotations-view-detail{
+  .codx-detail-body{
+    border: 1px rgb(255, 134, 205) solid!important;
+  }
+}
+contracts-view-detail{
+  .codx-detail-body{
+    border: 1px rgb(144, 255, 39) solid!important;
+  }
+}
+contracts-view-detail{
+  border: 1px rgb(7, 224, 80) solid!important;
+  .codx-detail-body{
+    border: 1px rgb(144, 255, 39) solid!important;
+  }
+}
+*/

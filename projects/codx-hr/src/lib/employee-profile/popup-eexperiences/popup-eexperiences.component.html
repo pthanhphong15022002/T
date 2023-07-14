@@ -276,56 +276,6 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     *ngIf="isAfterRender"
 >
 <ng-template #body>
-    <div class="form-group row mt-5">
-        <codx-label
-            fiedName="CompanyName"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-            field="companyName"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
-
-    <div class="form-group row">
-        <codx-label
-            fiedName="CompanyAddress"
-            [formModel]="formModel"
-            [Group]="formGroup"
-            
-        ></codx-label>
-        <codx-input
-            field="companyAddress"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
-
-    <div class="form-group row">
-        <codx-label
-            fiedName="IndustryID"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-            field="industryID"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
-
-    <div class="form-group row">
-        <codx-label
-            fiedName="Position"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-            field="position"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
-
     <div class="form-group row">
         <div class="col-6">
             <codx-label
@@ -355,6 +305,58 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         </div>
     </div>
 
+    <div class="form-group row mt-5">
+        <codx-label
+            fiedName="CompanyName"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+            field="companyName"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+
+    <!-- <div class="form-group row">
+        <codx-label
+            fiedName="CompanyAddress"
+            [formModel]="formModel"
+            [Group]="formGroup"
+            
+        ></codx-label>
+        <codx-input
+            field="companyAddress"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+
+    <div class="form-group row">
+        <codx-label
+            fiedName="IndustryID"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+            field="industryID"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div> -->
+
+    <div class="form-group row">
+        <codx-label
+            fiedName="Position"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+            field="position"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+
+
+
     <div class="form-group row">
         <codx-label
             fiedName="Note"
@@ -371,7 +373,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
 
 <ng-template #footer>
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" (click)="onSaveForm()">
+        <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
             <i class="icon-save"></i>
         <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
         </button>
