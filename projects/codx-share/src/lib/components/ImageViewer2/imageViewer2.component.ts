@@ -238,6 +238,11 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
                     ele[0].firstChild.remove();
                     ele[0].appendChild(video);
                     this.setStyleClass('iv-loader', 'visibility', 'hidden');
+                    // this.setStyleClass('iv-image-wrap', 'widht', '100%');
+                    // this.setStyleClass('iv-image-wrap', 'height', video.height+"");
+                    // this.setStyleClass('iv-image-wrap', 'display', 'flex');
+                    // this.setStyleClass('iv-image-wrap', 'justify-content', 'center');
+                    // this.setStyleClass('iv-image-wrap', 'align-items', 'center');
                 }
         }
         else
