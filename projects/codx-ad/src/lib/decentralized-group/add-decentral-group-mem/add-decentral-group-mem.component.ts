@@ -249,6 +249,9 @@ export class AddDecentralGroupMemComponent extends UIComponent {
 
   onSave(closePopup: boolean) {
     console.log('dirty', this.form.formGroup.dirty);
+    if (this.form?.formGroup?.status == 'INVALID') {
+      return;
+    }
     if (this.form?.formGroup?.dirty) {
       this.dialog.dataService
         .save((opt: RequestOption) => this.beforeSave(opt), 0)

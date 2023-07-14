@@ -810,10 +810,14 @@ export class CodxDMService {
               if(data?.approvalStatus == '8') list = 'DMT0226'
               else list = 'DMT0233'
             }
-             //Đã duyệt phát hành
+            //Đã duyệt phát hành
             else if (data.approvalStatus == '6')  {
              list = 'DMT0243'
             }
+            //Từ chối duyệt phát hành
+            else if (data.approvalStatus == '7')  {
+              list = 'DMT0243'
+              }
             else list = 'DMT0227';
             if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
               e[i].disabled = false;

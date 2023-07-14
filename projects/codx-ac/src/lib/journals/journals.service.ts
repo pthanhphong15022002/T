@@ -160,7 +160,11 @@ export class JournalService {
     if (journal?.loanControl === '0') {
     }
 
-    const idimControls: string[] = journal?.idimControl?.split(';');
+    if (!journal.idimControl) {
+      return hiddenFields;
+    }
+
+    const idimControls: string[] = journal.idimControl?.split(';');
     for (let i = 0; i < 10; i++) {
       if (!idimControls.includes(i.toString())) {
         hiddenFields.push('IDIM' + i);

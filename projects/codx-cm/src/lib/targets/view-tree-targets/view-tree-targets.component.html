@@ -1,4 +1,4 @@
-<div class="treeview">
+<div class="treeview" style="padding-right: 100px; padding-left: 100px">
   <codx-treeview
     id="tree"
     #treeView
@@ -7,23 +7,79 @@
     [enableCheck]="false"
     idField="recID"
     parentIdField="parentID"
+    fieldCheck="hasChildren"
     [autoLoad]="false"
     [isOutput]="true"
     [isLoadChild]="true"
+    (selectionChange)="selectionChange($event)"
   >
   </codx-treeview>
 </div>
 
 <ng-template #templateTree let-item>
   <div class="mb-2" (click)="clickTreeNode($event)">
-    <div class="d-flex justify-content-between">
-      <div class="d-flex justify-content-between">
-        {{ item?.targetName }}
+    <div class="d-flex justify-content-between has-action-menu">
+      <div class="w-250px min-w-250px d-flex justify-content-between">
+        <span
+          class="text-dark"
+          [ngClass]="
+            item?.fontSize != null && item?.fontSize?.trim() != ''
+              ? item?.fontSize
+              : ''
+          "
+        >
+          {{ item?.targetName }}
+        </span>
       </div>
-      <div class="d-flex justify-content-end">
-        {{ item?.target }}
+      <div class="w-250px min-w-250px d-flex justify-content-end">
+        <div
+          style="margin-right: 40px"
+          *ngIf="item?.owner != null && item?.owner.trim() != ''"
+        >
+          <codx-imgs
+            [width]="30"
+            [objectId]="item?.owner"
+            objectType="AD_Users"
+            [numberImages]="5"
+            class=""
+          >
+          </codx-imgs>
+        </div>
+        <div
+          class="ms-3 fw-bold d-flex justify-content-end"
+          style="min-width: 150px"
+        >
+          <span
+            [ngStyle]="
+              item?.color != null && item?.color?.trim() != ''
+                ? { color: item?.color }
+                : { color: '#1d1f1f' }
+            "
+            [innerHTML]="
+              item?.target | formatvalue : fmTargetLines : 'Target' | async
+            "
+          ></span>
+          <span
+            class="fw-bold ms-1"
+            [innerHTML]="
+              item?.currencyID
+                | formatvalue : fmTargetLines : 'CurrencyID'
+                | async
+            "
+          >
+          </span>
+        </div>
+        <codx-mfunc
+          *ngIf="item?.parentID == null"
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, item)"
+          (changeDataMF)="changeDataMF($event, item)"
+          [isBookMark]="false"
+          [dataItem]="item"
+          type="hover"
+        >
+        </codx-mfunc>
       </div>
     </div>
-    <div *ngIf="item.listChild != null && item.listChild.length > 0"></div>
   </div>
 </ng-template>
