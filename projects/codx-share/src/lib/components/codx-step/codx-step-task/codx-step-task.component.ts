@@ -1558,7 +1558,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             groupView.progress = dataProgress?.progressGroupTask;
             if (this.isMoveStage) {
               groupView.progressOld = dataProgress?.progressGroupTask; // dành cho cập nhật tất cả
-              data.isChange = true;
+              groupView.isChange = true;
             }
           }
           if (groupData) {
