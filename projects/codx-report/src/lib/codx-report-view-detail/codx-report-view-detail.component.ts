@@ -219,7 +219,6 @@ getReport(funcID:string){
   getReportList(moduleID:string,reportType:string){
     this.api.execSv("rptsys",'Codx.RptBusiniess.SYS',"ReportListBusiness","GetReportsByModuleAsync",[reportType,moduleID]).subscribe((res:any)=>{
       this.orgReportList = res;
-      debugger
       let arrChildren : Array<PageLink>=[];
       for(let i=0 ;i< this.orgReportList.length;i++){
         let pageLink: PageLink = {
