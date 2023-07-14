@@ -3462,3 +3462,39 @@ codx-views[ng-reflect-func-i-d="CM0104"]{
     height: calc(100vh - 340px)!important;
   }
 }
+
+//////
+
+codx-lead-detail{
+  .codx-detail-body{
+     height: calc(100vh - 465px) !important;
+    codx-tab-lead-detail{
+      height: 100%;
+      overflow: auto;
+    }
+  }
+}
+
+/*
+codx-deal-detail{
+  .codx-detail-body .e-content{
+    border: 1px red solid!important;
+  }
+}
+lib-quotations-view-detail{
+  .codx-detail-body{
+    border: 1px rgb(255, 134, 205) solid!important;
+  }
+}
+contracts-view-detail{
+  .codx-detail-body{
+    border: 1px rgb(144, 255, 39) solid!important;
+  }
+}
+contracts-view-detail{
+  border: 1px rgb(7, 224, 80) solid!important;
+  .codx-detail-body{
+    border: 1px rgb(144, 255, 39) solid!important;
+  }
+}
+*/

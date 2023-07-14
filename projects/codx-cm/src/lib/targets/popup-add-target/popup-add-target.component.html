@@ -22,32 +22,35 @@
           >
           </codx-input>
         </div>
-        <div class="row col-6">
-          <div class="col-6">
-            <codx-label [formModel]="form.formModel" [fiedName]="'Period'">
-            </codx-label>
-            <codx-dropdown-calendar
-              #dropCalendar
-              [disabled]="action == 'edit' || isBusiness"
-              cssPopup="h-500px w-800px"
-              [value]="date"
-              [displayOption]="ops"
-              cssClass="w-100 om-calendar"
-              class="me-2"
-              [selectedType]="selectedType"
-              (change)="changeCalendar($event)"
-            ></codx-dropdown-calendar>
-          </div>
-          <div class="col-6">
-            <codx-label [formModel]="form.formModel" fiedName="Target">
-            </codx-label>
-            <codx-input
-              [formModel]="form.formModel"
-              [crrValue]="data?.target"
-              (valueChange)="valueChangeTarget($event, 'input')"
-              field="target"
-            >
-            </codx-input>
+        <div class="col-6">
+          <div class="row">
+            <div class="col-6">
+              <codx-label [formModel]="form.formModel" [fiedName]="'Period'">
+              </codx-label>
+              <codx-dropdown-calendar
+                #dropCalendar
+                [disabled]="action == 'edit' || isBusiness"
+                cssPopup="h-500px w-800px"
+                [value]="date"
+                [displayOption]="ops"
+                cssClass="w-100 om-calendar"
+                class="me-2"
+                [selectedType]="selectedType"
+                (change)="changeCalendar($event)"
+              ></codx-dropdown-calendar>
+            </div>
+            <div class="col-6">
+              <codx-label [formModel]="form.formModel" fiedName="Target">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [crrValue]="data?.target"
+                [min]="0"
+                (valueChange)="valueChangeTarget($event, 'input')"
+                field="target"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
       </div>
@@ -81,6 +84,7 @@
           <codx-input
             type="number"
             [crrValue]="quarter1"
+            [min]="0"
             (valueChange)="valueChangeTarget($event, 'input')"
             field="quarter1"
           >
@@ -96,6 +100,7 @@
           <codx-input
             type="number"
             [crrValue]="quarter2"
+            [min]="0"
             (valueChange)="valueChangeTarget($event, 'input')"
             field="quarter2"
           >
@@ -111,6 +116,7 @@
           <codx-input
             type="number"
             [crrValue]="quarter3"
+            [min]="0"
             (valueChange)="valueChangeTarget($event, 'input')"
             field="quarter3"
           >
@@ -122,6 +128,7 @@
           <codx-input
             type="number"
             [crrValue]="quarter4"
+            [min]="0"
             (valueChange)="valueChangeTarget($event, 'input')"
             field="quarter4"
           >
