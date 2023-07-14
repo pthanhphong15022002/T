@@ -10,7 +10,6 @@ import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { ReviewComponent } from 'projects/codx-sv/src/lib/add-survey/review/review.component';
-import { CustomergroupsComponent } from 'projects/codx-cm/src/lib/customergroups/customergroups.component';
 
 var childAuthRoutes: Routes = [
   {
