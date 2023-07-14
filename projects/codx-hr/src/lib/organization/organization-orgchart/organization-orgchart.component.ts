@@ -6,6 +6,9 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  EventEmitter,
+  Output,
+  TemplateRef,
 } from '@angular/core';
 // import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
@@ -33,7 +36,9 @@ import {
   CacheService,
   CallFuncService,
   CRUDService,
+  DialogRef,
   FormModel,
+  RequestOption,
   SidebarModel,
   ViewsComponent,
 } from 'codx-core';
@@ -61,6 +66,12 @@ export class OrganizationOrgchartComponent implements OnInit {
   pagefit: any;
   orientationType: any;
   childrenPlacementType: any;
+  @ViewChild('contactTemplate') contactTemplate: TemplateRef<any>;
+
+  //Popup Settings
+  dialogEditStatus: any;
+  @ViewChild('templateUpdateStatus', { static: true })
+  templateUpdateStatus: TemplateRef<any>;
 
   annotations: Array<LevelAnnotationConfig> = [];
   datasetting: any = null;
@@ -76,9 +87,11 @@ export class OrganizationOrgchartComponent implements OnInit {
     constraints: SnapConstraints.None,
   };
   @Input() formModel: FormModel;
-  @Input() orgUnitID: string;
-  @Input() view: ViewsComponent = null;
+  @Input() orgUnitID: string = '';
+  @Input() view: ViewsComponent;
   @Input() dataService: CRUDService = null;
+  @Output() clickMFunction = new EventEmitter();
+
   scaleNumber: number = 0.5;
   width = 250;
   height = 350;
@@ -93,6 +106,8 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   //style slider
   stylesObj = { width: '30%', display: 'flex', margin: '5px auto' };
+  stylesObjChart = { border: '3px solid #03a9f4', position: 'relative' };
+  stylesObjChart1 = { border: '1px ridge gray', position: 'relative' };
 
   @ViewChild('diagram') diagram: any;
   constructor(
@@ -101,15 +116,8 @@ export class OrganizationOrgchartComponent implements OnInit {
     private callFC: CallFuncService,
     private cacheService: CacheService,
     private hrService: CodxHrService
-  ) {}
-
-  onSelected(value): void {
-    this.selectedTeam = value;
-    if (value.includes('Không')) {
-      this.getDataPositionByID(this.orgUnitID, false);
-    } else {
-      this.getDataPositionByID(this.orgUnitID, true);
-    }
+  ) {
+    this.isGetManager(this.selectedTeam);
   }
 
   showVal(value) {
@@ -167,6 +175,54 @@ export class OrganizationOrgchartComponent implements OnInit {
   //   }
   // }
 
+  openSetting() {
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+
+    this.dialogEditStatus = this.callFC.openSide(
+      this.templateUpdateStatus,
+      {
+        actionType: 'abc',
+      },
+      option
+    );
+    this.dialogEditStatus.closed.subscribe((res) => {
+      if (res?.event) {
+        this.view.dataService.update(res.event[0]).subscribe();
+        //Render new data when update new status on view detail
+        this.dt.detectChanges();
+      }
+    });
+  }
+
+  CloseDialog(dialog: DialogRef) {
+    dialog.close();
+  }
+
+  onSaveUpdateForm() {
+    this.dialogEditStatus && this.dialogEditStatus.close();
+    // this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
+    //   if (res != null) {
+    //     this.notify.notifyCode('SYS007');
+    //     res[0].emp = this.currentEmpObj;
+    //     this.view.formModel.entityName;
+    //     this.hrService
+    //       .addBGTrackLog(
+    //         res[0].recID,
+    //         this.cmtStatus,
+    //         this.view.formModel.entityName,
+    //         'C1',
+    //         null,
+    //         'EContractsBusiness'
+    //       )
+    //       .subscribe();
+    //     this.dialogEditStatus && this.dialogEditStatus.close(res);
+    //   }
+    // });
+  }
+
   getDataPositionByID(orgUnitID: string, getManager: boolean) {
     if (orgUnitID) {
       this.api
@@ -195,6 +251,7 @@ export class OrganizationOrgchartComponent implements OnInit {
                     employeeName: item.employeeName,
                     employeeManager: item.employeeManager,
                     orgUnitType: item.orgUnitType,
+                    data: item,
                   },
                   //itemType: ItemType.Assistant,
                   // adviserPlacementType: AdviserPlacementType.Left,
@@ -204,6 +261,8 @@ export class OrganizationOrgchartComponent implements OnInit {
               );
               // }
             });
+            console.log(items);
+
             this.items = items;
           }
         });
@@ -219,15 +278,31 @@ export class OrganizationOrgchartComponent implements OnInit {
     });
   }
 
+  //#region  Get manager depend combobox
+  isGetManager(value) {
+    if (value.includes('Không')) {
+      this.getDataPositionByID(this.orgUnitID, false);
+    } else {
+      this.getDataPositionByID(this.orgUnitID, true);
+    }
+  }
+
+  onSelected(value): void {
+    this.selectedTeam = value;
+    this.isGetManager(value);
+  }
+
+  GetChartDiagram() {
+    this.isGetManager(this.selectedTeam);
+  }
+
+  //#endregion
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
       if (this.orgUnitID) {
         //Function get new orgchart
-        if (this.selectedTeam.includes('Không')) {
-          this.getDataPositionByID(this.orgUnitID, false);
-        } else {
-          this.getDataPositionByID(this.orgUnitID, true);
-        }
+        this.isGetManager(this.selectedTeam);
         //this.dt.detectChanges();
         //Function get olg orgchart
         // this.dataService.setPredicates([], [this.orgUnitID], (res) => {
@@ -244,6 +319,7 @@ export class OrganizationOrgchartComponent implements OnInit {
       }
     }
   }
+
   setDataOrg(data: any[]) {
     let setting = this.newDataManager(data);
     setting.dataManager = new DataManager(data);
@@ -305,14 +381,14 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
 
   // click moreFC
-  clickMF(event: any, node: any) {
+  clickMF(event: any, data: any) {
     if (event) {
       switch (event.functionID) {
         case 'SYS02': //delete
-          this.deleteData(node);
+          this.deleteData(data);
           break;
         case 'SYS03': // edit
-          this.editData(node, event);
+          this.editData(data, event);
           break;
         case 'SYS04': // copy
           break;
@@ -323,17 +399,17 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
 
   changeDataMf(event, data) {
-    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+    this.hrService.handleShowHideMF(event, data, this.formModel);
   }
   // edit data
-  editData(node: any, event: any) {
+  editData(data: any, event: any) {
     if (this.dataService) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.dataService;
       option.FormModel = this.formModel;
       let object = {
-        data: node,
+        data: data,
         action: event,
         funcID: this.formModel.funcID,
         isModeAdd: false,
@@ -346,25 +422,90 @@ export class OrganizationOrgchartComponent implements OnInit {
       );
       popup.closed.subscribe((res: any) => {
         if (res.event) {
-          let org = res.event[0];
-          let tmpOrg = res.event[1];
-          this.dataService.update(tmpOrg).subscribe(() => {
-            this.dataSource = this.newDataManager(this.dataService.data);
+          this.dataService.update(res.event).subscribe(() => {
+            // this.dataSource = this.newDataManager(this.dataService.data);
+            this.getDataPositionByID(this.orgUnitID, true);
             this.dt.detectChanges();
           });
-          this.view.dataService.add(org).subscribe();
+          //this.view.dataService.add(res.event).subscribe();
         }
       });
     }
   }
 
+  beforeDelete(opt: RequestOption, id) {
+    opt.methodName = 'DeleteEOrgChartAsync';
+    opt.className = 'OrganizationUnitsBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = id;
+    return true;
+  }
+
   // delete data
-  deleteData(node) {
-    this.view.dataService.delete([node]).subscribe(() => {
-      this.dataService.remove(node).subscribe(() => {
-        this.dataSource = this.newDataManager(this.dataService.data);
+  deleteData(data) {
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data.orgUnitID)
+      )
+      .subscribe(() => {
+        this.getDataPositionByID(this.orgUnitID, true);
         this.dt.detectChanges();
       });
+  }
+
+  //Load more icon add
+  loadDataChild(node: any, element: HTMLElement) {
+    let data = [];
+    let result = new OrgItemConfig({
+      id: 'abc',
+      parent: 'ORG-0156',
+      title: 'haha',
+      description: 'hichic',
+      templateName: 'contactTemplate',
+
+      context: {
+        employeeID: '26',
+        employeeName: 'test',
+        employeeManager: null,
+        orgUnitType: '1',
+        data: this.items[0].context.data,
+      },
     });
+
+    data = this.items.concat(result);
+
+    this.items = data;
+    // if (node.loadChildrent) {
+    //   result = this.data.filter(e => e.reportTo != node.positionID);
+    //   if (result.length > 0) {
+    //     result.forEach(element => {
+    //       if (element.positionID == node.positionID) {
+    //         element.loadChildrent = false;
+    //       }
+    //     });
+    //     this.removeNode(node.positionID);
+    //   }
+    //   this.setDataOrg(this.data);
+    // }
+    // else {
+    //   if (node.positionID) {
+    //     this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetChildOrgChartAsync", [node.positionID])
+    //       .subscribe((res: any) => {
+    //         if (res) {
+    //           result = this.data.concat(res);
+    //           if (result.length > 0) {
+    //             result.forEach(element => {
+    //               if (element.positionID == node.positionID) {
+    //                 element.loadChildrent = true;
+    //               }
+    //             });
+    //             this.data = JSON.parse(JSON.stringify(result))
+    //           }
+    //           this.setDataOrg(this.data);
+    //         }
+    //       });
+    //   }
+    // }
   }
 }

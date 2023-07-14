@@ -45,7 +45,7 @@
             default="Phân bổ lại cho"
           >
           </codx-label>
-          <div *ngIf="stepCurrent != null">
+          <div *ngIf="stepCurrent">
             <codx-popup-participants
               [lstParticipants]="lstParticipants"
               [dialog]="dialog"

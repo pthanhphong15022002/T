@@ -66,8 +66,9 @@ export class CodxViewFilesComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.objectID.currentValue != changes.objectID.previousValue && !changes.firstChange)
+    if(changes.objectID?.currentValue != changes.objectID?.previousValue && !changes.firstChange){
       this.getFileByObjectID(this.objectID);
+    }
   }
   // get files by objectID
   getFileByObjectID(objectID:string){
