@@ -137,10 +137,9 @@ export class PopupMoveStageComponent implements OnInit {
       this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
       this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
       this.listStepProccess = dt?.data?.listStepProccess;
-
       this.isDurationControl = dt?.data?.isDurationControl;
       this.getIdReason();
-      this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
+
     }
     else if(this.applyFor != '0' ){
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
@@ -169,6 +168,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+    this.applyFor == '0' && this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
     this.getGrvInstanceStep();
   }
 

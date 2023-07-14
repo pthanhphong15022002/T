@@ -106,7 +106,6 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
   }
   // collapse box chat
   collapseBoxChat(data:any){
-    debugger
     let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
     if(index > -1 ){
       this.lstGroupActive.splice(index, 1);

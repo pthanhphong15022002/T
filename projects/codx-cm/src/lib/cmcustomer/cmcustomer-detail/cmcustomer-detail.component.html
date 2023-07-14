@@ -749,8 +749,9 @@
     [predicates]="'CustomerID==@0'"
     [dataValues]="dataSelected?.recID"
     [type]="'customer'"
+    [isPause]="dataSelected?.status == '99'"
   ></list-contracts>
 </ng-template>
 <ng-template #taskTemplate let-data>
-  <step-task [typeTask]="2" [customerID]="dataSelected?.recID"></step-task>
+  <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="dataSelected?.status == '99'"></step-task>
 </ng-template>
