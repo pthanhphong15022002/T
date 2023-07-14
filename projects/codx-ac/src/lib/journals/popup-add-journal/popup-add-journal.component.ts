@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   CRUDService,
+  CodxComboboxComponent,
   CodxFormComponent,
   CodxInputComponent,
   DataRequest,
@@ -365,12 +366,11 @@ export class PopupAddJournalComponent
   onSelect(e): void {
     console.log('onSelect', e);
     this.journal.fiscalYear = e.itemData.value;
-
-    this.form.formGroup.controls.periodID.reset();
-    (this.periodID.ComponentCurrent.dataService as CRUDService).setPredicates(
-      ['FiscalYear=@0'],
-      [e.itemData.value]
-    );
+    // this.form.formGroup.controls.periodID.reset();
+    // (this.periodID.ComponentCurrent.dataService as CRUDService).setPredicates(
+    //   ['FiscalYear=@0'],
+    //   [e.itemData.value]
+    // );
   }
 
   async onClickSave(): Promise<void> {
