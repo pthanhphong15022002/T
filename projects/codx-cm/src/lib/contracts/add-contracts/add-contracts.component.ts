@@ -141,10 +141,10 @@ export class AddContractsComponent implements OnInit {
     this.dialog = dialog;
     this.type = dt?.data?.type;
     this.action = dt?.data?.action;
-    this.account = dt?.data?.account;
-    this.projectID = dt?.data?.projectID;
-    this.headerTest = dt?.data?.actionName;
-    this.contractsInput = dt?.data?.contract;
+    // this.account = dt?.data?.account;
+    // this.projectID = dt?.data?.projectID;
+    // this.headerTest = dt?.data?.actionName;
+    // this.contractsInput = dt?.data?.contract;
 
     this.getFormModel();
     this.listTypeContract = contractService.listTypeContract;
