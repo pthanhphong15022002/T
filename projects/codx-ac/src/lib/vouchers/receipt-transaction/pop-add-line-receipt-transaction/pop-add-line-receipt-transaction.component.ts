@@ -4,9 +4,9 @@ import { Vouchers } from '../../../models/Vouchers.model';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 
 @Component({
-  selector: 'lib-pop-add-lineinventory',
-  templateUrl: './pop-add-lineinventory.component.html',
-  styleUrls: ['./pop-add-lineinventory.component.css']
+  selector: 'lib-pop-add-line-receipt-transaction',
+  templateUrl: './pop-add-line-receipt-transaction.component.html',
+  styleUrls: ['./pop-add-line-receipt-transaction.component.css']
 })
 export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
 
