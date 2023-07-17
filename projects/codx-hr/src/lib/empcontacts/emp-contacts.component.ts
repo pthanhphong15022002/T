@@ -134,7 +134,7 @@ export class EmpContactsComponent extends UIComponent {
     this.request.method = 'GetListEmployeeAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
-    this.request.idField = 'OrgUnitID';
+    this.request.idField = 'orgUnitID';
 
     this.views = [
       {
@@ -165,6 +165,7 @@ export class EmpContactsComponent extends UIComponent {
       {
         id: '3',
         type: ViewType.tree_list,
+        sameData: false,
         request: this.request,
         model: {
           resizable: true,
@@ -188,11 +189,6 @@ export class EmpContactsComponent extends UIComponent {
     ];
 
     this.detectorRef.detectChanges();
-    console.log(this.view);
-    if (this.view.formModel.formName && this.view.formModel.gridViewName) {
-      this.cache.gridViewSetup(this.view.formModel.formName, this.view.formModel.gridViewName)
-        .subscribe(res => { if (res) console.log(res) })
-    }
   }
 
   selectedChange(event: any): void {
@@ -200,12 +196,18 @@ export class EmpContactsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  viewChanged(event: any) {
-    if (event?.view?.id === '3' || event?.view?.id === '4') {
+  viewChanging(event: any) {
+    if (event?.id === '3' || event?.id === '4') {
       this.view.dataService.parentIdField = 'ParentID';
+      this.view.dataService.idField = 'orgUnitID';
+      this.view.idField = 'orgUnitID';
     } else {
       this.view.dataService.parentIdField = '';
+      this.view.dataService.idField = 'employeeID';
+      this.view.idField = 'employeeID';
+
     }
+    this.detectorRef.detectChanges();
   }
   getFunction(funcID: string) {
     if (funcID) {
