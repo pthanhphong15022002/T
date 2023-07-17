@@ -1,24 +1,25 @@
+import { Util } from "codx-core";
+
 export class CashPaymentLine {
   accountID: any;
   assetGroupID: any;
   assetType: any;
   assign: any;
   autoCreated: any;
-  cR2: any;
-  cr: any;
+  cR2: any = 0;
+  cr: any = 0;
   createdBy: any;
   createdOn: any;
-  dR2: any;
+  dR2: any = 0;
   delete: any;
   derpModelID: any;
   diM1: any;
   diM2: any;
   diM3: any;
-  dr: any;
+  dr: any = 0;
   illegalExpense: any;
   includeTables: any;
   isBrigdeAcct: any;
-  loanContractID: any;
   modifiedBy: any;
   modifiedOn: any;
   note: any;
@@ -29,7 +30,7 @@ export class CashPaymentLine {
   placeInServiceDate: any;
   projectID: any;
   reasonID: any;
-  recID: any;
+  recID: any = Util.uid();;
   refLineID: any;
   refNo: any;
   rowNo: any;
@@ -42,6 +43,7 @@ export class CashPaymentLine {
   taxAmt2: any;
   transID: any;
   unbounds: any;
+  singleEntry:any;
   updateColumns: any;
   vatid: any;
   write: any;

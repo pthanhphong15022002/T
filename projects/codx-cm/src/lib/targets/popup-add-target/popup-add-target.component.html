@@ -74,7 +74,7 @@
                 [field]="'allocation'"
                 [crrValue]="isAllocation"
                 type="checkbox"
-                [disabled]="isPeriod || isExitTarget"
+                [disabled]="isExitTarget"
                 (valueChange)="valueChange($event)"
               ></codx-input>
             </div>
@@ -273,8 +273,7 @@
                           ? 'user-nav-active'
                           : null
                       "
-                      *ngIf="
-                        !isEditing(line?.recID, isAllocation) || !isEditLine
+                      *ngIf=" editingItem !== line?.recID
                       "
                       (click)="dbClick(line?.recID)"
                       class="user-nav-item"
@@ -296,7 +295,7 @@
                           : null
                       "
                       class="user-nav-item"
-                      *ngIf="isEditing(line?.recID, isAllocation) && isEditLine"
+                      *ngIf="editingItem === line?.recID"
                     >
                       <input
                         type="text"

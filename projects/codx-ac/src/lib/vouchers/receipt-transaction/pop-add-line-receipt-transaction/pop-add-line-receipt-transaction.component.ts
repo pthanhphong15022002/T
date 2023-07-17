@@ -1,14 +1,14 @@
 import { Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import { CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { InventoryJournalLines } from '../../../models/InventoryJournalLines.model';
-import { InventoryJournals } from '../../../models/InventoryJournals.model';
+import { Vouchers } from '../../../models/Vouchers.model';
+import { VouchersLines } from '../../../models/VouchersLines.model';
 
 @Component({
-  selector: 'lib-pop-add-lineinventory',
-  templateUrl: './pop-add-lineinventory.component.html',
-  styleUrls: ['./pop-add-lineinventory.component.css']
+  selector: 'lib-pop-add-line-receipt-transaction',
+  templateUrl: './pop-add-line-receipt-transaction.component.html',
+  styleUrls: ['./pop-add-line-receipt-transaction.component.css']
 })
-export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
+export class PopAddLineReceiptTransactionComponent extends UIComponent implements OnInit{
 
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('idiM0') idiM0: CodxInputComponent;
@@ -30,11 +30,15 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   objectIdim: any;
   lockFields: any;
   itemName: any;
-  entityLine: any;
   funcID: any;
-  inventoryJournalLine: InventoryJournalLines;
-  inventoryJournal: InventoryJournals;
-  objectInventoryJournalLines: Array<InventoryJournalLines> = [];
+  vouchersLine: VouchersLines;
+  vouchers: Vouchers;
+  objectVouchersLines: Array<VouchersLines> = [];
+  fmVouchersLines: FormModel = {
+    formName: '',
+    gridViewName: '',
+    entityName: '',
+  };
 
   constructor(
     inject: Injector,
@@ -44,10 +48,10 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   ) {
     super(inject);
     this.dialog = dialog;
-    this.inventoryJournalLine = dialogData.data?.data;
-    this.inventoryJournal = dialogData.data?.dataInventoryJournal;
-    this.objectInventoryJournalLines = dialogData.data?.dataline;
-    this.entityLine = dialogData.data?.entityLine;
+    this.vouchersLine = dialogData.data?.data;
+    this.vouchers = dialogData.data?.dataVouchers;
+    this.objectVouchersLines = dialogData.data?.dataline;
+    this.fmVouchersLines = dialogData.data?.formModelLine;
     this.lockFields = dialogData.data?.lockFields;
     this.funcID = dialogData.data?.funcID;
     if (this.lockFields == null) {
@@ -56,7 +60,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
     this.cache
-      .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
+      .gridViewSetup(this.fmVouchersLines.formName, this.fmVouchersLines.gridViewName)
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -81,7 +85,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
   }
 
   valueChange(e: any){
-    this.inventoryJournalLine[e.field] = e.data;
+    this.vouchersLine[e.field] = e.data;
     const postFields: string[] = [
       'itemID',
       'costPrice',
@@ -99,18 +103,19 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
       'idiM7',
       'idiM8',
       'idiM9',
+      'lineType'
     ];
     if (postFields.includes(e.field)) {
       this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'ValueChangedAsync', [
+        .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
           e.field,
-          this.inventoryJournal,
-          this.inventoryJournalLine,
+          this.vouchers,
+          this.vouchersLine,
         ])
         .subscribe((line) => {
           console.log(line);
 
-          this.inventoryJournalLine = Object.assign(this.inventoryJournalLine, line);
+          this.vouchersLine = Object.assign(this.vouchersLine, line);
           switch (e.field) 
           {
             case 'itemID':
@@ -119,37 +124,37 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
               {
                 (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
                 this.idiM0.crrValue = null;
-                this.inventoryJournalLine.idiM0 = null;
+                this.vouchersLine.idiM0 = null;
               }
               if(this.idiM1)
               {
                 (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
                 this.idiM1.crrValue = null;
-                this.inventoryJournalLine.idiM1 = null;
+                this.vouchersLine.idiM1 = null;
               }
               if(this.idiM2)
               {
                 (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
                 this.idiM2.crrValue = null;
-                this.inventoryJournalLine.idiM2 = null;
+                this.vouchersLine.idiM2 = null;
               }
               if(this.idiM3)
               {
                 (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
                 this.idiM3.crrValue = null;
-                this.inventoryJournalLine.idiM3 = null;
+                this.vouchersLine.idiM3 = null;
               }
               if(this.idiM6)
               {
                 (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
                 this.idiM6.crrValue = null;
-                this.inventoryJournalLine.idiM6 = null;
+                this.vouchersLine.idiM6 = null;
               }
               if(this.idiM7)
               {
                 (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
                 this.idiM7.crrValue = null;
-                this.inventoryJournalLine.idiM7 = null;
+                this.vouchersLine.idiM7 = null;
               }
               break;
             case 'idiM4':
@@ -157,13 +162,13 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
               {
                 (this.idiM5.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
                 this.idiM5.crrValue = null;
-                this.inventoryJournalLine.idiM5 = null;
+                this.vouchersLine.idiM5 = null;
               }
             break;
           }
           if(this.form)
           {
-            this.form.formGroup.patchValue(this.inventoryJournalLine);
+            this.form.formGroup.patchValue(this.vouchersLine);
           }
         });
     }
@@ -182,26 +187,26 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
         case 'add':
           this.api
             .execAction<any>(
-              this.entityLine,
-              [this.inventoryJournalLine],
+              this.fmVouchersLines.entityName,
+              [this.vouchersLine],
               'SaveAsync'
             )
             .subscribe((res) => {
               if (res) {
-                this.dialog.close({data:this.inventoryJournalLine});
+                this.dialog.close({data:this.vouchersLine});
               }
             });
           break;
         case 'edit':
           this.api
             .execAction<any>(
-              this.entityLine,
-              [this.inventoryJournalLine],
+              this.fmVouchersLines.entityName,
+              [this.vouchersLine],
               'UpdateAsync'
             )
             .subscribe((res) => {
               if (res) {
-                this.dialog.close({data:this.inventoryJournalLine});
+                this.dialog.close({data:this.vouchersLine});
               }
             });
           break;
@@ -217,15 +222,15 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     } else {
       this.api
         .execAction<any>(
-          this.entityLine,
-          [this.inventoryJournalLine],
+          this.fmVouchersLines.entityName,
+          [this.vouchersLine],
           'SaveAsync'
         )
         .subscribe((res) => {
           if (res) {
             this.hasSave = true;
-            this.objectInventoryJournalLines.push({ ...this.inventoryJournalLine });
-            this.clearInventoryJournalLines();
+            this.objectVouchersLines.push({ ...this.vouchersLine });
+            this.clearVouchersLines();
           }
         });
     }
@@ -245,19 +250,19 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
 
   loadInit(){
     this.formModel = this.form?.formModel;
-    this.form.formGroup.patchValue(this.inventoryJournalLine);
+    this.form.formGroup.patchValue(this.vouchersLine);
   }
 
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.inventoryJournalLine);
+    var keymodel = Object.keys(this.vouchersLine);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
-              this.inventoryJournalLine[keymodel[i]] == null ||
-              String(this.inventoryJournalLine[keymodel[i]]).match(/^ *$/) !== null
+              this.vouchersLine[keymodel[i]] == null ||
+              String(this.vouchersLine[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -274,7 +279,7 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
 
   calculateAtm(e:any){
     if (e.crrValue) {
-      this.inventoryJournalLine[e.ControlName] = e.crrValue;
+      this.vouchersLine[e.ControlName] = e.crrValue;
       switch (e.ControlName) {
         case 'costPrice':
         case 'quantity':
@@ -288,18 +293,18 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
     }
   }
 
-  clearInventoryJournalLines() {
-    let idx = this.objectInventoryJournalLines.length;
-    let data = new InventoryJournalLines();
+  clearVouchersLines() {
+    let idx = this.objectVouchersLines.length;
+    let data = new VouchersLines();
     this.api
-      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
-        this.inventoryJournal,
+      .exec<any>('IV', 'VouchersLinesBusiness', 'SetDefaultAsync', [
+        this.vouchers,
         data,
       ])
       .subscribe((res) => {
         if (res) {
           res.rowNo = idx + 1;
-          this.inventoryJournalLine = res;
+          this.vouchersLine = res;
           this.form.formGroup.patchValue(res);
         }
       });
@@ -310,15 +315,15 @@ export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
           .subscribe((res: any) => {
             if (res)
             {
-              this.inventoryJournalLine.itemName = res.itemName;
-              this.inventoryJournalLine.umid = res.umid;
-              this.form.formGroup.patchValue(this.inventoryJournalLine);
+              this.vouchersLine.itemName = res.itemName;
+              this.vouchersLine.umid = res.umid;
+              this.form.formGroup.patchValue(this.vouchersLine);
             }
             else
             {
-              this.inventoryJournalLine.itemName = null;
-              this.inventoryJournalLine.umid = null;
-              this.form.formGroup.patchValue(this.inventoryJournalLine);
+              this.vouchersLine.itemName = null;
+              this.vouchersLine.umid = null;
+              this.form.formGroup.patchValue(this.vouchersLine);
             }
           });
   }

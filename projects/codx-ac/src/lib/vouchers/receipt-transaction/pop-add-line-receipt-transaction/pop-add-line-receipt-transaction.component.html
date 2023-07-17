@@ -7,7 +7,7 @@
   [footer]="footer"
   subToolbarCss="text-end"
   [customToolbar]="subToolbar"
-  [data]="inventoryJournalLine"
+  [data]="vouchersLine"
 >
 </codx-form>
 <ng-template #subToolbar>
@@ -71,7 +71,7 @@
             <codx-input
               type="text"
               [disabled]="true"
-              [crrValue]="inventoryJournalLine.itemName"
+              [crrValue]="vouchersLine.itemName"
               field="itemName"
             >
             </codx-input>
@@ -223,7 +223,7 @@
               </codx-input>
             </div>
           </div>
-          <div *ngIf="loadControl('IDIM9')" class="form-group mb-0">
+          <div *ngIf="loadControl('IDIM9')" class="form-group mb-0 col-6">
             <codx-label
               [formModel]="form.formModel"
               fiedName="IDIM9"
@@ -235,6 +235,19 @@
               field="idiM9"
             >
             </codx-input>
+          </div>
+          <div class="form-group mb-0 col-6">
+            <codx-label
+                [formModel]="form.formModel"
+                fiedName="LineType"
+              ></codx-label>
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+                field="lineType"
+              >
+              </codx-input>
           </div>
         </div>
       </div>
@@ -365,7 +378,7 @@
             <codx-input
               type="text"
               [disabled]="true"
-              [crrValue]="inventoryJournalLine.itemName"
+              [crrValue]="vouchersLine.itemName"
               field="itemName"
             >
             </codx-input>

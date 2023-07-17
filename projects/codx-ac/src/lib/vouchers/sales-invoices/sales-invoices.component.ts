@@ -222,7 +222,7 @@ export class SalesInvoicesComponent
     this.lines = [];
     this.api
       .exec(
-        'SM',
+        'AC',
         'SalesInvoicesLinesBusiness',
         'GetLinesAsync',
         this.master.recID
@@ -254,7 +254,7 @@ export class SalesInvoicesComponent
   onClickAdd(e): void {
     this.view.dataService
       .addNew(() =>
-        this.api.exec('SM', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
+        this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
           this.journalNo,
         ])
       )

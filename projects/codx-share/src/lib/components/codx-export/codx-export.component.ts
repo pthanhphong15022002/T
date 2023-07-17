@@ -38,7 +38,10 @@ export class CodxExportComponent implements OnInit, OnChanges {
   active = '1';
   gridModel: any;
   recID: any;
+  functionID: any;
+  field:any;
   data = {};
+  dataSource: string = '';
   dataEx: any;
   dataWord: any;
   dialog: any;
@@ -107,8 +110,12 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
+    this.functionID = dt.data?.[2];
+    this.field = dt.data?.[3];
+    this.dataSource = dt.data?.[4];
   }
   ngOnInit(): void {
+    this.getDataSource(this.functionID,this.field,this.recID);
     //Tạo formGroup
     this.exportGroup = this.formBuilder.group({
       dataExport: ['all', Validators.required],
@@ -295,19 +302,36 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.gridModel.dataValues = [this.recID].join(';');
         }
 
-        this.api
-          .execSv<any>(
-            this.services,
-            'Core',
-            'CMBusiness',
-            'ExportExcelAsync',
-            [this.gridModel, idTemp]
-          )
-          .subscribe((item) => {
-            if (item) {
-              this.downloadFile(item);
-            }
-          });
+        if (!this.dataSource) {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'CMBusiness',
+              'ExportExcelAsync',
+              [this.gridModel, idTemp]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        } else {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'CMBusiness',
+              'ExportExcelDataAsync',
+              [this.dataSource, idTemp]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        }
+
         break;
       case 'wordTemp':
         if (value?.dataExport == 'all') {
@@ -320,20 +344,36 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.gridModel.predicates = this.idField + '=@0';
           this.gridModel.dataValues = [this.recID].join(';');
         }
+        if (!this.dataSource) {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'ExportWordBusiness',
+              'ExportWordTemplateAsync',
+              [this.gridModel, idTemp]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        } else {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'ExportWordBusiness',
+              'ExportWordTemplateAsync',
+              [null, idTemp, this.dataSource]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        }
 
-        this.api
-          .execSv<any>(
-            this.services,
-            'Core',
-            'ExportWordBusiness',
-            'ExportWordTemplateAsync',
-            [this.gridModel, idTemp]
-          )
-          .subscribe((item) => {
-            if (item) {
-              this.downloadFile(item);
-            }
-          });
         break;
     }
 
@@ -422,5 +462,16 @@ export class CodxExportComponent implements OnInit, OnChanges {
         break;
     }
     this.exportGroup.controls['format'].setValue(id);
+  }
+
+  getDataSource(reportID:string,field:string,id:string){
+    this.api.execSv("rptsys",
+        "Codx.RptBusiness.CM",
+        "ReportBusiness",
+        "GetReportSourceByIDAsync",
+         [reportID,field,id])
+        .subscribe((res:any) => {
+          this.dataSource = res;
+        });
   }
 }

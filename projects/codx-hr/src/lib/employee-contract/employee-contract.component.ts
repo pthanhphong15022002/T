@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CallFuncService,
+  DataRequest,
   DialogRef,
   NotificationsService,
   SidebarModel,
@@ -25,6 +26,7 @@ import { getListImg } from 'projects/codx-od/src/lib/function/default.function';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable } from 'rxjs';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -248,7 +250,9 @@ export class EmployeeContractComponent extends UIComponent {
         this.copyValue(event.text, data, 'eContract');
         this.df.detectChanges();
         break;
-
+      case "HRTPro01A20": // in hợp đồng
+        this.export(event.functionID,data.recID,"reportID");
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           event,
@@ -275,6 +279,28 @@ export class EmployeeContractComponent extends UIComponent {
       //   break;
       // }
     }
+  } 
+
+  export(functionID:string,id:string,field:String) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, id,functionID,field],
+      null
+    );
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {

@@ -121,8 +121,10 @@ export class CodxTabsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  loadingCount: boolean = false;
   ngOnChanges() {
-    if (this.objectID) {
+    if (this.objectID && !this.loadingCount) {
+      this.loadingCount = true;
       this.api
         .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
           this.objectID,
@@ -131,11 +133,14 @@ export class CodxTabsComponent implements OnInit {
         ])
         .subscribe((res) => {
           if (res) this.oCountFooter = res;
+          this.loadingCount = false;
         });
     }
     this.CheckTabControlApproval();
     this.changeDetectorRef.detectChanges();
   }
+
+  ngAfterViewInit() {}
 
   CheckTabControlApproval() {
     var funcList = this.shareService.loadFunctionList(this.funcID) as any;

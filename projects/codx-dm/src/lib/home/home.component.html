@@ -191,9 +191,9 @@
         <tbody (scroll)="onScroll($event)"  [ngStyle]="{'max-height.px': maxHeightScroll}">
           <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="item.folderName != undefined ? item.folderName : item.fileName">
             <td class="w-50px">
-              <codx-mfunc  *ngIf="!hideMF && item?.approvalStatus != '5' && item?.approvalStatus != '6' && item?.approvalStatus != '4' && item?.approvalStatus != '7'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+              <codx-mfunc  *ngIf="!hideMF && item?.approvalStatus != '5' && item?.approvalStatus != '6' && item?.approvalStatus != '4' && item?.approvalStatus != '7' && item?.approvalStatus != '8'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
                 type="hover" [formModel]="view.formModel"></codx-mfunc>
-                <codx-mfunc  *ngIf="item?.approvalStatus == '5' || item?.approvalStatus == '6' ||  item?.approvalStatus == '8' || item?.approvalStatus == '7'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+                <codx-mfunc  *ngIf="item?.approvalStatus == '4' || item?.approvalStatus == '5' || item?.approvalStatus == '6' ||  item?.approvalStatus == '8' || item?.approvalStatus == '7'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
                 type="hover" [formModel]="view.formModel"></codx-mfunc>
             </td>
             <td class="w-300px cursor-pointer" (dblclick)="dbView(item)">

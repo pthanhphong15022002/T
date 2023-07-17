@@ -93,6 +93,7 @@ import {
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
 import { CustomergroupsComponent } from './customergroups/customergroups.component';
 import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
+import { CodxDpModule } from 'projects/codx-dp/src/public-api';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 
 const routes: Routes = [
@@ -154,22 +155,10 @@ const routes: Routes = [
     ],
   },
 
-  // {
-  //   path: '',
-  //   loadChildren: () =>
-  //     import('./settings/settings.module').then((m) => m.SettingsModule),
-  // },
-
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'setting/settingprocess/:funcID',
-        component: SettingProcessCmComponent,
-        data: { noReuse: true },
-      },
-    ],
+    loadChildren: () =>
+      import('./settings/settings.module').then((m) => m.SettingsCmModule),
   },
 ];
 
