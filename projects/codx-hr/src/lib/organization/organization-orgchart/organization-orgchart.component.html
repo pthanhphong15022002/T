@@ -315,21 +315,19 @@
 ]"
 >
 </org-diagram> -->
-<!-- <button class="btn btn-primary" (click)="openSetting()">Setting</button> -->
-
-<input
-  min="1"
-  max="100"
-  value="50"
-  step="1"
-  #ref
-  (change)="showVal(ref.value)"
-  type="range"
-  [style]="stylesObj"
-/>
+<div class="me-4 mt-4 d-flex justify-content-end">
+  <button
+    class="btn btn-primary d-flex align-items-center"
+    (click)="openSetting()"
+  >
+    <i class="icon-settings"></i> Thiết lập
+  </button>
+</div>
 
 <ng-template #templateUpdateStatus let-dialog1>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+  <div
+    class="custom codx-form card w-100 h-100 rounded-0 border-0 overflow-auto"
+  >
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
@@ -354,6 +352,1467 @@
       </div>
     </div>
 
+    <!-- #region Layout -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[0] = !collapsed[0]"
+      [attr.aria-expanded]="!collapsed[0]"
+      aria-controls="collapseExample"
+    >
+      <span>Bố cục tự động</span>
+
+      <i
+        class="ms-auto"
+        [ngClass]="
+          this.collapsed[0] ? 'icon-arrow_upward' : 'icon-arrow_downward'
+        "
+      ></i>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="!collapsed[0]">
+      <p class="m-4 text-primary fw-bold">Chế độ phù hợp với trang</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeNone"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeNone"> Mặc định </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeWidth"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeWidth">
+          Vừa chiều rộng
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeHeight"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeHeight">
+          Vừa chiều ngang
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeFit"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeFit">
+          Vừa cả trang
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeSelect"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeSelect">
+          Chỉ khi chọn
+        </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Định hướng</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationTop"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationTop"> Trên cùng </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationBottom"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationBottom">
+          Phía dưới
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationLeft"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationLeft"> Trái </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationRight"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationRight"> Phải </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationNone"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationNone"> Không </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Hạng mục căn dọc</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="itemVertical"
+          id="itemVerticalTop"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="itemVerticalTop">
+          Trên cùng
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="itemVertical"
+          id="itemVerticalMiddle"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="itemVerticalMiddle">
+          Ở giữa
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="itemVertical"
+          id="itemVerticalBottom"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="itemVerticalBottom">
+          Phía dưới
+        </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Hạng mục căn ngang</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="horizontalAlignment"
+          id="horizontalAlignmentCenter"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="horizontalAlignmentCenter">
+          Giữa
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="horizontalAlignment"
+          id="horizontalAlignmentleft"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="horizontalAlignmentleft">
+          Trái
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="horizontalAlignment"
+          id="horizontalAlignmentRight"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="horizontalAlignmentRight">
+          Phải
+        </label>
+      </div>
+
+      <div class="d-flex m-4">
+        <input type="checkbox" id="crossBranch" (change)="changeMode($event)" />
+        <label class="ms-4 mt-2" for="crossBranch">
+          Kích hoạt liên kết chéo nhánh con</label
+        >
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Vị trí cấp con</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementAuto"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementAuto">
+          Tự động
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementVertical"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementVertical">
+          Nằm dọc
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementHorizontal"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementHorizontal">
+          Nằm ngang
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementMatrix"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementMatrix">
+          Ma trận
+        </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">
+        Vị trí lá xác định hình dạng bố cục cho các mục không có con
+      </p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="leavesPlaceAuto"
+          name="leavesPlace"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="leavesPlaceAuto"> Tự động </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="leavesPlaceVertical"
+          name="leavesPlace"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="leavesPlaceVertical">
+          Nằm dọc
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="leavesPlaceHorizontal"
+          name="leavesPlace"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="leavesPlaceHorizontal">
+          Nằm ngang
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="leavesPlaceMatrix"
+          name="leavesPlace"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="leavesPlaceMatrix">
+          Ma trận
+        </label>
+      </div>
+
+      <div class="d-flex m-4">
+        <input
+          type="checkbox"
+          id="placeAdviserAbove"
+          (change)="changeMode($event)"
+        />
+        <label class="ms-4 mt-2" for="placeAdviserAbove">
+          Đặt con của các cố vấn trên nút con của chúng</label
+        >
+      </div>
+
+      <div class="d-flex m-4">
+        <input
+          type="checkbox"
+          id="placeAssitantAbove"
+          (change)="changeMode($event)"
+        />
+        <label class="ms-4 mt-2" for="placeAssitantAbove">
+          Đặt con của các trợ lý phía trên nút con của chúng</label
+        >
+      </div>
+
+      <p class="m-4 text-primary fw-bold">
+        Số cột tối đa trong bố cục con của ma trận
+      </p>
+
+      <select
+        id="columnMatrix"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">
+        Khả năng hiển thị các nút tối thiểu
+      </p>
+
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="minimalNodeAuto"
+          name="minimalNode"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="minimalNodeAuto"> Tự động </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="minimalNodeNormal"
+          name="minimalNode"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="minimalNodeNormal">
+          Bình thường
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="minimalNodeDot"
+          name="minimalNode"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="minimalNodeDot"> Dấu chấm </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="minimalNodeLine"
+          name="minimalNode"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="minimalNodeLine">
+          Đường thẳng
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="minimalNodeInvisible"
+          name="minimalNode"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="minimalNodeInvisible">
+          Vô hình
+        </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Mức nhìn thấy tối thiểu</p>
+
+      <select
+        id="minimumVisible"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">
+        Chế độ đường dẫn lựa chọn đặt mức độ hiển thị của các mục giữa mục con
+        trỏ và thư mục gốc
+      </p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="selectPathModeNone"
+          name="selectPathMode"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="selectPathModeNone">
+          Mặc định
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="selectPathModeFullStack"
+          name="selectPathMode"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="selectPathModeFullStack">
+          Đầy đủ
+        </label>
+      </div>
+    </div>
+    <!-- #endregion-->
+
+    <!-- #region mẫu mặc định -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[1] = !collapsed[1]"
+      [attr.aria-expanded]="!collapsed[1]"
+      aria-controls="collapseExample"
+    >
+      <span>Mẫu mặc định</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[1] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse1="ngbCollapse" [ngbCollapse]="!collapsed[1]">
+      <p class="m-4 text-primary fw-bold">Hiển thị các nút người dùng</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="buttonUser"
+          id="buttonUserAuto"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="buttonUserAuto"> Auto </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="buttonUser"
+          id="buttonUserTrue"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="buttonUserTrue"> True </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="buttonUser"
+          id="buttonUserFalse"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="buttonUserFalse"> False </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Hiển thị nút chọn</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="selectionCheckbox"
+          id="selectionCheckboxAuto"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="selectionCheckboxAuto">
+          Auto
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="selectionCheckbox"
+          id="selectionCheckboxTrue"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="selectionCheckboxTrue">
+          True
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="selectionCheckbox"
+          id="selectionCheckboxFalse"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="selectionCheckboxFalse">
+          False
+        </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Nhãn hiển thị nút chọn</p>
+      <div class="m-4">
+        <input
+          type="text"
+          name="selectCheckBoxLabel"
+          id="selectCheckBoxLabelText"
+          (change)="changeMode($event)"
+        />
+      </div>
+    </div>
+
+    <!-- #endregion-->
+
+    <!-- #region tiêu đề nhóm -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[2] = !collapsed[2]"
+      [attr.aria-expanded]="!collapsed[2]"
+      aria-controls="collapseExample"
+    >
+      <span>Tiêu đề nhóm</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[2] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse2="ngbCollapse" [ngbCollapse]="!collapsed[2]">
+      <span>collapse</span>
+    </div>
+    <!-- #endregion-->
+    <!-- #region đánh dấu -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[3] = !collapsed[3]"
+      [attr.aria-expanded]="!collapsed[3]"
+      aria-controls="collapseExample"
+    >
+      <span>Đánh dấu</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[3] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse3="ngbCollapse" [ngbCollapse]="!collapsed[3]">
+      <p class="m-4 text-primary fw-bold">Kích cỡ đánh dấu</p>
+
+      <p class="m-4 text-primary fw-bold">Chiều rộng</p>
+      <select
+        id="markerWidth"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Chiều cao</p>
+      <select
+        id="markerHeight"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Bán kính góc</p>
+      <select
+        id="cornerRadius"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Đánh dấu đường viền xung quanh</p>
+      <p class="m-4 text-primary fw-bold">Trái</p>
+      <select
+        id="highlightPaddingLeft"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+      <p class="m-4 text-primary fw-bold">Trên</p>
+      <select
+        id="highlightPaddingTop"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+      <p class="m-4 text-primary fw-bold">Phải</p>
+      <select
+        id="highlightPaddingRight"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+      <p class="m-4 text-primary fw-bold">Dưới</p>
+      <select
+        id="highlightPaddingBottom"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Hình dạng đánh dấu</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="rectangle"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="rectangle"> Hình chữ nhật </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="oval"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="oval"> Hình trái xoan </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="triangle"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="triangle"> Tam giác </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="crossout"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="crossout"> Gạch bỏ </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="circle"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="circle"> Vòng tròn </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="rhombus"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="rhombus"> Hình thoi </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="wedge"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="wedge"> Lăng trụ tam giác </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="frameoval"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="frameoval">
+          Khung hình bầu dục
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="frametriangle"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="frametriangle">
+          Khung tam giác
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="framewedge"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="framewedge">
+          Khung lăng trụ tam giác
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="frameRhombus"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="frameRhombus">
+          Khung hình thoi
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="shapeNone"
+          name="shapeMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="shapeNone"> Mặc định </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Chiều rộng đường viền</p>
+      <select
+        id="borderLineWidth"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Loại đường viền đánh dấu</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="borderMarkerSolid"
+          name="borderMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="borderMarkerSolid"> Đậm </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="borderMarkerDot"
+          name="borderMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="borderMarkerDot"> Dấu chấm </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="borderMarkerDash"
+          name="borderMarker"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="borderMarkerDash">
+          Gạch ngang
+        </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Độ trong suốt</p>
+      <select
+        id="opacityMarker"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="0.1">0.1</option>
+        <option value="0.2">0.2</option>
+        <option value="0.3">0.3</option>
+        <option value="0.4">0.4</option>
+        <option value="0.5">0.5</option>
+        <option value="0.6">0.6</option>
+        <option value="0.7">0.7</option>
+        <option value="0.8">0.8</option>
+        <option value="0.9">0.9</option>
+      </select>
+    </div>
+    <!-- #endregion-->
+    <!-- #region khoảng thời gian -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[4] = !collapsed[4]"
+      [attr.aria-expanded]="!collapsed[4]"
+      aria-controls="collapseExample"
+    >
+      <span>Khoảng thời gian</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[4] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse4="ngbCollapse" [ngbCollapse]="!collapsed[4]">
+      <p class="m-4 text-primary fw-bold">Khoảng cách dọc giữa các hàng</p>
+      <p class="m-4 text-primary fw-bold">Bình thường</p>
+      <select
+        id="verticalBetweenNormal"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Dấu chấm</p>
+      <select
+        id="verticalBetweenDot"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="80">80</option>
+        <option value="160">160</option>
+        <option value="240">240</option>
+        <option value="320">320</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Đường thẳng</p>
+      <select
+        id="verticalBetweenLine"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="80">80</option>
+        <option value="160">160</option>
+        <option value="240">240</option>
+        <option value="320">320</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">
+        Khoảng cách ngang giữa các mục trong hàng
+      </p>
+      <p class="m-4 text-primary fw-bold">Bình thường</p>
+      <select
+        id="horizontalBetweenNormal"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Dấu chấm</p>
+      <select
+        id="horizontalBetweenDot"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Đường thẳng</p>
+      <select
+        id="horizontaletweenLine"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">
+        Không gian giữa các hệ thống phân cấp
+      </p>
+      <select
+        id="cousinInterval"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
+      <p class="m-4 text-primary fw-bold">Tăng khoảng cách</p>
+      <p class="m-4 text-primary fw-bold">Trái</p>
+      <select
+        id="paddingIntervalLeft"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+      </select>
+      <p class="m-4 text-primary fw-bold">Trên cùng</p>
+      <select
+        id="paddingIntervalTop"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+      </select>
+      <p class="m-4 text-primary fw-bold">Phải</p>
+      <select
+        id="paddingIntervalRight"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+      </select>
+      <p class="m-4 text-primary fw-bold">Bên dưới</p>
+      <select
+        id="paddingIntervalBottom"
+        class="w-50 m-2 p-2"
+        (change)="changeMode($event)"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <!-- #endregion-->
+    <!-- #region Kết nối -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[5] = !collapsed[5]"
+      [attr.aria-expanded]="!collapsed[5]"
+      aria-controls="collapseExample"
+    >
+      <span>Kết nối</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[5] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse5="ngbCollapse" [ngbCollapse]="!collapsed[5]">
+      <p class="m-4 text-primary fw-bold">Hướng mũi tên</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="arrowDirectionNone"
+          name="arrowDirection"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="arrowDirectionNone">
+          Mặc định
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="arrowDirectionParent"
+          name="arrowDirection"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="arrowDirectionParent">
+          Cấp cha
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="arrowDirectionChildren"
+          name="arrowDirection"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="arrowDirectionChildren">
+          Cấp con
+        </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Kết nối</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="connectorsSquare"
+          name="connectors"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="connectorsSquare">
+          Bình phương
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="connectorsAngular"
+          name="connectors"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="connectorsAngular">
+          Góc cạnh
+        </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="connectorsCurved"
+          name="connectors"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="connectorsCurved"> Cong </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Loại gập</p>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="elbowsNone"
+          name="elbows"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="elbowsNone"> Mặc định </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="elbowsDot"
+          name="elbows"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="elbowsDot"> Dấu chấm </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="elbowsBevel"
+          name="elbows"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="elbowsBevel"> Xiên cạnh </label>
+      </div>
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="elbowsRound"
+          name="elbows"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="elbowsRound"> Vòng vòng </label>
+      </div>
+
+      <p class="m-4 text-primary fw-bold">Kích cỡ xiên cạnh</p>
+      <select id="bevelSize" class="w-50 m-2 p-2" (change)="changeMode($event)">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+    <!-- #endregion-->
+    <!-- #region Tiêu đề -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[6] = !collapsed[6]"
+      [attr.aria-expanded]="!collapsed[6]"
+      aria-controls="collapseExample"
+    >
+      <span>Tiêu đề</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[6] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse6="ngbCollapse" [ngbCollapse]="!collapsed[6]">
+      <span>collapse</span>
+    </div>
+    <!-- #endregion-->
+    <!-- #region Gọi ra -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[7] = !collapsed[7]"
+      [attr.aria-expanded]="!collapsed[7]"
+      aria-controls="collapseExample"
+    >
+      <span>Gọi ra</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[7] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse7="ngbCollapse" [ngbCollapse]="!collapsed[7]">
+      <span>collapse</span>
+    </div>
+    <!-- #endregion-->
+    <!-- #region Tương tác -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[8] = !collapsed[8]"
+      [attr.aria-expanded]="!collapsed[8]"
+      aria-controls="collapseExample"
+    >
+      <span>Tương tác</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[8] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse8="ngbCollapse" [ngbCollapse]="!collapsed[8]">
+      <span>collapse</span>
+    </div>
+    <!-- #endregion-->
+    <!-- #region Hiển thị -->
+    <div
+      class="p-collapse"
+      (click)="collapsed[9] = !collapsed[9]"
+      [attr.aria-expanded]="!collapsed[9]"
+      aria-controls="collapseExample"
+    >
+      <span>Hiển thị</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[9] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse9="ngbCollapse" [ngbCollapse]="!collapsed[9]">
+      <span>collapse</span>
+    </div>
+    <!-- #endregion-->
+    <!-- #region Khung -->
+    <div
+      class="p-collapse c-first"
+      (click)="collapsed[10] = !collapsed[10]"
+      [attr.aria-expanded]="!collapsed[10]"
+      aria-controls="collapseExample"
+    >
+      <span>Khung</span>
+      <i
+        class="ms-auto"
+        [ngClass]="collapsed[10] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+      ></i>
+    </div>
+    <div #collapse10="ngbCollapse" [ngbCollapse]="!collapsed[10]">
+      <span>collapse</span>
+    </div>
+    <!-- #endregion-->
+
     <div
       class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
       type="button"
@@ -364,124 +1823,24 @@
     >
       Thiết lập mode view
     </div>
+
+    <input
+      min="1"
+      max="100"
+      value="50"
+      step="1"
+      #ref
+      (change)="showVal(ref.value)"
+      type="range"
+      [style]="stylesObj"
+    />
+
     <div>
       <select #teams (change)="onSelected(teams.value)">
         <!-- <option default>Chọn mode view</option> -->
         <option>Không có quản lý</option>
         <option default>Có quản lý</option>
       </select>
-
-      <p>Page fit mode</p>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="flexRadioDefault"
-          id="pageFitModeNone"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="pageFitModeNone"> None </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="flexRadioDefault"
-          id="pageFitModeFit"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="pageFitModeFit"> FitToPage </label>
-      </div>
-
-      <p>Orientation Type</p>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="orientation"
-          id="orientationTop"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="orientationTop"> Top </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="orientation"
-          id="orientationBottom"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="orientationBottom"> Bottom </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="orientation"
-          id="orientationLeft"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="orientationLeft"> Left </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="orientation"
-          id="orientationRight"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="orientationRight"> Right </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="orientation"
-          id="orientationNone"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="orientationNone"> None </label>
-      </div>
-
-      <p>Placement Type</p>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          id="childrenPlacementAuto"
-          name="placement"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="childrenPlacementAuto">
-          Auto
-        </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          id="childrenPlacementVertical"
-          name="placement"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="childrenPlacementVertical">
-          Vertical
-        </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          id="childrenPlacementHorizontal"
-          name="placement"
-          (change)="changeMode($event)"
-        />
-        <label class="form-check-label" for="childrenPlacementHorizontal">
-          Horizontal
-        </label>
-      </div>
     </div>
   </div>
 </ng-template>
@@ -492,30 +1851,61 @@
     [annotations]="annotations"
     [pageFitMode]="pagefit"
     [orientationType]="orientationType"
+    [verticalAlignment]="verticalAlignment"
+    [horizontalAlignment]="horizontalAlignment"
+    [alignBranches]="alignBranches"
+    [leavesPlacementType]="leavesPlacementType"
+    [placeAssistantsAboveChildren]="placeAssitantAbove"
+    [placeAdvisersAboveChildren]="placeAdviserAbove"
+    [maximumColumnsInMatrix]="maximumColumnsInMatrix"
+    [minimalVisibility]="minimalVisibility"
+    [minimumVisibleLevels]="minimumVisibleLevels"
+    [selectionPathMode]="selectionPathMode"
+    [hasButtons]="hasButtons"
+    [hasSelectorCheckbox]="hasSelectorCheckbox"
+    [selectCheckBoxLabel]="selectCheckBoxLabel"
+    [minimizedItemShapeType]="minimizedItemShapeType"
+    [normalLevelShift]="normalLevelShift"
+    [dotLevelShift]="dotLevelShift"
+    [lineLevelShift]="lineLevelShift"
+    [normalItemsInterval]="normalItemsInterval"
+    [dotItemsInterval]="dotItemsInterval"
+    [lineItemsInterval]="lineItemsInterval"
+    [cousinsIntervalMultiplier]="cousinsIntervalMultiplier"
+    [arrowsDirection]="arrowsDirection"
+    [connectorType]="connectorType"
+    [elbowType]="elbowType"
+    [padding]="{
+      left: paddingIntervalLeft,
+      top: paddingIntervalTop,
+      right: paddingIntervalRight,
+      bottom: paddingIntervalBottom
+    }"
     [highlightItem]="0"
-    [normalLevelShift]="20"
-    [dotLevelShift]="10"
-    [lineLevelShift]="20"
-    [normalItemsInterval]="40"
-    [dotItemsInterval]="20"
-    [lineItemsInterval]="50"
     [buttonsPanelSize]="48"
     [showFrame]="true"
     [itemTitleSecondFontColor]="'#FFFFFF'"
     [childrenPlacementType]="childrenPlacementType"
-    [arrowsDirection]="GroupByType.Children"
-    [hasSelectorCheckbox]="Enabled.False"
     [centerOnCursor]="true"
-    [connectorType]="ConnectorType"
     [scale]="scaleNumber"
     [templates]="[
       {
         name: 'contactTemplate',
         itemSize: { width: 170, height: 150 },
         itemTemplate: contactTemplate,
-        minimizedItemSize: { width: 5, height: 5 },
+        minimizedItemSize: { width: markerWidth, height: markerHeight },
+        highlightPadding: {
+          left: hightlightleft,
+          top: hightlightTop,
+          right: hightlightRight,
+          bottom: hightlightBottom
+        },
+        minimizedItemCornerRadius: minimizedItemCornerRadius,
+        minimizedItemLineWidth: minimizedItemLineWidth,
+        minimizedItemLineType: minimizedItemLineType,
         cursorTemplate: contactCursorTemplate,
-        highlightTemplate: contactHighlightTemplate
+        highlightTemplate: contactHighlightTemplate,
+        minimizedItemOpacity: minimizedItemOpacity
       }
     ]"
   >
@@ -677,7 +2067,7 @@
       </div> -->
       </div>
 
-      <!-- <div class="p-node">
+      <div class="p-node">
         <span
           #icon
           class="icon-20"
@@ -688,7 +2078,7 @@
           "
           (click)="loadDataChild(itemConfig, icon)"
         ></span>
-      </div> -->
+      </div>
     </div>
   </ng-container>
 </ng-template>
