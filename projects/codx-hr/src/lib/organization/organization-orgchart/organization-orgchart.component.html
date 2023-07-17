@@ -1725,6 +1725,21 @@
         <option value="9">9</option>
         <option value="10">10</option>
       </select>
+
+      <p class="m-4 text-primary fw-bold">Kích cỡ xiên cạnh</p>
+      <select id="bevelSize" class="w-50 m-2 p-2" (change)="changeMode($event)">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
     </div>
     <!-- #endregion-->
     <!-- #region Tiêu đề -->
@@ -2067,7 +2082,7 @@
       </div> -->
       </div>
 
-      <div class="p-node">
+      <!-- <div class="p-node">
         <span
           #icon
           class="icon-20"
@@ -2078,7 +2093,7 @@
           "
           (click)="loadDataChild(itemConfig, icon)"
         ></span>
-      </div>
+      </div> -->
     </div>
   </ng-container>
 </ng-template>
