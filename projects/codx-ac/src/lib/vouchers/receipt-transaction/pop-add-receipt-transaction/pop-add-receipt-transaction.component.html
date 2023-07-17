@@ -5,7 +5,7 @@
   [footer]="footer"
   [formModel]="dialog.formModel"
   [dialog]="dialog"
-  [data]="inventoryJournal"
+  [data]="vouchers"
   [customToolbar]="subToolbar"
   [openMore]="false"
 >
@@ -102,7 +102,7 @@
                     type="text"
                     field="warehouseName"
                     [disabled]="true"
-                    [crrValue]="inventoryJournal.warehouseName"
+                    [crrValue]="vouchers.warehouseName"
                   ></codx-input>
                 </div>
               </div>
@@ -196,23 +196,23 @@
 </ng-template>
 <!-- End: Tab Basic -->
 
-<!-- Start:InventoryJournalLine -->
+<!-- Start:VouchersLine -->
 <ng-template #tabLine>
   <ng-container *ngIf="modeGrid == '1'">
     <div class="tabline-content position-relative">
       <codx-gridview-v2
         class="tabLine"
-        #gridInventoryJournalLine
-        [formName]="fmInventoryJournalLines.formName"
-        [gridViewName]="fmInventoryJournalLines.gridViewName"
-        [entityName]="fmInventoryJournalLines.entityName"
+        #gridVouchersLine
+        [formName]="fmVouchersLines.formName"
+        [gridViewName]="fmVouchersLines.gridViewName"
+        [entityName]="fmVouchersLines.entityName"
         [templateMore]="morefunction"
         [editSettings]="editSettings"
         predicates="TransID=@0"
         [allowFiltering]="true"
         [allowSorting]="true"
         [dataValues]="form.data.recID"
-        [dataSource]="inventoryJournalLines"
+        [dataSource]="vouchersLines"
         service="IV"
         [autoLoad]="false"
         [autoAddRow]="true"
@@ -242,7 +242,7 @@
     </div>
     <div
       class="row"
-      *ngIf="inventoryJournalLines.length == 0"
+      *ngIf="vouchersLines.length == 0"
       style="height: 40px"
     ></div>
   </ng-container>
@@ -258,7 +258,7 @@
               <codx-label
                 class="fw-bold"
                 fiedName="RowNo"
-                [formModel]="fmInventoryJournalLines"
+                [formModel]="fmVouchersLines"
               >
               </codx-label>
             </th>
@@ -269,7 +269,7 @@
                   [setRequire]="false"
                   class="fw-bold"
                   fiedName="ItemID"
-                  [formModel]="fmInventoryJournalLines"
+                  [formModel]="fmVouchersLines"
                 >
                 </codx-label>
               </div>
@@ -289,7 +289,7 @@
             <th style="width: 10px"></th>
           </tr>
         </thead>
-        <tbody class="border-bottom" *ngFor="let item of inventoryJournalLines">
+        <tbody class="border-bottom" *ngFor="let item of vouchersLines">
           <tr>
             <td class="text-center fw-bold">
               {{ item.rowNo }}
@@ -309,7 +309,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM0"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -323,7 +323,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM1"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -337,7 +337,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM2"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -351,7 +351,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM3"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -366,7 +366,7 @@
                     [setRequire]="false"
                     class="text-gray-700 label-colon"
                     fiedName="IDIM4"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   &nbsp;
@@ -376,7 +376,7 @@
                     [innerHTML]="
                       item.idiM4
                         | formatvalue
-                          : fmInventoryJournalLines
+                          : fmVouchersLines
                           : 'idiM4'
                           : idiM4
                         | async
@@ -389,7 +389,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM5"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -403,7 +403,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM6"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -417,7 +417,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM7"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -431,7 +431,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM8"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold"
@@ -445,7 +445,7 @@
                   <codx-label
                     class="text-gray-700 label-colon"
                     fiedName="IDIM9"
-                    [formModel]="fmInventoryJournalLines"
+                    [formModel]="fmVouchersLines"
                   >
                   </codx-label>
                   <span class="fs-6 fw-bold">&nbsp;{{ item.idiM9 }}</span>
@@ -485,7 +485,7 @@
                     <codx-label
                       class="text-gray-700 label-colon"
                       fiedName="DIM2"
-                      [formModel]="fmInventoryJournalLines"
+                      [formModel]="fmVouchersLines"
                     >
                     </codx-label>
                     <span
@@ -494,7 +494,7 @@
                       [innerHTML]="
                         item.diM2
                           | formatvalue
-                            : fmInventoryJournalLines
+                            : fmVouchersLines
                             : 'diM2'
                             : diM2
                           | async
@@ -508,7 +508,7 @@
                     <codx-label
                       class="text-gray-700 label-colon"
                       fiedName="DIM3"
-                      [formModel]="fmInventoryJournalLines"
+                      [formModel]="fmVouchersLines"
                     >
                     </codx-label>
                     <span
@@ -517,7 +517,7 @@
                       [innerHTML]="
                         item.diM3
                           | formatvalue
-                            : fmInventoryJournalLines
+                            : fmVouchersLines
                             : 'diM3'
                             : diM3
                           | async
@@ -532,7 +532,7 @@
                     <codx-label
                       class="text-gray-700 label-colon"
                       fiedName="DIM1"
-                      [formModel]="fmInventoryJournalLines"
+                      [formModel]="fmVouchersLines"
                     >
                     </codx-label>
                     <span
@@ -541,7 +541,7 @@
                       [innerHTML]="
                         item.diM1
                           | formatvalue
-                            : fmInventoryJournalLines
+                            : fmVouchersLines
                             : 'diM1'
                             : diM1
                           | async
@@ -557,7 +557,7 @@
                     <codx-label
                       class="text-gray-700 label-colon"
                       fiedName="ProjectID"
-                      [formModel]="fmInventoryJournalLines"
+                      [formModel]="fmVouchersLines"
                     >
                     </codx-label>
                     <span
@@ -566,7 +566,7 @@
                       [innerHTML]="
                         item.projectID
                           | formatvalue
-                            : fmInventoryJournalLines
+                            : fmVouchersLines
                             : 'projectID'
                             : projectID
                           | async
@@ -619,7 +619,7 @@
     </div>
   </div>
 </ng-template>
-<!-- End: InventoryJournalLine -->
+<!-- End: VouchersLine -->
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
@@ -635,7 +635,7 @@
 
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div class="codx-detail-footer dialog-footer" *ngIf="inventoryJournal">
+  <div class="codx-detail-footer dialog-footer" *ngIf="vouchers">
     <div class="btn btn-white btn-icon tab-action">
       <span class="icon-unfold_more icon-20"></span>
     </div>
@@ -649,7 +649,7 @@
   <codx-tabs
     [entityName]="form.formModel.entityName"
     [formModel]="form.formModel"
-    [objectID]="inventoryJournal.recID"
+    [objectID]="vouchers.recID"
     [funcID]="form.formModel.funcID"
     [TabControl]="tabInfo"
   ></codx-tabs>
@@ -677,7 +677,7 @@
               [name]="'AC040'"
               [formModel]="form.formModel"
               [field]="'Status'"
-              [value]="inventoryJournal?.status"
+              [value]="vouchers?.status"
               [showText]="true"
               [showBgColor]="true"
               class="badge badge-light badge-lg lg"
@@ -714,7 +714,7 @@
             ></codx-label>
           </button>
         </div>
-        <div *ngIf="inventoryJournal?.status == '0' && hasSaved" class="ms-2">
+        <div *ngIf="vouchers?.status == '0' && hasSaved" class="ms-2">
           <button
             type="button"
             class="btn btn-md btn-danger"

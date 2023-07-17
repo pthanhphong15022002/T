@@ -7,7 +7,7 @@
   [footer]="footer"
   subToolbarCss="text-end"
   [customToolbar]="subToolbar"
-  [data]="inventoryJournalLine"
+  [data]="vouchersLine"
 >
 </codx-form>
 <ng-template #subToolbar>
@@ -71,7 +71,7 @@
             <codx-input
               type="text"
               [disabled]="true"
-              [crrValue]="inventoryJournalLine.itemName"
+              [crrValue]="vouchersLine.itemName"
               field="itemName"
             >
             </codx-input>
@@ -378,7 +378,7 @@
             <codx-input
               type="text"
               [disabled]="true"
-              [crrValue]="inventoryJournalLine.itemName"
+              [crrValue]="vouchersLine.itemName"
               field="itemName"
             >
             </codx-input>

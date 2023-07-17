@@ -165,7 +165,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PinchZoomModule,
     CodxCoreModule.forRoot({ environment }),
   ],
-  exports: [RouterModule, PopupAddDynamicProcessComponent],
+  exports: [RouterModule],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

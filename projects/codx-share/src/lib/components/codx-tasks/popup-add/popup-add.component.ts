@@ -391,7 +391,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   updateTodoList(content: string) {
-    if (content != '' || content.trim() == '') {
+    if (!content || content.trim() == '') {
       this.indexEditTodo = -1;
       return;
     }
