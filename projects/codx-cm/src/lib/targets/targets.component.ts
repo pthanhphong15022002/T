@@ -304,7 +304,7 @@ export class TargetsComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = '850px';
       var obj = {
         action: 'add',
         title: this.titleAction,
@@ -346,7 +346,7 @@ export class TargetsComponent
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '800px';
+        option.Width = '850px';
         var obj = {
           action: 'edit',
           title: this.titleAction,

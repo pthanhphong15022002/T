@@ -35,6 +35,112 @@
                 </div>
             </div>
 
+
+            <div class="d-none">
+                <div class="d-flex justify-content-start flex-column pb-3" >
+                    <div class="d-flex align-items-center flex-row cursor-pointer w-100">
+                        <div class="w-50 d-flex justify-content-start align-items-center   border-start ">
+                            <div
+                                class="border-top border-bottom min-h-table  d-flex justify-content-center align-items-center h-100">
+                                <span class="px-2 h-100" [inlineSVG]="okrVll?.ob?.icon"></span>
+                            </div>
+                            <div
+                                class="w-100 min-h-table d-flex justify-content-center align-items-center border-top border-bottom h-100">
+                                <codx-inplace type="text" field="okrName" [value]=""
+                                    [class]="'om-input w-100 fw-bold'"
+                                    [cssClass]="'om-input w-100 fw-bold fs-4'" [id]="'ob'"
+                                    [emptyText]="okrGrv?.obGrv?.okrName?.description"
+                                    ></codx-inplace>
+                            </div>
+                        </div>
+
+                        <div class="w-50 d-flex justify-content-start  h-100">
+                            <div
+                                class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom  border-top vll-inplace">
+                                <codx-inplace class="om-input w-100  fw-bold" field="okrGroupID" type="combobox"
+                                    [ngbTooltip]="'Nhóm mục tiêu'" [refValue]="'OKRGroups'" [class]="''"
+                                    [cssClass]="'fw-bold'" [emptyText]="'Nhóm mục tiêu'"
+                                    [value]="" ></codx-inplace>
+                            </div>
+                            <div
+                                class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom  border-top vll-inplace">
+                                <codx-inplace class="om-input w-100  fw-bold" field="category" type="valuelist"
+                                    [ngbTooltip]="okrGrv?.obGrv?.category?.headerText"
+                                    [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="''"
+                                    [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.category?.description"
+                                    [value]="" ></codx-inplace>
+                            </div>
+                            <div
+                                class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom border-top border-end vll-inplace">
+                                <codx-inplace class="om-input w-100  fw-bold" field="confidence"
+                                    type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.confidence?.headerText"
+                                    [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="''"
+                                    [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.confidence?.description"
+                                    [value]=""></codx-inplace>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <div class="d-flex justify-content-start flex-column border-start"
+                        >
+                        <div class="d-flex align-items-center cursor-pointer w-100 "
+                            >
+                            <div class="w-50 d-flex align-items-center ps-4 border-bottom border-end">
+                                <span
+                                    class="icon-brightness_1 fs-12px d-flex align-items-center text-warning"></span>
+                                <div class="d-flex align-items-center w-100">
+                                    <div
+                                        class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center">
+                                        <span class="w-100">
+                                            <codx-inplace type="text" field="okrName" [value]=""
+                                                [class]="'w-90'" [id]="'ob'+'kr'"
+                                                [emptyText]="okrGrv?.krGrv?.okrName?.description"
+                                                ></codx-inplace>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-50 d-flex justify-content-start">
+                                <div
+                                    class="w-30 min-h-table d-flex justify-content-center align-items-center border-bottom  border-end">
+                                    <span class="w-100">
+                                        <codx-inplace type="valuelist"
+                                            [refValue]="okrGrv?.krGrv?.measurement?.referedValue"
+                                            [emptyText]="okrGrv?.krGrv?.measurement?.headerText"
+                                            field="measurement" [value]="" [class]="'w-80'"
+                                            ></codx-inplace>
+                                    </span>
+                                </div>
+                                <div
+                                    class="w-30 min-h-table d-flex justify-content-center align-items-center  border-bottom border-end">
+                                    <span class="w-100">
+                                        <codx-inplace type="number"
+                                        [refValue]="okrGrv?.krGrv?.target?.referedValue"
+                                        [emptyText]="okrGrv?.krGrv?.target?.headerText"
+                                        field="target" [value]="" [class]="'w-80'"
+                                        ></codx-inplace>
+                                    </span>
+                                </div>
+                                <div
+                                    class="w-30 min-h-table d-flex justify-content-center align-items-center  border-bottom border-end">
+                                    <span class="w-100">
+                                        <codx-inplace type="combobox"
+                                            [refValue]="okrGrv?.krGrv?.umid?.referedValue"
+                                            [emptyText]="okrGrv?.krGrv?.umid?.headerText" field="umid"
+                                            [value]="" [class]="'w-80'"
+                                            ></codx-inplace>
+                                    </span>
+
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
             <div class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto">
                 <div class="flex-column d-flex justify-content-start px-9">
                     <div class="d-flex justify-content-start flex-column " *ngFor="let ob of dataOKR;let i=index">
@@ -251,6 +357,8 @@
                     </div>
                 </div>
             </div>
+
+
             <div class="d-flex justify-content-end my-5 px-9">
                 <button type="button" class="btn btn-primary" (click)="onSaveForm()" [disabled]="onSaving"><codx-label
                         default="Lưu" fiedName="lblSave"></codx-label></button>

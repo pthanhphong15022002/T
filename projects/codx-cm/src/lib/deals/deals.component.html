@@ -96,35 +96,36 @@
       <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
       >:
       <span
-      *ngIf="data?.dealValue; else defaultNull"
-      #dealValue
-      [innerHTML]="
-      data?.dealValue
-          | formatvalue : view.formModel : 'dealValue' : dealValue
-          | async
-      "
-    ></span>
+        *ngIf="data?.dealValue; else defaultNull"
+        #dealValue
+        [innerHTML]="
+          data?.dealValue
+            | formatvalue : view.formModel : 'dealValue' : dealValue
+            | async
+        "
+      ></span>
     </div>
   </ng-template>
   <div class="d-flex flex-column">
     <div class="d-flex justify-content-between mt-2">
-      <div class="w-auto d-flex align-items-center text-nowrap line-clamp line-clamp-1">
+      <div
+        class="w-auto d-flex align-items-center text-nowrap line-clamp line-clamp-1"
+      >
         <span
           [ngbTooltip]="toolTipDealValue"
           class="pe-1 d-flex align-items-center"
         >
           <span class="icon-monetization_on icon-16 text-warning me-1"></span>
           <span
-          class="text-nowrap line-clamp line-clamp-1"
-          *ngIf="data?.dealValue; else defaultNull"
-          #dealValue
-          [innerHTML]="
-          data?.dealValue
-              | formatvalue : view.formModel : 'dealValue' : dealValue
-              | async
-          "
-        ></span>
-
+            class="text-nowrap line-clamp line-clamp-1"
+            *ngIf="data?.dealValue; else defaultNull"
+            #dealValue
+            [innerHTML]="
+              data?.dealValue
+                | formatvalue : view.formModel : 'dealValue' : dealValue
+                | async
+            "
+          ></span>
         </span>
         <span
           [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
@@ -138,7 +139,10 @@
           "
         ></span>
       </div>
-      <div class="d-flex justify-content-end" [ngbTooltip]="gridViewSetup['Probability']?.headerText">
+      <div
+        class="d-flex justify-content-end"
+        [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+      >
         <span class="icon-i-check-all icon-16 text-green me-2"></span>
         <span
           [innerHTML]="
@@ -172,15 +176,15 @@
           >
         </div>
         <ng-template #statusDefault>
-            <codx-vll
-              [name]="gridViewSetup?.Status?.referedValue"
-              [field]="'Status'"
-              [value]="data?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-sm"
-            >
-            </codx-vll>
+          <codx-vll
+            [name]="gridViewSetup?.Status?.referedValue"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
         </ng-template>
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
@@ -316,14 +320,14 @@
       <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
       >:
       <span
-      *ngIf="data?.dealValue; else defaultNull"
-      #dealValue
-      [innerHTML]="
-      data?.dealValue
-          | formatvalue : view.formModel : 'dealValue' : dealValue
-          | async
-      "
-    ></span>
+        *ngIf="data?.dealValue; else defaultNull"
+        #dealValue
+        [innerHTML]="
+          data?.dealValue
+            | formatvalue : view.formModel : 'dealValue' : dealValue
+            | async
+        "
+      ></span>
     </div>
   </ng-template>
   <ng-template #toolTipProbability>
@@ -360,43 +364,46 @@
       ></span>
     </div>
 
-
     <div class="row mb-1 mx-0">
       <div class="col-5 ps-0 pe-0">
-        <div class="w-auto d-flex align-items-center text-nowrap line-clamp line-clamp-1">
-        <span
-          [ngbTooltip]="toolTipDealValue"
-          class="pe-1 d-flex align-items-center"
+        <div
+          class="w-auto d-flex align-items-center text-nowrap line-clamp line-clamp-1"
         >
-          <span class="icon-monetization_on icon-16 text-warning me-1"></span>
           <span
-          class="text-nowrap line-clamp line-clamp-1"
-          *ngIf="data?.dealValue; else defaultNull"
-          #dealValue
-          [innerHTML]="
-          data?.dealValue
-              | formatvalue : view.formModel : 'dealValue' : dealValue
-              | async
-          "
-        ></span>
-
-        </span>
-        <span
-          [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
-          class="text-gray-700"
-          [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
-          #currencyID
-          [innerHTML]="
-            data?.currencyID
-              | formatvalue : view.formModel : 'currencyID'
-              | async
-          "
-        ></span>
+            [ngbTooltip]="toolTipDealValue"
+            class="pe-1 d-flex align-items-center"
+          >
+            <span class="icon-monetization_on icon-16 text-warning me-1"></span>
+            <span
+              class="text-nowrap line-clamp line-clamp-1"
+              *ngIf="data?.dealValue; else defaultNull"
+              #dealValue
+              [innerHTML]="
+                data?.dealValue
+                  | formatvalue : view.formModel : 'dealValue' : dealValue
+                  | async
+              "
+            ></span>
+          </span>
+          <span
+            [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
+            class="text-gray-700"
+            [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+            #currencyID
+            [innerHTML]="
+              data?.currencyID
+                | formatvalue : view.formModel : 'currencyID'
+                | async
+            "
+          ></span>
+        </div>
       </div>
-      </div>
-      <div class="col-3 d-flex align-items-center" [ngbTooltip]="gridViewSetup['Probability']?.headerText">
-        <span class="icon-check_circle icon-16 text-green me-1" ></span>
-        <span >{{data?.probability}}%</span>
+      <div
+        class="col-3 d-flex align-items-center"
+        [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+      >
+        <span class="icon-check_circle icon-16 text-green me-1"></span>
+        <span>{{ data?.probability }}%</span>
       </div>
       <div class="col-4 pe-0 d-flex align-items-center">
         <span class="icon-16 icon-av_timer me-1"></span>
@@ -434,15 +441,15 @@
           >
         </div>
         <ng-template #statusDefault>
-            <codx-vll
-              [name]="gridViewSetup?.Status?.referedValue"
-              [field]="'Status'"
-              [value]="data?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-sm"
-            >
-            </codx-vll>
+          <codx-vll
+            [name]="gridViewSetup?.Status?.referedValue"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
         </ng-template>
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
@@ -575,3 +582,16 @@
   </div>
 </ng-template>
 <ng-template #defaultNull> <p>0</p></ng-template>
+<!-- temp more cua gird -->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (changeDataMF)="changeDataMFGird($event, data)"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
