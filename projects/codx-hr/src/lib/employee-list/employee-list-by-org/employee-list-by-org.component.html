@@ -63,9 +63,8 @@
         <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
             [dataValues]="orgUnitID" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
-            [predicates]="predicates" [rowHeight]="rowHeight" [height]="80" [autoFitColumns]="false"
-            [allowResizing]="false" [allowFiltering]="false" [allowSorting]="true"
-            [hideMoreFunc]="true"></codx-gridview-v2>
+            [predicates]="predicates" [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="false"
+            [allowFiltering]="false" [allowSorting]="true" [hideMoreFunc]="true"></codx-gridview-v2>
     </div>
 </div>
 
@@ -205,7 +204,8 @@
                 </ng-template>
             </div>
             <div #positionField *ngIf="data.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
-                <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName : data.positionID}}</span>
+                <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName :
+                    data.positionID}}</span>
                 <ng-template #positionTooltip>
                     <div class="d-flex flex-column">
                         <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
@@ -336,8 +336,8 @@
                 </ng-template>
             </div>
             <div class="align-items-center">
-                <codx-label class="label-colon text-dark" name="lblSenioritydate" [fiedName]="'Senioritydate'"
-                    [setRequire]="false" [formModel]="view.formModel" default="Thâm niên">
+                <codx-label class="label-colon label-text-color" name="lblHR_SenioritydateCal" [setRequire]="false"
+                    [formModel]="view.formModel" default="Thâm niên">
                 </codx-label>
                 <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
                     <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>

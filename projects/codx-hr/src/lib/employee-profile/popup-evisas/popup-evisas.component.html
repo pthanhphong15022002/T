@@ -16,6 +16,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="visaNo"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -27,6 +28,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="visaType"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -41,6 +43,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="effectedDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -52,6 +55,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="expiredDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -66,6 +70,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
             [showSpinButton]="false"
                 field="stayDays"
                 [formModel]="formModel"
@@ -78,6 +83,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="visaEntry"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -92,6 +98,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="nationalityID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -103,6 +110,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="issuedDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -116,6 +124,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="issuedPlace"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -129,6 +138,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="passportNo"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -140,6 +150,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="passportNationalityID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -152,6 +163,7 @@
             fiedName="Note"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="note"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -210,7 +222,7 @@
 </ng-template> -->
 
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
         <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
             <i class="icon-save"></i>
         <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
@@ -236,6 +248,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="visaNo"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -247,6 +260,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="visaType"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -261,6 +275,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="effectedDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -272,6 +287,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="expiredDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -286,6 +302,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
             [showSpinButton]="false"
                 field="stayDays"
                 [formModel]="formModel"
@@ -298,6 +315,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="visaEntry"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -312,6 +330,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="nationalityID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -323,6 +342,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="issuedDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -336,6 +356,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="issuedPlace"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -349,6 +370,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="passportNo"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -360,6 +382,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="passportNationalityID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -373,6 +396,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="note"
             [formModel]="formModel"
             [Group]="formGroup"
