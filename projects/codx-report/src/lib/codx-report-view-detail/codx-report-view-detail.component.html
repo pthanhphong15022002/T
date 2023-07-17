@@ -16,11 +16,7 @@
 
   </iframe> -->
   <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
-  <codx-report-iframe [funcID]="reportID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" *ngIf="reportID" ></codx-report-iframe>
-
-  <div class="container w-100 h-100" *ngIf="!reportID">
-
-  </div>
+  <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
   </ng-template>
 
 <!-- <ng-template #breadCrumb>

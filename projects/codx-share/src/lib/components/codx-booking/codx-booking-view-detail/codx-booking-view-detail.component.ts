@@ -510,7 +510,7 @@ export class CodxBookingViewDetailComponent
                 (driver != null && driver.length > 0) ||
                 data?.driverName != null
               ) {
-                func.disabled = false; //true
+                func.disabled = true;
               } else {
                 func.disabled = false;
               }
