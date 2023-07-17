@@ -202,6 +202,7 @@ import { CodxIconStepComponent } from './components/codx-step/codx-icon-step/cod
 import { CodxViewContentComponent } from './components/codx-view-content/codx-view-content.component';
 import { PopupViewContentComponent } from './components/codx-view-content/popup-view-content.component';
 import { CodxNoDataComponent } from './components/codx-step/codx-no-data/codx-no-data.component';
+import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -387,6 +388,7 @@ const T_Pipe: Type<any>[] = [
     UsingHistoryComponent,
     AccessHistoryComponent,
     OrderHistoryComponent,
+    CodxListReportsComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

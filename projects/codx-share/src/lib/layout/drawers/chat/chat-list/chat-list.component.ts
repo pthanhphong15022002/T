@@ -15,9 +15,6 @@ import {
   FormModel,
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
-import { MessageSystemPipe } from '../chat-box/mssgSystem.pipe';
-import { GRID_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { tmpMessage } from '../models/WP_Messages.model';
 
 @Component({
   selector: 'codx-chat-list',
@@ -32,7 +29,9 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   moreFC: any = null;
   user:any = null;
   searched:boolean = false;
-  messageSystemPipe:MessageSystemPipe = null;
+  idField:object = {
+    id:"groupID"
+  }
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
     private api: ApiHttpService,
@@ -46,7 +45,6 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   {
     this.user = this.auth.get();
     this.formModel = new FormModel();
-    this.messageSystemPipe = new MessageSystemPipe(this.cache,this.applicationRef);
   }
 
   ngOnInit(): void {

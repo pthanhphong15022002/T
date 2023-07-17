@@ -202,7 +202,7 @@ export class PopupAddSalesInvoicesLineComponent
     ];
     if (postFields.includes(e.field)) {
       this.api
-        .exec('SM', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
+        .exec('AC', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
           e.field,
           this.line,
         ])

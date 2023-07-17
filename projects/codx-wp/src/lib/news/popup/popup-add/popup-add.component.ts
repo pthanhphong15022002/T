@@ -171,7 +171,6 @@ export class PopupAddComponent implements OnInit {
     this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
     this.codxATMImage.saveFilesMulObservable()
     .subscribe((res1: any) => {
-      debugger
       if(res1.status != 0)
       {
         let fileNames = "";
@@ -192,7 +191,6 @@ export class PopupAddComponent implements OnInit {
   }
   // release post
   clickRelease() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0)
@@ -251,7 +249,6 @@ export class PopupAddComponent implements OnInit {
   }
   // value change
   valueChange(event: any) {
-    debugger
     if(event){
       let field = Util.camelize(event.field);
       let value = event.data;
@@ -343,7 +340,6 @@ export class PopupAddComponent implements OnInit {
  
   // attachment return files
   addFiles(files: any) {
-    debugger
     if (Array.isArray(files.data)){
       let file = files.data[0]; 
       if(file.mimeType.indexOf("image") >= 0){
