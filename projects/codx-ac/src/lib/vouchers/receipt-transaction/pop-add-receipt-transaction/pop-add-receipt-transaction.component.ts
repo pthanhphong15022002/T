@@ -10,7 +10,7 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Observable } from 'rxjs';
-import { PopAddLineinventoryComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
+import { PopAddLineReceiptTransactionComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
 
@@ -707,7 +707,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       .subscribe((res) => {
         if (res) {
           var dialogs = this.callfc.openForm(
-            PopAddLineinventoryComponent,
+            PopAddLineReceiptTransactionComponent,
             '',
             900,
             850,
@@ -765,7 +765,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               var dialogs = this.callfc.openForm(
-                PopAddLineinventoryComponent,
+                PopAddLineReceiptTransactionComponent,
                 '',
                 650,
                 600,

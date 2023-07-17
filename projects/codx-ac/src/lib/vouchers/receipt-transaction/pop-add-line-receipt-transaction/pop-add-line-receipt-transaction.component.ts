@@ -8,7 +8,7 @@ import { VouchersLines } from '../../../models/VouchersLines.model';
   templateUrl: './pop-add-line-receipt-transaction.component.html',
   styleUrls: ['./pop-add-line-receipt-transaction.component.css']
 })
-export class PopAddLineinventoryComponent extends UIComponent implements OnInit{
+export class PopAddLineReceiptTransactionComponent extends UIComponent implements OnInit{
 
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('idiM0') idiM0: CodxInputComponent;
