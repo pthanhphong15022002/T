@@ -49,7 +49,7 @@ export class EmployeeListComponent extends UIComponent {
   entityName = 'HR_Employees';
   className = 'EmployeesBusiness';
   method = 'GetListEmployeeAsync';
-  idField ='employeeID';
+  idField = 'employeeID';
 
   gridViewAction;
   cmtStatus = '';
@@ -107,8 +107,8 @@ export class EmployeeListComponent extends UIComponent {
         sameData: false,
         model: {
           resizable: true,
-          isCustomize:true,
-          
+          isCustomize: true,
+
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
           resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
@@ -307,15 +307,36 @@ export class EmployeeListComponent extends UIComponent {
     });
   }
 
+  
   viewChanged(event: any) {
+    if (event?.view?.id === '2' || event?.id === '2') {
+      this.view.dataService.parentIdField = 'ParentID';
+      this.view.dataService.idField = 'orgUnitID';
+      this.view.idField = 'orgUnitID';
+    } else if (event?.view?.id === '1' || event?.id === '1') {
+      this.view.dataService.parentIdField = '';
+      this.view.dataService.idField = 'employeeID';
+      this.view.idField = 'employeeID';
+    }
     if (this.grv2DataChanged || this.hasChangedData) {
-      if (event?.view?.id !== '2') {
-        this.view.dataService.parentIdField = '';
+      // if (this.viewActive !== event.view.id && this.flagLoaded) {
+      // if (event?.view?.id === '1' || event?.id === '1') {
+      //   this.view.dataService.data = [];
+      //   this.view.dataService.parentIdField = '';
+      // } else {
+      //   this.view.dataService.parentIdField = 'ParentID';
+      // }
+      if(event?.view?.id == '1 ' || event?.id == '1'){
         this.view.dataService.data = [];
+        this.view.dataService.page = 0;
+        this.view.dataService.load().subscribe();
       }
-      this.view.dataService.page = 0;
+      //check update data when CRUD or not
+      // this.flagLoaded = false;
+
+      //Prevent load data when click same id
       this.viewActive = event.view.id;
-      this.view.currentView.dataService.load().subscribe();
+      //this.view.currentView.dataService.load().subscribe();
     }
     this.grv2DataChanged = false;
     this.hasChangedData = false;
