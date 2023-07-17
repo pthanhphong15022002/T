@@ -71,17 +71,17 @@ export class ReceiptTransactionComponent extends UIComponent {
   overflowed: boolean = false;
   expanding: boolean = false;
   isLoadDataAcct: any = true;
-  fmInventoryJournal: FormModel = {
+  fmVouchers: FormModel = {
     formName: '',
     gridViewName: '',
     entityName: 'IV_Vouchers',
   };
-  fmInventoryJournalLines: FormModel = {
+  fmVouchersLines: FormModel = {
     formName: '',
     gridViewName: '',
     entityName: 'IV_VouchersLines',
   };
-  inventoryJournalLines: Array<VouchersLines> = [];
+  vouchersLines: Array<VouchersLines> = [];
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -123,8 +123,8 @@ export class ReceiptTransactionComponent extends UIComponent {
             let m = res.find((x) => x.functionID == 'ACT070801');
             if (m)
             {
-              this.fmInventoryJournal.formName = m.formName;
-              this.fmInventoryJournal.gridViewName = m.gridViewName;
+              this.fmVouchers.formName = m.formName;
+              this.fmVouchers.gridViewName = m.gridViewName;
             }
 
             let n = res.find((x) => x.functionID == 'ACT070800');
@@ -133,8 +133,8 @@ export class ReceiptTransactionComponent extends UIComponent {
             let o = res.find((x) => x.functionID == 'ACT070802');
             if(o)
             {
-              this.fmInventoryJournalLines.formName = 'VouchersLinesReceipts';
-              this.fmInventoryJournalLines.gridViewName = 'grvVouchersLinesReceipts';
+              this.fmVouchersLines.formName = 'VouchersLinesReceipts';
+              this.fmVouchersLines.gridViewName = 'grvVouchersLinesReceipts';
             }
           }
         });
@@ -145,8 +145,8 @@ export class ReceiptTransactionComponent extends UIComponent {
             let m = res.find((x) => x.functionID == 'ACT071401');
             if (m)
             {
-              this.fmInventoryJournal.formName = m.formName;
-              this.fmInventoryJournal.gridViewName = m.gridViewName;
+              this.fmVouchers.formName = m.formName;
+              this.fmVouchers.gridViewName = m.gridViewName;
             }
 
             let n = res.find((x) => x.functionID == 'ACT071400');
@@ -155,8 +155,8 @@ export class ReceiptTransactionComponent extends UIComponent {
             let o = res.find((x) => x.functionID == 'ACT071402');
             if(o)
             {
-              this.fmInventoryJournalLines.formName = 'VouchersLinesIssues';
-              this.fmInventoryJournalLines.gridViewName = 'grvVouchersLinesIssues';
+              this.fmVouchersLines.formName = 'VouchersLinesIssues';
+              this.fmVouchersLines.gridViewName = 'grvVouchersLinesIssues';
             }
           }
         });
@@ -252,8 +252,8 @@ export class ReceiptTransactionComponent extends UIComponent {
           var obj = {
             formType: 'add',
             headerText: this.headerText,
-            formModelMaster: this.fmInventoryJournal,
-            formModelLine: this.fmInventoryJournalLines,
+            formModelMaster: this.fmVouchers,
+            formModelLine: this.fmVouchersLines,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -280,8 +280,8 @@ export class ReceiptTransactionComponent extends UIComponent {
           var obj = {
             formType: 'edit',
             headerText: this.funcName,
-            formModelMaster: this.fmInventoryJournal,
-            formModelLine: this.fmInventoryJournalLines,
+            formModelMaster: this.fmVouchers,
+            formModelLine: this.fmVouchersLines,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -316,8 +316,8 @@ export class ReceiptTransactionComponent extends UIComponent {
           var obj = {
             formType: 'copy',
             headerText: this.funcName,
-            formModelMaster: this.fmInventoryJournal,
-            formModelLine: this.fmInventoryJournalLines,
+            formModelMaster: this.fmVouchers,
+            formModelLine: this.fmVouchersLines,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -380,7 +380,7 @@ export class ReceiptTransactionComponent extends UIComponent {
         data.recID,
       ])
       .subscribe((res: any) => {
-        this.inventoryJournalLines = res;
+        this.vouchersLines = res;
         this.loadTotal();
       });
     this.api
@@ -426,7 +426,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   loadTotal(){
     this.totalAmt = 0;
     this.totalQuantity = 0;
-    this.inventoryJournalLines.forEach((item) => {
+    this.vouchersLines.forEach((item) => {
       if(item)
       {
         this.totalQuantity += item.quantity;

@@ -57,7 +57,7 @@
                 : { color: '#1d1f1f' }
             "
             [innerHTML]="
-              item?.target | formatvalue : fmTargetLines : 'Target' | async
+            targetToFixed(item?.target) | formatvalue : fmTargetLines : 'Target' | async
             "
           ></span>
           <span
