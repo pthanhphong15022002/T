@@ -326,7 +326,7 @@
         [src]="curFileUrl"
         [(zoom)]="zoomValue"
         [(page)]="curPage"
-        [handTool]="false"
+        [handTool]="!(isEditable && !isPublic && !isInteractPDF)"
         [showHandToolButton]="false"
         [useBrowserLocale]="true"
         [showUnverifiedSignatures]="true"
