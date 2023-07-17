@@ -1,9 +1,13 @@
 .manager-gridview {
     .e-content {
-        height: calc(100vh - 300px) !important;
+        height: calc(100vh - 320px) !important;
     }
 }
-
+.hover-active:hover{
+    .item-active{
+        color: var(--primary);
+    }
+}
 .no-manager-gridview {
     .e-content {
         height: calc(100vh - 200px) !important;
