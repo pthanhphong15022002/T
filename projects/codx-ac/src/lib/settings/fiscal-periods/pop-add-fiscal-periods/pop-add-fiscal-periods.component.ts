@@ -173,27 +173,6 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
     }
   }
 
-  onSaveAdd(){
-    this.validate = 0;
-    this.checkValidate();
-    this.checkValidateStartDate();
-    this.checkValidateEndDate();
-    if (this.validate > 0) {
-      return;
-    } else {
-      if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
-          .save(null, 0, '', 'SYS006', true)
-          .subscribe((res) => {
-            if (res.save) {
-              this.onClearFiscalPeriods();
-              this.form.formGroup.patchValue(this.fiscalperiods);
-            }
-          });
-      }
-    }
-  }
-
   onClearFiscalPeriods()
   {
     this.fiscalperiods = new FiscalPeriods();
