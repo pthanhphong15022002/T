@@ -12,10 +12,10 @@ import { CodxAcService } from '../../codx-ac.service';
 })
 export class SalesInvoiceService {
   fmSalesInvoicesLines: FormModel = {
-    entityName: 'SM_SalesInvoicesLines',
+    entityName: 'AC_SalesInvoicesLines',
     formName: 'SalesInvoicesLines',
     gridViewName: 'grvSalesInvoicesLines',
-    entityPer: 'SM_SalesInvoicesLines',
+    entityPer: 'AC_SalesInvoicesLines',
     funcID: 'ACT0605',
   };
   gvsSalesInvoicesLines: any;
@@ -42,7 +42,7 @@ export class SalesInvoiceService {
 
   deleteLinesByTransID(transId: string): void {
     this.apiService
-      .exec('SM', 'SalesInvoicesLinesBusiness', 'DeleteByTransIDAsync', transId)
+      .exec('AC', 'SalesInvoicesLinesBusiness', 'DeleteByTransIDAsync', transId)
       .pipe(tap((t) => console.log(t)))
       .subscribe();
   }

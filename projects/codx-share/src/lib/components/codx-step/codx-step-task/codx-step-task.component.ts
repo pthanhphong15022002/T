@@ -48,12 +48,6 @@ import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
   styleUrls: ['./codx-step-task.component.scss'],
-  // animations: [
-  //   trigger('fadeInOut', [
-  //     state('void', style({ opacity: 0 })),
-  //     transition(':enter, :leave', [animate(500, style({ opacity: 1 }))]),
-  //   ]),
-  // ],
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region Input
@@ -112,7 +106,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   isUpdateProgressStep = false;
   isUpdateProgressGroup = false;
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
-  listRecIDGroupUpdateProgress:string[] = []
+  listRecIDGroupUpdateProgress: string[] = [];
 
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
@@ -230,7 +224,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
               sumProgress += task?.progress;
-              if(task?.isChange){
+              if (task?.isChange) {
                 progressData.push(this.setProgressOutput(task, group));
               }
             });
@@ -280,8 +274,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
                 sumProgress += task.progress;
-                if(task?.isChange){
-                  progressData.push(this.setProgressOutput(null, group));              
+                if (task?.isChange) {
+                  progressData.push(this.setProgressOutput(null, group));
                 }
               }
             });
@@ -336,6 +330,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       );
     });
   }
+
+  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
 
   //#region get Data
   async getStepById() {
@@ -411,7 +407,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return type == 'ID' ? role?.objectID : role?.objectName;
   }
   //#endregion
-  // loại bỏ những task có progress 100%
+
+  //#region remove task progress 100%
   removeTaskSuccess() {
     if (this.listGroupTask?.length > 0) {
       for (let i = 0; i < this.listGroupTask.length; ) {
@@ -436,7 +433,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     }
   }
+  //#endregion
 
+  //#region showTask or hideTask
   toggleTask(e, idGroup) {
     let elementGroup = document.getElementById(idGroup.toString());
     let children = e.currentTarget.children[0];
@@ -453,7 +452,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       children.classList.add('icon-add');
     }
   }
+  //#endregion
 
+  //#region handle color and icon
+  
+  //#region check parent ID
   checkExitsParentID(taskList, task): string {
     if (task?.requireCompleted) {
       return 'text-red';
@@ -474,8 +477,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     return check;
   }
+  //#endregion
 
-  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
+  //#endregion
 
   //#region more functions
   convertMoreFunctions(listMore, more, type) {
@@ -1419,17 +1423,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (!checkUpdate) return;
     }
     let askUpdateParent = false;
-    let checkUpdateGroup =this.listRecIDGroupUpdateProgress.some(id => id == data?.taskGroupID);
+    let checkUpdateGroup = this.listRecIDGroupUpdateProgress.some(
+      (id) => id == data?.taskGroupID
+    );
     if (type != 'P' && type != 'G') {
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
         this.currentStep
       );
       if (!checkTaskLink) return;
-      checkUpdateGroup =this.listRecIDGroupUpdateProgress.some(id => id == data?.taskGroupID);
-      askUpdateParent = checkUpdateGroup || this.askUpdateProgressStep ? true : false;
+      checkUpdateGroup = this.listRecIDGroupUpdateProgress.some(
+        (id) => id == data?.taskGroupID
+      );
+      askUpdateParent =
+        checkUpdateGroup || this.askUpdateProgressStep ? true : false;
     }
-    if(type == 'G'){
+    if (type == 'G') {
       askUpdateParent = this.askUpdateProgressStep;
     }
     let dataInput = {
@@ -1451,18 +1460,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     let dataProgress = dataPopupOutput?.event;
     if (dataProgress) {
-      if(type == 'G'){
+      if (type == 'G') {
         this.askUpdateProgressStep = false;
-        let check = this.listRecIDGroupUpdateProgress.some(id => id == data?.recID);
-        if(!check){
+        let check = this.listRecIDGroupUpdateProgress.some(
+          (id) => id == data?.recID
+        );
+        if (!check) {
           this.listRecIDGroupUpdateProgress.push(data?.refID);
         }
       }
       if (type != 'P' && type != 'G' && checkUpdateGroup) {
         this.askUpdateProgressStep = false;
-        let index = this.listRecIDGroupUpdateProgress?.findIndex(id => id == data?.taskGroupID);
-        if(index >=0 ){
-          this.listRecIDGroupUpdateProgress?.splice(index,1);
+        let index = this.listRecIDGroupUpdateProgress?.findIndex(
+          (id) => id == data?.taskGroupID
+        );
+        if (index >= 0) {
+          this.listRecIDGroupUpdateProgress?.splice(index, 1);
         }
       }
       this.handelProgress(data, dataProgress);
@@ -1721,6 +1734,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
+  //#region cheack
   checRoleTask(data, type) {
     return (
       data.roles?.some(
@@ -1750,6 +1764,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     return check;
   }
+  //#endregion
 
   //#region tao lich hop
   async createMeeting(data) {
