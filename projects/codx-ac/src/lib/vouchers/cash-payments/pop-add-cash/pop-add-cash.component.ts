@@ -4,39 +4,24 @@ import {
   ElementRef,
   HostListener,
   Injector,
+  OnDestroy,
   OnInit,
   Optional,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ContextMenuItem,
-  DialogEditEventArgs,
   EditSettingsModel,
-  FilterSettingsModel,
   GridComponent,
-  PdfExportProperties,
-  SaveEventArgs,
-  ToolbarItems,
-  row,
 } from '@syncfusion/ej2-angular-grids';
-import {
-  ClickEventArgs,
-  MenuEventArgs,
-  TabComponent,
-} from '@syncfusion/ej2-angular-navigations';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   AuthService,
   AuthStore,
-  CallFuncService,
-  CodxComboboxComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
-  CodxInputComponent,
-  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -48,28 +33,21 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { Observable, map } from 'rxjs';
-import { CashPayment } from '../../../models/CashPayment.model';
 import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { Reason } from '../../../models/Reason.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { VoucherComponent } from '../../../popup/voucher/voucher.component';
-import { SettledInvoices } from '../../../models/SettledInvoices.model';
-import { Double } from '@syncfusion/ej2-angular-charts';
 import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
-import { E } from '@angular/cdk/keycodes';
 import { PopUpVatComponent } from '../pop-up-vat/pop-up-vat.component';
 import {
   AnimationModel,
   ILoadedEventArgs,
-  IProgressValueEventArgs,
   ProgressBar,
-  ProgressBarAnnotationDirective,
 } from '@syncfusion/ej2-angular-progressbar';
+import { Subject } from 'rxjs';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
@@ -191,6 +169,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   loading: any = false;
   loadingform: any = true;
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
+
+  private sub = new Subject<void>();
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -366,7 +346,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpayment[e.field] = e.data;
     this.cashpayment.updateColumn = e.field;
     if (e && e.data) {
-      switch(e.field.toLowerCase()){
+      switch (e.field.toLowerCase()) {
         case 'reasonid':
         case 'objectid':
         case 'payee':
@@ -1628,22 +1608,34 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  setMemo(){
+  setMemo() {
     var newMemo = '';
     var reasonName = '';
     var objectName = '';
     var payName = '';
-    if (this.cbxReasonID.ComponentCurrent.itemsSelected && this.cbxReasonID.ComponentCurrent.itemsSelected.length > 0) {
-      reasonName = this.cbxReasonID.ComponentCurrent.itemsSelected[0].ReasonName + ' - ';
+    if (
+      this.cbxReasonID.ComponentCurrent.itemsSelected &&
+      this.cbxReasonID.ComponentCurrent.itemsSelected.length > 0
+    ) {
+      reasonName =
+        this.cbxReasonID.ComponentCurrent.itemsSelected[0].ReasonName + ' - ';
     }
-    if (this.cbxObjectID.ComponentCurrent.itemsSelected && this.cbxObjectID.ComponentCurrent.itemsSelected.length > 0) {
-      objectName = this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
+    if (
+      this.cbxObjectID.ComponentCurrent.itemsSelected &&
+      this.cbxObjectID.ComponentCurrent.itemsSelected.length > 0
+    ) {
+      objectName =
+        this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
     }
-    if (this.cbxPayee.ComponentCurrent.itemsSelected && this.cbxPayee.ComponentCurrent.itemsSelected.length > 0) {
-      payName = this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
+    if (
+      this.cbxPayee.ComponentCurrent.itemsSelected &&
+      this.cbxPayee.ComponentCurrent.itemsSelected.length > 0
+    ) {
+      payName =
+        this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
     }
     newMemo = reasonName + objectName + payName;
-    return newMemo.substring(0, newMemo.lastIndexOf(" - ") + 1);
+    return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
