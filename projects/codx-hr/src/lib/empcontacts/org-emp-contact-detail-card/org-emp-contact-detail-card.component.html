@@ -1,12 +1,12 @@
 <div class="ms-5 d-flex flex-wrap card-view">
     <div class="me-5 mt-5 card-item" *ngFor="let data of lstData">
         <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
-            imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" [dataItem]="data"
+            imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" [dataItem]="data" [footer]="footer"
             [imageObjType]="formModel.entityName" [hideMF]="true" [imageObjName]="data.employeeName"
             [titleTmp]="subtitleTmp">
         </codx-card-center>
         <ng-template #subtitleTmp>
-            <div class="d-flex flex-column align-items-center">
+            <div class="d-flex flex-column">
                 <span #nameField class="data-text-color data-text-width line-clamp line-clamp-1 fw-bold mb-1"
                     [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip : null">{{data.employeeName}}</span>
                 <span #positionField class="data-text-color data-text-width line-clamp line-clamp-1 mb-1"
@@ -14,10 +14,6 @@
                     {{data.positionName}}
                 </span>
                 <span *ngIf="data.birthday; else noBirthDay">{{data.birthday | fmDT }}</span>
-                <span *ngIf="data.phone; else noPhone"
-                    [innerHTML]="data.phone | formatvalue: formModel:'Phone' | async"></span>
-                <span
-                    [innerHTML]="data.email | formatvalue: formModel:'Email' | async"></span>
             </div>
         </ng-template>
         <ng-template #footer let-data>
@@ -54,16 +50,12 @@
 
 <ng-template #footer let-data>
     <div class="d-flex align-items-center flex-center d-phone">
-        <span class="icon-phone_android icon-16 me-2"></span>
-        <span class="text-gray-700">
-            <span #phone [innerHTML]="data.phone | formatvalue: formModel:'Phone' | async"></span>
-        </span>
+        <span class="text-gray-700" *ngIf="data.phone; else noPhone"
+            [innerHTML]="data.phone | formatvalue: formModel:'Phone' | async"></span>
     </div>
     <div class="d-flex align-items-center flex-center d-mail">
-        <span class="icon-email icon-16 me-2"> </span>
-        <span class="text-gray-700">
-            <span #email [innerHTML]="data.email | formatvalue: formModel:'Email' | async"></span>
-        </span>
+        <span class="text-gray-700" *ngIf="data.email; else noEmail">
+            [innerHTML]="data.email | formatvalue: formModel:'Email' | async"></span>
     </div>
 </ng-template>
 

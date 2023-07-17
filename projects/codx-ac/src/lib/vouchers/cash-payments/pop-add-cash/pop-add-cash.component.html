@@ -33,7 +33,7 @@
     </ejs-tab>
   </div>
   <div style="height: calc(100vh - 421px)!important;">
-    <ejs-tab #tabObj (selecting)="select($event)" (created)="created($event, tabObj)">
+    <ejs-tab #tabObj>
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -116,7 +116,7 @@
                     <codx-label fiedName="ReasonID" [formModel]="form.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
+                      <codx-input #cbxReasonID [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
                         field="reasonID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>
@@ -141,7 +141,7 @@
                         " fiedName="ObjectID" [formModel]="form.formModel" default="Đối tượng">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
+                      <codx-input #cbxObjectID [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
                         [formModel]="form.formModel" field="objectID" (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>
@@ -198,7 +198,7 @@
                     <codx-label fiedName="Payee" [formModel]="form.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
+                      <codx-input #cbxPayee [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
                         [formModel]="form.formModel" field="payee" (valueChange)="valueChange($event)"></codx-input>
                     </div>
                   </div>
@@ -212,7 +212,7 @@
                   </codx-label>
                   <div class="ac-input">
                     <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
-                      field="memo" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                      field="memo" [formModel]="form.formModel" (controlBlur)="valueFocusOut($event)">
                     </codx-input>
                   </div>
                 </div>
@@ -228,9 +228,9 @@
                 <div class="form-group">
                   <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                   </codx-label>
-                  <div [class]="!journal.multiCurrency ? 'ac-input-disable' : 'ac-input'">
+                  <div [class]="(!journal.multiCurrency) ? 'ac-input-disable' : 'ac-input'">
                     <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
-                      [disabled]="!journal.multiCurrency" [Group]="form.formGroup" field="currencyID"
+                      [disabled]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr)" [Group]="form.formGroup" field="currencyID"
                       [formModel]="form.formModel" (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
@@ -240,9 +240,9 @@
                 <div class="form-group">
                   <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
                   </codx-label>
-                  <div [class]="!journal.multiCurrency ? 'ac-input-disable' : 'ac-input'">
+                  <div [class]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr) ? 'ac-input-disable' : 'ac-input'">
                     <codx-input #tExchange [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
-                      [disabled]="!journal.multiCurrency" [Group]="form.formGroup" field="exchangeRate"
+                      [disabled]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr)" [Group]="form.formGroup" field="exchangeRate"
                       [formModel]="form.formModel" (controlBlur)="valueFocusOut($event)">
                     </codx-input>
                   </div>
@@ -694,7 +694,7 @@
         [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
         predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
         [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-        [autoFitColumns]="false" (created)="gridCreated()" [preSaveCheck]="false" rowHeight="35"
+        [autoFitColumns]="false" (created)="gridCreated()" rowHeight="35"
         (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
         (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
 

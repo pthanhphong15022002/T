@@ -1498,7 +1498,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               }
             });
         });
-    } else {
+    } else { 
       this.notificationsService.notifyCode('ES007');
       this.codxBookingService
         .afterApprovedManual(

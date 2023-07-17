@@ -119,6 +119,11 @@ export const EPCONST = {
       Stationery:'6',
     },
   },
+
+  APPROVALRULE :{
+    Haved:'1',
+    NotHaved:'0',
+  }
   
 
   //region format

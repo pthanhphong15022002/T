@@ -78,6 +78,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   categoryID: any;
   subFuncID = EPCONST.FUNCID.S_Category;
   lstWarehourse=[];
+  autoComfirm =EPCONST.APPROVALRULE.NotHaved;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -135,6 +136,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           let StationerySetting_1 = JSON.parse(res);
           this.nagetivePhysical = StationerySetting_1.NagetivePhysical;
           this.isPriceVisible = StationerySetting_1.ShowUnitPrice ?? false;
+          this.autoComfirm = StationerySetting_1?.AutoConfirm ?? EPCONST.APPROVALRULE.NotHaved;
         }
       });
     this.codxBookingService
@@ -437,7 +439,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.data.resourceType = this.dialogAddBookingStationery.value.resourceType;
     this.data.issueStatus =
       this.dialogAddBookingStationery.value.issueStatus ?? '1';
-    if (this.approvalRule == '0' && approval) {
+    if ((this.approvalRule == '0' || this.autoComfirm=='1') && approval) {
       this.data.approveStatus = '5';
     }
     this.data.approveStatus = this.data.approveStatus ?? '1';
@@ -471,7 +473,16 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
           }
 
           if (approval) {
-            if (this.approvalRule != '0') {
+            let autoRelease = false;
+            if(this.autoComfirm==EPCONST.APPROVALRULE.Haved){
+              autoRelease=true;
+            }
+            else{
+              if(this.approvalRule=='0'){
+                autoRelease=true;
+              }
+            }
+            if (!autoRelease) {
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((category: any) => {

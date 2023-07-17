@@ -19,7 +19,7 @@ export class VouchersLines{
     idiM7: any;
     idiM8: any;
     idiM9: any;
-    fixeddims: any;
+    fixedDIMs: any;
     cwum: any;
     cwConversion: any;
     cwQty: any;
