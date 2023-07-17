@@ -38,7 +38,6 @@ export class CodxExportComponent implements OnInit, OnChanges {
   active = '1';
   gridModel: any;
   recID: any;
-  functionID: any;
   field:any;
   data = {};
   dataSource: string = '';
@@ -106,16 +105,14 @@ export class CodxExportComponent implements OnInit, OnChanges {
     private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
+  ) 
+  {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
-    this.functionID = dt.data?.[2];
-    this.field = dt.data?.[3];
-    this.dataSource = dt.data?.[4];
+    this.dataSource = dt.data?.[2];
   }
   ngOnInit(): void {
-    this.getDataSource(this.functionID,this.field,this.recID);
     //Tạo formGroup
     this.exportGroup = this.formBuilder.group({
       dataExport: ['all', Validators.required],
@@ -464,14 +461,5 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.exportGroup.controls['format'].setValue(id);
   }
 
-  getDataSource(reportID:string,field:string,id:string){
-    this.api.execSv("rptsys",
-        "Codx.RptBusiness.CM",
-        "ReportBusiness",
-        "GetReportSourceByIDAsync",
-         [reportID,field,id])
-        .subscribe((res:any) => {
-          this.dataSource = res;
-        });
-  }
+  
 }
