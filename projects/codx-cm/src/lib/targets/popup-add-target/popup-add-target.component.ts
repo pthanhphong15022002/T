@@ -431,7 +431,7 @@ export class PopupAddTargetComponent {
   }
 
   convertToFixelNumber(target: number) {
-    let roundedNumber: number = Math.round(target * Math.pow(10, 1)) / Math.pow(10, 1);
+    let roundedNumber: number = Math.round(target * Math.pow(10, 0)) / Math.pow(10, 0);
     return roundedNumber;
   }
   //#endregion
