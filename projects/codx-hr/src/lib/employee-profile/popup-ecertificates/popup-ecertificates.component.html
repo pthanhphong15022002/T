@@ -42,7 +42,6 @@
   </div>
 
   <div class="form-group row mt-5">
-
     <div class="col-6">
       <codx-label
         fiedName="CertificateGradeID"
@@ -55,6 +54,7 @@
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
+
     <div class="col-6">
       <codx-label
         fiedName="ForeignLanguage"
@@ -139,6 +139,37 @@
       [formModel]="formModel"
       [Group]="formGroup"
     ></codx-input>
+  </div>
+
+  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+    <codx-label
+      name="lblAttachFile"
+      [formModel]="formModel"
+      [default]="'File đính kèm'"
+    >
+    </codx-label>
+  </div>
+
+  <div class=" flex-nowrap">
+    <codx-attachment
+      #attachment
+      [objectType]="formModel?.entityName"
+      showMessage="0"
+      hideBtnSave="1"
+      hideFolder="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      [objectId]="certificateObj?.recID"
+      [allowMultiFile]="1"
+      [idBrowse]="'add'"
+      displayThumb="full"
+      [functionID]="funcID"
+      (fileAdded)="addFiles($event)">
+      [referType]="'source'"
+      >
+    </codx-attachment>
   </div>
 </ng-template>
 
@@ -378,8 +409,19 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+  <div class="d-flex justify-content-between">
+    <button
+    class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+    (click)="openFormUploadFile()"
+  >
+    <codx-label
+      name="lblAddFile"
+      default="Đính kèm file"
+      [formModel]="formModel"
+    ></codx-label>
+  </button>
+
+    <button class="btn btn-primary" (click)="onSaveForm()">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

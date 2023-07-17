@@ -2,7 +2,6 @@ import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, Vi
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
-import { InventoryJournalLines } from '../../../models/InventoryJournalLines.model';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { Reason } from '../../../models/Reason.model';
 import { EditSettingsModel, row } from '@syncfusion/ej2-angular-grids';
@@ -11,8 +10,9 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Observable } from 'rxjs';
-import { InventoryJournals } from '../../../models/InventoryJournals.model';
-import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-lineinventory.component';
+import { PopAddLineinventoryComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
+import { VouchersLines } from '../../../models/VouchersLines.model';
+import { Vouchers } from '../../../models/Vouchers.model';
 
 
 @Component({
@@ -39,15 +39,15 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   warehouseName: any;
   headerText: string;
   dialog!: DialogRef;
-  inventoryJournal: InventoryJournals;
+  inventoryJournal: Vouchers;
   formType: any;
   gridViewSetup: any;
   gridViewSetupLine: any;
   validate: any = 0;
   journalNo: any;
   modeGrid: any;
-  inventoryJournalLines: Array<InventoryJournalLines> = [];
-  inventoryJournalLinesDelete: Array<InventoryJournalLines> = [];
+  inventoryJournalLines: Array<VouchersLines> = [];
+  inventoryJournalLinesDelete: Array<VouchersLines> = [];
   lockFields = [];
   tab: number = 0;
   total: any = 0;
@@ -56,14 +56,22 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   funcID: any;
-  entityMaster: any;
   loading: any = false;
   loadingform: any = true;
   journal: IJournal;
+  receiptsFormName: string = 'VouchersReceipts';
+  receiptsGrvName: string = 'grvVouchersReceipts';
+  issuesFormName: string = 'VouchersIssues';
+  issuesGrvName: string = 'grvVouchersIssues';
   voucherNoPlaceholderText$: Observable<string>;
+  fmInventoryJournal: FormModel = {
+    formName: '',
+    gridViewName: '',
+    entityName: '',
+  };
   fmInventoryJournalLines: FormModel = {
-    formName: 'InventoryJournalLines',
-    gridViewName: 'grvInventoryJournalLines',
+    formName: '',
+    gridViewName: '',
     entityName: '',
   };
   gridHeight: number;
@@ -104,17 +112,18 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.inventoryJournal = dialog.dataService.dataSelected;
-    this.entityMaster = dialogData.data?.entityMaster;
+    this.fmInventoryJournal = dialogData.data?.formModelMaster;
+    this.fmInventoryJournalLines = dialogData.data?.formModelLine;
     this.funcID = dialog.formModel.funcID;
     this.cache
-      .gridViewSetup('InventoryJournals', 'grvInventoryJournals')
+      .gridViewSetup(this.fmInventoryJournal.formName, this.fmInventoryJournal.gridViewName)
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
         }
       });
     this.cache
-    .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
+    .gridViewSetup(this.fmInventoryJournalLines.formName, this.fmInventoryJournalLines.gridViewName)
     .subscribe((res) => {
       if (res) {
         this.gridViewSetupLine = res;
@@ -123,19 +132,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         });
       }
     });
-    switch(this.funcID)
-    {
-      case 'ACT0708':
-        this.cache.valueList(this.vllReceipt).subscribe((res) => {
-          this.fmInventoryJournalLines.entityName = res?.datas[1].value;
-        });
-        break;
-      case 'ACT0714':
-        this.cache.valueList(this.vllIssue).subscribe((res) => {
-          this.fmInventoryJournalLines.entityName = res?.datas[1].value;
-        });
-        break;
-    }
   }
 
   //#endregion
@@ -149,39 +145,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.inventoryJournal);
-    (this.elementRef.nativeElement as HTMLElement).addEventListener(
-      'keyup',
-      (e: KeyboardEvent) => {
-        if (e.key == 'Tab') {
-          if (this.gridInventoryJournalLine) {
-            this.gridInventoryJournalLine.autoAddRow = true;
-          }  
-          if (document.activeElement.className == 'e-tab-wrap') {
-            var element = document.getElementById('btnadd');
-            element.focus();
-          }
-        }
-      }
-    );
-    (document.body as HTMLElement).addEventListener(
-      'click',
-      (e: any) => {
-        if (
-          e.target.closest('.e-grid') == null &&
-          e.target.closest('.e-popup') == null &&
-          e.target.closest('.edit-value') == null
-        ) {
-          if ( this.modeGrid == "1" || this.gridInventoryJournalLine.gridRef.isEdit) {
-            this.gridInventoryJournalLine.endEdit();
-            this.gridInventoryJournalLine.autoAddRow = false;
-          }
-        }else{
-          if (this.gridInventoryJournalLine) {
-            this.gridInventoryJournalLine.autoAddRow = false;
-          }
-        }
-      }
-    );
     this.dt.detectChanges();
   }
 
@@ -242,22 +205,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         case 'memo':
           this.inventoryJournal.memo = e.data;
           break;
-        case 'currencyid':
-          {
-            this.inventoryJournal.currencyID = e.data;
-            this.api.exec('IV', 'InventoryJournalsBusiness', 'GetExchangeRateAsync', [this.inventoryJournal])
-            .subscribe((res: any) => {
-              this.inventoryJournal.exchangeRate = res.exchangeRate;
-              this.form.formGroup.patchValue(this.inventoryJournal);
-            });
-          }
-          break;
-          break;
         case 'voucherdate':
           this.inventoryJournal.voucherDate = e.data;
-          break;
-        case 'exchangerate':
-          this.inventoryJournal.exchangeRate = e.data;
           break;
       }
     }
@@ -296,7 +245,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     ];
     if (postFields.includes(e.field)) {
       this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'ValueChangedAsync', [
+        .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
           e.field,
           this.inventoryJournal,
           e.data,
@@ -376,15 +325,16 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    if (this.modeGrid == "2" || !this.gridInventoryJournalLine.gridRef.isEdit) {
-      if (this.hasSaved) {
-        this.dialog.close({
-          update: true,
-          data: this.inventoryJournal,
-        });
-      } else {
-        this.dialog.close();
-      }
+    if (this.isSaveMaster ) {
+      this.onSaveMaster();
+    }
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.inventoryJournal,
+      });
+    } else {
+      this.dialog.close();
     }
   }
 
@@ -439,9 +389,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   save(isclose: boolean)
   {
-    if (this.modeGrid == "2" || !this.gridInventoryJournalLine.gridRef.isEdit)
-    {
-      this.loading = true;
+    this.loading = true;
       switch (this.formType) {
         case 'add':
         case 'copy':
@@ -495,7 +443,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.journal,
               this.inventoryJournal,
               'IV',
-              this.entityMaster,
+              this.fmInventoryJournal.entityName,
               this.form,
               this.formType === 'edit',
               () => {
@@ -537,7 +485,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.journal,
             this.inventoryJournal,
             'IV',
-            this.entityMaster,
+            this.fmInventoryJournal.entityName,
             this.form,
             this.formType === 'edit',
             () => {
@@ -561,11 +509,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           );
           break;
       }
-    }
   }
 
   setDefault(o) {
-    return this.api.exec('IV', 'InventoryJournalsBusiness', 'SetDefaultAsync', [
+    return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
@@ -573,7 +520,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   loadInit(){
     if (this.formType == 'edit') {
       this.api
-        .exec('IV', 'InventoryJournalLinesBusiness', 'LoadDataAsync', [
+        .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
           this.inventoryJournal.recID,
         ])
         .subscribe((res: any) => {
@@ -586,14 +533,20 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
         });
     }
-    if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
+    // if(this.formType == 'copy' && this.inventoryJournal.warehouseID)
+    // {
+    //   this.getWarehouseName(this.inventoryJournal.warehouseID);
+    // }
+    // if(this.formType == 'add')
+    // {
+    //   this.setWarehouseID();
+    // }
+
+    if(this.inventoryJournal.warehouseID)
     {
       this.getWarehouseName(this.inventoryJournal.warehouseID);
     }
-    if(this.formType == 'add')
-    {
-      this.setWarehouseID();
-    }
+
     if (
       this.inventoryJournal &&
       this.inventoryJournal.unbounds &&
@@ -605,7 +558,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
     else{
       this.api
-        .exec('IV', 'InventoryJournalsBusiness', 'SetUnboundsAsync', [
+        .exec('IV', 'VouchersBusiness', 'SetUnboundsAsync', [
           this.inventoryJournal
         ])
         .subscribe((res: any) => {
@@ -643,10 +596,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
     this.total = totals;
     this.inventoryJournal.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT')
-    if (this.isSaveMaster ) {
-      this.onSaveMaster();
-    }
+    this.total = totals.toLocaleString('it-IT');
   }
 
   addRow(){
@@ -675,7 +625,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.journal,
               this.inventoryJournal,
               'IV',
-              this.entityMaster,
+              this.fmInventoryJournal.entityName,
               this.form,
               this.formType === 'edit',
               () => {
@@ -709,10 +659,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   loadModegrid() {
-    let data = new InventoryJournalLines();
+    let data = new VouchersLines();
     let idx;
     this.api
-      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
+      .exec<any>('IV', 'VouchersLinesBusiness', 'SetDefaultAsync', [
         this.inventoryJournal,
         data,
       ])
@@ -743,17 +693,17 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       dataInventoryJournal: this.inventoryJournal,
       lockFields: this.lockFields,
       type: type,
-      entityLine: this.fmInventoryJournalLines.entityName,
+      formModelLine: this.fmInventoryJournalLines,
       funcID: this.funcID,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'InventoryJournalLines';
-    dataModel.gridViewName = 'grvInventoryJournalLines';
+    dataModel.formName = this.fmInventoryJournalLines.formName;
+    dataModel.gridViewName = this.fmInventoryJournalLines.gridViewName;
     dataModel.entityName = this.fmInventoryJournalLines.entityName;
     opt.FormModel = dataModel;
     this.cache
-      .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
+      .gridViewSetup('VouchersLines', 'grvVouchersLines')
       .subscribe((res) => {
         if (res) {
           var dialogs = this.callfc.openForm(
@@ -800,18 +750,18 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           type: 'edit',
           lockFields: this.lockFields,
           journal: this.journal,
-          entityLine: this.fmInventoryJournalLines.entityName,
+          formModelLine: this.fmInventoryJournalLines,
           funcID: this.funcID,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
-        dataModel.formName = 'InventoryJournalLines';
-        dataModel.gridViewName = 'grvInventoryJournalLines';
+        dataModel.formName = this.fmInventoryJournalLines.formName;
+        dataModel.gridViewName = this.fmInventoryJournalLines.gridViewName;
         dataModel.entityName = this.fmInventoryJournalLines.entityName;
         opt.FormModel = dataModel;
         opt.Resizeable = false;
         this.cache
-          .gridViewSetup('InventoryJournalLines', 'grvInventoryJournalLines')
+          .gridViewSetup('VouchersLines', 'grvVouchersLines')
           .subscribe((res) => {
             if (res) {
               var dialogs = this.callfc.openForm(
@@ -842,7 +792,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   copyRow(data) {
     let idx;
     this.api
-      .exec<any>('IV', 'InventoryJournalLinesBusiness', 'SetDefaultAsync', [
+      .exec<any>('IV', 'VouchersLinesBusiness', 'SetDefaultAsync', [
         this.inventoryJournal,
         data,
       ])
@@ -903,7 +853,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.api
                 .exec(
                   'IV',
-                  'InventoryJournalLinesBusiness',
+                  'VouchersLinesBusiness',
                   'UpdateAfterDelete',
                   [this.inventoryJournalLines]
                 )
@@ -1149,7 +1099,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   getWarehouseName(warehouseID: any){
-    this.api.exec('IV', 'InventoryJournalsBusiness', 'GetWarehouseNameAsync', [warehouseID])
+    this.api.exec('IV', 'VouchersBusiness', 'GetWarehouseNameAsync', [warehouseID])
       .subscribe((res: any) => {
         if (res.length > 0) {
           this.inventoryJournal.warehouseName = res;
@@ -1162,16 +1112,16 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     switch(this.funcID)
       {
         case 'ACT0708':
-          if(this.inventoryJournal.warehouseReceipt)
+          if(this.inventoryJournal.warehouseID)
           {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
+            // this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseReceipt;
             this.getWarehouseName(this.inventoryJournal.warehouseID);
           }
           break;
         case 'ACT0714':
-          if(this.inventoryJournal.warehouseIssue)
+          if(this.inventoryJournal.warehouseID)
           {
-            this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
+            // this.inventoryJournal.warehouseID = this.inventoryJournal.warehouseIssue;
             this.getWarehouseName(this.inventoryJournal.warehouseID);
           }
           break;

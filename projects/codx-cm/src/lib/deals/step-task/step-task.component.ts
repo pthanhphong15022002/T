@@ -12,8 +12,9 @@ import { tmpInstancesStepsReasons } from '../../models/tmpModel';
 })
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('task') task : CodxStepTaskComponent;
-  @Input() typeTask = 1;
-  @Input() customerID = 1;
+  @Input() typeTask = 1; // 2 = hợp đồng
+  @Input() customerID = '';
+  @Input() isPause = false;
   @Input() applyFor;
   @Input() isDataLoading: any;
   @Input() dataSelected: any;

@@ -19,7 +19,7 @@
                     </div>
                     <div class="mb-1">
                         <ng-container *ngIf="manager?.positionID; else lblPositionName">
-                            <span class="text-gray-500">{{manager.positionName? manager.positionName:
+                            <span class="text-gray-700">{{manager.positionName? manager.positionName:
                                 manager.positionID}}</span>
                         </ng-container>
                         <ng-template #lblPositionName>
@@ -64,7 +64,7 @@
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
             [dataValues]="orgUnitID" [autoLoad]="false"
             [showRowNumber]="showRowNumber" [idField]="idField" [predicates]="predicates" [rowHeight]="rowHeight"
-            height="auto" [autoFitColumns]="false" [allowResizing]="false" [allowFiltering]="false"
+            [height]="80" [autoFitColumns]="false" [allowResizing]="false" [allowFiltering]="false"
             [allowSorting]="true" [hideMoreFunc]="true"></codx-gridview-v2>
     </div>
 </div>

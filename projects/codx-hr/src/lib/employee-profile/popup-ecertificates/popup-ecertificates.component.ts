@@ -15,6 +15,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-ecertificates',
@@ -44,6 +45,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
 
   displayForeignCert = false;
 
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
@@ -167,7 +169,8 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     });
   }
 
-  onSaveForm() {
+  async onSaveForm() {
+    debugger
     if(!this.certificateObj.foreignLanguage && this.certificateObj.certificateType == '3'){
       this.notify.notifyCode('SYS009', null, this.fieldHeaderTexts['ForeignLanguage']);
       return;
@@ -188,6 +191,17 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
           return;
       }
     }
+
+    if(
+      this.attachment.fileUploadList &&
+      this.attachment.fileUploadList.length > 0
+      ) {
+      this.attachment.objectId=this.certificateObj?.recID;
+      (await (this.attachment.saveFilesObservable())).subscribe(
+      (item2:any)=>{
+            debugger
+          });
+      }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
@@ -226,7 +240,12 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     console.log(this.listView);
   }
 
+  openFormUploadFile() {
+    this.attachment.uploadFile();
+  }
+
   valueChange(event, cbxComponent: any = null) {
+    debugger
     if(event.data == '3'){
       this.displayForeignCert = true;
     }
@@ -242,6 +261,10 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         }
       }
     }
+  }
+
+  async addFiles(evt){
+    this.certificateObj.attachments = evt.data.length;
   }
 
   setIssuedPlace() {
