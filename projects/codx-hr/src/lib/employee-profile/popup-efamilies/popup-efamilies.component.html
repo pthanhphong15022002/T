@@ -1,6 +1,6 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
@@ -287,7 +287,7 @@
         >
         </codx-label> -->
 
-    <div class="extend-function">
+    <!-- <div class="extend-function">
       <hr />
       <div class="d-flex justify-content-center">
         <div class="d-flex align-items-center w-auto extend-title">
@@ -299,6 +299,13 @@
           </span>
         </div>
       </div>
+    </div> -->
+
+    <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+      <codx-label
+      default="Giảm trừ gia cảnh"
+      [formModel]="formModel"
+    ></codx-label>
     </div>
 
     <div class="form-group row">

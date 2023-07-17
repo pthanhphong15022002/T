@@ -11,7 +11,7 @@
 <ng-template #body>
     <ng-container *ngFor=" let report of listReport">
     <div class="d-flex justify-content-end me-3">
-        <button type="button" class="btn btn-light-primary w-100 text-center" (click)="testReport(report)">
+        <button type="button" class="btn btn-light-primary w-100 text-center" (click)="gotoReportDetail(report)">
             {{ report.reportName }}
         </button>
     </div>

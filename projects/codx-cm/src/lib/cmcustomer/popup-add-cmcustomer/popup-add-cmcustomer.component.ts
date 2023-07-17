@@ -122,12 +122,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.recID = dt?.data[2];
     }
     this.recID = dt?.data[2];
-    if (this.action == 'edit' || this.action == 'copy') {
-      if (this.data?.objectType == '1') {
-        this.refValueCbx = 'CMCustomers';
-      } else {
-        this.refValueCbx = 'CMPartners';
-      }
+    if (this.data?.objectType == '1') {
+      this.refValueCbx = 'CMCustomers';
+    } else {
+      this.refValueCbx = 'CMPartners';
     }
   }
 
@@ -363,7 +361,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   valueChangeIndustries(e) {
-    if (e?.data != this.data?.industries){
+    if (e?.data != this.data?.industries) {
       this.data[e.field] = e?.data;
     }
   }

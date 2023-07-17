@@ -13,6 +13,7 @@ export class ContractsService {
     { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
     { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
     { name: 'extend', textDefault: 'Gia hạn', icon: 'icon-tune', isActive: false },
+    { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
     // { name: 'termsAndRelated', textDefault: 'Điều khoản và hồ sơ liên quan', icon: 'icon-more', isActive: false },
   ];
   constructor(

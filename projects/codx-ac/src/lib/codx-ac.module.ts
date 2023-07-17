@@ -56,7 +56,7 @@ import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-a
 import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
 import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
-import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
+import { PopAddLineReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
 import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
 import { TableLineDetailStaticComponent } from './vouchers/sales-invoices/components/table-line-detail-static/table-line-detail-static.component';
@@ -81,9 +81,7 @@ import { PopAddInvoiceSetlementComponent } from './periodic/invoice-setlement/po
 import { ClosingDataComponent } from './periodic/closing-data/closing-data.component';
 import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
-import { PopUpCashReportComponent } from './vouchers/cash-payments/pop-up-cash-report/pop-up-cash-report.component';
 import { TableAccountingComponent } from './vouchers/sales-invoices/components/table-accounting/table-accounting.component';
-
 export const routes: Routes = [
   {
     path: '',
@@ -270,7 +268,7 @@ export const routes: Routes = [
     PopAddReceiptTransactionComponent,
     ReportsComponent,
     ApprovalsComponent,
-    PopAddLineinventoryComponent,
+    PopAddLineReceiptTransactionComponent,
     Group067Component,
     GroupShareComponent,
     RunPeriodicComponent,
@@ -302,7 +300,6 @@ export const routes: Routes = [
     TableLineDetailStaticComponent,
     JournalV2Component,
     LayloutJournalComponent,
-    PopUpCashReportComponent,
     TableAccountingComponent,
   ],
   exports: [RouterModule],

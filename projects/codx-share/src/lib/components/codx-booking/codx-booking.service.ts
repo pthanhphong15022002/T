@@ -31,6 +31,25 @@ export class CodxBookingService {
     );
   }
 
+  autoApproveStationery(recID:string, refID:string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AutoApproveStationeryAsync',
+      [recID,refID]
+    );
+  }
+  releaseStationeryOfRoom(recID:string, refID:string, processID :string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'ReleaseStationeryAsync',
+      [recID,refID,processID]
+    );
+  }
+
   getListRO() {
     return this.api.execSv(
       'EP',

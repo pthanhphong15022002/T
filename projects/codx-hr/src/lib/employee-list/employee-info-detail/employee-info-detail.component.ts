@@ -1485,6 +1485,18 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
   }
 
+  deleteFile(data, formModel){
+    //code xóa file luôn khi record chứa file bị xóa
+    return this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'DeleteByObjectIDAsync',
+        [data.recID, formModel.entityName, true]
+      );
+}
+
   initEmpProcess() {
     if (this.employeeID) {
       if (!this.lstContractType) {
@@ -2198,6 +2210,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+                    this.deleteFile(data, this.eDegreeFormModel).subscribe((res) =>{
+                      debugger
+                    })
                     this.updateGridView(this.eDegreeGrid, 'delete', null, data);
                     // (this.eDegreeGrid?.dataService as CRUDService)
                     //   ?.remove(data)
@@ -2244,6 +2259,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+                    this.deleteFile(data,this.eCertificateFormModel).subscribe((res) => {
+                      debugger
+                    })
                     // let i = this.lstCertificates.indexOf(data);
                     // if (i != -1) {
                     //   this.lstCertificates.splice(i, 1);
@@ -3365,7 +3383,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.eCertificateGrid?.dataService;
     option.FormModel = this.eCertificateFormModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {
@@ -3393,7 +3411,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.eDegreeGrid?.dataService;
     option.FormModel = this.eDegreeFormModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {

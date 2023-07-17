@@ -540,6 +540,7 @@ export class TabModel {
   textDefault: string;
   template?: any;
   isActive: boolean = false;
+  icon: string = '';
 }
 
 export class DP_Activities {

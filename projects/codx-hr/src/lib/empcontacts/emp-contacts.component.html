@@ -30,7 +30,7 @@
     </div>
     <div class="w-10 text-dark fw-bold p-3 fw-500">
       <codx-label fiedName="Status" [setRequire]="false" [formModel]="view.formModel" [gridViewName]="'grvEmpContacts'"
-        [formName]="'EmpContacts'" [default]="'Trạng thái'"></codx-label>
+        [formName]="'grvEmpContacts'" [default]="'Trạng thái'"></codx-label>
     </div>
   </div>
 </ng-template>
@@ -64,35 +64,23 @@
         <span class="data-text-color" *ngIf="data.birthday; else noBirthDay">
           {{data.birthday| fmDT}}
         </span>
-        <ng-template #noBirthDay>
-          <span class="place-holder">
-            {{grvSetup['Birthday']?.headerText}}
-          </span>
-        </ng-template>
       </div>
     </div>
     <!-- Di động -->
     <div class="w-20 p-3">
       <div class="d-flex align-items-center">
-        <span class="icon-phone_android icon-16 me-2"></span>
         <span class="data-text-color" *ngIf="data.phone; else noPhone">
           <span [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
         </span>
-        <ng-template #noPhone>
-          <span class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
-        </ng-template>
       </div>
     </div>
     <!-- Email -->
     <div class="w-20 p-3">
       <div class="d-flex align-items-center ">
-        <span class="icon-email icon-16 me-2"></span>
         <span class="data-text-color" *ngIf="data.email; else noEmail">
-          <span class="line-clamp line-clamp-1" [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
+          <span class="line-clamp line-clamp-1"
+            [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
         </span>
-        <ng-template #noEmail>
-          <span class="place-holder">{{grvSetup['Email']?.headerText}}</span>
-        </ng-template>
       </div>
     </div>
     <!-- Ngày vào làm -->
@@ -101,9 +89,7 @@
         <span class="data-text-color" *ngIf="data.joinedOn; else noJoinedOn">
           {{data.joinedOn | fmDT}}
         </span>
-        <ng-template #noJoinedOn>
-          <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
-        </ng-template>
+
       </div>
     </div>
     <!-- Tình trạng -->
@@ -127,28 +113,52 @@
 
 <ng-template #cardTemp let-data>
   <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
-    imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" [title]="data.employeeName"
-    [dataItem]="data" [imageObjType]="view.formModel.entityName" [hideMF]="true" [footer]="footer"
-    [desc]="data.birthday? (data.birthday | fmDT):  placeholder('Birthday')" [imageObjName]="data.employeeName"
-    [subTitle]="data.positionName? data.positionName: 
-                        (data.positionID? data.positionID : placeholder('PositionID'))">
+    imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" [dataItem]="data"
+    [imageObjType]="view.formModel.entityName" [hideMF]="true" [imageObjName]="data.employeeName"
+    [titleTmp]="subtitleTmp">
   </codx-card-center>
+  <ng-template #subtitleTmp>
+    <div class="d-flex flex-column align-items-center">
+      <span #nameField class="data-text-color data-text-width line-clamp line-clamp-1 fw-bold mb-1"
+        [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip : null">{{data.employeeName}}</span>
+      <span #positionField class="data-text-color data-text-width line-clamp line-clamp-1 mb-1"
+        [ngbTooltip]="positionField.scrollHeight > positionField.clientHeight? positionTooltip : null">
+        {{data.positionName}}
+      </span>
+      <span *ngIf="data.birthday; else noBirthDay">{{data.birthday | fmDT }}</span>
+      <span *ngIf="data.phone; else noPhone"
+        [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
+      <span class="line-clamp line-clamp-1" 
+        [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
+    </div>
+  </ng-template>
   <ng-template #footer let-data>
     <div class="d-flex align-items-center flex-center d-phone">
-      <!-- <span class="icon-phone_android icon-16 me-2"></span> -->
-      <span class="text-gray-700">
+      <span class="text-gray-700" *ngIf="data.phone; else noPhone">
         <span #phone [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
       </span>
     </div>
     <div class="d-flex align-items-center flex-center d-mail">
-      <!-- <span class="icon-email icon-16 me-2"> </span> -->
-      <span class="text-gray-700">
-        <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
+      <span class="text-gray-700" *ngIf="data.email; else noEmail">
+        <span #email class="line-clamp line-clamp-1"
+          [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
       </span>
     </div>
   </ng-template>
+  <ng-template #positionTooltip>
+    <div class="d-flex flex-column">
+      <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+      <span class="data-text-color">{{data.positionName?
+        data.positionName : data.positionID}}</span>
+    </div>
+  </ng-template>
+  <ng-template #nameTooltip>
+    <div class="d-flex flex-column">
+      <span class="label-text-color">{{grvSetup['EmployeeName'].headerText}}</span>
+      <span class="data-text-color">{{data.employeeName}}</span>
+    </div>
+  </ng-template>
 </ng-template>
-
 
 
 
@@ -159,7 +169,7 @@
 </ng-template>
 <ng-template #tmpTreeItemDetail let-data>
   <lib-employee-list-by-org [showManager]="false" [formModel]="view.formModel" [editable]="false" rowHeight="50"
-    modeView="contact" [orgUnitID]="itemSelected?.orgUnitID" [showRowNumber]="true">
+    modeView="contact" [orgUnitID]="itemSelected?.orgUnitID" [showRowNumber]="false">
   </lib-employee-list-by-org>
 </ng-template>
 
@@ -200,11 +210,6 @@
       <span class="data-text-color" *ngIf="data.birthday; else noBirthDay">
         {{data.birthday| fmDT}}
       </span>
-      <ng-template #noBirthDay>
-        <span class="place-holder">
-          {{grvSetup['Birthday']?.headerText}}
-        </span>
-      </ng-template>
     </div>
   </div>
 </ng-template>
@@ -214,32 +219,38 @@
     <span class="data-text-color" *ngIf="data.joinedOn; else noJoinedOn">
       {{data.joinedOn | fmDT}}
     </span>
-    <ng-template #noJoinedOn>
-      <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
-    </ng-template>
   </div>
 </ng-template>
 
 <ng-template #itemPhone let-data>
   <div class="d-flex align-items-center employee-add">
-    <span class="icon-phone_android icon-16 me-2"></span>
     <span class="data-text-color" *ngIf="data.phone; else noPhone">
-      <span [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
+      <span [innerHTML]="data.phone | formatvalue : view.formModel:'phone' | async"></span>
     </span>
-    <ng-template #noPhone>
-      <span class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
-    </ng-template>
   </div>
 </ng-template>
 
 <ng-template #itemEmail let-data>
   <div class="d-flex align-items-center employee-email">
-    <span class="icon-email icon-16 me-2"></span>
-    <span class="data-text-color" *ngIf="data.email; else noEmail">
-      <span #email [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
+    <span class="data-text-color" *ngIf="data.email;else noEmail">
+      <span class="line-clamp line-clamp-1" #email
+        [innerHTML]="data.email | formatvalue : view.formModel:'email' | async"></span>
     </span>
-    <ng-template #noEmail>
-      <span class="place-holder">{{grvSetup['Email']?.headerText}}</span>
-    </ng-template>
   </div>
+</ng-template>
+
+
+<ng-template #noEmail>
+  <span class="place-holder">{{grvSetup['Email']?.headerText}}</span>
+</ng-template>
+<ng-template #noPhone>
+  <span class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
+</ng-template>
+<ng-template #noBirthDay>
+  <span class="place-holder">
+    {{grvSetup['Birthday']?.headerText}}
+  </span>
+</ng-template>
+<ng-template #noJoinedOn>
+  <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
 </ng-template>

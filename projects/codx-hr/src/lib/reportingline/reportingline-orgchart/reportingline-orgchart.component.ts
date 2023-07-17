@@ -1,17 +1,28 @@
+import { concat } from 'rxjs';
+import { style } from '@angular/animations';
 import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import {
-  ConnectorModel,
-  Diagram,
   DiagramComponent,
-  DiagramTools,
+  LineDistribution,
+} from '@syncfusion/ej2-angular-diagrams';
+import {
   NodeModel,
-  ShapeStyleModel,
+  ConnectorModel,
+  DiagramTools,
+  Diagram,
+  DataBinding,
+  ComplexHierarchicalTree,
   SnapConstraints,
   SnapSettingsModel,
-} from '@syncfusion/ej2-angular-diagrams';
-import { DataManager } from '@syncfusion/ej2-data';
-import { ApiHttpService, CallFuncService, NotificationsService, RequestOption, SidebarModel } from 'codx-core';
+  LayoutModel,
+  LayoutOrientation,
+  ConnectionPointOrigin,
+
+} from '@syncfusion/ej2-diagrams';
+import { ApiHttpService, CRUDService, CallFuncService, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { PopupAddPositionsComponent } from '../popup-add-positions/popup-add-positions.component';
+import { DataManager } from '@syncfusion/ej2-data';
+Diagram.Inject(DataBinding, ComplexHierarchicalTree, LineDistribution);
 
 @Component({
   selector: 'lib-reportingline-orgchart',
@@ -24,7 +35,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() positionID: string = "";
   @Input() funcID: string = "";
   @Input() formModel: any;
-  @Input() view: any;
+  @Input() view: ViewsComponent;
 
   width: number = 250;
   height: number = 150;
@@ -34,9 +45,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   minHeight: number = 150;
   employees: any[] = [];
   employeeInfor: any = null;
-  layout: Object = {
-    type: 'HierarchicalTree',
-    verticalSpacing: 30,
+  layout: LayoutModel = {
+    type: 'ComplexHierarchicalTree',
+    connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
+    verticalSpacing: 70,
     horizontalSpacing: 40,
     enableAnimation: true,
   };
@@ -44,7 +56,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
-  @ViewChild('diagram') diagram: any;
+  firstLoadDiagram: boolean = true;
+  @ViewChild('diagram') diagram: DiagramComponent;
   datasetting: any = null;
   data: any = null;
   onDoneLoading: boolean = false;
@@ -55,44 +68,53 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     private callfc: CallFuncService,
     private notiService: NotificationsService,
   ) { }
-
   ngOnInit(): void {
-    console.log(this.view);
     this.api.execSv<any>('SYS', 'AD', 'CompanySettingsBusiness', 'GetAsync')
-    .subscribe((res) => {
-      if (res) {
-        this.isCorporation = res.isCorporation;
-      }
-    });
-    this.getDataPositionByID(this.positionID);
+      .subscribe((res) => {
+        if (res) {
+          this.isCorporation = res.isCorporation;
+        }
+      });
+    //this.getDataPositionByID(this.positionID);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
       this.positionID = changes.positionID.currentValue;
+      this.firstLoadDiagram = true;
       this.getDataPositionByID(this.positionID);
       this.changeDetectorRef.detectChanges();
     }
   }
-
-  public  connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
-    connector.targetDecorator.shape = 'None';
+  public created(): void {
+    if(this.diagram){
+      this.diagram.fitToPage();
+      this.firstLoadDiagram = false;
+    }
+  }
+  public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
+    //connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     // connector.constraints = 0;
     connector.cornerRadius = 5;
+    connector.targetDecorator.height = 5;
+    connector.targetDecorator.width = 5;
     connector.style!.strokeColor = '#6d6d6d';
+    let sourceNode = diagram.getNodeObject(connector.sourceID).data;
+    let targetNode = diagram.getNodeObject(connector.targetID).data;
+    if (sourceNode['positionID'] === targetNode['reportTo2'])
+      connector.style.strokeDashArray = '5,5';
     return connector;
   }
 
   public nodeDefaults(node: NodeModel): NodeModel {
     return node;
   }
-
   newDataManager(): any {
     return {
       id: 'positionID',
-      parentId: 'reportTo',
+      parentId: 'parents',
       dataManager: new DataManager(this.data as JSON[]),
       //binds the external data with node
       doBinding: (nodeModel: NodeModel, data: any, diagram: Diagram) => {
@@ -117,7 +139,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     if (data.length > 0) {
       this.data = data;
       var setting = this.newDataManager();
-      setting.dataManager = new DataManager(this.data);
+      //setting.dataManager = new DataManager(this.data);
       this.datasetting = setting;
       this.changeDetectorRef.detectChanges();
     }
@@ -128,7 +150,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetDataOrgChartAsync", [positionID])
         .subscribe((res: any) => {
           if (res) {
-            this.data = res;
+            this.data = JSON.parse(JSON.stringify(res))
             //this.renewData();
             this.setDataOrg(this.data);
           }
@@ -138,14 +160,14 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
 
   }
 
-  mouseUp(dataNode: any, evt: any) {
-    this.positionID = dataNode.positionID;
-    var exist = this.checkExistParent(this.positionID);
-    if (this.diagram && exist) {
-      var tool = this.diagram.getTool('LayoutAnimation');
-      tool.mouseUp(this.diagram.eventHandler.eventArgs);
-    }
-  }
+  // mouseUp(dataNode: any, evt: any) {
+  //   this.positionID = dataNode.positionID;
+  //   var exist = this.checkExistParent(this.positionID);
+  //   if (this.diagram && exist) {
+  //     var tool = this.diagram.getTool('LayoutAnimation');
+  //     tool.mouseUp(this.diagram.eventHandler.eventArgs);
+  //   }
+  // }
 
   loadDataChild(node: any, element: HTMLElement) {
     let result = [];
@@ -164,31 +186,31 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
     else {
       if (node.positionID) {
-        this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetChildOrgChartAsync", [node.positionID])
+        let listPos = [];
+        this.data.forEach(function (object) {
+          var posID = object.positionID;
+          listPos.push(posID);
+        });
+        this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetChildOrgChartAsync", [node.positionID, listPos])
           .subscribe((res: any) => {
             if (res) {
-              result = this.data.concat(res);
-              if (result.length > 0) {
-                result.forEach(element => {
-                  if (element.positionID == node.positionID) {
-                    element.loadChildrent = true;
-                  }
-                });
-                this.data = JSON.parse(JSON.stringify(result))
-                // this.data.filter((e , index) => {
-                //   this.data.indexOf(e) === index
-
-                //   return this.data;
-                // })
+              if (res.length > 0) {
+                result = this.data.concat(res);
               }
-              //this.renewData();
-              this.setDataOrg(this.data);
-            }
+            } else result = this.data;
+            result.forEach(element => {
+              if (element.positionID == node.positionID) {
+                element.loadChildrent = true;
+              }
+            });
+            this.data = JSON.parse(JSON.stringify(result))
+            //this.renewData();
+            this.setDataOrg(this.data);
           });
       }
     }
-
   }
+
   checkExistParent(parentID: string): boolean {
     var dt = this.data.filter((x) => x.positionID === parentID);
     if (dt && dt.length > 0) return true;
@@ -224,7 +246,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   copy(event: any, data: any) {
     if (event && data) {
       this.view.dataService.dataSelected = data;
-      this.view.dataService.copy().subscribe((res) => {
+      (this.view.dataService as CRUDService).copy().subscribe((res) => {
         if (res) {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -242,6 +264,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
             .closed.subscribe((res) => {
               if (res?.event) {
                 let node = res.event;
+
               }
             });
         }
@@ -255,7 +278,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '800px';
-      this.view.dataService
+      (this.view.dataService as CRUDService)
         .edit(this.view.dataService.dataSelected)
         .subscribe((result) => {
           let object = {
@@ -271,7 +294,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
             PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe(res => {
               if (res) {
-
+                if (res.positionID === this.positionID) {
+                  this.data = this.data.filter(x => x.positionID !== data.positionID).concat(res.event);
+                  this.setDataOrg(this.data);
+                }
               }
             });
 
@@ -287,9 +313,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     return true;
   }
   delete(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
+    (this.view.dataService as CRUDService)
+      .delete([data], true, (opt) =>
         this.beforeDel(opt), null, null, null, null, null
       )
       .subscribe((res) => {
@@ -297,7 +322,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
           this.notiService.notifyCode('SYS008')
           this.data = this.data.filter((x) => x.positionID !== data.positionID);
           this.setDataOrg(this.data);
-        }else{
+        } else {
           //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
         }
       });
@@ -311,6 +336,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //     else element.loadChildrent = true;
   //   });
   // }
-
+  searchText: string = "";
+  searchUser(event: any) {
+    this.searchText = event;
+  }
 
 }

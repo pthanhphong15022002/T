@@ -491,7 +491,7 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <!-- <button class="btn btn-primary" (click)="onSaveForm(true)"> -->
-    <button class="btn btn-primary" (click)="save()">
+    <button class="btn btn-primary" (click)="save()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

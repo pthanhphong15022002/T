@@ -79,7 +79,7 @@ export class TargetsComponent
   //calendar - tháng - quý - năm
   date: any = new Date();
   ops = ['m', 'q', 'y'];
-
+  year: number;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -175,12 +175,11 @@ export class TargetsComponent
       TextField: 'userName',
       Title: 'Owners',
     };
-
   }
   //#endregion setting schedule
 
   //#region load tree
-  loadTreeData(year){
+  loadTreeData(year) {
     this.loadedTree = false;
     var resource = new DataRequest();
     resource.predicates = 'Period=@0';
@@ -222,7 +221,7 @@ export class TargetsComponent
 
   selectionChange(parent) {
     if (parent.isItem) {
-      parent.data.items= parent?.data?.items;
+      parent.data.items = parent?.data?.items;
     }
   }
   //#endregion
@@ -230,6 +229,7 @@ export class TargetsComponent
   //#region change Calendar ejs
   changeCalendar(data: any) {
     var year = parseInt(data?.fromDate?.getFullYear());
+    this.year = year;
     this.loadTreeData(year?.toString());
   }
   //#endregion
@@ -273,16 +273,28 @@ export class TargetsComponent
     }
   }
 
-  changeDataMF(e, data) {
+  changeDataMF(e, data, type = 'schedule') {
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS04':
             res.disabled = true;
             break;
+          case 'SYS02':
+            if (type == 'tree') res.disabled = true;
+
+            break;
         }
       });
     }
+  }
+
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  changeMoreMF(e) {
+    this.changeDataMF(e.e, e.data, e.type);
   }
   //#endregion
 
@@ -300,6 +312,22 @@ export class TargetsComponent
       var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
+        if (e != null && e?.event != null) {
+          if (e?.event[0] != null && e?.event[0][1] != null) {
+            var data = e?.event[0][1];
+            var index = this.lstDataTree.findIndex(
+              (x) => x.businessLineID == data?.businessLineID
+            );
+            if (index != -1) {
+              this.lstDataTree[index] = data;
+              // this.lstDataTree.splice(index, 1);
+            }else{
+              this.lstDataTree.push(Object.assign({}, data));
+
+            }
+          }
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
@@ -323,11 +351,25 @@ export class TargetsComponent
           action: 'edit',
           title: this.titleAction,
           lstOwners: lstOwners,
-          lstTargetLines: lstTargetLines
+          lstTargetLines: lstTargetLines,
         };
         var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
+          if (e != null && e?.event != null) {
+            if (e?.event[0] != null && e?.event[0][1] != null) {
+              var data = e?.event[1];
+              var index = this.lstDataTree.findIndex(
+                (x) => x.businessLineID == data?.businessLineID
+              );
+              if (index != -1) {
+                this.lstDataTree[index] = data;
+              }
+              // this.lstDataTree.push(Object.assign({}, data));
+
+              this.detectorRef.detectChanges();
+            }
+          }
         });
       });
   }

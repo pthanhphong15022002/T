@@ -61,7 +61,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   formModel:FormModel = null;
   gridViewSetup: any = null;
   mssgPlaceHolder: string = '';
-  mssgEmtyData: string = '';
+  mssgWP035: string = '';
+  mssgWP038: string = '';
+
   CATEGORY = {
     POST: '1',
     COMMENTS: '2',
@@ -108,13 +110,19 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   //get thiết lập
   getSetting() {
+    // placeholder {0} bạn đang nghĩ gì
     this.cache.message('WP011').subscribe((mssg: any) => {
-      if (mssg) this.mssgPlaceHolder = Util.stringFormat(mssg.defaultName, this.user.userName);
+      if (mssg?.customName) this.mssgPlaceHolder = Util.stringFormat(mssg.customName, this.user.userName);
     });
+    // mesage không có dữ liệu
     this.cache.message('WP035').subscribe((mssg: any) => {
-      if (mssg) this.mssgEmtyData = mssg.defaultName;
+      if (mssg?.customName) this.mssgWP035 = mssg.customName;
     });
-    // get function - formModel 
+    // message bài viết đang được xét duyệt
+    this.cache.message('WP038').subscribe((mssg: any) => {
+      if (mssg?.customName) this.mssgWP038 = mssg.customName;
+    });
+    // get function - formModel - gridviewSetup
     this.cache.functionList('WP')
     .subscribe((func) => {
       if (func) 
@@ -125,7 +133,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.formModel.formName = func.formName;
         this.formModel.gridViewName = func.gridViewName;
         this.formModel.entityName = func.entityName;
-        // get gridviewSetup
         this.cache.gridViewSetup(func.formName, func.gridViewName)
         .subscribe((grd: any) => {
           this.gridViewSetup = grd;

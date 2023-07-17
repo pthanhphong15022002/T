@@ -39,6 +39,7 @@ import {
 //   SocialAuthService,
 // } from '@abacritt/angularx-social-login';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 
 @Component({
   selector: 'app-login',
@@ -77,6 +78,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
     private cache: CacheService,
+    private signalRService:SignalRService,
     private readonly authService: AuthService,
     // private readonly extendAuthService: SocialAuthService,
     private shareService: CodxShareService
@@ -413,6 +415,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   private loginAfter(data: any) {
     if (data) {
       if (!data.isError) {
+        if(this.signalRService.logOut)
+        {
+          this.signalRService.createConnection();
+        }
         this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
         if (this.returnUrl) {
           this.returnUrl = decodeURIComponent(this.returnUrl);

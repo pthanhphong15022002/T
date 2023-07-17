@@ -24,8 +24,8 @@
       <codx-label default="Thông tin chung"></codx-label>
     </div>
     <div class="mb-3">
-      <div class="row">
-        <div class="col-6">
+      <div class="d-flex">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel ">
               <codx-label
@@ -50,7 +50,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
@@ -76,8 +76,8 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-6">
+      <div class="d-flex">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
@@ -102,7 +102,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
@@ -129,8 +129,8 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-6">
+      <div class="d-flex">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
@@ -155,7 +155,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
@@ -182,8 +182,8 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-6">
+      <div class="d-flex">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
@@ -208,7 +208,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="w-50">
           <div class="mb-5px d-flex align-items-top">
             <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
               <codx-label
@@ -258,7 +258,7 @@
 
 <ng-template #field>
   <div class="d-flex flex-column">
-    <ng-container *ngFor="let item of listStep">
+    <ng-container *ngFor="let item of listSteps">
       <codx-fields-detail-temp
         *ngIf="item?.fields?.length > 0 && item?.fields"
         [dataStep]="item"
@@ -274,7 +274,7 @@
   <step-task
     [isDataLoading]="isDataLoading"
     [dataSelected]="dataSelected"
-    [listInstanceStep]="listStep"
+    [listInstanceStep]="listSteps"
     [applyFor]="'5'"
     (continueStep)="continueStep($event)"
     (saveAssignTask)="saveAssignTask($event)"

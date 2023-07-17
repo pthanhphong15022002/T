@@ -56,9 +56,24 @@ export class PopupViewsDetailsProcessComponent
   stepNames = [];
   tabInstances = [];
   tabControl: TabModel[] = [
-    { name: 'Detail', textDefault: 'Chi tiết quy trình', isActive: false },
-    { name: 'Kanban', textDefault: 'Kanban', isActive: true },
-    { name: 'FlowChart', textDefault: 'Biểu đồ', isActive: false },
+    {
+      name: 'Detail',
+      textDefault: 'Chi tiết quy trình',
+      isActive: false,
+      icon: 'icon-storage',
+    },
+    {
+      name: 'Kanban',
+      textDefault: 'Kanban',
+      isActive: true,
+      icon: 'icon-table_chart',
+    },
+    {
+      name: 'FlowChart',
+      textDefault: 'Biểu đồ',
+      isActive: false,
+      icon: 'icon-wallpaper',
+    },
   ];
   listType = [];
   // value

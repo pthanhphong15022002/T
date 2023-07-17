@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService, CodxService } from 'codx-core';
 import { PopupAddEmployeeComponent } from '../popup/popup-add-employee/popup-add-employee.component';
-import { PopupUpdateStatusComponent } from '../popup-update-status/popup-update-status.component';
+import { PopupUpdateStatusComponent } from '../popup/popup-update-status/popup-update-status.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-list-by-org',
@@ -60,6 +61,7 @@ export class EmployeeListByOrgComponent {
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     private callfc: CallFuncService,
+    private shareService: CodxShareService,
     private codxService: CodxService) { }
 
   ngOnInit(): void {
@@ -192,10 +194,15 @@ export class EmployeeListByOrgComponent {
       case 'HRT03a1A07': // cập nhật tình trạng
         this.updateStatus(data, moreFunc.functionID);
         break;
-      case 'HR0032': // xem chi tiết
-        break;
-      case 'SYS002':
-        // this.exportFile();
+      default:
+        this.shareService.defaultMoreFunc(
+          moreFunc,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
         break;
     }
   }

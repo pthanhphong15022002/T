@@ -7,13 +7,16 @@
       class="d-flex align-items-center fw-bold w-100 has-action-menu step-content"
     >
       <div
-        class="d-flex align-items-center w-auto h-30px text-primary border-bottom border-bottom-2 border-primary">
+        class="d-flex align-items-center w-auto h-30px text-primary"
+        [ngStyle]="{'border-bottom': '2px solid' + currentStep?.backgroundColor}"
+      >
         <div
           class="w-20px me-2"
           >
-          <span [ngClass]="currentStep?.icon" class="fs-5-sm"></span>
+          <span [ngClass]="currentStep?.icon" [ngStyle]="{color: currentStep?.iconColor}" class="fs-5-sm"></span>
         </div>
         <span
+        [ngStyle]="{color: currentStep?.textColor}"
           class="line-clamp line-clamp-1 fs-6 fw-bold">
           {{ currentStep.stepName || "" }}</span
         >
@@ -315,20 +318,7 @@
 </ng-template>
 
 <ng-template #buttonTemplate let-data="value">
-  <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView">
-    <!-- <button
-      type="button"
-      class="btn btn-outline-primary me-2"
-      (click)="addGroupTask()"
-    >
-      <i class="icon-add icon-18 text-primary"></i>
-      <codx-label
-        [name]="'lblAddGroup'"
-        [formName]="'DPStepsFields'"
-        [gridViewName]="'grvDPStepsFields'"
-        [default]="'Thêm nhóm công việc'"
-      ></codx-label>
-    </button> -->
+  <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView && isShowBtnAddTask">
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
