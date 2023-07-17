@@ -28,7 +28,7 @@ export class ViewTreeTargetsComponent implements OnInit {
   }
 
   targetToFixed(data) {
-    return data ? this.decimalPipe.transform(data, '1.0-0') : '0';
+    return Math.round(data);
   }
 
   selectionChange(parent) {
