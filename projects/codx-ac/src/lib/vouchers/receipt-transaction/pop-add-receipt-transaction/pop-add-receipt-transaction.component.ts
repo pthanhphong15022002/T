@@ -10,7 +10,7 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Observable } from 'rxjs';
-import { PopAddLineinventoryComponent } from '../pop-add-lineinventory/pop-add-lineinventory.component';
+import { PopAddLineinventoryComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
 

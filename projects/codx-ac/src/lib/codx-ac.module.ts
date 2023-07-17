@@ -56,7 +56,7 @@ import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-a
 import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
 import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
-import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-lineinventory/pop-add-lineinventory.component';
+import { PopAddLineinventoryComponent } from './vouchers/receipt-transaction/pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
 import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
 import { TableLineDetailStaticComponent } from './vouchers/sales-invoices/components/table-line-detail-static/table-line-detail-static.component';
