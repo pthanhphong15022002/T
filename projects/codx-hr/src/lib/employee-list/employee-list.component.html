@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
   [entityName]="entityName" [className]="className" [method]="method" [button]="button" (buttonClick)="add()"
   [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
-  (viewChanged)="viewChanged($event)">
+  (viewChanging)="viewChanged($event)" (viewChanged)="viewChanged($event)">
 </codx-views>
 <!-- <codx-views #view [views]="views" [button]="button" (buttonClick)="add()" service="HR" idField="employeeID"
   [selectedFirst]="true" (selectedChange)="selectedChange($event)"> -->
@@ -224,7 +224,7 @@
 </ng-template>
 <ng-template #tmpMasterDetail>
   <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [editable]="true"
-    [funcID]="funcID" rowHeight="50" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view"
+    [funcID]="funcID" [rowHeight]="80" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view"
     [showRowNumber]="false" (dataChange)="dataChange($event)"></lib-employee-list-by-org>
 </ng-template>
 <!-- end tree_masterDetail -->
