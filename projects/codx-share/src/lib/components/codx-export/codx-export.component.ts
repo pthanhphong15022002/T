@@ -460,6 +460,4 @@ export class CodxExportComponent implements OnInit, OnChanges {
     }
     this.exportGroup.controls['format'].setValue(id);
   }
-
-  
 }

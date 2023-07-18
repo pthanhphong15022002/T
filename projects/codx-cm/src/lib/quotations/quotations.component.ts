@@ -559,6 +559,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
             this.codxCmService
               .getESCategoryByCategoryID(process.processNo)
               .subscribe((res) => {
+                if (!res) {
+                  this.notiService.notifyCode('ES028');
+                  return;
+                }
+
                 if (res.eSign) {
                   //kys soos
                 } else {
@@ -646,10 +651,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                 }
               });
           } else {
-            this.notiService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
+            this.notiService.notifyCode('DP040');
           }
         });
       }

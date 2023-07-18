@@ -91,12 +91,10 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
-import { CustomergroupsComponent } from './customergroups/customergroups.component';
-import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
-import { CodxDpModule } from 'projects/codx-dp/src/public-api';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
+import { CmApprovalComponent } from './cm-approval/cm-approval.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
@@ -140,14 +138,14 @@ const routes: Routes = [
         component: TargetsComponent,
         data: { noReuse: true },
       },
-      // {
-      //   path: 'approvals/:funcID',
-      //   loadChildren: () =>
-      //     import('projects/codx-cm/src/lib/codx-cm-approval.module').then(
-      //       (m) => m.ApprovelCmModule
-      //     ),
-      //   data: { noReuse: true },
-      // },
+      {
+        path: '',
+        loadChildren: () =>
+          import('projects/codx-cm/src/lib/codx-approvel.module').then(
+            (m) => m.CodxApprovelModule
+          ),
+        data: { noReuse: true },
+      },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -207,8 +205,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
     ContractsComponent,
-    CustomergroupsComponent,
-    PopupAddCustgroupComponent,
+    // CustomergroupsComponent,
+    // PopupAddCustgroupComponent,
     //test
     SettingProcessCmComponent,
     CodxAsideCustomComponent,
@@ -231,6 +229,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddTargetComponent,
     CodxTabCmComponent,
     ViewTreeTargetsComponent,
+    CmApprovalComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
