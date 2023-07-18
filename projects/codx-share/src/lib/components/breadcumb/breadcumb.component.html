@@ -38,34 +38,45 @@
                 </ng-container>
             </ng-container>
             <span class="icon-keyboard_arrow_right icon-18"></span>
-            <div class="dropdown">
-                <button class="btn btn-icon btn-md" type="button" #dropdownMenuButton id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span (mouseenter)="hover(dropdownMenuButton)" class="icon-more_horiz icon-16"></span> <!--  -->
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <ng-container *ngFor="let item of getBreadCumList(); let i = index">
-                        <ng-container *ngIf="i >= 2 && i < breadcumb.length - end">
-                            <!-- <span class="icon-keyboard_arrow_right icon-20"></span>
-                            <span class="text-gray-500">{{item.toString()}}</span> -->
-                            <a class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <span class="icon-folder_open icon-16"></span>
-                                    <!-- <span class="ms-3">{{item.toString()}}</span> -->
-                                    <div *ngIf="link; then jump4 else nojump4"></div>
-                                    <ng-template #jump4>
-                                        <a class="cursor-pointer text-dark" (click)="onJump(i)">
-                                            <span class="ms-3">{{item.toString()}}</span>
-                                        </a>
-                                    </ng-template>
-                                    <ng-template #nojump4>
-                                        <span class="ms-3">{{item.toString()}}</span>
-                                    </ng-template>
-                                </div>
-                            </a>
-                        </ng-container>
-                    </ng-container>
-                </div>
+            <div class="dropdown" ngbDropdown>
+                <button
+                    ngbDropdownToggle
+                    class="btn align-items-center mt-1"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                >
+                <span class="icon-more_horiz icon-18"></span>
+              </button>
+              <div
+                ngbDropdownMenu
+                class="dropdown-menu overflow-auto"
+                aria-labelledby="dropdownMenuButton"
+              >
+              <ng-container *ngFor="let item of getBreadCumList(); let i = index">
+                <ng-container *ngIf="i >= 2 && i < breadcumb.length - end">
+                    <!-- <span class="icon-keyboard_arrow_right icon-20"></span>
+                    <span class="text-gray-500">{{item.toString()}}</span> -->
+                    <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                            <span class="icon-folder_open icon-16"></span>
+                            <!-- <span class="ms-3">{{item.toString()}}</span> -->
+                            <div *ngIf="link; then jump4 else nojump4"></div>
+                            <ng-template #jump4>
+                                <a class="cursor-pointer text-dark" (click)="onJump(i)">
+                                    <span class="ms-3">{{item.toString()}}</span>
+                                </a>
+                            </ng-template>
+                            <ng-template #nojump4>
+                                <span class="ms-3">{{item.toString()}}</span>
+                            </ng-template>
+                        </div>
+                    </a>
+                </ng-container>
+            </ng-container>
+              </div>
             </div>
             <ng-container *ngFor="let item of getBreadCumList(); let i = index">
                 <ng-container *ngIf="i >= breadcumb.length - end">
