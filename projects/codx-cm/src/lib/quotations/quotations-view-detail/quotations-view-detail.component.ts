@@ -20,7 +20,7 @@ import { CM_Contracts } from '../../models/cm_model';
   styleUrls: ['./quotations-view-detail.component.css'],
 })
 export class QuotationsViewDetailComponent implements OnChanges {
-  @ViewChild('contract')contract: TemplateRef<any>;
+  @ViewChild('contract') contract: TemplateRef<any>;
   @Input() itemSelected: any;
   @Input() hideMF: any = false;
   @Input() formModel: FormModel;
@@ -87,7 +87,8 @@ export class QuotationsViewDetailComponent implements OnChanges {
     protected sanitizer: DomSanitizer
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.itemSelected.contactID != this.crrContactID) {
+    if (!this.itemSelected) return;
+    if (this.itemSelected?.contactID != this.crrContactID) {
       this.crrContactID = this.itemSelected.contactID;
       this.loadDetailContactByID(this.crrContactID);
     }
@@ -101,10 +102,16 @@ export class QuotationsViewDetailComponent implements OnChanges {
   }
 
   ngAfterViewInit(): void {
-    let index = this.tabControl.findIndex(item => item.name == 'Contract');
-    if(index >= 0){
-      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false,icon :'icon-sticky_note_2' ,template: this.contract};
-      this.tabControl.splice(index,1,contract)
+    let index = this.tabControl.findIndex((item) => item.name == 'Contract');
+    if (index >= 0) {
+      let contract = {
+        name: 'Contract',
+        textDefault: 'Hợp đồng',
+        isActive: false,
+        icon: 'icon-sticky_note_2',
+        template: this.contract,
+      };
+      this.tabControl.splice(index, 1, contract);
     }
   }
 
