@@ -15,6 +15,7 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
 import { CM_Contracts, CM_ContractsPayments, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
+import { CodxCmService } from '../../codx-cm.service';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-detail.component.html',
@@ -28,6 +29,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
+  listInsStep = [];
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -60,6 +62,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   constructor(
     private inject: Injector,
     private contractService: ContractsService,
+    private codxCmService: CodxCmService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -82,6 +85,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
     if(changes?.contract && this.contract){
       this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
       this.getPayMentByContractID(this.contract?.recID);
+      this.getListInstanceStep(this.contract);
     }
   }
   async onInit(){
@@ -93,6 +97,19 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
   changeTab(e){
     this.tabClicked = e;
+  }
+
+  getListInstanceStep(contract) {
+    var data = [
+      contract?.refID,
+      contract?.processID,
+      contract?.status,
+    ];
+    this.codxCmService.getStepInstance(data).subscribe((res) => {
+      if (res) {
+        this.listInsStep = res;    
+      }
+    });
   }
 
   changeDataMF(event, data:CM_Contracts) {

@@ -90,6 +90,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   listTask = [];
   idStepOld = '';
   addCarTitle = '';
+  titleAction = '';
   carFG: FormGroup;
   carFM: FormModel;
   currentStep: any;
@@ -97,7 +98,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   listTaskType = [];
   listGroupTask = [];
   progressTaskEnd = 0;
-  titleAction: any = '';
   dataPopupProgress: any;
   dateFomat = 'dd/MM/yyyy';
   grvMoreFunction: FormModel;
