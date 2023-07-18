@@ -405,7 +405,7 @@ export class CatagoryComponent implements OnInit {
         case 'cms0303':
         case 'cms0304':
         case 'cms0305':
-          this.cmOpenPopup(item);
+          this.cmOpenPopup(item, dialogModel);
           break;
         default:
           break;
@@ -1009,7 +1009,7 @@ export class CatagoryComponent implements OnInit {
   }
 
   //CM_Setting popup - VThao - 4/7/2023 - chuyen qua từ code của Phúc
-  async cmOpenPopup(item) {
+  async cmOpenPopup(item, dialogModel) {
     let funcID = item.reference;
     let title = item.title || item.description;
     this.api
@@ -1032,7 +1032,6 @@ export class CatagoryComponent implements OnInit {
       )
       .subscribe((data) => {
         if (data != null && data.length > 0) {
-          let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
           dialogModel.zIndex = 999;
           let formModel = new FormModel();

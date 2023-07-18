@@ -1,6 +1,7 @@
 <codx-views #view [views]="views" idField="positionID" [selectedFirst]="true"
     (selectedChange)="onSelectionChanged($event)" [button]="button" [service]="'HR'" [assemblyName]="'ERM.Business.HR'"
-    [className]="'PositionsBusiness'" [method]="'GetPositionsAsync'" (buttonClick)="btnClick($event)">
+    [className]="'PositionsBusiness'" [method]="'GetPositionsAsync'" (buttonClick)="btnClick($event)"
+    (viewChanged)="viewChanged($event)">
 </codx-views>
 
 <ng-template #tmpTree let-data>
@@ -11,8 +12,8 @@
 
 
 <ng-template #tmpOrgchart>
-    <lib-reportingline-orgchart [positionID]="positionID" [funcID]="funcID"
-    [view]="view"></lib-reportingline-orgchart>
+    <lib-reportingline-orgchart #orgChart [positionID]="positionID" [funcID]="funcID" (deletedInputPosition)="changeSelectedData($event)" 
+    [view]="view" (hasChangedData)="changedDataFromChart($event)"></lib-reportingline-orgchart>
 </ng-template>
 
 <ng-template #tmpList let-data>
