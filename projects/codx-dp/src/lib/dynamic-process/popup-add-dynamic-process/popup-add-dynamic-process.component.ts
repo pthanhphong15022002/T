@@ -332,16 +332,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
+    this.user = this.authStore.get();
+    this.languages = this.auth.userValue?.language?.toLowerCase();
     this.entityName = this.dialog.formModel.entityName;
     this.systemProcess = dt?.data?.systemProcess ?? '0';
     this.action = dt?.data?.action;
     this.showID = dt?.data?.showID;
-    this.user = this.authStore.get();
-    this.languages = this.auth.userValue?.language?.toLowerCase();
+
     this.userId = this.user?.userID;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.titleAction = dt?.data?.titleAction;
     this.lstGroup = dt?.data?.lstGroup;
+    //copy
+    this.listClickedCoppy = dt?.data?.conditionCopy;
+    this.oldIdProccess = dt?.data?.oldIdProccess;
+    this.newIdProccess = dt?.data?.newIdProccess;
+    this.listValueCopy = dt?.data?.listValueCopy;
 
     this.formModelField = JSON.parse(JSON.stringify(dialog.formModel));
     this.formModelField.formName = 'DPStepsFields';
@@ -353,7 +359,60 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.systemProcess == '0'
         ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
         : JSON.parse(JSON.stringify(dt?.data?.data));
-    console.log(this.process);
+
+    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      if (mf) {
+        var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+        if (mfAdd) this.titleAdd = mfAdd?.customName;
+      }
+    });
+    this.cache.functionList('DPT03').subscribe((fun) => {
+      if (fun) {
+        this.titleDefaultCF = fun.customName || fun.description;
+      }
+    });
+    this.loadDefault();
+  }
+
+  ngOnInit() {
+    this.loading();
+  }
+
+  async loading(): Promise<void> {
+    //Tạo formGroup
+    this.exportGroup = this.formBuilder.group({
+      dataExport: ['all', Validators.required],
+      format: ['excel', Validators.required],
+    });
+    this.grvMoreFunction = await this.getFormModel('DPT040102');
+    this.grvStep = await this.getFormModel('DPS0103');
+    this.getTitleStepViewSetup();
+    this.initForm();
+    this.checkedDayOff(this.step?.excludeDayoff);
+    if (this.action != 'add' && this.action != 'copy') {
+      this.getStepByProcessID();
+    }
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
+    this.cache
+      .gridViewSetup(this.grvStep?.formName, this.grvStep?.gridViewName)
+      .subscribe((res) => {
+        this.headerTextStepName = res['StepName']['headerText'];
+      });
+    this.getTypeTask();
+    // document.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  loadDefault() {
+    this.getGrvStep();
+    this.getGrvStepReason();
+    this.getValListDayoff();
+    // this.autoHandleStepReason();
+    this.loadCbxProccess();
+    this.getVllFormat();
     this.getIconReason();
     this.getValueYesNo();
     this.getValueDayHour();
@@ -365,10 +424,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       this.process.permissions = [];
       this.instanceNoSetting = this.process.instanceNoSetting;
-      this.listClickedCoppy = dt.data.conditionCopy;
-      this.oldIdProccess = dt.data.oldIdProccess;
-      this.newIdProccess = dt.data.newIdProccess;
-      this.listValueCopy = dt.data.listValueCopy;
       var valueListStr = this.listValueCopy.join(';');
       this.getAvatar(this.process);
       if (
@@ -410,77 +465,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
       this.process.autoName = this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
       this.setDefaultOwner();
-      // this.step.owner = this.user.userID;
-      // this.process.instanceNoSetting = this.process.processNo;
     }
-
-    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-      if (mf) {
-        var mfAdd = mf.find((f) => f.functionID == 'SYS01');
-        if (mfAdd) this.titleAdd = mfAdd?.customName;
-      }
-    });
-    this.cache.functionList('DPT03').subscribe((fun) => {
-      if (fun) {
-        this.titleDefaultCF = fun.customName || fun.description;
-      }
-    });
-
-    this.getGrvStep();
-    this.getGrvStepReason();
-    this.getValListDayoff();
-    // this.autoHandleStepReason();
-    this.loadCbxProccess();
-    this.getVllFormat();
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
 
-  ngOnInit() {
-    this.loading();
-  }
-
-  async loading(): Promise<void> {
-    //Tạo formGroup
-    this.exportGroup = this.formBuilder.group({
-      dataExport: ['all', Validators.required],
-      format: ['excel', Validators.required],
-    });
-    this.grvMoreFunction = await this.getFormModel('DPT040102');
-    this.grvStep = await this.getFormModel('DPS0103');
-    this.getTitleStepViewSetup();
-    this.initForm();
-    this.checkedDayOff(this.step?.excludeDayoff);
-    if (this.action != 'add' && this.action != 'copy') {
-      this.getStepByProcessID();
-    }
-    this.cache.valueList('DP004').subscribe((res) => {
-      if (res.datas) {
-        this.listTypeTask = res?.datas;
-      }
-    });
-    this.cache
-      .gridViewSetup(this.grvStep?.formName, this.grvStep?.gridViewName)
-      .subscribe((res) => {
-        this.headerTextStepName = res['StepName']['headerText'];
-      });
-    this.getTypeTask();
-    // document.addEventListener("keydown", this.handleKeyDown);
-  }
-
-  // handleKeyDown(event) {
-  //   if (event.code === "F5" || event.code === "Escape") {
-  //     event.preventDefault();
-  //   }
-  // }
-
-  // ngOnDestroy() {
-  //   document.removeEventListener("keydown", this.handleKeyDown);
-  // }
-
-  ngAfterViewInit(): void {
-    //  this.GetListProcessGroups();
-  }
+  ngAfterViewInit(): void {}
 
   setDefaultOwner() {
     var perm = new DP_Processes_Permission();
