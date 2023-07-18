@@ -55,7 +55,7 @@ import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
@@ -165,7 +165,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PinchZoomModule,
     CodxCoreModule.forRoot({ environment }),
   ],
-  exports: [RouterModule],
+  exports: [RouterModule, PopupAddDynamicProcessComponent],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

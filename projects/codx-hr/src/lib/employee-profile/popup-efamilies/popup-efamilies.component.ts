@@ -39,6 +39,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   employId: string;
   actionType: string;
+  disabledInput = false;
   dialog: DialogRef;
   fieldHeaderTexts
   // lstFamilyMembers;
@@ -67,6 +68,9 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.familyMemberObj = JSON.parse(
       JSON.stringify(data?.data?.familyMemberObj)
     );
@@ -98,7 +102,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         if (new Date(this.familyMemberObj.registerFrom).getFullYear() == 1)
         {
           this.familyMemberObj.registerFrom = null;

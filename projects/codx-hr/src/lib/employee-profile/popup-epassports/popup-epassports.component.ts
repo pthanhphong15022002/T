@@ -32,6 +32,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   funcID;
   isAfterRender = false;
   employId;
+  disabledInput = false;
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
@@ -49,6 +50,10 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    debugger
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.passportObj = JSON.parse(JSON.stringify(data?.data?.passportObj));
   }
 
@@ -101,7 +106,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         if (this.actionType == 'copy') {
           if (this.passportObj.issuedDate == '0001-01-01T00:00:00') {
             this.passportObj.issuedDate = null;
@@ -116,6 +121,10 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
         this.isAfterRender = true;
       }
     }
+    // this.formModel.currentData = this.passportObj;
+    // this.formGroup.patchValue(this.passportObj);
+    // this.cr.detectChanges();
+    // this.isAfterRender = true;
   }
 
   onSaveForm() {
