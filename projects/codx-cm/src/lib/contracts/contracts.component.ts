@@ -216,6 +216,27 @@ export class ContractsComponent extends UIComponent {
       },
     ];
     this.getAccount();
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
+        },
+      },
+    ];
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -235,11 +256,12 @@ export class ContractsComponent extends UIComponent {
       },
       {
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
+          resources: this.columnGrids,
           template2: this.templateMore,
-          frozenColumns: 1,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -608,4 +630,84 @@ export class ContractsComponent extends UIComponent {
   }
   //end duyet
   //--------------------------------------------------------------------//
+  // getColumsGrid(grvSetup) {
+  //   this.columnGrids = [];
+  //   this.arrFieldIsVisible.forEach((key) => {
+  //     let field = Util.camelize(key);
+  //     let template: any;
+  //     let colums: any;
+  //     switch (key) {
+  //       case 'Status':
+  //         template = this.templateStatus;
+  //         break;
+  //       case 'CustomerID':
+  //         template = this.templateCustomer;
+  //         break;
+  //       case 'CreatedBy':
+  //         template = this.templateCreatedBy;
+  //         break;
+  //       case 'TotalTaxAmt':
+  //         template = this.templateTotalTaxAmt;
+  //         break;
+  //       case 'TotalAmt':
+  //         template = this.templateTotalAmt;
+  //         break;
+  //       case 'TotalSalesAmt':
+  //         template = this.templateTotalSalesAmt;
+  //         break;
+  //       case 'CreatedOn':
+  //         template = this.templateCreatedOn;
+  //         break;
+  //       case 'DealID':
+  //         template = this.templateDeal;
+  //         break;
+  //       case 'ApproveStatus':
+  //         template = this.templateApproverStatus;
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //     if (template) {
+  //       colums = {
+  //         field: field,
+  //         headerText: grvSetup[key].headerText,
+  //         width: grvSetup[key].width,
+  //         template: template,
+  //         // textAlign: 'center',
+  //       };
+  //     } else {
+  //       colums = {
+  //         field: field,
+  //         headerText: grvSetup[key].headerText,
+  //         width: grvSetup[key].width,
+  //       };
+  //     }
+
+  //     this.columnGrids.push(colums);
+  //   });
+
+  //   this.views = [
+  //     {
+  //       type: ViewType.listdetail,
+  //       active: true,
+  //       sameData: true,
+  //       model: {
+  //         template: this.itemTemplate,
+  //         panelRightRef: this.templateDetail,
+  //       },
+  //     },
+  //     {
+  //       type: ViewType.grid,
+  //       active: false,
+  //       sameData: true,
+  //       model: {
+  //         resources: this.columnGrids,
+  //         template2: this.templateMore,
+  //         // frozenColumns: 1,
+  //       },
+  //     },
+  //   ];
+
+  //   this.detectorRef.detectChanges();
+  // }
 }

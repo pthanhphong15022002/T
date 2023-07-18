@@ -122,3 +122,8 @@
 .timeline-exper-item:last-child .timeline-exper-nav::after{
   display: none;
 }
+.hover-active:hover{
+  .item-active{
+      color: var(--primary);
+  }
+}
