@@ -416,56 +416,63 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getIconReason();
     this.getValueYesNo();
     this.getValueDayHour();
-    if (this.action === 'copy') {
-      this.process.category = '1';
-      this.listPermissions = [];
-      this.listPermissions = JSON.parse(
-        JSON.stringify(this.process.permissions)
-      );
-      this.process.permissions = [];
-      this.instanceNoSetting = this.process.instanceNoSetting;
-      var valueListStr = this.listValueCopy.join(';');
-      this.getAvatar(this.process);
-      if (
-        this.listValueCopy.includes('2') &&
-        !this.listValueCopy.includes('3')
-      ) {
-        this.process.permissions = this.listPermissions;
-        this.permissions = this.process.permissions;
+
+    //action form
+    switch (this.action) {
+      case 'add':
+        if (this.lstGroup != null && this.lstGroup.length > 0) {
+          this.process.groupID = this.lstGroup[0].groupID;
+        }
+        this.process.autoName =
+          this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
         this.setDefaultOwner();
-      }
-      if (this.listValueCopy.includes('3')) {
-        this.getListStepByProcessIDCopy(
-          this.oldIdProccess,
-          this.newIdProccess,
-          valueListStr
+        break;
+      case 'edit':
+        this.loadEx();
+        this.loadWord();
+        this.loadListApproverStep();
+        // this.showID = true;
+        this.checkGroup = this.lstGroup.some(
+          (x) => x.groupID == this.process?.groupID
         );
-      }
+        this.processNameBefore = this.process?.processName;
+        this.permissions = this.process.permissions;
+        if (this.permissions.length > 0) {
+          var perm = this.permissions.filter((x) => x.roleType == 'P');
+          this.lstParticipants = perm;
+        }
+        this.processTab = 3;
+        this.getAvatar(this.process);
+        this.instanceNoSetting = this.process.instanceNoSetting;
+        break;
+      case 'copy':
+        this.process.category = '1';
+        this.listPermissions = [];
+        this.listPermissions = JSON.parse(
+          JSON.stringify(this.process.permissions)
+        );
+        this.process.permissions = [];
+        this.instanceNoSetting = this.process.instanceNoSetting;
+        var valueListStr = this.listValueCopy.join(';');
+        this.getAvatar(this.process);
+        if (
+          this.listValueCopy.includes('2') &&
+          !this.listValueCopy.includes('3')
+        ) {
+          this.process.permissions = this.listPermissions;
+          this.permissions = this.process.permissions;
+          this.setDefaultOwner();
+        }
+        if (this.listValueCopy.includes('3')) {
+          this.getListStepByProcessIDCopy(
+            this.oldIdProccess,
+            this.newIdProccess,
+            valueListStr
+          );
+        }
+        break;
     }
-    if (this.action == 'edit') {
-      this.loadEx();
-      this.loadWord();
-      this.loadListApproverStep();
-      // this.showID = true;
-      this.checkGroup = this.lstGroup.some(
-        (x) => x.groupID == this.process?.groupID
-      );
-      this.processNameBefore = this.process?.processName;
-      this.permissions = this.process.permissions;
-      if (this.permissions.length > 0) {
-        var perm = this.permissions.filter((x) => x.roleType == 'P');
-        this.lstParticipants = perm;
-      }
-      this.processTab = 3;
-      this.getAvatar(this.process);
-      this.instanceNoSetting = this.process.instanceNoSetting;
-    } else if (this.action == 'add') {
-      if (this.lstGroup != null && this.lstGroup.length > 0) {
-        this.process.groupID = this.lstGroup[0].groupID;
-      }
-      this.process.autoName = this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
-      this.setDefaultOwner();
-    }
+
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
