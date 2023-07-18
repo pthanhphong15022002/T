@@ -57,6 +57,7 @@ export class EmployeeListByOrgComponent {
   predicates = '@0.Contains(OrgUnitID)';
   funcIDEmpInfor: string = 'HRT03b';
   itemSelected;
+  hadEmitDataService = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -165,11 +166,12 @@ export class EmployeeListByOrgComponent {
         this.grid.dataService.rowCount = 0;
         clearInterval(ins);
         this.grid.refresh();
-        if (this.grid && this.editable) {
+        if (this.grid && this.editable && !this.hadEmitDataService) {
+          this.hadEmitDataService = true;
           this.gridViewDataService.emit(this.grid.dataService);
         }
       }
-    }, 200);
+    }, 50);
   }
 
   getManager(orgUnitID: string) {
