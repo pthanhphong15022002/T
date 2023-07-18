@@ -16,6 +16,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="workPermitNo"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -27,6 +28,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="passportNo"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -40,6 +42,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="qualification"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -51,6 +54,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="companyName"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -62,6 +66,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="location"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -75,6 +80,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="jobAssign"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -86,6 +92,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="workingForm"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -100,6 +107,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="fromDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -111,6 +119,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="toDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -125,6 +134,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="workPermitType"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -136,6 +146,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     [showSpinButton]="false" 
                     field="reissuedNum"
                     [formModel]="formModel"
@@ -151,6 +162,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="nationalityID"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -162,6 +174,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [disabled]="disabledInput"
                     field="issuedDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -175,6 +188,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="issuedPlace"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -187,6 +201,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="note"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -245,7 +260,7 @@
 </ng-template> -->
 
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
         <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
             <i class="icon-save"></i>
         <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
@@ -271,6 +286,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="workPermitNo"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -282,6 +298,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="passportNo"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -295,6 +312,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="qualification"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -306,6 +324,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="companyName"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -317,6 +336,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="location"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -330,6 +350,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="jobAssign"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -341,6 +362,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="workingForm"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -355,6 +377,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="fromDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -366,6 +389,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="toDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -380,6 +404,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="workPermitType"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -391,6 +416,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 [showSpinButton]="false" 
                 field="reissuedNum"
                 [formModel]="formModel"
@@ -406,6 +432,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="nationalityID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -417,6 +444,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="issuedDate"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -430,6 +458,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="issuedPlace"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -442,6 +471,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="note"
             [formModel]="formModel"
             [Group]="formGroup"

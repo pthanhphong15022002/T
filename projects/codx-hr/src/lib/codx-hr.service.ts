@@ -2292,6 +2292,16 @@ export class CodxHrService {
     );
   }
 
+  // getFunctionList(funcID: string) {
+  //   return this.api.execSv<any>(
+  //     'SYS',
+  //     'SYS',
+  //     'FunctionListBusiness',
+  //     'GetByFuncAsync',
+  //     funcID
+  //   );
+  // }
+
   getOrgTreeByOrgID(orgID: string, level: number) {
     return this.api.execSv<any>(
       'HR',

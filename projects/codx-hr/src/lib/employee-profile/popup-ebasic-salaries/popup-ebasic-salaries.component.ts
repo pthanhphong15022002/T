@@ -32,6 +32,7 @@ export class PopupEBasicSalariesComponent
   // indexSelected
   idField = 'RecID';
   actionType: string;
+  disabledInput = false;
   funcID: string;
   employeeId: string | null;
   isAfterRender = false;
@@ -60,6 +61,9 @@ export class PopupEBasicSalariesComponent
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.formModel = dialog?.formModel;
     this.fromListView = data?.data?.fromListView;
     this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
@@ -215,7 +219,7 @@ export class PopupEBasicSalariesComponent
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         if (this.actionType == 'copy') {
           if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
             this.EBasicSalaryObj.effectedDate = null;
@@ -227,9 +231,10 @@ export class PopupEBasicSalariesComponent
         this.cr.detectChanges();
       }
     }
-    console.log('form Model ne', this.formModel);
-    console.log('form group', this.formGroup);
-    console.log('dialog ne', this.dialog);
+    // this.formGroup.patchValue(this.EBasicSalaryObj);
+    // this.formModel.currentData = this.EBasicSalaryObj;
+    // this.isAfterRender = true;
+    // this.cr.detectChanges();
   }
 
   onSaveForm() {
