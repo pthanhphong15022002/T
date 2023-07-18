@@ -234,7 +234,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
-    ReactiveFormsModule,
+    // ReactiveFormsModule,
     SharedModule,
     ChartAllModule,
     AccumulationChartAllModule,

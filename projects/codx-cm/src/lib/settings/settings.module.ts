@@ -10,7 +10,7 @@ import { CustomerGroupsComponent } from './customer-groups/customer-groups.compo
 import { PopupAddCustomerGroupsComponent } from './customer-groups/popup-add-customer-groups/popup-add-customer-groups.component';
 import { CodxDpModule } from 'projects/codx-dp/src/public-api';
 
-var routes: Routes = [
+const routes: Routes = [
   {
     path: '',
     component: LayoutNoAsideComponent,
