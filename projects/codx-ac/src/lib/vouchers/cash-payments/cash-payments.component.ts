@@ -34,6 +34,7 @@ import {
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { Subject, interval, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -51,6 +52,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('pgbAcctranst') pgbAcctranst: ProgressBar;
   @ViewChild('pgbSet') pgbSet: ProgressBar;
   @ViewChild('pgbVat') pgbVat: ProgressBar;
+  @ViewChild('annotationsave') annotationsave: ProgressBar;
   dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -106,6 +108,8 @@ export class CashPaymentsComponent extends UIComponent {
     entityName: 'AC_AcctTrans',
   };
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
+  private destroy$ = new Subject<void>();
+  loading:any = false;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -133,7 +137,6 @@ export class CashPaymentsComponent extends UIComponent {
     });
   }
   //#endregion
-
   //#region Init
   onInit(): void {
     this.userID = this.authStore.get().userID;
@@ -203,6 +206,12 @@ export class CashPaymentsComponent extends UIComponent {
 
   ngOnDestroy() {
     this.view.setRootNode('');
+    console.log("asdsa");
+  }
+
+  onDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   //#endregion
 
@@ -255,6 +264,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
+    this.onDestroy();
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -706,6 +716,7 @@ export class CashPaymentsComponent extends UIComponent {
   loadjounal() {
     this.api
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.journal = res[0];
