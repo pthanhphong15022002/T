@@ -4314,7 +4314,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   setColorTestStep(step) {
     if (this.process?.stepsColorMode) {
-      if (step.isFailStep || step.isSuccessStep) {
+      if (step?.isFailStep || step?.isSuccessStep) {
         return { color: '#ffffff' };
       } else {
         let countStep = this.stepList?.length || 0;
@@ -4332,9 +4332,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   setColorStep(step: DP_Steps) {
     if (this.process?.stepsColorMode) {
-      if (step.isFailStep) {
+      if (step?.isFailStep) {
         return { 'background-color': this.iconReasonFail?.color };
-      } else if (step.isSuccessStep) {
+      } else if (step?.isSuccessStep) {
         return { 'background-color': this.iconReasonSuccess?.color };
       } else {
         let countStep = this.stepList?.length || 0;

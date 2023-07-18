@@ -91,9 +91,7 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
-import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 import { CmApprovalComponent } from './cm-approval/cm-approval.component';
-import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 
 export const routes: Routes = [
   {
@@ -206,7 +204,6 @@ const T_Component: Type<any>[] = [
   // CustomergroupsComponent,
   // PopupAddCustgroupComponent,
   //test
-  SettingProcessCmComponent,
   CodxAsideCustomComponent,
   PopupAddPaymentComponent,
   PopupAddPaymentHistoryComponent,
