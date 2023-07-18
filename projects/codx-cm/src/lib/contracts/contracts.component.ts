@@ -284,6 +284,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   selectedChange(val: any) {
+    if (!val?.data) return;
     this.itemSelected = val?.data;
     this.getQuotationsAndQuotationsLinesByTransID(
       this.itemSelected.quotationID

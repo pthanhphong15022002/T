@@ -29,7 +29,6 @@ import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-catagory',
