@@ -401,7 +401,6 @@ export class EmployeeListComponent extends UIComponent {
   //selected Change
   selectedChange(val: any) {
     this.itemSelected = val.data;
-    console.log(this.itemSelected);
     this.detectorRef.detectChanges();
   }
   // view imployee infor
