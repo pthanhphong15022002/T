@@ -58,30 +58,49 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
         break;
       case 'startDate':
           this.fiscalperiods.startDate = e.data;
-          this.checkValidateFiscalYear();
+          this.checkValidateStartYear();
           this.checkValidateDate();
           break;
       case 'endDate':
         this.fiscalperiods.endDate = e.data;
-        this.checkValidateFiscalYear();
+        this.checkValidateEndYear();
         this.checkValidateDate();
         break;
     }
   }
 
-  checkValidateFiscalYear()
+  checkValidateEndYear()
+  {
+    var endDate = new Date(this.fiscalperiods.endDate);
+    var endYear = endDate.getFullYear();
+    if(endYear != this.fiscalperiods.fiscalYear)
+    {
+      if(endYear)
+      {
+        this.notification.notifyCode(
+          'AC0023',
+          0,
+          '"' + this.gridViewSetup.EndDate.headerText + '"'
+        );
+      }
+      this.validate++;
+    }
+  }
+
+  checkValidateStartYear()
   {
     var startDate = new Date(this.fiscalperiods.startDate);
     var startYear = startDate.getFullYear();
-    var endDate = new Date(this.fiscalperiods.endDate);
-    var endYear = endDate.getFullYear();
-    if(startYear != this.fiscalperiods.fiscalYear || endYear != this.fiscalperiods.fiscalYear)
+    if(startYear != this.fiscalperiods.fiscalYear)
     {
-      this.notification.notifyCode(
-        'AC0023',
-        0,
-        '"' + '' + '"'
-      );
+      if(startYear)
+      {
+        this.notification.notifyCode(
+          'AC0023',
+          0,
+          '"' + this.gridViewSetup.StartDate.headerText + '"'
+        );
+      }
       this.validate++;
     }
   }
@@ -132,7 +151,8 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
   onSave(){
     this.validate = 0;
     this.checkValidate();
-    this.checkValidateFiscalYear();
+    this.checkValidateStartYear();
+    this.checkValidateEndYear();
     this.checkValidateDate();
     if (this.validate > 0) {
       return;
