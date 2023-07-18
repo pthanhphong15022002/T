@@ -6,28 +6,16 @@ import {
   Injector,
   OnInit,
   Optional,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ContextMenuItem,
-  DialogEditEventArgs,
   EditSettingsModel,
-  FilterSettingsModel,
   GridComponent,
-  PdfExportProperties,
-  SaveEventArgs,
-  ToolbarItems,
-  row,
 } from '@syncfusion/ej2-angular-grids';
-import {
-  ClickEventArgs,
-  MenuEventArgs,
-  TabComponent,
-} from '@syncfusion/ej2-angular-navigations';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   AuthService,
   AuthStore,
@@ -36,8 +24,6 @@ import {
   CodxDropdownSelectComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
-  CodxInputComponent,
-  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -57,22 +43,14 @@ import { Reason } from '../../../models/Reason.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { VoucherComponent } from '../../../popup/voucher/voucher.component';
-import { SettledInvoices } from '../../../models/SettledInvoices.model';
-import { Double } from '@syncfusion/ej2-angular-charts';
 import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
-import { E, O } from '@angular/cdk/keycodes';
 import { PopUpVatComponent } from '../pop-up-vat/pop-up-vat.component';
 import {
   AnimationModel,
   ILoadedEventArgs,
-  IProgressValueEventArgs,
   ProgressBar,
-  ProgressBarAnnotationDirective,
 } from '@syncfusion/ej2-angular-progressbar';
-import { argv } from 'process';
-declare var window: any;
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -457,7 +435,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           );
           if (this.cashpaymentline.length > 0) {
             if (e.component.dataService.currentComponent.previousItemData) {
-              preValue = e.component.dataService.currentComponent.previousItemData.ReasonID;
+              preValue =
+                e.component.dataService.currentComponent.previousItemData
+                  .ReasonID;
             } else {
               preValue = e.component.itemsSelected[0].ReasonID;
             }
@@ -477,7 +457,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         case 'cashbookid':
           if (this.cashpaymentline.length > 0) {
             if (e.component.dataService.currentComponent.previousItemData) {
-              preValue = e.component.dataService.currentComponent.previousItemData.CashAcctID;
+              preValue =
+                e.component.dataService.currentComponent.previousItemData
+                  .CashAcctID;
             } else {
               preValue = e.component.itemsSelected[0].CashAcctID;
             }
@@ -2451,7 +2433,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.cashpaymentline.forEach((item) => {
             if (item.reasonID == preValue) {
               item.reasonID = this.cashpayment.reasonID;
-              item.note = this.cbxReasonID.ComponentCurrent.itemsSelected[0].ReasonName;
+              item.note =
+                this.cbxReasonID.ComponentCurrent.itemsSelected[0].ReasonName;
             }
           });
           this.gridCash.refresh();

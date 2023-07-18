@@ -31,6 +31,7 @@ export class EmployeeListComponent extends UIComponent {
   orgUnitID: string = '';
   request: ResourceModel;
   viewActive: string = '';
+  gridViewDataService: any;
   // template columns grid
   @ViewChild('colEmployee', { static: true }) colEmployee: TemplateRef<any>;
   @ViewChild('colContact', { static: true }) colContact: TemplateRef<any>;
@@ -49,7 +50,7 @@ export class EmployeeListComponent extends UIComponent {
   entityName = 'HR_Employees';
   className = 'EmployeesBusiness';
   method = 'GetListEmployeeAsync';
-  idField ='employeeID';
+  idField = 'employeeID';
 
   gridViewAction;
   cmtStatus = '';
@@ -107,8 +108,7 @@ export class EmployeeListComponent extends UIComponent {
         sameData: false,
         model: {
           resizable: true,
-          isCustomize:true,
-          
+          isCustomize: true,
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,
           resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
@@ -176,27 +176,56 @@ export class EmployeeListComponent extends UIComponent {
   add(moreFunc: any = null) {
     if (!moreFunc)
       moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS01');
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px';
-      let popup = this.callfc.openSide(
-        PopupAddEmployeeComponent,
-        {
-          action: 'add',
-          text: moreFunc.defaultName ?? moreFunc.text,
-          data: res,
-        },
-        option
-      );
-      popup.closed.subscribe((e) => {
-        if (e.event) {
-          (this.view.dataService as CRUDService).add(e.event).subscribe();
-          this.hasChangedData = true;
-        }
+    if (this.view.dataService.idField == 'orgUnitID' || this.view.idField == 'orgUnitID') { // on tree view
+      (this.gridViewDataService as CRUDService).addNew().subscribe((res: any) => { // add from tree view
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        let popup = this.callfc.openSide(
+          PopupAddEmployeeComponent,
+          {
+            action: 'add',
+            text: moreFunc.defaultName ?? moreFunc.text,
+            data: res,
+          },
+          option
+        );
+        popup.closed.subscribe((e) => {
+          if (e.event) {
+            this.grv2DataChanged = true;
+            this.view.currentView.dataService.load().subscribe();
+            if (e.event?.orgUnitID == this.itemSelected?.orgUnitID)
+              this.itemSelected = e.event;
+            //(this.view.dataService as CRUDService).add(e.event).subscribe();
+            //this.hasChangedData = true;
+          }
+        });
       });
-    });
+    } else {
+      this.view.dataService.addNew().subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        let popup = this.callfc.openSide(
+          PopupAddEmployeeComponent,
+          {
+            action: 'add',
+            text: moreFunc.defaultName ?? moreFunc.text,
+            data: res,
+          },
+          option
+        );
+        popup.closed.subscribe((e) => {
+          if (e.event) {
+            (this.view.dataService as CRUDService).add(e.event).subscribe();
+            this.hasChangedData = true;
+          }
+        });
+      });
+    }
+    this.detectorRef.detectChanges();
   }
 
   //edit Employee
@@ -306,16 +335,50 @@ export class EmployeeListComponent extends UIComponent {
       this.detectorRef.detectChanges();
     });
   }
+  viewChanging(event: any) {
+    if (event?.view?.id === '2' || event?.id === '2') {
+      this.view.dataService.parentIdField = 'ParentID';
+      this.view.dataService.idField = 'orgUnitID';
+      this.view.idField = 'orgUnitID';
+    } else if (event?.view?.id === '1' || event?.id === '1') {
+      this.view.dataService.parentIdField = '';
+      this.view.dataService.idField = 'employeeID';
+      this.view.idField = 'employeeID';
+    }
+  }
 
   viewChanged(event: any) {
+    // if (event?.view?.id === '2' || event?.id === '2') {
+    //   this.view.dataService.parentIdField = 'ParentID';
+    //   this.view.dataService.idField = 'orgUnitID';
+    //   this.view.idField = 'orgUnitID';
+    // } else if (event?.view?.id === '1' || event?.id === '1') {
+    //   this.view.dataService.parentIdField = '';
+    //   this.view.dataService.idField = 'employeeID';
+    //   this.view.idField = 'employeeID';
+    // }
     if (this.grv2DataChanged || this.hasChangedData) {
-      if (event?.view?.id !== '2') {
-        this.view.dataService.parentIdField = '';
+      // if (this.viewActive !== event.view.id && this.flagLoaded) {
+      // if (event?.view?.id === '1' || event?.id === '1') {
+      //   this.view.dataService.data = [];
+      //   this.view.dataService.parentIdField = '';
+      // } else {
+      //   this.view.dataService.parentIdField = 'ParentID';
+      // }
+      if (event?.view?.id == '1' || event?.id == '1') {
         this.view.dataService.data = [];
+        this.view.dataService.page = 0;
+        this.view.dataService.load().subscribe();
       }
-      this.view.dataService.page = 0;
+      if (event?.view?.id == '2' || event?.id == '2') {
+        this.view.currentView.dataService.load().subscribe();
+      }
+      //check update data when CRUD or not
+      // this.flagLoaded = false;
+
+      //Prevent load data when click same id
       this.viewActive = event.view.id;
-      this.view.currentView.dataService.load().subscribe();
+      //this.view.currentView.dataService.load().subscribe();
     }
     this.grv2DataChanged = false;
     this.hasChangedData = false;
@@ -347,6 +410,7 @@ export class EmployeeListComponent extends UIComponent {
   //selected Change
   selectedChange(val: any) {
     this.itemSelected = val.data;
+    console.log(this.itemSelected);
     this.detectorRef.detectChanges();
   }
   // view imployee infor
@@ -368,5 +432,8 @@ export class EmployeeListComponent extends UIComponent {
   }
   dataChange(event) {
     this.grv2DataChanged = event?.hasDataChanged ? true : false;
+  }
+  getGridViewDataService(event) {
+    this.gridViewDataService = event;
   }
 }

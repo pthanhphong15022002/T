@@ -163,7 +163,7 @@
     <h5
       #meetingName
       [innerHTML]="
-        data.meetingName
+        data?.meetingName
           | formatvalue
             : formModel
             : 'meetingName'
@@ -183,7 +183,7 @@
           class="text-gray-700"
           #startDate
           [innerHTML]="
-            data.startDate
+            data?.startDate
               | formatvalue
                 : formModel
                 : 'startDate'
@@ -195,7 +195,7 @@
         >
         </span>
         <span
-          *ngIf="data.startDate"
+          *ngIf="data?.startDate"
           class="fw-bold p-2"
           [innerHtml]="'( ' + getDate(data) + ')'"
         ></span>
@@ -232,7 +232,7 @@
           *ngIf="!data?.memo"
           #memoMeeting
           [innerHTML]="
-            data.memo
+            data?.memo
               | formatvalue
                 : formModel
                 : 'memo'

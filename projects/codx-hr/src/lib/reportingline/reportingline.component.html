@@ -16,7 +16,7 @@
 </ng-template>
 
 <ng-template #tmpList let-data>
-    <div class="d-flex align-items-center py-4 px-5 border-bottom">
+    <div class="d-flex align-items-center py-2 px-5 border-bottom">
         <div class="d-flex justify-content-between align-items-center w-40 min-w-350px">
             <!-- HR_Positions infor -->
             <div class="reportingline-cell-positioninfo">
@@ -81,11 +81,11 @@
 
         <div class="d-flex w-20 min-w-150px align-items-center justify-content-end ms-6">
             <div class="d-flex flex-column align-items-center">
-                <div class="text-gray-600 mb-1">
+                <div class="text-gray-600">
                     <codx-label [formModel]="view.formModel" default="Nhân viên">
                     </codx-label>
                 </div>
-                <div class="pos-number text-primary fs-3 fw-bold mb-2">
+                <div class="pos-number text-primary fs-3 fw-bold mb-1">
                     <span>{{data.staff > 0? data.staff : 0}}</span>
                 </div>
                 <ng-container *ngIf="data.staffEmp">

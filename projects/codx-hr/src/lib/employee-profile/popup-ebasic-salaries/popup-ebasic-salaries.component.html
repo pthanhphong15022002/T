@@ -54,6 +54,7 @@
     </div>
     <div class="col-2 d-flex justify-content-end">
       <codx-input
+      [disabled]="disabledInput"
         [showInput]="false"
         field="employeeID"
         [formModel]="formModel"
@@ -101,6 +102,7 @@
     <div class="col-6">
       <codx-label fiedName="EffectedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="effectedDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -109,6 +111,7 @@
     <div class="col-6">
       <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="expiredDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -120,6 +123,7 @@
     <div class="col-6">
       <codx-label fiedName="BSalary" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="BSalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -129,6 +133,7 @@
     <div class="col-6">
       <codx-label fiedName="SISalary" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="SISalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -141,6 +146,7 @@
     <div class="col-6">
       <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="JSalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -156,7 +162,7 @@
       <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
       <codx-input
         field="decisionNo"
-        [disabled]="autoNumField === 'DecisionNo'"
+        [disabled]="autoNumField === 'DecisionNo' || disabledInput"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
@@ -164,6 +170,7 @@
     <div class="col-6">
       <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="signedDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -174,6 +181,7 @@
   <div class="form-group border-bottom pb-1">
     <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="signerID"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -184,6 +192,7 @@
   <div class="form-group row">
     <codx-label fiedName="SignerPosition" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="signerPosition"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -193,6 +202,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="note"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -200,7 +210,7 @@
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
     <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label
