@@ -234,7 +234,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
-    // ReactiveFormsModule,
+    ReactiveFormsModule,
     SharedModule,
     ChartAllModule,
     AccumulationChartAllModule,
@@ -250,22 +250,22 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TreeMapModule,
     TreeMapAllModule,
     ChartModule,
-    CodxCoreModule.forRoot({ environment }),
+    CodxCoreModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService, CategoryService, LineSeriesService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxCmModule {
-  public static forRoot(
-    config?: EnvironmentConfig
-  ): ModuleWithProviders<CodxCoreModule> {
-    return {
-      ngModule: CodxCoreModule,
-      providers: [
-        HttpClientModule,
-        { provide: EnvironmentConfig, useValue: config },
-      ],
-    };
-  }
+  // public static forRoot(
+  //   config?: EnvironmentConfig
+  // ): ModuleWithProviders<CodxCoreModule> {
+  //   return {
+  //     ngModule: CodxCoreModule,
+  //     providers: [
+  //       HttpClientModule,
+  //       { provide: EnvironmentConfig, useValue: config },
+  //     ],
+  //   };
+  // }
 }

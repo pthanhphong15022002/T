@@ -163,22 +163,22 @@ const T_Component: Type<any>[] = [LayoutComponent];
     SliderModule,
     CoreModule,
     PinchZoomModule,
-    CodxCoreModule.forRoot({ environment }),
+    CodxCoreModule,
   ],
   exports: [RouterModule, PopupAddDynamicProcessComponent],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxDpModule {
-  public static forRoot(
-    config?: EnvironmentConfig
-  ): ModuleWithProviders<CodxCoreModule> {
-    return {
-      ngModule: CodxCoreModule,
-      providers: [
-        HttpClientModule,
-        { provide: EnvironmentConfig, useValue: config },
-      ],
-    };
-  }
+  // public static forRoot(
+  //   config?: EnvironmentConfig
+  // ): ModuleWithProviders<CodxCoreModule> {
+  //   return {
+  //     ngModule: CodxCoreModule,
+  //     providers: [
+  //       HttpClientModule,
+  //       { provide: EnvironmentConfig, useValue: config },
+  //     ],
+  //   };
+  // }
 }

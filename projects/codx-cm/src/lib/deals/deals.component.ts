@@ -1183,7 +1183,7 @@ export class DealsComponent
 
   //#region event
   selectedChange(data) {
-    this.dataSelected = data?.data ? data?.data : data;
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
