@@ -93,6 +93,7 @@ import {
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 import { CmApprovalComponent } from './cm-approval/cm-approval.component';
+import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 
 export const routes: Routes = [
   {
@@ -160,78 +161,79 @@ export const routes: Routes = [
   },
 ];
 
-const T_Component: Type<any>[] = [LayoutComponent];
+const T_Component: Type<any>[] = [
+  CodxCmComponent,
+  LayoutComponent,
+  CmCustomerComponent,
+  CmCustomerDetailComponent,
+  InformationComponent,
+  PopupAddCmCustomerComponent,
+  PopupAddressComponent,
+  ViewListCmComponent,
+  PopupListContactsComponent,
+  PopupQuickaddContactComponent,
+  QuotationsComponent,
+  PopupAddQuotationsComponent,
+  DealsComponent,
+  PopupAddDealComponent,
+  DealDetailComponent,
+  TabDetailCustomComponent,
+  AddContractsComponent,
+  ListContractsComponent,
+  QuotationsLinesComponent,
+  PopupAddQuotationsLinesComponent,
+  CodxListContactsComponent,
+  CodxListDealsComponent,
+  CodxTabDealcompetitorsComponent,
+  PopupAddDealcompetitorComponent,
+  ViewDealcompetitorsComponent,
+  QuotationsViewDetailComponent,
+  CasesComponent,
+  CasesDetailComponent,
+  PopupAddCasesComponent,
+  TabCasesDetailComponent,
+  CodxAddressCmComponent,
+  LeadsComponent,
+  PopupAddLeadComponent,
+  TabLeadDetailComponent,
+  LeadDetailComponent,
+  CampaignsComponent,
+  PopupAddCampaignComponent,
+  PopupStatusCompetitorComponent,
+  CampaignsDetailComponent,
+  PopupConvertLeadComponent,
+  ContractsComponent,
+  // CustomergroupsComponent,
+  // PopupAddCustgroupComponent,
+  //test
+  SettingProcessCmComponent,
+  CodxAsideCustomComponent,
+  PopupAddPaymentComponent,
+  PopupAddPaymentHistoryComponent,
+  PopupViewPaymentHistoryComponent,
+  PopupMergeLeadsComponent,
+  ViewImgContactComponent,
+  PopupRemoveAddContactComponent,
+  ViewPaymentComponent,
+  GanttChartComponent,
+  StepTaskComponent,
+  QuotationsTabViewComponent,
+  ContractsViewDetailComponent,
+  TaskComponent,
+  PopupOwnerDealComponent,
+  ViewIconGroupComponent,
+  CmDashboardComponent,
+  TargetsComponent,
+  PopupAddTargetComponent,
+  CodxTabCmComponent,
+  ViewTreeTargetsComponent,
+  CmApprovalComponent,
+];
 
 @NgModule({
-  declarations: [
-    CodxCmComponent,
-    LayoutComponent,
-    CmCustomerComponent,
-    CmCustomerDetailComponent,
-    InformationComponent,
-    PopupAddCmCustomerComponent,
-    PopupAddressComponent,
-    ViewListCmComponent,
-    PopupListContactsComponent,
-    PopupQuickaddContactComponent,
-    QuotationsComponent,
-    PopupAddQuotationsComponent,
-    DealsComponent,
-    PopupAddDealComponent,
-    DealDetailComponent,
-    TabDetailCustomComponent,
-    AddContractsComponent,
-    ListContractsComponent,
-    QuotationsLinesComponent,
-    PopupAddQuotationsLinesComponent,
-    CodxListContactsComponent,
-    CodxListDealsComponent,
-    CodxTabDealcompetitorsComponent,
-    PopupAddDealcompetitorComponent,
-    ViewDealcompetitorsComponent,
-    QuotationsViewDetailComponent,
-    CasesComponent,
-    CasesDetailComponent,
-    PopupAddCasesComponent,
-    TabCasesDetailComponent,
-    CodxAddressCmComponent,
-    LeadsComponent,
-    PopupAddLeadComponent,
-    TabLeadDetailComponent,
-    LeadDetailComponent,
-    CampaignsComponent,
-    PopupAddCampaignComponent,
-    PopupStatusCompetitorComponent,
-    CampaignsDetailComponent,
-    PopupConvertLeadComponent,
-    ContractsComponent,
-    // CustomergroupsComponent,
-    // PopupAddCustgroupComponent,
-    //test
-    SettingProcessCmComponent,
-    CodxAsideCustomComponent,
-    PopupAddPaymentComponent,
-    PopupAddPaymentHistoryComponent,
-    PopupViewPaymentHistoryComponent,
-    PopupMergeLeadsComponent,
-    ViewImgContactComponent,
-    PopupRemoveAddContactComponent,
-    ViewPaymentComponent,
-    GanttChartComponent,
-    StepTaskComponent,
-    QuotationsTabViewComponent,
-    ContractsViewDetailComponent,
-    TaskComponent,
-    PopupOwnerDealComponent,
-    ViewIconGroupComponent,
-    CmDashboardComponent,
-    TargetsComponent,
-    PopupAddTargetComponent,
-    CodxTabCmComponent,
-    ViewTreeTargetsComponent,
-    CmApprovalComponent,
-  ],
+  declarations: [T_Component],
   imports: [
+    CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
@@ -250,22 +252,21 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TreeMapModule,
     TreeMapAllModule,
     ChartModule,
-    CodxCoreModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService, CategoryService, LineSeriesService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxCmModule {
-  // public static forRoot(
-  //   config?: EnvironmentConfig
-  // ): ModuleWithProviders<CodxCoreModule> {
-  //   return {
-  //     ngModule: CodxCoreModule,
-  //     providers: [
-  //       HttpClientModule,
-  //       { provide: EnvironmentConfig, useValue: config },
-  //     ],
-  //   };
-  // }
+  public static forRoot(
+    config?: EnvironmentConfig
+  ): ModuleWithProviders<CodxCoreModule> {
+    return {
+      ngModule: CodxCoreModule,
+      providers: [
+        HttpClientModule,
+        { provide: EnvironmentConfig, useValue: config },
+      ],
+    };
+  }
 }

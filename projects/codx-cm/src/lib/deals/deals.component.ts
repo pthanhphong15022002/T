@@ -518,9 +518,9 @@ export class DealsComponent
 
   checkMoreReason(tmpPermission) {
     return (
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
+      !tmpPermission?.roleMore?.isReasonSuccess &&
+      !tmpPermission?.roleMore?.isReasonFail &&
+      !tmpPermission?.roleMore?.isMoveStage
     );
   }
   clickMF(e, data) {
