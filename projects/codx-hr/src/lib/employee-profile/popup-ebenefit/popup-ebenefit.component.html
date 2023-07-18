@@ -1,5 +1,5 @@
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType !='view'">
     <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label
@@ -57,6 +57,7 @@
     <div class="form-group row">
       <codx-label fiedName="BenefitID" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="BenefitID"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -70,6 +71,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="EffectedDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -81,6 +83,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="ExpiredDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -99,6 +102,7 @@
           ></codx-label>
 
           <codx-input
+          [disabled]="disabledInput"
             field="BenefitAmt"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -113,6 +117,7 @@
             [formModel]="formModel"
           ></codx-label>
           <codx-input
+          [disabled]="disabledInput"
             field="BenefitNorm"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -125,6 +130,7 @@
       <codx-label fiedName="BenefitPct" [formModel]="formModel"></codx-label>
       <div class="col-6">
         <codx-input
+        [disabled]="disabledInput"
         field="BenefitPct"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -136,6 +142,7 @@
     <div class="form-group row">
       <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="note"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -164,6 +171,7 @@
         <div class="d-flex flex-column">
           <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
           <codx-input
+          [disabled]="disabledInput"
             field="SignedDate"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -176,6 +184,7 @@
     <div class="form-group row">
       <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
           field="signerID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -189,6 +198,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="signerPosition"
         [formModel]="formModel"
         [Group]="formGroup"

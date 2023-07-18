@@ -1105,6 +1105,10 @@ export class CasesComponent
         this.codxCmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notificationsService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -1112,10 +1116,7 @@ export class CasesComponent
             }
           });
       } else {
-        this.notificationsService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notificationsService.notify('DP040');
       }
     });
   }
@@ -1167,7 +1168,7 @@ export class CasesComponent
                         dt?.recID,
                         this.view.formModel.entityName,
                         null,
-                        null,
+                        null
                       )
                       .subscribe((res3) => {
                         if (res3) {

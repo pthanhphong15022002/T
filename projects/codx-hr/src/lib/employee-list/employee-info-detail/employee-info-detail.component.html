@@ -1569,9 +1569,9 @@
                 </div>
               </div>
 
-              <div class="row mb-5">
+              <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
                 <div class="col">
-                  <div class="text-gray-600 pb-1">
+                  <div class="text-gray-600 pb-1" (click)="clickViewDetail(crrPassport, ePassportFuncID)">
                     <span
                       class="icon-wysiwyg icon-16 text-gray-600 me-2"
                     ></span>
@@ -1583,7 +1583,7 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark ms-7">
+                    <span class="ms-7 item-active">
                       {{ crrPassport?.passportNo }}
                     </span>
                   </div>
@@ -1663,8 +1663,8 @@
                 </div>
               </div>
 
-              <div>
-                <div class="row mb-5">
+              <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
+                <div class="row mb-5 ">
                   <div class="col">
                     <div class="text-gray-600 pb-1">
                       <span
@@ -1927,7 +1927,7 @@
               </div>
             </div>
 
-            <div *ngIf="eWorkPermitFormModel">
+            <div *ngIf="eWorkPermitFormModel" class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
               <div class="row mb-5">
                 <div class="col">
                   <div class="text-gray-600 pb-1">
@@ -2167,11 +2167,11 @@
           <div #family class="mt-5">
             <div class="row" *ngIf="lstFamily?.length > 0 && eFamilyFormModel; else emptyDataTemplate">
               <ng-container *ngFor="let item of lstFamily">
-                <div class="col-6 mb-5 ps-9">
+                <div class="col-6 mb-5 ps-9 ">
                   <div class="rounded rounded-2 border border-gray-150 w-325px mw-325px">
                     <codx-temp-full
                       (clickMF)="clickMF($event, item, 'family')"
-                      cardCss="card-template p-3 w-325px mw-325px h-100px"
+                      cardCss="card-template p-3 w-325px mw-325px h-100 mb-2 py-2 hover-active bg-hover cursor-pointer"
                       [moreFuncCss]="'me-10'"
                       [imageId]="item.recID"
                       [imageObjType]="'HR_EFamilies'"
@@ -2329,7 +2329,7 @@
                             class="icon-fiber_manual_record text-gray-600"
                           ></span>
                         </div>
-                        <div class="stepper-label has-action-menu">
+                        <div class="stepper-label has-action-menu mb-2 py-2 hover-active bg-hover cursor-pointer">
                           <div
                             class="stepper-title line-clamp line-clamp-3 mb-1"
                           >
@@ -3466,7 +3466,7 @@
 
         <ng-container *ngIf="loadedESalary && eBasicSalaryFormmodel">
           
-            <div *ngIf="crrEBSalary; else emptyDataTemplate">
+            <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer" *ngIf="crrEBSalary; else emptyDataTemplate">
               <codx-temp-full
                 (clickMF)="clickMF($event, crrEBSalary, 'basicSalary')"
                 [dataItem]="crrEBSalary"
@@ -3753,7 +3753,7 @@
           "
         >
           
-          <div class="mt-4">
+          <div class="mt-4 row">
             <ng-container *ngFor="let benefit of listCrrBenefit">
               <div class="ms-8 w-100">
                 <codx-temp-full
@@ -3761,7 +3761,7 @@
                   [dataItem]="benefit"
                   [formModel]="benefitFormodel"
                   [footer]="footerBenefit"
-                  cardCss=""
+                  cardCss="mb-2 py-2 hover-active bg-hover cursor-pointer"
                   [typeMF]="'hover'"
                 >
                 </codx-temp-full>
@@ -3973,7 +3973,7 @@
           </div>
 
           <div
-            class="mt-5"
+            class="mt-5 row mb-2 py-2 hover-active bg-hover cursor-pointer"
             *ngIf="crrEContract && eContractFormModel; else emptyDataTemplate"
           >
             <codx-temp-full

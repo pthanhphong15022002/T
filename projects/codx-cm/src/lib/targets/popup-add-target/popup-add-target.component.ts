@@ -508,11 +508,11 @@ export class PopupAddTargetComponent {
     // }
     this.data.year = year;
     this.text = e?.text;
-    if (this.typeChange != 'noInput') {
-      this.setListTargetLine();
-    } else {
-      this.typeChange = 'input';
-    }
+    // if (this.typeChange != 'noInput') {
+    //   this.setListTargetLine();
+    // } else {
+    //   this.typeChange = 'input';
+    // }
     this.getListTimeCalendar(e?.text);
 
     this.changedetectorRef.detectChanges();

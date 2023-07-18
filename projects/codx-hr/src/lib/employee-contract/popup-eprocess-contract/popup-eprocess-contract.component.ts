@@ -49,6 +49,8 @@ export class PopupEProcessContractComponent
   openFrom: string;
   employeeObj: any;
 
+  disabledInput=false;
+
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
   benefitObj: any;
@@ -105,6 +107,9 @@ export class PopupEProcessContractComponent
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
 
@@ -246,7 +251,6 @@ export class PopupEProcessContractComponent
 
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
-            this.isAfterRender = true;
 
             this.formGroup.patchValue({
               orgUnitID: this.employeeObj.orgUnitID,
@@ -254,11 +258,11 @@ export class PopupEProcessContractComponent
             this.formGroup.patchValue({
               positionID: this.employeeObj.positionID,
             });
-
+            this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
-    } else if (this.actionType === 'edit' || this.actionType === 'copy') {
+    } else if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
       this.loadedAutoField = true;
       if (this.actionType == 'copy') {
         if (this.data.signedDate == '0001-01-01T00:00:00') {

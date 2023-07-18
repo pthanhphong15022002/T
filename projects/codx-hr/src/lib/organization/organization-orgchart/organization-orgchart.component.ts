@@ -30,6 +30,13 @@ import {
   ConnectorType,
   NavigationMode,
   OrientationType,
+  VerticalAlignmentType,
+  HorizontalAlignmentType,
+  Visibility,
+  SelectionPathMode,
+  ShapeType,
+  LineType,
+  ElbowType,
 } from 'ngx-basic-primitives';
 import {
   ApiHttpService,
@@ -60,18 +67,69 @@ export class OrganizationOrgchartComponent implements OnInit {
   ConnectorType = ConnectorType;
   GroupByType = GroupByType;
   OrientationType = OrientationType;
+  VerticalAlignment = VerticalAlignmentType;
+  HorizontalAlignmentType = HorizontalAlignmentType;
+  LeavesPlacementType = ChildrenPlacementType;
+  Visibility = Visibility;
+  SelectionPathMode = SelectionPathMode;
+  HasButtons = Enabled;
+  HasSelectorCheckbox = Enabled;
+  MinimizedItemShapeType = ShapeType;
+  MinimizedItemLineType = LineType;
+  ArrowsDirection = GroupByType;
+  ElbowType = ElbowType;
   items: Array<OrgItemConfig> = [];
+
   dataVll: [];
   //Variable diagram
   pagefit: any;
   orientationType: any;
   childrenPlacementType: any;
+  verticalAlignment: any;
+  horizontalAlignment: any;
+  leavesPlacementType: any;
+  minimalVisibility: any;
+  selectionPathMode: any;
+  hasButtons: any;
+  minimizedItemShapeType: any;
+  minimizedItemLineType: any;
+  arrowsDirection: any;
+  connectorType: any;
+  elbowType: any;
+  hasSelectorCheckbox: any = Enabled.False;
+  alignBranches: boolean = false;
+  placeAdviserAbove: boolean = false;
+  placeAssitantAbove: boolean = false;
+  maximumColumnsInMatrix: number;
+  minimumVisibleLevels: number;
+  markerWidth: number;
+  markerHeight: number;
+  minimizedItemCornerRadius: number;
+  selectCheckBoxLabel: string;
+  hightlightleft: number;
+  hightlightTop: number;
+  hightlightRight: number;
+  hightlightBottom: number;
+  minimizedItemLineWidth: number;
+  minimizedItemOpacity: number;
+  normalLevelShift: number;
+  dotLevelShift: number;
+  lineLevelShift: number;
+  normalItemsInterval: number;
+  dotItemsInterval: number = 30;
+  lineItemsInterval: number;
+  cousinsIntervalMultiplier: number;
+  paddingIntervalLeft: number;
+  paddingIntervalTop: number;
+  paddingIntervalRight: number;
+  paddingIntervalBottom: number;
   @ViewChild('contactTemplate') contactTemplate: TemplateRef<any>;
 
   //Popup Settings
   dialogEditStatus: any;
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
+  collapsed: boolean[] = [];
 
   annotations: Array<LevelAnnotationConfig> = [];
   datasetting: any = null;
@@ -127,39 +185,325 @@ export class OrganizationOrgchartComponent implements OnInit {
   changeMode(e) {
     var target = e.target.id;
 
-    if (target === 'pageFitModeNone') {
-      this.pagefit = this.PageFitMode.None;
-    }
-    if (target === 'pageFitModeFit') {
-      this.pagefit = this.PageFitMode.FitToPage;
-    }
+    switch (target) {
+      case 'pageFitModeNone':
+        this.pagefit = this.PageFitMode.None;
+        break;
+      case 'pageFitModeWidth':
+        this.pagefit = this.PageFitMode.PageWidth;
+        break;
+      case 'pageFitModeHeight':
+        this.pagefit = this.PageFitMode.PageHeight;
+        break;
+      case 'pageFitModeFit':
+        this.pagefit = this.PageFitMode.FitToPage;
+        break;
+      case 'pageFitModeSelect':
+        this.pagefit = this.PageFitMode.SelectionOnly;
+        break;
 
-    //Orientation
-    if (target === 'orientationTop') {
-      this.orientationType = this.OrientationType.Top;
-    }
-    if (target === 'orientationBottom') {
-      this.orientationType = this.OrientationType.Bottom;
-    }
-    if (target === 'orientationLeft') {
-      this.orientationType = this.OrientationType.Left;
-    }
-    if (target === 'orientationRight') {
-      this.orientationType = this.OrientationType.Right;
-    }
-    if (target === 'orientationNone') {
-      this.orientationType = this.OrientationType.None;
-    }
+      //Orientation
+      case 'orientationTop':
+        this.orientationType = this.OrientationType.Top;
+        break;
+      case 'orientationBottom':
+        this.orientationType = this.OrientationType.Bottom;
+        break;
+      case 'orientationLeft':
+        this.orientationType = this.OrientationType.Left;
+        break;
+      case 'orientationRight':
+        this.orientationType = this.OrientationType.Right;
+        break;
+      case 'orientationNone':
+        this.orientationType = this.OrientationType.None;
+        break;
 
-    //PlacementType
-    if (target === 'childrenPlacementAuto') {
-      this.childrenPlacementType = this.ChildrenPlacementType.Auto;
-    }
-    if (target === 'childrenPlacementVertical') {
-      this.childrenPlacementType = this.ChildrenPlacementType.Vertical;
-    }
-    if (target === 'childrenPlacementHorizontal') {
-      this.childrenPlacementType = this.ChildrenPlacementType.Horizontal;
+      //PlacementType children
+      case 'childrenPlacementAuto':
+        this.childrenPlacementType = this.ChildrenPlacementType.Auto;
+        break;
+      case 'childrenPlacementVertical':
+        this.childrenPlacementType = this.ChildrenPlacementType.Vertical;
+        break;
+      case 'childrenPlacementHorizontal':
+        this.childrenPlacementType = this.ChildrenPlacementType.Horizontal;
+        break;
+      case 'childrenPlacementMatrix':
+        this.childrenPlacementType = this.ChildrenPlacementType.Matrix;
+        break;
+
+      //Hạng mục căn dọc
+      case 'itemVerticalTop':
+        this.verticalAlignment = this.VerticalAlignment.Top;
+        break;
+      case 'itemVerticalMiddle':
+        this.verticalAlignment = this.VerticalAlignment.Middle;
+        break;
+      case 'itemVerticalBottom':
+        this.verticalAlignment = this.VerticalAlignment.Bottom;
+        break;
+
+      //Hạng mục căn ngang
+      case 'horizontalAlignmentCenter':
+        this.horizontalAlignment = this.HorizontalAlignmentType.Center;
+        break;
+      case 'horizontalAlignmentleft':
+        this.horizontalAlignment = this.HorizontalAlignmentType.Left;
+        break;
+      case 'horizontalAlignmentRight':
+        this.horizontalAlignment = this.HorizontalAlignmentType.Right;
+        break;
+
+      case 'crossBranch':
+        this.alignBranches = e.target.checked;
+        break;
+
+      //Hạng mục lá con
+      case 'leavesPlaceAuto':
+        this.leavesPlacementType = this.LeavesPlacementType.Auto;
+        break;
+      case 'leavesPlaceVertical':
+        this.leavesPlacementType = this.LeavesPlacementType.Vertical;
+        break;
+      case 'leavesPlaceHorizontal':
+        this.leavesPlacementType = this.LeavesPlacementType.Horizontal;
+        break;
+      case 'leavesPlaceMatrix':
+        this.leavesPlacementType = this.LeavesPlacementType.Matrix;
+        break;
+
+      case 'placeAdviserAbove':
+        this.placeAdviserAbove = e.target.checked;
+        break;
+      case 'placeAssitantAbove':
+        this.placeAssitantAbove = e.target.checked;
+        break;
+
+      case 'columnMatrix':
+        this.maximumColumnsInMatrix = parseInt(e.target.value);
+        break;
+
+      //Khả năng hiển thị tối thiểu
+      case 'minimalNodeAuto':
+        this.minimalVisibility = this.Visibility.Auto;
+        break;
+      case 'minimalNodeNormal':
+        this.minimalVisibility = this.Visibility.Normal;
+        break;
+      case 'minimalNodeDot':
+        this.minimalVisibility = this.Visibility.Dot;
+        break;
+      case 'minimalNodeLine':
+        this.minimalVisibility = this.Visibility.Line;
+        break;
+      case 'minimalNodeInvisible':
+        this.minimalVisibility = this.Visibility.Invisible;
+        break;
+
+      //Mức nhìn thấy tối thiểu
+      case 'minimumVisible':
+        this.minimumVisibleLevels = parseInt(e.target.value);
+        break;
+
+      //Chế độ đường dẫn
+      case 'selectPathMode':
+        this.selectionPathMode = this.SelectionPathMode.None;
+        break;
+      case 'selectPathModeFullStack':
+        this.selectionPathMode = this.SelectionPathMode.FullStack;
+        break;
+
+      //Nút người dùng
+      case 'buttonUserAuto':
+        this.hasButtons = this.HasButtons.Auto;
+        break;
+      case 'buttonUserTrue':
+        this.hasButtons = this.HasButtons.True;
+        break;
+      case 'buttonUserFalse':
+        this.hasButtons = this.HasButtons.False;
+        break;
+
+      //Nút chọn
+      case 'selectionCheckboxAuto':
+        this.hasSelectorCheckbox = this.HasSelectorCheckbox.Auto;
+        break;
+      case 'selectionCheckboxTrue':
+        this.hasSelectorCheckbox = this.HasSelectorCheckbox.True;
+        break;
+      case 'selectionCheckboxFalse':
+        this.hasSelectorCheckbox = this.HasSelectorCheckbox.False;
+        break;
+
+      case 'selectCheckBoxLabelText':
+        this.selectCheckBoxLabel = e.target.value;
+        break;
+
+      //Kích cỡ đánh dấu
+      case 'markerWidth':
+        this.markerWidth = parseInt(e.target.value);
+        break;
+      case 'markerHeight':
+        this.markerHeight = parseInt(e.target.value);
+        break;
+
+      //Bán kính gó
+      case 'cornerRadius':
+        this.minimizedItemCornerRadius = parseInt(e.target.value);
+        break;
+
+      //Đánh dấu đường viền xung quanh
+      case 'highlightPaddingLeft':
+        this.hightlightleft = parseInt(e.target.value);
+        break;
+      case 'highlightPaddingTop':
+        this.hightlightTop = parseInt(e.target.value);
+        break;
+      case 'highlightPaddingRight':
+        this.hightlightRight = parseInt(e.target.value);
+        break;
+      case 'highlightPaddingBottom':
+        this.hightlightBottom = parseInt(e.target.value);
+        break;
+
+      //Hình dạng đánh dấu
+      case 'rectangle':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.Rectangle;
+        break;
+      case 'oval':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.Oval;
+        break;
+      case 'triangle':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.Triangle;
+        break;
+      case 'crossout':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.CrossOut;
+        break;
+      case 'circle':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.Circle;
+        break;
+      case 'rhombus':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.Rhombus;
+        break;
+      case 'wedge':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.Wedge;
+        break;
+      case 'frameoval':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.FramedOval;
+        break;
+      case 'frametriangle':
+        this.minimizedItemShapeType =
+          this.MinimizedItemShapeType.FramedTriangle;
+        break;
+      case 'framewedge':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.FramedWedge;
+        break;
+      case 'frameRhombus':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.FramedRhombus;
+        break;
+      case 'shapeNone':
+        this.minimizedItemShapeType = this.MinimizedItemShapeType.None;
+        break;
+
+      case 'borderLineWidth':
+        this.minimizedItemLineWidth = parseInt(e.target.value);
+        break;
+
+      //Loại đường viền đánh dấu
+      case 'borderMarkerSolid':
+        this.minimizedItemLineType = this.MinimizedItemLineType.Solid;
+        break;
+      case 'borderMarkerDot':
+        this.minimizedItemLineType = this.MinimizedItemLineType.Dotted;
+        break;
+      case 'borderMarkerDash':
+        this.minimizedItemLineType = this.MinimizedItemLineType.Dashed;
+        break;
+
+      //Độ trong suốt
+      case 'opacityMarker':
+        this.minimizedItemOpacity = parseFloat(e.target.value);
+        break;
+
+      //Khoảng cách dọc giữa các hàng
+      case 'verticalBetweenNormal':
+        this.normalLevelShift = parseInt(e.target.value);
+        break;
+      case 'verticalBetweenDot':
+        this.dotLevelShift = parseInt(e.target.value);
+        break;
+      case 'verticalBetweenLine':
+        this.lineLevelShift = parseInt(e.target.value);
+        break;
+
+      //Khoảng cách ngang giữa các hàng
+      case 'horizontalBetweenNormal':
+        this.normalItemsInterval = parseInt(e.target.value);
+        break;
+      case 'horizontalBetweenDot':
+        this.dotItemsInterval = parseInt(e.target.value);
+        break;
+      case 'horizontaletweenLine':
+        this.lineItemsInterval = parseInt(e.target.value);
+        break;
+
+      // Không gian giữa các hệ thống phân cấp
+      case 'cousinInterval':
+        this.cousinsIntervalMultiplier = parseInt(e.target.value);
+        break;
+
+      // Tăng khoảng cách
+      case 'paddingIntervalLeft':
+        this.paddingIntervalLeft = parseInt(e.target.value);
+        break;
+      case 'paddingIntervalTop':
+        this.paddingIntervalTop = parseInt(e.target.value);
+        break;
+      case 'paddingIntervalRight':
+        this.paddingIntervalRight = parseInt(e.target.value);
+        break;
+      case 'paddingIntervalBottom':
+        this.paddingIntervalBottom = parseInt(e.target.value);
+        break;
+
+      //Hướng mũi tên
+      case 'arrowDirectionNone':
+        this.arrowsDirection = this.ArrowsDirection.None;
+        break;
+      case 'arrowDirectionParent':
+        this.arrowsDirection = this.ArrowsDirection.Parents;
+        break;
+      case 'arrowDirectionChildren':
+        this.arrowsDirection = this.ArrowsDirection.Children;
+        break;
+
+      //Kết nối
+      case 'connectorsSquare':
+        this.connectorType = this.ConnectorType.Squared;
+        break;
+      case 'connectorsAngular':
+        this.connectorType = this.ConnectorType.Angular;
+        break;
+      case 'connectorsCurved':
+        this.connectorType = this.ConnectorType.Curved;
+        break;
+
+      //Loại gập
+      case 'elbowsNone':
+        this.elbowType = this.ElbowType.None;
+        break;
+      case 'elbowsDot':
+        this.elbowType = this.ElbowType.Dot;
+        break;
+      case 'elbowsBevel':
+        this.elbowType = this.ElbowType.Bevel;
+        break;
+      case 'elbowsRound':
+        this.elbowType = this.ElbowType.Round;
+        break;
+      default:
+      // code block
     }
   }
 
@@ -261,8 +605,6 @@ export class OrganizationOrgchartComponent implements OnInit {
               );
               // }
             });
-            console.log(items);
-
             this.items = items;
           }
         });

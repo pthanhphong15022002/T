@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
-import { ApprovalCmComponent } from './approval-cm/approval-cm.component';
+import { CmApprovalComponent } from './cm-approval/cm-approval.component';
 
 const routes: Routes = [
   {
@@ -10,8 +10,8 @@ const routes: Routes = [
     component: CodxApprovalComponent,
     children: [
       {
-        path: 'khanh/:FuncID/:id',
-        component: ApprovalCmComponent,
+        path: 'quotations/:FuncID/:id',
+        component: CmApprovalComponent,
       },
     ],
   },
@@ -21,4 +21,4 @@ const routes: Routes = [
   declarations: [],
   imports: [CommonModule, RouterModule.forChild(routes)],
 })
-export class ApprovelCmModule {}
+export class CodxApprovelModule {}
