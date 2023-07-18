@@ -3440,16 +3440,18 @@ lib-employee-list{
 .e-hscroll-bar{
   margin: 0 5px;
 }
+.FD_Cards{
+  .text-feed{
+    height: 310px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #1e1d1f33 !important;
+  }
+}
 
-// .text-feed{
-//   height: 310px;
-//     overflow-y: scroll;
-//     -webkit-overflow-scrolling: touch;
-// }
-// .text-feed::-webkit-scrollbar {
-//   width: 0px !important; /* ẩn thanh cuộn */
-//   height: 0px !important;
-// }
+
 
 // .text-feed::-webkit-scrollbar-track {
 //   background-color: transparent !important; /* ẩn thanh cuộn */

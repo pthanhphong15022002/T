@@ -1,4 +1,4 @@
-<div class="ms-5 d-flex flex-wrap card-view">
+<div #cardView class="ms-5 d-flex flex-wrap card-view" (scroll)="scroll(cardView)">
     <div class="me-5 mt-5 card-item" *ngFor="let data of lstData">
         <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
             imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" [dataItem]="data" [footer]="footer"
