@@ -91,12 +91,9 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
-import { CustomergroupsComponent } from './customergroups/customergroups.component';
-import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
-import { CodxDpModule } from 'projects/codx-dp/src/public-api';
 import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
@@ -207,8 +204,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CampaignsDetailComponent,
     PopupConvertLeadComponent,
     ContractsComponent,
-    CustomergroupsComponent,
-    PopupAddCustgroupComponent,
+    // CustomergroupsComponent,
+    // PopupAddCustgroupComponent,
     //test
     SettingProcessCmComponent,
     CodxAsideCustomComponent,
