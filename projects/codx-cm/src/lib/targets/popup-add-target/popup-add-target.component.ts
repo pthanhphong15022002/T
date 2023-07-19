@@ -86,25 +86,22 @@ export class PopupAddTargetComponent {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.isAllocation = this.data?.allocation == '1' ? true : false;
-    this.cache.valueList('CRM046').subscribe((res) => {
-      if (res && res.datas) {
-        res.datas.forEach((element) => {
-          if (
-            !this.lstQuarters?.some((x) => x.id == parseInt(element?.value))
-          ) {
-            var tmp = {};
-            tmp['recID'] = Util.uid();
-            tmp['id'] = parseInt(element?.value);
-            tmp['text'] = element?.text ?? element?.default;
-            tmp['target'] = 0;
-            tmp['userID'] = null;
-            this.lstQuarters.push(Object.assign({}, tmp));
-          }
-        });
-      }
-    });
+    var res = await firstValueFrom(this.cache.valueList('CRM046'));
+    if (res && res.datas) {
+      res?.datas?.forEach((element) => {
+        if (!this.lstQuarters?.some((x) => x.id == parseInt(element?.value))) {
+          var tmp = {};
+          tmp['recID'] = Util.uid();
+          tmp['id'] = parseInt(element?.value);
+          tmp['text'] = element?.text ?? element?.default;
+          tmp['target'] = 0;
+          tmp['userID'] = null;
+          this.lstQuarters.push(Object.assign({}, tmp));
+        }
+      });
+    }
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.selectedType = this.getFormatCalendar(null);
@@ -659,6 +656,8 @@ export class PopupAddTargetComponent {
   //#endregion
 
   //#region dblick Edit targetLine
+
+  //#endregion
   onOutsideClick() {
     this.editingItem = null;
   }
@@ -769,5 +768,9 @@ export class PopupAddTargetComponent {
     }
     this.changedetectorRef.detectChanges();
   }
+  //#endregion
+
+  //#region remove
+  removeUser(item) {}
   //#endregion
 }
