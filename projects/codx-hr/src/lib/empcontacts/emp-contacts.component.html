@@ -134,7 +134,7 @@
         <ng-template #positionTooltip>
           <div class="d-flex flex-column">
             <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
-            <span class="data-text-color" *ngIf="positionField.scrollHeight > positionField.clientHeight">{{data.positionName? data.positionName : data.positionID}}</span>
+            <span class="data-text-color data-text-width" *ngIf="positionField.scrollHeight > positionField.clientHeight">{{data.positionName? data.positionName : data.positionID}}</span>
           </div>
         </ng-template>
       </span>
