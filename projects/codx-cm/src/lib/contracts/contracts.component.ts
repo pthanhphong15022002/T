@@ -21,6 +21,7 @@ import {
   RequestOption,
   CallFuncService,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import {
   CM_Contracts,
@@ -51,9 +52,16 @@ export class ContractsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   //temGird
-  @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
-  @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
-  @ViewChild('templateCreatedBy') templateCreatedBy: TemplateRef<any>;
+  @ViewChild('tempContractName') tempContractName: TemplateRef<any>;
+  @ViewChild('tempCustomerID') tempCustomerID: TemplateRef<any>;
+  @ViewChild('tempContractAmt') tempContractAmt: TemplateRef<any>;
+  @ViewChild('tempPaidAmt') tempPaidAmt: TemplateRef<any>;
+  @ViewChild('tempRemainAmt') tempRemainAmt: TemplateRef<any>;
+  @ViewChild('tempEffectiveFrom') tempEffectiveFrom: TemplateRef<any>;
+  @ViewChild('tempEffectiveTo') tempEffectiveTo: TemplateRef<any>;
+  @ViewChild('tempDealID') tempDealID: TemplateRef<any>;
+  @ViewChild('tempQuotationID') tempQuotationID: TemplateRef<any>;
+  @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
 
   listClicked = [];
   views: Array<ViewModel> = [];
@@ -63,6 +71,7 @@ export class ContractsComponent extends UIComponent {
 
   account: any;
   quotations: CM_Quotations;
+  listInsStep = [];
 
   tabClicked = '';
   actionName = '';
@@ -183,6 +192,15 @@ export class ContractsComponent extends UIComponent {
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
     );
+
+    let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
+    if (Array.isArray(arrField)) {
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
+      this.getColumsGrid(this.grvSetup);
+    }
+
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
 
@@ -216,27 +234,7 @@ export class ContractsComponent extends UIComponent {
       },
     ];
     this.getAccount();
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-          template2: this.templateMore,
-          // frozenColumns: 1,
-        },
-      },
-    ];
+    this.getColumsGrid(this.grvSetup);
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -244,27 +242,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-          template2: this.templateMore,
-          // frozenColumns: 1,
-        },
-      },
-    ];
+    this.getColumsGrid(this.grvSetup);
   }
 
   changeTab(e) {
@@ -284,6 +262,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   selectedChange(val: any) {
+    if (!val?.data) return;
     this.itemSelected = val?.data;
     this.getQuotationsAndQuotationsLinesByTransID(
       this.itemSelected.quotationID
@@ -322,13 +301,57 @@ export class ContractsComponent extends UIComponent {
   }
 
   // moreFunc
-  eventChangeMF(e) {
+  changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
 
-  changeDataMF(e, data) {}
+  changeDataMF(event, data:CM_Contracts) {
+    if (event != null) {
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02':
+        
+        break;
+      case 'SYS03':
+        
+        break;
+      case 'SYS04':
+        
+        break;
+      case 'CM0204_4':
+        res.disabled = true;
+        break;
+      case 'CM0204_3'://tạo hợp đồng gia hạn
+        if(data?.status == '0'){
+          res.disabled = true;
+        }
+        break;
+      case 'CM0204_5'://Đã giao hàng
+      if(data?.status == '0'){
+        res.disabled = true;
+      }
+        break;
+      case 'CM0204_6'://hoàn tất hợp đồng
+        if(data?.status == '0'){
+          res.disabled = true;
+        }
+        break;
+      case 'CM0204_1'://Gửi duyệt
+        if(data?.status != '0'){
+          res.disabled = true;
+        }
+        break;
+      case 'CM0204_2'://Hủy yêu cầu duyệt
+        if(data?.status == '0'){
+          res.disabled = true;
+        }
+        break;
+        }
+      });
+    }
+  }
 
-  clickMoreFunction(e) {
+  clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
   }
   clickMF(e, data) {
@@ -357,13 +380,47 @@ export class ContractsComponent extends UIComponent {
         break;
       case 'CM0204_1':
         //Gửi duyệt
-
+        this.approvalTrans(data);
         break;
       case 'CM0204_2':
         //Hủy yêu cầu duyệt
-
+        this.cancelApprover(data);
+        break;
+      case 'CM0204_9':
+        //Bắt đầu
+        this.startInstance(data);
+        break;
+      case 'CM0204_8':
+        //Chuyển giai đoạn
+        this.cancelApprover(data);
+        break;
+      case 'CM0204_10':
+        //thành công
+        this.cancelApprover(data);
+        break;
+      case 'CM0204_11':
+        //thất bại
+        this.cancelApprover(data);
         break;
     }
+  }
+
+  startInstance(data){
+    this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'StartInstanceAsync',
+      [data?.refID]
+    ).subscribe((res) =>{
+      console.log(res);
+      if(res){
+        this.listInsStep = res;
+      }
+    })
+  }
+
+  moveStep(){
+    
   }
 
   async addContract() {
@@ -534,11 +591,15 @@ export class ContractsComponent extends UIComponent {
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.cmService.getProcess(dt.processID).subscribe((process) => {
+    this.cmService.getProcess(dt?.processID).subscribe((process) => {
       if (process) {
         this.cmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notiService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -546,10 +607,7 @@ export class ContractsComponent extends UIComponent {
             }
           });
       } else {
-        this.notiService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notiService.notifyCode('DP040');
       }
     });
   }
@@ -584,7 +642,7 @@ export class ContractsComponent extends UIComponent {
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.cmService.getProcess(dt.processID).subscribe((process) => {
+        this.cmService.getProcess(dt?.processID).subscribe((process) => {
           if (process) {
             this.cmService
               .getESCategoryByCategoryID(process.processNo)
@@ -616,13 +674,13 @@ export class ContractsComponent extends UIComponent {
                         } else this.notiService.notifyCode('SYS021');
                       });
                   }
+                } else {
+                  this.notiService.notifyCode('ES028');
+                  return;
                 }
               });
           } else {
-            this.notiService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
+            this.notiService.notifyCode('DP040');
           }
         });
       }
@@ -630,84 +688,87 @@ export class ContractsComponent extends UIComponent {
   }
   //end duyet
   //--------------------------------------------------------------------//
-  // getColumsGrid(grvSetup) {
-  //   this.columnGrids = [];
-  //   this.arrFieldIsVisible.forEach((key) => {
-  //     let field = Util.camelize(key);
-  //     let template: any;
-  //     let colums: any;
-  //     switch (key) {
-  //       case 'Status':
-  //         template = this.templateStatus;
-  //         break;
-  //       case 'CustomerID':
-  //         template = this.templateCustomer;
-  //         break;
-  //       case 'CreatedBy':
-  //         template = this.templateCreatedBy;
-  //         break;
-  //       case 'TotalTaxAmt':
-  //         template = this.templateTotalTaxAmt;
-  //         break;
-  //       case 'TotalAmt':
-  //         template = this.templateTotalAmt;
-  //         break;
-  //       case 'TotalSalesAmt':
-  //         template = this.templateTotalSalesAmt;
-  //         break;
-  //       case 'CreatedOn':
-  //         template = this.templateCreatedOn;
-  //         break;
-  //       case 'DealID':
-  //         template = this.templateDeal;
-  //         break;
-  //       case 'ApproveStatus':
-  //         template = this.templateApproverStatus;
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //     if (template) {
-  //       colums = {
-  //         field: field,
-  //         headerText: grvSetup[key].headerText,
-  //         width: grvSetup[key].width,
-  //         template: template,
-  //         // textAlign: 'center',
-  //       };
-  //     } else {
-  //       colums = {
-  //         field: field,
-  //         headerText: grvSetup[key].headerText,
-  //         width: grvSetup[key].width,
-  //       };
-  //     }
+  getColumsGrid(grvSetup) {
+    this.columnGrids = [];
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'contractName':
+          template = this.tempContractName;
+          break;
+        case 'customerID':
+          template = this.tempCustomerID;
+          break;
+        case 'contractAmt':
+          template = this.tempContractAmt;
+          break;
+        case 'paidAmt':
+          template = this.tempPaidAmt;
+          break;
+        case 'remainAmt':
+          template = this.tempRemainAmt;
+          break;
+        case 'effectiveFrom':
+          template = this.tempEffectiveFrom;
+          break;
+        case 'effectiveTo':
+          template = this.tempEffectiveTo;
+          break;
+        case 'dealID':
+          template = this.tempDealID;
+          break;
+        case 'quotationID':
+          template = this.tempQuotationID;
+          break;
+          case 'status':
+          template = this.tempStatus;
+          break;
+        default:
+          break;
+      }
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+          template: template,
+          // textAlign: 'center',
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+        };
+      }
 
-  //     this.columnGrids.push(colums);
-  //   });
+      this.columnGrids.push(colums);
+    });
 
-  //   this.views = [
-  //     {
-  //       type: ViewType.listdetail,
-  //       active: true,
-  //       sameData: true,
-  //       model: {
-  //         template: this.itemTemplate,
-  //         panelRightRef: this.templateDetail,
-  //       },
-  //     },
-  //     {
-  //       type: ViewType.grid,
-  //       active: false,
-  //       sameData: true,
-  //       model: {
-  //         resources: this.columnGrids,
-  //         template2: this.templateMore,
-  //         // frozenColumns: 1,
-  //       },
-  //     },
-  //   ];
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
+        },
+      },
+    ];
 
-  //   this.detectorRef.detectChanges();
-  // }
+    this.detectorRef.detectChanges();
+  }
 }

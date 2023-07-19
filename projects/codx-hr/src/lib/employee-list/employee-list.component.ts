@@ -195,6 +195,8 @@ export class EmployeeListComponent extends UIComponent {
           if (e.event) {
             this.grv2DataChanged = true;
             this.view.currentView.dataService.load().subscribe();
+            if (e.event?.orgUnitID == this.itemSelected?.orgUnitID)
+              this.itemSelected = e.event;
             //(this.view.dataService as CRUDService).add(e.event).subscribe();
             //this.hasChangedData = true;
           }
@@ -333,9 +335,7 @@ export class EmployeeListComponent extends UIComponent {
       this.detectorRef.detectChanges();
     });
   }
-
-
-  viewChanged(event: any) {
+  viewChanging(event: any) {
     if (event?.view?.id === '2' || event?.id === '2') {
       this.view.dataService.parentIdField = 'ParentID';
       this.view.dataService.idField = 'orgUnitID';
@@ -345,21 +345,27 @@ export class EmployeeListComponent extends UIComponent {
       this.view.dataService.idField = 'employeeID';
       this.view.idField = 'employeeID';
     }
+  }
+
+  viewChanged(event: any) {
+    // if (event?.view?.id === '2' || event?.id === '2') {
+    //   this.view.dataService.parentIdField = 'ParentID';
+    //   this.view.dataService.idField = 'orgUnitID';
+    //   this.view.idField = 'orgUnitID';
+    // } else if (event?.view?.id === '1' || event?.id === '1') {
+    //   this.view.dataService.parentIdField = '';
+    //   this.view.dataService.idField = 'employeeID';
+    //   this.view.idField = 'employeeID';
+    // }
     if (this.grv2DataChanged || this.hasChangedData) {
-      // if (this.viewActive !== event.view.id && this.flagLoaded) {
-      // if (event?.view?.id === '1' || event?.id === '1') {
-      //   this.view.dataService.data = [];
-      //   this.view.dataService.parentIdField = '';
-      // } else {
-      //   this.view.dataService.parentIdField = 'ParentID';
-      // }
-      if (event?.view?.id == '1 ' || event?.id == '1') {
+      if (event?.view?.id == '1' || event?.id == '1') {
         this.view.dataService.data = [];
         this.view.dataService.page = 0;
         this.view.dataService.load().subscribe();
       }
-      //check update data when CRUD or not
-      // this.flagLoaded = false;
+      if (event?.view?.id == '2' || event?.id == '2') {
+        this.view.currentView.dataService.load().subscribe();
+      }
 
       //Prevent load data when click same id
       this.viewActive = event.view.id;
@@ -417,7 +423,7 @@ export class EmployeeListComponent extends UIComponent {
   dataChange(event) {
     this.grv2DataChanged = event?.hasDataChanged ? true : false;
   }
-  getGridViewDataService(event){
+  getGridViewDataService(event) {
     this.gridViewDataService = event;
   }
 }

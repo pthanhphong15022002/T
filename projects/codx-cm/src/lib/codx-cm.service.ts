@@ -901,6 +901,14 @@ export class CodxCmService {
       data
     );
   }
+  getStepByStepIDAndInID(insID, stepID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepByStepIDAndInIDAsync',
+      [insID, stepID]
+    );
+  }
 
   //#endregion -- Bao
 
@@ -1034,6 +1042,11 @@ export class CodxCmService {
     );
   }
 
+  //load data chua xong
+  loadDataApproverByID(id, classMame) {
+    return this.api.exec<any>('CM', classMame, 'LoadDataApproverByIDAsync', id);
+  }
+  //
   getProcess(recID) {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', recID);
   }

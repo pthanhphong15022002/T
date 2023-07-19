@@ -117,7 +117,7 @@
     <span [innerHTML]="data?.resourceName "></span>
   </div>
 </ng-template>
-<ng-template #gridHost let-data>
+<ng-template #gridOwner let-data>
   <span [innerHTML]="data?.owner | formatvalue : formModel : 'Owner' | async"></span>
 </ng-template>
 <ng-template #gridBookingOn let-data>

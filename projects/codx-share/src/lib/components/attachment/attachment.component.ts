@@ -1498,7 +1498,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
     if (!fileItem.urlPath) return null;
 
-    this.closeBtnUp = false;
+    //this.closeBtnUp = false;
     return fileItem;
   }
 
@@ -1729,6 +1729,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     );
     dialogs.closed.subscribe((item) => {
       if (item.event) {
+        debugger
         // var index = this.fileUploadList.findIndex(
         //   (x) => x.recID == item.event.recID
         // );

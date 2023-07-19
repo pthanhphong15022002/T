@@ -100,21 +100,37 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.acService
-      .loadComboboxData('CashBooks', 'AC')
-      .subscribe((cashBooks) => {
-        if (cashBooks) {
-          this.cashBookName1 = this.getCashBookNameById(
-            cashBooks,
-            this.cashTransfer?.cashBookID
-          );
-          this.cashBookName2 = this.getCashBookNameById(
-            cashBooks,
-            this.cashTransfer?.cashBookID2
-          );
+    if (this.cashTransfer.cashBookID || this.cashTransfer.cashBookID2) {
+      let predicates = '';
+      let datavalues = '[]';
+      if (this.cashTransfer.cashBookID) {
+        predicates = 'cashBookID=@0';
+        datavalues = this.cashTransfer.cashBookID;
+      }
+      if (this.cashTransfer.cashBookID2) {
+        if (predicates) {
+          predicates += ' or cashBookID=@1';
+          datavalues += ';' + this.cashTransfer.cashBookID2;
+        } else {
+          predicates = 'cashBookID=@0';
+          datavalues = this.cashTransfer.cashBookID;
         }
-      });
-
+      }
+      this.acService
+        .loadComboboxData('CashBooks', 'AC', predicates, datavalues)
+        .subscribe((cashBooks) => {
+          if (cashBooks) {
+            this.cashBookName1 = this.getCashBookNameById(
+              cashBooks,
+              this.cashTransfer?.cashBookID
+            );
+            this.cashBookName2 = this.getCashBookNameById(
+              cashBooks,
+              this.cashTransfer?.cashBookID2
+            );
+          }
+        });
+    }
     this.cache
       .gridViewSetup(
         this.dialogRef.formModel.formName,
@@ -303,7 +319,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
       this.handleDataBeforeSavingCashTransfer();
 
-      this.journalService.handleVoucherNoAndSave(
+      this.journalService.checkVoucherNoBeforeSave(
         this.journal,
         this.cashTransfer,
         'AC',
@@ -385,7 +401,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
     this.handleDataBeforeSavingCashTransfer();
 
-    this.journalService.handleVoucherNoAndSave(
+    this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.cashTransfer,
       'AC',

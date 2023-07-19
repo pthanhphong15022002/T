@@ -289,3 +289,17 @@
 <ng-template #popDetail let-popup>
   <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
 </ng-template>
+
+<!-- temp more cua gird -->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (changeDataMF)="changeDataMFGird($event, data)"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
