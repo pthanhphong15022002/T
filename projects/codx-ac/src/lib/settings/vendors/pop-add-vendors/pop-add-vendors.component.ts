@@ -64,6 +64,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   funcNameAddress: any;
   formType: any;
   validate: any = 0;
+  allowEditKey: any;
   dicMST: Map<string, any> = new Map<string, any>();
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
@@ -108,6 +109,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.vendors = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
+    this.allowEditKey = dialog.dataService!.allowEditKey;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let add = res.find((x) => x.functionID == 'SYS01');
@@ -551,10 +553,22 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.notification.notifyCode('SYS008', 0, '');
   }
   checkValidate() {
+
+    //Note: Tự động khi lưu, Không check BatchNo
+    let ignoredFields: string[] = [];
+    if (this.allowEditKey) {
+      ignoredFields.push('VendorID');
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Node
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.vendors);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+          continue;
+        }
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
@@ -658,12 +672,12 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
             config.type = 'YesNo';
             this.notification.alertCode('AC0007', config, '"' + this.vendors.vendorTaxCode + '"').subscribe((x) => {
               if (x.event.status == 'Y') {
-                this.save();
+                this.updateVendorIDBeforeSave();
               }
             });
           }
           else{
-            this.save();
+            this.updateVendorIDBeforeSave();
           }
         });
       }
@@ -721,6 +735,29 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
             }
           });
       }
+    }
+  }
+
+  updateVendorIDBeforeSave()
+  {
+    if(this.allowEditKey)
+    {
+      this.api.exec(
+        'ERM.Business.AC',
+        'CommonBusiness',
+        'GenerateAutoNumberAsync',
+      )
+      .subscribe((autoNumber: string) => {
+        if(autoNumber)
+        {
+          this.vendors.vendorID = autoNumber;
+          this.save();
+        }
+      });
+    }
+    else
+    {
+      this.save();
     }
   }
 
