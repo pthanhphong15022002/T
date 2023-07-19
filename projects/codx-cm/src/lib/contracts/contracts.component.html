@@ -130,5 +130,53 @@
   <contracts-view-detail
     [contract]="itemSelected"
     [formModel]="view.formModel"
+    (changeMF)="changeMF($event)"
+    (clickMoreFunc)="clickMoreFunc($event)"
   ></contracts-view-detail>
 </ng-template>
+
+<!--Tên hợp đồng -->
+<ng-template #contractName let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.contractName | formatvalue : view.formModel : 'ContractName' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<!-- Khách hàng -->
+<!-- báo giá -->
+<!-- Giá trị hợp đồng -->
+<ng-template #templateTotalAmt let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<!-- Cơ hội -->
+<ng-template #templateTotalAmt let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<!-- Giá trị hợp đồng -->
+<ng-template #templateTotalAmt let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<!-- Số tiền đã thanh toán -->
+<!-- Số tiền còn lại -->
+<!-- Trạng thái -->

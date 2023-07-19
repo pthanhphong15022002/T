@@ -25,7 +25,7 @@ import {
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, filter } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { StepService } from '../step.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -90,6 +90,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   listTask = [];
   idStepOld = '';
   addCarTitle = '';
+  titleAction = '';
   carFG: FormGroup;
   carFM: FormModel;
   currentStep: any;
@@ -97,7 +98,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   listTaskType = [];
   listGroupTask = [];
   progressTaskEnd = 0;
-  titleAction: any = '';
   dataPopupProgress: any;
   dateFomat = 'dd/MM/yyyy';
   grvMoreFunction: FormModel;
@@ -578,12 +578,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
-            if (task.taskType != 'B') res.disabled = true;
+            if (task?.taskType != 'B' || (task?.taskType == 'B' && task?.actionStatus == "2")) res.disabled = true;
             break;
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
-              if (task.taskType == 'M' && task?.actionStatus != '2')
+              if (task?.actionStatus != '2')
                 res.disabled = true;
             } else {
               res.disabled = true;
@@ -592,19 +592,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP29': // Hủy
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
-              if (task.taskType == 'M' && task?.actionStatus != '2')
+              if (task?.actionStatus != '2')
                 res.disabled = true;
             } else {
               res.disabled = true;
             }
             break;
           case 'DP30': //Khôi phục
-            if (['B', 'M'].includes(task.taskType)) {
-              this.convertMoreFunctions(event, res, task.taskType);
-              if (task.taskType == 'M') res.disabled = true;
-            } else {
-              res.disabled = true;
-            }
+            // if (['B', 'M'].includes(task.taskType)) {
+            //   this.convertMoreFunctions(event, res, task.taskType);
+            //   if (task.taskType == 'M') res.disabled = true;
+            // } else {
+            //   res.disabled = true;
+            // }
+            res.disabled = true;
             break;
           case 'DP31': // bắt đầu ngay
             if (task?.dependRule != '0' || task?.status != '1') {
@@ -786,7 +787,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.createMeeting(task);
         break;
       case 'DP28':
-        this.editMeeting(task);
+        if(task.taskType === 'M'){
+          this.editMeeting(task);
+        }else if(task.taskType === 'B'){
+          this.updateBookingCar(task);
+        }
         break;
       case 'DP29':
         this.deleteMeeting(task);
@@ -795,7 +800,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.sendMail();
         break;
       case 'DP27':
-        this.addBookingCar();
+        this.addBookingCar(task);
         break;
       case 'DP31':
         this.startTask(task, groupTask);
@@ -2091,15 +2096,63 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.isShowElement = !this.isShowElement;
   }
 
-  addBookingCar() {
+  async updateBookingCar(task){
+   let booking = await firstValueFrom(
+    this.api.exec<any>(
+      'EP',
+      'BookingsBusiness',
+      'GetBookingByIDAsync',
+      task?.reference
+    )); 
+    if(booking){
+      let option = new SidebarModel();
+      option.FormModel = this.carFM;
+      option.Width = '800px';
+      let data = [booking, 'DPT04', this.addCarTitle ,null, null, false,]
+      let dialog = this.callfc.openSide(
+        CodxAddBookingCarComponent,
+        data,
+        option
+      );
+    }
+  }
+
+  addBookingCar(task) {
+    let roleTypeP = task?.roles?.filter(role => role.roleType == "P") || [];
     let option = new SidebarModel();
     option.FormModel = this.carFM;
     option.Width = '800px';
-    this.callfc.openSide(
+    let data = [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false,roleTypeP]
+    let dialog = this.callfc.openSide(
       CodxAddBookingCarComponent,
-      [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
+      data,
       option
     );
+
+    dialog.closed.subscribe((e) => {
+      if(e?.event){
+        task.actionStatus = "2";
+        task.reference = e?.event?.recID;
+        this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', task)
+        .subscribe((res) => {
+          if (res) {
+            let group = this.listGroupTask.find(
+              (group) => group.refID == res?.taskGroupID
+            );
+            if (group) {
+              let index = group?.task?.findIndex(
+                (taskFind) => taskFind.recID == task.recID
+              );
+              if (index >= 0) {
+                group?.task?.splice(index, 1, res);
+              }
+            }
+          }
+        });
+      }
+    })
+
     // let option = new DialogModel();
     // option.FormModel = this.frmModelInstancesTask;
     // this.callfc

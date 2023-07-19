@@ -332,16 +332,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
+    this.user = this.authStore.get();
+    this.languages = this.auth.userValue?.language?.toLowerCase();
     this.entityName = this.dialog.formModel.entityName;
     this.systemProcess = dt?.data?.systemProcess ?? '0';
     this.action = dt?.data?.action;
     this.showID = dt?.data?.showID;
-    this.user = this.authStore.get();
-    this.languages = this.auth.userValue?.language?.toLowerCase();
+
     this.userId = this.user?.userID;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.titleAction = dt?.data?.titleAction;
     this.lstGroup = dt?.data?.lstGroup;
+    //copy
+    this.listClickedCoppy = dt?.data?.conditionCopy;
+    this.oldIdProccess = dt?.data?.oldIdProccess;
+    this.newIdProccess = dt?.data?.newIdProccess;
+    this.listValueCopy = dt?.data?.listValueCopy;
 
     this.formModelField = JSON.parse(JSON.stringify(dialog.formModel));
     this.formModelField.formName = 'DPStepsFields';
@@ -353,66 +359,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.systemProcess == '0'
         ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
         : JSON.parse(JSON.stringify(dt?.data?.data));
-    console.log(this.process);
-    this.getIconReason();
-    this.getValueYesNo();
-    this.getValueDayHour();
-    if (this.action === 'copy') {
-      this.process.category = '1';
-      this.listPermissions = [];
-      this.listPermissions = JSON.parse(
-        JSON.stringify(this.process.permissions)
-      );
-      this.process.permissions = [];
-      this.instanceNoSetting = this.process.instanceNoSetting;
-      this.listClickedCoppy = dt.data.conditionCopy;
-      this.oldIdProccess = dt.data.oldIdProccess;
-      this.newIdProccess = dt.data.newIdProccess;
-      this.listValueCopy = dt.data.listValueCopy;
-      var valueListStr = this.listValueCopy.join(';');
-      this.getAvatar(this.process);
-      if (
-        this.listValueCopy.includes('2') &&
-        !this.listValueCopy.includes('3')
-      ) {
-        this.process.permissions = this.listPermissions;
-        this.permissions = this.process.permissions;
-        this.setDefaultOwner();
-      }
-      if (this.listValueCopy.includes('3')) {
-        this.getListStepByProcessIDCopy(
-          this.oldIdProccess,
-          this.newIdProccess,
-          valueListStr
-        );
-      }
-    }
-    if (this.action == 'edit') {
-      this.loadEx();
-      this.loadWord();
-      this.loadListApproverStep();
-      // this.showID = true;
-      this.checkGroup = this.lstGroup.some(
-        (x) => x.groupID == this.process?.groupID
-      );
-      this.processNameBefore = this.process?.processName;
-      this.permissions = this.process.permissions;
-      if (this.permissions.length > 0) {
-        var perm = this.permissions.filter((x) => x.roleType == 'P');
-        this.lstParticipants = perm;
-      }
-      this.processTab = 3;
-      this.getAvatar(this.process);
-      this.instanceNoSetting = this.process.instanceNoSetting;
-    } else if (this.action == 'add') {
-      if (this.lstGroup != null && this.lstGroup.length > 0) {
-        this.process.groupID = this.lstGroup[0].groupID;
-      }
-      this.process.autoName = this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
-      this.setDefaultOwner();
-      // this.step.owner = this.user.userID;
-      // this.process.instanceNoSetting = this.process.processNo;
-    }
 
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {
@@ -425,15 +371,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.titleDefaultCF = fun.customName || fun.description;
       }
     });
-
-    this.getGrvStep();
-    this.getGrvStepReason();
-    this.getValListDayoff();
-    // this.autoHandleStepReason();
-    this.loadCbxProccess();
-    this.getVllFormat();
-    let theme = this.auth.userValue.theme.split('|')[0];
-    this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
+    this.loadDefault();
   }
 
   ngOnInit() {
@@ -468,19 +406,78 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // document.addEventListener("keydown", this.handleKeyDown);
   }
 
-  // handleKeyDown(event) {
-  //   if (event.code === "F5" || event.code === "Escape") {
-  //     event.preventDefault();
-  //   }
-  // }
+  loadDefault() {
+    this.getGrvStep();
+    this.getGrvStepReason();
+    this.getValListDayoff();
+    // this.autoHandleStepReason();
+    this.loadCbxProccess();
+    this.getVllFormat();
+    this.getIconReason();
+    this.getValueYesNo();
+    this.getValueDayHour();
 
-  // ngOnDestroy() {
-  //   document.removeEventListener("keydown", this.handleKeyDown);
-  // }
+    //action form
+    switch (this.action) {
+      case 'add':
+        if (this.lstGroup != null && this.lstGroup.length > 0) {
+          this.process.groupID = this.lstGroup[0].groupID;
+        }
+        this.process.autoName =
+          this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
+        this.setDefaultOwner();
+        break;
+      case 'edit':
+        this.loadEx();
+        this.loadWord();
+        this.loadListApproverStep();
+        // this.showID = true;
+        this.checkGroup = this.lstGroup.some(
+          (x) => x.groupID == this.process?.groupID
+        );
+        this.processNameBefore = this.process?.processName;
+        this.permissions = this.process.permissions;
+        if (this.permissions.length > 0) {
+          var perm = this.permissions.filter((x) => x.roleType == 'P');
+          this.lstParticipants = perm;
+        }
+        this.processTab = 3;
+        this.getAvatar(this.process);
+        this.instanceNoSetting = this.process.instanceNoSetting;
+        break;
+      case 'copy':
+        this.process.category = '1';
+        this.listPermissions = [];
+        this.listPermissions = JSON.parse(
+          JSON.stringify(this.process.permissions)
+        );
+        this.process.permissions = [];
+        this.instanceNoSetting = this.process.instanceNoSetting;
+        var valueListStr = this.listValueCopy.join(';');
+        this.getAvatar(this.process);
+        if (
+          this.listValueCopy.includes('2') &&
+          !this.listValueCopy.includes('3')
+        ) {
+          this.process.permissions = this.listPermissions;
+          this.permissions = this.process.permissions;
+          this.setDefaultOwner();
+        }
+        if (this.listValueCopy.includes('3')) {
+          this.getListStepByProcessIDCopy(
+            this.oldIdProccess,
+            this.newIdProccess,
+            valueListStr
+          );
+        }
+        break;
+    }
 
-  ngAfterViewInit(): void {
-    //  this.GetListProcessGroups();
+    let theme = this.auth.userValue.theme.split('|')[0];
+    this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
+
+  ngAfterViewInit(): void {}
 
   setDefaultOwner() {
     var perm = new DP_Processes_Permission();
@@ -4317,7 +4314,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   setColorTestStep(step) {
     if (this.process?.stepsColorMode) {
-      if (step.isFailStep || step.isSuccessStep) {
+      if (step?.isFailStep || step?.isSuccessStep) {
         return { color: '#ffffff' };
       } else {
         let countStep = this.stepList?.length || 0;
@@ -4335,9 +4332,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   setColorStep(step: DP_Steps) {
     if (this.process?.stepsColorMode) {
-      if (step.isFailStep) {
+      if (step?.isFailStep) {
         return { 'background-color': this.iconReasonFail?.color };
-      } else if (step.isSuccessStep) {
+      } else if (step?.isSuccessStep) {
         return { 'background-color': this.iconReasonSuccess?.color };
       } else {
         let countStep = this.stepList?.length || 0;

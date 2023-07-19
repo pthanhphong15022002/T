@@ -518,9 +518,9 @@ export class DealsComponent
 
   checkMoreReason(tmpPermission) {
     return (
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
+      !tmpPermission?.roleMore?.isReasonSuccess &&
+      !tmpPermission?.roleMore?.isReasonFail &&
+      !tmpPermission?.roleMore?.isMoveStage
     );
   }
   clickMF(e, data) {
@@ -1183,7 +1183,7 @@ export class DealsComponent
 
   //#region event
   selectedChange(data) {
-    this.dataSelected = data?.data ? data?.data : data;
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
@@ -1244,6 +1244,10 @@ export class DealsComponent
         this.codxCmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notificationsService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -1251,10 +1255,7 @@ export class DealsComponent
             }
           });
       } else {
-        this.notificationsService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notificationsService.notifyCode('DP040');
       }
     });
   }

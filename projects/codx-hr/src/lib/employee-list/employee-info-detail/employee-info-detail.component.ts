@@ -1019,9 +1019,40 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   initHeaderText() {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      debugger
       this.addHeaderText = res[0].customName;
       this.editHeaderText = res[2].customName;
     });
+  }
+
+  clickViewDetail(data, funcID){
+    switch(funcID){
+      case this.ePassportFuncID:
+        // Phải gán cứng vì hệ thống không có morefunc xem chi tiết nên không lấy action text như add và edit được
+        this.handleEmployeePassportInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eVisaFuncID:
+        this.handleEmployeeVisaInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eWorkPermitFuncID:
+        this.handleEmployeeWorkingPermitInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eContractFuncID:
+        this.HandleEContractInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eBasicSalaryFuncID:
+        this.HandleEmployeeBasicSalariesInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.benefitFuncID:
+        this.handlEmployeeBenefit('Xem chi tiết', 'view', data);
+        break;
+      case this.eFamiliesFuncID:
+        this.handleEFamilyInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eExperienceFuncID:
+        this.handlEmployeeExperiences('Xem chi tiết', 'view', data);
+        break;
+    }
   }
 
   //chua dung

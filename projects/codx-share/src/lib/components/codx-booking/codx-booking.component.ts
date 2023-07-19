@@ -781,7 +781,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         }
       }
       else{
-        if(this.approvalRule==EPCONST.APPROVALRULE.Haved){            
+        if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
           autoRelease=true;
         }
       }

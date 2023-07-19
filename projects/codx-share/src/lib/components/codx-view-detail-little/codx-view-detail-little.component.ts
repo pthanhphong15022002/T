@@ -97,7 +97,7 @@ export class CodxViewDetailLittleComponent implements OnInit {
   getResourceID(data) {
     var resources = [];
     this.objectID = '';
-    resources = data.permissions;
+    resources = data?.permissions;
     var id = '';
     if (resources != null) {
       resources.forEach((e) => {
