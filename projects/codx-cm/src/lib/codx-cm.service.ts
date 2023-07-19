@@ -1042,6 +1042,11 @@ export class CodxCmService {
     );
   }
 
+  //load data chua xong
+  loadDataApproverByID(id, classMame) {
+    return this.api.exec<any>('CM', classMame, 'LoadDataApproverByIDAsync', id);
+  }
+  //
   getProcess(recID) {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', recID);
   }

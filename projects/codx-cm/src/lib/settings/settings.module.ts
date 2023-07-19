@@ -9,7 +9,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomerGroupsComponent } from './customer-groups/customer-groups.component';
 import { PopupAddCustomerGroupsComponent } from './customer-groups/popup-add-customer-groups/popup-add-customer-groups.component';
 
-var routes: Routes = [
+const routes: Routes = [
   {
     path: '',
     component: LayoutNoAsideComponent,
@@ -25,8 +25,8 @@ var routes: Routes = [
 @NgModule({
   declarations: [CustomerGroupsComponent, PopupAddCustomerGroupsComponent],
   imports: [
-    CommonModule,
     RouterModule.forChild(routes),
+    CommonModule,
     CodxCoreModule,
     CodxShareModule,
     FormsModule,
@@ -35,4 +35,4 @@ var routes: Routes = [
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class SettingsModule {}
+export class SettingsCmModule {}

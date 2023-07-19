@@ -36,6 +36,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   funcID: string;
   employId: string;
   actionType: string;
+  disabledInput = false;
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -54,6 +55,9 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.formModel = dialog?.formModel;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.data = JSON.parse(JSON.stringify(data?.data?.eExperienceObj));
     if(this.data){
       this.fromdateVal = this.data.fromDate;

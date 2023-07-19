@@ -79,7 +79,7 @@ export class TargetsComponent
   //calendar - tháng - quý - năm
   date: any = new Date();
   ops = ['m', 'q', 'y'];
-
+  year: number;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -229,6 +229,7 @@ export class TargetsComponent
   //#region change Calendar ejs
   changeCalendar(data: any) {
     var year = parseInt(data?.fromDate?.getFullYear());
+    this.year = year;
     this.loadTreeData(year?.toString());
   }
   //#endregion
@@ -303,7 +304,7 @@ export class TargetsComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = '850px';
       var obj = {
         action: 'add',
         title: this.titleAction,
@@ -311,6 +312,22 @@ export class TargetsComponent
       var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
+        if (e != null && e?.event != null) {
+          if (e?.event[0] != null && e?.event[0][1] != null) {
+            var data = e?.event[0][1];
+            var index = this.lstDataTree.findIndex(
+              (x) => x.businessLineID == data?.businessLineID
+            );
+            if (index != -1) {
+              this.lstDataTree[index] = data;
+              // this.lstDataTree.splice(index, 1);
+            }else{
+              this.lstDataTree.push(Object.assign({}, data));
+
+            }
+          }
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
@@ -329,7 +346,7 @@ export class TargetsComponent
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '800px';
+        option.Width = '850px';
         var obj = {
           action: 'edit',
           title: this.titleAction,
@@ -339,6 +356,20 @@ export class TargetsComponent
         var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
+          if (e != null && e?.event != null) {
+            if (e?.event[0] != null && e?.event[0][1] != null) {
+              var data = e?.event[1];
+              var index = this.lstDataTree.findIndex(
+                (x) => x.businessLineID == data?.businessLineID
+              );
+              if (index != -1) {
+                this.lstDataTree[index] = data;
+              }
+              // this.lstDataTree.push(Object.assign({}, data));
+
+              this.detectorRef.detectChanges();
+            }
+          }
         });
       });
   }

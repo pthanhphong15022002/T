@@ -23,6 +23,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
@@ -365,8 +366,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         width: '10%',
       },
     ];
-    var recIDIEConnections = crypto.randomUUID();
-    var mappingTemplate = crypto.randomUUID();
+    var recIDIEConnections = Util.uid();
+    var mappingTemplate = Util.uid();
     var objConnections = {
       recID: recIDIEConnections,
       processIndex: 1,
@@ -379,7 +380,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       gridViewName: 'grvPurchaseInvoices',
     };
     this.dataIEConnections = { ...objConnections, ...this.dataIEConnections };
-    let ieTableID = crypto.randomUUID();
+    let ieTableID = Util.uid();
     var objIETables = new IETables();
     (objIETables.recID = ieTableID),
       (objIETables.sessionID = this.dataIEConnections.recID),

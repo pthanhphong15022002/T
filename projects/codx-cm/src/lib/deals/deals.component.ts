@@ -71,6 +71,8 @@ export class DealsComponent
 
   @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
   @ViewChild('confirmOrRefuseTemp') confirmOrRefuseTemp: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
+
   popupConfirm: DialogRef;
 
   // extension core
@@ -144,7 +146,7 @@ export class DealsComponent
   returnedCmt = '';
   dataColums: any = [];
   listHeader: any = [];
-  listSteps:any[]=[];
+  listSteps: any[] = [];
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -230,6 +232,16 @@ export class DealsComponent
           template: this.cardKanban,
           template2: this.viewColumKaban,
           setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -382,9 +394,12 @@ export class DealsComponent
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
   }
-  changeDataMF($event, data) {
+  changeDataMF($event, data, type = null) {
     if ($event != null && data != null) {
       for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -396,12 +411,16 @@ export class DealsComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      if (  (data.closed && data.status != '1') || ['1','0'].includes(data.status) ||   this.checkMoreReason(data) ) {
+      if (
+        (data.closed && data.status != '1') ||
+        ['1', '0'].includes(data.status) ||
+        this.checkMoreReason(data)
+      ) {
         eventItem.disabled = true;
       }
     };
     var isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0' ) {
+      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
     //  eventItem.disabled = false;
@@ -412,21 +431,21 @@ export class DealsComponent
       }
     };
     var isEdit = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data)|| data.status == '0') {
+      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || data.status == '0'
+      eventItem.disabled = data.closed || data.status == '0';
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || data.status == '0'
+      eventItem.disabled = !data.closed || data.status == '0';
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['1'].includes(data.status) || data.closed ;
+      eventItem.disabled = !['1'].includes(data.status) || data.closed;
     };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed ;
+      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed;
     };
     var isConfirmOrRefuse = (eventItem, data) => {
       eventItem.disabled = data.status != '0';
@@ -500,7 +519,11 @@ export class DealsComponent
   }
 
   checkMoreReason(tmpPermission) {
-    return  !tmpPermission.roleMore.isReasonSuccess &&  !tmpPermission.roleMore.isReasonFail && !tmpPermission.roleMore.isMoveStage
+    return (
+      !tmpPermission?.roleMore?.isReasonSuccess &&
+      !tmpPermission?.roleMore?.isReasonFail &&
+      !tmpPermission?.roleMore?.isMoveStage
+    );
   }
   clickMF(e, data) {
     const actions = {
@@ -605,12 +628,20 @@ export class DealsComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notifyCode('DP038', 0, '"' + data.dealName + '"');
+      this.notificationsService.notifyCode(
+        'DP038',
+        0,
+        '"' + data.dealName + '"'
+      );
       this.changeDetectorRef.detectChanges();
       return;
     }
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notifyCode('DP037', 0, '"' + data.dealName + '"');
+      this.notificationsService.notifyCode(
+        'DP037',
+        0,
+        '"' + data.dealName + '"'
+      );
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -707,7 +738,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
             // listStepCbx: this.lstStepInstances,
           };
           var obj = {
@@ -730,8 +761,8 @@ export class DealsComponent
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
               var instance = e.event.instance;
-            var listSteps = e.event?.listStep;
-             var index =
+              var listSteps = e.event?.listStep;
+              var index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
@@ -739,12 +770,25 @@ export class DealsComponent
                     !x.isFailStep
                 ) + 1;
               var nextStep = '';
-              if (index != -1 && !listSteps[index]?.isSuccessStep && !listSteps[index]?.isFailStep ) {
+              if (
+                index != -1 &&
+                !listSteps[index]?.isSuccessStep &&
+                !listSteps[index]?.isFailStep
+              ) {
                 if (index != e.event.listStep.length) {
                   nextStep = listSteps[index]?.stepID;
                 }
               }
-              var dataUpdate = [data.recID, instance.stepID, nextStep,oldStepId,oldStatus, e.event?.comment,e.event?.expectedClosed,e.event?.probability];
+              var dataUpdate = [
+                data.recID,
+                instance.stepID,
+                nextStep,
+                oldStepId,
+                oldStatus,
+                e.event?.comment,
+                e.event?.expectedClosed,
+                e.event?.probability,
+              ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res[0];
@@ -787,9 +831,7 @@ export class DealsComponent
               // data.closedOn = check ? new Date() : data.closedOn;
               // data.modifiedOn = new Date();
               this.dataSelected.closed = check;
-              this.dataSelected = JSON.parse(
-                JSON.stringify(this.dataSelected)
-              );
+              this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.view.dataService.update(this.dataSelected).subscribe();
               this.notificationsService.notifyCode(
                 check ? 'DP016' : 'DP017',
@@ -851,7 +893,7 @@ export class DealsComponent
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
         data = this.updateReasonDeal(e.event?.instance, data);
-        var datas = [data,oldStepId, oldStatus, e.event?.comment];
+        var datas = [data, oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
             data = res[0];
@@ -1149,7 +1191,7 @@ export class DealsComponent
 
   //#region event
   selectedChange(data) {
-    this.dataSelected = data?.data ? data?.data : data;
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
@@ -1210,6 +1252,10 @@ export class DealsComponent
         this.codxCmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notificationsService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -1217,10 +1263,7 @@ export class DealsComponent
             }
           });
       } else {
-        this.notificationsService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notificationsService.notifyCode('DP040');
       }
     });
   }
@@ -1272,7 +1315,7 @@ export class DealsComponent
                         dt?.recID,
                         this.view.formModel.entityName,
                         null,
-                        null,
+                        null
                       )
                       .subscribe((res3) => {
                         if (res3) {
@@ -1572,6 +1615,12 @@ export class DealsComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+  //#endregion
+
+  //#region temp Gird
+  changeDataMFGird(e, data) {
+    this.changeDataMF(e, data, 11);
   }
   //#endregion
 }

@@ -3,7 +3,9 @@
 <ng-template #templateLeft>
   <div class="rounded-3 p-0 position-relative h-100">
     <div class="d-flex justify-content-center">
-      <div class="w-30 min-w-225px mw-450px me-5 bg-white calendar-left scroll-y">
+      <div
+        class="w-30 min-w-225px mw-450px me-5 bg-white calendar-left scroll-y"
+      >
         <ejs-calendar
           #ejCalendar
           cssClass="width-calendar"
@@ -14,6 +16,7 @@
           (change)="changeDayOfMonth($event)"
           (navigated)="changeNewMonth($event)"
           (renderDayCell)="onLoad($event)"
+          (created)="firstime()"
         >
         </ejs-calendar>
         <div class="m-3">

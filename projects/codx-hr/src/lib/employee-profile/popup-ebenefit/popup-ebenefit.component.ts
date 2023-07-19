@@ -28,6 +28,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   successFlag = false;
   actionType: string;
+  disabledInput = false;
   idField = 'RecID';
   employeeObj;
   headerText: '';
@@ -55,6 +56,9 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     //this.listBenefits = data?.data?.listBenefits;
     this.headerText = data?.data?.headerText;
     // if (this.actionType === 'edit' || this.actionType === 'copy') {
@@ -117,7 +121,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType ==='view') {
         this.formGroup.patchValue(this.benefitObj);
         this.formModel.currentData = this.benefitObj;
         this.isAfterRender = true;

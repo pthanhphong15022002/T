@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange
 import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService, CodxService } from 'codx-core';
 import { PopupAddEmployeeComponent } from '../popup/popup-add-employee/popup-add-employee.component';
 import { PopupUpdateStatusComponent } from '../popup/popup-update-status/popup-update-status.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-employee-list-by-org',
@@ -21,6 +22,7 @@ export class EmployeeListByOrgComponent {
   @Input() showRowNumber: boolean = false;
   @Input() funcID: string = 'HRT03a1';
   @Output() dataChange: EventEmitter<any> = new EventEmitter();
+  @Output() gridViewDataService: EventEmitter<any> = new EventEmitter();
   totalEmployee: number = 0;
   sysMoreFunc: any[] = [];
   columnsGrid;
@@ -55,11 +57,13 @@ export class EmployeeListByOrgComponent {
   predicates = '@0.Contains(OrgUnitID)';
   funcIDEmpInfor: string = 'HRT03b';
   itemSelected;
+  hadEmitDataService = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     private callfc: CallFuncService,
+    private shareService: CodxShareService,
     private codxService: CodxService) { }
 
   ngOnInit(): void {
@@ -79,6 +83,9 @@ export class EmployeeListByOrgComponent {
             this.initColumnGrid();
           }
         });
+    }
+    if (this.grid && this.editable) {
+      this.gridViewDataService.emit(this.grid.dataService);
     }
   }
   initColumnGrid() {
@@ -159,8 +166,12 @@ export class EmployeeListByOrgComponent {
         this.grid.dataService.rowCount = 0;
         clearInterval(ins);
         this.grid.refresh();
+        if (this.grid && this.editable && !this.hadEmitDataService) {
+          this.hadEmitDataService = true;
+          this.gridViewDataService.emit(this.grid.dataService);
+        }
       }
-    }, 200);
+    }, 50);
   }
 
   getManager(orgUnitID: string) {
@@ -192,10 +203,15 @@ export class EmployeeListByOrgComponent {
       case 'HRT03a1A07': // cập nhật tình trạng
         this.updateStatus(data, moreFunc.functionID);
         break;
-      case 'HR0032': // xem chi tiết
-        break;
-      case 'SYS002':
-        // this.exportFile();
+      default:
+        this.shareService.defaultMoreFunc(
+          moreFunc,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
         break;
     }
   }
@@ -283,7 +299,7 @@ export class EmployeeListByOrgComponent {
       );
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS03');
-        (this.grid.dataService as CRUDService).edit(data).subscribe((res: any) => {
+      (this.grid.dataService as CRUDService).edit(data).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;

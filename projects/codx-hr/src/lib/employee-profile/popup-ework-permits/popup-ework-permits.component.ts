@@ -25,6 +25,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   data: any;
   actionType: string;
   formGroup: FormGroup;
+  disabledInput = false;
   idField = 'RecID';
   funcID: string;
   employId: string;
@@ -45,6 +46,9 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.employId = data?.data?.employeeId;
     this.formModel = dialog.formModel;
     this.data = JSON.parse(JSON.stringify(data?.data?.workPermitObj));
@@ -78,7 +82,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
                 }
               });
           } else {
-            if (this.actionType === 'edit' || this.actionType === 'copy') {
+            if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
               if (this.actionType == 'copy') {
                 if (this.data.fromDate == '0001-01-01T00:00:00') {
                   this.data.fromDate = null;
@@ -94,9 +98,11 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
               this.isAfterRender = true;
             }
           }
-        } else {
-          this.notify.notifyCode('ABCDE');
-        }
+          // this.formGroup.patchValue(this.data);
+          // this.formModel.currentData = this.data;
+          // this.cr.detectChanges();
+          // this.isAfterRender = true;
+        } 
       });
   }
 

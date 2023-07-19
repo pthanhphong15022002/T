@@ -38,7 +38,9 @@ export class CodxExportComponent implements OnInit, OnChanges {
   active = '1';
   gridModel: any;
   recID: any;
+  field:any;
   data = {};
+  dataSource: string = '';
   dataEx: any;
   dataWord: any;
   dialog: any;
@@ -103,10 +105,12 @@ export class CodxExportComponent implements OnInit, OnChanges {
     private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
+  ) 
+  {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
+    this.dataSource = dt.data?.[2];
   }
   ngOnInit(): void {
     //Tạo formGroup
@@ -295,19 +299,36 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.gridModel.dataValues = [this.recID].join(';');
         }
 
-        this.api
-          .execSv<any>(
-            this.services,
-            'Core',
-            'CMBusiness',
-            'ExportExcelAsync',
-            [this.gridModel, idTemp]
-          )
-          .subscribe((item) => {
-            if (item) {
-              this.downloadFile(item);
-            }
-          });
+        if (!this.dataSource) {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'CMBusiness',
+              'ExportExcelAsync',
+              [this.gridModel, idTemp]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        } else {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'CMBusiness',
+              'ExportExcelDataAsync',
+              [this.dataSource, idTemp]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        }
+
         break;
       case 'wordTemp':
         if (value?.dataExport == 'all') {
@@ -320,20 +341,36 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.gridModel.predicates = this.idField + '=@0';
           this.gridModel.dataValues = [this.recID].join(';');
         }
+        if (!this.dataSource) {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'ExportWordBusiness',
+              'ExportWordTemplateAsync',
+              [this.gridModel, idTemp]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        } else {
+          this.api
+            .execSv<any>(
+              this.services,
+              'Core',
+              'ExportWordBusiness',
+              'ExportWordTemplateAsync',
+              [null, idTemp, this.dataSource]
+            )
+            .subscribe((item) => {
+              if (item) {
+                this.downloadFile(item);
+              }
+            });
+        }
 
-        this.api
-          .execSv<any>(
-            this.services,
-            'Core',
-            'ExportWordBusiness',
-            'ExportWordTemplateAsync',
-            [this.gridModel, idTemp]
-          )
-          .subscribe((item) => {
-            if (item) {
-              this.downloadFile(item);
-            }
-          });
         break;
     }
 

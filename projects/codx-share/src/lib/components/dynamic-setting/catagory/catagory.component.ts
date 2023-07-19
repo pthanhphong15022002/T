@@ -29,7 +29,6 @@ import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-catagory',
@@ -405,7 +404,7 @@ export class CatagoryComponent implements OnInit {
         case 'cms0303':
         case 'cms0304':
         case 'cms0305':
-          this.cmOpenPopup(item);
+          this.cmOpenPopup(item, dialogModel);
           break;
         default:
           break;
@@ -1009,7 +1008,7 @@ export class CatagoryComponent implements OnInit {
   }
 
   //CM_Setting popup - VThao - 4/7/2023 - chuyen qua từ code của Phúc
-  async cmOpenPopup(item) {
+  async cmOpenPopup(item, dialogModel) {
     let funcID = item.reference;
     let title = item.title || item.description;
     this.api
@@ -1032,7 +1031,6 @@ export class CatagoryComponent implements OnInit {
       )
       .subscribe((data) => {
         if (data != null && data.length > 0) {
-          let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
           dialogModel.zIndex = 999;
           let formModel = new FormModel();
@@ -1051,7 +1049,7 @@ export class CatagoryComponent implements OnInit {
             data: data[0],
           };
 
-          var dialog = this.callfc.openForm(
+          this.callfc.openForm(
             PopupAddDynamicProcessComponent,
             '',
             0,
@@ -1061,7 +1059,6 @@ export class CatagoryComponent implements OnInit {
             '',
             dialogModel
           );
-          dialog.closed.subscribe((e) => {});
         }
       });
 

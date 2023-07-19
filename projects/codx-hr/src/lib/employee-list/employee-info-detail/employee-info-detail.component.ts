@@ -1019,9 +1019,40 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   initHeaderText() {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      debugger
       this.addHeaderText = res[0].customName;
       this.editHeaderText = res[2].customName;
     });
+  }
+
+  clickViewDetail(data, funcID){
+    switch(funcID){
+      case this.ePassportFuncID:
+        // Phải gán cứng vì hệ thống không có morefunc xem chi tiết nên không lấy action text như add và edit được
+        this.handleEmployeePassportInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eVisaFuncID:
+        this.handleEmployeeVisaInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eWorkPermitFuncID:
+        this.handleEmployeeWorkingPermitInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eContractFuncID:
+        this.HandleEContractInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eBasicSalaryFuncID:
+        this.HandleEmployeeBasicSalariesInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.benefitFuncID:
+        this.handlEmployeeBenefit('Xem chi tiết', 'view', data);
+        break;
+      case this.eFamiliesFuncID:
+        this.handleEFamilyInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eExperienceFuncID:
+        this.handlEmployeeExperiences('Xem chi tiết', 'view', data);
+        break;
+    }
   }
 
   //chua dung
@@ -1484,6 +1515,18 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.df.detectChanges();
       });
   }
+
+  deleteFile(data, formModel){
+    //code xóa file luôn khi record chứa file bị xóa
+    return this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'DeleteByObjectIDAsync',
+        [data.recID, formModel.entityName, true]
+      );
+}
 
   initEmpProcess() {
     if (this.employeeID) {
@@ -2198,6 +2241,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+                    this.deleteFile(data, this.eDegreeFormModel).subscribe((res) =>{
+                      debugger
+                    })
                     this.updateGridView(this.eDegreeGrid, 'delete', null, data);
                     // (this.eDegreeGrid?.dataService as CRUDService)
                     //   ?.remove(data)
@@ -2244,6 +2290,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
+                    this.deleteFile(data,this.eCertificateFormModel).subscribe((res) => {
+                      debugger
+                    })
                     // let i = this.lstCertificates.indexOf(data);
                     // if (i != -1) {
                     //   this.lstCertificates.splice(i, 1);
@@ -3393,7 +3442,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.eDegreeGrid?.dataService;
     option.FormModel = this.eDegreeFormModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {

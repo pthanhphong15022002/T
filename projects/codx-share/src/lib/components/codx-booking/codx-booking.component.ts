@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import {
   Component,
@@ -110,6 +111,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   categoryIDProcess = '';
   categoryID = '';
   allocateStatus: string;
+  approvalRule= EPCONST.APPROVALRULE.Haved;
+  autoComfirm= EPCONST.APPROVALRULE.NotHaved;
+  stationeryAR = EPCONST.APPROVALRULE.Haved;
+  autoApproveItem = EPCONST.APPROVALRULE.Haved;
   constructor(
     injector: Injector,
     private codxShareService: CodxShareService,
@@ -303,42 +308,61 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     });
     switch (this.funcID) {
       case EPCONST.FUNCID.R_Bookings:
-        this.resourceType = '1';
+        this.resourceType = EPCONST.VLL.ResourceType.Room;
         this.categoryIDProcess = 'ES_EP001';
         break;
       case EPCONST.FUNCID.C_Bookings:
-        this.resourceType = '2';
+        this.resourceType = EPCONST.VLL.ResourceType.Car;
         this.categoryIDProcess = 'ES_EP002';
         break;
 
       case EPCONST.FUNCID.S_Bookings:
-        this.resourceType = '6';
+        this.resourceType = EPCONST.VLL.ResourceType.Stationery;
         this.categoryIDProcess = 'ES_EP003';
         break;
     }
-    // this.codxBookingService
-    //   .getDataValueOfSettingAsync("_EPParameters", null, '4')
-    //   .subscribe((res: string) => {
-    //     if (res) {
-    //       let setting_4 = JSON.parse(res);
-    //       if (setting_4 != null && setting_4.length > 0) {
-    //         let setting= setting_4.filter((x:any) => x.Category == EPCONST.ENTITY.S_Bookings);
-    //         if(setting!=null){
-    //           //this.approvalRule = setting[0]?.ApprovalRule !=null? setting[0]?.ApprovalRule :'1';
-    //           this.categoryID=setting[0]?.CategoryID !=null? setting[0]?.CategoryID:EPCONST.ES_CategoryID.Stationery;
-    //         }
-    //         else{
-    //           //this.approvalRule='1';//Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
-    //           this.categoryID=EPCONST.ES_CategoryID.Stationery;
-    //         }
-    //       }
-    //     }
-    //   });
+    
     if (this.funcID == EPCONST.FUNCID.S_Allocate) {
       this.isAllocateStationery = true;
-      this.resourceType = '6';
+      this.resourceType = EPCONST.VLL.ResourceType.Stationery;
     }
-
+    this.cache.viewSettingValues('EPParameters').subscribe(res=>{
+      if(res){
+        let listSetting = res;
+        let stationerySetting_1= listSetting.filter(x=>x.category =='1' && x.transType == EPCONST.PARAM.EPStationeryParameters);
+        if(stationerySetting_1?.length>0){
+          let setting = JSON.parse(stationerySetting_1[0]?.dataValue);
+          this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP        
+          this.autoApproveItem = setting?.AutoApproveItem != null ? setting?.AutoApproveItem : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP khi đặt phòng
+        }
+        let epSetting_4= listSetting.filter(x=>x.category =='4' && x.tranType == null);
+        if(epSetting_4!=null){
+          let listEPSetting = JSON.parse(epSetting_4[0]?.dataValue);
+          let roomSetting_4= listEPSetting.filter(x=>x.FieldName == EPCONST.ES_CategoryID.Room);
+          let carSetting_4= listEPSetting.filter(x=>x.FieldName == EPCONST.ES_CategoryID.Car);
+          let stationerySetting_4= listEPSetting.filter(x=>x.FieldName == EPCONST.ES_CategoryID.Stationery);
+          this.stationeryAR = stationerySetting_4?.length>0 && stationerySetting_4[0]?.ApprovalRule!=null ? stationerySetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;
+          switch (this.resourceType){
+            case EPCONST.VLL.ResourceType.Room:
+              if(roomSetting_4?.length>0){
+                this.approvalRule = roomSetting_4[0]?.ApprovalRule !=null ? roomSetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;              
+              }
+            break;
+            case EPCONST.VLL.ResourceType.Car:
+              if(carSetting_4?.length>0){
+                this.approvalRule = carSetting_4[0]?.ApprovalRule !=null ? carSetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;              
+              }
+            break;
+            case EPCONST.VLL.ResourceType.Stationery:
+              if(stationerySetting_4?.length>0){
+                this.approvalRule = stationerySetting_4[0]?.ApprovalRule !=null ? stationerySetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;                             
+              }
+            break;
+          }
+        }
+        
+      }
+    });
     if (this.resourceType == '1') {
       this.popupBookingComponent = CodxAddBookingRoomComponent;
     } else if (this.resourceType == '2') {
@@ -745,7 +769,23 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           }
         }
       }
-      if (data.approval != '0') {
+      let autoRelease = false;
+      if(data?.resourceType== EPCONST.VLL.ResourceType.Stationery){
+        if(this.autoComfirm==EPCONST.APPROVALRULE.Haved){
+          autoRelease=true;
+        }
+        else{
+          if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
+            autoRelease=true;
+          }
+        }
+      }
+      else{
+        if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
+          autoRelease=true;
+        }
+      }
+      if (!autoRelease ) {
         this.codxBookingService
           .getProcessByCategoryID(this.categoryIDProcess)
           .subscribe((res: any) => {
@@ -767,15 +807,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   data.approveStatus = EPCONST.A_STATUS.Released;
                   data.write = false;
                   data.delete = false;
-                  this.codxBookingService
-                  .getBookingByRecID(data.recID)
-                  .subscribe((res) => {
-                    if (res) {
-                      data.approveStatus = res?.approveStatus;
-                      this.detectorRef.detectChanges();
-                    }                    
-                    this.view.dataService.update(data).subscribe();
-                  });
+                  this.view.dataService.update(data).subscribe();
+                  this.updateData(data);
                 } else {
                   this.notificationsService.notifyCode(res?.msgCodeError);
                 }
@@ -911,7 +944,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             dModel
           );
           dialogStationery.closed.subscribe((returnData) => {
-            if (!returnData.event) {
+            if (returnData?.event) {
+              this.updateData(returnData?.event);
+            }
+            else{
               this.view.dataService.clear();
             }
           });
@@ -926,7 +962,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             option
           );
           dialogAdd.closed.subscribe((returnData) => {
-            if (!returnData.event) {
+            if (returnData?.event) {
+              this.updateData(returnData?.event);
+            }
+            else{
               this.view.dataService.clear();
             }
           });
@@ -966,7 +1005,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     dModel
                   );
                   dialogStationery.closed.subscribe((returnData) => {
-                    if (!returnData.event) {
+                    if (returnData?.event) {
+                      this.updateData(returnData?.event);
+                    }
+                    else{
                       this.view.dataService.clear();
                     }
                   });
@@ -986,7 +1028,12 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     option
                   );
                   dialogEdit.closed.subscribe((returnData) => {
-                    if (!returnData.event) this.view.dataService.clear();
+                    if (returnData?.event) {
+                      this.updateData(returnData?.event);
+                    }
+                    else{
+                      this.view.dataService.clear();
+                    }
                   });
                 }
               });
@@ -1027,7 +1074,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                       dModel
                     );
                     dialogStationery.closed.subscribe((returnData) => {
-                      if (!returnData.event) {
+                      if (returnData?.event) {
+                        this.updateData(returnData?.event);
+                      }
+                      else{
                         this.view.dataService.clear();
                       }
                     });
@@ -1042,7 +1092,12 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                       option
                     );
                     dialogCopy.closed.subscribe((returnData) => {
-                      if (!returnData.event) this.view.dataService.clear();
+                      if (returnData?.event) {
+                        this.updateData(returnData?.event);
+                      }
+                      else{
+                        this.view.dataService.clear();
+                      }
                     });
                   }
                 }
@@ -1051,6 +1106,27 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           });
       }
     }
+  }
+
+  updateData(data){
+    this.codxBookingService.getBookingByRecID(data?.recID).subscribe(newData=>{
+      if(newData){
+        data=newData;
+        this.view?.dataService.update(data).subscribe();
+        this.detectorRef.detectChanges();
+        if(this.approvalRule== EPCONST.APPROVALRULE.Haved && data?.resourceType==EPCONST.VLL.ResourceType.Room && data?.approveStatus==EPCONST.A_STATUS.Approved && data?.items?.length>0){
+          //Trường hợp đặc biệt khi đặt phòng có theo quy trình duyệt nhưng được duyệt tự động(người gửi == người duyệt : VPP chưa kịp tạo ra khi gửi duyệt)          
+          if(this.autoApproveItem ==EPCONST.APPROVALRULE.Haved ){
+            //Tự duyệt & cấp phát Vpp của phòng họp
+            this.codxBookingService.autoApproveStationery(null,data?.recID).subscribe();
+          }
+          else{
+            //Gửi duyệt Vpp của phòng họp
+            this.codxBookingService.releaseStationeryOfRoom(null,data?.recID,null).subscribe();
+          }
+        }
+      }
+    })
   }
 
   delete(data?) {

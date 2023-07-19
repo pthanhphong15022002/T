@@ -13,6 +13,7 @@ import {
   UIComponent,
   ViewModel,
   ViewType,
+  ViewsComponent,
 } from 'codx-core';
 import { catchError, map, Observable, of, finalize, Subscription } from 'rxjs';
 
@@ -23,7 +24,6 @@ import { catchError, map, Observable, of, finalize, Subscription } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
 })
 export class EmpContactsComponent extends UIComponent {
-  console = console;
   actionSub: Subscription;
   displayCard = false;
   predicate = 'Status<@0';
@@ -34,14 +34,13 @@ export class EmpContactsComponent extends UIComponent {
   // @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
-  @ViewChild('itemStatusName', { static: true })
-  itemStatusName: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
   @ViewChild('itemBirthDay', { static: true }) itemBirthDay: TemplateRef<any>;
   @ViewChild('itemJoinOn', { static: true }) itemJoinOn: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('view') codxView!: any;
+  //@ViewChild('view') codxView!: ViewsComponent;
 
   @ViewChild('tmpTree') tmpTree: TemplateRef<any>;
   @ViewChild('tmpTreeItemDetail') tmpTreeItemDetail: TemplateRef<any>;
@@ -64,7 +63,7 @@ export class EmpContactsComponent extends UIComponent {
   entityName = 'HR_Employees';
   className = 'EmployeesBusiness';
   method = 'GetListEmployeeAsync';
-  idField ='employeeID';
+  idField = 'employeeID';
 
   constructor(inject: Injector,
     //private changedt: ChangeDetectorRef,
@@ -124,7 +123,7 @@ export class EmpContactsComponent extends UIComponent {
         width: 140,
       },
     ];
-    this.getFunction('HRT03a1')
+    this.getFunction(this.funcID);
   }
 
   ngAfterViewInit(): void {
@@ -138,23 +137,23 @@ export class EmpContactsComponent extends UIComponent {
     this.request.idField = 'orgUnitID';
 
     this.views = [
-      // {
-      //   id: '1',
-      //   type: ViewType.grid,
-      //   sameData: true,
-      //   model: {
-      //     resources: this.columnsGrid,
-      //   },
-      // },
       {
         id: '1',
-        type: ViewType.list,
+        type: ViewType.grid,
         sameData: true,
         model: {
-          template: this.templateList,
-          headerTemplate: this.headerTemplate,
+          resources: this.columnsGrid,
         },
       },
+      // {
+      //   id: '1',
+      //   type: ViewType.list,
+      //   sameData: true,
+      //   model: {
+      //     template: this.templateList,
+      //     headerTemplate: this.headerTemplate,
+      //   },
+      // },
       {
         id: '2',
         type: ViewType.card,
@@ -166,6 +165,7 @@ export class EmpContactsComponent extends UIComponent {
       {
         id: '3',
         type: ViewType.tree_list,
+        sameData: false,
         request: this.request,
         model: {
           resizable: true,
@@ -196,17 +196,22 @@ export class EmpContactsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  viewChanged(event: any) {
-    if (event?.view?.id === '3' || event?.view?.id === '4') {
+  viewChanging(event: any) {
+    if (event?.id === '3' || event?.id === '4') {
       this.view.dataService.parentIdField = 'ParentID';
+      this.view.dataService.idField = 'orgUnitID';
+      this.view.idField = 'orgUnitID';
     } else {
       this.view.dataService.parentIdField = '';
+      this.view.dataService.idField = 'employeeID';
+      this.view.idField = 'employeeID';
+
     }
+    this.detectorRef.detectChanges();
   }
   getFunction(funcID: string) {
     if (funcID) {
       this.cache.functionList(funcID).subscribe((func: any) => {
-        if (func) this.funcID = func;
         if (func?.formName && func?.gridViewName) {
           this.cache
             .gridViewSetup(func.formName, func.gridViewName)
@@ -229,5 +234,10 @@ export class EmpContactsComponent extends UIComponent {
   placeholder(field: string) {
     var headerText = this.grvSetup[field].headerText as string;
     return `<span class="place-holder">${headerText}</span>`
+  }
+  hasDataValue(data: string, field: string) {
+    return `<span #data${field}Field class="data-text-color data-text-width line-clamp line-clamp-1"
+        [ngbTooltip]="${field}Tooltip">${data}</span>
+        `
   }
 }

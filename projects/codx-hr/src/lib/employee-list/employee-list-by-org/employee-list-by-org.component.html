@@ -19,7 +19,7 @@
                     </div>
                     <div class="mb-1">
                         <ng-container *ngIf="manager?.positionID; else lblPositionName">
-                            <span class="text-gray-500">{{manager.positionName? manager.positionName:
+                            <span class="text-gray-700">{{manager.positionName? manager.positionName:
                                 manager.positionID}}</span>
                         </ng-container>
                         <ng-template #lblPositionName>
@@ -62,10 +62,9 @@
     <div *ngIf="columnsGrid" class="h-100" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
         <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
-            [dataValues]="orgUnitID" [autoLoad]="false"
-            [showRowNumber]="showRowNumber" [idField]="idField" [predicates]="predicates" [rowHeight]="rowHeight"
-            height="auto" [autoFitColumns]="false" [allowResizing]="false" [allowFiltering]="false"
-            [allowSorting]="true" [hideMoreFunc]="true"></codx-gridview-v2>
+            [dataValues]="orgUnitID" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
+            [predicates]="predicates" [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="false"
+            [allowFiltering]="false" [allowSorting]="true" [hideMoreFunc]="true"></codx-gridview-v2>
     </div>
 </div>
 
@@ -77,16 +76,30 @@
         </codx-img>
         <div class="d-flex flex-column flex-grow-1">
             <div class="d-flex align-items-center">
-                <div class="text-dark fw-bold me-2">{{ data.employeeName }}</div>
+                <div #nameContactField
+                    [ngbTooltip]="nameContactField.scrollHeight > nameContactField.clientHeight? nameContactTooltip :null"
+                    class="text-dark fw-bold me-2 line-clamp line-clamp-1">{{data.employeeName}}
+                    <ng-template #nameContactTooltip>
+                        <div class="inline-tooltip">
+                            <span class="fw-bold fs-6 me-3 text-nowrap">{{data.employeeName}}</span>
+                        </div>
+                    </ng-template>
+                </div>
             </div>
             <div class="mt-1">
-                <span *ngIf="data.positionName; else noPosName" class="text-gray-600 fs-7">
-                    <span>{{data.positionName? data.positionName : data.positionID}}</span>
-                </span>
+                <div #positionContactField *ngIf="data.positionID" [ngbTooltip]="positionContactTooltip"
+                    class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
+                    {{data.positionName? data.positionName : data.positionID}}
+                    <ng-template #positionContactTooltip>
+                        <div class="d-flex flex-column">
+                            <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+                            <span *ngIf="positionContactField.scrollHeight > positionContactField.clientHeight"
+                                class="text-gray-600">{{data.positionName? data.positionName : data.positionID}}</span>
+                        </div>
+                    </ng-template>
+                </div>
                 <ng-template #noPosName>
-                    <span class="fs-7">
-                        <span>{{grvSetup['PositionID']?.headerText}}</span>
-                    </span>
+                    <span class="fs-7">{{grvSetup['PositionID']?.headerText}}</span>
                 </ng-template>
             </div>
         </div>
@@ -102,13 +115,11 @@
 </ng-template>
 <ng-template #templatePhone let-data>
     <div class="d-flex align-items-center employee-add">
-        <span *ngIf="formModel.formName != 'EmployeeInfomation'" class="icon-phone_android icon-16 me-2"></span>
         <span class="data-text-color" [innerHTML]="data.phone | formatvalue: formModel:'phone' | async"></span>
     </div>
 </ng-template>
 <ng-template #templateEmail let-data>
     <div class="d-flex align-items-center employee-email">
-        <span *ngIf="formModel.formName != 'EmployeeInfomation'" class="icon-email icon-16 me-2"> </span>
         <span class="data-text-color" [innerHTML]="data.email | formatvalue: formModel:'email' | async"></span>
     </div>
 </ng-template>
@@ -120,9 +131,9 @@
 </ng-template>
 <ng-template #templateStatus let-item>
     <div class="d-flex align-items-center has-action-menu">
-            <codx-vll [formModel]="formModel" [classList]="'badge badge-sm badge-inline'"
-                [name]="'HR003'" [value]="item.status" [showText]="true" [showBgColor]="true">
-            </codx-vll>
+        <codx-vll [formModel]="formModel" [classList]="'badge badge-sm badge-inline'" [name]="'HR003'"
+            [value]="item.status" [showText]="true" [showBgColor]="true">
+        </codx-vll>
         <div class="align-self-center" *ngIf="editable">
             <div style="height: 40px">
                 <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, item)"
@@ -193,7 +204,8 @@
                 </ng-template>
             </div>
             <div #positionField *ngIf="data.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
-                <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName : data.positionID}}</span>
+                <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName :
+                    data.positionID}}</span>
                 <ng-template #positionTooltip>
                     <div class="d-flex flex-column">
                         <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
@@ -324,8 +336,8 @@
                 </ng-template>
             </div>
             <div class="align-items-center">
-                <codx-label class="label-colon text-dark" name="lblSenioritydate" [fiedName]="'Senioritydate'"
-                    [setRequire]="false" [formModel]="view.formModel" default="Thâm niên">
+                <codx-label class="label-colon label-text-color" name="lblHR_SenioritydateCal" [setRequire]="false"
+                    [formModel]="view.formModel" default="Thâm niên">
                 </codx-label>
                 <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
                     <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>

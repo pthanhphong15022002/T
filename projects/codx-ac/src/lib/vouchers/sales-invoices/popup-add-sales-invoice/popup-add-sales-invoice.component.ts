@@ -94,11 +94,11 @@ export class PopupAddSalesInvoiceComponent
 
     this.isReturnInvoice = dialogRef.formModel.funcID === 'ACT0701';
 
-    // create a CRUDService for SM_SalesInvoicesLines
+    // create a CRUDService for AC_SalesInvoicesLines
     this.detailService = acService.createCrudService(
       injector,
       this.fmSalesInvoicesLines,
-      'SM'
+      'AC'
     );
   }
   //#endregion
@@ -125,12 +125,12 @@ export class PopupAddSalesInvoiceComponent
 
     if (this.isEdit) {
       const options = new DataRequest();
-      options.entityName = 'SM_SalesInvoicesLines';
+      options.entityName = 'AC_SalesInvoicesLines';
       options.predicates = 'TransID=@0';
       options.dataValues = this.master.recID;
       options.pageLoading = false;
       this.acService
-        .loadDataAsync('SM', options)
+        .loadDataAsync('AC', options)
         .subscribe(
           (res) => (this.lines = res.sort((a, b) => a.rowNo - b.rowNo))
         );
@@ -168,8 +168,8 @@ export class PopupAddSalesInvoiceComponent
     this.journalService.handleVoucherNoAndSave(
       this.journal,
       this.master,
-      'SM',
-      'SM_SalesInvoices',
+      'AC',
+      'AC_SalesInvoices',
       this.form,
       this.masterService.hasSaved,
       () => this.save(closeAfterSave)
@@ -210,7 +210,7 @@ export class PopupAddSalesInvoiceComponent
     ];
     if (postFields.includes(e.field)) {
       this.api
-        .exec('SM', 'SalesInvoicesBusiness', 'ValueChangeAsync', [
+        .exec('AC', 'SalesInvoicesBusiness', 'ValueChangeAsync', [
           e.field,
           this.master,
         ])
@@ -303,7 +303,7 @@ export class PopupAddSalesInvoiceComponent
     ];
     if (postFields.includes(e.field)) {
       this.api
-        .exec('SM', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
+        .exec('AC', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
           e.field,
           e.data,
         ])
@@ -350,25 +350,43 @@ export class PopupAddSalesInvoiceComponent
     this.journalService.handleVoucherNoAndSave(
       this.journal,
       this.master,
-      'SM',
-      'SM_SalesInvoices',
+      'AC',
+      'AC_SalesInvoices',
       this.form,
       this.masterService.hasSaved,
       () => this.addRow()
     );
   }
 
-  onEndAddNew(e): void {
-    console.log('onEndAddNew', e);
+  onEndAddNew(line: ISalesInvoicesLine): void {
+    console.log('onEndAddNew', line);
 
-    this.detailService.save(null, null, null, null, false).subscribe(() => {});
+    line.fixedDIMs = this.genFixedDims(line);
+
+    this.detailService
+      .save(null, null, null, null, false)
+      .subscribe((res: any) => {
+        if (res.save?.error) {
+          this.grid.gridRef.selectRow(Number(line._rowIndex));
+          this.grid.gridRef.startEdit();
+        }
+      });
   }
 
-  onEndEdit(e): void {
-    console.log('onEndEdit', e);
+  onEndEdit(line: ISalesInvoicesLine): void {
+    console.log('onEndEdit', line);
 
-    this.detailService.updateDatas.set(e.recID, e);
-    this.detailService.save(null, null, null, null, false).subscribe(() => {});
+    line.fixedDIMs = this.genFixedDims(line);
+
+    this.detailService.updateDatas.set(line.recID, line);
+    this.detailService
+      .save(null, null, null, null, false)
+      .subscribe((res: any) => {
+        if (res.update?.error) {
+          this.grid.gridRef.selectRow(Number(line._rowIndex));
+          this.grid.gridRef.startEdit();
+        }
+      });
   }
 
   onActionEvent(e): void {
@@ -495,7 +513,7 @@ export class PopupAddSalesInvoiceComponent
           this.detailService
             .addNew(() =>
               this.api.exec(
-                'SM',
+                'AC',
                 'SalesInvoicesLinesBusiness',
                 'GetDefaultAsync',
                 [this.master]
@@ -574,7 +592,7 @@ export class PopupAddSalesInvoiceComponent
   resetForm(): void {
     this.masterService
       .addNew(() =>
-        this.api.exec('SM', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
+        this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
           this.master.journalNo,
         ])
       )
@@ -619,6 +637,16 @@ export class PopupAddSalesInvoiceComponent
       idim5.predicate = 'WarehouseID=@0';
       idim5.dataValue = dataValue;
     }
+  }
+
+  genFixedDims(line: ISalesInvoicesLine): string {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    return fixedDims.join('');
   }
   //#endregion
 }

@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  HostListener,
   Injector,
   Optional,
   TemplateRef,
@@ -27,18 +26,15 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
-import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
-import { SettledInvoices } from '../../models/SettledInvoices.model';
-import { map } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   AnimationModel,
-  ILoadedEventArgs,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
-import { PopUpCashReportComponent } from './pop-up-cash-report/pop-up-cash-report.component';
+import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { Subject, interval, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -56,6 +52,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('pgbAcctranst') pgbAcctranst: ProgressBar;
   @ViewChild('pgbSet') pgbSet: ProgressBar;
   @ViewChild('pgbVat') pgbVat: ProgressBar;
+  @ViewChild('annotationsave') annotationsave: ProgressBar;
   dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -111,6 +108,8 @@ export class CashPaymentsComponent extends UIComponent {
     entityName: 'AC_AcctTrans',
   };
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
+  private destroy$ = new Subject<void>();
+  loading:any = false;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -138,7 +137,6 @@ export class CashPaymentsComponent extends UIComponent {
     });
   }
   //#endregion
-
   //#region Init
   onInit(): void {
     this.userID = this.authStore.get().userID;
@@ -208,6 +206,12 @@ export class CashPaymentsComponent extends UIComponent {
 
   ngOnDestroy() {
     this.view.setRootNode('');
+    console.log("asdsa");
+  }
+
+  onDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   //#endregion
 
@@ -260,6 +264,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
+    this.onDestroy();
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -711,6 +716,7 @@ export class CashPaymentsComponent extends UIComponent {
   loadjounal() {
     this.api
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.journal = res[0];
@@ -793,15 +799,15 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-  print(data: any, reportID: any)
-  {
+  print(data: any, reportID: any, reportType: string = 'V') {
+    
     this.api
     .execSv(
       'rptsys',
       'Codx.RptBusiniess.SYS',
       'ReportListBusiness',
       'GetListReportByIDandType',
-      reportID,
+      [reportID, reportType]
     )
     .subscribe((res: any) => {
       if (res != null ) {
@@ -811,23 +817,21 @@ export class CashPaymentsComponent extends UIComponent {
         }
         else if(res.length == 1)
         {
-          this.codxService.navigate('', 'ac/report/detail/' + `${res[0].reportID}`);
+          this.codxService.navigate('', 'ac/report/detail/' + `${res[0].recID}`);
         }
       }
     });
   }
 
-  openPopupCashReport(data: any, reportList: any)
-  {
+  openPopupCashReport(data: any, reportList: any) {
     var obj = {
-      formType: 'Insert',
-      headerText: this.funcName,
       data: data,
       reportList: reportList,
+      url: 'ac/report/detail/',
     };
     let opt = new DialogModel();
     this.dialog = this.callfunc.openForm(
-      PopUpCashReportComponent,
+      CodxListReportsComponent,
       '',
       400,
       600,

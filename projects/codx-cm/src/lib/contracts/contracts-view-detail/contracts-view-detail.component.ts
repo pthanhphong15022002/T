@@ -11,10 +11,13 @@ import {
   Component,
   SimpleChanges,
   Optional,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
 import { CM_Contracts, CM_ContractsPayments, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
+import { CodxCmService } from '../../codx-cm.service';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-detail.component.html',
@@ -23,11 +26,14 @@ import { CM_Contracts, CM_ContractsPayments, CM_Quotations, CM_QuotationsLines }
 export class ContractsViewDetailComponent extends UIComponent implements  OnChanges {
   @Input() contract: CM_Contracts;
   @Input() formModel: FormModel;
+  @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
+  listInsStep = [];
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -60,6 +66,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   constructor(
     private inject: Injector,
     private contractService: ContractsService,
+    private codxCmService: CodxCmService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -82,6 +89,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
     if(changes?.contract && this.contract){
       this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
       this.getPayMentByContractID(this.contract?.recID);
+      this.getListInstanceStep(this.contract);
     }
   }
   async onInit(){
@@ -93,6 +101,19 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
   changeTab(e){
     this.tabClicked = e;
+  }
+
+  getListInstanceStep(contract) {
+    var data = [
+      contract?.refID,
+      contract?.processID,
+      contract?.status,
+    ];
+    this.codxCmService.getStepInstance(data).subscribe((res) => {
+      if (res) {
+        this.listInsStep = res;    
+      }
+    });
   }
 
   changeDataMF(event, data:CM_Contracts) {
@@ -140,39 +161,8 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
       });
     }
   }
-
   clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        // this.deleteContract(data);
-        break;
-      case 'SYS03':
-        // this.editContract(data);
-        break;
-      case 'SYS04':
-        // this.copyContract(data);
-        break;
-      case 'CM0204_3':
-        //tạo hợp đồng gia hạn
-        // this.addContractAdjourn(data)
-        break;
-      case 'CM0204_5':
-        //Đã giao hàng
-        // this.updateDelStatus(data);
-        break;
-      case 'CM0204_6':
-        //hoàn tất hợp đồng
-        // this.completedContract(data);
-        break;
-      case 'CM0204_1':
-        //Gửi duyệt
-       
-        break;
-      case 'CM0204_2':
-        //Hủy yêu cầu duyệt
-       
-        break;
-    }
+    this.clickMoreFunc.emit({ e: e, data: data });
   }
 
   getPayMentByContractID(contractID) {

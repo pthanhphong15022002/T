@@ -190,6 +190,7 @@ export class CodxTasksComponent
   animation: AnimationModel = { enable: true, duration: 2000, delay: 200 };
   HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
   listTaskGoals = [];
+  selectedFirst = true;
 
   constructor(
     inject: Injector,
@@ -552,33 +553,33 @@ export class CodxTasksComponent
     }
     if (data.category == '1' || data.category == '2') {
       this.editConfirm(data);
-      return;
-    }
-
-    var isCanEdit = true;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTaskChildDetailAsync',
-        data.taskID
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '00' && element.status != '10') {
-              isCanEdit = false;
-              return;
+    } else {
+      var isCanEdit = true;
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTaskChildDetailAsync',
+          data.taskID
+        )
+        .subscribe((res: any) => {
+          if (res && res?.length > 0) {
+            for (let i = 0; i < res.length; i++) {
+              let element = res[i];
+              if (element.status != '00' && element.status != '10') {
+                isCanEdit = false;
+                break;
+              }
             }
-          });
-          if (!isCanEdit) {
-            this.notiService.notifyCode('TM016');
-          } else {
-            this.editConfirm(data);
+            if (!isCanEdit) {
+              this.notiService.notifyCode('TM016');
+            } else {
+              this.editConfirm(data);
+            }
           }
-        }
-      });
+        });
+    }
   }
 
   copy(data) {

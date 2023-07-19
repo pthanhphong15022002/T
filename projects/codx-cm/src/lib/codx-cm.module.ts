@@ -91,11 +91,9 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
-import { CustomergroupsComponent } from './customergroups/customergroups.component';
-import { PopupAddCustgroupComponent } from './customergroups/popup-add-custgroup/popup-add-custgroup.component';
-import { SettingProcessCmComponent } from './setting-process-cm/setting-process-cm.component';
+import { CmApprovalComponent } from './cm-approval/cm-approval.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
@@ -139,14 +137,14 @@ const routes: Routes = [
         component: TargetsComponent,
         data: { noReuse: true },
       },
-      // {
-      //   path: 'approvals/:funcID',
-      //   loadChildren: () =>
-      //     import('projects/codx-cm/src/lib/codx-cm-approval.module').then(
-      //       (m) => m.ApprovelCmModule
-      //     ),
-      //   data: { noReuse: true },
-      // },
+      {
+        path: '',
+        loadChildren: () =>
+          import('projects/codx-cm/src/lib/codx-approvel.module').then(
+            (m) => m.CodxApprovelModule
+          ),
+        data: { noReuse: true },
+      },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -154,96 +152,85 @@ const routes: Routes = [
     ],
   },
 
-  // {
-  //   path: '',
-  //   loadChildren: () =>
-  //     import('./settings/settings.module').then((m) => m.SettingsModule),
-  // },
-
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'setting/settingprocess/:funcID',
-        component: SettingProcessCmComponent,
-        data: { noReuse: true },
-      },
-    ],
+    loadChildren: () =>
+      import('./settings/settings.module').then((m) => m.SettingsCmModule),
   },
 ];
 
-const T_Component: Type<any>[] = [LayoutComponent];
+const T_Component: Type<any>[] = [
+  CodxCmComponent,
+  LayoutComponent,
+  CmCustomerComponent,
+  CmCustomerDetailComponent,
+  InformationComponent,
+  PopupAddCmCustomerComponent,
+  PopupAddressComponent,
+  ViewListCmComponent,
+  PopupListContactsComponent,
+  PopupQuickaddContactComponent,
+  QuotationsComponent,
+  PopupAddQuotationsComponent,
+  DealsComponent,
+  PopupAddDealComponent,
+  DealDetailComponent,
+  TabDetailCustomComponent,
+  AddContractsComponent,
+  ListContractsComponent,
+  QuotationsLinesComponent,
+  PopupAddQuotationsLinesComponent,
+  CodxListContactsComponent,
+  CodxListDealsComponent,
+  CodxTabDealcompetitorsComponent,
+  PopupAddDealcompetitorComponent,
+  ViewDealcompetitorsComponent,
+  QuotationsViewDetailComponent,
+  CasesComponent,
+  CasesDetailComponent,
+  PopupAddCasesComponent,
+  TabCasesDetailComponent,
+  CodxAddressCmComponent,
+  LeadsComponent,
+  PopupAddLeadComponent,
+  TabLeadDetailComponent,
+  LeadDetailComponent,
+  CampaignsComponent,
+  PopupAddCampaignComponent,
+  PopupStatusCompetitorComponent,
+  CampaignsDetailComponent,
+  PopupConvertLeadComponent,
+  ContractsComponent,
+  // CustomergroupsComponent,
+  // PopupAddCustgroupComponent,
+  //test
+  CodxAsideCustomComponent,
+  PopupAddPaymentComponent,
+  PopupAddPaymentHistoryComponent,
+  PopupViewPaymentHistoryComponent,
+  PopupMergeLeadsComponent,
+  ViewImgContactComponent,
+  PopupRemoveAddContactComponent,
+  ViewPaymentComponent,
+  GanttChartComponent,
+  StepTaskComponent,
+  QuotationsTabViewComponent,
+  ContractsViewDetailComponent,
+  TaskComponent,
+  PopupOwnerDealComponent,
+  ViewIconGroupComponent,
+  CmDashboardComponent,
+  TargetsComponent,
+  PopupAddTargetComponent,
+  CodxTabCmComponent,
+  ViewTreeTargetsComponent,
+  CmApprovalComponent,
+];
 
 @NgModule({
-  declarations: [
-    CodxCmComponent,
-    LayoutComponent,
-    CmCustomerComponent,
-    CmCustomerDetailComponent,
-    InformationComponent,
-    PopupAddCmCustomerComponent,
-    PopupAddressComponent,
-    ViewListCmComponent,
-    PopupListContactsComponent,
-    PopupQuickaddContactComponent,
-    QuotationsComponent,
-    PopupAddQuotationsComponent,
-    DealsComponent,
-    PopupAddDealComponent,
-    DealDetailComponent,
-    TabDetailCustomComponent,
-    AddContractsComponent,
-    ListContractsComponent,
-    QuotationsLinesComponent,
-    PopupAddQuotationsLinesComponent,
-    CodxListContactsComponent,
-    CodxListDealsComponent,
-    CodxTabDealcompetitorsComponent,
-    PopupAddDealcompetitorComponent,
-    ViewDealcompetitorsComponent,
-    QuotationsViewDetailComponent,
-    CasesComponent,
-    CasesDetailComponent,
-    PopupAddCasesComponent,
-    TabCasesDetailComponent,
-    CodxAddressCmComponent,
-    LeadsComponent,
-    PopupAddLeadComponent,
-    TabLeadDetailComponent,
-    LeadDetailComponent,
-    CampaignsComponent,
-    PopupAddCampaignComponent,
-    PopupStatusCompetitorComponent,
-    CampaignsDetailComponent,
-    PopupConvertLeadComponent,
-    ContractsComponent,
-    CustomergroupsComponent,
-    PopupAddCustgroupComponent,
-    //test
-    SettingProcessCmComponent,
-    CodxAsideCustomComponent,
-    PopupAddPaymentComponent,
-    PopupAddPaymentHistoryComponent,
-    PopupViewPaymentHistoryComponent,
-    PopupMergeLeadsComponent,
-    ViewImgContactComponent,
-    PopupRemoveAddContactComponent,
-    ViewPaymentComponent,
-    GanttChartComponent,
-    StepTaskComponent,
-    QuotationsTabViewComponent,
-    ContractsViewDetailComponent,
-    TaskComponent,
-    PopupOwnerDealComponent,
-    ViewIconGroupComponent,
-    CmDashboardComponent,
-    TargetsComponent,
-    PopupAddTargetComponent,
-    CodxTabCmComponent,
-    ViewTreeTargetsComponent,
-  ],
+  declarations: [T_Component],
   imports: [
+    CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
@@ -262,7 +249,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TreeMapModule,
     TreeMapAllModule,
     ChartModule,
-    CodxCoreModule.forRoot({ environment }),
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService, CategoryService, LineSeriesService],
