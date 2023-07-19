@@ -695,7 +695,7 @@
       [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
       predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
       [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-      [autoFitColumns]="false" (created)="gridCreated()" rowHeight="35"
+      [autoFitColumns]="false" (created)="gridCreated()" rowHeight="35" [preSaveCheck]="true"
       (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
       (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
 
