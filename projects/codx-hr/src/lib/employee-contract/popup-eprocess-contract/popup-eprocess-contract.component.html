@@ -363,6 +363,7 @@
     type="button"
     class="btn btn-sm btn-light-primary"
     (click)="addBenefit()"
+    *ngIf="actionType != 'view'"
   >
     <i class="icon-add icon-16 ms-n1"></i>
     <codx-label

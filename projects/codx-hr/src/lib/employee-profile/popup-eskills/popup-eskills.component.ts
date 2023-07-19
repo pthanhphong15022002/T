@@ -38,6 +38,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   toDateFormat;
   headerTextCalendar: any = [];
   isNullFrom : boolean = true;
+  disabledInput = false;
+
   isNullTo: boolean = true;
 
   @ViewChild('form') form: CodxFormComponent;
@@ -55,6 +57,9 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.skillObj = JSON.parse(JSON.stringify(data?.data.dataInput));
@@ -87,7 +92,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     } else {
       this.isNullFrom = true;
       this.isNullTo = true;
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         this.formGroup.patchValue(this.skillObj);
         this.formModel.currentData = this.skillObj;
         this.isAfterRender = true;
