@@ -1,9 +1,10 @@
 <codx-views
   #view
+  idField="recID"
+  [views]="views"
+  [button]="button"
   service="IV"
   entityName="IV_ItemSeries"
-  idField="recID"
-  [button]="button"
   (buttonClick)="toolBarClick($event)"
 >
 </codx-views>

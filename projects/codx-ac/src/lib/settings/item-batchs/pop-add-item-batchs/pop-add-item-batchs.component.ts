@@ -56,27 +56,27 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
         this.itemBatchs.batchNo = e.data;
         break;
       case 'manufaturedDate':
-        this.validateDate()
         this.itemBatchs.manufaturedDate = e.data;
+        this.validateDate();
         break;
       case 'expiredDate':
-        this.validateDate();
         this.itemBatchs.expiredDate = e.data;
+        this.validateDate();
         break;
       case 'bestBeforeDate':
-        this.validateBestBeforeDate();
         this.itemBatchs.bestBeforeDate = e.data;
+        this.validateBestBeforeDate();
         break;
       case 'vendorBatchNo':
         this.itemBatchs.vendorBatchNo = e.data;
         break;
       case 'vendorBatchDate':
-        this.validateNCCDate();
         this.itemBatchs.vendorBatchDate = e.data;
+        this.validateNCCDate();
         break;
       case 'vendorExpiredDate':
-        this.validateNCCDate();
         this.itemBatchs.vendorExpiredDate = e.data;
+        this.validateNCCDate();
         break;
       case 'note':
         this.itemBatchs.note = e.data;
