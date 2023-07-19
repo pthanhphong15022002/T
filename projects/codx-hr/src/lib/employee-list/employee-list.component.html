@@ -76,12 +76,12 @@
               <div class="d-flex flex-column">
                 <span class="label-text-color">{{grvSetup['OrgUnitID'].headerText}}</span>
                 <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
-                  class="text-gray-600 text-nowrap">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+                  class="text-gray-600">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
               </div>
             </ng-template>
           </div>
           <div #departmentField [ngbTooltip]="departmentTooltip"
-            class="text-gray-600 align-items-center text-nowrap line-clamp line-clamp-1">
+            class="text-gray-600 align-items-center line-clamp line-clamp-1">
             <span *ngIf="data.departmentID != data.orgUnitID">
               {{data.departmentName? data.departmentName :data.departmentID}}</span>
             <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">,</span>
