@@ -250,7 +250,6 @@ export class EditFileComponent implements OnInit {
     @Optional() dialog?: DialogRef
     ) {
       this.data = data.data;
-      //this.fileEditing = this.data[1];   
       this.fileEditing =  JSON.parse(JSON.stringify(this.data[1]));   
       this.user = this.auth.get();
       this.dialog = dialog;     
@@ -272,39 +271,12 @@ export class EditFileComponent implements OnInit {
     this.dmSV.loadGridView(this.formModel?.formName , this.formModel?.gridViewName).subscribe(item=>{
       if(item) this.gridViewSetup = item;
     })
-/* if(this.fileEditing.language)
-        {
-          this.cache.valueList("L1473").subscribe(item=>{
-            if(item && item.datas) 
-            {
-              this.vlL1473 = item.datas;
-              var lang = item.datas.filter(x=>x.value === this.fileEditing.language);
-              if(lang && lang[0])
-              {
-                // this.fileEditing.language // this.fileEditing.type = lang[0].text;
-              }
-              
-            }
-          })
-        } */
-   
   }
 
   
 
   onSaveEditingFile() {
-    if (this.fileEditing.fileName === "") {
-      // $('#fileName').addClass('form-control is-invalid');
-      // $('#fileName').focus();
-      
-    }
     this.fileEditing.fileName = this.fileEditing.fileName + this.fileEditing.extension
-    // if(this.license == true){
-    //   if(this.fileEditing.author == "" || this.fileEditing.publisher == "" || this.fileEditing.publishYear == null || this.fileEditing.copyRights == "" || this.fileEditing.publishDate == null){
-    //     this.notificationsService.notify(this.editfilemessage);
-    //     return;
-    //   }
-    // }
     //Check bản quyền
     if(this.isCopyRight && this.checkCopyRight()) return
 

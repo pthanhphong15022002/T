@@ -261,6 +261,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   selectedChange(val: any) {
+    if (!val?.data) return;
     this.itemSelected = val?.data;
     this.getQuotationsAndQuotationsLinesByTransID(
       this.itemSelected.quotationID
@@ -334,11 +335,11 @@ export class ContractsComponent extends UIComponent {
         break;
       case 'CM0204_1':
         //Gửi duyệt
-
+        this.approvalTrans(data);
         break;
       case 'CM0204_2':
         //Hủy yêu cầu duyệt
-
+        this.cancelApprover(data);
         break;
     }
   }
@@ -511,11 +512,15 @@ export class ContractsComponent extends UIComponent {
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.cmService.getProcess(dt.processID).subscribe((process) => {
+    this.cmService.getProcess(dt?.processID).subscribe((process) => {
       if (process) {
         this.cmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notiService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -523,10 +528,7 @@ export class ContractsComponent extends UIComponent {
             }
           });
       } else {
-        this.notiService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notiService.notifyCode('DP040');
       }
     });
   }
@@ -561,7 +563,7 @@ export class ContractsComponent extends UIComponent {
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.cmService.getProcess(dt.processID).subscribe((process) => {
+        this.cmService.getProcess(dt?.processID).subscribe((process) => {
           if (process) {
             this.cmService
               .getESCategoryByCategoryID(process.processNo)
@@ -593,13 +595,13 @@ export class ContractsComponent extends UIComponent {
                         } else this.notiService.notifyCode('SYS021');
                       });
                   }
+                } else {
+                  this.notiService.notifyCode('ES028');
+                  return;
                 }
               });
           } else {
-            this.notiService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
+            this.notiService.notifyCode('DP040');
           }
         });
       }
