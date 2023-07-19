@@ -20,7 +20,7 @@
             fiedName="WarehouseID"
           ></codx-label>
           <codx-input
-            [disabled]="formType == 'edit' ? true : false"
+            [disabled]="allowEditKey"
             [Group]="form.formGroup"
             [crrValue]="warehouses.warehouseID"
             [formModel]="form.formModel"
