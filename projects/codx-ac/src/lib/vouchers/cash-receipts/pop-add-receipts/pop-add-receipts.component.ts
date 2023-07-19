@@ -762,7 +762,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     } else {
       // nếu voucherNo đã tồn tại,
       // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-      this.journalService.handleVoucherNoAndSave(
+      this.journalService.checkVoucherNoBeforeSave(
         this.journal,
         this.cashreceipts,
         'AC',

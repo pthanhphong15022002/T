@@ -26,6 +26,8 @@ import { CodxCmService } from '../../codx-cm.service';
 export class ContractsViewDetailComponent extends UIComponent implements  OnChanges {
   @Input() contract: CM_Contracts;
   @Input() formModel: FormModel;
+  @Input() listInsStepStart = [];
+
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   dialog: DialogRef;
@@ -33,13 +35,13 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
-  listInsStep = [];
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
 
   listQuotationsLine: CM_QuotationsLines[];
   quotations: CM_Quotations;
+  listInsStep = [];
 
   account:any;
   listTypeContract = [];
@@ -90,6 +92,9 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
       this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
       this.getPayMentByContractID(this.contract?.recID);
       this.getListInstanceStep(this.contract);
+    }
+    if(changes?.listInsStepStart){
+     this.listInsStep = this.listInsStepStart;
     }
   }
   async onInit(){

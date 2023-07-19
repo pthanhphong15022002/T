@@ -71,7 +71,6 @@ export class PopupAddSalesInvoiceComponent
     mode: 'Normal',
   };
   isReturnInvoice: boolean;
-  gridHeight: number;
   journalStateSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -165,7 +164,7 @@ export class PopupAddSalesInvoiceComponent
       return;
     }
 
-    this.journalService.handleVoucherNoAndSave(
+    this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
       'AC',
@@ -206,7 +205,6 @@ export class PopupAddSalesInvoiceComponent
       'currencyID',
       'exchangeRate',
       'voucherDate',
-      'salespersonID',
     ];
     if (postFields.includes(e.field)) {
       this.api
@@ -347,7 +345,7 @@ export class PopupAddSalesInvoiceComponent
     if (this.masterService.hasSaved) {
       this.masterService.updateDatas.set(this.master.recID, this.master);
     }
-    this.journalService.handleVoucherNoAndSave(
+    this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
       'AC',
@@ -391,9 +389,6 @@ export class PopupAddSalesInvoiceComponent
 
   onActionEvent(e): void {
     console.log('onActionEvent', e);
-
-    // ❌ for copyRow ???
-    delete this.grid.rowDataSelected.createdOn;
 
     if (e.type === 'beginEdit') {
       // reset predicates

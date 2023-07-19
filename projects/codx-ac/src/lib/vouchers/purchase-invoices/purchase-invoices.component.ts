@@ -22,9 +22,9 @@ import { IPurchaseInvoice } from './interfaces/IPurchaseInvoice.inteface';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 
 @Component({
-  selector: 'lib-purchaseinvoices',
-  templateUrl: './purchaseinvoices.component.html',
-  styleUrls: ['./purchaseinvoices.component.css'],
+  selector: 'lib-purchase-invoices',
+  templateUrl: './purchase-invoices.component.html',
+  styleUrls: ['./purchase-invoices.component.scss'],
 })
 export class PurchaseinvoicesComponent extends UIComponent {
   //#region Contructor
@@ -34,7 +34,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
-  headerText: any;
   funcName: any;
   parentID: string;
   journalNo: string;
@@ -50,7 +49,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   fmPurchaseInvoicesLines: FormModel = {
     formName: 'PurchaseInvoicesLines',
     gridViewName: 'grvPurchaseInvoicesLines',
-    entityName: 'PS_PurchaseInvoicesLines',
+    entityName: 'AC_PurchaseInvoicesLines',
   };
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   tabItem: any = [
@@ -150,7 +149,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  clickMF(e, data) {
+  onClickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -164,69 +163,71 @@ export class PurchaseinvoicesComponent extends UIComponent {
     }
   }
 
+  onClickAdd(e) {
+    this.view.dataService
+      .addNew(() =>
+        this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+          this.journalNo,
+        ])
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          let options = new SidebarModel();
+          options.DataService = this.view.dataService;
+          options.FormModel = this.view.formModel;
+          options.isFull = true;
+
+          this.callfc.openSide(
+            PopAddPurchaseComponent,
+            {
+              formType: 'add',
+              formTitle: `${e.text} ${this.funcName}`,
+            },
+            options,
+            this.view.funcID
+          );
+        }
+      });
+  }
+  //#endregion
+
+  //#region Method
   setDefault(o) {
-    return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+    return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
 
-  onClickAdd(e) {
-    this.headerText = this.funcName;
-    this.view.dataService
-      .addNew((o) => this.setDefault(o))
-      .subscribe((res: any) => {
-        if (res) {
-          var obj = {
-            formType: 'add',
-            headerText: this.headerText,
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
-          this.dialog = this.callfunc.openSide(
-            PopAddPurchaseComponent,
-            obj,
-            option,
-            this.view.funcID
-          );
-        }
-      });
+  edit(e, data) {
+    const copiedData = { ...data };
+    this.view.dataService.dataSelected = copiedData;
+    this.view.dataService.edit(copiedData).subscribe((res: any) => {
+      let options = new SidebarModel();
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      options.isFull = true;
+
+      this.callfunc
+        .openSide(
+          PopAddPurchaseComponent,
+          {
+            formType: 'edit',
+            formTitle: `${e.text} ${this.funcName}`,
+          },
+          options,
+          this.view.funcID
+        )
+        .closed.subscribe((res) => {
+          if (res.event != null) {
+            if (res.event['update']) {
+              this.master = res.event['data'];
+              this.loadDatadetail(this.master);
+            }
+          }
+        });
+    });
   }
 
-  edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        if (res) {
-          var obj = {
-            formType: 'edit',
-            headerText: this.funcName,
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
-          this.dialog = this.callfunc.openSide(
-            PopAddPurchaseComponent,
-            obj,
-            option,
-            this.view.funcID
-          );
-          this.dialog.closed.subscribe((res) => {
-            if (res.event != null) {
-              if (res.event['update']) {
-                this.master = res.event['data'];
-                this.loadDatadetail(this.master);
-              }
-            }
-          });
-        }
-      });
-  }
   copy(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -236,8 +237,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           var obj = {
-            formType: 'copy',
-            headerText: this.funcName,
+            formType: 'add',
+            formTitle: `${e.text} ${this.funcName}`,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -252,6 +253,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         }
       });
   }
+
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -298,15 +300,15 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
       .subscribe((res: any) => {
         if (res != null) {
-          this.objectname = res[0].objectName;
+          this.objectname = res[0]?.objectName;
         }
       });
-    this.api
-      .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [data.recID])
-      .subscribe((res: any) => {
-        this.purchaseInvoicesLines = res;
-        this.loadTotal();
-      });
+    // this.api
+    //   .exec('AC', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [data.recID])
+    //   .subscribe((res: any) => {
+    //     this.purchaseInvoicesLines = res;
+    //     this.loadTotal();
+    //   });
   }
 
   loadTotal() {
