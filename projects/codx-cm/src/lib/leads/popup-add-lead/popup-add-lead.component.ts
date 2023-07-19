@@ -49,12 +49,17 @@ export class PopupAddLeadComponent
   dialog: DialogRef;
   //type any
   formModel: FormModel;
-  addFieldsControl: any = '1';
+
   // type string
   titleAction: string = '';
   action: string = '';
   autoName: string = '';
   title: string = '';
+  linkAvatar: string;
+  leadId: string = '';
+  contactId: string = '';
+  applyFor: string = '';
+  oldIdInstance: string = '';
 
   // Data struct Opportunity
   lead: CM_Leads = new CM_Leads();
@@ -70,13 +75,20 @@ export class PopupAddLeadComponent
   listCustomFile: any[] = [];
   listParticipants: any[] = [];
   listOrgs: any[] = [];
+  listInstanceSteps: any[] = [];
+  lstContact: any[] = [];
+  lstContactDeletes: any[] = [];
+  listIndustries: any[] = [];
 
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
   readonly actionEdit: string = 'edit';
-  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
-
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000';
+  readonly radioCategory: string = 'radioCategory';
+  readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
+  readonly radioCompany: string = 'company';
+  readonly radioCustomer: string = 'customer';
   // Tab control
   menuGeneralInfo = {
     icon: 'icon-info',
@@ -106,7 +118,6 @@ export class PopupAddLeadComponent
     subName: 'Input information',
     subText: 'Input information',
   };
-  readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 
   //type any
   gridViewSetup: any;
@@ -116,23 +127,20 @@ export class PopupAddLeadComponent
   dateMax: any;
   customerIDOld: any;
   funcID: any;
+  instanceSteps: any;
+  addFieldsControl: any = '1';
+
   // model of DP
   instance: tmpInstances = new tmpInstances();
-  instanceSteps: any;
-  listInstanceSteps: any[] = [];
-  avatarChangeLead: boolean = false;
-  avatarChangeContact: boolean = false;
-  lstContact: any[] = [];
-  lstContactDeletes: any[] = [];
-  linkAvatar: string;
-  leadId: string = '';
-  contactId: string = '';
+
+  // boolean
+  isLoading: boolean = false;
   isCopyAvtLead: boolean = false;
   isCopyAvtContact: boolean = false;
-  listIndustries: any[] = [];
-  applyFor: string = '';
-  isLoading: boolean = false;
-  oldIdInstance: string = '';
+  avatarChangeLead: boolean = false;
+  avatarChangeContact: boolean = false;
+  isCategory: boolean = true;
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -235,6 +243,18 @@ export class PopupAddLeadComponent
       this.listIndustries.push($event.data);
     }
   }
+  valueChangeCategory($event,field) {
+    if ($event) {
+      let checked = $event.component.checked;
+        if ($event.field === this.radioCompany && checked) {
+          this.isCategory = true;
+        } else if ($event.field === this.radioCustomer && checked) {
+          this.isCategory = false;
+        }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
   onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
