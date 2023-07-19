@@ -1466,6 +1466,7 @@ export class InstancesComponent
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
+                this.detailViewPopup.loadChangeData();
               }
               this.detectorRef.detectChanges();
             }
