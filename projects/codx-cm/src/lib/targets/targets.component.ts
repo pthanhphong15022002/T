@@ -11,11 +11,13 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   DataRequest,
+  DialogModel,
   FormModel,
   RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -80,6 +82,8 @@ export class TargetsComponent
   date: any = new Date();
   ops = ['m', 'q', 'y'];
   year: number;
+  heightWin: any;
+  widthWin: any;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -89,6 +93,9 @@ export class TargetsComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
@@ -301,15 +308,25 @@ export class TargetsComponent
   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '850px';
+      let dialogModel = new DialogModel();
+      dialogModel.DataService = this.view.dataService;
+      dialogModel.FormModel = this.view?.formModel;
+      dialogModel.IsFull = true;
+      dialogModel.zIndex = 999;
       var obj = {
         action: 'add',
         title: this.titleAction,
       };
-      var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
+      var dialog = this.callfc.openForm(
+        PopupAddTargetComponent,
+        '',
+        this.widthWin,
+        this.heightWin,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e != null && e?.event != null) {
@@ -321,9 +338,8 @@ export class TargetsComponent
             if (index != -1) {
               this.lstDataTree[index] = data;
               // this.lstDataTree.splice(index, 1);
-            }else{
+            } else {
               this.lstDataTree.push(Object.assign({}, data));
-
             }
           }
           this.detectorRef.detectChanges();
@@ -343,17 +359,27 @@ export class TargetsComponent
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '850px';
+        let dialogModel = new DialogModel();
+        dialogModel.DataService = this.view.dataService;
+        dialogModel.FormModel = this.view?.formModel;
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
         var obj = {
           action: 'edit',
           title: this.titleAction,
           lstOwners: lstOwners,
           lstTargetLines: lstTargetLines,
         };
-        var dialog = this.callfc.openSide(PopupAddTargetComponent, obj, option);
+        var dialog = this.callfc.openForm(
+          PopupAddTargetComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e != null && e?.event != null) {
