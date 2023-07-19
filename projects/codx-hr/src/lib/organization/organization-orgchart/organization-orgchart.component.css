@@ -74,7 +74,7 @@
 .p-node {
   position: absolute;
   left: 45%;
-  bottom: -4%;
+  bottom: -5%;
   cursor: pointer;
 }
 
@@ -115,4 +115,15 @@ input[type="checkbox"] {
   transform: translateY(30%);
   left: 4px;
   content: "";
+}
+
+.c-header {
+  position: fixed !important;
+  z-index: 10;
+  width: 100%;
+  top: 0;
+}
+
+.p-top {
+  margin-top: 60px;
 }
