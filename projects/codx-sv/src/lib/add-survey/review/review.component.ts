@@ -85,7 +85,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
     private change: ChangeDetectorRef,
     private auth: AuthStore,
     private sanitizer: DomSanitizer,
-    private aesCrypto: AESCryptoService
+    private aesCrypto: AESCryptoService,
+    private authService : AuthService,
   ) {
     super(injector);
     this.user = this.auth.get();
@@ -178,6 +179,13 @@ export class ReviewComponent extends UIComponent implements OnInit {
       }
       if(data?.settings?.isPublic) {
         this.isPublic = data?.settings?.isPublic;
+
+        if(this.isPublic)
+        {
+          this.api.execSv("SYS","AD","UsersBusiness","CreateUserNoLoginAsync","").subscribe((item:any)=>{
+            if(item) this.auth.set(item);
+          });
+        }
       }
     }
   }
@@ -356,7 +364,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
 
   lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer , seqNoSession = null) {
-    //itemAnswer.choose = choose
     if(itemQuestion.answerType == "L")
     {
       let objAnswer = {
@@ -397,9 +404,12 @@ export class ReviewComponent extends UIComponent implements OnInit {
       else if (e.field == 'C') {
         if (e.data) this.lstAnswer.push(JSON.parse(JSON.stringify(itemAnswer)));
         else this.lstAnswer = this.lstAnswer.filter(x => x.seqNo != itemAnswer.seqNo);
+
+        var listID = itemQuestion.answers.map((u) => u.id).join(';');
+        var listAnswers = this.lstAnswer.filter(x=>listID.includes(x.id));
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
-        ].answers = this.lstAnswer;
+        ].answers = listAnswers;
       }
       else if(e.field == 'O2')
       {
@@ -481,7 +491,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
       (document.getElementById('ip-order-'+seqNoSession+itemQuestion?.recID) as HTMLInputElement).focus();
     }
     else {
-
       this.lstAnswer =  this.lstAnswer.filter(x => x.seqNo != itemAnswer.seqNo);
       this.lstQuestion[itemSession.seqNo].children[
         itemQuestion.seqNo
@@ -583,6 +592,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       this.respondents.scores = 0;
       this.respondents.duration = 20;
       this.respondents.pending = true;
+      this.respondents.status = "5";
       this.SVServices.onSubmit(this.respondents).subscribe((res:any) => {
         if(res && res.status == 5) this.isSent = true
       });
