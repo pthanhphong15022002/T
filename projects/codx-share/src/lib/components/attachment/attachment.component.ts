@@ -1498,7 +1498,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
     if (!fileItem.urlPath) return null;
 
-    this.closeBtnUp = false;
+    //this.closeBtnUp = false;
     return fileItem;
   }
 

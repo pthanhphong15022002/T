@@ -16,15 +16,15 @@
 
 <!-- header -->
 <ng-template #headerTemplate let-data>
-  <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-50 text-dark fw-bold p-3 fw-500">
+  <div class="d-flex w-100 p-4">
+    <div class="w-50 text-dark fw-bold">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
         [default]="grvSetup?.EmployeeID?.headerText"
       ></codx-label>
     </div>
-    <div class="w-30 text-dark fw-bold p-3 fw-500">
+    <div class="w-30 text-dark fw-bold">
       <codx-label
         fiedName="lblKowID"
         [formModel]="view.formModel"
@@ -46,7 +46,7 @@
       >
       </codx-label> -->
     </div>
-    <div class="w-20 text-dark fw-bold p-3 fw-500">
+    <div class="w-20 text-dark fw-bold">
       <codx-label
         fiedName="lblStatus"
         [formModel]="view.formModel"
@@ -60,11 +60,11 @@
 
 <!-- list view -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
+  <div class="d-flex align-items-center border-bottom p-4">
     <!-- emp info -->
-    <div class="w-50 p-3">
+    <div class="w-50">
       <div class="d-flex align-items-start">
-        <div class="d-flex flex-column w-50px">
+        <div class="d-flex flex-column">
           <codx-img
             [width]="35"
             class="me-3"
@@ -76,11 +76,9 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div class="d-flex align-items-center">
-            <span class="me-2 text-dark fw-bold text-nowrap">{{
-              data?.emp?.employeeName
-            }}</span>
-          </div>
+          <div class="fs-6 text-dark fw-bold text-nowrap mb-1">{{
+            data?.emp?.employeeName
+            }}</div>
           <div class="text-gray-700 fs-7 mb-1">
             <span
               [innerHTML]="
@@ -117,15 +115,15 @@
     <!-- end emp info -->
 
     <!-- day off type / day off periods-->
-    <div class="w-30 p-3">
+    <div class="w-30">
       <div class="d-flex flex-column text-gray-700">
-        <div class="d-flex mb-2 fs-5">
+        <div class="d-flex mb-2 text-dark">
           <div
             class="align-self-center fw-bold me-2"
             [ngbTooltip]="grvSetup?.KowID?.headerText"
           >
             <span
-              class="align-self-center fw-bold fs-5"
+              class="align-self-center fw-bold text-dark"
               [innerHTML]="
                 data?.kowID | formatvalue : view.formModel : 'kowID' | async
               "
@@ -211,7 +209,7 @@
     <!-- day off type / day off periods -->
 
     <!-- status -->
-    <div class="w-20 p-3">
+    <div class="w-20">
       <ng-container *ngIf="flagChangeMF">
         <ng-container *ngIf="runModeCheck; else elseVll">
           <codx-vll
@@ -268,13 +266,13 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-2'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-3'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageWidth]="40"
+    [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
@@ -283,6 +281,7 @@
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
+    [subTitleCss]="'fs-7 text-gray-600'"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
     (changeDataMF)="changeDataMF($event, data)"
@@ -291,7 +290,6 @@
 
   <ng-template #descTmp>
     <span
-      class="mt-1"
       [ngbTooltip]="grvSetup?.KowID?.headerText"
       [innerHTML]="data?.kowID | formatvalue : view.formModel : 'kowID' | async"
     ></span>
@@ -301,7 +299,7 @@
     <!-- reason -->
     <div>
       <div class="justify-content-between text-gray-700">
-        <div class="d-flex mb-2" #reasonFieldDetail>
+        <div class="d-flex" #reasonFieldDetail>
           <span
             [ngbTooltip]="reasonDetailTooltip"
             class="line-clamp line-clamp-1 text-dark"
@@ -327,7 +325,7 @@
       <!-- end reason -->
       <!-- from to -->
       <div class="d-flex align-items-center">
-        <span class="icon-calendar_today icon-15 me-1"></span>
+        <span class="icon-calendar_today icon-14 me-1"></span>
         <span
           [innerHTML]="
             data?.beginDate | formatvalue : view.formModel : 'beginDate' | async

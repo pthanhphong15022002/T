@@ -207,7 +207,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
   //#endregion
-  
+
   //#region Init
   onInit(): void {
     this.userID = this.authStore.get().userID;
@@ -215,7 +215,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadInit();
   }
 
-  ngAfterViewInit() { 
+  ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment, {
       onlySelf: true,
       emitEvent: false,
@@ -460,7 +460,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (this.cashpayment.currencyID != e.component.itemsSelected[0].CurrencyID) {
             this.cashpayment.currencyID = e.component.itemsSelected[0].CurrencyID;
             this.setCurrency();
-          }      
+          }
           break;
         case 'currencyid':
           this.setCurrency();
@@ -826,6 +826,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     //       });
     //   }
     // }
+    this.gridCash._afterSaveCheck.next(true);
   }
   //Tach thanh component settledinvoice
   settledLineChanged(e: any) {
@@ -1420,7 +1421,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               });
           }
         })
-        
+
       }
     }
   }
@@ -1474,7 +1475,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     switch (this.modegrid) {
       case '1':
         this.setLineDefault();
-        
+
         // idx = this.gridCash.dataSource.length;
         // this.dataLine.rowNo = idx + 1;
         // this.requireFields = this.dataLine.unbounds
@@ -1573,7 +1574,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          this.gridViewSetup = res;   
+          this.gridViewSetup = res;
         }
       });
   }
@@ -2330,12 +2331,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           onlySelf: true,
           emitEvent: false,
         }
-      );    
+      );
       if (this.cashpaymentline.length > 0) {
         this.dialog.dataService.update(this.cashpayment).subscribe();
         this.changeExchangeRate(true);
       }
-      
+
     } else {
       this.api
         .exec<any>('AC', this.className, 'ValueChangedAsync', [
@@ -2364,7 +2365,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.cashpaymentline = res.line;
               this.dialog.dataService.update(this.cashpayment).subscribe();
             }
-          }     
+          }
         });
       // let hasCurrency = this.dicCurrency.has(this.cashpayment.currencyID);
       // if (hasCurrency) {
@@ -2380,9 +2381,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       //       onlySelf: true,
       //       emitEvent: false,
       //     }
-      //   );     
+      //   );
       // } else {
-        
+
       // }
     }
     this.gridCreated();

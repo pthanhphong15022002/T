@@ -2297,8 +2297,8 @@ export class CodxHrService {
   //     'SYS',
   //     'SYS',
   //     'FunctionListBusiness',
-  //     'GetByFuncAsync',
-  //     funcID
+  //     'GetByParentAsync',
+  //     [funcID, true]
   //   );
   // }
 

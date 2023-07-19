@@ -37,6 +37,8 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   employId: string;
   idField = 'RecID';
   isAfterRender = false;
+  disabledInput = false;
+
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -88,6 +90,9 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.healthObj = data?.data?.healthObj;
     if(this.healthObj){
       if(this.healthObj?.healthDate == '0001-01-01T00:00:00'){
@@ -146,7 +151,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType == 'view') {
         this.formGroup.patchValue(this.healthObj);
         this.formModel.currentData = this.healthObj;
         this.cr.detectChanges();
