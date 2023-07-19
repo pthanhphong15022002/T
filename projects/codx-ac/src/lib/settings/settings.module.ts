@@ -52,6 +52,8 @@ import { WarehousesComponent } from './warehouses/warehouses.component';
 import { ImageBoxListComponent } from './items/components/image-box-list/image-box-list.component';
 import { FiscalPeriodsComponent } from './fiscal-periods/fiscal-periods.component';
 import { PopAddFiscalPeriodsComponent } from './fiscal-periods/pop-add-fiscal-periods/pop-add-fiscal-periods.component';
+import { ItemBatchsComponent } from './item-batchs/item-batchs.component';
+import { PopAddItemBatchsComponent } from './item-batchs/pop-add-item-batchs/pop-add-item-batchs.component';
 
 var routes: Routes = [
   {
@@ -118,6 +120,10 @@ var routes: Routes = [
         path: 'fiscalperiods/:funcID',
         component: FiscalPeriodsComponent,
       },
+      {
+        path: 'itembatchs/:funcID',
+        component: ItemBatchsComponent,
+      },
     ],
   },
 ];
@@ -167,6 +173,8 @@ var routes: Routes = [
     ImageBoxListComponent,
     FiscalPeriodsComponent,
     PopAddFiscalPeriodsComponent,
+    ItemBatchsComponent,
+    PopAddItemBatchsComponent,
   ],
   imports: [
     CommonModule,
