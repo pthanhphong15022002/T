@@ -65,6 +65,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
     entityName: 'CM_Quotations',
     gridViewName: 'grvCMQuotations',
   };
+  isLoading: boolean = true;
   constructor(
     private inject: Injector,
     private contractService: ContractsService,
@@ -93,7 +94,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
       this.getPayMentByContractID(this.contract?.recID);
       this.getListInstanceStep(this.contract);
     }
-    if(changes?.listInsStepStart){
+    if(changes?.listInsStepStart && changes?.listInsStepStart?.currentValue){
      this.listInsStep = this.listInsStepStart;
     }
   }

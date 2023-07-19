@@ -427,6 +427,7 @@ export class CM_ContractsPayments {
 }
 export class CM_Contracts {
   recID: string = Util.uid(); //Mã hợp đồng
+  stepID: string; //Mã hợp đồng
   contractID: string; //Mã hợp đồng
   contractDate: Date; //Ngày lập hợp đồng
   contractName: string; //Tên hợp đồng
