@@ -11,6 +11,8 @@ import {
   Component,
   SimpleChanges,
   Optional,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
@@ -24,6 +26,8 @@ import { CodxCmService } from '../../codx-cm.service';
 export class ContractsViewDetailComponent extends UIComponent implements  OnChanges {
   @Input() contract: CM_Contracts;
   @Input() formModel: FormModel;
+  @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
@@ -157,39 +161,8 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
       });
     }
   }
-
   clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        // this.deleteContract(data);
-        break;
-      case 'SYS03':
-        // this.editContract(data);
-        break;
-      case 'SYS04':
-        // this.copyContract(data);
-        break;
-      case 'CM0204_3':
-        //tạo hợp đồng gia hạn
-        // this.addContractAdjourn(data)
-        break;
-      case 'CM0204_5':
-        //Đã giao hàng
-        // this.updateDelStatus(data);
-        break;
-      case 'CM0204_6':
-        //hoàn tất hợp đồng
-        // this.completedContract(data);
-        break;
-      case 'CM0204_1':
-        //Gửi duyệt
-       
-        break;
-      case 'CM0204_2':
-        //Hủy yêu cầu duyệt
-       
-        break;
-    }
+    this.clickMoreFunc.emit({ e: e, data: data });
   }
 
   getPayMentByContractID(contractID) {
