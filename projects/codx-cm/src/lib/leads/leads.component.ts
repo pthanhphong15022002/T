@@ -324,6 +324,7 @@ export class LeadsComponent
     };
     var isCRUD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
+    //  eventItem.disabled = false;
     };
     var isClosed = (eventItem, data) => {
       eventItem.disabled = data.closed
@@ -991,6 +992,7 @@ export class LeadsComponent
     dialogModel.FormModel = formMD;
     var obj = {
       recID: data?.recID,
+      refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
       gridViewSetup: this.gridViewSetup,
@@ -998,6 +1000,7 @@ export class LeadsComponent
       applyFor: this.applyForLead,
       titleAction: this.titleAction,
       owner: data.owner,
+      startControl: data.steps.startControl
     };
     var dialog = this.callfc.openForm(
       PopupOwnerDealComponent,

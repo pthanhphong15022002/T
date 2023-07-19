@@ -35,6 +35,7 @@ import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from '../payment/popup-view-payment-history/popup-view-payment-history.component';
+import { tmpInstances } from '../../models/tmpModel';
 
 @Component({
   selector: 'add-contracts',
@@ -80,6 +81,7 @@ export class AddContractsComponent implements OnInit {
   grvPayments: any;
   projectID: string;
   dialog!: DialogRef;
+  instance: tmpInstances = new tmpInstances();
 
   view = [];
   isLoadDate = true;
@@ -94,6 +96,11 @@ export class AddContractsComponent implements OnInit {
   headerTest = '';
   listTypeContract = [];
   type: 'view' | 'deal' | 'quotation' | 'customer';
+
+  owner;
+  listParticipants;
+  objPermissions = {};
+  readonly fieldCbxParticipants = { text: 'objectName', value: 'objectID' };
 
   moreDefaut = {
     share: true,
@@ -238,16 +245,6 @@ export class AddContractsComponent implements OnInit {
       this.contracts = data;
       delete this.contracts['id'];
       this.contracts.recID = Util.uid();
-
-      // this.contracts.contractID = await firstValueFrom(
-      //   this.cmService.genAutoNumberDefault(
-      //     'CM0204',
-      //     'CM_Contracts',
-      //     'contractID'
-      //   )
-      // );
-      // this.contracts.contractID =
-      //   'HD-' + (Math.random() * 10000000000).toFixed(0);
       this.getQuotationsLinesInContract(
         this.contracts?.recID,
         this.contracts?.quotationID
@@ -432,6 +429,7 @@ export class AddContractsComponent implements OnInit {
 
   addContracts() {
     if (this.type == 'view') {
+      this.setDataInstance(this.contracts, this.instance);
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {
@@ -445,6 +443,7 @@ export class AddContractsComponent implements OnInit {
           }
           // this.changeDetector.detectChanges();
         });
+        this.addInstance();
     } else {
       this.cmService
         .addContracts([this.contracts, this.listPaymentAdd])
@@ -480,36 +479,36 @@ export class AddContractsComponent implements OnInit {
   //#endregion
   //#region Save
   handleSaveContract() {
-    if (
-      this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
-    ) {
-      return;
-    }
-    if (
-      this.contracts?.delPhone &&
-      !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
-    ) {
-      this.notiService.notifyCode('RS030');
-      return;
-    }
+    // if (
+    //   this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
+    // ) {
+    //   return;
+    // }
+    // if (
+    //   this.contracts?.delPhone &&
+    //   !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
+    // ) {
+    //   this.notiService.notifyCode('RS030');
+    //   return;
+    // }
 
-    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
-      this.notiService.notifyCode(
-        'CM026',
-        0,
-        '"' + this.grvSetup['ContractID'].headerText + '"'
-      );
-      return;
-    }
+    // if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
+    //   this.notiService.notifyCode(
+    //     'CM026',
+    //     0,
+    //     '"' + this.grvSetup['ContractID'].headerText + '"'
+    //   );
+    //   return;
+    // }
 
-    if (this.isExitAutoNum) {
-      this.notiService.notifyCode(
-        'CM003',
-        0,
-        '"' + this.grvSetup['ContractID'].headerText + '"'
-      );
-      return;
-    }
+    // if (this.isExitAutoNum) {
+    //   this.notiService.notifyCode(
+    //     'CM003',
+    //     0,
+    //     '"' + this.grvSetup['ContractID'].headerText + '"'
+    //   );
+    //   return;
+    // }
     switch (this.action) {
       case 'add':
       case 'copy':
@@ -561,12 +560,55 @@ export class AddContractsComponent implements OnInit {
       this.getCustomerByrecID(event?.data);
       this.getCustomersDefaults(event?.data);
     }
+
     if (event?.field == 'delStatus') {
       this.disabledDelActualDate =
         event?.data == '0' || event?.data == '1' ? true : false;
     }
+    if (event?.field == 'processID') {
+      this.setPermissions(this.contracts?.processID);
+    }
   }
 
+  async setPermissions(processID) {
+    if (processID) {
+      this.listParticipants = this.objPermissions?.[processID];
+      if (!this.listParticipants) {
+        let permission = await firstValueFrom(
+          this.api.exec<any>(
+            'DP',
+            'InstancesBusiness',
+            'GetPermissionsInProcessIDAsync',
+            [processID]
+          )
+        );
+        if (permission) {
+          this.objPermissions[processID] = permission;
+          this.listParticipants = permission;
+        }
+      }
+    }
+  }
+
+  setDataInstance(contract: CM_Contracts, instance: tmpInstances) {
+    instance.title = contract?.contractName;
+    instance.instanceNo = contract?.contractID;
+    instance.owner = this.owner;
+    instance.processID = contract?.processID;
+    contract.refID = instance?.recID;
+  }
+
+  async addInstance() {
+    var data = [this.instance, this.contracts.processID];
+    let listInsStep = await firstValueFrom(
+      this.api.exec<any>(
+        'DP',
+        'InstancesBusiness',
+        'AddInstanceOfContractAsync',
+        data,
+      )
+    );
+  }
   setValueComboboxDeal() {
     let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
     if (listDeal) {
@@ -918,5 +960,11 @@ export class AddContractsComponent implements OnInit {
 
   checkSpace(text: string) {
     return text.includes(' ');
+  }
+
+  valueChangeOwner($event) {
+    if ($event) {
+      this.owner = $event;
+    }
   }
 }

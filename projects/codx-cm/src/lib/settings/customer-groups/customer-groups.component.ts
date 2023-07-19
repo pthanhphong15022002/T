@@ -142,8 +142,8 @@ export class CustomerGroupsComponent extends UIComponent {
 
     this.views = [
       {
-        sameData: true,
         type: ViewType.grid,
+        sameData: true,
         active: true,
         model: {
           resources: this.columnsGrid,

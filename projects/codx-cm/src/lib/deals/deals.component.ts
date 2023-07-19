@@ -41,6 +41,7 @@ import { AnyNsRecord } from 'dns';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
+import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
 
 @Component({
   selector: 'lib-deals',
@@ -422,6 +423,7 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
+    //  eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
@@ -518,9 +520,9 @@ export class DealsComponent
 
   checkMoreReason(tmpPermission) {
     return (
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
+      !tmpPermission?.roleMore?.isReasonSuccess &&
+      !tmpPermission?.roleMore?.isReasonFail &&
+      !tmpPermission?.roleMore?.isMoveStage
     );
   }
   clickMF(e, data) {
@@ -962,25 +964,31 @@ export class DealsComponent
       formMD.gridViewName = fun.gridViewName;
       dialogModel.zIndex = 999;
       dialogModel.FormModel = formMD;
-      var dataCM = {
+      var obj = {
+        recID: data?.recID,
         refID: data?.refID,
         processID: data?.processID,
         stepID: data?.stepID,
+        gridViewSetup: this.gridViewSetup,
+        formModel: this.view.formModel,
+        applyFor: "1",
+        titleAction: this.titleAction,
+        owner: data.owner,
+        startControl: data.steps.startControl
       };
       var dialog = this.callfc.openForm(
-        PopupEditOwnerstepComponent,
+        PopupOwnerDealComponent,
         '',
         500,
         280,
         '',
-        [null, this.titleAction, data, '1', dataCM],
+        obj,
         '',
         dialogModel
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-          data.modifiedOn = new Date();
-          this.dataSelected = data;
+          this.view.dataService.update(e?.event).subscribe();
           this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
@@ -1183,7 +1191,7 @@ export class DealsComponent
 
   //#region event
   selectedChange(data) {
-    this.dataSelected = data?.data ? data?.data : data;
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
@@ -1244,6 +1252,10 @@ export class DealsComponent
         this.codxCmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notificationsService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -1251,10 +1263,7 @@ export class DealsComponent
             }
           });
       } else {
-        this.notificationsService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notificationsService.notifyCode('DP040');
       }
     });
   }

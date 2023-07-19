@@ -47,6 +47,7 @@ import { SearchingComponent } from './searching/searching.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { DMDashboardComponent } from './dmdashboard/dmdashboard.component';
 import { DashboardLayoutModule } from '@syncfusion/ej2-angular-layouts';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 //import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
@@ -158,6 +159,7 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
+    NgbDropdownModule,
     CoreModule,
     UploaderModule,
     DialogModule,

@@ -1732,7 +1732,7 @@
           (cdkDropListDropped)="dropStep($event)"
         >
           <!-- danh sách giai đoạn -->
-          <div class="stage-scroll">
+          <div class="stage-scroll" *ngIf="stepList?.length > 0">
             <div
               cdkDrag
               *ngFor="let itemStep of stepList; let i = index"
@@ -1842,7 +1842,10 @@
                 >
                 </i>
               </div>
-              <div class="d-flex flex-column" [ngStyle]="setColorTestStep(stepSuccess)">
+              <div
+                class="d-flex flex-column"
+                [ngStyle]="setColorTestStep(stepSuccess)"
+              >
                 <div class="fw-bold">
                   {{ stepNameSuccess }}
                 </div>
@@ -1877,7 +1880,10 @@
                 >
                 </i>
               </div>
-              <div class="d-flex flex-column" [ngStyle]="setColorTestStep(stepFail)">
+              <div
+                class="d-flex flex-column"
+                [ngStyle]="setColorTestStep(stepFail)"
+              >
                 <div class="fw-bold">
                   {{ stepNameFail }}
                 </div>
@@ -2316,7 +2322,10 @@
   </div>
 
   <div class="form-group row">
-    <div class="col-6 d-flex align-items-center justify-content-between" *ngIf="!process?.stepsColorMode">
+    <div
+      class="col-6 d-flex align-items-center justify-content-between"
+      *ngIf="!process?.stepsColorMode"
+    >
       <codx-label
         fiedName="backgroundColor"
         [formModel]="grvStep"
@@ -2335,7 +2344,10 @@
       >
       </codx-input>
     </div>
-    <div class="col-6 d-flex align-items-center" *ngIf="!process?.stepsColorMode">
+    <div
+      class="col-6 d-flex align-items-center"
+      *ngIf="!process?.stepsColorMode"
+    >
       <codx-label
         class="me-4"
         fiedName="textColor"

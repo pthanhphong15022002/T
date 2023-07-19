@@ -59,6 +59,7 @@ export class CasesComponent
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
   @ViewChild('casesDetail') casesDetail: CasesDetailComponent;
 
   // extension core
@@ -181,6 +182,16 @@ export class CasesComponent
           template: this.cardKanban,
           template2: this.viewColumKaban,
           setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -374,9 +385,12 @@ export class CasesComponent
         break;
     }
   }
-  changeDataMF($event, data) {
+  changeDataMF($event, data, type = null) {
     if ($event != null && data != null) {
       for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -1105,6 +1119,10 @@ export class CasesComponent
         this.codxCmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notificationsService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -1112,10 +1130,7 @@ export class CasesComponent
             }
           });
       } else {
-        this.notificationsService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notificationsService.notify('DP040');
       }
     });
   }
@@ -1167,7 +1182,7 @@ export class CasesComponent
                         dt?.recID,
                         this.view.formModel.entityName,
                         null,
-                        null,
+                        null
                       )
                       .subscribe((res3) => {
                         if (res3) {
@@ -1390,4 +1405,10 @@ export class CasesComponent
     });
   }
   //end
+
+  //#region temp Gird
+  changeDataMFGird(e, data) {
+    this.changeDataMF(e, data, 11);
+  }
+  //#endregion
 }

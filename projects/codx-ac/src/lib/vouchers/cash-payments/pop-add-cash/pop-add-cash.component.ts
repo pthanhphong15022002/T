@@ -912,7 +912,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           }
         } else {
-          this.journalService.handleVoucherNoAndSave(
+          this.journalService.checkVoucherNoBeforeSave(
             this.journal,
             this.cashpayment,
             'AC',
@@ -1334,7 +1334,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
           break;
         case 'edit':
-          this.journalService.handleVoucherNoAndSave(
+          this.journalService.checkVoucherNoBeforeSave(
             this.journal,
             this.cashpayment,
             'AC',
