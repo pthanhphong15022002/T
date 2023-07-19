@@ -231,7 +231,7 @@
                 </codx-label>
                 <div [class]="(!journal.multiCurrency) ? 'ac-input-disable' : 'ac-input'">
                   <codx-input #cbxCurrencyID [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
-                    [disabled]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr)" [Group]="form.formGroup" field="currencyID"
+                    [disabled]="(!journal.multiCurrency)" [Group]="form.formGroup" field="currencyID"
                     [formModel]="form.formModel" (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
@@ -695,7 +695,7 @@
       [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
       predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
       [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-      [autoFitColumns]="false" (created)="gridCreated()" rowHeight="35"
+      [autoFitColumns]="false" (created)="gridCreated()" rowHeight="35" [preSaveCheck]="false"
       (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
       (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
 
@@ -879,21 +879,27 @@
     </div>
     <div class="d-flex align-items-center me-3">
       <div *ngIf="action != 'edit'" class="ms-2">
-        <ejs-tooltip id='tooltip' content='Alt + Shift + S' target="#saveadd">
+        <!-- <ejs-tooltip id='tooltip' content='Alt + Shift + S' target="#saveadd">
           <button id="saveadd" type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
             <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
           </button>
-        </ejs-tooltip>
+        </ejs-tooltip> -->
+        <button id="saveadd" type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
+            <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+          </button>
       </div>
       <div class="ms-2">
-        <ejs-tooltip id='tooltip' content='Alt + S' target="#save">
+        <!-- <ejs-tooltip id='tooltip' content='Alt + S' target="#save">
           <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
             <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
           </button>
-        </ejs-tooltip>
+        </ejs-tooltip> -->
+        <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+          </button>
       </div>
       <div *ngIf="cashpayment?.status == '0'" class="ms-2">
-        <ejs-tooltip id='tooltip' content='Ctrl + D' target="#discard">
+        <!-- <ejs-tooltip id='tooltip' content='Ctrl + D' target="#discard">
           <button id="discard" [disabled]="!hasSaved" type="button" class="btn btn-md btn-danger"
             (click)="onDiscard()">
             <div class="d-flex align-items-center">
@@ -901,7 +907,14 @@
               <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
             </div>
           </button>
-        </ejs-tooltip>
+        </ejs-tooltip> -->
+        <button id="discard" [disabled]="!hasSaved" type="button" class="btn btn-md btn-danger"
+            (click)="onDiscard()">
+            <div class="d-flex align-items-center">
+              <i class="icon-autorenew icon-16"></i>
+              <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+            </div>
+          </button>
       </div>
       <div class="ms-2">
         <div class="btn btn-icon btn-light-danger btn-circle" (click)="close()">
