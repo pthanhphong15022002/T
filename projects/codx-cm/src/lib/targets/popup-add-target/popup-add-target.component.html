@@ -241,8 +241,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of lstOwners">
-            <td class="fixed-width-column-user">
-              <div
+            <td class="fixed-width-column-user" >
+              <div *ngIf="!item.isExit"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od mb-1 p-2"
               >
                 <div class="action-menu-od me-1" (click)="removeUser(item)">
@@ -267,7 +267,7 @@
               </div>
             </td>
             <td class="fixed-width-column">
-              <span
+              <span *ngIf="!item.isExit"
                 class=""
                 [ngbTooltip]="targetYear"
                 [innerHTML]="targetToFixed(item?.target)"
@@ -279,7 +279,7 @@
             </td>
             <td class="fixed-width-column" *ngFor="let quar of lstQuarters">
               <ng-container *ngFor="let quarU of item?.quarters">
-                <div *ngIf="quarU?.id === quar?.id">
+                <div *ngIf="quarU?.id === quar?.id && !item.isExit">
                   <div [innerHTML]="targetToFixed(quarU?.target)"></div>
                 </div>
               </ng-container>
@@ -287,7 +287,7 @@
             <td *ngFor="let time of lstTime" class="fixed-width-column">
               <ng-container *ngFor="let line of time?.lines">
                 <span
-                  *ngIf="line.salespersonID == item?.userID"
+                  *ngIf="line.salespersonID == item?.userID && !line.isExit"
                   class="w-100px"
                 >
                   <div
