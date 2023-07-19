@@ -10,7 +10,7 @@
   class="h-100 dt-es-view"
 >
   <ng-template #header>
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-4">
       <codx-temp-full
         [title]="itemDetail?.ownerName"
         [imageId]="itemDetail?.emp?.employeeID"
@@ -21,10 +21,8 @@
         <!-- info view -->
         <ng-template #title>
           <div class="d-flex flex-column ms-1 w-100">
-            <div class="mb-2 d-flex">
-              <span class="text-dark fs-5-sm fw-bold me-3">
-                {{ itemDetail?.emp?.employeeName }}
-              </span>
+            <div class="text-dark fs-5-sm fw-bold mb-1">
+              {{ itemDetail?.emp?.employeeName }}
             </div>
             <div class="d-flex align-items-center text-gray-600 mb-1">
               <span
@@ -68,7 +66,7 @@
     </div>
 
     <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
           fiedName="kowID"
           [formModel]="formModel"
@@ -77,7 +75,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold"
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.kowID | formatvalue : formModel : 'kowID' | async
           "
@@ -85,7 +83,7 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
           fiedName="registeredDate"
           [formModel]="formModel"
@@ -93,7 +91,7 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span
+        <span class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.registeredDate
               | formatvalue : formModel : 'registeredDate'
@@ -103,7 +101,7 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
           fiedName="registeredDate"
           [formModel]="formModel"
@@ -111,7 +109,7 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span
+        <span class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.registeredBy
               | formatvalue : formModel : 'registeredBy'
@@ -121,10 +119,10 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label default="Ngày nghỉ" class="text-gray-700 label-colon">
         </codx-label>
-        <span
+        <span class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.beginDate
               | formatvalue : formModel : 'beginDate'
@@ -133,7 +131,7 @@
         >
         </span>
         <span class="px-1"> - </span>
-        <span
+        <span class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.endDate | formatvalue : formModel : 'endDate' | async
           "
@@ -141,7 +139,7 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2">
+      <div class="d-flex align-items-center mb-1">
         <codx-label
           fiedName="totalDaysOff"
           [formModel]="formModel"
@@ -150,7 +148,7 @@
         >
         </codx-label>
         <!-- <span class="fw-bold" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
-        <span
+        <span class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.totalDaysOff
               | formatvalue : formModel : 'totalDaysOff'
@@ -158,10 +156,10 @@
           "
         >
         </span>
-        <span *ngIf="itemDetail.totalDaysOff">ngày</span>
+        <span class="fw-bold text-dark" *ngIf="itemDetail.totalDaysOff">ngày</span>
       </div>
 
-      <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
+      <div class="d-flex align-items-top flex-wrap mb-1 me-4 col-12">
         <codx-label
           fiedName="reason"
           [formModel]="formModel"
@@ -170,7 +168,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-break"
+          class="fw-bold text-dark text-break"
           [innerHTML]="
             itemDetail?.reason | formatvalue : formModel : 'reason' | async
           "
@@ -178,7 +176,7 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
+      <div class="d-flex align-items-top flex-wrap mb-1 me-4 col-12">
         <codx-label
           fiedName="note"
           [formModel]="formModel"
@@ -187,7 +185,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold"
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.note | formatvalue : formModel : 'note' | async
           "
