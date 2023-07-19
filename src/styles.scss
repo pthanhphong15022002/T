@@ -3440,7 +3440,26 @@ lib-employee-list{
 .e-hscroll-bar{
   margin: 0 5px;
 }
+.FD_Cards{
+  .text-feed{
+    height: 310px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #1e1d1f33 !important;
+  }
+}
 
+
+
+// .text-feed::-webkit-scrollbar-track {
+//   background-color: transparent !important; /* ẩn thanh cuộn */
+// }
+
+// .text-feed::-webkit-scrollbar-thumb {
+//   background-color: transparent !important; /* ẩn thanh cuộn */
+// }
 
 .cm-scroll .e-content{
   padding-bottom: 30px;
@@ -3470,9 +3489,10 @@ codx-views[ng-reflect-func-i-d="CM0104"]{
 //////
 
 codx-lead-detail{
-  .codx-detail-body{
+  .codx-detail-body ejs-tab .e-content{
     height: calc(100vh - 424px)!important;
     overflow: auto;
+ 
   }
 }
 
@@ -3480,6 +3500,7 @@ codx-deal-detail{
   .deal-tab-content{    
     height: calc(100vh - 424px)!important;
     overflow: auto;
+
   }
 }
 

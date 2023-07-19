@@ -145,15 +145,15 @@ export class EmpContactsComponent extends UIComponent {
           resources: this.columnsGrid,
         },
       },
-      // {
-      //   id: '1',
-      //   type: ViewType.list,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateList,
-      //     headerTemplate: this.headerTemplate,
-      //   },
-      // },
+      {
+        id: '5',
+        type: ViewType.list,
+        sameData: true,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplate,
+        },
+      },
       {
         id: '2',
         type: ViewType.card,

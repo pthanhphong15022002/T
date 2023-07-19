@@ -62,6 +62,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   valuelist: any;
   formType: any;
   validate: any = 0;
+  allowEditKey: any;
   dicMST: Map<string, any> = new Map<string, any>();
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
@@ -107,6 +108,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.customers = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
+    this.allowEditKey = dialog.dataService!.allowEditKey;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let add = res.find((x) => x.functionID == 'SYS01');
@@ -544,10 +546,22 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   checkValidate() {
+
+    //Note: Tự động khi lưu, Không check BatchNo
+    let ignoredFields: string[] = [];
+    if (this.allowEditKey) {
+      ignoredFields.push('CustomerID');
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Node
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.customers);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+          continue;
+        }
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
@@ -656,19 +670,42 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             config.type = 'YesNo';
             this.notification.alertCode('AC0007', config, '"' + this.customers.custTaxCode + '"').subscribe((x) => {
               if (x.event.status == 'Y') {
-                this.save();
+                this.updateCustomerIDBeforeSave();
               }
             });
           }
           else
           {
-            this.save();
+            this.updateCustomerIDBeforeSave();
           }
         });
       }
       if (this.formType == 'edit') {
         this.edit();
       }
+    }
+  }
+
+  updateCustomerIDBeforeSave()
+  {
+    if(this.allowEditKey)
+    {
+      this.api.exec(
+        'ERM.Business.AC',
+        'CommonBusiness',
+        'GenerateAutoNumberAsync',
+      )
+      .subscribe((autoNumber: string) => {
+        if(autoNumber)
+        {
+          this.customers.customerID = autoNumber;
+          this.save();
+        }
+      });
+    }
+    else
+    {
+      this.save();
     }
   }
 

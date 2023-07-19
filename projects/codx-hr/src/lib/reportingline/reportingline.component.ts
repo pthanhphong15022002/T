@@ -20,6 +20,7 @@ import {
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { ReportinglineDetailComponent } from './reportingline-detail/reportingline-detail.component';
+import { ReportinglineOrgChartComponent } from './reportingline-orgchart/reportingline-orgchart.component';
 
 @Component({
   selector: 'lib-reportingline',
@@ -32,6 +33,7 @@ export class ReportinglineComponent extends UIComponent {
   @ViewChild('tmpRightRef') tmpRightRef: TemplateRef<any>;
   @ViewChild('tmpOrgchart') tmpOrgchart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
+  @ViewChild('orgChart') orgChart : ReportinglineOrgChartComponent;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -49,6 +51,8 @@ export class ReportinglineComponent extends UIComponent {
   codxTreeView: CodxTreeviewComponent = null;
   isCorporation: boolean;
   grvSetup: any[] = [];
+  hasChangedDataChart: boolean = false;
+  hasChangedDataList: boolean = false;
   constructor(
     inject: Injector,
     private adService: CodxAdService,
@@ -94,7 +98,7 @@ export class ReportinglineComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
-        active: true,
+        //active: true,
         sameData: true,
         model: {
           template: this.tmpList,
@@ -103,7 +107,7 @@ export class ReportinglineComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.tree_orgchart,
-        active: false,
+        //active: false,
         sameData: false,
         request: this.request,
         model: {
@@ -122,6 +126,31 @@ export class ReportinglineComponent extends UIComponent {
     if (component) {
       this.detailComponent = component;
     }
+  }
+  viewChanging(event: any) {
+    if (event?.view?.id === '2' || event?.id === '2') {
+      this.view.dataService.parentIdField = 'ReportTo';
+    } else if (event?.view?.id === '1' || event?.id === '1') {
+      this.view.dataService.parentIdField = '';
+    }
+  }
+  viewChanged(event){
+    if (this.hasChangedDataChart || this.hasChangedDataList) {
+      // if (this.viewActive !== event.view.id && this.flagLoaded) {
+      if (event?.view?.id === '1' || event?.id === '1') {
+        this.view.dataService.page = 0;
+        this.view.dataService.data = [];
+        this.view.dataService.load().subscribe();
+      } 
+      if (event?.view?.id === '2' || event?.id === '2') {
+        this.view.currentView.dataService.data = [];
+        this.view.currentView.dataService.currentComponent.dicDatas = {};
+        this.view.currentView.dataService.load().subscribe();
+        if(this.orgChart) this.orgChart.reloadDiagram();
+      }
+    }
+    this.hasChangedDataChart = false;
+    this.hasChangedDataList = false;
   }
   // btn add toolbar click
   btnClick(event: any) {
@@ -158,6 +187,7 @@ export class ReportinglineComponent extends UIComponent {
               let node = res.event;
               this.codxTreeView.setNodeTree(node);
               this.detectorRef.detectChanges();
+              this.hasChangedDataList = true;
             }
           });
           this.detectorRef.detectChanges();
@@ -205,7 +235,7 @@ export class ReportinglineComponent extends UIComponent {
             PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe(res => {
               if (res) {
-
+                this.hasChangedDataList = true;
               }
             });
 
@@ -233,6 +263,7 @@ export class ReportinglineComponent extends UIComponent {
           this.callfc.openSide(PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe((res) => {
               if (res?.event) {
+                this.hasChangedDataList = true;
                 let node = res.event;
                 this.codxTreeView.setNodeTree(node);
                 this.detectorRef.detectChanges();
@@ -241,7 +272,6 @@ export class ReportinglineComponent extends UIComponent {
         }
       });
     }
-
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
@@ -260,9 +290,10 @@ export class ReportinglineComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.itemSelected = this.view.dataService.data[0];
+          this.hasChangedDataList = true;
           this.notiService.notifyCode('SYS008')
           this.detectorRef.detectChanges();
-        }else{
+        } else {
           //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
         }
       });
@@ -278,7 +309,17 @@ export class ReportinglineComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-
+  changeSelectedData(event: any) { // update selected data for view
+    if (event) {
+      this.positionID = event?.positionID;
+      this.view.dataService.setDataSelected(event);
+    }
+  }
+  changedDataFromChart(event: any) {
+    if(event){
+      this.hasChangedDataChart = event?.hasChanged;
+    }
+  }
   doubleClickItem(data: any) {
     if (this.view && data) {
       let option = new DialogModel();
@@ -298,8 +339,8 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
   // search employee in popup view list employee
-  searchText:string = "";
-  searchUser(event:any){
+  searchText: string = "";
+  searchUser(event: any) {
     this.searchText = event;
   }
 }

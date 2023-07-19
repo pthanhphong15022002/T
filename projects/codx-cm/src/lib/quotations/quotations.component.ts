@@ -269,6 +269,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   selectedChange(val: any) {
+    if (!val?.data) return;
     this.itemSelected = val?.data;
     this.detectorRef.detectChanges();
   }

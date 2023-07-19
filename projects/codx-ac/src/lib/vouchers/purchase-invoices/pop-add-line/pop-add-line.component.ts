@@ -78,8 +78,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
       });
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseInvoicesLines);
@@ -91,27 +90,39 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
       switch (e.field) {
         case 'itemID':
           this.loadItemNameAndItemUMID(e.data);
-            (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
-            this.idiM0.crrValue = null;
-            this.idiM1.crrValue = null;
-            this.idiM2.crrValue = null;
-            this.idiM3.crrValue = null;
-            this.idiM6.crrValue = null;
-            this.idiM7.crrValue = null;
-            this.purchaseInvoicesLines.idiM0 = null;
-            this.purchaseInvoicesLines.idiM1 = null;
-            this.purchaseInvoicesLines.idiM2 = null;
-            this.purchaseInvoicesLines.idiM3 = null;
-            this.purchaseInvoicesLines.idiM6 = null;
-            this.purchaseInvoicesLines.idiM7 = null;
-            this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+          (
+            this.idiM0.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          (
+            this.idiM1.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          (
+            this.idiM2.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          (
+            this.idiM3.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          (
+            this.idiM6.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          (
+            this.idiM7.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          this.idiM0.crrValue = null;
+          this.idiM1.crrValue = null;
+          this.idiM2.crrValue = null;
+          this.idiM3.crrValue = null;
+          this.idiM6.crrValue = null;
+          this.idiM7.crrValue = null;
+          this.purchaseInvoicesLines.idiM0 = null;
+          this.purchaseInvoicesLines.idiM1 = null;
+          this.purchaseInvoicesLines.idiM2 = null;
+          this.purchaseInvoicesLines.idiM3 = null;
+          this.purchaseInvoicesLines.idiM6 = null;
+          this.purchaseInvoicesLines.idiM7 = null;
+          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
           break;
-          case 'vatid':
+        case 'vatid':
           var vat = e.component.itemsSelected[0];
           this.purchaseInvoicesLines.vatAmt =
             vat.TaxRate * this.purchaseInvoicesLines.netAmt;
@@ -121,7 +132,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     }
   }
 
-  calculateAtm(e:any){
+  calculateAtm(e: any) {
     if (e.crrValue) {
       this.purchaseInvoicesLines[e.ControlName] = e.crrValue;
       switch (e.ControlName) {
@@ -157,7 +168,9 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
               this.notification.notifyCode(
                 'SYS009',
                 0,
-                '"' + this.grvPurchaseInvoicesLines[keygrid[index]].headerText + '"'
+                '"' +
+                  this.grvPurchaseInvoicesLines[keygrid[index]].headerText +
+                  '"'
               );
               this.validate++;
             }
@@ -167,12 +180,11 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     }
   }
   close() {
-    if(this.hasSave == false)
-    {
+    if (this.hasSave == false) {
       this.dialog.close();
     }
     this.dialog.close({
-      add: true
+      add: true,
     });
   }
   onSave() {
@@ -186,26 +198,26 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
         case 'add':
           this.api
             .execAction<any>(
-              'PS_PurchaseInvoicesLines',
+              'AC_PurchaseInvoicesLines',
               [this.purchaseInvoicesLines],
               'SaveAsync'
             )
             .subscribe((res) => {
               if (res) {
-                this.dialog.close({data:this.purchaseInvoicesLines});
+                this.dialog.close({ data: this.purchaseInvoicesLines });
               }
             });
           break;
         case 'edit':
           this.api
             .execAction<any>(
-              'PS_PurchaseInvoicesLines',
+              'Ac_PurchaseInvoicesLines',
               [this.purchaseInvoicesLines],
               'UpdateAsync'
             )
             .subscribe((res) => {
               if (res) {
-                this.dialog.close({data:this.purchaseInvoicesLines});
+                this.dialog.close({ data: this.purchaseInvoicesLines });
               }
             });
           break;
@@ -221,14 +233,16 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     } else {
       this.api
         .execAction<any>(
-          'PS_PurchaseInvoicesLines',
+          'AC_PurchaseInvoicesLines',
           [this.purchaseInvoicesLines],
           'SaveAsync'
         )
         .subscribe((res) => {
           if (res) {
             this.hasSave = true;
-            this.objectPurchaseInvoicesLines.push({ ...this.purchaseInvoicesLines });
+            this.objectPurchaseInvoicesLines.push({
+              ...this.purchaseInvoicesLines,
+            });
             this.clearInventoryJournalLines();
           }
         });
@@ -239,7 +253,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     let idx = this.objectPurchaseInvoicesLines.length;
     let data = new PurchaseInvoicesLines();
     this.api
-      .exec<any>('PS', 'PurchaseInvoicesLinesBusiness', 'SetDefaultAsync', [
+      .exec<any>('AC', 'PurchaseInvoicesLinesBusiness', 'SetDefaultAsync', [
         this.purchaseInvoices,
         data,
       ])
@@ -261,11 +275,11 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadItemNameAndItemUMID(itemID: any){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [itemID])
+  loadItemNameAndItemUMID(itemID: any) {
+    this.api
+      .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [itemID])
       .subscribe((res: any) => {
-        if (res)
-        {
+        if (res) {
           this.purchaseInvoicesLines.itemName = res.itemName;
           this.purchaseInvoicesLines.umid = res.umid;
           this.form.formGroup.patchValue(this.purchaseInvoicesLines);

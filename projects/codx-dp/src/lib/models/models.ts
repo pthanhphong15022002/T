@@ -125,7 +125,7 @@ export class DP_Steps {
   taskControl: string;
   leadtimeControl: boolean = true;
   durationControl: boolean = true;
-  startControl: string = '1'; // update boolean to string
+  startControl: string = '1';
   reScheduleTasks: boolean = true;
   options: string; // json
   roles: DP_Steps_Roles[] = []; // objects

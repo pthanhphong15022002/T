@@ -273,6 +273,10 @@
           *ngSwitchCase="'extend'"
           [ngTemplateOutlet]="extendTemplate"
         ></some-element>
+        <some-element
+          *ngSwitchCase="'task'"
+          [ngTemplateOutlet]="task"
+        ></some-element>
         <!-- <some-element
           *ngSwitchCase="'termsAndRelated'"
           [ngTemplateOutlet]="termsAndRelatedTemplate"
@@ -799,4 +803,13 @@
     [objectID]="contract.recID"
     [funcID]="formModel.funcID"
   ></codx-tabs>
+</ng-template>
+ <!-- nvthuan công việc -->
+ <ng-template #task let-data="value">
+  <div *ngIf="listInsStep?.length > 0">
+    <step-task
+    [dataSelected]="contract"
+    [listInstanceStep]="listInsStep"
+  ></step-task>
+  </div>
 </ng-template>

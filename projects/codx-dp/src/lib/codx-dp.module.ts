@@ -54,6 +54,7 @@ import { environment } from 'src/environments/environment';
 import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details-process/views-tabs-details/views-tabs-details.component';
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
+import { CodxCmModule } from 'projects/codx-cm/src/lib/codx-cm.module';
 
 export const routes: Routes = [
   {
@@ -110,45 +111,46 @@ export const routes: Routes = [
   // },
 ];
 
-const T_Component: Type<any>[] = [LayoutComponent];
+const T_Component: Type<any>[] = [
+  CodxDpComponent,
+  LayoutComponent,
+  LayoutInstancesComponent,
+  DynamicProcessComponent,
+  PopupAddDynamicProcessComponent,
+  PopupJobComponent,
+  PopupAddCustomFieldComponent,
+  PopupRolesDynamicComponent,
+  PopupViewsDetailsProcessComponent,
+  InstancesComponent,
+  InstanceDetailComponent,
+  PopupAddInstanceComponent,
+  StagesDetailComponent,
+  FieldDetailComponent,
+  InputCustomFieldComponent,
+  PopupMoveStageComponent,
+  PopupMoveReasonComponent,
+  ViewJobComponent,
+  PopupCustomFieldComponent,
+  StepTaskGroupComponent,
+  UserComponent,
+  PopupPropertiesComponent,
+  PopupUserPropertiesComponent,
+  PopupParticipantsComponent,
+  CarouselStageComponent,
+  InputNumberDurationComponent,
+  ApprovalsComponent,
+  PopupEditOwnerstepComponent,
+  PopupSelectTempletComponent,
+  ViewsTabsDetailsComponent,
+  InstanceDashboardComponent,
+];
 
 @NgModule({
-  declarations: [
-    CodxDpComponent,
-    LayoutComponent,
-    LayoutInstancesComponent,
-    DynamicProcessComponent,
-    PopupAddDynamicProcessComponent,
-    PopupJobComponent,
-    PopupAddCustomFieldComponent,
-    PopupRolesDynamicComponent,
-    PopupViewsDetailsProcessComponent,
-    InstancesComponent,
-    InstanceDetailComponent,
-    PopupAddInstanceComponent,
-    StagesDetailComponent,
-    FieldDetailComponent,
-    InputCustomFieldComponent,
-    PopupMoveStageComponent,
-    PopupMoveReasonComponent,
-    ViewJobComponent,
-    PopupCustomFieldComponent,
-    StepTaskGroupComponent,
-    UserComponent,
-    PopupPropertiesComponent,
-    PopupUserPropertiesComponent,
-    PopupParticipantsComponent,
-    CarouselStageComponent,
-    InputNumberDurationComponent,
-    ApprovalsComponent,
-    PopupEditOwnerstepComponent,
-    PopupSelectTempletComponent,
-    ViewsTabsDetailsComponent,
-    InstanceDashboardComponent,
-  ],
+  declarations: [T_Component],
   imports: [
-    CommonModule,
+    CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
@@ -163,9 +165,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     SliderModule,
     CoreModule,
     PinchZoomModule,
-    CodxCoreModule.forRoot({ environment }),
+    CodxCmModule.forRoot({ environment }),
   ],
-  exports: [RouterModule, PopupAddDynamicProcessComponent],
+  exports: [RouterModule],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -15,7 +15,6 @@ export class FiscalPeriodsComponent extends UIComponent{
   columnsGrid = [];
   dialog: DialogRef;
   funcName: any = 'danh mục kỳ tài chính';
-  objecttype: string = '6';
   gridViewSetup: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(

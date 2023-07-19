@@ -8,9 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomerGroupsComponent } from './customer-groups/customer-groups.component';
 import { PopupAddCustomerGroupsComponent } from './customer-groups/popup-add-customer-groups/popup-add-customer-groups.component';
-import { CodxDpModule } from 'projects/codx-dp/src/public-api';
 
-var routes: Routes = [
+const routes: Routes = [
   {
     path: '',
     component: LayoutNoAsideComponent,
@@ -26,8 +25,8 @@ var routes: Routes = [
 @NgModule({
   declarations: [CustomerGroupsComponent, PopupAddCustomerGroupsComponent],
   imports: [
-    CommonModule,
     RouterModule.forChild(routes),
+    CommonModule,
     CodxCoreModule,
     CodxShareModule,
     FormsModule,

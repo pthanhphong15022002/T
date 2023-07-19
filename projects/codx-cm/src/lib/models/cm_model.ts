@@ -729,7 +729,7 @@ export class CM_Leads {
   closed: boolean;
   currencyID: string;
   exchangeRate: number;
-  dealValue: number;
+  dealValue: number = 0;
 }
 
 export class CM_Targets{

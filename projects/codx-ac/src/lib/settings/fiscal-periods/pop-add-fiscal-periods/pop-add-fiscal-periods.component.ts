@@ -19,6 +19,7 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
   gridViewSetup: any;
   formType: any;
   validate: any = 0;
+  allowEditKey: any;
 
   constructor(
     inject: Injector,
@@ -33,6 +34,7 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
     this.headerText = dialogData.data?.headerText;
     this.fiscalperiods = dialog.dataService!.dataSelected;
     this.formType = dialogData.data?.formType;
+    this.allowEditKey = dialog.dataService!.allowEditKey;
     this.cache.gridViewSetup('FiscalPeriods', 'grvFiscalPeriods').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -58,50 +60,57 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
         break;
       case 'startDate':
           this.fiscalperiods.startDate = e.data;
-          this.checkValidateStartDate();
+          this.checkValidateStartYear();
+          this.checkValidateDate();
           break;
       case 'endDate':
         this.fiscalperiods.endDate = e.data;
-        this.checkValidateEndDate();
+        this.checkValidateEndYear();
+        this.checkValidateDate();
         break;
     }
   }
 
-  checkValidateStartDate()
+  checkValidateEndYear()
   {
-    var startDate = new Date(this.fiscalperiods.startDate);
-    var startYear = startDate.getFullYear();
-    var endDate = new Date(this.fiscalperiods.endDate);
-    if(startYear != this.fiscalperiods.fiscalYear)
-    {
-      this.notification.notifyCode('AC0023');
-      this.validate++;
-    }
-    if(this.fiscalperiods.endDate && this.fiscalperiods.startDate)
-    {
-      var endDate = new Date(this.fiscalperiods.endDate);
-      if(startDate.getTime() > endDate.getTime())
-      {
-        this.notification.notifyCode('AC0024');
-        this.validate++;
-      }
-    }
-  }
-
-  checkValidateEndDate()
-  {
-    var startDate = new Date(this.fiscalperiods.startDate);
     var endDate = new Date(this.fiscalperiods.endDate);
     var endYear = endDate.getFullYear();
     if(endYear != this.fiscalperiods.fiscalYear)
     {
-      this.notification.notifyCode(
-        'AC0023',
-        0,
-        '"' + '' + '"'
-      );
+      if(endYear)
+      {
+        this.notification.notifyCode(
+          'AC0023',
+          0,
+          '"' + this.gridViewSetup.EndDate.headerText + '"'
+        );
+      }
       this.validate++;
     }
+  }
+
+  checkValidateStartYear()
+  {
+    var startDate = new Date(this.fiscalperiods.startDate);
+    var startYear = startDate.getFullYear();
+    if(startYear != this.fiscalperiods.fiscalYear)
+    {
+      if(startYear)
+      {
+        this.notification.notifyCode(
+          'AC0023',
+          0,
+          '"' + this.gridViewSetup.StartDate.headerText + '"'
+        );
+      }
+      this.validate++;
+    }
+  }
+
+  checkValidateDate()
+  {
+    var startDate = new Date(this.fiscalperiods.startDate);
+    var endDate = new Date(this.fiscalperiods.endDate);
     if(this.fiscalperiods.endDate && this.fiscalperiods.startDate)
     {
       var endDate = new Date(this.fiscalperiods.endDate);
@@ -118,10 +127,22 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
   }
 
   checkValidate() {
+
+    //Note: Tự động khi lưu, Không check BatchNo
+    let ignoredFields: string[] = [];
+    if (this.allowEditKey) {
+      ignoredFields.push('PeriodID');
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Node
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.fiscalperiods);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+          continue;
+        }
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
@@ -144,8 +165,9 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
   onSave(){
     this.validate = 0;
     this.checkValidate();
-    this.checkValidateStartDate();
-    this.checkValidateEndDate();
+    this.checkValidateStartYear();
+    this.checkValidateEndYear();
+    this.checkValidateDate();
     if (this.validate > 0) {
       return;
     } else {

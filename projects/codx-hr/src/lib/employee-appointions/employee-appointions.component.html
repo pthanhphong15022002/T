@@ -301,18 +301,19 @@
 <!-- Detail -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-2'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-4'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageWidth]="40"
+    [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
     [title]="data.emp?.employeeName"
+    [titleCss]="'fs-6 text-dark'"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
@@ -323,8 +324,8 @@
   </codx-temp-full>
 
   <ng-template #descTmp>
-    <div class="d-flex mt-1 align-items-center">
-      <codx-vll
+    <div class="d-flex flex-wrap mt-1 align-items-center">
+      <codx-vll class="text-nowrap"
         name="HR014"
         [value]="data.appoint"
         [showText]="true"
@@ -333,10 +334,10 @@
       ></codx-vll>
       <span
         *ngIf="data.positionID || data.orgUnitID"
-        class="me-2 icon-i-info-circle-fill icon-6 text-gray-400"
+        class="me-2 icon-i-info-circle-fill icon-4 text-gray-400"
       >
       </span>
-      <div
+      <div class="text-nowrap"
         *ngIf="data.positionID || data.orgUnitID"
         [ngbTooltip]="
           data.positionID
@@ -358,8 +359,8 @@
 
   <ng-template #desc2Tmp>
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mt-1">
-        <span class="icon-description icon-15 me-1"></span>
+      <div class="d-flex align-items-center mt-1 text-gray-600">
+        <span class="icon-description icon-14 me-1"></span>
         <div
           class="me-3"
           [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
@@ -370,7 +371,7 @@
           "
         ></div>
 
-        <span class="icon-calendar_today icon-15 me-1"></span>
+        <span class="icon-calendar_today icon-14 me-1"></span>
         <div
           [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
           [innerHTML]="
@@ -390,7 +391,7 @@
           "
         ></div>
       </div>
-      <div class="d-flex text-dark align-items-end mt-1">
+      <div class="d-flex text-dark align-items-end mt-2">
         <ng-container *ngIf="flagChangeMF">
           <ng-container *ngIf="runModeCheck; else elseVll">
             <codx-vll

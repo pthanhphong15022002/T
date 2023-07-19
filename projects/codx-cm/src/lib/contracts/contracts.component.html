@@ -128,8 +128,11 @@
 <!-- temp right -->
 <ng-template #templateDetail>
   <contracts-view-detail
+    [listInsStepStart]="listInsStep"
     [contract]="itemSelected"
     [formModel]="view.formModel"
+    (changeMF)="changeMF($event)"
+    (clickMoreFunc)="clickMoreFunc($event)"
   ></contracts-view-detail>
 </ng-template>
 
