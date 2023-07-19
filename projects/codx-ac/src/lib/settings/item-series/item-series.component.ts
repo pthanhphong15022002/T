@@ -1,22 +1,25 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CallFuncService, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { PopAddFiscalPeriodsComponent } from './pop-add-fiscal-periods/pop-add-fiscal-periods.component';
+import { Button } from '@syncfusion/ej2-angular-buttons';
+import { ButtonModel, CallFuncService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopAddItemSeriesComponent } from './pop-add-item-series/pop-add-item-series.component';
 
 @Component({
-  selector: 'lib-fiscal-periods',
-  templateUrl: './fiscal-periods.component.html',
-  styleUrls: ['./fiscal-periods.component.css']
+  selector: 'lib-item-series',
+  templateUrl: './item-series.component.html',
+  styleUrls: ['./item-series.component.css']
 })
-export class FiscalPeriodsComponent extends UIComponent{
-  
+export class ItemSeriesComponent extends UIComponent{
+ 
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  buttons: ButtonModel = { id: 'btnAdd' };
+  button: ButtonModel = {
+    id: 'btnAdd'
+  };
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  funcName: any = 'danh mục kỳ tài chính';
+  funcName: any = 'danh mục seri';
   gridViewSetup: any;
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -27,16 +30,11 @@ export class FiscalPeriodsComponent extends UIComponent{
     this.dialog = dialog;
   }
   
+  
   onInit(): void {
   }
 
   ngAfterViewInit() {
-    // this.cache.moreFunction('FiscalPeriods', 'grvFiscalPeriods').subscribe((res) => {
-    //   if (res && res.length) {
-    //     let m = res.find((x) => x.functionID == 'ACS21500');
-    //     if (m) this.funcName = m.defaultName;
-    //   }
-    // });
     this.views = [
       {
         type: ViewType.grid,
@@ -84,7 +82,7 @@ export class FiscalPeriodsComponent extends UIComponent{
       option.FormModel = this.view.formModel;
       option.Width = '550px';
       this.dialog = this.callfunc.openSide(
-        PopAddFiscalPeriodsComponent,
+        PopAddItemSeriesComponent,
         obj,
         option,
         this.view.funcID
@@ -110,7 +108,7 @@ export class FiscalPeriodsComponent extends UIComponent{
         option.FormModel = this.view.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(
-          PopAddFiscalPeriodsComponent,
+          PopAddItemSeriesComponent,
           obj,
           option
         );
@@ -132,7 +130,7 @@ export class FiscalPeriodsComponent extends UIComponent{
         option.FormModel = this.view.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(
-          PopAddFiscalPeriodsComponent,
+          PopAddItemSeriesComponent,
           obj,
           option
         );

@@ -14,8 +14,7 @@ export class ItemBatchsComponent extends UIComponent{
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  funcName: any = 'danh mục kỳ tài chính';
-  objecttype: string = '6';
+  funcName: any = 'danh mục lô';
   gridViewSetup: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
