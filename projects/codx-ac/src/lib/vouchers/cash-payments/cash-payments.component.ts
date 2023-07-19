@@ -260,80 +260,92 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
-    if (this.journal) {
-      this.headerText = this.funcName;
-      this.view.dataService.dataSelected = {...this.oCash};
-      // this.view.dataService
-      //   .addNew((o) => this.setDefault(o))
-      //   .subscribe((res: any) => {
-         
-      //   });
-      var obj = {
-        formType: 'add',
-        headerText: this.headerText,
-        journal: {...this.journal},
-      };
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.isFull = true;
-      var dialog = this.callfunc.openSide(
-        PopAddCashComponent,
-        obj,
-        option,
-        this.view.funcID
-      ); 
-    }
+    let ins = setInterval(() => {
+      if (this.journal) {
+        clearInterval(ins);
+        this.headerText = this.funcName;
+        this.view.dataService.dataSelected = {...this.oCash};
+        // this.view.dataService
+        //   .addNew((o) => this.setDefault(o))
+        //   .subscribe((res: any) => {
+           
+        //   });
+        var obj = {
+          formType: 'add',
+          headerText: this.headerText,
+          journal: {...this.journal},
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.isFull = true;
+        var dialog = this.callfunc.openSide(
+          PopAddCashComponent,
+          obj,
+          option,
+          this.view.funcID
+        ); 
+      }
+      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
+    })
   }
 
   edit(e, data) {
-    if (data && this.journal) {
-      this.view.dataService.dataSelected = data;
-      this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'edit',
-          headerText: this.funcName,
-          journal: {...this.journal},
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        var dialog = this.callfunc.openSide(
-          PopAddCashComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-      });
-    }  
+    let ins = setInterval(() => {
+      if (data && this.journal) {
+        clearInterval(ins);
+        this.view.dataService.dataSelected = data;
+        this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res: any) => {
+          var obj = {
+            formType: 'edit',
+            headerText: this.funcName,
+            journal: {...this.journal},
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          var dialog = this.callfunc.openSide(
+            PopAddCashComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        });
+      }  
+      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
+    })   
   }
 
   copy(e, data) {
-    if (data && this.journal) {
-      this.view.dataService.dataSelected = data;
-      this.view.dataService
-      .copy((o) => this.setDefault(o))
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: this.funcName,
-          journal: {...this.journal},
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        var dialog = this.callfunc.openSide(
-          PopAddCashComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-      });
-    }  
+    let ins = setInterval(() => {
+      if (data && this.journal) {
+        clearInterval(ins);
+        this.view.dataService.dataSelected = data;
+        this.view.dataService
+        .copy((o) => this.setDefault(o))
+        .subscribe((res: any) => {
+          var obj = {
+            formType: 'copy',
+            headerText: this.funcName,
+            journal: {...this.journal},
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          var dialog = this.callfunc.openSide(
+            PopAddCashComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        });
+      }  
+      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
+    })   
   }
 
   delete(data) {
