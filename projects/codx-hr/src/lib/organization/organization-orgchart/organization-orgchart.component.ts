@@ -155,6 +155,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   labelFontFamily: string;
   labelColor: string;
   labelFontWeight: string;
+  disableActive: boolean = false;
   @ViewChild('contactTemplate') contactTemplate: TemplateRef<any>;
 
   //Popup Settings
@@ -716,6 +717,8 @@ export class OrganizationOrgchartComponent implements OnInit {
   //   }
   // }
 
+  clearSetting(){}
+
   openSetting() {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -725,7 +728,7 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.dialogEditStatus = this.callFC.openSide(
       this.templateUpdateStatus,
       {
-        actionType: 'abc',
+        actionType: 'settings',
       },
       option
     );
@@ -762,6 +765,11 @@ export class OrganizationOrgchartComponent implements OnInit {
     //     this.dialogEditStatus && this.dialogEditStatus.close(res);
     //   }
     // });
+  }
+
+  //Disable active chart
+  clickActive(){
+    this.disableActive = true;
   }
 
   getColorItem(orgType: any) {
@@ -835,6 +843,8 @@ export class OrganizationOrgchartComponent implements OnInit {
     } else {
       this.getDataPositionByID(this.orgUnitID, true);
     }
+    //Reset disalbe when select differ item
+    this.disableActive = false;
   }
 
   onSelected(value): void {
@@ -842,6 +852,7 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.isGetManager(value);
   }
 
+  //Call from parent class
   GetChartDiagram() {
     this.isGetManager(this.selectedTeam);
   }
@@ -1035,14 +1046,15 @@ export class OrganizationOrgchartComponent implements OnInit {
         this.items.forEach(function (object) {
           var posID = object.id;
           listPos.push(posID);
-        });
+        }); 
+
         this.api
           .execSv(
             'HR',
             'ERM.Business.HR',
             'OrganizationUnitsBusiness',
             'GetChildChartAsync',
-            [node.id, listPos]
+            [node.id, this.selectedTeam.includes('Không') ? false : true]
           )
           .subscribe((res: any) => {
             if (res) {

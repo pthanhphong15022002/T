@@ -30,6 +30,21 @@ export class tmpInstancesStepsReasons {
   modifiedOn: Date;
   modifiedBy: string;
 }
+export class tmpInstancesStepsRoles {
+  recID: string;
+  instanceID: string;
+  stepID: string;
+  roleType: string;
+  objectType: string;
+  objectName: string;
+  objectID: string;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
+
 
 export class GridModels {
   pageSize: number;

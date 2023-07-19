@@ -317,6 +317,12 @@
 </org-diagram> -->
 <div class="me-4 mt-4 d-flex justify-content-end">
   <button
+    class="btn btn-primary d-flex align-items-center me-4"
+    (click)="clearSetting()"
+  >
+    <i class="icon-clear_all"></i> Cài đặt lại
+  </button>
+  <button
     class="btn btn-primary d-flex align-items-center"
     (click)="openSetting()"
   >
@@ -328,7 +334,7 @@
   <div
     class="custom codx-form card w-100 h-100 rounded-0 border-0 overflow-auto"
   >
-    <div class="card-header flex-column red">
+    <div class="card-header flex-column c-header">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
           <div class="d-flex flex-column">
@@ -354,7 +360,7 @@
 
     <!-- #region Layout -->
     <div
-      class="p-collapse"
+      class="p-collapse p-top"
       (click)="collapsed[0] = !collapsed[0]"
       [attr.aria-expanded]="!collapsed[0]"
       aria-controls="collapseExample"
@@ -559,11 +565,23 @@
         </label>
       </div>
 
-      <div class="d-flex m-4">
+      <!-- <div class="d-flex m-4">
         <input type="checkbox" id="crossBranch" (change)="changeMode($event)" />
         <label class="ms-4 mt-2" for="crossBranch">
           Kích hoạt liên kết chéo nhánh con</label
         >
+      </div> -->
+
+      <div class="form-check m-4">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="crossBranch"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="crossBranch">
+          Kích hoạt liên kết chéo nhánh con
+        </label>
       </div>
 
       <p class="m-4 text-primary fw-bold">Vị trí cấp con</p>
@@ -666,26 +684,28 @@
         </label>
       </div>
 
-      <div class="d-flex m-4">
+      <div class="form-check m-4">
         <input
+          class="form-check-input"
           type="checkbox"
           id="placeAdviserAbove"
           (change)="changeMode($event)"
         />
-        <label class="ms-4 mt-2" for="placeAdviserAbove">
-          Đặt con của các cố vấn trên nút con của chúng</label
-        >
+        <label class="form-check-label" for="placeAdviserAbove">
+          Đặt con của các cố vấn trên nút con của chúng
+        </label>
       </div>
 
-      <div class="d-flex m-4">
+      <div class="form-check m-4">
         <input
+          class="form-check-input"
           type="checkbox"
           id="placeAssitantAbove"
           (change)="changeMode($event)"
         />
-        <label class="ms-4 mt-2" for="placeAssitantAbove">
-          Đặt con của các trợ lý phía trên nút con của chúng</label
-        >
+        <label class="form-check-label" for="placeAssitantAbove">
+          Đặt con của các trợ lý phía trên nút con của chúng
+        </label>
       </div>
 
       <p class="m-4 text-primary fw-bold">
@@ -2427,9 +2447,7 @@
     <!-- #endregion-->
   </div>
 </ng-template>
-<!-- ( (!isCursor ? itemConfig.id === orgUnitID : isCursor)
-          ? stylesObjChart
-          : stylesObjChartNone) -->
+
 <div class="sample">
   <org-diagram
     [navigationMode]="navigationMode"
@@ -2525,10 +2543,13 @@
     <div
       *ngIf="itemConfig.context.orgUnitType === item.value"
       [style]="
-        isCursor 
-        ? stylesObjChart
-        : (itemConfig.id === orgUnitID && !isCursor ? stylesObjChart : stylesObjChartNone)
+        isCursor
+          ? stylesObjChart
+          : itemConfig.id === orgUnitID && !isCursor && !disableActive
+          ? stylesObjChart
+          : stylesObjChartNone
       "
+      (click)="clickActive()"
     >
       <div
         class="d-flex align-items-center p-2 w-100"

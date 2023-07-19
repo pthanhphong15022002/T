@@ -39,19 +39,6 @@ export class TabLeadDetailComponent
   readonly tabField: string = 'Field';
   readonly tabTask: string = 'Task';
   readonly tabComment: string = 'Comment';
-  tabControlComment = [
-    {
-      name: 'Comment',
-      textDefault: 'Thảo luận',
-      isActive: false,
-      template: null,
-    },
-  ];
-  fmProcductsLines: FormModel = {
-    formName: 'CMProducts',
-    gridViewName: 'grvCMProducts',
-    entityName: 'CM_Products',
-  };
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -60,97 +47,81 @@ export class TabLeadDetailComponent
   oCountFooter: any = {};
   constructor(
     private inject: Injector,
-    private codxCmService: CodxCmService,
     private changeDetectorRef: ChangeDetectorRef,
-    private leadDetailComponent: LeadDetailComponent,
   ) {
     super(inject);
   }
   ngAfterViewInit() {}
   onInit(): void {
-    this.executeApiCalls();
+ //   this.executeApiCalls();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    //nvthuan
-    if (changes.dataSelected) {
-      this.isDataLoading = true;
-      this.dataSelected = changes.dataSelected.currentValue;
-    }
-    if (changes?.listSteps) {
-      if (
-        changes?.listSteps?.currentValue?.length > 0 &&
-        changes?.listSteps?.currentValue !== null
-      ) {
-        this.isDataLoading = false;
-        this.listSteps = changes?.listSteps.currentValue;
-      }
-    }
-
-  }
-
-  async executeApiCalls() {
-    try {
-      //   await this.getValueList();
-    } catch (error) {
-      console.error('Error executing API calls:', error);
-    }
-  }
-
-
-
-  // async getValueList() {
-  //   this.cache.valueList('CRM010').subscribe((res) => {
-  //     if (res.datas) {
-  //       this.listCategory = res?.datas;
+  // ngOnChanges(changes: SimpleChanges) {
+  //   //nvthuan
+  //   if (changes.dataSelected) {
+  //     this.isDataLoading = true;
+  //     this.dataSelected = changes.dataSelected.currentValue;
+  //   }
+  //   if (changes?.listSteps) {
+  //     if (
+  //       changes?.listSteps?.currentValue?.length > 0 &&
+  //       changes?.listSteps?.currentValue !== null
+  //     ) {
+  //       this.isDataLoading = false;
+  //       this.listSteps = changes?.listSteps.currentValue;
   //     }
-  //   });
+  //   }
+
   // }
 
-  // getNameCategory(categoryId:string) {
-  //   return this.listCategory.filter(x=> x.value == categoryId)[0]?.text;
+  // async executeApiCalls() {
+  //   try {
+  //     //   await this.getValueList();
+  //   } catch (error) {
+  //     console.error('Error executing API calls:', error);
+  //   }
   // }
 
-  //truong tuy chinh - đang cho bằng 1
-  showColumnControl(stepID) {
-    if (this.listStepsProcess?.length > 0) {
-      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
-      if (idx == -1) return 1;
-      return this.listStepsProcess[idx]?.showColumnControl;
-    }
-    return 1;
-  }
+  // //truong tuy chinh - đang cho bằng 1
+  // showColumnControl(stepID) {
+  //   if (this.listStepsProcess?.length > 0) {
+  //     var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+  //     if (idx == -1) return 1;
+  //     return this.listStepsProcess[idx]?.showColumnControl;
+  //   }
+  //   return 1;
+  // }
 
-  continueStep(event) {
-    let isTaskEnd = event?.isTaskEnd;
-    let step = event?.step;
+  // continueStep(event) {
+  //   let isTaskEnd = event?.isTaskEnd;
+  //   let step = event?.step;
 
-    let transferControl = this.dataSelected.steps.transferControl;
-    if (transferControl == '0') return;
+  //   let transferControl = this.dataSelected.steps.transferControl;
+  //   if (transferControl == '0') return;
 
-    // let isShowFromTaskEnd = !this.checkContinueStep(true,step);
-    // let isContinueTaskEnd = isTaskEnd;
-    // let isContinueTaskAll = this.checkContinueStep(false,step);
-    // let isShowFromTaskAll = !isContinueTaskAll;
+  //   // let isShowFromTaskEnd = !this.checkContinueStep(true,step);
+  //   // let isContinueTaskEnd = isTaskEnd;
+  //   // let isContinueTaskAll = this.checkContinueStep(false,step);
+  //   // let isShowFromTaskAll = !isContinueTaskAll;
 
-    // if(transferControl == '1' && isContinueTaskAll){
-    //   isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
-    //   !isShowFromTaskAll && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
-    // }
+  //   // if(transferControl == '1' && isContinueTaskAll){
+  //   //   isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
+  //   //   !isShowFromTaskAll && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
+  //   // }
 
-    // if(transferControl == '2' && isContinueTaskEnd){
-    //   isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
-    //   !isShowFromTaskEnd && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
-    // }
-  }
-  saveAssignTask(e) {
-    // if(e) this.saveAssign.emit(e);
-  }
+  //   // if(transferControl == '2' && isContinueTaskEnd){
+  //   //   isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
+  //   //   !isShowFromTaskEnd && this.handleMoveStage( this.completedAllTasks(step),step.stepID);
+  //   // }
+  // }
+  // saveAssignTask(e) {
+  //   // if(e) this.saveAssign.emit(e);
+  // }
 
-  changeCountFooter(value: number, key: string) {
-    let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
-    oCountFooter[key] = value;
-    this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
-    this.changeDetectorRef.detectChanges();
-  }
+  // changeCountFooter(value: number, key: string) {
+  //   let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
+  //   oCountFooter[key] = value;
+  //   this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
+  //   this.changeDetectorRef.detectChanges();
+  // }
 }
