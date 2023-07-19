@@ -71,6 +71,7 @@ export class ContractsComponent extends UIComponent {
 
   account: any;
   quotations: CM_Quotations;
+  listInsStep = [];
 
   tabClicked = '';
   actionName = '';
@@ -385,11 +386,37 @@ export class ContractsComponent extends UIComponent {
         //Hủy yêu cầu duyệt
         this.cancelApprover(data);
         break;
+      case 'CM0204_9':
+        //Bắt đầu
+        this.startInstance(data);
+        break;
+      case 'CM0204_8':
+        //Chuyển giai đoạn
+        this.cancelApprover(data);
+        break;
+      case 'CM0204_10':
+        //thành công
+        this.cancelApprover(data);
+        break;
+      case 'CM0204_11':
+        //thất bại
+        this.cancelApprover(data);
+        break;
     }
   }
 
-  startInstance(){
-
+  startInstance(data){
+    this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'StartInstanceAsync',
+      [data?.refID]
+    ).subscribe((res) =>{
+      console.log(res);
+      if(res){
+        this.listInsStep = res;
+      }
+    })
   }
 
   moveStep(){

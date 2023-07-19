@@ -901,6 +901,14 @@ export class CodxCmService {
       data
     );
   }
+  getStepByStepIDAndInID(insID, stepID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepByStepIDAndInIDAsync',
+      [insID, stepID]
+    );
+  }
 
   //#endregion -- Bao
 
