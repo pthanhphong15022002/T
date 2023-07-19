@@ -1,9 +1,8 @@
 <codx-views
   #view
-  idField="recID"
   [views]="views"
   [button]="button"
-  entityName="PS_PurchaseInvoices"
+  entityName="AC_PurchaseInvoices"
   (buttonClick)="onClickAdd($event)"
   predicates="JournalNo=@0"
   [dataValues]="journalNo"
@@ -15,7 +14,7 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="view.formModel"
-    (clickMF)="clickMF($event, data)"
+    (clickMF)="onClickMF($event, data)"
     [isBookMark]="false"
     type="view"
   ></codx-mfunc>
@@ -37,7 +36,7 @@
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF()"
     (click)="clickChange(data)"
-    (clickMF)="clickMF($event, data)"
+    (clickMF)="onClickMF($event, data)"
   >
   </codx-temp-full>
 </ng-template>
@@ -50,7 +49,7 @@
     [formModel]="view.formModel"
     [dataItem]="master"
     [footer]="footer"
-    (clickMF)="clickMF($event, master)"
+    (clickMF)="onClickMF($event, master)"
   >
   </codx-detail-tmp>
 </ng-template>

@@ -229,8 +229,11 @@
       <table>
         <thead>
           <tr>
-            <th class="" style="z-index: 100"></th>
-            <th class="fixed-width-column">{{data?.year}}</th>
+            <th class="fixed-width-column-user" style="z-index: 100"></th>
+            <th class="fixed-width-column">{{ data?.year }}</th>
+            <th *ngFor="let quar of lstQuarters" class="fixed-width-column">
+              {{ quar?.text }}
+            </th>
             <th *ngFor="let time of lstTime" class="fixed-width-column">
               {{ time?.text }}
             </th>
@@ -238,10 +241,13 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of lstOwners">
-            <td>
+            <td class="fixed-width-column-user">
               <div
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od mb-1 p-2"
               >
+                <div class="action-menu-od me-1" (click)="removeUser(item)">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
                 <div class="d-flex justify-content-between list-title">
                   <div class="d-flex align-items-top me-2">
                     <codx-img
@@ -261,7 +267,22 @@
               </div>
             </td>
             <td class="fixed-width-column">
-              <span class="" [innerHTML]="targetToFixed(item?.target)"></span>
+              <span
+                class=""
+                [ngbTooltip]="targetYear"
+                [innerHTML]="targetToFixed(item?.target)"
+              >
+                <ng-template #targetYear>
+                  <div [innerHTML]="targetToFixed(item?.target)"></div>
+                </ng-template>
+              </span>
+            </td>
+            <td class="fixed-width-column" *ngFor="let quar of lstQuarters">
+              <ng-container *ngFor="let quarU of item?.quarters">
+                <div *ngIf="quarU?.id === quar?.id">
+                  <div [innerHTML]="targetToFixed(quarU?.target)"></div>
+                </div>
+              </ng-container>
             </td>
             <td *ngFor="let time of lstTime" class="fixed-width-column">
               <ng-container *ngFor="let line of time?.lines">
@@ -314,7 +335,6 @@
                   </div>
                 </span>
               </ng-container>
-
             </td>
           </tr>
         </tbody>

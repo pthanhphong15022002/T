@@ -439,7 +439,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           } else {
             // nếu voucherNo đã tồn tại,
             // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-            this.journalService.handleVoucherNoAndSave(
+            this.journalService.checkVoucherNoBeforeSave(
               this.journal,
               this.vouchers,
               'IV',
@@ -481,7 +481,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
           break;
         case 'edit':
-          this.journalService.handleVoucherNoAndSave(
+          this.journalService.checkVoucherNoBeforeSave(
             this.journal,
             this.vouchers,
             'IV',
@@ -621,7 +621,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 }
               });
           } else {
-            this.journalService.handleVoucherNoAndSave(
+            this.journalService.checkVoucherNoBeforeSave(
               this.journal,
               this.vouchers,
               'IV',
