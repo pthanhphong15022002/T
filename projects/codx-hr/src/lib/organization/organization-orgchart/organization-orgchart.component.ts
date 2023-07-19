@@ -37,6 +37,8 @@ import {
   ShapeType,
   LineType,
   ElbowType,
+  TextOrientationType,
+  PlacementType,
 } from 'ngx-basic-primitives';
 import {
   ApiHttpService,
@@ -51,6 +53,7 @@ import {
 } from 'codx-core';
 import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 import { CodxHrService } from '../../codx-hr.service';
+import { DataVll } from '../../model/HR_OrgChart.model';
 
 @Component({
   selector: 'hr-organization-orgchart',
@@ -78,9 +81,13 @@ export class OrganizationOrgchartComponent implements OnInit {
   MinimizedItemLineType = LineType;
   ArrowsDirection = GroupByType;
   ElbowType = ElbowType;
+  LinesType = LineType;
+  ShowLabels = Enabled;
+  LabelOrientation = TextOrientationType;
+  LabelPlacement = PlacementType;
   items: Array<OrgItemConfig> = [];
 
-  dataVll: [];
+  dataVll: Array<DataVll>;
   //Variable diagram
   pagefit: any;
   orientationType: any;
@@ -96,10 +103,16 @@ export class OrganizationOrgchartComponent implements OnInit {
   arrowsDirection: any;
   connectorType: any;
   elbowType: any;
+  linesType: any;
+  labelOrientation: any;
+  labelPlacement: any;
+  navigationMode: any;
+  showLabels: any = Enabled.False;
   hasSelectorCheckbox: any = Enabled.False;
   alignBranches: boolean = false;
   placeAdviserAbove: boolean = false;
   placeAssitantAbove: boolean = false;
+  showFrame: boolean = false;
   maximumColumnsInMatrix: number;
   minimumVisibleLevels: number;
   markerWidth: number;
@@ -112,7 +125,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   hightlightBottom: number;
   minimizedItemLineWidth: number;
   minimizedItemOpacity: number;
-  normalLevelShift: number;
+  normalLevelShift: number = 45;
   dotLevelShift: number;
   lineLevelShift: number;
   normalItemsInterval: number;
@@ -123,6 +136,25 @@ export class OrganizationOrgchartComponent implements OnInit {
   paddingIntervalTop: number;
   paddingIntervalRight: number;
   paddingIntervalBottom: number;
+  bevelSize: number;
+  elbowDotSize: number;
+  lineWidth: number;
+  widthTitle: number;
+  heightTitle: number;
+  labelOffset: number;
+  frameLeft: number;
+  frameTop: number;
+  frameRight: number;
+  frameBottom: number;
+  frameoutLeft: number;
+  frameoutTop: number;
+  frameoutRight: number;
+  frameoutBottom: number;
+  linesColor: string;
+  labelFontSize: string;
+  labelFontFamily: string;
+  labelColor: string;
+  labelFontWeight: string;
   @ViewChild('contactTemplate') contactTemplate: TemplateRef<any>;
 
   //Popup Settings
@@ -163,9 +195,17 @@ export class OrganizationOrgchartComponent implements OnInit {
   selectedTeam = '';
 
   //style slider
-  stylesObj = { width: '30%', display: 'flex', margin: '5px auto' };
-  stylesObjChart = { border: '3px solid #03a9f4', position: 'relative' };
-  stylesObjChart1 = { border: '1px ridge gray', position: 'relative' };
+  stylesObj = { width: '30%', display: 'flex', margin: '5px 14px' };
+  stylesObjChart = {
+    border: '3px solid #03a9f4',
+    position: 'relative',
+    height: '100%',
+  };
+  stylesObjChartNone = {
+    border: '1px ridge gray',
+    position: 'relative',
+    height: '100%',
+  };
 
   @ViewChild('diagram') diagram: any;
   constructor(
@@ -502,6 +542,163 @@ export class OrganizationOrgchartComponent implements OnInit {
       case 'elbowsRound':
         this.elbowType = this.ElbowType.Round;
         break;
+
+      case 'bevelSize':
+        this.bevelSize = parseInt(e.target.value);
+        break;
+      case 'elbowDotSize':
+        this.elbowDotSize = parseInt(e.target.value);
+        break;
+
+      //Loại đường kẻ
+      case 'linesTypeSolid':
+        this.linesType = this.LinesType.Solid;
+        break;
+      case 'linesTypeDot':
+        this.linesType = this.LinesType.Dotted;
+        break;
+      case 'linesTypeDash':
+        this.linesType = this.LinesType.Dashed;
+        break;
+
+      case 'linesColor':
+        this.linesColor = e.target.value;
+        break;
+
+      case 'lineWidth':
+        this.lineWidth = parseInt(e.target.value);
+        break;
+
+      //Hiển thị tiêu đề
+      case 'showLabelAuto':
+        this.showLabels = this.ShowLabels.Auto;
+        break;
+      case 'showLabelTrue':
+        this.showLabels = this.ShowLabels.True;
+        break;
+      case 'showLabelFalse':
+        this.showLabels = this.ShowLabels.False;
+        break;
+      case 'widthTitle':
+        this.widthTitle = parseInt(e.target.value);
+        break;
+      case 'heightTitle':
+        this.heightTitle = parseInt(e.target.value);
+        break;
+      case 'offsetTitle':
+        this.labelOffset = parseInt(e.target.value);
+        break;
+
+      //Định hướng tiêu đề
+      case 'labelHorizontal':
+        this.labelOrientation = this.LabelOrientation.Horizontal;
+        break;
+      case 'labelLeft':
+        this.labelOrientation = this.LabelOrientation.RotateLeft;
+        break;
+      case 'labelRight':
+        this.labelOrientation = this.LabelOrientation.RotateRight;
+        break;
+      case 'labelAuto':
+        this.labelOrientation = this.LabelOrientation.Auto;
+        break;
+
+      //Vị trí tiêu đề
+      case 'labelAuto':
+        this.labelPlacement = this.LabelPlacement.Auto;
+        break;
+      case 'placeLeft':
+        this.labelPlacement = this.LabelPlacement.TopLeft;
+        break;
+      case 'placeTop':
+        this.labelPlacement = this.LabelPlacement.Top;
+        break;
+      case 'placeTopRight':
+        this.labelPlacement = this.LabelPlacement.TopRight;
+        break;
+      case 'placeRightTop':
+        this.labelPlacement = this.LabelPlacement.RightTop;
+        break;
+      case 'placeRight':
+        this.labelPlacement = this.LabelPlacement.Right;
+        break;
+      case 'placeRightBottom':
+        this.labelPlacement = this.LabelPlacement.RightBottom;
+        break;
+      case 'placeBottomRight':
+        this.labelPlacement = this.LabelPlacement.BottomRight;
+        break;
+      case 'placeBottom':
+        this.labelPlacement = this.LabelPlacement.Bottom;
+        break;
+      case 'placeBottomLeft':
+        this.labelPlacement = this.LabelPlacement.BottomLeft;
+        break;
+      case 'placeLeftBottom':
+        this.labelPlacement = this.LabelPlacement.LeftBottom;
+        break;
+      case 'placeLeft':
+        this.labelPlacement = this.LabelPlacement.Left;
+        break;
+      case 'placeLeftTop':
+        this.labelPlacement = this.LabelPlacement.LeftTop;
+        break;
+
+      case 'labelFontSize':
+        this.labelFontSize = e.target.value;
+        break;
+      case 'labelFontFamily':
+        this.labelFontFamily = e.target.value;
+        break;
+      case 'labelFontWeight':
+        this.labelFontWeight = e.target.value;
+        break;
+
+      //Sử dụng tùy chọn này để tắt đánh dấu chuột
+      case 'navigationModeDefault':
+        this.navigationMode = this.NavigationMode.Default;
+        break;
+      case 'navigationModeCursor':
+        this.navigationMode = this.NavigationMode.CursorOnly;
+        break;
+      case 'navigationModeHightlight':
+        this.navigationMode = this.NavigationMode.HighlightOnly;
+        break;
+      case 'navigationModeInactive':
+        this.navigationMode = this.NavigationMode.Inactive;
+        break;
+
+      //Hiển thị khung bao quanh
+      case 'frameCheck':
+        this.showFrame = e.target.checked;
+        break;
+
+      //Tăng khoảng cách bên trong
+      case 'frameLeft':
+        this.frameLeft = parseInt(e.target.value);
+        break;
+      case 'frameTop':
+        this.frameTop = parseInt(e.target.value);
+        break;
+      case 'frameRight':
+        this.frameRight = parseInt(e.target.value);
+        break;
+      case 'frameBottom':
+        this.frameBottom = parseInt(e.target.value);
+        break;
+      //Tăng khoảng cách bên ngoài
+      case 'frameoutLeft':
+        this.frameoutLeft = parseInt(e.target.value);
+        break;
+      case 'frameoutTop':
+        this.frameoutTop = parseInt(e.target.value);
+        break;
+      case 'frameoutRight':
+        this.frameoutRight = parseInt(e.target.value);
+        break;
+      case 'frameoutBottom':
+        this.frameoutBottom = parseInt(e.target.value);
+        break;
       default:
       // code block
     }
@@ -534,9 +731,9 @@ export class OrganizationOrgchartComponent implements OnInit {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe();
+        //this.view.dataService.update(res.event[0]).subscribe();
         //Render new data when update new status on view detail
-        this.dt.detectChanges();
+        //this.dt.detectChanges();
       }
     });
   }
@@ -567,6 +764,12 @@ export class OrganizationOrgchartComponent implements OnInit {
     // });
   }
 
+  getColorItem(orgType: any) {
+    return this.dataVll
+      .filter((item) => item.value === orgType)
+      .map((obj) => obj.color);
+  }
+
   getDataPositionByID(orgUnitID: string, getManager: boolean) {
     if (orgUnitID) {
       this.api
@@ -581,6 +784,7 @@ export class OrganizationOrgchartComponent implements OnInit {
           if (res) {
             // this.dataSource = this.newDataManager(res);
             var items: Array<OrgItemConfig> = [];
+
             res.map((item) => {
               items.push(
                 new OrgItemConfig({
@@ -588,14 +792,18 @@ export class OrganizationOrgchartComponent implements OnInit {
                   parent: item.parentID,
                   title: item.orgUnitName,
                   description: item.positionName,
+                  label: item.orgUnitName,
                   //image: this.imgTest,
                   templateName: 'contactTemplate',
+                  itemTitleColor: String(this.getColorItem(item.orgUnitType)),
                   context: {
                     employeeID: item.employeeID,
                     employeeName: item.employeeName,
                     employeeManager: item.employeeManager,
                     orgUnitType: item.orgUnitType,
                     data: item,
+                    isChildren: item.isChildren,
+                    loadChildrent: item.loadChildrent,
                   },
                   //itemType: ItemType.Assistant,
                   // adviserPlacementType: AdviserPlacementType.Left,
@@ -796,58 +1004,83 @@ export class OrganizationOrgchartComponent implements OnInit {
       });
   }
 
+  removeNode(id: string) {
+    var children = this.items.filter((x) => x.parent === id);
+    if (children.length > 0) {
+      children.forEach((e) => {
+        this.items = this.items.filter((x) => x.id !== e.id);
+        this.removeNode(String(e.id));
+      });
+    }
+  }
+
   //Load more icon add
   loadDataChild(node: any, element: HTMLElement) {
-    let data = [];
-    let result = new OrgItemConfig({
-      id: 'abc',
-      parent: 'ORG-0156',
-      title: 'haha',
-      description: 'hichic',
-      templateName: 'contactTemplate',
-
-      context: {
-        employeeID: '26',
-        employeeName: 'test',
-        employeeManager: null,
-        orgUnitType: '1',
-        data: this.items[0].context.data,
-      },
-    });
-
-    data = this.items.concat(result);
-
-    this.items = data;
-    // if (node.loadChildrent) {
-    //   result = this.data.filter(e => e.reportTo != node.positionID);
-    //   if (result.length > 0) {
-    //     result.forEach(element => {
-    //       if (element.positionID == node.positionID) {
-    //         element.loadChildrent = false;
-    //       }
-    //     });
-    //     this.removeNode(node.positionID);
-    //   }
-    //   this.setDataOrg(this.data);
-    // }
-    // else {
-    //   if (node.positionID) {
-    //     this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetChildOrgChartAsync", [node.positionID])
-    //       .subscribe((res: any) => {
-    //         if (res) {
-    //           result = this.data.concat(res);
-    //           if (result.length > 0) {
-    //             result.forEach(element => {
-    //               if (element.positionID == node.positionID) {
-    //                 element.loadChildrent = true;
-    //               }
-    //             });
-    //             this.data = JSON.parse(JSON.stringify(result))
-    //           }
-    //           this.setDataOrg(this.data);
-    //         }
-    //       });
-    //   }
-    // }
+    let result = [];
+    var items = [];
+    if (node.context.loadChildrent) {
+      result = this.items.filter((e) => e.parent != node.id);
+      if (result.length > 0) {
+        result.forEach((element) => {
+          if (element.id == node.id) {
+            element.context.loadChildrent = false;
+          }
+        });
+        this.removeNode(node.id);
+      }
+      //this.setDataOrg(this.data);
+    } else {
+      if (node.id) {
+        let listPos = [];
+        this.items.forEach(function (object) {
+          var posID = object.id;
+          listPos.push(posID);
+        });
+        this.api
+          .execSv(
+            'HR',
+            'ERM.Business.HR',
+            'OrganizationUnitsBusiness',
+            'GetChildChartAsync',
+            [node.id, listPos]
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              this.items.forEach((e) => {
+                if (e.id == node.id) {
+                  e.context.loadChildrent = true;
+                }
+                items.push(e);
+              });
+              res.map((item) => {
+                items.push(
+                  new OrgItemConfig({
+                    id: item.orgUnitID,
+                    parent: item.parentID,
+                    title: item.orgUnitName,
+                    description: item.positionName,
+                    label: item.orgUnitName,
+                    templateName: 'contactTemplate',
+                    itemTitleColor: String(this.getColorItem(item.orgUnitType)),
+                    context: {
+                      employeeID: item.employeeID,
+                      employeeName: item.employeeName,
+                      employeeManager: item.employeeManager,
+                      orgUnitType: item.orgUnitType,
+                      data: item,
+                      isChildren: item.isChildren,
+                      loadChildrent: item.loadChildrent,
+                    },
+                  })
+                );
+                // }
+              });
+            } else {
+              result = this.items;
+            }
+            this.items = items;
+          });
+      }
+    }
   }
 }
