@@ -9,6 +9,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
   AccumulationChartAllModule,
   AccumulationTooltipService,
+  BubbleSeriesService,
   ChartAllModule,
   ChartModule,
 } from '@syncfusion/ej2-angular-charts';
@@ -137,14 +138,14 @@ export const routes: Routes = [
         component: TargetsComponent,
         data: { noReuse: true },
       },
-      {
-        path: '',
-        loadChildren: () =>
-          import('projects/codx-cm/src/lib/codx-approvel.module').then(
-            (m) => m.CodxApprovelModule
-          ),
-        data: { noReuse: true },
-      },
+      // {
+      //   path: '',
+      //   loadChildren: () =>
+      //     import('projects/codx-cm/src/lib/codx-approvel.module').then(
+      //       (m) => m.CodxApprovelModule
+      //     ),
+      //   data: { noReuse: true },
+      // },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -251,7 +252,12 @@ const T_Component: Type<any>[] = [
     ChartModule,
   ],
   exports: [RouterModule],
-  providers: [AccumulationTooltipService, CategoryService, LineSeriesService],
+  providers: [
+    AccumulationTooltipService,
+    CategoryService,
+    LineSeriesService,
+    BubbleSeriesService,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxCmModule {
