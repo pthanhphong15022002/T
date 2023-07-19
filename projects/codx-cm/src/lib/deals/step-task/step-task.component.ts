@@ -24,7 +24,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
-  type = '';
+  type = 'S';
   crrViewGant = 'W';
   vllViewGannt = 'DP042';
   typeTime;
@@ -93,7 +93,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
     if (changes.dataSelected) {
       this.dataSelected = changes.dataSelected?.currentValue;
-      this.type = this.dataSelected.viewModeDetail;
+      this.type = this.dataSelected.viewModeDetail || "S";
     }
   }
 

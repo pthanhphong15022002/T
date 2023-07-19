@@ -73,8 +73,9 @@
 
 .p-node {
   position: absolute;
-  left: 44%;
-  bottom: -6%;
+  left: 45%;
+  bottom: -5%;
+  cursor: pointer;
 }
 
 .c-last {
@@ -101,4 +102,28 @@ input[type="radio"] {
   transform: translateY(30%);
   left: 4px;
   content: "";
+}
+
+.form-check-input[type="checkbox"] {
+  border-radius: unset;
+}
+input[type="checkbox"] {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(30%);
+  left: 4px;
+  content: "";
+}
+
+.c-header {
+  position: fixed !important;
+  z-index: 10;
+  width: 100%;
+  top: 0;
+}
+
+.p-top {
+  margin-top: 60px;
 }

@@ -78,4 +78,6 @@ export interface IPurchaseInvoice {
     postedBy: string;
     modifiedOn: string | null;
     modifiedBy: string;
+
+    unbounds: any;
 }
