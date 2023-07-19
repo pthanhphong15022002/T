@@ -434,7 +434,7 @@ export class PopupAddJournalComponent
       this.journal.invoiceForm = null;
     }
 
-    if (!this.journalTypes110.includes(this.journal.journalType)) {
+    if (!this.journalTypes109.includes(this.journal.journalType)) {
       this.journal.idimControl = null;
     }
 

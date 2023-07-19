@@ -614,6 +614,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res: any[]) => {
+        debugger
         if (res && res[1] > 0) {
           this.lstFuncID = Array.from<any>(res[0]);
           if (this.lstFuncID?.length > 0) {
@@ -927,6 +928,52 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  viewGridDetail(data, funcID){
+    switch(funcID){
+      case this.appointionFuncID:
+        // Phải gán cứng vì hệ thống không có morefunc xem chi tiết nên không lấy action text như add và edit được
+        this.HandleEmployeeAppointionInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.dayoffFuncID:
+        this.HandleEmployeeDayOffInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eBusinessTravelFuncID:
+        this.HandleEBusinessTravel('Xem chi tiết', 'view', data);
+        break;
+      case this.awardFuncID:
+        this.HandleEmployeeEAwardsInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eDisciplineFuncID:
+        this.HandleEmployeeEDisciplinesInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eDegreeFuncID:
+        this.HandleEmployeeEDegreeInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eCertificateFuncID:
+        this.HandleEmployeeECertificateInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eSkillFuncID:
+        this.HandleEmployeeESkillsInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eTrainCourseFuncID:
+        this.HandleEmployeeTrainCourseInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eAccidentsFuncID:
+        this.HandleEmployeeAccidentInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eDiseasesFuncID:
+        this.HandleEmployeeEDiseasesInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eHealthFuncID:
+        this.HandleEmployeeEHealths('Xem chi tiết', 'view', data);
+        break;
+      case this.eVaccinesFuncID:
+        this.HandleEVaccinesInfo('Xem chi tiết', 'view', data);
+        break;
+    }
+    debugger
+  }
+
   initSortModel() {
     this.dayOffSortModel = new SortModel();
     this.dayOffSortModel.field = 'BeginDate';
@@ -1019,7 +1066,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   initHeaderText() {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      debugger
       this.addHeaderText = res[0].customName;
       this.editHeaderText = res[2].customName;
     });

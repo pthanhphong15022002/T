@@ -30,7 +30,7 @@ export class CashPaymentLine {
   placeInServiceDate: any;
   projectID: any;
   reasonID: any;
-  recID: any = Util.uid();;
+  recID: any = Util.uid();
   refLineID: any;
   refNo: any;
   rowNo: any;

@@ -33,6 +33,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   lstEdiseases;
   indexSelected
   idField = 'RecID';
+  disabledInput = false;
   funcID;
   actionType: string;
   employeeId: string;
@@ -77,6 +78,9 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.lstEdiseases = data?.data?.lstEdiseases;
     this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1;
     this.ediseasesObj = data?.data?.dataInput;
