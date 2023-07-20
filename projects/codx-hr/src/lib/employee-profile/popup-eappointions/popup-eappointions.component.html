@@ -63,6 +63,7 @@
       </div>
       <div class="col-2 d-flex justify-content-end">
         <codx-input
+        [disabled]="disabledInput"
           [showInput]="false"
           field="employeeID"
           [formModel]="formModel"
@@ -91,6 +92,7 @@
     <div class="form-group row">
       <codx-label fiedName="Appoint" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="appoint"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -104,6 +106,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="effectedDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -112,6 +115,7 @@
       <div class="col-6">
         <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="expiredDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -123,6 +127,7 @@
       <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="orgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -147,6 +152,7 @@
       <div class="col-6">
         <codx-label fiedName="JobLevel" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="jobLevel"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -168,6 +174,7 @@
       <div class="col-6">
         <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="positionID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -192,6 +199,7 @@
       <div class="col-6">
         <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -204,6 +212,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           [disabled]="true"
           field="oldLocationID"
           [formModel]="formModel"
@@ -215,6 +224,7 @@
     <div class="form-group row">
       <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="note"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -225,7 +235,7 @@
       <div class="col-6">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
         <codx-input
-          [disabled]="autoNumField === 'DecisionNo'"
+          [disabled]="autoNumField === 'DecisionNo' || disabledInput"
           field="decisionNo"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -234,6 +244,7 @@
       <div class="col-6">
         <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="signedDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -245,6 +256,7 @@
       <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
       <div class="border-bottom pb-1">
         <codx-input
+        [disabled]="disabledInput"
           field="signerID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -259,6 +271,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+        [disabled]="disabledInput"
         field="signerPosition"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -268,7 +281,7 @@
 </codx-form>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
     <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label

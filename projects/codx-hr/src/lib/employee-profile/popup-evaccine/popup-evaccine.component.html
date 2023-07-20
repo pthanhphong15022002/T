@@ -17,6 +17,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="VaccineTypeID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -25,6 +26,7 @@
       <div class="col-6">
         <codx-label fiedName="VaccineName" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="VaccineName"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -35,6 +37,7 @@
       <div class="col-6">
         <codx-label fiedName="HopitalID" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="HopitalID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -43,6 +46,7 @@
       <div class="col-6">
         <codx-label fiedName="InjectDate" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="InjectDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -53,6 +57,7 @@
       <div class="col-6">
         <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="Cost"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -65,6 +70,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="NextInjectDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -74,6 +80,7 @@
     <div class="form-group row">
       <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="Note"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -192,6 +199,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="VaccineTypeID"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -200,6 +208,7 @@
     <div class="col-6">
       <codx-label fiedName="VaccineName" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="VaccineName"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -210,6 +219,7 @@
     <div class="col-6">
       <codx-label fiedName="HopitalID" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="HopitalID"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -218,6 +228,7 @@
     <div class="col-6">
       <codx-label fiedName="InjectDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="InjectDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -228,6 +239,7 @@
     <div class="col-6">
       <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="Cost"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -240,6 +252,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="NextInjectDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -249,6 +262,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="Note"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -258,7 +272,7 @@
 </codx-form>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
     <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label

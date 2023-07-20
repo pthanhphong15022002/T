@@ -42,6 +42,8 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   headerTextCalendar: any = [];
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
+  disabledInput = false;
+
 
   displayForeignCert = false;
 
@@ -65,6 +67,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.lstCertificates = data?.data?.lstCertificates;
     this.certificateObj = JSON.parse(JSON.stringify(data.data.dataInput));
     // this.indexSelected =
@@ -127,7 +132,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     } else {
       this.isNullFrom = true;
       this.isNullTo = true;
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         if(this.certificateObj.certificateType == '3'){
           this.displayForeignCert = true;
         }

@@ -49,9 +49,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
     connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
+    // orientation: 'LeftToRight',
     verticalSpacing: 70,
     horizontalSpacing: 40,
-    enableAnimation: true,
+    enableAnimation: false,
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
   snapSettings: SnapSettingsModel = {
