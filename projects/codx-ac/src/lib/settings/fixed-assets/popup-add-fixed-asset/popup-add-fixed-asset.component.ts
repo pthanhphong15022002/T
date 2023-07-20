@@ -10,6 +10,7 @@ import {
   CodxFormComponent,
   DialogData,
   DialogRef,
+  NotificationsService,
   RequestOption,
   UIComponent,
 } from 'codx-core';
@@ -33,6 +34,9 @@ export class PopupAddFixedAssetComponent
   asset: IAsset = {} as IAsset;
   gvs: any;
   isEdit: boolean = false;
+  keyField: any = '';
+  validate: any = 0;
+  formType: any;
   oldAssetId: string;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'General Info' },
@@ -51,6 +55,7 @@ export class PopupAddFixedAssetComponent
   constructor(
     injector: Injector,
     private acService: CodxAcService,
+    private notification: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
   ) {
@@ -58,7 +63,8 @@ export class PopupAddFixedAssetComponent
 
     this.dataService = this.dialogRef.dataService;
     this.asset = this.dataService.dataSelected;
-
+    this.keyField = this.dataService!.keyField;
+    this.formType = this.dialogData.data?.formType;
     if (this.dialogData.data?.formType === 'edit') {
       this.isEdit = true;
       this.oldAssetId = this.asset.assetID;
@@ -88,11 +94,12 @@ export class PopupAddFixedAssetComponent
   onClickSave(): void {
     console.log(this.asset);
 
-    if (!this.acService.validateFormData(this.form.formGroup, this.gvs)) {
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
-    }
-
-    this.dataService
+    } else {
+      this.dataService
       .save((req: RequestOption) => {
         if (!this.isEdit) {
           return false;
@@ -113,10 +120,48 @@ export class PopupAddFixedAssetComponent
           this.dialogRef.close();
         }
       });
+    }
   }
   //#endregion
 
   //#region Method
+  checkValidate() {
+
+    //Note
+    let ignoredFields: string[] = [];
+    if(this.keyField == 'AssetID')
+    {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+
+    var keygrid = Object.keys(this.gvs);
+    var keymodel = Object.keys(this.asset);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gvs[keygrid[index]].isRequire == true) {
+        if(ignoredFields.includes(keygrid[index].toLowerCase()))
+        {
+          continue;
+        }
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.asset[keymodel[i]] == null ||
+              String(this.asset[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gvs[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
   //#endregion
 
   //#region Function

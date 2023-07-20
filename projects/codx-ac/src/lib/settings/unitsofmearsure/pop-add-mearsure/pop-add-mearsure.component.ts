@@ -39,6 +39,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   unitsofmearsure: UnitsOfMearsure;
   gridViewSetup: any;
   validate: any = 0;
+  keyField: any = '';
   objectUmconversion: Array<UMConversion> = [];
   objectUmconversionDelete: Array<UMConversion> = [];
   tabInfo: any[] = [
@@ -66,6 +67,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.unitsofmearsure = dialog.dataService!.dataSelected;
+    this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'edit') {
       if (this.unitsofmearsure.umid != null) {
         this.acService
@@ -202,10 +204,24 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     this.objectUmconversionDelete = [];
   }
   checkValidate() {
+
+    //Note
+    let ignoredFields: string[] = [];
+    if(this.keyField == 'UMID')
+    {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.unitsofmearsure);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if(ignoredFields.includes(keygrid[index].toLowerCase()))
+        {
+          continue;
+        }
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
