@@ -27,10 +27,8 @@
               ? item?.fontSize
               : ''
           "
-          [innerHTML]="
-          item.businessLineID | formatvalue : fmTargetLines : 'BusinessLineID' | async
-          "
         >
+          {{ item?.targetName }}
         </span>
       </div>
       <div class="w-250px min-w-250px d-flex justify-content-end">
