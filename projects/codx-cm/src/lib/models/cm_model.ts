@@ -667,7 +667,7 @@ export class CM_Leads {
   leadID: string;
   leadName: string;
   leadName2: string;
-  category: string;
+  category: string = "1";
   channelID: string;
   campaignID: string;
   businessLineID: string;
