@@ -38,6 +38,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() view: ViewsComponent;
   @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
   @Output() hasChangedData: EventEmitter<any> = new EventEmitter();
+  @Output() itemSelectedChanged: EventEmitter<any> = new EventEmitter();
   width: number = 250;
   height: number = 150;
   maxWidth: number = 250;
@@ -49,8 +50,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
     connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
-    // orientation: 'LeftToRight',
-    verticalSpacing: 70,
+    orientation: 'LeftToRight',
+    verticalSpacing: 40,
     horizontalSpacing: 40,
     enableAnimation: false,
   };
@@ -99,7 +100,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
-    //connector.targetDecorator.shape = 'None';
+    connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     // connector.constraints = 0;
     connector.cornerRadius = 5;
@@ -109,7 +110,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     let sourceNode = diagram.getNodeObject(connector.sourceID).data;
     let targetNode = diagram.getNodeObject(connector.targetID).data;
     if (sourceNode['positionID'] === targetNode['reportTo2'])
+    {
+      connector.style!.strokeColor = '#6d6d6d';
       connector.style.strokeDashArray = '5,5';
+    }
     return connector;
   }
 
@@ -231,8 +235,12 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       });
     }
   }
-
+  changeSelectedItem(data: any){
+    this.positionID = data?.positionID;
+    this.itemSelectedChanged.emit(data);
+  }
   clickMF(event: any, data: any = null) {
+    this.changeSelectedItem(data);
     if (event) {
       switch (event.functionID) {
         case 'SYS03':
