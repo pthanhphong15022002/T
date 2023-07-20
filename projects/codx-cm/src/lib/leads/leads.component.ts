@@ -126,14 +126,16 @@ export class LeadsComponent
   moreFuncInstance: any;
   dataColums: any;
   viewCrr: any;
-
+  isLoading = false;
+  action:any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+
   ) {
     super(inject);
     if (!this.funcID) {
@@ -322,9 +324,11 @@ export class LeadsComponent
     var isDisabled = (eventItem, data) => {
       eventItem.disabled = (data.closed && !['0', '1'].includes(data.status)) ||  ['0', '1'].includes(data.status) ||this.checkMoreReason(data);
     };
-    var isCRUD = (eventItem, data) => {
+    var isCRD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
-    //  eventItem.disabled = false;
+    };
+    var isEdit = (eventItem, data) => {
+       eventItem.disabled = eventItem.disabled = data.closed || ( data.status != '13' && this.checkMoreReason(data));
     };
     var isClosed = (eventItem, data) => {
       eventItem.disabled = data.closed
@@ -365,11 +369,11 @@ export class LeadsComponent
       CM0205_11: isOpened, // open lead
       SYS101: isDisabledDefault,
       SYS103: isDisabledDefault,
-      SYS03: isCRUD,
+      SYS03: isEdit,
       SYS104: isDisabledDefault,
-      SYS04: isCRUD,
+      SYS04: isCRD,
       SYS102: isDisabledDefault,
-      SYS02: isCRUD,
+      SYS02: isCRD,
     };
     return functionMappings[type];
   }
@@ -607,7 +611,9 @@ export class LeadsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         e.event.modifiedOn = new Date();
-        this.view.dataService.update(e.event).subscribe();
+        this.dataSelected = e.event;
+        this.detailViewLead.promiseAllLoad();
+        this.view.dataService.update(this.dataSelected).subscribe();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -640,8 +646,11 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
+            this.isLoading = false;
             e.event.modifiedOn = new Date();
-            this.view.dataService.update(e.event).subscribe();
+            this.detailViewLead.promiseAllLoad();
+            this.dataSelected = e.event;
+            this.view.dataService.update(this.dataSelected).subscribe();
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -793,19 +802,27 @@ export class LeadsComponent
       .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          var datas = [data.recID];
-          this.codxCmService.startLead(datas).subscribe((res) => {
-            if (res) {
-              this.dataSelected = res[0];
-              this.notificationsService.notifyCode('SYS007');
-              this.view.dataService.update(this.dataSelected).subscribe();
+          this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
+            if(resDP) {
+              var datas = [data.recID, resDP[0]];
+              this.codxCmService.startLead(datas).subscribe((res) => {
+                if (res) {
+                  debugger;
+                  this.dataSelected = res[0];
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.detailViewLead.reloadListStep(resDP[1]);
+                  this.notificationsService.notifyCode('SYS007');
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                }
+                this.detectorRef.detectChanges();
+              });
             }
-            this.detectorRef.detectChanges();
           });
-        }
+          }
       });
   }
-
   openOrCloseLead(data, check) {
     var datas = [data.recID, data.processID, check];
     this.notificationsService
@@ -814,8 +831,6 @@ export class LeadsComponent
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedLead(datas).subscribe((res) => {
             if (res) {
-              // data.closedOn = check ? new Date() : data.closedOn;
-              // data.modifiedOn = new Date();
               this.dataSelected.closed = check;
               this.dataSelected = JSON.parse(
                 JSON.stringify(this.dataSelected)
@@ -888,9 +903,10 @@ export class LeadsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance = e.event.instance;
-              var listSteps = e.event?.listStep;
-             var index =
+            var instance = e.event.instance;
+            var listSteps = e.event?.listStep;
+            this.detailViewLead.reloadListStep(listSteps);
+            var index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
@@ -903,7 +919,6 @@ export class LeadsComponent
                   nextStep = listSteps[index]?.stepID;
                 }
               }
-
               var dataUpdate = [data.recID, instance.stepID, nextStep];
               this.codxCmService.moveStageLead(dataUpdate).subscribe((res) => {
                 if (res) {
@@ -964,6 +979,9 @@ export class LeadsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
+        var listSteps = e.event?.listStep
+        this.isLoading = false;
+        this.detailViewLead.reloadListStep(listSteps);
         data = this.updateReasonLead(e.event?.instance, data, isMoveSuccess);
         var datas = [data];
         this.codxCmService.moveLeadReason(datas).subscribe((res) => {
@@ -1018,6 +1036,7 @@ export class LeadsComponent
     );
     dialog.closed.subscribe((e) => {
       if (e && e?.event != null) {
+        this.detailViewLead.promiseAllLoad();
         this.view.dataService.update(e?.event).subscribe();
         this.notificationsService.notifyCode('SYS007');
         this.detectorRef.detectChanges();
