@@ -53,6 +53,7 @@ export class CmCustomerComponent
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
   @ViewChild('customerDetail') customerDetail: CmCustomerDetailComponent;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
@@ -121,6 +122,14 @@ export class CmCustomerComponent
         sameData: true,
         model: {
           template: this.itemViewList,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        model: {
+          template2: this.templateMore,
+          resources: this.columnGrids,
         },
       },
     ];
@@ -345,7 +354,6 @@ export class CmCustomerComponent
                 e.event.modifiedOn = new Date();
                 this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e?.event).subscribe();
-
                 this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }

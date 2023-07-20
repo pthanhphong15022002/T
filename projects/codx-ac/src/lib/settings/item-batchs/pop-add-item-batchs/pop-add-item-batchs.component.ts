@@ -19,7 +19,7 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
   gridViewSetup: any;
   formType: any;
   validate: any = 0;
-  allowEditKey: any;
+  keyField: any = '';
 
   constructor(
     inject: Injector,
@@ -33,7 +33,7 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.itemBatchs = dialog.dataService!.dataSelected;
-    this.allowEditKey = this.dialog.dataService!.allowEditKey;
+    this.keyField = this.dialog.dataService!.keyField;
     this.formType = dialogData.data?.formType;
     this.cache.gridViewSetup('ItemBatchs', 'grvItemBatchs').subscribe((res) => {
       if (res) {
@@ -56,26 +56,27 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
         this.itemBatchs.batchNo = e.data;
         break;
       case 'manufaturedDate':
-        this.validateDate()
         this.itemBatchs.manufaturedDate = e.data;
+        this.validateDate();
         break;
       case 'expiredDate':
-        this.validateDate();
         this.itemBatchs.expiredDate = e.data;
+        this.validateDate();
         break;
       case 'bestBeforeDate':
         this.itemBatchs.bestBeforeDate = e.data;
+        this.validateBestBeforeDate();
         break;
       case 'vendorBatchNo':
         this.itemBatchs.vendorBatchNo = e.data;
         break;
       case 'vendorBatchDate':
-        this.validateNCCDate();
         this.itemBatchs.vendorBatchDate = e.data;
+        this.validateNCCDate();
         break;
       case 'vendorExpiredDate':
-        this.validateNCCDate();
         this.itemBatchs.vendorExpiredDate = e.data;
+        this.validateNCCDate();
         break;
       case 'note':
         this.itemBatchs.note = e.data;
@@ -91,6 +92,7 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
     this.checkValidate();
     this.validateDate();
     this.validateNCCDate();
+    this.validateBestBeforeDate();
     if (this.validate > 0) {
       return;
     } else {
@@ -126,8 +128,8 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
   checkValidate() {
     //Note: Tự động khi lưu, Không check BatchNo
     let ignoredFields: string[] = [];
-    if (this.allowEditKey) {
-      ignoredFields.push('BatchNo');
+    if (this.keyField == 'BatchNo') {
+      ignoredFields.push(this.keyField);
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Node
@@ -190,6 +192,64 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
           '"' + '' + '"'
         );
         this.validate++;
+      }
+    }
+  }
+
+  validateBestBeforeDate()
+  {
+    if(this.itemBatchs.expiredDate && this.itemBatchs.manufaturedDate)
+    {
+      var startDate = new Date(this.itemBatchs.manufaturedDate);
+      var endDate = new Date(this.itemBatchs.expiredDate);
+      var bestDate = new Date(this.itemBatchs.bestBeforeDate);
+      if(startDate.getTime() >  bestDate.getTime() || bestDate.getTime() > endDate.getTime())
+      {
+        this.notification.notifyCode(
+          'AC0025',
+          0,
+          `'${this.gridViewSetup.BestBeforeDate.headerText}'`,
+          `'${this.gridViewSetup.ManufaturedDate.headerText}'`,
+          `'${this.gridViewSetup.ExpiredDate.headerText}'`
+        );
+        this.validate++;
+        return;
+      }
+    }
+    if(this.itemBatchs.expiredDate && !this.itemBatchs.manufaturedDate)
+    {
+      var startDate = new Date(this.itemBatchs.manufaturedDate);
+      var endDate = new Date(this.itemBatchs.expiredDate);
+      var bestDate = new Date(this.itemBatchs.bestBeforeDate);
+      if(bestDate.getTime() > endDate.getTime())
+      {
+        this.notification.notifyCode(
+          'AC0025',
+          0,
+          `'${this.gridViewSetup.BestBeforeDate.headerText}'`,
+          `'${this.gridViewSetup.ManufaturedDate.headerText}'`,
+          `'${this.gridViewSetup.ExpiredDate.headerText}'`
+        );
+        this.validate++;
+        return;
+      }
+    }
+    if(!this.itemBatchs.expiredDate && this.itemBatchs.manufaturedDate)
+    {
+      var startDate = new Date(this.itemBatchs.manufaturedDate);
+      var endDate = new Date(this.itemBatchs.expiredDate);
+      var bestDate = new Date(this.itemBatchs.bestBeforeDate);
+      if(startDate.getTime() >  bestDate.getTime())
+      {
+        this.notification.notifyCode(
+          'AC0025',
+          0,
+          `'${this.gridViewSetup.BestBeforeDate.headerText}'`,
+          `'${this.gridViewSetup.ManufaturedDate.headerText}'`,
+          `'${this.gridViewSetup.ExpiredDate.headerText}'`
+        );
+        this.validate++;
+        return;
       }
     }
   }

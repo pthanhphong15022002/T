@@ -19,7 +19,6 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="itemID"
                 [formModel]="form.formModel"
@@ -36,12 +35,11 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="batchNo"
                 [formModel]="form.formModel"
                 (valueChange)="valueChange($event)"
-                [disabled]="allowEditKey"
+                [disabled]="keyField == 'BatchNo' ? true : false || formType == 'edit' ? true : false"
               >
             </codx-input>
         </div>
@@ -54,7 +52,6 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="manufaturedDate"
                 [formModel]="form.formModel"
@@ -71,7 +68,6 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="expiredDate"
                 [formModel]="form.formModel"
@@ -88,7 +84,6 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="bestBeforeDate"
                 [formModel]="form.formModel"
@@ -105,7 +100,6 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="vendorBatchNo"
                 [formModel]="form.formModel"
@@ -122,7 +116,6 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="vendorBatchDate"
                 [formModel]="form.formModel"
@@ -139,7 +132,6 @@
               >
             </codx-label>
             <codx-input
-                id="end-date"
                 [Group]="form.formGroup"
                 field="vendorExpiredDate"
                 [formModel]="form.formModel"

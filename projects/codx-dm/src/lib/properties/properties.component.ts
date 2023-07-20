@@ -64,6 +64,7 @@ export class PropertiesComponent implements OnInit {
   titleAuthor = 'Tác giả';
   titlePublisher = 'Nhà xuất bản';
   titleCopyrights = 'Bản quyền';
+  titleNote = 'Ghi chú';
   titleRating = 'Đánh giá';
   titleRatingDesc = 'Đánh giá tài liệu này ?';
   titleRatingDesc2 = 'Cho người khác biết suy nghĩ của bạn!';

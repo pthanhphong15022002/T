@@ -50,6 +50,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   moreFuncName: any;
   funcName: any;
   validate: any = 0;
+  keyField: any = '';
   objecttype: string = '6';
   tabInfo: any[] = [
     {
@@ -86,6 +87,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.warehouses = dialog.dataService!.dataSelected;
     this.formType = dialogData.data?.formType;
+    this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'edit') {
       if (this.warehouses.warehouseID != null) {
         this.acService
@@ -248,10 +250,23 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.objectContactDelete.push(data);
   }
   checkValidate() {
+
+    //Note
+    let ignoredFields: string[] = [];
+    if (this.keyField == 'WarehouseID') {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.warehouses);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if(ignoredFields.includes(keygrid[index].toLowerCase()))
+        {
+          continue;
+        }
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
@@ -302,41 +317,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'WareHousesBusiness';
-            opt.assemblyName = 'IV';
-            opt.service = 'IV';
-            opt.data = [this.warehouses];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save) {
-              this.addObjects();
-              this.acService
-                .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
-                  this.objecttype,
-                  this.warehouses.warehouseID,
-                  this.objectContact,
-                ])
-                .subscribe(() => {});
-              this.acService
-                .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
-                  this.objects,
-                ])
-                .subscribe(() => {});
-              this.dialog.close();
-              this.dt.detectChanges();
-            } else {
-              this.notification.notifyCode(
-                'SYS031',
-                0,
-                '"' + this.warehouses.warehouseID + '"'
-              );
-              return;
-            }
-          });
+        this.updateWarehouseIDBeforeSave();
       }
       if (this.formType == 'edit') {
         this.dialog.dataService
@@ -375,6 +356,68 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
           });
       }
     }
+  }
+
+  updateWarehouseIDBeforeSave()
+  {
+    if(this.keyField == 'WarehouseID')
+    {
+      this.api.exec(
+        'ERM.Business.AC',
+        'CommonBusiness',
+        'GenerateAutoNumberAsync',
+      )
+      .subscribe((autoNumber: string) => {
+        if(autoNumber)
+        {
+          this.warehouses.warehouseID = autoNumber;
+          this.save();
+        }
+      });
+    }
+    else
+    {
+      this.save();
+    }
+  }
+
+  save()
+  {
+    this.dialog.dataService
+    .save((opt: RequestOption) => {
+      opt.methodName = 'AddAsync';
+      opt.className = 'WareHousesBusiness';
+      opt.assemblyName = 'IV';
+      opt.service = 'IV';
+      opt.data = [this.warehouses];
+      return true;
+    })
+    .subscribe((res) => {
+      if (res.save) {
+        this.addObjects();
+        this.acService
+          .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
+            this.objecttype,
+            this.warehouses.warehouseID,
+            this.objectContact,
+          ])
+          .subscribe(() => {});
+        this.acService
+          .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
+            this.objects,
+          ])
+          .subscribe(() => {});
+        this.dialog.close();
+        this.dt.detectChanges();
+      } else {
+        this.notification.notifyCode(
+          'SYS031',
+          0,
+          '"' + this.warehouses.warehouseID + '"'
+        );
+        return;
+      }
+    });
   }
   //#endregion
 }

@@ -49,6 +49,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   pregnancyFromVal;
   @ViewChild('form') form: CodxFormComponent;
   empObj: any;
+  disabledInput = false;
   // genderGrvSetup: any;
   allowToViewEmSelector: boolean = false;
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -96,6 +97,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.formModel = dialog.formModel;
 
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
   }
 
   onInit(): void {
@@ -165,7 +169,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         this.formGroup.patchValue(this.dayoffObj);
         this.formModel.currentData = this.dayoffObj;
         this.isAfterRender = true;
