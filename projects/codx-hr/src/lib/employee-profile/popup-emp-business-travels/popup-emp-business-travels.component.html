@@ -19,6 +19,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="registeredDate"
@@ -27,6 +28,7 @@
     <div class="col-6">
       <codx-label fiedName="RegisteredBy" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="registeredBy"
@@ -36,6 +38,7 @@
   <div class="form-group row">
     <codx-label fiedName="KowID" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="kowID"
@@ -45,6 +48,7 @@
     <div class="col-6">
       <codx-label fiedName="BeginDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="beginDate"
@@ -53,6 +57,7 @@
     <div class="col-6">
       <codx-label fiedName="EndDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="endDate"
@@ -63,6 +68,7 @@
     <div class="col-6">
       <codx-label fiedName="PeriodType" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="periodType"
@@ -71,6 +77,7 @@
     <div class="col-6">
       <codx-label fiedName="Days" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         [showSpinButton]="false" 
@@ -81,6 +88,7 @@
   <div class="form-group row">
     <codx-label fiedName="BusinessPlace" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="businessPlace"
@@ -89,6 +97,7 @@
   <div class="form-group row">
     <codx-label fiedName="Address" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="address"
@@ -97,6 +106,7 @@
   <div class="form-group row">
     <codx-label fiedName="BusinessPurpose" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="businessPurpose"
@@ -107,6 +117,7 @@
     <div class="col-6">
       <codx-label fiedName="TransportType" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="transportType"
@@ -116,12 +127,14 @@
       <div class="d-flex justify-content-between">
         <codx-label fiedName="IsOversea" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           [Group]="formGroup"
           [formModel]="formModel"
           field="isOversea"
         ></codx-input>
       </div>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="country"
@@ -132,6 +145,7 @@
     <div class="col-6">
       <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="cost"
@@ -141,6 +155,7 @@
     <div class="col-6">
       <codx-label fiedName="ChargeObject" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="chargeObject"
@@ -152,6 +167,7 @@
     <div class="col-6">
       <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="decisionNo"
@@ -160,6 +176,7 @@
     <div class="col-6">
       <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="signedDate"
@@ -170,6 +187,7 @@
   <div class="form-group row">
     <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="signerID"
@@ -182,6 +200,7 @@
       [formModel]="formModel"
     ></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="signerPositionID"
@@ -190,6 +209,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="note"
@@ -326,7 +346,7 @@
 </ng-template> -->
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
       <button class="btn btn-primary" (click)="onSaveForm(false)" [disabled]="!formModel.currentData.updateColumn">
           <i class="icon-save"></i>
       <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
@@ -352,6 +372,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="registeredDate"
@@ -360,6 +381,7 @@
     <div class="col-6">
       <codx-label fiedName="RegisteredBy" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="registeredBy"
@@ -369,6 +391,7 @@
   <div class="form-group row">
     <codx-label fiedName="KowID" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="kowID"
@@ -378,6 +401,7 @@
     <div class="col-6">
       <codx-label fiedName="BeginDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="beginDate"
@@ -386,6 +410,7 @@
     <div class="col-6">
       <codx-label fiedName="EndDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="endDate"
@@ -396,6 +421,7 @@
     <div class="col-6">
       <codx-label fiedName="PeriodType" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="periodType"
@@ -404,6 +430,7 @@
     <div class="col-6">
       <codx-label fiedName="Days" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         [showSpinButton]="false" 
@@ -414,6 +441,7 @@
   <div class="form-group row">
     <codx-label fiedName="BusinessPlace" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="businessPlace"
@@ -422,6 +450,7 @@
   <div class="form-group row">
     <codx-label fiedName="Address" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="address"
@@ -430,6 +459,7 @@
   <div class="form-group row">
     <codx-label fiedName="BusinessPurpose" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="businessPurpose"
@@ -440,6 +470,7 @@
     <div class="col-6">
       <codx-label fiedName="TransportType" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="transportType"
@@ -449,13 +480,15 @@
       <div class="d-flex justify-content-between">
         <codx-label fiedName="IsOversea" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           [Group]="formGroup"
           [formModel]="formModel"
           (focus)="changOverSeaFlag($event)"
           field="isOversea"
         ></codx-input>
       </div>
-      <codx-input 
+      <codx-input
+      [disabled]="disabledInput" 
         [disabled]="isNotOverseaFlag"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -467,6 +500,7 @@
     <div class="col-6">
       <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="cost"
@@ -476,6 +510,7 @@
     <div class="col-6">
       <codx-label fiedName="ChargeObject" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="chargeObject"
@@ -487,6 +522,7 @@
     <div class="col-6">
       <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="decisionNo"
@@ -495,6 +531,7 @@
     <div class="col-6">
       <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="signedDate"
@@ -506,6 +543,7 @@
     <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
     <div class="border-bottom pb-1">
       <codx-input
+      [disabled]="disabledInput"
         [Group]="formGroup"
         [formModel]="formModel"
         field="signerID"
@@ -519,6 +557,7 @@
       [formModel]="formModel"
     ></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="signerPositionID"
@@ -527,6 +566,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       [Group]="formGroup"
       [formModel]="formModel"
       field="note"

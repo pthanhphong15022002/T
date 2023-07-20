@@ -82,6 +82,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   autoNumber: any;
   disabledShowInput = false;
   planceHolderAutoNumber = '';
+  radioChecked = true;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
     {
@@ -293,6 +294,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.action != 'edit' ? autoNumber : this.data.competitorID;
         break;
     }
+  }
+
+
+  changeRadio(e){
+    if (e.field === 'yes' && e.component.checked === true) {
+      this.radioChecked = true;
+      this.data.category = '1';
+    } else if (e.field === 'no' && e.component.checked === true) {
+      this.radioChecked = false;
+      this.data.category = '0';
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   getListAddress(entityName, recID) {

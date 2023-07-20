@@ -1,8 +1,23 @@
 <codx-form #form [formModel]="dialog.formModel" [dialog]="dialog" [openMore]="false" [body]="body" [footer]="footer"
   [customToolbar]="subToolbar">
 </codx-form>
+<!-- <div *ngIf="loading" class="ac-load-save">
+  <ejs-progressbar #annotationload id="load-save-container" type="Circular" [maximum]="100" [minimum]="0" [value]="20"
+    width="100" height="100" [animation]="animation" [isIndeterminate]="true">
+    <e-progressbar-annotations>
+      <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar>
+  </div> -->
+  <!-- <ejs-progressbar #annotationload id="load-save-container" type="Circular" [maximum]="100" [minimum]="0" [value]="20"
+    width="100" height="100" [animation]="animation" [isIndeterminate]="true">
+    <e-progressbar-annotations>
+      <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar> -->
+  
 <ng-template #subToolbar>
-  <div class="w-100">
+  <!-- <div class="w-100">
     <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
       <div class="d-flex align-items-center me-2">
         <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
@@ -20,16 +35,23 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 <!-- Start: Header -->
 <!-- End: Header -->
 <!-- Start: Body -->
 <ng-template #body>
-  <div class="card-add mt-5" #cardbodyRef>
+  <div style="background-color: white !important;" *ngIf="loadingPop" class="ac-load-save">
+  <ejs-progressbar #annotationload id="load-save-container" type="Circular" [maximum]="100" [minimum]="0" [value]="20"
+    width="100" height="100" [animation]="animation" [isIndeterminate]="true">
+    <e-progressbar-annotations>
+      <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar>
+  </div>
+  <!-- <div class="card-add mt-5" #cardbodyRef>
     <ejs-tab #cashRef>
       <e-tabitems>
-        <!-- Tab thông tin chứng từ -->
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
@@ -46,7 +68,6 @@
     </ejs-tab>
     <ejs-tab #tabObj>
       <e-tabitems>
-        <!-- Tab chi tiết bút toán -->
         <e-tabitem>
           <ng-template #headerText>
             <div #cashRef class="d-flex align-items-top me-2 mt-2">
@@ -61,7 +82,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-  </div>
+  </div> -->
 </ng-template>
 <!-- End: Body -->
 <!-- Start: Footer -->

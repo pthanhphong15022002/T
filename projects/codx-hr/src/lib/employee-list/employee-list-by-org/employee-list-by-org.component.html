@@ -151,26 +151,22 @@
 <!-- header template -->
 <ng-template #colEmployeeHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="EmployeeID" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Nhân viên'"></codx-label>
+        <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel" [default]="'Nhân viên'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colContactHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="Email" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Liên hệ'"></codx-label>
+        <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel" [default]="'Liên hệ'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colPersonalHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="Birthday" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Thông tin cá nhân'"></codx-label>
+        <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin cá nhân'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colStatusHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="Status" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Tình Trạng'"></codx-label>
+        <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel" [default]="'Tình Trạng'"></codx-label>
     </div>
 </ng-template>
 <!--column Nhân viên -->

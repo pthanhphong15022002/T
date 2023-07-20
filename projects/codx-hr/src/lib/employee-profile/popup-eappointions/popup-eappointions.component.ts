@@ -38,6 +38,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   decisionNoDisable: boolean = false;
   autoNumField: string;
   eAppointionHeaderTexts: any;
+  disabledInput = false;
+
 
   originUnitID: any;
   originJobLevelID: any;
@@ -77,6 +79,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.isUseEmployee = data?.data?.isUseEmployee;
     if (data?.data?.appointionObj)
       this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
@@ -131,7 +136,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
             this.cr.detectChanges();
           }
         });
-    } else if (this.actionType === 'edit' || this.actionType === 'copy') {
+    } else if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
       this.formGroup.patchValue(this.EAppointionObj);
       this.formModel.currentData = this.EAppointionObj;
       this.isAfterRender = true;

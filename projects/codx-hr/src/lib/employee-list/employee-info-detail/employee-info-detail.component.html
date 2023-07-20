@@ -1570,8 +1570,8 @@
               </div>
 
               <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
-                <div class="col">
-                  <div class="text-gray-600 pb-1" (click)="clickViewDetail(crrPassport, ePassportFuncID)">
+                <div class="col" (click)="clickViewDetail(crrPassport, ePassportFuncID)">
+                  <div class="text-gray-600 pb-1">
                     <span
                       class="icon-wysiwyg icon-16 text-gray-600 me-2"
                     ></span>
@@ -1583,7 +1583,7 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="ms-7 item-active">
+                    <span class="ms-7 fw-bold item-active">
                       {{ crrPassport?.passportNo }}
                     </span>
                   </div>
@@ -1665,7 +1665,7 @@
 
               <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
                 <div class="row mb-5 ">
-                  <div class="col">
+                  <div class="col" (click)="clickViewDetail(crrVisa, eVisaFuncID)">
                     <div class="text-gray-600 pb-1">
                       <span
                         class="icon-wysiwyg icon-16 text-gray-600 me-2"
@@ -1678,7 +1678,7 @@
                       </codx-label>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span class="fw-bold text-dark ms-7"
+                      <span class="fw-bold ms-7 item-active"
                       [innerHTML]="
                       crrVisa?.visaNo
                         | formatvalue : eVisaFormModel : 'visaNo'
@@ -1929,8 +1929,8 @@
 
             <div *ngIf="eWorkPermitFormModel" class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
               <div class="row mb-5">
-                <div class="col">
-                  <div class="text-gray-600 pb-1">
+                <div class="col" (click)="clickViewDetail(crrWorkpermit, eWorkPermitFuncID)">
+                  <div class="text-gray-600 pb-1" >
                     <span
                       class="icon-wysiwyg icon-16 text-gray-600 me-2"
                     ></span>
@@ -1942,7 +1942,7 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark ms-7">
+                    <span class="fw-bold item-active ms-7">
                       {{ crrWorkpermit?.workPermitNo }}
                     </span>
                   </div>
@@ -2170,6 +2170,7 @@
                 <div class="col-6 mb-5 ps-9 ">
                   <div class="rounded rounded-2 border border-gray-150 w-325px mw-325px">
                     <codx-temp-full
+                    
                       (clickMF)="clickMF($event, item, 'family')"
                       cardCss="card-template p-3 w-325px mw-325px h-100 mb-2 py-2 hover-active bg-hover cursor-pointer"
                       [moreFuncCss]="'me-10'"
@@ -2177,8 +2178,8 @@
                       [imageObjType]="'HR_EFamilies'"
                       [imageWidth]="35"
                       [imgCss]="'me-3 '"
-                      [title]="item?.relationName"
-                      [titleCss]="'fs-6 mb-1'"
+
+                      [titleTmp]="titleTmp"
                       [subTitleTmp]="subtitleTmp"
                       [formModel]="eFamilyFormModel"
                       [dataItem]="item"
@@ -2186,7 +2187,15 @@
                       [typeMF]="'hover'"
                       [baseHeaderRightTmp]="baseHeaderRightTmp"
                     >
+                    <!-- [title]="item?.relationName"
+                    [titleCss]="'fs-6 mb-1 item-active'" -->
                     </codx-temp-full>
+
+                    <ng-template #titleTmp let-data>
+                      <div class="fs-6 mb-1 item-active" (click)="clickViewDetail(data, eFamiliesFuncID)">
+                        {{data?.relationName}}
+                      </div>
+                    </ng-template>
 
                     <ng-template #subtitleTmp let-data>
                       <div class="w-100">
@@ -2329,12 +2338,14 @@
                             class="icon-fiber_manual_record text-gray-600"
                           ></span>
                         </div>
-                        <div class="stepper-label has-action-menu mb-2 py-2 hover-active bg-hover cursor-pointer">
+                        <div class="stepper-label has-action-menu mb-2 py-2 hover-active bg-hover cursor-pointer"
+                        (click)="clickViewDetail(item, eExperienceFuncID)"
+                        >
                           <div
                             class="stepper-title line-clamp line-clamp-3 mb-1"
                           >
                             <i class="icon-business icon-16 text-gray-700 me-2"></i>
-                            <span class="fs-6 fw-bold">{{ item?.companyName }}</span>
+                            <span class="fs-6 fw-bold item-active">{{ item?.companyName }}</span>
                           </div>
                           <div class="stepper-desc text-gray-500 ">
                             {{ item?.position }}
@@ -3510,10 +3521,10 @@
                       </codx-label>
                     </div>
                   </div>
-                  <div class="col-2">
+                  <div class="col-2" (click)="clickViewDetail(data, eBasicSalaryFuncID)">
                     <div class="mb-3 d-flex justify-content-end">
                       <span
-                        class="fw-bold text-dark"
+                        class="fw-bold item-active"
                         [innerHTML]="
                           data?.bSalary
                             | formatvalue : eBasicSalaryFormmodel : 'bSalary'
@@ -3767,13 +3778,13 @@
                 </codx-temp-full>
                 <ng-template #footerBenefit let-data>
                   <div class="row">
-                    <div class="col-4">
+                    <div class="col-4" (click)="clickViewDetail(data, benefitFuncID)">
                       <div class="d-flex align-items-top mb-3">
                         <span
                           class="icon-card_giftcard text-gray-700 me-2 icon-16"
                         ></span>
                         <span
-                          class="text-gray-700"
+                          class="item-active"
                           [innerHTML]="
                             data.benefitID
                               | formatvalue : benefitFormodel : 'benefitID'
@@ -4000,10 +4011,10 @@
                     </codx-label>
                   </div>
                 </div>
-                <div class="col-8">
-                  <div class="d-flex align-items-center">
+                <div class="col-8" (click)="clickViewDetail(data, eContractFuncID)">
+                  <div class="d-flex align-items-center ">
                     <div
-                      class="text-primary fw-bold"
+                      class="text-primary fw-bold item-active"
                       [innerHTML]="
                         data?.contractTypeID
                           | formatvalue : eContractFormModel : 'contractTypeID'
@@ -4663,7 +4674,8 @@
               [predicates]="'EmployeeID=@0'"
               [dataValues]="employeeID"
               [emptyTemplate]="emptyDataTemplate"
-            ></codx-gridview-v2>
+              ></codx-gridview-v2>
+              <!-- (onSelected) = "viewGridDetail($event, eDegreeFuncID)" -->
             </div>
           </div>
         </div>
@@ -5991,25 +6003,30 @@
 
 <!--#region template Bằng cấp 123123-->
 <ng-template #templateEDegreeGridCol1 let-data>
-  <div class="py-2">
+  <div class="py-2 hover-active cursor-pointer" (click)="viewGridDetail(data, eDegreeFuncID)">
     <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
       [class]="data.isMain ? 'bg-primary' : 'bg-transparent'"
     ></span> -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-1">
-        <span class="icon-school text-primary icon-18 me-2"></span>
-        <div class="text-dark fs-6 fw-bold">{{ data?.degreeName }}</div>
+        <!-- <span class="icon-school text-primary icon-18 me-2"></span> -->
+        <div class="item-active fs-6 fw-bold"
+    placement="top" [ngbTooltip]="eDegreeHeaderText.DegreeName"
+        >{{ data?.degreeName }}</div>
       </div>
       <div class="ms-7">
         <div class="text-dark mb-1"
+    placement="top" [ngbTooltip]="eDegreeHeaderText.TrainFieldID"
           [innerHTML]="
           data?.trainFieldID
             | formatvalue : eDegreeFormModel : 'trainFieldID'
             | async
           "
           ></div>
-        <div class="text-gray-500">{{ data?.trainFieldDetail }}</div>
+        <div class="text-gray-500"
+    placement="top" [ngbTooltip]="eDegreeHeaderText.TrainFieldDetail"
+        >{{ data?.trainFieldDetail }}</div>
       </div>
     </div>
   </div>
@@ -6024,6 +6041,7 @@
 <ng-template #templateEDegreeGridCol2 let-data>
   <div class="py-2">
     <div
+    placement="top" [ngbTooltip]="eDegreeHeaderText.TrainSupplierID"
       class="text-dark mb-2"
       [innerHTML]="
         data?.trainSupplierID
@@ -6035,6 +6053,7 @@
       <div class="d-flex align-items-center mb-1">
         <span class="icon-insights icon-14 text-warning me-2"></span>
         <span
+    placement="top" [ngbTooltip]="eDegreeHeaderText.Ranking"
           class="text-warning"
           #ranking
           [innerHTML]="
@@ -6049,6 +6068,7 @@
         ></span>
         <span class="fw-bold text-warning">
           <span
+    placement="top" [ngbTooltip]="eDegreeHeaderText.TotalScore"
             [innerHTML]="
               data?.totalScore
                 | formatvalue : eDegreeFormModel : 'totalScore'
@@ -6067,6 +6087,7 @@
       <span class="icon-event icon-16 me-2"></span>
       <span
         class="text-dark"
+    placement="top" [ngbTooltip]="eDegreeHeaderText.YearGraduated"
         [innerHTML]="
           data?.yearGraduated
             | formatvalue : eDegreeFormModel : 'yearGraduated'
@@ -6077,6 +6098,7 @@
         class="icon-i-info-circle-fill icon-4 text-gray-400 mx-2"
       ></span>
       <span class="text-gray-600"
+    placement="top" [ngbTooltip]="eDegreeHeaderText.IssuedDate"
         [innerHTML]="
           data?.issuedDate
             | formatvalue : eDegreeFormModel : 'issuedDate'
@@ -6101,10 +6123,11 @@
 <!--#endregion-->
 
 <ng-template #templateECertificateGridCol1 let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-class icon-16 text-primary me-2"></i>
+  <div class="d-flex align-items-center mb-5px hover-active cursor-pointer" (click)="viewGridDetail(data, eCertificateFuncID)">
+    <!-- <i class="icon-class icon-16 text-primary me-2"></i> -->
     <span
-      class="text-dark"
+      class="fw-bold item-active"
+      placement="top" [ngbTooltip]="eCertificateHeaderText.CertificateID"
       [innerHTML]="
         data?.certificateID
           | formatvalue : eCertificateFormModel : 'certificateID'
@@ -6116,6 +6139,8 @@
     class="icon-i-info-circle-fill icon-circle-group text-gray-400 mx-1"
   ></i>
   <span
+  placement="top" [ngbTooltip]="eCertificateHeaderText.CertificateGradeID"
+
     [innerHTML]="
       data?.certificateGradeID
         | formatvalue : eCertificateFormModel : 'certificateGradeID'
@@ -6125,9 +6150,11 @@
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
   <div class="d-flex align-items-center">
-    <i class="icon-dashboard icon-16 text-primary me-2"></i>
+    <!-- <i class="icon-dashboard icon-16 text-primary me-2"></i> -->
     <span
       class="fw-bold"
+  placement="top" [ngbTooltip]="eCertificateHeaderText.CertificateType"
+
       [innerHTML]="
         data?.certificateType
           | formatvalue : eCertificateFormModel : 'certificateType'
@@ -6140,6 +6167,8 @@
 <ng-template #templateECertificateGridCol2 let-data>
   <div
     class="d-flex align-items-center mb-5px"
+  placement="top" [ngbTooltip]="eCertificateHeaderText.TrainSupplierID"
+
     [innerHTML]="
       data?.trainSupplierID
         | formatvalue : eCertificateFormModel : 'trainSupplierID'
@@ -6151,6 +6180,8 @@
       <span class="icon-insights icon-14 text-warning me-1"></span>
       <span
         class="text-warning"
+  placement="top" [ngbTooltip]="eCertificateHeaderText.Ranking"
+
         #ranking
         [innerHTML]="
           data?.ranking
@@ -6167,6 +6198,7 @@
       <span class="fw-bold text-primary">
         <span
           class="text-danger"
+          placement="top" [ngbTooltip]="eCertificateHeaderText.TotalScore"
           [innerHTML]="
             data?.totalScore
               | formatvalue : eCertificateFormModel : 'totalScore'
@@ -6182,9 +6214,31 @@
 
 <ng-template #templateECertificateGridCol3 let-data>
   <div class="has-action-menu">
+    <div class="text-dark fw-bold">
+      <span
+      placement="top" [ngbTooltip]="eCertificateHeaderText.EffectedDate"
+
+        [innerHTML]="
+          data?.effectedDate
+            | formatvalue : eCertificateFormModel : 'effectedDate'
+            | async
+        "
+      ></span>
+      <span *ngIf="data?.expiredDate" class="me-2">-</span>
+      <span *ngIf="data?.expiredDate"
+      placement="top" [ngbTooltip]="eCertificateHeaderText.ExpiredDate"
+        [innerHTML]="
+          data?.expiredDate
+            | formatvalue : eCertificateFormModel : 'expiredDate'
+            | async
+        "
+      ></span>
+    </div>
+
     <div class="d-flex align-items-center mb-5px">
       <i class="icon-event icon-16 text-gray-600 me-2"></i>
       <span
+      placement="top" [ngbTooltip]="eCertificateHeaderText.IssuedDate"
         [innerHTML]="
           data?.issuedDate
             | formatvalue : eCertificateFormModel : 'issuedDate'
@@ -6197,23 +6251,7 @@
       </span>
       <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
     </div>
-    <div class="text-dark fw-bold">
-      <span
-        [innerHTML]="
-          data?.effectedDate
-            | formatvalue : eCertificateFormModel : 'effectedDate'
-            | async
-        "
-      ></span>
-      <span *ngIf="data?.expiredDate" class="me-2">-</span>
-      <span *ngIf="data?.expiredDate"
-        [innerHTML]="
-          data?.expiredDate
-            | formatvalue : eCertificateFormModel : 'expiredDate'
-            | async
-        "
-      ></span>
-    </div>
+
     <codx-mfunc
       [formModel]="eCertificateFormModel"
       (clickMF)="clickMF($event, data, 'eCertificate')"
@@ -6226,8 +6264,10 @@
 
 <!--Template ESkills-->
 <ng-template #templateESkillGridCol1 let-data>
-  <div
-    class="fw-bold text-dark mb-5px"
+  <div class="hover-active cursor-pointer" (click)="viewGridDetail(data, eSkillFuncID)">
+    <div
+    class="fw-bold mb-5px item-active"
+    placement="top" [ngbTooltip]="eSkillHeaderText.SkillID"
     [innerHTML]="
       data?.skillID | formatvalue : eSkillFormmodel : 'skillID' | async
     "
@@ -6241,6 +6281,7 @@
           : 'border-1 text-dark badge-secondary fw-bold'
       "
       [style.border-color]="isMaxGrade(data) ? '' : 'black'"
+    placement="top" [ngbTooltip]="eSkillHeaderText.SkillGradeID"
       [innerHTML]="
         data?.skillGradeID
           | formatvalue : eSkillFormmodel : 'skillGradeID'
@@ -6249,11 +6290,15 @@
     >
     </span>
   </div>
+    </div>  
+
+
 </ng-template>
 
 <ng-template #templateESkillGridCol2 let-data>
   <div
     class="mb-5px"
+    placement="top" [ngbTooltip]="eSkillHeaderText.TrainSupplierID"
     [innerHTML]="
       data?.trainSupplierID
         | formatvalue : eSkillFormmodel : 'trainSupplierID'
@@ -6266,6 +6311,8 @@
       <span class="icon-insights icon-14 text-warning me-1"></span>
       <span
         class="text-warning"
+    placement="top" [ngbTooltip]="eSkillHeaderText.Ranking"
+
         #ranking
         [innerHTML]="
           data?.ranking | formatvalue : eSkillFormmodel : 'ranking' | async
@@ -6279,6 +6326,8 @@
       ></span>
       <span class="fw-bold text-danger">
         <span
+    placement="top" [ngbTooltip]="eSkillHeaderText.TotalScore"
+
           [innerHTML]="
             data?.totalScore
               | formatvalue : eSkillFormmodel : 'totalScore'
@@ -6295,17 +6344,21 @@
   <div class="has-action-menu">
     <div class="mb-1">
       <span
+    placement="top" [ngbTooltip]="eSkillHeaderText.TrainFrom"
+
         [innerHTML]="
           data?.trainFrom
-            | formatvalue : eCertificateFormModel : 'trainFrom'
+            | formatvalue : eSkillFormmodel : 'trainFrom'
             | async
         "
       ></span>
       <span class="me-2"> - </span>
       <span
+    placement="top" [ngbTooltip]="eSkillHeaderText.TrainTo"
+
         [innerHTML]="
           data?.trainTo
-            | formatvalue : eCertificateFormModel : 'trainTo'
+            | formatvalue : eSkillFormmodel : 'trainTo'
             | async
         "
       ></span>
@@ -6314,6 +6367,8 @@
       <i class="icon-menu_book icon-16 text-primary me-2"></i>
       <span
         class="text-primary"
+    placement="top" [ngbTooltip]="eSkillHeaderText.TrainForm"
+
         [innerHTML]="
           data?.trainForm | formatvalue : eSkillFormmodel : 'trainForm' | async
         "
@@ -6614,24 +6669,26 @@
 
 <!-- #region Đào tạo -->
 <ng-template #templateTrainCourseGridCol1 let-data>
-  <div
-    class="text-gray-600 mb-1"
-    [innerHTML]="
-      data?.trainCourseID
-        | formatvalue : eTrainCourseFormModel : 'trainCourseID'
-        | async
-    "
-  ></div>
-  <div class="d-flex align-items-center">
-    <i class="icon-menu_book icon-16 text-primary me-2"></i>
-    <span
-      class="text-primary"
+  <div class="hover-active cursor-pointer" (click)="viewGridDetail(data, eTrainCourseFuncID)">
+    <div
+      class="fw-bold mb-1 item-active"
       [innerHTML]="
-        data?.trainForm
-          | formatvalue : eTrainCourseFormModel : 'trainForm'
+        data?.trainCourseID
+          | formatvalue : eTrainCourseFormModel : 'trainCourseID'
           | async
       "
-    ></span>
+    ></div>
+    <div class="d-flex align-items-center">
+      <i class="icon-menu_book icon-16 text-primary me-2"></i>
+      <span
+        class="text-primary"
+        [innerHTML]="
+          data?.trainForm
+            | formatvalue : eTrainCourseFormModel : 'trainForm'
+            | async
+        "
+      ></span>
+    </div>
   </div>
 </ng-template>
 
@@ -6720,9 +6777,9 @@
 
 <!-- #region Bổ nhiệm columnGrid templates -->
 <ng-template #templateAppointionGridCol1 let-data>
-  <div class="py-1">
+  <div class="py-1 hover-active cursor-pointer" (click)="viewGridDetail(data, appointionFuncID)">
     <div
-      class="mb-2 text-dark fw-bold fs-6"
+      class="mb-2 fw-bold fs-6 item-active"
       [innerHTML]="
         data?.appoint | formatvalue : appointionFormModel : 'appoint' | async
       "
@@ -6794,16 +6851,17 @@
 
 <!-- #region Nghỉ phép -->
 <ng-template #templateDayOffGridCol1 let-data>
-  <div class="d-flex align-items-top mb-2 mt-2">
-    <i class="icon-deck text-primary me-2"></i>
+  <div class="d-flex align-items-top mb-2 mt-2 hover-active cursor-pointer" (click)="viewGridDetail(data, dayoffFuncID)">
     <div class="d-flex flex-column">
       <div
-        class="text-dark fw-bold fs-6 mb-2"
+      placement="top" [ngbTooltip]="dayoffHeaderTexts.KowID"
+        class="fw-bold fs-6 mb-2 item-active"
         [innerHTML]="
           data?.kowID | formatvalue : dayoffFormModel : 'kowID' | async
         "
       ></div>
       <span
+      placement="top" [ngbTooltip]="dayoffHeaderTexts.RegisteredDate"
         class="text-gray-700"
         [innerHTML]="
           data?.registeredDate
@@ -6819,6 +6877,7 @@
   <div class="d-flex align-items-center mb-2 mt-2">
     <i class="icon-event text-dark icon-16 me-2"></i>
     <div
+    placement="top" [ngbTooltip]="dayoffHeaderTexts.BeginDate"
       class="text-dark"
       [innerHTML]="
         data?.beginDate | formatvalue : dayoffFormModel : 'beginDate' | async
@@ -6826,6 +6885,7 @@
     ></div>
     <span class="mx-2"> - </span>
     <span
+    placement="top" [ngbTooltip]="dayoffHeaderTexts.EndDate"
       class="text-dark"
       [innerHTML]="
         data?.endDate | formatvalue : dayoffFormModel : 'endDate' | async
@@ -6836,7 +6896,9 @@
     <i
       class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 px-2"
     ></i>
-    <span class="text-primary fw-bold me-1">
+    <span class="text-primary fw-bold me-1"
+    placement="top" [ngbTooltip]="dayoffHeaderTexts.TotalDaysOff"
+    >
       {{ data?.totalDaysOff }}
     </span>
   </div>
@@ -6844,7 +6906,9 @@
 
 <ng-template #templateDayOffGridCol3 let-data>
   <div class="d-flex align-items-center has-action-menu min-h-40px">
-    <span class="text-gray-700">
+    <span class="text-gray-700"
+    placement="top" [ngbTooltip]="dayoffHeaderTexts.Reason"
+    >
       {{ data?.reason }}
     </span>
     <codx-mfunc
@@ -6860,15 +6924,18 @@
 
 <!-- #region Nhật ký công tác -->
 <ng-template #templateBusinessTravelGridCol1 let-data>
-  <div class="py-2">
+  <div class="py-2 hover-active cursor-pointer" (click)="viewGridDetail(data, eBusinessTravelFuncID)">
     <div class="d-flex align-items-center mb-2">
-      <span class="icon-home_work icon-16 me-2"></span>
-      <span class="text-dark fw-bold fs-6">{{ data?.businessPlace }}</span>
+      <!-- <span class="icon-home_work icon-16 me-2"></span> -->
+      <span class="item-active fw-bold fs-6"
+      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.BusinessPlace"
+      >{{ data?.businessPlace }}</span>
     </div>
     <div class="d-flex align-items-center">
-      <i class="icon-connection-point icon-16 me-2 text-primary"></i>
+      <!-- <i class="icon-connection-point icon-16 me-2 text-primary"></i> -->
       <span
         class="text-primary fs-7"
+      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.KowID"
         [innerHTML]="
           data?.kowID | formatvalue : EBusinessTravelFormodel : 'kowID' | async
         "
@@ -6884,6 +6951,7 @@
       <span class="icon-calendar_today icon-16 me-2"></span>
       <span
         class="text-dark"
+      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.BeginDate"
         [innerHTML]="
           data?.beginDate
             | formatvalue : EBusinessTravelFormodel : 'beginDate'
@@ -6893,6 +6961,7 @@
       <span class="mx-2">-</span>
       <span
         class="text-dark"
+      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.EndDate"
         [innerHTML]="
           data?.endDate
             | formatvalue : EBusinessTravelFormodel : 'endDate'
@@ -6904,7 +6973,9 @@
       <span
         class="icon-i-circle-fill icon-4 text-gray-400 px-3"
       ></span>
-      <span class="text-primary fw-bold">
+      <span class="text-primary fw-bold"
+      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.Days"
+      >
         {{ data?.days }}
       </span>
     </div>
@@ -6913,7 +6984,9 @@
 
 <ng-template #templateBusinessTravelGridCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <span class="text-dark">
+    <span class="text-dark"
+    placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.BusinessPurpose"
+    >
       {{ data?.businessPurpose }}
     </span>
     <codx-mfunc
@@ -6929,9 +7002,9 @@
 
 <!--region Award - Khen thưởng-->
 <ng-template #templateAwardGridCol1 let-data>
-  <div class="py-2">
+  <div class="py-2 hover-active cursor-pointer" (click)="viewGridDetail(data, awardFuncID)">
     <div
-      class="mb-2"
+      class="mb-2 item-active"
       [innerHTML]="
         data?.awardID | formatvalue : awardFormModel : 'awardID' | async
       "
@@ -7010,9 +7083,9 @@
 <!--#end region-->
 
 <ng-template #templateDisciplineGridCol1 let-data>
-  <div class="py-2">
+  <div class="py-2 hover-active cursor-pointer" (click)="viewGridDetail(data, eDisciplineFuncID)">
     <div
-      class="fw-bold text-dark mb-2"
+      class="fw-bold mb-2 item-active"
       [innerHTML]="
         data?.disciplineID
           | formatvalue : eDisciplineFormModel : 'DisciplineID'
@@ -7072,29 +7145,31 @@
 
 <!-- #region Bệnh nghề nghiệp column template-->
 <ng-template #templateDiseasesGridCol1 let-data>
-  <div class="d-flex align-items-center mb-3">
-    <span
-      class="fw-bold text-dark"
-      [innerHTML]="
-        data?.diseaseID | formatvalue : eDiseasesFormModel : 'diseaseID' | async
-      "
-    >
-    </span>
-  </div>
-  <div class="d-flex align-items-center">
-    <span class="icon-calendar_today icon-16 me-2"></span>
-    <span
-      class="fw-bold text-dark me-2"
-      [innerHTML]="
-        data?.diseaseDate
-          | formatvalue : eDiseasesFormModel : 'diseaseDate'
-          | async
-      "
-    >
-    </span>
-    <span class="badge badge-success fw-bold border-0" *ngIf="data.isInspect">
-      Có giám định Y khoa
-    </span>
+  <div class="hover-active cursor-pointer" (click)="viewGridDetail(data, eDiseasesFuncID)">
+    <div class="d-flex align-items-center mb-3">
+      <span
+        class="fw-bold item-active"
+        [innerHTML]="
+          data?.diseaseID | formatvalue : eDiseasesFormModel : 'diseaseID' | async
+        "
+      >
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <span class="icon-calendar_today icon-16 me-2"></span>
+      <span
+        class="fw-bold text-dark me-2"
+        [innerHTML]="
+          data?.diseaseDate
+            | formatvalue : eDiseasesFormModel : 'diseaseDate'
+            | async
+        "
+      >
+      </span>
+      <span class="badge badge-success fw-bold border-0" *ngIf="data.isInspect">
+        Có giám định Y khoa
+      </span>
+    </div>
   </div>
 </ng-template>
 <ng-template #templateDiseasesGridCol2 let-data>
@@ -7140,26 +7215,28 @@
 
 <!-- #region Tai nạn lao động column template  -->
 <ng-template #templateEAccidentCol1 let-data>
-  <div class="d-flex align-items-center">
-    <span
-      class="d-flex fw-bold"
-      [innerHTML]="
-        data?.accidentID
-          | formatvalue : eAccidentsFormModel : 'accidentID'
-          | async
-      "
-    ></span>
-  </div>
-  <div class="d-flex align-items-center">
-    <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
-    <div
-      class="text-dark"
-      [innerHTML]="
-        data?.accidentDate
-          | formatvalue : eAccidentsFormModel : 'accidentDate'
-          | async
-      "
-    ></div>
+  <div class="hover-active cursor-pointer" (click)="viewGridDetail(data, eAccidentsFuncID)">
+    <div class="d-flex align-items-center">
+      <span
+        class="d-flex fw-bold item-active"
+        [innerHTML]="
+          data?.accidentID
+            | formatvalue : eAccidentsFormModel : 'accidentID'
+            | async
+        "
+      ></span>
+    </div>
+    <div class="d-flex align-items-center">
+      <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
+      <div
+        class="text-dark"
+        [innerHTML]="
+          data?.accidentDate
+            | formatvalue : eAccidentsFormModel : 'accidentDate'
+            | async
+        "
+      ></div>
+    </div>
   </div>
 </ng-template>
 <ng-template #templateEAccidentCol2 let-data>
@@ -7209,35 +7286,37 @@
 
 <!-- #region Khám sức khỏe column template -->
 <ng-template #tempCol1EHealthGrid let-data>
-  <div class="d-flex align-items-center">
-    <i class="icon-calendar_today text-dark icon-16 text-dark me-2"></i>
-    <span
-      class="text-dark fw-bold"
-      [innerHTML]="
-        data?.healthDate | formatvalue : eHealthFormModel : 'healthDate' | async
-      "
-    >
-    </span>
-    <span class="icon-i-circle-fill icon-4 px-3"></span>
-    <span
-      class="text-primary"
-      [innerHTML]="
-        data?.healthPeriodID
-          | formatvalue : eHealthFormModel : 'healthPeriodID'
-          | async
-      "
-    >
-    </span>
-  </div>
-  <div class="d-flex align-items-center">
-    <i class="bi-bag-plus icon-15 text-gray-500 me-2"></i>
-    <span
-      class="text-dark"
-      [innerHTML]="
-        data?.hospitalID | formatvalue : eHealthFormModel : 'hospitalID' | async
-      "
-    >
-    </span>
+  <div class="hover-active cursor-pointer" (click)="viewGridDetail(data, eHealthFuncID)">
+    <div class="d-flex align-items-center">
+      <i class="icon-calendar_today text-dark icon-16 text-dark me-2"></i>
+      <span
+        class="fw-bold item-active"
+        [innerHTML]="
+          data?.healthDate | formatvalue : eHealthFormModel : 'healthDate' | async
+        "
+      >
+      </span>
+      <span class="icon-i-circle-fill icon-4 px-3"></span>
+      <span
+        class="text-primary"
+        [innerHTML]="
+          data?.healthPeriodID
+            | formatvalue : eHealthFormModel : 'healthPeriodID'
+            | async
+        "
+      >
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <i class="bi-bag-plus icon-15 text-gray-500 me-2"></i>
+      <span
+        class="text-dark"
+        [innerHTML]="
+          data?.hospitalID | formatvalue : eHealthFormModel : 'hospitalID' | async
+        "
+      >
+      </span>
+    </div>
   </div>
 </ng-template>
 <ng-template #tempCol2EHealthGrid let-data>
@@ -7286,35 +7365,38 @@
 
 <!-- #region Tiêm vaccine template -->
 <ng-template #tempEVaccineGridCol1 let-data>
-  <div class="d-flex align-items-center">
-    <!-- <span class="icon-i-arrow-down-left-circle-fill icon-12 me-2"
-      [style.color]="getVaccineBackgroundColor(data)"></span> -->
+  <div class="hover-active cursor-pointer" (click)="viewGridDetail(data, eVaccinesFuncID)">
+    <div class="d-flex align-items-center">
+      <!-- <span class="icon-i-arrow-down-left-circle-fill icon-12 me-2"
+        [style.color]="getVaccineBackgroundColor(data)"></span> -->
+      <span
+        class="fw-bold item-active"
+        [innerHTML]="
+          data?.vaccineTypeID
+            | formatvalue : eVaccineFormModel : 'vaccineTypeID'
+            | async
+        "
+      >
+      </span>
+      <span class="icon-i-circle-fill icon-4 text-gray-400 mx-3"></span>
+      <span
+        class="text-primary"
+        [innerHTML]="
+          data?.vaccineName
+            | formatvalue : eVaccineFormModel : 'vaccineName'
+            | async
+        "
+      >
+      </span>
+    </div>
     <span
-      class="text-dark fw-bold"
+      class="d-flex align-self-center text-dark"
       [innerHTML]="
-        data?.vaccineTypeID
-          | formatvalue : eVaccineFormModel : 'vaccineTypeID'
-          | async
+        data?.hopitalID | formatvalue : eVaccineFormModel : 'hopitalID' | async
       "
-    >
-    </span>
-    <span class="icon-i-circle-fill icon-4 text-gray-400 mx-3"></span>
-    <span
-      class="text-primary"
-      [innerHTML]="
-        data?.vaccineName
-          | formatvalue : eVaccineFormModel : 'vaccineName'
-          | async
-      "
-    >
-    </span>
+    ></span>
+
   </div>
-  <span
-    class="d-flex align-self-center text-dark"
-    [innerHTML]="
-      data?.hopitalID | formatvalue : eVaccineFormModel : 'hopitalID' | async
-    "
-  ></span>
 </ng-template>
 <ng-template #tempEVaccineGridCol2 let-data>
   <div class="d-flex align-items-center">
@@ -7953,13 +8035,14 @@
   <codx-label
     [formModel]="eDegreeFormModel"
     [name]="'lblDegreeGridCol1'"
-    [default]="
+    [default]="'Tên bằng cấp'"
+    class="fw-bold fs-6 text-gray-800"
+    >
+    <!-- [default]="
       eDegreeHeaderText['DegreeName'] +
       ' | ' +
       eDegreeHeaderText['TrainFieldID']
-    "
-    class="fw-bold fs-6 text-gray-800"
-  >
+    " -->
   </codx-label>
 </ng-template>
 
@@ -7967,28 +8050,32 @@
   <codx-label
     [formModel]="eDegreeFormModel"
     [name]="'lblDegreeGridCol2'"
-    [default]="
+    [default]="'Nơi đào tạo'"
+
+    class="fw-bold fs-6 text-gray-800"
+    >
+    <!-- [default]="
       eDegreeHeaderText['TrainSupplierID'] +
       ' | ' +
       eDegreeHeaderText['Ranking']
     "
-    default="Nơi đào tạo | Xếp loại tốt nghiệp"
-    class="fw-bold fs-6 text-gray-800"
-  >
+    default="Nơi đào tạo | Xếp loại tốt nghiệp" -->
   </codx-label>
 </ng-template>
 
 <ng-template #headTempDegree3>
   <codx-label
     [formModel]="eDegreeFormModel"
-    [default]="
+    [default]="'Năm tốt nghiệp'"
+
+    [name]="'lblDegreeGridCol3'"
+    class="fw-bold fs-6 text-gray-800"
+    >
+    <!-- [default]="
       eDegreeHeaderText['YearGraduated'] +
       ' | ' +
       eDegreeHeaderText['IssuedDate']
-    "
-    [name]="'lblDegreeGridCol3'"
-    class="fw-bold fs-6 text-gray-800"
-  >
+    " -->
   </codx-label>
 </ng-template>
 
@@ -8007,12 +8094,15 @@
     [formModel]="eCertificateFormModel"
     [name]="'lblCertificateGridCol2'"
     [default]="
-      eCertificateHeaderText['TrainSupplierID'] +
-      ' | ' +
-      eCertificateHeaderText['Ranking']
+      eCertificateHeaderText['TrainSupplierID']
     "
     class="fw-bold fs-6 text-gray-800"
   >
+  [default]="
+  eCertificateHeaderText['TrainSupplierID'] +
+  ' | ' +
+  eCertificateHeaderText['Ranking']
+"
   </codx-label>
 </ng-template>
 
@@ -8020,9 +8110,7 @@
   <codx-label
     [formModel]="eCertificateFormModel"
     [default]="
-      eCertificateHeaderText['IssuedDate'] +
-      ' | ' +
-      eCertificateHeaderText['EffectedDate']
+      'Thời hạn chứng chỉ'
     "
     [name]="'lblCertificateGridCol3'"
     class="fw-bold fs-6 text-gray-800"
@@ -8034,11 +8122,12 @@
   <codx-label
     [formModel]="eSkillFormmodel"
     [name]="'lblSkillGridCol1'"
-    [default]="
-      eSkillHeaderText['SkillID'] + ' | ' + eSkillHeaderText['SkillGradeID']
-    "
+    [default]="'Kỹ năng'"
     class="fw-bold fs-6 text-gray-800"
-  >
+    >
+    <!-- [default]="
+      eSkillHeaderText['SkillID'] + ' | ' + eSkillHeaderText['SkillGradeID']
+    " -->
   </codx-label>
 </ng-template>
 
@@ -8046,27 +8135,33 @@
   <codx-label
     [formModel]="eSkillFormmodel"
     [name]="'lblSkillGridCol2'"
-    [default]="
-      eSkillHeaderText['TrainSupplierID'] +
-      ' | ' +
-      eSkillHeaderText['Ranking'] +
-      ' - ' +
-      eSkillHeaderText['TotalScore']
-    "
+    [default]="'Nơi đào tạo'"
+
+
     class="fw-bold fs-6 text-gray-800"
   >
+  <!-- [default]="
+  eSkillHeaderText['TrainSupplierID'] +
+  ' | ' +
+  eSkillHeaderText['Ranking'] +
+  ' - ' +
+  eSkillHeaderText['TotalScore']
+" -->
   </codx-label>
 </ng-template>
 
 <ng-template #headTempSkill3>
   <codx-label
     [formModel]="eSkillFormmodel"
-    [default]="
-      eSkillHeaderText['TrainFrom'] + ' | ' + eSkillHeaderText['TrainForm']
-    "
+    [default]="'Thời gian đào tạo'"
+
+
     [name]="'lblSkillGridCol3'"
     class="fw-bold fs-6 text-gray-800"
   >
+  <!-- [default]="
+  eSkillHeaderText['TrainFrom'] + ' | ' + eSkillHeaderText['TrainForm']
+" -->
   </codx-label>
 </ng-template>
 
