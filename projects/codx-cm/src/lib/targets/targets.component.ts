@@ -25,6 +25,7 @@ import { PopupAddTargetComponent } from './popup-add-target/popup-add-target.com
 import { DecimalPipe } from '@angular/common';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
+import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-targets',
@@ -80,7 +81,7 @@ export class TargetsComponent
   readonly btnAdd: string = 'btnAdd';
   //calendar - tháng - quý - năm
   date: any = new Date();
-  ops = ['m', 'q', 'y'];
+  ops = ['y'];
   year: number;
   heightWin: any;
   widthWin: any;
@@ -242,6 +243,7 @@ export class TargetsComponent
     var year = parseInt(data?.fromDate?.getFullYear());
     this.year = year;
     this.loadTreeData(year?.toString());
+    this.detectorRef.detectChanges();
   }
   //#endregion
   //#region event codx-view
@@ -340,18 +342,20 @@ export class TargetsComponent
             if (e != null && e?.event != null) {
               if (e?.event[0] != null && e?.event[0][1] != null) {
                 var data = e?.event[0][1];
-                this.businessLineID = e?.event[2];
-                this.lstTargetLines = e?.event[0][0];
-                this.lstOwners = e?.event[1];
-                this.data = e?.event[0][2];
-                var index = this.lstDataTree.findIndex(
-                  (x) => x.businessLineID == data?.businessLineID
-                );
-                if (index != -1) {
-                  this.lstDataTree[index] = data;
-                  // this.lstDataTree.splice(index, 1);
-                } else {
-                  this.lstDataTree.push(Object.assign({}, data));
+                if (data.year == this.year) {
+                  this.businessLineID = e?.event[2];
+                  this.lstTargetLines = e?.event[0][0];
+                  this.lstOwners = e?.event[1];
+                  this.data = e?.event[0][2];
+                  var index = this.lstDataTree.findIndex(
+                    (x) => x.businessLineID == data?.businessLineID
+                  );
+                  if (index != -1) {
+                    this.lstDataTree[index] = data;
+                    // this.lstDataTree.splice(index, 1);
+                  } else {
+                    this.lstDataTree.push(Object.assign({}, data));
+                  }
                 }
               }
               this.detectorRef.detectChanges();
@@ -367,7 +371,7 @@ export class TargetsComponent
     if (this.businessLineID != null) {
       lstOwners = this.lstOwners;
       lstTargetLines = this.lstTargetLines;
-      if (this.data != null) {
+      if (this.data != null && this.data?.recID == data?.recID) {
         this.view.dataService.dataSelected = this.data;
       }
     } else {
@@ -414,16 +418,19 @@ export class TargetsComponent
               if (e != null && e?.event != null) {
                 if (e?.event[0] != null && e?.event[0][1] != null) {
                   var data = e?.event[0][1];
-                  this.businessLineID = e?.event[2];
-                  this.lstTargetLines = e?.event[0][0];
-                  this.lstOwners = e?.event[1];
-                  this.data = e?.event[0][2];
-                  var index = this.lstDataTree.findIndex(
-                    (x) => x.businessLineID == data?.businessLineID
-                  );
-                  if (index != -1) {
-                    this.lstDataTree[index] = data;
+                  if (data.year == this.year) {
+                    this.businessLineID = e?.event[2];
+                    this.lstTargetLines = e?.event[0][0];
+                    this.lstOwners = e?.event[1];
+                    this.data = e?.event[0][2];
+                    var index = this.lstDataTree.findIndex(
+                      (x) => x.businessLineID == data?.businessLineID
+                    );
+                    if (index != -1) {
+                      this.lstDataTree[index] = data;
+                    }
                   }
+
                   // this.lstDataTree.push(Object.assign({}, data));
 
                   this.detectorRef.detectChanges();
