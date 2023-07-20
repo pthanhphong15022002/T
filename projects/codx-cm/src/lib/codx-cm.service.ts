@@ -712,6 +712,15 @@ export class CodxCmService {
       data
     );
   }
+  startInstance(data){
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstancesBusiness',
+      'StartInstanceInDealAsync',
+      data
+    );
+  }
 
   moveStageDeal(data) {
     return this.api.execSv<any>(
