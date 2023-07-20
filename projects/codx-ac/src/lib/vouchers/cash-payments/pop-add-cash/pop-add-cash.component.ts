@@ -654,10 +654,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   lineChanged(e: any) {
+    if(e.hasNoChange){
+      this.gridCash.focusNextinput(this.gridCash.editIndex);
+      return;
+    }
     this.dataLine = e.data;
     switch (e.field.toLowerCase()) {
       case 'accountid':
-        this.consTraintGrid();
+        //this.consTraintGrid();
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'offsetacctid':
         let oOffaccount = this.oAccount.filter(
@@ -669,7 +674,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.isBrigdeAcct =
             oOffaccount[0].accountType == '5' ? true : false;
         }
-        this.consTraintGrid();
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.consTraintGrid();
         break;
       case 'dr':
         if (this.dataLine.dr != 0 && this.dataLine.cR2 != 0) {
@@ -686,11 +692,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
+              this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         //this.dataLine = this.getValueByExRate(true);
         if (this.journal.entryMode == '2') {
-          this.consTraintGrid();
+          //this.consTraintGrid();
         }
         break;
       case 'cr':
@@ -708,11 +715,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
+
+              this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         //this.dataLine = this.getValueByExRate(false);
         if (this.journal.entryMode == '2') {
-          this.consTraintGrid();
+          //this.consTraintGrid();
         }
         break;
       case 'dr2':
@@ -760,10 +769,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.dataLine.cR2 * this.cashpayment.exchangeRate;
           }
         }
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'note':
         // xu li sau
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
+      default:
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
+      break;
     }
     // const field = [
     //   'accountid',
@@ -830,7 +844,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     //       });
     //   }
     // }
+<<<<<<< HEAD
+
+=======
     //this.gridCash._afterSaveCheck.next(true);
+>>>>>>> 8f1538c032aa824f044c68f49c8556e3145b1951
   }
   //Tach thanh component settledinvoice
   settledLineChanged(e: any) {
@@ -930,8 +948,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     // if (this.cashpayment.unbounds.lineDefault != null) {
                     //   this.dataLine = this.cashpayment.unbounds.lineDefault;
                     // }
+<<<<<<< HEAD
+
                   }
                 });
+
+=======
+                  }
+                });
+>>>>>>> 8f1538c032aa824f044c68f49c8556e3145b1951
             }
           );
         }
