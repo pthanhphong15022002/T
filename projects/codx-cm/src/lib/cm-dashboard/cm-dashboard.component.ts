@@ -296,8 +296,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         }
 
         this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
-        this.minOwners = this.dataDashBoard?.CountsOwnersTopLowToHight ?? [];
-
+        this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
+        this.productivityOwner =
+          this.dataDashBoard.countsProductivityOwner ?? [];
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);
