@@ -748,6 +748,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.cr = 0;
           this.dataLine.cR2 = 0;
         }
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'cr2':
         if (
@@ -844,11 +845,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     //       });
     //   }
     // }
-<<<<<<< HEAD
-
-=======
-    //this.gridCash._afterSaveCheck.next(true);
->>>>>>> 8f1538c032aa824f044c68f49c8556e3145b1951
   }
   //Tach thanh component settledinvoice
   settledLineChanged(e: any) {
@@ -948,15 +944,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     // if (this.cashpayment.unbounds.lineDefault != null) {
                     //   this.dataLine = this.cashpayment.unbounds.lineDefault;
                     // }
-<<<<<<< HEAD
 
                   }
                 });
 
-=======
-                  }
-                });
->>>>>>> 8f1538c032aa824f044c68f49c8556e3145b1951
             }
           );
         }
