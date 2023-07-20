@@ -283,8 +283,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   changeType(e?: any, ele?: TabComponent) {
     // if ((this.gridCash && !this.gridCash.gridRef.isEdit) || (this.gridSet && !this.gridSet.gridRef.isEdit)) {
-      
-      
+
+
     // }
     if (e && e.data[0] && (this.cashpaymentline.length > 0 || this.settledInvoices.length > 0)) {
         this.notification.alertCode('AC0014', null).subscribe((res) => {
@@ -322,9 +322,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.cashpayment.subType = e.data[0];
         if (this.tabObj) {
           this.loadSubType(this.cashpayment.subType, this.tabObj);
-        }    
+        }
       }
-    
+
     // let i;
     // if (e && e.data[0] != null) {
     //   i = e.data[0];
@@ -649,14 +649,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   lineChanged(e: any) {
     if(e.hasNoChange){
-      // this.gridCash.focusNextinput(this.gridCash.editIndex);
+      this.gridCash.focusNextinput(this.gridCash.editIndex);
       return;
     }
     this.dataLine = e.data;
     switch (e.field.toLowerCase()) {
       case 'accountid':
         //this.consTraintGrid();
-        // this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'offsetacctid':
         let oOffaccount = this.oAccount.filter(
@@ -668,7 +668,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.isBrigdeAcct =
             oOffaccount[0].accountType == '5' ? true : false;
         }
-        // this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         //this.consTraintGrid();
         break;
       case 'dr':
@@ -686,7 +686,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
-              // this.gridCash.focusNextinput(this.gridCash.editIndex);
+              this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         //this.dataLine = this.getValueByExRate(true);
@@ -710,7 +710,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
 
-              // this.gridCash.focusNextinput(this.gridCash.editIndex);
+              this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         //this.dataLine = this.getValueByExRate(false);
@@ -764,14 +764,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.dataLine.cR2 * this.cashpayment.exchangeRate;
           }
         }
-        // this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'note':
         // xu li sau
-        // this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       default:
-        // this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
       break;
     }
     // const field = [
