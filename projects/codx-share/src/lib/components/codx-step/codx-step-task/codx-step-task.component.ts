@@ -1023,6 +1023,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let groupData = this.currentStep?.taskGroups.find(
         (group) => group.refID == data.task.taskGroupID
       );
+      if(this.listGroupTask && this.listGroupTask?.length <= 0){
+        let taskGroup = {};
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.listGroupTask.push(taskGroup);
+      }
       let group = this.listGroupTask.find(
         (group) => group.refID == data.task.taskGroupID
       );
