@@ -32,6 +32,8 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   employId;
   empObj;
   valueYear;
+  disabledInput = false;
+
   isAfterRender = false;
   defaultAwardDate: string = '0001-01-01T00:00:00';
   autoNumField: string;
@@ -53,6 +55,9 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.fromListView = data?.data?.fromListView;
     this.formModel = this.dialog.formModel;
     if (data?.data?.dataInput) {

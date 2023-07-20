@@ -36,6 +36,8 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   headerText: '';
+  disabledInput = false;
+
   defaultDisciplineDate: string = '0001-01-01T00:00:00';
   autoNumField: string;
 
@@ -73,6 +75,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     }
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.lstDiscipline = data?.data?.lstDiscipline;
     this.indexSelected = data?.data?.indexSelected ?? -1;
     this.disciplineObj = JSON.parse(JSON.stringify(data?.data?.dataInput));

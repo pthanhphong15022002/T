@@ -212,43 +212,70 @@ export class CmCustomerDetailComponent implements OnInit {
 
   listTab(funcID) {
     if (funcID == 'CM0101') {
-      this.tabDetail = [
-        {
-          name: 'Information',
-          text: 'Thông tin chung',
-          icon: 'icon-info',
-        },
-        {
-          name: 'Contact',
-          text: 'Liên hệ',
-          icon: 'icon-contact_phone',
-        },
-        {
-          name: 'Address',
-          text: 'Địa chỉ',
-          icon: 'icon-location_on',
-        },
-        {
-          name: 'Deal',
-          text: 'Cơ hội',
-          icon: 'icon-add_shopping_cart',
-        },
-        {
-          name: 'Quotations',
-          text: 'Báo giá',
-          icon: 'icon-monetization_on',
-        },
-        {
-          name: 'Contract',
-          text: 'Hợp đồng',
-          icon: 'icon-shopping_bag',
-        },
-        {
-          name: 'Task',
-          text: 'Công việc',
-          icon: 'icon-more',
-        },
-      ];
+      if(this.dataSelected?.category == '1'){
+        this.tabDetail = [
+          {
+            name: 'Information',
+            text: 'Thông tin chung',
+            icon: 'icon-info',
+          },
+          {
+            name: 'Contact',
+            text: 'Liên hệ',
+            icon: 'icon-contact_phone',
+          },
+          {
+            name: 'Address',
+            text: 'Địa chỉ',
+            icon: 'icon-location_on',
+          },
+          {
+            name: 'Deal',
+            text: 'Cơ hội',
+            icon: 'icon-add_shopping_cart',
+          },
+          {
+            name: 'Quotations',
+            text: 'Báo giá',
+            icon: 'icon-monetization_on',
+          },
+          {
+            name: 'Contract',
+            text: 'Hợp đồng',
+            icon: 'icon-shopping_bag',
+          },
+          {
+            name: 'Task',
+            text: 'Công việc',
+            icon: 'icon-more',
+          },
+        ];
+      }else if(this.dataSelected?.category == '0'){
+        this.tabDetail = [
+          {
+            name: 'Information',
+            text: 'Thông tin chung',
+            icon: 'icon-info',
+          },
+
+          {
+            name: 'Deal',
+            text: 'Cơ hội',
+            icon: 'icon-add_shopping_cart',
+          },
+          {
+            name: 'Quotations',
+            text: 'Báo giá',
+            icon: 'icon-monetization_on',
+          },
+          {
+            name: 'Contract',
+            text: 'Hợp đồng',
+            icon: 'icon-shopping_bag',
+          }
+        ];
+      }
+
     } else if (funcID == 'CM0102') {
       this.tabDetail = [
         {

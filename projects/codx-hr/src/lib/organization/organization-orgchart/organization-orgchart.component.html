@@ -2527,11 +2527,8 @@
           bottom: hightlightBottom
         },
         minimizedItemCornerRadius: minimizedItemCornerRadius,
-        minimizedItemLineWidth: minimizedItemLineWidth,
-        minimizedItemLineType: minimizedItemLineType,
         cursorTemplate: contactCursorTemplate,
-        highlightTemplate: contactHighlightTemplate,
-        minimizedItemOpacity: minimizedItemOpacity
+        highlightTemplate: contactHighlightTemplate, 
       }
     ]"
   >
@@ -2727,6 +2724,5 @@
   <!-- {{ itemConfig }} -->
 </ng-template>
 <ng-template #contactHighlightTemplate let-itemConfig="context">
-  <div class="bg-dark"></div>
-  <!-- <div class="highlight-frame">{{ itemConfig }}</div> -->
+  <div class="highlight-frame"></div>
 </ng-template>
