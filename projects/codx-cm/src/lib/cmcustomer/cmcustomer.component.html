@@ -24,8 +24,14 @@
 <!--grid view-->
 <ng-template #templateMore let-data>
   <div>
-    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-      type="view"></codx-mfunc>
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeMoreMF($event)"
+      [isBookMark]="true"
+      type="view"
+    ></codx-mfunc>
   </div>
 </ng-template>
 <!--grid view-->
