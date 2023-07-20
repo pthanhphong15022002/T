@@ -53,11 +53,9 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('pgbSet') pgbSet: ProgressBar;
   @ViewChild('pgbVat') pgbVat: ProgressBar;
   @ViewChild('annotationsave') annotationsave: ProgressBar;
-  dialog!: DialogRef;
   button?: ButtonModel = {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
-    text: 'Thêm phiếu chi',
   };
   headerText: any;
   moreFuncName: any;
@@ -77,7 +75,7 @@ export class CashPaymentsComponent extends UIComponent {
   settledInvoices: any;
   acctTrans: any;
   baseCurr: any;
-  arrEntryID = [];
+  oCash:any;
   isLoadDataAcct: any = true;
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -109,7 +107,6 @@ export class CashPaymentsComponent extends UIComponent {
   };
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   private destroy$ = new Subject<void>();
-  loading:any = false;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -121,7 +118,6 @@ export class CashPaymentsComponent extends UIComponent {
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
-    this.dialog = dialog;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
@@ -138,6 +134,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
   //#endregion
   //#region Init
+  
   onInit(): void {
     this.userID = this.authStore.get().userID;
     this.loadjounal();
@@ -206,7 +203,6 @@ export class CashPaymentsComponent extends UIComponent {
 
   ngOnDestroy() {
     this.view.setRootNode('');
-    console.log("asdsa");
   }
 
   onDestroy(){
@@ -264,79 +260,92 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
-    this.onDestroy();
-    this.headerText = this.funcName;
-    this.view.dataService
-      .addNew((o) => this.setDefault(o))
-      .subscribe((res: any) => {
+    let ins = setInterval(() => {
+      if (this.journal) {
+        clearInterval(ins);
+        this.headerText = this.funcName;
+        this.view.dataService.dataSelected = {...this.oCash};
+        // this.view.dataService
+        //   .addNew((o) => this.setDefault(o))
+        //   .subscribe((res: any) => {
+           
+        //   });
         var obj = {
           formType: 'add',
           headerText: this.headerText,
-          journal: this.journal,
+          journal: {...this.journal},
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.isFull = true;
-        this.dialog = this.callfunc.openSide(
+        var dialog = this.callfunc.openSide(
           PopAddCashComponent,
           obj,
           option,
           this.view.funcID
-        );
-      });
+        ); 
+      }
+      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
+    })
   }
 
   edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'edit',
-          headerText: this.funcName,
-          journal: this.journal,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddCashComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-        this.dialog.closed.subscribe((res) => {
-          console.log(this.itemSelected);
+    let ins = setInterval(() => {
+      if (data && this.journal) {
+        clearInterval(ins);
+        this.view.dataService.dataSelected = data;
+        this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res: any) => {
+          var obj = {
+            formType: 'edit',
+            headerText: this.funcName,
+            journal: {...this.journal},
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          var dialog = this.callfunc.openSide(
+            PopAddCashComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
         });
-      });
+      }  
+      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
+    })   
   }
 
   copy(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .copy((o) => this.setDefault(o))
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        this.dialog = this.callfunc.openSide(
-          PopAddCashComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-      });
+    let ins = setInterval(() => {
+      if (data && this.journal) {
+        clearInterval(ins);
+        this.view.dataService.dataSelected = data;
+        this.view.dataService
+        .copy((o) => this.setDefault(o))
+        .subscribe((res: any) => {
+          var obj = {
+            formType: 'copy',
+            headerText: this.funcName,
+            journal: {...this.journal},
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          var dialog = this.callfunc.openSide(
+            PopAddCashComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        });
+      }  
+      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
+    })   
   }
 
   delete(data) {
@@ -716,10 +725,10 @@ export class CashPaymentsComponent extends UIComponent {
   loadjounal() {
     this.api
       .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.journal = res[0];
+          this.oCash = res[1];
         }
       });
   }
@@ -830,7 +839,7 @@ export class CashPaymentsComponent extends UIComponent {
       url: 'ac/report/detail/',
     };
     let opt = new DialogModel();
-    this.dialog = this.callfunc.openForm(
+    var dialog = this.callfunc.openForm(
       CodxListReportsComponent,
       '',
       400,

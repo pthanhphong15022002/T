@@ -22,6 +22,7 @@ import {
   CallFuncService,
   NotificationsService,
   Util,
+  SidebarModel,
 } from 'codx-core';
 import {
   CM_Contracts,
@@ -36,6 +37,7 @@ import { ContractsService } from './service-contracts.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AddContractsComponent } from './add-contracts/add-contracts.component';
 import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
+import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -71,6 +73,7 @@ export class ContractsComponent extends UIComponent {
 
   account: any;
   quotations: CM_Quotations;
+  listInsStep = [];
 
   tabClicked = '';
   actionName = '';
@@ -385,15 +388,23 @@ export class ContractsComponent extends UIComponent {
         //Hủy yêu cầu duyệt
         this.cancelApprover(data);
         break;
+      case 'CM0204_9':
+        //Bắt đầu
+        this.startInstance(data);
+        break;
+      case 'CM0204_8':
+        //Chuyển giai đoạn
+        this.moveStage(data)
+        break;
+      case 'CM0204_10':
+        //thành công
+        this.cancelApprover(data);
+        break;
+      case 'CM0204_11':
+        //thất bại
+        this.cancelApprover(data);
+        break;
     }
-  }
-
-  startInstance(){
-
-  }
-
-  moveStep(){
-    
   }
 
   async addContract() {
@@ -743,5 +754,117 @@ export class ContractsComponent extends UIComponent {
     ];
 
     this.detectorRef.detectChanges();
+  }
+
+  startInstance(data){
+    this.notiService
+      .alertCode('DP033', null, ['"' + data?.contractName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.api.exec<any>(
+            'DP',
+            'InstancesBusiness',
+            'StartInstanceAsync',
+            [data?.refID]
+          ).subscribe((res) =>{
+            console.log(res);
+            if(res){
+              this.listInsStep = res;
+            }
+          })
+        }
+      });
+   
+  }
+
+  moveStage(data: any) {
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      this.cache
+        .gridViewSetup(fun.formName, fun.gridViewName)
+        .subscribe((grvSt) => {
+          var formMD = new FormModel();
+          formMD.funcID = fun.functionID;
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          let oldStatus = data.status;
+          let oldStepId = data.stepID;
+          var stepReason = {
+            isUseFail: false,
+            isUseSuccess: false,
+          };
+          var dataCM = {
+            refID: data?.refID,
+            processID: data?.processID,
+            stepID: data?.stepID,
+            // nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
+       //     listStepCbx: this.listInsStep,
+          };
+          var obj = {
+            stepName: data?.currentStepName,
+            formModel: formMD,
+            deal: data,
+            stepReason: stepReason,
+            headerTitle: this.actionName,
+            applyFor: '4',
+            dataCM: dataCM,
+          };
+          var dialogMoveStage = this.callfc.openForm(
+            PopupMoveStageComponent,
+            '',
+            850,
+            900,
+            '',
+            obj
+          );
+          dialogMoveStage.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              var instance = e.event.instance;
+              var listSteps = e.event?.listStep;
+              var index =
+                e.event.listStep.findIndex(
+                  (x) =>
+                    x.stepID === instance.stepID &&
+                    !x.isSuccessStep &&
+                    !x.isFailStep
+                ) + 1;
+              var nextStep = '';
+              if (
+                index != -1 &&
+                !listSteps[index]?.isSuccessStep &&
+                !listSteps[index]?.isFailStep
+              ) {
+                if (index != e.event.listStep.length) {
+                  nextStep = listSteps[index]?.stepID;
+                }
+              }
+              var dataUpdate = [
+                data.recID,
+                instance.stepID,
+                nextStep,
+                oldStepId,
+                oldStatus,
+                e.event?.comment,
+                e.event?.expectedClosed,
+                e.event?.probability,
+              ];
+              // this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
+              //   if (res) {
+              //     data = res[0];
+              //     this.view.dataService.update(data).subscribe();
+              //     this.detailViewDeal.dataSelected = data;
+              //     if (e.event.isReason != null) {
+              //       this.moveReason(data, e.event.isReason);
+              //     }
+              //     this.detectorRef.detectChanges();
+              //   }
+              // });
+            }
+          });
+        });
+    });
   }
 }

@@ -15,22 +15,22 @@
 </codx-views>
 
 <ng-template #headerTemplate let-data>
-  <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-50 text-dark p-3 fw-bold fw-500">
+  <div class="d-flex w-100 p-4">
+    <div class="w-40 text-dark fw-bold">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
         [default]="grvSetup?.EmployeeID?.description"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark p-3 fw-bold fw-500">
+    <div class="w-30 text-dark fw-bold">
       <codx-label
         fiedName="lblBenefitID"
         [formModel]="view.formModel"
         [default]="grvSetup?.BenefitID?.description"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark p-3 fw-bold fw-500">
+    <div class="w-30 text-dark fw-bold">
       <codx-label
         name="lblStatus"
         [formModel]="view.formModel"
@@ -41,8 +41,8 @@
 </ng-template>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-50 p-3">
+  <div class="d-flex align-items-center p-4 border-bottom w-100">
+    <div class="w-40">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -94,7 +94,7 @@
         </div>
       </div>
     </div>
-    <div class="w-25 p-3">
+    <div class="w-30">
       <div class="d-flex flex-column">
         <span
           class="align-self-start fs-6 fw-bold text-dark"
@@ -154,7 +154,7 @@
       </div>
     </div>
 
-    <div class="w-25 p-3">
+    <div class="w-30">
       <div class="d-flex">
         <ng-container *ngIf="flagChangeMF">
           <ng-container *ngIf="runModeCheck; else elseVll">
@@ -315,8 +315,8 @@
 <!-- Detail -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-4'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-3'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"

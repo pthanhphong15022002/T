@@ -319,7 +319,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
       this.handleDataBeforeSavingCashTransfer();
 
-      this.journalService.handleVoucherNoAndSave(
+      this.journalService.checkVoucherNoBeforeSave(
         this.journal,
         this.cashTransfer,
         'AC',
@@ -401,7 +401,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
     this.handleDataBeforeSavingCashTransfer();
 
-    this.journalService.handleVoucherNoAndSave(
+    this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.cashTransfer,
       'AC',

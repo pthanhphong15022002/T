@@ -30,6 +30,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   successFlag = false;
   funcID: string;
   actionType;
+  disabledInput = false;
+
   employId;
   isAfterRender = false;
   headerText: '';
@@ -66,6 +68,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.formModel = dialog?.formModel;
     this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;

@@ -18,6 +18,7 @@ import {
   SortModel,
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
+import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'lib-voucher',
@@ -44,10 +45,12 @@ export class VoucherComponent implements OnInit {
   subInvoices: Array<any> = [];
   predicates: string;
   dataValues: string;
+  loadingPop:any = true;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
+  @ViewChild('annotationload') annotationload: ProgressBar;
   morefunction: any;
   payAmt: number = 0;
   editSettings: any = {
@@ -56,6 +59,7 @@ export class VoucherComponent implements OnInit {
     allowEditing: true,
     mode: 'Normal',
   };
+  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,

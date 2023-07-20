@@ -17,6 +17,7 @@
   <div class="form-group row mt-5">
     <codx-label fiedName="DegreeName" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="degreeName"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -30,6 +31,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainFieldID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -39,6 +41,7 @@
     <div class="col-6">
       <codx-label fiedName="TrainLevel" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainLevel"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -53,6 +56,7 @@
       [formModel]="formModel"
     ></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="trainFieldDetail"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -63,6 +67,7 @@
     <div class="col-6">
       <codx-label fiedName="CourseName" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="courseName"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -71,6 +76,7 @@
     <div class="col-6">
       <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainForm"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -85,6 +91,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="yearGraduated"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -95,6 +102,7 @@
       <codx-label fiedName="IsMain" [formModel]="formModel"></codx-label>
       <div>
         <codx-input
+        [disabled]="disabledInput"
           field="isMain"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -107,6 +115,7 @@
     <div class="col-6">
       <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="totalScore"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -116,6 +125,7 @@
     <div class="col-6">
       <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="ranking"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -127,6 +137,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="note"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -180,6 +191,7 @@
       [formModel]="formModel"
     ></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="trainSupplierID"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -190,12 +202,12 @@
   <div class="form-group row">
     <div class="col-6">
       <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
-      <codx-dropdown-calendar [emptyText]="headerTextCalendar[0]" [firstChange]="isNullFrom" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="fromDateFormat" [displayOption]="ops"
+      <codx-dropdown-calendar [disabled]="disabledInput" [emptyText]="headerTextCalendar[0]" [firstChange]="isNullFrom" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="fromDateFormat" [displayOption]="ops"
           cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'FromDate')"></codx-dropdown-calendar>
     </div>
     <div class="col-6">
       <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
-      <codx-dropdown-calendar [emptyText]="headerTextCalendar[1]" [firstChange]="isNullTo" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainToDate)" [selectedType]="toDateFormat" [displayOption]="ops"
+      <codx-dropdown-calendar [disabled]="disabledInput" [emptyText]="headerTextCalendar[1]" [firstChange]="isNullTo" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainToDate)" [selectedType]="toDateFormat" [displayOption]="ops"
       cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'ToDate')"></codx-dropdown-calendar>
     </div>
   </div>
@@ -212,6 +224,7 @@
     <div class="col-6">
       <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="decisionNo"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -220,6 +233,7 @@
     <div class="col-6">
       <codx-label fiedName="IssuedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="issuedDate"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -231,6 +245,7 @@
     <div class="col-6">
       <codx-label fiedName="DegreeNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="degreeNo"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -239,6 +254,7 @@
     <div class="col-6">
       <codx-label fiedName="BookNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="bookNo"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -246,10 +262,10 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row" >
     <div class="d-flex flex-stack">
       <codx-label fiedName="IssuedPlace" [formModel]="formModel"></codx-label>
-      <span class="text-end align-items-end mb-1">
+      <span class="text-end align-items-end mb-1"  *ngIf="actionType != 'view'">
         <a
           class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
           (click)="setIssuedPlace()"
@@ -265,6 +281,7 @@
     </div>
 
     <codx-input
+    [disabled]="disabledInput"
       field="issuedPlace"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -274,6 +291,7 @@
   <div class="form-group row">
     <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="issuedBy"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -296,6 +314,7 @@
   <div class="form-group row mt-5">
     <codx-label fiedName="DegreeName" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="degreeName"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -309,6 +328,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainFieldID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -318,6 +338,7 @@
     <div class="col-6">
       <codx-label fiedName="TrainLevel" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainLevel"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -332,6 +353,7 @@
       [formModel]="formModel"
     ></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="trainFieldDetail"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -344,6 +366,7 @@
       [formModel]="formModel"
     ></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="trainSupplierID"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -355,6 +378,7 @@
     <div class="col-6">
       <codx-label fiedName="CourseName" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="courseName"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -363,6 +387,7 @@
     <div class="col-6">
       <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainForm"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -387,6 +412,7 @@
     <div class="col-6">
       <codx-label fiedName="ExamDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="examDate"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -398,6 +424,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="yearGraduated"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -410,6 +437,7 @@
     <div class="col-6">
       <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="totalScore"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -419,6 +447,7 @@
     <div class="col-6">
       <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="ranking"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -432,6 +461,7 @@
       <codx-label fiedName="IsGraduated" [formModel]="formModel"></codx-label>
       <div>
         <codx-input
+        [disabled]="disabledInput"
           field="isGraduated"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -442,6 +472,7 @@
       <codx-label fiedName="IsMain" [formModel]="formModel"></codx-label>
       <div>
         <codx-input
+        [disabled]="disabledInput"
           field="isMain"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -456,6 +487,7 @@
     <div class="col-6">
       <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="decisionNo"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -464,6 +496,7 @@
     <div class="col-6">
       <codx-label fiedName="IssuedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="issuedDate"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -475,6 +508,7 @@
     <div class="col-6">
       <codx-label fiedName="DegreeNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="degreeNo"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -483,6 +517,7 @@
     <div class="col-6">
       <codx-label fiedName="BookNo" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="bookNo"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -509,6 +544,7 @@
     </div>
 
     <codx-input
+    [disabled]="disabledInput"
       field="issuedPlace"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -518,6 +554,7 @@
   <div class="form-group row">
     <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="issuedBy"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -527,6 +564,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="note"
       [Group]="formGroup"
       [formModel]="formModel"
@@ -536,7 +574,7 @@
 </codx-form> -->
 
 <ng-template #footer>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between" *ngIf="actionType != 'view'">
     <button
     class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
     (click)="openFormUploadFile()"
