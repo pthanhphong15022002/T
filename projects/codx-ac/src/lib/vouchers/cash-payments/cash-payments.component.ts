@@ -615,14 +615,15 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-          this.itemSelected = event?.data;
-          return;
-        } else {
-          this.isLoadDataAcct = true;
-          this.itemSelected = event?.data;
-          this.loadDatadetail(this.itemSelected);
-        }
+        this.isLoadDataAcct = true;
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
+        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        //   this.itemSelected = event?.data;
+        //   return;
+        // } else {
+          
+        // }
       }
     }
   }
