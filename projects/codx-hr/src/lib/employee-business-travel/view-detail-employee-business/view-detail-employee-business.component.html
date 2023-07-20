@@ -11,12 +11,12 @@
 >
   <ng-template #titleTmp>
     <div class="d-flex flex-column ms-1 w-100">
-      <div class="mb-2 d-flex">
+      <div class="mb-1 d-flex">
         <span class="text-dark fs-5-sm fw-bold me-3">
           {{ itemDetail?.emp?.employeeName }}
         </span>
       </div>
-      <div class="d-flex align-items-center text-gray-600 mb-1">
+      <div class="d-flex align-items-center mb-1 text-gray-600">
         <span
           class="me-4 fw-bold text-dark"
           [innerHTML]="
@@ -56,7 +56,7 @@
 
   <!-- Header detail -->
   <ng-template #header>
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-4">
       <codx-temp-full
         class="user-center"
         [title]="itemDetail?.ownerName"
@@ -68,16 +68,16 @@
       >
       </codx-temp-full>
     </div>
-    <div class="d-flex mb-2 flex-wrap">
+    <div class="d-flex mb-1 flex-wrap">
       <codx-label
         fiedName="kowID"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
         [setRequire]="false"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.kowID | formatvalue : formModel : 'kowID' | async
         "
@@ -87,11 +87,11 @@
       <codx-label
         fiedName="registeredDate"
         [formModel]="formModel"
-        class="text-gray-700 label-colon ms-4"
+        class="text-gray-600 label-colon ms-4"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.registeredDate
             | formatvalue : formModel : 'registeredDate'
@@ -103,11 +103,11 @@
       <codx-label
         fiedName="registeredBy"
         [formModel]="formModel"
-        class="text-gray-700 label-colon ms-4"
+        class="text-gray-600 label-colon ms-4"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.registeredBy
             | formatvalue : formModel : 'registeredBy'
@@ -116,16 +116,16 @@
       >
       </span>
     </div>
-    <div class="d-flex mb-2 flex-wrap">
+    <div class="d-flex mb-1 flex-wrap">
       <codx-label
         [setRequire]="false"
         fiedName="beginDate"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.beginDate | formatvalue : formModel : 'beginDate' | async
         "
@@ -133,7 +133,7 @@
       </span>
       <span class="mx-2">-</span>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.endDate | formatvalue : formModel : 'endDate' | async
         "
@@ -143,12 +143,12 @@
       <codx-label
         fiedName="days"
         [formModel]="formModel"
-        class="text-gray-700 label-colon ms-4"
+        class="text-gray-600 label-colon ms-4"
       >
       </codx-label>
 
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.days | formatvalue : formModel : 'days' | async
         "
@@ -156,17 +156,17 @@
       </span>
     </div>
 
-    <div class="d-flex mb-2 flex-wrap">
+    <div class="d-flex mb-1 flex-wrap">
       <codx-label
         fiedName="businessPlace"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
         [setRequire]="false"
       >
       </codx-label>
 
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.businessPlace
             | formatvalue : formModel : 'businessPlace'
@@ -177,7 +177,7 @@
 
       <span class="mx-2">-</span>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.address | formatvalue : formModel : 'address' | async
         "
@@ -189,12 +189,12 @@
       <codx-label
         fiedName="businessPurpose"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
       >
       </codx-label>
 
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.businessPurpose
             | formatvalue : formModel : 'businessPurpose'
@@ -213,11 +213,11 @@
       <codx-label
         fiedName="transportType"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.transportType
             | formatvalue : formModel : 'transportType'
@@ -230,11 +230,11 @@
       <codx-label
         fiedName="chargeObject"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.chargeObject
             | formatvalue : formModel : 'chargeObject'
@@ -247,11 +247,11 @@
       <codx-label
         fiedName="country"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.country | formatvalue : formModel : 'country' | async
         "
@@ -262,11 +262,11 @@
       <codx-label
         fiedName="note"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
       >
       </codx-label>
       <span
-        class="fw-bold"
+        class="fw-bold text-dark"
         [innerHTML]="
           itemDetail?.note | formatvalue : formModel : 'note' | async
         "
@@ -290,9 +290,9 @@
           <ng-template ngbNavContent>
             <ng-container>
               <div class="d-flex align-items-center me-5 mb-5 col-5">
-                <codx-label fiedName="transportType" [formModel]="formModel" class="text-gray-700 label-colon">
+                <codx-label fiedName="transportType" [formModel]="formModel" class="text-gray-600 label-colon">
                 </codx-label>
-                <span class="fw-bold" [innerHTML]="
+                <span class="fw-bold text-dark" [innerHTML]="
                     itemDetail?.transportType
                       | formatvalue : formModel : 'transportType'
                       | async
@@ -301,9 +301,9 @@
               </div>
 
               <div class="d-flex align-items-center me-5 mb-5 col-5">
-                <codx-label fiedName="chargeObject" [formModel]="formModel" class="text-gray-700 label-colon">
+                <codx-label fiedName="chargeObject" [formModel]="formModel" class="text-gray-600 label-colon">
                 </codx-label>
-                <span class="fw-bold" [innerHTML]="
+                <span class="fw-bold text-dark" [innerHTML]="
                     itemDetail?.chargeObject
                       | formatvalue : formModel : 'chargeObject'
                       | async
@@ -312,9 +312,9 @@
               </div>
 
               <div class="d-flex align-items-center me-5 mb-5 col-5">
-                <codx-label fiedName="country" [formModel]="formModel" class="text-gray-700 label-colon">
+                <codx-label fiedName="country" [formModel]="formModel" class="text-gray-600 label-colon">
                 </codx-label>
-                <span class="fw-bold" [innerHTML]="
+                <span class="fw-bold text-dark" [innerHTML]="
                     itemDetail?.country
                       | formatvalue : formModel : 'country'
                       | async
@@ -322,9 +322,9 @@
                 </span>
               </div>
               <div class="d-flex align-items-center me-5 mb-5 col-5">
-                <codx-label fiedName="note" [formModel]="formModel" class="text-gray-700 label-colon">
+                <codx-label fiedName="note" [formModel]="formModel" class="text-gray-600 label-colon">
                 </codx-label>
-                <span class="fw-bold" [innerHTML]="
+                <span class="fw-bold text-dark" [innerHTML]="
                     itemDetail?.note | formatvalue : formModel : 'note' | async
                   ">
                 </span>

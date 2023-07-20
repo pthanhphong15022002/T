@@ -50,7 +50,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   moreFuncName: any;
   funcName: any;
   validate: any = 0;
-  allowEditKey: any;
+  keyField: any = '';
   objecttype: string = '6';
   tabInfo: any[] = [
     {
@@ -87,7 +87,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.warehouses = dialog.dataService!.dataSelected;
     this.formType = dialogData.data?.formType;
-    this.allowEditKey = dialog.dataService!.allowEditKey;
+    this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'edit') {
       if (this.warehouses.warehouseID != null) {
         this.acService
@@ -252,10 +252,9 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   checkValidate() {
 
     //Note
-    let ignoredFields: string [] = [];
-    if(this.allowEditKey)
-    {
-      ignoredFields.push('WarehouseID')
+    let ignoredFields: string[] = [];
+    if (this.keyField == 'WarehouseID') {
+      ignoredFields.push(this.keyField);
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Note
@@ -361,7 +360,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
 
   updateWarehouseIDBeforeSave()
   {
-    if(this.allowEditKey)
+    if(this.keyField == 'WarehouseID')
     {
       this.api.exec(
         'ERM.Business.AC',

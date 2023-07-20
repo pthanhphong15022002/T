@@ -135,36 +135,40 @@
           </div>
         </div>
       </div>
-      <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
-        <div class="" *ngIf="driver != null">
-          <div class="symbol symbol-30px symbol-circle position-relative">
+     
+
+      <span class=" flex-nowrap">
+        <span class="pe-2" *ngIf="driver != null">
+          <span class="symbol symbol-30px symbol-circle position-relative">
             <codx-img [objectId]="driver?.objectID" width="30" [objectName]="driver?.driverName"
               [objectType]="driver?.objectType"></codx-img>
             <span class=" attendees-tag position-absolute"
               inlineSVG="./assets/themes/ep/default/img/{{ driver?.icon }}"></span>
-          </div>
-        </div>
-        <div class="" *ngIf="resources.length >= 1">
-          <div class="symbol symbol-30px symbol-circle">
-            <codx-img [objectId]="resources[0].userID" [width]="30" objectType="AD_Users"></codx-img>
-            <span class="attendees-tag position-absolute"
-              inlineSVG="./assets/themes/ep/default/img/{{ resources[0].icon }}"></span>
-          </div>
-        </div>
-        <div class="" *ngIf="resources.length >=2">
-          <div class="symbol symbol-30px symbol-circle">
-            <codx-img [objectId]="resources[1].userID" [width]="30" objectType="AD_Users"></codx-img>
-            <span class="attendees-tag position-absolute"
-              inlineSVG="./assets/themes/ep/default/img/{{ resources[1].icon }}"></span>
-          </div>
-        </div>
+          </span>
+        </span>
+        <span class="symbol-group-badge pe-2" *ngIf="resources != null && resources?.length >= 1">
+          <span class="symbol symbol-30px symbol-circle position-relative">
+            <codx-img [width]="30" [objectId]="resources[0]?.userID" objectType="AD_Users"></codx-img>
+            <span class="position-absolute attendees-tag"
+              [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[0]?.icon"></span>
+          </span>
+        </span>
+        <span class="symbol-group-badge pe-2" *ngIf="resources?.length >= 2">
+          <span class="symbol symbol-30px symbol-circle position-relative">
+            <codx-img [width]="30" [objectId]="resources[1]?.userID" objectType="AD_Users"></codx-img>
+            <span class="position-absolute attendees-tag"
+              [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[1]?.icon"></span>
+          </span>
+        </span>
 
-        <div class="symbol-more-check" *ngIf="resources.length >= 3">
-          <span class="symbol symbol-30px symbol-circle">
+        <span class="symbol-group-badge pe-2" *ngIf="resources.length > 2">
+          <span class="symbol symbol-30px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
             <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ resources.length - 2 }}</span>
           </span>
-        </div>
-      </div>
+        </span>
+      </span>
+
+
     </div>
   </ng-container>
 </ng-template>

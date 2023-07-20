@@ -33,6 +33,7 @@ import { PopupAddItemConversionComponent } from '../popup-add-item-conversion/po
 import { PopupAddItemSizeComponent } from '../popup-add-item-size/popup-add-item-size.component';
 import { PopupAddItemStyleComponent } from '../popup-add-item-style/popup-add-item-style.component';
 import { EntityName, getClassName } from '../utils/unknown.util';
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 
 @Component({
   selector: 'lib-popup-add-item',
@@ -61,6 +62,7 @@ export class PopupAddItemComponent
   isEdit: boolean = false;
   disabled: boolean = false;
   tempItemID: string = '';
+  keyField: any = '';
   selectedDimGroup: any;
   tabInfo = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Common information' },
@@ -146,6 +148,7 @@ export class PopupAddItemComponent
     this.item = this.dataService?.dataSelected;
     this.tempItemID = this.item?.itemID;
     this.dialogRef.formModel.currentData = this.item;
+    this.keyField = this.dataService?.keyField;
     this.isEdit = this.dialogData.data.formType === 'edit';
     this.disabled = this.isEdit;
 
@@ -407,11 +410,18 @@ export class PopupAddItemComponent
     console.log('itemsSales', this.itemsSales);
     console.log('itemsProduction', this.itemsProduction);
 
+    let ignoredFields: string[] = []
+    if(this.keyField == 'ItemID')
+    {
+      ignoredFields.push(this.keyField);
+    }
+
     if (
       !this.acService.validateFormData(
         this.form.formGroup,
         this.gridViewSetup,
-        ['UMID']
+        ['UMID'],
+        ignoredFields
       )
     ) {
       return;
@@ -440,7 +450,29 @@ export class PopupAddItemComponent
     ) {
       return;
     }
+    if(this.keyField == 'CurrencyID')
+    {
+      this.api.exec(
+        'ERM.Business.AC',
+        'CommonBusiness',
+        'GenerateAutoNumberAsync',
+      )
+      .subscribe((autoNumber: string) => {
+        if(autoNumber)
+        {
+          this.item.itemID = autoNumber;
+          this.updateFileDirectReload();
+        }
+      });
+    }
+    else
+    {
+      this.updateFileDirectReload();
+    }
+  }
 
+  updateFileDirectReload()
+  {
     if (this.itemImage?.imageUpload?.item) {
       this.itemImage
         .updateFileDirectReload(this.item.itemID)
