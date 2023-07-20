@@ -683,7 +683,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
     if (type == 'P') {
-      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(02|01+([0-9]{9})))\b)/;
+      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01|02+([0-9]{9})))\b)/;
       if (!field.toLowerCase().match(validPhone)) {
         this.notiService.notifyCode('RS030');
         return false;
