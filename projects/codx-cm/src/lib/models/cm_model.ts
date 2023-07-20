@@ -267,11 +267,19 @@ export class CM_Customers {
   memo: string;
   tags: string;
   owner: string;
+  category: string;
   bUID: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  allowCall: boolean;
+  allowEmail: boolean;
+  occupation: string;
+  gender: string;
+  birthday: Date;
+  idCardNo: string;
+  issuedOn: Date;
 }
 
 export class CM_Contacts {
@@ -732,7 +740,7 @@ export class CM_Leads {
   dealValue: number = 0;
 }
 
-export class CM_Targets{
+export class CM_Targets {
   recID: string;
   targetID: string;
   targetName: string;
@@ -748,13 +756,13 @@ export class CM_Targets{
   memo: string;
   owner: string;
   buid: string;
-  createdOn: Date = new Date;
+  createdOn: Date = new Date();
   createdBy: string;
   modifiedOn: Date;
   ModifiedBy: string;
 }
 
-export class CM_TargetsLines{
+export class CM_TargetsLines {
   recID: string;
   transID: string;
   salespersonID: string;
@@ -766,7 +774,7 @@ export class CM_TargetsLines{
   currencyID: number;
   target: number = 0;
   note: string;
-  createdOn: Date = new Date;
+  createdOn: Date = new Date();
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
