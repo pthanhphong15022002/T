@@ -340,10 +340,15 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       );
       return;
     }
-    if (this.task.assignTo == null || this.task.assignTo == '') {
+    if (
+      this.task.assignTo == null ||
+      this.task.assignTo == '' ||
+      !this.isExitTypeRAOfResource()
+    ) {
       this.notiService.notifyCode('TM011');
       return;
     }
+
     if (this.task.estimated < 0) {
       this.notiService.notifyCode('TM033');
       return;
@@ -959,22 +964,22 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
               this.dataReferences = result;
             }
           });
-        break;        
-        case 'OM_OKRs':
+        break;
+      case 'OM_OKRs':
         this.api
           .exec<any>('OM', 'OKRBusiness', 'GetOKRByIDAsync', task.refID)
           .subscribe((okr) => {
             if (okr) {
-                var ref = new tmpReferences();
-                ref.recIDReferences = okr.recID;
-                ref.refType = 'OM_OKRs';
-                ref.createdOn = okr?.createdOn;
-                ref.memo = okr?.okrName;
-                ref.createdBy = okr?.createdBy;
-                this.dataReferences.unshift(ref);
-                if (listUser.findIndex((p) => p == okr.createdBy) == -1)
-                  listUser.push(ref.createdBy);
-                this.getUserByListCreateBy(listUser);             
+              var ref = new tmpReferences();
+              ref.recIDReferences = okr.recID;
+              ref.refType = 'OM_OKRs';
+              ref.createdOn = okr?.createdOn;
+              ref.memo = okr?.okrName;
+              ref.createdBy = okr?.createdBy;
+              this.dataReferences.unshift(ref);
+              if (listUser.findIndex((p) => p == okr.createdBy) == -1)
+                listUser.push(ref.createdBy);
+              this.getUserByListCreateBy(listUser);
             }
           });
         break;
@@ -1009,5 +1014,15 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       option.zIndex = 1010;
       this.callFC.openForm(controlShare, '', 450, 600, '', null, '', option);
     }
+  }
+
+  //check check list rescource phải có ít nhat 1 người thực hiên hoặc chịu trách nhiệm
+  isExitTypeRAOfResource() {
+    if (this.listTaskResources?.length > 0) {
+      return this.listTaskResources.some(
+        (x) => x.roleType == 'R' || x.roleType == 'A'
+      );
+    }
+    return false;
   }
 }
