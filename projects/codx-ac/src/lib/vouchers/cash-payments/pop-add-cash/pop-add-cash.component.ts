@@ -830,7 +830,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     //       });
     //   }
     // }
-    this.gridCash._afterSaveCheck.next(true);
+    //this.gridCash._afterSaveCheck.next(true);
   }
   //Tach thanh component settledinvoice
   settledLineChanged(e: any) {

@@ -12,7 +12,7 @@
 >
   <ng-template #titleTmp>
     <div class="d-flex flex-column ms-1 w-100">
-      <div class="mb-2 d-flex">
+      <div class="mb-1 d-flex">
         <span class="text-dark fs-5-sm fw-bold me-3">
           {{ itemDetail?.emp?.employeeName }}
         </span>
@@ -63,7 +63,7 @@
       </div>
 
       <!-- 1 -->
-      <div class="d-flex align-items-center text-gray-600 mb-1">
+      <div class="d-flex align-items-center text-gray-600">
         <span
           class="me-4 fw-bold text-dark"
           [innerHTML]="
@@ -102,7 +102,7 @@
   </ng-template>
 
   <ng-template #header>
-    <div class="mb-2">
+    <div class="mb-4">
       <codx-temp-full
         class="user-center"
         [title]="itemDetail?.ownerName"
@@ -121,11 +121,11 @@
             fiedName="contractTypeID"
             [formModel]="formModel"
             [setRequire]="false"
-            class="text-dark fw-bold label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="text-gray-600"
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.contractTypeID
                 | formatvalue : formModel : 'contractTypeID'
@@ -138,11 +138,11 @@
           <codx-label
             fiedName="limitMonths"
             [formModel]="formModel"
-            class="text-dark fw-bold label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="text-gray-600"
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.limitMonths
                 | formatvalue : formModel : 'limitMonths'
@@ -157,10 +157,10 @@
             fiedName="contractNo"
             [setRequire]="false"
             [formModel]="formModel"
-            class="text-dark fw-bold label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span class="text-gray-600">
+          <span class="fw-bold text-dark">
             {{ itemDetail?.contractNo }}
           </span>
         </div>
@@ -169,10 +169,10 @@
             [default]="'Hiệu lực'"
             [name]="'contractTime'"
             [formModel]="formModel"
-            class="text-dark fw-bold label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span class="text-gray-600">
+          <span class="text-dark fw-bold">
             {{ itemDetail?.effectedDate | fmDT }}
             <span *ngIf="itemDetail?.expiredDate">
               - {{ itemDetail?.expiredDate | fmDT }}
@@ -184,10 +184,10 @@
             fiedName="signedDate"
             [setRequire]="false"
             [formModel]="formModel"
-            class="text-dark fw-bold label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span class="text-gray-600">
+          <span class="text-dark fw-bold">
             {{ itemDetail?.signedDate | fmDT }}
           </span>
         </div>
@@ -198,10 +198,10 @@
           <codx-label
             fiedName="OrgUnitID"
             [formModel]="formModel"
-            class="text-dark label-colon fw-bold"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span
+          <span class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.orgUnitID
                 | formatvalue : formModel : 'orgUnitID'
@@ -214,11 +214,11 @@
           <codx-label
             fiedName="PositionID"
             [formModel]="formModel"
-            class="text-dark label-colon fw-bold"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="text-gray-600"
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.positionID
                 | formatvalue : formModel : 'positionID'
