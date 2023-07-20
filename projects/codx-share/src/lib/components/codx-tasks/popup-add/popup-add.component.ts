@@ -524,13 +524,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
       return;
     }
+
     if (
       this.showAssignTo &&
-      (this.task.assignTo == '' || this.task.assignTo == null)
+      (this.task.assignTo == '' ||
+        this.task.assignTo == null ||
+        !this.isExitTypeRAOfResource())
     ) {
       this.notiService.notifyCode('TM011');
       return;
     }
+
     if (this.param?.ProjectControl == '2' && !this.task.projectID) {
       this.notiService.notifyCode('TM028');
       return;
@@ -1310,5 +1314,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.param.ExtendControl = taskGroup.extendControl;
     this.param.ExtendBy = taskGroup.extendBy;
     this.param.CompletedControl = taskGroup.completedControl;
+  }
+
+  //check check list rescource phải có ít nhat 1 người thực hiên hoặc chịu trách nhiệm
+  isExitTypeRAOfResource() {
+    if (this.listTaskResources?.length > 0) {
+      return this.listTaskResources.some(
+        (x) => x.roleType == 'R' || x.roleType == 'A'
+      );
+    }
+    return false;
   }
 }
