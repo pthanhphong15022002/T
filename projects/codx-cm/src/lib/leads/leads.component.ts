@@ -782,6 +782,10 @@ export class LeadsComponent
       }
     });
   }
+
+  onMoreMulti(e){
+
+  }
   //#endregion
 
   startDay(data) {

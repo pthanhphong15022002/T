@@ -64,6 +64,7 @@ export class PopupAddTargetComponent {
   quarter3: number = 0;
   quarter4: number = 0;
   lstQuarters = [];
+  count = 0;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -79,11 +80,14 @@ export class PopupAddTargetComponent {
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.action = data?.data?.action;
     this.headerText = data?.data?.title;
+    this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTargetLines = data?.data?.lstTargetLines;
+    } else {
+      this.data.status = '1';
     }
   }
 
@@ -130,9 +134,9 @@ export class PopupAddTargetComponent {
   }
 
   ngAfterViewInit(): void {
-    this.gridViewSetupTarget = firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
+    // this.gridViewSetupTarget = firstValueFrom(
+    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    // );
     this.gridViewSetupTargetLine = firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
@@ -179,6 +183,18 @@ export class PopupAddTargetComponent {
       });
   }
   onSave() {
+    if (
+      this.data?.businessLineID == null &&
+      this.data?.businessLineID?.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetupTarget?.BusinessLineID?.headerText + '"'
+      );
+      return;
+    }
+
     if (this.action == 'add') {
       this.onAdd();
     } else {
@@ -662,28 +678,21 @@ export class PopupAddTargetComponent {
           var target = 0;
           for (var line of targetUsers) {
             var month = new Date(line?.startDate)?.getMonth() + 1;
-            if (line.salespersonID == qua.userID) {
-              switch (qua?.id?.toString()) {
-                case '1':
-                  if (month >= 1 && month < 4) {
-                    target += line.target;
-                  }
-                  break;
-                case '2':
-                  if (month >= 4 && month < 7) {
-                    target += line.target;
-                  }
-                  break;
-                case '3':
-                  if (month >= 7 && month < 9) {
-                    target += line.target;
-                  }
-                  break;
-                case '4':
-                  if (month >= 10 && month <= 10) {
-                    target += line.target;
-                  }
-                  break;
+            if (qua?.id === 1) {
+              if (month >= 1 && month < 4) {
+                target += line.target;
+              }
+            } else if (qua?.id === 2) {
+              if (month >= 4 && month < 7) {
+                target += line.target;
+              }
+            } else if (qua?.id === 3) {
+              if (month >= 7 && month < 10) {
+                target += line.target;
+              }
+            } else {
+              if (month >= 10 && month <= 12) {
+                target += line.target;
               }
             }
           }

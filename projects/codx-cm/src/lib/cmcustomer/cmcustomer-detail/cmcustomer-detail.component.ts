@@ -84,7 +84,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() dataSelected: any;
   name = 'Information';
   id = '';
-  tabDetail: { name: string, text: string,  icon: string  }[] = [];
+  tabDetail: { name: string; text: string; icon: string }[] = [];
   formModelContact: FormModel;
   formModelAddress: FormModel;
   listAddress = [];
@@ -93,6 +93,7 @@ export class CmCustomerDetailComponent implements OnInit {
   nameCbxCM = '';
   loaded: boolean;
   addressNameCM: any;
+  category = '';
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -105,9 +106,14 @@ export class CmCustomerDetailComponent implements OnInit {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
     this.getFormModelAddress();
-    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
       this.tabControl = [
-        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'History',
+          textDefault: 'Lịch sử',
+          isActive: true,
+          template: null,
+        },
         {
           name: 'Comment',
           textDefault: 'Thảo luận',
@@ -120,17 +126,27 @@ export class CmCustomerDetailComponent implements OnInit {
           isActive: false,
           template: null,
         },
-        { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+        {
+          name: 'Task',
+          textDefault: 'Công việc',
+          isActive: false,
+          template: null,
+        },
         {
           name: 'References',
           textDefault: 'Liên kết',
           isActive: false,
           template: null,
-        }
+        },
       ];
-    }else{
+    } else {
       this.tabControl = [
-        { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+        {
+          name: 'History',
+          textDefault: 'Lịch sử',
+          isActive: true,
+          template: null,
+        },
         {
           name: 'Comment',
           textDefault: 'Thảo luận',
@@ -142,10 +158,9 @@ export class CmCustomerDetailComponent implements OnInit {
           textDefault: 'Đính kèm',
           isActive: false,
           template: null,
-        }
+        },
       ];
     }
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -170,26 +185,25 @@ export class CmCustomerDetailComponent implements OnInit {
     // this.getListContactByObjectID(this.dataSelected?.recID);
     this.addressNameCM = this.dataSelected?.address;
     setTimeout(() => {
-      this.viewTag = this.dataSelected?.tags
+      this.viewTag = this.dataSelected?.tags;
     }, 100);
     this.listTab(this.funcID);
     this.loaded = true;
   }
 
   getAdressNameByIsDefault(objectID, entityName) {
-    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
       this.cmSv
-      .getAdressNameByIsDefault(objectID, entityName)
-      .subscribe((res) => {
-        if (res) {
-          this.addressNameCM = res?.adressName;
-        } else {
-          this.addressNameCM = null;
-        }
-      });
-    }else{
+        .getAdressNameByIsDefault(objectID, entityName)
+        .subscribe((res) => {
+          if (res) {
+            this.addressNameCM = res?.adressName;
+          } else {
+            this.addressNameCM = null;
+          }
+        });
+    } else {
       this.addressNameCM = this.dataSelected?.address;
-
     }
   }
 
@@ -212,43 +226,69 @@ export class CmCustomerDetailComponent implements OnInit {
 
   listTab(funcID) {
     if (funcID == 'CM0101') {
-      this.tabDetail = [
-        {
-          name: 'Information',
-          text: 'Thông tin chung',
-          icon: 'icon-info',
-        },
-        {
-          name: 'Contact',
-          text: 'Liên hệ',
-          icon: 'icon-contact_phone',
-        },
-        {
-          name: 'Address',
-          text: 'Địa chỉ',
-          icon: 'icon-location_on',
-        },
-        {
-          name: 'Deal',
-          text: 'Cơ hội',
-          icon: 'icon-add_shopping_cart',
-        },
-        {
-          name: 'Quotations',
-          text: 'Báo giá',
-          icon: 'icon-monetization_on',
-        },
-        {
-          name: 'Contract',
-          text: 'Hợp đồng',
-          icon: 'icon-shopping_bag',
-        },
-        {
-          name: 'Task',
-          text: 'Công việc',
-          icon: 'icon-more',
-        },
-      ];
+      if (this.dataSelected?.category == '1') {
+        this.tabDetail = [
+          {
+            name: 'Information',
+            text: 'Thông tin chung',
+            icon: 'icon-info',
+          },
+          {
+            name: 'Contact',
+            text: 'Liên hệ',
+            icon: 'icon-contact_phone',
+          },
+          {
+            name: 'Address',
+            text: 'Địa chỉ',
+            icon: 'icon-location_on',
+          },
+          {
+            name: 'Deal',
+            text: 'Cơ hội',
+            icon: 'icon-add_shopping_cart',
+          },
+          {
+            name: 'Quotations',
+            text: 'Báo giá',
+            icon: 'icon-monetization_on',
+          },
+          {
+            name: 'Contract',
+            text: 'Hợp đồng',
+            icon: 'icon-shopping_bag',
+          },
+          {
+            name: 'Task',
+            text: 'Công việc',
+            icon: 'icon-more',
+          },
+        ];
+      } else if (this.dataSelected?.category == '0') {
+        this.tabDetail = [
+          {
+            name: 'Information',
+            text: 'Thông tin chung',
+            icon: 'icon-info',
+          },
+
+          {
+            name: 'Deal',
+            text: 'Cơ hội',
+            icon: 'icon-add_shopping_cart',
+          },
+          {
+            name: 'Quotations',
+            text: 'Báo giá',
+            icon: 'icon-monetization_on',
+          },
+          {
+            name: 'Contract',
+            text: 'Hợp đồng',
+            icon: 'icon-shopping_bag',
+          },
+        ];
+      }
     } else if (funcID == 'CM0102') {
       this.tabDetail = [
         {
@@ -327,5 +367,4 @@ export class CmCustomerDetailComponent implements OnInit {
       return data.competitorName;
     }
   }
-
 }

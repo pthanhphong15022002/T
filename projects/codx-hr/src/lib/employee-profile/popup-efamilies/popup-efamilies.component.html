@@ -368,6 +368,8 @@
                     [formModel]="formModel"
                 ></codx-input> -->
         <ejs-datepicker
+        #registerFromDatePicker
+        [enabled]="!disabledInput"
           [start]="start"
           [depth]="depth"
           [value]="fromdateVal"
@@ -384,6 +386,8 @@
                     [formModel]="formModel"
                 ></codx-input> -->
         <ejs-datepicker
+        #registerToDatePicker
+          [enabled]="!disabledInput"
           [start]="start"
           [depth]="depth"
           [value]="todateVal"
