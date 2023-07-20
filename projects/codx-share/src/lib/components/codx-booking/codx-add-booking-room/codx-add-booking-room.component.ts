@@ -127,7 +127,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   listFilePermission: any[];
   busyAttendees: string;
   returnData: any;
-  title: any;
+  title='';
   checkLoop: boolean;
   showAllResource: any;
   isPopupStationeryCbb: boolean;
@@ -1561,7 +1561,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   filterArray(arr) {
     return [...new Map(arr.map((item) => [item['userID'], item])).values()];
   }
-  setTitle() {
+  setTitle(e: any) {
     this.title = this.tmpTitle;
     this.changeDetectorRef.detectChanges();
   }
