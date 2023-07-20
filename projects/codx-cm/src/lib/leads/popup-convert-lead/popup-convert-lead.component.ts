@@ -103,6 +103,7 @@ export class PopupConvertLeadComponent implements OnInit {
   dateMax: Date;
   dateMessage: string;
   gridViewSetup: any;
+  radioCheckedCus= true;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -125,6 +126,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.currencyID = this.lead?.currencyID;
     this.deal.exchangeRate = this.lead?.exchangeRate;
     this.promiseAll();
+    this.customer.category = this.lead.category;
   }
 
   async ngOnInit() {
@@ -620,6 +622,17 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
+  changeRadioCus(e){
+    if (e.field === 'yes' && e.component.checked === true) {
+      this.radioCheckedCus = true;
+      this.customer.category = '1';
+    } else if (e.field === 'no' && e.component.checked === true) {
+      this.radioCheckedCus = false;
+      this.customer.category = '0';
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
   setDataCustomer() {
     this.customer.recID = null;
     this.customer.customerName = this.lead?.leadName;
@@ -631,6 +644,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.establishDate = this.lead?.establishDate;
     this.customer.channelID = this.lead?.channelID;
     this.customer.headcounts = this.lead?.headcounts;
+    this.customer.memo = '';
   }
 
   valueChangeOwner(e) {

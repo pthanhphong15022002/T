@@ -1,6 +1,6 @@
 <codx-form
   #form
-  [headerText]=""
+  [headerText]="headerText"
   [body]="body"
   [formModel]="dialog.formModel"
   [dialog]="dialog"
@@ -22,6 +22,7 @@
   <div class="w-100">
     <div class="d-flex align-items-center justify-content-between pt-2">
       <div class="d-flex justify-content-start me-2">
+        {{ headerText }}
       </div>
       <div class="d-flex justify-content-end">
         <div class="ms-2">

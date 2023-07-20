@@ -6,7 +6,7 @@
       <codx-aside
         *ngIf="codxService.asideDisplay"
         [asideMenuHeader]="header"
-        [asideMenuFooter]="footer"
+      
         [hasSecond]="true"
         [hasCountFavorite]="true"
         [hasNotFavAll]="true"
@@ -14,6 +14,7 @@
         (favoriteClick)="onClickFavarite($event)"
       >
       </codx-aside>
+      <!-- [asideMenuFooter]="footer" -->
       <ng-template #header>
         <div class="d-flex align-items-center justify-content-center">
           <a class="btn-add without-sub" href="javascript:;">
@@ -29,7 +30,7 @@
           </a>
         </div>
       </ng-template>
-      <ng-template #footer>
+      <!-- <ng-template #footer>
         <div
           class="menu-item progress-line d-flex align-items-center justify-content-center w-100"
         >
@@ -82,7 +83,7 @@
           </ejs-dashboardlayout>
         </div>
         </div>
-      </ng-template>
+      </ng-template> -->
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <div class="header align-items-stretch">

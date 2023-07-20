@@ -63,7 +63,7 @@
           ></codx-label>
           <codx-input
             field="itemID"
-            [disabled]="disabled"
+            [disabled]="disabled || keyField == 'ItemID' ? true : false"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           ></codx-input>

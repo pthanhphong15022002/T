@@ -156,7 +156,7 @@
               [formModel]="dialog.formModel"
               field="processID"
               [crrValue]="contracts?.processID"
-              (valueChange)="valueChangeCombobox($event)">
+              (valueChange)="cbxProcessChange($event)">
             </codx-input>
           </div>
         </div>
@@ -289,7 +289,9 @@
       </div>
     </div>
   </div>
-
+  <ng-container
+      [ngTemplateOutlet]="tabCustomFieldDetail"
+    ></ng-container>
 </ng-template>
 
 <!-- chi tiết mặt hàng -->
@@ -1147,4 +1149,34 @@
     [listPaymentEdit]="listPaymentEdit"
     [listPaymentDelete]="listPaymentDelete"
     [listPaymentHistory]="listPaymentHistory"></view-payment>
+</ng-template>
+
+<ng-template #tabCustomFieldDetail let-form>
+  <div *ngIf="isExistFields">
+    <div class="mb-5">
+      <codx-label
+        class="border-bottom border-bottom-2 border-primary text-primary p-1 fw-bold"
+        [formModel]="dialog.formModel"
+        fiedName="titleField"
+        default="Thông tin mở rộng"
+      ></codx-label>
+    </div>
+    <ng-container *ngFor="let step of listInstanceSteps">
+      <ng-container *ngIf="step?.fields?.length > 0">
+        <ng-container *ngFor="let item of step.fields">
+          <div class="form-group">
+            <codx-input-custom-field
+              [customField]="item"
+              [checkValid]="false"
+              [objectId]="item.recID"
+              [objectType]="'DP_Instances_Steps_Fields'"
+              [formModel]="dialog.formModel"
+              (valueChangeCustom)="valueChangeCustom($event)"
+            >
+            </codx-input-custom-field>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
 </ng-template>

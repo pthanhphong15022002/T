@@ -9,6 +9,7 @@ import {
   EventEmitter,
   Output,
   TemplateRef,
+  ElementRef,
 } from '@angular/core';
 // import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
@@ -89,7 +90,7 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   dataVll: Array<DataVll>;
   //Variable diagram
-  pagefit: any;
+  pagefit: any = PageFitMode.AutoSize;
   orientationType: any;
   childrenPlacementType: any;
   verticalAlignment: any;
@@ -125,8 +126,8 @@ export class OrganizationOrgchartComponent implements OnInit {
   hightlightBottom: number;
   minimizedItemLineWidth: number;
   minimizedItemOpacity: number;
-  normalLevelShift: number = 45;
-  dotLevelShift: number;
+  normalLevelShift: number = 50;
+  dotLevelShift: number = 30;
   lineLevelShift: number;
   normalItemsInterval: number;
   dotItemsInterval: number = 30;
@@ -150,7 +151,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   frameoutTop: number;
   frameoutRight: number;
   frameoutBottom: number;
-  linesColor: string;
+  linesColor: string = '#000';
   labelFontSize: string;
   labelFontFamily: string;
   labelColor: string;
@@ -162,6 +163,8 @@ export class OrganizationOrgchartComponent implements OnInit {
   dialogEditStatus: any;
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
+
+  @ViewChild('input') input: ElementRef;
   collapsed: boolean[] = [];
 
   annotations: Array<LevelAnnotationConfig> = [];
@@ -201,11 +204,13 @@ export class OrganizationOrgchartComponent implements OnInit {
     border: '3px solid #03a9f4',
     position: 'relative',
     height: '100%',
+    background: '#fff',
   };
   stylesObjChartNone = {
     border: '1px ridge gray',
     position: 'relative',
     height: '100%',
+    background: '#fff',
   };
 
   @ViewChild('diagram') diagram: any;
@@ -223,6 +228,7 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.scaleNumber = value / 100;
   }
 
+  //Settings
   changeMode(e) {
     var target = e.target.id;
 
@@ -717,7 +723,68 @@ export class OrganizationOrgchartComponent implements OnInit {
   //   }
   // }
 
-  clearSetting(){}
+  clearSetting() {
+    this.pagefit = this.PageFitMode.AutoSize;
+    this.orientationType = '';
+    this.childrenPlacementType = '';
+    this.verticalAlignment = '';
+    this.horizontalAlignment = '';
+    this.alignBranches = false;
+    this.leavesPlacementType = '';
+    this.placeAssitantAbove = false;
+    this.maximumColumnsInMatrix = 1;
+    this.minimalVisibility = '';
+    this.minimumVisibleLevels = 1;
+    this.selectionPathMode = '';
+    this.hasButtons = '';
+    this.hasSelectorCheckbox = this.HasSelectorCheckbox.False;
+    this.selectCheckBoxLabel = '';
+    this.markerHeight = 1;
+    this.minimizedItemOpacity = 1;
+
+    this.hightlightBottom = 1;
+    this.minimizedItemShapeType = '';
+    this.minimizedItemLineType = '';
+    this.minimizedItemCornerRadius = 10;
+    this.normalLevelShift = 50;
+    this.minimizedItemLineWidth = 2;
+    this.dotLevelShift = 30;
+    this.lineLevelShift = 1;
+    this.normalItemsInterval = 1;
+
+    this.dotItemsInterval = 30;
+    this.lineItemsInterval = 30;
+    this.cousinsIntervalMultiplier = 5;
+    this.paddingIntervalLeft = 1;
+    this.paddingIntervalTop = 1;
+    this.paddingIntervalRight = 1;
+    this.paddingIntervalBottom = 1;
+
+    this.arrowsDirection = '';
+    this.connectorType = '';
+    this.elbowType = '';
+    this.bevelSize = 1;
+    this.elbowDotSize = 1;
+    this.linesType = '';
+    this.linesColor = '#000';
+    this.lineWidth = 1;
+    this.labelOrientation = '';
+    this.labelPlacement = '';
+
+    this.labelFontSize = '';
+    this.labelFontFamily = '';
+    this.labelFontWeight = '';
+    this.navigationMode = '';
+    this.showFrame = false;
+    this.frameLeft = 1;
+    this.frameTop = 1;
+    this.frameRight = 1;
+    this.frameBottom = 1;
+    this.frameoutLeft = 1;
+    this.frameoutTop = 1;
+    this.frameoutRight = 1;
+    this.frameoutBottom = 1;
+  }
 
   openSetting() {
     let option = new SidebarModel();
@@ -732,43 +799,15 @@ export class OrganizationOrgchartComponent implements OnInit {
       },
       option
     );
-    this.dialogEditStatus.closed.subscribe((res) => {
-      if (res?.event) {
-        //this.view.dataService.update(res.event[0]).subscribe();
-        //Render new data when update new status on view detail
-        //this.dt.detectChanges();
-      }
-    });
+    this.dialogEditStatus.closed.subscribe();
   }
 
   CloseDialog(dialog: DialogRef) {
     dialog.close();
   }
 
-  onSaveUpdateForm() {
-    this.dialogEditStatus && this.dialogEditStatus.close();
-    // this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
-    //   if (res != null) {
-    //     this.notify.notifyCode('SYS007');
-    //     res[0].emp = this.currentEmpObj;
-    //     this.view.formModel.entityName;
-    //     this.hrService
-    //       .addBGTrackLog(
-    //         res[0].recID,
-    //         this.cmtStatus,
-    //         this.view.formModel.entityName,
-    //         'C1',
-    //         null,
-    //         'EContractsBusiness'
-    //       )
-    //       .subscribe();
-    //     this.dialogEditStatus && this.dialogEditStatus.close(res);
-    //   }
-    // });
-  }
-
   //Disable active chart
-  clickActive(){
+  clickActive() {
     this.disableActive = true;
   }
 
@@ -1046,7 +1085,7 @@ export class OrganizationOrgchartComponent implements OnInit {
         this.items.forEach(function (object) {
           var posID = object.id;
           listPos.push(posID);
-        }); 
+        });
 
         this.api
           .execSv(
