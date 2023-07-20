@@ -38,6 +38,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() view: ViewsComponent;
   @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
   @Output() hasChangedData: EventEmitter<any> = new EventEmitter();
+  @Output() itemSelected: EventEmitter<any> = new EventEmitter();
   width: number = 250;
   height: number = 150;
   maxWidth: number = 250;
@@ -48,7 +49,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   employeeInfor: any = null;
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
-    connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
+    connectionPointOrigin: ConnectionPointOrigin.SamePoint,
     // orientation: 'LeftToRight',
     verticalSpacing: 70,
     horizontalSpacing: 40,
@@ -109,7 +110,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     let sourceNode = diagram.getNodeObject(connector.sourceID).data;
     let targetNode = diagram.getNodeObject(connector.targetID).data;
     if (sourceNode['positionID'] === targetNode['reportTo2'])
+    {
+      connector.style!.strokeColor = '#6d6d6d';
       connector.style.strokeDashArray = '5,5';
+    }
     return connector;
   }
 
@@ -231,8 +235,12 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       });
     }
   }
-
+  changeSelectedItem(data: any){
+    this.positionID = data?.positionID;
+    this.itemSelected.emit(data);
+  }
   clickMF(event: any, data: any = null) {
+    this.changeSelectedItem(data);
     if (event) {
       switch (event.functionID) {
         case 'SYS03':
