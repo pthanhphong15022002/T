@@ -38,6 +38,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   formModel: FormModel;
   validate: any = 0;
+  keyField: any = '';
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
@@ -57,6 +58,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.Accounts = dialog.dataService!.dataSelected;
+    this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'add') {
       this.Accounts.detail = true;
     }
@@ -135,8 +137,22 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
 
   //#region CRUD
   onSave() {
+    
+    //Note
+    let ignoredFields: string[] = [];
+    if(this.keyField == 'AccountID')
+    {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+
     if (
-      !this.acService.validateFormData(this.form.formGroup, this.gridViewSetup)
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gridViewSetup,
+        [''],
+        ignoredFields)
     ) {
       return;
     }

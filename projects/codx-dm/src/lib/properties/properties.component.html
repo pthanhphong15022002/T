@@ -139,6 +139,11 @@
                                 <span class="">{{fileEditing.copyRights ? fileEditing.copyRights : "Không có dữ
                                     liệu"}}</span>
                             </div>
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <span class="text-gray-600 me-2 w-100px">{{titleNote}}:</span>
+                                <span class="">{{fileEditing.comment ? fileEditing.comment : "Không có dữ
+                                    liệu"}}</span>
+                            </div>
                         </div>
                         <div *ngIf="fileEditing" class="card-rating mt-4">
                             <div class="fw-bold text-gray-600 mb-3">{{titleRating}}</div>

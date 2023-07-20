@@ -354,9 +354,6 @@ export class CmCustomerComponent
                 e.event.modifiedOn = new Date();
                 this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e?.event).subscribe();
-                if(this.funcID == 'CM0101'){
-                  this.customerDetail.listTab(this.funcID);
-                }
                 this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }
