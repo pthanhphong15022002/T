@@ -696,7 +696,7 @@
         >
         </codx-input>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="radioCheckedCus">
         <div class="col-6 form-group">
           <codx-label [formModel]="formModelCustomer" fiedName="Phone">
           </codx-label>
@@ -722,6 +722,71 @@
           </codx-input>
         </div>
       </div>
+      <div class="row" *ngIf="!radioCheckedCus">
+        <div class="col-6 form-group">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <codx-label [formModel]="formModelCustomer" [fiedName]="'Phone'">
+              </codx-label>
+            </div>
+            <div class="d-flex align-items-center">
+              <codx-label
+                class="text-gray-500 me-2"
+                [formModel]="formModelCustomer"
+                [fiedName]="'AllowCall'"
+              >
+              </codx-label>
+              <codx-input
+                [formModel]="formModelCustomer"
+                type="checkbox"
+                [crrValue]="customer?.allowCall"
+                (valueChange)="valueChangeCustomer($event)"
+                field="allowCall"
+              >
+              </codx-input>
+            </div>
+          </div>
+
+          <codx-input
+            [formModel]="formModelCustomer"
+            [crrValue]="customer?.phone"
+            (valueChange)="valueChangeCustomer($event)"
+            [field]="'phone'"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <codx-label [formModel]="formModelCustomer" [fiedName]="'Email'">
+              </codx-label>
+            </div>
+            <div class="d-flex align-items-center">
+              <codx-label
+                class="text-gray-500 me-2"
+                [formModel]="formModelCustomer"
+                [fiedName]="'AllowEmail'"
+              >
+              </codx-label>
+              <codx-input
+                [formModel]="formModelCustomer"
+                type="checkbox"
+                [crrValue]="customer?.allowEmail"
+                (valueChange)="valueChangeCustomer($event)"
+                field="allowEmail"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <codx-input
+            [formModel]="formModelCustomer"
+            [crrValue]="customer?.email"
+            (valueChange)="valueChangeCustomer($event)"
+            field="email"
+          >
+          </codx-input>
+        </div>
+      </div>
       <div class="form-group">
         <codx-label [formModel]="formModelCustomer" fiedName="WebPage">
         </codx-label>
@@ -734,7 +799,7 @@
         >
         </codx-input>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="radioCheckedCus">
         <div class="col-6 form-group">
           <codx-label [formModel]="formModelCustomer" fiedName="AnnualRevenue">
           </codx-label>
@@ -761,6 +826,17 @@
           </codx-input>
         </div>
       </div>
+      <div class="form-group" *ngIf="!radioCheckedCus">
+        <codx-label [formModel]="form.formModel" fiedName="Occupation">
+        </codx-label>
+        <codx-input
+          [formModel]="formModelCustomer"
+          [crrValue]="customer?.occupation"
+          (valueChange)="valueChangeCustomer($event)"
+          field="occupation"
+        >
+        </codx-input>
+      </div>
       <div class="form-group">
         <codx-label [formModel]="formModelCustomer" fiedName="Owner">
         </codx-label>
@@ -774,7 +850,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="radioCheckedCus">
         <codx-label [formModel]="formModelCustomer" fiedName="Industries">
         </codx-label>
         <codx-input
