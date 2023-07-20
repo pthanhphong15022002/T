@@ -284,46 +284,48 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   changeType(e?: any, ele?: TabComponent) {
     // if ((this.gridCash && !this.gridCash.gridRef.isEdit) || (this.gridSet && !this.gridSet.gridRef.isEdit)) {
 
-
     // }
-    if (e && e.data[0] && (this.cashpaymentline.length > 0 || this.settledInvoices.length > 0)) {
-        this.notification.alertCode('AC0014', null).subscribe((res) => {
-          if (res.event.status === 'Y') {
-            this.api
-              .exec<any>('AC', 'CommonBusiness', 'DeleteAllAsync', [
-                this.cashpayment,
-              ])
-              .subscribe((res) => {});
-            this.cashpayment.subType = e.data[0];
-            this.cashpaymentline = [];
-            this.settledInvoices = [];
-            this.form.formGroup.patchValue(
-              { subType: this.cashpayment.subType },
-              {
-                onlySelf: true,
-                emitEvent: false,
-              }
-            );
-            this.loadSubType(this.cashpayment.subType, this.tabObj);
-          } else {
-            // this.form.formGroup.patchValue(
-            //   { subType: this.cashpayment.subType },
-            //   {
-            //     onlySelf: true,
-            //     emitEvent: false,
-            //   }
-            // );
-            // this.cbxSub.dropdownContent.value = '1';
-            // this.cbxSub.dropdownContent.loadDataVll();
-          }
-        });
-      }
-      else {
-        this.cashpayment.subType = e.data[0];
-        if (this.tabObj) {
+    if (
+      e &&
+      e.data[0] &&
+      (this.cashpaymentline.length > 0 || this.settledInvoices.length > 0)
+    ) {
+      this.notification.alertCode('AC0014', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.api
+            .exec<any>('AC', 'CommonBusiness', 'DeleteAllAsync', [
+              this.cashpayment,
+            ])
+            .subscribe((res) => {});
+          this.cashpayment.subType = e.data[0];
+          this.cashpaymentline = [];
+          this.settledInvoices = [];
+          this.form.formGroup.patchValue(
+            { subType: this.cashpayment.subType },
+            {
+              onlySelf: true,
+              emitEvent: false,
+            }
+          );
           this.loadSubType(this.cashpayment.subType, this.tabObj);
+        } else {
+          // this.form.formGroup.patchValue(
+          //   { subType: this.cashpayment.subType },
+          //   {
+          //     onlySelf: true,
+          //     emitEvent: false,
+          //   }
+          // );
+          // this.cbxSub.dropdownContent.value = '1';
+          // this.cbxSub.dropdownContent.loadDataVll();
         }
+      });
+    } else {
+      this.cashpayment.subType = e.data[0];
+      if (this.tabObj) {
+        this.loadSubType(this.cashpayment.subType, this.tabObj);
       }
+    }
 
     // let i;
     // if (e && e.data[0] != null) {
@@ -648,15 +650,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   lineChanged(e: any) {
-    if(e.hasNoChange){
-      this.gridCash.focusNextinput(this.gridCash.editIndex);
+    if (e.hasNoChange) {
+      //this.gridCash.focusNextinput(this.gridCash.editIndex);
       return;
     }
     this.dataLine = e.data;
     switch (e.field.toLowerCase()) {
       case 'accountid':
         //this.consTraintGrid();
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'offsetacctid':
         let oOffaccount = this.oAccount.filter(
@@ -668,7 +670,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.isBrigdeAcct =
             oOffaccount[0].accountType == '5' ? true : false;
         }
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         //this.consTraintGrid();
         break;
       case 'dr':
@@ -686,7 +688,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
-              this.gridCash.focusNextinput(this.gridCash.editIndex);
+              //this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         //this.dataLine = this.getValueByExRate(true);
@@ -710,7 +712,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
 
-              this.gridCash.focusNextinput(this.gridCash.editIndex);
+              //this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         //this.dataLine = this.getValueByExRate(false);
@@ -742,7 +744,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.cr = 0;
           this.dataLine.cR2 = 0;
         }
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'cr2':
         if (
@@ -764,15 +766,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.dataLine.cR2 * this.cashpayment.exchangeRate;
           }
         }
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'note':
         // xu li sau
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       default:
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
-      break;
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        break;
     }
     // const field = [
     //   'accountid',
@@ -938,10 +940,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     // if (this.cashpayment.unbounds.lineDefault != null) {
                     //   this.dataLine = this.cashpayment.unbounds.lineDefault;
                     // }
-
                   }
                 });
-
             }
           );
         }
@@ -1511,7 +1511,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     let obj = {
       cashpayment: this.cashpayment,
       type,
-      objectName: this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName
+      objectName: this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
