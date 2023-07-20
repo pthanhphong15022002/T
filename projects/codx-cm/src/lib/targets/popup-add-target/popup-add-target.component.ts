@@ -164,7 +164,7 @@ export class PopupAddTargetComponent {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
         if (res) {
-          this.dialog.close([res.save]);
+          this.dialog.close([res.save, this.lstOwners, this.data?.businessLineID]);
         }
       });
   }
@@ -178,7 +178,7 @@ export class PopupAddTargetComponent {
             .update(res.update)
             .subscribe();
 
-          this.dialog.close(res.update);
+          this.dialog.close([res.update, this.lstOwners, this.data?.businessLineID]);
         }
       });
   }
