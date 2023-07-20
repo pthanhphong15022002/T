@@ -64,7 +64,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   funcNameAddress: any;
   formType: any;
   validate: any = 0;
-  allowEditKey: any;
+  keyField: any = '';
   dicMST: Map<string, any> = new Map<string, any>();
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
@@ -109,7 +109,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.vendors = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.allowEditKey = dialog.dataService!.allowEditKey;
+    this.keyField = dialog.dataService!.keyField;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let add = res.find((x) => x.functionID == 'SYS01');
@@ -556,8 +556,8 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
 
     //Note: Tự động khi lưu, Không check BatchNo
     let ignoredFields: string[] = [];
-    if (this.allowEditKey) {
-      ignoredFields.push('VendorID');
+    if (this.keyField == 'VendorID') {
+      ignoredFields.push(this.keyField);
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Node
@@ -740,7 +740,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
 
   updateVendorIDBeforeSave()
   {
-    if(this.allowEditKey)
+    if(this.keyField == 'VendorID')
     {
       this.api.exec(
         'ERM.Business.AC',

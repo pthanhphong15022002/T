@@ -39,7 +39,7 @@
                 field="seriNo"
                 [formModel]="form.formModel"
                 (valueChange)="valueChange($event)"
-                [disabled]="allowEditKey"
+                [disabled]="keyField == 'SeriNo' ? true : false || formType == 'edit' ? true : false"
               >
             </codx-input>
         </div>

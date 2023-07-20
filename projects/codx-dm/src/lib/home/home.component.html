@@ -43,7 +43,7 @@
   <div *ngFor="let file of data" class="result-group result-group-dm has-action-menu">
     <div class="d-flex align-items-start justify-content-between result-item border-bottom p-5">
       <div class="d-flex flex-column">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" >
           <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file"
             [class]="classFile(file, 'float-start')" [imageWidth]="20"
             [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3 cursor-pointer" [title]="
@@ -54,6 +54,8 @@
             <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
             <span *ngIf="file?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
             <span *ngIf="file?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
+            <span *ngIf="file?.isOverdue" class="icon-notifications icon-18  end-0 text-danger "  title="Tài liệu hết hạn"></span>
+            
           </ng-template>
         </div>
         <div class="d-flex align-items-center text-primary font-size-md mt-1">
@@ -129,6 +131,7 @@
         <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
         <span *ngIf="item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
         <span *ngIf="item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
+        <span *ngIf="item?.isOverdue" class="icon-notifications icon-18 position-absolute end-0 text-danger " [style.color]="'#F64E60'" title="Tài liệu hết hạn"></span>
       </ng-template>
     </ng-container>
 

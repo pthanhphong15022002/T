@@ -62,7 +62,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   valuelist: any;
   formType: any;
   validate: any = 0;
-  allowEditKey: any;
+  keyField: any = '';
   dicMST: Map<string, any> = new Map<string, any>();
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
@@ -108,7 +108,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.customers = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.allowEditKey = dialog.dataService!.allowEditKey;
+    this.keyField = dialog.dataService!.keyField;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let add = res.find((x) => x.functionID == 'SYS01');
@@ -549,8 +549,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
 
     //Note: Tự động khi lưu, Không check BatchNo
     let ignoredFields: string[] = [];
-    if (this.allowEditKey) {
-      ignoredFields.push('CustomerID');
+    if (this.keyField == 'CustomerID') {
+      ignoredFields.push(this.keyField);
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Node
@@ -688,7 +688,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
 
   updateCustomerIDBeforeSave()
   {
-    if(this.allowEditKey)
+    if(this.keyField == 'CustomerID')
     {
       this.api.exec(
         'ERM.Business.AC',

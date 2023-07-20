@@ -25,6 +25,7 @@ import { PopupAddTargetComponent } from './popup-add-target/popup-add-target.com
 import { DecimalPipe } from '@angular/common';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
+import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-targets',
@@ -58,7 +59,7 @@ export class TargetsComponent
   requestTree = new DataRequest();
   serviceTree: string = 'CM';
   assemblyNameTree: string = 'ERM.Business.CM';
-  entityNameTree: string = 'CM_TargetsLines';
+  entityNameTree: string = 'CM_Targets';
   classNameTree: string = 'TargetsLinesBusiness';
   methodTree: string = 'GetListTreeTargetLineAsync';
   loadedTree: boolean;
@@ -80,10 +81,14 @@ export class TargetsComponent
   readonly btnAdd: string = 'btnAdd';
   //calendar - tháng - quý - năm
   date: any = new Date();
-  ops = ['m', 'q', 'y'];
+  ops = ['y'];
   year: number;
   heightWin: any;
   widthWin: any;
+  lstOwners = [];
+  lstTargetLines = [];
+  businessLineID: any;
+  data: any;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -189,7 +194,7 @@ export class TargetsComponent
   loadTreeData(year) {
     this.loadedTree = false;
     var resource = new DataRequest();
-    resource.predicates = 'Period=@0';
+    resource.predicates = 'Year=@0';
     resource.dataValues = year;
     resource.funcID = 'CM0601';
     resource.pageLoading = false;
@@ -238,6 +243,7 @@ export class TargetsComponent
     var year = parseInt(data?.fromDate?.getFullYear());
     this.year = year;
     this.loadTreeData(year?.toString());
+    this.detectorRef.detectChanges();
   }
   //#endregion
   //#region event codx-view
@@ -308,95 +314,130 @@ export class TargetsComponent
   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
-      let dialogModel = new DialogModel();
-      dialogModel.DataService = this.view.dataService;
-      dialogModel.FormModel = this.view?.formModel;
-      dialogModel.IsFull = true;
-      dialogModel.zIndex = 999;
-      var obj = {
-        action: 'add',
-        title: this.titleAction,
-      };
-      var dialog = this.callfc.openForm(
-        PopupAddTargetComponent,
-        '',
-        this.widthWin,
-        this.heightWin,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        if (e != null && e?.event != null) {
-          if (e?.event[0] != null && e?.event[0][1] != null) {
-            var data = e?.event[0][1];
-            var index = this.lstDataTree.findIndex(
-              (x) => x.businessLineID == data?.businessLineID
-            );
-            if (index != -1) {
-              this.lstDataTree[index] = data;
-              // this.lstDataTree.splice(index, 1);
-            } else {
-              this.lstDataTree.push(Object.assign({}, data));
+      this.cache
+        .gridViewSetup('CMTargets', 'grvCMTargets')
+        .subscribe(async (grid) => {
+          let dialogModel = new DialogModel();
+          dialogModel.DataService = this.view.dataService;
+          dialogModel.FormModel = this.view?.formModel;
+          dialogModel.IsFull = true;
+          dialogModel.zIndex = 999;
+          var obj = {
+            action: 'add',
+            title: this.titleAction,
+            gridViewSetupTarget: grid,
+          };
+          var dialog = this.callfc.openForm(
+            PopupAddTargetComponent,
+            '',
+            this.widthWin,
+            this.heightWin,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialog.closed.subscribe((e) => {
+            if (!e?.event) this.view.dataService.clear();
+            if (e != null && e?.event != null) {
+              if (e?.event[0] != null && e?.event[0][1] != null) {
+                var data = e?.event[0][1];
+                if (data.year == this.year) {
+                  this.businessLineID = e?.event[2];
+                  this.lstTargetLines = e?.event[0][0];
+                  this.lstOwners = e?.event[1];
+                  this.data = e?.event[0][2];
+                  var index = this.lstDataTree.findIndex(
+                    (x) => x.businessLineID == data?.businessLineID
+                  );
+                  if (index != -1) {
+                    this.lstDataTree[index] = data;
+                    // this.lstDataTree.splice(index, 1);
+                  } else {
+                    this.lstDataTree.push(Object.assign({}, data));
+                  }
+                }
+              }
+              this.detectorRef.detectChanges();
             }
-          }
-          this.detectorRef.detectChanges();
-        }
-      });
+          });
+        });
     });
   }
 
   async edit(data) {
-    var res = await firstValueFrom(
-      this.cmSv.getTargetAndLinesAsync(data?.businessLineID)
-    );
-    var lstOwners = res[2];
-    var lstTargetLines = res[1];
-    this.view.dataService.dataSelected = res[0];
+    let lstOwners = [];
+    let lstTargetLines = [];
+    if (this.businessLineID != null) {
+      lstOwners = this.lstOwners;
+      lstTargetLines = this.lstTargetLines;
+      if (this.data != null && this.data?.recID == data?.recID) {
+        this.view.dataService.dataSelected = this.data;
+      }
+    } else {
+      var tar = await firstValueFrom(
+        this.cmSv.getTargetAndLinesAsync(data?.businessLineID)
+      );
+      if (tar != null) {
+        lstOwners = tar[2];
+        lstTargetLines = tar[1];
+        this.view.dataService.dataSelected = tar[0];
+      }
+    }
+    this.cache
+      .gridViewSetup('CMTargets', 'grvCMTargets')
+      .subscribe(async (grid) => {
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            let dialogModel = new DialogModel();
+            dialogModel.DataService = this.view.dataService;
+            dialogModel.FormModel = this.view?.formModel;
+            dialogModel.IsFull = true;
+            dialogModel.zIndex = 999;
+            var obj = {
+              action: 'edit',
+              title: this.titleAction,
+              lstOwners: lstOwners,
+              lstTargetLines: lstTargetLines,
+              gridViewSetupTarget: grid,
+            };
+            var dialog = this.callfc.openForm(
+              PopupAddTargetComponent,
+              '',
+              this.widthWin,
+              this.heightWin,
+              '',
+              obj,
+              '',
+              dialogModel
+            );
+            dialog.closed.subscribe((e) => {
+              this.businessLineID = null;
+              if (!e?.event) this.view.dataService.clear();
+              if (e != null && e?.event != null) {
+                if (e?.event[0] != null && e?.event[0][1] != null) {
+                  var data = e?.event[0][1];
+                  if (data.year == this.year) {
+                    this.businessLineID = e?.event[2];
+                    this.lstTargetLines = e?.event[0][0];
+                    this.lstOwners = e?.event[1];
+                    this.data = e?.event[0][2];
+                    var index = this.lstDataTree.findIndex(
+                      (x) => x.businessLineID == data?.businessLineID
+                    );
+                    if (index != -1) {
+                      this.lstDataTree[index] = data;
+                    }
+                  }
 
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res) => {
-        let dialogModel = new DialogModel();
-        dialogModel.DataService = this.view.dataService;
-        dialogModel.FormModel = this.view?.formModel;
-        dialogModel.IsFull = true;
-        dialogModel.zIndex = 999;
-        var obj = {
-          action: 'edit',
-          title: this.titleAction,
-          lstOwners: lstOwners,
-          lstTargetLines: lstTargetLines,
-        };
-        var dialog = this.callfc.openForm(
-          PopupAddTargetComponent,
-          '',
-          this.widthWin,
-          this.heightWin,
-          '',
-          obj,
-          '',
-          dialogModel
-        );
-        dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e != null && e?.event != null) {
-            if (e?.event[0] != null && e?.event[0][1] != null) {
-              var data = e?.event[1];
-              var index = this.lstDataTree.findIndex(
-                (x) => x.businessLineID == data?.businessLineID
-              );
-              if (index != -1) {
-                this.lstDataTree[index] = data;
+                  // this.lstDataTree.push(Object.assign({}, data));
+
+                  this.detectorRef.detectChanges();
+                }
               }
-              // this.lstDataTree.push(Object.assign({}, data));
-
-              this.detectorRef.detectChanges();
-            }
-          }
-        });
+            });
+          });
       });
   }
 
