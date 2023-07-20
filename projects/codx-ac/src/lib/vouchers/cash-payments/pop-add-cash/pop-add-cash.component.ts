@@ -220,7 +220,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       onlySelf: true,
       emitEvent: false,
     });
-    this.onFocus();
+    //this.onFocus();
   }
   //#endregion
 

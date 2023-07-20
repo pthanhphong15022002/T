@@ -648,7 +648,7 @@
               [formModel]="formModelCustomer"
               [crrValue]="customer?.birthday"
               field="birthday"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>
@@ -678,7 +678,7 @@
               [formModel]="formModelCustomer"
               [crrValue]="customer?.issuedOn"
               field="issuedOn"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>
@@ -867,7 +867,7 @@
         <codx-label [formModel]="formModelCustomer" fiedName="Memo">
         </codx-label>
         <codx-input
-          type="textarea"
+          [formModel]="formModelCustomer"
           [crrValue]="customer?.memo"
           field="memo"
           (valueChange)="valueChangeCustomer($event)"

@@ -241,8 +241,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of lstOwners">
-            <td class="fixed-width-column-user" >
-              <div *ngIf="!item.isExit"
+            <td class="fixed-width-column-user">
+              <div
+                *ngIf="!item.isExit"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od mb-1 p-2"
               >
                 <div class="action-menu-od me-1" (click)="removeUser(item)">
@@ -267,7 +268,8 @@
               </div>
             </td>
             <td class="fixed-width-column">
-              <span *ngIf="!item.isExit"
+              <span
+                *ngIf="!item.isExit"
                 class=""
                 [ngbTooltip]="targetYear"
                 [innerHTML]="targetToFixed(item?.target)"
@@ -280,7 +282,14 @@
             <td class="fixed-width-column" *ngFor="let quar of lstQuarters">
               <ng-container *ngFor="let quarU of item?.quarters">
                 <div *ngIf="quarU?.id === quar?.id && !item.isExit">
-                  <div [innerHTML]="targetToFixed(quarU?.target)"></div>
+                  <div
+                    [ngbTooltip]="targetQuarter"
+                    [innerHTML]="targetToFixed(quarU?.target)"
+                  >
+                    <ng-template #targetQuarter>
+                      <div [innerHTML]="targetToFixed(quarU?.target)"></div>
+                    </ng-template>
+                  </div>
                 </div>
               </ng-container>
             </td>
@@ -304,9 +313,11 @@
                       name="lblTarget"
                       [value]="targetToFixed(line?.target)"
                       [disabled]="true"
+                      [ngbTooltip]="targetToFixed(line?.target)"
                       class="no-border text-gray-600"
                       style="margin-left: 0px"
                     />
+
                   </div>
                   <div
                     [ngClass]="

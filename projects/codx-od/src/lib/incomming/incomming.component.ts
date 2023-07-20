@@ -585,16 +585,19 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
-   
     var recID = null;
-    if (dt?.data) {
+
+    if (dt?.data) 
+    {
       recID = dt.data.recID;
       this.dataItem = dt?.data;
-    } else if (dt?.recID) {
+    } 
+    else if (dt?.recID) 
+    {
       recID = dt.recID;
       this.dataItem = dt;
     }
-    this.getDtDis(recID,this.dataItem);
+    if(this.lstDtDis?.recID != recID) this.getDtDis(recID,this.dataItem);
   }
   fileAdded(event: any) {
     this.fileAdd = event.data;
