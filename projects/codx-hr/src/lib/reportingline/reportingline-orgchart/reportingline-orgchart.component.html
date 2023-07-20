@@ -1,34 +1,34 @@
 <ng-container *ngIf="onDoneLoading">
   <ng-container *ngIf="data; else tmpEmpty">
-<ejs-diagram #diagram id="diagram" class="max-h-100 max-w-100" [getConnectorDefaults]="connDefaults"
-  [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
-  [dataSourceSettings]="datasetting" [created]="firstLoadDiagram? created(): null">
-  <ng-template #nodeTemplate let-node>
-    <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
-      [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
-    </ng-container>
-  </ng-template>
-</ejs-diagram>
-</ng-container>
-<ng-template #tmpEmpty>
-  <div class="container h-100">
-    <div class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
-        <div class="fw-bold mt-1 text-center">
-          {{ "SYS011" | mssg | async }}
+    <ejs-diagram #diagram id="diagram" class="max-h-100 max-w-100" [getConnectorDefaults]="connDefaults"
+      [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
+      [dataSourceSettings]="datasetting" [created]="firstLoadDiagram? created(): null">
+      <ng-template #nodeTemplate let-node>
+        <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
+        </ng-container>
+      </ng-template>
+    </ejs-diagram>
+  </ng-container>
+  <ng-template #tmpEmpty>
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+          <div class="fw-bold mt-1 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
 </ng-container>
 
 
 
 <ng-template #template let-data>
-  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 border h-150px" (click)="changeSelectedItem(data)"
-    [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
+  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 border h-150px"
+    (click)="changeSelectedItem(data)" [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
     <div class="has-action-menu">
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
       </codx-mfunc>
@@ -64,13 +64,20 @@
       type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
       style="padding: 0 !important ; margin-left: 0 !important; border:none">
       <div class="d-flex align-items-center">
-        <codx-img [funcId]="funcID" [objectId]="employees[0].employeeID" [objectName]="employees[0].employeeName"
-          [objectType]="'HR_Employees'" [width]="50" [referType]="'avt'">
-        </codx-img>
-        <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">
-          <span class="text-white fs-3">+{{(employees.length - 1)}}</span>
-        </span>
-      </div>
+          <codx-img [funcId]="funcID" [objectId]="employees[0].employeeID" [objectName]="employees[0].employeeName"
+            [objectType]="'HR_Employees'" [width]="50" [referType]="'avt'">
+          </codx-img>
+          <ng-container *ngIf="employees.length == 2; else manyEmployees">
+            <codx-img class="second-employee" [funcId]="funcID" [objectId]="employees[1].employeeID"
+              [objectName]="employees[1].employeeName" [objectType]="'HR_Employees'" [width]="50" [referType]="'avt'">
+            </codx-img>
+          </ng-container>
+          <ng-template #manyEmployees>
+            <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">
+              <span class="text-white fs-3">+{{(employees.length - 1)}}</span>
+            </span>
+          </ng-template>
+        </div>
     </div>
     <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
       <div>
@@ -88,7 +95,7 @@
             </codx-img>
             <div class="d-flex flex-column w-300px">
               <span class="fs-6">{{emp.employeeName}}</span>
-              <span class="text-gray-600">{{emp.positionName}}</span>
+              <span class="text-gray-600 line-clamp line-clamp-1">{{emp.positionName}}</span>
             </div>
           </div>
         </ng-container>

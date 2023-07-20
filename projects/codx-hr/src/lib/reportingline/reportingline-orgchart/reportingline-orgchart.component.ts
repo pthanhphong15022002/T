@@ -38,7 +38,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() view: ViewsComponent;
   @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
   @Output() hasChangedData: EventEmitter<any> = new EventEmitter();
-  @Output() itemSelected: EventEmitter<any> = new EventEmitter();
+  @Output() itemSelectedChanged: EventEmitter<any> = new EventEmitter();
   width: number = 250;
   height: number = 150;
   maxWidth: number = 250;
@@ -49,9 +49,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   employeeInfor: any = null;
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
-    connectionPointOrigin: ConnectionPointOrigin.SamePoint,
-    // orientation: 'LeftToRight',
-    verticalSpacing: 70,
+    connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
+    orientation: 'LeftToRight',
+    verticalSpacing: 40,
     horizontalSpacing: 40,
     enableAnimation: false,
   };
@@ -100,7 +100,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
-    //connector.targetDecorator.shape = 'None';
+    connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     // connector.constraints = 0;
     connector.cornerRadius = 5;
@@ -237,7 +237,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   }
   changeSelectedItem(data: any){
     this.positionID = data?.positionID;
-    this.itemSelected.emit(data);
+    this.itemSelectedChanged.emit(data);
   }
   clickMF(event: any, data: any = null) {
     this.changeSelectedItem(data);
