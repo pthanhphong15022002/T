@@ -19,7 +19,7 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
   gridViewSetup: any;
   formType: any;
   validate: any = 0;
-  allowEditKey: any;
+  keyField: any = '';
 
   constructor(
     inject: Injector,
@@ -34,7 +34,7 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
     this.headerText = dialogData.data?.headerText;
     this.fiscalperiods = dialog.dataService!.dataSelected;
     this.formType = dialogData.data?.formType;
-    this.allowEditKey = dialog.dataService!.allowEditKey;
+    this.keyField = dialog.dataService!.keyField;
     this.cache.gridViewSetup('FiscalPeriods', 'grvFiscalPeriods').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -130,8 +130,8 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
 
     //Note: Tự động khi lưu, Không check BatchNo
     let ignoredFields: string[] = [];
-    if (this.allowEditKey) {
-      ignoredFields.push('PeriodID');
+    if (this.keyField == 'PeriodID') {
+      ignoredFields.push(this.keyField);
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Node

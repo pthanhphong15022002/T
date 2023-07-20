@@ -224,7 +224,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     width: 120,
                     template: this.gridMF,
                     textAlign: 'center',
-                    visible : true,
+                    isVisible : true,
                   },
                 ];
                 this.views = [

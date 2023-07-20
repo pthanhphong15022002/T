@@ -64,6 +64,7 @@ export class PopupAddTargetComponent {
   quarter3: number = 0;
   quarter4: number = 0;
   lstQuarters = [];
+  count = 0;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -79,11 +80,14 @@ export class PopupAddTargetComponent {
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.action = data?.data?.action;
     this.headerText = data?.data?.title;
+    this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTargetLines = data?.data?.lstTargetLines;
+    }else{
+      this.data.status = '1';
     }
   }
 
@@ -130,9 +134,9 @@ export class PopupAddTargetComponent {
   }
 
   ngAfterViewInit(): void {
-    this.gridViewSetupTarget = firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
+    // this.gridViewSetupTarget = firstValueFrom(
+    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    // );
     this.gridViewSetupTargetLine = firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
@@ -179,6 +183,15 @@ export class PopupAddTargetComponent {
       });
   }
   onSave() {
+    if(this.data?.businessLineID == null && this.data?.businessLineID?.trim() == ''){
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetupTarget?.BusinessLineID?.headerText + '"'
+      );
+      return;
+    }
+
     if (this.action == 'add') {
       this.onAdd();
     } else {
