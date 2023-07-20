@@ -643,6 +643,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.establishDate = this.lead?.establishDate;
     this.customer.channelID = this.lead?.channelID;
     this.customer.headcounts = this.lead?.headcounts;
+    this.customer.memo = '';
   }
 
   valueChangeOwner(e) {

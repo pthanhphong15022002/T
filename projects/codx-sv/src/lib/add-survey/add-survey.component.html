@@ -130,7 +130,7 @@
           </div>
         </ng-template>
       </e-tabitem>
-      <e-tabitem>
+      <e-tabitem *ngIf="!dataSV?.isTemplate">
         <ng-template #headerText class="">
           <div class="nav-item">
             <a class="nav-link d-flex px-0">

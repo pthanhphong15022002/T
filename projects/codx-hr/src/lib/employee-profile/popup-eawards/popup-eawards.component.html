@@ -347,7 +347,7 @@
         <codx-label fiedName="InYear" [formModel]="formModel"></codx-label>
         <ejs-datepicker
           #picker
-        [disabled]="disabledInput"
+        [enabled]="!disabledInput"
           start="Decade"
           depth="Decade"
           [value]="valueYear"

@@ -87,6 +87,7 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.method = 'GetDataOrgAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
+
     this.views = [
       {
         id: '1',
