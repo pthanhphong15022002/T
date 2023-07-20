@@ -328,7 +328,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       ];
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
-      this.data.category = '0';
+      this.data.category = '2';
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {

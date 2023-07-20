@@ -162,8 +162,9 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionAdd) {
       this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.lead?.customerID;
+
     }
-    if (this.action === this.actionCopy) {
+    else if (this.action === this.actionCopy) {
       this.leadId = dt?.data?.leadIdOld;
       this.contactId = dt?.data?.contactIdOld;
       this.oldIdInstance = this.lead.refID;
@@ -171,6 +172,7 @@ export class PopupAddLeadComponent
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
+    this.isCategory = this.lead.category == "1";
   }
 
   onInit(): void {}
@@ -223,8 +225,8 @@ export class PopupAddLeadComponent
     }
 
     this.convertDataInstance(this.lead, this.instance);
-    this.updateDateDeal(this.instance, this.lead);
-
+    this.updateDataLead(this.instance, this.lead);
+    this.updateDateCategory();
     this.promiseSaveFile();
   }
   cbxChange($event, field) {
@@ -248,8 +250,10 @@ export class PopupAddLeadComponent
       let checked = $event.component.checked;
         if ($event.field === this.radioCompany && checked) {
           this.isCategory = true;
+          this.lead.category ="1"
         } else if ($event.field === this.radioCustomer && checked) {
           this.isCategory = false;
+          this.lead.category="2";
         }
     }
     this.changeDetectorRef.detectChanges();
@@ -292,7 +296,7 @@ export class PopupAddLeadComponent
     instance.processID = lead.processID;
     instance.stepID = lead.stepID;
   }
-  updateDateDeal(instance: tmpInstances, lead: CM_Leads) {
+  updateDataLead(instance: tmpInstances, lead: CM_Leads) {
     if (this.action !== this.actionEdit) {
       lead.stepID = this.listInstanceSteps[0]?.stepID;
       lead.nextStep = this.listInstanceSteps[1]?.stepID;
@@ -605,5 +609,16 @@ export class PopupAddLeadComponent
   }
   valueTagChange(e) {
     this.lead.tags = e.data;
+  }
+  updateDateCategory(){
+    if(this.lead.category == "2") {
+      this.lead.industries = null;
+      this.lead.annualRevenue = null;
+      this.lead.headcounts = null;
+    }
+    else {
+      this.lead.jobTitle = null;
+    }
+
   }
 }
