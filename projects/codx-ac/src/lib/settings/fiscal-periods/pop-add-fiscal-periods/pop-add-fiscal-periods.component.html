@@ -23,7 +23,7 @@
                     field="periodID"
                     [formModel]="form.formModel"
                     (valueChange)="valueChange($event)"
-                    [disabled]="allowEditKey"
+                    [disabled]="keyField == 'PeriodID' ? true : false || formType == 'edit' ? true : false"
                   >
                 </codx-input>
             </div>

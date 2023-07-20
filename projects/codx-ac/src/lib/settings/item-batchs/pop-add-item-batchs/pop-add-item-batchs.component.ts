@@ -19,7 +19,7 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
   gridViewSetup: any;
   formType: any;
   validate: any = 0;
-  allowEditKey: any;
+  keyField: any = '';
 
   constructor(
     inject: Injector,
@@ -33,7 +33,7 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.itemBatchs = dialog.dataService!.dataSelected;
-    this.allowEditKey = this.dialog.dataService!.allowEditKey;
+    this.keyField = this.dialog.dataService!.keyField;
     this.formType = dialogData.data?.formType;
     this.cache.gridViewSetup('ItemBatchs', 'grvItemBatchs').subscribe((res) => {
       if (res) {
@@ -128,8 +128,8 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
   checkValidate() {
     //Note: Tự động khi lưu, Không check BatchNo
     let ignoredFields: string[] = [];
-    if (this.allowEditKey) {
-      ignoredFields.push('BatchNo');
+    if (this.keyField == 'BatchNo') {
+      ignoredFields.push(this.keyField);
     }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Node

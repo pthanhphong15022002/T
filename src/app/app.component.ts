@@ -21,7 +21,7 @@ import {
   NotificationsService,
   TenantService,
 } from 'codx-core';
-import { AngularFireMessaging } from '@angular/fire/compat/messaging';
+//import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 declare var window: any;
@@ -34,7 +34,7 @@ declare var window: any;
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
-  private angularFireMessaging: AngularFireMessaging;
+  //private angularFireMessaging: AngularFireMessaging;
 
   constructor(
     private router: Router,
