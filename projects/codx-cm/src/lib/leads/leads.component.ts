@@ -64,7 +64,7 @@ export class LeadsComponent
   @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
-
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
 
   // extension core
@@ -127,15 +127,14 @@ export class LeadsComponent
   dataColums: any;
   viewCrr: any;
   isLoading = false;
-  action:any;
+  action: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private notificationsService: NotificationsService,
-
+    private notificationsService: NotificationsService
   ) {
     super(inject);
     if (!this.funcID) {
@@ -143,10 +142,7 @@ export class LeadsComponent
     }
     this.executeApiCalls();
   }
-  ngOnChanges(changes: SimpleChanges): void {
-
-
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
     this.button = {
@@ -175,6 +171,16 @@ export class LeadsComponent
           template: this.cardKanban,
           template2: this.viewColumKaban,
           setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -264,12 +270,14 @@ export class LeadsComponent
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
-       this.getGridViewSetup(
+        this.getGridViewSetup(
           this.funcIDCrr.formName,
           this.funcIDCrr.gridViewName
         );
-        this.getMoreFunction( this.funcIDCrr.formName,
-          this.funcIDCrr.gridViewName);
+        this.getMoreFunction(
+          this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName
+        );
       }
     });
   }
@@ -307,9 +315,10 @@ export class LeadsComponent
     this.clickMF(e.e, e.data);
   }
 
-  changeDataMF($event, data) {
+  changeDataMF($event, data, type = null) {
     if ($event != null && data != null) {
       for (let eventItem of $event) {
+        if (type == 11) eventItem.isbookmark = false;
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -322,28 +331,33 @@ export class LeadsComponent
   getRoleMoreFunction(type) {
     var functionMappings;
     var isDisabled = (eventItem, data) => {
-      eventItem.disabled = (data.closed && !['0', '1'].includes(data.status)) ||  ['0', '1'].includes(data.status) ||this.checkMoreReason(data);
+      eventItem.disabled =
+        (data.closed && !['0', '1'].includes(data.status)) ||
+        ['0', '1'].includes(data.status) ||
+        this.checkMoreReason(data);
     };
     var isCRD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
     };
     var isEdit = (eventItem, data) => {
-       eventItem.disabled = eventItem.disabled = data.closed || ( data.status != '13' && this.checkMoreReason(data));
+      eventItem.disabled = eventItem.disabled =
+        data.closed || (data.status != '13' && this.checkMoreReason(data));
     };
     var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed
+      eventItem.disabled = data.closed;
     };
     var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed
+      eventItem.disabled = !data.closed;
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed ;
+      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed;
     };
     var isConvertLead = (eventItem, data) => {
-      eventItem.disabled = !['13', '3'].includes(data.status) || data.closed ;
+      eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
     };
     var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['0', '1', '2'].includes(data.status) || data.closed ;
+      eventItem.disabled =
+        !['0', '1', '2'].includes(data.status) || data.closed;
     };
     var isFailReason = (eventItem, data) => {
       eventItem.disabled =
@@ -403,7 +417,8 @@ export class LeadsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        // this.viewDetail(e.data);
+        if (this.viewCrr != 11) this.viewDetail(e.data);
+        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
         break;
     }
   }
@@ -792,8 +807,8 @@ export class LeadsComponent
     });
   }
 
-  onMoreMulti(e){
-    console.log('gộp: ',e);
+  onMoreMulti(e) {
+    console.log('gộp: ', e);
   }
   //#endregion
 
@@ -803,7 +818,7 @@ export class LeadsComponent
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
-            if(resDP) {
+            if (resDP) {
               var datas = [data.recID, resDP[0]];
               this.codxCmService.startLead(datas).subscribe((res) => {
                 if (res) {
@@ -820,7 +835,7 @@ export class LeadsComponent
               });
             }
           });
-          }
+        }
       });
   }
   openOrCloseLead(data, check) {
@@ -832,9 +847,7 @@ export class LeadsComponent
           this.codxCmService.openOrClosedLead(datas).subscribe((res) => {
             if (res) {
               this.dataSelected.closed = check;
-              this.dataSelected = JSON.parse(
-                JSON.stringify(this.dataSelected)
-              );
+              this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.view.dataService.update(this.dataSelected).subscribe();
               this.notificationsService.notifyCode(
                 check ? 'DP016' : 'DP017',
@@ -849,7 +862,7 @@ export class LeadsComponent
                 data.showInstanceControl === '2'
               ) {
                 this.view.dataService.remove(this.dataSelected).subscribe();
-                 this.dataSelected = this.view.dataService.data[0];
+                this.dataSelected = this.view.dataService.data[0];
                 this.view.dataService.onAction.next({
                   type: 'delete',
                   data: data,
@@ -882,7 +895,7 @@ export class LeadsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick:  data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -903,10 +916,10 @@ export class LeadsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-            var instance = e.event.instance;
-            var listSteps = e.event?.listStep;
-            this.detailViewLead.reloadListStep(listSteps);
-            var index =
+              var instance = e.event.instance;
+              var listSteps = e.event?.listStep;
+              this.detailViewLead.reloadListStep(listSteps);
+              var index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
@@ -914,7 +927,11 @@ export class LeadsComponent
                     !x.isFailStep
                 ) + 1;
               var nextStep = '';
-              if (index != -1 && !listSteps[index]?.isSuccessStep && !listSteps[index]?.isFailStep ) {
+              if (
+                index != -1 &&
+                !listSteps[index]?.isSuccessStep &&
+                !listSteps[index]?.isFailStep
+              ) {
                 if (index != e.event.listStep.length) {
                   nextStep = listSteps[index]?.stepID;
                 }
@@ -979,7 +996,7 @@ export class LeadsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var listSteps = e.event?.listStep
+        var listSteps = e.event?.listStep;
         this.isLoading = false;
         this.detailViewLead.reloadListStep(listSteps);
         data = this.updateReasonLead(e.event?.instance, data, isMoveSuccess);
@@ -1022,7 +1039,7 @@ export class LeadsComponent
       applyFor: this.applyForLead,
       titleAction: this.titleAction,
       owner: data.owner,
-      startControl: data.steps.startControl
+      startControl: data.steps.startControl,
     };
     var dialog = this.callfc.openForm(
       PopupOwnerDealComponent,
@@ -1050,4 +1067,29 @@ export class LeadsComponent
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
+
+  //#region temp Gird
+  changeDataMFGird(e, data) {
+    this.changeDataMF(e, data, 11);
+  }
+  //#endregion
+
+  viewDetail(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+
+    let popup = this.callfc.openForm(
+      this.popDetail,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
+    popup.closed.subscribe((e) => {});
+  }
 }
