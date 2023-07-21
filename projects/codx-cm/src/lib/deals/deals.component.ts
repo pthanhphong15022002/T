@@ -154,7 +154,8 @@ export class DealsComponent
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+
   ) {
     super(inject);
     this.executeApiCalls();
@@ -423,7 +424,7 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
-    //  eventItem.disabled = false;
+      //  eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
@@ -583,7 +584,7 @@ export class DealsComponent
       .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.startDeal(data.recID);
+          this.startDeal(data);
         }
       });
   }
@@ -605,7 +606,8 @@ export class DealsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail(e.data);
+        if (this.viewCrr != 11) this.viewDetail(e.data);
+        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
         break;
       //chang fiter
       case 'pined-filter':
@@ -762,6 +764,7 @@ export class DealsComponent
             if (e && e.event != null) {
               var instance = e.event.instance;
               var listSteps = e.event?.listStep;
+              this.detailViewDeal.reloadListStep(listSteps);
               var index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -827,9 +830,6 @@ export class DealsComponent
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
             if (res) {
-              // data.closed = check ? true : false;
-              // data.closedOn = check ? new Date() : data.closedOn;
-              // data.modifiedOn = new Date();
               this.dataSelected.closed = check;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.view.dataService.update(this.dataSelected).subscribe();
@@ -892,6 +892,8 @@ export class DealsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
+        var listSteps = e.event?.listStep;
+        this.detailViewDeal.reloadListStep(listSteps);
         data = this.updateReasonDeal(e.event?.instance, data);
         var datas = [data, oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
@@ -940,16 +942,23 @@ export class DealsComponent
     deal.nextStep = '';
     return deal;
   }
-  startDeal(recId) {
-    var data = [recId];
-    this.codxCmService.startDeal(data).subscribe((res) => {
-      if (res) {
-        this.dataSelected = res[0];
-        this.notificationsService.notifyCode('SYS007');
-        this.view.dataService.update(this.dataSelected).subscribe();
-        if (this.kanban) this.kanban.updateCard(this.dataSelected);
+  startDeal(data) {
+    this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
+      if(resDP) {
+        var datas = [data.recID, resDP[0]];
+        this.codxCmService.startDeal(datas).subscribe((res) => {
+          if (res) {
+            this.dataSelected = res[0];
+            this.dataSelected = JSON.parse(
+              JSON.stringify(this.dataSelected)
+            );
+            this.detailViewDeal.reloadListStep(resDP[1]);
+            this.notificationsService.notifyCode('SYS007');
+            this.view.dataService.update(this.dataSelected).subscribe();
+          }
+          this.detectorRef.detectChanges();
+        });
       }
-      this.detectorRef.detectChanges();
     });
   }
 
@@ -971,10 +980,10 @@ export class DealsComponent
         stepID: data?.stepID,
         gridViewSetup: this.gridViewSetup,
         formModel: this.view.formModel,
-        applyFor: "1",
+        applyFor: '1',
         titleAction: this.titleAction,
         owner: data.owner,
-        startControl: data.steps.startControl
+        startControl: data.steps.startControl,
       };
       var dialog = this.callfc.openForm(
         PopupOwnerDealComponent,
@@ -988,6 +997,7 @@ export class DealsComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
+          this.detailViewDeal.promiseAllAsync();
           this.view.dataService.update(e?.event).subscribe();
           this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
@@ -1058,6 +1068,7 @@ export class DealsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
+        this.detailViewDeal.promiseAllAsync();
         this.view.dataService.update(e.event).subscribe();
         //up kaban
         if (this.kanban) {
@@ -1100,6 +1111,7 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
+            this.detailViewDeal.promiseAllAsync();
             this.view.dataService.update(e.event).subscribe();
             //up kaban
             if (
@@ -1198,6 +1210,7 @@ export class DealsComponent
 
   autoMoveStage($event) {
     if ($event && $event != null) {
+      this.detailViewDeal.promiseAllAsync();
       this.view.dataService.update($event).subscribe();
       this.detailViewDeal.dataSelected = JSON.parse(
         JSON.stringify(this.dataSelected)

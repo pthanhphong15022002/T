@@ -264,7 +264,7 @@ export class CmCustomerDetailComponent implements OnInit {
             icon: 'icon-more',
           },
         ];
-      } else if (this.dataSelected?.category == '0') {
+      } else if (this.dataSelected?.category == '2') {
         this.tabDetail = [
           {
             name: 'Information',

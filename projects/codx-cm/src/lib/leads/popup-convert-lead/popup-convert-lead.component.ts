@@ -126,6 +126,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.currencyID = this.lead?.currencyID;
     this.deal.exchangeRate = this.lead?.exchangeRate;
     this.promiseAll();
+    this.customer.category = this.lead.category;
   }
 
   async ngOnInit() {
@@ -370,6 +371,14 @@ export class PopupConvertLeadComponent implements OnInit {
         0,
         '"' + this.gridViewSetupDeal['EndDate']?.headerText + '"',
         '"' + this.dateMessage + '"'
+      );
+      return;
+    }
+    if (!this.deal?.businessLineID?.trim() && this.deal?.businessLineID ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetupDeal['BusinessLineID']?.headerText + '"'
       );
       return;
     }

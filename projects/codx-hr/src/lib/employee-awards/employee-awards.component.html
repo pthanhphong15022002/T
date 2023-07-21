@@ -16,22 +16,22 @@
 
 <!-- header -->
 <ng-template #headerTemplate let-data>
-  <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-30 fw-bold p-3">
+  <div class="d-flex w-100 p-4">
+    <div class="w-40 fw-bold">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
         [default]="grvSetup?.EmployeeID?.headerText"
       ></codx-label>
     </div>
-    <div class="w-30 fw-bold p-3">
+    <div class="w-30 fw-bold">
       <codx-label
         fiedName="lblAwardID"
         [formModel]="view.formModel"
         [default]="grvSetup?.AwardID?.headerText"
       ></codx-label>
     </div>
-    <div class="w-40 fw-bold p-3">
+    <div class="w-30 fw-bold">
       <codx-label
         name="lblStatus"
         [formModel]="view.formModel"
@@ -44,11 +44,11 @@
 
 <!-- list view -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
+  <div class="d-flex align-items-center p-4 min-h-100px border-bottom">
     <!-- emp info -->
-    <div class="w-30 px-3">
+    <div class="w-40">
       <div class="d-flex align-items-start">
-        <div class="d-flex flex-column flex-center me-2 w-50px">
+        <div class="d-flex flex-column flex-center me-4">
           <codx-img
             [width]="35"
             [objectId]="data?.emp?.employeeID"
@@ -69,7 +69,7 @@
             <!-- <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
                         <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
           </div>
-          <div class="text-dark mb-1">
+          <div class="text-gray-600 fs-7 mb-1">
             <span
               [innerHTML]="
                 data?.emp?.positionID
@@ -105,12 +105,12 @@
     <!-- end emp info -->
 
     <!-- award -->
-    <div class="w-30 px-3">
+    <div class="w-30">
       <div class="d-flex flex-column text-gray-700">
         <div class="d-flex flex-row mb-2">
           <div [ngbTooltip]="grvSetup?.AwardID?.headerText" class="me-3">
             <span
-              class="text-dark fw-bold fs-5"
+              class="text-primary fw-bold fs-6"
               [innerHTML]="
                 data?.awardID | formatvalue : view.formModel : 'awardID' | async
               "
@@ -167,7 +167,7 @@
     <!-- end award -->
 
     <!-- award date -->
-    <div class="w-40 px-3">
+    <div class="w-30">
       <div class="d-flex flex-column">
         <div class="d-flex flex-row mb-1">
           <ng-container *ngIf="flagChangeMF">
@@ -209,11 +209,11 @@
           </codx-vll> -->
         </div>
         <div class="d-flex flex-row align-items-center mb-1">
-          <span class="text-gray-700 me-1"
+          <span class="text-gray-600 me-1"
             >{{ grvSetup?.AwardDate?.description }} :</span
           >
           <span
-            class="fw-bold"
+            class="fw-bold text-dark"
             [innerHTML]="
               data?.awardDate
                 | formatvalue : view.formModel : 'awardDate'
@@ -222,10 +222,10 @@
           ></span>
         </div>
         <div class="d-flex flex-row align-items-center">
-          <span class="text-gray-700 me-1"
+          <span class="text-gray-600 me-1"
             >{{ grvSetup?.InYear?.description }} :</span
           >
-          <span class="fw-bold">{{ data?.inYear }}</span>
+          <span class="fw-bold text-dark">{{ data?.inYear }}</span>
         </div>
       </div>
 
@@ -269,13 +269,13 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-2'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-3'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageWidth]="40"
+    [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
@@ -284,6 +284,7 @@
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
+    [subTitleCss]="'text-gray-600'"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
     (changeDataMF)="changeDataMF($event, data)"
@@ -317,7 +318,7 @@
   <ng-template #desc2Tmp>
     <div>
       <div class="d-flex align-items-center">
-        <span class="icon-description icon-15 me-1"></span>
+        <span class="icon-description icon-14 me-1"></span>
         <span
           [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
           [innerHTML]="
