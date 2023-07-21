@@ -262,7 +262,9 @@
                     <div class="text-dark fw-bold fs-6">
                       {{ item?.userName }}
                     </div>
-                    <div class="text-gray-700">{{ item?.positionName }}</div>
+                    <div class="text-gray-700 line-clamp line-clamp-1">
+                      {{ item?.positionName }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -283,6 +285,7 @@
               <ng-container *ngFor="let quarU of item?.quarters">
                 <div *ngIf="quarU?.id === quar?.id && !item.isExit">
                   <div
+                    class="line-clamp line-clamp-1"
                     [ngbTooltip]="targetQuarter"
                     [innerHTML]="targetToFixed(quarU?.target)"
                   >
@@ -305,9 +308,11 @@
                     "
                     *ngIf="editingItem !== line?.recID"
                     (click)="dbClick(line?.recID)"
-                    class="user-nav-item"
+                    class="user-nav-item text-gray-600 line-clamp line-clamp-1"
+                    [innerHTML]="targetToFixed(line?.target)"
+                    [ngbTooltip]="targetToFixed(line?.target)"
                   >
-                    <input
+                    <!-- <input
                       type="text"
                       #lblTarget
                       name="lblTarget"
@@ -316,8 +321,7 @@
                       [ngbTooltip]="targetToFixed(line?.target)"
                       class="no-border text-gray-600"
                       style="margin-left: 0px"
-                    />
-
+                    /> -->
                   </div>
                   <div
                     [ngClass]="

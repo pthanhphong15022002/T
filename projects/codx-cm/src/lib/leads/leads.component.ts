@@ -822,7 +822,7 @@ export class LeadsComponent
             if (isCheck) {
               this.notificationsService.notifyCode(
                 'Bạn không có quyền sử dụng chức năng này !'
-              );
+              ); //Đợi mssg
               return;
             } else {
               isCheck = !lst.every(
@@ -831,7 +831,7 @@ export class LeadsComponent
               if (!!isCheck) {
                 this.notificationsService.notifyCode(
                   'Vui lòng gộp tiềm năng cùng loại !'
-                );
+                );//Đợi mssg
                 return;
               }
             }
@@ -841,13 +841,13 @@ export class LeadsComponent
                 isCheck = true;
                 this.notificationsService.notifyCode(
                   'Tiềm năng không phù hợp. Vui lòng chọn tiềm năng chưa phân bổ/đã phân bổ để gộp tiềm năng!'
-                );
+                );//Đợi mssg
                 return;
               } else if (element.closed && !isCheck) {
                 isCheck = true;
                 this.notificationsService.notifyCode(
                   'Có tiềm năng đang đóng vui lòng chọn tiềm năng khác!'
-                );
+                );//Đợi mssg
                 return;
               }
             });
@@ -873,6 +873,8 @@ export class LeadsComponent
           this.notificationsService.notifyCode('CM008');
         }
         break;
+        default:
+          break;
     }
     console.log('gộp: ', e);
   }
