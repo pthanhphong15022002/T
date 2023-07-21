@@ -15,6 +15,7 @@ import {
   AuthStore,
 } from 'codx-core';
 import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.component';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'codx-home',
   templateUrl: './home.component.html',
@@ -31,7 +32,8 @@ export class HomeComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private auth: AuthStore,
-    private page: PageTitleService
+    private page: PageTitleService,
+    private apihttp:HttpClient
   ) {
     super(injector);
     this.user = this.auth.get();
@@ -50,6 +52,8 @@ export class HomeComponent extends UIComponent {
     this.dataValuePortal = `1;3;4`;
   }
 
+
+  
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -62,6 +66,24 @@ export class HomeComponent extends UIComponent {
       },
     ];
     this.detectorRef.detectChanges();
+  }
+
+  test(){
+    if(this.user){
+      this.apihttp.get("http://localhost:9002/api/reportdowload/abc",
+       {
+        headers:
+        {
+          "lvtk": this.auth.get().token
+        },
+        params:{
+          "reportID":"2c28c0d8-f521-ee11-94bb-00155d035517",
+          "objectID":"ef247c60-245a-11ee-ab0c-7486e22779bf"
+        }
+      }).subscribe((res:any) => {
+        debugger
+      });
+    }
   }
   //open popup search portal
   clickShowPopupSearch() {

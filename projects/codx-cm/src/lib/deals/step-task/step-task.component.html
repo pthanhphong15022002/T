@@ -132,8 +132,10 @@
         [isRoleAll]="dataSelected?.roles?.isOnwer || false"
         [isShowElement]="isShowElement"
         [isAddTask]="i == indexAddTask"
+        [isTaskFirst]="i == 0 ? true : false"
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
+        (changeProgress)= "autoStart($event)"
       ></codx-step-task>
       <div *ngIf="(step?.isFailStep || step?.isSuccessStep) &&  !['0','1','2'].includes(dataSelected?.status) ">
         <div >
@@ -146,7 +148,7 @@
               </span>
               <span
                 class="line-clamp line-clamp-1 fs-6 fw-bold"
-                
+
               >
                 {{ step?.stepName || "" }}
               </span>
@@ -257,7 +259,7 @@
     type="button"
     class="btn btn-primary"
     (click)="onSaveReason()"
-    [disabled]="listStepReason.length < 0 && !listStepReason"
+    [disabled]="listStepReason?.length < 0 && !listStepReason"
   >
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>

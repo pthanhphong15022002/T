@@ -35,6 +35,8 @@ export class LeadDetailComponent implements OnInit {
   @Input() gridViewSetup: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
+  @Input() action: any;
+
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
@@ -48,14 +50,11 @@ export class LeadDetailComponent implements OnInit {
   listStepsProcess = [];
 
   tmpDeal: any;
-  oCountFooter:any;
+  oCountFooter: any = {};
   contactPerson: any;
   gridViewSetupDeal:any;
-  modifiedOn:any;
-
   request: ResourceModel;
   formModelDeal: FormModel;
-
 
   isDataLoading = false;
 
@@ -64,8 +63,10 @@ export class LeadDetailComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
+
   ) {
+    this.isDataLoading = true;
     this.executeApiCalls();
 
   }
@@ -127,50 +128,12 @@ export class LeadDetailComponent implements OnInit {
           template: this.referencesDeal,
           icon: 'icon-i-link',
         };
+        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
+          this.promiseAllLoad();
+        }
+        this.oldRecId = changes['dataSelected'].currentValue.recID;
+
         this.tabControl.push(references);
-        if ( (!this.modifiedOn || !changes['dataSelected'].currentValue?.modifiedOn ) ) {
-          this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-          this.isDataLoading = true;
-          this.oldRecId = changes['dataSelected'].currentValue.recID?.
-          this.promiseAllLoad();
-        }
-        else if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
-          this.isDataLoading = true;
-          this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-          this.oldRecId = changes['dataSelected'].currentValue.recID;
-          this.promiseAllLoad();
-        }
-        // if( this.oldRecId !== changes['dataSelected'].currentValue.recID?.recID) {
-        //   if ( (!this.modifiedOn || !changes['dataSelected'].currentValue?.modifiedOn ) ) {
-        //     this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-        //     this.isDataLoading = true;
-        //     this.oldRecId = changes['dataSelected'].currentValue.recID?.
-        //     this.promiseAllLoad();
-        //   }
-        //   else if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
-        //     this.isDataLoading = true;
-        //     this.promiseAllLoad();
-        //     this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-        //     this.oldRecId = changes['dataSelected'].currentValue.recID;
-        //   }
-        // }
-        // else {
-        //   if ( (!this.modifiedOn || !changes['dataSelected'].currentValue?.modifiedOn ) ) {
-        //     this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-        //     this.isDataLoading = true;
-        //     this.oldRecId = changes['dataSelected'].currentValue.recID?.
-        //     this.promiseAllLoad();
-        //   }
-        //   else if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
-        //     this.isDataLoading = true;
-        //     this.promiseAllLoad();
-        //     this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-        //     this.oldRecId = changes['dataSelected'].currentValue.recID;
-        //   }
-        // }
-
-
-
       }else {
         this.tmpDeal = null;
       }
@@ -193,9 +156,9 @@ export class LeadDetailComponent implements OnInit {
   changeFooter(e) {}
 
   async promiseAllLoad() {
-    await this.getTmpDeal();
+    this.isDataLoading = true;
     await this.getListInstanceStep();
-
+    await this.getTmpDeal();
   }
   async executeApiCalls(){
     await this.getValueListRole();
@@ -227,12 +190,11 @@ export class LeadDetailComponent implements OnInit {
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
-        this.isDataLoading = false;
         this.listSteps = res;
+        this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
       }
       else {
-        this.isDataLoading = false;
         this.listSteps = null;
       }
     });
@@ -307,6 +269,13 @@ export class LeadDetailComponent implements OnInit {
     let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
     oCountFooter[key] = value;
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
+    this.changeDetectorRef.detectChanges();
+  }
+
+  reloadListStep(listSteps:any) {
+    this.isDataLoading = true;
+    this.listSteps = listSteps;
+    this.isDataLoading = false;
     this.changeDetectorRef.detectChanges();
   }
 }
