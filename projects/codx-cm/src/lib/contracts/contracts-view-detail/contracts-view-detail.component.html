@@ -810,6 +810,7 @@
     <step-task
     [dataSelected]="contract"
     [listInstanceStep]="listInsStep"
+    (changeProgress)="autoStart($event)"
   ></step-task>
   </div>
 </ng-template>

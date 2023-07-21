@@ -376,7 +376,7 @@ export class TargetsComponent
       }
     } else {
       var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(data?.businessLineID)
+        this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
       );
       if (tar != null) {
         lstOwners = tar[2];

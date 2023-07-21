@@ -57,6 +57,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() taskAdd: DP_Instances_Steps_Tasks;
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
 
+  @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
   @Input() isClose = false; // đóng nhiệm vụ
   @Input() isRoleAll = true;
@@ -1412,11 +1413,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region progress
   async openPopupUpdateProgress(data, type) {
-    if(!this.isStart){
-      this.changeProgress.emit(true);
-    }
-    this.changeProgress.emit();
-    if (!this.isMoveStage) {
+    if (!this.isMoveStage && !this.isTaskFirst && this.currentStep?.stepStatus == "0") {
       if (
         !this.isOnlyView ||
         !this.isStart ||
@@ -1494,6 +1491,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       }
       this.handelProgress(data, dataProgress);
+      if(this.isTaskFirst && !this.isStart){
+        this.changeProgress.emit(true);
+
+      }
     }
     return dataPopupOutput;
   }
@@ -1630,7 +1631,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   checkUpdateProgress(dataUpdate, type) {
-    if (this.isMoveStage) {
+    if (this.isMoveStage || (this.isTaskFirst && this.currentStep?.stepStatus == "0")) {
       return true;
     }
     if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {

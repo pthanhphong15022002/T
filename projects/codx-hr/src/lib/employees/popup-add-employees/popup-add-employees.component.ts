@@ -158,7 +158,7 @@ export class PopupAddEmployeesComponent implements OnInit {
         .subscribe((res: any) => {
           let _mssgCode = res ? 'SYS007' : 'SYS021';
           this.notifiSV.notifyCode(_mssgCode);
-          this.dialogRef.close(res? employee : false);
+          this.dialogRef.close(res? res : false);
         });
     }
   }
