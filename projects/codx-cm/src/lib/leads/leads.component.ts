@@ -142,7 +142,6 @@ export class LeadsComponent
     }
     this.executeApiCalls();
   }
-  ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
     this.button = {
