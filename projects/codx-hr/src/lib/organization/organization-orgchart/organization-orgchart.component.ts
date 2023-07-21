@@ -48,6 +48,7 @@ import {
   CRUDService,
   DialogRef,
   FormModel,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   ViewsComponent,
@@ -158,6 +159,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   labelFontWeight: string;
   disableActive: boolean = false;
   @ViewChild('contactTemplate') contactTemplate: TemplateRef<any>;
+  @Output() newIdItem = new EventEmitter<string>();
 
   //Popup Settings
   dialogEditStatus: any;
@@ -219,7 +221,8 @@ export class OrganizationOrgchartComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private callFC: CallFuncService,
     private cacheService: CacheService,
-    private hrService: CodxHrService
+    private hrService: CodxHrService,
+    private notify: NotificationsService
   ) {
     this.isGetManager(this.selectedTeam);
   }
@@ -807,7 +810,10 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
 
   //Disable active chart
-  clickActive() {
+  clickActive(data) {
+    console.log(data);
+    //Patch id to parent chart
+    this.newIdItem.emit(data);
     this.disableActive = true;
   }
 
@@ -1045,13 +1051,39 @@ export class OrganizationOrgchartComponent implements OnInit {
   // delete data
   deleteData(data) {
     this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data.orgUnitID)
+      .delete(
+        [data],
+        true,
+        (option: RequestOption) => this.beforeDelete(option, data.orgUnitID),
+        null,
+        null,
+        null,
+        null,
+        null
       )
-      .subscribe(() => {
-        this.getDataPositionByID(this.orgUnitID, true);
-        this.dt.detectChanges();
+      .subscribe((res) => {
+        if (res === true) {
+          this.notify.notifyCode('SYS008');
+          this.getDataPositionByID(this.orgUnitID, true);
+          this.dt.detectChanges();
+        } else {
+          this.notify.notifyCode('SYS022');
+        }
       });
+    // if (data) {
+    //   this.journalService.deleteAutoNumber(data.autoNumber);
+    //   this.acService.deleteFile(data.recID, this.view.formModel.entityName);
+    //   this.api
+    //     .exec(
+    //       'AC',
+    //       'JournalsPermissionBusiness',
+    //       'DeleteByJournalNoAsync',
+    //       data.journalNo
+    //     )
+    //     .subscribe((res) => {
+    //       console.log('DeleteByJournalNoAsync', res);
+    //     });
+    // }
   }
 
   removeNode(id: string) {

@@ -17,7 +17,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
           <codx-input
-            [disabled]="formType == 'edit' ? true : false"
+            [disabled]="formType == 'edit' ? true : false || keyField == 'UMID' ? true : false"
             [Group]="form.formGroup"
             [crrValue]="unitsofmearsure.umid"
             [formModel]="form.formModel"

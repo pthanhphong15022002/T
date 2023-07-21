@@ -30,6 +30,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
+  @Output() changeProgress = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
@@ -208,5 +209,8 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
         this.account = res;
       }
     })
+  }
+  autoStart(event){
+    this.changeProgress.emit(event);
   }
 }

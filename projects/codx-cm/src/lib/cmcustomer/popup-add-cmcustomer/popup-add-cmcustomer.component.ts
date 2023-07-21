@@ -328,7 +328,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       ];
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
-      this.data.category = '0';
+      this.data.category = '2';
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -683,7 +683,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
     if (type == 'P') {
-      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(02|01+([0-9]{9})))\b)/;
+      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01|02+([0-9]{9})))\b)/;
       if (!field.toLowerCase().match(validPhone)) {
         this.notiService.notifyCode('RS030');
         return false;

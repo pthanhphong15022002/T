@@ -467,50 +467,6 @@
 </ng-template>
 <ng-template #addCustomer>
   <ng-container *ngIf="formModelCustomer">
-    <div class="row mb-4 mb-5">
-      <div class="d-flex align-items-top col-6">
-        <span class="d-flex align-items-center w-25px h-1px">
-          <codx-input
-            name="customerCompay"
-            class="test-check"
-            type="radio"
-            field="yes"
-            [checked]="radioCheckedCus ?? false"
-            (valueChange)="changeRadioCus($event)"
-          ></codx-input>
-        </span>
-        <span class="d-flex align-items-center">
-          <codx-label
-            class="text-dark fw-bold"
-            name="lblCustomerCompany"
-            [formModel]="formModelCustomer"
-            default="Công ty"
-          ></codx-label>
-        </span>
-      </div>
-      <div class="d-flex align-items-top col-6">
-        <span class="d-flex align-items-center w-25px h-1px">
-          <codx-input
-            name="customerPerson"
-            class="test-check fw-bold"
-            type="radio"
-            style="width: 100%"
-            field="no"
-            [checked]="!radioCheckedCus ?? false"
-            (valueChange)="changeRadioCus($event)"
-          ></codx-input>
-        </span>
-
-        <span class="d-flex justify-content-end align-items-center">
-          <codx-label
-            class="text-dark fw-bold"
-            name="lblRadioAddCustomer"
-            [formModel]="formModelCustomer"
-            default="Khách hàng cá nhân"
-          ></codx-label>
-        </span>
-      </div>
-    </div>
     <div class="mb-2">
       <div class="mt-6">
         <codx-label
@@ -600,7 +556,7 @@
         >
         </codx-input>
       </div>
-      <div class="row" *ngIf="radioCheckedCus">
+      <div class="row" *ngIf="customer?.category == '1'">
         <div class="col-6 form-group">
           <codx-label [formModel]="formModelCustomer" fiedName="ShortName">
           </codx-label>
@@ -626,7 +582,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="row" *ngIf="!radioCheckedCus">
+      <div class="row" *ngIf="customer?.category == '2'">
         <div class="col-6">
           <div class="form-group">
             <codx-label [formModel]="formModelCustomer" fiedName="Gender">
@@ -648,13 +604,13 @@
               [formModel]="formModelCustomer"
               [crrValue]="customer?.birthday"
               field="birthday"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="!radioCheckedCus">
+      <div class="row" *ngIf="customer?.category == '2'">
         <div class="col-6">
           <div class="form-group">
             <codx-label [formModel]="formModelCustomer" fiedName="IDCardNo">
@@ -678,7 +634,7 @@
               [formModel]="formModelCustomer"
               [crrValue]="customer?.issuedOn"
               field="issuedOn"
-              (valueChange)="valueChangeCustomer($event)"
+              (valueChange)="valueDateChange($event, 'customer')"
             >
             </codx-input>
           </div>
@@ -696,7 +652,7 @@
         >
         </codx-input>
       </div>
-      <div class="row" *ngIf="radioCheckedCus">
+      <div class="row" *ngIf="customer?.category == '1'">
         <div class="col-6 form-group">
           <codx-label [formModel]="formModelCustomer" fiedName="Phone">
           </codx-label>
@@ -722,7 +678,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="row" *ngIf="!radioCheckedCus">
+      <div class="row" *ngIf="customer?.category == '2'">
         <div class="col-6 form-group">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -799,7 +755,7 @@
         >
         </codx-input>
       </div>
-      <div class="row" *ngIf="radioCheckedCus">
+      <div class="row" *ngIf="customer?.category == '1'">
         <div class="col-6 form-group">
           <codx-label [formModel]="formModelCustomer" fiedName="AnnualRevenue">
           </codx-label>
@@ -826,7 +782,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="form-group" *ngIf="!radioCheckedCus">
+      <div class="form-group" *ngIf="customer?.category == '2'">
         <codx-label [formModel]="form.formModel" fiedName="Occupation">
         </codx-label>
         <codx-input
@@ -850,7 +806,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="radioCheckedCus">
+      <div class="form-group" *ngIf="customer?.category == '1'">
         <codx-label [formModel]="formModelCustomer" fiedName="Industries">
         </codx-label>
         <codx-input
@@ -867,7 +823,7 @@
         <codx-label [formModel]="formModelCustomer" fiedName="Memo">
         </codx-label>
         <codx-input
-          type="textarea"
+          [formModel]="formModelCustomer"
           [crrValue]="customer?.memo"
           field="memo"
           (valueChange)="valueChangeCustomer($event)"

@@ -10,6 +10,8 @@ import { ItemBatchs } from '../../../models/ItemBatchs.model';
 })
 export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
   
+  //Constructor
+
   @ViewChild('form') public form: CodxFormComponent;
   headerText: any;
   title: any;
@@ -41,9 +43,17 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
       }
     });
   }
+
+  //End Constructor
+
+  //Init
   
   onInit(): void {
   }
+
+  //End Init
+
+  //Event
 
   valueChange(e)
   {
@@ -87,6 +97,10 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
     }
   }
 
+  //End Event
+
+  //Method
+
   onSave(){
     this.validate = 0;
     this.checkValidate();
@@ -119,6 +133,10 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
       }
     }
   }
+
+  //End Method
+
+  //Function
 
   onClearItemBatchs()
   {
@@ -253,4 +271,6 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
       }
     }
   }
+
+  //End Function
 }

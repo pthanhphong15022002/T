@@ -180,28 +180,16 @@ export class AddContractsComponent implements OnInit {
       .subscribe((grv) => {
         this.grvSetup = grv;
       });
+
     if (this.action != 'edit') {
       this.cmService
-        .getFieldAutoNoDefault('CM0204', 'CM_Contracts')
-        .subscribe((res) => {
-          if (res && !res.stop) {
-            this.disabledShowInput = true;
-            this.cache.message('AD019').subscribe((mes) => {
-              if (mes)
-                this.planceHolderAutoNumber =
-                  mes?.customName || mes?.description;
-            });
-          } else {
-            this.disabledShowInput = false;
-            // if (this.action == 'add' || this.action == 'copy')
-            //   this.cmService
-            //     .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
-            //     .subscribe((autoNum) => {
-            //       this.contracts.contractID = autoNum;
-            //     });
-          }
-        });
-    } else this.disabledShowInput = true;
+        .genAutoNumberDefault('CM0204', 'CM_Contracts', 'contractID')
+        .subscribe((autoNum) => {
+          this.contracts.contractID = autoNum;
+          this.disabledShowInput = true;
+        });    
+    }
+
   }
   ngOnInit() {
     this.setDataContract(this.contractsInput);
@@ -486,36 +474,36 @@ export class AddContractsComponent implements OnInit {
   //#endregion
   //#region Save
   handleSaveContract() {
-    // if (
-    //   this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
-    // ) {
-    //   return;
-    // }
-    // if (
-    //   this.contracts?.delPhone &&
-    //   !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
-    // ) {
-    //   this.notiService.notifyCode('RS030');
-    //   return;
-    // }
+    if (
+      this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
+    ) {
+      return;
+    }
+    if (
+      this.contracts?.delPhone &&
+      !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
+    ) {
+      this.notiService.notifyCode('RS030');
+      return;
+    }
 
-    // if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
-    //   this.notiService.notifyCode(
-    //     'CM026',
-    //     0,
-    //     '"' + this.grvSetup['ContractID'].headerText + '"'
-    //   );
-    //   return;
-    // }
+    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
+      this.notiService.notifyCode(
+        'CM026',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
+      return;
+    }
 
-    // if (this.isExitAutoNum) {
-    //   this.notiService.notifyCode(
-    //     'CM003',
-    //     0,
-    //     '"' + this.grvSetup['ContractID'].headerText + '"'
-    //   );
-    //   return;
-    // }
+    if (this.isExitAutoNum) {
+      this.notiService.notifyCode(
+        'CM003',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
+      return;
+    }
     switch (this.action) {
       case 'add':
       case 'copy':

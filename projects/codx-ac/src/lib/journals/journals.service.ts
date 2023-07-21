@@ -112,7 +112,6 @@ export class JournalService {
                   `'${autoNumber}'`
                 )
                 .subscribe((res) => {
-                  console.log(res);
                   if (res.event.status === 'Y') {
                     form.formGroup.patchValue({ voucherNo: autoNumber });
                     saveFunction();

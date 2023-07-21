@@ -9,7 +9,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="CurrencyID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="currencyID"
-            [crrValue]="currencies.currencyID" [disabled]="formType == 'edit' ? true : false" (valueChange)="valueChange($event)">
+            [crrValue]="currencies.currencyID" [disabled]="keyField == 'CurrencyID' ? true : false || formType == 'edit' ? true : false" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>

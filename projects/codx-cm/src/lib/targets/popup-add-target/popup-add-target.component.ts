@@ -86,7 +86,9 @@ export class PopupAddTargetComponent {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTargetLines = data?.data?.lstTargetLines;
-    }else{
+      let date = new Date().setFullYear(this.data.year);
+      this.date = new Date(date);
+    } else {
       this.data.status = '1';
     }
   }
@@ -152,7 +154,7 @@ export class PopupAddTargetComponent {
     } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
     }
-    op.className = 'TargetsLinesBusiness';
+    op.className = 'TargetsBusiness';
     data = [this.data, this.lstTargetLines];
 
     op.data = data;
@@ -164,7 +166,11 @@ export class PopupAddTargetComponent {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
         if (res) {
-          this.dialog.close([res.save]);
+          this.dialog.close([
+            res.save,
+            this.lstOwners,
+            this.data?.businessLineID,
+          ]);
         }
       });
   }
@@ -178,12 +184,19 @@ export class PopupAddTargetComponent {
             .update(res.update)
             .subscribe();
 
-          this.dialog.close(res.update);
+          this.dialog.close([
+            res.update,
+            this.lstOwners,
+            this.data?.businessLineID,
+          ]);
         }
       });
   }
   onSave() {
-    if(this.data?.businessLineID == null && this.data?.businessLineID?.trim() == ''){
+    if (
+      this.data?.businessLineID == null &&
+      this.data?.businessLineID?.trim() == ''
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -216,7 +229,7 @@ export class PopupAddTargetComponent {
       if (this.data[e?.field] != e?.data) {
         this.data[e?.field] = e?.data;
         if (e?.field == 'businessLineID' && e?.data?.trim() != '') {
-          this.getTargetAndLinesAsync(this.data.businessLineID);
+          this.getTargetAndLinesAsync(this.data.businessLineID, this.data.year);
         }
       }
     }
@@ -609,8 +622,8 @@ export class PopupAddTargetComponent {
 
   //#region get target and targetLine
 
-  getTargetAndLinesAsync(businessLineID) {
-    this.cmSv.getTargetAndLinesAsync(businessLineID).subscribe((res) => {
+  getTargetAndLinesAsync(businessLineID, year) {
+    this.cmSv.getTargetAndLinesAsync(businessLineID, year).subscribe((res) => {
       if (res != null) {
         this.data = res[0];
         if (this.data != null) {
@@ -675,28 +688,21 @@ export class PopupAddTargetComponent {
           var target = 0;
           for (var line of targetUsers) {
             var month = new Date(line?.startDate)?.getMonth() + 1;
-            if (line.salespersonID == qua.userID) {
-              switch (qua?.id?.toString()) {
-                case '1':
-                  if (month >= 1 && month < 4) {
-                    target += line.target;
-                  }
-                  break;
-                case '2':
-                  if (month >= 4 && month < 7) {
-                    target += line.target;
-                  }
-                  break;
-                case '3':
-                  if (month >= 7 && month < 9) {
-                    target += line.target;
-                  }
-                  break;
-                case '4':
-                  if (month >= 10 && month <= 10) {
-                    target += line.target;
-                  }
-                  break;
+            if (qua?.id === 1) {
+              if (month >= 1 && month < 4) {
+                target += line.target;
+              }
+            } else if (qua?.id === 2) {
+              if (month >= 4 && month < 7) {
+                target += line.target;
+              }
+            } else if (qua?.id === 3) {
+              if (month >= 7 && month < 10) {
+                target += line.target;
+              }
+            } else {
+              if (month >= 10 && month <= 12) {
+                target += line.target;
               }
             }
           }

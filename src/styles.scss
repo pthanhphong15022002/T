@@ -52,7 +52,7 @@ erm-quick-links-inner .dropdown-menu {
   padding: 12px 0!important;
 }
 .place-holder {
-  opacity: 0.35;
+  opacity: 0.325;
   font-style: italic;
   font-weight: 400;
 }
@@ -1334,12 +1334,15 @@ button[type="button"]:focus {
 }
 
 div.user-mini-nav {
-  min-height: 28px;
+  min-height: 26px;
   height: auto !important;
-  padding: 3px 8px 3px 2px !important;
+  padding: 2px 8px 3px 2px !important;
   margin-right: 6px;
 }
 
+div.user-mini-nav.mb-2 {
+  margin-bottom: 2px!important;
+}
 .w-30px.h-30px {
   min-width: 30px;
 }

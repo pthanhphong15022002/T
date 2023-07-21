@@ -178,13 +178,15 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="orgUnitID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+      <div class="pb-1 border-bottom">
+        <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
+        <codx-input
+        [disabled]="disabledInput"
+          field="orgUnitID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
@@ -352,7 +354,7 @@
   </div> -->
 
   
-  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
     <codx-label
     default="Phụ cấp được hưởng"
     name="lblEmpBenefit"
