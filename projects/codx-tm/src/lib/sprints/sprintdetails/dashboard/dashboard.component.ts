@@ -121,7 +121,7 @@ export class DashboardComponent
 
   legendSettings1: Object = {
     position: 'Top',
-    visible: true,
+    visible: false,
   };
 
   legendSettings2: Object = {
@@ -135,9 +135,6 @@ export class DashboardComponent
 
   legendSettings: Object = {
     position: 'Top',
-    visible: true,
-  };
-  legendRateDoneSettings: Object = {
     visible: true,
   };
 
@@ -183,6 +180,7 @@ export class DashboardComponent
   headerText: Object = [
     { text: 'Khối lượng công việc' },
     { text: 'Thời gian thực hiện' },
+    { text: 'Hiệu quả làm việc' },
   ];
 
   constructor(

@@ -190,6 +190,7 @@ export class CodxTasksComponent
   animation: AnimationModel = { enable: true, duration: 2000, delay: 200 };
   HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
   listTaskGoals = [];
+  selectedFirst = true;
 
   constructor(
     inject: Injector,

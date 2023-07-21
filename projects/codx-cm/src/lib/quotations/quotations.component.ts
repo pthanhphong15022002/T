@@ -34,8 +34,6 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   styleUrls: ['./quotations.component.css'],
 })
 export class QuotationsComponent extends UIComponent implements OnInit {
-  @Input() funcID: string;
-  @Input() customerID: string;
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
@@ -53,6 +51,8 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   @ViewChild('templateDeal') templateDeal: TemplateRef<any>;
   @ViewChild('templateApproverStatus') templateApproverStatus: TemplateRef<any>;
 
+  @Input() funcID: string;
+  @Input() customerID: string;
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -105,7 +105,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    // this.loadSetting();
+    this.funcID = this.routerActive.snapshot.params['funcID'];
   }
 
   onInit(): void {
@@ -269,6 +269,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   selectedChange(val: any) {
+    if (!val?.data) return;
     this.itemSelected = val?.data;
     this.detectorRef.detectChanges();
   }
@@ -559,6 +560,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
             this.codxCmService
               .getESCategoryByCategoryID(process.processNo)
               .subscribe((res) => {
+                if (!res) {
+                  this.notiService.notifyCode('ES028');
+                  return;
+                }
+
                 if (res.eSign) {
                   //kys soos
                 } else {
@@ -646,10 +652,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                 }
               });
           } else {
-            this.notiService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
+            this.notiService.notifyCode('DP040');
           }
         });
       }

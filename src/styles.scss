@@ -52,7 +52,7 @@ erm-quick-links-inner .dropdown-menu {
   padding: 12px 0!important;
 }
 .place-holder {
-  opacity: 0.35;
+  opacity: 0.325;
   font-style: italic;
   font-weight: 400;
 }
@@ -1334,12 +1334,15 @@ button[type="button"]:focus {
 }
 
 div.user-mini-nav {
-  min-height: 28px;
+  min-height: 26px;
   height: auto !important;
-  padding: 3px 8px 3px 2px !important;
+  padding: 2px 8px 3px 2px !important;
   margin-right: 6px;
 }
 
+div.user-mini-nav.mb-2 {
+  margin-bottom: 2px!important;
+}
 .w-30px.h-30px {
   min-width: 30px;
 }
@@ -3431,12 +3434,35 @@ lib-employee-list{
   min-width: 100px;
 }
 
+.icon-14.icon-me-2 span[class*="fa-"]{
+  margin-right: 2px;
+  
+}
 
 //
 .e-hscroll-bar{
   margin: 0 5px;
 }
+.FD_Cards{
+  .text-feed{
+    height: 310px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #1e1d1f33 !important;
+  }
+}
 
+
+
+// .text-feed::-webkit-scrollbar-track {
+//   background-color: transparent !important; /* ẩn thanh cuộn */
+// }
+
+// .text-feed::-webkit-scrollbar-thumb {
+//   background-color: transparent !important; /* ẩn thanh cuộn */
+// }
 
 .cm-scroll .e-content{
   padding-bottom: 30px;
@@ -3466,9 +3492,10 @@ codx-views[ng-reflect-func-i-d="CM0104"]{
 //////
 
 codx-lead-detail{
-  .codx-detail-body{
+  .codx-detail-body ejs-tab .e-content{
     height: calc(100vh - 424px)!important;
     overflow: auto;
+ 
   }
 }
 
@@ -3476,8 +3503,10 @@ codx-deal-detail{
   .deal-tab-content{    
     height: calc(100vh - 424px)!important;
     overflow: auto;
+
   }
 }
+
 
 
 /*

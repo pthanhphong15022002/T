@@ -90,15 +90,15 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           panelLeftRef:this.report
         },
       },
-      // {
-      //   type: ViewType.list,
-      //   sameData: true,
-      //   active: false,
+      {
+        type: ViewType.content,
+        sameData: true,
+        active: false,
 
-      //   // model: {
-      //   //   template: ,
-      //   // },
-      // },
+        model: {
+          panelLeftRef:this.report
+        },
+      },
     ];
 
     this.routerNg.events.subscribe((event: any)=>{

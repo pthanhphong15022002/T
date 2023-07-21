@@ -13,6 +13,7 @@
     <div class="form-group row">
       <codx-label fiedName="SkillID" [formModel]="formModel"> </codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="skillID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -22,6 +23,7 @@
     <div class="form-group row">
       <codx-label fiedName="SkillGradeID" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="skillGradeID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -34,6 +36,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainSupplierID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -47,6 +50,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="trainCourseID"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -55,6 +59,7 @@
       <div class="col-6">
         <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="trainForm"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -66,6 +71,7 @@
       <div class="col-6">
         <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="trainFrom"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -74,6 +80,7 @@
       <div class="col-6">
         <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="trainTo"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -85,6 +92,7 @@
       <div class="col-6">
         <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="totalScore"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -94,6 +102,7 @@
       <div class="col-6">
         <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="ranking"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -104,6 +113,7 @@
     <div class="form-group row">
       <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="note"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -178,7 +188,7 @@
 </ng-template> -->
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
     <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label
@@ -204,6 +214,7 @@
     <div class="form-group row mt-5">
       <codx-label fiedName="SkillID" [formModel]="formModel"> </codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="skillID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -213,6 +224,7 @@
     <div class="form-group row">
       <codx-label fiedName="SkillGradeID" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="skillGradeID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -225,6 +237,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="trainSupplierID"
         [Group]="formGroup"
         [formModel]="formModel"
@@ -238,6 +251,7 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="trainCourseID"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -246,6 +260,7 @@
       <div class="col-6">
         <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="trainForm"
           [Group]="formGroup"
           [formModel]="formModel"
@@ -257,6 +272,7 @@
       <div class="col-6">
         <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
         <codx-dropdown-calendar
+        [disabled]="disabledInput"
           cssPopup="h-400px w-500px"
           [value]="Date(skillObj.trainFromDate)"
           [emptyText]="headerTextCalendar[0]"
@@ -272,6 +288,7 @@
       <div class="col-6">
         <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
         <codx-dropdown-calendar
+        [disabled]="disabledInput"
           cssPopup="h-400px w-500px"
           [value]="Date(skillObj.trainToDate)"
           [emptyText]="headerTextCalendar[1]"
@@ -290,6 +307,7 @@
       <div class="col-6">
         <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="totalScore"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -299,6 +317,7 @@
       <div class="col-6">
         <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
         <codx-input
+        [disabled]="disabledInput"
           field="ranking"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -309,6 +328,7 @@
     <div class="form-group row">
       <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="note"
         [Group]="formGroup"
         [formModel]="formModel"

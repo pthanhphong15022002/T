@@ -15,7 +15,7 @@
 </codx-layout-add>
 
 <ng-template #footer1>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
     <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
@@ -32,37 +32,37 @@
     <div class="col-6">
       <codx-label fiedName="HealthPeriodID" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="healthPeriodID"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthPeriodID"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HealthDate" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="healthDate"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthDate"></codx-input>
       </div>
     </div>
   </div>
   <div class="form-group">
     <codx-label fiedName="HospitalID" [formModel]="formModel"></codx-label>
-    <codx-input [Group]="formGroup" [formModel]="formModel" field="hospitalID">
+    <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="hospitalID">
     </codx-input>
   </div>
   <div class="form-group">
     <codx-label fiedName="HealthPlace" [formModel]="formModel"></codx-label>
-    <codx-input [Group]="formGroup" [formModel]="formModel" field="healthPlace">
+    <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthPlace">
     </codx-input>
   </div>
   <div class="form-group row">
     <div class="col-6">
       <codx-label fiedName="DoctorName" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="doctorName"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="doctorName"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HealthFee" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="healthFee"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthFee"
           [showSpinButton]="false"></codx-input>
       </div>
     </div>
@@ -70,7 +70,7 @@
 
   <div class="form-group">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-    <codx-input [Group]="formGroup" [formModel]="formModel" field="note">
+    <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="note">
     </codx-input>
   </div>
   <div class="mt-8 mb-3">
@@ -81,13 +81,13 @@
     <div class="col-6">
       <codx-label fiedName="HealthType" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="healthType"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthType"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="PreviousDiseases" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
           field="previousDiseases"></codx-input>
       </div>
     </div>
@@ -95,19 +95,19 @@
 
   <div class="form-group">
     <codx-label fiedName="Injury" [formModel]="formModel"></codx-label>
-    <codx-input [Group]="formGroup" [formModel]="formModel" field="injury">
+    <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="injury">
     </codx-input>
   </div>
 
   <div class="form-group">
     <codx-label fiedName="FinalConclusion" [formModel]="formModel"></codx-label>
-    <codx-input [Group]="formGroup" [formModel]="formModel" field="finalConclusion">
+    <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="finalConclusion">
     </codx-input>
   </div>
 
   <div class="form-group pb-3">
     <codx-label fiedName="Suggestion" [formModel]="formModel"></codx-label>
-    <codx-input [Group]="formGroup" [formModel]="formModel" field="suggestion">
+    <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="suggestion">
     </codx-input>
   </div>
 </ng-template>
@@ -120,13 +120,13 @@
     <div class="col-6">
       <codx-label fiedName="P_High" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="p_High"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_High"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="P_Weigh" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="p_Weigh"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_Weigh"></codx-input>
       </div>
     </div>
   </div>
@@ -135,13 +135,13 @@
     <div class="col-6">
       <codx-label fiedName="P_PulseTension" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="p_PulseTension"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_PulseTension"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="P_BloodPressure" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
           field="p_BloodPressure"></codx-input>
       </div>
     </div>
@@ -151,13 +151,13 @@
     <div class="col-6">
       <codx-label fiedName="P_BMI" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="P_BMI"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="P_BMI"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="P_Pignet" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="p_Pignet"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_Pignet"></codx-input>
       </div>
     </div>
   </div>
@@ -166,13 +166,13 @@
     <div class="col-6">
       <codx-label fiedName="P_ThoraxInhale" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="p_ThoraxInhale"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_ThoraxInhale"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="P_ThoraxExhale" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="p_ThoraxExhale"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_ThoraxExhale"></codx-input>
       </div>
     </div>
   </div>
@@ -181,21 +181,21 @@
     <div class="col-6">
       <codx-label fiedName="P_ThoraxAverage" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
           field="p_ThoraxAverage"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Physical" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="hType_Physical"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="hType_Physical"></codx-input>
       </div>
     </div>
   </div>
 
   <div class="form-group row">
     <codx-label fiedName="P_Note" [formModel]="formModel"></codx-label>
-    <codx-input field="p_Note" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="p_Note" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 </ng-template>
 
@@ -210,13 +210,13 @@
     <div class="col-6">
       <codx-label fiedName="C_Circulation" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Circulation"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Circulation"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Circulation" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
           field="HType_Circulation"></codx-input>
       </div>
     </div>
@@ -226,13 +226,13 @@
     <div class="col-6">
       <codx-label fiedName="C_Lung" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Lung"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Lung"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Lung" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Lung"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Lung"></codx-input>
       </div>
     </div>
   </div>
@@ -241,13 +241,13 @@
     <div class="col-6">
       <codx-label fiedName="C_ToDigest" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_ToDigest"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_ToDigest"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_ToDigest" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_ToDigest"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_ToDigest"></codx-input>
       </div>
     </div>
   </div>
@@ -256,13 +256,13 @@
     <div class="col-6">
       <codx-label fiedName="C_Urethra" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Urethra"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Urethra"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Urethra" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Urethra"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Urethra"></codx-input>
       </div>
     </div>
   </div>
@@ -271,13 +271,13 @@
     <div class="col-6">
       <codx-label fiedName="C_MuscleBone" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_MuscleBone"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_MuscleBone"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_MuscleBone" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
           field="HType_MuscleBone"></codx-input>
       </div>
     </div>
@@ -287,13 +287,13 @@
     <div class="col-6">
       <codx-label fiedName="C_Nervous" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Nervous"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Nervous"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Nervous" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Nervous"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Nervous"></codx-input>
       </div>
     </div>
   </div>
@@ -302,13 +302,13 @@
     <div class="col-6">
       <codx-label fiedName="C_Mental" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Mental"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Mental"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Mental" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Mental"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Mental"></codx-input>
       </div>
     </div>
   </div>
@@ -321,13 +321,13 @@
     <div class="col-6">
       <codx-label fiedName="C_Surgery" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Surgery"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Surgery"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Surgery" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Surgery"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Surgery"></codx-input>
       </div>
     </div>
   </div>
@@ -340,13 +340,13 @@
     <div class="col-6">
       <codx-label fiedName="C_Gynecology" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Gynecology"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Gynecology"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Gynecology" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
           field="HType_Gynecology"></codx-input>
       </div>
     </div>
@@ -360,13 +360,13 @@
     <div class="col-6">
       <codx-label fiedName="EyeLeft" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="eyeLeft"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="eyeLeft"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="EyeRight" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="eyeRight"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="eyeRight"></codx-input>
       </div>
     </div>
   </div>
@@ -375,20 +375,20 @@
     <div class="col-6">
       <codx-label fiedName="EyeHaveGlasses" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="eyeHaveGlasses"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="eyeHaveGlasses"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Eye" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Eye"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Eye"></codx-input>
       </div>
     </div>
   </div>
 
   <div class="form-group row">
     <codx-label fiedName="EyeNote" [formModel]="formModel"></codx-label>
-    <codx-input field="eyeNote" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="eyeNote" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="mt-6 mb-3">
@@ -397,20 +397,20 @@
 
   <div class="form-group row">
     <codx-label fiedName="TMH" [formModel]="formModel"></codx-label>
-    <codx-input field="tmh" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="tmh" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="form-group row">
     <div class="col-6">
       <codx-label fiedName="TMHNote" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="TMHNote"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="TMHNote"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_TMH" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_TMH"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_TMH"></codx-input>
       </div>
     </div>
   </div>
@@ -421,20 +421,20 @@
 
   <div class="form-group row">
     <codx-label fiedName="RHM" [formModel]="formModel"></codx-label>
-    <codx-input field="rhm" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="rhm" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="form-group row">
     <div class="col-6">
       <codx-label fiedName="RHMNote" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="RHMNote"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="RHMNote"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_RHM" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_RHM"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_RHM"></codx-input>
       </div>
     </div>
   </div>
@@ -445,20 +445,20 @@
 
   <div class="form-group row">
     <codx-label fiedName="Dermal" [formModel]="formModel"></codx-label>
-    <codx-input field="dermal" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="dermal" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="form-group row">
     <div class="col-6">
       <codx-label fiedName="DermalNote" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="DermalNote"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="DermalNote"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="HType_Dermal" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Dermal"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Dermal"></codx-input>
       </div>
     </div>
   </div>
@@ -484,14 +484,14 @@
     <div class="col-6">
       <codx-label fiedName="ResultBloodTest" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel"
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
           field="resultBloodTest"></codx-input>
       </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="BloodGroup" [formModel]="formModel"></codx-label>
       <div>
-        <codx-input [Group]="formGroup" [formModel]="formModel" field="bloodGroup"></codx-input>
+        <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="bloodGroup"></codx-input>
       </div>
     </div>
   </div>
@@ -505,7 +505,7 @@
         fiedName="TestUrine"
         [formModel]="formModel"
     ></codx-label> -->
-    <codx-input field="testUrine" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="testUrine" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="mt-6 mb-3">
@@ -517,7 +517,7 @@
       fiedName="ResultXRay"
       [formModel]="formModel"pr
   ></codx-label> -->
-    <codx-input field="resultXRay" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="resultXRay" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="d-flex flex-stack mt-4 mb-2 align-items-center">
@@ -537,7 +537,7 @@
     fiedName="ResultUltrasound"
     [formModel]="formModel"
 ></codx-label> -->
-    <codx-input field="resultUltrasound" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="resultUltrasound" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="mt-6 mb-3">
@@ -549,7 +549,7 @@
   fiedName="ResultECG"
   [formModel]="formModel"
 ></codx-label> -->
-    <codx-input field="resultECG" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="resultECG" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 
   <div class="mt-6 mb-3">
@@ -561,14 +561,14 @@
 fiedName="ResultBoneMeasure"
 [formModel]="formModel"
 ></codx-label> -->
-    <codx-input field="resultBoneMeasure" [formModel]="formModel" [Group]="formGroup"></codx-input>
+    <codx-input [disabled]="disabledInput" field="resultBoneMeasure" [formModel]="formModel" [Group]="formGroup"></codx-input>
   </div>
 </ng-template>
 
 
 
 <ng-template #footer2>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
     <button class="btn btn-primary" (click)="onSave()">
       <i class="icon-save"></i>
       <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
@@ -584,33 +584,33 @@ fiedName="ResultBoneMeasure"
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="U_Thyroid" [formModel]="formModel"></codx-label>
-          <codx-input field="U_Thyroid" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="U_Thyroid" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="U_Heart" [formModel]="formModel"></codx-label>
-          <codx-input field="U_Heart" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="U_Heart" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="U_Belly" [formModel]="formModel"></codx-label>
-          <codx-input field="U_Belly" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="U_Belly" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="U_Breast" [formModel]="formModel"></codx-label>
-          <codx-input field="U_Breast" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="U_Breast" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="U_TVS" [formModel]="formModel"></codx-label>
-          <codx-input field="U_TVS" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="U_TVS" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="ResultUltrasound" [formModel]="formModel"></codx-label>
-          <codx-input field="ResultUltrasound" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="ResultUltrasound" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
     </ng-template>
@@ -626,72 +626,72 @@ fiedName="ResultBoneMeasure"
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestBloodCell" [formModel]="formModel"></codx-label>
-          <codx-input field="testBloodCell" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testBloodCell" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestGlucose" [formModel]="formModel"></codx-label>
-          <codx-input field="testGlucose" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testGlucose" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestCholesterol" [formModel]="formModel"></codx-label>
-          <codx-input field="testCholesterol" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testCholesterol" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestHDL_Trigly" [formModel]="formModel"></codx-label>
-          <codx-input field="testHDL_Trigly" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testHDL_Trigly" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestSGOT_SGPT" [formModel]="formModel"></codx-label>
-          <codx-input field="testSGOT_SGPT" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testSGOT_SGPT" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestGGT" [formModel]="formModel"></codx-label>
-          <codx-input field="testGGT" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testGGT" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestHBsAg" [formModel]="formModel"></codx-label>
-          <codx-input field="testHBsAg" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testHBsAg" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestAntiHBs" [formModel]="formModel"></codx-label>
-          <codx-input field="testAntiHBs" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testAntiHBs" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestAntiHCV" [formModel]="formModel"></codx-label>
-          <codx-input field="testAntiHCV" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testAntiHCV" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestUre_Cre" [formModel]="formModel"></codx-label>
-          <codx-input field="testUre_Cre" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testUre_Cre" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestAcidUric" [formModel]="formModel"></codx-label>
-          <codx-input field="testAcidUric" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testAcidUric" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestHP" [formModel]="formModel"></codx-label>
-          <codx-input field="testHP" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testHP" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <codx-label fiedName="TestKSTDR" [formModel]="formModel"></codx-label>
-        <codx-input field="testKSTDR" [formModel]="formModel" [Group]="formGroup"></codx-input>
+        <codx-input [disabled]="disabledInput" field="testKSTDR" [formModel]="formModel" [Group]="formGroup"></codx-input>
       </div>
 
       <codx-label [name]="'2TamSoatUngThu'" [formModel]="formModel" class="fw-bold " default="2. Tầm soát ung thư"></codx-label>
@@ -699,50 +699,50 @@ fiedName="ResultBoneMeasure"
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestK_AFP" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_AFP" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_AFP" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestK_CEA" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_CEA" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_CEA" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestK_PSA" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_PSA" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_PSA" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestK_HPV_PAP" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_HPV_PAP" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_HPV_PAP" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestK_CA125" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_CA125" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_CA125" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestK_CA153" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_CA153" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_CA153" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <div class="col-6">
           <codx-label fiedName="TestK_CA199" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_CA199" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_CA199" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
         <div class="col-6">
           <codx-label fiedName="TestK_CA724" [formModel]="formModel"></codx-label>
-          <codx-input field="testK_CA724" [formModel]="formModel" [Group]="formGroup"></codx-input>
+          <codx-input [disabled]="disabledInput" field="testK_CA724" [formModel]="formModel" [Group]="formGroup"></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
         <codx-label fiedName="TestK_Cyfra211" [formModel]="formModel"></codx-label>
-        <codx-input field="testK_Cyfra211" [formModel]="formModel" [Group]="formGroup"></codx-input>
+        <codx-input [disabled]="disabledInput" field="testK_Cyfra211" [formModel]="formModel" [Group]="formGroup"></codx-input>
       </div>
 
       <codx-label [name]="'3GhiChuChungXetNghiemMau'" [formModel]="formModel" class="fw-bold " default="3. Ghi chú chung phần xét nghiệm máu"></codx-label>
@@ -752,7 +752,7 @@ fiedName="ResultBoneMeasure"
         fiedName="ResultBloodTest"
         [formModel]="formModel"
     ></codx-label> -->
-        <codx-input field="resultBloodTest" [formModel]="formModel" [Group]="formGroup"></codx-input>
+        <codx-input [disabled]="disabledInput" field="resultBloodTest" [formModel]="formModel" [Group]="formGroup"></codx-input>
       </div>
     </ng-template>
   </codx-form>
@@ -782,37 +782,37 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="HealthPeriodID" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="healthPeriodID"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthPeriodID"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HealthDate" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="healthDate"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthDate"></codx-input>
                 </div>
               </div>
             </div>
             <div class="form-group">
               <codx-label fiedName="HospitalID" [formModel]="formModel"></codx-label>
-              <codx-input [Group]="formGroup" [formModel]="formModel" field="hospitalID">
+              <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="hospitalID">
               </codx-input>
             </div>
             <div class="form-group">
               <codx-label fiedName="HealthPlace" [formModel]="formModel"></codx-label>
-              <codx-input [Group]="formGroup" [formModel]="formModel" field="healthPlace">
+              <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthPlace">
               </codx-input>
             </div>
             <div class="form-group row">
               <div class="col-6">
                 <codx-label fiedName="DoctorName" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="doctorName"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="doctorName"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HealthFee" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="healthFee"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthFee"
                     [showSpinButton]="false"></codx-input>
                 </div>
               </div>
@@ -820,7 +820,7 @@ fiedName="ResultBoneMeasure"
 
             <div class="form-group">
               <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-              <codx-input [Group]="formGroup" [formModel]="formModel" field="note">
+              <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="note">
               </codx-input>
             </div>
             <div class="mt-8 mb-3">
@@ -831,13 +831,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="HealthType" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="healthType"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="healthType"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="PreviousDiseases" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
                     field="previousDiseases"></codx-input>
                 </div>
               </div>
@@ -845,19 +845,19 @@ fiedName="ResultBoneMeasure"
 
             <div class="form-group">
               <codx-label fiedName="Injury" [formModel]="formModel"></codx-label>
-              <codx-input [Group]="formGroup" [formModel]="formModel" field="injury">
+              <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="injury">
               </codx-input>
             </div>
 
             <div class="form-group">
               <codx-label fiedName="FinalConclusion" [formModel]="formModel"></codx-label>
-              <codx-input [Group]="formGroup" [formModel]="formModel" field="finalConclusion">
+              <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="finalConclusion">
               </codx-input>
             </div>
 
             <div class="form-group pb-3">
               <codx-label fiedName="Suggestion" [formModel]="formModel"></codx-label>
-              <codx-input [Group]="formGroup" [formModel]="formModel" field="suggestion">
+              <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="suggestion">
               </codx-input>
             </div>
           </ng-template>
@@ -875,13 +875,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="P_High" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="p_High"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_High"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="P_Weigh" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="p_Weigh"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_Weigh"></codx-input>
                 </div>
               </div>
             </div>
@@ -890,13 +890,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="P_PulseTension" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="p_PulseTension"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_PulseTension"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="P_BloodPressure" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
                     field="p_BloodPressure"></codx-input>
                 </div>
               </div>
@@ -906,13 +906,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="P_BMI" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="P_BMI"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="P_BMI"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="P_Pignet" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="p_Pignet"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_Pignet"></codx-input>
                 </div>
               </div>
             </div>
@@ -921,13 +921,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="P_ThoraxInhale" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="p_ThoraxInhale"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_ThoraxInhale"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="P_ThoraxExhale" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="p_ThoraxExhale"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="p_ThoraxExhale"></codx-input>
                 </div>
               </div>
             </div>
@@ -936,21 +936,21 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="P_ThoraxAverage" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
                     field="p_ThoraxAverage"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Physical" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="hType_Physical"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="hType_Physical"></codx-input>
                 </div>
               </div>
             </div>
 
             <div class="form-group row">
               <codx-label fiedName="P_Note" [formModel]="formModel"></codx-label>
-              <codx-input field="p_Note" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="p_Note" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
           </ng-template>
         </e-tabitem>
@@ -970,13 +970,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_Circulation" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Circulation"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Circulation"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Circulation" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
                     field="HType_Circulation"></codx-input>
                 </div>
               </div>
@@ -986,13 +986,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_Lung" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Lung"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Lung"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Lung" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Lung"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Lung"></codx-input>
                 </div>
               </div>
             </div>
@@ -1001,13 +1001,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_ToDigest" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_ToDigest"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_ToDigest"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_ToDigest" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_ToDigest"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_ToDigest"></codx-input>
                 </div>
               </div>
             </div>
@@ -1016,13 +1016,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_Urethra" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Urethra"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Urethra"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Urethra" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Urethra"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Urethra"></codx-input>
                 </div>
               </div>
             </div>
@@ -1031,13 +1031,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_MuscleBone" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_MuscleBone"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_MuscleBone"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_MuscleBone" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
                     field="HType_MuscleBone"></codx-input>
                 </div>
               </div>
@@ -1047,13 +1047,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_Nervous" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Nervous"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Nervous"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Nervous" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Nervous"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Nervous"></codx-input>
                 </div>
               </div>
             </div>
@@ -1062,13 +1062,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_Mental" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Mental"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Mental"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Mental" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Mental"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Mental"></codx-input>
                 </div>
               </div>
             </div>
@@ -1081,13 +1081,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_Surgery" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Surgery"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Surgery"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Surgery" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Surgery"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Surgery"></codx-input>
                 </div>
               </div>
             </div>
@@ -1100,13 +1100,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="C_Gynecology" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="c_Gynecology"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="c_Gynecology"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Gynecology" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
                     field="HType_Gynecology"></codx-input>
                 </div>
               </div>
@@ -1120,13 +1120,13 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="EyeLeft" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="eyeLeft"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="eyeLeft"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="EyeRight" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="eyeRight"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="eyeRight"></codx-input>
                 </div>
               </div>
             </div>
@@ -1135,20 +1135,20 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="EyeHaveGlasses" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="eyeHaveGlasses"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="eyeHaveGlasses"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Eye" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Eye"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Eye"></codx-input>
                 </div>
               </div>
             </div>
 
             <div class="form-group row">
               <codx-label fiedName="EyeNote" [formModel]="formModel"></codx-label>
-              <codx-input field="eyeNote" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="eyeNote" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="mt-6 mb-3">
@@ -1157,20 +1157,20 @@ fiedName="ResultBoneMeasure"
 
             <div class="form-group row">
               <codx-label fiedName="TMH" [formModel]="formModel"></codx-label>
-              <codx-input field="tmh" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="tmh" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="form-group row">
               <div class="col-6">
                 <codx-label fiedName="TMHNote" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="TMHNote"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="TMHNote"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_TMH" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_TMH"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_TMH"></codx-input>
                 </div>
               </div>
             </div>
@@ -1181,20 +1181,20 @@ fiedName="ResultBoneMeasure"
 
             <div class="form-group row">
               <codx-label fiedName="RHM" [formModel]="formModel"></codx-label>
-              <codx-input field="rhm" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="rhm" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="form-group row">
               <div class="col-6">
                 <codx-label fiedName="RHMNote" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="RHMNote"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="RHMNote"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_RHM" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_RHM"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_RHM"></codx-input>
                 </div>
               </div>
             </div>
@@ -1205,20 +1205,20 @@ fiedName="ResultBoneMeasure"
 
             <div class="form-group row">
               <codx-label fiedName="Dermal" [formModel]="formModel"></codx-label>
-              <codx-input field="dermal" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="dermal" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="form-group row">
               <div class="col-6">
                 <codx-label fiedName="DermalNote" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="DermalNote"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="DermalNote"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="HType_Dermal" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="HType_Dermal"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="HType_Dermal"></codx-input>
                 </div>
               </div>
             </div>
@@ -1250,14 +1250,14 @@ fiedName="ResultBoneMeasure"
               <div class="col-6">
                 <codx-label fiedName="ResultBloodTest" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel"
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel"
                     field="resultBloodTest"></codx-input>
                 </div>
               </div>
               <div class="col-6">
                 <codx-label fiedName="BloodGroup" [formModel]="formModel"></codx-label>
                 <div>
-                  <codx-input [Group]="formGroup" [formModel]="formModel" field="bloodGroup"></codx-input>
+                  <codx-input [disabled]="disabledInput" [Group]="formGroup" [formModel]="formModel" field="bloodGroup"></codx-input>
                 </div>
               </div>
             </div>
@@ -1267,7 +1267,7 @@ fiedName="ResultBoneMeasure"
             </div>
 
             <div class="form-group row">
-              <codx-input field="testUrine" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="testUrine" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="mt-6 mb-3">
@@ -1275,7 +1275,7 @@ fiedName="ResultBoneMeasure"
             </div>
 
             <div class="form-group row">
-              <codx-input field="resultXRay" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="resultXRay" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="d-flex flex-stack mt-4 mb-2 align-items-center">
@@ -1291,7 +1291,7 @@ fiedName="ResultBoneMeasure"
             </div>
 
             <div class="form-group row">
-              <codx-input field="resultUltrasound" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="resultUltrasound" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="mt-6 mb-3">
@@ -1299,7 +1299,7 @@ fiedName="ResultBoneMeasure"
             </div>
 
             <div class="form-group row">
-              <codx-input field="resultECG" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="resultECG" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
             <div class="mt-6 mb-3">
@@ -1307,7 +1307,7 @@ fiedName="ResultBoneMeasure"
             </div>
 
             <div class="form-group row">
-              <codx-input field="resultBoneMeasure" [formModel]="formModel" [Group]="formGroup"></codx-input>
+              <codx-input [disabled]="disabledInput" field="resultBoneMeasure" [formModel]="formModel" [Group]="formGroup"></codx-input>
             </div>
 
           </ng-template>

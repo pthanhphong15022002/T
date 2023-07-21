@@ -1,6 +1,6 @@
 <codx-views #view service="HR" [assemblyName]="assemblyName" [className]="className" [idField]="idField"
   [method]="method" [views]="views" [entityName]="entityName" [selectedFirst]="true" [buttons]="buttons"
-  [viewActiveType]="'2'" (selectedChange)="selectedChange($event)">
+  [viewActiveType]="'2'" (selectedChange)="selectedChange($event)" (viewChanging)="viewChanging($event)">
 </codx-views>
 
 
@@ -40,7 +40,7 @@
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center border-bottom">
     <!-- Nhân viên -->
-    <div class="w-40 p-3 ">
+    <div class="w-40 p-3">
       <div class="d-flex align-items-center">
         <codx-img class="me-3" [width]="30" [objectId]="data.employeeID" [objectName]="data.employeeName"
           objectType="HR_Employees" [referType]="'avt'">
@@ -113,23 +113,33 @@
 
 <ng-template #cardTemp let-data>
   <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
-    imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" [dataItem]="data"
+    imageObjType="HR_Employees" imageWidth="50" [formModel]="view.formModel" [dataItem]="data" [footer]="footer"
     [imageObjType]="view.formModel.entityName" [hideMF]="true" [imageObjName]="data.employeeName"
     [titleTmp]="subtitleTmp">
   </codx-card-center>
   <ng-template #subtitleTmp>
     <div class="d-flex flex-column align-items-center">
       <span #nameField class="data-text-color data-text-width line-clamp line-clamp-1 fw-bold mb-1"
-        [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip : null">{{data.employeeName}}</span>
+        [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip : null">{{data.employeeName}}
+        <ng-template #nameTooltip>
+          <div class="d-flex flex-column">
+            <span class="label-text-color">{{grvSetup['EmployeeName'].headerText}}</span>
+            <span class="data-text-color data-text-width">{{data.employeeName}}</span>
+          </div>
+        </ng-template>
+      </span>
       <span #positionField class="data-text-color data-text-width line-clamp line-clamp-1 mb-1"
-        [ngbTooltip]="positionField.scrollHeight > positionField.clientHeight? positionTooltip : null">
+        [ngbTooltip]="positionTooltip">
         {{data.positionName}}
+        <ng-template #positionTooltip>
+          <div class="d-flex flex-column">
+            <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+            <span class="data-text-color data-text-width" *ngIf="positionField.scrollHeight > positionField.clientHeight">
+              {{data.positionName? data.positionName : data.positionID}}</span>
+          </div>
+        </ng-template>
       </span>
       <span *ngIf="data.birthday; else noBirthDay">{{data.birthday | fmDT }}</span>
-      <span *ngIf="data.phone; else noPhone"
-        [innerHTML]="data.phone | formatvalue: view.formModel:'Phone' | async"></span>
-      <span class="line-clamp line-clamp-1" 
-        [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
     </div>
   </ng-template>
   <ng-template #footer let-data>
@@ -143,19 +153,6 @@
         <span #email class="line-clamp line-clamp-1"
           [innerHTML]="data.email | formatvalue: view.formModel:'Email' | async"></span>
       </span>
-    </div>
-  </ng-template>
-  <ng-template #positionTooltip>
-    <div class="d-flex flex-column">
-      <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
-      <span class="data-text-color">{{data.positionName?
-        data.positionName : data.positionID}}</span>
-    </div>
-  </ng-template>
-  <ng-template #nameTooltip>
-    <div class="d-flex flex-column">
-      <span class="label-text-color">{{grvSetup['EmployeeName'].headerText}}</span>
-      <span class="data-text-color">{{data.employeeName}}</span>
     </div>
   </ng-template>
 </ng-template>
@@ -247,9 +244,7 @@
   <span class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
 </ng-template>
 <ng-template #noBirthDay>
-  <span class="place-holder">
-    {{grvSetup['Birthday']?.headerText}}
-  </span>
+  <span class="place-holder">{{grvSetup['Birthday']?.headerText}}</span>
 </ng-template>
 <ng-template #noJoinedOn>
   <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>

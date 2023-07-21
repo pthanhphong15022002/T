@@ -30,6 +30,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   fieldHeaderTexts;
   funcID;
   idField = 'RecID';
+  disabledInput = false;
   indexSelected;
   employId;
   isAfterRender = false;
@@ -50,6 +51,9 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.employId = data?.data?.employeeId;
     this.visaObj = JSON.parse(JSON.stringify(data?.data?.visaObj));
   }
@@ -79,7 +83,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         if (this.actionType == 'copy') {
           if (this.visaObj.effectedDate == '0001-01-01T00:00:00') {
             this.visaObj.effectedDate = null;
@@ -94,6 +98,10 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
         this.isAfterRender = true;
       }
     }
+    // this.formModel.currentData = this.visaObj;
+    // this.formGroup.patchValue(this.visaObj);
+    // this.cr.detectChanges();
+    // this.isAfterRender = true;
   }
 
   onInit(): void {

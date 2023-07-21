@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
@@ -183,7 +183,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           {
             this.vouchers.warehouseID = e.data;
             this.vouchers.warehouseName = e.component.itemsSelected[0].WarehouseName;
-            this.form.formGroup.patchValue(this.vouchers);
+            this.form.formGroup.patchValue({
+              warehouseID: this.vouchers.warehouseID,
+              warehouseName: this.vouchers.warehouseName,
+            });
           }
           break;
         case 'warehousename':
@@ -324,6 +327,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     // this.loadPredicate(this.gridVouchersLine.visibleColumns, data.rowData);
   }
 
+  onClose()
+  {
+    if(this.modeGrid == 1)
+    {
+      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+      {
+        this.close();
+      }
+    }
+    else if(this.modeGrid == 2)
+    {
+      this.close();
+    }
+  }
+
   close() {
     if (this.isSaveMaster ) {
       this.onSaveMaster();
@@ -349,7 +367,15 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.validate = 0;
       return;
     } else {
-      this.save(false);
+      if(this.modeGrid == 1)
+      {
+        if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+          this.save(false);
+      }
+      else if(this.modeGrid == 2)
+      {
+        this.save(false);
+      }
     }
   }
 
@@ -360,7 +386,15 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.validate = 0;
       return;
     } else {
-      this.save(true);
+      if(this.modeGrid == 1)
+      {
+        if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+          this.save(true);
+      }
+      else if(this.modeGrid == 2)
+      {
+        this.save(true);
+      }
     }
   }
 
@@ -439,7 +473,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           } else {
             // nếu voucherNo đã tồn tại,
             // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-            this.journalService.handleVoucherNoAndSave(
+            this.journalService.checkVoucherNoBeforeSave(
               this.journal,
               this.vouchers,
               'IV',
@@ -481,7 +515,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
           break;
         case 'edit':
-          this.journalService.handleVoucherNoAndSave(
+          this.journalService.checkVoucherNoBeforeSave(
             this.journal,
             this.vouchers,
             'IV',
@@ -621,7 +655,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 }
               });
           } else {
-            this.journalService.handleVoucherNoAndSave(
+            this.journalService.checkVoucherNoBeforeSave(
               this.journal,
               this.vouchers,
               'IV',
@@ -1095,7 +1129,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.vouchers,
       this.reason
     );
-    this.form.formGroup.patchValue(this.vouchers);
+    this.form.formGroup.patchValue({
+      memo: this.vouchers.memo,
+    });
   }
 
   getWarehouseName(warehouseID: any){
@@ -1103,7 +1139,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       .subscribe((res: any) => {
         if (res.length > 0) {
           this.vouchers.warehouseName = res;
-          this.form.formGroup.patchValue(this.vouchers);
+          this.form.formGroup.patchValue({
+            warehouseName: this.vouchers.warehouseName,
+          });
         }
       });
   }
@@ -1137,23 +1175,19 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   autoAddRowSet(e: any) {
-    setTimeout(() => {
-      if (!this.loadingform || !this.loading) {
-        switch (e.type) {
-          case 'autoAdd':
-            this.addRow();
-            break;
-          case 'add':
-            if (this.gridVouchersLine.autoAddRow) {
-              this.addRow();
-            }
-            break;
-          case 'closeEdit':
-            this.gridVouchersLine.autoAddRow = true;
-            break;
+    switch (e.type) {
+      case 'autoAdd':
+        this.addRow();
+        break;
+      case 'add':
+        if (this.gridVouchersLine.autoAddRow) {
+          this.addRow();
         }
-      }
-    }, 500);
+        break;
+      case 'closeEdit':
+        this.gridVouchersLine.autoAddRow = true;
+        break;
+    }
   }
 
   setPredicatesByItemID(dataValue: string): void {
@@ -1176,6 +1210,33 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if (idim5) {
       idim5.predicate = 'WarehouseID=@0';
       idim5.dataValue = dataValue;
+    }
+  }
+
+  @HostListener('keyup', ['$event'])
+  onKeyUp(e: KeyboardEvent): void {
+    if (e.key == 'Tab') {
+      let element;
+      if (document.activeElement.className == 'e-tab-wrap') {
+        element = document.getElementById('btnadd');
+        element.focus();
+      }
+    }
+  }
+  
+  @HostListener('click', ['$event'])
+  onClick(e) {
+    if(this.modeGrid == 2)
+      return;
+    if (
+      e.target.closest('.e-grid') == null &&
+      e.target.closest('.e-popup') == null &&
+      e.target.closest('.edit-value') == null
+    ) {
+      if (this.gridVouchersLine && this.gridVouchersLine.gridRef.isEdit) {
+        this.gridVouchersLine.autoAddRow = false;
+        this.gridVouchersLine.endEdit();
+      }
     }
   }
   //#endregion

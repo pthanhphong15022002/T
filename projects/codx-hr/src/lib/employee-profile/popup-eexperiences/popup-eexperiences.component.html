@@ -16,6 +16,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="companyName"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -30,6 +31,7 @@
                 
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="companyAddress"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -42,6 +44,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="industryID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -54,6 +57,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="position"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -95,6 +99,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="note"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -182,6 +187,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="companyName"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -196,6 +202,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="companyAddress"
             ></codx-input>
         </div>
@@ -206,6 +213,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="industryID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -218,6 +226,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="position"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -257,6 +266,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [disabled]="disabledInput"
                 field="note"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -283,6 +293,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <ejs-datepicker 
+            [enabled]="!disabledInput"
             [start]='start' 
             [depth]='depth' 
             [value]="fromdateVal"
@@ -296,6 +307,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <ejs-datepicker 
+            [enabled]="!disabledInput"
             [start]='start' 
             [depth]='depth' 
             [value]="todateVal"
@@ -311,6 +323,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="companyName"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -325,6 +338,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="companyAddress"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -337,6 +351,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="industryID"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -349,6 +364,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="position"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -363,6 +379,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             [formModel]="formModel"
         ></codx-label>
         <codx-input
+        [disabled]="disabledInput"
             field="note"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -372,7 +389,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
 </codx-form>
 
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
         <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
             <i class="icon-save"></i>
         <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>

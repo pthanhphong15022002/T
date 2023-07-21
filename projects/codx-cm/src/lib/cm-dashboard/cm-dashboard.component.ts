@@ -104,6 +104,92 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   marker = { visible: true };
   checkBtnSuscess = true;
   checkBtnFail = false;
+  //chart  Bubble
+  border: Object = {
+    width: 1.5,
+    color: 'black',
+  };
+  primaryYAxisBubble: Object = {
+    title: 'Chỉ tiêu dự kiến (triệu VND)',
+    // minimum: 0,
+    // maximum: 100,
+    // interval: 5,
+    // lineStyle: { width: 0 },
+    // majorTickLines: { width: 0 },
+    // majorGridLines: { width: 1 },
+    // minorGridLines: { width: 1 },
+    // minorTickLines: { width: 0 },
+  };
+  primaryXAxisBubble: Object = {
+    interval: 1,
+    valueType: 'Category',
+    title: 'Doanh số thực tế (triệu VND)',
+  };
+
+  dataSource = [
+    {
+      dataSource: [
+        { x: 10, y: 7, d: 0.01 },
+        { x: 20, y: 50, d: 0.1 },
+      ],
+      color: 'blue',
+      name: 'Muc tiêu 1',
+      size: 0.0003,
+    },
+    {
+      dataSource: [{ x: 40, y: 25, d: 10 }],
+      color: 'green',
+      name: 'Muc tiêu 2',
+      size: 10,
+    },
+    {
+      dataSource: [{ x: 45, y: 60, d: 20 }],
+      color: 'red',
+      name: 'Muc tiêu 3',
+      size: 20,
+    },
+    {
+      dataSource: [{ x: 70, y: 56, d: 0.0005 }],
+      color: 'yellow',
+      name: 'Muc tiêu 4',
+      size: 0.0005,
+    },
+    {
+      dataSource: [{ x: 120, y: 45, d: 0.1 }],
+      color: 'black',
+      name: 'Muc tiêu 5',
+      size: 0.1,
+    },
+  ];
+
+  //nang suat nhan viên
+  productivityOwner = [
+    {
+      name: 'Trương Đặng Ngọc Phúc',
+      percentage: 90,
+      money: 5000000,
+    },
+    {
+      name: 'Nguyễn Thanh Dung',
+      percentage: 70,
+      money: 5000000,
+    },
+    {
+      name: 'Trần Công Sơn',
+      percentage: 60,
+      money: 5000000,
+    },
+    {
+      name: 'Hồ Thị Trang Ngân',
+      percentage: 30,
+      money: 5000000,
+    },
+    {
+      name: 'Lê Nguyên Trí',
+      percentage: 20,
+      money: 5000000,
+    },
+  ];
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);
@@ -141,7 +227,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     this.panelsDeals = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"81.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"91.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":8,"minSizeX":32,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"111.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"81.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"91.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"111.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.36639064171709834_layout","data":"8"},{"panelId":"91.06496875406606994_layout","data":"9"},{"panelId":"101.21519762020962552_layout","data":"10"},{"panelId":"111.21519762020964252_layout","data":"11"}]'
@@ -210,8 +296,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         }
 
         this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
-        this.minOwners = this.dataDashBoard?.CountsOwnersTopLowToHight ?? [];
-
+        this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
+        this.productivityOwner =
+          this.dataDashBoard.countsProductivityOwner ?? [];
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);

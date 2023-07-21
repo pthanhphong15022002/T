@@ -41,6 +41,7 @@ import { AnyNsRecord } from 'dns';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
+import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
 
 @Component({
   selector: 'lib-deals',
@@ -153,7 +154,8 @@ export class DealsComponent
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+
   ) {
     super(inject);
     this.executeApiCalls();
@@ -422,6 +424,7 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
+      //  eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
@@ -518,9 +521,9 @@ export class DealsComponent
 
   checkMoreReason(tmpPermission) {
     return (
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
+      !tmpPermission?.roleMore?.isReasonSuccess &&
+      !tmpPermission?.roleMore?.isReasonFail &&
+      !tmpPermission?.roleMore?.isMoveStage
     );
   }
   clickMF(e, data) {
@@ -581,7 +584,7 @@ export class DealsComponent
       .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.startDeal(data.recID);
+          this.startDeal(data);
         }
       });
   }
@@ -603,7 +606,8 @@ export class DealsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail(e.data);
+        if (this.viewCrr != 11) this.viewDetail(e.data);
+        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
         break;
       //chang fiter
       case 'pined-filter':
@@ -760,6 +764,7 @@ export class DealsComponent
             if (e && e.event != null) {
               var instance = e.event.instance;
               var listSteps = e.event?.listStep;
+              this.detailViewDeal.reloadListStep(listSteps);
               var index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -825,9 +830,6 @@ export class DealsComponent
         if (info.event.status == 'Y') {
           this.codxCmService.openOrClosedDeal(datas).subscribe((res) => {
             if (res) {
-              // data.closed = check ? true : false;
-              // data.closedOn = check ? new Date() : data.closedOn;
-              // data.modifiedOn = new Date();
               this.dataSelected.closed = check;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.view.dataService.update(this.dataSelected).subscribe();
@@ -890,6 +892,8 @@ export class DealsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
+        var listSteps = e.event?.listStep;
+        this.detailViewDeal.reloadListStep(listSteps);
         data = this.updateReasonDeal(e.event?.instance, data);
         var datas = [data, oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
@@ -938,16 +942,23 @@ export class DealsComponent
     deal.nextStep = '';
     return deal;
   }
-  startDeal(recId) {
-    var data = [recId];
-    this.codxCmService.startDeal(data).subscribe((res) => {
-      if (res) {
-        this.dataSelected = res[0];
-        this.notificationsService.notifyCode('SYS007');
-        this.view.dataService.update(this.dataSelected).subscribe();
-        if (this.kanban) this.kanban.updateCard(this.dataSelected);
+  startDeal(data) {
+    this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
+      if(resDP) {
+        var datas = [data.recID, resDP[0]];
+        this.codxCmService.startDeal(datas).subscribe((res) => {
+          if (res) {
+            this.dataSelected = res[0];
+            this.dataSelected = JSON.parse(
+              JSON.stringify(this.dataSelected)
+            );
+            this.detailViewDeal.reloadListStep(resDP[1]);
+            this.notificationsService.notifyCode('SYS007');
+            this.view.dataService.update(this.dataSelected).subscribe();
+          }
+          this.detectorRef.detectChanges();
+        });
       }
-      this.detectorRef.detectChanges();
     });
   }
 
@@ -962,25 +973,32 @@ export class DealsComponent
       formMD.gridViewName = fun.gridViewName;
       dialogModel.zIndex = 999;
       dialogModel.FormModel = formMD;
-      var dataCM = {
+      var obj = {
+        recID: data?.recID,
         refID: data?.refID,
         processID: data?.processID,
         stepID: data?.stepID,
+        gridViewSetup: this.gridViewSetup,
+        formModel: this.view.formModel,
+        applyFor: '1',
+        titleAction: this.titleAction,
+        owner: data.owner,
+        startControl: data.steps.startControl,
       };
       var dialog = this.callfc.openForm(
-        PopupEditOwnerstepComponent,
+        PopupOwnerDealComponent,
         '',
         500,
         280,
         '',
-        [null, this.titleAction, data, '1', dataCM],
+        obj,
         '',
         dialogModel
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-          data.modifiedOn = new Date();
-          this.dataSelected = data;
+          this.detailViewDeal.promiseAllAsync();
+          this.view.dataService.update(e?.event).subscribe();
           this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
@@ -1050,6 +1068,7 @@ export class DealsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
+        this.detailViewDeal.promiseAllAsync();
         this.view.dataService.update(e.event).subscribe();
         //up kaban
         if (this.kanban) {
@@ -1092,6 +1111,7 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
+            this.detailViewDeal.promiseAllAsync();
             this.view.dataService.update(e.event).subscribe();
             //up kaban
             if (
@@ -1183,13 +1203,14 @@ export class DealsComponent
 
   //#region event
   selectedChange(data) {
-    this.dataSelected = data?.data ? data?.data : data;
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
   autoMoveStage($event) {
     if ($event && $event != null) {
+      this.detailViewDeal.promiseAllAsync();
       this.view.dataService.update($event).subscribe();
       this.detailViewDeal.dataSelected = JSON.parse(
         JSON.stringify(this.dataSelected)
@@ -1244,6 +1265,10 @@ export class DealsComponent
         this.codxCmService
           .getESCategoryByCategoryID(process.processNo)
           .subscribe((res) => {
+            if (!res) {
+              this.notificationsService.notifyCode('ES028');
+              return;
+            }
             if (res.eSign) {
               //kys soos
             } else {
@@ -1251,10 +1276,7 @@ export class DealsComponent
             }
           });
       } else {
-        this.notificationsService.notify(
-          'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
+        this.notificationsService.notifyCode('DP040');
       }
     });
   }

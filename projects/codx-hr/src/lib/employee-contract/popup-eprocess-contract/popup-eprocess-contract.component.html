@@ -14,12 +14,12 @@
 </codx-layout-add>
 
 <ng-template #contractInfo>
-  <div *ngIf="openFrom == 'empContractProcess'" class="form-group row">
-    <div class="col-10">
-      <div class="d-flex">
+  <div *ngIf="openFrom == 'empContractProcess'" class="form-group d-flex justify-content-between">
+    <div class="w-100">
+      <div class="d-flex border-bottom pb-1">
         <div class="d-flex flex-column position-relative">
           <codx-img
-            [width]="40"
+            [width]="35"
             class="me-4"
             [objectId]="employeeObj?.employeeID ?? employeeObj?.emp?.employeeID"
             [referType]="'avt'"
@@ -37,7 +37,7 @@
             </span>
           </div>
           <div
-            class="text-gray-700"
+            class="text-gray-500 fs-7"
             *ngIf="employeeObj?.positionID || employeeObj?.emp?.positionID"
           >
             <span
@@ -48,7 +48,7 @@
               "
             ></span>
           </div>
-          <span class="text-gray-700" *ngIf="employeeObj?.orgUnitName">{{
+          <span class="text-gray-700 fs-7" *ngIf="employeeObj?.orgUnitName">{{
             employeeObj?.orgUnitName
           }}</span>
           <!-- <div
@@ -66,9 +66,10 @@
         </div>
       </div>
     </div>
-    <div class="col-2 d-flex justify-content-end">
+    <div class="w-50px d-flex justify-content-end">
       <!-- <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label> -->
       <codx-input
+      [disabled]="disabledInput"
         [showInput]="false"
         field="employeeID"
         [formModel]="formModel"
@@ -111,7 +112,7 @@
       <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
       <codx-input
         *ngIf="loadedAutoField == true"
-        [disabled]="autoNumField == 'ContractNo'"
+        [disabled]="autoNumField == 'ContractNo' || disabledInput"
         field="contractNo"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -120,6 +121,7 @@
     <div class="col-6">
       <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="signedDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -133,6 +135,7 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="contractTypeID"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -154,6 +157,7 @@
     <div class="col-6">
       <codx-label fiedName="EffectedDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="effectedDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -163,6 +167,7 @@
     <div class="col-6">
       <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="expiredDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -172,16 +177,20 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="orgUnitID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+      <div class="pb-1 border-bottom">
+        <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
+        <codx-input
+        [disabled]="disabledInput"
+          field="orgUnitID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="positionID"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -192,6 +201,7 @@
     <div class="col-6">
       <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="locationID"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -200,6 +210,7 @@
     <div class="col-6">
       <codx-label fiedName="TransportType" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="TransportType"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -212,6 +223,7 @@
       <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
       <div class="border-bottom pb-1">
         <codx-input
+        [disabled]="disabledInput"
           field="signerID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -224,6 +236,7 @@
   <div class="form-group row">
     <codx-label fiedName="SignerPosition" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="signerPosition"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -233,6 +246,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="note"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -282,6 +296,7 @@
   <div class="form-group row mt-5">
     <codx-label fiedName="TimeWork" [formModel]="formModel"></codx-label>
     <codx-input
+    [disabled]="disabledInput"
       field="timeWork"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -291,6 +306,7 @@
     <codx-label fiedName="MainWork" [formModel]="formModel"></codx-label>
     <div class="main-work">
       <codx-input
+      [disabled]="disabledInput"
         field="mainWork"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -304,6 +320,7 @@
     <div class="col-6">
       <codx-label fiedName="MainSalary" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="mainSalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -312,6 +329,7 @@
     <div class="col-6">
       <codx-label fiedName="JobSalary" [formModel]="formModel"></codx-label>
       <codx-input
+      [disabled]="disabledInput"
         field="jobSalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -335,7 +353,7 @@
   </div> -->
 
   
-  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
     <codx-label
     default="Phụ cấp được hưởng"
     name="lblEmpBenefit"
@@ -347,6 +365,7 @@
     type="button"
     class="btn btn-sm btn-light-primary"
     (click)="addBenefit()"
+    *ngIf="actionType != 'view'"
   >
     <i class="icon-add icon-16 ms-n1"></i>
     <codx-label
@@ -418,6 +437,7 @@
 
 <ng-template #footer>
   <div
+  *ngIf="actionType != 'view'"
     class="d-flex"
     [ngClass]="
       actionType == 'edit' ? 'justify-content-between' : 'justify-content-end'
@@ -478,6 +498,7 @@
             [formModel]="benefitFormModel"
           ></codx-label>
           <codx-input
+          [disabled]="disabledInput"
             field="BenefitID"
             [formModel]="benefitFormModel"
             [Group]="benefitFormGroup"
@@ -492,6 +513,7 @@
               ></codx-label>
 
               <codx-input
+              [disabled]="disabledInput"
                 field="BenefitAmt"
                 [formModel]="benefitFormModel"
                 [Group]="benefitFormGroup"
@@ -506,6 +528,7 @@
                 [formModel]="benefitFormModel"
               ></codx-label>
               <codx-input
+              [disabled]="disabledInput"
                 field="BenefitNorm"
                 [formModel]="benefitFormModel"
                 [Group]="benefitFormGroup"

@@ -73,7 +73,7 @@ export class JournalService {
   /**
    * If this model.voucherNo already exists, the system will automatically suggest another voucherNo.
    * @param isEdit A boolean value that indicates whether you are in edit mode.*/
-  handleVoucherNoAndSave(
+  checkVoucherNoBeforeSave(
     journal: IJournal,
     model: any,
     service: string,
@@ -112,7 +112,6 @@ export class JournalService {
                   `'${autoNumber}'`
                 )
                 .subscribe((res) => {
-                  console.log(res);
                   if (res.event.status === 'Y') {
                     form.formGroup.patchValue({ voucherNo: autoNumber });
                     saveFunction();

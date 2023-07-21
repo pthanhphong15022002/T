@@ -12,67 +12,75 @@
     >
       <ng-template #header let-data>
         <div class="d-flex align-items-center justify-content-between">
-          <div class="mb-2" *ngIf="funcID == 'CM0101'">
-            <div
-              *ngIf="
-                dataSelected?.custGroupID != null &&
-                  dataSelected?.custGroupID?.trim() != '';
-                then thenData;
-                else noData
-              "
-            ></div>
-            <ng-template #thenData>
-              <ng-container
-                *ngIf="lstCustGroups != null && lstCustGroups.length > 0"
-              >
-                <ng-container *ngFor="let item of lstCustGroups">
-                  <div
-                    class="d-flex align-items-center"
-                    *ngIf="item?.recID == dataSelected?.custGroupID"
-                  >
-                    <span
-                      [ngClass]="item?.icon ?? 'icon-corporate_fare icon-16'"
-                      [ngStyle]="{ color: item?.iconColor }"
-                      class="me-2"
-                      [ngbTooltip]="popupCustGroupID"
-                      ><ng-template #popupCustGroupID>
-                        <codx-label
-                          [setRequire]="false"
-                          fiedName="CustGroupID"
-                          [formModel]="formModel"
-                        ></codx-label> </ng-template
-                    ></span>
-                    <span class="text-dark fs-6 fw-bold">
-                      {{ item?.custGroupName }}
-                    </span>
-                  </div>
+          <div class="mb-2">
+            <div *ngIf="funcID == 'CM0101'">
+              <div
+                *ngIf="
+                  dataSelected?.custGroupID != null &&
+                    dataSelected?.custGroupID?.trim() != ''
+                  then thenData;
+                  else noData
+                "
+              ></div>
+              <ng-template #thenData>
+                <ng-container
+                  *ngIf="lstCustGroups != null && lstCustGroups.length > 0"
+                >
+                  <ng-container *ngFor="let item of lstCustGroups">
+                    <div
+                      class="d-flex align-items-center"
+                      *ngIf="item?.recID == dataSelected?.custGroupID"
+                    >
+                      <span
+                        [ngClass]="item?.icon ?? 'icon-corporate_fare icon-16'"
+                        [ngStyle]="{ color: item?.iconColor }"
+                        class="me-2"
+                        [ngbTooltip]="popupCustGroupID"
+                        ><ng-template #popupCustGroupID>
+                          <codx-label
+                            [setRequire]="false"
+                            fiedName="CustGroupID"
+                            [formModel]="formModel"
+                          ></codx-label> </ng-template
+                      ></span>
+                      <span class="text-dark fs-6 fw-bold">
+                        {{ item?.custGroupName }}
+                      </span>
+                    </div>
+                  </ng-container>
                 </ng-container>
-              </ng-container>
-            </ng-template>
-            <ng-template #noData>
-              <div class="d-flex align-items-center">
-                <span
-                  class="icon-corporate_fare icon-16 me-2"
-                  [ngbTooltip]="popupCustGroupID"
-                  ><ng-template #popupCustGroupID>
-                    <codx-label
-                      [setRequire]="false"
-                      fiedName="CustGroupID"
-                      [formModel]="formModel"
-                    ></codx-label> </ng-template
-                ></span>
-                <span
-                  class="text-dark fs-6 fw-bold"
-                  [innerHTML]="
-                    dataSelected?.custGroupID
-                      | formatvalue : formModel : 'CustGroupID'
-                      | async
-                  "
-                ></span>
-              </div>
-            </ng-template>
+              </ng-template>
+              <ng-template #noData>
+                <div
+                  class="d-flex align-items-center"
+                >
+                  <span
+                    class="icon-corporate_fare icon-16 me-2"
+                    [ngbTooltip]="popupCustGroupID"
+                    ><ng-template #popupCustGroupID>
+                      <codx-label
+                        [setRequire]="false"
+                        fiedName="CustGroupID"
+                        [formModel]="formModel"
+                      ></codx-label> </ng-template
+                  ></span>
+                  <span
+                    class="text-dark fs-6 fw-bold"
+                    [innerHTML]="
+                      dataSelected?.custGroupID
+                        | formatvalue : formModel : 'CustGroupID'
+                        | async
+                    "
+                  ></span>
+                </div>
+
+              </ng-template>
+            </div>
           </div>
-          <div class="d-flex justify-content-end mb-2" *ngIf="funcID == 'CM0101'">
+          <div
+            class="d-flex justify-content-end mb-2"
+            *ngIf="funcID == 'CM0101'"
+          >
             <codx-mfunc
               [hideMF]="false"
               [dataItem]="dataSelected"
@@ -100,9 +108,7 @@
             <div class="d-flex flex-column w-100">
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                  <div
-                    class="fw-bold fs-6 text-dark line-clamp line-clamp-1"
-                  >
+                  <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
                     {{
                       funcID == "CM0101"
                         ? dataSelected.customerName
@@ -115,11 +121,14 @@
                   </div>
                   <div
                     class="d-flex flex-wrap me-4"
-                    *ngIf="funcID == 'CM0102'"
+                    *ngIf="
+                      (funcID == 'CM0101' && dataSelected?.category == '2') ||
+                      funcID == 'CM0102'
+                    "
                   >
                     <div
                       class="me-3 d-flex align-items-center"
-                      *ngIf="dataSelected?.mobile"
+                      *ngIf="dataSelected?.phone || dataSelected?.mobile"
                     >
                       <span
                         [ngbTooltip]="popupAllowCall"
@@ -145,12 +154,16 @@
                           dataSelected?.allowCall ? 'text-primary' : ''
                         "
                         class="text-gray-600"
-                        >{{ dataSelected?.mobile }}</span
+                        ><span *ngIf="funcID == 'CM0101'">
+                          {{ dataSelected?.phone }} </span
+                        ><span *ngIf="funcID == 'CM0102'">
+                          {{ dataSelected?.mobile }}
+                        </span></span
                       >
                     </div>
                     <div
                       class="d-flex align-items-center"
-                      *ngIf="dataSelected?.personalEmail"
+                      *ngIf="dataSelected?.email || dataSelected?.personalEmail"
                     >
                       <span
                         [ngbTooltip]="popupAllowEmail"
@@ -176,7 +189,11 @@
                           dataSelected?.allowEmail ? 'text-primary' : ''
                         "
                         class="text-gray-900"
-                        >{{ dataSelected?.personalEmail }}</span
+                        ><span *ngIf="funcID == 'CM0101'">
+                          {{ dataSelected?.email }} </span
+                        ><span *ngIf="funcID == 'CM0102'">
+                          {{ dataSelected?.personalEmail }}
+                        </span></span
                       >
                     </div>
                   </div>
@@ -243,7 +260,7 @@
               funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''
             "
           >
-            <div class="w-100" *ngIf="dataSelected.industries">
+            <div class="w-100" *ngIf="dataSelected?.category == '1'">
               <codx-label
                 style="white-space: nowrap"
                 class="fw-bold text-primary"
@@ -271,6 +288,24 @@
                   >
                   <!-- {{ dataSelected?.segmentID }} -->
                 </div>
+              </div>
+            </div>
+            <div class="w-100" *ngIf="dataSelected?.category == '2'">
+              <codx-label
+                style="white-space: nowrap"
+                class="fw-bold text-primary"
+                fiedName="Occupation"
+                [formModel]="formModel"
+              ></codx-label>
+              <div class="mt-1">
+                <span
+                  class="text-gray-700"
+                  [innerHTML]="
+                    dataSelected?.occupation
+                      | formatvalue : formModel : 'Occupation'
+                      | async
+                  "
+                ></span>
               </div>
             </div>
           </div>
@@ -346,12 +381,10 @@
               </div>
             </div>
           </div>
-
         </div>
       </ng-template>
       <ng-template #body let-data>
         <div class="cm-scroll">
-
           <div class="instance-select">
             <ejs-tab
               id="tab_adaptive"
@@ -363,7 +396,9 @@
                 <e-tabitem>
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-info text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-info text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Thông tin chung"
@@ -387,10 +422,17 @@
                     </div>
                   </ng-template>
                 </e-tabitem>
-                <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+                <e-tabitem
+                  *ngIf="
+                    (funcID == 'CM0101' && dataSelected?.category == '1') ||
+                    funcID == 'CM0103'
+                  "
+                >
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-contact_phone text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-contact_phone text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Liên hệ"
@@ -417,10 +459,17 @@
                     </div>
                   </ng-template>
                 </e-tabitem>
-                <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
+                <e-tabitem
+                  *ngIf="
+                    (funcID == 'CM0101' && dataSelected?.category == '1') ||
+                    funcID == 'CM0102'
+                  "
+                >
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-location_on text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-location_on text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Địa chỉ"
@@ -445,7 +494,9 @@
                 <e-tabitem *ngIf="funcID == 'CM0101'">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-add_shopping_cart text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-add_shopping_cart text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Cơ hội"
@@ -465,7 +516,9 @@
                 <e-tabitem *ngIf="funcID == 'CM0101'">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-monetization_on text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-monetization_on text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Báo giá"
@@ -492,7 +545,9 @@
                 <e-tabitem *ngIf="funcID == 'CM0101'">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-shopping_bag text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-shopping_bag text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Hợp đồng"
@@ -511,10 +566,14 @@
                     </div>
                   </ng-template>
                 </e-tabitem>
-                <e-tabitem *ngIf="funcID == 'CM0101'">
+                <e-tabitem
+                  *ngIf="funcID == 'CM0101' && dataSelected?.category == '1'"
+                >
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-more text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-more text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Công việc"
@@ -536,7 +595,9 @@
                 <e-tabitem *ngIf="funcID == 'CM0104'">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
-                      <span class="icon-shopping_cart text-hover-primary icon-16 me-2"></span>
+                      <span
+                        class="icon-shopping_cart text-hover-primary icon-16 me-2"
+                      ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
                         default="Cơ hội liên quan"
@@ -753,5 +814,9 @@
   ></list-contracts>
 </ng-template>
 <ng-template #taskTemplate let-data>
-  <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="dataSelected?.status == '99'"></step-task>
+  <step-task
+    [typeTask]="2"
+    [customerID]="dataSelected?.recID"
+    [isPause]="dataSelected?.status == '99'"
+  ></step-task>
 </ng-template>

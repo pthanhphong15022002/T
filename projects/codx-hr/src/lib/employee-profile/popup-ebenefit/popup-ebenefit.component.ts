@@ -28,6 +28,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   successFlag = false;
   actionType: string;
+  disabledInput = false;
   idField = 'RecID';
   employeeObj;
   headerText: '';
@@ -55,6 +56,9 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     //this.listBenefits = data?.data?.listBenefits;
     this.headerText = data?.data?.headerText;
     // if (this.actionType === 'edit' || this.actionType === 'copy') {
@@ -117,7 +121,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType ==='view') {
         this.formGroup.patchValue(this.benefitObj);
         this.formModel.currentData = this.benefitObj;
         this.isAfterRender = true;
@@ -153,39 +157,22 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           this.notify.notifyCode('SYS006');
           this.successFlag = true;
           this.dialog && this.dialog.close(this.benefitObj);
-
-          //this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
-          // if(this.listView){
-          //   (this.listView.dataService as CRUDService).add(this.benefitObj).subscribe();
-          // }
-          // this.hrService
-          //   .GetCurrentBenefit(this.benefitObj.employeeID)
-          //   .subscribe((res) => {
-          //     //this.listBenefits = res;
-          //     this.dialog && this.dialog.close(p);
-          //   });
         }
       });
     } else {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
         debugger
-        if (p != null) {
+        if (p[0] != null) {
           this.notify.notifyCode('SYS007');
           this.dialog && this.dialog.close(this.benefitObj);
-          //this.listBenefits[this.indexSelected] = p;
-          // if(this.listView){
-          //   (this.listView.dataService as CRUDService).update(this.lstPassports[this.indexSelected]).subscribe()
-          // }
-          // this.dialog.close(this.data)
         }
       });
     }
   }
 
-    //change employee
     handleSelectEmp(evt) {
       switch (evt?.field) {
-        case 'signerID': // check if signer changed
+        case 'signerID':
           if (evt?.data && evt?.data.length > 0) {
             this.getEmployeeInfoById(evt?.data, evt?.field);
           } else {

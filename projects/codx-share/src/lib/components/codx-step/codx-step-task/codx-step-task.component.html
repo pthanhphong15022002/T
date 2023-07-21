@@ -11,13 +11,14 @@
         [ngStyle]="{'border-bottom': '2px solid' + currentStep?.backgroundColor}"
       >
         <div
-          class="w-20px me-2"
+          class="w-20px me-2 text-primary"
           >
-          <span [ngClass]="currentStep?.icon" [ngStyle]="{color: currentStep?.iconColor}" class="fs-5-sm"></span>
+          <span [ngClass]="currentStep?.icon" class="fs-5-sm"></span>
         </div>
+        <!-- [ngStyle]="{color: currentStep?.iconColor}"
+        [ngStyle]="{color: currentStep?.textColor}" -->
         <span
-        [ngStyle]="{color: currentStep?.textColor}"
-          class="line-clamp line-clamp-1 fs-6 fw-bold">
+          class="line-clamp line-clamp-1 fs-6 fw-bold text-primary">
           {{ currentStep.stepName || "" }}</span
         >
       </div>
@@ -113,6 +114,7 @@
               <div
                 *ngIf="groupTask?.recID"
                 class="d-flex align-items-center justify-content-between card-job-expand"
+                (dblclick)="viewTask(groupTask, 'G')"
               >
                 <ng-container
                   [ngTemplateOutlet]="groupTemplate"
@@ -156,7 +158,8 @@
                     class="drap-drop"
                   >
                     <div
-                      class="d-flex align-items-center justify-content-between"
+                      class="d-flex align-items-center justify-content-between cursor-pointer"
+                      (dblclick)="viewTask(task, task?.taskType || 'T')"
                     >
                       <div style="flex-grow: 1" class="has-action-menu">
                         <ng-container

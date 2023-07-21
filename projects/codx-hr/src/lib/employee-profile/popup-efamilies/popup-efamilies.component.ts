@@ -3,6 +3,7 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   OnInit,
   Optional,
   ViewChild,
@@ -39,6 +40,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   employId: string;
   actionType: string;
+  disabledInput = false;
   dialog: DialogRef;
   fieldHeaderTexts
   // lstFamilyMembers;
@@ -51,6 +53,8 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   headerText: '';
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('registerFromDatePicker') registerFromDatePicker: ElementRef;
+  @ViewChild('registerToDatePicker') registerToDatePicker: ElementRef;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
@@ -67,6 +71,10 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+
+    }
     this.familyMemberObj = JSON.parse(
       JSON.stringify(data?.data?.familyMemberObj)
     );
@@ -98,7 +106,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
         if (new Date(this.familyMemberObj.registerFrom).getFullYear() == 1)
         {
           this.familyMemberObj.registerFrom = null;
@@ -121,6 +129,10 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         this.isAfterRender = true;
       }
     }
+    // if(this.disabledInput == true){
+    //   this.registerToDatePicker.nativeElement.disabled = true;
+    //   this.registerFromDatePicker.nativeElement.disabled = true;
+    // }
   }
   onInit(): void {
     if (!this.formModel) {

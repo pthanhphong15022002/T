@@ -50,6 +50,12 @@ import { VendorsComponent } from './vendors/vendors.component';
 import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
 import { WarehousesComponent } from './warehouses/warehouses.component';
 import { ImageBoxListComponent } from './items/components/image-box-list/image-box-list.component';
+import { FiscalPeriodsComponent } from './fiscal-periods/fiscal-periods.component';
+import { PopAddFiscalPeriodsComponent } from './fiscal-periods/pop-add-fiscal-periods/pop-add-fiscal-periods.component';
+import { ItemBatchsComponent } from './item-batchs/item-batchs.component';
+import { PopAddItemBatchsComponent } from './item-batchs/pop-add-item-batchs/pop-add-item-batchs.component';
+import { ItemSeriesComponent } from './item-series/item-series.component';
+import { PopAddItemSeriesComponent } from './item-series/pop-add-item-series/pop-add-item-series.component';
 
 var routes: Routes = [
   {
@@ -112,6 +118,18 @@ var routes: Routes = [
         path: 'fixedassets/:funcID',
         component: FixedAssetsComponent,
       },
+      {
+        path: 'fiscalperiods/:funcID',
+        component: FiscalPeriodsComponent,
+      },
+      {
+        path: 'itembatchs/:funcID',
+        component: ItemBatchsComponent,
+      },
+      {
+        path: 'itemseries/:funcID',
+        component: ItemSeriesComponent,
+      },
     ],
   },
 ];
@@ -159,6 +177,12 @@ var routes: Routes = [
     FixedAssetsComponent,
     PopupAddFixedAssetComponent,
     ImageBoxListComponent,
+    FiscalPeriodsComponent,
+    PopAddFiscalPeriodsComponent,
+    ItemBatchsComponent,
+    PopAddItemBatchsComponent,
+    ItemSeriesComponent,
+    PopAddItemSeriesComponent,
   ],
   imports: [
     CommonModule,

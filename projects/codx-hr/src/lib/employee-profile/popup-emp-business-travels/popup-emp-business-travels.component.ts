@@ -39,6 +39,7 @@ export class PopupEmpBusinessTravelsComponent
   employId;
   data;
   isNotOverseaFlag = true;
+  disabledInput = false;
 
   idField = 'RecID';
 
@@ -46,6 +47,7 @@ export class PopupEmpBusinessTravelsComponent
   predicates = 'EmployeeID=@0';
 
   isAfterRender = false;
+  
   actionType: string;
   ops = ['y'];
   date = new Date('01-04-2040');
@@ -62,6 +64,9 @@ export class PopupEmpBusinessTravelsComponent
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.funcID = data?.data?.funcID;
     this.data = JSON.parse(JSON.stringify(data?.data?.businessTravelObj));
 

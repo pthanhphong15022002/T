@@ -22,6 +22,7 @@ export class EmployeeListByOrgComponent {
   @Input() showRowNumber: boolean = false;
   @Input() funcID: string = 'HRT03a1';
   @Output() dataChange: EventEmitter<any> = new EventEmitter();
+  @Output() gridViewDataService: EventEmitter<any> = new EventEmitter();
   totalEmployee: number = 0;
   sysMoreFunc: any[] = [];
   columnsGrid;
@@ -56,6 +57,7 @@ export class EmployeeListByOrgComponent {
   predicates = '@0.Contains(OrgUnitID)';
   funcIDEmpInfor: string = 'HRT03b';
   itemSelected;
+  hadEmitDataService = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -81,6 +83,9 @@ export class EmployeeListByOrgComponent {
             this.initColumnGrid();
           }
         });
+    }
+    if (this.grid && this.editable) {
+      this.gridViewDataService.emit(this.grid.dataService);
     }
   }
   initColumnGrid() {
@@ -161,8 +166,12 @@ export class EmployeeListByOrgComponent {
         this.grid.dataService.rowCount = 0;
         clearInterval(ins);
         this.grid.refresh();
+        if (this.grid && this.editable && !this.hadEmitDataService) {
+          this.hadEmitDataService = true;
+          this.gridViewDataService.emit(this.grid.dataService);
+        }
       }
-    }, 200);
+    }, 50);
   }
 
   getManager(orgUnitID: string) {
@@ -290,7 +299,7 @@ export class EmployeeListByOrgComponent {
       );
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS03');
-        (this.grid.dataService as CRUDService).edit(data).subscribe((res: any) => {
+      (this.grid.dataService as CRUDService).edit(data).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;

@@ -36,6 +36,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   dataForm2;
   actionType: string;
   isSaved: boolean = false;
+  disabledInput = false;
+
   fieldHeaderTexts
   trainCourseObj;
   dataVllSupplier: any;
@@ -80,6 +82,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dataDialog?.data?.headerText;
     this.actionType = dataDialog?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.formModel = dialog?.formModel;
     this.funcID = dataDialog?.data?.funcID;
     this.employId = dataDialog?.data?.employeeId;
