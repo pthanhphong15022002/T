@@ -119,14 +119,14 @@
                     [objectName]="data.sampleStaffEmp[0]?.employeeName" [objectType]="'HR_Employees'" [width]="30"
                     [referType]="'avt'">
                 </codx-img>
-                <ng-container *ngIf="data.sampleStaffEmp.length == 2; else manyEmployees">
+                <ng-container *ngIf="data.sampleStaff == 2; else manyEmployees">
                     <codx-img style="margin: -4px;" [funcId]=" funcID" [objectId]="data.sampleStaffEmp[1]?.employeeID"
                         [objectName]="data.sampleStaffEmp[1]?.employeeName" [objectType]="'HR_Employees'" [width]="30"
                         [referType]="'avt'">
                     </codx-img>
                 </ng-container>
                 <ng-template #manyEmployees>
-                    <span *ngIf="data.staffEmp.length > 1" class="multiple-employee rounded-circle">
+                    <span *ngIf="data.staff > 2" class="multiple-employee rounded-circle">
                         <span class="text-white fs-3">+{{(data.staff - 1)}}</span>
                     </span>
                 </ng-template>
