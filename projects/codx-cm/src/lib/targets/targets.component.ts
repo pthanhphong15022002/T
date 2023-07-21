@@ -373,6 +373,15 @@ export class TargetsComponent
       lstTargetLines = this.lstTargetLines;
       if (this.data != null && this.data?.recID == data?.recID) {
         this.view.dataService.dataSelected = this.data;
+      } else {
+        var tar = await firstValueFrom(
+          this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
+        );
+        if (tar != null) {
+          lstOwners = tar[2];
+          lstTargetLines = tar[1];
+          this.view.dataService.dataSelected = tar[0];
+        }
       }
     } else {
       var tar = await firstValueFrom(
