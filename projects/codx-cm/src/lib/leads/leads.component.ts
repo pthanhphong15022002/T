@@ -64,7 +64,7 @@ export class LeadsComponent
   @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
-
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
 
   // extension core
@@ -142,7 +142,6 @@ export class LeadsComponent
     }
     this.executeApiCalls();
   }
-  ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
     this.button = {
@@ -171,6 +170,16 @@ export class LeadsComponent
           template: this.cardKanban,
           template2: this.viewColumKaban,
           setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -305,9 +314,10 @@ export class LeadsComponent
     this.clickMF(e.e, e.data);
   }
 
-  changeDataMF($event, data) {
+  changeDataMF($event, data, type = null) {
     if ($event != null && data != null) {
       for (let eventItem of $event) {
+        if (type == 11) eventItem.isbookmark = false;
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -326,8 +336,8 @@ export class LeadsComponent
         this.checkMoreReason(data);
     };
     var isCRD = (eventItem, data) => {
-   eventItem.disabled = data.closed || this.checkMoreReason(data);
-   // eventItem.disabled  = false;
+      eventItem.disabled = data.closed || this.checkMoreReason(data);
+      // eventItem.disabled  = false;
     };
     var isEdit = (eventItem, data) => {
       eventItem.disabled = eventItem.disabled =
@@ -407,7 +417,8 @@ export class LeadsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        // this.viewDetail(e.data);
+        if (this.viewCrr != 11) this.viewDetail(e.data);
+        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
         break;
     }
   }
@@ -809,16 +820,15 @@ export class LeadsComponent
             'Bạn không có quyền sử dụng chức năng này !'
           );
           return;
-        } else{
+        } else {
           isCheck = !lst.every((x) => x.category == '1' || x.category == '2');
-          if(!!isCheck){
+          if (!!isCheck) {
             this.notificationsService.notifyCode(
               'Vui lòng gộp tiềm năng cùng loại !'
             );
             return;
           }
         }
-
 
         lst.forEach((element) => {
           if (!['0', '1'].includes(element?.status) && !isCheck) {
@@ -1121,4 +1131,29 @@ export class LeadsComponent
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
+
+  //#region temp Gird
+  changeDataMFGird(e, data) {
+    this.changeDataMF(e, data, 11);
+  }
+  //#endregion
+
+  viewDetail(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+
+    let popup = this.callfc.openForm(
+      this.popDetail,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
+    popup.closed.subscribe((e) => {});
+  }
 }

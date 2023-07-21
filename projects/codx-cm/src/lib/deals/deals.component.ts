@@ -424,7 +424,7 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
-    //  eventItem.disabled = false;
+      //  eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
@@ -606,7 +606,8 @@ export class DealsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail(e.data);
+        if (this.viewCrr != 11) this.viewDetail(e.data);
+        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
         break;
       //chang fiter
       case 'pined-filter':
@@ -979,10 +980,10 @@ export class DealsComponent
         stepID: data?.stepID,
         gridViewSetup: this.gridViewSetup,
         formModel: this.view.formModel,
-        applyFor: "1",
+        applyFor: '1',
         titleAction: this.titleAction,
         owner: data.owner,
-        startControl: data.steps.startControl
+        startControl: data.steps.startControl,
       };
       var dialog = this.callfc.openForm(
         PopupOwnerDealComponent,

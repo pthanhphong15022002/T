@@ -9,6 +9,8 @@ import { PopAddItemBatchsComponent } from './pop-add-item-batchs/pop-add-item-ba
 })
 export class ItemBatchsComponent extends UIComponent{
   
+  //Constructor
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
   headerText: any;
@@ -26,7 +28,11 @@ export class ItemBatchsComponent extends UIComponent{
     super(inject);
     this.dialog = dialog;
   }
+
+  //End Constructor
   
+  //Init
+
   onInit(): void {
   }
 
@@ -43,6 +49,10 @@ export class ItemBatchsComponent extends UIComponent{
       },
     ];
   }
+
+  //End Init
+
+  //Event
 
   toolBarClick(e) {
     switch (e.id) {
@@ -64,6 +74,10 @@ export class ItemBatchsComponent extends UIComponent{
         break;
     }
   }
+
+  //End Event
+
+  //Function
 
   add(e) {
     console.log(this.view.dataService);
@@ -140,4 +154,6 @@ export class ItemBatchsComponent extends UIComponent{
     this.view.dataService.delete([data], true).subscribe((res: any) => {
     });
   }
+
+  //End Function
 }

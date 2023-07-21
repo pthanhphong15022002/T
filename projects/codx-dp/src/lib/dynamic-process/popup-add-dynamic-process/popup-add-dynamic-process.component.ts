@@ -4361,11 +4361,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       return null;
     }
     const [r, g, b] = result.slice(1).map((value) => parseInt(value, 16));
-    if (opacity !== undefined) {
-      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    } else {
-      return `rgb(${r}, ${g}, ${b})`;
-    }
+    return this.rgba2hex(r, g, b, opacity);
   }
   //#endregion
+  
+  rgba2hex(r, g, b, alpha = 1) {
+    const toHex = (num) => formatHex(num.toString(16));
+    const formatHex = (str) => (str.length === 1 ? `0${str}` : str);
+    
+    const alphaHex = formatHex(Math.round(alpha * 255).toString(16));
+    const rHex = toHex(r);
+    const gHex = toHex(g);
+    const bHex = toHex(b);
+  
+    return `#${rHex}${gHex}${bHex}${alphaHex}`;
+  }
 }
