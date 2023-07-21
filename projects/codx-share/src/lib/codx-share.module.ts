@@ -204,6 +204,7 @@ import { PopupViewContentComponent } from './components/codx-view-content/popup-
 import { CodxNoDataComponent } from './components/codx-step/codx-no-data/codx-no-data.component';
 import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { AttachmentWebComponent } from './components/attachment/attachment-web/attachment-web.component';
 import { CodxReportAddComponent } from './components/codx-list-reports/popup/codx-report-add/codx-report-add.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -381,6 +382,7 @@ const T_Pipe: Type<any>[] = [
     T_Component,
     T_Pipe,
     AttachmentComponent,
+    AttachmentWebComponent,
     DialogthumbComponent,
     CodxEmailComponent,
     //CodxApproveStepsComponent,
