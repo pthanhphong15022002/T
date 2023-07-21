@@ -810,8 +810,8 @@ export class LeadsComponent
           );
           return;
         } else{
-          isCheck = !!lst.every((x) => x.category == '1' || x.category == '2');
-          if(isCheck){
+          isCheck = !lst.every((x) => x.category == '1' || x.category == '2');
+          if(!!isCheck){
             this.notificationsService.notifyCode(
               'Vui lòng gộp tiềm năng cùng loại !'
             );

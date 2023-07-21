@@ -100,6 +100,9 @@ export class PopupMergeLeadsComponent implements OnInit {
       dt?.data?.leadThree != null
         ? JSON.parse(JSON.stringify(dt?.data?.leadThree))
         : new CM_Leads();
+    if (dt?.data?.leadThree == null) {
+      this.leadThree.recID = null;
+    }
     this.isMulti = dt?.data?.isMulti;
   }
   async ngOnInit() {
