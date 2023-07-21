@@ -793,7 +793,7 @@ export class LeadsComponent
   }
 
   onMoreMulti(e){
-
+    console.log('gộp: ',e);
   }
   //#endregion
 

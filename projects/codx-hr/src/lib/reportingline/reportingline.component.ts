@@ -1,3 +1,4 @@
+import { concat } from 'rxjs';
 import {
   Component,
   Injector,
@@ -33,7 +34,7 @@ export class ReportinglineComponent extends UIComponent {
   @ViewChild('tmpRightRef') tmpRightRef: TemplateRef<any>;
   @ViewChild('tmpOrgchart') tmpOrgchart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
-  @ViewChild('orgChart') orgChart : ReportinglineOrgChartComponent;
+  @ViewChild('orgChart') orgChart: ReportinglineOrgChartComponent;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -42,7 +43,6 @@ export class ReportinglineComponent extends UIComponent {
   funcID: string;
   employees: any = [];
   itemSelected: any;
-  orgUnitID: any;
   ListViewService: CRUDService;
   detailComponent: any = null;
   dataSelected: any = null;
@@ -53,6 +53,10 @@ export class ReportinglineComponent extends UIComponent {
   grvSetup: any[] = [];
   hasChangedDataChart: boolean = false;
   hasChangedDataList: boolean = false;
+  scrolling: boolean = true;
+  posEmpPageSize: number = 5;
+  posEmpPageIndex: number = 2;
+  viewEmpPosition: string = '';
   constructor(
     inject: Injector,
     private adService: CodxAdService,
@@ -134,19 +138,19 @@ export class ReportinglineComponent extends UIComponent {
       this.view.dataService.parentIdField = '';
     }
   }
-  viewChanged(event){
+  viewChanged(event) {
     if (this.hasChangedDataChart || this.hasChangedDataList) {
       // if (this.viewActive !== event.view.id && this.flagLoaded) {
       if (event?.view?.id === '1' || event?.id === '1') {
         this.view.dataService.page = 0;
         this.view.dataService.data = [];
         this.view.dataService.load().subscribe();
-      } 
+      }
       if (event?.view?.id === '2' || event?.id === '2') {
         this.view.currentView.dataService.data = [];
         this.view.currentView.dataService.currentComponent.dicDatas = {};
         this.view.currentView.dataService.load().subscribe();
-        if(this.orgChart) this.orgChart.reloadDiagram();
+        if (this.orgChart) this.orgChart.reloadDiagram();
       }
     }
     this.hasChangedDataChart = false;
@@ -316,7 +320,7 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
   changedDataFromChart(event: any) {
-    if(event){
+    if (event) {
       this.hasChangedDataChart = event?.hasChanged;
     }
   }
@@ -340,7 +344,83 @@ export class ReportinglineComponent extends UIComponent {
   }
   // search employee in popup view list employee
   searchText: string = "";
-  searchUser(event: any) {
+  searchUser(event: any, positionId: string) {
     this.searchText = event;
+    var index = this.view.dataService.data.findIndex(x => x.positionID == positionId)
+    this.view.dataService.data[index].staffEmp = [];
+    this.posEmpPageIndex = 0;
+    this.scrolling = true;
+    if (this.searchText.length <= 0) {
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, ''])
+        .subscribe(res => {
+          if (res) {
+            if (index >= 0) {
+              this.view.dataService.data[index].staffEmp = this.view.dataService.data[index].staffEmp.concat(res[0]);
+              this.view.dataService.data[index].staff = res[1];
+            }
+
+            if (this.view.dataService.data[index]?.staff <= this.view.dataService.data[index].staffEmp.length) {
+              this.scrolling = false;
+            } else {
+              this.posEmpPageIndex = this.posEmpPageIndex + 1;
+              this.scrolling = true;
+            }
+          }
+        })
+    } else {
+      this.view.dataService.data[index].staffEmp = [];
+      this.posEmpPageIndex = 0;
+      this.scrolling = true;
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
+        .subscribe(res => {
+          if (res) {
+            if (index >= 0){
+              this.view.dataService.data[index].staffEmp = this.view.dataService.data[index].staffEmp.concat(res[0]);
+              this.view.dataService.data[index].staff = res[1];
+            } 
+            if (this.view.dataService.data[index]?.staff <= this.view.dataService.data[index].staffEmp.length) {
+              this.scrolling = false;
+            } else {
+              this.posEmpPageIndex = this.posEmpPageIndex + 1;
+              this.scrolling = true;
+            }
+          }
+        })
+    }
   }
+  onScrollEmpList(ele: HTMLDivElement, positionID: string, totalEmp: number) {
+    if (this.viewEmpPosition !== positionID) { //change position
+      this.posEmpPageIndex = 1;
+      this.scrolling = true;
+      this.viewEmpPosition = positionID;
+    }
+    var totalScroll = ele.offsetHeight + ele.scrollTop;
+    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
+      this.getEmpListPaging(positionID);
+    }
+  }
+  getEmpListPaging(positionID: string) {
+    var index = this.view.dataService.data.findIndex(x => x.positionID == positionID)
+    if (this.scrolling && this.view.dataService.data[index]?.staff > this.view.dataService.data[index].staffEmp.length) {
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+        .subscribe(res => {
+          if (res) {
+            if (index >= 0){
+              this.view.dataService.data[index].staffEmp = this.view.dataService.data[index].staffEmp.concat(res[0]);
+              this.view.dataService.data[index].staff = res[1];
+            } 
+
+            if (this.view.dataService.data[index]?.staff <= this.view.dataService.data[index].staffEmp.length) {
+              this.scrolling = false;
+            } else {
+              this.posEmpPageIndex = this.posEmpPageIndex + 1;
+              this.scrolling = true;
+            }
+          }
+        })
+    } else {
+      this.scrolling = false;
+    }
+  }
+
 }

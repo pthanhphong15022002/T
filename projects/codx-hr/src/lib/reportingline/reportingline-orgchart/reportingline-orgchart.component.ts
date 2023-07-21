@@ -38,6 +38,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() view: ViewsComponent;
   @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
   @Output() hasChangedData: EventEmitter<any> = new EventEmitter();
+  @Output() itemSelectedChanged: EventEmitter<any> = new EventEmitter();
+
   width: number = 250;
   height: number = 150;
   maxWidth: number = 250;
@@ -48,9 +50,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   employeeInfor: any = null;
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
-    connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
+    connectionPointOrigin: ConnectionPointOrigin.SamePoint,
     // orientation: 'LeftToRight',
-    verticalSpacing: 70,
+    verticalSpacing: 80,
     horizontalSpacing: 40,
     enableAnimation: false,
   };
@@ -58,12 +60,22 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
+
   firstLoadDiagram: boolean = true;
   @ViewChild('diagram') diagram: DiagramComponent;
   datasetting: any = null;
   data: any = null;
   onDoneLoading: boolean = false;
   isCorporation: boolean;
+
+  posEmpPageSize: number = 5;
+  posEmpPageIndex: number = 2;
+  viewEmpPosition: string = '';
+  scrolling: boolean = true;
+  currentViewPosEmp: {
+    countEmp: 0,
+    employees: any[]
+  };
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -99,7 +111,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
-    //connector.targetDecorator.shape = 'None';
+    connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     // connector.constraints = 0;
     connector.cornerRadius = 5;
@@ -108,8 +120,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     connector.style!.strokeColor = '#6d6d6d';
     let sourceNode = diagram.getNodeObject(connector.sourceID).data;
     let targetNode = diagram.getNodeObject(connector.targetID).data;
-    if (sourceNode['positionID'] === targetNode['reportTo2'])
+    if (sourceNode['positionID'] === targetNode['reportTo2']) {
+      connector.style!.strokeColor = '#6d6d6d';
       connector.style.strokeDashArray = '5,5';
+    }
     return connector;
   }
 
@@ -231,8 +245,12 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       });
     }
   }
-
+  changeSelectedItem(data: any) {
+    this.positionID = data?.positionID;
+    this.itemSelectedChanged.emit(data);
+  }
   clickMF(event: any, data: any = null) {
+    this.changeSelectedItem(data);
     if (event) {
       switch (event.functionID) {
         case 'SYS03':
@@ -369,8 +387,117 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //   });
   // }
   searchText: string = "";
-  searchUser(event: any) {
+  searchUser(event: any, positionId: string) {
     this.searchText = event;
-  }
 
+    //set scroll when 
+    var index = this.data.findIndex(x => x.positionID == positionId)
+    this.posEmpPageIndex = 0;
+    this.scrolling = true;
+    this.currentViewPosEmp = { countEmp: 0, employees: [] }
+
+    if (this.searchText.length <= 0) {
+      this.currentViewPosEmp = {
+        countEmp: this.data[index].countEmp,
+        employees: this.data[index].employees
+      };
+    } else {
+      this.currentViewPosEmp = { countEmp: 0, employees: [] }
+      this.posEmpPageIndex = 0;
+      this.scrolling = true;
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
+        .subscribe(res => {
+          if (res) {
+            if (index >= 0) {
+              this.currentViewPosEmp.countEmp = res[1];
+              this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+            }
+            if (this.currentViewPosEmp.countEmp <= this.currentViewPosEmp.employees.length) {
+              this.scrolling = false;
+            } else {
+              this.posEmpPageIndex = this.posEmpPageIndex + 1;
+              this.scrolling = true;
+            }
+          }
+        })
+    }
+  }
+  onScrollEmpList(ele: HTMLDivElement, positionID: string, totalEmp: number) {
+    if (this.viewEmpPosition !== positionID) { //change position
+      this.posEmpPageIndex = 1;
+      this.scrolling = true;
+      this.viewEmpPosition = positionID;
+    }
+    var totalScroll = ele.offsetHeight + ele.scrollTop;
+    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
+      this.getEmpListPaging(positionID);
+    }
+  }
+  getEmpListPaging(positionID: string) {
+    var index = this.data.findIndex(x => x.positionID == positionID)
+    if (this.scrolling)
+    {
+      if (this.searchText.length > 0){
+        if(this.currentViewPosEmp.countEmp > this.currentViewPosEmp.employees.length) {
+          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+            .subscribe(res => {
+              if (res) {
+                if (index >= 0) {
+                  this.currentViewPosEmp.countEmp = res[1];
+                  this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+                }
+    
+                if (this.currentViewPosEmp.countEmp <= this.currentViewPosEmp.employees.length) {
+                  this.scrolling = false;
+                } else {
+                  this.posEmpPageIndex = this.posEmpPageIndex + 1;
+                  this.scrolling = true;
+                }
+              }
+            })
+        } else {
+          this.scrolling = false;
+        }
+      }else{
+        if(this.data[index]?.countEmp > this.data[index].employees.length) {
+          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+            .subscribe(res => {
+              if (res) {
+                if (index >= 0) {
+                  this.data[index].employees = this.data[index].employees.concat(res[0]);
+                  this.data[index].countEmp = res[1];
+                  this.currentViewPosEmp.countEmp = res[1];
+                  this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+                }
+    
+                if (this.data[index]?.countEmp <= this.data[index].employees.length) {
+                  this.scrolling = false;
+                } else {
+                  this.posEmpPageIndex = this.posEmpPageIndex + 1;
+                  this.scrolling = true;
+                }
+              }
+            })
+        } else {
+          this.scrolling = false;
+        }
+      }
+    }
+
+  }
+  hasOpenEmpList(positionID: string) {
+    if (this.viewEmpPosition !== positionID) { //change position
+      this.posEmpPageIndex = 1;
+      this.scrolling = true;
+      this.viewEmpPosition = positionID;
+    }
+    var index = this.data.findIndex(x => x.positionID == positionID)
+    if (index >= 0) {
+      this.currentViewPosEmp = {
+        countEmp: this.data[index].countEmp,
+        employees: this.data[index].employees
+      };
+
+    } else this.currentViewPosEmp = { countEmp: 0, employees: [] }
+  }
 }
