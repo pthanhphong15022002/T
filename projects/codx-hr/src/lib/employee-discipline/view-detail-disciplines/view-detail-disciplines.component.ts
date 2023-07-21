@@ -40,7 +40,7 @@ export class ViewDetailDisciplinesComponent {
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
-  @Input() funcID;
+  @Input() grvSetup;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;

@@ -67,6 +67,7 @@ import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { type_audio, type_image, type_video } from './attachment.type';
+import { AttachmentWebComponent } from './attachment-web/attachment-web.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -262,7 +263,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //     }
     //   });
     // }
-
+   
     if (document.getElementById(this.idBrowse) != null) {
       var list = document.getElementsByName('UploadFiles');
       if (list?.length > 0) {
@@ -1921,6 +1922,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
     if (ctrl != null) ctrl.click();
   }
+
+  openUploadForm()
+  {
+    this.callfc.openForm(AttachmentWebComponent,"",900,700,"");
+    var e = window.event;
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+  }
+
+
 
   async handleFileInput1(files: FileList) {
     var count = this.fileUploadList.length;
