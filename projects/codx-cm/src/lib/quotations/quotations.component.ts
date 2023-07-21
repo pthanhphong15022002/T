@@ -105,7 +105,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    // this.loadSetting();
+    this.funcID = this.routerActive.snapshot.params['funcID'];
   }
 
   onInit(): void {
