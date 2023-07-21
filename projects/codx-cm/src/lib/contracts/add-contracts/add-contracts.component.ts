@@ -486,36 +486,36 @@ export class AddContractsComponent implements OnInit {
   //#endregion
   //#region Save
   handleSaveContract() {
-    // if (
-    //   this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
-    // ) {
-    //   return;
-    // }
-    // if (
-    //   this.contracts?.delPhone &&
-    //   !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
-    // ) {
-    //   this.notiService.notifyCode('RS030');
-    //   return;
-    // }
+    if (
+      this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)
+    ) {
+      return;
+    }
+    if (
+      this.contracts?.delPhone &&
+      !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
+    ) {
+      this.notiService.notifyCode('RS030');
+      return;
+    }
 
-    // if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
-    //   this.notiService.notifyCode(
-    //     'CM026',
-    //     0,
-    //     '"' + this.grvSetup['ContractID'].headerText + '"'
-    //   );
-    //   return;
-    // }
+    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
+      this.notiService.notifyCode(
+        'CM026',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
+      return;
+    }
 
-    // if (this.isExitAutoNum) {
-    //   this.notiService.notifyCode(
-    //     'CM003',
-    //     0,
-    //     '"' + this.grvSetup['ContractID'].headerText + '"'
-    //   );
-    //   return;
-    // }
+    if (this.isExitAutoNum) {
+      this.notiService.notifyCode(
+        'CM003',
+        0,
+        '"' + this.grvSetup['ContractID'].headerText + '"'
+      );
+      return;
+    }
     switch (this.action) {
       case 'add':
       case 'copy':
