@@ -17,8 +17,7 @@
               <div
                 *ngIf="
                   dataSelected?.custGroupID != null &&
-                    dataSelected?.custGroupID?.trim() != '' &&
-                    dataSelected?.category == '1';
+                    dataSelected?.custGroupID?.trim() != ''
                   then thenData;
                   else noData
                 "

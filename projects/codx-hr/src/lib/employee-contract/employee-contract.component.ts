@@ -11,6 +11,7 @@ import {
   ButtonModel,
   CallFuncService,
   DataRequest,
+  DialogModel,
   DialogRef,
   NotificationsService,
   SidebarModel,
@@ -27,6 +28,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable, map } from 'rxjs';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -251,7 +253,7 @@ export class EmployeeContractComponent extends UIComponent {
         this.df.detectChanges();
         break;
       case "HRTPro01A20": // in hợp đồng
-        this.export(event.functionID,data.recID);
+        this.printContract(event,data.recID);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -281,28 +283,19 @@ export class EmployeeContractComponent extends UIComponent {
     }
   } 
 
-  export(funcID:string,objectID:string) {
-    this.getReportSource(funcID,"reportID",objectID)
+  printContract(moreFC:any,objectID:string) {
+    this.getReportSource(moreFC.functionID,"reportID",objectID)
     .subscribe((src:any) => {
-      var gridModel = new DataRequest();
-      gridModel.formName = this.view.formModel.formName;
-      gridModel.entityName = this.view.formModel.entityName;
-      gridModel.funcID = this.view.formModel.funcID;
-      gridModel.gridViewName = this.view.formModel.gridViewName;
-      gridModel.page = this.view.dataService.request.page;
-      gridModel.pageSize = this.view.dataService.request.pageSize;
-      gridModel.predicate = this.view.dataService.request.predicates;
-      gridModel.dataValue = this.view.dataService.request.dataValues;
-      gridModel.entityPermission = this.view.formModel.entityPer;
-      this.callfunc.openForm(
-        CodxExportComponent,
-        null,
-        900,
-        700,
-        '',
-        [gridModel, objectID, src],
-        null
-      );
+      let dialogModel = new DialogModel();
+      dialogModel.FormModel = this.view.formModel;
+      dialogModel.DataService = this.view.dataService;
+      let data = {
+        headerText:moreFC.text,
+        reportID : moreFC.functionID,
+        dataSource : src
+      };
+      this.callfc.openForm(CodxListReportsComponent,moreFC.defaultName,0,0,moreFC.functionID,data,"",dialogModel);
+
     });
     
   }

@@ -810,47 +810,48 @@ export class LeadsComponent
   }
 
   onMoreMulti(e) {
-    if (e?.dataSelected != null) {
-      if (e?.dataSelected?.length < 4 && e?.dataSelected?.length >= 2) {
-        var lst = e?.dataSelected;
-        var isCheck = false;
-        isCheck = lst.some((x) => !x?.roles?.isOnwer);
-        if (isCheck) {
-          this.notificationsService.notifyCode(
-            'Bạn không có quyền sử dụng chức năng này !'
-          );
-          return;
-        } else {
-          isCheck = !lst.every((x) => x.category == '1' || x.category == '2');
-          if (!!isCheck) {
-            this.notificationsService.notifyCode(
-              'Vui lòng gộp tiềm năng cùng loại !'
-            );
-            return;
-          }
-        }
+    let event = e?.event;
+    this.titleAction = event?.text;
+    switch (event?.functionID) {
+      case 'CM0205_2': //Gộp
+        if (e?.dataSelected != null) {
+          if (e?.dataSelected?.length < 4 && e?.dataSelected?.length >= 2) {
+            var lst = e?.dataSelected;
+            var isCheck = false;
+            isCheck = lst.some((x) => !x?.roles?.isOnwer);
+            if (isCheck) {
+              this.notificationsService.notifyCode(
+                'Bạn không có quyền sử dụng chức năng này !'
+              ); //Đợi mssg
+              return;
+            } else {
+              isCheck = !lst.every(
+                (x) => x.category == '1' || x.category == '2'
+              );
+              if (!!isCheck) {
+                this.notificationsService.notifyCode(
+                  'Vui lòng gộp tiềm năng cùng loại !'
+                );//Đợi mssg
+                return;
+              }
+            }
 
-        lst.forEach((element) => {
-          if (!['0', '1'].includes(element?.status) && !isCheck) {
-            isCheck = true;
-            this.notificationsService.notifyCode(
-              'Tiềm năng không phù hợp. Vui lòng chọn tiềm năng chưa phân bổ/đã phân bổ để gộp tiềm năng!'
-            );
-            return;
-          } else if (element.closed && !isCheck) {
-            isCheck = true;
-            this.notificationsService.notifyCode(
-              'Có tiềm năng đang đóng vui lòng chọn tiềm năng khác!'
-            );
-            return;
-          }
-        });
-        if (!isCheck) {
-          let event = e?.event;
-          this.titleAction = event?.text;
-
-          switch (event?.functionID) {
-            case 'CM0205_2': //Gộp
+            lst.forEach((element) => {
+              if (!['0', '1'].includes(element?.status) && !isCheck) {
+                isCheck = true;
+                this.notificationsService.notifyCode(
+                  'Tiềm năng không phù hợp. Vui lòng chọn tiềm năng chưa phân bổ/đã phân bổ để gộp tiềm năng!'
+                );//Đợi mssg
+                return;
+              } else if (element.closed && !isCheck) {
+                isCheck = true;
+                this.notificationsService.notifyCode(
+                  'Có tiềm năng đang đóng vui lòng chọn tiềm năng khác!'
+                );//Đợi mssg
+                return;
+              }
+            });
+            if (!isCheck) {
               let leadTwo = new CM_Leads();
               let leadThree = new CM_Leads();
               for (let i = 1; i < lst.length; i++) {
@@ -864,14 +865,16 @@ export class LeadsComponent
                 leadThree = null;
               }
               this.mergeLead(lst[0], true, leadTwo, leadThree);
-              break;
+            }
+          } else {
+            return;
           }
         } else {
-          return;
+          this.notificationsService.notifyCode('CM008');
         }
-      } else {
-        this.notificationsService.notifyCode('CM008');
-      }
+        break;
+        default:
+          break;
     }
     console.log('gộp: ', e);
   }
