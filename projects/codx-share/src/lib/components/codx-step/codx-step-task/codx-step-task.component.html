@@ -114,6 +114,7 @@
               <div
                 *ngIf="groupTask?.recID"
                 class="d-flex align-items-center justify-content-between card-job-expand"
+                (dblclick)="viewTask(groupTask, 'G')"
               >
                 <ng-container
                   [ngTemplateOutlet]="groupTemplate"
@@ -157,7 +158,8 @@
                     class="drap-drop"
                   >
                     <div
-                      class="d-flex align-items-center justify-content-between"
+                      class="d-flex align-items-center justify-content-between cursor-pointer"
+                      (dblclick)="viewTask(task, task?.taskType || 'T')"
                     >
                       <div style="flex-grow: 1" class="has-action-menu">
                         <ng-container

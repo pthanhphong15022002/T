@@ -10,6 +10,8 @@ import { PopAddItemSeriesComponent } from './pop-add-item-series/pop-add-item-se
 })
 export class ItemSeriesComponent extends UIComponent{
  
+  //Constructor
+
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button: ButtonModel = {
@@ -29,7 +31,10 @@ export class ItemSeriesComponent extends UIComponent{
     super(inject);
     this.dialog = dialog;
   }
+
+  //End Constructor
   
+  //Init
   
   onInit(): void {
   }
@@ -47,6 +52,10 @@ export class ItemSeriesComponent extends UIComponent{
       },
     ];
   }
+
+  //End Init
+
+  //Event
 
   toolBarClick(e) {
     switch (e.id) {
@@ -68,6 +77,10 @@ export class ItemSeriesComponent extends UIComponent{
         break;
     }
   }
+
+  //End Event
+
+  //Function
 
   add(e) {
     console.log(this.view.dataService);
@@ -144,4 +157,6 @@ export class ItemSeriesComponent extends UIComponent{
     this.view.dataService.delete([data], true).subscribe((res: any) => {
     });
   }
+
+  //End Function
 }
