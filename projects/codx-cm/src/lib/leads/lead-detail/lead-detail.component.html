@@ -14,17 +14,19 @@
       <div
         class="d-flex align-items-center justify-content-start text-info py-2"
       >
+      <div [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText">
         <span class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></span>
         <span
           class="text-dark fs-6 fw-bold"
           #businessLineID
-          [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
           [innerHTML]="
             dataSelected?.businessLineID
               | formatvalue : formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
+      </div>
+
       </div>
 
       <div class="container_detail mt-1">
@@ -282,7 +284,7 @@
                     ></codx-label>
                   </div>
                   <div class="d-flex justify-content-end">
-                    <div style="position: relative" [ngbTooltip]="tooltipOwner">
+                    <div style="position: relative" [ngbTooltip]="tooltipOwner" *ngIf="dataSelected?.owner">
                       <codx-imgs
                         [width]="30"
                         [objectId]="dataSelected?.owner"
@@ -305,10 +307,9 @@
                       </div>
                     </div>
 
-                    <div style="position: relative"  [ngbTooltip]="tooltipSalesperson">
+                    <div style="position: relative"  [ngbTooltip]="tooltipSalesperson" *ngIf="dataSelected?.salespersonID">
                       <codx-img
                         [width]="30"
-
                         [objectId]="dataSelected.salespersonID"
                         objectType="AD_Users"
                         [referType]="'avt'"
@@ -328,7 +329,7 @@
                       </div>
                     </div>
 
-                    <div style="position: relative"  [ngbTooltip]="tooltipConsultant">
+                    <div style="position: relative"  [ngbTooltip]="tooltipConsultant" *ngIf="dataSelected?.consultantID">
                       <codx-imgs
                         [width]="30"
                         [objectId]="dataSelected?.consultantID"
@@ -349,8 +350,6 @@
                         /></span>
                       </div>
                     </div>
-
-
                   </div>
                 </div>
               </div>
@@ -664,7 +663,7 @@
             </div>
           </ng-template>
           <ng-template #content let-data="value">
-              <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="dataSelected?.status == '99'"></step-task>
+              <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="['0', '1','3','5','13','11'].includes(dataSelected.status) || !dataSelected?.roles?.isOnwer || dataSelected.closed"></step-task>
           </ng-template>
         </e-tabitem>
         <e-tabitem >

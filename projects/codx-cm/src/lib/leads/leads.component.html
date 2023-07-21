@@ -18,7 +18,7 @@
   (viewChanged)="changeView($event)"
   (searchChanged)="searchChanged($event)"
   (onActions)="onActions($event)"
-  (oneMoreMulti)="onMoreMulti($event)"
+  (onMoreMulti)="onMoreMulti($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
 
@@ -45,7 +45,6 @@
     [footer]="footer"
     [titleCss]="'fs-6 mb-1'"
     [dataItem]="data"
-    (onMoreMulti)="onMoreMulti($event)"
   >
   </codx-temp-full>
 </ng-template>

@@ -28,7 +28,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
-import { CM_Customers } from '../models/cm_model';
+import { CM_Customers, CM_Leads } from '../models/cm_model';
 import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from './popup-convert-lead/popup-convert-lead.component';
 import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.component';
@@ -338,6 +338,7 @@ export class LeadsComponent
     };
     var isCRD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
+      // eventItem.disabled  = false;
     };
     var isEdit = (eventItem, data) => {
       eventItem.disabled = eventItem.disabled =
@@ -661,7 +662,6 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.isLoading = false;
             e.event.modifiedOn = new Date();
             this.detailViewLead.promiseAllLoad();
             this.dataSelected = e.event;
@@ -761,10 +761,13 @@ export class LeadsComponent
   //#endregion
 
   //#region mergeLead
-  mergeLead(data) {
+  mergeLead(leadOne, isMulti = false, leadTwo = null, leadThree = null) {
     let obj = {
-      data,
+      leadOne: leadOne,
+      leadTwo: leadTwo,
+      leadThree: leadThree,
       title: this.titleAction,
+      isMulti: isMulti,
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -808,6 +811,69 @@ export class LeadsComponent
   }
 
   onMoreMulti(e) {
+    if (e?.dataSelected != null) {
+      if (e?.dataSelected?.length < 4 && e?.dataSelected?.length >= 2) {
+        var lst = e?.dataSelected;
+        var isCheck = false;
+        isCheck = lst.some((x) => !x?.roles?.isOnwer);
+        if (isCheck) {
+          this.notificationsService.notifyCode(
+            'Bạn không có quyền sử dụng chức năng này !'
+          );
+          return;
+        } else {
+          isCheck = !lst.every((x) => x.category == '1' || x.category == '2');
+          if (!!isCheck) {
+            this.notificationsService.notifyCode(
+              'Vui lòng gộp tiềm năng cùng loại !'
+            );
+            return;
+          }
+        }
+
+        lst.forEach((element) => {
+          if (!['0', '1'].includes(element?.status) && !isCheck) {
+            isCheck = true;
+            this.notificationsService.notifyCode(
+              'Tiềm năng không phù hợp. Vui lòng chọn tiềm năng chưa phân bổ/đã phân bổ để gộp tiềm năng!'
+            );
+            return;
+          } else if (element.closed && !isCheck) {
+            isCheck = true;
+            this.notificationsService.notifyCode(
+              'Có tiềm năng đang đóng vui lòng chọn tiềm năng khác!'
+            );
+            return;
+          }
+        });
+        if (!isCheck) {
+          let event = e?.event;
+          this.titleAction = event?.text;
+
+          switch (event?.functionID) {
+            case 'CM0205_2': //Gộp
+              let leadTwo = new CM_Leads();
+              let leadThree = new CM_Leads();
+              for (let i = 1; i < lst.length; i++) {
+                if (i == 1) {
+                  leadTwo = lst[1];
+                } else {
+                  leadThree = lst[i];
+                }
+              }
+              if (lst.length == 2) {
+                leadThree = null;
+              }
+              this.mergeLead(lst[0], true, leadTwo, leadThree);
+              break;
+          }
+        } else {
+          return;
+        }
+      } else {
+        this.notificationsService.notifyCode('CM008');
+      }
+    }
     console.log('gộp: ', e);
   }
   //#endregion
@@ -822,7 +888,6 @@ export class LeadsComponent
               var datas = [data.recID, resDP[0]];
               this.codxCmService.startLead(datas).subscribe((res) => {
                 if (res) {
-                  debugger;
                   this.dataSelected = res[0];
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
