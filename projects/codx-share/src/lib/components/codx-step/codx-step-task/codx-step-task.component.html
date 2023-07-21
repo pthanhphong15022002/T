@@ -8,17 +8,16 @@
     >
       <div
         class="d-flex align-items-center w-auto h-30px text-primary"
-        [ngStyle]="{'border-bottom': '2px solid' + currentStep?.backgroundColor}"
+        [ngStyle]="{
+          'border-bottom': '2px solid' + currentStep?.backgroundColor
+        }"
       >
-        <div
-          class="w-20px me-2 text-primary"
-          >
+        <div class="w-20px me-2 text-primary">
           <span [ngClass]="currentStep?.icon" class="fs-5-sm"></span>
         </div>
         <!-- [ngStyle]="{color: currentStep?.iconColor}"
         [ngStyle]="{color: currentStep?.textColor}" -->
-        <span
-          class="line-clamp line-clamp-1 fs-6 fw-bold text-primary">
+        <span class="line-clamp line-clamp-1 fs-6 fw-bold text-primary">
           {{ currentStep.stepName || "" }}</span
         >
       </div>
@@ -95,7 +94,10 @@
   </div>
   <!-- drap drop công việc ngoài-->
   <!-- [@fadeInOut] -->
-  <div class="main-body ms-6" *ngIf="listGroupTask?.length > 0 && isShowElement">
+  <div
+    class="main-body ms-6"
+    *ngIf="listGroupTask?.length > 0 && isShowElement"
+  >
     <div
       cdkDropList
       class="list"
@@ -113,7 +115,8 @@
             <div class="card-job stages-task">
               <div
                 *ngIf="groupTask?.recID"
-                class="d-flex align-items-center justify-content-between card-job-expand"
+                class="d-flex align-items-center justify-content-between card-job-expand cursor-pointer"
+                (dblclick)="viewTask(groupTask, 'G')"
               >
                 <ng-container
                   [ngTemplateOutlet]="groupTemplate"
@@ -157,7 +160,8 @@
                     class="drap-drop"
                   >
                     <div
-                      class="d-flex align-items-center justify-content-between"
+                      class="d-flex align-items-center justify-content-between cursor-pointer"
+                      (dblclick)="viewTask(task, task?.taskType || 'T')"
                     >
                       <div style="flex-grow: 1" class="has-action-menu">
                         <ng-container
@@ -319,7 +323,10 @@
 </ng-template>
 
 <ng-template #buttonTemplate let-data="value">
-  <div class="d-flex justify-content-center mt-3" *ngIf="isOnlyView && isShowBtnAddTask">
+  <div
+    class="d-flex justify-content-center mt-3"
+    *ngIf="isOnlyView && isShowBtnAddTask"
+  >
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
@@ -339,34 +346,34 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <!-- <div *ngIf="data?.value?.startDate && data?.value?.endDate">
+    <codx-vll
+      *ngIf="data?.group && !isMoveStage"
+      [name]="'DP048'"
+      [field]="'Status'"
+      [value]="data?.value?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-primary badge-sm w-95px"
+    >
+    </codx-vll>
+    <!-- <div class="text-nowrap text-gray-500" *ngIf="data?.value?.startDate && data?.value?.endDate">
       <span
         class="fs-7"
         [innerHTML]="
           data?.value?.startDate
-            | formatvalue : view.formModel : 'ContractType'
+            | formatvalue : formModel : 'StartDate'
             | async
         "
       ></span>
       <span
         class="fs-7"
         [innerHTML]="
-          itemSelected?.contractType
-            | formatvalue : view.formModel : 'ContractType'
+          data?.value?.startDate
+            | formatvalue : formModel : 'EndDate'
             | async
         "
       ></span>
     </div> -->
-    <codx-vll
-        *ngIf="(data?.group && !isMoveStage)"
-        [name]="'DP048'"
-        [field]="'Status'"
-        [value]="data?.value?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-primary badge-sm w-95px"
-      >
-      </codx-vll>
     <span
       class="date text-nowrap text-gray-500"
       *ngIf="data?.value?.startDate && data?.value?.endDate"

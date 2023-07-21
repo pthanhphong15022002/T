@@ -154,7 +154,7 @@ export class PopupAddTargetComponent {
     } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
     }
-    op.className = 'TargetsLinesBusiness';
+    op.className = 'TargetsBusiness';
     data = [this.data, this.lstTargetLines];
 
     op.data = data;

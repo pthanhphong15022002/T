@@ -9,10 +9,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertConfirmInputConfig,
   ButtonModel,
   DataRequest,
   DialogModel,
   FormModel,
+  NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -60,7 +62,7 @@ export class TargetsComponent
   serviceTree: string = 'CM';
   assemblyNameTree: string = 'ERM.Business.CM';
   entityNameTree: string = 'CM_Targets';
-  classNameTree: string = 'TargetsLinesBusiness';
+  classNameTree: string = 'TargetsBusiness';
   methodTree: string = 'GetListTreeTargetLineAsync';
   loadedTree: boolean;
   fmTargetLines: FormModel;
@@ -71,9 +73,9 @@ export class TargetsComponent
   funcID = '';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
-  entityName: string = 'CM_Targets';
+  entityName: string = '';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTargetAsync';
+  method: string = 'GetListTargetLineAsync';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -92,6 +94,7 @@ export class TargetsComponent
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
+    private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
     private cmSv: CodxCmService
   ) {
@@ -157,7 +160,7 @@ export class TargetsComponent
     //lấy list target để vẽ schedule
     this.schedules = new ResourceModel();
     this.schedules.assemblyName = 'CM';
-    this.schedules.className = 'TargetsLinesBusiness';
+    this.schedules.className = 'TargetsBusiness';
     this.schedules.service = 'CM';
     this.schedules.method = 'GetListTargetLineAsync';
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
@@ -168,7 +171,7 @@ export class TargetsComponent
     //lấy list user vẽ header schedule
     this.scheduleHeader = new ResourceModel();
     this.scheduleHeader.assemblyName = 'CM';
-    this.scheduleHeader.className = 'TargetsLinesBusiness';
+    this.scheduleHeader.className = 'TargetsBusiness';
     this.scheduleHeader.service = 'CM';
     this.scheduleHeader.method = 'GetListUserAsync';
     this.scheduleModel = {
@@ -352,9 +355,19 @@ export class TargetsComponent
                   );
                   if (index != -1) {
                     this.lstDataTree[index] = data;
+                    if (this.lstTargetLines != null) {
+                      this.lstTargetLines.forEach((res) => {
+                        this.view.dataService.update(res).subscribe();
+                      });
+                    }
                     // this.lstDataTree.splice(index, 1);
                   } else {
                     this.lstDataTree.push(Object.assign({}, data));
+                    if (this.lstTargetLines != null) {
+                      this.lstTargetLines.forEach((res) => {
+                        this.view.dataService.add(res).subscribe();
+                      });
+                    }
                   }
                 }
               }
@@ -373,10 +386,19 @@ export class TargetsComponent
       lstTargetLines = this.lstTargetLines;
       if (this.data != null && this.data?.recID == data?.recID) {
         this.view.dataService.dataSelected = this.data;
+      } else {
+        var tar = await firstValueFrom(
+          this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
+        );
+        if (tar != null) {
+          lstOwners = tar[2];
+          lstTargetLines = tar[1];
+          this.view.dataService.dataSelected = tar[0];
+        }
       }
     } else {
       var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
+        this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.period)
       );
       if (tar != null) {
         lstOwners = tar[2];
@@ -442,26 +464,37 @@ export class TargetsComponent
   }
 
   deleteTargetLine(data) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.onAction.next({
-            type: 'delete',
-            data: data,
-          });
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event?.status) {
+        if (x?.event?.status == 'Y') {
+          this.api
+            .execSv(
+              'CM',
+              'ERM.Business.CM',
+              'TargetsBusiness',
+              'DeletedTargetLineAsync',
+              data.recID
+            )
+            .subscribe((res) => {
+              if (res) {
+                data.target = 0;
+                this.view.dataService.update(data.target).subscribe();
+                this.notiService.notifyCode('SYS008');
+                this.detectorRef.detectChanges();
+              }
+            });
         }
-      });
+      }
+    });
   }
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedTargetLineAsync';
     opt.assemblyName = 'ERM.Business.CM';
-    opt.className = 'TargetsLinesBusiness';
+    opt.className = 'TargetsBusiness';
     opt.service = 'CM';
     opt.data = [itemSelected.recID];
     return true;

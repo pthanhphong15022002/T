@@ -14,12 +14,12 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   @ViewChild('report') report:TemplateRef<any>;
   @ViewChild('view') viewBase:ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!:ElementRef<any>;
-  onInit(): void {
-    this.funcID = this.router.snapshot.params['funcID'];
-  }
+  
 
-   views: ViewModel[];
+  views: ViewModel[];
   viewType = ViewType;
+  mssgSYS043:string = "";
+  mssgSYS044:string = "";
   @Input() funcID:any;
   @Input() predicate:any = "";
   @Input() dataValue:any="";
@@ -47,7 +47,28 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     private auth : AuthStore
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
+    
+  }
+
+  onInit(): void {
+    this.router.params.subscribe((param:any) => {
+      this.funcID = param.funcID;
+      this.getReport(this.funcID);
+    });
+    this.getMessageDefault();
+  }
+
+  getMessageDefault(){
+    this.cache.message("SYS043")
+    .subscribe((mssg:any) => {
+      if(mssg.defaultName)
+        this.mssgSYS043 = mssg.defaultName;
+    });
+    this.cache.message("SYS044")
+    .subscribe((mssg:any) => {
+      if(mssg.defaultName)
+        this.mssgSYS044 = mssg.defaultName;
+    });
   }
   ngOnDestroy(): void {
     this.pageTitle.setSubTitle("");
@@ -90,7 +111,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           this.pageTitle.setRootNode(this.rootFunction.customName);
 
           //this.funcID = this.router.snapshot.params['funcID'];
-          this.getReport(funcID);
+          //this.getReport(funcID);
         }
         else if(event.url.includes(this.rootFunction.funtionID)){
 
@@ -153,13 +174,17 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       option
     );
   }
-
+  isRunMode = false;
   filterReportChange(e:any){
+    debugger
+    if(this.isRunMode)
+      this.isRunMode = false;
     // if(e[0]){
     //   debugger
     //   this.predicate = e[0].predicates;
     //   this.dataValue = e[0].dataValues;
     // }
+    if(e == null) return;
     let objParam:any = {};
     let objLabel:any={};
     if(e[1]){
@@ -191,22 +216,22 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
     })
   }
-getReport(funcID:string){
+  //get report by ID
+  getReport(funcID:string){
     this.api
     .execSv(
       'rptsys',
-      'Codx.RptBusiniess.SYS',
-      'ReportListBusiness',
+      'Codx.RptBusiness.CM',
+      'ReportBusiness',
       'GetAsync',
-      funcID
-    )
-    .subscribe((res: any) => {
+      [funcID])
+      .subscribe((res: any) => {
       if (res) {
         this.funcItem = res;
         this.reportID = res.reportID;
+        this.isRunMode = res.runMode == "1";
         this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
-        this.pageTitle.setSubTitle("")
-
+        this.pageTitle.setSubTitle("");
       }
     });
   }
@@ -244,4 +269,7 @@ getReport(funcID:string){
     this.setBreadCrumb(this.funcItem,true);
   }
 
+  clickViewReport(){
+    (document.querySelector(".btnApply") as any)?.click();
+  }
 }
