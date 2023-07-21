@@ -260,6 +260,44 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div class="container">
+          <div class="d-flex flex-column">
+            <div class="m-2">
+              <div class="d-flex">
+                <div
+                  class="me-2"
+                  style="
+                    height: 15px;
+                    width: 15px;
+                    border-radius: 10%;
+                    background-color: #5465ff;
+                  "
+                ></div>
+                <span>Tỷ lệ hoàn thành công việc</span>
+              </div>
+              <div class="d-flex justify-content-start align-items-center">
+                <span class="fw-bold fs-3">{{ rateDoneTask }}%</span>
+              </div>
+            </div>
+            <div class="m-2">
+              <div class="d-flex">
+                <div
+                  class="me-2"
+                  style="
+                    height: 15px;
+                    width: 15px;
+                    border-radius: 10%;
+                    background-color: #04deb7;
+                  "
+                ></div>
+                <span>Tỷ lệ hoàn thành công việc đúng hạn</span>
+              </div>
+              <div class="d-flex justify-content-start align-items-center">
+                <span class="fw-bold fs-3">{{ rateDoneTaskOnTime }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="col-4" style="position: relative">
@@ -304,7 +342,24 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div class="d-flex justify-content-around">
+          <div>
+            <div>Tổng thời gian hoàn thành thực tế</div>
+            <div class="d-flex justify-content-center align-items-center">
+              <span class="fw-bold fs-3">116</span>
+              <span class="ms-2">giờ</span>
+            </div>
+          </div>
+          <div>
+            <div>Tổng thời gian làm việc</div>
+            <div class="d-flex justify-content-center align-items-center">
+              <span class="fw-bold fs-3">176</span>
+              <span class="ms-2">giờ</span>
+            </div>
+          </div>
+        </div>
         <div
+          *ngIf="kpi"
           style="
             position: absolute;
             top: 25%;
