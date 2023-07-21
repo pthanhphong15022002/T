@@ -54,7 +54,6 @@
               <ng-template #noData>
                 <div
                   class="d-flex align-items-center"
-                  *ngIf="dataSelected?.category == '1'"
                 >
                   <span
                     class="icon-corporate_fare icon-16 me-2"
@@ -75,29 +74,7 @@
                     "
                   ></span>
                 </div>
-                <div
-                  class="d-flex align-items-center"
-                  *ngIf="dataSelected?.category == '2'"
-                >
-                  <span
-                    class="icon-corporate_fare icon-16 me-2"
-                    [ngbTooltip]="popupCustGroupID"
-                    ><ng-template #popupCustGroupID>
-                      <codx-label
-                        [setRequire]="false"
-                        name="lblCategory"
-                        default="Khách hàng cá nhân"
-                        [formModel]="formModel"
-                      ></codx-label> </ng-template
-                  ></span>
-                  <codx-label
-                    class="text-dark fs-6 fw-bold"
-                    [setRequire]="false"
-                    name="lblCategory"
-                    default="Khách hàng cá nhân"
-                    [formModel]="formModel"
-                  ></codx-label>
-                </div>
+
               </ng-template>
             </div>
           </div>
