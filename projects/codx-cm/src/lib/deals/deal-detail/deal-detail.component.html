@@ -806,7 +806,7 @@
             </div>
           </ng-template>
           <ng-template #content let-data="value">
-              <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="dataSelected?.status == '99'"></step-task>
+              <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="['0', '1','3','5'].includes(dataSelected.status) || !dataSelected?.roles?.isOnwer || dataSelected.closed"></step-task>
           </ng-template>
         </e-tabitem>
         <e-tabitem >
