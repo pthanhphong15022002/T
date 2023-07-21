@@ -18,7 +18,7 @@
   (viewChanged)="changeView($event)"
   (searchChanged)="searchChanged($event)"
   (onActions)="onActions($event)"
-  (oneMoreMulti)="onMoreMulti($event)"
+  (onMoreMulti)="onMoreMulti($event)"
   [viewActiveType]="viewMode"
 ></codx-views>
 
@@ -60,12 +60,11 @@
           class="text-gray-600 fs-7"
           #businessLineID
           [innerHTML]="
-          data?.businessLineID
+            data?.businessLineID
               | formatvalue : view.formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
-
       </div>
     </div>
     <div class="d-flex justify-content-start mb-1 w-100">
@@ -231,12 +230,11 @@
           class="text-gray-600 fs-7"
           #businessLineID
           [innerHTML]="
-          data?.businessLineID
+            data?.businessLineID
               | formatvalue : view.formModel : 'businessLineID' : businessLineID
               | async
           "
         ></span>
-
       </div>
 
       <div class="d-flex justify-content-start mb-1 w-100">
@@ -342,21 +340,19 @@
         class="text-gray-700"
         #modifiedOn
         [innerHTML]="
-          data?.modifiedOn
-            | formatvalue : view.formModel : 'modifiedOn'
-            | async
+          data?.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
         "
       ></span>
     </div>
     <div>
       <codx-imgs
-      [isToolTip]="true"
-      [width]="25"
-      [objectId]="data?.owner"
-      objectType="AD_Users"
-      [numberImages]="1"
-    >
-    </codx-imgs>
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="data?.owner"
+        objectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
     </div>
   </div>
 </ng-template>
@@ -382,3 +378,22 @@
 </ng-template>
 
 <!-- end kanban -->
+
+<!-- temp more cua gird -->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (changeDataMF)="changeDataMFGird($event, data)"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+
+<!-- View chi tiet kanban -gird -->
+<ng-template #popDetail let-popup>
+  <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
+</ng-template>

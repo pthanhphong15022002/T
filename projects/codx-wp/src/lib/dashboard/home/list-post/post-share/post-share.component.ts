@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ApiHttpService, CRUDService, CacheService, CallFuncService, CodxService, DialogModel, FormModel } from 'codx-core';
 import { PopupDetailComponent } from '../popup-detail/popup-detail.component';
 import { environment } from 'src/environments/environment';
@@ -6,7 +6,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'wp-post-share',
   templateUrl: './post-share.component.html',
-  styleUrls: ['./post-share.component.scss']
+  styleUrls: ['./post-share.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 export class PostShareComponent implements OnInit {
 

@@ -48,7 +48,7 @@ export class TabDetailCustomComponent
   // @Input() mergedList: any[] = [];
   @Input() listSteps: any;
   @Input() isUpdateTab: any;
-  @Output() saveAssign = new EventEmitter<any>();
+
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   // @Output() contactEvent = new EventEmitter<any>();
   titleAction: string = '';
@@ -92,125 +92,30 @@ export class TabDetailCustomComponent
     private notificationsService: NotificationsService
   ) {
     super(inject);
-    this.executeApiCalls();
   }
   ngAfterViewInit() {}
   onInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.dataSelected) {
-      this.isDataLoading = true;
-      // if (!this.modifiedOn) {
-      //   this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-      // }
-      // if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
-      //   this.dataSelected = changes.dataSelected.currentValue;
-      // }
-      this.dataSelected = changes.dataSelected.currentValue;
-      this.loadContactDeal?.getListContactsByObjectId(this.dataSelected?.recID);
-    }
-    if (changes?.listSteps) {
-      if (
-        changes?.listSteps?.currentValue?.length > 0 &&
-        changes?.listSteps?.currentValue !== null
-      ) {
-        this.isDataLoading = false;
-        this.listSteps = changes?.listSteps.currentValue;
-      }
-    }
+    // if (changes.dataSelected) {
+    //   this.isDataLoading = true;
+    //   this.dataSelected = changes.dataSelected.currentValue;
+    //   this.loadContactDeal?.getListContactsByObjectId(this.dataSelected?.recID);
+    // }
+    // if (changes?.listSteps) {
+    //   if (
+    //     changes?.listSteps?.currentValue?.length > 0 &&
+    //     changes?.listSteps?.currentValue !== null
+    //   ) {
+    //     this.isDataLoading = false;
+    //     this.listSteps = changes?.listSteps.currentValue;
+    //   }
+    // }
   }
 
-  async executeApiCalls() {
-    try {
-      await this.getValueList();
-      // await this.getGridViewQuotation();
-      // await this.getGridViewContract();
-      // await this.getGridViewLead();
-    } catch (error) {
-      console.error('Error executing API calls:', error);
-    }
-  }
 
-  async getValueList() {
-    this.cache.valueList('CRM010').subscribe((res) => {
-      if (res.datas) {
-        this.listCategory = res?.datas;
-      }
-    });
-  }
 
-  // settingViewValue() {
-  //   this.viewSettings = {
-  //     '1': {
-  //       icon: 'icon-monetization_on',
-  //       headerText: 'Báo giá',
-  //       deadValue: this.grvSetupQuotation['TotalAmt']?.headerText,
-  //       formModel: this.formModelQuotations,
-  //       status: this.vllStatusQuotation,
-  //       gridViewSetup: this.grvSetupQuotation,
-  //       name: this.grvSetupQuotation['QuotationName']?.headerText
-
-  //     },
-  //     '2': {
-  //       icon: 'icon-sticky_note_2',
-  //       headerText: 'Hợp đồng',
-  //       deadValue:  this.grvSetupContract['ContractAmt']?.headerText,
-  //       formModel: this.formModelContract,
-  //       status: this.vllStatusContract,
-  //       gridViewSetup: this.grvSetupContract,
-  //       name: this.grvSetupContract['ContractName']?.headerText
-  //     },
-  //     '3': {
-  //       icon: 'icon-monetization_on',
-  //       headerText: 'Tiềm năng',
-  //       deadValue:  this.grvSetupLead['DealValue']?.headerText,
-  //       formModel: this.formModelLead,
-  //       status: this.vllStatusLead,
-  //       gridViewSetup: this.grvSetupLead,
-  //       name: this.grvSetupLead['LeadName']?.headerText
-  //     },
-  //   };
-  // }
-
-  getNameCategory(categoryId: string) {
-    return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
-  }
-
-  //truong tuy chinh - đang cho bằng 1
-  showColumnControl(stepID) {
-    if (this.listStepsProcess?.length > 0) {
-      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
-      if (idx == -1) return 1;
-      return this.listStepsProcess[idx]?.showColumnControl;
-    }
-    return 1;
-  }
-
-  continueStep(event) {
-    let isTaskEnd = event?.isTaskEnd;
-    let step = event?.step;
-
-    let transferControl = this.dataSelected.steps.transferControl;
-    if (transferControl == '0') return;
-
-    let isShowFromTaskEnd = !this.checkContinueStep(true, step);
-    let isContinueTaskEnd = isTaskEnd;
-    let isContinueTaskAll = this.checkContinueStep(false, step);
-    let isShowFromTaskAll = !isContinueTaskAll;
-
-    if (transferControl == '1' && isContinueTaskAll) {
-      isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
-      !isShowFromTaskAll &&
-        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
-    }
-
-    if (transferControl == '2' && isContinueTaskEnd) {
-      isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
-      !isShowFromTaskEnd &&
-        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
-    }
-  }
 
   checkContinueStep(isDefault, step) {
     let check = true;
@@ -230,9 +135,6 @@ export class TabDetailCustomComponent
   }
 
   //event giao viec
-  saveAssignTask(e) {
-    if (e) this.saveAssign.emit(e);
-  }
   contactChange($event) {
     if ($event) {
       this.dealDetailComponent.getContactPerson($event.data);
@@ -255,74 +157,6 @@ export class TabDetailCustomComponent
     return fields.some((x) => !x.dataValue && x.isRequired);
   }
 
-  handleMoveStage(isStopAuto, stepID) {
-    if (!isStopAuto) {
-      this.dealComponent.moveStage(this.dataSelected);
-    } else {
-      let index = this.listSteps.findIndex((x) => x.stepID === stepID);
-      let isUpdate = false;
-      let nextStep;
-      if (index != -1) {
-        nextStep = this.listSteps.findIndex(
-          (x) => x.stepID == this.listSteps[index + 1].stepID
-        );
-        if (nextStep != -1) {
-          isUpdate = true;
-        }
-      }
-      if (isUpdate) {
-        var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-          if (x.event?.status == 'Y') {
-            this.listSteps[nextStep].stepStatus = '1';
-            this.listSteps[nextStep].actualStart = new Date();
-            this.listSteps[index].stepStatus = '3';
-            if (this.listSteps[index].actualEnd !== null) {
-              this.listSteps[index].actualEnd = new Date();
-            }
-
-            var listInstanceStep = [];
-            listInstanceStep.push(this.listSteps[index]);
-            listInstanceStep.push(this.listSteps[nextStep]);
-            var nextStepDeal = this.listSteps.find(
-              (x) => x.stepID == this.listSteps[nextStep + 1].stepID
-            );
-            this.dataSelected.stepID = this.listSteps[nextStep].stepID;
-            if (nextStepDeal) {
-              this.dataSelected.nextStep = nextStepDeal.stepID;
-            } else {
-              this.dataSelected.nextStep = null;
-            }
-
-            this.promiseAll(listInstanceStep);
-          }
-        });
-      }
-    }
-  }
-
-  async promiseAll(listInstanceStep) {
-    try {
-      await this.updateMoveStageInstance(listInstanceStep);
-      await this.updateMoveStageDeal();
-    } catch (err) {}
-  }
-
-  async updateMoveStageInstance(listInstanceStep) {
-    var data = [listInstanceStep, this.dataSelected.processID];
-    this.codxCmService.autoMoveStageInInstance(data).subscribe((res) => {});
-  }
-
-  async updateMoveStageDeal() {
-    var data = [this.dataSelected];
-    this.codxCmService.autoMoveStageInDeal(data).subscribe((res) => {
-      if (res[0] && res) {
-        this.dataSelected = res[0];
-        this.dealComponent.autoMoveStage(this.dataSelected);
-      }
-    });
-  }
   getHeaderText() {}
   saveDataStep(e) {
     if (e) {

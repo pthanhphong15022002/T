@@ -46,6 +46,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   title: any;
   validate: any = 0;
+  keyField: any = '';
   moreFuncNameAdd: any;
   moreFuncNameEdit: any;
   funcName: any;
@@ -63,6 +64,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.currencies = dialog.dataService!.dataSelected;
+    this.keyField = dialog.dataService!.keyField;
     if (this.currencies.calculation == null) {
       this.currencies.calculation = '2';
       this.currencies.multi = true;
@@ -254,10 +256,24 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       });
   }
   checkValidate() {
+
+    //Note
+    let ignoredFields: string[] = [];
+    if(this.keyField == 'CurrencyID')
+    {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.currencies);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if(ignoredFields.includes(keygrid[index].toLowerCase()))
+        {
+          continue;
+        }
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
@@ -289,36 +305,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'CurrenciesBusiness';
-            opt.assemblyName = 'BS';
-            opt.service = 'BS';
-            opt.data = [this.currencies];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save) {
-              this.api
-                .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
-                  this.currencies.currencyID,
-                  this.objectExchange,
-                ])
-                .subscribe((res: []) => {
-                  if (res) {
-                    this.dialog.close();
-                  }
-                });
-            } else {
-              this.notification.notifyCode(
-                'SYS031',
-                0,
-                '"' + this.currencies.currencyID + '"'
-              );
-              return;
-            }
-          });
+        this.updateCurrencyIDBeforeSave();
       }
       if (this.formType == 'edit') {
         this.dialog.dataService
@@ -360,7 +347,86 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.dialog.dataService
+      if(this.keyField == 'CurrencyID')
+      {
+        this.api.exec(
+          'ERM.Business.AC',
+          'CommonBusiness',
+          'GenerateAutoNumberAsync',
+        )
+        .subscribe((autoNumber: string) => {
+          if(autoNumber)
+          {
+            this.currencies.currencyID = autoNumber;
+            this.saveAdd();
+          }
+        });
+      }
+      else
+      {
+        this.saveAdd();
+      }
+    }
+  }
+
+  updateCurrencyIDBeforeSave()
+  {
+    if(this.keyField == 'CurrencyID')
+    {
+      this.api.exec(
+        'ERM.Business.AC',
+        'CommonBusiness',
+        'GenerateAutoNumberAsync',
+      )
+      .subscribe((autoNumber: string) => {
+        if(autoNumber)
+        {
+          this.currencies.currencyID = autoNumber;
+          this.save();
+        }
+      });
+    }
+    else
+    {
+      this.save();
+    }
+  }
+
+  save(){
+    this.dialog.dataService
+    .save((opt: RequestOption) => {
+      opt.methodName = 'AddAsync';
+      opt.className = 'CurrenciesBusiness';
+      opt.assemblyName = 'BS';
+      opt.service = 'BS';
+      opt.data = [this.currencies];
+      return true;
+    })
+    .subscribe((res) => {
+      if (res.save) {
+        this.api
+          .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
+            this.currencies.currencyID,
+            this.objectExchange,
+          ])
+          .subscribe((res: []) => {
+            if (res) {
+              this.dialog.close();
+            }
+          });
+      } else {
+        this.notification.notifyCode(
+          'SYS031',
+          0,
+          '"' + this.currencies.currencyID + '"'
+        );
+        return;
+      }
+    });
+  }
+
+  saveAdd(){
+    this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
           opt.className = 'CurrenciesBusiness';
@@ -395,7 +461,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
             return;
           }
         });
-    }
   }
   //#endregion
 }

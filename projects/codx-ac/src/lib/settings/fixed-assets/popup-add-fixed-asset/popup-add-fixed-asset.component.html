@@ -40,6 +40,8 @@
         field="assetID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="keyField == 'AssetID' ? true : false 
+        || formType == 'edit' ? true : false"
       ></codx-input>
     </div>
 

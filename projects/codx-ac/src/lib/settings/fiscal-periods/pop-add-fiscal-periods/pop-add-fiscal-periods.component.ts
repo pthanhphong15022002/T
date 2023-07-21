@@ -10,6 +10,8 @@ import { CodxAcService } from '../../../codx-ac.service';
 })
 export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
   
+  //Constructor
+
   @ViewChild('form') public form: CodxFormComponent;
   headerText: any;
   title: any;
@@ -41,9 +43,17 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
       }
     });
   }
+
+  //End Constructor
+
+  //Init
   
   onInit(): void {
   }
+
+  //End Init
+
+  //Event
 
   valueChange(e: any)
   {
@@ -70,6 +80,10 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
         break;
     }
   }
+
+  //End Event
+
+  //Function
 
   checkValidateEndYear()
   {
@@ -162,6 +176,15 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
     }
   }
 
+  onClearFiscalPeriods()
+  {
+    this.fiscalperiods = new FiscalPeriods();
+  }
+
+  //End Function
+
+  //Method
+
   onSave(){
     this.validate = 0;
     this.checkValidate();
@@ -195,8 +218,5 @@ export class PopAddFiscalPeriodsComponent extends UIComponent implements OnInit{
     }
   }
 
-  onClearFiscalPeriods()
-  {
-    this.fiscalperiods = new FiscalPeriods();
-  }
+  //End Method
 }

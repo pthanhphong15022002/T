@@ -57,7 +57,9 @@
                 : { color: '#1d1f1f' }
             "
             [innerHTML]="
-            targetToFixed(item?.target) | formatvalue : fmTargetLines : 'Target' | async
+              targetToFixed(item?.target)
+                | formatvalue : fmTargetLines : 'Target'
+                | async
             "
           ></span>
           <span
@@ -73,6 +75,7 @@
         </div>
         <div class="w-100px min-w-100px ms-2">
           <span
+            *ngIf="item?.parentID == null"
             class="fw-bold me-2"
             [innerHTML]="
               item?.currencyID
