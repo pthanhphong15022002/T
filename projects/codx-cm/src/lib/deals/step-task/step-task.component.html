@@ -146,7 +146,7 @@
               </span>
               <span
                 class="line-clamp line-clamp-1 fs-6 fw-bold"
-                
+
               >
                 {{ step?.stepName || "" }}
               </span>
@@ -257,7 +257,7 @@
     type="button"
     class="btn btn-primary"
     (click)="onSaveReason()"
-    [disabled]="listStepReason.length < 0 && !listStepReason"
+    [disabled]="listStepReason?.length < 0 && !listStepReason"
   >
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
