@@ -15,22 +15,22 @@
 </codx-views>
 
 <ng-template #headerTemplate let-data>
-  <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-50 text-dark p-3 fw-bold fw-500">
+  <div class="d-flex w-100 p-4">
+    <div class="w-40 text-dark fw-bold">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
         [default]="grvSetup?.EmployeeID?.description"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark p-3 fw-bold fw-500">
+    <div class="w-30 text-dark fw-bold">
       <codx-label
         fiedName="lblBenefitID"
         [formModel]="view.formModel"
         [default]="grvSetup?.BenefitID?.description"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark p-3 fw-bold fw-500">
+    <div class="w-30 text-dark fw-bold">
       <codx-label
         name="lblStatus"
         [formModel]="view.formModel"
@@ -41,8 +41,8 @@
 </ng-template>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-50 p-3">
+  <div class="d-flex align-items-center p-4 border-bottom w-100">
+    <div class="w-40">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -58,10 +58,10 @@
         <div class="d-flex flex-column">
           <div>
             <div class="fw-bold">
-              <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
+              <span class="me-2 text-dark fs-6">{{ data?.emp?.employeeName }}</span>
             </div>
           </div>
-          <div class="text-gray-700">
+          <div class="text-gray-600 fs-7">
             <span
               [innerHTML]="
                 data?.emp?.positionID
@@ -94,10 +94,10 @@
         </div>
       </div>
     </div>
-    <div class="w-25 p-3">
+    <div class="w-30">
       <div class="d-flex flex-column">
         <span
-          class="align-self-start mt-1"
+          class="align-self-start fs-6 fw-bold text-dark"
           [ngbTooltip]="grvSetup?.BenefitID?.headerText"
           [innerHTML]="
             data.benefitID | formatvalue : view.formModel : 'benefitID' | async
@@ -105,10 +105,10 @@
         >
         </span>
 
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center text-gray-600">
           <span class="icon-attach_money icon-16 w-20px me-1"></span>
           <span
-            class="align-self-center fw-bold"
+            class="align-self-center"
             [ngbTooltip]="grvSetup?.BenefitAmt?.headerText"
             [innerHTML]="
               data?.benefitAmt
@@ -119,7 +119,7 @@
           </span>
           <span class="mx-1">/</span>
           <span
-            class="align-self-center fw-bold"
+            class="align-self-center"
             [ngbTooltip]="grvSetup?.BenefitNorm?.headerText"
             [innerHTML]="
               data?.benefitNorm
@@ -130,7 +130,7 @@
           </span>
         </div>
 
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center fs-7">
           <div class="icon-calendar_today icon-14 w-20px me-1"></div>
           <div
             [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
@@ -154,7 +154,7 @@
       </div>
     </div>
 
-    <div class="w-25 p-3">
+    <div class="w-30">
       <div class="d-flex">
         <ng-container *ngIf="flagChangeMF">
           <ng-container *ngIf="runModeCheck; else elseVll">
@@ -315,22 +315,24 @@
 <!-- Detail -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-2'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-3'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageWidth]="40"
+    [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
     [title]="data.emp?.employeeName"
+    [titleCss]="'fs-6'"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
+    [subTitleCss]="'fs-7 text-gray-600'"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
     (changeDataMF)="changeDataMF($event, data)"
@@ -363,7 +365,7 @@
 
   <ng-template #descTmp>
     <span
-      class="mt-1"
+      class="text-dark"
       [ngbTooltip]="grvSetup?.BenefitID?.headerText"
       [innerHTML]="
         data?.benefitID | formatvalue : view.formModel : 'benefitID' | async

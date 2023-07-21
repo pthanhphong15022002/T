@@ -15,7 +15,7 @@
       [panels]="panelsDeals"
       [datas]="datasDeals"
       [isEditMode]="isEditMode"
-      [cellSpacing]="[20, 20]"
+      [cellSpacing]="[22, 20]"
     ></codx-dashboard>
   </div>
   <div class="w-100 h-100" *ngIf="!isLoaded">
@@ -201,13 +201,13 @@
 <!-- Top nhân viên có nhiều cơ hội thành công nhất -->
 <!-- title="Top nhân viên có nhiều cơ hội thành công nhất" -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="7">
+  <div class="w-100 h-100" id="7" style="overflow-y: hiden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblChartOwners"
       default="Top nhân viên có nhiều cơ hội thành công nhất"
     ></codx-label>
-    <div class="mt-5">
+    <div class="mt-5" style="overflow-y: auto; max-height: 85%">
       <div class="d-flex justify-content-center align-items-center">
         <div
           [ngClass]="checkBtnMax ? 'button-selected' : 'button-no-selected'"
@@ -368,35 +368,97 @@
 
 <!-- Thống kê hiệu suất trong năm -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="10"
-    title=" Thống kê hiệu suất trong năm"
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="10" title="" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblEfficiency"
       default="Thống kê hiệu suất trong năm"
     ></codx-label>
-    <ng-container *ngIf="false; else noData"></ng-container>
+    <ng-container *ngIf="true; else noData">
+      <div class="w-100" [style.height]="'97%'">
+        <ejs-chart
+          style="display: block"
+          id="chart-container-2"
+          [primaryXAxis]="primaryXAxisBubble"
+          [primaryYAxis]="primaryYAxisBubble"
+          [title]=""
+        >
+          <e-series-collection>
+            <ng-container *ngFor="let item of dataSource">
+              <e-series
+                [dataSource]="item.dataSource"
+                type="Bubble"
+                xName="x"
+                yName="y"
+                size="d"
+                [name]="item.name"
+                [fillColor]="item.color"
+                [border]="border"
+                [tooltip]="item.name"
+                [width]="10"
+              >
+              </e-series>
+            </ng-container>
+          </e-series-collection>
+        </ejs-chart>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
 <!-- Thống kê năng suất nhân viên -->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="11"
-    title="Thống kê năng suất nhân viên"
-    style="overflow: hidden"
-  >
+  <div class="w-100 h-100" id="11" title="" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblProductivityOfOwners"
       default="Thống kê năng suất nhân viên"
     ></codx-label>
-    <ng-container *ngIf="false; else noData"></ng-container>
+    <ng-container *ngIf="productivityOwner?.length > 0; else noData">
+      <div style="overflow-y: auto; max-height: 90%">
+        <div *ngFor="let productivity of productivityOwner">
+          <div class="mx-2 my-3">
+            <div class="d-flex justify-content-between">
+              <div class="mb-2">
+                <span class="fw-bold">{{ productivity?.objectName }}</span>
+              </div>
+              <div class="d-flex align-items-end">
+                <span class="text-gray-400">{{
+                  productivity?.sumTarget | currency : productivity?.currencyID
+                }}</span>
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center min-w-200px"
+              [title]="
+                productivity?.sumDealValueSuccess
+                  | currency : productivity?.currencyID
+              "
+            >
+              <div class="w-100 bg-gray-200 rounded-4" style="height: 15px">
+                <div class="h-5px w-100 bg-gray-200 rounded-4">
+                  <div
+                    class="rounded-4 h-15px align-items-center progress-bar"
+                    role="progressbar"
+                    [ngStyle]="{
+                      backgroundColor:
+                        productivity?.percentage >= 50
+                          ? '#187de4'
+                          : colorReasonFails
+                    }"
+                    [style.width]="productivity?.percentage + '%'"
+                  >
+                    <div class="fw-bold text-light">
+                      {{ productivity?.percentage + "%" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 

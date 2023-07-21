@@ -21,10 +21,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() listInstanceStep: any[];
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
+  @Output() changeProgress = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
-  type = '';
+  type = 'S';
   crrViewGant = 'W';
   vllViewGannt = 'DP042';
   typeTime;
@@ -93,7 +94,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
     if (changes.dataSelected) {
       this.dataSelected = changes.dataSelected?.currentValue;
-      this.type = this.dataSelected.viewModeDetail;
+      this.type = this.dataSelected.viewModeDetail || "S";
     }
   }
 
@@ -325,5 +326,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         // this.renderer.setStyle(listTask, 'height', taskHeight.toString() + 'px');
       }
     }, 500);
+  }
+
+  autoStart(event){
+    this.changeProgress.emit(event);
   }
 }

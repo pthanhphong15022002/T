@@ -9,13 +9,14 @@ import { PopAddFiscalPeriodsComponent } from './pop-add-fiscal-periods/pop-add-f
 })
 export class FiscalPeriodsComponent extends UIComponent{
   
+  //Constructor
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
   funcName: any = 'danh mục kỳ tài chính';
-  objecttype: string = '6';
   gridViewSetup: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
@@ -27,17 +28,15 @@ export class FiscalPeriodsComponent extends UIComponent{
     super(inject);
     this.dialog = dialog;
   }
+
+  //End Constructor
+
+  //Init
   
   onInit(): void {
   }
 
   ngAfterViewInit() {
-    // this.cache.moreFunction('FiscalPeriods', 'grvFiscalPeriods').subscribe((res) => {
-    //   if (res && res.length) {
-    //     let m = res.find((x) => x.functionID == 'ACS21500');
-    //     if (m) this.funcName = m.defaultName;
-    //   }
-    // });
     this.views = [
       {
         type: ViewType.grid,
@@ -50,6 +49,10 @@ export class FiscalPeriodsComponent extends UIComponent{
       },
     ];
   }
+
+  //End Init
+
+  //Event
 
   toolBarClick(e) {
     switch (e.id) {
@@ -71,6 +74,10 @@ export class FiscalPeriodsComponent extends UIComponent{
         break;
     }
   }
+
+  //End Event
+
+  //Function
 
   add(e) {
     console.log(this.view.dataService);
@@ -147,4 +154,6 @@ export class FiscalPeriodsComponent extends UIComponent{
     this.view.dataService.delete([data], true).subscribe((res: any) => {
     });
   }
+
+  //End Function
 }

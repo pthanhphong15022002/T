@@ -1,4 +1,4 @@
-<div class="ms-5 d-flex flex-wrap card-view">
+<div #cardView class="ms-5 d-flex flex-wrap card-view" (scroll)="scroll(cardView)">
     <div class="me-5 mt-5 card-item" *ngFor="let data of lstData">
         <codx-card-center cardCss="border d-flex flex-center flex-column  card-user" [imageId]="data.employeeID"
             imageObjType="HR_Employees" imageWidth="50" [formModel]="formModel" [dataItem]="data" [footer]="footer"
@@ -9,37 +9,36 @@
             <div class="d-flex flex-column">
                 <span #nameField class="data-text-color data-text-width line-clamp line-clamp-1 fw-bold mb-1"
                     [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip : null">{{data.employeeName}}</span>
+                <ng-template #nameTooltip>
+                    <div class="d-flex flex-column">
+                        <span class="label-text-color">{{grvSetup['EmployeeName'].headerText}}</span>
+                        <span class="data-text-color data-text-width">{{data.employeeName}}</span>
+                    </div>
+                </ng-template>
                 <span #positionField class="data-text-color data-text-width line-clamp line-clamp-1 mb-1"
-                    [ngbTooltip]="positionField.scrollHeight > positionField.clientHeight? positionTooltip : null">
+                    [ngbTooltip]="positionTooltip">
                     {{data.positionName}}
+                    <ng-template #positionTooltip>
+                        <div class="d-flex flex-column">
+                            <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+                            <span class="data-text-color data-text-width" *ngIf="positionField.scrollHeight > positionField.clientHeight">
+                                {{data.positionName?data.positionName : data.positionID}}</span>
+                        </div>
+                    </ng-template>
                 </span>
                 <span *ngIf="data.birthday; else noBirthDay">{{data.birthday | fmDT }}</span>
             </div>
         </ng-template>
         <ng-template #footer let-data>
             <div class="d-flex align-items-center flex-center d-phone">
-                <span class="text-gray-700" *ngIf="data.phone; else noPhone">
+                <span class="text-gray-700 line-clamp line-clamp-1" *ngIf="data.phone; else noPhone">
                     <span #phone [innerHTML]="data.phone | formatvalue: formModel:'Phone' | async"></span>
                 </span>
             </div>
             <div class="d-flex align-items-center flex-center d-mail">
-                <span class="text-gray-700" *ngIf="data.email; else noEmail">
-                    <span #email class="line-clamp line-clamp-1"
-                        [innerHTML]="data.email | formatvalue: formModel:'Email' | async"></span>
+                <span class="text-gray-700 line-clamp line-clamp-1"  *ngIf="data.email; else noEmail">
+                    <span #email [innerHTML]="data.email | formatvalue: formModel:'Email' | async"></span>
                 </span>
-            </div>
-        </ng-template>
-        <ng-template #positionTooltip>
-            <div class="d-flex flex-column">
-                <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
-                <span class="data-text-color">{{data.positionName?
-                    data.positionName : data.positionID}}</span>
-            </div>
-        </ng-template>
-        <ng-template #nameTooltip>
-            <div class="d-flex flex-column">
-                <span class="label-text-color">{{grvSetup['EmployeeName'].headerText}}</span>
-                <span class="data-text-color">{{data.employeeName}}</span>
             </div>
         </ng-template>
     </div>

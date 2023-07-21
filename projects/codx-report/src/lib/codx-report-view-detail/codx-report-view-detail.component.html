@@ -16,9 +16,28 @@
 
   </iframe> -->
   <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
-  <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
+  <ng-container *ngIf="funcItem">
+    <ng-container *ngIf="isRunMode ; else tmpElse">
+      <div class="d-flex align-items-center justify-content-center w-100 h-100">
+        <div class="report_panel">
+          <img src="../../../../../src/assets/themes/sys/default/img/PrintReport.svg" alt="reportviewer.png">
+          <p [innerHTML]="mssgSYS044"></p>
+          <button type="btn" class="btn btn-primary" (click)="clickViewReport()">
+            <codx-label [formModel]="view.formModel" [name]="'lblApply'" [default]="'Áp dụng'"></codx-label>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #tmpElse >
+      <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
+    </ng-template>
+  </ng-container>
+    <!-- <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe> -->
   </ng-template>
 
+  <ng-template #reportPDF>
+    <h1>PDF NÈ CU</h1>
+    </ng-template>
 <!-- <ng-template #breadCrumb>
 
 </ng-template> -->

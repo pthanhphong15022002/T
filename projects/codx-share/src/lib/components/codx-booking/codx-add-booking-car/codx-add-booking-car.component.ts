@@ -83,7 +83,7 @@ export class CodxAddBookingCarComponent
     icon: string;
   };
   tempDriver: any;
-  title: string;
+  title:any;
   attendeesList = [];
   onSaving = false;
   resourceOwner = null;

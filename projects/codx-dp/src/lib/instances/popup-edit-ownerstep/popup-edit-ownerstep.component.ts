@@ -43,7 +43,6 @@ export class PopupEditOwnerstepComponent {
     else {
       this.startControl = dt?.data[4];
     }
-
     this.getStepByStepIDAndInID(recID, stepID);
   }
 

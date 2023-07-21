@@ -34,6 +34,8 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   idField: string = 'recID';
   actionType: string;
   employeeId: string;
+  disabledInput = false;
+
   successFlag = false;
   oldVaccineTypeID: string; // xử lí binding data main view
   isAfterRender = false;
@@ -54,6 +56,9 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.funcID = data?.data?.funcID;
     this.formModel = dialog.formModel;
     this.data = data?.data?.data;

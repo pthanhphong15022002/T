@@ -14,12 +14,12 @@
 </codx-layout-add>
 
 <ng-template #contractInfo>
-  <div *ngIf="openFrom == 'empContractProcess'" class="form-group row">
-    <div class="col-10">
-      <div class="d-flex">
+  <div *ngIf="openFrom == 'empContractProcess'" class="form-group d-flex justify-content-between">
+    <div class="w-100">
+      <div class="d-flex border-bottom pb-1">
         <div class="d-flex flex-column position-relative">
           <codx-img
-            [width]="40"
+            [width]="35"
             class="me-4"
             [objectId]="employeeObj?.employeeID ?? employeeObj?.emp?.employeeID"
             [referType]="'avt'"
@@ -37,7 +37,7 @@
             </span>
           </div>
           <div
-            class="text-gray-700"
+            class="text-gray-500 fs-7"
             *ngIf="employeeObj?.positionID || employeeObj?.emp?.positionID"
           >
             <span
@@ -48,7 +48,7 @@
               "
             ></span>
           </div>
-          <span class="text-gray-700" *ngIf="employeeObj?.orgUnitName">{{
+          <span class="text-gray-700 fs-7" *ngIf="employeeObj?.orgUnitName">{{
             employeeObj?.orgUnitName
           }}</span>
           <!-- <div
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <div class="col-2 d-flex justify-content-end">
+    <div class="w-50px d-flex justify-content-end">
       <!-- <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label> -->
       <codx-input
       [disabled]="disabledInput"
@@ -177,13 +177,15 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="orgUnitID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+      <div class="pb-1 border-bottom">
+        <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
+        <codx-input
+        [disabled]="disabledInput"
+          field="orgUnitID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
     </div>
     <div class="col-6">
       <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
@@ -351,7 +353,7 @@
   </div> -->
 
   
-  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
     <codx-label
     default="Phụ cấp được hưởng"
     name="lblEmpBenefit"
@@ -363,6 +365,7 @@
     type="button"
     class="btn btn-sm btn-light-primary"
     (click)="addBenefit()"
+    *ngIf="actionType != 'view'"
   >
     <i class="icon-add icon-16 ms-n1"></i>
     <codx-label

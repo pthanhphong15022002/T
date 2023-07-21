@@ -93,9 +93,9 @@
       </div>
       <div class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
-          <span class="text-gray-600 line-clamp line-clamp-1" #objectName [innerHTML]="
-            data?.objectName
-              | formatvalue : view.formModel : 'objectName' : objectName
+          <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
+            data?.objectID
+              | formatvalue : view.formModel : 'objectID' : objectID
               | async
           "></span>
         </div>
@@ -155,9 +155,9 @@
       <div class="d-flex align-items-center">
         <!-- <span class="me-2 icon-corporate_fare text-primary icon-20"></span> -->
         <!-- <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" /> -->
-        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" #objectName [innerHTML]="
-            itemSelected?.objectName
-              | formatvalue : view.formModel : 'objectName' : objectName
+        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" #objectID [innerHTML]="
+            itemSelected?.objectID
+              | formatvalue : view.formModel : 'objectID' : objectID
               | async
           "></span>
       </div>
@@ -1021,9 +1021,9 @@
           </ejs-tooltip>
         </div>
         <div class="d-flex align-items-center">
-          <span class="text-gray-600 line-clamp line-clamp-1 mt-1" #objectName [innerHTML]="
-          data?.objectName
-                    | formatvalue : view.formModel : 'objectName' : objectName
+          <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
+          data?.objectID
+                    | formatvalue : view.formModel : 'objectName' : objectID
                     | async
                 "></span>
         </div>
@@ -1079,7 +1079,7 @@
           <span *ngIf="data?.totalDR == 0"
             class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' + data?.currencyID}}</span>
         </div>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mb-1">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="refDocs" [formModel]="view.formModel">
           </codx-label>
           <span #refDocs class="text-gray-600" [innerHTML]="

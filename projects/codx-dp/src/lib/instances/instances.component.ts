@@ -56,6 +56,7 @@ import { X } from '@angular/cdk/keycodes';
 import { PopupAddDealComponent } from 'projects/codx-cm/src/lib/deals/popup-add-deal/popup-add-deal.component';
 import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add-cases/popup-add-cases.component';
 import { GridModels } from './instance-dashboard/instance-dashboard.component';
+import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 
 @Component({
   selector: 'codx-instances',
@@ -488,10 +489,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            option.Width =
-              this.addFieldsControl == '1' || this.process.applyFor != '0'
-                ? '800px'
-                : '550px';
+            option.Width = this.addFieldsControl == '1' || this.process.applyFor != '0'? '800px': '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (this.process.applyFor == '0') {
@@ -510,7 +508,7 @@ export class InstancesComponent
                       );
                     }
                   });
-              } else {
+              }else {
                 this.codxDpService
                   .getAutoNumberByInstanceNoSetting(
                     this.process.instanceNoSetting
@@ -528,6 +526,8 @@ export class InstancesComponent
                     }
                   });
               }
+            }else if(this.process.applyFor == '4'){
+              this.openPopupContract('add',formMD);
             } else {
               this.openPopUpAdd(
                 applyFor,
@@ -719,7 +719,7 @@ export class InstancesComponent
                     this.openPopupEdit(applyFor, formMD, option, titleAction);
                   }
                 });
-              } else {
+              }else {
                 this.openPopupEdit(applyFor, formMD, option, titleAction);
               }
             });
@@ -1466,6 +1466,7 @@ export class InstancesComponent
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
+                this.detailViewPopup.loadChangeData();
               }
               this.detectorRef.detectChanges();
             }
@@ -2420,6 +2421,8 @@ export class InstancesComponent
       return 'CM0401';
     } else if (applyFor == '3') {
       return 'CM0402';
+    }else if (applyFor == '4') {
+      return 'CM0204';
     }
     return null;
   }
@@ -2468,6 +2471,30 @@ export class InstancesComponent
     } else {
       return `rgb(${r}, ${g}, ${b})`;
     }
+  }
+
+  async openPopupContract(action,formModel: FormModel, contract?) {
+    let data = {
+      action,
+      contract: contract || null,
+      type: 'view',
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    option.FormModel = formModel;
+    let popupContract = this.callfc.openForm(
+      AddContractsComponent,
+      '',
+      null,
+      null,
+      '',
+      data,
+      '',
+      option
+    );
+    let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    return dataPopupOutput;
   }
 
 }

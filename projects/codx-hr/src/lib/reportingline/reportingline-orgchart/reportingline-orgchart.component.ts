@@ -1,6 +1,6 @@
 import { concat } from 'rxjs';
 import { style } from '@angular/animations';
-import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
 import {
   DiagramComponent,
   LineDistribution,
@@ -31,11 +31,14 @@ Diagram.Inject(DataBinding, ComplexHierarchicalTree, LineDistribution);
 })
 export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
 
-  @Input() postion: any = null;
+  @Input() position: any = null;
   @Input() positionID: string = "";
   @Input() funcID: string = "";
   @Input() formModel: any;
   @Input() view: ViewsComponent;
+  @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
+  @Output() hasChangedData: EventEmitter<any> = new EventEmitter();
+  @Output() itemSelectedChanged: EventEmitter<any> = new EventEmitter();
 
   width: number = 250;
   height: number = 150;
@@ -47,21 +50,32 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   employeeInfor: any = null;
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
-    connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
-    verticalSpacing: 70,
+    connectionPointOrigin: ConnectionPointOrigin.SamePoint,
+    // orientation: 'LeftToRight',
+    verticalSpacing: 80,
     horizontalSpacing: 40,
-    enableAnimation: true,
+    enableAnimation: false,
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
+
   firstLoadDiagram: boolean = true;
   @ViewChild('diagram') diagram: DiagramComponent;
   datasetting: any = null;
   data: any = null;
   onDoneLoading: boolean = false;
   isCorporation: boolean;
+
+  posEmpPageSize: number = 5;
+  posEmpPageIndex: number = 2;
+  viewEmpPosition: string = '';
+  scrolling: boolean = true;
+  currentViewPosEmp: {
+    countEmp: 0,
+    employees: any[]
+  };
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -77,7 +91,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       });
     //this.getDataPositionByID(this.positionID);
   }
-
+  public reloadDiagram(): void {
+    this.firstLoadDiagram = true;
+    this.getDataPositionByID(this.positionID);
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
@@ -88,13 +105,13 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
   public created(): void {
-    if(this.diagram){
+    if (this.diagram) {
       this.diagram.fitToPage();
       this.firstLoadDiagram = false;
     }
   }
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
-    //connector.targetDecorator.shape = 'None';
+    connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     // connector.constraints = 0;
     connector.cornerRadius = 5;
@@ -103,8 +120,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     connector.style!.strokeColor = '#6d6d6d';
     let sourceNode = diagram.getNodeObject(connector.sourceID).data;
     let targetNode = diagram.getNodeObject(connector.targetID).data;
-    if (sourceNode['positionID'] === targetNode['reportTo2'])
+    if (sourceNode['positionID'] === targetNode['reportTo2']) {
+      connector.style!.strokeColor = '#6d6d6d';
       connector.style.strokeDashArray = '5,5';
+    }
     return connector;
   }
 
@@ -226,8 +245,12 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       });
     }
   }
-
+  changeSelectedItem(data: any) {
+    this.positionID = data?.positionID;
+    this.itemSelectedChanged.emit(data);
+  }
   clickMF(event: any, data: any = null) {
+    this.changeSelectedItem(data);
     if (event) {
       switch (event.functionID) {
         case 'SYS03':
@@ -263,8 +286,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
           this.callfc.openSide(PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe((res) => {
               if (res?.event) {
-                let node = res.event;
-
+                this.hasChangedData.emit({
+                  data: res?.event?.positionID ? res.event : res,
+                  action: 'copy',
+                });
               }
             });
         }
@@ -294,9 +319,28 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
             PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe(res => {
               if (res) {
-                if (res.positionID === this.positionID) {
-                  this.data = this.data.filter(x => x.positionID !== data.positionID).concat(res.event);
-                  this.setDataOrg(this.data);
+                this.hasChangedData.emit({
+                  data: res?.event?.positionID ? res.event : res,
+                  action: 'edit',
+                  hasChanged: true,
+                });
+                if (res?.positionID === this.positionID || res?.event?.positionID === this.positionID) {
+                  // if (res?.reportTo != data?.reportTo && res?.reportTo2 != data?.reportTo2) {
+                  //   this.getDataPositionByID(this.positionID);
+                  // }
+                  // else {
+                  //   data['parents'] = [];
+                  //   if (res?.event?.reportTo) (data['parents'] as any[]).push(res?.event?.reportTo);
+                  //   if (res?.event?.reportTo2) (data['parents'] as any[]).push(res?.event?.reportTo2);
+                  //   data.orgUnitID = res?.event?.orgUnitID;
+                  //   data.orgUnitName = res?.event?.orgUnitName;
+                  //   data.positionName = res?.event?.positionName;
+
+                  //   var i = this.data.findIndex(p => p.positionID === data.positionID)
+                  //   this.data[i]= data;
+                  //   if(this.diagram)this.setDataOrg(this.data);
+                  // }
+                  this.getDataPositionByID(this.positionID);
                 }
               }
             });
@@ -319,12 +363,18 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       )
       .subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('SYS008')
-          this.data = this.data.filter((x) => x.positionID !== data.positionID);
+          this.notiService.notifyCode('SYS008');
+          if (data?.positionID == this.positionID || data?.position == this.position?.positionID) {
+            let parent = this.data.filter((item) => item.positionID == data?.reportTo);
+            this.deletedInputPosition.emit(parent);
+          } else {
+            this.data = this.data.filter((x) => x.positionID !== data.positionID);
+          }
           this.setDataOrg(this.data);
-        } else {
-          //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
         }
+        //else {
+        //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
+        //}
       });
 
   }
@@ -337,8 +387,117 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //   });
   // }
   searchText: string = "";
-  searchUser(event: any) {
+  searchUser(event: any, positionId: string) {
     this.searchText = event;
-  }
 
+    //set scroll when 
+    var index = this.data.findIndex(x => x.positionID == positionId)
+    this.posEmpPageIndex = 0;
+    this.scrolling = true;
+    this.currentViewPosEmp = { countEmp: 0, employees: [] }
+
+    if (this.searchText.length <= 0) {
+      this.currentViewPosEmp = {
+        countEmp: this.data[index].countEmp,
+        employees: this.data[index].employees
+      };
+    } else {
+      this.currentViewPosEmp = { countEmp: 0, employees: [] }
+      this.posEmpPageIndex = 0;
+      this.scrolling = true;
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
+        .subscribe(res => {
+          if (res) {
+            if (index >= 0) {
+              this.currentViewPosEmp.countEmp = res[1];
+              this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+            }
+            if (this.currentViewPosEmp.countEmp <= this.currentViewPosEmp.employees.length) {
+              this.scrolling = false;
+            } else {
+              this.posEmpPageIndex = this.posEmpPageIndex + 1;
+              this.scrolling = true;
+            }
+          }
+        })
+    }
+  }
+  onScrollEmpList(ele: HTMLDivElement, positionID: string, totalEmp: number) {
+    if (this.viewEmpPosition !== positionID) { //change position
+      this.posEmpPageIndex = 1;
+      this.scrolling = true;
+      this.viewEmpPosition = positionID;
+    }
+    var totalScroll = ele.offsetHeight + ele.scrollTop;
+    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
+      this.getEmpListPaging(positionID);
+    }
+  }
+  getEmpListPaging(positionID: string) {
+    var index = this.data.findIndex(x => x.positionID == positionID)
+    if (this.scrolling)
+    {
+      if (this.searchText.length > 0){
+        if(this.currentViewPosEmp.countEmp > this.currentViewPosEmp.employees.length) {
+          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+            .subscribe(res => {
+              if (res) {
+                if (index >= 0) {
+                  this.currentViewPosEmp.countEmp = res[1];
+                  this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+                }
+    
+                if (this.currentViewPosEmp.countEmp <= this.currentViewPosEmp.employees.length) {
+                  this.scrolling = false;
+                } else {
+                  this.posEmpPageIndex = this.posEmpPageIndex + 1;
+                  this.scrolling = true;
+                }
+              }
+            })
+        } else {
+          this.scrolling = false;
+        }
+      }else{
+        if(this.data[index]?.countEmp > this.data[index].employees.length) {
+          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+            .subscribe(res => {
+              if (res) {
+                if (index >= 0) {
+                  this.data[index].employees = this.data[index].employees.concat(res[0]);
+                  this.data[index].countEmp = res[1];
+                  this.currentViewPosEmp.countEmp = res[1];
+                  this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+                }
+    
+                if (this.data[index]?.countEmp <= this.data[index].employees.length) {
+                  this.scrolling = false;
+                } else {
+                  this.posEmpPageIndex = this.posEmpPageIndex + 1;
+                  this.scrolling = true;
+                }
+              }
+            })
+        } else {
+          this.scrolling = false;
+        }
+      }
+    }
+
+  }
+  hasOpenEmpList(positionID: string) {
+    if (this.viewEmpPosition !== positionID) { //change position
+      this.posEmpPageIndex = 1;
+      this.scrolling = true;
+      this.viewEmpPosition = positionID;
+    }
+    var index = this.data.findIndex(x => x.positionID == positionID)
+    if (index >= 0) {
+      this.currentViewPosEmp = {
+        countEmp: this.data[index].countEmp,
+        employees: this.data[index].employees
+      };
+
+    } else this.currentViewPosEmp = { countEmp: 0, employees: [] }
+  }
 }

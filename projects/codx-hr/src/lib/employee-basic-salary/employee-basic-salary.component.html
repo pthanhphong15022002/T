@@ -14,22 +14,22 @@
 >
 </codx-views>
 <ng-template #headerTemplate let-data>
-  <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-30 text-dark p-3 fw-bold fw-500">
+  <div class="d-flex w-100 p-4">
+    <div class="w-30 text-dark fw-bold">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
         [default]="grvSetup?.EmployeeID?.description"
       ></codx-label>
     </div>
-    <div class="w-40 text-dark p-3 fw-bold fw-500">
+    <div class="w-40 text-dark fw-bold">
       <codx-label
         fiedName="lblDecisionNo"
         [formModel]="view.formModel"
         [default]="grvSetup?.DecisionNo?.description"
       ></codx-label>
     </div>
-    <div class="w-30 text-dark p-3 fw-bold fw-500">
+    <div class="w-30 text-dark fw-bold">
       <codx-label
         fiedName="lblStatus"
         [formModel]="view.formModel"
@@ -41,9 +41,9 @@
 
 <!-- list view -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-3 border-bottom w-100">
+  <div class="d-flex align-items-center p-4 border-bottom w-100">
     <!-- emp info -->
-    <div class="w-30 p-2">
+    <div class="w-30">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -90,7 +90,7 @@
     </div>
     <!-- end emp info -->
     <!-- Decision -->
-    <div class="w-40 px-3">
+    <div class="w-40">
       <div class="d-flex flex-column">
         <div class="d-flex align-items-center mb-1">
           <span class="icon-event_notes icon-16 me-1"></span>
@@ -140,7 +140,7 @@
     </div>
     <!-- end decision -->
     <!-- satus -->
-    <div class="w-30 px-3">
+    <div class="w-30">
       <div class="d-flex flex-column">
         <div class="d-flex flex-row mb-2">
           <div class="me-2">
@@ -230,13 +230,13 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full
-    [imgCss]="'me-2'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [imgCss]="'me-3'"
+    cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageWidth]="40"
+    [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
@@ -246,6 +246,7 @@
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
+    [subTitleCss]="'fs-7 text-gray-600'"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
     (changeDataMF)="changeDataMF($event, data)"
@@ -277,39 +278,38 @@
   </ng-template>
 
   <ng-template #descTmp>
-    <div class="d-flex align-items-center mt-1 flex-wrap">
-      <!-- <div
-        class="d-flex align-items-center me-4"
+    <div class="d-flex align-items-center mt-1 flex-wrap flex-wrap">
+    
+      <div class="d-flex align-items-center me-4">
+        <span class="icon-description icon-14 me-1"></span>
+        <span [ngbTooltip]="grvSetup?.DecisionNo?.headerText">
+          {{ data?.decisionNo }}
+        </span>
         
-      > -->
-      <span class="icon-description icon-15 me-1"></span>
-      <span class="me-3" [ngbTooltip]="grvSetup?.DecisionNo?.headerText">
-        {{ data?.decisionNo }}
-      </span>
-      <!-- </div> -->
-      <!-- <div class="d-flex align-items-center"> -->
-      <span class="icon-calendar_today icon-15 me-1"></span>
-      <span
-        [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
-        [innerHTML]="
-          data?.effectedDate
-            | formatvalue : view.formModel : 'effectedDate'
-            | async
-        "
-      >
-      </span>
-      <!-- </div> -->
-      <span class="mx-1" *ngIf="data?.expiredDate"> - </span>
-      <span
-        *ngIf="data?.expiredDate"
-        [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
-        [innerHTML]="
-          data?.expiredDate
-            | formatvalue : view.formModel : 'expiredDate'
-            | async
-        "
-      >
-      </span>
+      </div>
+      <div class="d-flex align-items-center me-4">
+        <span class="icon-calendar_today icon-14 me-1"></span>
+        <span
+          [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
+          [innerHTML]="
+            data?.effectedDate
+              | formatvalue : view.formModel : 'effectedDate'
+              | async
+          "
+        >
+        </span>
+        <span class="mx-1" *ngIf="data?.expiredDate"> - </span>
+        <span
+          *ngIf="data?.expiredDate"
+          [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
+          [innerHTML]="
+            data?.expiredDate
+              | formatvalue : view.formModel : 'expiredDate'
+              | async
+          "
+        >
+        </span>
+      </div>
     </div>
   </ng-template>
 

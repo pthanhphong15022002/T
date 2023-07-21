@@ -78,6 +78,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   modifyOnContact: Date;
   data: any;
   isDate: boolean = false;
+  isMulti = false;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -90,7 +91,19 @@ export class PopupMergeLeadsComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.title = dt?.data?.title;
-    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.leadOne = JSON.parse(JSON.stringify(dt?.data?.leadOne));
+    this.leadTwo =
+      dt?.data?.leadTwo != null
+        ? JSON.parse(JSON.stringify(dt?.data?.leadTwo))
+        : new CM_Leads();
+    this.leadThree =
+      dt?.data?.leadThree != null
+        ? JSON.parse(JSON.stringify(dt?.data?.leadThree))
+        : new CM_Leads();
+    if (dt?.data?.leadThree == null) {
+      this.leadThree.recID = null;
+    }
+    this.isMulti = dt?.data?.isMulti;
   }
   async ngOnInit() {
     this.isDate = false;
@@ -99,25 +112,30 @@ export class PopupMergeLeadsComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    this.leadOne = JSON.parse(JSON.stringify(this.data));
     this.leadNew = JSON.parse(JSON.stringify(this.leadOne));
     this.leadNew.recID = Util.uid();
     this.leadNew.contactID = Util.uid();
     this.leadNew.memo = this.leadNew.memo ?? '';
     this.leadNew.note = this.leadNew.note ?? '';
-
-    this.leadTwo.recID = null;
-    this.leadThree.recID = null;
     this.recIDLead = this.leadOne?.recID;
     this.recIDAvt = this.leadOne?.contactID;
     this.nameContact = this.leadOne.contactName;
     this.nameLead = this.leadOne?.leadName;
     this.modifyOn = this.leadOne?.modifiedOn;
     this.modifyOnContact = this.leadOne?.modifiedOn;
-
+    if (!this.isMulti) {
+      this.leadThree.recID = null;
+      this.leadTwo.recID = null;
+    }
     this.lstLeadCbxOne = await this.getCbxLead(null, null);
-    this.lstLeadCbxTwo = await this.getCbxLead(this.leadOne?.recID, null);
-    this.lstLeadCbxThree = await this.getCbxLead(this.leadOne?.recID, null);
+    this.lstLeadCbxTwo = await this.getCbxLead(
+      this.leadOne?.recID,
+      this.leadThree?.recID
+    );
+    this.lstLeadCbxThree = await this.getCbxLead(
+      this.leadOne?.recID,
+      this.leadTwo?.recID
+    );
     // if (this.leadOne) {
     //   this.lstContactOne = await this.getContacts(this.leadOne?.recID);
     //   this.lstAddressOne = await this.getListAddress(
@@ -151,7 +169,7 @@ export class PopupMergeLeadsComponent implements OnInit {
     options.predicates =
       '(Status.Equals(@0) or Status.Equals(@1)) and !RecID.Equals(@2) and !RecID.Equals(@3) and IsDuplicated==false';
     options.dataValues =
-      '1' + ';' + '3' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
+      '0' + ';' + '1' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     lst =

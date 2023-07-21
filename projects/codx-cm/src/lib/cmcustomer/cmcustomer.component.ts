@@ -53,6 +53,7 @@ export class CmCustomerComponent
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
   @ViewChild('customerDetail') customerDetail: CmCustomerDetailComponent;
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
@@ -107,23 +108,7 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.list,
-        sameData: true,
-        model: {
-          template: this.itemViewList,
-        },
-      },
-    ];
+
 
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
@@ -135,6 +120,34 @@ export class CmCustomerComponent
     });
   }
   ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.itemViewList,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          template2: this.templateMore,
+          resources: this.columnGrids,
+        },
+      },
+    ];
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
@@ -209,13 +222,13 @@ export class CmCustomerComponent
     this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        if (this.isButton) this.edit(data);
+        this.edit(data);
         break;
       case 'SYS02':
         this.delete(data);
         break;
       case 'SYS04':
-        if (this.isButton) this.copy(data);
+        this.copy(data);
         break;
       case 'CM0101_1':
         this.setIsBlackList(data, true);
@@ -345,7 +358,6 @@ export class CmCustomerComponent
                 e.event.modifiedOn = new Date();
                 this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e?.event).subscribe();
-
                 this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }

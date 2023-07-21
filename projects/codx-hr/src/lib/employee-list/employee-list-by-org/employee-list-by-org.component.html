@@ -81,7 +81,7 @@
                     class="text-dark fw-bold me-2 line-clamp line-clamp-1">{{data.employeeName}}
                     <ng-template #nameContactTooltip>
                         <div class="inline-tooltip">
-                            <span class="fw-bold fs-6 me-3 text-nowrap">{{data.employeeName}}</span>
+                            <span class="fw-bold fs-6 me-3">{{data.employeeName}}</span>
                         </div>
                     </ng-template>
                 </div>
@@ -151,26 +151,22 @@
 <!-- header template -->
 <ng-template #colEmployeeHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="EmployeeID" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Nhân viên'"></codx-label>
+        <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel" [default]="'Nhân viên'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colContactHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="Email" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Liên hệ'"></codx-label>
+        <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel" [default]="'Liên hệ'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colPersonalHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="Birthday" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Thông tin cá nhân'"></codx-label>
+        <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin cá nhân'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colStatusHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="Status" [formModel]="view.formModel" [gridViewName]="'grvEmployee'"
-            [formName]="'employees'" [default]="'Tình Trạng'"></codx-label>
+        <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel" [default]="'Tình Trạng'"></codx-label>
     </div>
 </ng-template>
 <!--column Nhân viên -->
@@ -190,13 +186,13 @@
         <div class="d-flex flex-column">
             <div #nameField [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip :null"
                 class="align-items-center line-clamp line-clamp-1 mb-1">
-                <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">
+                <span class="fw-bold fs-6 me-3 item-active text-nowrap" (click)="clickViewEmpInfo(data)">
                     {{data.employeeName}}</span>
                 <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
                 <span class="text-danger">{{ data.employeeID }}</span>
                 <ng-template #nameTooltip>
                     <div class="inline-tooltip">
-                        <span class="fw-bold fs-6 me-3 text-nowrap">
+                        <span class="fw-bold fs-6 me-3">
                             {{data.employeeName}}</span>
                         <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
                         <span class="text-danger">{{ data.employeeID }}</span>
@@ -220,13 +216,13 @@
                     <div class="d-flex flex-column">
                         <span class="label-text-color">{{grvSetup['OrgUnitID'].headerText}}</span>
                         <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
-                            class="text-gray-600 text-nowrap">{{data.orgUnitName? data.orgUnitName :
+                            class="text-gray-600">{{data.orgUnitName? data.orgUnitName :
                             data.orgUnitID}}</span>
                     </div>
                 </ng-template>
             </div>
             <div #departmentField [ngbTooltip]="departmentTooltip"
-                class="text-gray-600 align-items-center text-nowrap line-clamp line-clamp-1">
+                class="text-gray-600 align-items-center line-clamp line-clamp-1">
                 <span *ngIf="data.departmentID != data.orgUnitID">
                     {{data.departmentName? data.departmentName :data.departmentID}}</span>
                 <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">,</span>

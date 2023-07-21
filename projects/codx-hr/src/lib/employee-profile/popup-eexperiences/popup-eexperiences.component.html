@@ -293,6 +293,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <ejs-datepicker 
+            [enabled]="!disabledInput"
             [start]='start' 
             [depth]='depth' 
             [value]="fromdateVal"
@@ -306,6 +307,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 [formModel]="formModel"
             ></codx-label>
             <ejs-datepicker 
+            [enabled]="!disabledInput"
             [start]='start' 
             [depth]='depth' 
             [value]="todateVal"
