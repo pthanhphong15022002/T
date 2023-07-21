@@ -203,6 +203,7 @@ import { CodxViewContentComponent } from './components/codx-view-content/codx-vi
 import { PopupViewContentComponent } from './components/codx-view-content/popup-view-content.component';
 import { CodxNoDataComponent } from './components/codx-step/codx-no-data/codx-no-data.component';
 import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
+import { CodxReportAddComponent } from './components/codx-list-reports/popup/codx-report-add/codx-report-add.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -357,6 +358,9 @@ const T_Component: Type<any>[] = [
   UpdateNotePinComponent,
   PopupViewContentComponent,
   CodxViewContentComponent,
+
+  //report
+  CodxReportAddComponent
 ];
 
 const T_Pipe: Type<any>[] = [
