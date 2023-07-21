@@ -57,6 +57,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() taskAdd: DP_Instances_Steps_Tasks;
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
 
+  @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
   @Input() isClose = false; // đóng nhiệm vụ
   @Input() isRoleAll = true;
@@ -81,6 +82,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() continueStep = new EventEmitter<any>();
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>(); // type A = all, D=default, R = required
+  @Output() changeProgress = new EventEmitter<any>(); 
   //#endregion
 
   isUpdate;
@@ -1022,6 +1024,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let groupData = this.currentStep?.taskGroups.find(
         (group) => group.refID == data.task.taskGroupID
       );
+      if(this.listGroupTask && this.listGroupTask?.length <= 0){
+        let taskGroup = {};
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.listGroupTask.push(taskGroup);
+      }
       let group = this.listGroupTask.find(
         (group) => group.refID == data.task.taskGroupID
       );
@@ -1406,7 +1413,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region progress
   async openPopupUpdateProgress(data, type) {
-    if (!this.isMoveStage) {
+    if (!this.isMoveStage && !this.isTaskFirst && this.currentStep?.stepStatus == "0") {
       if (
         !this.isOnlyView ||
         !this.isStart ||
@@ -1484,6 +1491,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       }
       this.handelProgress(data, dataProgress);
+      if(this.isTaskFirst && !this.isStart){
+        this.changeProgress.emit(true);
+
+      }
     }
     return dataPopupOutput;
   }
@@ -1620,7 +1631,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   checkUpdateProgress(dataUpdate, type) {
-    if (this.isMoveStage) {
+    if (this.isMoveStage || (this.isTaskFirst && this.currentStep?.stepStatus == "0")) {
       return true;
     }
     if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {

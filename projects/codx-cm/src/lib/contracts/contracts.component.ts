@@ -38,6 +38,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AddContractsComponent } from './add-contracts/add-contracts.component';
 import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
+import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -398,11 +399,11 @@ export class ContractsComponent extends UIComponent {
         break;
       case 'CM0204_10':
         //thành công
-        this.cancelApprover(data);
+        this.moveReason(data,true);
         break;
       case 'CM0204_11':
         //thất bại
-        this.cancelApprover(data);
+        this.moveReason(data,false);
         break;
     }
   }
@@ -801,7 +802,7 @@ export class ContractsComponent extends UIComponent {
             processID: data?.processID,
             stepID: data?.stepID,
             // nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
-       //     listStepCbx: this.listInsStep,
+           // listStepCbx: this.listInsStep,
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -822,6 +823,7 @@ export class ContractsComponent extends UIComponent {
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
+              this.listInsStep = e?.event?.listStep;
               var instance = e.event.instance;
               var listSteps = e.event?.listStep;
               var index =
@@ -866,5 +868,90 @@ export class ContractsComponent extends UIComponent {
           });
         });
     });
+  }
+
+  moveReason(data: any, isMoveSuccess: boolean) {
+    //lay step Id cu de gen lai total
+    // if (!this.crrStepID || this.crrStepID != data.stepID)
+    //   this.crrStepID = data.stepID;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
+    this.cache.functionList(functionID).subscribe((fun) => {
+      this.openFormReason(data, fun, isMoveSuccess);
+    });
+  }
+  openFormReason(data, fun, isMoveSuccess) {
+    var formMD = new FormModel();
+    formMD.funcID = fun.functionID;
+    formMD.entityName = fun.entityName;
+    formMD.formName = fun.formName;
+    formMD.gridViewName = fun.gridViewName;
+    let oldStatus = data.status;
+    let oldStepId = data.stepID;
+    var dataCM = {
+      refID: data?.refID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+    };
+    var obj = {
+      headerTitle: fun.defaultName,
+      formModel: formMD,
+      isReason: isMoveSuccess,
+      applyFor: '4',
+      dataCM: dataCM,
+      stepName: data.currentStepName,
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupMoveReasonComponent,
+      '',
+      800,
+      600,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (e && e.event != null) {
+      //   data = this.updateReasonDeal(e.event?.instance, data);
+      //   var datas = [data, oldStepId, oldStatus, e.event?.comment];
+      //   this.codxCmService.moveDealReason(datas).subscribe((res) => {
+      //     if (res) {
+      //       data = res[0];
+      //       this.view.dataService.update(data).subscribe();
+      //       //up kaban
+      //       if (this.kanban) {
+      //         let money = data.dealValue * data.exchangeRate;
+      //         this.renderTotal(data.stepID, 'add', money);
+      //         this.renderTotal(this.crrStepID, 'minus', money);
+      //         this.kanban.refresh();
+      //       }
+      //       this.detectorRef.detectChanges();
+      //     }
+      //   });
+      //   // }
+      // } else {
+      //   if (this.kanban) {
+      //     this.dataSelected.stepID = this.crrStepID;
+      //     this.kanban.updateCard(this.dataSelected);
+      //   }
+      }
+    });
+  }
+  autoStart(event){
+    if(event){
+      this.api.exec<any>(
+        'DP',
+        'InstancesBusiness',
+        'StartInstanceAsync',
+        [this.itemSelected?.refID]
+      ).subscribe((res) =>{
+        console.log(res);
+        if(res){
+          this.listInsStep = res;
+        }
+      })
+    }
   }
 }

@@ -132,8 +132,10 @@
         [isRoleAll]="dataSelected?.roles?.isOnwer || false"
         [isShowElement]="isShowElement"
         [isAddTask]="i == indexAddTask"
+        [isTaskFirst]="i == 0 ? true : false"
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
+        (changeProgress)= "autoStart($event)"
       ></codx-step-task>
       <div *ngIf="(step?.isFailStep || step?.isSuccessStep) &&  !['0','1','2'].includes(dataSelected?.status) ">
         <div >

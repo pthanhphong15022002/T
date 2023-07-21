@@ -123,6 +123,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.recID = dt?.data[2];
     }
     this.recID = dt?.data[2];
+    if (this.funcID == 'CM0101') {
+      if (this.action == 'add') {
+        this.radioChecked = true;
+        this.data?.category == '1';
+      } else {
+        this.radioChecked = this.data?.category == '1' ? true : false;
+      }
+    }
     if (this.data?.objectType == '1') {
       this.refValueCbx = 'CMCustomers';
     } else {
@@ -215,7 +223,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   getTab() {
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' && this.radioChecked) {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -296,14 +304,39 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-
-  changeRadio(e){
+  changeRadio(e) {
     if (e.field === 'yes' && e.component.checked === true) {
       this.radioChecked = true;
       this.data.category = '1';
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-read_more',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
+        {
+          icon: 'icon-location_on',
+          text: 'Danh sách địa chỉ',
+          name: 'Address',
+        },
+        {
+          icon: 'icon-contact_phone',
+          text: 'Người liên hệ',
+          name: 'Contacts',
+        },
+      ];
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
-      this.data.category = '0';
+      this.data.category = '2';
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
+        {
+          icon: 'icon-read_more',
+          text: 'Thông tin khác',
+          name: 'InformationDefault',
+        },
+      ];
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -650,7 +683,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
     if (type == 'P') {
-      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(02|01+([0-9]{9})))\b)/;
+      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01|02+([0-9]{9})))\b)/;
       if (!field.toLowerCase().match(validPhone)) {
         this.notiService.notifyCode('RS030');
         return false;

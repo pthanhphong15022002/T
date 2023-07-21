@@ -12,8 +12,10 @@
 
 
 <ng-template #tmpOrgchart>
-    <lib-reportingline-orgchart #orgChart [positionID]="positionID" [funcID]="funcID" (deletedInputPosition)="changeSelectedData($event)" 
-    [view]="view" (hasChangedData)="changedDataFromChart($event)"></lib-reportingline-orgchart>
+    <lib-reportingline-orgchart #orgChart [positionID]="positionID" [funcID]="funcID"
+        (deletedInputPosition)="changeSelectedData($event)" [view]="view"
+        (hasChangedData)="changedDataFromChart($event)"
+        (dataSelectedChanged)="changeSelectedData($event)"></lib-reportingline-orgchart>
 </ng-template>
 
 <ng-template #tmpList let-data>
@@ -29,13 +31,15 @@
                         <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="JobID">
                         </codx-label>
                         <span class="text-gray-600 me-1">: </span>
-                        <span class="text-dark fw-bold" *ngIf="data?.jobID"> {{data.jobName? data.jobName : data.jobID}}</span>
+                        <span class="text-dark fw-bold" *ngIf="data?.jobID"> {{data.jobName? data.jobName :
+                            data.jobID}}</span>
                     </div>
                     <div class="mb-1">
                         <codx-label class="text-gray-600" [formModel]="view.formModel" fiedName="JobLevel">
                         </codx-label>
                         <span class="text-gray-600 me-1">: </span>
-                        <span class="text-dark fw-bold" *ngIf="data?.jobLevel">{{data.jobLevelName? data.jobLevelName : data.jobLevel }}</span>
+                        <span class="text-dark fw-bold" *ngIf="data?.jobLevel">{{data.jobLevelName? data.jobLevelName :
+                            data.jobLevel }}</span>
                     </div>
                 </div>
             </div>
@@ -87,10 +91,10 @@
                     </codx-label>
                 </div>
                 <div class="pos-number text-primary fs-3 fw-bold mb-1">
-                    <span>{{data.staff > 0? data.staff : 0}}</span>
+                    <span>{{data.sampleStaff > 0? data.sampleStaff : 0}}</span>
                 </div>
                 <ng-container *ngIf="data.staffEmp">
-                    <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.staffEmp }">
+                    <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data}">
                     </ng-container>
                 </ng-container>
             </div>
@@ -105,37 +109,58 @@
     </div>
 </ng-template>
 
-<ng-template #templateListEmployee let-employees>
+<ng-template #templateListEmployee let-data>
     <div ngbDropdown class="symbol-more" [container]="'body'">
         <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
             type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             style="padding: 0 !important ; margin-left: 0 !important; border:none">
             <div class="d-flex align-items-center">
-                <codx-img [objectId]="employees[0].employeeID" [objectName]="employees[0].employeeName"
-                    [objectType]="'HR_Employees'" [width]="30">
+                <codx-img [funcId]="funcID" [objectId]="data.sampleStaffEmp[0]?.employeeID"
+                    [objectName]="data.sampleStaffEmp[0]?.employeeName" [objectType]="'HR_Employees'" [width]="30"
+                    [referType]="'avt'">
                 </codx-img>
-                <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">
-                    <span class="text-white">+{{(employees.length - 1)}}</span>
-                </span>
+                <ng-container *ngIf="data.sampleStaff == 2; else manyEmployees">
+                    <codx-img style="margin: -4px;" [funcId]=" funcID" [objectId]="data.sampleStaffEmp[1]?.employeeID"
+                        [objectName]="data.sampleStaffEmp[1]?.employeeName" [objectType]="'HR_Employees'" [width]="30"
+                        [referType]="'avt'">
+                    </codx-img>
+                </ng-container>
+                <ng-template #manyEmployees>
+                    <span *ngIf="data.staffEmp.length > 1" class="multiple-employee rounded-circle">
+                        <span class="text-white fs-3">+{{(data.staff - 1)}}</span>
+                    </span>
+                </ng-template>
             </div>
         </div>
-        <div ngbDropdownMenu class="dropdown-menu w-300px p-3" aria-labelledby="dropdownMenuButton">
+        <div ngbDropdownMenu class="dropdown-menu w-350px p-3" aria-labelledby="dropdownMenuButton">
             <div>
-                <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
-                <span class="fw-bold">({{employees.length}})</span>
+                <codx-label [formModel]="view?.formModel" default="Danh sách nhân viên" class="fw-bold"></codx-label>
+                <span class="fw-bold">({{data?.staff? data.staff : 0}})</span>
             </div>
             <div class="py-2">
-                <codx-searchbar (searchEvent)="searchUser($event) "></codx-searchbar>
+                <codx-searchbar (searchEvent)="searchUser($event, data?.positionID) "></codx-searchbar>
             </div>
-            <div class="hr-list-employee">
-                <ng-container *ngFor="let emp of employees | filter : searchText : 'employeeName': '' :''">
+            <div #posListEmp class="hr-list-employee"
+                (scroll)="onScrollEmpList(posListEmp,data?.positionID, data.staff)">
+                <ng-container *ngFor="let emp of data.staffEmp">
                     <div class="d-flex align-items-centerp py-1">
-                        <codx-img [objectId]="emp.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                        <codx-img [objectId]="emp?.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
                             [objectName]="emp.employeeName" [width]="30">
                         </codx-img>
-                        <div class="d-flex flex-column w-300px">
-                            <span class="fs-6">{{emp.employeeName}}</span>
-                            <span class="text-gray-600">{{emp.positionName}}</span>
+                        <div class="d-flex flex-column w-350px">
+                            <span #employeeName class="fs-6 line-clamp line-clamp-1"
+                                [ngbTooltip]="employeeName.scrollHeight > employeeName.clientHeight? positionTooltip: null">
+                                {{emp.employeeName}}</span>
+                            <span #positionName class="text-gray-600 line-clamp line-lamp-1"
+                                [ngbTooltip]="positionName.scrollHeight > positionName.clientHeight? positionTooltip: null">
+                                {{emp.positionName}}
+                            </span>
+                            <ng-template #positionTooltip>
+                                {{emp.positionName}}
+                            </ng-template>
+                            <ng-template #employeeNameTooltip>
+                                {{emp.positionName}}
+                            </ng-template>
                         </div>
                     </div>
                 </ng-container>

@@ -39,7 +39,7 @@
                 field="batchNo"
                 [formModel]="form.formModel"
                 (valueChange)="valueChange($event)"
-                [disabled]="allowEditKey"
+                [disabled]="keyField == 'BatchNo' ? true : false || formType == 'edit' ? true : false"
               >
             </codx-input>
         </div>
