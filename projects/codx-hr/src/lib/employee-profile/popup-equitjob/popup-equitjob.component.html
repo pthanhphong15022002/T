@@ -9,6 +9,8 @@
   [openMore]="true"
   [tabContent]="[commonInfo, empResponsible, compResponsible]"
   [data]="quitJobObj"
+  (setTitle)="setTitle($event)"
+
   *ngIf="isAfterRender"
 >
 </codx-layout-add>
