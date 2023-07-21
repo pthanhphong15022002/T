@@ -940,4 +940,7 @@ export class ContractsComponent extends UIComponent {
       }
     });
   }
+  autoStart(event){
+    
+  }
 }
