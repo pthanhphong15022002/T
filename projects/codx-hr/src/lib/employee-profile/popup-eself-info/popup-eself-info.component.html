@@ -1,6 +1,6 @@
 <codx-layout-add
   #form
-  [title]="headerText"
+  [title]="action"
   [tabInfo]="tabInfo"
   [formModel]="formModel"
   [subHeader]=""
@@ -8,6 +8,7 @@
   [dialog]="dialog"
   [openMore]="true"
   [tabContent]="[selfInfo, contactInfo]"
+  (setTitle)="setTitle($event)"
   [data]="data"
   *ngIf="isAfterRender"
 >

@@ -7,6 +7,8 @@
   [footer]="footer1"
   [dialog]="dialog"
   [openMore]="true"
+  (setTitle)="setTitle($event)"
+
   [tabContent]="[diseasesInfo, hospitalCheck]"
   [data]="ediseasesObj"
   *ngIf="isAfterRender"
