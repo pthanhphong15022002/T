@@ -11,6 +11,7 @@
   [button]="buttonAdd"
   (buttonClick)="addDiscipline($event)"
   (selectedChange)="changeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
   <!-- (onActions)="HandleAction($event)"
   (oneMoreMulti)="onMoreMulti($event)"
@@ -172,9 +173,10 @@
               [name]="'lblEDisciplineDate'"
             >
             </codx-label>
-            </span
-          >
-          <span class="text-dark fw-bold">{{ data?.disciplineDate | fmDT }}</span>
+          </span>
+          <span class="text-dark fw-bold">{{
+            data?.disciplineDate | fmDT
+          }}</span>
         </div>
         <div *ngIf="data?.fromDate">
           <span class="text-gray-600">
@@ -184,8 +186,7 @@
               [name]="'lblEDisciplineFromDate'"
             >
             </codx-label>
-            </span
-          >
+          </span>
           <span class="fw-bold text-dark"></span>
         </div>
       </div>
@@ -488,9 +489,9 @@
   <lib-view-detail-disciplines
     #viewdetail
     [itemDetail]="itemDetail"
-    [funcID]="funcID"
     [view]="view"
     [formModel]="view.formModel"
+    [grvSetup]="grvSetup"
     (clickMFunction)="clickEvent($event)"
   >
   </lib-view-detail-disciplines>

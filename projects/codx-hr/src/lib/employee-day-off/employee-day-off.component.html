@@ -11,6 +11,7 @@
   [method]="method"
   (buttonClick)="addDayOff($event)"
   (selectedChange)="changeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
@@ -534,6 +535,7 @@
     [itemDetail]="itemDetail"
     [view]="view"
     [formModel]="view?.formModel"
+    [grvSetup]="grvSetup"
     (clickMFunction)="clickEvent($event)"
   >
   </lib-view-day-off-detail>

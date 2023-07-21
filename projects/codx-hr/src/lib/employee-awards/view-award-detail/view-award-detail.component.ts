@@ -34,14 +34,11 @@ export class ViewAwardDetailComponent {
     private cache: CacheService,
     private shareService: CodxShareService,
     private codxODService: CodxOdService
-  ) {
-    this.funcID = this.router.snapshot.params['funcID'];
-    // this.user = this.authStore.get();
-  }
+  ) {}
 
-  @Input() funcID: any;
   @Input() itemDetail: any;
   @Input() formModel;
+  @Input() grvSetup;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
@@ -61,7 +58,6 @@ export class ViewAwardDetailComponent {
   // className: string = 'FileBussiness';
   // lstFile: any[] = [];
   // user: any;
-  grvSetup: any = {};
   itemDetailStt;
   itemDetailDataStt;
   gridViewSetup: any = {};

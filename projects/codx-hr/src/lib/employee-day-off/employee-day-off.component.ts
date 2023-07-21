@@ -94,6 +94,7 @@ export class EmployeeDayOffComponent extends UIComponent {
   eDayOff: any;
   flagChangeMF: boolean = false;
   runModeCheck: boolean = false;
+  viewActive: string;
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
@@ -115,6 +116,7 @@ export class EmployeeDayOffComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -124,6 +126,7 @@ export class EmployeeDayOffComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateListDetail,
@@ -145,8 +148,14 @@ export class EmployeeDayOffComponent extends UIComponent {
     }
   }
 
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   //More function
