@@ -17,3 +17,21 @@
 
 }
 
+.report_panel{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-width: 1px;
+  border-color: #1f92b8;
+  border-style: dashed;
+  padding: 10px 40px;
+  background-color: rgba(88, 165, 244, 0.1294117647);
+}
+
+.report_panel img{
+  width: 300px;
+}
+.report_panel p {
+  margin-top: 10px;
+}

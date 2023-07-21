@@ -85,14 +85,23 @@ export class PopupOwnerDealComponent {
 
   saveOwner(){
     this.setRoles();
-    var data = [this.recID, this.owner,this.ownerStep, this.startControl];
-    this.codxCmService.updateOwnerLead(data).subscribe((res)=> {
+    var datas = [this.recID, this.owner,this.ownerStep, this.startControl];
+    if(this.applyFor == "1"){
+      this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
+        if(res) {
+          this.dialog.close(res[0]);
+        }
+    })
+    }
+    else if (this.applyFor == "5") {
+      this.codxCmService.updateOwnerLead(datas).subscribe((res)=> {
         if(res) {
           this.dialog.close(res[0]);
         }
     })
   }
 
+  }
   valueChangeOwner($event){
     if($event) {
       this.owner = $event;

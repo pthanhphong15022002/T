@@ -53,11 +53,8 @@ export class LeadDetailComponent implements OnInit {
   oCountFooter: any = {};
   contactPerson: any;
   gridViewSetupDeal:any;
-  modifiedOn:any;
-
   request: ResourceModel;
   formModelDeal: FormModel;
-
 
   isDataLoading = false;
 
@@ -134,7 +131,6 @@ export class LeadDetailComponent implements OnInit {
         if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
           this.promiseAllLoad();
         }
-        this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
         this.oldRecId = changes['dataSelected'].currentValue.recID;
 
         this.tabControl.push(references);

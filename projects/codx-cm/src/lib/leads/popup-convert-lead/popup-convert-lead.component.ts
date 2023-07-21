@@ -374,6 +374,14 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       return;
     }
+    if (!this.deal?.businessLineID?.trim() && this.deal?.businessLineID ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetupDeal['BusinessLineID']?.headerText + '"'
+      );
+      return;
+    }
 
     this.onConvert();
   }

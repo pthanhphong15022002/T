@@ -10,6 +10,8 @@ import { CodxAcService } from '../../../codx-ac.service';
 })
 export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
   
+  //Constructor
+
   @ViewChild('form') public form: CodxFormComponent;
   headerText: any;
   title: any;
@@ -41,9 +43,17 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
       }
     });
   }
+
+  //End Constructor
+
+  //Init
   
   onInit(): void {
   }
+
+  //End Init
+
+  //Event
 
   valueChange(e)
   {
@@ -79,6 +89,10 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
     }
   }
 
+  //End Event
+
+  //Method
+
   onSave(){
     this.validate = 0;
     this.checkValidate();
@@ -110,6 +124,10 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
       }
     }
   }
+
+  //End Method
+
+  //Function
 
   onClearItemSeries()
   {
@@ -226,4 +244,6 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
       }
     }
   }
+
+  //End Function
 }
