@@ -732,7 +732,7 @@ export class PdfComponent
         //     resolve(status);
         //   });
         this.codxShareService
-          .codxApprove(this.transRecID, mode, null, comment,null)
+          .codxApprove(this.transRecID, mode, null, comment, null)
           .subscribe((res: any) => {
             if (res?.msgCodeError == null) {
               resolve(true);
@@ -2905,6 +2905,12 @@ export class PdfComponent
   removeCA() {
     this.esService.removeCA().subscribe((res) => {
       console.log('remove', res);
+    });
+  }
+
+  testCreateCA() {
+    this.esService.testCreateCA().subscribe((res) => {
+      console.log('test', res);
     });
   }
   //#endregion
