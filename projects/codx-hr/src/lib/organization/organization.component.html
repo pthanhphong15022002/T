@@ -40,6 +40,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [orgUnitID]="orgUnitID"
+    (newIdItem)="getIdFromChild($event)"
   ></hr-organization-orgchart>
 </ng-template>
 <!-- tree orgChart
@@ -211,7 +212,6 @@
       <codx-mfunc
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"
-        [isBookMark]="false"
         [dataItem]="item"
         type="hover"
       >
@@ -341,7 +341,7 @@
               <ng-container
                 *ngTemplateOutlet="
                   templateListEmployee;
-                  context: { $implicit: item.staffEmp }
+                  context: { $implicit: item.staffEmp, item: item }
                 "
               >
               </ng-container>
@@ -500,7 +500,7 @@
   </div> -->
 </ng-template>
 
-<ng-template #templateListEmployee let-employees>
+<ng-template #templateListEmployee let-employees let-item="item">
   <div ngbDropdown class="symbol-more" [container]="'body'">
     <div
       ngbDropdownToggle
@@ -511,7 +511,7 @@
       aria-haspopup="true"
       aria-expanded="false"
       style="padding: 0 !important ; margin-left: 0 !important; border: none"
-      (click)="clickOpen($event)"
+      (click)="clickOpen($event, item.orgUnitID, employees)"
     >
       <div class="d-flex align-items-center">
         <codx-img
@@ -534,7 +534,7 @@
           *ngIf="employees?.length > 1 && employees?.length !== 2"
           class="multiple-employee rounded-circle"
         >
-          <span class="text-white">+{{ employees.length - 1 }}</span>
+          <span class="text-white">+{{ item.counts - 1 }}</span>
         </span>
       </div>
     </div>
@@ -545,18 +545,19 @@
     >
       <div class="">
         <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
-        <span class="fw-bold">({{ employees?.length }})</span>
+        <span class="fw-bold">({{ lstMyTeam?.length }})</span>
       </div>
       <div class="py-2">
         <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar>
       </div>
-      <div class="hr-list-employee">
-        <ng-container
+      <div #eleMyTeams class="hr-list-employee" (scroll)="scroll(eleMyTeams)">
+        <ng-container *ngFor="let emp of lstMyTeam">
+          <!-- <ng-container
           *ngFor="
-            let emp of employees
+            let emp of lstMyTeam
               | filter : searchText : 'employeeName' : '' : ''
           "
-        >
+        > -->
           <div class="d-flex align-items-centerp py-1">
             <codx-img
               [objectId]="emp.employeeID"

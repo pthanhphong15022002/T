@@ -326,7 +326,8 @@ export class LeadsComponent
         this.checkMoreReason(data);
     };
     var isCRD = (eventItem, data) => {
-      eventItem.disabled = data.closed || this.checkMoreReason(data);
+   eventItem.disabled = data.closed || this.checkMoreReason(data);
+   // eventItem.disabled  = false;
     };
     var isEdit = (eventItem, data) => {
       eventItem.disabled = eventItem.disabled =
@@ -649,7 +650,6 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.isLoading = false;
             e.event.modifiedOn = new Date();
             this.detailViewLead.promiseAllLoad();
             this.dataSelected = e.event;
@@ -877,7 +877,6 @@ export class LeadsComponent
               var datas = [data.recID, resDP[0]];
               this.codxCmService.startLead(datas).subscribe((res) => {
                 if (res) {
-                  debugger;
                   this.dataSelected = res[0];
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
