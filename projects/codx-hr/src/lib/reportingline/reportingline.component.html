@@ -126,7 +126,7 @@
                     </codx-img>
                 </ng-container>
                 <ng-template #manyEmployees>
-                    <span *ngIf="data.staffEmp.length > 1" class="multiple-employee rounded-circle">
+                    <span *ngIf="data.staff > 2" class="multiple-employee rounded-circle">
                         <span class="text-white fs-3">+{{(data.staff - 1)}}</span>
                     </span>
                 </ng-template>
