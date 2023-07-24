@@ -1925,7 +1925,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   openUploadForm()
   {
-    this.callfc.openForm(AttachmentWebComponent,"",900,700,"");
+    this.callfc.openForm(AttachmentWebComponent,"",1100,700,"");
     var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();

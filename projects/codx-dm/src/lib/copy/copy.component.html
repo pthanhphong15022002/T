@@ -25,6 +25,6 @@
         </form>
     </ng-template>
     <ng-template #footer>
-        <button type="button" id="btnRename" class="btn btn-primary" (click)="SaveData()"><codx-label [default]="titleSave" fiedName="titleSave"></codx-label></button>
+        <button type="button" id="btnRename" class="btn btn-primary" [disabled]="btnDisabled" (click)="SaveData()"><codx-label [default]="titleSave" fiedName="titleSave"></codx-label></button>
     </ng-template>
 </codx-form>

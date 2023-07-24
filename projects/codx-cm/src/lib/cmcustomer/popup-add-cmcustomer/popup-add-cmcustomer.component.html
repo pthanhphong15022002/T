@@ -433,7 +433,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0104'">
+        <div class="form-group mt-3" *ngIf="funcID == 'CM0104'">
           <codx-label [formModel]="form.formModel" fiedName="SegmentID">
           </codx-label>
           <codx-input
@@ -638,6 +638,7 @@
           class="test-check"
           type="radio"
           field="yes"
+          [disabled]="action === 'edit'"
           [checked]="radioChecked ?? false"
           (valueChange)="changeRadio($event)"
         ></codx-input>
@@ -658,6 +659,7 @@
           class="test-check fw-bold"
           type="radio"
           style="width: 100%"
+          [disabled]="action === 'edit'"
           field="no"
           [checked]="!radioChecked ?? false"
           (valueChange)="changeRadio($event)"
