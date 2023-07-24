@@ -34,8 +34,6 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   styleUrls: ['./quotations.component.css'],
 })
 export class QuotationsComponent extends UIComponent implements OnInit {
-  @Input() funcID: string;
-  @Input() customerID: string;
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
@@ -53,6 +51,8 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   @ViewChild('templateDeal') templateDeal: TemplateRef<any>;
   @ViewChild('templateApproverStatus') templateApproverStatus: TemplateRef<any>;
 
+  @Input() funcID: string;
+  @Input() customerID: string;
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -105,7 +105,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    // this.loadSetting();
+    this.funcID = this.routerActive.snapshot.params['funcID'];
   }
 
   onInit(): void {
@@ -296,17 +296,17 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         }
         switch (res.functionID) {
           case 'CM0202_1':
-            if (data.status != 0 && data.status != 4) {
+            if (data.status != '0' && data.status != '4') {
               res.disabled = true;
             }
             break;
           case 'CM0202_2':
-            if (data.status != 1) {
+            if (data.status != '1') {
               res.disabled = true;
             }
             break;
           case 'CM0202_3':
-            if (data.status != 2) {
+            if (data.status != '2') {
               res.isblur = true;
             }
             break;
@@ -356,7 +356,22 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       case 'CM0202_5':
         this.viewDetail(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   // region CRUD
@@ -572,10 +587,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                 }
               });
           } else {
-            this.notiService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
+            this.notiService.notifyCode('DP040');
           }
         });
       } else {
@@ -602,13 +614,15 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       .subscribe((res2: any) => {
         if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
         else {
-          this.itemSelected.approveStatus = '3';
-          this.view.dataService.update(this.itemSelected).subscribe();
-          // if (this.kanban) this.kanban.updateCard(this.itemSelected);
-          this.codxCmService
-            .updateApproveStatus('DealsBusiness', data?.recID, '3')
-            .subscribe();
-          this.notiService.notifyCode('ES007');
+          this.codxCM
+            .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.itemSelected = q;
+                this.view.dataService.update(this.itemSelected).subscribe();
+              }
+              this.notiService.notifyCode('ES007');
+            });
         }
       });
   }

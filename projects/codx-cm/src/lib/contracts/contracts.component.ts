@@ -894,13 +894,12 @@ export class ContractsComponent extends UIComponent {
       refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
-      nextStep: data?.nextStep,
     };
     var obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor: '1',
+      applyFor: '4',
       dataCM: dataCM,
       stepName: data.currentStepName,
     };
@@ -941,6 +940,18 @@ export class ContractsComponent extends UIComponent {
     });
   }
   autoStart(event){
-    
+    if(event){
+      this.api.exec<any>(
+        'DP',
+        'InstancesBusiness',
+        'StartInstanceAsync',
+        [this.itemSelected?.refID]
+      ).subscribe((res) =>{
+        console.log(res);
+        if(res){
+          this.listInsStep = res;
+        }
+      })
+    }
   }
 }

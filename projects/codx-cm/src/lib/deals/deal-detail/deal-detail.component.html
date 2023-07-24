@@ -29,11 +29,10 @@
     </ng-template>
     <ng-template #header let-data>
       <div class="d-flex justify-content-between">
-        <div class="text-info d-flex align-items-center">
+        <div class="text-info d-flex align-items-center"   [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText">
           <i class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></i>
           <span
             class="text-dark fs-6 fw-bold line-clamp-menu"
-            [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
             #businessLineID
             [innerHTML]="
               dataSelected?.businessLineID
@@ -113,7 +112,7 @@
                         | async
                     "
                   ></span>
-                  <span
+                  <span *ngIf="dataSelected?.currencyID"
                     [ngClass]="
                       dataSelected?.currencyID ? '' : 'line-clamp-menu'
                     "
@@ -149,9 +148,8 @@
                   ></span
                   >%
                 </div>
-
                 <span
-                  class="text-gray-600 ms-3"
+                  [ngClass]="dataSelected?.expectedClosed? 'text-gray-600 ms-3':'text-gray-600 ms-3 line-clamp line-clamp-1'"
                   #expectedClosed
                   [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
                   [innerHTML]="
@@ -336,7 +334,42 @@
                       </codx-vll>
                     </ng-template>
                   </div>
-
+                  <ng-template #tooltipSalesperson>
+                    <div class="d-flex justify-content-center fw-bold fs-6">
+                      <span
+                        #salespersonID
+                        [innerHTML]="
+                          dataSelected?.salespersonID
+                            | formatvalue
+                              : formModel
+                              : 'salespersonID'
+                              : salespersonID
+                            | async
+                        "
+                      ></span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      {{ gridViewSetup["SalespersonID"]?.headerText }}
+                    </div>
+                  </ng-template>
+                  <ng-template #tooltipConsultant>
+                    <div class="d-flex justify-content-center fw-bold fs-6">
+                      <span
+                      #consultantID
+                      [innerHTML]="
+                      dataSelected?.consultantID
+                          | formatvalue
+                            : formModel
+                            : 'consultantID'
+                            : consultantID
+                          | async
+                      "
+                    ></span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      {{ gridViewSetup["ConsultantID"]?.headerText }}
+                    </div>
+                  </ng-template>
                   <div
                     class="d-flex flex-column align-items-top"
                     style="margin-top: 2.25rem !important"
@@ -348,40 +381,57 @@
                       ></codx-label>
                     </div>
                     <div class="d-flex justify-content-end">
-                      <codx-imgs
-                        [width]="30"
-                        [objectId]="dataSelected.owner"
-                        ojectType="AD_Users"
-                        [numberImages]="1"
-                      >
-                      </codx-imgs>
+                      <div style="position: relative"  [ngbTooltip]="tooltipSalesperson" *ngIf="dataSelected?.salespersonID">
+                        <codx-img
+                          [width]="30"
 
-                      <codx-imgs
-                        [width]="30"
-                        [objectId]="dataSelected.consultantID"
-                        ojectType="AD_Users"
-                        [numberImages]="1"
-                      >
-                      </codx-imgs>
+                          [objectId]="dataSelected.salespersonID"
+                          objectType="AD_Users"
+                          [referType]="'avt'"
+                          [numberImages]="1"
+                        >
+                        </codx-img>
+                        <div
+                          style="position: absolute; right: 0px; bottom: 0px"
+                        >
+                          <span
+                            ><img
+                              src="/assets/themes/cm/default/img/{{
+                                getIcon('3')
+                              }}"
+                              alt=""
+                          /></span>
+                        </div>
+                      </div>
+                      <div style="position: relative"  [ngbTooltip]="tooltipConsultant" *ngIf="dataSelected?.consultantID">
+                        <codx-imgs
+                          [width]="30"
+                          [objectId]="dataSelected?.consultantID"
+                          ojectType="AD_Users"
+                          [numberImages]="1"
+                          [isToolTip]="false"
+                        >
+                        </codx-imgs>
+                        <div
+                          style="position: absolute; right: 0px; bottom: 0px"
+                        >
+                          <span
+                            ><img
+                              src="/assets/themes/cm/default/img/{{
+                                getIcon('5')
+                              }}"
+                              alt=""
+                          /></span>
+                        </div>
+                      </div>
+
+
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- <div class="view-details-header bg-body scroll-y me-3 h-100">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex tab-header">
-                  <codx-taskbar
-                    [listTab]="tabDetail"
-                    [change]="dataSelected"
-                    (tab)="changeTab($event)"
-                    size="18"
-                    class="mb-3"
-                  ></codx-taskbar>
-                </div>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
@@ -389,15 +439,423 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <div class="d-flex flex-column">
-    <!-- <codx-taskbar
-      [listTab]="tabDetail"
-      [change]="dataSelected"
-      (tab)="changeTab($event)"
-      size="18"
-      class="mb-3"
-    ></codx-taskbar> -->
+  <div style="overflow: hidden;">
+    <ejs-tab
+    >
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top">
+              <span class="icon-info icon-16 me-2"></span>
+              <span>
+                <codx-label
+                class="fw-bold"
+                default="Thông tin chung"
+                [formModel]="formModel"
+                name="lblInformation"
+              ></codx-label>
+              </span>
 
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <div class="d-flex flex-column">
+              <div class="text-dark text-primary fw-bold fs-6 mb-3">
+                <codx-label default="Thông tin chung"></codx-label>
+              </div>
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label default="Mã cơ hội"></codx-label>:
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        {{ dataSelected?.dealID }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          fiedName="ChannelID"
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #channelID
+                          [innerHTML]="
+                            dataSelected?.channelID
+                              | formatvalue
+                                : formModel
+                                : 'channelID'
+                                : channelID
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          fiedName="Category"
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          default="Loại cơ hội"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        {{ getNameCategory(dataSelected?.category) }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          fiedName="CampaignID"
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #campaignID
+                          [innerHTML]="
+                            dataSelected?.campaignID
+                              | formatvalue
+                                : formModel
+                                : 'campaignID'
+                                : campaignID
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="DealValue"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #dealValue
+                          *ngIf="dataSelected?.dealValue; else defaultNull"
+                          [innerHTML]="
+                            dataSelected?.dealValue
+                              | formatvalue
+                                : formModel
+                                : 'dealValue'
+                                : dealValue
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="ConsultantID"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #consultantID
+                          [innerHTML]="
+                            dataSelected?.consultantID
+                              | formatvalue
+                                : formModel
+                                : 'consultantID'
+                                : consultantID
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="Probability"
+                        ></codx-label>
+                      </div>
+                      <div
+                        class="text-dark fw-bold codx-textcontent d-flex justify-content-start"
+                      >
+                        <span
+                          #probability
+                          *ngIf="dataSelected?.probability; else defaultNull"
+                          [innerHTML]="
+                            dataSelected?.probability
+                              | formatvalue : formModel : 'probability' : probability
+                              | async
+                          "
+                        ></span
+                        >%
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="SalespersonID"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #salespersonID
+                          [innerHTML]="
+                            dataSelected?.salespersonID
+                              | formatvalue
+                                : formModel
+                                : 'salespersonID'
+                                : salespersonID
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="ExpectedClosed"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #expectedClosed
+                          [innerHTML]="
+                            dataSelected?.expectedClosed
+                              | formatvalue
+                                : formModel
+                                : 'expectedClosed'
+                                : expectedClosed
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-5">
+                <div class="text-dark text-primary fw-bold fs-6 mb-3">
+                  <codx-label
+                    fiedName="Memo"
+                    [setRequire]="false"
+                    [formModel]="formModel"
+                  ></codx-label>
+                </div>
+                <span
+                  #memo
+                  [innerHTML]="
+                    dataSelected.memo | formatvalue : formModel : 'memo' : memo | async
+                  "
+                ></span>
+              </div>
+            </div>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem *ngIf="dataSelected?.steps?.isHaveField">
+        <ng-template #headerText>
+          <div class="d-flex align-items-top">
+            <span class="icon-add_to_photos icon-16 me-1"></span>
+            <codx-label
+              class="fw-bold"
+              default="Trường tùy chỉnh"
+              [formModel]="formModel"
+              name="lblField"
+            ></codx-label>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <div class="d-flex flex-column">
+            <ng-container *ngFor="let item of listSteps">
+              <codx-fields-detail-temp
+                *ngIf="item?.fields?.length > 0"
+                [dataStep]="item"
+                [showColumnControl]="showColumnControl(item.stepID)"
+                [isUpdate]=" ['1', '2'].includes(dataSelected.status) && dataSelected?.roles?.isOnwer"
+                (saveDataStep)="saveDataStep($event)"
+              >
+              </codx-fields-detail-temp>
+            </ng-container>
+          </div>
+        </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top">
+              <span class="icon-add_to_photos icon-16 me-1"></span>
+              <codx-label
+                class="fw-bold"
+                default="Liên hệ"
+                [formModel]="formModel"
+                name="lblContanct"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <div>
+              <codx-list-contacts
+                #loadContactDeal
+                [selectAll]="false"
+                [funcID]="'CM0205'"
+                [objectID]="dataSelected?.recID"
+                [objectName]="dataSelected.dealName"
+                [customerID]="dataSelected?.customerID"
+                [objectType]="'4'"
+                [type]="'formDetail'"
+                [hidenMF]="
+                  !dataSelected?.roles?.isOnwer ||
+                  dataSelected?.closed ||
+                  ['1', '0', '3', '5'].includes(dataSelected.status)
+                "
+                (contactEvent)="contactChange($event)"
+              ></codx-list-contacts>
+            </div>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top">
+              <span class="icon-add_to_photos icon-16 me-1"></span>
+              <codx-label
+                class="fw-bold"
+                default="Đối thủ"
+                [formModel]="formModel"
+                name="lblOpponent"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <codx-tab-dealcompetitors
+                  [dealID]="dataSelected.recID"
+                  [hidenMF]="
+                    !dataSelected?.roles?.isOnwer ||
+                    dataSelected.closed ||
+                    ['1', '0', '3', '5'].includes(dataSelected.status)
+                  "
+                ></codx-tab-dealcompetitors>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem >
+          <ng-template #headerText>
+            <div class="d-flex align-items-top">
+              <span class="icon-more icon-16 me-2"></span>
+              <codx-label
+                class="fw-bold"
+                default="Công việc"
+                [formModel]="formModel"
+                name="lblTask"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content let-data="value">
+              <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="['0', '1','3','5'].includes(dataSelected.status) || !dataSelected?.roles?.isOnwer || dataSelected.closed"></step-task>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem >
+          <ng-template #headerText>
+            <div class="d-flex align-items-top">
+              <span class="icon-more icon-16 me-2"></span>
+              <codx-label
+                class="fw-bold"
+                default="Quy trình xử lý"
+                [formModel]="formModel"
+                name="lblProcess"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content let-data="value">
+            <div *ngIf="listSteps?.length > 0 && listSteps">
+              <step-task
+              [isDataLoading]="isDataLoading"
+              [dataSelected]="dataSelected"
+              [listInstanceStep]="listSteps"
+              [applyFor]="'1'"
+              (continueStep)="continueStep($event)"
+              (saveAssignTask)="saveAssignTask($event)"
+            ></step-task>
+            </div>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem >
+          <ng-template #headerText>
+            <div class="d-flex align-items-top">
+              <span class="icon-i-chat-right icon-16 me-2"></span>
+              <codx-label
+                class="fw-bold"
+                default="Thảo luận"
+                [formModel]="formModel"
+                name="lblComment"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content let-data >
+
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
+
+
+  <!-- <div class="d-flex flex-column">
     <codx-tab-deal-detail
       [tabClicked]="tabClicked"
       [dataSelected]="dataSelected"
@@ -409,7 +867,7 @@
       [tabDetail]="tabDetail"
       [mergedList]="mergedList"
     ></codx-tab-deal-detail>
-  </div>
+  </div> -->
 </ng-template>
 <ng-template #tabs let-data>
   <codx-tabs
@@ -533,4 +991,4 @@
     <codx-no-data> </codx-no-data>
   </ng-template>
 </ng-template>
-<ng-template #defaultNull> <p>0</p></ng-template>
+<ng-template #defaultNull> <span class="pe-1">0</span></ng-template>

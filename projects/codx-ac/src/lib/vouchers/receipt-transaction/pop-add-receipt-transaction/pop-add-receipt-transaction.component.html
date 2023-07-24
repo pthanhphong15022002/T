@@ -40,7 +40,7 @@
       </e-tabitems>
     </ejs-tab>
     <ejs-tab>
-      <e-tabitems #tabObj>
+      <e-tabitems #tabObj *ngIf="modeGrid">
         <!-- Tab chi tiết -->
         <e-tabitem>
           <ng-template #headerText>
@@ -215,6 +215,7 @@
         [dataSource]="vouchersLines"
         service="IV"
         [autoLoad]="false"
+        [autoFitColumns]="false"
         [autoAddRow]="true"
         (eventAction)="autoAddRowSet($event)"
         (created)="gridCreated()"
@@ -733,7 +734,7 @@
         <div class="ms-2">
           <div
             class="btn btn-icon btn-light-danger btn-circle bg"
-            (click)="close()"
+            (click)="onClose()"
           >
             <i class="icon-close icon-18"></i>
           </div>

@@ -204,6 +204,14 @@ import { PopupViewContentComponent } from './components/codx-view-content/popup-
 import { CodxNoDataComponent } from './components/codx-step/codx-no-data/codx-no-data.component';
 import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { AttachmentWebComponent } from './components/attachment/attachment-web/attachment-web.component';
+import { CodxReportAddComponent } from './components/codx-list-reports/popup/codx-report-add/codx-report-add.component';
+
+import { CodxAddApproversComponent } from './components/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
+import { CodxAddESignFileComponent } from './components/codx-approval-procress/codx-add-esignfile/codx-add-esignfile.component';
+import { CodxAddSignFileComponent } from './components/codx-approval-procress/codx-add-sign-file/codx-add-sign-file.component';
+import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
+
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -357,6 +365,17 @@ const T_Component: Type<any>[] = [
   UpdateNotePinComponent,
   PopupViewContentComponent,
   CodxViewContentComponent,
+
+  //report
+  CodxReportAddComponent,
+
+
+  
+  //Approval Process
+  CodxAddApproversComponent,
+  CodxAddESignFileComponent,
+  CodxAddSignFileComponent,
+  CodxGetTemplateSignFileComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -377,6 +396,7 @@ const T_Pipe: Type<any>[] = [
     T_Component,
     T_Pipe,
     AttachmentComponent,
+    AttachmentWebComponent,
     DialogthumbComponent,
     CodxEmailComponent,
     //CodxApproveStepsComponent,

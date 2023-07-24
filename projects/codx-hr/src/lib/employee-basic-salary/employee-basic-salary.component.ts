@@ -78,6 +78,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   itemDetail;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
+  viewActive: string;
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
@@ -99,6 +100,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -108,6 +110,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateListDetail,
@@ -138,8 +141,15 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       );
     }
   }
+
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   clickMF(event, data) {

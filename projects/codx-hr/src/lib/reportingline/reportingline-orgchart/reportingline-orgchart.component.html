@@ -5,7 +5,7 @@
       [dataSourceSettings]="datasetting" [created]="firstLoadDiagram? created(): null">
       <ng-template #nodeTemplate let-node>
         <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
-          [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
+          [ngTemplateOutletContext]="{ $implicit: node.data}">
         </ng-container>
       </ng-template>
     </ejs-diagram>
@@ -27,14 +27,15 @@
 
 
 <ng-template #template let-data>
-  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 border h-150px"
-    (click)="changeSelectedItem(data)" [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
+  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 h-150px"
+    [ngClass]="data?.isSelected ?'highlight-node-border': 'border'"
+    (click)="changeSelectedItem(data)" [ngStyle]=" { background: data?.positionID == positionID? 'aliceblue': null, borderColor: '' }">
     <div class="has-action-menu">
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
       </codx-mfunc>
     </div>
     <div *ngIf="data.employees?.length > 0;else tmpNoEmployee">
-      <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.employees }">
+      <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data }">
       </ng-container>
       <div class="text-center mt-2">
         <p class="text-dark m-0 p-0 fw-bolder line-clamp line-clamp-1">{{data.employees[0].employeeName}}</p>
@@ -53,53 +54,67 @@
     </ng-template>
     <div *ngIf="data.isChildrent" class="d-flex mt-auto justify-content-center">
       <span #icon class="icon-20 " [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
-        (click)="loadDataChild(data,icon)"></span>
+        (click)="loadDataChild(data,icon , $event)"></span>
     </div>
   </div>
 </ng-template>
 <!-- template view employee -->
-<ng-template #templateListEmployee let-employees>
+<ng-template #templateListEmployee let-data>
   <div ngbDropdown class="d-flex align-items-center justify-content-center symbol-more" [container]="'body'">
-    <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-50px"
-      type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-      style="padding: 0 !important ; margin-left: 0 !important; border:none">
-      <div class="d-flex align-items-center">
-          <codx-img [funcId]="funcID" [objectId]="employees[0].employeeID" [objectName]="employees[0].employeeName"
-            [objectType]="'HR_Employees'" [width]="50" [referType]="'avt'">
-          </codx-img>
-          <ng-container *ngIf="employees.length == 2; else manyEmployees">
-            <codx-img class="second-employee" [funcId]="funcID" [objectId]="employees[1].employeeID"
-              [objectName]="employees[1].employeeName" [objectType]="'HR_Employees'" [width]="50" [referType]="'avt'">
-            </codx-img>
-          </ng-container>
-          <ng-template #manyEmployees>
-            <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">
-              <span class="text-white fs-3">+{{(employees.length - 1)}}</span>
-            </span>
-          </ng-template>
-        </div>
-    </div>
-    <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-      <div>
-        <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
-        <span class="fw-bold">({{employees.length}})</span>
-      </div>
-      <div class="py-2">
-        <codx-searchbar (searchEvent)="searchUser($event) "></codx-searchbar>
-      </div>
-      <div class="hr-list-employee">
-        <ng-container *ngFor="let emp of employees | filter : searchText : 'employeeName': '' :''">
-          <div class="d-flex align-items-centerp py-1">
-            <codx-img [objectId]="emp.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
-              [objectName]="emp.employeeName" [width]="30">
-            </codx-img>
-            <div class="d-flex flex-column w-300px">
-              <span class="fs-6">{{emp.employeeName}}</span>
-              <span class="text-gray-600 line-clamp line-clamp-1">{{emp.positionName}}</span>
-            </div>
+      <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
+          type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          style="padding: 0 !important ; margin-left: 0 !important; border:none">
+          <div class="d-flex align-items-center" (click)="hasOpenEmpList(data?.positionID)">
+              <codx-img [funcId]="funcID" [objectId]="data.sampleEmployees[0]?.employeeID"
+                  [objectName]="data.sampleEmployees[0]?.employeeName" [objectType]="'HR_Employees'" [width]="50"
+                  [referType]="'avt'">
+              </codx-img>
+              <ng-container *ngIf="data.countSampleEmp == 2; else manyEmployees">
+                  <codx-img style="margin: -4px;" [funcId]=" funcID" [objectId]="data.sampleEmployees[1]?.employeeID"
+                      [objectName]="data.sampleEmployees[1]?.employeeName" [objectType]="'HR_Employees'" [width]="50"
+                      [referType]="'avt'">
+                  </codx-img>
+              </ng-container>
+              <ng-template #manyEmployees>
+                  <span *ngIf="data.countSampleEmp > 2" class="multiple-employee rounded-circle">
+                      <span class="text-white fs-3">+{{(data.countSampleEmp - 1)}}</span>
+                  </span>
+              </ng-template>
           </div>
-        </ng-container>
       </div>
-    </div>
+      <div ngbDropdownMenu *ngIf="currentViewPosEmp != null" class="dropdown-menu w-350px p-3" aria-labelledby="dropdownMenuButton">
+          <div>
+              <codx-label [formModel]="view?.formModel" default="Danh sách nhân viên" class="fw-bold"></codx-label>
+              <span class="fw-bold">({{currentViewPosEmp?.countEmp? currentViewPosEmp.countEmp : 0}})</span>
+          </div>
+          <div class="py-2">
+              <codx-searchbar (searchEvent)="searchUser($event, data?.positionID) "></codx-searchbar>
+          </div>
+          <div #posListEmp class="hr-list-employee"
+              (scroll)="onScrollEmpList(posListEmp, data?.positionID, data.countEmp)">
+              <ng-container *ngFor="let emp of currentViewPosEmp?.employees">
+                  <div class="d-flex align-items-centerp py-1">
+                      <codx-img [objectId]="emp?.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                          [objectName]="emp.employeeName" [width]="30">
+                      </codx-img>
+                      <div class="d-flex flex-column w-350px">
+                          <span #employeeName class="fs-6 line-clamp line-clamp-1"
+                              [ngbTooltip]="employeeName.scrollHeight > employeeName.clientHeight? positionTooltip: null">
+                              {{emp.employeeName}}</span>
+                          <span #positionName class="text-gray-600 line-clamp line-lamp-1"
+                              [ngbTooltip]="positionName.scrollHeight > positionName.clientHeight? positionTooltip: null">
+                              {{emp.positionName}}
+                          </span>
+                          <ng-template #positionTooltip>
+                              {{emp.positionName}}
+                          </ng-template>
+                          <ng-template #employeeNameTooltip>
+                              {{emp.positionName}}
+                          </ng-template>
+                      </div>
+                  </div>
+              </ng-container>
+          </div>
+      </div>
   </div>
 </ng-template>

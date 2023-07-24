@@ -65,6 +65,8 @@ export class ES_SignFile {
   title: string;
   updateColumns = '';
   write = true;
+  templateID: string;
+  templateType:string;
 }
 
 export class EmailSendTo {

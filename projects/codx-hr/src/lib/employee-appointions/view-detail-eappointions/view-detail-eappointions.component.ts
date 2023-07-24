@@ -5,14 +5,8 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import {
-  ApiHttpService,
-  AuthStore,
-  FormModel,
-  ViewsComponent,
-} from 'codx-core';
+import { ApiHttpService, AuthStore, ViewsComponent } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -30,6 +24,7 @@ export class ViewDetailEappointionsComponent {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
   @Input() formModel;
+  @Input() grvSetup;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
   @Input() hideFooter = false;
