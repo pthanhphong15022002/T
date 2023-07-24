@@ -867,10 +867,9 @@ export class LeadsComponent
               this.mergeLead(lst[0], true, leadTwo, leadThree);
             }
           } else {
+            this.notificationsService.notifyCode('CM008');
             return;
           }
-        } else {
-          this.notificationsService.notifyCode('CM008');
         }
         break;
         default:
