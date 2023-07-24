@@ -334,7 +334,7 @@
               >
               </codx-label>
             </span>
-            <div class="fs-2 fw-bold mb-2 text-primary number-users">
+            <div class="fs-4 fw-bold text-primary number-users mb-1">
               {{ item.counts ? item.counts : 0 }}
             </div>
             <ng-container *ngIf="item.staffEmp?.length > 0">
@@ -518,7 +518,7 @@
           [objectId]="employees[0].employeeID"
           [objectName]="employees[0].employeeName"
           [objectType]="'HR_Employees'"
-          [width]="30"
+          [width]="25"
         >
         </codx-img>
         <ng-container *ngIf="employees[1] && employees?.length < 3">
@@ -526,15 +526,15 @@
             [objectId]="employees[1].employeeID"
             [objectName]="employees[1].employeeName"
             [objectType]="'HR_Employees'"
-            [width]="30"
+            [width]="25"
           >
           </codx-img>
         </ng-container>
         <span
           *ngIf="employees?.length > 1 && employees?.length !== 2"
-          class="multiple-employee rounded-circle"
+          class="multiple-employee rounded-circle w-25px h-25px"
         >
-          <span class="text-white">+{{ item.counts - 1 }}</span>
+          <span class="text-white fs-7">+{{ item.counts - 1 }}</span>
         </span>
       </div>
     </div>

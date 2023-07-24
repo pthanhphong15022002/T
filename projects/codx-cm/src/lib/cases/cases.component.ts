@@ -1009,6 +1009,7 @@ export class CasesComponent
           action: 'edit',
           formMD: this.formModelCrr,
           titleAction: this.titleAction,
+          applyFor: this.applyFor
         };
         let dialogCustomcases = this.callfc.openSide(
           PopupAddCasesComponent,

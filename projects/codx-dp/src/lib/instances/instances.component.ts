@@ -359,11 +359,11 @@ export class InstancesComponent
     this.button = {
       id: 'btnAdd',
     };
-
     this.dataObj = {
       processID: this.processID,
       haveDataService: this.haveDataService ? '1' : '0',
       showInstanceControl: this.process?.showInstanceControl
+
         ? this.process?.showInstanceControl
         : '2',
       hiddenInstanceReason: this.getListStatusInstance(
