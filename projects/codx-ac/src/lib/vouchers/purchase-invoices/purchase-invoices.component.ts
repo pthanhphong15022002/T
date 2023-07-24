@@ -32,8 +32,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd' };
+
+  button: ButtonModel = { id: 'btnAdd' };
+  isFirstChange: boolean = true;
   funcName: any;
   parentID: string;
   journalNo: string;
@@ -67,11 +68,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
-    private routerActive: ActivatedRoute,
-    @Optional() dialog?: DialogRef
+    private routerActive: ActivatedRoute
   ) {
     super(inject);
-    this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
       if (params?.parent) {
@@ -244,7 +243,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
           option.isFull = true;
-          this.dialog = this.callfunc.openSide(
+          this.callfunc.openSide(
             PopAddPurchaseComponent,
             obj,
             option,
@@ -271,30 +270,27 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //#endregion
 
   //#region Function
-  onSelectChange(event) {
-    if (event?.data.data || event?.data.error) {
+  onSelectChange(e) {
+    console.log('onChange', e);
+
+    if (e.data.error?.isError) {
       return;
-    } else {
-      if (this.master && this.master.recID == event?.data.recID) {
-        return;
-      } else {
-        this.master = event?.data;
-        this.loadDatadetail(this.master);
-      }
     }
+
+    this.master = e.data.data ?? e.data;
+    if (!this.master) {
+      return;
+    }
+
+    // prevent this function from being called twice on the first run
+    if (this.isFirstChange) {
+      this.isFirstChange = false;
+      return;
+    }
+
+    this.loadDatadetail(this.master);
   }
 
-  clickChange(data) {
-    this.master = data;
-    this.loadDatadetail(data);
-  }
-
-  changeDataMF() {
-    if (this.view.dataService.dataSelected.recID) {
-      this.master = this.view.dataService.dataSelected;
-      this.loadDatadetail(this.master);
-    }
-  }
   loadDatadetail(data) {
     this.api
       .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
@@ -303,6 +299,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           this.objectname = res[0]?.objectName;
         }
       });
+
     // this.api
     //   .exec('AC', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [data.recID])
     //   .subscribe((res: any) => {
