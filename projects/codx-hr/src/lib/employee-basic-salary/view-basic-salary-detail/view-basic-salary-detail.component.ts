@@ -35,6 +35,7 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
 
   @Input() itemDetail: any;
   @Input() formModel;
+  @Input() grvSetup;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
@@ -44,7 +45,6 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
   tabControl: TabModel[] = [];
 
   user: any;
-  grvSetup: any = {};
   itemDetailStt;
 
   olderItem: any;

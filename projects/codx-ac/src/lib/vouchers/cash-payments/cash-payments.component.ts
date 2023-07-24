@@ -270,7 +270,7 @@ export class CashPaymentsComponent extends UIComponent {
         //   .subscribe((res: any) => {
            
         //   });
-        var obj = {
+        let obj = {
           formType: 'add',
           headerText: this.headerText,
           journal: {...this.journal},
@@ -279,7 +279,7 @@ export class CashPaymentsComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.isFull = true;
-        var dialog = this.callfunc.openSide(
+        let dialog = this.callfunc.openSide(
           PopAddCashComponent,
           obj,
           option,
@@ -729,7 +729,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.journal = res[0];
-          this.oCash = res[1];
+          this.oCash = res[1].data;
         }
       });
   }

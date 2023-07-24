@@ -60,6 +60,7 @@ export class ViewDetailContractsComponent implements OnInit {
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
+  @Input() grvSetup;
   @Input() hideMF = false;
   @Input() hideFooter = false;
   @Output() clickMFunction = new EventEmitter();

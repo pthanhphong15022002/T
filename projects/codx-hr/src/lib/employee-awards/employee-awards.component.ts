@@ -88,6 +88,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   dataCategory: any;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
+  viewActive: string;
 
   itemDetail;
 
@@ -111,6 +112,7 @@ export class EmployeeAwardsComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -120,6 +122,7 @@ export class EmployeeAwardsComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateListDetail,
@@ -153,8 +156,14 @@ export class EmployeeAwardsComponent extends UIComponent {
     }
   }
 
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   clickMF(event, data) {

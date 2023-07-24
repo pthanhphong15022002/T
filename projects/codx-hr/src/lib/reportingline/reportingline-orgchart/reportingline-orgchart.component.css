@@ -78,3 +78,6 @@
 .second-employee{
   margin-left: -4px;
 }
+.highlight-node-border{
+  border: 1px solid #3699FF;
+}

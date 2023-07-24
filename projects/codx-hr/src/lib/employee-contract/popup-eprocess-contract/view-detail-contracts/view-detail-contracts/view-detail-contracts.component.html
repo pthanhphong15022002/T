@@ -91,12 +91,24 @@
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
         <span
+          *ngIf="
+            itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+            else noOrgUnitName
+          "
+          >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
+        >
+        <ng-template #noOrgUnitName>
+          <span class="place-holder">{{
+            grvSetup["OrgUnitID"].headerText
+          }}</span>
+        </ng-template>
+        <!-- <span
           [innerHTML]="
             itemDetail?.emp?.orgUnitID
               | formatvalue : formModel : 'orgUnitID'
               | async
           "
-        ></span>
+        ></span> -->
       </div>
     </div>
   </ng-template>
@@ -187,8 +199,16 @@
             class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span class="text-dark fw-bold">
-            {{ itemDetail?.signedDate | fmDT }}
+          <span
+            class="text-dark fw-bold"
+            class="me-4"
+            [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+            [innerHTML]="
+              itemDetail?.signedDate
+                | formatvalue : formModel : 'signedDate'
+                | async
+            "
+          >
           </span>
         </div>
       </div>
@@ -201,14 +221,19 @@
             class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span class="text-dark fw-bold"
-            [innerHTML]="
-              itemDetail?.orgUnitID
-                | formatvalue : formModel : 'orgUnitID'
-                | async
+          <span
+            class="text-dark fw-bold"
+            *ngIf="
+              itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+              else noOrgUnitName
             "
+            >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
           >
-          </span>
+          <ng-template #noOrgUnitName>
+            <span class="place-holder">{{
+              grvSetup["OrgUnitID"].headerText
+            }}</span>
+          </ng-template>
         </div>
         <div class="d-flex align-item-center mb-1">
           <codx-label
@@ -217,6 +242,7 @@
             class="text-gray-600 label-colon"
           >
           </codx-label>
+
           <span
             class="text-dark fw-bold"
             [innerHTML]="
@@ -387,7 +413,7 @@
                   >
                   </codx-label>
                 </div>
-                <div class="w-100px d-flex justify-content-end">
+                <div class="d-flex justify-content-end">
                   <span
                     class="fw-bold text-dark"
                     [innerHTML]="
@@ -409,7 +435,7 @@
                   >
                   </codx-label>
                 </div>
-                <div class="w-100px d-flex justify-content-end">
+                <div class="d-flex justify-content-end">
                   <span
                     class="fw-bold text-dark"
                     [innerHTML]="
@@ -421,30 +447,32 @@
                   </span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap w-100 mb-3" *ngFor="let item of lstBenefit">
-                
-                <div class="d-flex align-items-center w-125px">
-                  <span class="text-gray-600"
+              <div
+                class="d-flex align-items-center mb-3"
+                *ngFor="let item of lstBenefit"
+              >
+                <div class="w-125px">
+                  <span
+                    class="text-gray-600"
                     [innerHTML]="
                       item?.BenefitID
                         | formatvalue : benefitFormModel : 'benefitID'
                         | async
                     "
                   >
-                  </span>:
-
+                  </span
+                  >:
                 </div>
-                <div class="d-flex align-items-center">
-                  <div class="w-100px d-flex justify-content-end">
-                    <span class="text-dark fw-bold"
-                      [innerHTML]="
-                        item?.BenefitAmt
-                          | formatvalue : benefitFormModel : 'benefitAmt'
-                          | async
-                      "
-                    >
-                    </span>
-                  </div>
+                <div class="d-flex">
+                  <span
+                    class="text-dark fw-bold"
+                    [innerHTML]="
+                      item?.BenefitAmt
+                        | formatvalue : benefitFormModel : 'benefitAmt'
+                        | async
+                    "
+                  >
+                  </span>
                   <span class="text-gray-400 mx-2">/</span>
                   <span
                     class="text-gray-600"
@@ -455,7 +483,6 @@
                     "
                   ></span>
                 </div>
-             
               </div>
             </ng-container>
           </ng-template>

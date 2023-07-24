@@ -44,6 +44,7 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
   @Input() formModel;
+  @Input() grvSetup;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
   @Input() hideFooter = false;

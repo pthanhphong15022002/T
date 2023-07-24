@@ -126,6 +126,11 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
+  setTitle(evt: any){
+    this.headerText += " " +  evt;
+    this.cr.detectChanges();
+  }
+
   ngAfterViewInit() {
     // this.dialog &&
     //   this.dialog.closed.subscribe((res) => {
