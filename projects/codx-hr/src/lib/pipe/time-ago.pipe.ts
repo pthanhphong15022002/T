@@ -26,21 +26,26 @@ export class TimeAgoPipe implements PipeTransform {
     years: ' years',
     yesterday: 'Yesterday',
   };
-  transform(value:any,languages:string = "vn"): string 
-  {
-    if(!value) return "";
-    let language = languages == "vn"? this.vn : this.en;
+  transform(value: any, languages: string = "vn"): string {
+    if (!value) return "";
+    let language = languages == "vn" ? this.vn : this.en;
     let dateValue = new Date(value);
     var seconds = Math.floor((new Date().valueOf() - dateValue.valueOf()) / 1000);
     let yearNumber = Math.floor(seconds / 31536000);
-    let monthNumber = Math.floor((seconds - (yearNumber * 31536000))/ 2592000);
+    let monthNumber = Math.floor((seconds - (yearNumber * 31536000)) / 2592000);
     let strTimeAgo = "";
     // let srtTimeAgo = moment(dateValue).fromNow();
-    if(yearNumber > 0){
+    if (yearNumber > 0) {
       strTimeAgo = yearNumber + language.years;
     }
-    if(monthNumber > 0){
+    if (monthNumber >= 1) {
       strTimeAgo += monthNumber + language.months;
+    }
+    if (monthNumber < 1) {
+      let dayNumber = Math.floor(seconds / 86400);
+      if (monthNumber < 1 && yearNumber < 1) {
+        strTimeAgo += ((dayNumber < 1) ? dayNumber : 0) + language.days;
+      }
     }
     return strTimeAgo;
   }
