@@ -44,6 +44,7 @@ export class PopupAddSalesInvoiceComponent
   @ViewChild('tableLineDetail') tableLineDetail: TableLineDetailComponent;
 
   master: ISalesInvoice = {} as ISalesInvoice;
+  prevMaster: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
   masterService: CRUDService;
   detailService: CRUDService;
@@ -90,6 +91,7 @@ export class PopupAddSalesInvoiceComponent
     this.isEdit = dialogData.data.formType === 'edit';
     this.masterService.hasSaved = this.isEdit;
     this.master = this.dialogRef.dataService?.dataSelected;
+    this.prevMaster = { ...this.master };
 
     this.isReturnInvoice = dialogRef.formModel.funcID === 'ACT0701';
 
@@ -200,6 +202,10 @@ export class PopupAddSalesInvoiceComponent
       return;
     }
 
+    if (this.master[e.field] === this.prevMaster[e.field]) {
+      return;
+    }
+
     const postFields: string[] = [
       'objectID',
       'currencyID',
@@ -216,6 +222,7 @@ export class PopupAddSalesInvoiceComponent
           console.log(res);
 
           this.master = Object.assign(this.master, res);
+          this.prevMaster = { ...this.master };
           this.form.formGroup.patchValue(res);
         });
     }

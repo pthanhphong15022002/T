@@ -1,0 +1,12 @@
+.sample-process{
+    text-decoration: underline;
+    font-style: italic;
+}
+.sign-attachment{
+    .dropzone.dropzone-default {
+        height: auto;
+        .e-file-select-wrap{
+            padding-bottom: 0;
+        }
+    }
+}

@@ -11,6 +11,7 @@
   [button]="buttonAdd"
   (buttonClick)="AddAppoint($event)"
   (selectedChange)="ChangeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
@@ -325,7 +326,8 @@
 
   <ng-template #descTmp>
     <div class="d-flex flex-wrap mt-1 align-items-center">
-      <codx-vll class="text-nowrap"
+      <codx-vll
+        class="text-nowrap"
         name="HR014"
         [value]="data.appoint"
         [showText]="true"
@@ -337,7 +339,8 @@
         class="me-2 icon-i-info-circle-fill icon-4 text-gray-400"
       >
       </span>
-      <div class="text-nowrap"
+      <div
+        class="text-nowrap"
         *ngIf="data.positionID || data.orgUnitID"
         [ngbTooltip]="
           data.positionID
@@ -359,7 +362,7 @@
 
   <ng-template #desc2Tmp>
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mt-1 text-gray-600">
+      <div class="d-flex align-items-center mt-1 text-gray-600 flex-wrap">
         <span class="icon-description icon-14 me-1"></span>
         <div
           class="me-3"
@@ -546,6 +549,7 @@
     [itemDetail]="itemDetail"
     [view]="view"
     [formModel]="view.formModel"
+    [grvSetup]="grvSetup"
     (clickMFunction)="ClickEvent($event)"
   >
   </lib-view-detail-eappointions>

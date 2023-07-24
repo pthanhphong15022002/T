@@ -14,6 +14,7 @@ import {
   DialogModel,
   DialogRef,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -61,6 +62,7 @@ export class EmployeeContractComponent extends UIComponent {
   grvSetup: any;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
+  viewActive: string;
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01';
@@ -105,6 +107,7 @@ export class EmployeeContractComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -114,6 +117,7 @@ export class EmployeeContractComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.itemTemplateListDetail,
@@ -217,6 +221,16 @@ export class EmployeeContractComponent extends UIComponent {
     // }
   }
 
+  //Call api delete
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteEContractAsync';
+    opt.className = 'EContractsBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = data;
+    return true;
+  }
+
   clickMF(event, data) {
     this.itemDetail = data;
     switch (event.functionID) {
@@ -245,15 +259,22 @@ export class EmployeeContractComponent extends UIComponent {
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-        this.view.dataService.delete([data]).subscribe();
+        this.view.dataService
+          .delete([data], true, (option: RequestOption) =>
+            this.beforeDelete(option, data)
+          )
+          .subscribe((res) => {
+            res[1].emp = data.emp;
+            this.view.dataService.update(res[1]).subscribe();
+          });
         break;
       case 'SYS04': //copy
         this.currentEmpObj = data.emp;
         this.copyValue(event.text, data, 'eContract');
         this.df.detectChanges();
         break;
-      case "HRTPro01A20": // in hợp đồng
-        this.printContract(event,data.recID);
+      case 'HRTPro01A20': // in hợp đồng
+        this.printContract(event, data.recID);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -281,32 +302,47 @@ export class EmployeeContractComponent extends UIComponent {
       //   break;
       // }
     }
-  } 
+  }
 
-  printContract(moreFC:any,objectID:string) {
-    this.getReportSource(moreFC.functionID,"reportID",objectID)
-    .subscribe((src:any) => {
-      let dialogModel = new DialogModel();
-      dialogModel.FormModel = this.view.formModel;
-      dialogModel.DataService = this.view.dataService;
-      let data = {
-        headerText:moreFC.text,
-        reportID : moreFC.functionID,
-        dataSource : src
-      };
-      this.callfc.openForm(CodxListReportsComponent,moreFC.defaultName,0,0,moreFC.functionID,data,"",dialogModel);
-
-    });
-    
+  printContract(moreFC: any, objectID: string) {
+    this.getReportSource(moreFC.functionID, 'reportID', objectID).subscribe(
+      (src: any) => {
+        let dialogModel = new DialogModel();
+        dialogModel.FormModel = this.view.formModel;
+        dialogModel.DataService = this.view.dataService;
+        let data = {
+          headerText: moreFC.text,
+          reportID: moreFC.functionID,
+          dataSource: src,
+        };
+        this.callfc.openForm(
+          CodxListReportsComponent,
+          moreFC.defaultName,
+          0,
+          0,
+          moreFC.functionID,
+          data,
+          '',
+          dialogModel
+        );
+      }
+    );
   }
   // unites get data source
-  getReportSource(reportID:string,reportField:string,objectID:string){
-    return this.api.execSv("rptsys",
-        "Codx.RptBusiness.CM",
-        "ReportBusiness",
-        "GetReportSourceByIDAsync",
-         [reportID,reportField,objectID])
-        .pipe(map((res:any) => {return res;}));
+  getReportSource(reportID: string, reportField: string, objectID: string) {
+    return this.api
+      .execSv(
+        'rptsys',
+        'Codx.RptBusiness.CM',
+        'ReportBusiness',
+        'GetReportSourceByIDAsync',
+        [reportID, reportField, objectID]
+      )
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
@@ -322,20 +358,24 @@ export class EmployeeContractComponent extends UIComponent {
         dataObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empContractProcess',
+        useForQTNS: true,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event, 0).subscribe();
+          this.currentEmpObj = res.event[0].emp;
+          this.view.dataService.add(res.event[0], 0).subscribe();
+          this.view.dataService.update(res.event[1]).subscribe();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe();
+          this.view.dataService.update(res.event[0]).subscribe();
+          this.view.dataService.update(res.event[1]).subscribe();
         }
         this.df.detectChanges();
       }
@@ -371,8 +411,14 @@ export class EmployeeContractComponent extends UIComponent {
     return arr.join(';');
   }
 
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   beforeRelease() {
@@ -388,8 +434,6 @@ export class EmployeeContractComponent extends UIComponent {
           let eContractsObj = parsedJSON[index];
           if (eContractsObj['ApprovalRule'] == '1') {
             this.release();
-          } else {
-            //đợi BA mô tả
           }
         }
       }

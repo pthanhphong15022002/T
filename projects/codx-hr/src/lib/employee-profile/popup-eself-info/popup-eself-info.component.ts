@@ -27,7 +27,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   data;
   saveflag = false;
   isAfterRender = false;
-  headerText: '';
+  action: '';
   @ViewChild('form') form: CodxFormComponent;
 
   tabInfo: any[] = [
@@ -53,7 +53,8 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
-    this.headerText = data?.data?.headerText;
+    this.action = data?.data?.action;
+    debugger
     this.funcID = data?.data?.funcID;
     this.formModel = dialog.FormModel;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
@@ -66,6 +67,11 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.isAfterRender = true;
   }
 
+  setTitle(evt: any){
+    this.action += " " +  evt;
+    this.cr.detectChanges();
+  }
+  
   onInit(): void {
     if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {

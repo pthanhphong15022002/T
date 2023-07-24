@@ -12,16 +12,20 @@
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
     <div class="w-40 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel" [default]="'Nhân viên'"></codx-label>
+      <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Nhân viên'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel" [default]="'Liên hệ'"></codx-label>
+      <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Liên hệ'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin cá nhân'"></codx-label>
+      <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Thông tin cá nhân'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel" [default]="'Tình Trạng'"></codx-label>
+      <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Tình Trạng'"></codx-label>
     </div>
   </div>
 </ng-template>
@@ -197,7 +201,10 @@
               <span class="data-text-color">{{ data.senioritydate | timeAgo }}</span>
             </ng-container>
             <ng-template #noSeniorityDate>
-              <span class="place-holder">{{grvSetup['Senioritydate'].headerText}}</span>
+              <!-- <span class="place-holder">{{grvSetup['Senioritydate'].headerText}}</span> -->
+              <codx-label class="place-holder" name="lblHR_SenioritydatePlaceHolder" [setRequire]="false"
+                [formModel]="view.formModel" default="Thâm niên">
+              </codx-label>
             </ng-template>
           </div>
         </div>

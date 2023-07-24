@@ -1,15 +1,18 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injector,
   Input,
   OnInit,
   Output,
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  inject,
 } from '@angular/core';
-import { CRUDService, FormModel } from 'codx-core';
+import { CRUDService, FormModel, UIComponent } from 'codx-core';
 import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
@@ -20,14 +23,17 @@ import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.com
   templateUrl: './cases-detail.component.html',
   styleUrls: ['./cases-detail.component.scss'],
 })
-export class CasesDetailComponent implements OnInit {
+export class CasesDetailComponent extends UIComponent
+implements OnInit, AfterViewInit {
   @Input() dataSelected: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
+  @Input() gridViewSetup: any;
   @Input() formModel: FormModel;
   @Input() funcID: string; //True - Khách hàng; False - Liên hệ
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
+  @Output() saveAssign = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('tabCaseDetailComponent') tabCaseDetailComponent: TabCasesDetailComponent;
@@ -67,39 +73,92 @@ export class CasesDetailComponent implements OnInit {
   ];
 
   treeTask = [];
-
-  nameDetail = '';
-  tabClicked = '';
+  listCategory = [];
+  listStepsProcess = [];
+  listSteps = [];
 
   caseId: string = '';
 
   vllPriority = 'TM005';
+  casesType:string='';
+  oldRecId:string = '';
 
   contactPerson = new CM_Contacts();
+  isDataLoading:boolean = true;
 
-  tabDetail = [];
   constructor(
+    private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
   ) {
-    this.listTab();
-    console.log('test formModel' + this.formModel);
+    super(inject);
+    this.executeApiCalls();
   }
 
-  ngOnInit(): void {}
+  onInit(): void {}
 
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
-      this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+
       if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
+
+        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
+          this.promiseAllAsync();
+        }
+        this.oldRecId = changes['dataSelected'].currentValue.recID;
+        this.dataSelected =this.dataSelected;
         this.caseId = changes['dataSelected'].currentValue?.recID;
         this.getContactByObjectID(this.dataSelected.contactID ,this.dataSelected.customerID);
         this.getTree(); //v
       }
     }
   }
+  async promiseAllAsync() {
+    this.isDataLoading = true;
+    try {
+      // await this.getTree(); //ve cay giao viec
+      await this.getListInstanceStep();
+      //await this.getContactByDeaID(this.dataSelected.recID)
+
+    } catch (error) {}
+  }
+  reloadListStep(listSteps:any) {
+    this.isDataLoading = true;
+    this.listSteps = listSteps;
+    this.isDataLoading = false;
+    this.changeDetectorRef.detectChanges();
+  }
+  getListInstanceStep() {
+    var data = [
+      this.dataSelected?.refID,
+      this.dataSelected?.processID,
+      this.dataSelected?.status,
+     this.dataSelected.caseType == "1" ? '2':'3'
+    ];
+    this.codxCmService.getStepInstance(data).subscribe((res) => {
+      if (res) {
+        this.listSteps = res;
+        debugger;
+        console.log(this.listSteps);
+        this.isDataLoading = false;
+        this.checkCompletedInstance(this.dataSelected?.status);
+      } else {
+        this.listSteps = null;
+      }
+    });
+  }
+  checkCompletedInstance(dealStatus: any) {
+    if (dealStatus == '1' || dealStatus == '2') {
+      this.deleteListReason(this.listSteps);
+    }
+  }
+  deleteListReason(listStep: any): void {
+    listStep.pop();
+    listStep.pop();
+  }
+
 
   getContactByObjectID(contactId,customerID) {
     var data = [customerID,contactId];
@@ -108,33 +167,6 @@ export class CasesDetailComponent implements OnInit {
         this.contactPerson = res;
       }
     });
-  }
-
-  listTab() {
-    this.tabDetail = [
-      {
-        name: 'Information',
-        textDefault: 'Chi tiết sự cố',
-        icon: 'icon-info',
-        isActive: true,
-      },
-      {
-        name: 'Task',
-        textDefault: 'Quy trình',
-        icon: 'icon-shopping_bag',
-        isActive: false,
-      },
-      {
-        name: 'Field',
-        textDefault: 'Thông tin mở rộng',
-        icon: 'icon-contact_phone',
-        isActive: false,
-      },
-    ];
-  }
-
-  changeTab(e) {
-    this.tabClicked = e;
   }
 
   clickMF(e, data) {
@@ -159,7 +191,70 @@ export class CasesDetailComponent implements OnInit {
       this.treeTask = tree || [];
     });
   }
-  saveAssign(e){
-    if(e) this.getTree();
+  async executeApiCalls() {
+    try {
+      await this.getValueList();
+      await this.getListInstanceStep();
+    } catch (error) {
+      console.error('Error executing API calls:', error);
+    }
+  }
+  async getValueList() {
+    this.cache.valueList('CRM010').subscribe((res) => {
+      if (res.datas) {
+        this.listCategory = res?.datas;
+      }
+    });
+  }
+  showColumnControl(stepID) {
+    if (this.listStepsProcess?.length > 0) {
+      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+      if (idx == -1) return 1;
+      return this.listStepsProcess[idx]?.showColumnControl;
+    }
+    return 1;
+  }
+  continueStep(event) {
+    let isTaskEnd = event?.isTaskEnd;
+    let step = event?.step;
+
+    let transferControl = this.dataSelected.steps.transferControl;
+    if (transferControl == '0') return;
+
+    let isShowFromTaskEnd = !this.checkContinueStep(true, step);
+    let isContinueTaskEnd = isTaskEnd;
+    let isContinueTaskAll = this.checkContinueStep(false, step);
+    let isShowFromTaskAll = !isContinueTaskAll;
+
+    // if (transferControl == '1' && isContinueTaskAll) {
+    //   isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
+    //   !isShowFromTaskAll &&
+    //     this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    // }
+
+    // if (transferControl == '2' && isContinueTaskEnd) {
+    //   isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
+    //   !isShowFromTaskEnd &&
+    //     this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    // }
+  }
+  checkContinueStep(isDefault, step) {
+    let check = true;
+    let listTask = isDefault
+      ? step?.tasks?.filter((task) => task?.requireCompleted)
+      : step?.tasks;
+    if (listTask?.length <= 0) {
+      return isDefault ? true : false;
+    }
+    for (let task of listTask) {
+      if (task.progress != 100) {
+        check = false;
+        break;
+      }
+    }
+    return check;
+  }
+  saveAssignTask(e) {
+    if (e) this.saveAssign.emit(e);
   }
 }

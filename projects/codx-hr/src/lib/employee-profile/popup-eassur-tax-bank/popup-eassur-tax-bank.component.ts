@@ -37,6 +37,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
+    debugger
     // if(this.formModel){
     //   this.isAfterRender = true
     // }

@@ -1,11 +1,7 @@
-import { concat } from 'rxjs';
-import { style } from '@angular/animations';
-import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import {
   DiagramComponent,
   LineDistribution,
-} from '@syncfusion/ej2-angular-diagrams';
-import {
   NodeModel,
   ConnectorModel,
   DiagramTools,
@@ -15,8 +11,10 @@ import {
   SnapConstraints,
   SnapSettingsModel,
   LayoutModel,
-  LayoutOrientation,
   ConnectionPointOrigin,
+  ScrollSettingsModel,
+} from '@syncfusion/ej2-angular-diagrams';
+import {
 
 } from '@syncfusion/ej2-diagrams';
 import { ApiHttpService, CRUDService, CallFuncService, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
@@ -27,7 +25,8 @@ Diagram.Inject(DataBinding, ComplexHierarchicalTree, LineDistribution);
 @Component({
   selector: 'lib-reportingline-orgchart',
   templateUrl: './reportingline-orgchart.component.html',
-  styleUrls: ['./reportingline-orgchart.component.css']
+  styleUrls: ['./reportingline-orgchart.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
 
@@ -51,15 +50,16 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
     connectionPointOrigin: ConnectionPointOrigin.SamePoint,
-    // orientation: 'LeftToRight',
+    //orientation: 'LeftToRight',
     verticalSpacing: 80,
-    horizontalSpacing: 40,
+    horizontalSpacing: 30,
     enableAnimation: false,
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
+  scrollSettings: ScrollSettingsModel = { scrollLimit: 'Infinity' };
 
   firstLoadDiagram: boolean = true;
   @ViewChild('diagram') diagram: DiagramComponent;
@@ -76,6 +76,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     countEmp: 0,
     employees: any[]
   };
+  currentSelectedNode: string = '';
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -91,12 +92,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       });
     //this.getDataPositionByID(this.positionID);
   }
-  public reloadDiagram(): void {
-    this.firstLoadDiagram = true;
-    this.getDataPositionByID(this.positionID);
-  }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.positionID.currentValue != changes.positionID.previousValue) {
+      this.currentSelectedNode = '';
       this.onDoneLoading = false;
       this.positionID = changes.positionID.currentValue;
       this.firstLoadDiagram = true;
@@ -104,12 +102,18 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.changeDetectorRef.detectChanges();
     }
   }
+  public reloadDiagram(): void {
+    this.firstLoadDiagram = true;
+    this.getDataPositionByID(this.positionID);
+  }
+
   public created(): void {
     if (this.diagram) {
       this.diagram.fitToPage();
       this.firstLoadDiagram = false;
     }
   }
+
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
     connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
@@ -123,6 +127,10 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     if (sourceNode['positionID'] === targetNode['reportTo2']) {
       connector.style!.strokeColor = '#6d6d6d';
       connector.style.strokeDashArray = '5,5';
+    }
+    if (sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
+      connector.style!.strokeColor = '#3699FF';
+      connector.style!.strokeWidth = 5;
     }
     return connector;
   }
@@ -188,7 +196,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //   }
   // }
 
-  loadDataChild(node: any, element: HTMLElement) {
+  loadDataChild(node: any, element: HTMLElement, e: Event) {
+    e.stopPropagation();
+    //e.preventDefault();
     let result = [];
     if (node.loadChildrent) {
       result = this.data.filter(e => e.reportTo != node.positionID);
@@ -246,8 +256,21 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
   }
   changeSelectedItem(data: any) {
-    this.positionID = data?.positionID;
-    this.itemSelectedChanged.emit(data);
+    var index = this.data.findIndex(x => x.positionID == data?.positionID);
+    if (this.data[index]['isSelected']) {
+      this.data[index]['isSelected'] = false;
+    } else {
+      this.positionID = data?.positionID;
+      this.data.forEach(item => {
+        if (item?.positionID === this.positionID) {
+          item['isSelected'] = true;
+        } else item['isSelected'] = false
+      });
+      this.itemSelectedChanged.emit(data);
+    }
+    this.datasetting = this.newDataManager();
+    //this.diagram.updateData();
+
   }
   clickMF(event: any, data: any = null) {
     this.changeSelectedItem(data);
@@ -378,14 +401,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       });
 
   }
-  // renewData(){
-  //   this.data.forEach(element => {
-  //     var childCount = this.data.filter(e => e.reportTo === element.positionID 
-  //       || e.reportTo2 === element.positionID).length;
-  //     if(childCount < element?.childrenCount) element.loadChildrent = false;
-  //     else element.loadChildrent = true;
-  //   });
-  // }
   searchText: string = "";
   searchUser(event: any, positionId: string) {
     this.searchText = event;
@@ -435,10 +450,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   }
   getEmpListPaging(positionID: string) {
     var index = this.data.findIndex(x => x.positionID == positionID)
-    if (this.scrolling)
-    {
-      if (this.searchText.length > 0){
-        if(this.currentViewPosEmp.countEmp > this.currentViewPosEmp.employees.length) {
+    if (this.scrolling) {
+      if (this.searchText.length > 0) {
+        if (this.currentViewPosEmp.countEmp > this.currentViewPosEmp.employees.length) {
           this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
             .subscribe(res => {
               if (res) {
@@ -446,7 +460,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
                   this.currentViewPosEmp.countEmp = res[1];
                   this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
                 }
-    
+
                 if (this.currentViewPosEmp.countEmp <= this.currentViewPosEmp.employees.length) {
                   this.scrolling = false;
                 } else {
@@ -458,8 +472,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
         } else {
           this.scrolling = false;
         }
-      }else{
-        if(this.data[index]?.countEmp > this.data[index].employees.length) {
+      } else {
+        if (this.data[index]?.countEmp > this.data[index].employees.length) {
           this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
             .subscribe(res => {
               if (res) {
@@ -469,7 +483,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
                   this.currentViewPosEmp.countEmp = res[1];
                   this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
                 }
-    
+
                 if (this.data[index]?.countEmp <= this.data[index].employees.length) {
                   this.scrolling = false;
                 } else {
@@ -485,7 +499,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
 
   }
-  hasOpenEmpList(positionID: string) {
+  hasOpenEmpList(positionID: string, event: Event) {
+    event.stopPropagation();
+    // event.preventDefault();
     if (this.viewEmpPosition !== positionID) { //change position
       this.posEmpPageIndex = 1;
       this.scrolling = true;
@@ -497,7 +513,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
         countEmp: this.data[index].countEmp,
         employees: this.data[index].employees
       };
-
+      
     } else this.currentViewPosEmp = { countEmp: 0, employees: [] }
   }
 }

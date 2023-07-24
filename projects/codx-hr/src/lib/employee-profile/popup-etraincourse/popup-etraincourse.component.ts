@@ -171,6 +171,12 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     }
   }
 
+  setTitle(evt: any){
+    this.headerText += " " +  evt;
+    this.cr.detectChanges();
+  }
+
+
   onInit(): void {
     if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {

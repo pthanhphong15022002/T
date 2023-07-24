@@ -155,6 +155,12 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     }
   }
 
+  setTitle(evt: any){
+    this.headerText += " " +  evt;
+    this.cr.detectChanges();
+  }
+
+
   onInit(): void {
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.fieldHeaderTexts = res;
