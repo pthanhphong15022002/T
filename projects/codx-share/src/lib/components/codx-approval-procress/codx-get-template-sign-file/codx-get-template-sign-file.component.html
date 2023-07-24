@@ -1,0 +1,21 @@
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
+  <ng-template #body let-dialog>
+    <div class="card-body">
+      <div class="form-group">
+        <codx-label fiedName="" [formModel]="" default="Quy trình mẫu"></codx-label>
+        <ejs-dropdownlist  id="template" #templateCBB [dataSource]="sfTemplates" [fields]="fields" 
+          (valueChange)="valueChange($event)"></ejs-dropdownlist>        
+      </div>
+    </div>
+
+  </ng-template>
+  <ng-template #footer>
+    <div class="">
+      <div class="form-group d-flex justify-content-end flex-row">
+        <button type="button" class="btn btn-primary" (click)="onSaveForm()">
+          <codx-label name="lblSave" default="Lưu"></codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

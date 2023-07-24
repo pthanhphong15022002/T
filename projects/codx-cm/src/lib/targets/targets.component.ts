@@ -73,9 +73,9 @@ export class TargetsComponent
   funcID = '';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
-  entityName: string = '';
+  entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTargetLineAsync';
+  method: string = 'GetListTargetAsync';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -91,6 +91,7 @@ export class TargetsComponent
   lstTargetLines = [];
   businessLineID: any;
   data: any;
+  schedule: any;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -140,7 +141,7 @@ export class TargetsComponent
           resourceModel: this.scheduleHeaderModel, //resource
           template: this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip, //tooltip
+          // template5: this.resourceTootip, //tooltip
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
@@ -163,10 +164,6 @@ export class TargetsComponent
     this.schedules.className = 'TargetsBusiness';
     this.schedules.service = 'CM';
     this.schedules.method = 'GetListTargetLineAsync';
-    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
-      this.schedules.predicate = this.queryParams?.predicate;
-      this.schedules.dataValue = this.queryParams?.dataValue;
-    }
     this.schedules.idField = 'recID';
     //lấy list user vẽ header schedule
     this.scheduleHeader = new ResourceModel();
@@ -180,7 +177,6 @@ export class TargetsComponent
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'salespersonID' },
-      status: 'status',
     };
 
     this.scheduleHeaderModel = {
@@ -251,7 +247,12 @@ export class TargetsComponent
   //#endregion
   //#region event codx-view
   viewChanged(e) {
-    console.log(e);
+    if (e?.view?.type == 8) {
+      if (!this.schedule)
+        this.schedule = (this.view?.currentView as any)?.schedule;
+    }else{
+      this.schedule = null;
+    }
     var formModel = new FormModel();
     formModel.formName = 'CMTargetsLines';
     formModel.gridViewName = 'grvCMTargetsLines';
@@ -345,30 +346,53 @@ export class TargetsComponent
             if (e != null && e?.event != null) {
               if (e?.event[0] != null && e?.event[0][1] != null) {
                 var data = e?.event[0][1];
+                var lstOwners = e?.event[1];
+                var lstTargetLines = e?.event[0][0];
                 if (data.year == this.year) {
                   this.businessLineID = e?.event[2];
-                  this.lstTargetLines = e?.event[0][0];
-                  this.lstOwners = e?.event[1];
+                  this.lstTargetLines = lstTargetLines;
+                  this.lstOwners = lstOwners;
                   this.data = e?.event[0][2];
                   var index = this.lstDataTree.findIndex(
                     (x) => x.businessLineID == data?.businessLineID
                   );
                   if (index != -1) {
                     this.lstDataTree[index] = data;
-                    if (this.lstTargetLines != null) {
-                      this.lstTargetLines.forEach((res) => {
-                        this.view.dataService.update(res).subscribe();
-                      });
-                    }
                     // this.lstDataTree.splice(index, 1);
                   } else {
                     this.lstDataTree.push(Object.assign({}, data));
-                    if (this.lstTargetLines != null) {
-                      this.lstTargetLines.forEach((res) => {
-                        this.view.dataService.add(res).subscribe();
-                      });
-                    }
                   }
+                }
+                if (this.schedule) {
+                  // if (lstOwners != null && lstOwners?.length > 0) {
+                  //   var resource = this.schedule['resourceDataSource'];
+                  //   lstOwners.forEach((item) => {
+                  //     if (
+                  //       !resource?.find(
+                  //         (user) => user.salespersonID === item.userID
+                  //       )
+                  //     ) {
+                  //       var tmp = {};
+                  //       tmp['salespersonID'] = item?.userID;
+                  //       tmp['ClassName'] = 'e-child-node';
+                  //       tmp['Count'] = 0;
+                  //       tmp['events'] = 11;
+                  //       tmp['positionName'] = item?.positionName;
+                  //       tmp['salespersonID'] = item?.userID;
+                  //       tmp['value'] = item?.userID;
+                  //       tmp['target'] = 0;
+                  //       tmp['text'] = item?.userName;
+                  //       tmp['userName'] = item?.userName;
+                  //       resource?.push(tmp);
+                  //     }
+                  //   });
+
+                  //   this.schedule['resourceDataSource'] = resource;
+                  //   this.schedule['displayResource'] = resource;
+                  //   this.view.currentView = this.schedule;
+                  //   this.view?.currentView?.refesh();
+                  // }
+                   this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
                 }
               }
               this.detectorRef.detectChanges();
@@ -452,7 +476,9 @@ export class TargetsComponent
                       this.lstDataTree[index] = data;
                     }
                   }
-
+                  if (this.schedule) {
+                    this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
+                  }
                   // this.lstDataTree.push(Object.assign({}, data));
 
                   this.detectorRef.detectChanges();
