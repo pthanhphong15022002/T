@@ -80,6 +80,7 @@ export class DealsComponent
   @ViewChild('templateOwner') templateOwner: TemplateRef<any>;
   @ViewChild('templateSteps') templateSteps: TemplateRef<any>;
   @ViewChild('templateConsultant') templateConsultant: TemplateRef<any>;
+  @ViewChild('templateExpectedClosed') templateExpectedClosed: TemplateRef<any>;
 
   popupConfirm: DialogRef;
 
@@ -1611,6 +1612,9 @@ export class DealsComponent
             break;
           case 'ConsultantID':
             template = this.templateConsultant;
+            break;
+          case 'ExpectedClosed':
+            template = this.templateExpectedClosed;
             break;
 
           default:
