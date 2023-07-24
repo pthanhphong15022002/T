@@ -43,10 +43,10 @@
   <div *ngFor="let file of data" class="result-group result-group-dm has-action-menu">
     <div class="d-flex align-items-start justify-content-between result-item border-bottom p-5">
       <div class="d-flex flex-column">
-        <div class="d-flex align-items-center" >
-          <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file"
+        <div class="d-flex align-items-center cursor-pointer" (click)="dbView(file)">
+          <codx-temp-full appDragDropFileFolder [dataDrapDrop]="file"
             [class]="classFile(file, 'float-start')" [imageWidth]="20"
-            [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3 cursor-pointer" [title]="
+            [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3" [title]="
               file.folderName != undefined ? file.folderName : file.fileName
             " cardCss="w-100" [typeMF]="'hover'" [baseHeaderRightTmp]="rightSecurity">
           </codx-temp-full>

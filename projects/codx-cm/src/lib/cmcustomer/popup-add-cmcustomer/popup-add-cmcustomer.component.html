@@ -638,6 +638,7 @@
           class="test-check"
           type="radio"
           field="yes"
+          [disabled]="action === 'edit'"
           [checked]="radioChecked ?? false"
           (valueChange)="changeRadio($event)"
         ></codx-input>
@@ -658,6 +659,7 @@
           class="test-check fw-bold"
           type="radio"
           style="width: 100%"
+          [disabled]="action === 'edit'"
           field="no"
           [checked]="!radioChecked ?? false"
           (valueChange)="changeRadio($event)"

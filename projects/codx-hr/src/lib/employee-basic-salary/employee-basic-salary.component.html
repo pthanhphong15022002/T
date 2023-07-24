@@ -11,6 +11,7 @@
   [button]="buttonAdd"
   (buttonClick)="addBasicSalary($event)"
   (selectedChange)="changeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 <ng-template #headerTemplate let-data>
@@ -279,13 +280,11 @@
 
   <ng-template #descTmp>
     <div class="d-flex align-items-center mt-1 flex-wrap flex-wrap">
-    
       <div class="d-flex align-items-center me-4">
         <span class="icon-description icon-14 me-1"></span>
         <span [ngbTooltip]="grvSetup?.DecisionNo?.headerText">
           {{ data?.decisionNo }}
         </span>
-        
       </div>
       <div class="d-flex align-items-center me-4">
         <span class="icon-calendar_today icon-14 me-1"></span>
@@ -474,6 +473,7 @@
     [itemDetail]="itemDetail"
     [formModel]="view?.formModel"
     [view]="view"
+    [grvSetup]="grvSetup"
     (clickMF)="clickEvent($event)"
   >
   </lib-view-basic-salary-detail>

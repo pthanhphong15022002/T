@@ -14,6 +14,7 @@ import {
   CodxFormComponent,
   CodxGridviewV2Component,
   CodxInplaceComponent,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -23,7 +24,7 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
@@ -48,6 +49,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
   master: IPurchaseInvoice;
+  prevMaster: IPurchaseInvoice;
   lines: IPurchaseInvoiceLine[] = [];
   vatInvoices: VATInvoices[] = [];
   masterService: CRUDService;
@@ -64,13 +66,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   formType: any;
   validate: any = 0;
   vatType: string;
-  countDetail = 0;
   hasSaved: any = false;
   isSaveMaster: any = false;
   expanded: boolean = false;
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
   vatinvoices: VATInvoices = new VATInvoices();
-
+  isInvoiceRefHidden: boolean = true;
+  lineSubject = new Subject<IPurchaseInvoiceLine[]>();
   fmVATInvoices: FormModel = {
     entityName: 'AC_VATInvoices',
     formName: 'VATInvoices',
@@ -105,12 +107,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   lockFields: string[];
   voucherNoPlaceholderText$: Observable<string>;
   journalStateSubject = new BehaviorSubject<boolean>(false);
+  acParams: any;
 
   constructor(
     inject: Injector,
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
-    private notification: NotificationsService,
+    private notiService: NotificationsService,
     private journalService: JournalService,
     @Optional() public dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -122,6 +125,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
     this.masterService = dialog.dataService;
     this.master = dialog.dataService?.dataSelected;
+    this.prevMaster = { ...this.master };
     this.isEdit = dialogData.data.formType === 'edit';
     this.masterService.hasSaved = this.isEdit;
 
@@ -143,68 +147,24 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
+    this.lineSubject.subscribe((lines: IPurchaseInvoiceLine[]) => {
+      this.isInvoiceRefHidden = lines.find((l) => l.vatid) ? false : true;
+    });
+
+    this.acService.getACParameters().subscribe((res) => {
+      this.acParams = res;
+    });
+
     this.cache
-      .gridViewSetup('PurchaseInvoices', 'grvPurchaseInvoices')
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
       .subscribe((res) => {
         if (res) {
           this.grvPurchaseInvoices = res;
         }
       });
-
-    if (this.formType == 'edit') {
-      this.api
-        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
-          this.master.recID,
-        ])
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.lines = res;
-            this.lines.forEach((element) => {
-              if (element.vatid != null) {
-                this.countDetail++;
-              }
-              this.loadTotal();
-            });
-          }
-        });
-    }
-
-    if (this.master.status == '0' && this.formType == 'edit') {
-      this.hasSaved = true;
-    }
-
-    this.api
-      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.lsVatCode = res;
-        }
-      });
-
-    if (
-      this.master &&
-      this.master.unbounds &&
-      this.master.unbounds.lockFields &&
-      this.master.unbounds.lockFields.length
-    ) {
-      this.lockFields = this.master.unbounds.lockFields as Array<string>;
-    } else {
-      this.api
-        .exec('AC', 'PurchaseInvoicesBusiness', 'SetUnboundsAsync', [
-          this.master,
-        ])
-        .subscribe((res: any) => {
-          if (
-            res.unbounds &&
-            res.unbounds.lockFields &&
-            res.unbounds.lockFields.length
-          ) {
-            this.master.unbounds = res.unbounds;
-            this.lockFields = this.master.unbounds.lockFields as Array<string>;
-          }
-        });
-    }
 
     this.journalService.getJournal(this.master.journalNo).subscribe((res) => {
       this.journal = res;
@@ -218,6 +178,26 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
       this.journalStateSubject.next(true);
     });
+
+    if (this.isEdit) {
+      const options = new DataRequest();
+      options.entityName = this.fmPurchaseInvoicesLines.entityName;
+      options.predicates = 'TransID=@0';
+      options.dataValues = this.master.recID;
+      options.pageLoading = false;
+      this.acService.loadDataAsync('AC', options).subscribe((lines) => {
+        this.lines = lines;
+        this.lineSubject.next(lines);
+      });
+    }
+
+    // this.api
+    //   .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
+    //   .subscribe((res: any) => {
+    //     if (res != null) {
+    //       this.lsVatCode = res;
+    //     }
+    //   });
   }
 
   ngAfterViewInit() {
@@ -251,6 +231,25 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       return;
     }
 
+    if (this.master[e.field] === this.prevMaster[e.field]) {
+      return;
+    }
+
+    if (
+      e.field === 'exchangeRate' &&
+      this.acParams.BaseCurr === this.acParams.TaxCurr
+    ) {
+      this.notiService.alertCode('AC0022').subscribe(({ event }) => {
+        if (!this.master.unbounds) {
+          this.master.unbounds = {};
+        }
+        this.master.unbounds.requiresTaxUpdate = event.status === 'Y';
+        this.handleMasterChange(e.field);
+      });
+
+      return;
+    }
+
     const postFields: string[] = [
       'objectID',
       'currencyID',
@@ -259,17 +258,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       'voucherDate',
     ];
     if (postFields.includes(e.field)) {
-      this.api
-        .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
-          e.field,
-          this.master,
-        ])
-        .subscribe((res: any) => {
-          console.log(res);
-
-          this.master = Object.assign(this.master, res);
-          this.form.formGroup.patchValue(res);
-        });
+      this.handleMasterChange(e.field);
     }
   }
 
@@ -325,73 +314,33 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     });
   }
 
-  onDoubleClick(data) {
-    this.loadPredicate(
-      this.gridPurchaseInvoiceLines.visibleColumns,
-      data.rowData
-    );
-  }
+  onCellChange(e: any) {
+    // if (e.data?.isAddNew == null) {
+    //   this.api
+    //     .exec(
+    //       'AC',
+    //       'PurchaseInvoicesLinesBusiness',
+    //       'CheckExistPurchaseInvoicesLines',
+    //       [e.data.recID]
+    //     )
+    //     .subscribe((res: any) => {
+    //       if (res) {
+    //         e.data.isAddNew = res;
+    //       } else {
+    //         this.api
+    //           .exec('AC', 'VATInvoicesBusiness', 'UpdateVATfromPurchaseAsync', [
+    //             this.master,
+    //             e.data,
+    //           ])
+    //           .subscribe(() => {});
+    //       }
+    //     });
+    // }
 
-  cellChangedPurchase(e: any) {
-    if (e.field == 'vatid' && e.data.vatid != null) {
-      this.loadPurchaseInfo();
-    }
-    if (e.data?.isAddNew == null) {
-      this.api
-        .exec(
-          'AC',
-          'PurchaseInvoicesLinesBusiness',
-          'CheckExistPurchaseInvoicesLines',
-          [e.data.recID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            e.data.isAddNew = res;
-          } else {
-            this.api
-              .exec('AC', 'VATInvoicesBusiness', 'UpdateVATfromPurchaseAsync', [
-                this.master,
-                e.data,
-              ])
-              .subscribe(() => {});
-          }
-        });
-    }
-    switch (e.field) {
-      case 'quantity':
-        if (e.value == null) e.data.quantity = 0;
-        e.data.netAmt = this.calculateNetAmt(e.data.quantity, e.data.unitPrice);
-        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
-        break;
-      case 'unitPrice':
-        if (e.value == null) e.data.unitPrice = 0;
-        e.data.netAmt = this.calculateNetAmt(e.data.quantity, e.data.unitPrice);
-        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
-        break;
-      case 'netAmt':
-        if (e.value == null) e.data.netAmt = 0;
-        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
-        break;
-      case 'vatAmt':
-        if (e.value == null) e.data.vatAmt = 0;
-        break;
-      case 'vatid':
-        e.data.vatAmt = this.calculateVatAmt(e.data.netAmt, e.data.vatid);
-        break;
-      case 'itemID':
-        this.api
-          .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data.itemID])
-          .subscribe((res: any) => {
-            if (res) {
-              e.data.itemName = res.itemName;
-              e.data.umid = res.umid;
-            }
-          });
-        this.loadItemID(e.value);
-        break;
-      case 'idiM4':
-        this.loadWarehouseID(e.value);
-        break;
+    console.log('onCellChange', e);
+
+    if (!e.data[e.field]) {
+      return;
     }
   }
 
@@ -453,6 +402,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
           return;
         }
+
+        this.lineSubject.next(this.lines);
       });
   }
 
@@ -469,6 +420,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
           return;
         }
+
+        this.lineSubject.next(this.lines);
       });
   }
 
@@ -488,9 +441,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if (this.masterService.hasSaved) {
-      this.masterService.updateDatas.set(this.master.recID, this.master);
-    }
     this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
@@ -500,62 +450,29 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.masterService.hasSaved,
       () => this.addRow()
     );
-
-    // switch (this.formType) {
-    //   case 'add':
-    //   case 'copy':
-    //     if (this.hasSaved) {
-    //       this.dialog.dataService.updateDatas.set(
-    //         this.master['_uuid'],
-    //         this.master
-    //       );
-    //       this.dialog.dataService
-    //         .save(null, 0, '', '', false)
-    //         .subscribe((res) => {
-    //           if (res && res.update.data != null) {
-    //             this.loadModegrid();
-    //           }
-    //         });
-    //     } else {
-    //       this.journalService.checkVoucherNoBeforeSave(
-    //         this.journal,
-    //         this.master,
-    //         'AC',
-    //         'AC_PurchaseInvoices',
-    //         this.form,
-    //         this.formType === 'edit',
-    //         () => {
-    //           this.dialog.dataService
-    //             .save(null, 0, '', '', false)
-    //             .subscribe((res) => {
-    //               if (res && res.save.data != null) {
-    //                 this.hasSaved = true;
-    //                 this.loadModegrid();
-    //               }
-    //             });
-    //         }
-    //       );
-    //     }
-    //     break;
-    //   case 'edit':
-    //     this.dialog.dataService.updateDatas.set(
-    //       this.master['_uuid'],
-    //       this.master
-    //     );
-    //     this.dialog.dataService
-    //       .save(null, 0, '', '', false)
-    //       .subscribe((res) => {
-    //         if (res && res.update.data != false) {
-    //           this.loadModegrid();
-    //         }
-    //       });
-    //     break;
-    // }
   }
   //#endregion
 
   //#region Method
+  handleMasterChange(field: string): void {
+    this.api
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
+        field,
+        this.master,
+      ])
+      .subscribe((res: any) => {
+        console.log(res);
+
+        this.master = Object.assign(this.master, res);
+        this.prevMaster = { ...this.master };
+        this.form.formGroup.patchValue(res);
+      });
+  }
+
   addRow(): void {
+    if (this.masterService.hasSaved) {
+      this.masterService.updateDatas.set(this.master.recID, this.master);
+    }
     this.masterService
       .save(null, null, null, null, false)
       .subscribe((res: any) => {
@@ -744,7 +661,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.master.status = '0';
           }
           if (res && res.update.data != null && res.update.error != true) {
-            this.clearPurchaseInvoicesLines();
+            this.lines = [];
             this.dialog.dataService.clear();
             this.dialog.dataService
               .addNew((o) => this.setDefault(o))
@@ -772,7 +689,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.master.status = '0';
               }
               if (res && res.save.data != null && res.save.error != true) {
-                this.clearPurchaseInvoicesLines();
+                this.lines = [];
                 this.dialog.dataService.clear();
                 this.dialog.dataService
                   .addNew((o) => this.setDefault(o))
@@ -888,15 +805,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.purchaseInvoiceLineService.delete([data]).subscribe((res: any) => {
       if (res.error === false) {
         this.gridPurchaseInvoiceLines.deleteRow(data, true);
-      }
-    });
-  }
-
-  loadPurchaseInfo() {
-    this.countDetail = 0;
-    this.lines.forEach((element) => {
-      if (element.vatid != null) {
-        this.countDetail++;
+        this.lineSubject.next(this.lines);
       }
     });
   }
@@ -1059,7 +968,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               String(this.master[keymodel[i]]).match(/^ *$/) !== null ||
               this.master[keymodel[i]] == 0
             ) {
-              this.notification.notifyCode(
+              this.notiService.notifyCode(
                 'SYS009',
                 0,
                 '"' + this.grvPurchaseInvoices[keygrid[index]].headerText + '"'
@@ -1083,7 +992,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
               e[keymodel[i]] === null ||
               String(e[keymodel[i]]).match(/^ *$/) !== null
             ) {
-              this.notification.notifyCode(
+              this.notiService.notifyCode(
                 'SYS009',
                 0,
                 '"' +
@@ -1103,7 +1012,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.journal.transLimit &&
       this.master.totalAmt > this.journal.transLimit
     ) {
-      this.notification.notifyCode('AC0016');
+      this.notiService.notifyCode('AC0016');
       this.validate++;
     }
   }
@@ -1125,10 +1034,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         });
       }
     }
-  }
-
-  clearPurchaseInvoicesLines() {
-    this.lines = [];
   }
 
   setDefault(o) {

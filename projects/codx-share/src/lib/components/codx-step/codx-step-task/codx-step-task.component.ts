@@ -200,10 +200,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           group?.task?.forEach((task) => {
             task['progressOld'] = task.progress;
             task['isChange'] = false;
-            task['isChangeAuto'] = false;
           });
           group['progressOld'] = group.progress;
           group['isChange'] = false;
+          group['isChangeAuto'] = true;
         });
       } else {
         let progressData = [];
@@ -230,7 +230,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 progressData.push(this.setProgressOutput(task, group));
               }
             });
-            group.progress = Number((sumProgress / countTask).toFixed(2));
+            if(group?.isChangeAuto){
+              group.progress = Number((sumProgress / countTask).toFixed(2));
+            }
             // group.progress = group?.progressOld;
             if (group?.recID && group?.isChange) {
               progressData.push(this.setProgressOutput(null, group));
@@ -275,14 +277,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
-                sumProgress += task.progress;
                 if (task?.isChange) {
                   progressData.push(this.setProgressOutput(null, group));
                 }
               }
+              sumProgress += task.progress;
             });
             // group.progress = group?.progressOld;
-            group.progress = Number((sumProgress / countTask).toFixed(2));
+            if(group?.isChangeAuto){
+              group.progress = Number((sumProgress / countTask).toFixed(2));
+            }
             if (group?.recID && group?.isChange) {
               progressData.push(this.setProgressOutput(null, group));
             }
@@ -1413,6 +1417,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region progress
   async openPopupUpdateProgress(data, type) {
+    if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){
+      return;
+    }
+
     if (!this.isMoveStage && !this.isTaskFirst && this.currentStep?.stepStatus == "0") {
       if (
         !this.isOnlyView ||
@@ -1568,6 +1576,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (this.isMoveStage) {
           data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
           data.isChange = true;
+          data.isChangeProgressAuto = false;
         }
       } else {
         this.updateDataProgress(data, dataProgress);
@@ -1595,7 +1604,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             groupView.progress = dataProgress?.progressGroupTask;
             if (this.isMoveStage) {
               groupView.progressOld = dataProgress?.progressGroupTask; // dành cho cập nhật tất cả
-              groupView.isChange = true;
+              groupView.isChange = false;
+              data.isChangeProgressAuto = true;
             }
           }
           if (groupData) {
@@ -1631,6 +1641,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   checkUpdateProgress(dataUpdate, type) {
+    if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){
+      return false;
+    }
     if (this.isMoveStage || (this.isTaskFirst && this.currentStep?.stepStatus == "0")) {
       return true;
     }

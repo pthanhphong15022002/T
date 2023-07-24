@@ -163,33 +163,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   ];
 
   //nang suat nhan viên
-  productivityOwner = [
-    {
-      name: 'Trương Đặng Ngọc Phúc',
-      percentage: 90,
-      money: 5000000,
-    },
-    {
-      name: 'Nguyễn Thanh Dung',
-      percentage: 70,
-      money: 5000000,
-    },
-    {
-      name: 'Trần Công Sơn',
-      percentage: 60,
-      money: 5000000,
-    },
-    {
-      name: 'Hồ Thị Trang Ngân',
-      percentage: 30,
-      money: 5000000,
-    },
-    {
-      name: 'Lê Nguyên Trí',
-      percentage: 20,
-      money: 5000000,
-    },
-  ];
+  productivityOwner = [];
 
   constructor(inject: Injector, private layout: LayoutComponent) {
     super(inject);

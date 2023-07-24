@@ -55,9 +55,11 @@
 </ng-template>
 
 <ng-template #desc2Tmp let-data>
-  <span class="text-gray-500 mt-1 line-clamp line-clamp-2">{{
-    data?.memo
-  }}</span>
+  <span
+    class="text-gray-500 mt-1 line-clamp line-clamp-2"
+    [title]="data?.memo"
+    >{{ data?.memo }}</span
+  >
 </ng-template>
 
 <ng-template #siderFooter let-data>
@@ -157,6 +159,7 @@
             fiedName="invoiceNo"
             [formModel]="view.formModel"
             class="fw-bold label-colon"
+            default="Số hóa đơn"
           ></codx-label>
           <span
             class="text-gray-600"
@@ -172,6 +175,7 @@
             fiedName="invoiceDate"
             [formModel]="view.formModel"
             class="fw-bold label-colon"
+            default="Ngày hóa đơn"
           ></codx-label>
           <span
             [innerHTML]="
@@ -187,6 +191,7 @@
             fiedName="invoiceDueDate"
             [formModel]="view.formModel"
             class="fw-bold label-colon"
+            default="Hạn thanh toán"
           ></codx-label>
           <span
             [innerHTML]="
@@ -212,6 +217,7 @@
           fiedName="pmtMethodID"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
+          default="Hình thức thanh toán"
         ></codx-label>
         <span
           class="text-gray-600"
@@ -227,6 +233,7 @@
           fiedName="salespersonID"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
+          default="Nhân viên bán hàng"
         ></codx-label>
         <span
           [innerHTML]="
@@ -245,6 +252,7 @@
           fiedName="memo"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
+          default="Diễn giải"
         ></codx-label>
         <span
           [innerHTML]="
@@ -387,19 +395,13 @@
                     <td class="text-end pe-3">
                       <div class="d-flex flex-column gap-1">
                         <div>{{ line.vatAmt | currency : "" : "" }}</div>
-                        <div
-                          *ngIf="
-                            vats
-                              | nameById
-                                : 'VATID'
-                                : 'TaxRate'
-                                : line.vatid as taxRate;
-                            else taxRate
-                          "
-                        >
-                          {{ taxRate * 100 }}%
+                        <div>
+                          {{
+                            line.taxRate === "-"
+                              ? line.taxRate
+                              : line.taxRate * 100 + "%"
+                          }}
                         </div>
-                        <ng-template #taxRate>-</ng-template>
                       </div>
                     </td>
                   </tr>
