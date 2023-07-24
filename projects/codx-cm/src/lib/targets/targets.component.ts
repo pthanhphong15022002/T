@@ -250,6 +250,8 @@ export class TargetsComponent
     if (e?.view?.type == 8) {
       if (!this.schedule)
         this.schedule = (this.view?.currentView as any)?.schedule;
+    }else{
+      this.schedule = null;
     }
     var formModel = new FormModel();
     formModel.formName = 'CMTargetsLines';
