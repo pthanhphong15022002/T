@@ -61,6 +61,7 @@ export class EmployeeContractComponent extends UIComponent {
   grvSetup: any;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
+  viewActive: string;
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01';
@@ -105,6 +106,7 @@ export class EmployeeContractComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -114,6 +116,7 @@ export class EmployeeContractComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.itemTemplateListDetail,
@@ -252,8 +255,8 @@ export class EmployeeContractComponent extends UIComponent {
         this.copyValue(event.text, data, 'eContract');
         this.df.detectChanges();
         break;
-      case "HRTPro01A20": // in hợp đồng
-        this.printContract(event,data.recID);
+      case 'HRTPro01A20': // in hợp đồng
+        this.printContract(event, data.recID);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -281,32 +284,47 @@ export class EmployeeContractComponent extends UIComponent {
       //   break;
       // }
     }
-  } 
+  }
 
-  printContract(moreFC:any,objectID:string) {
-    this.getReportSource(moreFC.functionID,"reportID",objectID)
-    .subscribe((src:any) => {
-      let dialogModel = new DialogModel();
-      dialogModel.FormModel = this.view.formModel;
-      dialogModel.DataService = this.view.dataService;
-      let data = {
-        headerText:moreFC.text,
-        reportID : moreFC.functionID,
-        dataSource : src
-      };
-      this.callfc.openForm(CodxListReportsComponent,moreFC.defaultName,0,0,moreFC.functionID,data,"",dialogModel);
-
-    });
-    
+  printContract(moreFC: any, objectID: string) {
+    this.getReportSource(moreFC.functionID, 'reportID', objectID).subscribe(
+      (src: any) => {
+        let dialogModel = new DialogModel();
+        dialogModel.FormModel = this.view.formModel;
+        dialogModel.DataService = this.view.dataService;
+        let data = {
+          headerText: moreFC.text,
+          reportID: moreFC.functionID,
+          dataSource: src,
+        };
+        this.callfc.openForm(
+          CodxListReportsComponent,
+          moreFC.defaultName,
+          0,
+          0,
+          moreFC.functionID,
+          data,
+          '',
+          dialogModel
+        );
+      }
+    );
   }
   // unites get data source
-  getReportSource(reportID:string,reportField:string,objectID:string){
-    return this.api.execSv("rptsys",
-        "Codx.RptBusiness.CM",
-        "ReportBusiness",
-        "GetReportSourceByIDAsync",
-         [reportID,reportField,objectID])
-        .pipe(map((res:any) => {return res;}));
+  getReportSource(reportID: string, reportField: string, objectID: string) {
+    return this.api
+      .execSv(
+        'rptsys',
+        'Codx.RptBusiness.CM',
+        'ReportBusiness',
+        'GetReportSourceByIDAsync',
+        [reportID, reportField, objectID]
+      )
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
@@ -371,8 +389,14 @@ export class EmployeeContractComponent extends UIComponent {
     return arr.join(';');
   }
 
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   beforeRelease() {
@@ -388,8 +412,6 @@ export class EmployeeContractComponent extends UIComponent {
           let eContractsObj = parsedJSON[index];
           if (eContractsObj['ApprovalRule'] == '1') {
             this.release();
-          } else {
-            //đợi BA mô tả
           }
         }
       }

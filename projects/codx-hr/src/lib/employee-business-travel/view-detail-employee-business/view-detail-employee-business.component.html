@@ -44,12 +44,24 @@
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
         <span
+          *ngIf="
+            itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+            else noOrgUnitName
+          "
+          >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
+        >
+        <ng-template #noOrgUnitName>
+          <span class="place-holder">{{
+            grvSetup["OrgUnitID"].headerText
+          }}</span>
+        </ng-template>
+        <!-- <span
           [innerHTML]="
             itemDetail?.emp?.orgUnitID
               | formatvalue : formModel : 'orgUnitID'
               | async
           "
-        ></span>
+        ></span> -->
       </div>
     </div>
   </ng-template>

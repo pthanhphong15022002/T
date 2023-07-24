@@ -145,6 +145,11 @@ export class PopupEProcessContractComponent
       });
   }
 
+  setTitle(evt: any){
+    this.headerText += " " +  evt;
+    this.cr.detectChanges();
+  }
+
   onInit(): void {
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {

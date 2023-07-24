@@ -34,6 +34,7 @@ export class ViewDetailEbenefitComponent implements OnInit {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
   @Input() itemDetail: any;
+  @Input() grvSetup;
   @Input() view: ViewsComponent;
   @Input() formModel;
   @Input() hideFooter = false;

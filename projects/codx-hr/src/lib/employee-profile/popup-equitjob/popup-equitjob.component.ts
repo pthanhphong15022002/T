@@ -132,6 +132,12 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
     }
   }
 
+  setTitle(evt: any){
+    this.headerText += " " +  evt;
+    this.cr.detectChanges();
+  }
+
+
   onInit(): void {
     this.getECurrentContract();
 

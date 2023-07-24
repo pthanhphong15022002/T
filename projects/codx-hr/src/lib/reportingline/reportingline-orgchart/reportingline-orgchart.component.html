@@ -27,8 +27,9 @@
 
 
 <ng-template #template let-data>
-  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 border h-150px"
-    (click)="changeSelectedItem(data)" [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
+  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 h-150px"
+    [ngClass]="data?.isSelected ?'highlight-node-border': 'border'"
+    (click)="changeSelectedItem(data)" [ngStyle]=" { background: data?.positionID == positionID? 'aliceblue': null, borderColor: '' }">
     <div class="has-action-menu">
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
       </codx-mfunc>

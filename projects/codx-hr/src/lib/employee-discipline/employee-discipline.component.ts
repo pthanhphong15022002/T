@@ -52,6 +52,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   grvSetup: any;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
+  viewActive: string;
 
   //#region eDisciplineFuncID
   actionAddNew = 'HRTPro07A01';
@@ -99,6 +100,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -108,6 +110,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.itemTemplateListDetail,
@@ -327,8 +330,14 @@ export class EmployeeDisciplineComponent extends UIComponent {
     });
   }
 
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   release() {
