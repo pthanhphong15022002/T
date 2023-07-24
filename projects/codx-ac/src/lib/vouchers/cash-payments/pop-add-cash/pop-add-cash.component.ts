@@ -676,7 +676,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   lineChanged(e: any) {
     if(e.hasNoChange){
-      //this.gridCash.focusNextinput(this.gridCash.editIndex);
+      this.gridCash.focusNextinput(this.gridCash.editIndex);
       return;
     }
     this.dataLine = e.data;
@@ -713,7 +713,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
-              //this.gridCash.focusNextinput(this.gridCash.editIndex);
+              this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         //this.dataLine = this.getValueByExRate(true);
@@ -933,42 +933,43 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               });
           }
         } else {
-          this.journalService.checkVoucherNoBeforeSave(
-            this.journal,
-            this.cashpayment,
-            'AC',
-            this.dialog.formModel.entityName,
-            this.form,
-            this.action === 'edit',
-            () => {
-              this.dialog.dataService.addDatas.set(
-                this.cashpayment['_uuid'],
-                this.cashpayment
-              );
-              this.cashpayment.updateColumn = null;
-              this.hasSaved = true;
-              this.dialog.dataService
-                .save(
-                  (opt: RequestOption) => {
-                    opt.methodName = 'SaveLogicAsync';
-                    opt.data = [this.cashpayment];
-                  },
-                  0,
-                  '',
-                  '',
-                  false
-                )
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  if (res && res.save.data != null) {
-                    //this.cashpayment = res.save.data;
-                    // if (this.cashpayment.unbounds.lineDefault != null) {
-                    //   this.dataLine = this.cashpayment.unbounds.lineDefault;
-                    // }
-                  }
-                });
-            }
+          // this.journalService.checkVoucherNoBeforeSave(
+          //   this.journal,
+          //   this.cashpayment,
+          //   'AC',
+          //   this.dialog.formModel.entityName,
+          //   this.form,
+          //   this.action === 'edit',
+          //   () => {
+              
+          //   }
+          // );
+          this.dialog.dataService.addDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
           );
+          this.cashpayment.updateColumn = null;
+          this.hasSaved = true;
+          this.dialog.dataService
+            .save(
+              (opt: RequestOption) => {
+                opt.methodName = 'SaveLogicAsync';
+                opt.data = [this.cashpayment];
+              },
+              0,
+              '',
+              '',
+              false
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res && res.save.data != null) {
+                //this.cashpayment = res.save.data;
+                // if (this.cashpayment.unbounds.lineDefault != null) {
+                //   this.dataLine = this.cashpayment.unbounds.lineDefault;
+                // }
+              }
+            });
         }
         break;
       case 'edit':
@@ -2422,12 +2423,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       objectName =
         this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
     }
-    if (
-      this.cbxPayee.ComponentCurrent.itemsSelected &&
-      this.cbxPayee.ComponentCurrent.itemsSelected.length > 0
-    ) {
-      payName =
-        this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
+    if (this.cbxPayee.ComponentCurrent.itemsSelected && this.cbxPayee.ComponentCurrent.itemsSelected.length > 0 && !this.cbxPayee.ComponentCurrent.itemsSelected[0][0]) {
+      payName = this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
+    }else{
+      payName = this.cbxPayee.ComponentCurrent.value + ' - ';
     }
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);

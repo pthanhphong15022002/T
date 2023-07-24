@@ -1,7 +1,7 @@
 <ng-container *ngIf="isInit">
 <ejs-sidebar (close)="onCloseSidebar($event)" type="Slide" #sidebar width="100%" (created)="onCreatedSidebar($event)" id="default-sidebar" style="visibility: hidden" >
   <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
-[customToolbar]="subToolbar" [openMore]="false" class="ac-side-form">
+[customToolbar]="subToolbar" [openMore]="false" class="ac-dialog">
 </codx-form>
 <!-- <div class="ac-ng-overlay">
 <ngx-ui-loader [loaderId]="'loader'" [logoUrl]="'../assets/themes/ac/default/img/bussiness-accouting-codx.svg'"></ngx-ui-loader>
@@ -34,7 +34,7 @@
         </e-tabitems>
       </ejs-tab>
     </div>
-    <div tabindex="-1" style="height: calc(100vh - 420px)!important;">
+    <div tabindex="-1" style="height: calc(100vh - 405px)!important;">
       <ejs-tab #tabObj enablePersistence="true" (created)="created($event, tabObj)">
         <e-tabitems>
           <e-tabitem>
@@ -727,7 +727,7 @@
       [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
       predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
       [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-      [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" [preSaveCheck]="false"
+      [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" [preSaveCheck]="true"
       (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
       (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
     <div #btnRef class="btn-addline">
