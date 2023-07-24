@@ -72,6 +72,14 @@ export class DealsComponent
   @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
   @ViewChild('confirmOrRefuseTemp') confirmOrRefuseTemp: TemplateRef<any>;
   @ViewChild('templateMore') templateMore: TemplateRef<any>;
+  //temp gird
+  @ViewChild('templateCustomer') templateCustomer: TemplateRef<any>;
+  @ViewChild('templateBusinessLines') templateBusinessLines: TemplateRef<any>;
+  @ViewChild('templateDealValue') templateDealValue: TemplateRef<any>;
+  @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
+  @ViewChild('templateOwner') templateOwner: TemplateRef<any>;
+  @ViewChild('templateSteps') templateSteps: TemplateRef<any>;
+  @ViewChild('templateConsultant') templateConsultant: TemplateRef<any>;
 
   popupConfirm: DialogRef;
 
@@ -147,6 +155,8 @@ export class DealsComponent
   dataColums: any = [];
   listHeader: any = [];
   listSteps: any[] = [];
+  arrFieldIsVisible: any[];
+
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -154,14 +164,17 @@ export class DealsComponent
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
-    private codxShareService: CodxShareService,
-
+    private codxShareService: CodxShareService
   ) {
     super(inject);
-    this.executeApiCalls();
-    // if (!this.funcID) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // }
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      this.functionModule = f.module;
+      this.nameModule = f.customName;
+      this.executeApiCallFunctionID(f.formName, f.gridViewName);
+    });
+    this.getColorReason();
+
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
 
@@ -171,7 +184,6 @@ export class DealsComponent
         this.processIDKanban = res.recID;
       }
     });
-
     ///lay tien mac dinh
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
@@ -203,13 +215,6 @@ export class DealsComponent
     this.button = {
       id: this.btnAdd,
     };
-
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      this.functionModule = f.module;
-      this.nameModule = f.customName;
-      this.executeApiCallFunctionID(f.formName, f.gridViewName);
-    });
-    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -240,28 +245,32 @@ export class DealsComponent
         active: false,
         sameData: true,
         model: {
-          resources: this.columnGrids,
           template2: this.templateMore,
+          resources: this.columnGrids,
           // frozenColumns: 1,
         },
       },
     ];
-    this.cache.viewSettings(this.funcID).subscribe((views) => {
-      this.viewsDefault.forEach((v, index) => {
-        let idx = views.findIndex((x) => x.view == v.type);
-        if (idx != -1) {
-          v.hide = false;
-          if (views[idx].isDefault) v.action = true;
-          else v.active = false;
-        } else {
-          v.hide = true;
-          v.active = false;
-        }
-        // if (!(this.funcID == 'CM0201' && v.type == '6'))
-        this.views.push(v);
-      });
-    });
-    this.changeDetectorRef.detectChanges();
+  }
+
+  loadViewModel() {
+    this.views = this.viewsDefault;
+    // this.cache.viewSettings(this.funcID).subscribe((views) => {
+    //   this.viewsDefault.forEach((v, index) => {
+    //     let idx = views.findIndex((x) => x.view == v.type);
+    //     if (idx != -1) {
+    //       v.hide = false;
+    //       if (views[idx].isDefault) v.action = true;
+    //       else v.active = false;
+    //     } else {
+    //       v.hide = true;
+    //       v.active = false;
+    //     }
+    //     // if (!(this.funcID == 'CM0201' && v.type == '6'))
+    //     this.views.push(v);
+    //   });
+    // });
+    //this.changeDetectorRef.detectChanges();
   }
 
   afterLoad() {
@@ -297,74 +306,6 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      // this.view.load();
-      // this.cache.viewSettings(this.funcID).subscribe((views) => {
-      //   if (views) {
-      //     this.afterLoad();
-      //     this.views = [];
-      //     let idxActive = -1;
-      //     let viewOut = false;
-      //     this.viewsDefault.forEach((v, index) => {
-      //       let idx = views.findIndex((x) => x.view == v.type);
-      //       if (idx != -1) {
-      //         v.hide = false;
-      //         if (v.type != this.viewCrr) v.active = false;
-      //         else v.active = true;
-      //         if (views[idx].isDefault) idxActive = index;
-      //       } else {
-      //         v.hide = true;
-      //         v.active = false;
-      //         if (this.viewCrr == v.type) viewOut = true;
-      //       }
-      //       if (v.type == 6) {
-      //         v.request.dataObj = this.dataObj;
-      //         v.request2.dataObj = this.dataObj;
-      //       }
-      //       //  if (!(this.funcID == 'CM0201' && v.type == '6'))
-      //       this.views.push(v);
-      //       //  else viewOut = true;
-      //     });
-      //     if (!this.views.some((x) => x.active)) {
-      //       if (idxActive != -1) this.views[idxActive].active = true;
-      //       else this.views[0].active = true;
-
-      //       let viewModel =
-      //         idxActive != -1 ? this.views[idxActive] : this.views[0];
-      //       this.view.viewActiveType = viewModel.type;
-      //       this.view.viewChange(viewModel);
-      //       // if (viewOut)
-      //       // this.view.load();
-      //     }
-
-      // if ((this.view?.currentView as any)?.kanban) {
-      //   this.loadKanban();
-      //   // let kanban = (this.view?.currentView as any)?.kanban;
-      //   // let settingKanban = kanban.kanbanSetting;
-      //   // settingKanban.isChangeColumn = true;
-      //   // settingKanban.formName = this.view?.formModel?.formName;
-      //   // settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-      //   // this.api
-      //   //   .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-      //   //     settingKanban,
-      //   //     this.dataObj,
-      //   //   ])
-      //   //   .subscribe((resource) => {
-      //   //     if (resource?.columns && resource?.columns.length)
-      //   //       kanban.columns = resource.columns;
-      //   //     kanban.kanbanSetting.isChangeColumn = false;
-      //   //     kanban.dataObj = this.dataObj;
-      //   //     kanban.loadDataSource(
-      //   //       kanban.columns,
-      //   //       kanban.kanbanSetting?.swimlaneSettings,
-      //   //       false
-      //   //     );
-      //   //     kanban.refresh();
-      //   //     this.kanban = kanban;
-      //   //     this.detectorRef.detectChanges();
-      //   //   });
-      // }
-      // }
-      // });
     } else if (
       this.funcID == 'CM0201' &&
       this.viewCrr == 6 &&
@@ -475,37 +416,40 @@ export class DealsComponent
 
     return functionMappings[type];
   }
-  async executeApiCalls() {
-    try {
-      await this.getColorReason();
-    } catch (error) {}
+
+  executeApiCallFunctionID(formName, gridViewName) {
+    this.getGridViewSetup(formName, gridViewName);
+    this.getMoreFunction(formName, gridViewName);
   }
 
-  async executeApiCallFunctionID(formName, gridViewName) {
-    try {
-      await this.getMoreFunction(formName, gridViewName);
-      await this.getGridViewSetup(formName, gridViewName);
-    } catch (error) {}
-  }
-
-  async getMoreFunction(formName, gridViewName) {
+  getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
         this.moreFuncInstance = res;
       }
     });
   }
-  async getGridViewSetup(formName, gridViewName) {
+  getGridViewSetup(formName, gridViewName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
         this.vllStatus = this.gridViewSetup['Status'].referedValue;
         this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
+        //lay grid view
+        let arrField = Object.values(this.gridViewSetup).filter(
+          (x: any) => x.isVisible
+        );
+        if (Array.isArray(arrField)) {
+          this.arrFieldIsVisible = arrField
+            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+          // this.getColumsGrid(this.gridViewSetup);
+        }
       }
     });
   }
 
-  async getColorReason() {
+  getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -944,14 +888,12 @@ export class DealsComponent
   }
   startDeal(data) {
     this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
-      if(resDP) {
+      if (resDP) {
         var datas = [data.recID, resDP[0]];
         this.codxCmService.startDeal(datas).subscribe((res) => {
           if (res) {
             this.dataSelected = res[0];
-            this.dataSelected = JSON.parse(
-              JSON.stringify(this.dataSelected)
-            );
+            this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
             this.detailViewDeal.reloadListStep(resDP[1]);
             this.notificationsService.notifyCode('SYS007');
             this.view.dataService.update(this.dataSelected).subscribe();
@@ -1512,13 +1454,18 @@ export class DealsComponent
   }
 
   onLoading(e) {
-    if (!this.funCrr) return;
+    if (!this.funCrr) {
+      this.getColumsGrid(this.gridViewSetup);
+      return;
+    }
+
     //reload filter
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+
     // if (this.funCrr != this.funcID) {
     //   this.view.pinedFilter.filters = [];
     //   this.view.dataService.filter.filters = [];
     // }
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -1557,8 +1504,7 @@ export class DealsComponent
             idxActive != -1 ? this.views[idxActive] : this.views[0];
           this.view.viewActiveType = viewModel.type;
           this.view.viewChange(viewModel);
-          // if (viewOut)
-          // this.view.load();
+          if (viewOut) this.view.load();
         }
         if ((this.view?.currentView as any)?.kanban) this.loadKanban();
       }
@@ -1636,4 +1582,59 @@ export class DealsComponent
     this.changeDataMF(e, data, 11);
   }
   //#endregion
+
+  getColumsGrid(grvSetup) {
+    this.columnGrids = [];
+    if (this.arrFieldIsVisible?.length > 0) {
+      this.arrFieldIsVisible.forEach((key) => {
+        let field = Util.camelize(key);
+        let template: any;
+        let colums: any;
+        switch (key) {
+          case 'CustomerID':
+            template = this.templateCustomer;
+            break;
+          case 'BusinessLineID':
+            template = this.templateBusinessLines;
+            break;
+          case 'DealValue':
+            template = this.templateDealValue;
+            break;
+          case 'Status':
+            template = this.templateStatus;
+            break;
+          case 'Owner':
+            template = this.templateOwner;
+            break;
+          case 'StepID':
+            template = this.templateSteps;
+            break;
+          case 'ConsultantID':
+            template = this.templateConsultant;
+            break;
+
+          default:
+            break;
+        }
+        if (template) {
+          colums = {
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+            template: template,
+            // textAlign: 'center',
+          };
+        } else {
+          colums = {
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+          };
+        }
+        this.columnGrids.push(colums);
+      });
+    }
+
+    this.loadViewModel();
+  }
 }
