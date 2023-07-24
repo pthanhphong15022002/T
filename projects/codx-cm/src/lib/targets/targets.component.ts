@@ -448,7 +448,9 @@ export class TargetsComponent
                       this.lstDataTree[index] = data;
                     }
                   }
-
+                  if (this.schedule) {
+                    this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
+                  }
                   // this.lstDataTree.push(Object.assign({}, data));
 
                   this.detectorRef.detectChanges();
