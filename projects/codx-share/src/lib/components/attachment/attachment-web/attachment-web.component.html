@@ -54,15 +54,15 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let item of listData" class="border-top">
-                        <td>
+                        <td class="w-30px">
                             <ng-container *ngIf="!item?.folderName">
                                 <codx-input type="checkbox" ></codx-input>
                             </ng-container>
                         </td>
                         <td class="d-flex align-items-center border-0">
-                            <img *ngIf="item.folderName" class="h-13px" src="../../../assets/themes/dm/default/img/icon-folder.svg" />
-                            <img *ngIf="!item.folderName" class="h-16px" [src]="getThumbnail(item)" />
-                            <span class="ms-2">{{item.folderName ? item.folderName : item.fileName}}</span>
+                            <img *ngIf="item.folderName" class="h-13px me-2" src="../../../assets/themes/dm/default/img/icon-folder.svg" />
+                            <img *ngIf="!item.folderName" class="h-16px me-2" [src]="getThumbnail(item)" />
+                            <span>{{item.folderName ? item.folderName : item.fileName}}</span>
                         </td>
                         <td>{{item.createdOn | date: 'dd/MM/yyyy'}}</td>
                         <td> 
