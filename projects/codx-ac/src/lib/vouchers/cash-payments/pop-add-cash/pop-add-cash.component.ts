@@ -682,7 +682,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.dataLine = e.data;
     switch (e.field.toLowerCase()) {
       case 'accountid':
-        //this.consTraintGrid();
+        this.consTraintGrid();
         //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'offsetacctid':
@@ -696,7 +696,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             oOffaccount[0].accountType == '5' ? true : false;
         }
         //this.gridCash.focusNextinput(this.gridCash.editIndex);
-        //this.consTraintGrid();
+        this.consTraintGrid();
         break;
       case 'dr':
         if (this.dataLine.dr != 0 && this.dataLine.cR2 != 0) {
@@ -718,7 +718,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           });
         //this.dataLine = this.getValueByExRate(true);
         if (this.journal.entryMode == '2') {
-          //this.consTraintGrid();
+          this.consTraintGrid();
         }
         break;
       case 'cr':
@@ -742,7 +742,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           });
         //this.dataLine = this.getValueByExRate(false);
         if (this.journal.entryMode == '2') {
-          //this.consTraintGrid();
+          this.consTraintGrid();
         }
         break;
       case 'dr2':
