@@ -1,6 +1,6 @@
 
 .tabline-content .e-content{
-   height: calc(100vh - 527px)!important;
+   height: calc(100vh - 505px)!important;
 }
 
 .tabset-content .e-content{
@@ -33,7 +33,7 @@
 .ac-load-grid{
     margin-top: 3rem;
     width: 100%;
-    height: calc(100vh - 500px) !important;
+    height: calc(100vh - 475px) !important;
     justify-content: center !important;
     display: flex;
     position: absolute;

@@ -326,6 +326,7 @@ export class DealDetailComponent implements OnInit {
       this.dataSelected?.refID,
       this.dataSelected?.processID,
       this.dataSelected?.status,
+      '1'
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {

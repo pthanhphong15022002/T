@@ -126,7 +126,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.funcID == 'CM0101') {
       if (this.action == 'add') {
         this.radioChecked = true;
-        this.data?.category == '1';
+        this.data.category = '1';
       } else {
         this.radioChecked = this.data?.category == '1' ? true : false;
       }

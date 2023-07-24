@@ -1524,6 +1524,57 @@ export class CodxShareService {
     );
   }
   //#endregion Codx Quy trình duyệt
+
+  //Lấy icon Folder/File
+  getIconFile(ex: string) {
+    if (!ex) return 'file.svg';
+    var ext = ex.toLocaleLowerCase();
+    switch (ext) {
+      case '.txt':
+        return 'txt.svg';
+      case '.doc':
+      case '.docx':
+        return 'doc.svg';
+      case '.7z':
+      case '.rar':
+      case '.zip':
+        return 'zip.svg';
+      case '.jpg':
+      case '.jpeg':
+      case '.jfif':
+        return 'jpg.svg';
+      case '.mp4':
+        return 'mp4.svg';
+      case '.xls':
+      case '.xlsx':
+        return 'xls.svg';
+      case '.pdf':
+        return 'pdf.svg';
+      case '.png':
+        return 'png.svg';
+      case '.js':
+        return 'javascript.svg';
+      case '.apk':
+        return 'android.svg';
+      case '.ppt':
+        return 'ppt.svg';
+      case '.mp3':
+      case '.wma':
+      case '.wav':
+      case '.flac':
+      case '.ogg':
+      case '.aiff':
+      case '.aac':
+      case '.alac':
+      case '.lossless':
+      case '.wma9':
+      case '.aac+':
+      case '.ac3':
+        return 'audio.svg';
+      default:
+        return 'file.svg';
+    }
+  }
 }
 //#region Model
 export class ResponseModel {
