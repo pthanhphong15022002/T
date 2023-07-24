@@ -58,6 +58,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
   genderGrvSetup: any;
   flagChangeMF: boolean = false;
   runModeCheck: boolean = false;
+  viewActive: string;
 
   //#region more functions
   actionAddNew = 'HRTPro02A01';
@@ -100,6 +101,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -109,6 +111,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateListDetail,
@@ -404,8 +407,14 @@ export class EmployeeAppointionsComponent extends UIComponent {
   //#endregion
 
   //#region Handle detail data
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   ChangeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   ClickEvent(event) {

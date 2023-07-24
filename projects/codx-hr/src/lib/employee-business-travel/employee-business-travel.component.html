@@ -11,6 +11,7 @@
   [button]="buttonAdd"
   (buttonClick)="addBusinessTravel($event)"
   (selectedChange)="changeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
@@ -473,6 +474,7 @@
     [itemDetail]="itemDetail"
     [view]="view"
     [formModel]="view.formModel"
+    [grvSetup]="grvSetup"
     (uploaded)="getDetailESalary($event, data)"
     (clickMFunction)="clickEvent($event)"
   >

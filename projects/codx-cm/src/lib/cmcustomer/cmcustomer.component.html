@@ -18,17 +18,17 @@
   (viewChanged)="viewChanged($event)"
   (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
-  [viewActiveType]="viewMode"
 ></codx-views>
 
 <!--grid view-->
 <ng-template #templateMore let-data>
-  <div>
+  <div class="" style="height: 30px">
     <codx-mfunc
+      [hideMF]="false"
       [dataItem]="data"
       [formModel]="view.formModel"
+      (changeDataMF)="changeDataMF($event, data)"
       (clickMF)="clickMF($event, data)"
-      (changeDataMF)="changeMoreMF($event)"
       [isBookMark]="true"
       type="view"
     ></codx-mfunc>

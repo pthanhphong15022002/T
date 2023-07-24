@@ -712,7 +712,7 @@ export class CodxCmService {
       data
     );
   }
-  startInstance(data){
+  startInstance(data) {
     return this.api.execSv<any>(
       'DP',
       'ERM.Business.DP',
@@ -1256,13 +1256,17 @@ export class CodxCmService {
   }
 
   //#region target and targetLines
-  getTargetAndLinesAsync(bussinessID) {
+  getTargetAndLinesAsync(bussinessID, year) {
     return this.api.exec<any>(
       'CM',
       'TargetsBusiness',
       'GetTargetAndLinesAsync',
-      bussinessID
+      [bussinessID, year]
     );
   }
   //#region
+
+  getOneObject(recID, className) {
+    return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
+  }
 }

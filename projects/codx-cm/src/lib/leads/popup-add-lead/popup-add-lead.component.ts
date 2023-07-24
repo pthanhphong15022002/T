@@ -613,7 +613,7 @@ export class PopupAddLeadComponent
   updateDateCategory(){
     if(this.lead.category == "2") {
       this.lead.industries = null;
-      this.lead.annualRevenue = null;
+      this.lead.annualRevenue = 0;
       this.lead.headcounts = null;
     }
     else {

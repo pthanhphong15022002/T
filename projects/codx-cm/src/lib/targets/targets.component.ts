@@ -9,10 +9,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertConfirmInputConfig,
   ButtonModel,
   DataRequest,
   DialogModel,
   FormModel,
+  NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -25,6 +27,7 @@ import { PopupAddTargetComponent } from './popup-add-target/popup-add-target.com
 import { DecimalPipe } from '@angular/common';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
+import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-targets',
@@ -59,7 +62,7 @@ export class TargetsComponent
   serviceTree: string = 'CM';
   assemblyNameTree: string = 'ERM.Business.CM';
   entityNameTree: string = 'CM_Targets';
-  classNameTree: string = 'TargetsLinesBusiness';
+  classNameTree: string = 'TargetsBusiness';
   methodTree: string = 'GetListTreeTargetLineAsync';
   loadedTree: boolean;
   fmTargetLines: FormModel;
@@ -70,9 +73,9 @@ export class TargetsComponent
   funcID = '';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
-  entityName: string = 'CM_Targets';
+  entityName: string = '';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTargetAsync';
+  method: string = 'GetListTargetLineAsync';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -80,7 +83,7 @@ export class TargetsComponent
   readonly btnAdd: string = 'btnAdd';
   //calendar - tháng - quý - năm
   date: any = new Date();
-  ops = ['m', 'q', 'y'];
+  ops = ['y'];
   year: number;
   heightWin: any;
   widthWin: any;
@@ -91,6 +94,7 @@ export class TargetsComponent
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
+    private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
     private cmSv: CodxCmService
   ) {
@@ -156,7 +160,7 @@ export class TargetsComponent
     //lấy list target để vẽ schedule
     this.schedules = new ResourceModel();
     this.schedules.assemblyName = 'CM';
-    this.schedules.className = 'TargetsLinesBusiness';
+    this.schedules.className = 'TargetsBusiness';
     this.schedules.service = 'CM';
     this.schedules.method = 'GetListTargetLineAsync';
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
@@ -167,7 +171,7 @@ export class TargetsComponent
     //lấy list user vẽ header schedule
     this.scheduleHeader = new ResourceModel();
     this.scheduleHeader.assemblyName = 'CM';
-    this.scheduleHeader.className = 'TargetsLinesBusiness';
+    this.scheduleHeader.className = 'TargetsBusiness';
     this.scheduleHeader.service = 'CM';
     this.scheduleHeader.method = 'GetListUserAsync';
     this.scheduleModel = {
@@ -242,6 +246,7 @@ export class TargetsComponent
     var year = parseInt(data?.fromDate?.getFullYear());
     this.year = year;
     this.loadTreeData(year?.toString());
+    this.detectorRef.detectChanges();
   }
   //#endregion
   //#region event codx-view
@@ -340,18 +345,30 @@ export class TargetsComponent
             if (e != null && e?.event != null) {
               if (e?.event[0] != null && e?.event[0][1] != null) {
                 var data = e?.event[0][1];
-                this.businessLineID = e?.event[2];
-                this.lstTargetLines = e?.event[0][0];
-                this.lstOwners = e?.event[1];
-                this.data = e?.event[0][2];
-                var index = this.lstDataTree.findIndex(
-                  (x) => x.businessLineID == data?.businessLineID
-                );
-                if (index != -1) {
-                  this.lstDataTree[index] = data;
-                  // this.lstDataTree.splice(index, 1);
-                } else {
-                  this.lstDataTree.push(Object.assign({}, data));
+                if (data.year == this.year) {
+                  this.businessLineID = e?.event[2];
+                  this.lstTargetLines = e?.event[0][0];
+                  this.lstOwners = e?.event[1];
+                  this.data = e?.event[0][2];
+                  var index = this.lstDataTree.findIndex(
+                    (x) => x.businessLineID == data?.businessLineID
+                  );
+                  if (index != -1) {
+                    this.lstDataTree[index] = data;
+                    if (this.lstTargetLines != null) {
+                      this.lstTargetLines.forEach((res) => {
+                        this.view.dataService.update(res).subscribe();
+                      });
+                    }
+                    // this.lstDataTree.splice(index, 1);
+                  } else {
+                    this.lstDataTree.push(Object.assign({}, data));
+                    if (this.lstTargetLines != null) {
+                      this.lstTargetLines.forEach((res) => {
+                        this.view.dataService.add(res).subscribe();
+                      });
+                    }
+                  }
                 }
               }
               this.detectorRef.detectChanges();
@@ -367,12 +384,21 @@ export class TargetsComponent
     if (this.businessLineID != null) {
       lstOwners = this.lstOwners;
       lstTargetLines = this.lstTargetLines;
-      if (this.data != null) {
+      if (this.data != null && this.data?.recID == data?.recID) {
         this.view.dataService.dataSelected = this.data;
+      } else {
+        var tar = await firstValueFrom(
+          this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
+        );
+        if (tar != null) {
+          lstOwners = tar[2];
+          lstTargetLines = tar[1];
+          this.view.dataService.dataSelected = tar[0];
+        }
       }
     } else {
       var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(data?.businessLineID)
+        this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.period)
       );
       if (tar != null) {
         lstOwners = tar[2];
@@ -414,16 +440,19 @@ export class TargetsComponent
               if (e != null && e?.event != null) {
                 if (e?.event[0] != null && e?.event[0][1] != null) {
                   var data = e?.event[0][1];
-                  this.businessLineID = e?.event[2];
-                  this.lstTargetLines = e?.event[0][0];
-                  this.lstOwners = e?.event[1];
-                  this.data = e?.event[0][2];
-                  var index = this.lstDataTree.findIndex(
-                    (x) => x.businessLineID == data?.businessLineID
-                  );
-                  if (index != -1) {
-                    this.lstDataTree[index] = data;
+                  if (data.year == this.year) {
+                    this.businessLineID = e?.event[2];
+                    this.lstTargetLines = e?.event[0][0];
+                    this.lstOwners = e?.event[1];
+                    this.data = e?.event[0][2];
+                    var index = this.lstDataTree.findIndex(
+                      (x) => x.businessLineID == data?.businessLineID
+                    );
+                    if (index != -1) {
+                      this.lstDataTree[index] = data;
+                    }
                   }
+
                   // this.lstDataTree.push(Object.assign({}, data));
 
                   this.detectorRef.detectChanges();
@@ -435,26 +464,37 @@ export class TargetsComponent
   }
 
   deleteTargetLine(data) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.onAction.next({
-            type: 'delete',
-            data: data,
-          });
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event?.status) {
+        if (x?.event?.status == 'Y') {
+          this.api
+            .execSv(
+              'CM',
+              'ERM.Business.CM',
+              'TargetsBusiness',
+              'DeletedTargetLineAsync',
+              data.recID
+            )
+            .subscribe((res) => {
+              if (res) {
+                data.target = 0;
+                this.view.dataService.update(data.target).subscribe();
+                this.notiService.notifyCode('SYS008');
+                this.detectorRef.detectChanges();
+              }
+            });
         }
-      });
+      }
+    });
   }
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedTargetLineAsync';
     opt.assemblyName = 'ERM.Business.CM';
-    opt.className = 'TargetsLinesBusiness';
+    opt.className = 'TargetsBusiness';
     opt.service = 'CM';
     opt.data = [itemSelected.recID];
     return true;

@@ -30,6 +30,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   actionType: string;
   disabledInput = false;
   idField = 'RecID';
+  autoNumField = ''
   employeeObj;
   headerText: '';
   funcID: string;
@@ -108,6 +109,9 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            if (res.key) {
+              this.autoNumField = res.key;
+            }
             console.log('get default benefit', res);
 
             this.benefitObj = res?.data;

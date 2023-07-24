@@ -295,48 +295,50 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   changeType(e?: any, ele?: TabComponent) {
     // if ((this.gridCash && !this.gridCash.gridRef.isEdit) || (this.gridSet && !this.gridSet.gridRef.isEdit)) {
-      
-      
+
     // }
-    if (e && e.data[0] && (this.cashpaymentline.length > 0 || this.settledInvoices.length > 0)) {
-        this.notification.alertCode('AC0014', null).subscribe((res) => {
-          if (res.event.status === 'Y') {
-            this.api
-              .exec<any>('AC', 'CommonBusiness', 'DeleteAllAsync', [
-                this.cashpayment,
-              ])
-              .subscribe((res) => {});
-            this.cashpayment.subType = e.data[0];
-            this.cashpaymentline = [];
-            this.settledInvoices = [];
-            this.form.formGroup.patchValue(
-              { subType: this.cashpayment.subType },
-              {
-                onlySelf: true,
-                emitEvent: false,
-              }
-            );
-            this.loadSubType(this.cashpayment.subType, this.tabObj);
-          } else {
-            // this.form.formGroup.patchValue(
-            //   { subType: this.cashpayment.subType },
-            //   {
-            //     onlySelf: true,
-            //     emitEvent: false,
-            //   }
-            // );
-            // this.cbxSub.dropdownContent.value = '1';
-            // this.cbxSub.dropdownContent.loadDataVll();
-          }
-        });
-      }
-      else {
-        this.cashpayment.subType = e.data[0];
-        if (this.tabObj) {
+    if (
+      e &&
+      e.data[0] &&
+      (this.cashpaymentline.length > 0 || this.settledInvoices.length > 0)
+    ) {
+      this.notification.alertCode('AC0014', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.api
+            .exec<any>('AC', 'CommonBusiness', 'DeleteAllAsync', [
+              this.cashpayment,
+            ])
+            .subscribe((res) => {});
+          this.cashpayment.subType = e.data[0];
+          this.cashpaymentline = [];
+          this.settledInvoices = [];
+          this.form.formGroup.patchValue(
+            { subType: this.cashpayment.subType },
+            {
+              onlySelf: true,
+              emitEvent: false,
+            }
+          );
           this.loadSubType(this.cashpayment.subType, this.tabObj);
-        }    
+        } else {
+          // this.form.formGroup.patchValue(
+          //   { subType: this.cashpayment.subType },
+          //   {
+          //     onlySelf: true,
+          //     emitEvent: false,
+          //   }
+          // );
+          // this.cbxSub.dropdownContent.value = '1';
+          // this.cbxSub.dropdownContent.loadDataVll();
+        }
+      });
+    } else {
+      this.cashpayment.subType = e.data[0];
+      if (this.tabObj) {
+        this.loadSubType(this.cashpayment.subType, this.tabObj);
       }
-    
+    }
+
     // let i;
     // if (e && e.data[0] != null) {
     //   i = e.data[0];
@@ -963,10 +965,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                     // if (this.cashpayment.unbounds.lineDefault != null) {
                     //   this.dataLine = this.cashpayment.unbounds.lineDefault;
                     // }
-
                   }
                 });
-
             }
           );
         }
@@ -1536,7 +1536,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     let obj = {
       cashpayment: this.cashpayment,
       type,
-      objectName: this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName
+      objectName: this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();

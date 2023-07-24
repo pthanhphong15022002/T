@@ -11,6 +11,7 @@
   [button]="buttonAdd"
   (buttonClick)="addBenefit($event)"
   (selectedChange)="changeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
@@ -58,7 +59,9 @@
         <div class="d-flex flex-column">
           <div>
             <div class="fw-bold">
-              <span class="me-2 text-dark fs-6">{{ data?.emp?.employeeName }}</span>
+              <span class="me-2 text-dark fs-6">{{
+                data?.emp?.employeeName
+              }}</span>
             </div>
           </div>
           <div class="text-gray-600 fs-7">
@@ -448,6 +451,7 @@
     [itemDetail]="itemDetail"
     [view]="view"
     [formModel]="view.formModel"
+    [grvSetup]="grvSetup"
     (uploaded)="getDetailESalary($event, data)"
     (clickMFunction)="clickEvent($event)"
   >

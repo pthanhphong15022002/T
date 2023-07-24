@@ -64,11 +64,8 @@
 }
 
 .sample {
-  width: 76%;
-  min-width: auto;
-  height: 95%;
-  overflow-y: auto;
-  position: fixed;
+  width: 100%;
+  height: 93%;
 }
 
 .p-node {
@@ -128,6 +125,9 @@ input[type="checkbox"] {
   margin-top: 60px;
 }
 
+.scroll-panel {
+  width: 97% !important;
+}
 /* .highlight-frame {
   background-color: red;
   opacity: 1;

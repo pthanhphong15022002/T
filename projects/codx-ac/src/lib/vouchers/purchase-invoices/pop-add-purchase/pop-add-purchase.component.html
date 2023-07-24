@@ -64,7 +64,7 @@
                 [autoLoad]="false"
                 [rowHeight]="35"
                 [dataSource]="lines"
-                (cellChanged)="cellChangedPurchase($event)"
+                (cellChanged)="onCellChange($event)"
                 (created)="onGridCreated($event, gridPurchaseInvoiceLines)"
                 (onAddNew)="onEndAddNew($event)"
                 (onEdit)="onEndEdit($event)"
@@ -600,7 +600,7 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ng-container *ngIf="countDetail > 0">
+    <ng-container *ngIf="!isInvoiceRefHidden">
       <div class="mb-3 text-primary fw-bold fs-5">
         <codx-label
           fiedName="lblRefInfo"
@@ -854,7 +854,7 @@
             field="taxExchRate"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="onInputChange($event)"
+            (controlBlur)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -906,7 +906,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="!journal?.multiCurrency"
-            (valueChange)="onInputChange($event)"
+            (controlBlur)="onInputChange($event)"
           >
           </codx-input>
         </div>

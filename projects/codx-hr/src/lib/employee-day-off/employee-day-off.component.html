@@ -11,6 +11,7 @@
   [method]="method"
   (buttonClick)="addDayOff($event)"
   (selectedChange)="changeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
@@ -76,9 +77,9 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div class="fs-6 text-dark fw-bold text-nowrap mb-1">{{
-            data?.emp?.employeeName
-            }}</div>
+          <div class="fs-6 text-dark fw-bold text-nowrap mb-1">
+            {{ data?.emp?.employeeName }}
+          </div>
           <div class="text-gray-600 fs-7">
             <span
               [innerHTML]="
@@ -534,6 +535,7 @@
     [itemDetail]="itemDetail"
     [view]="view"
     [formModel]="view?.formModel"
+    [grvSetup]="grvSetup"
     (clickMFunction)="clickEvent($event)"
   >
   </lib-view-day-off-detail>

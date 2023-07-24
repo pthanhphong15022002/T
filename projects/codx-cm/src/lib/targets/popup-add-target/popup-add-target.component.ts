@@ -86,6 +86,8 @@ export class PopupAddTargetComponent {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTargetLines = data?.data?.lstTargetLines;
+      let date = new Date().setFullYear(this.data.year);
+      this.date = new Date(date);
     } else {
       this.data.status = '1';
     }
@@ -152,7 +154,7 @@ export class PopupAddTargetComponent {
     } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
     }
-    op.className = 'TargetsLinesBusiness';
+    op.className = 'TargetsBusiness';
     data = [this.data, this.lstTargetLines];
 
     op.data = data;
@@ -164,7 +166,11 @@ export class PopupAddTargetComponent {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
         if (res) {
-          this.dialog.close([res.save, this.lstOwners, this.data?.businessLineID]);
+          this.dialog.close([
+            res.save,
+            this.lstOwners,
+            this.data?.businessLineID,
+          ]);
         }
       });
   }
@@ -178,7 +184,11 @@ export class PopupAddTargetComponent {
             .update(res.update)
             .subscribe();
 
-          this.dialog.close([res.update, this.lstOwners, this.data?.businessLineID]);
+          this.dialog.close([
+            res.update,
+            this.lstOwners,
+            this.data?.businessLineID,
+          ]);
         }
       });
   }
@@ -219,7 +229,7 @@ export class PopupAddTargetComponent {
       if (this.data[e?.field] != e?.data) {
         this.data[e?.field] = e?.data;
         if (e?.field == 'businessLineID' && e?.data?.trim() != '') {
-          this.getTargetAndLinesAsync(this.data.businessLineID);
+          this.getTargetAndLinesAsync(this.data.businessLineID, this.data.year);
         }
       }
     }
@@ -612,8 +622,8 @@ export class PopupAddTargetComponent {
 
   //#region get target and targetLine
 
-  getTargetAndLinesAsync(businessLineID) {
-    this.cmSv.getTargetAndLinesAsync(businessLineID).subscribe((res) => {
+  getTargetAndLinesAsync(businessLineID, year) {
+    this.cmSv.getTargetAndLinesAsync(businessLineID, year).subscribe((res) => {
       if (res != null) {
         this.data = res[0];
         if (this.data != null) {

@@ -757,6 +757,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             delete element['task'];
           });
         }
+        let color = this.setColorTestStep(step);
+        let background = this.setColorStep(step);
+        step.backgroundColor = background;
+        step.textColor = color;
+        step.iconColor = color;
       });
     }
     this.process['steps'] = stepListSave;
@@ -4315,36 +4320,36 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   setColorTestStep(step) {
     if (this.process?.stepsColorMode) {
       if (step?.isFailStep || step?.isSuccessStep) {
-        return { color: '#ffffff' };
+        return '#ffffff';
       } else {
         let countStep = this.stepList?.length || 0;
         let medium = Math.round(countStep / 2);
         if (step?.stepNo < medium) {
-          return { color: '#000000' };
+          return '#000000';
         } else {
-          return { color: '#ffffff' };
+          return '#ffffff';
         }
       }
     } else {
-      return { color: step?.textColor || 'gray' };
+      return step?.textColor || 'gray';
     }
   }
 
   setColorStep(step: DP_Steps) {
     if (this.process?.stepsColorMode) {
       if (step?.isFailStep) {
-        return { 'background-color': this.iconReasonFail?.color };
+        return this.iconReasonFail?.color;
       } else if (step?.isSuccessStep) {
-        return { 'background-color': this.iconReasonSuccess?.color };
+        return this.iconReasonSuccess?.color;
       } else {
         let countStep = this.stepList?.length || 0;
         let opacityDefault = Number((1 / countStep).toFixed(2));
         let opacity = opacityDefault * Number(step?.stepNo || 1);
         let color = this.hexToRGB(this.colorDefault, opacity);
-        return { 'background-color': color };
+        return color;
       }
     } else {
-      return { 'background-color': step?.backgroundColor };
+      return step?.backgroundColor;
     }
   }
 
@@ -4356,11 +4361,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       return null;
     }
     const [r, g, b] = result.slice(1).map((value) => parseInt(value, 16));
-    if (opacity !== undefined) {
-      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    } else {
-      return `rgb(${r}, ${g}, ${b})`;
-    }
+    return this.rgba2hex(r, g, b, opacity);
   }
   //#endregion
+  
+  rgba2hex(r, g, b, alpha = 1) {
+    const toHex = (num) => formatHex(num.toString(16));
+    const formatHex = (str) => (str.length === 1 ? `0${str}` : str);
+    
+    const alphaHex = formatHex(Math.round(alpha * 255).toString(16));
+    const rHex = toHex(r);
+    const gHex = toHex(g);
+    const bHex = toHex(b);
+  
+    return `#${rHex}${gHex}${bHex}${alphaHex}`;
+  }
 }

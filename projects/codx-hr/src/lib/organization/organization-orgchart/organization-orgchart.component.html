@@ -316,6 +316,17 @@
 >
 </org-diagram> -->
 <div class="me-4 mt-4 d-flex justify-content-end">
+  <input
+    min="1"
+    max="100"
+    value="50"
+    step="1"
+    #ref
+    (change)="showVal(ref.value)"
+    type="range"
+    [style]="stylesObj"
+  />
+
   <button
     class="btn btn-primary d-flex align-items-center me-4"
     (click)="clearSetting()"
@@ -2265,18 +2276,7 @@
       ></i>
     </div>
     <div #collapse9="ngbCollapse" [ngbCollapse]="!collapsed[9]">
-      <p class="m-4 text-primary fw-bold">Phóng to thu nhỏ</p>
-
-      <input
-        min="1"
-        max="100"
-        value="50"
-        step="1"
-        #ref
-        (change)="showVal(ref.value)"
-        type="range"
-        [style]="stylesObj"
-      />
+      <!-- <p class="m-4 text-primary fw-bold">Phóng to thu nhỏ</p> -->
 
       <p class="m-4 text-primary fw-bold">Tùy chọn hiển thị đi kèm</p>
 
@@ -2546,7 +2546,7 @@
           ? stylesObjChart
           : stylesObjChartNone
       "
-      (click)="clickActive()"
+      (click)="clickActive(itemConfig.id)"
     >
       <div
         class="d-flex align-items-center p-2 w-100"

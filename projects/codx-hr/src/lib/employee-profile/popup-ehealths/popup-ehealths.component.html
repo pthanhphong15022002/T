@@ -9,6 +9,8 @@
   [openMore]="true"
   [tabContent]="[overallInfo, health1Info, health2Info, health3Info]"
   [data]="healthObj"
+  (setTitle)="setTitle($event)"
+
   *ngIf="isAfterRender"
 >
 

@@ -847,7 +847,8 @@ export class CasesComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail(e.data);
+        if (this.viewCrr != 11) this.viewDetail(e.data);
+        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
         break;
     }
   }
