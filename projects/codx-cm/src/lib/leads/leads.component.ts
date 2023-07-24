@@ -821,7 +821,7 @@ export class LeadsComponent
             isCheck = lst.some((x) => !x?.roles?.isOnwer);
             if (isCheck) {
               this.notificationsService.notifyCode(
-                'Bạn không có quyền sử dụng chức năng này !'
+                'CM027'
               ); //Đợi mssg
               return;
             } else {
@@ -830,7 +830,7 @@ export class LeadsComponent
               );
               if (!!isCheck) {
                 this.notificationsService.notifyCode(
-                  'Vui lòng gộp tiềm năng cùng loại !'
+                  'CM030'
                 );//Đợi mssg
                 return;
               }
@@ -840,13 +840,13 @@ export class LeadsComponent
               if (!['0', '1'].includes(element?.status) && !isCheck) {
                 isCheck = true;
                 this.notificationsService.notifyCode(
-                  'Tiềm năng không phù hợp. Vui lòng chọn tiềm năng chưa phân bổ/đã phân bổ để gộp tiềm năng!'
+                  'CM028'
                 );//Đợi mssg
                 return;
               } else if (element.closed && !isCheck) {
                 isCheck = true;
                 this.notificationsService.notifyCode(
-                  'Có tiềm năng đang đóng vui lòng chọn tiềm năng khác!'
+                  'CM029'
                 );//Đợi mssg
                 return;
               }

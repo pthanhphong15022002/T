@@ -364,7 +364,35 @@ export class TargetsComponent
                   }
                 }
                 if (this.schedule) {
-                  this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
+                  // if (lstOwners != null && lstOwners?.length > 0) {
+                  //   var resource = this.schedule['resourceDataSource'];
+                  //   lstOwners.forEach((item) => {
+                  //     if (
+                  //       !resource?.find(
+                  //         (user) => user.salespersonID === item.userID
+                  //       )
+                  //     ) {
+                  //       var tmp = {};
+                  //       tmp['salespersonID'] = item?.userID;
+                  //       tmp['ClassName'] = 'e-child-node';
+                  //       tmp['Count'] = 0;
+                  //       tmp['events'] = 11;
+                  //       tmp['positionName'] = item?.positionName;
+                  //       tmp['salespersonID'] = item?.userID;
+                  //       tmp['value'] = item?.userID;
+                  //       tmp['target'] = 0;
+                  //       tmp['text'] = item?.userName;
+                  //       tmp['userName'] = item?.userName;
+                  //       resource?.push(tmp);
+                  //     }
+                  //   });
+
+                  //   this.schedule['resourceDataSource'] = resource;
+                  //   this.schedule['displayResource'] = resource;
+                  //   this.view.currentView = this.schedule;
+                  //   this.view?.currentView?.refesh();
+                  // }
+                   this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
                 }
               }
               this.detectorRef.detectChanges();
