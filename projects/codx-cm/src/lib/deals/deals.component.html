@@ -140,13 +140,16 @@
         ></span>
       </div>
       <div
-        class="d-flex justify-content-end "
+        class="d-flex justify-content-end"
         container="body"
         [ngbTooltip]="gridViewSetup['Probability']?.headerText"
       >
         <span class="icon-i-check-all icon-16 text-green me-2"></span>
         <span
-        *ngIf="data?.probability && data?.probability !='0';else defaultNull"
+          *ngIf="
+            data?.probability && data?.probability != '0';
+            else defaultNull
+          "
           [innerHTML]="
             data?.probability
               | formatvalue : view.formModel : 'probability'
@@ -408,15 +411,17 @@
         <span class="icon-check_circle icon-16 text-green me-1"></span>
 
         <span
-        *ngIf="data?.probability && data?.probability !='0' ; else defaultNull"
-        [innerHTML]="
-          data?.probability
-            | formatvalue : view.formModel : 'probability'
-            | async
-        "
-      ></span
-      ><span>%</span>
-
+          *ngIf="
+            data?.probability && data?.probability != '0';
+            else defaultNull
+          "
+          [innerHTML]="
+            data?.probability
+              | formatvalue : view.formModel : 'probability'
+              | async
+          "
+        ></span
+        ><span>%</span>
       </div>
       <div class="col-4 pe-0 d-flex align-items-center">
         <span class="icon-16 icon-av_timer me-1"></span>
@@ -606,5 +611,97 @@
       [isBookMark]="false"
       type="view"
     ></codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #templateCustomer let-data>
+  <div class="">
+    <cm-view-icon-group [customerID]="data?.customerID"></cm-view-icon-group>
+    <span
+      [innerHTML]="
+        data?.customerID | formatvalue : view.formModel : 'customerID' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessLines let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.businessLineID
+          | formatvalue : view.formModel : 'businessLineID'
+          | async
+      "
+    ></span>
+  </div>
+</ng-template>
+
+<ng-template #templateDealValue let-data>
+  <div class="">
+    <span
+      [innerHTML]="
+        data?.dealValue | formatvalue : view.formModel : 'dealValue' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<ng-template #templateStatus let-data>
+  <div class="">
+    <codx-vll
+      [name]="vllStatus"
+      [field]="'Status'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-sm"
+    >
+    </codx-vll>
+  </div>
+</ng-template>
+
+<ng-template #templateOwner let-data>
+  <div class="">
+    <codx-imgs
+      [isToolTip]="true"
+      [width]="25"
+      [objectId]="data.owner"
+      objectType="AD_Users"
+      [numberImages]="1"
+    >
+    </codx-imgs>
+  </div>
+</ng-template>
+
+<ng-template #templateConsultant let-data>
+  <div>
+    <codx-imgs
+      [width]="25"
+      [objectId]="data?.consultantID"
+      ojectType="AD_Users"
+      [numberImages]="1"
+    >
+    </codx-imgs>
+  </div>
+</ng-template>
+
+<ng-template #templateSteps let-data>
+  <div
+    [ngStyle]="{
+      'background-color': data?.steps['backgroundColor']
+    }"
+    class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+  >
+    <span
+      [ngClass]="data?.steps['icon']"
+      [ngStyle]="{ color: data?.steps['iconColor'] }"
+      class="me-1"
+    ></span>
+    <span
+      class="text-ellipsis line-clamp line-clamp-1"
+      [ngbTooltip]="data?.currentStepName"
+      [ngStyle]="{ color: data?.steps['textColor'] }"
+      >{{ data?.currentStepName }}</span
+    >
   </div>
 </ng-template>

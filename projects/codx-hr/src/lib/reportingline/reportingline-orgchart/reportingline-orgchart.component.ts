@@ -1,11 +1,7 @@
-import { concat } from 'rxjs';
-import { style } from '@angular/animations';
 import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import {
   DiagramComponent,
   LineDistribution,
-} from '@syncfusion/ej2-angular-diagrams';
-import {
   NodeModel,
   ConnectorModel,
   DiagramTools,
@@ -15,14 +11,15 @@ import {
   SnapConstraints,
   SnapSettingsModel,
   LayoutModel,
-  LayoutOrientation,
   ConnectionPointOrigin,
+  ScrollSettingsModel,
+} from '@syncfusion/ej2-angular-diagrams';
+import {
 
 } from '@syncfusion/ej2-diagrams';
 import { ApiHttpService, CRUDService, CallFuncService, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { PopupAddPositionsComponent } from '../popup-add-positions/popup-add-positions.component';
 import { DataManager } from '@syncfusion/ej2-data';
-import { Connector } from '@syncfusion/ej2-angular-charts';
 Diagram.Inject(DataBinding, ComplexHierarchicalTree, LineDistribution);
 
 @Component({
@@ -62,6 +59,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
+  scrollSettings: ScrollSettingsModel = { scrollLimit: 'Infinity' };
 
   firstLoadDiagram: boolean = true;
   @ViewChild('diagram') diagram: DiagramComponent;
@@ -78,7 +76,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     countEmp: 0,
     employees: any[]
   };
-  currentSelectedNode : string = '';
+  currentSelectedNode: string = '';
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -130,9 +128,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       connector.style!.strokeColor = '#6d6d6d';
       connector.style.strokeDashArray = '5,5';
     }
-    if(sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
+    if (sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
       connector.style!.strokeColor = '#3699FF';
-      connector.style!.strokeWidth = 3
+      connector.style!.strokeWidth = 5;
     }
     return connector;
   }
@@ -198,7 +196,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //   }
   // }
 
-  loadDataChild(node: any, element: HTMLElement , e: Event) {
+  loadDataChild(node: any, element: HTMLElement, e: Event) {
     e.stopPropagation();
     //e.preventDefault();
     let result = [];
@@ -259,9 +257,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   }
   changeSelectedItem(data: any) {
     var index = this.data.findIndex(x => x.positionID == data?.positionID);
-    if(this.data[index]['isSelected']){
+    if (this.data[index]['isSelected']) {
       this.data[index]['isSelected'] = false;
-    }else{
+    } else {
       this.positionID = data?.positionID;
       this.data.forEach(item => {
         if (item?.positionID === this.positionID) {
@@ -501,7 +499,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
 
   }
-  hasOpenEmpList(positionID: string) {
+  hasOpenEmpList(positionID: string, event: Event) {
+    event.stopPropagation();
+    // event.preventDefault();
     if (this.viewEmpPosition !== positionID) { //change position
       this.posEmpPageIndex = 1;
       this.scrolling = true;
@@ -513,7 +513,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
         countEmp: this.data[index].countEmp,
         employees: this.data[index].employees
       };
-
+      
     } else this.currentViewPosEmp = { countEmp: 0, employees: [] }
   }
 }
