@@ -211,6 +211,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         case 'voucherdate':
           this.vouchers.voucherDate = e.data;
           break;
+        case 'voucherno':
+          this.vouchers.voucherNo = e.data;
       }
     }
   }
@@ -336,7 +338,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.close();
       }
     }
-    else if(this.modeGrid == 2)
+    else
     {
       this.close();
     }
@@ -372,7 +374,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
           this.save(false);
       }
-      else if(this.modeGrid == 2)
+      else
       {
         this.save(false);
       }
@@ -391,7 +393,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
           this.save(true);
       }
-      else if(this.modeGrid == 2)
+      else
       {
         this.save(true);
       }
@@ -1226,7 +1228,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   
   @HostListener('click', ['$event'])
   onClick(e) {
-    if(this.modeGrid == 2)
+    if(this.modeGrid != 1)
       return;
     if (
       e.target.closest('.e-grid') == null &&
