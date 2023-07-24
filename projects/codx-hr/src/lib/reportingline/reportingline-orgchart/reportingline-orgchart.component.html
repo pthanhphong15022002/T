@@ -54,7 +54,7 @@
     </ng-template>
     <div *ngIf="data.isChildrent" class="d-flex mt-auto justify-content-center">
       <span #icon class="icon-20 " [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
-        (click)="loadDataChild(data,icon)"></span>
+        (click)="loadDataChild(data,icon , $event)"></span>
     </div>
   </div>
 </ng-template>
