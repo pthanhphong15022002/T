@@ -44,7 +44,7 @@ export class TimeAgoPipe implements PipeTransform {
     if (monthNumber < 1) {
       let dayNumber = Math.floor(seconds / 86400);
       if (monthNumber < 1 && yearNumber < 1) {
-        strTimeAgo += ((dayNumber < 1) ? dayNumber : 0) + language.days;
+        strTimeAgo += ((dayNumber >= 1) ? dayNumber : 0) + language.days;
       }
     }
     return strTimeAgo;
