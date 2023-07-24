@@ -198,7 +198,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //   }
   // }
 
-  loadDataChild(node: any, element: HTMLElement) {
+  loadDataChild(node: any, element: HTMLElement , e: Event) {
+    e.stopPropagation();
+    //e.preventDefault();
     let result = [];
     if (node.loadChildrent) {
       result = this.data.filter(e => e.reportTo != node.positionID);
