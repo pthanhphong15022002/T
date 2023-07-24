@@ -217,7 +217,9 @@ export class DealsComponent
     };
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {}
+
+  loadViewModel() {
     this.viewsDefault = [
       {
         type: ViewType.listdetail,
@@ -251,9 +253,7 @@ export class DealsComponent
         },
       },
     ];
-  }
 
-  loadViewModel() {
     this.views = this.viewsDefault;
     // this.cache.viewSettings(this.funcID).subscribe((views) => {
     //   this.viewsDefault.forEach((v, index) => {
