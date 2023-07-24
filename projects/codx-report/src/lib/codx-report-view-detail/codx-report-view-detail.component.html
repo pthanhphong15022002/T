@@ -28,16 +28,19 @@
         </div>
       </div>
     </ng-container>
-    <ng-template #tmpElse >
-      <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
+    <ng-template #tmpElse>
+      <ng-container *ngIf="funcItem.displayMode == '3'; else reportBolder">
+        <!-- <lib-pdf *ngIf="url" [inputUrl]="url"></lib-pdf> -->
+      </ng-container>
+      <ng-template #reportBolder>
+        <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
+      </ng-template>
     </ng-template>
   </ng-container>
     <!-- <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe> -->
   </ng-template>
 
-  <ng-template #reportPDF>
-    <h1>PDF NÈ CU</h1>
-    </ng-template>
+  
 <!-- <ng-template #breadCrumb>
 
 </ng-template> -->

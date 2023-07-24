@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { map } from 'rxjs';
 import { Base64 } from '@syncfusion/ej2-angular-documenteditor';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'lib-popup-add',
@@ -92,7 +93,6 @@ export class PopupAddComponent implements OnInit {
     
   }
   ngOnInit(): void {
-    debugger
     if(this.isAdd)
     {
       this.data.createdBy = this.user.userID;
@@ -152,7 +152,6 @@ export class PopupAddComponent implements OnInit {
   }
   //close popup
   clickClosePopup() {
-    debugger
     this.dialogRef.close();
   }
   // open popup share
@@ -162,7 +161,6 @@ export class PopupAddComponent implements OnInit {
 
   // insert post
   clickInsert(){
-    debugger
     if(this.checkValidate()){
       return;
     }
@@ -191,6 +189,7 @@ export class PopupAddComponent implements OnInit {
   }
   // release post
   clickRelease() {
+    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0)
@@ -198,7 +197,6 @@ export class PopupAddComponent implements OnInit {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res: any) => {
-        debugger
         if(res.status != 0)
         {
           let fileNames = this.fileUpload.map(x => x.fileName).join(";");
@@ -252,9 +250,12 @@ export class PopupAddComponent implements OnInit {
     if(event){
       let field = Util.camelize(event.field);
       let value = event.data;
-      if(field === 'startDate' || field === 'endDate'){
+      if(field === 'startDate' || field === 'endDate')
+      {
         value = value.fromDate;
-        if(this.data["startDate"] && this.data["endDate"] && this.data["startDate"] > this.data["endDate"]){
+        if(this.data["startDate"] && this.data["endDate"] 
+        && this.data["startDate"].toLocaleDateString() > this.data["endDate"].toLocaleDateString())
+        {
           this.data[field] = null;
           this.notifSV.notifyCode('WP012');
           return;
@@ -369,7 +370,6 @@ export class PopupAddComponent implements OnInit {
 
   //update
   clickUpdate() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0)
@@ -377,7 +377,6 @@ export class PopupAddComponent implements OnInit {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res:any) => {
-        debugger
         if(res.status != 0)
         {
           let fileNames = this.fileUpload.map(x => x.fileName).join(";");
@@ -437,8 +436,8 @@ export class PopupAddComponent implements OnInit {
 
   //check base 64
   removeBase64(){
-    let strUrl = "";
-    let isBase64 = Base64
+    // let strUrl = "";
+    // let isBase64 = Base64
   }
   
 }

@@ -96,6 +96,7 @@ export class PopupDetailComponent implements OnInit {
   }
   //change image
   changeImage(file:any){
+    debugger
     if(file)
     {
       this.fileSelected = JSON.parse(JSON.stringify(file));;
