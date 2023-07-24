@@ -316,6 +316,13 @@ export class CodxAcService {
       .subscribe((res) => console.log('deleteFile', res));
   }
 
+  getACParameters(category: string = '1'): Observable<any> {
+    return this.cache.viewSettingValues('ACParameters').pipe(
+      map((arr: any[]) => arr.find((a) => a.category === category)),
+      map((data) => JSON.parse(data.dataValue))
+    );
+  }
+
   CheckExistAccount(data: any): boolean {
     let result: boolean = true;
     this.api

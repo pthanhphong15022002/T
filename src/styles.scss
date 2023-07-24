@@ -1527,10 +1527,6 @@ a {
   background-color: var(--gray-100);
 }
 
-.content-tree li.menu-item > .d-flex.align-items-center {
-  align-items: start !important;
-}
-
 .step-rignt ngb-popover-window[role="tooltip"] {
   white-space: nowrap;
 }
@@ -3445,16 +3441,18 @@ lib-employee-list{
 }
 .FD_Cards{
   .text-feed{
-    height: 310px;
+    height: 210px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #1e1d1f33 !important;
+    background-color: #1e1d1f25 !important;
   }
 }
 
-
+.multiple-employee.w-25px.h-25px{
+  line-height: 25px!important;
+}
 
 // .text-feed::-webkit-scrollbar-track {
 //   background-color: transparent !important; /* ẩn thanh cuộn */

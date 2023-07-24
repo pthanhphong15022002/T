@@ -1,6 +1,6 @@
 
 .tabline-content .e-content{
-   height: calc(100vh - 518px)!important;
+   height: calc(100vh - 527px)!important;
 }
 
 .tabset-content .e-content{
@@ -31,8 +31,9 @@
     z-index: 1000;
 }
 .ac-load-grid{
+    margin-top: 3rem;
     width: 100%;
-    height: calc(100vh - 451px)!important;
+    height: calc(100vh - 500px) !important;
     justify-content: center !important;
     display: flex;
     position: absolute;
@@ -144,3 +145,6 @@
 .ac-input-disable codx-input{
     position: relative;
 }
+/* css footer */
+
+

@@ -14,6 +14,7 @@ import {
   DialogModel,
   DialogRef,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -220,6 +221,16 @@ export class EmployeeContractComponent extends UIComponent {
     // }
   }
 
+  //Call api delete
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteEContractAsync';
+    opt.className = 'EContractsBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = data;
+    return true;
+  }
+
   clickMF(event, data) {
     this.itemDetail = data;
     switch (event.functionID) {
@@ -248,7 +259,14 @@ export class EmployeeContractComponent extends UIComponent {
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-        this.view.dataService.delete([data]).subscribe();
+        this.view.dataService
+          .delete([data], true, (option: RequestOption) =>
+            this.beforeDelete(option, data)
+          )
+          .subscribe((res) => {
+            res[1].emp = data.emp;
+            this.view.dataService.update(res[1]).subscribe();
+          });
         break;
       case 'SYS04': //copy
         this.currentEmpObj = data.emp;
@@ -340,20 +358,24 @@ export class EmployeeContractComponent extends UIComponent {
         dataObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empContractProcess',
+        useForQTNS: true,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event, 0).subscribe();
+          this.currentEmpObj = res.event[0].emp;
+          this.view.dataService.add(res.event[0], 0).subscribe();
+          this.view.dataService.update(res.event[1]).subscribe();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe();
+          this.view.dataService.update(res.event[0]).subscribe();
+          this.view.dataService.update(res.event[1]).subscribe();
         }
         this.df.detectChanges();
       }

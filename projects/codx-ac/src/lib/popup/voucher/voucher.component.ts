@@ -254,16 +254,13 @@ export class VoucherComponent extends UIComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
+    this.dialog.close(data);
     this.api
       .exec<any>('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
         this.cashpayment,
         data,
       ])
-      .subscribe((res) => {
-        if (res) {
-          this.dialog.close(data);
-        }
-      });
+      .subscribe((res) => {});
   }
 
   paymentAmt(data) {
