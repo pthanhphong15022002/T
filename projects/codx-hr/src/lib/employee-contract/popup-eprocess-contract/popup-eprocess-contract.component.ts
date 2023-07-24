@@ -49,7 +49,8 @@ export class PopupEProcessContractComponent
   openFrom: string;
   employeeObj: any;
 
-  disabledInput=false;
+  disabledInput = false;
+  useForQTNS: boolean = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
@@ -106,8 +107,9 @@ export class PopupEProcessContractComponent
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
+    this.useForQTNS = data?.data?.useForQTNS;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
@@ -145,8 +147,8 @@ export class PopupEProcessContractComponent
       });
   }
 
-  setTitle(evt: any){
-    this.headerText += " " +  evt;
+  setTitle(evt: any) {
+    this.headerText += ' ' + evt;
     this.cr.detectChanges();
   }
 
@@ -267,7 +269,11 @@ export class PopupEProcessContractComponent
             this.cr.detectChanges();
           }
         });
-    } else if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+    } else if (
+      this.actionType === 'edit' ||
+      this.actionType === 'copy' ||
+      this.actionType === 'view'
+    ) {
       this.loadedAutoField = true;
       if (this.actionType == 'copy') {
         if (this.data.signedDate == '0001-01-01T00:00:00') {
@@ -333,7 +339,16 @@ export class PopupEProcessContractComponent
               //code test
               this.notify.notifyCode('SYS006');
               res[0].emp = this.employeeObj;
-              this.dialog && this.dialog.close(res[0]);
+
+              if (res[1]) {
+                res[1].emp = this.employeeObj;
+              }
+
+              if (this.useForQTNS) {
+                this.dialog && this.dialog.close(res);
+              } else {
+                this.dialog && this.dialog.close(res[0]);
+              }
               this.data = res;
             } else if (res[1]) {
               this.notify.alertCode(res[1]).subscribe((stt) => {
@@ -344,9 +359,18 @@ export class PopupEProcessContractComponent
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
+                          console.log(res);
                           result[0].emp = this.employeeObj;
-                          console.log(result[0]);
-                          this.dialog && this.dialog.close(result[0]);
+
+                          if (res[1]) {
+                            res[1].emp = this.employeeObj;
+                          }
+
+                          if (this.useForQTNS) {
+                            this.dialog && this.dialog.close(res);
+                          } else {
+                            this.dialog && this.dialog.close(res[0]);
+                          }
                         }
                       });
                   } else if (res[1] == 'HR009') {
@@ -358,9 +382,16 @@ export class PopupEProcessContractComponent
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
+                          console.log(res);
                           result[0].emp = this.employeeObj;
-                          console.log(result[0]);
-                          this.dialog && this.dialog.close(result[0]);
+                          if (res[1]) {
+                            res[1].emp = this.employeeObj;
+                          }
+                          if (this.useForQTNS) {
+                            this.dialog && this.dialog.close(res);
+                          } else {
+                            this.dialog && this.dialog.close(res[0]);
+                          }
                         }
                       });
                   }
@@ -374,7 +405,14 @@ export class PopupEProcessContractComponent
         if (res && res[0]) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.employeeObj;
-          this.dialog && this.dialog.close(res[0]);
+          if (res[1]) {
+            res[1].emp = this.employeeObj;
+          }
+          if (this.useForQTNS) {
+            this.dialog && this.dialog.close(res);
+          } else {
+            this.dialog && this.dialog.close(res[0]);
+          }
         }
       });
     }

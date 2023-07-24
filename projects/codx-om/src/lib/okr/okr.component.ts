@@ -990,6 +990,35 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       return false;
     }
   }
+
+  checkOrg(user){
+    if(user ==null){
+      user = this.curUser;
+    }
+    switch (this.funcID) {
+      case OMCONST.FUNCID.COMP:
+        if(this.curUser?.employee?.companyID ==null){
+          return false;
+        }
+        break;
+      case OMCONST.FUNCID.DEPT:
+        if(this.curUser?.employee?.departmentID ==null){
+          return false;
+        }
+        break;
+      case OMCONST.FUNCID.ORG:
+        if(this.curUser?.employee?.orgUnitID ==null){
+          return false;
+        }
+        break;
+      case OMCONST.FUNCID.PERS:
+        if(this.curUser?.employee?.employeeID ==null){
+          return false;
+        }
+        break;
+    }
+    return true
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
@@ -1163,6 +1192,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
     let tmpPlan = this.dataOKRPlans;
     if (isAdd) {
+      if(!this.checkOrg(this.curUser)){
+        this.notificationsService.notify("Người dùng hiện tại chưa có thông tin phòng ban, vui lòng kiểm tra lại","2");
+        return;
+      }
       tmpPlan = { ...this.groupModel.planModel };
       tmpPlan.interval = this.interval;
       tmpPlan.year = this.year;
