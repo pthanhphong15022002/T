@@ -8,9 +8,17 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { Layout } from '@syncfusion/ej2-angular-diagrams';
-import { ApiHttpService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthService,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { LayoutComponent } from '../_layout/layout.component';
 import { GridModels } from '../models/tmpModel';
+import { Browser } from '@syncfusion/ej2-base';
+import { IPointRenderEventArgs } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -77,14 +85,62 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   minOwners = [];
 
   //chart line tỉ lệ thanh công that bai tren san pham
+
+  dataStatisticTarget = [];
   //Initializing Primary X Axis
-  primaryXAxis: Object = {
+  primaryXAxisRatio = {
+    title: '',
+    crossesAt: 0, //chart băt dau
+    minimum: 0,
+    maximum: 1000,
+    interval: 100,
+  };
+  //Initializing Primary Y Axis
+  primaryYAxisRatio = {
+    title: '',
+    crossesAt: 0, //chart băt dau
+    minimum: 0,
+    maximum: 1000,
+    interval: 100,
+  };
+
+  markerRatio = {
+    dataLabel: {
+      name: 'TooltipMappingName',
+      visible: true,
+      position: 'Middle',
+      font: { fontWeight: '500' },
+    },
+  };
+
+  tooltip = {
+    header: '<b>${point.tooltip}</b>',
+    enableMarker: false,
+    enable: true,
+    format:
+      'Tổng doanh số dự kiến : <b>${point.x}</b> <br/>Tổng mục tiêu : <b>${point.y}</b><br/>Số lượng cơ hội : <b>${point.size}</b>',
+  };
+  border: Object = {
+    width: 2,
+  };
+  legend: Object = {
+    visible: false,
+  };
+  minRadius: number = 1;
+  maxRadius: number = 10;
+  width = '95%';
+  height = '65%';
+  title: string = 'World Countries Details';
+
+  // chart line
+
+  primaryXAxis = {
     interval: 1,
     valueType: 'Category',
     title: 'Tháng triển khai Cơ hội',
   };
-  //Initializing Primary Y Axis
-  primaryYAxis: Object = {
+
+  primaryYAxis = {
     title: 'Tỷ lệ (%)',
     minimum: 0,
     maximum: 100,
@@ -95,7 +151,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     minorGridLines: { width: 1 },
     minorTickLines: { width: 0 },
   };
-  tooltipChartLine: Object = {
+  tooltipChartLine = {
     enable: true,
     shared: true,
     format: '${series.name} : <b>${point.y}%</b>',
@@ -104,100 +160,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   marker = { visible: true };
   checkBtnSuscess = true;
   checkBtnFail = false;
-  //chart  Bubble
-  border: Object = {
-    width: 1.5,
-    color: 'black',
-  };
-  primaryYAxisBubble: Object = {
-    title: 'Chỉ tiêu dự kiến (triệu VND)',
-    // minimum: 0,
-    // maximum: 100,
-    // interval: 5,
-    // lineStyle: { width: 0 },
-    // majorTickLines: { width: 0 },
-    // majorGridLines: { width: 1 },
-    // minorGridLines: { width: 1 },
-    // minorTickLines: { width: 0 },
-  };
-  primaryXAxisBubble: Object = {
-    interval: 1,
-    valueType: 'Category',
-    title: 'Doanh số thực tế (triệu VND)',
-  };
-
-  dataSource = [
-    {
-      dataSource: [
-        { x: 10, y: 7, d: 0.01 },
-        { x: 20, y: 50, d: 0.1 },
-      ],
-      color: 'blue',
-      name: 'Muc tiêu 1',
-      size: 0.0003,
-    },
-    {
-      dataSource: [{ x: 40, y: 25, d: 10 }],
-      color: 'green',
-      name: 'Muc tiêu 2',
-      size: 10,
-    },
-    {
-      dataSource: [{ x: 45, y: 60, d: 20 }],
-      color: 'red',
-      name: 'Muc tiêu 3',
-      size: 20,
-    },
-    {
-      dataSource: [{ x: 70, y: 56, d: 0.0005 }],
-      color: 'yellow',
-      name: 'Muc tiêu 4',
-      size: 0.0005,
-    },
-    {
-      dataSource: [{ x: 120, y: 45, d: 0.1 }],
-      color: 'black',
-      name: 'Muc tiêu 5',
-      size: 0.1,
-    },
-  ];
 
   //nang suat nhan viên
   productivityOwner = [];
+  language = 'vn';
+  currencyIDDefault: any = 'VND';
 
-  constructor(inject: Injector, private layout: LayoutComponent) {
+  constructor(
+    inject: Injector,
+    private layout: LayoutComponent,
+    private auth: AuthService
+  ) {
     super(inject);
+    this.language = this.auth.userValue?.language?.toLowerCase();
     this.funcID = this.router.snapshot.params['funcID'];
-    this.cache.valueList('DP036').subscribe((vll) => {
-      if (vll && vll?.datas) {
-        this.colorReasonSuscess = vll?.datas.filter(
-          (x) => x.value == 'S'
-        )[0]?.color;
-        this.colorReasonFails = vll?.datas.filter(
-          (x) => x.value == 'F'
-        )[0]?.color;
-      }
-    });
-    this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
-      if (grv) {
-        this.vllStatus = grv['Status'].referedValue;
-        this.cache.valueList(this.vllStatus).subscribe((res) => {
-          if (res && res.datas) this.arrVllStatus = res.datas;
-        });
-      }
-    });
-    this.cache.functionList('CM0201').subscribe((fun) => {
-      this.titLeModule = fun?.customName || fun?.description;
-      // this.leafItemSettings = {
-      //   labelPath: 'businessLineName',
-      //   lableWidth: '100%',
-      //   labelPosition: 'Center',
-      //   labelFormat: '${businessLineName}
-      //    <br>${quantity} ' +
-      //    this.titLeModule +
-      //    '-(${percentage} %)',
-      // };
-    });
+    this.loadChangeDefault();
   }
   onInit(): void {
     this.panelsDeals = JSON.parse(
@@ -268,7 +245,28 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
             });
           //chart
         }
+        this.dataStatisticTarget =
+          this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
+        if (this.dataStatisticTarget.length > 0) {
+          let maxTarget = Math.max(
+            ...this.dataStatisticTarget.map((o) => o.totalTarget)
+          );
+          this.primaryXAxisRatio.maximum =
+            maxTarget + 2 * Math.floor(maxTarget / 10);
+          this.primaryXAxisRatio.interval = Math.floor(
+            this.primaryXAxisRatio.maximum / 10
+          );
 
+          let maxDealValue = Math.max(
+            ...this.dataStatisticTarget.map((o) => o.totalDealValue)
+          );
+
+          this.primaryYAxisRatio.maximum =
+            maxDealValue + 2 * Math.floor(maxDealValue / 10);
+          this.primaryYAxisRatio.interval = Math.floor(
+            this.primaryYAxisRatio.maximum / 10
+          );
+        }
         this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
         this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
         this.productivityOwner =
@@ -318,6 +316,71 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         ' px'
       );
     }
-    return '90%'; //vi no chua bat dc
+    return '90%'; //vi no chua bat dcF
+  }
+  setColorPoint(args: IPointRenderEventArgs): void {
+    let index = args.point.index;
+    args.fill = this.dataStatisticTarget[index].color;
+  }
+
+  //load default
+  loadChangeDefault() {
+    if (this.language == 'en') {
+      this.tooltip.format =
+        'Total expected sales : <b>${point.x}</b> <br/>Total target : <b>${point.y}</b><br/>Quantity of deals : <b>${point.size}</b>';
+      this.primaryXAxis.title = 'Deployment month';
+      this.primaryYAxis.title = 'Ratio(%)';
+    }
+
+    this.cache.valueList('DP036').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.colorReasonSuscess = vll?.datas.filter(
+          (x) => x.value == 'S'
+        )[0]?.color;
+        this.colorReasonFails = vll?.datas.filter(
+          (x) => x.value == 'F'
+        )[0]?.color;
+      }
+    });
+    this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
+      if (grv) {
+        this.vllStatus = grv['Status'].referedValue;
+        this.cache.valueList(this.vllStatus).subscribe((res) => {
+          if (res && res.datas) this.arrVllStatus = res.datas;
+        });
+      }
+    });
+    this.cache.functionList('CM0201').subscribe((fun) => {
+      this.titLeModule = fun?.customName || fun?.description;
+      // this.leafItemSettings = {
+      //   labelPath: 'businessLineName',
+      //   lableWidth: '100%',
+      //   labelPosition: 'Center',
+      //   labelFormat: '${businessLineName}
+      //    <br>${quantity} ' +
+      //    this.titLeModule +
+      //    '-(${percentage} %)',
+      // };
+    });
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) {
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+          if (this.language == 'vn') {
+            this.primaryXAxisRatio.title =
+              'Tổng doanh số dự kiến ( ' + this.currencyIDDefault + ')';
+            this.primaryYAxisRatio.title =
+              'Tổng mục tiêu ( ' + this.currencyIDDefault + ')';
+          } else {
+            this.primaryXAxisRatio.title =
+              'Total expected sales ( ' + this.currencyIDDefault + ')';
+            this.primaryYAxisRatio.title =
+              'Total target ( ' + this.currencyIDDefault + ')';
+          }
+        }
+      }
+    });
   }
 }
