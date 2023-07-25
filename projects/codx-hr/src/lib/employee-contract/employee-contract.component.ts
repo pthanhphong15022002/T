@@ -162,8 +162,11 @@ export class EmployeeContractComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         //this.view.dataService.update(res.event[0]).subscribe();
-        this.view.dataService.update(res[0]).subscribe();
-        this.view.dataService.update(res[1]).subscribe();
+        this.view.dataService.update(res.event[0]).subscribe();
+
+        if (res.event[1]) {
+          this.view.dataService.update(res.event[1]).subscribe();
+        }
         //Render new data when update new status on view detail
         this.df.detectChanges();
       }
@@ -180,10 +183,9 @@ export class EmployeeContractComponent extends UIComponent {
         console.log(res);
         this.notify.notifyCode('SYS007');
         res[0].emp = this.currentEmpObj;
-        res[1].emp = this.currentEmpObj;
-        // this.view.dataService.update(res[0]).subscribe();
-        // this.view.dataService.update(res[1]).subscribe();
-
+        if (res[1]) {
+          res[1].emp = this.currentEmpObj;
+        }
         this.view.formModel.entityName;
         this.hrService
           .addBGTrackLog(
@@ -262,11 +264,11 @@ export class EmployeeContractComponent extends UIComponent {
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-        this.view.dataService
-          .delete([data], true, (option: RequestOption) =>
-            this.beforeDelete(option, data)
-          )
-          .subscribe();
+        this.view.dataService.delete([data]).subscribe();
+        // this.view.dataService
+        //   .delete([data], true, (option: RequestOption) =>
+        //     this.beforeDelete(option, data)
+        //   )
         // .subscribe((res) => {
         //   if (res[1]) {
         //     res[1].emp = data?.emp;
@@ -321,6 +323,7 @@ export class EmployeeContractComponent extends UIComponent {
           reportID: moreFC.functionID,
           dataSource: src,
         };
+        debugger
         this.callfc.openForm(
           CodxListReportsComponent,
           moreFC.defaultName,
@@ -352,7 +355,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
-    this.currentEmpObj = this.itemDetail.emp;
+    this.currentEmpObj = this.itemDetail?.emp;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
