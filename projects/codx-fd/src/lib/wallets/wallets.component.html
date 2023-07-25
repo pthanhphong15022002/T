@@ -8,10 +8,12 @@
           <div class="w-100 pr-6 mt-3 left-20 pd-r-10">
             <div class="d-flex align-items-top">
               <div class="me-3 w-150px">
-                <codx-dropdown-calendar [cssClass]="'w-200'" [cssPopup]="'h-400px w-500px border'"
+                <codx-label default="Ngày">
+                </codx-label>
+                <codx-dropdown-calendar [cssPopup]="'h-400px w-600px border'"
                   (change)="dateChange($event)"></codx-dropdown-calendar>
               </div>
-              <div class="me-3 left-5">
+              <div class="me-3">
                 <div class="d-flex flex-column mb-3" #Organize>
                   <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức">
                   </codx-label>
