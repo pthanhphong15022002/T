@@ -147,4 +147,21 @@
 }
 /* css footer */
 
+/* css aniamtion slide form */
+.ac-animation-slideRight{
+    animation-name: slideRight;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+
+}
+@keyframes slideRight {
+    0% {
+        transform: translate3d(100%, 0, 0);
+        visibility: visible;
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+  }
+
 

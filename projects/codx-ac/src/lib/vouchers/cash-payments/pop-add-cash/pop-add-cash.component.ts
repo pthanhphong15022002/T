@@ -104,6 +104,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
   headerText: string;
   dialog!: DialogRef;
+  dialogData?: any
   cashpayment: any;
   action: any;
   gridViewSetup: any;
@@ -158,14 +159,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   loading: any = false;
   loadingform: any = true;
   isInit:any;
-  // dicCurrency: Map<string, any> = new Map<string, any>();
   oAccount: any;
   userID: any;
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
-  // public animationTab: object = {
-  //   previous: { effect: "FadeIn", duration: 1000, easing: "" },
-  //   next: { effect: "FadeIn", duration: 1000, easing: "" }
-  // };
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -181,6 +177,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
+    dialogData = dialogData;
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.journalNo) this.journalNo = res.journalNo;
     });
@@ -189,8 +186,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpayment = dialog.dataService.dataSelected;
     this.journal = dialogData.data?.journal;
     this.modegrid = this.journal.addNewMode;
-    this.baseCurr = this.journal.unbounds.baseCurr;
-    this.oAccount = this.journal.unbounds.oAccount;
+    this.baseCurr = dialogData.data?.baseCurr;
     switch (this.dialog.formModel.funcID) {
       case 'ACT0429':
       case 'ACT0410':
@@ -225,14 +221,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       onlySelf: true,
       emitEvent: false,
     });   
-  }
-  onCreatedSidebar(e){
-    this.sidebar.element.style.visibility = '';
-    this.sidebar.show();
-  }
-
-  onCloseSidebar(e){
-    e.cancel = true;
   }
   //#endregion
 
@@ -619,8 +607,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   gridInit(columnsGrid){
     this.hideFields = [];
-    if (this.journal.unbounds && this.journal.unbounds.hideFields && this.journal.unbounds.hideFields.length) {
-      this.hideFields = [...(this.journal.unbounds.hideFields as Array<string>)];
+    if (this.dialogData?.hideFields && this.dialogData?.hideFields.length > 0) {
+      this.hideFields = this.dialogData?.hideFields
     }
     this.loadVisibleColumn(columnsGrid);
     this.loadAccountControl(columnsGrid);
@@ -640,8 +628,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   gridRefresh() {
     this.hideFields = [];
-    if (this.journal.unbounds && this.journal.unbounds.hideFields && this.journal.unbounds.hideFields.length) {
-      this.hideFields = [...(this.journal.unbounds.hideFields as Array<string>)];
+    if (this.dialogData?.hideFields && this.dialogData?.hideFields.length > 0) {
+      this.hideFields = this.dialogData?.hideFields
     }
     this.loadVisibleColumn(this.gridCash.columnsGrid);
     this.loadAccountControl(this.gridCash.columnsGrid);
@@ -683,7 +671,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     switch (e.field.toLowerCase()) {
       case 'accountid':
         this.consTraintGrid();
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'offsetacctid':
         let oOffaccount = this.oAccount.filter(
@@ -695,7 +683,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.isBrigdeAcct =
             oOffaccount[0].accountType == '5' ? true : false;
         }
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         this.consTraintGrid();
         break;
       case 'dr':
@@ -716,7 +704,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
-        //this.dataLine = this.getValueByExRate(true);
         if (this.journal.entryMode == '2') {
           this.consTraintGrid();
         }
@@ -736,11 +723,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
-
-              //this.gridCash.focusNextinput(this.gridCash.editIndex);
+              this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
-        //this.dataLine = this.getValueByExRate(false);
         if (this.journal.entryMode == '2') {
           this.consTraintGrid();
         }
@@ -769,7 +754,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.cr = 0;
           this.dataLine.cR2 = 0;
         }
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'cr2':
         if (
@@ -791,14 +776,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.dataLine.cR2 * this.cashpayment.exchangeRate;
           }
         }
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'note':
         // xu li sau
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       default:
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
       break;
     }
     // const field = [
@@ -909,30 +894,41 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     switch (this.action) {
       case 'add':
-        if (type == '1') {
-          this.loadGrid();
-        } else {
-          this.popupSettledInvoices(this.typeSet);
-        }
         if (this.hasSaved) {
-          if (this.cashpayment.updateColumn) {
-            this.cashpayment.updateColumn = null;
-            this.dialog.dataService.update(this.cashpayment).subscribe();
+          if (this.cashpayment.updateColumn) {      
             this.api
               .exec('AC', this.className, 'UpdateMasterAsync', [
                 this.cashpayment,
-                this.journal,
+                this.cashpayment.updateColumn == 'voucherNo'
               ])
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (res) {
+                  if (type == '1') {
+                    this.loadGrid();
+                  } else {
+                    this.popupSettledInvoices(this.typeSet);
+                  }
+                  this.cashpayment.updateColumn = null;
+                  this.dialog.dataService.update(this.cashpayment).subscribe();            
                   // if (res.unbounds.lineDefault != null) {
                   //   this.dataLine = res.unbounds.lineDefault;
                   // }
                 }
               });
+          }else{
+            if (type == '1') {
+              this.loadGrid();
+            } else {
+              this.popupSettledInvoices(this.typeSet);
+            }
           }
         } else {
+          if (type == '1') {
+            this.loadGrid();
+          } else {
+            this.popupSettledInvoices(this.typeSet);
+          }
           // this.journalService.checkVoucherNoBeforeSave(
           //   this.journal,
           //   this.cashpayment,
@@ -2416,24 +2412,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       reasonName =
         this.cbxReasonID.ComponentCurrent.itemsSelected[0].ReasonName + ' - ';
     }
-    if (
-      this.cbxObjectID.ComponentCurrent.itemsSelected &&
-      this.cbxObjectID.ComponentCurrent.itemsSelected.length > 0
+    if (this.cbxObjectID.ComponentCurrent.itemsSelected && this.cbxObjectID.ComponentCurrent.itemsSelected.length > 0
     ) {
-      objectName =
-        this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
+      objectName = this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
     }
     if (this.cbxPayee.ComponentCurrent.itemsSelected && this.cbxPayee.ComponentCurrent.itemsSelected.length > 0 && !this.cbxPayee.ComponentCurrent.itemsSelected[0][0]) {
       payName = this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
     }else{
-      payName = this.cbxPayee.ComponentCurrent.value + ' - ';
+      if (this.cbxPayee.ComponentCurrent.value) {
+        payName = this.cbxPayee.ComponentCurrent.value + ' - ';
+      }   
     }
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
 
   reloadDataLine(field, preValue) {
-    this.cashpayment.updateColumn = null;
     this.dialog.dataService.update(this.cashpayment).subscribe();
     if (preValue) {
       switch (field.toLowerCase()) {
@@ -2498,25 +2492,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.requireGrid();
   }
 
-  onFocus() {
-    let ins = setInterval(() => {
-      if (this.cbxCashBook) {
-        if (
-          this.cbxCashBook.ComponentCurrent &&
-          this.cbxCashBook.ComponentCurrent.comboBoxObject
-        ) {
-          if (this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement) {
-            clearInterval(ins);
-            this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.focus();
-            this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.select();
-          }
-        }
-      }
-    }, 200);
-    setTimeout(() => {
-      if (ins) clearInterval(ins);
-    }, 10000);
-  }
+  // onFocus() {
+  //   let ins = setInterval(() => {
+  //     if (this.cbxCashBook) {
+  //       if (
+  //         this.cbxCashBook.ComponentCurrent &&
+  //         this.cbxCashBook.ComponentCurrent.comboBoxObject
+  //       ) {
+  //         if (this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement) {
+  //           clearInterval(ins);
+  //           this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.focus();
+  //           this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.select();
+  //         }
+  //       }
+  //     }
+  //   }, 200);
+  //   setTimeout(() => {
+  //     if (ins) clearInterval(ins);
+  //   }, 10000);
+  // }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
