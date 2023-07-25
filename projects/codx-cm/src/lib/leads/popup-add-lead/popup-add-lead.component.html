@@ -21,6 +21,7 @@
           [field]="radioCompany"
           [label]="'Công ty'"
           [checked]="isCategory"
+          [disabled]="action === actionEdit"
           [crrValue]="isCategory"
           (valueChange)="valueChangeCategory($event,radioCompany)"
         >
@@ -36,6 +37,7 @@
           style="width: 100%"
           [field]="radioCustomer"
           [label]="'Cá nhân'"
+          [disabled]="action === actionEdit"
           [checked]="!isCategory"
           [crrValue]="isCategory"
           (valueChange)="valueChangeCategory($event,radioCustomer)"
@@ -106,7 +108,21 @@
       </div>
     </div>
   </div>
-
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ApplyProcess" class="pe-2">
+        </codx-label>
+        <codx-input
+          field="ApplyProcess"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-12">
       <div class="form-group">

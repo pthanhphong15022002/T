@@ -1,0 +1,33 @@
+.div-btn-tab-attachment
+{
+    span{
+        color: #999EA2;
+    }
+    border-radius: 3px;
+}
+.div-btn-tab-attachment.active
+{
+    span{
+        color: #0061D0;
+    }
+    background-color: #F4F7FF;
+}
+.div-tree-attachment-web
+{
+    .aside-menu
+    {
+        height: 100%;
+    }
+    .content-tree
+    {
+        height: 100%;
+        padding: 15px 0;
+        .nochild
+        {
+            width: 23px !important;
+        }
+    }
+
+    overflow: auto;
+    height: 100%;
+}

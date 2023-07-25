@@ -187,6 +187,7 @@ export class LeadDetailComponent implements OnInit {
       this.dataSelected?.refID,
       this.dataSelected?.processID,
       this.dataSelected?.status,
+      '5'
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {

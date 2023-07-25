@@ -76,6 +76,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
   //#region headerText
   passportHeaderText: any;
+  workHeaderText: any;
+  visaHeaderText: any;
+  basicSalaryHeaderText: any;
   benefitHeaderText: any;
   //#endregion
 
@@ -102,6 +105,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   // Column grid viewchild
   @ViewChild('passportCol1', { static: true }) passportCol1: TemplateRef<any>;
   @ViewChild('passportCol2', { static: true }) passportCol2: TemplateRef<any>;
+  @ViewChild('passportCol3', { static: true }) passportCol3: TemplateRef<any>;
 
   // eWorkPermit grid viewchild
   @ViewChild('workPermitCol1', { static: true })
@@ -260,20 +264,21 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         this.passportColumnGrid = [
           {
             headerText:
-              this.passportHeaderText['PassportNo'] +
-              ' | ' +
-              this.passportHeaderText['IssuedPlace'],
+              this.passportHeaderText['PassportNo'],
             template: this.passportCol1,
             width: '150',
           },
           {
             headerText:
-              this.passportHeaderText['IssuedDate'] +
-              ' | ' +
-              this.passportHeaderText['ExpiredDate'],
+              this.passportHeaderText['PassportType'],
             template: this.passportCol2,
             width: '150',
           },
+          {
+            headerText: this.passportHeaderText['ExpiredDate'],
+            template: this.passportCol3,
+            width: '150',
+          }
         ];
         if (this.funcID == this.ePassportFuncID) {
           this.columnGrid = this.passportColumnGrid;
@@ -288,16 +293,16 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //#region get columnGrid EVisa - Thị thực
     if (!this.visaColumnGrid) {
       this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
-        let visaHeaderText = res;
+        this.visaHeaderText = res;
         this.visaColumnGrid = [
           {
             headerText:
-              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
+            this.visaHeaderText['VisaNo'],
             template: this.visaCol1,
             width: '150',
           },
           {
-            headerText: 'Thời hạn' + ' | ' + 'Quốc gia đến',
+            headerText: 'Thời hạn',
             template: this.visaCol2,
             width: '150',
           },
@@ -314,8 +319,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
 
     //#region get columnGrid EWorkPermit - Giấy phép lao động
     if (!this.workPermitColumnGrid) {
-      this.hrService.getHeaderText(this.funcID).then((res) => {
-        let workHeaderText = res;
+      this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
+        this.workHeaderText = res;
         this.workPermitColumnGrid = [
           {
             // headerText:
@@ -347,7 +352,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //#region get columnGrid EBasicSalary - Lương cơ bản
     if (!this.basicSalaryColumnGrid) {
       this.hrService.getHeaderText(this.funcID).then((res) => {
-        let basicSalaryHeaderText = res;
+        this.basicSalaryHeaderText = res;
         this.basicSalaryColumnGrid = [
           {
             // headerText: basicSalaryHeaderText['BSalary'],
@@ -1065,7 +1070,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         actionType: actionType,
         dataObj: data,
         empObj: this.infoPersonal,
-        headerText: actionHeaderText + ' ' + this.headerText,
+        headerText:
+          actionHeaderText + ' ', //+ this.getFormHeader2(this.eContractFuncID, this.lstFuncHRProcess),
         employeeId: this.employeeId,
         funcID: this.eContractFuncID,
       },
@@ -1077,5 +1083,29 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       }
       this.df.detectChanges();
     });
+  }
+
+  viewGridDetail(data, funcID){
+    switch(funcID){
+      case this.ePassportFuncID:
+        // Phải gán cứng vì hệ thống không có morefunc xem chi tiết nên không lấy action text như add và edit được
+        this.handleEmployeePassportInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eVisaFuncID:
+        this.handleEmployeeVisaInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eWorkPermitFuncID:
+        this.handleEmployeeWorkingPermitInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eContractFuncID:
+        this.handleEContractInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.eBasicSalaryFuncID:
+        this.HandleEmployeeBasicSalariesInfo('Xem chi tiết', 'view', data);
+        break;
+      case this.ebenefitFuncID:
+        this.HandleEmployeeBenefit('Xem chi tiết', 'view', data);
+        break;
+    }
   }
 }

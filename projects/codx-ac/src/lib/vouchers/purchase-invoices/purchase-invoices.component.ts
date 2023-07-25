@@ -37,7 +37,7 @@ export class PurchaseinvoicesComponent
   extends UIComponent
   implements AfterViewInit, AfterViewChecked
 {
-  //#region Contructor
+  //#region Constructor
   @ViewChild('siderTemplate') siderTemplate?: TemplateRef<any>;
   @ViewChild('contentTemplate') contentTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
@@ -57,12 +57,6 @@ export class PurchaseinvoicesComponent
   funcName: any;
   parentID: string;
   journalNo: string;
-  totalAmt: any = 0;
-  totalQuantity: any = 0;
-  totalVat: any = 0;
-  oData: any;
-  itemName: any;
-  lsVatCode: any;
   fmPurchaseInvoicesLines: FormModel;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
@@ -85,9 +79,9 @@ export class PurchaseinvoicesComponent
   gvsAcctTrans: any;
 
   constructor(
-    private inject: Injector,
+    inject: Injector,
+    purchaseInvoiceService: PurchaseInvoiceService,
     private callfunc: CallFuncService,
-    private purchaseInvoiceService: PurchaseInvoiceService,
     private routerActive: ActivatedRoute
   ) {
     super(inject);
@@ -164,28 +158,6 @@ export class PurchaseinvoicesComponent
             sumFormat: SumFormat.Currency,
           }),
         ];
-      });
-
-    this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.oData = res;
-        }
-      });
-    this.api
-      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.itemName = res;
-        }
-      });
-    this.api
-      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.lsVatCode = res;
-        }
       });
   }
 
@@ -345,24 +317,15 @@ export class PurchaseinvoicesComponent
       options.FormModel = this.view.formModel;
       options.isFull = true;
 
-      this.callfunc
-        .openSide(
-          PopAddPurchaseComponent,
-          {
-            formType: 'edit',
-            formTitle: `${e.text} ${this.funcName}`,
-          },
-          options,
-          this.view.funcID
-        )
-        .closed.subscribe((res) => {
-          if (res.event != null) {
-            if (res.event['update']) {
-              this.master = res.event['data'];
-              this.loadDatadetail(this.master);
-            }
-          }
-        });
+      this.callfunc.openSide(
+        PopAddPurchaseComponent,
+        {
+          formType: 'edit',
+          formTitle: `${e.text} ${this.funcName}`,
+        },
+        options,
+        this.view.funcID
+      );
     });
   }
 
@@ -392,32 +355,12 @@ export class PurchaseinvoicesComponent
       });
   }
 
-  delete(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-      if (res) {
-        this.api
-          .exec('ERM.Business.AC', 'VATInvoicesBusiness', 'DeleteAsync', [
-            data.recID,
-          ])
-          .subscribe((res: any) => {});
-      }
-    });
+  delete(data: IPurchaseInvoice): void {
+    this.view.dataService.delete([data], true).subscribe();
   }
   //#endregion
 
   //#region Function
-  loadDatadetail(data) {
-    // this.api
-    //   .exec('AC', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [data.recID])
-    //   .subscribe((res: any) => {
-    //     this.purchaseInvoicesLines = res;
-    //     this.loadTotal();
-    //   });
-  }
-
   groupBy(arr: any[], key: string): any[][] {
     return Object.values(
       arr.reduce((acc, current) => {

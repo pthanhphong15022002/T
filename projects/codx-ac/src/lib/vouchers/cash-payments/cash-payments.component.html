@@ -310,31 +310,31 @@
               <codx-label class="ps-3 fw-bold" fiedName="lblAccountName" default="Tài khoản">
               </codx-label>
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+            <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
               <div class="d-flex align-items-center justify-content-end">
                 <codx-label class="ps-3 fw-bold" fiedName="lblAccountID" default="Nợ">
                 </codx-label>
               </div>     
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
               <div class="d-flex align-items-center justify-content-end">
                 <codx-label class="ps-3 fw-bold" fiedName="lblAccountID" default="Nợ, HT">
                 </codx-label>
               </div>    
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+            <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
               <div class="d-flex align-items-center justify-content-end">
                 <codx-label class="ps-3 fw-bold" fiedName="lblOffSetAccID" default="Có">
                 </codx-label>
               </div>   
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
               <div class="d-flex align-items-center justify-content-end">
                 <codx-label class="ps-3 fw-bold" fiedName="lblOffSetAccID" default="Có, HT">
                 </codx-label>
               </div>  
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
               <div class="d-flex align-items-center justify-content-end">
                 <codx-label class="ps-3 fw-bold" fiedName="lblDR2" default="Số tiền, NT">
                 </codx-label>
@@ -452,11 +452,11 @@
               </td>
               <td class="text-center">
                 <div *ngIf="!item.crediting" class="d-flex align-items-center justify-content-end ps-3">
-                  <ng-container *ngIf="itemSelected?.currencyID == baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
-                  <ng-container *ngIf="itemSelected?.currencyID != baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt2
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
@@ -464,14 +464,20 @@
               </td>
               <td class="text-center">
                 <div *ngIf="item.crediting" class="d-flex align-items-center justify-content-end ps-3">
-                  <ng-container *ngIf="itemSelected?.currencyID == baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
-                  <ng-container *ngIf="itemSelected?.currencyID != baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt2
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
+                </div>
+              </td>
+              <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-center">
+                <div class="d-flex align-items-center justify-content-end ps-3">
+                  <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
+                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                 </div>
               </td>
               <td>

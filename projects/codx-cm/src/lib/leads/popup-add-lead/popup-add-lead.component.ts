@@ -397,7 +397,6 @@ export class PopupAddLeadComponent
     try {
       await this.getGridView(this.formModel);
       await this.getListInstanceSteps(this.lead.processID);
-      // this.action != this.actionEdit && await this.getAutoNumber(this.formModel);
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
