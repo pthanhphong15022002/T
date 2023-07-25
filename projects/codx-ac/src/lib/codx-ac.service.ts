@@ -35,9 +35,9 @@ export class CodxAcService {
       });
 
     this.api
-      .exec('AC', 'CommonBusiness', 'GetCacheAccountAsync', '')
+      .exec('AC', 'CommonBusiness', 'GetCacheSubObjectAsync', '')
       .subscribe((res) => {
-        if (res) this.stores.set('account', res);
+        if (res) this.stores.set('subobject', res);
       });
   }
 
