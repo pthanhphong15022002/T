@@ -45,6 +45,7 @@ export class PopupEBasicSalariesComponent
   actionArray = ['add', 'edit', 'copy'];
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
+  useForQTNS: boolean = false;
   // genderGrvSetup: any;
   //end
   constructor(
@@ -61,12 +62,17 @@ export class PopupEBasicSalariesComponent
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.formModel = dialog?.formModel;
     this.fromListView = data?.data?.fromListView;
-    this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
+    this.useForQTNS = data?.data?.useForQTNS;
+    if (data?.data?.salaryObj) {
+      this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
+    } else {
+      this.EBasicSalaryObj = null;
+    }
     if (this.EBasicSalaryObj?.employeeID && this.fromListView) {
       this.employeeId = this.EBasicSalaryObj?.employeeID;
     } else {
@@ -75,7 +81,7 @@ export class PopupEBasicSalariesComponent
     if (this.EBasicSalaryObj?.emp && this.fromListView) {
       this.employeeObj = this.EBasicSalaryObj?.emp;
     } else {
-      this.employeeObj = data?.data?.empObj;
+      this.employeeObj = data?.data?.empObj || null;
     }
   }
 
@@ -193,7 +199,9 @@ export class PopupEBasicSalariesComponent
         this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
       )
       .subscribe((res) => {
-        this.employeeObj.orgUnitName = res.orgUnitName;
+        if (this.employeeObj) {
+          this.employeeObj.orgUnitName = res.orgUnitName;
+        }
       });
     if (this.actionType == 'add') {
       this.hrService
@@ -219,7 +227,11 @@ export class PopupEBasicSalariesComponent
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+      if (
+        this.actionType === 'edit' ||
+        this.actionType === 'copy' ||
+        this.actionType === 'view'
+      ) {
         if (this.actionType == 'copy') {
           if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
             this.EBasicSalaryObj.effectedDate = null;
@@ -259,7 +271,7 @@ export class PopupEBasicSalariesComponent
     }
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
-        .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)
+        .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj, this.useForQTNS)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
@@ -269,7 +281,10 @@ export class PopupEBasicSalariesComponent
         });
     } else {
       this.hrService
-        .UpdateEmployeeBasicSalariesInfo(this.formModel.currentData)
+        .UpdateEmployeeBasicSalariesInfo(
+          this.formModel.currentData,
+          this.useForQTNS
+        )
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');

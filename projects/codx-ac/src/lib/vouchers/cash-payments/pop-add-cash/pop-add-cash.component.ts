@@ -180,7 +180,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    dialogData = dialogData;
+    this.dialogData = dialogData;
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.journalNo) this.journalNo = res.journalNo;
     });
@@ -610,8 +610,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   gridInit(columnsGrid) {
     this.hideFields = [];
-    if (this.dialogData?.hideFields && this.dialogData?.hideFields.length > 0) {
-      this.hideFields = this.dialogData?.hideFields
+    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+      this.hideFields = this.dialogData?.data.hideFields
     }
     this.loadVisibleColumn(columnsGrid);
     this.loadAccountControl(columnsGrid);
@@ -631,8 +631,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   gridRefresh() {
     this.hideFields = [];
-    if (this.dialogData?.hideFields && this.dialogData?.hideFields.length > 0) {
-      this.hideFields = this.dialogData?.hideFields
+    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+      this.hideFields = this.dialogData?.data.hideFields
     }
     this.loadVisibleColumn(this.gridCash.columnsGrid);
     this.loadAccountControl(this.gridCash.columnsGrid);
