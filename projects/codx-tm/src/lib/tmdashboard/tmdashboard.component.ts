@@ -392,7 +392,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
-
+    this.pageTitle.setBreadcrumbs([])
     this.routerActive.queryParams.subscribe((res) => {
       if (res.reportID) {
         this.reportID = res.reportID;
