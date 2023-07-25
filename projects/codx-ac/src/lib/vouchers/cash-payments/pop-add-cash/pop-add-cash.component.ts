@@ -2394,24 +2394,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ) {
       objectName = this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
     }
-<<<<<<< HEAD
     if (this.cbxPayee.ComponentCurrent.itemsSelected && this.cbxPayee.ComponentCurrent.itemsSelected.length > 0 && !this.cbxPayee.ComponentCurrent.itemsSelected[0][0]) {
       payName = this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
     }else{
       if (this.cbxPayee.ComponentCurrent.value) {
         payName = this.cbxPayee.ComponentCurrent.value + ' - ';
       }   
-=======
-    if (
-      this.cbxPayee.ComponentCurrent.itemsSelected &&
-      this.cbxPayee.ComponentCurrent.itemsSelected.length > 0 &&
-      !this.cbxPayee.ComponentCurrent.itemsSelected[0][0]
-    ) {
-      payName =
-        this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
-    } else {
-      payName = this.cbxPayee.ComponentCurrent.value + ' - ';
->>>>>>> a08a2f98aab4d9134eac15bd8b8836f3603544a0
     }
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
