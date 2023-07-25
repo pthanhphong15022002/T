@@ -8,19 +8,45 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, takeUntil, tap } from 'rxjs';
 import { Reason } from './models/Reason.model';
+import { Subject } from '@microsoft/signalr';
+import { log } from 'console';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxAcService {
   childMenuClick = new BehaviorSubject<any>(null);
+  stores = new Map<string, any>();
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService
-  ) {}
+  ) {
+    this.getCache();
+  }
+
+  getCache() {
+    this.api
+      .exec('AC', 'CommonBusiness', 'GetCacheAccountAsync', '')
+      .subscribe((res) => {
+        if (res) this.stores.set('account', res);
+      });
+
+    this.api
+      .exec('AC', 'CommonBusiness', 'GetCacheAccountAsync', '')
+      .subscribe((res) => {
+        if (res) this.stores.set('account', res);
+      });
+  }
+
+  getCacheValue(storeName: string, value: string) {
+    let v = '';
+    if (this.stores.has(storeName)) v = this.stores.get(storeName)[value];
+    return v;
+  }
+
   setCacheFormModel(formModel: FormModel) {
     this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
       this.cache.setGridView(formModel.gridViewName, gridView);
