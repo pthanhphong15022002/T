@@ -169,7 +169,7 @@ export class CodxAcService {
           gridViewSetup[propName].dataType === 'String' &&
           !data[dataPropName]?.trim()
         ) {
-          console.log('invalid', { propName });
+          //console.log('invalid', { propName });
 
           this.notiService.notifyCode(
             'SYS009',
@@ -209,7 +209,7 @@ export class CodxAcService {
           gridViewSetup[propName].dataType === 'String' &&
           !data[dataPropName]?.trim()
         ) {
-          console.log('invalid', { propName });
+          //console.log('invalid', { propName });
 
           this.notiService.notifyCode(
             'SYS009',
@@ -255,9 +255,9 @@ export class CodxAcService {
         [dataRequest]
       )
       .pipe(
-        tap((p) => console.log(p)),
+        //tap((p) => console.log(p)),
         map((p) => JSON.parse(p[0])),
-        tap((p) => console.log(p))
+        //tap((p) => console.log(p))
       );
   }
 
@@ -265,7 +265,7 @@ export class CodxAcService {
     return this.api
       .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
       .pipe(
-        tap((r) => console.log(r)),
+        //tap((r) => console.log(r)),
         map((r) => r[0])
       );
   }
@@ -313,7 +313,7 @@ export class CodxAcService {
         'DeleteByObjectIDAsync',
         [objectId, objectType, true]
       )
-      .subscribe((res) => console.log('deleteFile', res));
+      .subscribe();
   }
 
   getACParameters(category: string = '1'): Observable<any> {
@@ -323,7 +323,20 @@ export class CodxAcService {
     );
   }
 
-  CheckExistAccount(data: any): boolean {
+  getJournal(journalNo){
+    return this.api
+      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [journalNo])
+  }
+  
+  getCompanySetting(){
+    return this.cache.companySetting();
+  }
+
+  getFunctionList(funcID){
+    return this.cache.functionList(funcID);
+  }
+
+  checkExistAccount(data: any): boolean {
     let result: boolean = true;
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'CheckExistAccount', [data])
@@ -346,5 +359,14 @@ export class CodxAcService {
   setPopupSize(dialog: any, width: any, height: any) {
     dialog.dialog.properties.height = width;
     dialog.dialog.properties.width = height;
+  }
+
+  validateVourcher(data){
+    return this.api
+    .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
+  }
+  postVourcher(data){
+    return this.api
+    .exec('AC', 'CashPaymentsBusiness', 'PostAsync', [data])
   }
 }

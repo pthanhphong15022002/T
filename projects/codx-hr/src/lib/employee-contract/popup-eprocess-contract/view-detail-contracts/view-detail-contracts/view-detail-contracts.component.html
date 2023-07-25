@@ -224,10 +224,10 @@
           <span
             class="text-dark fw-bold"
             *ngIf="
-              itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+              itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
               else noOrgUnitName
             "
-            >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
+            >{{ itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName }}</span
           >
           <ng-template #noOrgUnitName>
             <span class="place-holder">{{
