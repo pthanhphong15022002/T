@@ -49,6 +49,20 @@ export class TargetsComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('templateMonth0') templateMonth0?: TemplateRef<any>;
+  @ViewChild('templateMonth1') templateMonth1?: TemplateRef<any>;
+  @ViewChild('templateMonth2') templateMonth2?: TemplateRef<any>;
+  @ViewChild('templateMonth3') templateMonth3?: TemplateRef<any>;
+  @ViewChild('templateMonth4') templateMonth4?: TemplateRef<any>;
+  @ViewChild('templateMonth5') templateMonth5?: TemplateRef<any>;
+  @ViewChild('templateMonth6') templateMonth6?: TemplateRef<any>;
+  @ViewChild('templateMonth7') templateMonth7?: TemplateRef<any>;
+  @ViewChild('templateMonth8') templateMonth8?: TemplateRef<any>;
+  @ViewChild('templateMonth9') templateMonth9?: TemplateRef<any>;
+  @ViewChild('templateMonth10') templateMonth10?: TemplateRef<any>;
+  @ViewChild('templateMonth11') templateMonth11?: TemplateRef<any>;
+  @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
   dataObj: any;
@@ -73,9 +87,9 @@ export class TargetsComponent
   funcID = '';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
-  entityName: string = '';
+  entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTargetLineAsync';
+  method: string = 'GetListTargetAsync';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -91,6 +105,8 @@ export class TargetsComponent
   lstTargetLines = [];
   businessLineID: any;
   data: any;
+  schedule: any;
+  columnGrids = [];
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -117,6 +133,24 @@ export class TargetsComponent
     this.getSchedule();
   }
   ngAfterViewInit(): void {
+    let lst = [];
+
+    for (let i = 0; i < 13; i++) {
+      var tmp = {};
+      if (i == 0) {
+        tmp['field'] = '';
+        tmp['headerText'] = '';
+        tmp['width'] = 350;
+        tmp['template'] = this[`templateMonth${0}`];
+      } else {
+        tmp['field'] = '';
+        tmp['headerText'] = 'Tháng ' + i;
+        tmp['width'] = 175;
+        tmp['template'] = this[`templateMonth${i}`];
+      }
+      lst.push(Object.assign({}, tmp));
+    }
+    this.columnGrids = lst;
     this.views = [
       {
         type: ViewType.content,
@@ -124,6 +158,15 @@ export class TargetsComponent
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnGrids,
+          hideMoreFunc: true,
         },
       },
       {
@@ -140,7 +183,7 @@ export class TargetsComponent
           resourceModel: this.scheduleHeaderModel, //resource
           template: this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip, //tooltip
+          // template5: this.resourceTootip, //tooltip
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
@@ -163,10 +206,6 @@ export class TargetsComponent
     this.schedules.className = 'TargetsBusiness';
     this.schedules.service = 'CM';
     this.schedules.method = 'GetListTargetLineAsync';
-    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
-      this.schedules.predicate = this.queryParams?.predicate;
-      this.schedules.dataValue = this.queryParams?.dataValue;
-    }
     this.schedules.idField = 'recID';
     //lấy list user vẽ header schedule
     this.scheduleHeader = new ResourceModel();
@@ -180,7 +219,6 @@ export class TargetsComponent
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'salespersonID' },
-      status: 'status',
     };
 
     this.scheduleHeaderModel = {
@@ -251,7 +289,12 @@ export class TargetsComponent
   //#endregion
   //#region event codx-view
   viewChanged(e) {
-    console.log(e);
+    if (e?.view?.type == 8) {
+      if (!this.schedule)
+        this.schedule = (this.view?.currentView as any)?.schedule;
+    } else {
+      this.schedule = null;
+    }
     var formModel = new FormModel();
     formModel.formName = 'CMTargetsLines';
     formModel.gridViewName = 'grvCMTargetsLines';
@@ -317,64 +360,82 @@ export class TargetsComponent
   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
-      this.cache
-        .gridViewSetup('CMTargets', 'grvCMTargets')
-        .subscribe(async (grid) => {
-          let dialogModel = new DialogModel();
-          dialogModel.DataService = this.view.dataService;
-          dialogModel.FormModel = this.view?.formModel;
-          dialogModel.IsFull = true;
-          dialogModel.zIndex = 999;
-          var obj = {
-            action: 'add',
-            title: this.titleAction,
-            gridViewSetupTarget: grid,
-          };
-          var dialog = this.callfc.openForm(
-            PopupAddTargetComponent,
-            '',
-            this.widthWin,
-            this.heightWin,
-            '',
-            obj,
-            '',
-            dialogModel
-          );
-          dialog.closed.subscribe((e) => {
-            if (!e?.event) this.view.dataService.clear();
-            if (e != null && e?.event != null) {
-              if (e?.event[0] != null && e?.event[0][1] != null) {
-                var data = e?.event[0][1];
-                if (data.year == this.year) {
-                  this.businessLineID = e?.event[2];
-                  this.lstTargetLines = e?.event[0][0];
-                  this.lstOwners = e?.event[1];
-                  this.data = e?.event[0][2];
-                  var index = this.lstDataTree.findIndex(
-                    (x) => x.businessLineID == data?.businessLineID
-                  );
-                  if (index != -1) {
-                    this.lstDataTree[index] = data;
-                    if (this.lstTargetLines != null) {
-                      this.lstTargetLines.forEach((res) => {
-                        this.view.dataService.update(res).subscribe();
-                      });
-                    }
-                    // this.lstDataTree.splice(index, 1);
-                  } else {
-                    this.lstDataTree.push(Object.assign({}, data));
-                    if (this.lstTargetLines != null) {
-                      this.lstTargetLines.forEach((res) => {
-                        this.view.dataService.add(res).subscribe();
-                      });
-                    }
-                  }
-                }
+      let dialogModel = new DialogModel();
+      dialogModel.DataService = this.view.dataService;
+      dialogModel.FormModel = this.view?.formModel;
+      dialogModel.IsFull = true;
+      dialogModel.zIndex = 999;
+      var obj = {
+        action: 'add',
+        title: this.titleAction,
+      };
+      var dialog = this.callfc.openForm(
+        PopupAddTargetComponent,
+        '',
+        this.widthWin,
+        this.heightWin,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
+      dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e != null && e?.event != null) {
+          if (e?.event[0] != null && e?.event[0][1] != null) {
+            var data = e?.event[0][1];
+            var lstOwners = e?.event[1];
+            var lstTargetLines = e?.event[0][0];
+            if (data.year == this.year) {
+              this.businessLineID = e?.event[2];
+              this.lstTargetLines = lstTargetLines;
+              this.lstOwners = lstOwners;
+              this.data = e?.event[0][2];
+              var index = this.lstDataTree.findIndex(
+                (x) => x.businessLineID == data?.businessLineID
+              );
+              if (index != -1) {
+                this.lstDataTree[index] = data;
+                // this.lstDataTree.splice(index, 1);
+              } else {
+                this.lstDataTree.push(Object.assign({}, data));
               }
-              this.detectorRef.detectChanges();
             }
-          });
-        });
+            if (this.schedule) {
+              // if (lstOwners != null && lstOwners?.length > 0) {
+              //   var resource = this.schedule['resourceDataSource'];
+              //   lstOwners.forEach((item) => {
+              //     if (
+              //       !resource?.find(
+              //         (user) => user.salespersonID === item.userID
+              //       )
+              //     ) {
+              //       var tmp = {};
+              //       tmp['salespersonID'] = item?.userID;
+              //       tmp['ClassName'] = 'e-child-node';
+              //       tmp['Count'] = 0;
+              //       tmp['events'] = 11;
+              //       tmp['positionName'] = item?.positionName;
+              //       tmp['salespersonID'] = item?.userID;
+              //       tmp['value'] = item?.userID;
+              //       tmp['target'] = 0;
+              //       tmp['text'] = item?.userName;
+              //       tmp['userName'] = item?.userName;
+              //       resource?.push(tmp);
+              //     }
+              //   });
+
+              //   this.schedule['resourceDataSource'] = resource;
+              //   this.schedule['displayResource'] = resource;
+              //   this.view.currentView = this.schedule;
+              //   this.view?.currentView?.refesh();
+              // }
+              this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
+            }
+          }
+          this.detectorRef.detectChanges();
+        }
+      });
     });
   }
 
@@ -398,7 +459,10 @@ export class TargetsComponent
       }
     } else {
       var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.period)
+        this.cmSv.getTargetAndLinesAsync(
+          data?.businessLineID,
+          data.year > 0 ? data.year : data.period
+        )
       );
       if (tar != null) {
         lstOwners = tar[2];
@@ -406,60 +470,58 @@ export class TargetsComponent
         this.view.dataService.dataSelected = tar[0];
       }
     }
-    this.cache
-      .gridViewSetup('CMTargets', 'grvCMTargets')
-      .subscribe(async (grid) => {
-        this.view.dataService
-          .edit(this.view.dataService.dataSelected)
-          .subscribe((res) => {
-            let dialogModel = new DialogModel();
-            dialogModel.DataService = this.view.dataService;
-            dialogModel.FormModel = this.view?.formModel;
-            dialogModel.IsFull = true;
-            dialogModel.zIndex = 999;
-            var obj = {
-              action: 'edit',
-              title: this.titleAction,
-              lstOwners: lstOwners,
-              lstTargetLines: lstTargetLines,
-              gridViewSetupTarget: grid,
-            };
-            var dialog = this.callfc.openForm(
-              PopupAddTargetComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {
-              this.businessLineID = null;
-              if (!e?.event) this.view.dataService.clear();
-              if (e != null && e?.event != null) {
-                if (e?.event[0] != null && e?.event[0][1] != null) {
-                  var data = e?.event[0][1];
-                  if (data.year == this.year) {
-                    this.businessLineID = e?.event[2];
-                    this.lstTargetLines = e?.event[0][0];
-                    this.lstOwners = e?.event[1];
-                    this.data = e?.event[0][2];
-                    var index = this.lstDataTree.findIndex(
-                      (x) => x.businessLineID == data?.businessLineID
-                    );
-                    if (index != -1) {
-                      this.lstDataTree[index] = data;
-                    }
-                  }
 
-                  // this.lstDataTree.push(Object.assign({}, data));
-
-                  this.detectorRef.detectChanges();
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let dialogModel = new DialogModel();
+        dialogModel.DataService = this.view.dataService;
+        dialogModel.FormModel = this.view?.formModel;
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        var obj = {
+          action: 'edit',
+          title: this.titleAction,
+          lstOwners: lstOwners,
+          lstTargetLines: lstTargetLines,
+        };
+        var dialog = this.callfc.openForm(
+          PopupAddTargetComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+        dialog.closed.subscribe((e) => {
+          this.businessLineID = null;
+          if (!e?.event) this.view.dataService.clear();
+          if (e != null && e?.event != null) {
+            if (e?.event[0] != null && e?.event[0][1] != null) {
+              var data = e?.event[0][1];
+              if (data.year == this.year) {
+                this.businessLineID = e?.event[2];
+                this.lstTargetLines = e?.event[0][0];
+                this.lstOwners = e?.event[1];
+                this.data = e?.event[0][2];
+                var index = this.lstDataTree.findIndex(
+                  (x) => x.businessLineID == data?.businessLineID
+                );
+                if (index != -1) {
+                  this.lstDataTree[index] = data;
                 }
               }
-            });
-          });
+              if (this.schedule) {
+                this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
+              }
+              // this.lstDataTree.push(Object.assign({}, data));
+
+              this.detectorRef.detectChanges();
+            }
+          }
+        });
       });
   }
 
@@ -502,6 +564,6 @@ export class TargetsComponent
   //#endregion
 
   targetToFixed(data) {
-    return data ? this.decimalPipe.transform(data, '1.0-0') : '0';
+    return Math.round(data);
   }
 }

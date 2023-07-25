@@ -722,6 +722,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   maxPageNum: number = 0;
   crrIndex: number = 0;
 
+  currentDate = new Date();
+  passPortIsExpired = false;
+  visaIsExpired = false;
+  workpermitIsExpired = false;
+
   currentYear = new Date().getFullYear();
   firstDay = new Date(this.currentYear, 0, 1);
   lastDay = new Date(this.currentYear, 11, 31);
@@ -1221,8 +1226,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.getEmpCurrentData().subscribe((res) => {
           if(res){
             this.crrPassport = res[0];
+            this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
             this.crrVisa = res[1];
+            this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
             this.crrWorkpermit = res[2];
+            this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
             this.lstFamily = res[3];
             this.calculateEFamilyAge();
             this.lstExperiences = res[4];
@@ -2603,6 +2611,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       .GetEmpCurrentPassport(this.employeeID)
                       .subscribe((res) => {
                         this.crrPassport = res;
+                        this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
                         this.df.detectChanges();
                       });
                   } else {
@@ -2619,6 +2628,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       .GetEmpCurrentWorkpermit(this.employeeID)
                       .subscribe((res) => {
                         this.crrWorkpermit = res;
+            this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+
                         this.df.detectChanges();
                       });
                   } else {
@@ -2635,6 +2646,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       .GetEmpCurrentVisa(this.employeeID)
                       .subscribe((res) => {
                         this.crrVisa = res;
+            this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+
                         this.df.detectChanges();
                       });
                   } else {
@@ -3159,8 +3172,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (res?.event) {
         if (res?.event == 'none') {
           this.crrWorkpermit = null;
+          this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+
         } else {
           this.crrWorkpermit = res.event;
+          this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+
         }
         this.df.detectChanges();
       }
@@ -3192,8 +3209,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (res?.event) {
         if (res?.event == 'none') {
           this.crrVisa = null;
+          this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+
         } else {
           this.crrVisa = res.event;
+          this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+
         }
         this.df.detectChanges();
       }
@@ -3225,8 +3246,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (res?.event) {
         if (res?.event == 'none') {
           this.crrPassport = null;
+          this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
         } else {
           this.crrPassport = res.event;
+          this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
         }
         this.df.detectChanges();
       }
@@ -4009,6 +4032,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             res?.event.issuedDate > this.crrPassport.issuedDate
           ) {
             this.crrPassport = res?.event;
+            // this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
             this.df.detectChanges();
           }
         } else if (actionType == 'edit') {
@@ -4016,15 +4040,18 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             res?.event.issuedDate >= this.crrPassport.issuedDate
           ) {
             this.crrPassport = res.event;
+            // this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
           } else {
             this.hrService
               .GetEmpCurrentPassport(this.employeeID)
               .subscribe((res) => {
                 this.crrPassport = res;
+                // this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
                 this.df.detectChanges();
               });
           }
         }
+        this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
       }
       this.df.detectChanges();
     });
@@ -4106,6 +4133,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         //   actionType,
         //   res?.event
         // );
+        this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+
       }
       this.df.detectChanges();
     });
@@ -4152,6 +4181,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               });
           }
         }
+        this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+
       }
       this.df.detectChanges();
     });

@@ -215,6 +215,7 @@
         [dataSource]="vouchersLines"
         service="IV"
         [autoLoad]="false"
+        [autoFitColumns]="false"
         [autoAddRow]="true"
         (eventAction)="autoAddRowSet($event)"
         (created)="gridCreated()"

@@ -80,7 +80,7 @@ export class PopupAddTargetComponent {
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.action = data?.data?.action;
     this.headerText = data?.data?.title;
-    this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
+    // this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
       this.lstOwners = data?.data?.lstOwners;
@@ -136,9 +136,9 @@ export class PopupAddTargetComponent {
   }
 
   ngAfterViewInit(): void {
-    // this.gridViewSetupTarget = firstValueFrom(
-    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    // );
+    this.gridViewSetupTarget = firstValueFrom(
+      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    );
     this.gridViewSetupTargetLine = firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
@@ -650,23 +650,25 @@ export class PopupAddTargetComponent {
         // this.setTargetToLine(1, 4);
         this.getListTimeCalendar(this.text);
       } else {
-        this.lstTargetLines = [];
-        let businessLine = this.data?.businessLineID;
-        let year = this.data?.year;
-        this.data = JSON.parse(JSON.stringify(this.dataOld));
-        this.data.businessLineID = businessLine;
-        this.data.owner = null;
-        this.data.year = year;
-        this.data.category = '1';
-        this.isPeriod = false;
-        this.isExitTarget = false;
-        this.quarter1 = 0;
-        this.quarter2 = 0;
-        this.quarter3 = 0;
-        this.quarter4 = 0;
-        this.data.currencyID = 'VND';
-        this.lstTime.forEach((x) => (x.lines = []));
-        this.lstOwners = [];
+        if (this.isExitTarget) {
+          this.lstTargetLines = [];
+          let businessLine = this.data?.businessLineID;
+          let year = this.data?.year;
+          this.data = JSON.parse(JSON.stringify(this.dataOld));
+          this.data.businessLineID = businessLine;
+          this.data.owner = null;
+          this.data.year = year;
+          this.data.category = '1';
+          this.isPeriod = false;
+          this.quarter1 = 0;
+          this.quarter2 = 0;
+          this.quarter3 = 0;
+          this.quarter4 = 0;
+          this.data.currencyID = 'VND';
+          this.lstTime.forEach((x) => (x.lines = []));
+          this.lstOwners = [];
+          this.isExitTarget = false;
+        }
       }
     });
   }

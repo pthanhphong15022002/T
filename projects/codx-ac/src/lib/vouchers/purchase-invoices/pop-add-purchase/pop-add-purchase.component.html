@@ -34,7 +34,7 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ejs-tab heightAdjustMode="Fill" class="overflow-auto mb-4" id="styledTab">
+    <ejs-tab heightAdjustMode="Fill" class="overflow-auto mb-4" id="styledTab" #tab>
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -64,477 +64,13 @@
                 [autoLoad]="false"
                 [rowHeight]="35"
                 [dataSource]="lines"
-                (cellChanged)="cellChangedPurchase($event)"
+                (cellChanged)="onCellChange($event)"
                 (created)="onGridCreated($event, gridPurchaseInvoiceLines)"
                 (onAddNew)="onEndAddNew($event)"
                 (onEdit)="onEndEdit($event)"
                 (eventAction)="onActionEvent($event)"
               ></codx-gridview-v2>
-              <ng-template #dialogMode>
-                <!-- <ng-container *ngIf="modegrid == '2' && grvPurchaseInvoicesLines">
-              <div class="table-responsive table-content mt-3">
-                <table
-                  style="table-layout: fixed"
-                  class="table table-hover table-row-bordered mb-2"
-                >
-                  <thead>
-                    <tr>
-                      <th class="w-50px text-center">
-                        <codx-label
-                          class="fw-bold"
-                          fiedName="RowNo"
-                          [formModel]="fmPurchaseInvoicesLines"
-                        >
-                        </codx-label>
-                      </th>
-                      <th style="width: 40%">
-                        <div class="d-flex">
-                          <i
-                            class="icon-i-box icon-16 me-2 icon-add text-gray-700"
-                          ></i>
-                          <codx-label
-                            [setRequire]="false"
-                            class="fw-bold"
-                            fiedName="ItemID"
-                            [formModel]="fmPurchaseInvoicesLines"
-                          >
-                          </codx-label>
-                        </div>
-                      </th>
-                      <th>
-                        <div class="d-flex">
-                          <span class="fw-bold">Thông tin mua hàng</span>
-                        </div>
-                      </th>
-                      <th>
-                        <div class="d-flex">
-                          <span class="fw-bold">Thông tin thuế</span>
-                        </div>
-                      </th>
-                      <th>
-                        <div class="d-flex">
-                          <span class="fw-bold">Thông tin phân tích</span>
-                        </div>
-                      </th>
-                      <th style="width: 10px"></th>
-                    </tr>
-                  </thead>
-                  <tbody class="border-bottom" *ngFor="let item of lines">
-                    <tr>
-                      <td class="text-center fw-bold">
-                        {{ item.rowNo }}
-                      </td>
-                      <td>
-                        <div class="d-flex flex-wrap">
-                          <div class="d-flex align-items-center me-5 mb-1">
-                            <span
-                              [ngbTooltip]="item.itemName"
-                              class="fw-bold line-clamp line-clamp-2"
-                              >{{ item.itemName }}</span
-                            >
-                          </div>
-                        </div>
-                        <div
-                          style="white-space: nowrap"
-                          class="d-flex flex-wrap"
-                        >
-                          <ng-container
-                            *ngIf="item.idiM0 != null && item.idiM0 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM0"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM0
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM1 != null && item.idiM1 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM1"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM1
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM2 != null && item.idiM2 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM2"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM2
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM3 != null && item.idiM3 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM3"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM3
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM4 != null && item.idiM4 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM4"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            &nbsp;
-                            <span
-                              #idiM4
-                              class="fs-6 fw-bold"
-                              [innerHTML]="
-                                item.idiM4
-                                  | formatvalue
-                                    : fmPurchaseInvoicesLines
-                                    : 'idiM4'
-                                    : idiM4
-                                  | async
-                              "
-                            ></span>
-                          </ng-container>
-                        </div>
-                        <div
-                          style="white-space: nowrap"
-                          class="d-flex flex-wrap"
-                        >
-                          <ng-container
-                            *ngIf="item.idiM5 != null && item.idiM5 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM5"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM5
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM6 != null && item.idiM6 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM6"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM6
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM7 != null && item.idiM7 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM7"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM7
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM8 != null && item.idiM8 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM8"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{
-                                item.idiM8
-                              }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
-                            >
-                          </ng-container>
-
-                          <ng-container
-                            *ngIf="item.idiM9 != null && item.idiM9 != ''"
-                          >
-                            <codx-label
-                              class="text-gray-700 label-colon"
-                              fiedName="IDIM9"
-                              [formModel]="fmPurchaseInvoicesLines"
-                            >
-                            </codx-label>
-                            <span class="fs-6 fw-bold"
-                              >&nbsp;{{ item.idiM9 }}</span
-                            >
-                          </ng-container>
-                        </div>
-                      </td>
-                      <td>
-                        <div
-                          *ngIf="item.netAmt != null && item.netAmt != ''"
-                          style="white-space: nowrap"
-                          class="d-flex align-items-center justify-content-start mt-1"
-                        >
-                          <span class="text-gray-700 fs-6">Tiền hàng:</span>
-                          <span
-                            [ngbTooltip]="popContent"
-                            class="fs-6 fw-bold line-clamp line-clamp-1"
-                            >&nbsp;{{ item.quantity }}{{ item.umid }} x
-                            {{ item.unitPrice.toLocaleString("it-IT") }} =
-                            {{ item.netAmt.toLocaleString("it-IT") }}</span
-                          >
-                          <ng-template #popContent>
-                            <span
-                              #popContent
-                              [ngbTooltip]="popContent"
-                              class="fs-6 fw-bold"
-                              >&nbsp;{{ item.quantity }}{{ item.umid }} x
-                              {{ item.unitPrice.toLocaleString("it-IT") }} =
-                              {{ item.netAmt.toLocaleString("it-IT") }}</span
-                            >
-                          </ng-template>
-                        </div>
-                      </td>
-                      <td>
-                        <div
-                          *ngIf="item.vatAmt != null && item.vatAmt != ''"
-                          style="white-space: nowrap"
-                          class="d-flex align-items-center justify-content-start mt-1"
-                        >
-                          <codx-label
-                            class="text-gray-700 label-colon"
-                            fiedName="VATID"
-                            [formModel]="fmPurchaseInvoicesLines"
-                          >
-                          </codx-label>
-                          <ng-container *ngFor="let vat of lsVatCode">
-                            <span
-                              [ngbTooltip]="popvat"
-                              *ngIf="vat.vatid == item.vatid"
-                              class="fs-6 fw-bold line-clamp line-clamp-1"
-                            >
-                              &nbsp;{{ vat.taxRate }}% x
-                              {{ item.netAmt.toLocaleString("it-IT") }} =
-                              {{ item.vatAmt.toLocaleString("it-IT") }}
-                            </span>
-                            <ng-template #popvat>
-                              <span
-                                *ngIf="vat.vatid == item.vatid"
-                                class="fs-6 fw-bold"
-                              >
-                                &nbsp;{{ vat.taxRate }}% x
-                                {{ item.netAmt.toLocaleString("it-IT") }} =
-                                {{ item.vatAmt.toLocaleString("it-IT") }}
-                              </span>
-                            </ng-template>
-                          </ng-container>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="d-flex flex-wrap">
-                          <ng-container
-                            *ngIf="item.diM2 != null && item.diM2 != ''"
-                          >
-                            <div class="d-flex align-items-top">
-                              <codx-label
-                                class="text-gray-700 label-colon"
-                                fiedName="DIM2"
-                                [formModel]="fmPurchaseInvoicesLines"
-                              >
-                              </codx-label>
-                              <span
-                                #diM2
-                                class="fs-6 fw-bold"
-                                [innerHTML]="
-                                  item.diM2
-                                    | formatvalue
-                                      : fmPurchaseInvoicesLines
-                                      : 'diM2'
-                                      : diM2
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </ng-container>
-                          <ng-container
-                            *ngIf="item.diM3 != null && item.diM3 != ''"
-                          >
-                            <div class="text-gray-400 mx-1">|</div>
-                            <div class="d-flex align-items-top">
-                              <codx-label
-                                class="text-gray-700 label-colon"
-                                fiedName="DIM3"
-                                [formModel]="fmPurchaseInvoicesLines"
-                              >
-                              </codx-label>
-                              <span
-                                #diM3
-                                class="fs-6 fw-bold"
-                                [innerHTML]="
-                                  item.diM3
-                                    | formatvalue
-                                      : fmPurchaseInvoicesLines
-                                      : 'diM3'
-                                      : diM3
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </ng-container>
-                        </div>
-                        <div class="d-flex flex-wrap mt-1">
-                          <ng-container
-                            *ngIf="item.diM1 != null && item.diM1 != ''"
-                          >
-                            <div class="d-flex align-items-top">
-                              <codx-label
-                                class="text-gray-700 label-colon"
-                                fiedName="DIM1"
-                                [formModel]="fmPurchaseInvoicesLines"
-                              >
-                              </codx-label>
-                              <span
-                                #diM1
-                                class="fs-6 fw-bold"
-                                [innerHTML]="
-                                  item.diM1
-                                    | formatvalue
-                                      : fmPurchaseInvoicesLines
-                                      : 'diM1'
-                                      : diM1
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </ng-container>
-                          <ng-container
-                            *ngIf="
-                              item.projectID != null && item.projectID != ''
-                            "
-                          >
-                            <div class="text-gray-400 mx-1">|</div>
-                            <div class="d-flex align-items-top">
-                              <codx-label
-                                class="text-gray-700 label-colon"
-                                fiedName="ProjectID"
-                                [formModel]="fmPurchaseInvoicesLines"
-                              >
-                              </codx-label>
-                              <span
-                                #projectID
-                                class="fs-6 fw-bold"
-                                [innerHTML]="
-                                  item.projectID
-                                    | formatvalue
-                                      : fmPurchaseInvoicesLines
-                                      : 'projectID'
-                                      : projectID
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </ng-container>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="has-action-menu">
-                          <codx-mfunc
-                            [dataItem]="item"
-                            [formModel]="form.formModel"
-                            (clickMF)="clickMF($event, item)"
-                            isBookMark="false"
-                            type="view"
-                          ></codx-mfunc>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="btn-addline" style="top: -38px">
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-light-primary"
-                    (click)="addRow()"
-                  >
-                    <i class="icon-playlist_add icon-16"></i>
-                    <codx-label
-                      fiedName="lblSaveAndClear"
-                      default="Thêm dòng"
-                    ></codx-label>
-                  </button>
-                </div>
-              </div>
-
-              <div class="d-flex flex-wrap mt-6">
-                <div class="d-flex align-items-center mb-1 bg-light me-5">
-                  <span
-                    class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 bg-primary"
-                  ></span>
-                  <span class="py-1 px-2">Tổng tiền: {{ totalnet }}</span>
-                </div>
-                <div class="d-flex align-items-center mb-1 bg-light me-5">
-                  <span
-                    class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"
-                  ></span>
-                  <span class="py-1 px-2">Tổng thuế: {{ totalvat }}</span>
-                </div>
-                <div class="d-flex align-items-center mb-1 bg-light me-5">
-                  <span
-                    class="bullet bullet-vertical d-flex align-items-center min-h-25px mh-100 me-2 bg-primary"
-                  ></span>
-                  <span class="text-dark fw-bold py-1 px-2"
-                    >Tổng cộng:
-                    {{
-                      total.toLocaleString("it-IT", {
-                        style: "currency",
-                        currency: "VND"
-                      })
-                    }}</span
-                  >
-                </div>
-              </div>
-            </ng-container> -->
-              </ng-template>
+              <ng-template #dialogMode> </ng-template>
 
               <button
                 id="btnAddLine"
@@ -600,7 +136,7 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ng-container *ngIf="countDetail > 0">
+    <ng-container *ngIf="!isInvoiceRefHidden">
       <div class="mb-3 text-primary fw-bold fs-5">
         <codx-label
           fiedName="lblRefInfo"
@@ -678,8 +214,10 @@
     <div class="d-flex align-items-center justify-content-between pt-3">
       <div class="d-flex justify-content-start align-items-center me-2">
         <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
-          <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
-          <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
+          <i
+            class="icon-16"
+            [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
+          ></i>
         </div>
         <div
           class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1"
@@ -700,56 +238,54 @@
           </span>
         </div>
       </div>
+
       <div class="d-flex align-items-center me-3">
-        <div *ngIf="formType != 'edit'" class="ms-2">
-          <button type="button" class="btn btn-md btn-light-primary">
-            <codx-label
-              class="fs-6 fw-normal"
-              fiedName="lblSave"
-              [formModel]="form.formModel"
-              (click)="onSaveAdd()"
-              default="Lưu & thêm"
-            ></codx-label>
-          </button>
-        </div>
-        <div class="ms-2 me-2">
-          <button
-            type="button"
-            class="btn btn-md btn-primary"
-            style="min-width: 60px"
-            (click)="onSave()"
-          >
-            <codx-label
-              class="fs-6 fw-normal"
-              fiedName="lblSave"
-              [formModel]="form.formModel"
-              default="Lưu"
-            ></codx-label>
-          </button>
-        </div>
-        <div *ngIf="master?.status == '0' && hasSaved" class="ms-2">
-          <button
-            type="button"
-            class="btn btn-md btn-danger"
-            (click)="onDiscard()"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-settings_backup_restore icon-18"></i>
-              <codx-label
-                class="fs-6 fw-normal"
-                fiedName="lblDiscard"
-                default="Hủy bỏ"
-              ></codx-label>
-            </div>
-          </button>
-        </div>
-        <div class="ms-2">
-          <div
-            class="btn btn-icon btn-light-danger btn-circle bg"
-            (click)="close()"
-          >
-            <i class="icon-close icon-18"></i>
-          </div>
+        <button
+          *ngIf="!isEdit"
+          type="button"
+          class="btn btn-md btn-light-primary ms-2"
+          (click)="onClickSave(false)"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSaveAndClear"
+            [formModel]="form.formModel"
+            default="Lưu & thêm"
+          ></codx-label>
+        </button>
+
+        <button
+          type="button"
+          style="min-width: 60px"
+          class="btn btn-md btn-primary ms-2 me-2"
+          (click)="onClickSave(true)"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSave"
+            [formModel]="form.formModel"
+            default="Lưu"
+          ></codx-label>
+        </button>
+
+        <button
+          class="btn btn-md btn-danger"
+          (click)="onDiscard()"
+          *ngIf="masterService.hasSaved && master.status == '0'"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblDiscard"
+            [formModel]="form.formModel"
+            default="Hủy bỏ"
+          ></codx-label>
+        </button>
+
+        <div
+          class="btn btn-icon btn-light-danger btn-circle bg ms-2"
+          (click)="onClickClose()"
+        >
+          <i class="icon-close icon-18"></i>
         </div>
       </div>
     </div>
@@ -854,7 +390,7 @@
             field="taxExchRate"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="onInputChange($event)"
+            (controlBlur)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -906,7 +442,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="!journal?.multiCurrency"
-            (valueChange)="onInputChange($event)"
+            (controlBlur)="onInputChange($event)"
           >
           </codx-input>
         </div>

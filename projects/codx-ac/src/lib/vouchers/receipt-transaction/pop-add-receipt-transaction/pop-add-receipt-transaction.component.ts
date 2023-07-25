@@ -127,9 +127,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     .subscribe((res) => {
       if (res) {
         this.gridViewSetupLine = res;
-        this.lockFields.forEach((field) => {
-          this.gridViewSetupLine[field].isVisible = false;
-        });
       }
     });
   }

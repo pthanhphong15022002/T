@@ -126,7 +126,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.funcID == 'CM0101') {
       if (this.action == 'add') {
         this.radioChecked = true;
-        this.data?.category == '1';
+        this.data.category = '1';
       } else {
         this.radioChecked = this.data?.category == '1' ? true : false;
       }
@@ -485,7 +485,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.customerName = this.data?.customerName;
     } else if (this.funcID == 'CM0103') {
       this.data.partnerName = this.data?.partnerName;
+      this.data.annualRevenue =  this.data?.annualRevenue != null && parseFloat(this.data?.annualRevenue) >= 0 ? parseFloat(this.data?.annualRevenue) : 0;
     }
+
+    if(this.funcID == 'CM0104'){
+      this.data.annualRevenue =  this.data?.annualRevenue != null && parseFloat(this.data?.annualRevenue) >= 0 ? parseFloat(this.data?.annualRevenue) : 0;
+    }
+
     if (this.funcID == 'CM0102') {
       if (this.data.objectType == null || this.data.objectType.trim() == '') {
         this.gridViewSetup['ContactType'].isRequire = false;

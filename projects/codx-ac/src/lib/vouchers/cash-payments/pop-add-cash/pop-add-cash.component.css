@@ -1,6 +1,6 @@
 
 .tabline-content .e-content{
-   height: calc(100vh - 518px)!important;
+   height: calc(100vh - 505px)!important;
 }
 
 .tabset-content .e-content{
@@ -31,8 +31,9 @@
     z-index: 1000;
 }
 .ac-load-grid{
+    margin-top: 3rem;
     width: 100%;
-    height: calc(100vh - 451px)!important;
+    height: calc(100vh - 475px) !important;
     justify-content: center !important;
     display: flex;
     position: absolute;
@@ -144,3 +145,44 @@
 .ac-input-disable codx-input{
     position: relative;
 }
+/* css footer */
+
+/* css aniamtion slide form */
+.ac-animation-slideRight{
+    animation-name: slideRight;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    -webkit-animation-timing-function: linear;
+}
+@keyframes slideRight {
+    0%{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        transform: translate3d(100%, 0, 0);
+    }
+    50%{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        transform: translate3d(50%, 0, 0);
+    }
+    100%{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform: translate3d(0, 0, 0);
+    }
+    /* from{
+       
+    }
+    to{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform: translate3d(0, 0, 0);
+    } */
+  }
+
+

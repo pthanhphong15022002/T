@@ -15,7 +15,10 @@ import {
   EditSettingsModel,
   GridComponent,
 } from '@syncfusion/ej2-angular-grids';
-import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import {
+  SidebarComponent,
+  TabComponent,
+} from '@syncfusion/ej2-angular-navigations';
 import {
   AuthService,
   AuthStore,
@@ -72,6 +75,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('grid') public grid: GridComponent;
   @ViewChild('annotationsave') annotationsave: ProgressBar;
   @ViewChild('annotationform') annotationform: ProgressBar;
+  @ViewChild('sidebar') sidebar?: SidebarComponent;
   // @ViewChild('cbxCashBook') cbxCashBook: any;
   @ViewChild('cbxReasonID') cbxReasonID: any;
   @ViewChild('cbxObjectID') cbxObjectID: any;
@@ -103,6 +107,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
   headerText: string;
   dialog!: DialogRef;
+  dialogData?: any
   cashpayment: any;
   action: any;
   gridViewSetup: any;
@@ -156,8 +161,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   typeSet: any;
   loading: any = false;
   loadingform: any = true;
-  isOpen: any;
-  // dicCurrency: Map<string, any> = new Map<string, any>();
+  isInit:any;
   oAccount: any;
   userID: any;
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
@@ -176,6 +180,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
+    this.dialogData = dialogData;
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.journalNo) this.journalNo = res.journalNo;
     });
@@ -184,8 +189,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpayment = dialog.dataService.dataSelected;
     this.journal = dialogData.data?.journal;
     this.modegrid = this.journal.addNewMode;
-    this.baseCurr = this.journal.unbounds.baseCurr;
-    this.oAccount = this.journal.unbounds.oAccount;
+    this.baseCurr = dialogData.data?.baseCurr;
     switch (this.dialog.formModel.funcID) {
       case 'ACT0429':
       case 'ACT0410':
@@ -211,8 +215,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {
     this.userID = this.authStore.get().userID;
-    this.isOpen = true;
     this.loadInit();
+    this.isInit = true;
   }
 
   ngAfterViewInit() {
@@ -220,7 +224,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       onlySelf: true,
       emitEvent: false,
     });
-    //this.onFocus();
   }
   //#endregion
 
@@ -605,28 +608,41 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  gridCreated() {
+  gridInit(columnsGrid) {
     this.hideFields = [];
-    if (
-      this.journal.unbounds &&
-      this.journal.unbounds.hideFields &&
-      this.journal.unbounds.hideFields.length
-    ) {
-      this.hideFields = [
-        ...(this.journal.unbounds.hideFields as Array<string>),
-      ];
+    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+      this.hideFields = this.dialogData?.data.hideFields
     }
-    this.loadVisibleColumn();
-    this.loadAccountControl();
-    this.loadFormat();
-    this.predicateControl(this.gridCash.visibleColumns);
-    this.gridCash.hideColumns(this.hideFields);
-    setTimeout(() => {
-      this.loadingform = false;
-    }, 500);
+    this.loadVisibleColumn(columnsGrid);
+    this.loadAccountControl(columnsGrid);
+    this.loadFormat(columnsGrid);
+    this.predicateControl(columnsGrid);
+    this.hideGrid(columnsGrid);
+    if (this.action == 'add') {
+      setTimeout(() => {
+        this.loadingform = false;
+      }, 500);
+    } else {
+      setTimeout(() => {
+        this.loadingform = false;
+      }, 2000);
+    }
   }
 
-  gridCreatedSet() {
+  gridRefresh() {
+    this.hideFields = [];
+    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+      this.hideFields = this.dialogData?.data.hideFields
+    }
+    this.loadVisibleColumn(this.gridCash.columnsGrid);
+    this.loadAccountControl(this.gridCash.columnsGrid);
+    this.hideGrid(this.gridCash.columnsGrid);
+    setTimeout(() => {
+      this.gridCash.refresh();
+    });
+  }
+
+  gridInitSet() {
     this.hideFieldsSet = [];
     let arr = ['BalAmt2', 'SettledAmt2', 'SettledDisc2'];
     arr.forEach((fieldName) => {
@@ -657,8 +673,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.dataLine = e.data;
     switch (e.field.toLowerCase()) {
       case 'accountid':
-        //this.consTraintGrid();
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.consTraintGrid();
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'offsetacctid':
         let oOffaccount = this.oAccount.filter(
@@ -670,8 +686,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.isBrigdeAcct =
             oOffaccount[0].accountType == '5' ? true : false;
         }
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
-        //this.consTraintGrid();
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.consTraintGrid();
         break;
       case 'dr':
         if (this.dataLine.dr != 0 && this.dataLine.cR2 != 0) {
@@ -691,9 +707,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               //this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
-        //this.dataLine = this.getValueByExRate(true);
         if (this.journal.entryMode == '2') {
-          //this.consTraintGrid();
+          this.consTraintGrid();
         }
         break;
       case 'cr':
@@ -711,13 +726,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
-
-              //this.gridCash.focusNextinput(this.gridCash.editIndex);
+              this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
-        //this.dataLine = this.getValueByExRate(false);
         if (this.journal.entryMode == '2') {
-          //this.consTraintGrid();
+          this.consTraintGrid();
         }
         break;
       case 'dr2':
@@ -744,7 +757,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.cr = 0;
           this.dataLine.cR2 = 0;
         }
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'cr2':
         if (
@@ -766,15 +779,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.dataLine.cR2 * this.cashpayment.exchangeRate;
           }
         }
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'note':
         // xu li sau
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       default:
-        //this.gridCash.focusNextinput(this.gridCash.editIndex);
-        break;
+        this.gridCash.focusNextinput(this.gridCash.editIndex);
+      break;
     }
     // const field = [
     //   'accountid',
@@ -884,66 +897,78 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     switch (this.action) {
       case 'add':
-        if (type == '1') {
-          this.loadGrid();
-        } else {
-          this.popupSettledInvoices(this.typeSet);
-        }
         if (this.hasSaved) {
-          if (this.cashpayment.updateColumn) {
-            this.cashpayment.updateColumn = null;
-            this.dialog.dataService.update(this.cashpayment).subscribe();
+          if (this.cashpayment.updateColumn) {      
             this.api
               .exec('AC', this.className, 'UpdateMasterAsync', [
                 this.cashpayment,
-                this.journal,
+                this.cashpayment.updateColumn == 'voucherNo'
               ])
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (res) {
+                  if (type == '1') {
+                    this.loadGrid();
+                  } else {
+                    this.popupSettledInvoices(this.typeSet);
+                  }
+                  this.cashpayment.updateColumn = null;
+                  this.dialog.dataService.update(this.cashpayment).subscribe();            
                   // if (res.unbounds.lineDefault != null) {
                   //   this.dataLine = res.unbounds.lineDefault;
                   // }
                 }
               });
+          }else{
+            if (type == '1') {
+              this.loadGrid();
+            } else {
+              this.popupSettledInvoices(this.typeSet);
+            }
           }
         } else {
-          this.journalService.checkVoucherNoBeforeSave(
-            this.journal,
-            this.cashpayment,
-            'AC',
-            this.dialog.formModel.entityName,
-            this.form,
-            this.action === 'edit',
-            () => {
-              this.dialog.dataService.addDatas.set(
-                this.cashpayment['_uuid'],
-                this.cashpayment
-              );
-              this.cashpayment.updateColumn = null;
-              this.hasSaved = true;
-              this.dialog.dataService
-                .save(
-                  (opt: RequestOption) => {
-                    opt.methodName = 'SaveLogicAsync';
-                    opt.data = [this.cashpayment];
-                  },
-                  0,
-                  '',
-                  '',
-                  false
-                )
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  if (res && res.save.data != null) {
-                    //this.cashpayment = res.save.data;
-                    // if (this.cashpayment.unbounds.lineDefault != null) {
-                    //   this.dataLine = this.cashpayment.unbounds.lineDefault;
-                    // }
-                  }
-                });
-            }
+          if (type == '1') {
+            this.loadGrid();
+          } else {
+            this.popupSettledInvoices(this.typeSet);
+          }
+          // this.journalService.checkVoucherNoBeforeSave(
+          //   this.journal,
+          //   this.cashpayment,
+          //   'AC',
+          //   this.dialog.formModel.entityName,
+          //   this.form,
+          //   this.action === 'edit',
+          //   () => {
+
+          //   }
+          // );
+          this.dialog.dataService.addDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
           );
+          this.cashpayment.updateColumn = null;
+          this.hasSaved = true;
+          this.dialog.dataService
+            .save(
+              (opt: RequestOption) => {
+                opt.methodName = 'SaveLogicAsync';
+                opt.data = [this.cashpayment];
+              },
+              0,
+              '',
+              '',
+              false
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res && res.save.data != null) {
+                //this.cashpayment = res.save.data;
+                // if (this.cashpayment.unbounds.lineDefault != null) {
+                //   this.dataLine = this.cashpayment.unbounds.lineDefault;
+                // }
+              }
+            });
         }
         break;
       case 'edit':
@@ -1440,7 +1465,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onDestroy() {
-    this.isOpen = false;
+    this.isInit = false;
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -1623,6 +1648,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.disableField(this.lockFields);
   }
 
+  hideGrid(columnsGrid) {
+    if (this.hideFields.length > 0) {
+      this.hideFields.forEach((fieldName) => {
+        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+        if (i > -1) {
+          columnsGrid[i].isVisible = false;
+        }
+      });
+    }
+  }
+
   loadTotal() {
     this.total = 0;
     if (this.cashpayment.subType != 2) {
@@ -1659,30 +1695,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  predicateControl(visibleColumns) {
-    let arr = [
-      'AccountID',
-      'OffsetAcctID',
-      'DIM1',
-      'DIM3',
-      'DIM2',
-      'ProjectID',
-    ];
+  predicateControl(columnsGrid) {
+    let arr = ['AccountID', 'OffsetAcctID', 'DIM1', 'DIM3', 'DIM2'];
     arr.forEach((fieldName) => {
-      let idx = this.gridCash.visibleColumns.findIndex(
-        (x) => x.fieldName == fieldName
-      );
+      let idx = columnsGrid.findIndex((x) => x.fieldName == fieldName);
       if (idx > -1) {
-        visibleColumns[idx].predicate = '';
-        visibleColumns[idx].dataValue = '';
+        columnsGrid[idx].predicate = '';
+        columnsGrid[idx].dataValue = '';
         switch (fieldName) {
           case 'AccountID':
             if (
               this.journal.drAcctControl == '1' ||
               this.journal.drAcctControl == '2'
             ) {
-              visibleColumns[idx].predicate = '@0.Contains(AccountID)';
-              visibleColumns[idx].dataValue = `[${this.journal?.drAcctID}]`;
+              columnsGrid[idx].predicate = '@0.Contains(AccountID)';
+              columnsGrid[idx].dataValue = `[${this.journal?.drAcctID}]`;
             }
             break;
           case 'OffsetAcctID':
@@ -1690,8 +1717,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.journal.crAcctControl == '1' ||
               this.journal.crAcctControl == '2'
             ) {
-              visibleColumns[idx].predicate = '@0.Contains(AccountID)';
-              visibleColumns[idx].dataValue = `[${this.journal?.crAcctID}]`;
+              columnsGrid[idx].predicate = '@0.Contains(AccountID)';
+              columnsGrid[idx].dataValue = `[${this.journal?.crAcctID}]`;
             }
             break;
           case 'DIM1':
@@ -1699,8 +1726,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.journal.diM1Control == '1' ||
               this.journal.diM1Control == '2'
             ) {
-              visibleColumns[idx].predicate = '@0.Contains(DepartmentID)';
-              visibleColumns[idx].dataValue = `[${this.journal?.diM1}]`;
+              columnsGrid[idx].predicate = '@0.Contains(DepartmentID)';
+              columnsGrid[idx].dataValue = `[${this.journal?.diM1}]`;
             }
             break;
           case 'DIM3':
@@ -1708,8 +1735,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.journal.diM3Control == '1' ||
               this.journal.diM3Control == '2'
             ) {
-              visibleColumns[idx].predicate = '@0.Contains(CostItemID)';
-              visibleColumns[idx].dataValue = `[${this.journal?.diM3}]`;
+              columnsGrid[idx].predicate = '@0.Contains(CostItemID)';
+              columnsGrid[idx].dataValue = `[${this.journal?.diM3}]`;
             }
             break;
           case 'DIM2':
@@ -1717,8 +1744,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.journal.diM2Control == '1' ||
               this.journal.diM2Control == '2'
             ) {
-              visibleColumns[idx].predicate = '@0.Contains(CostCenterID)';
-              visibleColumns[idx].dataValue = `[${this.journal?.diM2}]`;
+              columnsGrid[idx].predicate = '@0.Contains(CostCenterID)';
+              columnsGrid[idx].dataValue = `[${this.journal?.diM2}]`;
             }
             break;
         }
@@ -1757,7 +1784,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadAccountControl() {
+  loadAccountControl(columnsGrid) {
     if (this.journal.entryMode == '1') {
       this.hideFields.push('CR2');
       this.hideFields.push('CR');
@@ -1765,30 +1792,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.hideFields.push('DR2');
         this.hideFields.push('TaxAmt2');
       }
-      let i = this.gridCash.columnsGrid.findIndex(
-        (x) => x.fieldName == 'AccountID'
-      );
+      let i = columnsGrid.findIndex((x) => x.fieldName == 'AccountID');
       if (i > -1) {
-        this.gridCash.columnsGrid[i].headerText = 'TK nợ';
+        columnsGrid[i].headerText = 'TK nợ';
       }
-      let idx = this.gridCash.columnsGrid.findIndex(
-        (x) => x.fieldName == 'OffsetAcctID'
-      );
+      let idx = columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID');
       if (idx > -1) {
-        this.gridCash.columnsGrid[idx].isRequire = true;
+        columnsGrid[idx].isRequire = true;
       }
     } else {
-      let i = this.gridCash.columnsGrid.findIndex(
-        (x) => x.fieldName == 'AccountID'
-      );
+      let i = columnsGrid.findIndex((x) => x.fieldName == 'AccountID');
       if (i > -1) {
-        this.gridCash.columnsGrid[i].headerText = 'TK';
+        columnsGrid[i].headerText = 'TK';
       }
-      let idx = this.gridCash.columnsGrid.findIndex(
-        (x) => x.fieldName == 'OffsetAcctID'
-      );
+      let idx = columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID');
       if (idx > -1) {
-        this.gridCash.columnsGrid[idx].isRequire = false;
+        columnsGrid[idx].isRequire = false;
       }
       this.hideFields.push('OffsetAcctID');
       if (this.cashpayment.currencyID == this.baseCurr) {
@@ -1799,31 +1818,38 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadFormat() {
+  loadFormat(columnsGrid) {
     if (this.cashpayment.currencyID == this.baseCurr) {
       let arr = ['DR', 'CR'];
-      arr.forEach((field) => {
-        let i = this.gridCash.columnsGrid.findIndex(
-          (x) => x.fieldName == field
-        );
+      arr.forEach((fieldName) => {
+        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
         if (i > -1) {
-          this.gridCash.columnsGrid[i].dataFormat = 'B';
+          columnsGrid[i].dataFormat = 'B';
         }
       });
     } else {
-      let arr = ['DR2', 'CR2', 'TaxAmt2'];
-      arr.forEach((field) => {
-        let i = this.gridCash.columnsGrid.findIndex(
-          (x) => x.fieldName == field
-        );
-        if (i > -1) {
-          this.gridCash.columnsGrid[i].dataFormat = 'S';
+      let arr = ['DR', 'CR', 'DR2', 'CR2', 'TaxAmt2'];
+      arr.forEach((fieldName) => {
+        switch (fieldName) {
+          case 'DR':
+          case 'CR':
+            let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+            if (i > -1) {
+              columnsGrid[i].dataFormat = 'S';
+            }
+            break;
+          default:
+            let idx = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+            if (idx > -1) {
+              columnsGrid[idx].dataFormat = 'B';
+            }
+            break;
         }
       });
     }
   }
 
-  loadVisibleColumn() {
+  loadVisibleColumn(columnsGrid) {
     let arr = [
       'TaxAmt2',
       'DR2',
@@ -1841,12 +1867,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'OffsetAcctID',
     ];
     arr.forEach((fieldName) => {
-      let i = this.gridCash.columnsGrid.findIndex(
-        (x) => x.fieldName == fieldName
-      );
+      let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
       if (i > -1) {
-        this.gridCash.columnsGrid[i].isVisible = true;
-        this.gridCash.visibleColumns.push(this.gridCash.columnsGrid[i]);
+        columnsGrid[i].isVisible = true;
       }
     });
   }
@@ -1870,17 +1893,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       }
     });
-  }
-
-  loadProgressbar(args: ILoadedEventArgs) {
-    if (args.progressBar.element.id === 'load-save-container') {
-      args.progressBar.annotations[0].content =
-        '<img src="../assets/themes/ac/default/img/save.svg"></img>';
-    }
-    if (args.progressBar.element.id === 'load-form-container') {
-      args.progressBar.annotations[0].content =
-        '<img style="width: 50px;height:50px" src="../assets/themes/ac/default/img/file.gif" alt="">';
-    }
   }
 
   setLineDefault() {
@@ -2009,43 +2021,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.endEdit();
     this.gridCash.addRow(this.dataLine, this.gridCash.dataSource.length);
   }
-
-  // getValueByExRate(isDr) {
-  //   if (isDr) {
-  //     let dDR2 = 0;
-  //     if (this.cashpayment.multi) {
-  //       dDR2 = this.dataLine.dr * this.cashpayment.exchangeRate;
-  //     } else {
-  //       dDR2 =
-  //         this.cashpayment.exchangeRate != 0
-  //           ? this.dataLine.dr / this.cashpayment.exchangeRate
-  //           : this.dataLine.dr;
-  //     }
-  //     if (this.dataLine.dR2 != dDR2) {
-  //       this.dataLine.dR2 = dDR2;
-  //     }
-  //     if (this.dataLine.cR2 != 0) {
-  //       this.dataLine.cR2 = 0;
-  //     }
-  //   } else {
-  //     let dCR2 = 0;
-  //     if (this.cashpayment.multi) {
-  //       dCR2 = this.dataLine.cr * this.cashpayment.exchangeRate;
-  //     } else {
-  //       dCR2 =
-  //         this.cashpayment.exchangeRate != 0
-  //           ? this.dataLine.cr / this.cashpayment.exchangeRate
-  //           : this.dataLine.cr;
-  //     }
-  //     if (this.dataLine.cR2 != dCR2) {
-  //       this.dataLine.cR2 = dDR2;
-  //     }
-  //     if (this.dataLine.dR2 != 0) {
-  //       this.dataLine.dR2 = 0;
-  //     }
-  //   }
-  //   return this.dataLine;
-  // }
 
   calcRemainAmt(totalAmt) {
     if (totalAmt == 0) {
@@ -2400,7 +2375,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
       // }
     }
-    this.gridCreated();
+    this.gridRefresh();
   }
 
   setMemo() {
@@ -2415,26 +2390,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       reasonName =
         this.cbxReasonID.ComponentCurrent.itemsSelected[0].ReasonName + ' - ';
     }
-    if (
-      this.cbxObjectID.ComponentCurrent.itemsSelected &&
-      this.cbxObjectID.ComponentCurrent.itemsSelected.length > 0
+    if (this.cbxObjectID.ComponentCurrent.itemsSelected && this.cbxObjectID.ComponentCurrent.itemsSelected.length > 0
     ) {
-      objectName =
-        this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
+      objectName = this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
     }
-    if (
-      this.cbxPayee.ComponentCurrent.itemsSelected &&
-      this.cbxPayee.ComponentCurrent.itemsSelected.length > 0
-    ) {
-      payName =
-        this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
+    if (this.cbxPayee.ComponentCurrent.itemsSelected && this.cbxPayee.ComponentCurrent.itemsSelected.length > 0 && !this.cbxPayee.ComponentCurrent.itemsSelected[0][0]) {
+      payName = this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
+    }else{
+      if (this.cbxPayee.ComponentCurrent.value) {
+        payName = this.cbxPayee.ComponentCurrent.value + ' - ';
+      }   
     }
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
 
   reloadDataLine(field, preValue) {
-    this.cashpayment.updateColumn = null;
     this.dialog.dataService.update(this.cashpayment).subscribe();
     if (preValue) {
       switch (field.toLowerCase()) {
@@ -2499,25 +2470,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.requireGrid();
   }
 
-  onFocus() {
-    let ins = setInterval(() => {
-      if (this.cbxCashBook) {
-        if (
-          this.cbxCashBook.ComponentCurrent &&
-          this.cbxCashBook.ComponentCurrent.comboBoxObject
-        ) {
-          if (this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement) {
-            clearInterval(ins);
-            this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.focus();
-            this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.select();
-          }
-        }
-      }
-    }, 200);
-    setTimeout(() => {
-      if (ins) clearInterval(ins);
-    }, 10000);
-  }
+  // onFocus() {
+  //   let ins = setInterval(() => {
+  //     if (this.cbxCashBook) {
+  //       if (
+  //         this.cbxCashBook.ComponentCurrent &&
+  //         this.cbxCashBook.ComponentCurrent.comboBoxObject
+  //       ) {
+  //         if (this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement) {
+  //           clearInterval(ins);
+  //           this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.focus();
+  //           this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.select();
+  //         }
+  //       }
+  //     }
+  //   }, 200);
+  //   setTimeout(() => {
+  //     if (ins) clearInterval(ins);
+  //   }, 10000);
+  // }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
