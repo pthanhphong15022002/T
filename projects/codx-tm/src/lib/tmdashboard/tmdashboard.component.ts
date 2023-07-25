@@ -14,7 +14,13 @@ import {
   ProgressBar,
   RangeColorModel,
 } from '@syncfusion/ej2-angular-progressbar';
-import { ButtonModel, PageTitleService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ButtonModel,
+  PageTitleService,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { ChartSettings } from './models/chart.model';
 
 export class GridModels {
@@ -47,7 +53,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @Input() datas2: any;
   @Input() panels3: any;
   @Input() datas3: any;
-  arrReport:any=[];
+  arrReport: any = [];
   viewType = ViewType;
   views: Array<ViewModel> = [];
   dashboard = [];
@@ -329,7 +335,11 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
 
   buttons: Array<ButtonModel> = [];
 
-  constructor(inject: Injector,private pageTitle: PageTitleService,private routerActive: ActivatedRoute,) {
+  constructor(
+    inject: Injector,
+    private pageTitle: PageTitleService,
+    private routerActive: ActivatedRoute
+  ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -382,16 +392,17 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
-
-
+    this.pageTitle.setBreadcrumbs([])
     this.routerActive.queryParams.subscribe((res) => {
-      if(res.reportID){
+      if (res.reportID) {
         this.reportID = res.reportID;
         this.isLoaded = false;
-        let reportItem:any=this.arrReport.find((x:any)=>x.reportID==res.reportID);
-        if(reportItem){
-          let pinnedParams = reportItem.parameters?.filter((x:any)=>x.isPin);
-          if(pinnedParams) this.view.pinedReportParams = pinnedParams;
+        let reportItem: any = this.arrReport.find(
+          (x: any) => x.reportID == res.reportID
+        );
+        if (reportItem) {
+          let pinnedParams = reportItem.parameters?.filter((x: any) => x.isPin);
+          if (pinnedParams) this.view.pinedReportParams = pinnedParams;
         }
         switch (res.reportID) {
           case 'TMD001':
@@ -407,7 +418,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
             break;
         }
       }
-
     });
     this.detectorRef.detectChanges();
   }
@@ -501,35 +511,22 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   onActions(e: any) {
-    if(e.type=='reportLoaded'){
-       this.arrReport = e.data;
-      if(this.arrReport.length){
-        let arrChildren:any=[];
-        for(let i =0;i<this.arrReport.length;i++){
-          arrChildren.push({title:this.arrReport[i].customName, path: 'tm/tmdashboard/TMD?reportID='+this.arrReport[i].reportID})
+    if (e.type == 'reportLoaded') {
+      this.arrReport = e.data;
+      if (this.arrReport.length) {
+        let arrChildren: any = [];
+        for (let i = 0; i < this.arrReport.length; i++) {
+          arrChildren.push({
+            title: this.arrReport[i].customName,
+            path: 'tm/tmdashboard/TMD?reportID=' + this.arrReport[i].reportID,
+          });
         }
         this.pageTitle.setSubTitle(arrChildren[0].title);
         this.pageTitle.setChildren(arrChildren);
-        this.codxService.navigate("",arrChildren[0].path);
-
+        this.codxService.navigate('', arrChildren[0].path);
       }
     }
     this.isLoaded = false;
-    // this.reportID = e.data;
-
-    // switch (this.reportID) {
-    //   case 'TMD001':
-    //     this.getMyDashboardData();
-    //     break;
-    //   case 'TMD002':
-    //     this.getTeamDashboardData();
-    //     break;
-    //   case 'TMD003':
-    //     this.getAssignDashboardData();
-    //     break;
-    //   default:
-    //     break;
-    // }
   }
 
   newGuid(): string {

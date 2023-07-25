@@ -49,6 +49,20 @@ export class TargetsComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('templateMonth0') templateMonth0?: TemplateRef<any>;
+  @ViewChild('templateMonth1') templateMonth1?: TemplateRef<any>;
+  @ViewChild('templateMonth2') templateMonth2?: TemplateRef<any>;
+  @ViewChild('templateMonth3') templateMonth3?: TemplateRef<any>;
+  @ViewChild('templateMonth4') templateMonth4?: TemplateRef<any>;
+  @ViewChild('templateMonth5') templateMonth5?: TemplateRef<any>;
+  @ViewChild('templateMonth6') templateMonth6?: TemplateRef<any>;
+  @ViewChild('templateMonth7') templateMonth7?: TemplateRef<any>;
+  @ViewChild('templateMonth8') templateMonth8?: TemplateRef<any>;
+  @ViewChild('templateMonth9') templateMonth9?: TemplateRef<any>;
+  @ViewChild('templateMonth10') templateMonth10?: TemplateRef<any>;
+  @ViewChild('templateMonth11') templateMonth11?: TemplateRef<any>;
+  @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
   dataObj: any;
@@ -92,6 +106,7 @@ export class TargetsComponent
   businessLineID: any;
   data: any;
   schedule: any;
+  columnGrids = [];
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -118,6 +133,24 @@ export class TargetsComponent
     this.getSchedule();
   }
   ngAfterViewInit(): void {
+    let lst = [];
+
+    for (let i = 0; i < 13; i++) {
+      var tmp = {};
+      if (i == 0) {
+        tmp['field'] = '';
+        tmp['headerText'] = '';
+        tmp['width'] = 350;
+        tmp['template'] = this[`templateMonth${0}`];
+      } else {
+        tmp['field'] = '';
+        tmp['headerText'] = 'Tháng ' + i;
+        tmp['width'] = 175;
+        tmp['template'] = this[`templateMonth${i}`];
+      }
+      lst.push(Object.assign({}, tmp));
+    }
+    this.columnGrids = lst;
     this.views = [
       {
         type: ViewType.content,
@@ -125,6 +158,15 @@ export class TargetsComponent
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnGrids,
+          hideMoreFunc: true,
         },
       },
       {
@@ -417,7 +459,10 @@ export class TargetsComponent
       }
     } else {
       var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.period)
+        this.cmSv.getTargetAndLinesAsync(
+          data?.businessLineID,
+          data.year > 0 ? data.year : data.period
+        )
       );
       if (tar != null) {
         lstOwners = tar[2];
@@ -519,6 +564,6 @@ export class TargetsComponent
   //#endregion
 
   targetToFixed(data) {
-    return data ? this.decimalPipe.transform(data, '1.0-0') : '0';
+    return Math.round(data);
   }
 }

@@ -323,6 +323,7 @@ export class EmployeeContractComponent extends UIComponent {
           reportID: moreFC.functionID,
           dataSource: src,
         };
+        debugger
         this.callfc.openForm(
           CodxListReportsComponent,
           moreFC.defaultName,
