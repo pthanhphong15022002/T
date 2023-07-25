@@ -459,7 +459,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column mt-4">
               <div class="text-dark text-primary fw-bold fs-6 mb-3">
                 <codx-label default="Thông tin chung"></codx-label>
               </div>
@@ -723,7 +723,7 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column mt-4">
             <ng-container *ngFor="let item of listSteps">
               <codx-fields-detail-temp
                 *ngIf="item?.fields?.length > 0"
@@ -750,7 +750,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <div>
+            <div class="mt-4">
               <codx-list-contacts
                 #loadContactDeal
                 [selectAll]="false"
@@ -783,6 +783,7 @@
             </div>
           </ng-template>
           <ng-template #content>
+            <div class="mt-4">
             <codx-tab-dealcompetitors
                   [dealID]="dataSelected.recID"
                   [hidenMF]="
@@ -791,6 +792,7 @@
                     ['1', '0', '3', '5'].includes(dataSelected.status)
                   "
                 ></codx-tab-dealcompetitors>
+              </div>
           </ng-template>
         </e-tabitem>
         <e-tabitem >
@@ -806,7 +808,9 @@
             </div>
           </ng-template>
           <ng-template #content let-data="value">
+            <div class="mt-4">
               <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="['0', '1','3','5'].includes(dataSelected.status) || !dataSelected?.roles?.isOnwer || dataSelected.closed"></step-task>
+            </div>
           </ng-template>
         </e-tabitem>
         <e-tabitem >
