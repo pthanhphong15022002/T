@@ -1735,35 +1735,39 @@ export class CodxHrService {
     );
   }
 
-  addEContract(data: any) {
+  addEContract(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'AddEContractAsync',
-      [data]
+      [data, useForQTNS]
     );
   }
 
-  validateBeforeSaveContract(data: any, isAddNew: boolean) {
+  validateBeforeSaveContract(
+    data: any,
+    isAddNew: boolean,
+    useForQTNS: boolean
+  ) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'ValidateBeforeSaveAsync',
-      [data, isAddNew]
+      [data, isAddNew, useForQTNS]
     );
   }
 
   ValidateBeforeSaveAsync;
 
-  editEContract(data: any) {
+  editEContract(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'EditEContractAsync',
-      data
+      [data, useForQTNS]
     );
   }
 
@@ -2282,25 +2286,25 @@ export class CodxHrService {
     );
   }
 
-  getFunctionList(funcID: string) {
-    return this.api.execSv<any>(
-      'SYS',
-      'AD',
-      'SystemSettingsBusiness',
-      'GetFunctionAsync',
-      funcID
-    );
-  }
-
   // getFunctionList(funcID: string) {
   //   return this.api.execSv<any>(
   //     'SYS',
-  //     'SYS',
-  //     'FunctionListBusiness',
-  //     'GetByFuncAsync',
+  //     'AD',
+  //     'SystemSettingsBusiness',
+  //     'GetFunctionAsync',
   //     funcID
   //   );
   // }
+
+  getFunctionList(funcID: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'FunctionListBusiness',
+      'GetByParentAsync',
+      [funcID, true]
+    );
+  }
 
   getOrgTreeByOrgID(orgID: string, level: number) {
     return this.api.execSv<any>(

@@ -42,7 +42,7 @@
     </div>
     <!-- <i class="prev" (click)="imagemAnterior()"></i>
     <i class="next" (click)="proximaImagem()"></i> -->
-    <div class="next-previrous px-5">
+    <div class="next-previrous px-5" *ngIf="images?.length > 1">
         <span class="btn rounded-circle btn-icon btn-light-primary cursor-pointer" (click)="imagemAnterior()">
             <span class="icon-i-chevron-left icon-24"></span></span>
         <span class="btn rounded-circle btn-icon btn-light-primary cursor-pointer" (click)="proximaImagem()">

@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import {
   CRUDService,
-  CodxComboboxComponent,
   CodxFormComponent,
   CodxInputComponent,
   DataRequest,
@@ -16,7 +15,7 @@ import {
   DialogRef,
   ImageViewerComponent,
   NotificationsService,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
@@ -434,7 +433,7 @@ export class PopupAddJournalComponent
       this.journal.invoiceForm = null;
     }
 
-    if (!this.journalTypes110.includes(this.journal.journalType)) {
+    if (!this.journalTypes109.includes(this.journal.journalType)) {
       this.journal.idimControl = null;
     }
 

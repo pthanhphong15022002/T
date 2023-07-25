@@ -49,7 +49,8 @@ export class PopupEProcessContractComponent
   openFrom: string;
   employeeObj: any;
 
-  disabledInput=false;
+  disabledInput = false;
+  useForQTNS: boolean = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
@@ -106,12 +107,17 @@ export class PopupEProcessContractComponent
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
+    this.useForQTNS = data?.data?.useForQTNS;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    if (data?.data?.empObj) {
+      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    } else {
+      this.employeeObj = {};
+    }
 
     if (this.data?.benefits) {
       this.tempBenefitArr = JSON.parse(this.data.benefits);
@@ -143,6 +149,11 @@ export class PopupEProcessContractComponent
           this.benefitFormGroup.patchValue(this.benefitObj);
         }
       });
+  }
+
+  setTitle(evt: any) {
+    this.headerText += ' ' + evt;
+    this.cr.detectChanges();
   }
 
   onInit(): void {
@@ -252,17 +263,24 @@ export class PopupEProcessContractComponent
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
 
-            this.formGroup.patchValue({
-              orgUnitID: this.employeeObj.orgUnitID,
-            });
-            this.formGroup.patchValue({
-              positionID: this.employeeObj.positionID,
-            });
+            if (this.employeeObj) {
+              this.formGroup.patchValue({
+                orgUnitID: this.employeeObj.orgUnitID,
+              });
+              this.formGroup.patchValue({
+                positionID: this.employeeObj.positionID,
+              });
+            }
+
             this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
-    } else if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+    } else if (
+      this.actionType === 'edit' ||
+      this.actionType === 'copy' ||
+      this.actionType === 'view'
+    ) {
       this.loadedAutoField = true;
       if (this.actionType == 'copy') {
         if (this.data.signedDate == '0001-01-01T00:00:00') {
@@ -321,7 +339,7 @@ export class PopupEProcessContractComponent
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice
-        .validateBeforeSaveContract(this.data, true)
+        .validateBeforeSaveContract(this.data, true, this.useForQTNS)
         .subscribe((res) => {
           if (res) {
             if (res[0]) {
@@ -335,12 +353,12 @@ export class PopupEProcessContractComponent
                 if (stt?.event.status == 'Y') {
                   if (res[1] == 'HR010') {
                     this.hrSevice
-                      .addEContract(this.data)
+                      .addEContract(this.data, this.useForQTNS)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
                           result[0].emp = this.employeeObj;
-                          console.log(result[0]);
+
                           this.dialog && this.dialog.close(result[0]);
                         }
                       });
@@ -349,12 +367,11 @@ export class PopupEProcessContractComponent
                     this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
 
                     this.hrSevice
-                      .addEContract(this.data)
+                      .addEContract(this.data, this.useForQTNS)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
                           result[0].emp = this.employeeObj;
-                          console.log(result[0]);
                           this.dialog && this.dialog.close(result[0]);
                         }
                       });
@@ -365,13 +382,15 @@ export class PopupEProcessContractComponent
           }
         });
     } else if (this.actionType == 'edit') {
-      this.hrSevice.editEContract(this.data).subscribe((res) => {
-        if (res && res[0]) {
-          this.notify.notifyCode('SYS007');
-          res[0].emp = this.employeeObj;
-          this.dialog && this.dialog.close(res[0]);
-        }
-      });
+      this.hrSevice
+        .editEContract(this.data, this.useForQTNS)
+        .subscribe((res) => {
+          if (res && res[0]) {
+            this.notify.notifyCode('SYS007');
+            res[0].emp = this.employeeObj;
+            this.dialog && this.dialog.close(res[0]);
+          }
+        });
     }
     this.cr.detectChanges();
   }
@@ -535,6 +554,7 @@ export class PopupEProcessContractComponent
   }
 
   handleSubContract(actionHeaderText: string, actionType: string, data: any) {
+    console.log(actionHeaderText);
     let optionSub = new SidebarModel();
     optionSub.Width = '550px';
     optionSub.zIndex = 1001;
@@ -549,7 +569,7 @@ export class PopupEProcessContractComponent
         contractNo: this.data.contractNo,
         actionType: actionType,
         dataObj: data,
-        headerText: actionHeaderText + 'Phụ lục hợp đồng lao động',
+        headerText: actionHeaderText + ' ' + 'Phụ lục hợp đồng lao động',
       }
     );
     popupSubContract.closed.subscribe((res) => {

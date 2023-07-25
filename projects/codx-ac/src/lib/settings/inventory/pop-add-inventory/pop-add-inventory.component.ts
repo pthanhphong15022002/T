@@ -30,6 +30,7 @@ export class PopAddInventoryComponent extends UIComponent {
   inventory: Inventorymodels;
   gridViewSetup: any;
   validate: any = 0;
+  keyField: any = '';
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
@@ -51,6 +52,7 @@ export class PopAddInventoryComponent extends UIComponent {
     this.inventory = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
+    this.keyField = dialog.dataService!.keyField;
     this.cache
       .gridViewSetup('InventoryModels', 'grvInventoryModels')
       .subscribe((res) => {
@@ -87,10 +89,24 @@ export class PopAddInventoryComponent extends UIComponent {
     this.dt.detectChanges();
   }
   checkValidate() {
+
+    //Note
+    let ignoredFields: string[] = [];
+    if(this.keyField == 'InventModelID')
+    {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.inventory);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if(ignoredFields.includes(keygrid[index].toLowerCase()))
+        {
+          continue;
+        }
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (

@@ -5,7 +5,7 @@
   [subHeader]="subHeader"
   [tabInfo]="tabInfo"
   [tabContent]="
-    funcID == 'CM0101'
+    funcID == 'CM0101' && radioChecked
       ? [tabGeneralInfo, tabDefault, tabAddress, tabContacts]
       : funcID == 'CM0102'
       ? [tabGeneralInfo, tabDefault, tabAddress]
@@ -88,7 +88,7 @@
         </codx-label>
         <div class="row mt-5">
           <div class="col-6">
-            <div class="form-group">
+            <div class="form-group" *ngIf="radioChecked">
               <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
               </codx-label>
               <codx-input
@@ -99,7 +99,7 @@
               </codx-input>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" *ngIf="radioChecked">
               <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
               </codx-label>
               <codx-input
@@ -121,7 +121,7 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="form-group">
+            <div class="form-group" *ngIf="radioChecked">
               <codx-label [formModel]="form.formModel" fiedName="Headcounts">
               </codx-label>
               <codx-input
@@ -141,7 +141,7 @@
               >
               </codx-input>
             </div>
-            <div class="form-group" style="margin-top: 33px">
+            <div class="form-group" style="margin-top: 33px" *ngIf="radioChecked">
               <div class="d-flex justify-content-between">
                 <div class="me-2">
                   <codx-input
@@ -433,7 +433,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0104'">
+        <div class="form-group mt-3" *ngIf="funcID == 'CM0104'">
           <codx-label [formModel]="form.formModel" fiedName="SegmentID">
           </codx-label>
           <codx-input
@@ -630,6 +630,53 @@
 </ng-template>
 
 <ng-template #tabCustomer>
+  <div class="row mb-4 mb-5 mt-5">
+    <div class="d-flex align-items-top col-6">
+      <span class="d-flex align-items-center w-25px h-1px">
+        <codx-input
+          name="customerCompay"
+          class="test-check"
+          type="radio"
+          field="yes"
+          [disabled]="action === 'edit'"
+          [checked]="radioChecked ?? false"
+          (valueChange)="changeRadio($event)"
+        ></codx-input>
+      </span>
+      <span class="d-flex align-items-center">
+        <codx-label
+          class="text-dark fw-bold"
+          name="lblCustomerCompany"
+          [formModel]="dialog.formModel"
+          default="Công ty"
+        ></codx-label>
+      </span>
+    </div>
+    <div class="d-flex align-items-top col-6">
+      <span class="d-flex align-items-center w-25px h-1px">
+        <codx-input
+          name="customerPerson"
+          class="test-check fw-bold"
+          type="radio"
+          style="width: 100%"
+          [disabled]="action === 'edit'"
+          field="no"
+          [checked]="!radioChecked ?? false"
+          (valueChange)="changeRadio($event)"
+        ></codx-input>
+      </span>
+
+      <span class="d-flex justify-content-end align-items-center">
+        <codx-label
+          class="text-dark fw-bold"
+          name="lblRadioAddCustomer"
+          [formModel]="dialog.formModel"
+          default="Khách hàng cá nhân"
+        ></codx-label>
+      </span>
+    </div>
+  </div>
+
   <div class="row mt-3">
     <div class="col-6">
       <div class="form-group">
@@ -696,7 +743,7 @@
     </codx-input>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="radioChecked">
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="ShortName">
@@ -709,17 +756,6 @@
         </codx-input>
       </div>
     </div>
-    <!-- <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
-        </codx-label>
-        <codx-input
-          type="datetime"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="establishDate"
-        >
-        </codx-input>
-      </div> -->
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="TaxCode">
@@ -733,7 +769,58 @@
       </div>
     </div>
   </div>
-
+  <div class="row" *ngIf="!radioChecked">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Gender">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="gender"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Birthday">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="birthday"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="!radioChecked">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="IDCardNo">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="idCardNo"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="IssuedOn">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="issuedOn"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
@@ -744,7 +831,66 @@
     >
     </codx-input>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="!radioChecked">
+    <div class="col-6 form-group">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <codx-label [formModel]="form.formModel" [fiedName]="'Phone'">
+          </codx-label>
+        </div>
+        <div class="d-flex align-items-center">
+          <codx-label
+            class="text-gray-500 me-2"
+            [formModel]="form.formModel"
+            [fiedName]="'AllowCall'"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="allowCall"
+          >
+          </codx-input>
+        </div>
+      </div>
+
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [field]="'phone'"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <codx-label [formModel]="form.formModel" [fiedName]="'Email'">
+          </codx-label>
+        </div>
+        <div class="d-flex align-items-center">
+          <codx-label
+            class="text-gray-500 me-2"
+            [formModel]="form.formModel"
+            [fiedName]="'AllowEmail'"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="allowEmail"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [field]="'email'"
+      >
+      </codx-input>
+    </div>
+  </div>
+  <div class="row" *ngIf="radioChecked">
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
@@ -778,7 +924,7 @@
     >
     </codx-input>
   </div>
-  <div class="form-group">
+  <div class="form-group" *ngIf="radioChecked">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>
     <codx-input
@@ -797,6 +943,16 @@
       field="industries"
     >
     </codx-input> -->
+  </div>
+  <div class="form-group" *ngIf="!radioChecked">
+    <codx-label [formModel]="form.formModel" fiedName="Occupation">
+    </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="occupation"
+    >
+    </codx-input>
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Owner"> </codx-label>

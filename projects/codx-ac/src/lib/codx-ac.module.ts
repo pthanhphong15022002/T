@@ -8,7 +8,7 @@ import {
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { SidebarModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
@@ -53,10 +53,10 @@ import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-li
 import { PopAddReceiptsComponent } from './vouchers/cash-receipts/pop-add-receipts/pop-add-receipts.component';
 import { CashTransfersComponent } from './vouchers/cash-transfers/cash-transfers.component';
 import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
-import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
-import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
-import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
 import { PopAddLineReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
+import { PopAddLineComponent } from './vouchers/purchase-invoices/pop-add-line/pop-add-line.component';
+import { PopAddPurchaseComponent } from './vouchers/purchase-invoices/pop-add-purchase/pop-add-purchase.component';
+import { PurchaseinvoicesComponent } from './vouchers/purchase-invoices/purchase-invoices.component';
 import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
 import { TableLineDetailStaticComponent } from './vouchers/sales-invoices/components/table-line-detail-static/table-line-detail-static.component';
@@ -323,6 +323,7 @@ export const routes: Routes = [
     CircularGaugeModule,
     TooltipModule,
     ChartAllModule,
+    SidebarModule
   ],
 })
 export class AcModule {}

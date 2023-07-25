@@ -1,9 +1,10 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthStore, DialogModel, LayoutService, PageLink, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { AuthService, AuthStore, DialogModel, LayoutService, PageLink, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.component';
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'codx-report-view-detail',
@@ -14,12 +15,12 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   @ViewChild('report') report:TemplateRef<any>;
   @ViewChild('view') viewBase:ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!:ElementRef<any>;
-  onInit(): void {
-    this.funcID = this.router.snapshot.params['funcID'];
-  }
+  
 
-   views: ViewModel[];
+  views: ViewModel[];
   viewType = ViewType;
+  mssgSYS043:string = "";
+  mssgSYS044:string = "";
   @Input() funcID:any;
   @Input() predicate:any = "";
   @Input() dataValue:any="";
@@ -38,16 +39,41 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   rootFunction:any;
   funcItem:any;
   reportList:any=[];
+  user:any = null;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
     private layout: LayoutService,
     private pageTitle: PageTitleService,
     private routerNg:Router,
-    private auth : AuthStore
+    private auth : AuthStore,
+    private authSV : AuthService,
+    private apihttp:HttpClient
+
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.user = this.auth.get();
+  }
+
+  onInit(): void {
+    this.router.params.subscribe((param:any) => {
+      this.funcID = param.funcID;
+      this.getReport(this.funcID);
+    });
+    this.getMessageDefault();
+  }
+
+  getMessageDefault(){
+    this.cache.message("SYS043")
+    .subscribe((mssg:any) => {
+      if(mssg.defaultName)
+        this.mssgSYS043 = mssg.defaultName;
+    });
+    this.cache.message("SYS044")
+    .subscribe((mssg:any) => {
+      if(mssg.defaultName)
+        this.mssgSYS044 = mssg.defaultName;
+    });
   }
   ngOnDestroy(): void {
     this.pageTitle.setSubTitle("");
@@ -69,15 +95,15 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           panelLeftRef:this.report
         },
       },
-      // {
-      //   type: ViewType.list,
-      //   sameData: true,
-      //   active: false,
+      {
+        type: ViewType.content,
+        sameData: true,
+        active: false,
 
-      //   // model: {
-      //   //   template: ,
-      //   // },
-      // },
+        model: {
+          panelLeftRef:this.report
+        },
+      },
     ];
 
     this.routerNg.events.subscribe((event: any)=>{
@@ -90,7 +116,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           this.pageTitle.setRootNode(this.rootFunction.customName);
 
           //this.funcID = this.router.snapshot.params['funcID'];
-          this.getReport(funcID);
+          //this.getReport(funcID);
         }
         else if(event.url.includes(this.rootFunction.funtionID)){
 
@@ -106,12 +132,10 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
 
   }
   viewChanged(e:any){
-    //this.funcID = this.router.snapshot.params['funcID'];
     this.viewBase.moreFuncs = this.moreFc;
-    //this.pageTitle.setBreadcrumbs([]);
-    if(this.funcID){
-      this.getReport(this.funcID);
-    }
+    // if(this.funcID && !this.funcItem){
+    //   this.getReport(this.funcID);
+    // }
   }
 
   onActions(e:any){
@@ -153,13 +177,17 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       option
     );
   }
-
+  isRunMode = false;
   filterReportChange(e:any){
+    debugger
+    if(this.isRunMode)
+      this.isRunMode = false;
     // if(e[0]){
     //   debugger
     //   this.predicate = e[0].predicates;
     //   this.dataValue = e[0].dataValues;
     // }
+    if(e == null) return;
     let objParam:any = {};
     let objLabel:any={};
     if(e[1]){
@@ -191,22 +219,25 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
     })
   }
-getReport(funcID:string){
+  //get report by ID
+  getReport(funcID:string){
     this.api
     .execSv(
       'rptsys',
-      'Codx.RptBusiniess.SYS',
-      'ReportListBusiness',
+      'Codx.RptBusiness.CM',
+      'ReportBusiness',
       'GetAsync',
-      funcID
-    )
-    .subscribe((res: any) => {
+      [funcID])
+      .subscribe((res: any) => {
       if (res) {
         this.funcItem = res;
         this.reportID = res.reportID;
+        this.isRunMode = res.runMode == "1";
         this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
-        this.pageTitle.setSubTitle("")
-
+        this.pageTitle.setSubTitle("");
+        if(res.displayMode == "3"){
+          this.test();
+        }
       }
     });
   }
@@ -244,4 +275,15 @@ getReport(funcID:string){
     this.setBreadCrumb(this.funcItem,true);
   }
 
+  clickViewReport(){
+    (document.querySelector(".btnApply") as any)?.click();
+  }
+
+  url:string = "";
+  test(){
+    let sk = "sk=" + btoa(this.authSV.userValue.userID+"|"+this.authSV.userValue.securityKey);
+    this.url = `http://localhost:9002/api/reportdowload/GetReportByPDF?reportID=58007c85-00e4-ed11-94ac-00155d03551a&${sk}`;
+  }
 }
+
+

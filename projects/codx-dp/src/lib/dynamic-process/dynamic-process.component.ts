@@ -1,5 +1,3 @@
-import { paste } from '@syncfusion/ej2-angular-richtexteditor';
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -22,14 +20,11 @@ import {
   ViewType,
   DialogModel,
   SidebarModel,
-  CallFuncService,
   Util,
   RequestOption,
   DialogRef,
-  CodxCardImgComponent,
   FormModel,
   CRUDService,
-  DataService,
   CodxLabelComponent,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
@@ -38,12 +33,6 @@ import { PopupViewsDetailsProcessComponent } from './popup-views-details-process
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { environment } from 'src/environments/environment';
 import { PopupPropertiesComponent } from './popup-properties/popup-properties.component';
-import {
-  AccordionComponent,
-  ExpandEventArgs,
-} from '@syncfusion/ej2-angular-navigations';
-import { CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
-import { closest } from '@syncfusion/ej2-base';
 import { firstValueFrom } from 'rxjs';
 import { LayoutComponent } from '../_layout/layout.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
@@ -670,13 +659,16 @@ export class DynamicProcessComponent
             }
             break;
           case 'DP01016':
-            if (data.category === '0' || data.released || !data?.publish) res.disabled = true;
+            if (data.category === '0' || data.released || !data?.publish)
+              res.disabled = true;
             break;
           case 'DP01017':
-            if (data.category === '0' || !data.released || !data?.publish) res.disabled = true;
+            if (data.category === '0' || !data.released || !data?.publish)
+              res.disabled = true;
             break;
           case 'DP01018':
-            if (data.category === '0' || !data.released || !data?.publish)  res.disabled = true;
+            if (data.category === '0' || !data.released || !data?.publish)
+              res.disabled = true;
             break;
         }
       });
@@ -1036,8 +1028,10 @@ export class DynamicProcessComponent
     }
     if (predicates) predicates = '( ' + predicates + ' )';
 
-    (this.view.dataService as CRUDService)
-      .setPredicates([predicates], [dataValueFilter.join(';')]);
+    (this.view.dataService as CRUDService).setPredicates(
+      [predicates],
+      [dataValueFilter.join(';')]
+    );
   }
 
   //setting trình kí

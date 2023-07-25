@@ -1691,12 +1691,12 @@
     <div class="d-flex align-items-center">
       <codx-label
         class="mb-1"
-        name="lblStage"
+        name="stepsColorMode"
         [formModel]="dialog.formModel"
         default="Thiết lập mặc định"
       ></codx-label>
       <codx-input
-        class="ms-1"
+        class="ms-2"
         type="switch"
         [checked]="process?.stepsColorMode"
         (valueChange)="valueChange($event)"
@@ -1732,7 +1732,7 @@
           (cdkDropListDropped)="dropStep($event)"
         >
           <!-- danh sách giai đoạn -->
-          <div class="stage-scroll">
+          <div class="stage-scroll" *ngIf="stepList?.length > 0">
             <div
               cdkDrag
               *ngFor="let itemStep of stepList; let i = index"
@@ -1743,7 +1743,7 @@
               (click)="
                 clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
               "
-              [ngStyle]="setColorStep(itemStep)"
+              [ngStyle]="{ 'background-color': setColorStep(itemStep)}"
               [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             >
               <ng-container
@@ -1751,7 +1751,7 @@
               >
                 <div
                   class="d-flex flex-column"
-                  [ngStyle]="setColorTestStep(itemStep)"
+                  [ngStyle]="{color: setColorTestStep(itemStep)}"
                 >
                   <div class="d-flex">
                     <span
@@ -1830,7 +1830,7 @@
               class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom has-action-menu"
               [ngClass]="viewStepCrr === viewStepReasonSuccess ? 'click' : ''"
               (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
-              [ngStyle]="setColorStep(stepSuccess)"
+              [ngStyle]="{ 'background-color': setColorStep(stepSuccess)}"
             >
               <div
                 class="order"
@@ -1842,7 +1842,10 @@
                 >
                 </i>
               </div>
-              <div class="d-flex flex-column" [ngStyle]="setColorTestStep(stepSuccess)">
+              <div
+                class="d-flex flex-column"
+                [ngStyle]="{color: setColorTestStep(stepSuccess)}"
+              >
                 <div class="fw-bold">
                   {{ stepNameSuccess }}
                 </div>
@@ -1865,7 +1868,7 @@
               class="list-stage cursor-pointer drap-drop has-action-menu"
               [ngClass]="viewStepCrr === viewStepReasonFail ? 'click' : ''"
               (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
-              [ngStyle]="setColorStep(stepFail)"
+              [ngStyle]="{ 'background-color': setColorStep(stepFail)}"
             >
               <div
                 class="order"
@@ -1877,7 +1880,10 @@
                 >
                 </i>
               </div>
-              <div class="d-flex flex-column" [ngStyle]="setColorTestStep(stepFail)">
+              <div
+                class="d-flex flex-column"
+                [ngStyle]="{color: setColorTestStep(stepFail)}"
+              >
                 <div class="fw-bold">
                   {{ stepNameFail }}
                 </div>
@@ -2316,7 +2322,10 @@
   </div>
 
   <div class="form-group row">
-    <div class="col-6 d-flex align-items-center justify-content-between" *ngIf="!process?.stepsColorMode">
+    <div
+      class="col-6 d-flex align-items-center justify-content-between"
+      *ngIf="!process?.stepsColorMode"
+    >
       <codx-label
         fiedName="backgroundColor"
         [formModel]="grvStep"
@@ -2335,7 +2344,10 @@
       >
       </codx-input>
     </div>
-    <div class="col-6 d-flex align-items-center" *ngIf="!process?.stepsColorMode">
+    <div
+      class="col-6 d-flex align-items-center"
+      *ngIf="!process?.stepsColorMode"
+    >
       <codx-label
         class="me-4"
         fiedName="textColor"

@@ -1,0 +1,535 @@
+<codx-form
+  #form
+  [body]="body"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [data]="master"
+  [customToolbar]="subToolbar"
+  [openMore]="false"
+  class="ac-dialog"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="card-add h-100 d-flex flex-column">
+    <ejs-tab>
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-info icon-20 me-2"></i>
+              <codx-label
+                fiedName="lblGeneralInfoTab"
+                default="Thông tin chứng từ"
+                [formModel]="form.formModel"
+                class="fw-bold fs-6"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabCommonInfo"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+
+    <ejs-tab heightAdjustMode="Fill" class="overflow-auto mb-4" id="styledTab" #tab>
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-format_list_numbered icon-20 me-2"></i>
+              <codx-label
+                fiedName="lblDetail"
+                default="Chi tiết"
+                [formModel]="form.formModel"
+                class="fw-bold fs-6"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <div class="position-relative h-100">
+              <codx-gridview-v2
+                *ngIf="journal?.addNewMode === '1'; else dialogMode"
+                #gridPurchaseInvoiceLines
+                class="tabLine"
+                [formName]="fmPurchaseInvoicesLines.formName"
+                [gridViewName]="fmPurchaseInvoicesLines.gridViewName"
+                [entityName]="fmPurchaseInvoicesLines.entityName"
+                [templateMore]="morefunction"
+                [editSettings]="editSettings"
+                [allowFiltering]="true"
+                [allowSorting]="true"
+                [autoLoad]="false"
+                [rowHeight]="35"
+                [dataSource]="lines"
+                (cellChanged)="onCellChange($event)"
+                (created)="onGridCreated($event, gridPurchaseInvoiceLines)"
+                (onAddNew)="onEndAddNew($event)"
+                (onEdit)="onEndEdit($event)"
+                (eventAction)="onActionEvent($event)"
+              ></codx-gridview-v2>
+              <ng-template #dialogMode> </ng-template>
+
+              <button
+                id="btnAddLine"
+                class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
+                style="top: -28px"
+                (click)="onClickAddRow()"
+              >
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label
+                  fiedName="lblAddLine"
+                  [formModel]="fmPurchaseInvoicesLines"
+                  default="Thêm dòng"
+                ></codx-label>
+              </button>
+            </div>
+          </ng-template>
+        </e-tabitem>
+
+        <e-tabitem *ngIf="vatType == '2'">
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-format_list_numbered icon-20 me-2"></i>
+              <codx-label
+                fiedName="lblInvoice"
+                default="Hóa đơn"
+                [formModel]="form.formModel"
+                class="fw-bold fs-6"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <div class="position-relative h-100">
+              <codx-gridview-v2
+                #gridVatInvoices
+                [formName]="fmVATInvoices.formName"
+                [gridViewName]="fmVATInvoices.gridViewName"
+                [entityName]="fmVATInvoices.entityName"
+                [templateMore]="morefunction"
+                [editSettings]="editSettings"
+                [allowFiltering]="true"
+                [allowSorting]="true"
+                [dataSource]="vatInvoices"
+                [rowHeight]="35"
+                (cellChanged)="cellChangedInvoice($event)"
+                (created)="onGridCreated($event, gridVatInvoices)"
+              ></codx-gridview-v2>
+
+              <button
+                id="btnAddLine2"
+                class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
+                style="top: -28px"
+              >
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label
+                  fiedName="lblAddLine"
+                  [formModel]="fmVATInvoices"
+                  default="Thêm dòng"
+                ></codx-label>
+              </button>
+            </div>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+
+    <ng-container *ngIf="!isInvoiceRefHidden">
+      <div class="mb-3 text-primary fw-bold fs-5">
+        <codx-label
+          fiedName="lblRefInfo"
+          [formModel]="form.formModel"
+          default="Thông tin hóa đơn tham chiếu"
+        ></codx-label>
+      </div>
+      <div class="row">
+        <div class="col-2 form-group">
+          <codx-label
+            fiedName="invoiceForm"
+            [formModel]="form.formModel"
+            default="Mẫu số"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceForm"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-2 form-group">
+          <codx-label
+            fiedName="invoiceSeri"
+            [formModel]="form.formModel"
+            default="Ký hiệu"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceSeri"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          ></codx-input>
+        </div>
+        <div class="col-4 form-group">
+          <codx-label
+            fiedName="InvoiceNo"
+            [formModel]="form.formModel"
+            default="Số hóa đơn"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceNo"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-4 form-group">
+          <codx-label
+            fiedName="invoiceDate"
+            [formModel]="form.formModel"
+            default="Ngày hóa đơn"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceDate"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #subToolbar>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-3">
+      <div class="d-flex justify-content-start align-items-center me-2">
+        <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
+          <i
+            class="icon-16"
+            [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
+          ></i>
+        </div>
+        <div
+          class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1"
+        >
+          {{ formTitle }}
+        </div>
+        <div class="input-circle input-sm" *ngIf="form?.formGroup">
+          <span class="me-2">
+            <codx-vll
+              [formModel]="form.formModel"
+              field="Status"
+              [value]="master?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-md"
+            >
+            </codx-vll>
+          </span>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center me-3">
+        <button
+          *ngIf="!isEdit"
+          type="button"
+          class="btn btn-md btn-light-primary ms-2"
+          (click)="onClickSave(false)"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSaveAndClear"
+            [formModel]="form.formModel"
+            default="Lưu & thêm"
+          ></codx-label>
+        </button>
+
+        <button
+          type="button"
+          style="min-width: 60px"
+          class="btn btn-md btn-primary ms-2 me-2"
+          (click)="onClickSave(true)"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSave"
+            [formModel]="form.formModel"
+            default="Lưu"
+          ></codx-label>
+        </button>
+
+        <button
+          class="btn btn-md btn-danger"
+          (click)="onDiscard()"
+          *ngIf="masterService.hasSaved && master.status == '0'"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblDiscard"
+            [formModel]="form.formModel"
+            default="Hủy bỏ"
+          ></codx-label>
+        </button>
+
+        <div
+          class="btn btn-icon btn-light-danger btn-circle bg ms-2"
+          (click)="onClickClose()"
+        >
+          <i class="icon-close icon-18"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tabCommonInfo>
+  <div class="row mt-5">
+    <div class="col-7 ac-left">
+      <div class="mw-750px row">
+        <div class="col-3 form-group">
+          <codx-label
+            fiedName="objectID"
+            [formModel]="form.formModel"
+            default="Mã nhà cung cấp"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="objectID"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <codx-label
+            fiedName="objectName"
+            [formModel]="form.formModel"
+            default="Tên nhà cung cấp"
+          >
+          </codx-label>
+          <codx-input
+            field="objectName"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="true"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label fiedName="pmtMethodID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="pmtMethodID"
+            [formModel]="form.formModel"
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-3 form-group">
+          <codx-label
+            fiedName="pmtTermID"
+            [formModel]="form.formModel"
+            default="Điều khoản thanh toán"
+          >
+          </codx-label>
+          <codx-input
+            field="pmtTermID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label
+            fiedName="buyer"
+            [formModel]="form.formModel"
+            default="Nhân viên mua hàng"
+          >
+          </codx-label>
+          <codx-input
+            field="buyer"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label
+            fiedName="invoiceDueDate"
+            [formModel]="form.formModel"
+            default="Hạn thanh toán"
+          >
+          </codx-label>
+          <codx-input
+            field="invoiceDueDate"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label
+            fiedName="taxExchRate"
+            [formModel]="form.formModel"
+            default="Tỷ giá thuế"
+          >
+          </codx-label>
+          <codx-input
+            field="taxExchRate"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (controlBlur)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-12 form-group">
+          <codx-label
+            fiedName="memo"
+            [formModel]="form.formModel"
+            default="Diễn giải"
+          >
+          </codx-label>
+          <codx-input
+            field="memo"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="col-2 ac-bettween"></div>
+    <div class="col-3 ac-right d-flex justify-content-end">
+      <div class="mw-300px row">
+        <div class="col-6 form-group">
+          <codx-label
+            fiedName="currencyID"
+            [formModel]="form.formModel"
+            default="Tiền tệ"
+          >
+          </codx-label>
+          <codx-input
+            field="currencyID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="!journal?.multiCurrency"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <codx-label
+            fiedName="exchangeRate"
+            [formModel]="form.formModel"
+            default="Tỷ giá"
+          >
+          </codx-label>
+          <codx-input
+            field="exchangeRate"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="!journal?.multiCurrency"
+            (controlBlur)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-6 form-group">
+          <codx-label
+            fiedName="voucherDate"
+            [formModel]="form.formModel"
+            default="Ngày chứng từ"
+          >
+          </codx-label>
+          <codx-input
+            field="voucherDate"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <codx-label
+            fiedName="voucherNo"
+            [formModel]="form.formModel"
+            default="Số chứng từ"
+          >
+          </codx-label>
+          <codx-input
+            field="voucherNo"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="journal?.assignRule != '0'"
+            [placeholder]="
+              journal?.assignRule == '2'
+                ? (voucherNoPlaceholderText$ | async)
+                : ''
+            "
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-12 form-group">
+          <codx-label
+            fiedName="postedDate"
+            [formModel]="form.formModel"
+            default="Ngày ghi sổ"
+          >
+          </codx-label>
+          <codx-input
+            field="postedDate"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #morefunction let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="form.formModel"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="onChangeMF($event)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
+</ng-template>
+
+<ng-template #footer>
+  <div
+    class="codx-detail-footer dialog-footer"
+    [ngClass]="expanded ? 'expand' : 'collape'"
+  >
+    <div
+      class="btn btn-white btn-icon tab-action"
+      (click)="expanded = !expanded"
+    >
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
+    <codx-tabs
+      [entityName]="form.formModel.entityName"
+      [formModel]="form.formModel"
+      [objectID]="master?.recID"
+      [funcID]="form.formModel.funcID"
+      [TabControl]="tabInfo"
+    ></codx-tabs>
+  </div>
+</ng-template>

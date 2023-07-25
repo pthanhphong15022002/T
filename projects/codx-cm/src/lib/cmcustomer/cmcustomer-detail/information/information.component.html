@@ -166,7 +166,7 @@
             "
           ></div>
         </div>
-        <div class="mb-5px d-flex align-items-top">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -184,7 +184,43 @@
             "
           ></div>
         </div>
-        <div class="mb-5px d-flex align-items-top">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '2'">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Gender"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.gender
+                | formatvalue : formModel : 'Gender'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '2'">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="Birthday"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.birthday
+                | formatvalue : formModel : 'Birthday'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -202,7 +238,7 @@
             "
           ></div>
         </div>
-        <div class="mb-5px d-flex align-items-top">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -218,7 +254,7 @@
             "
           ></div>
         </div>
-        <div class="mb-5px d-flex align-items-top">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -256,7 +292,7 @@
     </div>
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div class="mb-5px d-flex align-items-top">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -274,7 +310,43 @@
             "
           ></div>
         </div>
-        <div class="mb-5px d-flex align-items-top">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '2'">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="IDCardNo"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.idCardNo
+                | formatvalue : formModel : 'IDCardNo'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '2'">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="IssuedOn"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.issuedOn
+                | formatvalue : formModel : 'IssuedOn'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -292,7 +364,7 @@
             "
           ></div>
         </div>
-        <div class="mb-5px d-flex align-items-top">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
@@ -310,7 +382,7 @@
             "
           ></div>
         </div>
-        <div class="mb-5px d-flex align-items-top" *ngIf="funcID == 'CM0101'">
+        <div class="mb-5px d-flex align-items-top" *ngIf="dataSelected?.category == '1'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"

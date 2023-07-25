@@ -5,9 +5,12 @@
   <div class="w-100">
     <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
       <div class="d-flex align-items-center me-2">
-        <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
-          <i class="icon-add_box icon-16"></i>
+        <div class="btn btn-icon btn-sm btn-primary btn-circle me-2">
+          <i class="icon-i-check2-square icon-16"></i>
         </div>
+        <!-- <div style="background-color: var(--primary-dark);"class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+          <i style="color: white;" class="icon-i-check2-square icon-16"></i>
+        </div> -->
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           Chọn hóa đơn công nợ
         </div>
@@ -26,10 +29,9 @@
 <!-- End: Header -->
 <!-- Start: Body -->
 <ng-template #body>
-  <div class="card-add mt-5" #cardbodyRef>
+  <div class="card-add" #cardbodyRef>
     <ejs-tab #cashRef>
       <e-tabitems>
-        <!-- Tab thông tin chứng từ -->
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
@@ -46,7 +48,6 @@
     </ejs-tab>
     <ejs-tab #tabObj>
       <e-tabitems>
-        <!-- Tab chi tiết bút toán -->
         <e-tabitem>
           <ng-template #headerText>
             <div #cashRef class="d-flex align-items-top me-2 mt-2">
@@ -81,12 +82,76 @@
 <!-- Start: Tab basic -->
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-6">
+    <div class="p-3 tab-basic">
+      <div #itemRef class="row">
+        <div class="col-3">
+          <div class="form-group">
+            <codx-label fiedName="objectID" default="Đối tượng">
+            </codx-label>
+            <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <codx-label fiedName="AccountID" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="accountID" [formModel]="form.formModel"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <codx-label fiedName="lblVoucherType" [formModel]="form.formModel" default="Loại hóa đơn">
+            </codx-label>
+            <codx-input field="voucherType" [crrValue]="'0'" type="valuelist" refValue="AC082" (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
+        <ng-container *ngIf="type === 0 ">
+          <div class="col-2">
+            <div class="form-group">
+              <div class="form-group">
+                <codx-label fiedName="InvoiceDueDate" default="Lọc từ ngày">
+                </codx-label>
+                <codx-input field="invoiceDueDate" [Group]="form.formGroup" (valueChange)="valueChange($event)"
+                  [formModel]="form.formModel">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <codx-label fiedName="lblDate" [formModel]="form.formModel" default="Xét trong khoảng">
+              </codx-label>
+              <codx-input type="text" field="date" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+              </codx-input>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="type === 1">
+          <ng-container *ngTemplateOutlet="tempAutpay"></ng-container>
+        </ng-container>
+        <div class="col-2 d-flex align-items-center mt-1">
+          <button type="button" class="btn btn-md btn-light-primary" style="min-width: 60px;border: 1px solid var(--primary-dark) !important;"
+              (click)="submit()">
+              <div class="d-flex align-items-center">
+                <i class="icon-i-funnel icon-16 me-1"></i>
+                <codx-label *ngIf="type === 0"  class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                  [gridViewName]="formModel?.gridViewName" default="Lấy dữ liệu"></codx-label>
+                <codx-label *ngIf="type === 1"  class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                  [gridViewName]="formModel?.gridViewName" default="Cấn trừ"></codx-label>
+              </div>
+            </button>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row mt-6">
       <div class="col-2">
         <div class="form-group">
-          <codx-label fiedName="objectID" [formModel]="form.formModel" default="Đối tượng">
+          <codx-label fiedName="objectID" default="Đối tượng">
           </codx-label>
-          <codx-input type="text" field="objectID" [disabled]="true" [crrValue]="cashpayment.objectName"></codx-input>
+          <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
         </div>
       </div>
       <div class="col-2">
@@ -102,7 +167,7 @@
         <div class="form-group">
           <codx-label fiedName="lblVoucherType" [formModel]="form.formModel" default="Loại hóa đơn">
           </codx-label>
-          <codx-input field="voucherType" type="valuelist" refValue="AC082" (valueChange)="valueChange($event)">
+          <codx-input field="voucherType" [crrValue]="'0'" type="valuelist" refValue="AC082" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -150,16 +215,16 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
   </ng-container>
 </ng-template>
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div class="tabset-content position-relative">
+  <div *ngIf="!loadingPop" class="tabset-content position-relative">
     <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName"
       [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices"
-      service="AC" [autoLoad]="false" [editSettings]="editSettings"
+      service="AC" [autoLoad]="false" [editSettings]="editSettings" [autoFitColumns]="false"
       (onSelected)="onSelected($event)" (onDoubleClick)="onDoubleClick($event)" (eventAction)="actions($event)"
       ></codx-gridview-v2>
   </div>

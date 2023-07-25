@@ -46,6 +46,9 @@ import { CodxImportComponent } from './components/codx-import/codx-import.compon
 import { CodxExportComponent } from './components/codx-export/codx-export.component';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { CodxAddApproversComponent } from './components/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
+import { ES_File } from './components/codx-approval-procress/model/codx-approval-process.model';
+import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 
 @Injectable({
   providedIn: 'root',
@@ -74,8 +77,7 @@ export class CodxShareService {
     private fileService: FileService,
     private signalRSV: SignalRService,
     private httpClient: HttpClient
-  ) {
-  }
+  ) {}
   loadFunctionList(funcID: any): Observable<any> {
     let paras = ['FuncID', funcID];
     let keyRoot = 'FuncID' + funcID;
@@ -1076,8 +1078,27 @@ export class CodxShareService {
       [processID]
     );
   }
+  getFileByObjectID(recID) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      recID
+    );
+  }
+  getSignFileTemplateByRefType(refType) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTemplateByRefTypeAsync',
+      refType
+    );
+  }
   //#region Codx Quy trình duyệt
   //-------------------------------------------Gửi duyệt--------------------------------------------//
+
   codxRelease(
     module: string, //Tên service
     recID: any, //RecID nghiệp vụ gốc
@@ -1087,7 +1108,7 @@ export class CodxShareService {
     userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     customEntityName: string, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
-    approvers: Array<string> =null, //Danh sách userID của RO
+    approvers: Array<string> = null //Danh sách userID của RO
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
@@ -1099,6 +1120,7 @@ export class CodxShareService {
     approveProcess.module = module;
     approveProcess.customEntityName = customEntityName;
     approveProcess.approvers = approvers;
+    approveProcess.title = title;
 
     return this.api.execSv(
       module,
@@ -1108,58 +1130,333 @@ export class CodxShareService {
       [approveProcess]
     );
   }
-  codxESignRelease(
+
+  codxReleaseDynamic(
     module: string, //Tên service
-    recID: any, //RecID nghiệp vụ gốc
-    processID: any, //Mã quy trình duyệt
+    data: any, //RecID nghiệp vụ gốc
+    category: any, //Mã quy trình duyệt
     entityName: string, //EntityName nghiệp vụ gốc
     funcID: string, //FunctionID nghiệp vụ gốc
-    userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
-    customEntityName: string //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+    releaseCallback: (response: ResponseModel) => void, //Hàm xử lí kết quả trả về
+    userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
+    approvers: Array<string> = null, //Danh sách userID của RO
+    customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+    releaseOnly: boolean = false
   ) {
-    if (processID?.eSign) {
-      if (
-        processID?.releaseControl == null ||
-        processID?.releaseControl == '1'
-      ) {
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-        //trình ký
-        let signFile = new ES_SignFile();
-        signFile.recID = recID;
-        signFile.categoryID = processID?.categoryID;
-        signFile.refID = recID;
-        signFile.refType = entityName;
+    let approveProcess = new ApproveProcess();
+    approveProcess.recID = data?.recID;
+    approveProcess.processID = category?.processID;
+    approveProcess.userID = userID;
+    approveProcess.entityName = entityName;
+    approveProcess.funcID = funcID;
+    approveProcess.htmlView = '<div>' + title + '</div>';
+    approveProcess.module = module;
+    approveProcess.title = title;
+    approveProcess.customEntityName = customEntityName;
+    approveProcess.approvers = approvers;
+    approveProcess.category = category;
+
+    //Gọi gửi duyệt thẳng (Dùng cho nội bộ ES_SignFile)
+    if (releaseOnly) {
+      this.baseRelease(approveProcess, releaseCallback);
+    } else {
+      //Kiểm tra tham số editApprovers
+      if (category?.editApprovers == true) {
         let dialogApprove = this.callfunc.openForm(
-          PopupAddSignFileComponent,
-          'Chỉnh sửa',
-          700,
-          650,
+          CodxAddApproversComponent,
           '',
-          {
-            oSignFile: signFile,
-            files: [],
-            //cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
-            disableCateID: true,
-            refType: entityName,
-            refID: recID,
-            //formModel: this.view?.currentView?.formModel,
-          },
+          400,
+          250,
           '',
-          dialogModel
+          {},
+          ''
         );
         dialogApprove.closed.subscribe((res) => {
-          if (res.event && res.event?.approved == true) {
-            return { msgCodeError: null, rowCount: 1 };
+          if (res?.event) {
+            approveProcess.approvers = res?.event;
+            //Gửi duyệt
+            this.codxCheckReleaseESign(approveProcess, releaseCallback);
           } else {
+            //Tắt form chọn người duyệt
             return null;
           }
         });
       } else {
-        // Xử lí mới
-        return null;
+        //Gửi duyệt
+        this.codxCheckReleaseESign(approveProcess, releaseCallback);
       }
+    }
+  }
+  codxCheckReleaseESign(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void
+  ) {
+    if (approveProcess?.category?.eSign) {
+      switch (approveProcess?.category?.releaseControl) {
+        //Gửi duyệt kèm SignFile
+        case null:
+        case '1':
+          this.getFileByObjectID(approveProcess.recID).subscribe(
+            (listFiles: any) => {
+              if (listFiles) {
+                //Gửi kí số kèm file cũ
+                this.releaseWithOldFile(
+                  approveProcess,
+                  releaseCallback,
+                  listFiles
+                );
+              } else {
+                //Thêm trình kí ko có file
+                this.releaseWithEmptySignFile(approveProcess, releaseCallback);
+              }
+            }
+          );
+          break;
+
+        case '2':
+          this.getSignFileTemplateByRefType(
+            approveProcess?.entityName
+          ).subscribe((sfTemplates: any) => {
+            if (sfTemplates?.length >= 1) {
+              this.releaseAfterGetTemplate(
+                sfTemplates,
+                approveProcess,
+                releaseCallback
+              );
+            } else {
+              // Ko tìm thấy template mẫu của Category hiện tại
+              this.notificationsService.notify(
+                'Không tìm thấy mẫu thiết lập, vui lòng kiểm tra lại',
+                '2',
+                null
+              );
+              return;
+            }
+          });
+          break;
+
+        //Tự động Export và gửi duyệt ngầm
+        case '3':
+          this.releaseInBackground(approveProcess, releaseCallback);
+          break;
+      }
+    } else {
+      //Gửi duyệt thường
+      this.baseRelease(approveProcess, releaseCallback);
+    }
+  }
+
+  baseRelease(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void
+  ) {
+    this.api
+      .execSv(
+        approveProcess?.module,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'ReleaseAsync',
+        [approveProcess]
+      )
+      .subscribe((res: ResponseModel) => {
+        if (res) {
+          releaseCallback && releaseCallback(res);
+        }
+      });
+  }
+
+  releaseWithOldFile(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void,
+    listFiles: any
+  ) {
+    let signFile = this.createSignFile(approveProcess, listFiles);
+    this.openPopupSignFile(
+      approveProcess,
+      releaseCallback,
+      signFile,
+      listFiles
+    );
+  }
+
+  releaseWithExportFile(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void,
+    template: any,
+    releaseBackground: boolean = false
+  ) {
+    if (template?.templateID == null && !releaseBackground) {
+      //TemplateID null -> bật form kí số nhưng ko có file
+      this.releaseWithEmptySignFile(approveProcess, releaseCallback);
+    } else {
+      //Gọi hàm xuất file báo cáo
+      //wait
+      let listFiles = [];
+      let signFile = this.createSignFile(approveProcess, listFiles, template);
+      //Mở form trình kí và gửi duyệt
+      if (!releaseBackground) {
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+      }
+      //Tự tạo file trình kí và gửi duyêt ngầm
+      else {
+        //wait
+      }
+    }
+  }
+
+  releaseWithEmptySignFile(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void
+  ) {
+    let signFile = this.createSignFile(approveProcess);
+    this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+  }
+
+  releaseInBackground(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void
+  ) {
+    this.getFileByObjectID(approveProcess.recID).subscribe((listFiles: any) => {
+      if (listFiles?.length > 0) {
+        let signFile = this.createSignFile(approveProcess, listFiles);
+        this.openPopupSignFile(
+          approveProcess,
+          releaseCallback,
+          signFile,
+          listFiles
+        );
+      } else {
+        this.getSignFileTemplateByRefType(approveProcess?.entityName).subscribe(
+          (sfTemplates: any) => {
+            if (sfTemplates?.length >= 1) {
+              this.releaseAfterGetTemplate(
+                sfTemplates,
+                approveProcess,
+                releaseCallback,
+                true
+              );
+            } else {
+              // Ko tìm thấy template mẫu của Category hiện tại
+              this.notificationsService.notify(
+                'Không tìm thấy mẫu thiết lập, vui lòng kiểm tra lại',
+                '2',
+                null
+              );
+              return;
+            }
+          }
+        );
+      }
+    });
+  }
+
+  openPopupSignFile(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void,
+    signFile: ES_SignFile,
+    listFile: Array<any> = []
+  ) {
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+
+    let dialogSF = this.callfunc.openForm(
+      PopupAddSignFileComponent,
+      'Thêm mới',
+      700,
+      650,
+      '',
+      {
+        oSignFile: signFile,
+        files: listFile,
+        //cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
+        disableCateID: true,
+        refType: approveProcess.entityName,
+        refID: approveProcess.recID,
+        editApprovers: approveProcess.category?.editApprovers,
+        approvers: approveProcess.approvers,
+      },
+      '',
+      dialogModel
+    );
+    dialogSF.closed.subscribe((res) => {
+      if (res?.event && res?.event?.approved == true) {
+        let respone = new ResponseModel();
+        respone.msgCodeError = res?.event?.msgCodeError;
+        respone.rowCount = res?.event?.rowCount;
+        releaseCallback && releaseCallback(respone);
+      } else {
+        //Lưu - Tắt form kí số khi chưa gửi duyệt
+      }
+    });
+  }
+
+  createSignFile(
+    approveProcess: ApproveProcess,
+    listFiles: any = null,
+    template: any = null
+  ): ES_SignFile {
+    let signFile = new ES_SignFile();
+    signFile.recID = approveProcess?.recID;
+    signFile.categoryID = approveProcess?.category?.categoryID;
+    signFile.refID = approveProcess?.recID;
+    signFile.refType = approveProcess?.entityName;
+    signFile.title = approveProcess?.title;
+    signFile.files = [];
+    if (listFiles != null && listFiles?.length > 0) {
+      for (let i = 0; i < listFiles?.length; i++) {
+        let file = new ES_File();
+        file.fileID = listFiles[i].recID;
+        file.fileName = listFiles[i].fileName;
+        file.eSign = true;
+        signFile.files.push(file);
+      }
+    }
+    if (template != null) {
+      signFile.templateID = template.templateID;
+    }
+    return signFile;
+  }
+
+  releaseAfterGetTemplate(
+    sfTemplates: any,
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void,
+    releaseBackground: boolean = false
+  ) {
+    if (sfTemplates?.length > 1) {
+      let dialogTemplate = this.callfunc.openForm(
+        CodxGetTemplateSignFileComponent,
+        '',
+        400,
+        250,
+        '',
+        { sfTemplates: sfTemplates },
+        ''
+      );
+      dialogTemplate.closed.subscribe((res) => {
+        if (res?.event) {
+          let template = res?.event;
+          //Gửi duyệt
+          this.releaseWithExportFile(
+            approveProcess,
+            releaseCallback,
+            template,
+            releaseBackground
+          );
+        } else {
+          //Tắt form chọn người duyệt
+          return null;
+        }
+      });
+    } else if (sfTemplates?.length == 1) {
+      //Gửi duyệt
+      this.releaseWithExportFile(
+        approveProcess,
+        releaseCallback,
+        sfTemplates[0],
+        releaseBackground
+      );
     }
   }
 
@@ -1227,12 +1524,65 @@ export class CodxShareService {
     );
   }
   //#endregion Codx Quy trình duyệt
+
+  //Lấy icon Folder/File
+  getIconFile(ex: string) {
+    if (!ex) return 'file.svg';
+    var ext = ex.toLocaleLowerCase();
+    switch (ext) {
+      case '.txt':
+        return 'txt.svg';
+      case '.doc':
+      case '.docx':
+        return 'doc.svg';
+      case '.7z':
+      case '.rar':
+      case '.zip':
+        return 'zip.svg';
+      case '.jpg':
+      case '.jpeg':
+      case '.jfif':
+        return 'jpg.svg';
+      case '.mp4':
+        return 'mp4.svg';
+      case '.xls':
+      case '.xlsx':
+        return 'xls.svg';
+      case '.pdf':
+        return 'pdf.svg';
+      case '.png':
+        return 'png.svg';
+      case '.js':
+        return 'javascript.svg';
+      case '.apk':
+        return 'android.svg';
+      case '.ppt':
+        return 'ppt.svg';
+      case '.mp3':
+      case '.wma':
+      case '.wav':
+      case '.flac':
+      case '.ogg':
+      case '.aiff':
+      case '.aac':
+      case '.alac':
+      case '.lossless':
+      case '.wma9':
+      case '.aac+':
+      case '.ac3':
+        return 'audio.svg';
+      default:
+        return 'file.svg';
+    }
+  }
 }
 //#region Model
 export class ResponseModel {
   rowCount: number;
   msgCodeError: string;
+  approveStatus: string;
 }
+
 export class Approvers {
   recID: string;
   roleType: string;

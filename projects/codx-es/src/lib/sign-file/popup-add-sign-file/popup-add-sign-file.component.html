@@ -72,7 +72,7 @@
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
-          <div [ngClass]="
+          <div *ngIf="!editApprovers" [ngClass]="
               isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
             " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
@@ -86,7 +86,7 @@
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
-              <div class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''">
+              <div  class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''">
                 <codx-label name="lblApprovalStep" default="Quy trình duyệt" [formModel]="formModelCustom"></codx-label>
               </div>
             </div>
@@ -300,7 +300,7 @@
           </div>
 
 
-          <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
+          <div *ngIf="!editApprovers" class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
             <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 1" [transId]="
                 data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl" [isTemplate]="data?.isTemplate"
                [recID]="data.recID" [type]="'1'" [eSign]="eSign" [signatureType]="signatureType" [refType]="data?.refType !=null ? data?.refType :refType"
@@ -343,7 +343,7 @@
             <codx-label name="lblContinue" [formModel]="formModelCustom" default="Tiếp tục"></codx-label>
           </button>
 
-          <div class="d-flex" *ngIf="eSign == false && currentTab == 1 && modeView != '2'">
+          <div class="d-flex" *ngIf="eSign == false && currentTab == 1 && !editApprovers && modeView != '2'">
             <ng-container>
               <div ngbDropdown class="dropdown">
                 <button

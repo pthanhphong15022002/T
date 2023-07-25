@@ -38,6 +38,7 @@ import { CodxInviteRoomAttendeesComponent } from './codx-invite-room-attendees/c
 import { ɵglobal as global } from '@angular/core';
 import { CodxBookingService } from './codx-booking.service';
 import { CodxBookingViewDetailComponent } from './codx-booking-view-detail/codx-booking-view-detail.component';
+import { GridColumn } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'codx-booking',
@@ -61,7 +62,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   //grid view
   @ViewChild('gridResourceName') gridResourceName: TemplateRef<any>;
-  @ViewChild('gridHost') gridHost: TemplateRef<any>;
+  @ViewChild('gridOwner') gridOwner: TemplateRef<any>;
   @ViewChild('gridMF') gridMF: TemplateRef<any>;
   @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
   @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
@@ -180,34 +181,42 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     field: 'bookingOn',
                     template: this.gridBookingOn,
                     headerText: this.grView?.bookingOn?.headerText,
+                    isVisible : this.grView?.bookingOn?.isVisible,
+                    
                   },
                   {
                     field: 'resourceID',
                     template: this.gridResourceName,
                     headerText: this.grView?.resourceID?.headerText,
+                    isVisible : this.grView?.resourceID?.isVisible,
                   },
                   {
                     field: 'title',
                     headerText: this.grView?.title?.headerText,
+                    isVisible : this.grView?.title?.isVisible,
                   },
                   {
                     field: 'owner',
-                    template: this.gridHost,
-                    headerText: 'Người chủ trì',
+                    template: this.gridOwner,
+                    headerText: this.grView?.owner?.headerText,
+                    isVisible : this.grView?.owner?.isVisible,
                   },
                   {
                     field: 'startDate',
                     template: this.gridStartDate,
                     headerText: this.grView?.startDate?.headerText,
+                    isVisible : this.grView?.startDate?.isVisible,
                   },
                   {
                     field: 'endDate',
                     template: this.gridEndDate,
                     headerText: this.grView?.endDate?.headerText,
+                    isVisible : this.grView?.endDate?.isVisible,
                   },
                   {
                     field: 'requester',
                     headerText: this.grView?.requester?.headerText,
+                    isVisible : this.grView?.requester?.isVisible,
                   },
                   {
                     field: '',
@@ -215,6 +224,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     width: 120,
                     template: this.gridMF,
                     textAlign: 'center',
+                    isVisible : true,
                   },
                 ];
                 this.views = [

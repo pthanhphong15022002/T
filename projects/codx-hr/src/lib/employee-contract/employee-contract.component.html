@@ -7,10 +7,12 @@
   method="LoadDataEcontractWithEmployeeInfoAsync"
   [views]="views"
   [autoLoad]="true"
+  [selectedFirst]="true"
   idField="recID"
   [button]="buttonAdd"
   (buttonClick)="addContract($event)"
   (selectedChange)="changeItemDetail($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
@@ -124,7 +126,6 @@
         ></codx-label>
       </span>
     </ng-template>
-
     <div class="w-20 min-w-200px px-2">
       <div class="d-flex">
         <ng-container *ngIf="flagChangeMF">
@@ -452,6 +453,7 @@
     [itemDetail]="itemDetail"
     [view]="view"
     [formModel]="view.formModel"
+    [grvSetup]="grvSetup"
     (clickMFunction)="clickEvent($event)"
   >
   </lib-view-detail-contracts>

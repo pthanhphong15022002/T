@@ -1,27 +1,59 @@
 <codx-form
   #form
-  [headerText]=""
+  [headerText]="headerText"
   [body]="body"
   [formModel]="dialog.formModel"
   [dialog]="dialog"
-  subToolbarCss="text-end"
-  [customToolbar]="subToolbar"
+  [footer]="footer"
 >
 </codx-form>
 <ng-template #body>
-    <ng-container *ngFor=" let report of listReport">
-    <div class="d-flex justify-content-end me-3">
-        <button type="button" class="btn btn-light-primary w-100 text-center" (click)="gotoReportDetail(report)">
-            {{ report.reportName }}
-        </button>
-    </div>
-    </ng-container>
+  <div class="container">
+    <ng-container *ngFor=" let report of lstReport">
+      <div class="d-flex align-items-start justify-content-between py-2 border-bottom" (click)="selectedItem(report)">
+        <div class="d-flex align-items-top w-100">
+          <div class="w-20px h-20px me-2">
+            <codx-input type="radio" [crrValue]="report.selected" name="radioBtn"></codx-input>
+          </div>
+          <div class="d-flex flex-column w-100">
+            <div class="fw-bold text-dark">{{report.reportName}}</div>
+            <div class="fs-7 text-gray-500 text-italic">{{report.customName}}</div>
+          </div>
+        </div>
+        <!-- <div class="d-flex align-items-start ms-6">
+          <div ngbDropdown class="dropdown ms-6">
+            <button
+              ngbDropdownToggle
+              class="btn"
+              type="button"
+              id="dropdownMenuButton1"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="icon-more_vert icon-18"></span>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+              <ng-container *ngFor="let item of sysMoreFC">
+                <a ngbDropdownItem class="dropdown-item" (click)="clickMF(item,report)">
+                  <div class="d-flex align-items-center cursor-pointer">
+                    <span class="icon-16" [classList]="item.largeIcon" [style.color]="item.color"></span>
+                    <span class="ms-2">{{item.defaultName}}</span>
+                  </div>
+                </a>
+              </ng-container>
+            </div>
+          </div>
+        </div> -->
+      </div>
+      </ng-container>
+  </div>
 </ng-template>
 
 <ng-template #subToolbar>
   <div class="w-100">
     <div class="d-flex align-items-center justify-content-between pt-2">
       <div class="d-flex justify-content-start me-2">
+        {{ headerText }}
       </div>
       <div class="d-flex justify-content-end">
         <div class="ms-2">
@@ -36,3 +68,14 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #footer>
+<div class="d-flex align-item-center justify-content-end">
+  <!-- <button type="button" class="btn btn-ml btn-outline-primary">
+    <codx-label [formModel]="dialog.formModel" name="lblExportFile" default="Thêm"></codx-label>
+  </button> -->
+  <button type="button" class="btn btn-primary" (click)="clickExport()">
+    <codx-label [formModel]="dialog.formModel" name="lblExportFile" default="Xuất file"></codx-label>
+  </button>
+</div>
+</ng-template> 

@@ -25,25 +25,26 @@
     overflow: hidden;
 }
 
+/*
 .content-card{
-    height: 310px;
-    overflow-y: scroll; /* hiển thị thanh cuộn */
-    -webkit-overflow-scrolling: touch; /* tối ưu hóa cuộn trên các thiết bị cảm ứng */
+    height: 290px;
+    overflow-y: scroll; // hiển thị thanh cuộn 
+    -webkit-overflow-scrolling: touch; // tối ưu hóa cuộn trên các thiết bị cảm ứng 
 }
 
 .content-card::-webkit-scrollbar {
-    width: 0px !important; /* ẩn thanh cuộn */
+    width: 0px !important; // ẩn thanh cuộn 
     height: 0px !important;
 }
 
 .content-card::-webkit-scrollbar-track {
-    background-color: transparent !important; /* ẩn thanh cuộn */
+    background-color: transparent !important; // ẩn thanh cuộn 
 }
 
 .content-card::-webkit-scrollbar-thumb {
-    background-color: transparent !important; /* ẩn thanh cuộn */
+    background-color: transparent !important; // ẩn thanh cuộn 
 }
-
+*/
 #pattern-img {
     background-size: 300px 450px !important;
 }

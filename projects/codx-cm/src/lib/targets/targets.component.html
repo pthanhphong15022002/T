@@ -20,7 +20,6 @@
   (searchChanged)="searchChanged($event)"
 ></codx-views>
 
-<!--Schedule-->
 <!----------------------------------Schedule---------------------------------->
 <ng-template #cardTemplate let-data>
   <div class="d-flex flex-row justify-content-start align-items-center w-100">
@@ -61,7 +60,6 @@
   </div>
 </ng-template>
 
-<!--Popup infomation-->
 <ng-template #contentTmp let-data> </ng-template>
 
 <ng-template #resourceTootip let-data>
@@ -84,7 +82,7 @@
 </ng-template>
 <!--end-->
 
-<!--Schedule-->
+<!--Tree-->
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white rounded-2 pt-5 d-flex flex-column">
     <div class="d-flex align-items-center justify-content-end">
@@ -138,4 +136,205 @@
     </div>
   </div>
 </ng-template>
+<!--end-->
+
+<!--Grid-->
+<ng-template #templateMonth0 let-item>
+  <div class="d-flex flex-row ms-5 align-items-center">
+    <codx-img
+      [objectId]="item?.salespersonID"
+      imageType="circle"
+      width="40"
+      [objectType]="'AD_Users'"
+      [objectName]="item?.userName"
+    ></codx-img>
+    <div class="ms-4 d-flex flex-column" style="width: 160px">
+      <span class="fw-bold text-truncate" [title]="item?.userName">{{
+        item?.userName
+      }}</span>
+      <div [ngbTooltip]="tooltip" class="line-clamp line-clamp-1">
+        {{ item?.positionName }}
+        <ng-template #tooltip>
+          <div>{{ item?.positionName }}</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateMonth1 let-item>
+  <ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 1">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #templateMonth2 let-item>
+  <ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 2">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #templateMonth3 let-item>
+  <ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 3">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #templateMonth4 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 4">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container> </ng-container
+></ng-template>
+<ng-template #templateMonth5 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 5">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container> </ng-container
+></ng-template>
+<ng-template #templateMonth6 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 6">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container> </ng-container
+></ng-template>
+<ng-template #templateMonth7 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 7">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container> </ng-container
+></ng-template>
+<ng-template #templateMonth8 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 8">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container> </ng-container
+></ng-template>
+<ng-template #templateMonth9 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 9">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #templateMonth10 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 10">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #templateMonth11 let-item>
+  <ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 11">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #templateMonth12 let-item
+  ><ng-container *ngIf="item?.tmpMonths != null && item?.tmpMonths?.length > 0">
+    <ng-container *ngFor="let mo of item?.tmpMonths">
+      <div *ngIf="item?.salespersonID === mo?.salespersonID && mo?.month == 12">
+        <span
+          [innerHTML]="
+            targetToFixed(mo?.target)
+              | formatvalue : view.formModel : 'Target'
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
 <!--end-->

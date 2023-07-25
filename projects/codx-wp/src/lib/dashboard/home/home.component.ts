@@ -15,6 +15,7 @@ import {
   AuthStore,
 } from 'codx-core';
 import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.component';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'codx-home',
   templateUrl: './home.component.html',
@@ -31,7 +32,7 @@ export class HomeComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private auth: AuthStore,
-    private page: PageTitleService
+    private page: PageTitleService,
   ) {
     super(injector);
     this.user = this.auth.get();
@@ -50,6 +51,8 @@ export class HomeComponent extends UIComponent {
     this.dataValuePortal = `1;3;4`;
   }
 
+
+  
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -63,6 +66,8 @@ export class HomeComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
+
+  
   //open popup search portal
   clickShowPopupSearch() {
     let option = new DialogModel();

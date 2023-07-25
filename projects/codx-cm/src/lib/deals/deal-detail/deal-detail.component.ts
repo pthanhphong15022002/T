@@ -10,15 +10,18 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   CRUDService,
   CacheService,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
+import { DealsComponent } from '../deals.component';
 
 
 @Component({
@@ -37,6 +40,7 @@ export class DealDetailComponent implements OnInit {
   @Input() checkMoreReason = true;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
+  @Output() saveAssign = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('tabDetailViewDetail')
@@ -61,32 +65,37 @@ export class DealDetailComponent implements OnInit {
     entityName: 'CM_Leads',
   };
 
-
+  isDataLoading:boolean = true;
 
   nameDetail = '';
   tabClicked = '';
-  contactPerson: any;
+
   viewTag: string = '';
-  modifiedOn: any;
-  isUpdateTab:boolean = false;
+  oldRecId:string = '';
   treeTask = [];
   grvSetupQuotation: any[] = [];
   grvSetupLead: any[] = [];
   grvSetupContract: any[] = [];
   tabControl:any[] = [];
   tabDetail = [];
+  listStepsProcess = [];
   listContract: CM_Contracts[];
   mergedList: any[] = [];
+  listCategory = [];
+  listRoles = [];
+
   vllStatusQuotation: any;
   vllStatusContract: any;
   vllStatusLead: any;
   viewSettings: any;
+  contactPerson: any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
-    private api: ApiHttpService,
-    private cache: CacheService
+    private cache: CacheService,
+    private notificationsService: NotificationsService,
+    private dealComponent: DealsComponent,
   ) {
     this.executeApiCalls();
 
@@ -154,19 +163,16 @@ export class DealDetailComponent implements OnInit {
 
         this.getTags(this.dataSelected);
         this.dataSelected = this.dataSelected;
-        if (!this.modifiedOn) {
-          this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
+        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
           this.promiseAllAsync();
         }
-        if ( changes['dataSelected'].currentValue?.modifiedOn !== this.modifiedOn ) {
-          this.promiseAllAsync();
-          this.modifiedOn = changes['dataSelected'].currentValue?.modifiedOn;
-        }
+        this.oldRecId = changes['dataSelected'].currentValue.recID;
       }
     }
   }
 
   async promiseAllAsync() {
+    this.isDataLoading = true;
     try {
       await this.getTree(); //ve cay giao viec
       await this.getListInstanceStep();
@@ -174,6 +180,12 @@ export class DealDetailComponent implements OnInit {
       await this.getHistoryByDeaID();
 
     } catch (error) {}
+  }
+  reloadListStep(listSteps:any) {
+    this.isDataLoading = true;
+    this.listSteps = listSteps;
+    this.isDataLoading = false;
+    this.changeDetectorRef.detectChanges();
   }
 
   listTab() {
@@ -212,7 +224,23 @@ export class DealDetailComponent implements OnInit {
       await this.getGridViewQuotation();
       await this.getGridViewContract();
       await this.getGridViewLead();
+      await this.getValueList();
+      await this.getValueListRole();
     } catch (error) {}
+  }
+  async getValueListRole(){
+    this.cache.valueList('CRM040').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
+  }
+  async getValueList() {
+    this.cache.valueList('CRM010').subscribe((res) => {
+      if (res.datas) {
+        this.listCategory = res?.datas;
+      }
+    });
   }
   async getGridViewQuotation() {
     this.grvSetupQuotation = await firstValueFrom(
@@ -279,10 +307,6 @@ export class DealDetailComponent implements OnInit {
       this.treeTask = tree || [];
     });
   }
-  saveAssign(e) {
-    if (e) this.getTree();
-  }
-
   getContactPerson($event) {
     if ($event) {
       this.contactPerson = $event?.isDefault ? $event : null;
@@ -302,16 +326,16 @@ export class DealDetailComponent implements OnInit {
       this.dataSelected?.refID,
       this.dataSelected?.processID,
       this.dataSelected?.status,
+      '1'
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
+        this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
       } else {
         this.listSteps = null;
       }
-      this.isUpdateTab = this.checkHaveField(this.listSteps);
-      this.pushTabFields((this.checkHaveField(this.listSteps)));
     });
   }
   checkCompletedInstance(dealStatus: any) {
@@ -323,35 +347,6 @@ export class DealDetailComponent implements OnInit {
     listStep.pop();
     listStep.pop();
   }
-  checkHaveField(listStep: any){
-    var isCheck = false;
-    for(let item of listStep) {
-        if(item?.fields?.length > 0 && item?.fields) {
-          isCheck = true;
-          return isCheck;
-        }
-    }
-    return isCheck;
-  }
-  pushTabFields(isCheck) {
-    var index = this.tabDetail.findIndex(x=>x.name == 'Field');
-    if (isCheck) {
-      if(index == -1) {
-        var objField = {
-            name: 'Field',
-            text: 'Thông tin mở rộng',
-            icon: 'icon-add_to_photos',
-        };
-        this.tabDetail.splice(1, 0, objField);
-        this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
-      }
-    }
-    else {
-      index != -1 && this.tabDetail.splice(index, 1);
-      this.tabDetail = JSON.parse(JSON.stringify(this.tabDetail));
-    }
-  }
-
   settingViewValue() {
     this.viewSettings = {
       '1': {
@@ -384,6 +379,15 @@ export class DealDetailComponent implements OnInit {
       },
     };
   }
+    //truong tuy chinh - đang cho bằng 1
+    showColumnControl(stepID) {
+      if (this.listStepsProcess?.length > 0) {
+        var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+        if (idx == -1) return 1;
+        return this.listStepsProcess[idx]?.showColumnControl;
+      }
+      return 1;
+    }
 
   getSettingValue(type: string, fieldName: string): any {
     const obj = this.viewSettings[type];
@@ -409,4 +413,156 @@ export class DealDetailComponent implements OnInit {
     }
     return '';
   }
+  saveDataStep(e) {
+    if (e) {
+    }
+    // this.listSteps = e;
+    // this.outDataStep.emit(this.dataStep);
+  }
+  contactChange($event) {
+    if ($event) {
+      this.getContactPerson($event.data);
+    }
+  }
+
+  async promiseAll(listInstanceStep) {
+    try {
+      await this.updateMoveStageInstance(listInstanceStep);
+      await this.updateMoveStageDeal();
+    } catch (err) {}
+  }
+  async updateMoveStageInstance(listInstanceStep) {
+    var data = [listInstanceStep, this.dataSelected.processID];
+    this.codxCmService.autoMoveStageInInstance(data).subscribe((res) => {});
+  }
+
+  async updateMoveStageDeal() {
+    var data = [this.dataSelected];
+    this.codxCmService.autoMoveStageInDeal(data).subscribe((res) => {
+      if (res[0] && res) {
+        this.dataSelected = res[0];
+        this.dealComponent.autoMoveStage(this.dataSelected);
+      }
+    });
+  }
+
+  continueStep(event) {
+    let isTaskEnd = event?.isTaskEnd;
+    let step = event?.step;
+
+    let transferControl = this.dataSelected.steps.transferControl;
+    if (transferControl == '0') return;
+
+    let isShowFromTaskEnd = !this.checkContinueStep(true, step);
+    let isContinueTaskEnd = isTaskEnd;
+    let isContinueTaskAll = this.checkContinueStep(false, step);
+    let isShowFromTaskAll = !isContinueTaskAll;
+
+    if (transferControl == '1' && isContinueTaskAll) {
+      isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
+      !isShowFromTaskAll &&
+        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    }
+
+    if (transferControl == '2' && isContinueTaskEnd) {
+      isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
+      !isShowFromTaskEnd &&
+        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    }
+  }
+  handleMoveStage(isStopAuto, stepID) {
+    if (!isStopAuto) {
+      this.dealComponent.moveStage(this.dataSelected);
+    } else {
+      let index = this.listSteps.findIndex((x) => x.stepID === stepID);
+      let isUpdate = false;
+      let nextStep;
+      if (index != -1) {
+        nextStep = this.listSteps.findIndex(
+          (x) => x.stepID == this.listSteps[index + 1].stepID
+        );
+        if (nextStep != -1) {
+          isUpdate = true;
+        }
+      }
+      if (isUpdate) {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            this.listSteps[nextStep].stepStatus = '1';
+            this.listSteps[nextStep].actualStart = new Date();
+            this.listSteps[index].stepStatus = '3';
+            if (this.listSteps[index].actualEnd !== null) {
+              this.listSteps[index].actualEnd = new Date();
+            }
+
+            var listInstanceStep = [];
+            listInstanceStep.push(this.listSteps[index]);
+            listInstanceStep.push(this.listSteps[nextStep]);
+            var nextStepDeal = this.listSteps.find(
+              (x) => x.stepID == this.listSteps[nextStep + 1].stepID
+            );
+            this.dataSelected.stepID = this.listSteps[nextStep].stepID;
+            if (nextStepDeal) {
+              this.dataSelected.nextStep = nextStepDeal.stepID;
+            } else {
+              this.dataSelected.nextStep = null;
+            }
+
+            this.promiseAll(listInstanceStep);
+          }
+        });
+      }
+    }
+  }
+  completedAllTasks(instanceSteps): boolean {
+    var isCheckOnwer = instanceSteps?.owner ? false : true;
+    if (isCheckOnwer) {
+      return false;
+    }
+    var isCheckFields = this.checkFieldsIEmpty(instanceSteps.fields);
+    if (isCheckFields) {
+      return false;
+    }
+    return true;
+  }
+  checkContinueStep(isDefault, step) {
+    let check = true;
+    let listTask = isDefault
+      ? step?.tasks?.filter((task) => task?.requireCompleted)
+      : step?.tasks;
+    if (listTask?.length <= 0) {
+      return isDefault ? true : false;
+    }
+    for (let task of listTask) {
+      if (task.progress != 100) {
+        check = false;
+        break;
+      }
+    }
+    return check;
+  }
+  checkFieldsIEmpty(fields) {
+    return fields.some((x) => !x.dataValue && x.isRequired);
+  }
+  saveAssignTask(e) {
+    if (e) this.saveAssign.emit(e);
+  }
+  getNameCategory(categoryId: string) {
+    return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
+  }
+  getIcon($event){
+    if($event == '1') {
+      return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
+    }
+    else if($event == '5') {
+      return this.listRoles.filter(x=>x.value == '5')[0]?.icon ?? null;
+    }
+    else if($event == '3') {
+      return this.listRoles.filter(x=>x.value == '3')[0]?.icon ?? null;
+    }
+    return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
+  }
+
 }

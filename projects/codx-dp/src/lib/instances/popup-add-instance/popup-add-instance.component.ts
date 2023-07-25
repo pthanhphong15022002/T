@@ -51,7 +51,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   instance: DP_Instances;
 
-  isApplyFor: string = ''; // this is instance opportunity general
+  applyFor: string = ''; // this is instance opportunity general
   addFieldsControl = '1';
   totalDaySteps: number;
   totalHourSteps: number;
@@ -110,7 +110,7 @@ export class PopupAddInstanceComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.action = dt?.data?.action;
-    this.isApplyFor = dt?.data?.applyFor;
+    this.applyFor = dt?.data?.applyFor;
     this.listStep = this.updateIdFile(dt?.data?.listSteps);
     this.titleAction = dt?.data?.titleAction;
     this.formModelCrr = dt?.data?.formMD;
@@ -161,7 +161,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.isApplyFor === '1') {
+    if (this.applyFor === '1') {
       this.tabInfo = [
         this.menuGeneralInfo,
         this.menuAddress,
@@ -192,7 +192,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   async getListInstanceStep(recID, processID, status) {
     this.codxDpService
-      .GetStepsByInstanceIDAsync([recID, processID, status])
+      .GetStepsByInstanceIDAsync([recID, processID, status,this.applyFor])
       .subscribe(async (res) => {
         if (res && res?.length > 0) {
           this.listStep = JSON.parse(JSON.stringify(res));

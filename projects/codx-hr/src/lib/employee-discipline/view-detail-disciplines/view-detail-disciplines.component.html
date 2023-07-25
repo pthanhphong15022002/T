@@ -12,7 +12,7 @@
   <!-- [body]="body" -->
 
   <ng-template #header>
-    <div class="mb-2">
+    <div class="mb-4">
       <codx-temp-full
         class="user-center"
         [imageId]="itemDetail?.emp?.employeeID"
@@ -29,10 +29,10 @@
           <codx-label
             fiedName="decisionNo"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span>
+          <span class="fw-bold text-dark">
             {{ itemDetail?.decisionNo }}
           </span>
         </div>
@@ -40,11 +40,11 @@
           <codx-label
             fiedName="signedDate"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="fw-bold"
+            class="fw-bold text-dark"
             [innerHTML]="
               itemDetail?.signedDate
                 | formatvalue : view.formModel : 'signedDate'
@@ -57,10 +57,11 @@
           <codx-label
             fiedName="signerID"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.signerID
                 | formatvalue : view.formModel : 'signerID'
@@ -77,11 +78,11 @@
             fiedName="disciplineID"
             [setRequire]="false"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="fw-bold"
+            class="fw-bold text-dark"
             [innerHTML]="
               itemDetail?.disciplineID
                 | formatvalue : view.formModel : 'disciplineID'
@@ -95,10 +96,11 @@
             fiedName="disciplineFormCategory"
             [formModel]="formModel"
             [setRequire]="false"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.disciplineFormCategory
                 | formatvalue : view.formModel : 'disciplineFormCategory'
@@ -114,11 +116,11 @@
           <codx-label
             fiedName="disciplineDate"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
             [setRequire]="false"
           >
           </codx-label>
-          <span>
+          <span class="text-dark fw-bold">
             {{ itemDetail?.disciplineDate | fmDT }}
           </span>
         </div>
@@ -127,11 +129,11 @@
             [setRequire]="false"
             fiedName="fromDate"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="fw-bold"
+            class="fw-bold text-dark"
             [innerHTML]="
               itemDetail?.fromDate
                 | formatvalue : view.formModel : 'fromDate'
@@ -146,7 +148,7 @@
 
           <span
             *ngIf="itemDetail?.toDate"
-            class="fw-bold ms-2"
+            class="fw-bold text-dark ms-2"
             [innerHTML]="
               itemDetail?.toDate
                 | formatvalue : view.formModel : 'toDate'
@@ -163,10 +165,11 @@
           <codx-label
             fiedName="limitMonths"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.limitMonths
                 | formatvalue : view.formModel : 'limitMonths'
@@ -182,10 +185,11 @@
           <codx-label
             fiedName="disciplinePlace"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.disciplinePlace
                 | formatvalue : view.formModel : 'disciplinePlace'
@@ -201,10 +205,11 @@
           <codx-label
             fiedName="note"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.note | formatvalue : view.formModel : 'note' | async
             "
@@ -213,17 +218,18 @@
         </div>
       </div>
 
-      <div class="d-flex flex-column mt-10">
+      <div class="d-flex flex-column mt-5">
         <div class="d-flex align-item-center mb-1 ms-6">
           <codx-label
             fiedName="reason"
             [formModel]="formModel"
-            class="text-gray-700 label-colon text-primary"
+            class="fw-bold label-colon text-primary"
           >
           </codx-label>
         </div>
         <div class="d-flex align-item-center mb-1 ms-6">
           <span
+            class="text-dark"
             [innerHTML]="
               itemDetail?.reason
                 | formatvalue : view.formModel : 'reason'
@@ -239,12 +245,13 @@
           <codx-label
             fiedName="content"
             [formModel]="formModel"
-            class="text-gray-700 label-colon text-primary"
+            class="fw-bold label-colon text-primary"
           >
           </codx-label>
         </div>
         <div class="d-flex align-item-center mb-1 ms-6">
           <span
+            class="text-dark"
             [innerHTML]="
               itemDetail?.content
                 | formatvalue : view.formModel : 'content'
@@ -288,7 +295,7 @@
                       <codx-label
                         fiedName="TimeWork"
                         [formModel]="formModel"
-                        class="text-gray-700 label-colon"
+                        class="text-gray-600 label-colon"
                       >
                       </codx-label>
                       <span class="fw-bold">
@@ -299,7 +306,7 @@
                       <codx-label
                         fiedName="MainWork"
                         [formModel]="formModel"
-                        class="text-gray-700 label-colon"
+                        class="text-gray-600 label-colon"
                       >
                       </codx-label>
                       <span class="fw-bold" [innerHTML]="itemDetail?.mainWork">
@@ -332,7 +339,7 @@
                       <codx-label
                         fiedName="MainSalary"
                         [formModel]="formModel"
-                        class="text-gray-700 label-colon"
+                        class="text-gray-600 label-colon"
                       >
                       </codx-label>
                       <span class="fw-bold">
@@ -344,7 +351,7 @@
                       <codx-label
                         fiedName="JobSalary"
                         [formModel]="formModel"
-                        class="text-gray-700 label-colon"
+                        class="text-gray-600 label-colon"
                       >
                       </codx-label>
                       <span class="fw-bold">
@@ -376,7 +383,7 @@
 
 <ng-template #titleTmp>
   <div class="d-flex flex-column ms-1 w-100">
-    <div class="mb-2 d-flex">
+    <div class="mb-1 d-flex">
       <span class="text-dark fs-5-sm fw-bold me-3">
         {{ itemDetail?.emp?.employeeName }}
       </span>
@@ -409,12 +416,22 @@
     <!-- 2 -->
     <div class="text-gray-600 fs-7">
       <span
+        *ngIf="
+          itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+          else noOrgUnitName
+        "
+        >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
+      >
+      <ng-template #noOrgUnitName>
+        <span class="place-holder">{{ grvSetup["OrgUnitID"].headerText }}</span>
+      </ng-template>
+      <!-- <span
         [innerHTML]="
           itemDetail?.emp?.orgUnitID
             | formatvalue : formModel : 'orgUnitID'
             | async
         "
-      ></span>
+      ></span> -->
     </div>
   </div>
 </ng-template>

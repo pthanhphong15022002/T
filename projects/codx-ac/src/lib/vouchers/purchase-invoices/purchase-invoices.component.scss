@@ -1,0 +1,22 @@
+:host ::ng-deep {
+  .codx-detail-main {
+    display: flex;
+    flex-direction: column;
+
+    .codx-detail-body {
+      flex: 1;
+    }
+  }
+
+  tbody:not(:last-of-type) {
+    tr:last-child {
+      border-bottom: 1px solid var(--bs-table-border-color) !important;
+
+      th,
+      td {
+        border-bottom: 1px solid var(--bs-table-border-color) !important;
+        height: 100%;
+      }
+    }
+  }
+}

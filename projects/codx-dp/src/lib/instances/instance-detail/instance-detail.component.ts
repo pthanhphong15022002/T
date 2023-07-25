@@ -67,7 +67,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() isViewApprover = false;
   @Input() hideFooter = false;
   @Input() hideMF = false;
-
+  @Input() applyFor: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
@@ -340,7 +340,7 @@ export class InstanceDetailComponent implements OnInit {
 
   GetStepsByInstanceIDAsync() {
     this.tags = '';
-    var data = [this.id, this.dataSelect.processID, this.instanceStatus];
+    var data = [this.id, this.dataSelect.processID, this.instanceStatus,this.applyFor];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(this.id);

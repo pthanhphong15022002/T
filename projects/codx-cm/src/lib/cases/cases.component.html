@@ -76,23 +76,8 @@
   </codx-temp-full>
 </ng-template>
 
-<!-- <ng-template #footerKanban let-data>
-  <div class="d-flex justify-content-between align-items-center mt-1">
-    <div class="d-flex align-items-end codx-badge">noi dung gi day</div>
-    <codx-imgs
-      [isToolTip]="true"
-      [width]="25"
-      [objectId]="data.owner"
-      objectType="AD_Users"
-      [numberImages]="1"
-    >
-    </codx-imgs>
-  </div>
-</ng-template> -->
-
 <!-- end kanban -->
-<ng-template #itemTemplate let-data>
-  <codx-temp-full
+<ng-template #itemTemplate let-data>  <codx-temp-full
     [typeMF]="'hover'"
     [imageId]="data?.customerID"
     [imgOn]="data?.modifiedOn"
@@ -118,11 +103,18 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
-  <div class="d-flex flex-column">
-    <div class="d-flex justify-content-start mb-1">
-      <i class="icon-view_comfy me-2"></i>
+  <ng-template #tooltipCaseName>
+    <div class="text-end text-sm-start">
+      <strong>{{ gridViewSetup["CaseName"]?.headerText }}</strong
+      >: {{ data?.caseName }}
+    </div>
+  </ng-template>
+
+  <div class="d-flex flex-column w-100">
+    <div class="my-1">
       <span
-        class="text-gray-600"
+        class="text-dark fs-6 fw-bold line-clamp line-clamp-2"
+        [ngbTooltip]="tooltipCaseName"
         #caseName
         [innerHTML]="
           data?.caseName
@@ -131,14 +123,22 @@
         "
       ></span>
     </div>
-  </div>
-</ng-template>
-
-<ng-template #footer let-data>
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-light-primary"></div>
-      <div
+    <div class="d-flex align-items-center justify-content-start mb-1">
+      <i class="icon-add_shopping_cart icon-16 text-gray-500 me-2"></i>
+      <span
+        class="text-gray-500 line-clamp-menu"
+        #businessLineID
+        [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+        [innerHTML]="
+          data?.businessLineID
+            | formatvalue : view.formModel : 'businessLineID' : businessLineID
+            | async
+        "
+      ></span>
+    </div>
+    <div class="d-flex align-items-center justify-content-start mb-1">
+      <div>
+        <div
         *ngIf="data.status != '1'"
         [ngStyle]="{
           'background-color':
@@ -162,9 +162,10 @@
           >{{ data?.currentStepName }}</span
         >
       </div>
+      <!-- {{data.status}} -->
       <div *ngIf="data.status == '1'">
         <codx-vll
-          [name]="vllStatus"
+        [name]="'DP028'"
           [field]="'Status'"
           [value]="data?.status"
           [showText]="true"
@@ -184,7 +185,8 @@
         >
         </codx-vll>
       </ng-container>
-      <div class="d-flex align-items-center text-gray-600">
+      </div>
+      <div>
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
           class="text-gray-700"
@@ -194,9 +196,9 @@
           "
         ></span>
       </div>
-    </div>
-    <div class="d-flex justify-content-center mt-1">
-      <codx-imgs
+
+      <div class="ms-auto">
+        <codx-imgs
         [isToolTip]="true"
         [width]="25"
         [objectId]="data.owner"
@@ -204,44 +206,28 @@
         [numberImages]="1"
       >
       </codx-imgs>
+      </div>
+
+      <!-- <div class="d-flex align-items-center text-gray-600">
+
+      </div>
+      <div class="d-flex justify-content-center mt-1">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data.owner"
+          objectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div> -->
     </div>
   </div>
-  <!-- <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-light-primary">
-        <span>
-          {{ data?.currentStepName }}
-        </span>
-      </div>
-      <div class="d-flex align-items-center text-gray-600">
-        <span class="icon-16 icon-av_timer me-1"></span>
-        <span
-          class="text-gray-700"
-          #endDate
-          [innerHTML]="
-            data.endDate
-              | formatvalue
-                : formModel
-                : 'endDate'
-                : endDate
-                : 'CMDeals'
-                : 'grvCMDeals'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-    <div class="d-flex justify-content-center">
-      <codx-imgs
-        [isToolTip]="true"
-        [width]="25"
-        [objectId]="data.owner"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
-    </div>
-  </div> -->
+
+</ng-template>
+
+<ng-template #footer let-data>
+
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <span
@@ -276,6 +262,7 @@
     #casesDetail
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
+    [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
@@ -288,4 +275,18 @@
 <!-- View chi tiet kanban -->
 <ng-template #popDetail let-popup>
   <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
+</ng-template>
+
+<!-- temp more cua gird -->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (changeDataMF)="changeDataMFGird($event, data)"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
 </ng-template>

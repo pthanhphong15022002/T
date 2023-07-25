@@ -712,6 +712,15 @@ export class CodxCmService {
       data
     );
   }
+  startInstance(data) {
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstancesBusiness',
+      'StartInstanceInDealAsync',
+      data
+    );
+  }
 
   moveStageDeal(data) {
     return this.api.execSv<any>(
@@ -901,6 +910,14 @@ export class CodxCmService {
       data
     );
   }
+  getStepByStepIDAndInID(insID, stepID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepByStepIDAndInIDAsync',
+      [insID, stepID]
+    );
+  }
 
   //#endregion -- Bao
 
@@ -1034,6 +1051,11 @@ export class CodxCmService {
     );
   }
 
+  //load data chua xong
+  loadDataApproverByID(id, classMame) {
+    return this.api.exec<any>('CM', classMame, 'LoadDataApproverByIDAsync', id);
+  }
+  //
   getProcess(recID) {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', recID);
   }
@@ -1234,13 +1256,17 @@ export class CodxCmService {
   }
 
   //#region target and targetLines
-  getTargetAndLinesAsync(bussinessID) {
+  getTargetAndLinesAsync(bussinessID, year) {
     return this.api.exec<any>(
       'CM',
       'TargetsBusiness',
       'GetTargetAndLinesAsync',
-      bussinessID
+      [bussinessID, year]
     );
   }
   //#region
+
+  getOneObject(recID, className) {
+    return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
+  }
 }

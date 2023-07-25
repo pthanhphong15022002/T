@@ -10,7 +10,7 @@
   class="h-100 dt-es-view"
 >
   <ng-template #header>
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-4">
       <codx-temp-full
         [title]="itemDetail?.ownerName"
         [imageId]="itemDetail?.emp?.employeeID"
@@ -21,10 +21,8 @@
         <!-- info view -->
         <ng-template #title>
           <div class="d-flex flex-column ms-1 w-100">
-            <div class="mb-2 d-flex">
-              <span class="text-dark fs-5-sm fw-bold me-3">
-                {{ itemDetail?.emp?.employeeName }}
-              </span>
+            <div class="text-dark fs-5-sm fw-bold mb-1">
+              {{ itemDetail?.emp?.employeeName }}
             </div>
             <div class="d-flex align-items-center text-gray-600 mb-1">
               <span
@@ -54,12 +52,26 @@
             <!-- 2 -->
             <div class="text-gray-600 fs-7">
               <span
+                *ngIf="
+                  itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+                  else noOrgUnitName
+                "
+                >{{
+                  itemDetail.orgUnitName || itemDetail.emp.orgUnitName
+                }}</span
+              >
+              <ng-template #noOrgUnitName>
+                <span class="place-holder">{{
+                  grvSetup["OrgUnitID"].headerText
+                }}</span>
+              </ng-template>
+              <!-- <span
                 [innerHTML]="
                   itemDetail?.emp?.orgUnitID
                     | formatvalue : formModel : 'orgUnitID'
                     | async
                 "
-              ></span>
+              ></span> -->
             </div>
           </div>
         </ng-template>
@@ -68,16 +80,16 @@
     </div>
 
     <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
           fiedName="kowID"
           [formModel]="formModel"
           [setRequire]="false"
-          class="text-gray-700 label-colon"
+          class="text-gray-600 label-colon"
         >
         </codx-label>
         <span
-          class="fw-bold"
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.kowID | formatvalue : formModel : 'kowID' | async
           "
@@ -85,15 +97,16 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
           fiedName="registeredDate"
           [formModel]="formModel"
           [setRequire]="false"
-          class="text-gray-700 label-colon"
+          class="text-gray-600 label-colon"
         >
         </codx-label>
         <span
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.registeredDate
               | formatvalue : formModel : 'registeredDate'
@@ -103,15 +116,16 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
           fiedName="registeredDate"
           [formModel]="formModel"
           [setRequire]="false"
-          class="text-gray-700 label-colon"
+          class="text-gray-600 label-colon"
         >
         </codx-label>
         <span
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.registeredBy
               | formatvalue : formModel : 'registeredBy'
@@ -121,10 +135,11 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2 me-4">
-        <codx-label default="Ngày nghỉ" class="text-gray-700 label-colon">
+      <div class="d-flex align-items-center mb-1 me-4">
+        <codx-label default="Ngày nghỉ" class="text-gray-600 label-colon">
         </codx-label>
         <span
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.beginDate
               | formatvalue : formModel : 'beginDate'
@@ -134,6 +149,7 @@
         </span>
         <span class="px-1"> - </span>
         <span
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.endDate | formatvalue : formModel : 'endDate' | async
           "
@@ -141,16 +157,17 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-center mb-2">
+      <div class="d-flex align-items-center mb-1">
         <codx-label
           fiedName="totalDaysOff"
           [formModel]="formModel"
           [setRequire]="false"
-          class="text-gray-700 label-colon"
+          class="text-gray-600 label-colon"
         >
         </codx-label>
-        <!-- <span class="fw-bold" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
+        <!-- <span class="fw-bold text-dark" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
         <span
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.totalDaysOff
               | formatvalue : formModel : 'totalDaysOff'
@@ -158,19 +175,21 @@
           "
         >
         </span>
-        <span *ngIf="itemDetail.totalDaysOff">ngày</span>
+        <span class="fw-bold text-dark" *ngIf="itemDetail.totalDaysOff"
+          >ngày</span
+        >
       </div>
 
-      <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
+      <div class="d-flex align-items-top flex-wrap mb-1 me-4 col-12">
         <codx-label
           fiedName="reason"
           [formModel]="formModel"
           [setRequire]="false"
-          class="text-gray-700 label-colon"
+          class="text-gray-600 label-colon"
         >
         </codx-label>
         <span
-          class="fw-bold text-break"
+          class="fw-bold text-dark text-break"
           [innerHTML]="
             itemDetail?.reason | formatvalue : formModel : 'reason' | async
           "
@@ -178,16 +197,16 @@
         </span>
       </div>
 
-      <div class="d-flex align-items-top flex-wrap mb-2 me-4 col-12">
+      <div class="d-flex align-items-top flex-wrap mb-1 me-4 col-12">
         <codx-label
           fiedName="note"
           [formModel]="formModel"
           [setRequire]="false"
-          class="text-gray-700 label-colon"
+          class="text-gray-600 label-colon"
         >
         </codx-label>
         <span
-          class="fw-bold"
+          class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.note | formatvalue : formModel : 'note' | async
           "
@@ -212,7 +231,7 @@
                 <codx-label
                   [formModel]="itemDetailTemplate.formModel"
                   default="Thông tin chế độ nghỉ"
-                  class="fw-bold"
+                  class="fw-bold text-dark"
                 ></codx-label>
               </span>
             </div>
@@ -229,11 +248,11 @@
                       fiedName="siLeaveNo"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.siLeaveNo
                           | formatvalue : formModel : 'siLeaveNo'
@@ -248,11 +267,11 @@
                       fiedName="hospitalLine"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.hospitalLine
                           | formatvalue : formModel : 'hospitalLine'
@@ -269,11 +288,11 @@
                       fiedName="childID"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.childID
                           | formatvalue : formModel : 'childID'
@@ -288,11 +307,11 @@
                       fiedName="childHICardNo"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.childHICardNo
                           | formatvalue : formModel : 'childHICardNo'
@@ -309,11 +328,11 @@
                       fiedName="pregnancyFrom"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.pregnancyFrom
                           | formatvalue : formModel : 'pregnancyFrom'
@@ -327,11 +346,11 @@
                       fiedName="pregnancyWeeks"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.pregnancyWeeks
                           | formatvalue : formModel : 'pregnancyWeeks'
@@ -348,11 +367,11 @@
                       fiedName="newChildBirthDate"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.newChildBirthDate
                           | formatvalue : formModel : 'newChildBirthDate'
@@ -361,7 +380,7 @@
                     >
                     </span>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.newChildBirthDateType
                           | formatvalue : formModel : 'newChildBirthDateType'
@@ -376,11 +395,11 @@
                       fiedName="newChildNum"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.newChildNum
                           | formatvalue : formModel : 'newChildNum'
@@ -395,11 +414,11 @@
                       fiedName="wifeID"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.wifeID
                           | formatvalue : formModel : 'wifeID'
@@ -414,11 +433,11 @@
                       fiedName="wifeIDCardNo"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.wifeIDCardNo
                           | formatvalue : formModel : 'wifeIDCardNo'
@@ -433,11 +452,11 @@
                       fiedName="wifeSINo"
                       [formModel]="formModel"
                       [setRequire]="false"
-                      class="text-gray-700 label-colon"
+                      class="text-gray-600 label-colon"
                     >
                     </codx-label>
                     <span
-                      class="fw-bold"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         itemDetail?.wifeSINo
                           | formatvalue : formModel : 'wifeSINo'
@@ -452,7 +471,7 @@
                     fiedName="regimeNote"
                     [formModel]="formModel"
                     [setRequire]="false"
-                    class="text-gray-700 label-colon align-self-start"
+                    class="text-gray-600 label-colon align-self-start"
                   >
                   </codx-label>
                   <span

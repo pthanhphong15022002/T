@@ -9,15 +9,13 @@
   class="h-100 dt-es-view"
 >
   <ng-template #titleTmp>
-    <div class="d-flex flex-column ms-1 w-100">
-      <div class="mb-2 d-flex">
-        <span class="text-dark fs-5-sm fw-bold me-3">
-          {{ itemDetail?.emp?.employeeName }}
-        </span>
+    <div class="d-flex flex-column w-100">
+      <div class="text-dark fs-5-sm fw-bold">
+        {{ itemDetail?.emp?.employeeName }}
       </div>
-      <div class="d-flex align-items-center text-gray-600 mb-1">
+      <div class="d-flex flex-wrap align-items-center text-gray-600 mb-1">
         <span
-          class="me-4 fw-bold text-dark"
+          class="me-4 fw-bold text-dark text-nowrap"
           [innerHTML]="
             itemDetail?.emp?.positionID
               | formatvalue : formModel : 'positionID'
@@ -25,37 +23,51 @@
           "
           >' '</span
         >
-        <span
-          class="me-4 d-flex align-items-center"
-          *ngIf="itemDetail?.emp?.email"
-        >
-          <i class="icon-email icon-16 me-2"></i>
-          {{ itemDetail?.emp?.email }}
-        </span>
-        <span
-          class="me-3 d-flex align-items-center"
-          *ngIf="itemDetail?.emp?.mobile"
-        >
-          <i class="icon-phone_android icon-16 me-2"></i>
-          {{ itemDetail?.emp?.mobile }}
-        </span>
+        <div class="d-flex align-items-center">
+          <span
+            class="me-4 d-flex align-items-center"
+            *ngIf="itemDetail?.emp?.email"
+          >
+            <i class="icon-email icon-16 me-2"></i>
+            {{ itemDetail?.emp?.email }}
+          </span>
+          <span
+            class="me-3 d-flex align-items-center"
+            *ngIf="itemDetail?.emp?.mobile"
+          >
+            <i class="icon-phone_android icon-16 me-2"></i>
+            {{ itemDetail?.emp?.mobile }}
+          </span>
+        </div>
       </div>
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
         <span
+          *ngIf="
+            itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+            else noOrgUnitName
+          "
+          >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
+        >
+        <ng-template #noOrgUnitName>
+          <span class="place-holder">{{
+            grvSetup["OrgUnitID"].headerText
+          }}</span>
+        </ng-template>
+        <!-- <span
           [innerHTML]="
             itemDetail?.emp?.orgUnitID
               | formatvalue : formModel : 'orgUnitID'
               | async
           "
-        ></span>
+        ></span> -->
       </div>
     </div>
   </ng-template>
 
   <!-- Header detail -->
   <ng-template #header>
-    <div class="mb-2">
+    <div class="mb-3">
       <codx-temp-full
         class="user-center"
         [title]="itemDetail?.ownerName"
@@ -73,67 +85,72 @@
       [showText]="true"
       [showBgColor]="false"
     ></codx-vll>
-    <div class="d-flex align-items-center me-5 mt-4 flex-wrap">
-      <codx-label
-        fiedName="decisionNo"
-        [formModel]="formModel"
-        class="text-gray-700 label-colon"
-        [setRequire]="false"
-      >
-      </codx-label>
-      <div
-        class="fw-bold me-4"
-        [innerHTML]="
-          itemDetail?.decisionNo
-            | formatvalue : formModel : 'decisionNo'
-            | async
-        "
-      ></div>
-
-      <codx-label
-        fiedName="EffectedDate"
-        [formModel]="formModel"
-        class="text-gray-700 label-colon"
-        [setRequire]="false"
-      >
-      </codx-label>
-      <div
-        class="fw-bold"
-        [innerHTML]="
-          itemDetail?.effectedDate
-            | formatvalue : formModel : 'effectedDate'
-            | async
-        "
-      ></div>
-      <span class="mx-2">-</span>
-      <div
-        class="fw-bold me-4"
-        [innerHTML]="
-          itemDetail?.expiredDate
-            | formatvalue : formModel : 'expiredDate'
-            | async
-        "
-      ></div>
-
-      <codx-label
-        fiedName="signedDate"
-        [formModel]="formModel"
-        class="text-gray-700 label-colon"
-      >
-      </codx-label>
-      <div
-        class="fw-bold me-4"
-        [innerHTML]="
-          itemDetail?.signedDate
-            | formatvalue : formModel : 'signedDate'
-            | async
-        "
-      ></div>
-
+    <div class="d-flex align-items-center mt-4 flex-wrap">
+      <div class="d-flex align-items-center me-5 mb-1">
+        <codx-label
+          fiedName="decisionNo"
+          [formModel]="formModel"
+          class="text-gray-600 label-colon"
+          [setRequire]="false"
+        >
+        </codx-label>
+        <div
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.decisionNo
+              | formatvalue : formModel : 'decisionNo'
+              | async
+          "
+        ></div>
+      </div>
+      <div class="d-flex align-items-center me-5 mb-1">
+        <codx-label
+          fiedName="EffectedDate"
+          [formModel]="formModel"
+          class="text-gray-600 label-colon"
+          [setRequire]="false"
+        >
+        </codx-label>
+        <div
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.effectedDate
+              | formatvalue : formModel : 'effectedDate'
+              | async
+          "
+        ></div>
+        <span class="mx-1">-</span>
+        <div
+          class="fw-bold me-4"
+          [innerHTML]="
+            itemDetail?.expiredDate
+              | formatvalue : formModel : 'expiredDate'
+              | async
+          "
+        ></div>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <codx-label
+          fiedName="signedDate"
+          [formModel]="formModel"
+          class="text-gray-600 label-colon"
+        >
+        </codx-label>
+        <div
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.signedDate
+              | formatvalue : formModel : 'signedDate'
+              | async
+          "
+        ></div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center">
       <codx-label
         fiedName="Note"
         [formModel]="formModel"
-        class="text-gray-700 label-colon"
+        class="text-gray-600 label-colon"
       >
       </codx-label>
       <div
@@ -143,7 +160,6 @@
         "
       ></div>
     </div>
-
     <div class="mt-4">
       <ng-container *ngIf="lstFile.length > 0">
         <codx-thumbnail [files]="lstFile" displayThumb="simple">
@@ -152,8 +168,8 @@
     </div>
 
     <div class="row">
-      <div class="col-5">
-        <div class="mt-8 mb-2 text-primary fw-bold">
+      <div class="col-xl-7 col-lg-12 mb-4">
+        <div class="mb-2 text-primary fw-bold">
           Thông tin
           <span
             [innerHTML]="
@@ -163,31 +179,42 @@
             "
           ></span>
         </div>
-        <div class="d-flex">
+        <div class="d-flex mb-1">
           <codx-label
             fiedName="OrgUnitID"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="fw-bold me-4"
-            [innerHTML]="
-              itemDetail?.orgUnitID
-                | formatvalue : formModel : 'orgUnitID'
-                | async
+            *ngIf="
+              itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+              else noOrgUnitName
             "
+            >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
           >
-          </span>
+          <ng-template #noOrgUnitName>
+            <span class="place-holder">{{
+              grvSetup["OrgUnitID"].headerText
+            }}</span>
+          </ng-template>
         </div>
-        <div class="d-flex">
+        <div class="d-flex mb-1">
           <codx-label
             fiedName="JobLevel"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span
+          <span *ngIf="itemDetail.jobLevel; else noJobLevel">{{
+            itemDetail.jobLevel
+          }}</span>
+          <ng-template #noJobLevel>
+            <span class="place-holder">{{
+              grvSetup["JobLevel"].headerText
+            }}</span>
+          </ng-template>
+          <!-- <span
             class="fw-bold me-4"
             [innerHTML]="
               itemDetail?.jobLevel
@@ -195,17 +222,17 @@
                 | async
             "
           >
-          </span>
+          </span> -->
         </div>
-        <div class="d-flex">
+        <div class="d-flex mb-1">
           <codx-label
             fiedName="PositionID"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="fw-bold me-4"
+            class="fw-bold"
             [innerHTML]="
               itemDetail?.positionID
                 | formatvalue : formModel : 'positionID'
@@ -214,15 +241,15 @@
           >
           </span>
         </div>
-        <div class="d-flex">
+        <div class="d-flex mb-1">
           <codx-label
             fiedName="LocationID"
             [formModel]="formModel"
-            class="text-gray-700 label-colon"
+            class="text-gray-600 label-colon"
           >
           </codx-label>
           <span
-            class="fw-bold me-4"
+            class="fw-bold"
             [innerHTML]="
               itemDetail?.locationID
                 | formatvalue : formModel : 'locationID'
@@ -232,26 +259,34 @@
           </span>
         </div>
       </div>
-      <div class="col-5">
-        <div class="mt-8 mb-2 text-primary fw-bold">Thông tin cũ</div>
+      <div class="col-xl-5 col-lg-12 mb-4">
+        <div class="mb-2 text-primary fw-bold">Thông tin cũ</div>
         <div
-          class="fw-bold me-4"
+          class="fw-bold"
           [innerHTML]="
             itemDetail?.oldOrgUnitID
               | formatvalue : formModel : 'oldOrgUnitID'
               | async
           "
         ></div>
-        <div
-          class="fw-bold me-4"
+        <span *ngIf="itemDetail.oldJobLevel; else noOldJobLevel">{{
+          itemDetail.oldJobLevel
+        }}</span>
+        <ng-template #noOldJobLevel>
+          <span class="place-holder">{{
+            grvSetup["OldJobLevel"].headerText
+          }}</span>
+        </ng-template>
+        <!-- <div
+          class="fw-bold"
           [innerHTML]="
             itemDetail?.oldJobLevel
               | formatvalue : formModel : 'oldJobLevel'
               | async
           "
-        ></div>
+        ></div> -->
         <div
-          class="fw-bold me-4"
+          class="fw-bold"
           [innerHTML]="
             itemDetail?.oldPositionID
               | formatvalue : formModel : 'oldPositionID'
@@ -259,7 +294,7 @@
           "
         ></div>
         <div
-          class="fw-bold me-4"
+          class="fw-bold"
           [innerHTML]="
             itemDetail?.oldLocationID
               | formatvalue : formModel : 'oldLocationID'

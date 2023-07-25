@@ -31,6 +31,8 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   funcID: string;
   idField: string = 'recID';
   actionType;
+  disabledInput = false;
+
   data;
   isAfterRender = false;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -63,6 +65,9 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    if(this.actionType == 'view'){
+      this.disabledInput = true;
+    }
     this.funcID = data?.data?.funcID;
 
     this.accidentObj = JSON.parse(JSON.stringify(data?.data?.accidentObj));
@@ -101,6 +106,12 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
         });
     }
   }
+
+  setTitle(evt: any){
+    this.headerText += " " +  evt;
+    this.cr.detectChanges();
+  }
+
 
   initForm() {
     if (this.actionType == 'add') {

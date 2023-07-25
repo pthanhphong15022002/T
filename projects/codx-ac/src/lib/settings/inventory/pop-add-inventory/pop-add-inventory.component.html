@@ -20,7 +20,7 @@
             fiedName="InventModelID"
           ></codx-label>
           <codx-input
-            [disabled]="formType == 'edit' ? true : false"
+            [disabled]="formType == 'edit' ? true : false || keyField == 'InventModelID' ? true : false"
             [Group]="form.formGroup"
             [crrValue]="inventory.inventModelID"
             [formModel]="form.formModel"

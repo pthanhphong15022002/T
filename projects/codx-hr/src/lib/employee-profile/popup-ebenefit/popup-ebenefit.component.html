@@ -160,7 +160,7 @@
           ></codx-label>
 
           <codx-input
-            [disabled]="true"
+            [disabled]="autoNumField == 'DecisionNo' || disabledInput"
             field="DecisionNo"
             [formModel]="formModel"
             [Group]="formGroup"

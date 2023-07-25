@@ -2,6 +2,7 @@ import { DataRequest } from './../../../../../../src/shared/models/data.request'
 import {
   Component,
   ElementRef,
+  Injector,
   OnInit,
   Optional,
   ViewChild,
@@ -16,15 +17,17 @@ import {
   Util,
   CacheService,
   SortModel,
+  UIComponent,
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
+import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'lib-voucher',
   templateUrl: './voucher.component.html',
   styleUrls: ['./voucher.component.css'],
 })
-export class VoucherComponent implements OnInit {
+export class VoucherComponent extends UIComponent implements OnInit {
   //#region Constructor
   dialog!: DialogRef;
   title: string;
@@ -44,6 +47,8 @@ export class VoucherComponent implements OnInit {
   subInvoices: Array<any> = [];
   predicates: string;
   dataValues: string;
+  objectName:any;
+  loadingPop:any = true;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
@@ -57,14 +62,15 @@ export class VoucherComponent implements OnInit {
     mode: 'Normal',
   };
   constructor(
-    private api: ApiHttpService,
-    private cache: CacheService,
+    inject: Injector,
     private acService: CodxAcService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
+    super(inject);
     this.dialog = dialog;
     this.cashpayment = dialogData.data.cashpayment;
+    this.objectName = dialogData.data.objectName;
     this.type = dialogData.data.type;
     this.title = dialogData.data.title;
     this.gridModel.pageSize = 20;
@@ -73,7 +79,7 @@ export class VoucherComponent implements OnInit {
   //#region Constructor
 
   //#region Init
-  ngOnInit(): void {
+  onInit(): void {
     this.cache
       .moreFunction('SubLedgerOpen', 'grvSubLedgerOpen')
       .subscribe((res) => {
@@ -84,11 +90,7 @@ export class VoucherComponent implements OnInit {
           }
         }
       });
-
-    this.mapPredicates.set('currencyID', 'CurrencyID = @0');
-    this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
-    this.mapPredicates.set('objectID', 'ObjectID = @0');
-    this.mapDataValues.set('objectID', this.cashpayment.objectID);
+      this.setDefault();
   }
 
   ngAfterViewInit() {
@@ -98,6 +100,16 @@ export class VoucherComponent implements OnInit {
     // if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     // this.gridHeight = hBody - (hTab + 120);
     this.acService.setPopupSize(this.dialog, '80%', '80%');
+    setTimeout(() => {
+      this.loadingPop = false;
+    }, 1000);
+  }
+
+  setDefault(){
+    this.mapPredicates.set('currencyID', 'CurrencyID = @0');
+    this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
+    this.mapPredicates.set('objectID', 'ObjectID = @0');
+    this.mapDataValues.set('objectID', this.cashpayment.objectID);
   }
   //#endregion
 
@@ -245,16 +257,13 @@ export class VoucherComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
+    this.dialog.close(data);
     this.api
       .exec<any>('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
         this.cashpayment,
         data,
       ])
-      .subscribe((res) => {
-        if (res) {
-          this.dialog.close(data);
-        }
-      });
+      .subscribe((res) => {});
   }
 
   paymentAmt(data) {

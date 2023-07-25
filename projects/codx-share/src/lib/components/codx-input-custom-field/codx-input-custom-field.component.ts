@@ -1,16 +1,25 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { CacheService } from 'codx-core';
 
 @Component({
   selector: 'codx-input-custom-field',
   templateUrl: './codx-input-custom-field.component.html',
-  styleUrls: ['./codx-input-custom-field.component.css']
+  styleUrls: ['./codx-input-custom-field.component.css'],
 })
-export class CodxInputCustomFieldComponent implements OnInit{
+export class CodxInputCustomFieldComponent implements OnInit {
   @Input() customField: any = null;
   @Output() valueChangeCustom = new EventEmitter<any>();
-  //file - đặc thù cần hỏi lại sau
+  @Output() addFileCompleted = new EventEmitter<boolean>();
+  //file - đặc thù cần hỏi lại sauF
   @Input() objectId: any = '';
   @Input() checkValid = true;
   @Input() objectType: any = '';
@@ -18,9 +27,10 @@ export class CodxInputCustomFieldComponent implements OnInit{
   @Input() formModel: any = null;
   @Input() disable = false;
   @Input() viewFieldName = false;
+
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  addSuccess = true;
   errorMessage = '';
   showErrMess = false;
   //data tesst
@@ -71,9 +81,8 @@ export class CodxInputCustomFieldComponent implements OnInit{
         this.allowMultiFile = this.customField.multiselect ? '1' : '0';
         break;
       case 'R':
-          this.currentRate = Number.parseInt(this.customField.dataValue)??0  ;
-          break;
-
+        this.currentRate = Number.parseInt(this.customField.dataValue) ?? 0;
+        break;
     }
   }
 
@@ -139,7 +148,9 @@ export class CodxInputCustomFieldComponent implements OnInit{
       if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
-      this.arrIdUser = Array.from(new Set(this.listIdUser ? this.listIdUser.split(';') : []));
+      this.arrIdUser = Array.from(
+        new Set(this.listIdUser ? this.listIdUser.split(';') : [])
+      );
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
@@ -164,6 +175,8 @@ export class CodxInputCustomFieldComponent implements OnInit{
   }
 
   addFile() {
+    this.addSuccess = false;
+    this.addFileCompleted.emit(this.addSuccess);
     this.attachment.uploadFile();
   }
   fileAdded(e) {}
@@ -175,7 +188,9 @@ export class CodxInputCustomFieldComponent implements OnInit{
       var filed = Array.isArray(e) ? e[0].data : e;
       result = filed?.objectID + ';' + filed?.objectType;
     }
+    this.addSuccess = true;
     this.valueChangeCustom.emit({ e: result, data: this.customField });
+    this.addFileCompleted.emit(this.addSuccess);
   }
   rateChange(e) {
     //rank

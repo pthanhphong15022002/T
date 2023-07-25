@@ -13,7 +13,21 @@ ul.navi li {
     border: 0;
     color: var(--gray-600);
 }
-
+.uploadtemplate  .e-file-select-wrap {
+    display: none;
+}
+.uploadtemplate .e-upload {
+    float: none;
+    border: none;
+}
+.img-attachment-codx
+{
+	color: #D2E7FF;
+}
+.img-attachment-codx:hover
+{
+	color: white;
+}
 /*****29.07.2022***/
 .dropzone.dropzone-default {
     padding: 20px;
@@ -27,6 +41,7 @@ ul.navi li {
 .dropzone.dropzone-default.dropzone-primary {
     border-color: #3699FF;
 }
+
 
 .dropzone-msg-title {
     font-weight: 500;
@@ -154,4 +169,10 @@ ul.navi li {
 	animation-timing-function: linear;
 	animation-fill-mode: forwards;
 	transition: 2s stroke-dashoffset;
+}
+.btn-attachment
+{
+	background-color: #005DC7;
+	border-radius: 3px;
+	color: #D2E7FF;
 }

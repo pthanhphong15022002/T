@@ -22,39 +22,43 @@
           <div>Thống kê dung lượng tài liệu tải lên</div>
         </ng-template>
         <ng-template #content>
-          <!-- <div class="d-flex justify-content-center">
-            <div id="text" class="e-btn-group">
-              <input type="radio" id="left" name="align" value="left" />
-              <label class="e-btn bg-primary" for="left">Loại file</label>
-              <input type="radio" id="center" name="align" value="center" />
-              <label class="e-btn bg-primary" for="center">Ứng dụng</label>
-              <input type="radio" id="right" name="align" value="right" />
-              <label class="e-btn bg-primary" for="right">Phân loại</label>
+          <div class="p-2">
+            <div class="d-flex justify-content-center">
+              <div id="text" class="e-btn-group">
+                <input type="radio" id="left" name="align" value="left" />
+                <label class="e-btn bg-primary" for="left">Loại file</label>
+                <input type="radio" id="center" name="align" value="center" />
+                <label class="e-btn" for="center">Ứng dụng</label>
+                <input type="radio" id="right" name="align" value="right" />
+                <label class="e-btn" for="right">Phân loại</label>
+              </div>
+            </div>
+            <div id="column">
+              <ejs-accumulationchart
+                id="pie"
+                class="d-block"
+                style="height: 100%; width: 100%"
+                [legendSettings]="{
+                visible: false,
+              }"
+                [tooltip]="{ enable: true, format: '${point.x}' }"
+                [enableAnimation]="{
+                  enable: true
+                }"
+              >
+                <e-accumulation-series-collection>
+                  <e-accumulation-series
+                    [dataSource]="data1"
+                    xName="Product"
+                    yName="Percentage"
+                    innerRadius="70%"
+                    [border]="{ width: 3 }"
+                  >
+                  </e-accumulation-series>
+                </e-accumulation-series-collection>
+              </ejs-accumulationchart>
             </div>
           </div>
-          <div id="column">
-            <ejs-chart id="column" height="162px" [primaryXAxis]="primaryXAxis">
-              <e-series-collection>
-                <e-series
-                  [dataSource]="chartData"
-                  type="Column"
-                  xName="month"
-                  yName="sales"
-                >
-                </e-series>
-              </e-series-collection>
-            </ejs-chart>
-          </div> -->
-          <!-- <div>
-            <ng-template
-              ngFor
-              let-item
-              [ngForOf]="items"
-              let-i="index"
-              [ngForTrackBy]="trackByFn"
-            >
-            </ng-template>
-          </div> -->
         </ng-template>
       </e-panel>
       <e-panel id="2" [sizeX]="3" [sizeY]="3" [row]="0" [col]="3"
@@ -62,32 +66,156 @@
           <div>Tài liệu theo phân hệ</div>
         </ng-template>
         <ng-template #content>
-          <!-- <ejs-treemap
+          <ejs-treemap
             id="treemap"
             style="display: block"
-            height="100%"
+            height="350px"
             [dataSource]="data"
             weightValuePath="Count"
             [leafItemSettings]="leafItemSettings"
           >
-          </ejs-treemap> -->
+          </ejs-treemap>
         </ng-template>
       </e-panel>
       <e-panel id="3" [sizeX]="3" [sizeY]="3" [row]="0" [col]="6">
         <ng-template #header>
           <div>Thống kê tài liệu theo bộ phận</div>
         </ng-template>
+        <ng-template #content>
+          <div class="p-2">
+            <div class="d-flex justify-content-center">
+              <div id="text" class="e-btn-group">
+                <input type="radio" id="left" name="align" value="left" />
+                <label class="e-btn bg-primary" for="left">Dung lượng</label>
+                <input type="radio" id="center" name="align" value="center" />
+                <label class="e-btn" for="center">Số lượng</label>
+              </div>
+            </div>
+            <div>
+              <div class="m-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                    <codx-img
+                      [objectId]="'AD_Users'"
+                      [objectType]="'AD_Users'"
+                      [width]="25"
+                    >
+                    </codx-img>
+                    <div class="ms-2">Nhóm kiểm tra chất lượng</div>
+                  </div>
+                  <div>23MB</div>
+                </div>
+                <ejs-progressbar
+                  #linear
+                  id="linear1"
+                  [type]="'Linear'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="80"
+                  [width]="'100%'"
+                  [height]="'60'"
+                >
+                </ejs-progressbar>
+              </div>
+              <div class="m-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                    <codx-img
+                      [objectId]="'AD_Users'"
+                      [objectType]="'AD_Users'"
+                      [width]="25"
+                    >
+                    </codx-img>
+                    <div class="ms-2">Nhóm kiểm tra chất lượng</div>
+                  </div>
+                  <div>23MB</div>
+                </div>
+                <ejs-progressbar
+                  #linear
+                  id="linear2"
+                  [type]="'Linear'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="80"
+                  [width]="'100%'"
+                  [height]="'60'"
+                >
+                </ejs-progressbar>
+              </div>
+              <div class="m-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                    <codx-img
+                      [objectId]="'AD_Users'"
+                      [objectType]="'AD_Users'"
+                      [width]="25"
+                    >
+                    </codx-img>
+                    <div class="ms-2">Nhóm kiểm tra chất lượng</div>
+                  </div>
+                  <div>23MB</div>
+                </div>
+                <ejs-progressbar
+                  #linear
+                  id="linear3"
+                  [type]="'Linear'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="80"
+                  [width]="'100%'"
+                  [height]="'60'"
+                >
+                </ejs-progressbar>
+              </div>
+            </div>
+          </div>
+        </ng-template>
       </e-panel>
       <e-panel id="4" [sizeX]="6" [sizeY]="3" [row]="3" [col]="3"
         ><ng-template #header>
           <div>Thống kê mức độ sử dụng tài liệu theo bộ phận</div>
-        </ng-template></e-panel
-      >
+        </ng-template>
+        <ng-template #content>
+          <ejs-chart id="chart-container" [primaryXAxis]="primaryXAxis">
+            <e-series-collection>
+              <e-series
+                [dataSource]="chartData"
+                type="Column"
+                xName="month"
+                yName="sales"
+                name="Sales"
+              ></e-series>
+              <e-series
+                [dataSource]="chartData"
+                type="Line"
+                xName="month"
+                yName="sales"
+                name="Sales"
+              ></e-series>
+            </e-series-collection>
+          </ejs-chart> </ng-template
+      ></e-panel>
       <e-panel id="5" [sizeX]="3" [sizeY]="6" [row]="0" [col]="9"
         ><ng-template #header>
           <div>Top tài liệu</div>
-        </ng-template></e-panel
-      >
+        </ng-template>
+        <ng-template #content>
+          <div class="p-2">
+            <div class="d-flex justify-content-center">
+              <div id="text" class="e-btn-group">
+                <input type="radio" id="left" name="align" value="left" />
+                <label class="e-btn bg-primary" for="left">Xem</label>
+                <input type="radio" id="center" name="align" value="center" />
+                <label class="e-btn" for="center">Mới</label>
+                <input type="radio" id="right" name="align" value="right" />
+                <label class="e-btn" for="right">Chia sẻ</label>
+                <input type="radio" id="right" name="align" value="right" />
+                <label class="e-btn" for="right">Download</label>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </e-panel>
     </e-panels>
   </ejs-dashboardlayout>
 </ng-template>

@@ -45,6 +45,7 @@ export class ViewDayOffDetailComponent implements OnChanges {
 
   @Input() itemDetail: any;
   @Input() formModel;
+  @Input() grvSetup;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
@@ -57,7 +58,6 @@ export class ViewDayOffDetailComponent implements OnChanges {
   tabControl: TabModel[] = [];
 
   user: any;
-  grvSetup: any = {};
   itemDetailStt;
   itemDetailDataStt;
   // gridViewSetup: any = {};

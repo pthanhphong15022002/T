@@ -14,6 +14,42 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
+          <codx-input
+          [name]="radioCategory"
+          type="radio"
+          style="width: 100%"
+          [field]="radioCompany"
+          [label]="'Công ty'"
+          [checked]="isCategory"
+          [disabled]="action === actionEdit"
+          [crrValue]="isCategory"
+          (valueChange)="valueChangeCategory($event,radioCompany)"
+        >
+        </codx-input>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group">
+          <codx-input
+          [name]="radioCategory"
+          type="radio"
+          style="width: 100%"
+          [field]="radioCustomer"
+          [label]="'Cá nhân'"
+          [disabled]="action === actionEdit"
+          [checked]="!isCategory"
+          [crrValue]="isCategory"
+          (valueChange)="valueChangeCategory($event,radioCustomer)"
+        >
+        </codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
           <codx-label
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -67,14 +103,26 @@
             (handleInput)="changeAvatarLead()"
           >
           </codx-img>
-
-
           </div>
         </div>
       </div>
     </div>
   </div>
-
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ApplyProcess" class="pe-2">
+        </codx-label>
+        <codx-input
+          field="ApplyProcess"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-12">
       <div class="form-group">
@@ -162,7 +210,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="isCategory">
 
     <div class="col-6">
       <div class="form-group">
@@ -201,7 +249,7 @@
     </div>
 
   </div>
-  <div class="row">
+  <div class="row" *ngIf="isCategory">
     <div class="col-12">
       <div class="form-group">
         <codx-label
@@ -221,6 +269,28 @@
       </div>
     </div>
   </div>
+
+  <div class="row" *ngIf="!isCategory">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label
+          fiedName="JobTitle"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="jobTitle"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-6">
       <div class="form-group">

@@ -11,7 +11,7 @@
   class="h-100"
 >
   <ng-template #header>
-    <div class="d-flex justify-content-between mb-2">
+    <div class="d-flex justify-content-between mb-4">
       <codx-temp-full
         [title]="itemDetail?.ownerName"
         [imageId]="itemDetail?.emp?.employeeID"
@@ -22,12 +22,10 @@
         <!-- info view -->
         <ng-template #title>
           <div class="d-flex flex-column ms-1 w-100">
-            <div class="mb-2 d-flex">
-              <span class="text-dark fs-5-sm fw-bold me-3">
-                {{ itemDetail?.emp?.employeeName }}
-              </span>
+            <div class="text-dark fs-5-sm fw-bold me-3">
+              {{ itemDetail?.emp?.employeeName }}
             </div>
-            <div class="d-flex align-items-center text-gray-600 mb-1">
+            <div class="d-flex align-items-center text-gray-600">
               <span
                 class="me-4 fw-bold text-dark"
                 [innerHTML]="
@@ -55,12 +53,26 @@
             <!-- 2 -->
             <div class="text-gray-600 fs-7">
               <span
+                *ngIf="
+                  itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+                  else noOrgUnitName
+                "
+                >{{
+                  itemDetail.orgUnitName || itemDetail.emp.orgUnitName
+                }}</span
+              >
+              <ng-template #noOrgUnitName>
+                <span class="place-holder">{{
+                  grvSetup["OrgUnitID"].headerText
+                }}</span>
+              </ng-template>
+              <!-- <span
                 [innerHTML]="
                   itemDetail?.emp?.orgUnitID
                     | formatvalue : formModel : 'orgUnitID'
                     | async
                 "
-              ></span>
+              ></span> -->
             </div>
           </div>
           <!-- <div class="d-flex flex-column">
@@ -118,7 +130,7 @@
       </ng-container>
     </div>
     <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-center mb-2 me-4">
+      <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
           fiedName="decisionNo"
           [formModel]="formModel"
@@ -126,13 +138,13 @@
           [setRequire]="false"
         >
         </codx-label>
-        <span>
+        <span class="text-dark fw-bold">
           {{ itemDetail?.decisionNo }}
         </span>
       </div>
 
       <div
-        class="d-flex align-items-center mb-2 me-4"
+        class="d-flex align-items-center mb-1 me-4"
         *ngIf="itemDetail?.expiredDate; else noExpiredDate"
       >
         <codx-label
@@ -143,6 +155,7 @@
         >
         </codx-label>
         <span
+          class="text-dark fw-bold"
           [innerHTML]="
             itemDetail?.effectedDate
               | formatvalue : formModel : 'effectedDate'
@@ -152,6 +165,7 @@
         </span>
         <span class="px-1"> - </span>
         <span
+          class="text-dark fw-bold"
           [innerHTML]="
             itemDetail?.expiredDate
               | formatvalue : formModel : 'expiredDate'
@@ -162,7 +176,7 @@
       </div>
 
       <ng-template #noExpiredDate>
-        <div class="d-flex align-items-center mb-2 me-4">
+        <div class="d-flex align-items-center mb-1 me-4">
           <codx-label
             fiedName="effectedDate"
             [formModel]="formModel"
@@ -171,7 +185,7 @@
           >
           </codx-label>
           <span
-            class="fw-bold"
+            class="text-dark fw-bold"
             [innerHTML]="
               itemDetail?.effectedDate
                 | formatvalue : formModel : 'effectedDate'
@@ -181,41 +195,43 @@
           </span>
         </div>
       </ng-template>
-
-      <div class="d-flex align-items-center mb-2 me-4">
-        <codx-label
-          fiedName="signedDate"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          [innerHTML]="
-            itemDetail?.signedDate
-              | formatvalue : formModel : 'signedDate'
-              | async
-          "
-        >
-        </span>
-      </div>
-
-      <div class="d-flex flex-wrap align-items-top mb-2 col-12">
-        <codx-label
-          fiedName="note"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          [innerHTML]="
-            itemDetail?.note | formatvalue : formModel : 'note' | async
-          "
-        >
-        </span>
-      </div>
     </div>
+    <div class="d-flex align-items-center mb-1">
+      <codx-label
+        fiedName="signedDate"
+        [formModel]="formModel"
+        class="text-gray-700 label-colon"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="text-dark fw-bold"
+        [innerHTML]="
+          itemDetail?.signedDate
+            | formatvalue : formModel : 'signedDate'
+            | async
+        "
+      >
+      </span>
+    </div>
+
+    <div class="d-flex flex-wrap align-items-top mb-1">
+      <codx-label
+        fiedName="note"
+        [formModel]="formModel"
+        class="text-gray-700 label-colon"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="text-dark fw-bold"
+        [innerHTML]="
+          itemDetail?.note | formatvalue : formModel : 'note' | async
+        "
+      >
+      </span>
+    </div>
+
     <!-- <div class="mt-2">
       <ng-container *ngIf="files.length > 0">
         <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'">
@@ -260,7 +276,7 @@
                     <codx-label
                       fiedName="bSalary"
                       [formModel]="formModel"
-                      class="text-gray-700 w-30 label-colon"
+                      class="text-gray-700 w-125px label-colon"
                       [setRequire]="false"
                     >
                     </codx-label>
@@ -278,7 +294,7 @@
                     <codx-label
                       fiedName="siSalary"
                       [formModel]="formModel"
-                      class="text-gray-700 w-30 label-colon"
+                      class="text-gray-700 w-125px label-colon"
                       [setRequire]="false"
                     >
                     </codx-label>
@@ -296,7 +312,7 @@
                     <codx-label
                       fiedName="jSalary"
                       [formModel]="formModel"
-                      class="text-gray-700 w-30 label-colon"
+                      class="text-gray-700 w-125px label-colon"
                       [setRequire]="false"
                     >
                     </codx-label>

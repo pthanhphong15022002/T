@@ -87,6 +87,7 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.method = 'GetDataOrgAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
+
     this.views = [
       {
         id: '1',
@@ -218,11 +219,9 @@ export class OrgorganizationComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
 
-      console.log(data);
       this.hrService
         .copy(data, this.view.formModel, 'OrgUnitID')
         .subscribe((res) => {
-          console.log(res);
           // this.hrService
           //   .getDataDefault(
           //     this.view.formModel.funcID,
@@ -269,6 +268,12 @@ export class OrgorganizationComponent extends UIComponent {
       // this.detectorRef.detectChanges();
     }
   }
+
+  selectItemFromChild: string = '';
+
+  getIdFromChild(e) {
+    this.selectItemFromChild = e;
+  }
   // button add toolbar
   btnClick(e) {
     if (this.view) {
@@ -278,7 +283,11 @@ export class OrgorganizationComponent extends UIComponent {
       option.FormModel = this.view.formModel;
       this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
-          result['parentID'] = this.orgUnitID;
+          if (this.selectItemFromChild) {
+            result['parentID'] = this.selectItemFromChild;
+          } else {
+            result['parentID'] = this.orgUnitID;
+          }
           let object = {
             data: result,
             funcID: this.view.formModel.funcID,
@@ -358,9 +367,58 @@ export class OrgorganizationComponent extends UIComponent {
   searchText: string = '';
   searchUser(event: any) {
     this.searchText = event;
+    this.lstMyTeam = [];
+    this.pageIndex = 1;
+    this.getMyTeam();
   }
 
-  clickOpen(event) {
+  pageIndex: number = 1;
+  total: number = 0;
+  lstMyTeam: any[] = [];
+  scrolling: boolean = false;
+  orgId: string;
+
+  //get my team
+  getMyTeam() {
+    this.api
+      .execSv(
+        'HR',
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetTreeEmployeeAsync',
+        [this.orgId, this.pageIndex, this.searchText]
+      )
+      .subscribe((res: any[]) => {
+        if (res && res[0].length > 0) {
+          if (this.pageIndex == 1) {
+            this.total = res[1];
+          }
+          this.lstMyTeam.push(...res[0]);
+          if (this.lstMyTeam.length < this.total) {
+            this.scrolling = true;
+            this.pageIndex = this.pageIndex + 1;
+          } else this.scrolling = false;
+        } else this.scrolling = false;
+        //this.dt.detectChanges();
+      });
+  }
+
+  scroll(e: HTMLDivElement) {
+    var total = e.offsetHeight + e.scrollTop;
+
+    if (this.scrolling && (total <= e.scrollHeight + 2) && (total > e.scrollHeight -2)) {
+      this.scrolling = false;
+      this.getMyTeam();
+    }
+  }
+
+  //Click load employee
+  clickOpen(event, data, employee) {
+    // console.log(employee.slice(0, 10));
+    this.lstMyTeam = employee.slice(0, 10);
+    this.orgId = data;
+    this.scrolling = true;
+    this.pageIndex = 1;
     event.stopPropagation();
   }
 }

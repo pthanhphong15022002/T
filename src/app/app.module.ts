@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { TMModule } from 'projects/codx-tm/src/public-api';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
+import { CodxDpModule } from 'projects/codx-dp/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FileComponent } from './file/file.component';
 import { AppConfigService } from '@core/services/config/app-config.service';
@@ -108,6 +109,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     // CodxEp8Module.forRoot({ environment }),
     CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
+    CodxDpModule.forRoot({ environment }),
     CodxShareModule,
     AppRoutingModule,
     NgxSkeletonLoaderModule.forRoot({
