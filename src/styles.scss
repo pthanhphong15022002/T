@@ -3440,14 +3440,14 @@ lib-employee-list{
   margin: 0 5px;
 }
 .FD_Cards{
-  .text-feed{
-    height: 210px;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-  }
   ::-webkit-scrollbar-thumb {
-    background-color: #1e1d1f25 !important;
+    background-color: #1e1d1f1f !important;
   }
+}
+.text-feed{
+  height: 210px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .multiple-employee.w-25px.h-25px{

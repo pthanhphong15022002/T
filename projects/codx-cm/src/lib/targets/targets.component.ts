@@ -250,7 +250,7 @@ export class TargetsComponent
     if (e?.view?.type == 8) {
       if (!this.schedule)
         this.schedule = (this.view?.currentView as any)?.schedule;
-    }else{
+    } else {
       this.schedule = null;
     }
     var formModel = new FormModel();
@@ -318,87 +318,82 @@ export class TargetsComponent
   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
-      this.cache
-        .gridViewSetup('CMTargets', 'grvCMTargets')
-        .subscribe(async (grid) => {
-          let dialogModel = new DialogModel();
-          dialogModel.DataService = this.view.dataService;
-          dialogModel.FormModel = this.view?.formModel;
-          dialogModel.IsFull = true;
-          dialogModel.zIndex = 999;
-          var obj = {
-            action: 'add',
-            title: this.titleAction,
-            gridViewSetupTarget: grid,
-          };
-          var dialog = this.callfc.openForm(
-            PopupAddTargetComponent,
-            '',
-            this.widthWin,
-            this.heightWin,
-            '',
-            obj,
-            '',
-            dialogModel
-          );
-          dialog.closed.subscribe((e) => {
-            if (!e?.event) this.view.dataService.clear();
-            if (e != null && e?.event != null) {
-              if (e?.event[0] != null && e?.event[0][1] != null) {
-                var data = e?.event[0][1];
-                var lstOwners = e?.event[1];
-                var lstTargetLines = e?.event[0][0];
-                if (data.year == this.year) {
-                  this.businessLineID = e?.event[2];
-                  this.lstTargetLines = lstTargetLines;
-                  this.lstOwners = lstOwners;
-                  this.data = e?.event[0][2];
-                  var index = this.lstDataTree.findIndex(
-                    (x) => x.businessLineID == data?.businessLineID
-                  );
-                  if (index != -1) {
-                    this.lstDataTree[index] = data;
-                    // this.lstDataTree.splice(index, 1);
-                  } else {
-                    this.lstDataTree.push(Object.assign({}, data));
-                  }
-                }
-                if (this.schedule) {
-                  // if (lstOwners != null && lstOwners?.length > 0) {
-                  //   var resource = this.schedule['resourceDataSource'];
-                  //   lstOwners.forEach((item) => {
-                  //     if (
-                  //       !resource?.find(
-                  //         (user) => user.salespersonID === item.userID
-                  //       )
-                  //     ) {
-                  //       var tmp = {};
-                  //       tmp['salespersonID'] = item?.userID;
-                  //       tmp['ClassName'] = 'e-child-node';
-                  //       tmp['Count'] = 0;
-                  //       tmp['events'] = 11;
-                  //       tmp['positionName'] = item?.positionName;
-                  //       tmp['salespersonID'] = item?.userID;
-                  //       tmp['value'] = item?.userID;
-                  //       tmp['target'] = 0;
-                  //       tmp['text'] = item?.userName;
-                  //       tmp['userName'] = item?.userName;
-                  //       resource?.push(tmp);
-                  //     }
-                  //   });
-
-                  //   this.schedule['resourceDataSource'] = resource;
-                  //   this.schedule['displayResource'] = resource;
-                  //   this.view.currentView = this.schedule;
-                  //   this.view?.currentView?.refesh();
-                  // }
-                   this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
-                }
+      let dialogModel = new DialogModel();
+      dialogModel.DataService = this.view.dataService;
+      dialogModel.FormModel = this.view?.formModel;
+      dialogModel.IsFull = true;
+      dialogModel.zIndex = 999;
+      var obj = {
+        action: 'add',
+        title: this.titleAction,
+      };
+      var dialog = this.callfc.openForm(
+        PopupAddTargetComponent,
+        '',
+        this.widthWin,
+        this.heightWin,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
+      dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e != null && e?.event != null) {
+          if (e?.event[0] != null && e?.event[0][1] != null) {
+            var data = e?.event[0][1];
+            var lstOwners = e?.event[1];
+            var lstTargetLines = e?.event[0][0];
+            if (data.year == this.year) {
+              this.businessLineID = e?.event[2];
+              this.lstTargetLines = lstTargetLines;
+              this.lstOwners = lstOwners;
+              this.data = e?.event[0][2];
+              var index = this.lstDataTree.findIndex(
+                (x) => x.businessLineID == data?.businessLineID
+              );
+              if (index != -1) {
+                this.lstDataTree[index] = data;
+                // this.lstDataTree.splice(index, 1);
+              } else {
+                this.lstDataTree.push(Object.assign({}, data));
               }
-              this.detectorRef.detectChanges();
             }
-          });
-        });
+            if (this.schedule) {
+              // if (lstOwners != null && lstOwners?.length > 0) {
+              //   var resource = this.schedule['resourceDataSource'];
+              //   lstOwners.forEach((item) => {
+              //     if (
+              //       !resource?.find(
+              //         (user) => user.salespersonID === item.userID
+              //       )
+              //     ) {
+              //       var tmp = {};
+              //       tmp['salespersonID'] = item?.userID;
+              //       tmp['ClassName'] = 'e-child-node';
+              //       tmp['Count'] = 0;
+              //       tmp['events'] = 11;
+              //       tmp['positionName'] = item?.positionName;
+              //       tmp['salespersonID'] = item?.userID;
+              //       tmp['value'] = item?.userID;
+              //       tmp['target'] = 0;
+              //       tmp['text'] = item?.userName;
+              //       tmp['userName'] = item?.userName;
+              //       resource?.push(tmp);
+              //     }
+              //   });
+
+              //   this.schedule['resourceDataSource'] = resource;
+              //   this.schedule['displayResource'] = resource;
+              //   this.view.currentView = this.schedule;
+              //   this.view?.currentView?.refesh();
+              // }
+              this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
+            }
+          }
+          this.detectorRef.detectChanges();
+        }
+      });
     });
   }
 
@@ -430,62 +425,58 @@ export class TargetsComponent
         this.view.dataService.dataSelected = tar[0];
       }
     }
-    this.cache
-      .gridViewSetup('CMTargets', 'grvCMTargets')
-      .subscribe(async (grid) => {
-        this.view.dataService
-          .edit(this.view.dataService.dataSelected)
-          .subscribe((res) => {
-            let dialogModel = new DialogModel();
-            dialogModel.DataService = this.view.dataService;
-            dialogModel.FormModel = this.view?.formModel;
-            dialogModel.IsFull = true;
-            dialogModel.zIndex = 999;
-            var obj = {
-              action: 'edit',
-              title: this.titleAction,
-              lstOwners: lstOwners,
-              lstTargetLines: lstTargetLines,
-              gridViewSetupTarget: grid,
-            };
-            var dialog = this.callfc.openForm(
-              PopupAddTargetComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {
-              this.businessLineID = null;
-              if (!e?.event) this.view.dataService.clear();
-              if (e != null && e?.event != null) {
-                if (e?.event[0] != null && e?.event[0][1] != null) {
-                  var data = e?.event[0][1];
-                  if (data.year == this.year) {
-                    this.businessLineID = e?.event[2];
-                    this.lstTargetLines = e?.event[0][0];
-                    this.lstOwners = e?.event[1];
-                    this.data = e?.event[0][2];
-                    var index = this.lstDataTree.findIndex(
-                      (x) => x.businessLineID == data?.businessLineID
-                    );
-                    if (index != -1) {
-                      this.lstDataTree[index] = data;
-                    }
-                  }
-                  if (this.schedule) {
-                    this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
-                  }
-                  // this.lstDataTree.push(Object.assign({}, data));
 
-                  this.detectorRef.detectChanges();
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let dialogModel = new DialogModel();
+        dialogModel.DataService = this.view.dataService;
+        dialogModel.FormModel = this.view?.formModel;
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        var obj = {
+          action: 'edit',
+          title: this.titleAction,
+          lstOwners: lstOwners,
+          lstTargetLines: lstTargetLines,
+        };
+        var dialog = this.callfc.openForm(
+          PopupAddTargetComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+        dialog.closed.subscribe((e) => {
+          this.businessLineID = null;
+          if (!e?.event) this.view.dataService.clear();
+          if (e != null && e?.event != null) {
+            if (e?.event[0] != null && e?.event[0][1] != null) {
+              var data = e?.event[0][1];
+              if (data.year == this.year) {
+                this.businessLineID = e?.event[2];
+                this.lstTargetLines = e?.event[0][0];
+                this.lstOwners = e?.event[1];
+                this.data = e?.event[0][2];
+                var index = this.lstDataTree.findIndex(
+                  (x) => x.businessLineID == data?.businessLineID
+                );
+                if (index != -1) {
+                  this.lstDataTree[index] = data;
                 }
               }
-            });
-          });
+              if (this.schedule) {
+                this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
+              }
+              // this.lstDataTree.push(Object.assign({}, data));
+
+              this.detectorRef.detectChanges();
+            }
+          }
+        });
       });
   }
 

@@ -103,7 +103,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
     );
-    this.vllStatus = this.grvSetup['Status'].referedValue; 
+    this.vllStatus = this.grvSetup['Status'].referedValue;
     this.getAccount();
   }
   changeTab(e){
@@ -115,10 +115,11 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
       contract?.refID,
       contract?.processID,
       contract?.status,
+      '4'
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
-        this.listInsStep = res;    
+        this.listInsStep = res;
       }
     });
   }
@@ -128,13 +129,13 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
       event.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02':
-        
+
         break;
       case 'SYS03':
-        
+
         break;
       case 'SYS04':
-        
+
         break;
       case 'CM0204_4':
         res.disabled = true;

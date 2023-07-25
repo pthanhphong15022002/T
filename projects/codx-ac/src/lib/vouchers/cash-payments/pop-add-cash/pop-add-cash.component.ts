@@ -15,7 +15,10 @@ import {
   EditSettingsModel,
   GridComponent,
 } from '@syncfusion/ej2-angular-grids';
-import { SidebarComponent, TabComponent } from '@syncfusion/ej2-angular-navigations';
+import {
+  SidebarComponent,
+  TabComponent,
+} from '@syncfusion/ej2-angular-navigations';
 import {
   AuthService,
   AuthStore,
@@ -216,11 +219,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.isInit = true;
   }
 
-  ngAfterViewInit() { 
+  ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment, {
       onlySelf: true,
       emitEvent: false,
-    });   
+    });
   }
   //#endregion
 
@@ -605,7 +608,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  gridInit(columnsGrid){
+  gridInit(columnsGrid) {
     this.hideFields = [];
     if (this.dialogData?.hideFields && this.dialogData?.hideFields.length > 0) {
       this.hideFields = this.dialogData?.hideFields
@@ -619,7 +622,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       setTimeout(() => {
         this.loadingform = false;
       }, 500);
-    }else{
+    } else {
       setTimeout(() => {
         this.loadingform = false;
       }, 2000);
@@ -636,7 +639,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.hideGrid(this.gridCash.columnsGrid);
     setTimeout(() => {
       this.gridCash.refresh();
-    });  
+    });
   }
 
   gridInitSet() {
@@ -663,8 +666,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   lineChanged(e: any) {
-    if(e.hasNoChange){
-      this.gridCash.focusNextinput(this.gridCash.editIndex);
+    if (e.hasNoChange) {
+      //this.gridCash.focusNextinput(this.gridCash.editIndex);
       return;
     }
     this.dataLine = e.data;
@@ -701,7 +704,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             if (res) {
               this.dataLine.dR2 = res.dR2;
               this.dataLine.cR2 = res.cR2;
-              this.gridCash.focusNextinput(this.gridCash.editIndex);
+              //this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           });
         if (this.journal.entryMode == '2') {
@@ -937,7 +940,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           //   this.form,
           //   this.action === 'edit',
           //   () => {
-              
+
           //   }
           // );
           this.dialog.dataService.addDatas.set(
@@ -1645,7 +1648,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.disableField(this.lockFields);
   }
 
-  hideGrid(columnsGrid){
+  hideGrid(columnsGrid) {
     if (this.hideFields.length > 0) {
       this.hideFields.forEach((fieldName) => {
         let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
@@ -1693,17 +1696,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   predicateControl(columnsGrid) {
-    let arr = [
-      'AccountID',
-      'OffsetAcctID',
-      'DIM1',
-      'DIM3',
-      'DIM2',
-    ];
+    let arr = ['AccountID', 'OffsetAcctID', 'DIM1', 'DIM3', 'DIM2'];
     arr.forEach((fieldName) => {
-      let idx = columnsGrid.findIndex(
-        (x) => x.fieldName == fieldName
-      );
+      let idx = columnsGrid.findIndex((x) => x.fieldName == fieldName);
       if (idx > -1) {
         columnsGrid[idx].predicate = '';
         columnsGrid[idx].dataValue = '';
@@ -1797,28 +1792,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.hideFields.push('DR2');
         this.hideFields.push('TaxAmt2');
       }
-      let i = columnsGrid.findIndex(
-        (x) => x.fieldName == 'AccountID'
-      );
+      let i = columnsGrid.findIndex((x) => x.fieldName == 'AccountID');
       if (i > -1) {
         columnsGrid[i].headerText = 'TK nợ';
       }
-      let idx = columnsGrid.findIndex(
-        (x) => x.fieldName == 'OffsetAcctID'
-      );
+      let idx = columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID');
       if (idx > -1) {
         columnsGrid[idx].isRequire = true;
       }
     } else {
-      let i = columnsGrid.findIndex(
-        (x) => x.fieldName == 'AccountID'
-      );
+      let i = columnsGrid.findIndex((x) => x.fieldName == 'AccountID');
       if (i > -1) {
         columnsGrid[i].headerText = 'TK';
       }
-      let idx = columnsGrid.findIndex(
-        (x) => x.fieldName == 'OffsetAcctID'
-      );
+      let idx = columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID');
       if (idx > -1) {
         columnsGrid[idx].isRequire = false;
       }
@@ -1835,36 +1822,29 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (this.cashpayment.currencyID == this.baseCurr) {
       let arr = ['DR', 'CR'];
       arr.forEach((fieldName) => {
-        let i = columnsGrid.findIndex(
-          (x) => x.fieldName == fieldName
-        );
+        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
         if (i > -1) {
           columnsGrid[i].dataFormat = 'B';
         }
       });
     } else {
-      let arr = ['DR', 'CR','DR2', 'CR2', 'TaxAmt2'];
+      let arr = ['DR', 'CR', 'DR2', 'CR2', 'TaxAmt2'];
       arr.forEach((fieldName) => {
-        switch(fieldName){
+        switch (fieldName) {
           case 'DR':
           case 'CR':
-            let i = columnsGrid.findIndex(
-              (x) => x.fieldName == fieldName
-            );
+            let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
             if (i > -1) {
               columnsGrid[i].dataFormat = 'S';
             }
             break;
           default:
-            let idx = columnsGrid.findIndex(
-              (x) => x.fieldName == fieldName
-            );
+            let idx = columnsGrid.findIndex((x) => x.fieldName == fieldName);
             if (idx > -1) {
               columnsGrid[idx].dataFormat = 'B';
             }
             break;
         }
-        
       });
     }
   }
@@ -1887,9 +1867,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'OffsetAcctID',
     ];
     arr.forEach((fieldName) => {
-      let i = columnsGrid.findIndex(
-        (x) => x.fieldName == fieldName
-      );
+      let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
       if (i > -1) {
         columnsGrid[i].isVisible = true;
       }
@@ -2416,12 +2394,24 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ) {
       objectName = this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName + ' - ';
     }
+<<<<<<< HEAD
     if (this.cbxPayee.ComponentCurrent.itemsSelected && this.cbxPayee.ComponentCurrent.itemsSelected.length > 0 && !this.cbxPayee.ComponentCurrent.itemsSelected[0][0]) {
       payName = this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
     }else{
       if (this.cbxPayee.ComponentCurrent.value) {
         payName = this.cbxPayee.ComponentCurrent.value + ' - ';
       }   
+=======
+    if (
+      this.cbxPayee.ComponentCurrent.itemsSelected &&
+      this.cbxPayee.ComponentCurrent.itemsSelected.length > 0 &&
+      !this.cbxPayee.ComponentCurrent.itemsSelected[0][0]
+    ) {
+      payName =
+        this.cbxPayee.ComponentCurrent.itemsSelected[0].ContactName + ' - ';
+    } else {
+      payName = this.cbxPayee.ComponentCurrent.value + ' - ';
+>>>>>>> a08a2f98aab4d9134eac15bd8b8836f3603544a0
     }
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);

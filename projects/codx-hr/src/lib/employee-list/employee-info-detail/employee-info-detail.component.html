@@ -358,14 +358,14 @@
             <div class="d-flex flex-center">
               <div class="fs-5-sm d-flex align-items-center">
                 <span class="icon-qr_code_scanner icon-16 me-2"></span>
-                <span style="margin-top: 2px" #id placement="bottom" [ngbTooltip]="eInfoHeaderText?.EmployeeID">{{ employeeID }}</span>
+                <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{ employeeID }}</span>
                 <span
                   class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"
                 ></span>
-                <span class="fw-bold" placement="bottom" [ngbTooltip]="eInfoHeaderText?.EmployeeName">{{ infoPersonal?.employeeName }}</span>
+                <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName">{{ infoPersonal?.employeeName }}</span>
               </div>
             </div>
-            <div placement="bottom" [ngbTooltip]="eInfoHeaderText?.PositionID"
+            <div placement="bottom" [title]="eInfoHeaderText?.PositionID"
               class="text-gray-500 mb-1"
               *ngIf="infoPersonal"
               >
@@ -378,13 +378,13 @@
               " -->
             <div class="d-flex flex-column flex-center">
               <div
-              [ngbTooltip]="eInfoHeaderText?.OrgUnitID"
+              [title]="eInfoHeaderText?.OrgUnitID"
             class="text-gray-500 mb-1"
             *ngIf="infoPersonal"
               >{{orgUnitStr}}</div>
 
               <div
-              [ngbTooltip]="eInfoHeaderText?.DepartmentID"
+              [title]="eInfoHeaderText?.DepartmentID"
             class="text-gray-500 mb-1"
             *ngIf="infoPersonal"
               >{{DepartmentStr}}</div>
@@ -413,7 +413,7 @@
             <div class="d-flex flex-wrap mb-1">
               <div class="d-flex align-items-center text-gray-700 me-5">
                 <span class="icon-date_range icon-16 me-2"></span>
-                <span placement="bottom" [ngbTooltip]="eInfoHeaderText?.JoinedOn"
+                <span placement="bottom" [title]="eInfoHeaderText?.JoinedOn"
                   #joinedOn
                   *ngIf="eInfoFormModel"
                   [innerHTML]="
@@ -423,7 +423,7 @@
                   "
                 ></span>
               </div>
-              <div *ngIf="eInfoFormModel" placement="bottom" [ngbTooltip]="eInfoHeaderText?.Status">
+              <div *ngIf="eInfoFormModel" placement="bottom" [title]="eInfoHeaderText?.Status">
                 <codx-vll
                   class="badge"
                   [field]="'Status'"
@@ -436,7 +436,7 @@
             </div>
             <div class="d-flex align-items-center mb-1">
               <span class=""></span>
-              <span class="text-dark" placement="bottom" [ngbTooltip]="eInfoHeaderText?.Email">
+              <span class="text-dark" placement="bottom" [title]="eInfoHeaderText?.Email">
                 <span
                   #email
                   *ngIf="eInfoFormModel"
@@ -450,7 +450,7 @@
             </div>
             <div class="d-flex align-items-center mb-1">
               <span class=""></span>
-              <span placement="bottom" [ngbTooltip]="eInfoHeaderText?.Phone"
+              <span placement="bottom" [title]="eInfoHeaderText?.Phone"
                 class="text-dark me-3"
                 [innerHTML]="
                   infoPersonal?.phone
@@ -460,7 +460,7 @@
               ></span>
               <span class=""></span>
               <span class="text-dark">
-                <span placement="bottom" [ngbTooltip]="eInfoHeaderText?.Mobile"
+                <span placement="bottom" [title]="eInfoHeaderText?.Mobile"
                   *ngIf="eInfoFormModel"
                   [innerHTML]="
                     infoPersonal?.mobile
@@ -1591,13 +1591,13 @@
                 <div class="col">
                   <div class="text-gray-600 pb-1">
                     <codx-label
-                      fiedName="IssuedDate"
+                      fiedName="PassportType"
                       [formModel]="ePassportFormModel"
                       [setRequire]="false"
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center" [innerHTML]="crrPassport?.issuedDate | formatvalue : ePassportFormModel : 'issuedDate'| async">
+                  <div class="d-flex align-items-center" [innerHTML]="crrPassport?.passportType | formatvalue : ePassportFormModel : 'passportType'| async">
                     <!-- <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
                       {{ crrPassport?.issuedDate | fmDT }}
                     </span> -->
@@ -1612,7 +1612,12 @@
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center" [innerHTML]="crrPassport?.expiredDate | formatvalue : ePassportFormModel : 'expiredDate'| async">
+                  <div class="d-flex align-items-center" >
+                    <span [innerHTML]="crrPassport?.expiredDate | formatvalue : ePassportFormModel : 'expiredDate'| async"></span>
+                    <span *ngIf="passPortIsExpired == true" class="icon-notifications" 
+                    [style.color]="'#F64E60'" 
+                    [title]="'Hết hạn'"
+                    ></span>
                     <!-- <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
                       {{ crrPassport?.expiredDate | fmDT }}
                     </span> -->
@@ -1734,6 +1739,10 @@
                         | formatvalue : eVisaFormModel : 'expiredDate'
                         | async">
                       </span>
+                      <span *ngIf="visaIsExpired == true" class="icon-notifications" 
+                      [style.color]="'#F64E60'" 
+                      [title]="'Hết hạn'"
+                      ></span>
                     </div>
                     <codx-mfunc
                       *ngIf="crrVisa"
@@ -1983,6 +1992,10 @@
                       {{ crrWorkpermit?.fromDate | fmDT }} -
                       {{ crrWorkpermit?.toDate | fmDT }}
                     </span>
+                    <span *ngIf="workpermitIsExpired == true" class="icon-notifications" 
+                    [style.color]="'#F64E60'" 
+                    [title]="'Hết hạn'"
+                    ></span>
                   </div>
                   <codx-mfunc
                     *ngIf="crrWorkpermit"
@@ -2406,7 +2419,7 @@
                     </div>
                     <div class="timeline-item" *ngIf="index == lstFamily.length - 1 && !lstFamily">
                       <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                        <div class="step-add cursor-pointer w-30px h-30px" ngbTooltip="Thêm mới" (click)="initPersonalInfo()">
+                        <div class="step-add cursor-pointer w-30px h-30px" title="Thêm mới" (click)="initPersonalInfo()">
                           <span class="stepper-number">+</span>
                         </div>
                       </div>
@@ -6043,12 +6056,12 @@
       <div class="d-flex align-items-center mb-1">
         <!-- <span class="icon-school text-primary icon-18 me-2"></span> -->
         <div class="item-active fs-6 fw-bold" (click)="viewGridDetail(data, eDegreeFuncID)"
-    placement="top" [ngbTooltip]="eDegreeHeaderText.DegreeName"
+    placement="top" [title]="eDegreeHeaderText.DegreeName"
         >{{ data?.degreeName }}</div>
       </div>
       <div>
         <div class="text-dark mb-1"
-    placement="top" [ngbTooltip]="eDegreeHeaderText.TrainFieldID"
+    placement="top" [title]="eDegreeHeaderText.TrainFieldID"
           [innerHTML]="
           data?.trainFieldID
             | formatvalue : eDegreeFormModel : 'trainFieldID'
@@ -6056,7 +6069,7 @@
           "
           ></div>
         <div class="text-gray-500"
-    placement="top" [ngbTooltip]="eDegreeHeaderText.TrainFieldDetail"
+    placement="top" [title]="eDegreeHeaderText.TrainFieldDetail"
         >{{ data?.trainFieldDetail }}</div>
       </div>
     </div>
@@ -6072,7 +6085,7 @@
 <ng-template #templateEDegreeGridCol2 let-data>
   <div class="py-2">
     <div
-    placement="top" [ngbTooltip]="eDegreeHeaderText.TrainSupplierID"
+    placement="top" [title]="eDegreeHeaderText.TrainSupplierID"
       class="text-dark mb-2"
       [innerHTML]="
         data?.trainSupplierID
@@ -6084,7 +6097,7 @@
       <div class="d-flex align-items-center mb-1">
         <span class="icon-insights icon-14 text-warning me-2"></span>
         <span
-    placement="top" [ngbTooltip]="eDegreeHeaderText.Ranking"
+    placement="top" [title]="eDegreeHeaderText.Ranking"
           class="text-warning"
           #ranking
           [innerHTML]="
@@ -6099,7 +6112,7 @@
         ></span>
         <span class="fw-bold text-warning">
           <span
-    placement="top" [ngbTooltip]="eDegreeHeaderText.TotalScore"
+    placement="top" [title]="eDegreeHeaderText.TotalScore"
             [innerHTML]="
               data?.totalScore
                 | formatvalue : eDegreeFormModel : 'totalScore'
@@ -6118,14 +6131,14 @@
       <span class="icon-event icon-16 me-2"></span>
       <span
         class="text-dark"
-    placement="top" [ngbTooltip]="eDegreeHeaderText.YearGraduated"
+    placement="top" [title]="eDegreeHeaderText.YearGraduated"
 
       >{{data.yearGraduated}}</span>
       <span *ngIf="data.yearGraduated"
         class="icon-i-info-circle-fill icon-4 text-gray-400 mx-2"
       ></span>
       <span class="text-gray-600"
-    placement="top" [ngbTooltip]="eDegreeHeaderText.IssuedDate"
+    placement="top" [title]="eDegreeHeaderText.IssuedDate"
         [innerHTML]="
           data?.issuedDate
             | formatvalue : eDegreeFormModel : 'issuedDate'
@@ -6155,7 +6168,7 @@
     <span
       class="fw-bold item-active"
       (click)="viewGridDetail(data, eCertificateFuncID)"
-      placement="top" [ngbTooltip]="eCertificateHeaderText.CertificateID"
+      placement="top" [title]="eCertificateHeaderText.CertificateID"
       [innerHTML]="
         data?.certificateID
           | formatvalue : eCertificateFormModel : 'certificateID'
@@ -6167,7 +6180,7 @@
     class="icon-i-info-circle-fill icon-circle-group text-gray-400 mx-1"
   ></i>
   <span
-  placement="top" [ngbTooltip]="eCertificateHeaderText.CertificateGradeID"
+  placement="top" [title]="eCertificateHeaderText.CertificateGradeID"
 
     [innerHTML]="
       data?.certificateGradeID
@@ -6181,7 +6194,7 @@
     <!-- <i class="icon-dashboard icon-16 text-primary me-2"></i> -->
     <span
       class="fw-bold"
-  placement="top" [ngbTooltip]="eCertificateHeaderText.CertificateType"
+  placement="top" [title]="eCertificateHeaderText.CertificateType"
 
       [innerHTML]="
         data?.certificateType
@@ -6195,7 +6208,7 @@
 <ng-template #templateECertificateGridCol2 let-data>
   <div
     class="d-flex align-items-center mb-5px"
-  placement="top" [ngbTooltip]="eCertificateHeaderText.TrainSupplierID"
+  placement="top" [title]="eCertificateHeaderText.TrainSupplierID"
 
     [innerHTML]="
       data?.trainSupplierID
@@ -6208,7 +6221,7 @@
       <span class="icon-insights icon-14 text-warning me-1"></span>
       <span
         class="text-warning"
-  placement="top" [ngbTooltip]="eCertificateHeaderText.Ranking"
+  placement="top" [title]="eCertificateHeaderText.Ranking"
 
         #ranking
         [innerHTML]="
@@ -6226,7 +6239,7 @@
       <span class="fw-bold text-primary">
         <span
           class="text-danger"
-          placement="top" [ngbTooltip]="eCertificateHeaderText.TotalScore"
+          placement="top" [title]="eCertificateHeaderText.TotalScore"
           [innerHTML]="
             data?.totalScore
               | formatvalue : eCertificateFormModel : 'totalScore'
@@ -6244,7 +6257,7 @@
   <div class="has-action-menu">
     <div class="text-dark fw-bold">
       <span
-      placement="top" [ngbTooltip]="eCertificateHeaderText.EffectedDate"
+      placement="top" [title]="eCertificateHeaderText.EffectedDate"
 
         [innerHTML]="
           data?.effectedDate
@@ -6254,7 +6267,7 @@
       ></span>
       <span *ngIf="data?.expiredDate" class="me-2">-</span>
       <span *ngIf="data?.expiredDate"
-      placement="top" [ngbTooltip]="eCertificateHeaderText.ExpiredDate"
+      placement="top" [title]="eCertificateHeaderText.ExpiredDate"
         [innerHTML]="
           data?.expiredDate
             | formatvalue : eCertificateFormModel : 'expiredDate'
@@ -6266,7 +6279,7 @@
     <div class="d-flex align-items-center mb-5px">
       <i class="icon-event icon-16 text-gray-600 me-2"></i>
       <span
-      placement="top" [ngbTooltip]="eCertificateHeaderText.IssuedDate"
+      placement="top" [title]="eCertificateHeaderText.IssuedDate"
         [innerHTML]="
           data?.issuedDate
             | formatvalue : eCertificateFormModel : 'issuedDate'
@@ -6295,7 +6308,7 @@
   <div class="hover-active cursor-pointer" >
     <div
     class="fw-bold mb-5px item-active"
-    placement="top" [ngbTooltip]="eSkillHeaderText.SkillID"
+    placement="top" [title]="eSkillHeaderText.SkillID"
     (click)="viewGridDetail(data, eSkillFuncID)"
     [innerHTML]="
       data?.skillID | formatvalue : eSkillFormmodel : 'skillID' | async
@@ -6310,7 +6323,7 @@
           : 'border-1 text-dark badge-secondary fw-bold'
       "
       [style.border-color]="isMaxGrade(data) ? '' : 'black'"
-    placement="top" [ngbTooltip]="eSkillHeaderText.SkillGradeID"
+    placement="top" [title]="eSkillHeaderText.SkillGradeID"
       [innerHTML]="
         data?.skillGradeID
           | formatvalue : eSkillFormmodel : 'skillGradeID'
@@ -6327,7 +6340,7 @@
 <ng-template #templateESkillGridCol2 let-data>
   <div
     class="mb-5px"
-    placement="top" [ngbTooltip]="eSkillHeaderText.TrainSupplierID"
+    placement="top" [title]="eSkillHeaderText.TrainSupplierID"
     [innerHTML]="
       data?.trainSupplierID
         | formatvalue : eSkillFormmodel : 'trainSupplierID'
@@ -6340,7 +6353,7 @@
       <span class="icon-insights icon-14 text-warning me-1"></span>
       <span
         class="text-warning"
-    placement="top" [ngbTooltip]="eSkillHeaderText.Ranking"
+    placement="top" [title]="eSkillHeaderText.Ranking"
 
         #ranking
         [innerHTML]="
@@ -6355,7 +6368,7 @@
       ></span>
       <span class="fw-bold text-danger">
         <span
-    placement="top" [ngbTooltip]="eSkillHeaderText.TotalScore"
+    placement="top" [title]="eSkillHeaderText.TotalScore"
 
           [innerHTML]="
             data?.totalScore
@@ -6373,7 +6386,7 @@
   <div class="has-action-menu">
     <div class="mb-1">
       <span
-    placement="top" [ngbTooltip]="eSkillHeaderText.TrainFrom"
+    placement="top" [title]="eSkillHeaderText.TrainFrom"
 
         [innerHTML]="
           data?.trainFrom
@@ -6383,7 +6396,7 @@
       ></span>
       <span class="me-2"> - </span>
       <span
-    placement="top" [ngbTooltip]="eSkillHeaderText.TrainTo"
+    placement="top" [title]="eSkillHeaderText.TrainTo"
 
         [innerHTML]="
           data?.trainTo
@@ -6396,7 +6409,7 @@
       <i class="icon-menu_book icon-16 text-primary me-2"></i>
       <span
         class="text-primary"
-    placement="top" [ngbTooltip]="eSkillHeaderText.TrainForm"
+    placement="top" [title]="eSkillHeaderText.TrainForm"
 
         [innerHTML]="
           data?.trainForm | formatvalue : eSkillFormmodel : 'trainForm' | async
@@ -6702,7 +6715,7 @@
     <div
       class="fw-bold mb-1 item-active"
       (click)="viewGridDetail(data, eTrainCourseFuncID)"
-      placement="top" [ngbTooltip]="eTrainCourseHeaderText.TrainCourseID"
+      placement="top" [title]="eTrainCourseHeaderText.TrainCourseID"
       [innerHTML]="
         data?.trainCourseID
           | formatvalue : eTrainCourseFormModel : 'trainCourseID'
@@ -6713,7 +6726,7 @@
       <!-- <i class="icon-menu_book icon-16 text-primary me-2"></i> -->
       <span
         class="text-primary"
-      placement="top" [ngbTooltip]="eTrainCourseHeaderText.TrainForm"
+      placement="top" [title]="eTrainCourseHeaderText.TrainForm"
         [innerHTML]="
           data?.trainForm
             | formatvalue : eTrainCourseFormModel : 'trainForm'
@@ -6728,11 +6741,11 @@
   <div class="has-action-menu min-h-40px">
     <div class="d-flex align-items-center mb-1">
       <i class="icon-event icon-16 text-gray-600 me-2"></i>
-      <span placement="top" [ngbTooltip]="eTrainCourseHeaderText.TrainFrom">
+      <span placement="top" [title]="eTrainCourseHeaderText.TrainFrom">
         {{ data?.trainFrom | fmDT }} 
       </span>
   
-      <span placement="top" [ngbTooltip]="eTrainCourseHeaderText.TrainTo"> 
+      <span placement="top" [title]="eTrainCourseHeaderText.TrainTo"> 
         - 
         {{ data?.trainTo | fmDT }}
       </span>
@@ -6741,7 +6754,7 @@
       <i class="icon-year icon-14 text-gray-600 me-2"></i>
       <span
         class="fw-bold text-dark"
-        placement="top" [ngbTooltip]="eTrainCourseHeaderText.InYear"
+        placement="top" [title]="eTrainCourseHeaderText.InYear"
         [innerHTML]="
           data?.inYear | formatvalue : eTrainCourseFormModel : 'inYear' | async
         "
@@ -6764,7 +6777,7 @@
   <div class=" min-h-40px">
     <div
       class="text-gray-600 mb-1"
-      placement="top" [ngbTooltip]="eTrainCourseHeaderText.TrainSupplierID"
+      placement="top" [title]="eTrainCourseHeaderText.TrainSupplierID"
       [innerHTML]="
         data?.trainSupplierID
           | formatvalue : eTrainCourseFormModel : 'trainSupplierID'
@@ -6776,7 +6789,7 @@
         <span class="icon-insights icon-16 text-warning me-2"></span>
         <span
           class="text-warning"
-      placement="top" [ngbTooltip]="eTrainCourseHeaderText.Ranking"
+      placement="top" [title]="eTrainCourseHeaderText.Ranking"
           #ranking
           [innerHTML]="
             data?.ranking
@@ -6792,7 +6805,7 @@
         ></span>
         <span class="fw-bold text-danger">
           <span
-      placement="top" [ngbTooltip]="eTrainCourseHeaderText.TotalScore"
+      placement="top" [title]="eTrainCourseHeaderText.TotalScore"
             [innerHTML]="
               data?.totalScore
                 | formatvalue : eTrainCourseFormModel : 'totalScore'
@@ -6807,7 +6820,7 @@
         ></span>
         <span class="fw-bold text-warning">
           <span
-      placement="top" [ngbTooltip]="eTrainCourseHeaderText.Result"
+      placement="top" [title]="eTrainCourseHeaderText.Result"
             [innerHTML]="
               data?.result
                 | formatvalue : eTrainCourseFormModel : 'result'
@@ -6830,7 +6843,7 @@
     <div
       class="mb-2 fw-bold fs-6 item-active"
       (click)="viewGridDetail(data, appointionFuncID)"
-      placement="top" [ngbTooltip]="appointionHeaderTexts.Appoint"
+      placement="top" [title]="appointionHeaderTexts.Appoint"
 
       [innerHTML]="
         data?.appoint | formatvalue : appointionFormModel : 'appoint' | async
@@ -6840,13 +6853,13 @@
       <span class="icon-calendar_today icon-14 me-2"></span>
       <span class="text-gray-700">
         <span
-          placement="top" [ngbTooltip]="appointionHeaderTexts.EffectedDate"
+          placement="top" [title]="appointionHeaderTexts.EffectedDate"
           >
           {{ data?.effectedDate | fmDT }}
 
         </span>
         <span
-        placement="top" [ngbTooltip]="appointionHeaderTexts.ExpiredDate"
+        placement="top" [title]="appointionHeaderTexts.ExpiredDate"
         >
         - {{ data?.expiredDate | fmDT }}
       </span>
@@ -6858,7 +6871,7 @@
 <ng-template #templateAppointionGridCol2 let-data>
   <div class="py-1">
     <div 
-      placement="bottom" [ngbTooltip]="appointionHeaderTexts.PositionID" container="body"
+      placement="bottom" [title]="appointionHeaderTexts.PositionID" container="body"
       class="mb-2 text-dark fw-bold"
       [innerHTML]="
         data?.positionID
@@ -6866,7 +6879,7 @@
           | async
       "></div>
     <ng-container *ngIf="data?.oldPositionID">
-      <div class="text-gray-700" placement="bottom" [ngbTooltip]="appointionHeaderTexts.OldPositionID" container="body">
+      <div class="text-gray-700" placement="bottom" [title]="appointionHeaderTexts.OldPositionID" container="body">
         <span
           [innerHTML]="
             data?.oldPositionID
@@ -6882,7 +6895,7 @@
 <ng-template #templateAppointionGridCol3 let-data>
   <div class="has-action-menu py-1">
     <div
-      placement="bottom" [ngbTooltip]="appointionHeaderTexts.OrgUnitID" container="body"
+      placement="bottom" [title]="appointionHeaderTexts.OrgUnitID" container="body"
       class="mb-2 text-dark fw-bold"
       [innerHTML]="
         data?.orgUnitID
@@ -6891,7 +6904,7 @@
       "
     ></div>
     <ng-container *ngIf="data?.oldPositionID">
-      <div class="text-gray-700" placement="bottom" [ngbTooltip]="appointionHeaderTexts.OldOrgUnitID" container="body">
+      <div class="text-gray-700" placement="bottom" [title]="appointionHeaderTexts.OldOrgUnitID" container="body">
         <span
           [innerHTML]="
             data?.oldOrgUnitID
@@ -6916,7 +6929,7 @@
   <div class="d-flex align-items-top mb-2 mt-2 hover-active cursor-pointer" >
     <div class="d-flex flex-column">
       <div
-      placement="top" [ngbTooltip]="dayoffHeaderTexts.KowID"
+      placement="top" [title]="dayoffHeaderTexts.KowID"
         class="fw-bold fs-6 mb-2 item-active"
         (click)="viewGridDetail(data, dayoffFuncID)"
         [innerHTML]="
@@ -6924,7 +6937,7 @@
         "
       ></div>
       <span
-      placement="top" [ngbTooltip]="dayoffHeaderTexts.RegisteredDate"
+      placement="top" [title]="dayoffHeaderTexts.RegisteredDate"
         class="text-gray-700"
         [innerHTML]="
           data?.registeredDate
@@ -6940,7 +6953,7 @@
   <div class="d-flex align-items-center mb-2 mt-2">
     <i class="icon-event text-dark icon-16 me-2"></i>
     <div
-    placement="top" [ngbTooltip]="dayoffHeaderTexts.BeginDate"
+    placement="top" [title]="dayoffHeaderTexts.BeginDate"
       class="text-dark"
       [innerHTML]="
         data?.beginDate | formatvalue : dayoffFormModel : 'beginDate' | async
@@ -6948,7 +6961,7 @@
     ></div>
     <span class="mx-2"> - </span>
     <span
-    placement="top" [ngbTooltip]="dayoffHeaderTexts.EndDate"
+    placement="top" [title]="dayoffHeaderTexts.EndDate"
       class="text-dark"
       [innerHTML]="
         data?.endDate | formatvalue : dayoffFormModel : 'endDate' | async
@@ -6960,7 +6973,7 @@
       class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 px-2"
     ></i>
     <span class="text-primary fw-bold me-1"
-    placement="top" [ngbTooltip]="dayoffHeaderTexts.TotalDaysOff"
+    placement="top" [title]="dayoffHeaderTexts.TotalDaysOff"
     >
       {{ data?.totalDaysOff }}
     </span>
@@ -6970,7 +6983,7 @@
 <ng-template #templateDayOffGridCol3 let-data>
   <div class="d-flex align-items-center has-action-menu min-h-40px">
     <span class="text-gray-700"
-    placement="top" [ngbTooltip]="dayoffHeaderTexts.Reason"
+    placement="top" [title]="dayoffHeaderTexts.Reason"
     >
       {{ data?.reason }}
     </span>
@@ -6992,14 +7005,14 @@
       <!-- <span class="icon-home_work icon-16 me-2"></span> -->
       <span class="item-active fw-bold fs-6"
       (click)="viewGridDetail(data, eBusinessTravelFuncID)"
-      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.BusinessPlace"
+      placement="top" [title]="eBusinessTravelHeaderTexts.BusinessPlace"
       >{{ data?.businessPlace }}</span>
     </div>
     <div class="d-flex align-items-center">
       <!-- <i class="icon-connection-point icon-16 me-2 text-primary"></i> -->
       <span
         class="text-primary fs-7"
-      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.KowID"
+      placement="top" [title]="eBusinessTravelHeaderTexts.KowID"
         [innerHTML]="
           data?.kowID | formatvalue : EBusinessTravelFormodel : 'kowID' | async
         "
@@ -7015,7 +7028,7 @@
       <span class="icon-calendar_today icon-16 me-2"></span>
       <span
         class="text-dark"
-      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.BeginDate"
+      placement="top" [title]="eBusinessTravelHeaderTexts.BeginDate"
         [innerHTML]="
           data?.beginDate
             | formatvalue : EBusinessTravelFormodel : 'beginDate'
@@ -7025,7 +7038,7 @@
       <span class="mx-2">-</span>
       <span
         class="text-dark"
-      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.EndDate"
+      placement="top" [title]="eBusinessTravelHeaderTexts.EndDate"
         [innerHTML]="
           data?.endDate
             | formatvalue : EBusinessTravelFormodel : 'endDate'
@@ -7038,7 +7051,7 @@
         class="icon-i-circle-fill icon-4 text-gray-400 px-3"
       ></span>
       <span class="text-primary"
-      placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.Days"
+      placement="top" [title]="eBusinessTravelHeaderTexts.Days"
       >
         {{ data?.days }} 
         <codx-label
@@ -7056,7 +7069,7 @@
 <ng-template #templateBusinessTravelGridCol3 let-data>
   <div class="has-action-menu min-h-40px">
     <span class="text-dark"
-    placement="top" [ngbTooltip]="eBusinessTravelHeaderTexts.BusinessPurpose"
+    placement="top" [title]="eBusinessTravelHeaderTexts.BusinessPurpose"
     >
       {{ data?.businessPurpose }}
     </span>
@@ -7076,7 +7089,7 @@
   <div class="py-2 hover-active cursor-pointer" >
     <div
       class="mb-2 item-active"
-      placement="top" [ngbTooltip]="awardHeaderText.AwardID"
+      placement="top" [title]="awardHeaderText.AwardID"
       (click)="viewGridDetail(data, awardFuncID)"
       [innerHTML]="
         data?.awardID | formatvalue : awardFormModel : 'awardID' | async
@@ -7084,7 +7097,7 @@
     ></div>
     <div
       class="text-primary"
-      placement="top" [ngbTooltip]="awardHeaderText.AwardFormCategory"
+      placement="top" [title]="awardHeaderText.AwardFormCategory"
 
       [innerHTML]="
         data?.awardFormCategory
@@ -7100,7 +7113,7 @@
     <div class="d-flex align-items-center mb-2 me-4" #ranking>
       <span class="icon-event icon-16 me-2"></span>
       <span class="text-dark"
-      placement="top" [ngbTooltip]="awardHeaderText.AwardDate"
+      placement="top" [title]="awardHeaderText.AwardDate"
       >
         
         {{ data?.awardDate | fmDT }}
@@ -7118,7 +7131,7 @@
     <div class="d-flex align-items-center mb-2">
       <span class="icon-library_books icon-16 me-2"></span>
       <span class="text-dark"
-      placement="top" [ngbTooltip]="awardHeaderText.DecisionNo"
+      placement="top" [title]="awardHeaderText.DecisionNo"
       >
         {{ data?.decisionNo }}
       </span>
@@ -7147,7 +7160,7 @@
   <div class="has-action-menu py-2">
     <div
       class="min-h-40px"
-      placement="top" [ngbTooltip]="awardHeaderText.Reason"
+      placement="top" [title]="awardHeaderText.Reason"
 
       [innerHTML]="
         data?.reason | formatvalue : awardFormModel : 'reason' | async
@@ -7169,7 +7182,7 @@
     <div
       class="fw-bold mb-2 item-active"
       (click)="viewGridDetail(data, eDisciplineFuncID)"
-      placement="top" [ngbTooltip]="eDisciplineHeaderText.DisciplineID"
+      placement="top" [title]="eDisciplineHeaderText.DisciplineID"
 
       [innerHTML]="
         data?.disciplineID
@@ -7179,7 +7192,7 @@
     ></div>
     <div
       class="text-warning"
-      placement="top" [ngbTooltip]="eDisciplineHeaderText.DisciplineFormCategory"
+      placement="top" [title]="eDisciplineHeaderText.DisciplineFormCategory"
       [innerHTML]="
         data?.disciplineFormCategory
           | formatvalue : eDisciplineFormModel : 'disciplineFormCategory'
@@ -7194,7 +7207,7 @@
     <div class="d-flex align-items-center mb-2">
       <span class="icon-event icon-16 me-2 text-danger"></span>
       <div class="text-gray-700"
-      placement="top" [ngbTooltip]="eDisciplineHeaderText.DisciplineDate"
+      placement="top" [title]="eDisciplineHeaderText.DisciplineDate"
       >
         {{ data?.disciplineDate | fmDT }}
       </div>
@@ -7205,7 +7218,7 @@
 
       <span class="icon-library_books icon-16 me-2"></span>
       <span class="text-gray-700"
-      placement="top" [ngbTooltip]="eDisciplineHeaderText.DecisionNo"
+      placement="top" [title]="eDisciplineHeaderText.DecisionNo"
 
         [innerHTML]="
           data?.decisionNo
@@ -7220,7 +7233,7 @@
 
 <ng-template #templateDisciplineGridCol3 let-data>
   <div class="has-action-menu min-h-40px py-2"
-  placement="top" [ngbTooltip]="eDisciplineHeaderText.Reason"
+  placement="top" [title]="eDisciplineHeaderText.Reason"
   >
     {{ data?.reason }}
     <codx-mfunc
@@ -7242,7 +7255,7 @@
       <span
         class="fw-bold item-active"
         (click)="viewGridDetail(data, eDiseasesFuncID)"
-        placement="top" [ngbTooltip]="eDiseasesHeaderText.DiseaseID"
+        placement="top" [title]="eDiseasesHeaderText.DiseaseID"
         [innerHTML]="
           data?.diseaseID | formatvalue : eDiseasesFormModel : 'diseaseID' | async
         "
@@ -7253,7 +7266,7 @@
       <span class="icon-calendar_today icon-16 me-2"></span>
       <span
         class="fw-bold text-dark me-2"
-        placement="top" [ngbTooltip]="eDiseasesHeaderText.DiseaseDate"
+        placement="top" [title]="eDiseasesHeaderText.DiseaseDate"
         [innerHTML]="
           data?.diseaseDate
             | formatvalue : eDiseasesFormModel : 'diseaseDate'
@@ -7272,7 +7285,7 @@
     <div class="text-dark text-dark icon-event icon-16 me-1"></div>
     <span
       class="text-dark"
-      placement="top" [ngbTooltip]="eDiseasesHeaderText.FromDate"
+      placement="top" [title]="eDiseasesHeaderText.FromDate"
       [innerHTML]="
         data?.fromDate | formatvalue : eDiseasesFormModel : 'fromDate' | async
       "
@@ -7281,7 +7294,7 @@
   </div>
   <div
     class="text-dark"
-    placement="top" [ngbTooltip]="eDiseasesHeaderText.TreatHopitalID"
+    placement="top" [title]="eDiseasesHeaderText.TreatHopitalID"
     [innerHTML]="
       data?.treatHopitalID
         | formatvalue : eDiseasesFormModel : 'treatHopitalID'
@@ -7293,7 +7306,7 @@
   <div class="d-flex align-items-center has-action-menu min-h-40px">
     <span
       class="text-dark"
-    placement="top" [ngbTooltip]="eDiseasesHeaderText.Conclusion"
+    placement="top" [title]="eDiseasesHeaderText.Conclusion"
       [innerHTML]="
         data?.conclusion
           | formatvalue : eDiseasesFormModel : 'Conclusion'
@@ -7318,7 +7331,7 @@
       <span
         class="d-flex fw-bold item-active"
         (click)="viewGridDetail(data, eAccidentsFuncID)"
-        placement="top" [ngbTooltip]="eAccidentHeaderText.AccidentID"
+        placement="top" [title]="eAccidentHeaderText.AccidentID"
         [innerHTML]="
           data?.accidentID
             | formatvalue : eAccidentsFormModel : 'accidentID'
@@ -7330,7 +7343,7 @@
       <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
       <div
         class="text-dark"
-        placement="top" [ngbTooltip]="eAccidentHeaderText.AccidentDate"
+        placement="top" [title]="eAccidentHeaderText.AccidentDate"
         [innerHTML]="
           data?.accidentDate
             | formatvalue : eAccidentsFormModel : 'accidentDate'
@@ -7345,7 +7358,7 @@
     <span class="icon-place icon-16 text-gray-500 me-2"></span>
     <span class="text-dark fw-bold">
       <span
-      placement="top" [ngbTooltip]="eAccidentHeaderText.AccidentPlace"
+      placement="top" [title]="eAccidentHeaderText.AccidentPlace"
         [innerHTML]="
           data?.accidentPlace
             | formatvalue : eAccidentsFormModel : 'accidentPlace'
@@ -7357,7 +7370,7 @@
   <div class="d-flex align-items-center text-warning">
     <span class="icon-gamepad icon-16 me-2"></span>
     <span
-    placement="top" [ngbTooltip]="eAccidentHeaderText.AccidentReasonID"
+    placement="top" [title]="eAccidentHeaderText.AccidentReasonID"
       [innerHTML]="
         data?.accidentReasonID
           | formatvalue : eAccidentsFormModel : 'accidentReasonID'
@@ -7370,7 +7383,7 @@
   <div class="d-flex align-items-center has-action-menu min-h-40px">
     <span
       class="text-dark"
-    placement="top" [ngbTooltip]="eAccidentHeaderText.AccidentLevel"
+    placement="top" [title]="eAccidentHeaderText.AccidentLevel"
       [innerHTML]="
         data?.accidentLevel
           | formatvalue : eAccidentsFormModel : 'accidentLevel'
@@ -7394,7 +7407,7 @@
     <div class="d-flex align-items-center">
       <i class="icon-calendar_today text-dark icon-16 text-dark me-2"></i>
       <span
-      placement="top" [ngbTooltip]="eHealthHeaderText.HealthDate"
+      placement="top" [title]="eHealthHeaderText.HealthDate"
         class="fw-bold item-active"
         (click)="viewGridDetail(data, eHealthFuncID)"
         [innerHTML]="
@@ -7405,7 +7418,7 @@
       <span class="icon-i-circle-fill icon-4 px-3"></span>
       <span
         class="text-primary"
-      placement="top" [ngbTooltip]="eHealthHeaderText.HealthPeriodID"
+      placement="top" [title]="eHealthHeaderText.HealthPeriodID"
         [innerHTML]="
           data?.healthPeriodID
             | formatvalue : eHealthFormModel : 'healthPeriodID'
@@ -7418,7 +7431,7 @@
       <i class="bi-bag-plus icon-15 text-gray-500 me-2"></i>
       <span
         class="text-dark"
-      placement="top" [ngbTooltip]="eHealthHeaderText.HospitalID"
+      placement="top" [title]="eHealthHeaderText.HospitalID"
         [innerHTML]="
           data?.hospitalID | formatvalue : eHealthFormModel : 'hospitalID' | async
         "
@@ -7429,7 +7442,7 @@
 </ng-template>
 <ng-template #tempCol2EHealthGrid let-data>
   <div class="d-flex align-items-center text-primary fw-bold"
-  placement="top" [ngbTooltip]="eHealthHeaderText.HealthType"
+  placement="top" [title]="eHealthHeaderText.HealthType"
   >
     <div class="bi-caret-right icon-16 me-1"></div>
     <span *ngIf="data?.healthType"> Loại </span>
@@ -7445,7 +7458,7 @@
   <div class="text-dark">
     <span
       class="text-dark"
-  placement="top" [ngbTooltip]="eHealthHeaderText.FinalConclusion"
+  placement="top" [title]="eHealthHeaderText.FinalConclusion"
       [innerHTML]="
         data?.finalConclusion
           | formatvalue : eHealthFormModel : 'finalConclusion'
@@ -7459,7 +7472,7 @@
   <div class="d-flex align-items-center has-action-menu min-h-40px">
     <span
       class="text-dark"
-  placement="top" [ngbTooltip]="eHealthHeaderText.Suggestion"
+  placement="top" [title]="eHealthHeaderText.Suggestion"
       [innerHTML]="
         data?.suggestion | formatvalue : eHealthFormModel : 'suggestion' | async
       "
@@ -7485,7 +7498,7 @@
       <span
         class="fw-bold item-active"
         (click)="viewGridDetail(data, eVaccinesFuncID)"
-        placement="top" [ngbTooltip]="eVaccineHeaderText.VaccineTypeID"
+        placement="top" [title]="eVaccineHeaderText.VaccineTypeID"
         [innerHTML]="
           data?.vaccineTypeID
             | formatvalue : eVaccineFormModel : 'vaccineTypeID'
@@ -7496,7 +7509,7 @@
       <span class="icon-i-circle-fill icon-4 text-gray-400 mx-3"></span>
       <span
         class="text-primary"
-        placement="top" [ngbTooltip]="eVaccineHeaderText.VaccineName"
+        placement="top" [title]="eVaccineHeaderText.VaccineName"
         [innerHTML]="
           data?.vaccineName
             | formatvalue : eVaccineFormModel : 'vaccineName'
@@ -7507,7 +7520,7 @@
     </div>
     <span
       class="d-flex align-self-center text-dark"
-      placement="top" [ngbTooltip]="eVaccineHeaderText.HopitalID"
+      placement="top" [title]="eVaccineHeaderText.HopitalID"
       [innerHTML]="
         data?.hopitalID | formatvalue : eVaccineFormModel : 'hopitalID' | async
       "
@@ -7520,7 +7533,7 @@
     <i class="icon-calendar_today text-primary icon-16 me-1"></i>
     <span
       class="text-dark"
-      placement="top" [ngbTooltip]="eVaccineHeaderText.InjectDate"
+      placement="top" [title]="eVaccineHeaderText.InjectDate"
       [innerHTML]="
         data?.injectDate
           | formatvalue : eVaccineFormModel : 'injectDate'
@@ -7533,7 +7546,7 @@
     <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
     <span
       class="text-dark"
-      placement="top" [ngbTooltip]="eVaccineHeaderText.NextInjectDate"
+      placement="top" [title]="eVaccineHeaderText.NextInjectDate"
       [innerHTML]="
         data?.nextInjectDate
           | formatvalue : eVaccineFormModel : 'nextInjectDate'
@@ -7547,7 +7560,7 @@
   <div class="d-flex align-items-center has-action-menu min-h-40px">
     <!-- <i class="icon-edit text-gray-500 icon-16 me-1"></i> -->
     <span
-    placement="top" [ngbTooltip]="eVaccineHeaderText.Note"
+    placement="top" [title]="eVaccineHeaderText.Note"
       [innerHTML]="
         data?.note | formatvalue : eVaccineFormModel : 'note' | async
       "

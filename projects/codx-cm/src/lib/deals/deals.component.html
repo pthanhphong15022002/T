@@ -674,7 +674,7 @@
 </ng-template>
 
 <ng-template #templateConsultant let-data>
-  <div>
+  <div *ngIf="data?.consultantID">
     <codx-imgs
       [width]="25"
       [objectId]="data?.consultantID"
@@ -682,6 +682,15 @@
       [numberImages]="1"
     >
     </codx-imgs>
+  </div>
+  <div *ngIf="!data?.consultantID">
+    <span
+      [innerHTML]="
+        data.consultantID
+          | formatvalue : view.formModel : 'consultantID'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
@@ -704,4 +713,18 @@
       >{{ data?.currentStepName }}</span
     >
   </div>
+</ng-template>
+
+<ng-template #templateExpectedClosed let-data>
+  <span class="icon-16 icon-av_timer me-1"></span>
+  <span
+    class="text-gray-700 fs-7 line-clamp-menu"
+    #expectedClosed
+    [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
+    [innerHTML]="
+      data.expectedClosed
+        | formatvalue : view.formModel : 'expectedClosed'
+        | async
+    "
+  ></span>
 </ng-template>

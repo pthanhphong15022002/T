@@ -1735,35 +1735,39 @@ export class CodxHrService {
     );
   }
 
-  addEContract(data: any) {
+  addEContract(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'AddEContractAsync',
-      [data]
+      [data, useForQTNS]
     );
   }
 
-  validateBeforeSaveContract(data: any, isAddNew: boolean) {
+  validateBeforeSaveContract(
+    data: any,
+    isAddNew: boolean,
+    useForQTNS: boolean
+  ) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'ValidateBeforeSaveAsync',
-      [data, isAddNew]
+      [data, isAddNew, useForQTNS]
     );
   }
 
   ValidateBeforeSaveAsync;
 
-  editEContract(data: any) {
+  editEContract(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'EditEContractAsync',
-      data
+      [data, useForQTNS]
     );
   }
 

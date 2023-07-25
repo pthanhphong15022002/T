@@ -23,6 +23,7 @@ export class PopupCustomFieldComponent implements OnInit {
   checkErr = false;
   checkRequired = false;
   isSaving = false;
+  isAddComplete: any = true;
 
   constructor(
     private changeDetec: ChangeDetectorRef,
@@ -97,8 +98,9 @@ export class PopupCustomFieldComponent implements OnInit {
     }
     return true;
   }
+
   onSave() {
-    if (this.fiels?.length == 0) return;
+    if (this.fiels?.length == 0 || !this.isAddComplete) return;
 
     let check = true;
     let checkFormat = true;
@@ -127,5 +129,9 @@ export class PopupCustomFieldComponent implements OnInit {
           this.notiService.alertCode('SYS007');
         } else this.dialog.close();
       });
+  }
+
+  addFileCompleted(e) {
+    this.isAddComplete = e;
   }
 }
