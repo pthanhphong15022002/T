@@ -241,7 +241,7 @@ export class DashboardComponent
           this.quality = efficiency.quality.toFixed(2);
           this.kpi = efficiency.kpi.toFixed(2);
           this.tasksByGroup = tasksByGroup;
-          this.status = status;
+          this.status = status; 
           this.dataBarChart = dataBarChart;
           this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
           this.rateDoneTask = rateDoneTask.toFixed(2);
