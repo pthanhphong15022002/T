@@ -17,8 +17,10 @@ export class AttachmentWebComponent implements AfterViewInit{
   tab = 0;
   data:any;
   listData = [];
+  listSelected = [];
   loaded = false;
   isScroll = true;
+  countItems = 0;
   constructor(
     private shareService : CodxShareService,
     private folderService : FolderService,
@@ -78,10 +80,24 @@ export class AttachmentWebComponent implements AfterViewInit{
   {
     if(e && e?.data)
     {
+      this.countItems = 0;
+      this.listSelected = [];
       this.listData = e?.data?.items
       this.getDataFiles(e?.data?.recID)
     }
     
+  }
+
+  selectedFiles(e:any , data:any)
+  {
+    if(e.data) {
+      this.countItems ++;
+      this.listSelected.push(data);
+    }
+    else {
+      this.countItems --;
+      this.listSelected = this.listSelected.filter(x=>x.recID != data.recID);
+    }
   }
 
   getDataFiles(id:any)
@@ -90,7 +106,6 @@ export class AttachmentWebComponent implements AfterViewInit{
     this.fileService.GetFiles(id).subscribe((res) => {
       if (res && res[0])
       {
-        debugger
         this.listData = this.listData.concat(res[0]);
       }
     });
@@ -105,5 +120,10 @@ export class AttachmentWebComponent implements AfterViewInit{
 
   getThumbnail(data:any) {
     return `../../../assets/codx/dms/${this.shareService.getIconFile(data.extension)}`; //this.getAvatar(ext);
+  }
+
+  onSave()
+  {
+    this.dialog.close(this.listSelected);
   }
 }

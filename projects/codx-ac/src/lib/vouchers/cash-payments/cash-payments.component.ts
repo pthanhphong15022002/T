@@ -633,7 +633,7 @@ export class CashPaymentsComponent extends UIComponent {
       case '9':
       case '2':
         this.acService
-          .loadData('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
+          .execApi('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
             data.recID,
           ])
           .pipe(takeUntil(this.destroy$))
@@ -644,7 +644,7 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
     this.acService
-      .loadData('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .execApi('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.acctTrans = res;
@@ -709,34 +709,30 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   validateVourcher(data: any) {
-    // this.view.dataService.updateDatas.set(data['_uuid'], data);
-    // this.view.dataService.save().subscribe((res: any) => {
-    //   if (res && res.update.data != null) {
-    //     this.itemSelected = res.update.data;
-    //     this.loadDatadetail(this.itemSelected);
-    //     this.view.dataService.update(this.itemSelected).subscribe();
-    //   }
-    // });
-    this.acService.validateVourcher(data).subscribe((res => {
-      if (res) {
-        this.itemSelected = res;
-        this.loadDatadetail(this.itemSelected);
-        this.view.dataService.update(this.itemSelected)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe();
-      }
-    }))
+    this.acService
+      .execApi('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.itemSelected = res;
+          this.loadDatadetail(this.itemSelected);
+          this.view.dataService
+            .update(this.itemSelected)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+        }
+      });
   }
 
   post(data: any) {
-    this.acService.postVourcher(data).subscribe((res =>{
+    // this.acService.postVourcher(data).subscribe((res =>{
 
-    }))
+    // }))
   }
 
   loadjounal() {
     this.acService
-      .getJournal(this.journalNo)
+      .execApi('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.journal = res[0];

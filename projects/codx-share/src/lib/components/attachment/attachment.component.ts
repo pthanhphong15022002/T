@@ -1730,7 +1730,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     );
     dialogs.closed.subscribe((item) => {
       if (item.event) {
-        debugger
         // var index = this.fileUploadList.findIndex(
         //   (x) => x.recID == item.event.recID
         // );
@@ -1925,7 +1924,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   openUploadForm()
   {
-    this.callfc.openForm(AttachmentWebComponent,"",1100,700,"");
+    this.callfc.openForm(AttachmentWebComponent,"",1100,700,"").closed.subscribe(item=>{
+      if(item?.event)
+      {
+        
+      }
+    });
     var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();

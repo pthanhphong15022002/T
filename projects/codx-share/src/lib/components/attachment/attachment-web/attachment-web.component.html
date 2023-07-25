@@ -56,7 +56,7 @@
                       <tr *ngFor="let item of listData" class="border-top">
                         <td class="w-30px">
                             <ng-container *ngIf="!item?.folderName">
-                                <codx-input type="checkbox" ></codx-input>
+                                <codx-input type="checkbox" (valueChange)="selectedFiles($event , item)"></codx-input>
                             </ng-container>
                         </td>
                         <td class="d-flex align-items-center border-0">
@@ -79,9 +79,12 @@
     </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex">
-            <button type="button" class="btn btn-primary" ><codx-label default="Tải lên" fiedName="lblAttachmentUploadFile" formName="AttachmentUploadFile"></codx-label></button>
+            <span>Đã chọn {{countItems}} tập tin</span>
+        </div>
+        <div class="d-flex">
+            <button type="button" class="btn btn-primary" (click)="onSave()"><codx-label default="Tải lên" fiedName="lblAttachmentUploadFile" formName="AttachmentUploadFile"></codx-label></button>
         </div>
     </div>
 </ng-template>
