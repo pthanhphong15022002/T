@@ -30,7 +30,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   actionType: string;
   disabledInput = false;
   idField = 'RecID';
-  autoNumField = ''
+  autoNumField = '';
   employeeObj;
   headerText: '';
   funcID: string;
@@ -57,7 +57,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     //this.listBenefits = data?.data?.listBenefits;
@@ -125,7 +125,11 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType ==='view') {
+      if (
+        this.actionType === 'edit' ||
+        this.actionType === 'copy' ||
+        this.actionType === 'view'
+      ) {
         this.formGroup.patchValue(this.benefitObj);
         this.formModel.currentData = this.benefitObj;
         this.isAfterRender = true;
@@ -153,7 +157,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
+      this.hrService.AddEBenefit(this.benefitObj, false).subscribe((p) => {
         if (p != null) {
           if (p.length > 1) {
             this.benefitObj.recID = p[1].recID;
@@ -165,7 +169,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       });
     } else {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
-        debugger
+        debugger;
         if (p[0] != null) {
           this.notify.notifyCode('SYS007');
           this.dialog && this.dialog.close(this.benefitObj);
@@ -174,57 +178,57 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
   }
 
-    handleSelectEmp(evt) {
-      switch (evt?.field) {
-        case 'signerID':
-          if (evt?.data && evt?.data.length > 0) {
-            this.getEmployeeInfoById(evt?.data, evt?.field);
+  handleSelectEmp(evt) {
+    switch (evt?.field) {
+      case 'signerID':
+        if (evt?.data && evt?.data.length > 0) {
+          this.getEmployeeInfoById(evt?.data, evt?.field);
+        } else {
+          this.formGroup.patchValue({
+            signerID: null,
+            signerPosition: null,
+          });
+        }
+        break;
+    }
+  }
+
+  getEmployeeInfoById(empId: string, fieldName: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        else if (fieldName === 'signerID') {
+          if (emp[0][0]?.positionID) {
+            this.hrService
+              .getPositionByID(emp[0][0]?.positionID)
+              .subscribe((res) => {
+                if (res) {
+                  this.benefitObj.signerPosition = res.positionName;
+                  this.formGroup.patchValue({
+                    signerPosition: this.benefitObj.signerPosition,
+                  });
+                  this.cr.detectChanges();
+                }
+              });
           } else {
+            this.benefitObj.signerPosition = null;
             this.formGroup.patchValue({
-              signerID: null,
-              signerPosition: null,
+              signerPosition: this.benefitObj.signerPosition,
             });
           }
-          break;
-      }
-    }
-
-    getEmployeeInfoById(empId: string, fieldName: string) {
-      let empRequest = new DataRequest();
-      empRequest.entityName = 'HR_Employees';
-      empRequest.dataValues = empId;
-      empRequest.predicates = 'EmployeeID=@0';
-      empRequest.pageLoading = false;
-      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
-          else if (fieldName === 'signerID') {
-            if (emp[0][0]?.positionID) {
-              this.hrService
-                .getPositionByID(emp[0][0]?.positionID)
-                .subscribe((res) => {
-                  if (res) {
-                    this.benefitObj.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
-                      signerPosition: this.benefitObj.signerPosition,
-                    });
-                    this.cr.detectChanges();
-                  }
-                });
-            } else {
-              this.benefitObj.signerPosition = null;
-              this.formGroup.patchValue({
-                signerPosition: this.benefitObj.signerPosition,
-              });
-            }
-          }
         }
-        this.cr.detectChanges();
-      });
-    }
+      }
+      this.cr.detectChanges();
+    });
+  }
 
   valueChange(event) {
-    debugger
+    debugger;
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         case 'SignerID': {

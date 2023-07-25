@@ -137,21 +137,21 @@ export class InstanceDashboardComponent implements OnInit {
       row: 11,
       col: 0,
       sizeX: 16,
-      sizeY: 5,
+      sizeY: 6,
       minSizeX: 16,
-      minSizeY: 5,
+      minSizeY: 6,
       maxSizeX: null,
       maxSizeY: null,
       // header: 'Lý do thành công',
     },
     {
       id: '90.06496875406606994_layout',
-      row: 16,
+      row: 17,
       col: 0,
       sizeX: 16,
-      sizeY: 5,
+      sizeY: 6,
       minSizeX: 16,
-      minSizeY: 5,
+      minSizeY: 6,
       maxSizeX: null,
       maxSizeY: null,
       // header: 'Lý do thất bại',
@@ -163,7 +163,7 @@ export class InstanceDashboardComponent implements OnInit {
       sizeX: 32,
       sizeY: 12,
       minSizeX: 32,
-      minSizeY: 10,
+      minSizeY: 12,
       maxSizeX: null,
       maxSizeY: null,
       // header: 'Thống kê hiệu suất trong năm',
@@ -338,12 +338,8 @@ public marker1: Object = {
   height: 2,
   border: { color: 'black', width: 0 }
 };
-public tooltip: Object = {
-  enable: true,
-  format:
-    '<b>${point.x}</b><br>Thực tế: <b>${point.y4}%</b><br>Dự kiến: <b>${point.y}</b>',
-  header: '',
-};
+tooltip = {};
+ 
 
   constructor(
     private api: ApiHttpService,
@@ -415,6 +411,7 @@ public tooltip: Object = {
       this.countFails = this.dataDashBoard?.countsReasonsFails;
       this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
       this.countInstances = this.dataDashBoard?.countsInstance;
+      this.productivityOwner = this.dataDashBoard?.productivity;
 
       let counts = this.dataDashBoard?.counts;
       for (var prop in counts) {
@@ -476,6 +473,13 @@ public tooltip: Object = {
       minorGridLines: { width: 1 }, minorTickLines: { width: 0 },
       labelFormat: '{value}',
     };
+
+    this.tooltip = {
+      enable: true,
+      shared: true,
+      format: '${series.name} : <b>${point.y}</b>',
+    };
+  
   }
 
   setID() {
