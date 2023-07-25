@@ -51,7 +51,6 @@ export class SalesInvoicesComponent
   lines: ISalesInvoicesLine[] = [];
   acctTranLines: IAcctTran[][] = [[]];
   gvsSalesInvoicesLines: any;
-  vats: any[] = [];
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -92,7 +91,6 @@ export class SalesInvoicesComponent
       }
     });
 
-    this.vats = salesInvoiceService.vats;
     this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
     this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
   }
@@ -303,12 +301,7 @@ export class SalesInvoicesComponent
 
   //#region Method
   delete(data: ISalesInvoice): void {
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-      console.log({ res });
-      if (!res.error) {
-        this.salesInvoiceService.deleteLinesByTransID(data.recID);
-      }
-    });
+    this.view.dataService.delete([data], true).subscribe();
   }
 
   edit(e, data): void {
