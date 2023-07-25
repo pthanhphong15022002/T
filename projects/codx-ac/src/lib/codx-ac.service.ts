@@ -40,6 +40,10 @@ export class CodxAcService {
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
+  execApi(assemblyName: any, className: any, methodName: any, data: any){
+    return this.api.exec(assemblyName, className, methodName, data);
+  }
+
   addData(assemblyName: any, className: any, methodName: any, data: any) {
     return this.api.exec(assemblyName, className, methodName, data);
   }
@@ -321,11 +325,6 @@ export class CodxAcService {
       map((arr: any[]) => arr.find((a) => a.category === category)),
       map((data) => JSON.parse(data.dataValue))
     );
-  }
-
-  getJournal(journalNo){
-    return this.api
-      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [journalNo])
   }
   
   getCompanySetting(){

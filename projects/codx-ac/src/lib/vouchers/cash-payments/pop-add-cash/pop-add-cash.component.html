@@ -3,7 +3,7 @@
 </ejs-sidebar> -->
   <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
     [customToolbar]="subToolbar" [openMore]="false"
-    class="ac-dialog h-100 d-block ac-animation-slideRight">
+    class="ac-dialog ac-animation-slideRight">
   </codx-form>
   <div *ngIf="loading" class="ac-load-save">
     <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0" [value]="20"
@@ -904,7 +904,7 @@
     </button>
     </div>
   </div> -->
-    <div ngClass="collape" class="codx-detail-footer dialog-footer collape" *ngIf="cashpayment">
+    <div ngClass="collape" class="codx-detail-footer dialog-footer d-flex align-items-center collape" *ngIf="cashpayment">
       <div class="btn btn-white btn-icon tab-action">
         <span (click)="expand()" class="icon-unfold_more icon-20"></span>
       </div>
