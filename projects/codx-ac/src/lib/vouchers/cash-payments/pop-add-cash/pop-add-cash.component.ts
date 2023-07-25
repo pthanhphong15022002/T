@@ -599,7 +599,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     switch (e.field.toLowerCase()) {
       case 'accountid':
         this.consTraintGrid();
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'offsetacctid':
         if (this.acService.getCacheValue('account',this.dataLine.offsetAcctID)) {
@@ -607,7 +607,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         } else {
           this.dataLine.isBrigdeAcct = (this.acService.getCacheValue('account',this.dataLine.offsetAcctID) as any)?.accountType == '5' ? true : false;
         }
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         this.consTraintGrid();
         break;
       case 'dr':
@@ -686,14 +686,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           })
         }
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'note':
         // xu li sau
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       default:
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
       break;
     }
     // const field = [

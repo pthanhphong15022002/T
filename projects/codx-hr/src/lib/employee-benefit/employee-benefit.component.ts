@@ -151,11 +151,15 @@ export class EmployeeBenefitComponent extends UIComponent {
 
   onSaveUpdateForm() {
     this.hrService
-      .EditEmployeeBenefitMoreFunc(this.editStatusObj)
+      .EditEmployeeBenefitMoreFunc(this.editStatusObj, true)
       .subscribe((res) => {
         if (res != null) {
+          console.log(res);
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
+          if (res[1]) {
+            res[1].emp = this.currentEmpObj;
+          }
           this.view.formModel.entityName;
           this.hrService
             .addBGTrackLog(
@@ -167,7 +171,7 @@ export class EmployeeBenefitComponent extends UIComponent {
               'EBenefitsBusiness'
             )
             .subscribe((res) => {
-              console.log('kq luu track log', res);
+              //console.log('kq luu track log', res);
             });
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
@@ -199,6 +203,9 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe();
+        if (res.event[1]) {
+          this.view.dataService.update(res.event[1]).subscribe();
+        }
         this.df.detectChanges();
       }
     });
@@ -228,7 +235,7 @@ export class EmployeeBenefitComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .EditEmployeeBenefitMoreFunc(this.itemDetail)
+                  .EditEmployeeBenefitMoreFunc(this.itemDetail, false)
                   .subscribe((res) => {
                     console.log('Result after send edit' + res);
                     if (res) {
@@ -379,6 +386,7 @@ export class EmployeeBenefitComponent extends UIComponent {
         employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
+        useForQTNS: true,
       },
       option
     );
