@@ -161,7 +161,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice
-        .validateBeforeSaveContract(this.data, true)
+        .validateBeforeSaveContract(this.data, true, false)
         .subscribe((res) => {
           console.log('result', res);
           if (res) {
@@ -176,7 +176,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
                 if (stt?.event.status == 'Y') {
                   if (res[1] == 'HR010') {
                     this.hrSevice
-                      .addEContract(this.data)
+                      .addEContract(this.data, false)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
@@ -188,7 +188,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
                     this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
 
                     this.hrSevice
-                      .addEContract(this.data)
+                      .addEContract(this.data, false)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
@@ -202,7 +202,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
           }
         });
     } else if (this.actionType == 'edit') {
-      this.hrSevice.editEContract(this.data).subscribe((res) => {
+      this.hrSevice.editEContract(this.data, false).subscribe((res) => {
         if (res && res[0]) {
           this.notify.notifyCode('SYS007');
           this.dialog && this.dialog.close(res);
