@@ -383,32 +383,45 @@
         default="Thống kê hiệu suất trong năm"
       ></codx-label>
     </div>
-    <div *ngIf="data; else tempNoData">
-      <ejs-chart
-        style="display: block"
-        [chartArea]="chartArea"
-        [width]="'90%'"
-        id="chartcontainer"
-        [primaryXAxis]="primaryXAxis"
-        [primaryYAxis]="primaryYAxis"
-        [tooltip]="tooltip1"
-      >
-        <e-series-collection>
-          <e-series
-            [dataSource]="data"
-            type="Pareto"
-            xName="name"
-            yName="count"
-            name="Defect"
-            opacity="0.75"
-            [cornerRadius]="cornerRadius"
-            columnWidth="0.2"
-            [paretoOptions]="paretoOptions"
-            width="2"
-          >
-          </e-series>
-        </e-series-collection>
-      </ejs-chart>
+    <div *ngIf="productivityYear?.length > 0; else tempNoData">
+      <div>
+        <ejs-chart
+          style="display: block"
+          [chartArea]="chartArea"
+          [width]="'50%'"
+          id="chartcontainer"
+          [primaryXAxis]="primaryXAxis"
+          [primaryYAxis]="primaryYAxis"
+          [legendSettings]="legend"
+          [tooltip]="tooltip"
+        >
+          <e-series-collection>
+            <e-series
+              [dataSource]="productivityYear"
+              type="StackingColumn"
+              xName="month"
+              yName="expected"
+              name="Doanh thu dự kiến"
+              opacity="0.75"
+              [cornerRadius]="cornerRadius"
+              columnWidth="0.4"
+              [paretoOptions]="paretoOptions"
+              width="2"
+            >
+            </e-series>
+            <e-series
+              [dataSource]="productivityYear"
+              type="Line"
+              xName="month"
+              yName="reality"
+              name="Doanh thu thực tế"
+              width="2"
+              [marker]="marker1"
+            >
+            </e-series>
+          </e-series-collection>
+        </ejs-chart>
+      </div>
     </div>
   </div>
 </ng-template>

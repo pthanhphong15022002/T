@@ -155,9 +155,9 @@
 </ng-template>
 
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end w-auto pt-2 pe-3">
         <div>
-            <button class="btn btn-primary" (click)="save()">
+            <button class="btn btn-icon btn-sm btn-light" (click)="save()">
                 <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
             </button>
         </div>
@@ -190,7 +190,7 @@
             </ng-container>
             <ng-template #havePattern>
                 <codx-img [objectId]="patternSelected.recID" [funcId]="giftTrans.FunctionID" [isDefaulImg]="true"
-                    [imageType]="'square'" [objectType]="'FD_Patterns'" [width]="800">
+                    [imageType]="'square'" [objectType]="'FD_Patterns'" [width]="400">
                 </codx-img>
             </ng-template>
         </div>

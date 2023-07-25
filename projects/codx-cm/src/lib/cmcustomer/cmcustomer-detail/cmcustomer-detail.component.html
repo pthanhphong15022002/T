@@ -260,7 +260,7 @@
               funcID == 'CM0101' ? 'd-flex flex-wrap align-items-start' : ''
             "
           >
-            <div class="w-100" *ngIf="dataSelected?.category == '1'">
+            <div class="w-100" *ngIf="dataSelected?.category == '1' && dataSelected?.industries">
               <codx-label
                 style="white-space: nowrap"
                 class="fw-bold text-primary"
@@ -270,7 +270,7 @@
               <div class="mt-1">
                 <div
                   *ngFor="
-                    let item of dataSelected?.industries.split(';');
+                    let item of dataSelected?.industries?.split(';');
                     index as i
                   "
                   class="d-inline"
@@ -283,7 +283,7 @@
                   ></span
                   ><span
                     class="me-1"
-                    *ngIf="i < dataSelected?.industries.split(';').length - 1"
+                    *ngIf="i < dataSelected?.industries?.split(';').length - 1"
                     >,</span
                   >
                   <!-- {{ dataSelected?.segmentID }} -->
@@ -567,7 +567,7 @@
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem
-                  *ngIf="funcID == 'CM0101' && dataSelected?.category == '1'"
+                  *ngIf="funcID == 'CM0101'"
                 >
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">

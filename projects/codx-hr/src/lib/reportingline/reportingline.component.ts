@@ -395,7 +395,7 @@ export class ReportinglineComponent extends UIComponent {
       this.viewEmpPosition = positionID;
     }
     var totalScroll = ele.offsetHeight + ele.scrollTop;
-    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
+    if (this.scrolling && (totalScroll <= ele.scrollHeight + 2) && (totalScroll >= ele.scrollHeight - 2)) {  
       this.getEmpListPaging(positionID);
     }
   }

@@ -206,6 +206,12 @@ import { CodxListReportsComponent } from './components/codx-list-reports/codx-li
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { AttachmentWebComponent } from './components/attachment/attachment-web/attachment-web.component';
 import { CodxReportAddComponent } from './components/codx-list-reports/popup/codx-report-add/codx-report-add.component';
+
+import { CodxAddApproversComponent } from './components/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
+import { CodxAddESignFileComponent } from './components/codx-approval-procress/codx-add-esignfile/codx-add-esignfile.component';
+import { CodxAddSignFileComponent } from './components/codx-approval-procress/codx-add-sign-file/codx-add-sign-file.component';
+import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
+
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -361,7 +367,15 @@ const T_Component: Type<any>[] = [
   CodxViewContentComponent,
 
   //report
-  CodxReportAddComponent
+  CodxReportAddComponent,
+
+
+  
+  //Approval Process
+  CodxAddApproversComponent,
+  CodxAddESignFileComponent,
+  CodxAddSignFileComponent,
+  CodxGetTemplateSignFileComponent,
 ];
 
 const T_Pipe: Type<any>[] = [

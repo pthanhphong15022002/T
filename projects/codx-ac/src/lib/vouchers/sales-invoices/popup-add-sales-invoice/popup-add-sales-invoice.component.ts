@@ -16,6 +16,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -44,6 +45,7 @@ export class PopupAddSalesInvoiceComponent
   @ViewChild('tableLineDetail') tableLineDetail: TableLineDetailComponent;
 
   master: ISalesInvoice = {} as ISalesInvoice;
+  prevMaster: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
   masterService: CRUDService;
   detailService: CRUDService;
@@ -78,6 +80,7 @@ export class PopupAddSalesInvoiceComponent
     private acService: CodxAcService,
     private journalService: JournalService,
     private salesInvoiceService: SalesInvoiceService,
+    private notiService: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
@@ -90,6 +93,7 @@ export class PopupAddSalesInvoiceComponent
     this.isEdit = dialogData.data.formType === 'edit';
     this.masterService.hasSaved = this.isEdit;
     this.master = this.dialogRef.dataService?.dataSelected;
+    this.prevMaster = { ...this.master };
 
     this.isReturnInvoice = dialogRef.formModel.funcID === 'ACT0701';
 
@@ -164,6 +168,14 @@ export class PopupAddSalesInvoiceComponent
       return;
     }
 
+    if (
+      this.journal.transLimit &&
+      this.master.totalAmt > this.journal.transLimit
+    ) {
+      this.notiService.notifyCode('AC0016');
+      return;
+    }
+
     this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
@@ -185,8 +197,6 @@ export class PopupAddSalesInvoiceComponent
       .subscribe((res: any) => {
         console.log({ res });
         if (!res.error) {
-          this.salesInvoiceService.deleteLinesByTransID(this.master.recID);
-
           this.resetForm();
         }
       });
@@ -197,6 +207,10 @@ export class PopupAddSalesInvoiceComponent
 
     // e.data for valueChange and e.crrValue for controlBlur
     if (!e.data && !e.crrValue) {
+      return;
+    }
+
+    if (this.master[e.field] === this.prevMaster[e.field]) {
       return;
     }
 
@@ -216,6 +230,7 @@ export class PopupAddSalesInvoiceComponent
           console.log(res);
 
           this.master = Object.assign(this.master, res);
+          this.prevMaster = { ...this.master };
           this.form.formGroup.patchValue(res);
         });
     }
@@ -342,9 +357,6 @@ export class PopupAddSalesInvoiceComponent
       return;
     }
 
-    if (this.masterService.hasSaved) {
-      this.masterService.updateDatas.set(this.master.recID, this.master);
-    }
     this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
@@ -436,7 +448,7 @@ export class PopupAddSalesInvoiceComponent
     }
   }
 
-  // ❌
+  // ❌❌
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     console.log(e);
@@ -499,6 +511,9 @@ export class PopupAddSalesInvoiceComponent
 
   /** Save master before adding a new row */
   addRow(): void {
+    if (this.masterService.hasSaved) {
+      this.masterService.updateDatas.set(this.master.recID, this.master);
+    }
     this.masterService
       .save(null, null, null, null, false)
       .subscribe((res: any) => {
@@ -593,8 +608,7 @@ export class PopupAddSalesInvoiceComponent
       )
       .subscribe((res: ISalesInvoice) => {
         console.log(res);
-        this.master.recID = res.recID;
-        this.master.status = res.status;
+        this.master = Object.assign(this.master, res);
         this.form.formGroup.patchValue(res);
 
         this.masterService.hasSaved = false;
