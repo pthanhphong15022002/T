@@ -22,6 +22,7 @@ export class PopupSubEContractComponent implements OnInit {
   employeeID: string;
   contractNo: string;
   actionType: string;
+  headerText: string;
   constructor(
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
@@ -32,6 +33,7 @@ export class PopupSubEContractComponent implements OnInit {
     this.employeeID = data?.data?.employeeId;
     this.contractNo = data?.data?.contractNo;
     this.actionType = data?.data?.actionType;
+    this.headerText = data?.data?.headerText;
     this.dialog = dialog;
     this.oSubContract = JSON.parse(JSON.stringify(data?.data?.dataObj));
 
@@ -102,7 +104,7 @@ export class PopupSubEContractComponent implements OnInit {
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.oSubContract.contractTypeID = '1';
       this.oSubContract.status = '1';
-      this.hrService.addEContract(this.oSubContract).subscribe((res) => {
+      this.hrService.addEContract(this.oSubContract, false).subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(res);
@@ -110,12 +112,14 @@ export class PopupSubEContractComponent implements OnInit {
       });
     } else if (this.actionType == 'edit') {
       this.oSubContract.contractTypeID = '1';
-      this.hrService.editEContract(this.oSubContract).subscribe((res) => {
-        if (res) {
-          this.notify.notifyCode('SYS007');
-          this.dialog && this.dialog.close(res);
-        }
-      });
+      this.hrService
+        .editEContract(this.oSubContract, false)
+        .subscribe((res) => {
+          if (res) {
+            this.notify.notifyCode('SYS007');
+            this.dialog && this.dialog.close(res);
+          }
+        });
     }
   }
 

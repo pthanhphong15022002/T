@@ -90,11 +90,7 @@ export class VoucherComponent extends UIComponent implements OnInit {
           }
         }
       });
-
-    this.mapPredicates.set('currencyID', 'CurrencyID = @0');
-    this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
-    this.mapPredicates.set('objectID', 'ObjectID = @0');
-    this.mapDataValues.set('objectID', this.cashpayment.objectID);
+      this.setDefault();
   }
 
   ngAfterViewInit() {
@@ -107,6 +103,13 @@ export class VoucherComponent extends UIComponent implements OnInit {
     setTimeout(() => {
       this.loadingPop = false;
     }, 1000);
+  }
+
+  setDefault(){
+    this.mapPredicates.set('currencyID', 'CurrencyID = @0');
+    this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
+    this.mapPredicates.set('objectID', 'ObjectID = @0');
+    this.mapDataValues.set('objectID', this.cashpayment.objectID);
   }
   //#endregion
 

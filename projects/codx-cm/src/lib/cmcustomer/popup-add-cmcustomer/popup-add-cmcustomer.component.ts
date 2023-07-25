@@ -151,7 +151,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       .subscribe((res) => {
         if (res && !res.stop) {
           this.disabledShowInput = true;
-          this.getAutoNumber(this.autoNumber);
+          // this.getAutoNumber(this.autoNumber);
           this.cache.message('AD019').subscribe((mes) => {
             if (mes)
               this.planceHolderAutoNumber = mes?.customName || mes?.description;
@@ -160,15 +160,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.disabledShowInput = false;
         }
       });
-    this.checkContact = await firstValueFrom(
-      this.api.execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'ContactsBusiness',
-        'CheckContactDealAsync',
-        [this.data?.recID]
-      )
-    );
+    if (this.action == 'edit') {
+      this.checkContact = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'ContactsBusiness',
+          'CheckContactDealAsync',
+          [this.data?.recID]
+        )
+      );
+    }
+
     if (this.action == 'add' || this.action == 'copy') {
       this.data.address = null;
       this.data.countryID = null;
@@ -485,7 +488,21 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.customerName = this.data?.customerName;
     } else if (this.funcID == 'CM0103') {
       this.data.partnerName = this.data?.partnerName;
+      this.data.annualRevenue =
+        this.data?.annualRevenue != null &&
+        parseFloat(this.data?.annualRevenue) >= 0
+          ? parseFloat(this.data?.annualRevenue)
+          : 0;
     }
+
+    if (this.funcID == 'CM0104') {
+      this.data.annualRevenue =
+        this.data?.annualRevenue != null &&
+        parseFloat(this.data?.annualRevenue) >= 0
+          ? parseFloat(this.data?.annualRevenue)
+          : 0;
+    }
+
     if (this.funcID == 'CM0102') {
       if (this.data.objectType == null || this.data.objectType.trim() == '') {
         this.gridViewSetup['ContactType'].isRequire = false;
@@ -566,15 +583,20 @@ export class PopupAddCmCustomerComponent implements OnInit {
         );
         if (checkMainLst) {
           if (this.data?.isDefault) {
+            let nameDefault = this.lstContact.find(
+              (x) => x.isDefault
+            )?.contactName;
             var config = new AlertConfirmInputConfig();
             config.type = 'YesNo';
-            this.notiService.alertCode('CM001').subscribe((x) => {
-              if (x?.event && x.event?.status) {
-                if (x.event.status == 'Y') {
-                  this.hanleSave();
+            this.notiService
+              .alertCode('CM005', null, "'" + nameDefault + "'")
+              .subscribe((x) => {
+                if (x?.event && x.event?.status) {
+                  if (x.event.status == 'Y') {
+                    this.hanleSave();
+                  }
                 }
-              }
-            });
+              });
           } else {
             this.hanleSave();
           }
