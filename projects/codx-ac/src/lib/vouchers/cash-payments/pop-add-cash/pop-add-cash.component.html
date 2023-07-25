@@ -1,6 +1,7 @@
-<ng-container *ngIf="(isOpen)">
-<codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
-[customToolbar]="subToolbar" [openMore]="false" ngClass="ac-dialog">
+<ng-container *ngIf="isInit">
+<ejs-sidebar (close)="onCloseSidebar($event)" type="Slide" #sidebar width="100%" (created)="onCreatedSidebar($event)" id="default-sidebar" style="visibility: hidden" >
+  <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
+[customToolbar]="subToolbar" [openMore]="false" class="ac-dialog">
 </codx-form>
 <!-- <div class="ac-ng-overlay">
 <ngx-ui-loader [loaderId]="'loader'" [logoUrl]="'../assets/themes/ac/default/img/bussiness-accouting-codx.svg'"></ngx-ui-loader>
@@ -15,62 +16,94 @@
 </div>
 <!-- Start: Body -->
 <ng-template #body>
-<div style="height: 250px !important;">
-  <ejs-tab height="250px">
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2">
-            <i class="icon-info icon-18 me-2"></i>
-            <codx-label class="fw-bold fs-6" fiedName="lblGeneral" [formModel]="form.formModel"
-              default="Thông tin chung"></codx-label>
+    <div style="height: 250px !important;">
+      <ejs-tab enablePersistence="true">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-info icon-18 me-2"></i>
+                <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneral"
+                  [formModel]="form.formModel" default="Thông tin chung"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+    <div tabindex="-1" style="height: calc(100vh - 405px)!important;">
+      <ejs-tab #tabObj enablePersistence="true" (created)="created($event, tabObj)">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-format_list_numbered icon-18 me-2"></i>
+                <codx-label style="font-size: 14px !important;" class="fw-bold" fiedName="lblDetail1" [formModel]="form.formModel"
+                  default="Chi tiết"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabLine"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem tabIndex="-1" aria-hidden="true">
+            <ng-template #headerText>
+              <div #cashRef class="d-flex align-items-top me-2 mt-2">
+                <i *ngIf="cashpayment?.subType == '2'" class="icon-format_list_numbered icon-18 me-2"></i>
+                <i *ngIf="cashpayment?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
+                <codx-label *ngIf="cashpayment?.subType == '2'" style="font-size: 14px !important;" class="fw-bold" fiedName="lblDetail2"
+                  [formModel]="form.formModel" default="Chi tiết"></codx-label>
+                <codx-label *ngIf="cashpayment?.subType == '9'" style="font-size: 14px !important;" class="fw-bold" fiedName="lblDetail2"
+                  [formModel]="form.formModel" default="Hóa đơn công nợ"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabsettledInvoices"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+    <div style="height: 35px !important;" class="listcash-content row">
+      <div class="row align-items-center">
+        <div class="col-7">
+          <div *ngIf="form.formGroup" id="ac-column-def"
+            class="d-flex align-items-center cursor-pointer w-fit ac-refdoc">
+            <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
+            <codx-input style="width: 100%" class="fw-bold" [Group]="form.formGroup" field="refDocs"
+              [formModel]="form.formModel" (valueChange)="valueChange($event)">
+            </codx-input>
           </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
-</div>
-<div style="height: calc(100vh - 421px)!important;">
-  <ejs-tab #tabObj (created)="created($event, tabObj)">
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div #cashRef class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-format_list_numbered icon-18 me-2"></i>
-            <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="form.formModel"
-              default="Chi tiết"></codx-label>
+        </div>
+        <div class="col-5">
+          <div class="d-flex align-items-center justify-content-end">
+            <button style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
+              (click)="onDiscard()">
+              <div class="d-flex align-items-center">
+                <i class="icon-delete_outline icon-16"></i>
+                <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+              </div>
+            </button>
+            <button style="border: 1px solid var(--primary-dark) !important;" type="button"
+              class="btn btn-md btn-light-primary me-2" (click)="onSaveAdd()">
+              <div class="d-flex align-items-center">
+                <i class="icon-add_to_photos icon-16"></i>
+                <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+              </div>
+            </button>
+            <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+              <div class="d-flex align-items-center">
+                <i class="icon-save_alt icon-16"></i>
+                <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+              </div>
+            </button>
           </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="tabLine"></ng-container>
-        </ng-template>
-      </e-tabitem>
-      <e-tabitem tabIndex="-1" aria-hidden="true">
-        <ng-template #headerText>
-          <div #cashRef class="d-flex align-items-top me-2 mt-2">
-            <i *ngIf="cashpayment?.subType == '2'" class="icon-format_list_numbered icon-18 me-2"></i>
-            <i *ngIf="cashpayment?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
-            <codx-label *ngIf="cashpayment?.subType == '2'" class="fw-bold fs-6" fiedName="lblDetail2"
-              [formModel]="form.formModel" default="Chi tiết"></codx-label>
-            <codx-label *ngIf="cashpayment?.subType == '9'" class="fw-bold fs-6" fiedName="lblDetail2"
-              [formModel]="form.formModel" default="Hóa đơn công nợ"></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="tabsettledInvoices"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
-</div>
-<div class="row mt-2">
-  <div class="listcash-content mt-1">
-    <ng-container *ngTemplateOutlet="addLine"></ng-container>
-  </div>
-</div>
+        </div>
+      </div>
+    </div>
 </ng-template>
 <!-- End: Body -->
 
@@ -81,8 +114,7 @@
 <ng-template #tabBasic>
 <!-- Phiếu chi && Ủy nhiệm chi -->
 <!-- ver1 -->
-<ng-container
-  *ngIf="form && form.formGroup && form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'">
+<ng-container *ngIf="form.formGroup && form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'" >
   <div class="p-3 tab-basic">
     <div #itemRef class="row">
       <div class="col-7 ac-left">
@@ -149,8 +181,7 @@
                 </div>
               </div>
             </div>
-            <div [style]="
-                  cashpayment.subType == '3' || cashpayment.subType == '4'
+            <div [style]="cashpayment.subType == '3' || cashpayment.subType == '4'
                     ? 'display:inline'
                     : 'display:none'
                 " class="col-3 ac-type-3">
@@ -289,6 +320,7 @@
     </div>
   </div>
 </ng-container>
+
 <!-- ver1 -->
 
 <!-- ver2 -->
@@ -695,10 +727,9 @@
       [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
       predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
       [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-      [autoFitColumns]="false" (created)="gridCreated()" rowHeight="35" [preSaveCheck]="false"
+      [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" [preSaveCheck]="true"
       (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
       (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
-
     <div #btnRef class="btn-addline">
       <div class="d-flex align-items-center">
         <div>
@@ -717,10 +748,8 @@
         </div>
       </div>
     </div>
-    <div class="row" *ngIf="cashpaymentline.length == 0 && !loadingform"
-      style="height: 30px; background-color: whitesmoke"></div>
-    <div *ngIf="loadingform && action == 'edit'" class="ac-load-grid">
-      <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
+    <div *ngIf="loadingform" class="ac-load-grid">
+      <ejs-progressbar *ngIf="action == 'edit'" #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
         [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
         <e-progressbar-annotations>
           <e-progressbar-annotation content=" "> </e-progressbar-annotation>
@@ -735,8 +764,8 @@
       [formName]="fmCashCashReceiptsLine.formName" [gridViewName]="fmCashCashReceiptsLine.gridViewName"
       [entityName]="fmCashCashReceiptsLine.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
       predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
-      [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-      (created)="gridCreated()" [preSaveCheck]="false" rowHeight="35" (onAddNew)="onAddNew($event)"
+      [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" [enableFirstLoad]="action == 'edit' ? true : false"
+      [preSaveCheck]="false" rowHeight="35" (onAddNew)="onAddNew($event)"
       (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)"
       [isCustom]="false"></codx-gridview-v2>
 
@@ -758,8 +787,8 @@
         </div>
       </div>
     </div>
-    <div class="row" *ngIf="cashpaymentline.length == 0 && !loadingform"
-      style="height: 30px; background-color: whitesmoke"></div>
+    <!-- <div class="row" *ngIf="cashpaymentline.length == 0 && !loadingform"
+      style="height: 30px; background-color: whitesmoke"></div> -->
     <div *ngIf="loadingform" class="ac-load-grid">
       <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
         [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
@@ -784,7 +813,7 @@
       entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35"
       [allowFiltering]="true" [autoAddRow]="true" (eventAction)="autoAddRowSet($event)" [allowSorting]="true"
       [hideMoreFunc]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false" [autoFitColumns]="false"
-      [dataSource]="settledInvoices" (created)="gridCreatedSet()" (cellChanged)="settledLineChanged($event)">
+      [dataSource]="settledInvoices" (gridInit)="gridInitSet()" (cellChanged)="settledLineChanged($event)">
     </codx-gridview-v2>
     <div class="btn-addline">
       <div class="d-flex align-items-center">
@@ -840,12 +869,38 @@
 
 <!-- Start: Footer -->
 <ng-template #footer>
-<div ngClass="collape" class="codx-detail-footer dialog-footer collape" *ngIf="cashpayment">
-  <div class="btn btn-white btn-icon tab-action">
-    <span (click)="expand()" class="icon-unfold_more icon-20"></span>
-  </div>
-  <ng-container *ngTemplateOutlet="tabRef"></ng-container>
-</div>
+  <!-- <div class="d-flex align-items-center justify-content-between ac-popupfull">
+    <div class="d-flex align-items-center me-2">
+      <button style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
+      (click)="onDiscard()">
+      <div class="d-flex align-items-center">
+        <i class="icon-delete_outline icon-16"></i>
+        <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+      </div>
+    </button>
+    </div>
+    <div class="d-flex align-items-center me-2">
+      <button style="border: 1px solid var(--primary-dark) !important;" type="button"
+      class="btn btn-md btn-light-primary me-2" (click)="onSaveAdd()">
+      <div class="d-flex align-items-center">
+        <i class="icon-add_to_photos icon-16"></i>
+        <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+      </div>
+    </button>
+    <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+      <div class="d-flex align-items-center">
+        <i class="icon-save_alt icon-16"></i>
+        <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+      </div>
+    </button>
+    </div>
+  </div> -->
+    <div ngClass="collape" class="codx-detail-footer dialog-footer collape" *ngIf="cashpayment">
+      <div class="btn btn-white btn-icon tab-action">
+        <span (click)="expand()" class="icon-unfold_more icon-20"></span>
+      </div>
+      <ng-container *ngTemplateOutlet="tabRef"></ng-container>
+    </div>
 </ng-template>
 <!-- End: Footer -->
 
@@ -858,7 +913,66 @@
 
 <!-- Start: Sub toolbar -->
 <ng-template #subToolbar>
-<div class="w-100">
+    <div class="w-100">
+      <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
+        <div class="d-flex align-items-center me-2">
+          <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
+            <i *ngIf="action == 'add'" class="icon-add_box icon-16"></i>
+            <i *ngIf="action == 'copy'" class="icon-content_copy icon-16"></i>
+            <i *ngIf="action == 'edit'" class="icon-edit_square icon-16"></i>
+          </div>
+          <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+            {{ headerText }}
+          </div>
+          <div class="input-circle input-sm" *ngIf="form?.formGroup">
+            <span class="me-2">
+              <codx-vll [name]="'AC040'" [formModel]="form.formModel" [field]="'Status'" [value]="cashpayment?.status"
+                [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+              </codx-vll>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center me-3">
+          <!-- <div *ngIf="action != 'edit'" class="ms-2">
+            <button id="saveadd" type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
+              <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+            </button>
+          </div>
+          <div class="ms-2">
+            <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+              <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+            </button>
+          </div>
+          <div *ngIf="cashpayment?.status == '0'" class="ms-2">
+            <button id="discard" type="button" class="btn btn-md btn-danger" (click)="onDiscard()">
+              <div class="d-flex align-items-center">
+                <i class="icon-autorenew icon-16"></i>
+                <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+              </div>
+            </button>
+          </div> -->
+          <div class="ms-2">
+            <div class="btn btn-icon btn-light-danger btn-circle" (click)="close()">
+              <i class="icon-close icon-18"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-container>
+        <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
+          class="input-circle h-20px input-border-0 w-400px mt-1 mb-1">
+          <codx-dropdown-select #cbxSub [isToolbar]="false" [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px"
+            [isMulti]="false" type="valuelist" field="subType" [refValue]="gridViewSetup['SubType'].referedValue"
+            [value]="cashpayment.subType" emptyText="Loại phiếu" (valueChange)="changeType($event)"></codx-dropdown-select>
+        </div>
+        <span style="margin-left: 30px" *ngIf="action == 'edit' && cashpayment?.status != '0'">
+          <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
+            [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg mt-1">
+          </codx-vll>
+        </span>
+      </ng-container>
+    </div>
+<!-- <div class="w-100">
   <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
     <div class="d-flex align-items-center me-2">
       <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
@@ -879,35 +993,16 @@
     </div>
     <div class="d-flex align-items-center me-3">
       <div *ngIf="action != 'edit'" class="ms-2">
-        <!-- <ejs-tooltip id='tooltip' content='Alt + Shift + S' target="#saveadd">
-          <button id="saveadd" type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
-            <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-          </button>
-        </ejs-tooltip> -->
         <button id="saveadd" type="button" class="btn btn-md btn-light-primary" (click)="onSaveAdd()">
             <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
           </button>
       </div>
       <div class="ms-2">
-        <!-- <ejs-tooltip id='tooltip' content='Alt + S' target="#save">
-          <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
-            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
-          </button>
-        </ejs-tooltip> -->
         <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
             <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
           </button>
       </div>
       <div *ngIf="cashpayment?.status == '0'" class="ms-2">
-        <!-- <ejs-tooltip id='tooltip' content='Ctrl + D' target="#discard">
-          <button id="discard" [disabled]="!hasSaved" type="button" class="btn btn-md btn-danger"
-            (click)="onDiscard()">
-            <div class="d-flex align-items-center">
-              <i class="icon-autorenew icon-16"></i>
-              <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
-            </div>
-          </button>
-        </ejs-tooltip> -->
         <button id="discard" type="button" class="btn btn-md btn-danger"
             (click)="onDiscard()">
             <div class="d-flex align-items-center">
@@ -925,20 +1020,19 @@
   </div>
   <ng-container *ngIf="form.formGroup && gridViewSetup">
     <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
-      class="input-circle input-border-0 w-400px mt-1 mb-1">
+      class="input-circle h-20px input-border-0 w-400px mt-1 mb-1">
       <codx-dropdown-select #cbxSub [isToolbar]="false" [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-400px"
         [isMulti]="false" type="valuelist" field="subType" [refValue]="gridViewSetup['SubType'].referedValue"
         [value]="cashpayment.subType" emptyText="Loại phiếu"
         (valueChange)="changeType($event)"></codx-dropdown-select>
     </div>
-
     <span style="margin-left: 30px" *ngIf="action == 'edit' && cashpayment?.status != '0'">
       <codx-vll [name]="'AC063'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
         [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-lg mt-1">
       </codx-vll>
     </span>
   </ng-container>
-</div>
+</div> -->
 </ng-template>
 <!-- End: Sub toolbar -->
 
@@ -956,4 +1050,5 @@
 </ng-container>
 </ng-template>
 <!-- End: addline -->
+</ejs-sidebar>
 </ng-container>

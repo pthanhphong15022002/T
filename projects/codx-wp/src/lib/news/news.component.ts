@@ -265,7 +265,6 @@ export class NewsComponent extends UIComponent {
       option
     );
     popup.closed.subscribe((res: any) => {
-      debugger;
       if (res?.event) {
         let data = res.event;
         //post

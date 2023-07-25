@@ -51,6 +51,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   currentEmpObj: any = null;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
+  viewActive: string;
 
   //More function
   @ViewChild('templateUpdateStatus', { static: true })
@@ -104,6 +105,7 @@ export class EmployeeBenefitComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -113,6 +115,7 @@ export class EmployeeBenefitComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateListDetail,
@@ -414,8 +417,14 @@ export class EmployeeBenefitComponent extends UIComponent {
     }
   }
 
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   clickEvent(event) {

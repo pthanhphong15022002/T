@@ -70,6 +70,8 @@ export class PopupAddSignFileComponent implements OnInit {
   transID: String = '';
   gvSetup: any;
   sampleProcessName = '';
+  editApprovers = true;//false; // Ẩn quy trình xét duyệt, lấy người duyệt truyền vào 
+  approvers = null; // Mảng người xét duyệt truyền vào
   eSign: boolean = true; //Phân loại là ký số. defaul true for release form others module
   signatureType; //loai chu ki: cong cong - noi bo
 
@@ -148,8 +150,10 @@ export class PopupAddSignFileComponent implements OnInit {
     this.isTemplate = data?.data?.isTemplate ? true : false;
     this.refType = data?.data?.refType ?? 'ES_SignFiles';// Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
     this.refID = data?.data?.refID;// Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
-    this.typeCategory =
-      this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType;//Dùng để lấy Category của Module
+    this.typeCategory =this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType;//Dùng để lấy Category của Module
+    this.editApprovers = data?.data?.editApprovers ?? false;
+    this.approvers = data?.data?.approvers ?? null;
+
     if (this.modeView == '2') {
       this.disableCateID = true;
     }
@@ -1115,6 +1119,12 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.updateNodeStatus(oldNode, newNode);
                   this.currentTab == 0 && this.currentTab++;
                   this.processTab == 0 && this.processTab++;
+                  if(this.editApprovers){
+                    this.oldNode = oldNode+1;
+                    this.newNode = newNode+1;
+                    this.onSaveSignFile();
+                    this.nextClick = true;
+                  }
                 }
               }
             );
@@ -1122,6 +1132,12 @@ export class PopupAddSignFileComponent implements OnInit {
             this.updateNodeStatus(oldNode, newNode);
             this.currentTab == 0 && this.currentTab++;
             this.processTab == 0 && this.processTab++;
+            if(this.editApprovers){
+              this.oldNode = oldNode+1;
+              this.newNode = newNode+1;
+              this.onSaveSignFile();
+              this.nextClick = true;
+            }
           }
         } else {
           this.notify.notifyCode('ES006');
@@ -1338,6 +1354,7 @@ export class PopupAddSignFileComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {
+            let releaseRes= res;
             this.esService.getSFByID(this.data?.recID).subscribe((res) => {
               if (res?.signFile) {
                 this.data.files = res?.signFile?.files;
@@ -1361,6 +1378,7 @@ export class PopupAddSignFileComponent implements OnInit {
                       this.dialog.close({
                         data: this.data,
                         approved: true,
+                        responseModel : releaseRes,
                       });
                   }
                 });

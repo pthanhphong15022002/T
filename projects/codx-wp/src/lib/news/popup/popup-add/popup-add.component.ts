@@ -189,7 +189,6 @@ export class PopupAddComponent implements OnInit {
   }
   // release post
   clickRelease() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0)

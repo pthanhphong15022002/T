@@ -7,6 +7,7 @@
   [footer]="footer"
   [dialog]="dialog"
   [openMore]="true"
+  (setTitle)="setTitle($event)"
   [tabContent]="[degreeOveralInf, degreeMoreInf]"
   [data]="degreeObj"
   *ngIf="isAfterRender"

@@ -712,7 +712,7 @@ export class CodxCmService {
       data
     );
   }
-  startInstance(data){
+  startInstance(data) {
     return this.api.execSv<any>(
       'DP',
       'ERM.Business.DP',
@@ -1265,4 +1265,8 @@ export class CodxCmService {
     );
   }
   //#region
+
+  getOneObject(recID, className) {
+    return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
+  }
 }

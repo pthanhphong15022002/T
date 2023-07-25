@@ -103,6 +103,12 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     });
   }
 
+  setTitle(evt: any){
+    this.headerText += " " +  evt;
+    this.cr.detectChanges();
+  }
+
+
   initForm() {
     if (this.actionType == 'add') {
       this.hrSevice

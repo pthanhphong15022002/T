@@ -56,6 +56,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   dialogEditStatus: any;
   processID;
   cmtStatus: string = '';
+  viewActive: string;
   genderGrvSetup: any;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
@@ -101,6 +102,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
+        active: false,
         sameData: true,
         model: {
           template: this.templateList,
@@ -110,6 +112,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.listdetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateListDetail,
@@ -408,8 +411,14 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     }
   }
 
+  viewChanged(event: any) {
+    this.viewActive = event?.view?.id;
+  }
+
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    if (this.viewActive !== '1') {
+      this.itemDetail = event?.data;
+    }
   }
 
   clickEvent(event) {

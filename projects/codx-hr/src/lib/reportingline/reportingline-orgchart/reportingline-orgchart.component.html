@@ -27,8 +27,9 @@
 
 
 <ng-template #template let-data>
-  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 border h-150px"
-    (click)="changeSelectedItem(data)" [ngStyle]="{ background: data?.positionID == positionID? 'aliceblue': null }">
+  <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 h-150px"
+    [ngClass]="data?.isSelected ?'highlight-node-border': 'border'"
+    (click)="changeSelectedItem(data)" [ngStyle]=" { background: data?.positionID == positionID? 'aliceblue': null, borderColor: '' }">
     <div class="has-action-menu">
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
       </codx-mfunc>
@@ -53,7 +54,7 @@
     </ng-template>
     <div *ngIf="data.isChildrent" class="d-flex mt-auto justify-content-center">
       <span #icon class="icon-20 " [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
-        (click)="loadDataChild(data,icon)"></span>
+        (click)="loadDataChild(data,icon , $event)"></span>
     </div>
   </div>
 </ng-template>

@@ -30,7 +30,7 @@
     </ng-container>
     <ng-template #tmpElse>
       <ng-container *ngIf="funcItem.displayMode == '3'; else reportBolder">
-        <!-- <lib-pdf *ngIf="url" [inputUrl]="url"></lib-pdf> -->
+        <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true"></lib-pdf>
       </ng-container>
       <ng-template #reportBolder>
         <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
