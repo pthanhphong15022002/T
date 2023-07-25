@@ -1350,23 +1350,23 @@ export class CodxHrService {
     );
   }
 
-  AddEmployeeBasicSalariesInfo(data) {
+  AddEmployeeBasicSalariesInfo(data, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EBasicSalariesBusiness',
       'AddEmployeeBasicSalariesInfoAsync',
-      data
+      [data, useForQTNS]
     );
   }
 
-  UpdateEmployeeBasicSalariesInfo(data) {
+  UpdateEmployeeBasicSalariesInfo(data, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EBasicSalariesBusiness',
       'UpdateEmployeeBasicSalariesInfoAsync',
-      data
+      [data, useForQTNS]
     );
   }
   getOldBasicSalary(data) {
@@ -1804,13 +1804,13 @@ export class CodxHrService {
     );
   }
 
-  AddEBenefit(data: any) {
+  AddEBenefit(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'AddEBenefitAsync',
-      [data]
+      [data, useForQTNS]
     );
   }
 
@@ -1834,13 +1834,13 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeBenefitMoreFunc(data: any) {
+  EditEmployeeBenefitMoreFunc(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'EditEmployeeBenefitMoreFunc',
-      data
+      [data, useForQTNS]
     );
   }
   //#endregion

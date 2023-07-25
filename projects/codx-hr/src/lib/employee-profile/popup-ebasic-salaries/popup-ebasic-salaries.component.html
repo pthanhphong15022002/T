@@ -28,7 +28,7 @@
           <div class="text-dark fw-bold">
             <span>{{ employeeObj?.employeeName }}</span>
           </div>
-          <div class="text-gray-500 fs-7">
+          <div class="text-gray-500 fs-7" *ngIf="employeeObj?.positionID">
             <span
               [innerHTML]="
                 employeeObj?.positionID
@@ -37,7 +37,7 @@
               "
             ></span>
           </div>
-          <span class="text-gray-700" *ngIf="employeeObj.orgUnitName">{{
+          <span class="text-gray-700" *ngIf="employeeObj?.orgUnitName">{{
             employeeObj?.orgUnitName
           }}</span>
           <!-- <div class="text-gray-700">
@@ -54,7 +54,7 @@
     </div>
     <div class="col-2 d-flex justify-content-end">
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         [showInput]="false"
         field="employeeID"
         [formModel]="formModel"
@@ -102,7 +102,7 @@
     <div class="col-6">
       <codx-label fiedName="EffectedDate" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="effectedDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -111,7 +111,7 @@
     <div class="col-6">
       <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="expiredDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -123,7 +123,7 @@
     <div class="col-6">
       <codx-label fiedName="BSalary" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="BSalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -133,7 +133,7 @@
     <div class="col-6">
       <codx-label fiedName="SISalary" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="SISalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -146,7 +146,7 @@
     <div class="col-6">
       <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="JSalary"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -170,7 +170,7 @@
     <div class="col-6">
       <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="signedDate"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -181,7 +181,7 @@
   <div class="form-group border-bottom pb-1">
     <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
     <codx-input
-    [disabled]="disabledInput"
+      [disabled]="disabledInput"
       field="signerID"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -192,7 +192,7 @@
   <div class="form-group row">
     <codx-label fiedName="SignerPosition" [formModel]="formModel"></codx-label>
     <codx-input
-    [disabled]="disabledInput"
+      [disabled]="disabledInput"
       field="signerPosition"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -202,7 +202,7 @@
   <div class="form-group row">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
-    [disabled]="disabledInput"
+      [disabled]="disabledInput"
       field="note"
       [formModel]="formModel"
       [Group]="formGroup"
@@ -211,7 +211,11 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+    <button
+      class="btn btn-primary"
+      (click)="onSaveForm()"
+      [disabled]="!formModel.currentData.updateColumn"
+    >
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

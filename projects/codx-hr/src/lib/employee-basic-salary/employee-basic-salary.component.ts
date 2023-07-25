@@ -186,7 +186,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
           .delete([data], true, (option: RequestOption) =>
             this.beforeDelete(option, data.recID)
           )
-          .subscribe(() => {});
+          .subscribe();
         break;
       //Edit
       case 'SYS03':
@@ -258,7 +258,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event).subscribe();
+        // this.view.dataService.update(res.event).subscribe();
+        this.view.dataService.update(res.event[0]).subscribe();
+
+        if (res.event[1]) {
+          this.view.dataService.update(res.event[1]).subscribe();
+        }
         this.df.detectChanges();
       }
     });
@@ -282,6 +287,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         funcID: this.view.funcID,
         salaryObj: data,
         fromListView: true,
+        useForQTNS: true,
       },
       option
     );
@@ -292,7 +298,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe();
+          res.event[0].emp = res.event.emp;
+          this.view.dataService.update(res.event[0]).subscribe();
         }
         this.df.detectChanges();
       }
@@ -328,14 +335,18 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   onSaveUpdateForm() {
     this.hrService
-      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj)
+      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj, true)
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
-          res.emp = this.currentEmpObj;
+          res[0].emp = this.currentEmpObj;
+          if (res[1]) {
+            res[1].emp = this.currentEmpObj;
+          }
+
           this.hrService
             .addBGTrackLog(
-              res.recID,
+              res[0].recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
@@ -400,7 +411,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail)
+                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail, false)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService
