@@ -161,7 +161,12 @@ export class EmployeeContractComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
+        //this.view.dataService.update(res.event[0]).subscribe();
         this.view.dataService.update(res.event[0]).subscribe();
+
+        if (res.event[1]) {
+          this.view.dataService.update(res.event[1]).subscribe();
+        }
         //Render new data when update new status on view detail
         this.df.detectChanges();
       }
@@ -173,10 +178,14 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   onSaveUpdateForm() {
-    this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
+    this.hrService.editEContract(this.editStatusObj, true).subscribe((res) => {
       if (res != null) {
+        console.log(res);
         this.notify.notifyCode('SYS007');
         res[0].emp = this.currentEmpObj;
+        if (res[1]) {
+          res[1].emp = this.currentEmpObj;
+        }
         this.view.formModel.entityName;
         this.hrService
           .addBGTrackLog(
@@ -246,27 +255,26 @@ export class EmployeeContractComponent extends UIComponent {
         this.popupUpdateEContractStatus(event.functionID, oUpdate);
         break;
       case this.actionAddNew: // de xuat hop dong tiep theo
-        this.HandleEContractInfo(event.text, 'add', data);
+        this.HandleEContractInfo(event.text.substr(0, 7), 'add', data);
         break;
 
       case 'SYS03':
         this.currentEmpObj = data.emp;
-        this.HandleEContractInfo(
-          event.text + ' ' + this.view.function.description,
-          'edit',
-          data
-        );
+        this.HandleEContractInfo(event.text, 'edit', data);
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-        this.view.dataService
-          .delete([data], true, (option: RequestOption) =>
-            this.beforeDelete(option, data)
-          )
-          .subscribe((res) => {
-            res[1].emp = data.emp;
-            this.view.dataService.update(res[1]).subscribe();
-          });
+        this.view.dataService.delete([data]).subscribe();
+        // this.view.dataService
+        //   .delete([data], true, (option: RequestOption) =>
+        //     this.beforeDelete(option, data)
+        //   )
+        // .subscribe((res) => {
+        //   if (res[1]) {
+        //     res[1].emp = data?.emp;
+        //   }
+        //   this.view.dataService.update(res[1]).subscribe();
+        // });
         break;
       case 'SYS04': //copy
         this.currentEmpObj = data.emp;
@@ -315,6 +323,7 @@ export class EmployeeContractComponent extends UIComponent {
           reportID: moreFC.functionID,
           dataSource: src,
         };
+        debugger
         this.callfc.openForm(
           CodxListReportsComponent,
           moreFC.defaultName,
@@ -346,7 +355,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
-    this.currentEmpObj = this.itemDetail.emp;
+    this.currentEmpObj = this.itemDetail?.emp;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -368,14 +377,14 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.currentEmpObj = res.event[0].emp;
-          this.view.dataService.add(res.event[0], 0).subscribe();
-          this.view.dataService.update(res.event[1]).subscribe();
+          this.currentEmpObj = res.event.emp;
+          this.view.dataService.add(res.event, 0).subscribe();
+          // this.view.dataService.update(res.event[1]).subscribe();
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event[0]).subscribe();
-          this.view.dataService.update(res.event[1]).subscribe();
+          this.view.dataService.update(res.event).subscribe();
+          // this.view.dataService.update(res.event[1]).subscribe();
         }
         this.df.detectChanges();
       }
@@ -385,22 +394,14 @@ export class EmployeeContractComponent extends UIComponent {
   copyValue(actionHeaderText, data, flag) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
       if (flag == 'eContract') {
-        this.HandleEContractInfo(
-          actionHeaderText + ' ' + this.view.function.description,
-          'copy',
-          res
-        );
+        this.HandleEContractInfo(actionHeaderText, 'copy', res);
       }
     });
   }
 
   addContract(evt) {
     if (evt.id == 'btnAdd') {
-      this.HandleEContractInfo(
-        evt.text + ' ' + this.view.function.description,
-        'add',
-        null
-      );
+      this.HandleEContractInfo(evt.text, 'add', null);
     }
   }
 
@@ -465,7 +466,7 @@ export class EmployeeContractComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .editEContract(this.itemDetail)
+                  .editEContract(this.itemDetail, false)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService
