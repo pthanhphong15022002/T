@@ -54,11 +54,11 @@
             <div class="text-gray-600 fs-7">
               <span
                 *ngIf="
-                  itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+                  itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
                   else noOrgUnitName
                 "
                 >{{
-                  itemDetail.orgUnitName || itemDetail.emp.orgUnitName
+                  itemDetail?.orgUnitName || itemDetail.emp.orgUnitName
                 }}</span
               >
               <ng-template #noOrgUnitName>
@@ -115,7 +115,54 @@
         </ng-template>
         <!-- end -->
       </codx-temp-full>
-      <ng-container *ngIf="itemDetail?.isCurrent">
+      <span
+        *ngIf="
+          itemDetail.isCurrent &&
+          dateNow >= moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
+          (dateNow <= moment(itemDetail.expiredDate).format('YYYY-MM-DD') ||
+            itemDetail.expiredDate === null)
+        "
+        [style.color]="'#0078FF'"
+        class="icon-bookmark icon-18"
+        [ngbPopover]="popIsNewest"
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+      >
+      </span>
+
+      <span
+        *ngIf="
+          itemDetail?.isCurrent &&
+          dateNow > moment(itemDetail.expiredDate).format('YYYY-MM-DD')
+        "
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+        [ngbPopover]="popOverDue"
+        [style.color]="'#F64E60'"
+        class="icon-notifications icon-18"
+      ></span>
+
+      <span
+        *ngIf="
+          itemDetail?.isCurrent &&
+          dateNow < moment(itemDetail.effectedDate).format('YYYY-MM-DD')
+        "
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+        [ngbPopover]="popIsNotNewsest"
+        [style.color]="'#FFA800'"
+        class="icon-queue_play_next icon-18"
+      ></span>
+      <!-- <ng-container *ngIf="itemDetail?.isCurrent">
         <span
           [style.color]="'#0078FF'"
           class="icon-bookmark icon-25 me-2"
@@ -127,7 +174,7 @@
           placement="left"
         >
         </span>
-      </ng-container>
+      </ng-container> -->
     </div>
     <div class="d-flex flex-wrap">
       <div class="d-flex align-items-center mb-1 me-4">
@@ -479,17 +526,26 @@
     <codx-label
       name="lblIsCurrent"
       [formModel]="view.formModel"
-      default="Mới nhất"
+      default="Đang hiệu lực"
     ></codx-label>
   </span>
 </ng-template>
-
 <ng-template #popOverDue>
   <span>
     <codx-label
       name="lblOverDue"
       [formModel]="view.formModel"
       default="Đã quá hạn!"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popIsNotNewsest>
+  <span>
+    <codx-label
+      name="lblIsNotCurrent"
+      [formModel]="view.formModel"
+      default="Chưa hiệu lực"
     ></codx-label>
   </span>
 </ng-template>

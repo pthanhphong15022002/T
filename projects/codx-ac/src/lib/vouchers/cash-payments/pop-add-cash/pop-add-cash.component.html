@@ -3,7 +3,7 @@
 </ejs-sidebar> -->
   <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
     [customToolbar]="subToolbar" [openMore]="false"
-    class="ac-dialog h-100 d-block ac-animation-slideRight">
+    class="ac-dialog ac-animation-slideRight">
   </codx-form>
   <div *ngIf="loading" class="ac-load-save">
     <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0" [value]="20"
@@ -78,7 +78,7 @@
           </div>
         </div>
         <div class="col-5">
-          <div class="d-flex align-items-center justify-content-end">
+          <!-- <div class="d-flex align-items-center justify-content-end">
             <button style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
               (click)="onDiscard()">
               <div class="d-flex align-items-center">
@@ -99,7 +99,7 @@
                 <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
               </div>
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -114,7 +114,7 @@
     <!-- Phiếu chi && Ủy nhiệm chi -->
     <!-- ver1 -->
     <ng-container *ngIf="form.formGroup && form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'">
-      <div class="p-3 tab-basic">
+      <div class="p-3 tab-basic ac-form-master">
         <div #itemRef class="row">
           <div class="col-7 ac-left">
             <div class="mw-750px">
@@ -904,9 +904,32 @@
     </button>
     </div>
   </div> -->
-    <div ngClass="collape" class="codx-detail-footer dialog-footer collape" *ngIf="cashpayment">
-      <div class="btn btn-white btn-icon tab-action">
+    <div ngClass="collape" class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="cashpayment">
+      <!-- <div class="btn btn-white btn-icon tab-action">
         <span (click)="expand()" class="icon-unfold_more icon-20"></span>
+        
+      </div> -->
+      <div class="d-flex align-items-center justify-content-end btn-ac-footer">
+        <button style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
+          (click)="onDiscard()">
+          <div class="d-flex align-items-center">
+            <i class="icon-delete_outline icon-16"></i>
+            <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+          </div>
+        </button>
+        <button style="border: 1px solid var(--primary-dark) !important;" type="button"
+          class="btn btn-md btn-light-primary me-2" (click)="onSaveAdd()">
+          <div class="d-flex align-items-center">
+            <i class="icon-add_to_photos icon-16"></i>
+            <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+          </div>
+        </button>
+        <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+          <div class="d-flex align-items-center">
+            <i class="icon-save_alt icon-16"></i>
+            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+          </div>
+        </button>
       </div>
       <ng-container *ngTemplateOutlet="tabRef"></ng-container>
     </div>

@@ -30,6 +30,7 @@ import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable, map } from 'rxjs';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -63,6 +64,8 @@ export class EmployeeContractComponent extends UIComponent {
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
   viewActive: string;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01';
@@ -73,7 +76,7 @@ export class EmployeeContractComponent extends UIComponent {
   actionUpdateApproved = 'HRTPro01AU5';
   actionUpdateClosed = 'HRTPro01AU9';
   //#endregion
-
+  // moment(data.effectedDate).format("YYYY-MM-DD")
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
