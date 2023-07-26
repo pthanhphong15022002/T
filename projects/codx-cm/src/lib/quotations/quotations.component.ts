@@ -592,6 +592,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       if (deals) {
         this.codxCmService.getProcess(deals.processID).subscribe((process) => {
           if (process) {
+            debugger;
             this.codxCmService
               .getESCategoryByCategoryID(process.processNo)
               .subscribe((res) => {
@@ -675,42 +676,53 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-          if (process) {
+        this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
+          if (deals) {
             this.codxCmService
-              .getESCategoryByCategoryID(process.processNo)
-              .subscribe((res2: any) => {
-                if (res2) {
-                  if (res2?.eSign == true) {
-                    //trình ký
-                  } else if (res2?.eSign == false) {
-                    //kí duyet
-                    this.codxShareService
-                      .codxCancel(
-                        'CM',
-                        dt?.recID,
-                        this.view.formModel.entityName,
-                        null,
-                        null
-                      )
-                      .subscribe((res3) => {
-                        if (res3) {
-                          this.itemSelected.approveStatus = '0';
-                          this.codxCmService
-                            .updateApproveStatus(
-                              'QuotationsBusiness',
+              .getProcess(deals.processID)
+              .subscribe((process) => {
+                if (process) {
+                  this.codxCmService
+                    .getESCategoryByCategoryID(process.processNo)
+                    .subscribe((res2: any) => {
+                      if (res2) {
+                        if (res2?.eSign == true) {
+                          //trình ký
+                        } else if (res2?.eSign == false) {
+                          //kí duyet
+                          this.codxShareService
+                            .codxCancel(
+                              'CM',
                               dt?.recID,
-                              '0'
+                              this.view.formModel.entityName,
+                              null,
+                              null
                             )
-                            .subscribe();
-                          this.notiService.notifyCode('SYS007');
-                        } else this.notiService.notifyCode('SYS021');
-                      });
-                  }
+                            .subscribe((res3) => {
+                              if (res3) {
+                                this.itemSelected.approveStatus = '0';
+                                this.codxCmService
+                                  .updateApproveStatus(
+                                    'QuotationsBusiness',
+                                    dt?.recID,
+                                    '0'
+                                  )
+                                  .subscribe();
+                                this.notiService.notifyCode('SYS007');
+                              } else this.notiService.notifyCode('SYS021');
+                            });
+                        }
+                      }
+                    });
+                } else {
+                  this.notiService.notifyCode('DP040');
                 }
               });
           } else {
-            this.notiService.notifyCode('DP040');
+            this.notiService.notify(
+              'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+              '3'
+            );
           }
         });
       }
