@@ -43,4 +43,8 @@
   #styledTab > div:last-of-type {
     height: calc(100% - 32px) !important;
   }
+
+  input[ng-reflect-name="memo"] {
+    border: none;
+  }
 }
