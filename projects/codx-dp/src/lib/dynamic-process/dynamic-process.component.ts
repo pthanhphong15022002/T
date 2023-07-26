@@ -790,6 +790,7 @@ export class DynamicProcessComponent
     //thao test khong dc xoa
     if (!data.read) return;
     this.dpService.dataProcess.next(data);
+    //this.codxService.navigate('', `instances/DPT04/${data.recID}`);
     this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
 
     // let isRead = this.checkPermissionRead(data);
