@@ -90,4 +90,5 @@ export interface IPurchaseInvoiceLine {
     modifiedBy: string;
 
     _rowIndex: any;
+    unbounds?: any;
 }
