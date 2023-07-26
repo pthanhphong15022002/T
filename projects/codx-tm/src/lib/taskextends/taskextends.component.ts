@@ -10,16 +10,14 @@ import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
   DialogRef,
-  NotificationsService,
   UIComponent,
-  UrlUtil,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { PopupConfirmComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-confirm/popup-confirm.component';
 import { ViewDetailComponent } from 'projects/codx-share/src/lib/components/codx-tasks/view-detail/view-detail.component';
-import { CodxTMService } from '../codx-tm.service';
 import { TM_TaskExtends } from '../models/TM_Tasks.model';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-taskextends',
@@ -28,7 +26,8 @@ import { TM_TaskExtends } from '../models/TM_Tasks.model';
 })
 export class TaskExtendsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
@@ -44,15 +43,14 @@ export class TaskExtendsComponent
     inject: Injector,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private notiService: NotificationsService,
-    private tmSv: CodxTMService
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  onInit(): void { }
+  onInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
@@ -74,33 +72,10 @@ export class TaskExtendsComponent
     this.taskExtends = val?.data ? val?.data : val;
     this.detectorRef.detectChanges();
   }
-  requestEnded(e) { }
+  requestEnded(e) {}
 
   //#region extends
   openExtendStatusPopup(moreFunc, data) {
-    //chuyển kiểm tra sau nên cmt lại
-    // var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
-    // if (valueDefault == '5') {
-    //   this.api
-    //     .execSv<any>(
-    //       'TM',
-    //       'TM',
-    //       'TaskBusiness',
-    //       'GetTaskParentByTaskIDAsync',
-    //       data.taskID
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         if (res.dueDate < data.extendDate) {
-    //           this.notiService.alertCode('TM059').subscribe((confirm) => {
-    //             if (confirm?.event && confirm?.event?.status == 'Y') {
-    //               this.confirmExtends(moreFunc, data);
-    //             }
-    //           });
-    //         } else this.confirmExtends(moreFunc, data);
-    //       }
-    //     });
-    // } else this.confirmExtends(moreFunc, data);
     this.confirmExtends(moreFunc, data);
   }
 
@@ -143,12 +118,30 @@ export class TaskExtendsComponent
       case 'TMT04012':
         this.openExtendStatusPopup(e.data, data);
         break;
+      default:
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
-        if (x.functionID == 'SYS04'|| x.functionID == 'SYS03'||x.functionID == 'SYS02') {
+        if (
+          x.functionID == 'SYS04' ||
+          x.functionID == 'SYS03' ||
+          x.functionID == 'SYS02'
+        ) {
           x.disabled = true;
         }
         if (
@@ -164,20 +157,4 @@ export class TaskExtendsComponent
       });
     }
   }
-
-  //#region  tree
-  // loadTreeView() {
-  //   this.api
-  //     .execSv<any>(
-  //       'TM',
-  //       'ERM.Business.TM',
-  //       'TaskBusiness',
-  //       'GetListTasksTreeAsync',
-  //       this.taskExtends?.taskID
-  //     )
-  //     .subscribe((res) => {
-  //       if (res) this.dataTree = res;
-  //     });
-  // }
-  //#endregion
 }

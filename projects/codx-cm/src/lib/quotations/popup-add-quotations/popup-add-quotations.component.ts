@@ -100,6 +100,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   disabledShowInput: boolean = false;
   planceHolderAutoNumber: any = '';
   isExitAutoNum: any = false;
+  isNewVersion = false;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -129,6 +130,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.disableContactsID = dt?.data?.disableContactsID;
     this.copyToRecID = dt?.data?.copyToRecID;
     this.listQuotationLines = [];
+    this.isNewVersion = dt?.data?.isNewVersion;
 
     if (this.action == 'edit' || this.action == 'copy') {
       let tranID =
@@ -211,7 +213,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddQuotationsAsync';
-      data = [this.quotations, this.listQuotationLines];
+      data = [this.quotations, this.listQuotationLines, this.isNewVersion];
     }
     if (this.action == 'edit') {
       op.methodName = 'EditQuotationsAsync';

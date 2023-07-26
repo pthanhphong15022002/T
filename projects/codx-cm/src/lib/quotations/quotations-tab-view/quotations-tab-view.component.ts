@@ -239,7 +239,23 @@ export class QuotationsTabViewComponent
       case 'CM0202_5':
         this.viewDetail(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   add() {
@@ -289,6 +305,7 @@ export class QuotationsTabViewComponent
       action: action,
       headerText: action == 'add' ? this.titleActionAdd : this.titleAction,
       copyToRecID: copyToRecID,
+      isNewVersion: this.isNewVersion,
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -305,9 +322,9 @@ export class QuotationsTabViewComponent
       option
     );
     dialog.closed.subscribe((e) => {
+      if (this.isNewVersion) this.isNewVersion = false;
       if (e?.event) {
         this.listQuotations.push(e.event);
-        if (this.isNewVersion) this.isNewVersion = false;
       }
     });
   }
@@ -338,6 +355,7 @@ export class QuotationsTabViewComponent
       option
     );
     dialog.closed.subscribe((e) => {
+      if (this.isNewVersion) this.isNewVersion = false;
       if (e?.event) {
         let dataUp = e?.event;
         let idxUp = this.listQuotations.findIndex(
@@ -363,6 +381,16 @@ export class QuotationsTabViewComponent
           let field = Util.camelize(v.fieldName);
           data[field] = dataCopy[field];
         });
+      }
+
+      if (this.isNewVersion) {
+        data.revision = dataCopy.revision;
+        data.versionNo = dataCopy.versionNo;
+        data.versionName = dataCopy.versionName;
+        data.status = '0';
+        data.approveStatus = '1';
+        data.approvedDate = null;
+        data.refID = dataCopy.recID;
       }
       this.quotation = data;
       this.openPopup(this.quotation, 'copy', copyToRecID);

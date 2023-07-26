@@ -18,6 +18,44 @@
         </span>
 
         <span
+          *ngIf="itemDetail?.isCurrent && !itemDetail?.isExpire"
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+          [ngbPopover]="popIsNewest"
+          [style.color]="'#0078FF'"
+          class="icon-bookmark icon-18 ms-auto"
+        ></span>
+
+        <span
+          *ngIf="itemDetail?.isCurrent && itemDetail?.isExpire"
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+          [ngbPopover]="popOverDue"
+          [style.color]="'#F64E60'"
+          class="icon-notifications icon-18 ms-auto"
+        ></span>
+
+        <span
+          *ngIf="
+            itemDetail?.isCurrent &&
+            dateNow < moment(itemDetail.effectedDate).format('YYYY-MM-DD')
+          "
+          #popOver="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="popOver.open()"
+          (mouseleave)="popOver.close()"
+          placement="left"
+          [ngbPopover]="popIsNotNewsest"
+          [style.color]="'#FFA800'"
+          class="icon-queue_play_next icon-18 ms-auto"
+        ></span>
+        <!-- <span
           *ngIf="itemDetail?.isCurrent && !itemDetail.isExpire"
           class="ms-auto"
           #popOver="ngbPopover"
@@ -40,26 +78,7 @@
           [ngbPopover]="popOverDue"
           [style.color]="'#F64E60'"
           class="icon-notifications icon-25 ms-auto"
-        ></span>
-        <ng-template #popIsNewest>
-          <span>
-            <codx-label
-              name="lblIsCurrent"
-              [formModel]="view.formModel"
-              default="Mới nhất"
-            ></codx-label>
-          </span>
-        </ng-template>
-
-        <ng-template #popOverDue>
-          <span>
-            <codx-label
-              name="lblOverDue"
-              [formModel]="view.formModel"
-              default="Đã quá hạn!"
-            ></codx-label>
-          </span>
-        </ng-template>
+        ></span> -->
       </div>
 
       <!-- 1 -->
@@ -504,3 +523,33 @@
     </codx-tabs>
   </ng-template>
 </codx-detail-tmp>
+
+<ng-template #popIsNewest>
+  <span>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Đang hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Quá hạn"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popIsNotNewsest>
+  <span>
+    <codx-label
+      name="lblIsNotCurrent"
+      [formModel]="view.formModel"
+      default="Chưa hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>

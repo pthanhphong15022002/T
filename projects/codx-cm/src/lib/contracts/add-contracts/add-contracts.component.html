@@ -178,26 +178,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="row form-group">
-        <div class="col-12">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="processID"
-              default="Quy trình áp dụng"
-            >
-            </codx-label>
-          </div>
-          <div class>
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="processID"
-              [crrValue]="contracts?.processID"
-              (valueChange)="cbxProcessChange($event)">
-            </codx-input>
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <div class="w-50">
@@ -222,25 +202,6 @@
             </codx-input>
           </div>
         </div>
-        <!-- <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName=""
-              default="Người phụ trách"
-            >
-            </codx-label>
-          </div>
-          <div class>
-            <ejs-combobox
-              [dataSource]="listParticipants"
-              (valueChange)="valueChangeOwner($event)"
-              [fields]="fieldCbxParticipants"
-              [allowFiltering]="true"
-              [value]="owner"
-            ></ejs-combobox>
-          </div>
-        </div> -->
       </div>
 
       <div class="row form-group">
@@ -363,14 +324,17 @@
               (valueChange)="valueChangeOwner($event)"
               [fields]="fieldCbxParticipants"
               [allowFiltering]="true"
-              [value]="owner"
+              [value]="contracts?.owner"
             ></ejs-combobox>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"></ng-container>
+  <ng-container
+    *ngIf="contracts?.applyProcess"
+    [ngTemplateOutlet]="tabCustomFieldDetail"
+  ></ng-container>
 </ng-template>
 
 <!-- chi tiết mặt hàng -->
@@ -1315,7 +1279,7 @@
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <div *ngIf="isExistFields">
+  <div *ngIf="listField?.length > 0">
     <div class="mb-5">
       <codx-label
         class="border-bottom border-bottom-2 border-primary text-primary p-1 fw-bold"
@@ -1324,22 +1288,18 @@
         default="Thông tin mở rộng"
       ></codx-label>
     </div>
-    <ng-container *ngFor="let step of listInstanceSteps">
-      <ng-container *ngIf="step?.fields?.length > 0">
-        <ng-container *ngFor="let item of step.fields">
-          <div class="form-group">
-            <codx-input-custom-field
-              [customField]="item"
-              [checkValid]="false"
-              [objectId]="item.recID"
-              [objectType]="'DP_Instances_Steps_Fields'"
-              [formModel]="dialog.formModel"
-              (valueChangeCustom)="valueChangeCustom($event)"
-            >
-            </codx-input-custom-field>
-          </div>
-        </ng-container>
-      </ng-container>
-    </ng-container>
+    <div class="row">
+      <div *ngFor="let item of listField" class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+          <codx-input-custom-field
+            [customField]="item"
+            [checkValid]="false"
+            [objectId]="item.recID"
+            [objectType]="'DP_Instances_Steps_Fields'"
+            [formModel]="dialog.formModel"
+            (valueChangeCustom)="valueChangeCustom($event)"
+          >
+          </codx-input-custom-field>
+      </div>
+    </div>
   </div>
 </ng-template>
