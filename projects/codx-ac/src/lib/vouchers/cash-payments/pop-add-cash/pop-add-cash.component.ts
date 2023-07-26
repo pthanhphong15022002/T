@@ -802,41 +802,29 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     switch (this.action) {
       case 'add':
+        if (type == '1') {
+          this.loadGrid();
+        } else {
+          this.popupSettledInvoices(this.typeSet);
+        }    
         if (this.hasSaved) {
-          if (this.cashpayment.updateColumn) {      
+          if (this.cashpayment.updateColumn) {    
+            this.cashpayment.updateColumn = null;
+            this.dialog.dataService.update(this.cashpayment).subscribe();     
             this.api
               .exec('AC', this.className, 'UpdateMasterAsync', [
                 this.cashpayment,
-                this.cashpayment.updateColumn == 'voucherNo'
               ])
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
-                if (res) {
-                  if (type == '1') {
-                    this.loadGrid();
-                  } else {
-                    this.popupSettledInvoices(this.typeSet);
-                  }
-                  this.cashpayment.updateColumn = null;
-                  this.dialog.dataService.update(this.cashpayment).subscribe();            
+                if (res) {                         
                   // if (res.unbounds.lineDefault != null) {
                   //   this.dataLine = res.unbounds.lineDefault;
                   // }
                 }
               });
-          }else{
-            if (type == '1') {
-              this.loadGrid();
-            } else {
-              this.popupSettledInvoices(this.typeSet);
-            }
           }
         } else {
-          if (type == '1') {
-            this.loadGrid();
-          } else {
-            this.popupSettledInvoices(this.typeSet);
-          }
           // this.journalService.checkVoucherNoBeforeSave(
           //   this.journal,
           //   this.cashpayment,

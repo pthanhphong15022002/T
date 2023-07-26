@@ -11,14 +11,19 @@ import { CodxReportAddComponent } from './popup/codx-report-add/codx-report-add.
 export class CodxListReportsComponent extends UIComponent implements OnInit{
   
   lstReport: any[] = [];
-  dialog!: DialogRef;
+  dialog: DialogRef = null;
   report: any;
   url: string = '';
+  sysMoreFC:any = null;
   headerText: string = '';
   dataSource:string = "";
   reportID:string = "";
   dataSelected:any = null;
   entityName:string = "RP_ReportList";
+  jsParameters:string = "";
+  loading:boolean = false;
+  loaded:boolean = false;
+
   constructor(
     inject: Injector,
     private notification: NotificationsService,
@@ -28,15 +33,12 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   ) {
     super(inject);
     this.dialog = dialog;
-    this.lstReport = dialogData.data?.reportList;
-    this.url = dialogData.data?.url;
     this.headerText = dialogData.data?.headerText;
     this.reportID = dialogData?.data?.reportID;
-    this.dataSource = dialogData?.data?.dataSource;
-
+    this.jsParameters = dialogData?.data?.parameters;
   }
   onInit(): void {
-    if(!this.lstReport || this.lstReport?.length == 0)
+    if(this.reportID)
     {
       this.getReportList(this.reportID);
     }
@@ -50,20 +52,15 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   getReportList(reportID:string){
     if(reportID)
     {
-      this.api.execSv("rptsys","Codx.RptBusiness.CM","ReportBusiness","GetListReportByReportIDAsync",[reportID])
+      this.api.execSv("rptsys","Codx.RptBusiness.CM","ReportBusiness","GetByReportIDAsync",[reportID])
       .subscribe((res:any[]) => {
-        if(res?.length > 0)
-        {
-          res.forEach((x:any,index:number) =>{
-            x.selected = index == 0;
-          });
+        if(res)
           this.lstReport = res;
-        }
+        this.loaded = true;
       });
     }
   }
 
-  sysMoreFC:any = null;
   // get morefunc default
   getDefaultMoreFunc(){
     this.cache.moreFunction("CoDXSystem","").subscribe((mfc:any[]) => {
@@ -84,63 +81,34 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   }
   //seletecd item
   selectedItem(data:any){
-    this.lstReport.forEach(x => x.selected = x.recID == data.recID);
     this.dataSelected = data;
   }
   // export 
   clickExport(){
-    switch(this.dataSelected.displayMode)
+    if(!this.loading)
     {
-      case"1": // printPlayout
-        break;
-      case"2": // pdf
-        break;
-      case "3": // excel
-        this.exportToExcel();
-        break;
-      case "4": // word
-        this.exportToWord();
-        break;
-    }
-    
-  }
-  // export to excel
-  exportToExcel(){
-    this.api
-    .execSv<any>(
-      'SYS',
-      'Core',
-      'CMBusiness',
-      'ExportExcelDataAsync',
-      [this.dataSource, this.dataSelected.templateID]
-    )
-    .subscribe((item) => {
-      if (item) {
-        this.downloadFile(item);
-      }
-    });
-  }
-  // export to word
-  exportToWord(){
-    this.api
-      .execSv<any>(
-        'SYS',
-        'Core',
-        'ExportWordBusiness',
-        'ExportWordTemplateAsync',
-        [null, this.dataSelected.templateID, this.dataSource]
-      )
-      .subscribe((item) => {
-        if (item) {
-          this.downloadFile(item);
-        }
+      this.loading = true;
+      this.api.execSv(this.dataSelected.service,"Codx.RptBusiness.CM","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters])
+      .subscribe((res:any) => {
+        if (res)
+        {
+          let fileName = this.dataSelected.reportName;
+          if(fileName)
+            fileName = this.dataSelected.reportName.split(".")[0];
+          this.downloadFile(res,fileName); 
+        };
+        this.loading = false; 
       });
+    }
   }
 
+
+
+
   // dowload file
-  downloadFile(data: any) {
+  downloadFile(data: any,fileName:string) {
     var sampleArr = this.base64ToArrayBuffer(data[0]);
-    this.saveByteArray(this.dataSelected.reportName, sampleArr);
+    this.saveByteArray(fileName, sampleArr);
   }
   // convert base64
   base64ToArrayBuffer(base64) {
@@ -163,8 +131,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     });
     var link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    var fileName = reportName;
-    link.download = fileName;
+    link.download = reportName;
     link.click();
   }
 

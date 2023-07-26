@@ -463,7 +463,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         res.revision = data.revision;
         res.versionNo = data.versionNo;
         res.versionName = data.versionName;
+        res.status = '0';
+        res.approveStatus = '1';
+        res.approvedDate = null;
       }
+
       var obj = {
         data: res,
         action: 'copy',
@@ -532,6 +536,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           dt.versionNo[0] + (Number.parseInt(dt.versionNo.slice(1)) + 1);
         dt.revision = 0;
         dt.versionName = dt.versionNo + '.' + dt.revision;
+        dt.revision = 0;
         this.copy(dt);
         break;
       case '3':
