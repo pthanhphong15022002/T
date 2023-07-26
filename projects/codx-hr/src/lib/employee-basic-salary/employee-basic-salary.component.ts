@@ -23,6 +23,7 @@ import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-s
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -79,6 +80,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
   viewActive: string;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];

@@ -15,6 +15,7 @@ import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-view-detail-ebenefit',
@@ -49,6 +50,8 @@ export class ViewDetailEbenefitComponent implements OnInit {
   benefitFormModel: FormModel;
   benefitFormGroup: FormGroup;
   active = 1;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   ngOnInit(): void {
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {

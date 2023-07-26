@@ -25,6 +25,7 @@ import { CmCustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail
 import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { CodxCmService } from '../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -91,7 +92,9 @@ export class CmCustomerComponent
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private cmSv: CodxCmService
+    private cmSv: CodxCmService,
+    private codxShareService: CodxShareService,
+
   ) {
     super(inject);
     if (!this.funcID)
@@ -108,7 +111,6 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
-
 
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
@@ -248,6 +250,18 @@ export class CmCustomerComponent
       case 'CM0101_5':
         this.updateStatusCustomer('2', data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        // this.df.detectChanges();
+        break;
+      }
     }
   }
 

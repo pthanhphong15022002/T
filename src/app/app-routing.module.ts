@@ -2,7 +2,7 @@ import { LayoutTenantComponent } from './modules/auth/tenants/layout/layout.comp
 import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from 'codx-core';
+import { AuthGuard, LayoutBaseComponent } from 'codx-core';
 import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
@@ -197,6 +197,16 @@ var childAuthRoutes: Routes = [
       },
     ],
   },
+  //tesst chuyen instaces qua share
+  {
+    path: 'instances',
+    // canActivate: [AuthGuard],
+    loadChildren: () =>
+      import(
+        'projects/codx-share/src/lib/components/codx-instances/codx-instances.module'
+      ).then((m) => m.CodxInstancesModule),
+  },
+  //end tesst
   {
     path: 'sos',
     component: SosComponent,

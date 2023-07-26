@@ -48,13 +48,13 @@ export class VoucherComponent extends UIComponent implements OnInit {
   predicates: string;
   dataValues: string;
   objectName:any;
-  loadingPop:any = true;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
   morefunction: any;
   payAmt: number = 0;
+  sort:any = Array<SortModel> ;
   editSettings: any = {
     allowAdding: true,
     allowDeleting: true,
@@ -100,9 +100,6 @@ export class VoucherComponent extends UIComponent implements OnInit {
     // if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     // this.gridHeight = hBody - (hTab + 120);
     this.acService.setPopupSize(this.dialog, '80%', '80%');
-    setTimeout(() => {
-      this.loadingPop = false;
-    }, 1000);
   }
 
   setDefault(){
@@ -110,6 +107,10 @@ export class VoucherComponent extends UIComponent implements OnInit {
     this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
     this.mapPredicates.set('objectID', 'ObjectID = @0');
     this.mapDataValues.set('objectID', this.cashpayment.objectID);
+    if(this.type == 1){
+      this.payAmt = this.cashpayment.totalAmt;
+      this.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
+    }  
   }
   //#endregion
 
@@ -210,33 +211,33 @@ export class VoucherComponent extends UIComponent implements OnInit {
     }
 
     if (field === 'payType') {
-      let sort: Array<SortModel> = [];
+      this.sort = [];
       switch (e.data) {
         case '1':
           break;
         case '2':
-          sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
+          this.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
           break;
         case '3':
-          sort = [{ field: 'InvoiceDueDate', dir: 'desc' }];
+          this.sort = [{ field: 'InvoiceDueDate', dir: 'desc' }];
           break;
         case '4':
-          sort = [
+          this.sort = [
             { field: 'BalAmt', dir: 'asc' },
             { field: 'InvoiceDueDate', dir: 'asc' },
           ];
           break;
         case '5':
-          sort = [
+          this.sort = [
             { field: 'BalAmt', dir: 'desc' },
             { field: 'InvoiceDueDate', dir: 'asc' },
           ];
           break;
         default:
-          sort = [];
+          this.sort = [];
           break;
       }
-      this.gridModel.sort = sort;
+      this.gridModel.sort = this.sort;
     }
   }
 
@@ -371,6 +372,9 @@ export class VoucherComponent extends UIComponent implements OnInit {
               this.grid.gridRef?.selectRows(res[2]);
             }, 100);
           }
+          setTimeout(() => {
+            this.grid.refresh()
+          });     
         }
       });
   }

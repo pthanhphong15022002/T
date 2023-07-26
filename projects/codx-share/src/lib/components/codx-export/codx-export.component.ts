@@ -38,7 +38,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   active = '1';
   gridModel: any;
   recID: any;
-  field:any;
+  field: any;
   data = {};
   dataSource: string = '';
   dataEx: any;
@@ -105,8 +105,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
     private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
-  {
+  ) {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
@@ -143,7 +142,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
       var arr = this.gridModel?.entityName.split('_');
       this.services = arr[0];
       this.cache.entity(this.gridModel?.entityName).subscribe((res) => {
-        if (res) {
+        if (res && res.isPK) {
           this.idField = res.isPK;
         }
       });

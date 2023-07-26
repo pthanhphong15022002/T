@@ -47,12 +47,12 @@ export class JournalService {
   }
 
   getJournal(journalNo: string): Observable<IJournal> {
-    return this.apiService
-      .exec<any>('AC', 'JournalsBusiness', 'GetAsync', journalNo)
-      .pipe(
-        tap(),
-        map((r) => r)
-      );
+    return this.apiService.exec<any>(
+      'AC',
+      'JournalsBusiness',
+      'GetAsync',
+      journalNo
+    );
 
     // const journalOptions = new DataRequest();
     // journalOptions.entityName = 'AC_Journals';
