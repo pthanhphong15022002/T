@@ -484,7 +484,11 @@ export class PopupAddSalesInvoiceComponent
 
   @HostListener('click', ['$event.target'])
   onClick(e: HTMLElement): void {
-    if (this.grid.gridRef.isEdit && !e.closest('.edit-value')) {
+    if (
+      this.grid.gridRef.isEdit &&
+      !e.closest('.edit-value') &&
+      !e.closest('.e-gridcontent')
+    ) {
       this.grid.endEdit();
     }
   }

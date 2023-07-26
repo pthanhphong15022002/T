@@ -71,8 +71,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   expanded: boolean = false;
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
   vatinvoices: VATInvoices = new VATInvoices();
-  isInvoiceRefHidden: boolean = true;
-  lineSubject = new Subject<IPurchaseInvoiceLine[]>();
   fmVATInvoices: FormModel = {
     entityName: 'AC_VATInvoices',
     formName: 'VATInvoices',
@@ -146,10 +144,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
-    this.lineSubject.subscribe((lines: IPurchaseInvoiceLine[]) => {
-      this.isInvoiceRefHidden = lines.find((l) => l.vatid) ? false : true;
-    });
-
     this.acService.getACParameters().subscribe((res) => {
       this.acParams = res;
     });
@@ -186,7 +180,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       options.pageLoading = false;
       this.acService.loadDataAsync('AC', options).subscribe((lines) => {
         this.lines = lines;
-        this.lineSubject.next(lines);
       });
     }
   }
@@ -386,8 +379,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
           return;
         }
-
-        this.lineSubject.next(this.lines);
       });
   }
 
@@ -410,8 +401,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
           return;
         }
-
-        this.lineSubject.next(this.lines);
       });
   }
 
@@ -537,7 +526,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   onClick(e: HTMLElement): void {
     if (
       this.gridPurchaseInvoiceLines.gridRef.isEdit &&
-      !e.closest('.edit-value')
+      !e.closest('.edit-value') &&
+      !e.closest('.e-gridcontent')
     ) {
       this.gridPurchaseInvoiceLines.endEdit();
     }
@@ -563,7 +553,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.purchaseInvoiceLineService.delete([data]).subscribe((res: any) => {
       if (res.error === false) {
         this.gridPurchaseInvoiceLines.deleteRow(data, true);
-        this.lineSubject.next(this.lines);
       }
     });
   }

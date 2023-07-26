@@ -292,7 +292,7 @@
         [autoFitColumns]="false"
         [autoAddRow]="true"
         (eventAction)="autoAddRowSet($event)"
-        (created)="gridCreated()"
+        (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"
         (onEdit)="onEdit($event)"
         (onDoubleClick)="onDoubleClick($event)"
