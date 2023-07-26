@@ -23,6 +23,18 @@
           (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div>
+      <div
+        class="ms-3 d-flex align-items-center"
+        #popoverDetails="ngbPopover"
+        [ngbPopover]="'Hướng dẫn'"
+        (mouseenter)="popoverDetails.open()"
+        (mouseleave)="popoverDetails.close()"
+        (click)="showGuide(popoverDetails)"
+      >
+        <span
+          class="icon-event_notes icon-24 text-hover-primary cursor-pointer"
+        ></span>
+      </div>
     </div>
     <div class="right d-flex align-items-center">
       <div
@@ -57,8 +69,8 @@
       ></codx-input>
     </div>
   </header>
-  <main class="main-step" [ngStyle]="{'height': taskHeight}">
-      <ng-container
+  <main class="main-step" [ngStyle]="{ height: taskHeight }">
+    <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"
     ></ng-container>
@@ -85,31 +97,31 @@
         <ngx-skeleton-loader
           style="width: 100%"
           [theme]="{
-                     width: '100%',
-                     'border-radius': '5px',
-                     height: '60px',
-                     'margin': '0px'
-                   }"
+            width: '100%',
+            'border-radius': '5px',
+            height: '60px',
+            margin: '0px'
+          }"
         ></ngx-skeleton-loader>
       </div>
       <div style="padding-left: 70px; width: 100%">
         <ngx-skeleton-loader
           style="width: 100%"
           [theme]="{
-                     width: '100%',
-                     'border-radius': '10px',
-                     height: '100px',
-                     'margin': '0px'
-                   }"
+            width: '100%',
+            'border-radius': '10px',
+            height: '100px',
+            margin: '0px'
+          }"
         ></ngx-skeleton-loader>
         <ngx-skeleton-loader
           style="width: 100%"
           [theme]="{
-                     width: '100%',
-                     'border-radius': '10px',
-                     height: '100px',
-                     'margin': '0px'
-                   }"
+            width: '100%',
+            'border-radius': '10px',
+            height: '100px',
+            margin: '0px'
+          }"
         ></ngx-skeleton-loader>
       </div>
       <hr class="m-0 p-0" />
@@ -135,21 +147,25 @@
         [isTaskFirst]="i == 0 ? true : false"
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
-        (changeProgress)= "autoStart($event)"
+        (changeProgress)="autoStart($event)"
       ></codx-step-task>
-      <div *ngIf="(step?.isFailStep || step?.isSuccessStep) &&  !['0','1','2'].includes(dataSelected?.status) ">
-        <div >
+      <div
+        *ngIf="
+          (step?.isFailStep || step?.isSuccessStep) &&
+          !['0', '1', '2'].includes(dataSelected?.status)
+        "
+      >
+        <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <span class="w-20px me-2">
-                <span [class]="getReasonValue(step?.isSuccessStep)?.icon"
-                  class="icon-20">
+                <span
+                  [class]="getReasonValue(step?.isSuccessStep)?.icon"
+                  class="icon-20"
+                >
                 </span>
               </span>
-              <span
-                class="line-clamp line-clamp-1 fs-6 fw-bold"
-
-              >
+              <span class="line-clamp line-clamp-1 fs-6 fw-bold">
                 {{ step?.stepName || "" }}
               </span>
             </div>
@@ -235,7 +251,7 @@
   <div
     class="form-group mt-3"
     *ngIf="
-    listStepReason?.length > 0 && listStepReason !== null;
+      listStepReason?.length > 0 && listStepReason !== null;
       else dataIsEmpty
     "
   >
@@ -267,4 +283,67 @@
 
 <ng-template #dataIsEmpty>
   <codx-no-data></codx-no-data>
+</ng-template>
+
+<ng-template #popupGuide>
+  <div class="d-flex justify-content-between py-4 px-7">
+    <span class="text-dark fw-bold fs-3 me-6">
+      <codx-label
+        name="lblGuide"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+        default="Các bước hướng dẫn thực hiện quy trình"
+      ></codx-label>
+    </span>
+    <div>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light"
+        (click)="dialogGuide.close()"
+      >
+        <span class="icon-close icon-16"></span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="pb-2 px-7"
+    style="max-height: 400px; overflow: auto"
+    *ngIf="stepViews?.length > 0"
+  >
+    <ng-container *ngFor="let item of stepViews; let i = index">
+      <div class="d-flex text-gray-700 pb-1 pt-2">
+        <span class="me-2 fw-bold">
+          <codx-label
+            name="lblPhase"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Bước"
+          ></codx-label>
+          {{ i + 1 + ":" }}
+        </span>
+        <span>{{ item.stepName }}</span>
+      </div>
+    </ng-container>
+    <div>
+      <span class="text-dark fw-bold fs-4 me-6">
+        <codx-label
+          name="lblMemoDetail"
+          [formName]="'DPProcesses'"
+          [gridViewName]="'grvDPProcesses'"
+          default="Hướng dẫn chi tiết các giai đoạn"
+        ></codx-label>
+      </span>
+    </div>
+    <ng-container *ngFor="let item of stepViews">
+      <div class="text-dark fw-bold fs-5 me-6">
+        <span>{{ item.stepName }}</span>
+      </div>
+      <div
+        *ngIf="item?.memo"
+        [innerHTML]="
+        item?.memo | formatvalue : formModel : 'Memo' | async
+      "
+      ></div>
+    </ng-container>
+  </div>
 </ng-template>

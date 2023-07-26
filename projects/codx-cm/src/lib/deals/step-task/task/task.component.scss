@@ -1,7 +1,9 @@
+.list-contracts{
+   display: flex;
+   flex-direction: column;
+}
 .add-contract{
-   position: fixed;
-   bottom: 53px;
-   z-index: 10;
+//   flex: 1;
 }
 .icon-container{
    width: 32px;
