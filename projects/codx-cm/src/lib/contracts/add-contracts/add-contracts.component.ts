@@ -27,6 +27,7 @@ import {
   CallFuncService,
   CodxInputComponent,
   NotificationsService,
+  AuthStore,
 } from 'codx-core';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
@@ -92,6 +93,7 @@ export class AddContractsComponent implements OnInit {
   customerIdOld = null;
   disabledDelActualDate = false;
 
+  user;
   action = 'add';
   tabClicked = '';
   customerID = {};
@@ -101,9 +103,8 @@ export class AddContractsComponent implements OnInit {
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   listCustomFile: any[] = [];
-  isExistFields = false;
+  listField = [];
 
-  owner;
   listParticipants;
   objPermissions = {};
   readonly fieldCbxParticipants = { text: 'objectName', value: 'objectID' };
@@ -143,6 +144,7 @@ export class AddContractsComponent implements OnInit {
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
+    private authStore: AuthStore,
     private cmService: CodxCmService,
     private stepService: StepService,
     private callfunc: CallFuncService,
@@ -160,6 +162,7 @@ export class AddContractsComponent implements OnInit {
     this.headerTest = dt?.data?.actionName;
     this.contractsInput = dt?.data?.contract;
 
+    this.user = this.authStore.get();
     this.getFormModel();
     this.listTypeContract = contractService.listTypeContract;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
@@ -210,7 +213,7 @@ export class AddContractsComponent implements OnInit {
       this.contracts.contractDate = new Date();
       this.contracts.effectiveFrom = new Date();
       this.contracts.paidAmt = 0;
-      this.contracts.status = '0';
+      this.contracts.status = '1';
       this.contracts.remainAmt = 0;
       this.contracts.useType = '1';
       this.contracts.pmtStatus = '1';
@@ -533,6 +536,15 @@ export class AddContractsComponent implements OnInit {
     if (event?.field == 'currencyID' && this.checkPhone) {
       this.loadExchangeRate(event?.data);
     }
+    if(event?.field == 'applyProcess'){
+      if(event?.data){
+        this.contracts.owner = null;
+      }else{
+        this.contracts.processID = null;
+        this.contracts.owner = this.user?.userID;
+        this.listInstanceSteps = null;
+      }
+    }
   }
 
   valueChangeCombobox(event) {
@@ -584,7 +596,7 @@ export class AddContractsComponent implements OnInit {
   setDataInstance(contract: CM_Contracts, instance: tmpInstances) {
     instance.title = contract?.contractName;
     instance.instanceNo = contract?.contractID;
-    instance.owner = this.owner;
+    instance.owner = contract.owner;
     instance.processID = contract?.processID;
     contract.refID = instance?.recID;
     contract.stepID = this.listInstanceSteps[0].stepID;
@@ -952,7 +964,7 @@ export class AddContractsComponent implements OnInit {
 
   valueChangeOwner($event) {
     if ($event) {
-      this.owner = $event;
+      this.contracts.owner = $event;
     }
   }
 
@@ -966,7 +978,6 @@ export class AddContractsComponent implements OnInit {
           this.listInstanceSteps = result?.steps;
           this.listParticipants = result?.permissions;
           this.contracts.contractID = result?.dealId;
-          this.isExistFields = this.ischeckFields(this.listInstanceSteps);
           this.changeDetectorRef.detectChanges();
         } else {
           this.getListInstanceSteps(this.contracts?.processID);
@@ -998,16 +1009,16 @@ export class AddContractsComponent implements OnInit {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.isExistFields = this.ischeckFields(this.listInstanceSteps);
+        this.getFields(this.listInstanceSteps);
       }
     })
   }
 
-  ischeckFields(steps: any): boolean {
+  getFields(steps: any): boolean {
     if (steps?.length > 0 && steps != null) {
       for (let i = 0; i < steps.length; i++) {
         if (steps[i]?.fields.length > 0 && steps[i].fields != null) {
-          return true;
+          this.listField.push(...steps[i].fields);
         }
       }
     }

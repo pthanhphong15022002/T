@@ -55,6 +55,7 @@ import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { CodxCmModule } from 'projects/codx-cm/src/lib/codx-cm.module';
+import { CodxInstancesComponent } from 'projects/codx-share/src/lib/components/codx-instances/codx-instances.component';
 
 export const routes: Routes = [
   {
@@ -68,6 +69,7 @@ export const routes: Routes = [
       },
       {
         path: 'instances/:funcID/:processID',
+        //component: CodxInstancesComponent,
         component: InstancesComponent,
         data: { noReuse: true },
       },

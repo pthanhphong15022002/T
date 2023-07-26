@@ -511,7 +511,7 @@ export class CM_Contracts {
   delPhone: string;
   delContactID: string; // Liên hệ giao hàng
   processID: string; // Liên hệ giao hàng
-
+  applyProcess: boolean;
   // Điều khoản hồ sơ liên quan -- memo
 }
 

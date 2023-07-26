@@ -211,6 +211,7 @@ import { CodxAddApproversComponent } from './components/codx-approval-procress/c
 import { CodxAddESignFileComponent } from './components/codx-approval-procress/codx-add-esignfile/codx-add-esignfile.component';
 import { CodxAddSignFileComponent } from './components/codx-approval-procress/codx-add-sign-file/codx-add-sign-file.component';
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
+import { CodxInstancesComponent } from './components/codx-instances/codx-instances.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -350,6 +351,7 @@ const T_Component: Type<any>[] = [
   CodxViewTaskComponent,
   CodxTaskbarComponent,
   CodxNoDataComponent,
+  CodxInstancesComponent,
 
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
@@ -369,8 +371,6 @@ const T_Component: Type<any>[] = [
   //report
   CodxReportAddComponent,
 
-
-  
   //Approval Process
   CodxAddApproversComponent,
   CodxAddESignFileComponent,

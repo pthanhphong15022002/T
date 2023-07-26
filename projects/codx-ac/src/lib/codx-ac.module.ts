@@ -323,7 +323,6 @@ export const routes: Routes = [
     CircularGaugeModule,
     TooltipModule,
     ChartAllModule,
-    SidebarModule
   ],
 })
 export class AcModule {}
