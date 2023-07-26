@@ -239,7 +239,23 @@ export class QuotationsTabViewComponent
       case 'CM0202_5':
         this.viewDetail(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   add() {
@@ -461,6 +477,9 @@ export class QuotationsTabViewComponent
           dt.versionNo[0] + (Number.parseInt(dt.versionNo.slice(1)) + 1);
         dt.revision = 0;
         dt.versionName = dt.versionNo + '.' + dt.revision;
+        dt.status = '0';
+        dt.approveStatus = '1';
+        dt.approvedDate = null;
         this.copy(dt);
         break;
       case '3':
