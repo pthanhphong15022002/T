@@ -62,6 +62,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   oldLocationStr: any;
 
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('orgUnit') orgUnit: any;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
@@ -100,6 +101,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.editedLocation = this.employeeObj.locationID;
     }
     this.formModel = dialog.formModel;
+  }
+
+  ngAfterViewInit(){
+    debugger
   }
 
   initForm() {
@@ -454,5 +459,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           } else this.notify.notifyCode('SYS021');
         });
     }
+  }
+
+  onRenderOrgUnitID(event){
+    debugger
   }
 }

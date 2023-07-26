@@ -1225,12 +1225,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         // Load full thong tin current cua employee
         this.getEmpCurrentData().subscribe((res) => {
           if(res){
+            debugger
             this.crrPassport = res[0];
-            this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
+            if(this.crrPassport){
+              this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
+            }
             this.crrVisa = res[1];
-            this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+            if(this.crrVisa){
+              this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+            }
             this.crrWorkpermit = res[2];
-            this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+            if(this.crrWorkpermit){
+              this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+            }
             this.lstFamily = res[3];
             this.calculateEFamilyAge();
             this.lstExperiences = res[4];
@@ -1239,6 +1246,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.listCrrBenefit = res[6];
             this.loadEBenefit = true;
             this.crrEContract = res[7]
+            debugger
           }
         })
       }
@@ -2119,22 +2127,23 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 }
 
   initEmpProcess() {
-    if (this.employeeID) {
-      if (!this.lstContractType) {
-        let rqContractType = new DataRequest();
-        rqContractType.entityName = 'HR_ContractTypes';
-        rqContractType.dataValues = '1';
-        rqContractType.predicates = 'ContractGroup =@0';
-        rqContractType.pageLoading = false;
+    debugger
+    // if (this.employeeID) {
+    //   if (!this.lstContractType) {
+    //     let rqContractType = new DataRequest();
+    //     rqContractType.entityName = 'HR_ContractTypes';
+    //     rqContractType.dataValues = '1';
+    //     rqContractType.predicates = 'ContractGroup =@0';
+    //     rqContractType.pageLoading = false;
 
-        this.hrService.getCrrEContract(rqContractType).subscribe((res) => {
-          if (res && res[0]) {
-            this.lstContractType = res[0];
-            this.df.detectChanges();
-          }
-        });
-      }
-    }
+    //     this.hrService.getCrrEContract(rqContractType).subscribe((res) => {
+    //       if (res && res[0]) {
+    //         this.lstContractType = res[0];
+    //         this.df.detectChanges();
+    //       }
+    //     });
+    //   }
+    // }
 
     //#region EContract - Hợp đồng lao động
     // if (!this.eContractColumnGrid) {

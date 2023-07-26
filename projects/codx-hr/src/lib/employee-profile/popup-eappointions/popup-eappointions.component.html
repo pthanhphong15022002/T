@@ -127,7 +127,9 @@
       <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
+        #orgUnit
         [disabled]="disabledInput"
+          (render)="onRenderOrgUnitID($event)"
           field="orgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
