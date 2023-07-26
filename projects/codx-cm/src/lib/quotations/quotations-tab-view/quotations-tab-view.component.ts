@@ -91,6 +91,7 @@ export class QuotationsTabViewComponent
   itemSelected: any;
   popupView: DialogRef;
   isNewVersion: boolean;
+  oldVersion: any;
 
   constructor(
     private inject: Injector,
@@ -322,10 +323,18 @@ export class QuotationsTabViewComponent
       option
     );
     dialog.closed.subscribe((e) => {
-      if (this.isNewVersion) this.isNewVersion = false;
       if (e?.event) {
         this.listQuotations.push(e.event);
+        if (this.isNewVersion && this.oldVersion) {
+          this.oldVersion.newVerCreated = true;
+          let idx = this.listQuotations.findIndex(
+            (x) => x.recID == this.oldVersion.recID
+          );
+          if (idx != -1) this.listQuotations[idx] = this.oldVersion;
+          this.oldVersion = null;
+        }
       }
+      this.isNewVersion = false;
     });
   }
 
@@ -394,20 +403,6 @@ export class QuotationsTabViewComponent
       }
       this.quotation = data;
       this.openPopup(this.quotation, 'copy', copyToRecID);
-      // if (!this.quotation.quotationsID) {
-      //   this.api
-      //     .execSv<any>(
-      //       'SYS',
-      //       'AD',
-      //       'AutoNumbersBusiness',
-      //       'GenAutoNumberAsync',
-      //       [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-      //     )
-      //     .subscribe((id) => {
-      //       res.quotationID = id;
-      //       this.openPopup(this.quotation, 'copy', copyToRecID);
-      //     });
-      // } else this.openPopup(this.quotation, 'copy', copyToRecID);
     });
   }
 
@@ -485,6 +480,7 @@ export class QuotationsTabViewComponent
     switch (dt.status) {
       case '4':
       case '2':
+        this.oldVersion = JSON.parse(JSON.stringify(data));
         dt.versionNo =
           dt.versionNo[0] + (Number.parseInt(dt.versionNo.slice(1)) + 1);
         dt.revision = 0;

@@ -13,12 +13,10 @@ import {
   CRUDService,
   CacheService,
   CallFuncService,
-  CodxComboboxComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
   CodxInputComponent,
   DialogData,
-  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -27,18 +25,8 @@ import {
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import {
-  CM_Deals,
-  CM_Products,
-  CM_Quotations,
-  CM_QuotationsLines,
-} from '../../models/cm_model';
-import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
-import { CM_Contacts } from '../../models/tmpCrm.model';
-import { TempComponent } from 'codx-core/lib/templates/base-temp/base.component';
-import { firstValueFrom, map } from 'rxjs';
-import { DateTimePickerAllModule } from '@syncfusion/ej2-angular-calendars';
 import { QuotationsLinesComponent } from '../../quotations-lines/quotations-lines.component';
 @Component({
   selector: 'lib-popup-add-quotations',
@@ -248,6 +236,7 @@ export class PopupAddQuotationsComponent implements OnInit {
         .exec<any>('CM', 'QuotationsBusiness', 'AddQuotationsAsync', [
           this.quotations,
           this.listQuotationLines,
+          this.isNewVersion,
         ])
         .subscribe((res) => {
           if (res) {
