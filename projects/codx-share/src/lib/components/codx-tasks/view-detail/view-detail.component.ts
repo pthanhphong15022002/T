@@ -12,15 +12,9 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  ApiHttpService,
-  CallFuncService,
-  DialogData,
-  DialogRef,
-  FormModel,
-} from 'codx-core';
+import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { TM_Parameter, TM_TaskGroups } from '../model/task.model';
-import { AuthStore, CRUDService } from 'codx-core/public-api';
+import { CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tmpReferences } from '../../../models/assign-task.model';
 
@@ -104,7 +98,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(
     private api: ApiHttpService,
-    private callfc: CallFuncService,
     public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
@@ -227,6 +220,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                   (data.owner == data.createdBy && data.category == '2'))) ||
               data.status == '80' ||
               data.status == '90' ||
+              data.status == '05' ||
               data.extendControl == '0'
             )
               x.disabled = true;
@@ -242,19 +236,23 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           case 'TMT04023':
             if (data.approveStatus != '3') x.disabled = true;
             break;
-          //an giao viec
-          case 'TMT02015':
-          case 'TMT02025':
-            if (data.status == '90' || data.status == '80') x.disabled = true;
-            break;
           case 'SYS005':
             x.disabled = true;
             break;
+          //an giao viec
+          case 'TMT02015':
+          case 'TMT02025':
           //an cap nhat tien do khi hoan tat
           case 'TMT02018':
           case 'TMT02026':
           case 'TMT02035':
-            if (data.status == '90' || data.status == '80') x.disabled = true;
+            if (
+              data.status == '90' ||
+              data.status == '80' ||
+              data.status == '05' ||
+              data.status == '00'
+            )
+              x.disabled = true;
             break;
           //an voi ca TMT026
           case 'SYS02':
@@ -290,99 +288,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             break;
         }
       });
-      //  code cu
-      // e.forEach((x) => {
-      //   if (
-      //     (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-      //     data.confirmStatus != '1'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   if (
-      //     (x.functionID == 'TMT02019' || x.functionID == 'TMT02027')&&
-      //     data.verifyControl == '0' &&
-      //     data.category == '1'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //danh cho taskExtend
-      //   if (
-      //     (x.functionID == 'SYS02' ||
-      //       x.functionID == 'SYS03' ||
-      //       x.functionID == 'SYS04') &&
-      //     this.taskExtends
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   if (
-      //     (x.functionID == 'TMT04011' || x.functionID == 'TMT04012') &&
-      //     this.taskExtends.status != '3'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //tắt duyệt xác nhận
-      //   if (
-      //     (x.functionID == 'TMT04032' || x.functionID == 'TMT04031') &&
-      //     data.verifyStatus != '1'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //tắt duyệt đánh giá
-      //   if (
-      //     (x.functionID == 'TMT04021' ||
-      //       x.functionID == 'TMT04022' ||
-      //       x.functionID == 'TMT04023') &&
-      //     data.approveStatus != '3'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an giao viec
-      //   if (x.functionID == 'SYS005') {
-      //     x.disabled = true;
-      //   }
-      //   if (
-      //     (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
-      //     data.status == '90'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an cap nhat tien do khi hoan tat
-      //   if (
-      //     (x.functionID == 'TMT02018' ||
-      //       x.functionID == 'TMT02026' ||
-      //       x.functionID == 'TMT02035') &&
-      //     data.status == '90'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an voi ca TMT026
-      //   if (
-      //     (x.functionID == 'SYS02' ||
-      //       x.functionID == 'SYS03' ||
-      //       x.functionID == 'SYS04') &&
-      //     (this.formModel?.funcID == 'TMT0206' ||
-      //       this.formModel?.funcID == 'MWP0063')
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an voi fun TMT03011
-      //   if (
-      //     (this.formModel?.funcID == 'TMT03011' ||
-      //       this.formModel?.funcID == 'TMT05011') &&
-      //     data.category == '1' &&
-      //     data.createdBy != this.user.userID &&
-      //     !this.user?.administrator &&
-      //     (x.functionID == 'SYS02' || x.functionID == 'SYS03')
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an TMT02019
-      //   if (
-      //     (x.functionID == 'TMT02019' || x.functionID == 'TMT02027') &&
-      //     (data.status == '80' || data.status == '90' || data.extendControl)
-      //   )
-      //     x.disabled = true;
-      // });
     }
   }
 

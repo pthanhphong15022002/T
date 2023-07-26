@@ -1,4 +1,7 @@
-<div *ngIf="viewType == '0'" (click)="openViewPopup ? openPopup() : ''">
+<div
+  *ngIf="viewType == '0'"
+  (click)="openViewPopup && countData > 0 ? openPopup() : ''"
+>
   <div class="d-flex align-items-center text-hover-primary cursor-pointer">
     <div class="d-flex align-items-center">
       <i class="icon-i-paperclip icon-16"></i>
@@ -21,7 +24,10 @@
   >
 </div>
 
-<div *ngIf="viewType == '2'" (click)="openViewPopup ? openPopup() : ''">
+<div
+  *ngIf="viewType == '2'"
+  (click)="openViewPopup && countData > 0 ? openPopup() : ''"
+>
   <span class="icon-i-paperclip icon-16"> </span>
   <span
     *ngIf="countData > 0"
@@ -33,7 +39,7 @@
 
 <div
   *ngIf="viewType == '3'"
-  (click)="openViewPopup ? openPopup() : ''"
+  (click)="openViewPopup && countData > 0 ? openPopup() : ''"
   class="d-flex align-items-center position-relative me-4"
 >
   <span class="icon-i-paperclip icon-16"></span>
@@ -44,7 +50,10 @@
   >
 </div>
 
-<div *ngIf="viewType == '4'" (click)="openViewPopup ? openPopup() : ''">
+<div
+  *ngIf="viewType == '4'"
+  (click)="openViewPopup && countData > 0 ? openPopup() : ''"
+>
   <div class="d-flex align-items-center cursor-pointer text-hover-primary">
     <div class="d-flex align-items-center me-1">
       <i class="icon-i-paperclip icon-16"></i>

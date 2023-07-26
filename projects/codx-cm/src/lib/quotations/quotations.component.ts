@@ -588,7 +588,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                 if (res.eSign) {
                   //kys soos
                 } else {
-                  this.release(dt, res.processID);
+                  this.release(dt, res);
                 }
               });
           } else {
@@ -604,32 +604,56 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     });
   }
   //Gửi duyệt
-  release(data: any, processID: any) {
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-        else {
-          this.codxCM
-            .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-            .subscribe((q) => {
-              if (q) {
-                this.itemSelected = q;
-                this.view.dataService.update(this.itemSelected).subscribe();
-              }
-              this.notiService.notifyCode('ES007');
-            });
-        }
-      });
+  release(data: any, category: any) {
+    // this.codxShareService
+    //   .codxRelease(
+    //     this.view.service,
+    //     data?.recID,
+    //     category.processID,
+    //     this.view.formModel.entityName,
+    //     this.view.formModel.funcID,
+    //     '',
+    //     data?.title,
+    //     ''
+    //   )
+    //   .subscribe((res2: any) => {
+    //     if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+    //     else {
+    //       this.codxCM
+    //         .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+    //         .subscribe((q) => {
+    //           if (q) {
+    //             this.itemSelected = q;
+    //             this.view.dataService.update(this.itemSelected).subscribe();
+    //           }
+    //           this.notiService.notifyCode('ES007');
+    //         });
+    //     }
+    //   });
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback
+    );
+  }
+  //call Back
+  releaseCallback(res: any) {
+    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    else {
+      this.codxCM
+        .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+        .subscribe((q) => {
+          if (q) {
+            this.itemSelected = q;
+            this.view.dataService.update(this.itemSelected).subscribe();
+          }
+          this.notiService.notifyCode('ES007');
+        });
+    }
   }
 
   //Huy duyet

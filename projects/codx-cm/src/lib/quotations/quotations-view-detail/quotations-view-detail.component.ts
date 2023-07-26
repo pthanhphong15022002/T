@@ -109,7 +109,6 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
         }
       });
     if (this.itemSelected.refID) {
-      debugger;
       this.codxCM
         .getOneObject(this.itemSelected.refID, 'QuotationsBusiness')
         .subscribe((ref) => {
