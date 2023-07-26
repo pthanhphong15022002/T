@@ -389,20 +389,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       this.openPopup(res);
-      // if (!res.quotationsID) {
-      //   this.api
-      //     .execSv<any>(
-      //       'SYS',
-      //       'AD',
-      //       'AutoNumbersBusiness',
-      //       'GenAutoNumberAsync',
-      //       [this.formModel.funcID, this.formModel.entityName, 'QuotationID']
-      //     )
-      //     .subscribe((id) => {
-      //       res.quotationID = id;
-      //       this.openPopup(res);
-      //     });
-      // } else this.openPopup(res);
     });
   }
 
