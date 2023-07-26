@@ -773,6 +773,13 @@ export class ContractsComponent extends UIComponent {
               this.listInsStep = res;
             }
           })
+          this.contractService
+            .updateStatus([data?.recID, "2"])
+            .subscribe((res) => {
+              if (res) {
+                data.status = '2';
+              }
+            });
         }
       });
    

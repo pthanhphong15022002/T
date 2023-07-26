@@ -126,6 +126,8 @@
       id="chartBusinessLinesHeader"
       class="fs-5 fw-bold"
       name="lblChartBusinessLines"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
       default="Thống kê tỷ lệ thành công, thất bại trong năm theo dòng sản phẩm"
     ></codx-label>
     <div id="chartBusinessLinesButton" class="mt-3">
@@ -205,6 +207,8 @@
     <codx-label
       class="fs-5 fw-bold"
       name="lblChartOwners"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
       default="Top nhân viên có nhiều cơ hội thành công nhất"
     ></codx-label>
     <div class="mt-5" style="overflow-y: auto; max-height: 85%">
@@ -284,6 +288,8 @@
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonSuscess"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
       default="Lý do thành công"
     ></codx-label>
     <div
@@ -330,6 +336,8 @@
     <codx-label
       class="fs-5 fw-bold"
       name="lblReasonFails"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
       default="Lý do thất bại"
     ></codx-label>
     <div
@@ -368,39 +376,69 @@
 
 <!-- Thống kê hiệu suất trong năm -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="10" title="" style="overflow: hidden">
+  <div class="w-100 h-100" id="10" title="">
     <codx-label
       class="fs-5 fw-bold"
       name="lblEfficiency"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
       default="Thống kê hiệu suất trong năm"
     ></codx-label>
-    <ng-container *ngIf="true; else noData">
-      <div class="w-100" [style.height]="'97%'">
-        <ejs-chart
-          style="display: block"
-          id="chart-container-2"
-          [primaryXAxis]="primaryXAxisBubble"
-          [primaryYAxis]="primaryYAxisBubble"
-          [title]=""
-        >
-          <e-series-collection>
-            <ng-container *ngFor="let item of dataSource">
-              <e-series
-                [dataSource]="item.dataSource"
-                type="Bubble"
-                xName="x"
-                yName="y"
-                size="d"
-                [name]="item.name"
-                [fillColor]="item.color"
-                [border]="border"
-                [tooltip]="item.name"
-                [width]="10"
+    <ng-container *ngIf="dataStatisticTarget; else noData">
+      <div class="row w-100">
+        <div class="col-10">
+          <div class="control-section mb-10">
+            <div class="trackball-control-section" align="center">
+              <ejs-chart
+                style="display: block"
+                id="chartcontainer"
+                [primaryXAxis]="primaryXAxisRatio"
+                [primaryYAxis]="primaryYAxisRatio"
+                [tooltip]="tooltip"
+                [legendSettings]="legend"
+                (pointRender)="setColorPoint($event)"
               >
-              </e-series>
-            </ng-container>
-          </e-series-collection>
-        </ejs-chart>
+                <e-series-collection>
+                  <e-series
+                    [dataSource]="dataStatisticTarget"
+                    [minRadius]="minRadius"
+                    [maxRadius]="maxRadius"
+                    type="Bubble"
+                    xName="totalTarget"
+                    yName="totalDealValue"
+                    size="quantity"
+                    [marker]="markerRatio"
+                    tooltipMappingName="businessLineName"
+                    [border]="border"
+                  >
+                  </e-series>
+                </e-series-collection>
+              </ejs-chart>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <codx-label
+            class="codx-label fw-bold"
+            name="lblNote"
+            formName="CMMyDashboard"
+            gridViewName="grvCMMyDashboard"
+            default="Chú thích"
+          ></codx-label>
+          <ng-container *ngFor="let item of dataStatisticTarget">
+            <div class="d-flex mb-2 align-items-center">
+              <span
+                class="color-note me-2"
+                [style.background-color]="item.color"
+              ></span>
+              <span
+                [ngbTooltip]="item.businessLineName"
+                class="line-clamp-name"
+                [innerHTML]="item.businessLineName"
+              ></span>
+            </div>
+          </ng-container>
+        </div>
       </div>
     </ng-container>
   </div>

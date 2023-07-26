@@ -994,7 +994,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           if (this.isTab) data[i].createdOn = this.date;
           else data[i].createdOn = new Date();
           toltalUsed += data[i].fileSize;
-          if (total > 1) data[i] = await this.addFileLargeLong(data[i], false);
+          if (total > 1 && !data[i].uploadId) data[i] = await this.addFileLargeLong(data[i], false);
         }
         this.addPermissionA();
         if (remainingStorage >= 0 && toltalUsed > remainingStorage) {
@@ -1203,7 +1203,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
           data[0].description = this.description[0];
           data[0].data = '';
-          this.addFileLargeLong(data[0]);
+
+          if(data[0].uploadId) this.addFile(data[0]);
+          else this.addFileLargeLong(data[0]);
           this.lstRawFile = [];
           //this.addFile(this.fileUploadList[0]);
 
@@ -1730,7 +1732,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     );
     dialogs.closed.subscribe((item) => {
       if (item.event) {
-        debugger
         // var index = this.fileUploadList.findIndex(
         //   (x) => x.recID == item.event.recID
         // );
@@ -1925,12 +1926,100 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   openUploadForm()
   {
-    this.callfc.openForm(AttachmentWebComponent,"",1100,700,"");
+    this.callfc.openForm(AttachmentWebComponent,"",1100,700,"").closed.subscribe(item=>{
+      if(item?.event)
+      {
+        this.handleInputWeb(item?.event);
+      }
+    });
     var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
   }
 
+  handleInputWeb(files:any)
+  {
+    var addedList = [];
+    for (var i = 0; i < files.length; i++) {
+      if (
+        files[i].size >= this.maxFileSizeUpload &&
+        this.maxFileSizeUpload != 0
+      ) {
+        this.notificationsService.notifyCode(
+          'DM057',
+          0,
+          files[i].name,
+          this.maxFileSizeUploadMB
+        );
+        break;
+      }
+
+      let index = this.fileUploadList.findIndex(
+        (d) => d.fileName.toString() === files[i].fileName.toString()
+      ); //find index in your array
+      if (index == -1) {
+
+        var fileUpload = new FileUpload();
+        //var type = files[i].mimeType.toLowerCase();
+        fileUpload.fileName = files[i].fileName;
+
+        //Lấy avatar mặc định theo định dạng file
+        //Image
+        //if (type_image.includes(type)) fileUpload.avatar = data;
+        //Video
+        // else if (type_video.includes(type)) {
+        //   var url = this.sanitizer.bypassSecurityTrustUrl(
+        //     URL.createObjectURL(files[i].rawFile)
+        //   );
+        //   fileUpload.data = url;
+        //   fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
+        // }
+
+        //Các file định dạng khác
+        fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
+        fileUpload.extension = files[i].extension;
+        fileUpload.createdBy = this.user.userName;
+        // var arrName = files[i].name.split(".");
+        // arrName.splice((arrName.length - 1), 1);
+        // var name = arrName.join('.');
+        fileUpload.entityName = this.formModel?.entityName;
+        fileUpload.mimeType = this.GetMimeType(files[i].mimeType);
+        //fileUpload.type = files[i].type;
+        fileUpload.objectType = this.objectType;
+        fileUpload.objectID = this.objectId;
+        fileUpload.fileSize = files[i].fileSize;
+        fileUpload.description = files[i].description; //
+        fileUpload.funcID = this.functionID;
+        fileUpload.folderType = this.folderType;
+        fileUpload.referType = this.referType;
+        fileUpload.category = this.category;
+        fileUpload.uploadId = files[i].uploadId;
+        fileUpload.thumbnail =  files[i].thumbnail; //"";
+        fileUpload.urlPath = files[i].pathDisk; //"";
+        fileUpload.autoCreate = "2";
+        //this.lstRawFile.push(files[i].rawFile);
+        fileUpload.reWrite = this.isReWrite;
+        //fileUpload.data = '';
+        //fileUpload.item = files[i];
+        //fileUpload.folderId = this.folderId;
+        fileUpload.folderID = this.dmSV.folderId.getValue();
+
+        fileUpload.permissions = this.addPermissionForRoot(
+          fileUpload.permissions
+        );
+
+        addedList.push(Object.assign({}, fileUpload));
+        this.fileUploadList.push(Object.assign({}, fileUpload));
+      } else {
+        this.fileUploadList.push(this.fileUploadList[index]);
+        this.fileUploadList.splice(index, 1);
+      }
+    }
+
+    this.fileAdded.emit({ data: this.fileUploadList });
+    this.filePrimitive.emit(files);
+    this.fileCount.emit({ data: addedList });
+  }
 
 
   async handleFileInput1(files: FileList) {
