@@ -335,6 +335,26 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
 
   buttons: Array<ButtonModel> = [];
 
+  data1 = [
+    { Product: 'TV : 30 (12%)', Percentage: 12, TextMapping: 'TV, 30 <br>12%' },
+    { Product: 'PC : 20 (8%)', Percentage: 8, TextMapping: 'PC, 20 <br>8%' },
+    {
+      Product: 'Laptop : 40 (16%)',
+      Percentage: 16,
+      TextMapping: 'Laptop, 40 <br>16%',
+    },
+    {
+      Product: 'Mobile : 90 (36%)',
+      Percentage: 36,
+      TextMapping: 'Mobile, 90 <br>36%',
+    },
+    {
+      Product: 'Camera : 27 (11%)',
+      Percentage: 11,
+      TextMapping: 'Camera, 27 <br>11%',
+    },
+  ];
+
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -392,7 +412,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
-    this.pageTitle.setBreadcrumbs([])
+    this.pageTitle.setBreadcrumbs([]);
     this.routerActive.queryParams.subscribe((res) => {
       if (res.reportID) {
         this.reportID = res.reportID;

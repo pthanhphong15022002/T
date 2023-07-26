@@ -232,8 +232,8 @@ export class InstancesComponent
     sapphire: '#009384',
     green: '#0f8633',
     purple: '#5710b2',
-    navy: '#192440'
-  }
+    navy: '#192440',
+  };
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -363,7 +363,6 @@ export class InstancesComponent
       processID: this.processID,
       haveDataService: this.haveDataService ? '1' : '0',
       showInstanceControl: this.process?.showInstanceControl
-
         ? this.process?.showInstanceControl
         : '2',
       hiddenInstanceReason: this.getListStatusInstance(
@@ -439,13 +438,15 @@ export class InstancesComponent
     return find ? find[type] : '';
   }
 
-  setColorKanban(){
-    let listInsStep = this.kanban?.columns?.filter((column) =>{column?.dataColums?.isSuccessStep && column?.dataColums?.isFailStep})
+  setColorKanban() {
+    let listInsStep = this.kanban?.columns?.filter((column) => {
+      column?.dataColums?.isSuccessStep && column?.dataColums?.isFailStep;
+    });
     // let listInsStep = this.kanban?.columns?.filter((column) =>{column?.dataColums?.isSuccessStep && column?.dataColums?.isFailStep})
     this.kanban?.columns?.forEach((column) => {
       let a = this.hexToRGB(column?.dataColums);
-      column.color = this.hexToRGB(column?.dataColums,5);
-    })
+      column.color = this.hexToRGB(column?.dataColums, 5);
+    });
   }
 
   getPropertyColumn() {
@@ -489,7 +490,10 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            option.Width = this.addFieldsControl == '1' || this.process.applyFor != '0'? '800px': '550px';
+            option.Width =
+              this.addFieldsControl == '1' || this.process.applyFor != '0'
+                ? '800px'
+                : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (this.process.applyFor == '0') {
@@ -508,7 +512,7 @@ export class InstancesComponent
                       );
                     }
                   });
-              }else {
+              } else {
                 this.codxDpService
                   .getAutoNumberByInstanceNoSetting(
                     this.process.instanceNoSetting
@@ -526,8 +530,8 @@ export class InstancesComponent
                     }
                   });
               }
-            }else if(this.process.applyFor == '4'){
-              this.openPopupContract('add',formMD);
+            } else if (this.process.applyFor == '4') {
+              this.openPopupContract('add', formMD);
             } else {
               this.openPopUpAdd(
                 applyFor,
@@ -719,7 +723,7 @@ export class InstancesComponent
                     this.openPopupEdit(applyFor, formMD, option, titleAction);
                   }
                 });
-              }else {
+              } else {
                 this.openPopupEdit(applyFor, formMD, option, titleAction);
               }
             });
@@ -1008,11 +1012,22 @@ export class InstancesComponent
       case 'DP23':
         this.cancelApprover(data);
         break;
-      //xuat khau du lieu
-      case 'SYS002':
-        this.exportFile();
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
         break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
   //End
   checkMoreReason(data, isUseReason) {
@@ -2332,7 +2347,7 @@ export class InstancesComponent
                     dt?.recID,
                     this.view.formModel.entityName,
                     null,
-                    null,
+                    null
                   )
                   .subscribe((res3) => {
                     if (res3) {
@@ -2421,7 +2436,7 @@ export class InstancesComponent
       return 'CM0401';
     } else if (applyFor == '3') {
       return 'CM0402';
-    }else if (applyFor == '4') {
+    } else if (applyFor == '4') {
       return 'CM0204';
     }
     return null;
@@ -2455,9 +2470,9 @@ export class InstancesComponent
     this.detectorRef.detectChanges();
   }
 
-  hexToRGB(step,countStep = 1) {
+  hexToRGB(step, countStep = 1) {
     let hex = this.colorDefault;
-    let opacityDefault = Number((1/countStep).toFixed(2));
+    let opacityDefault = Number((1 / countStep).toFixed(2));
     let opacity = opacityDefault * Number(step?.stepNo || 1);
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     const hexLongRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
@@ -2465,7 +2480,7 @@ export class InstancesComponent
     if (!result) {
       return null;
     }
-    const [r, g, b] = result.slice(1).map(value => parseInt(value, 16));
+    const [r, g, b] = result.slice(1).map((value) => parseInt(value, 16));
     if (opacity !== undefined) {
       return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     } else {
@@ -2473,7 +2488,7 @@ export class InstancesComponent
     }
   }
 
-  async openPopupContract(action,formModel: FormModel, contract?) {
+  async openPopupContract(action, formModel: FormModel, contract?) {
     let data = {
       action,
       contract: contract || null,
@@ -2496,5 +2511,4 @@ export class InstancesComponent
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }
-
 }

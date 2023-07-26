@@ -28,4 +28,14 @@ export class CodxCreateIndexComponent {
         this.listModule = res || [];
       });
   }
+
+  selectedModule(module:any)
+  {
+    debugger
+  }
+
+  onSave()
+  {
+
+  }
 }
