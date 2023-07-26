@@ -213,7 +213,7 @@ export class AddContractsComponent implements OnInit {
       this.contracts.contractDate = new Date();
       this.contracts.effectiveFrom = new Date();
       this.contracts.paidAmt = 0;
-      this.contracts.status = '0';
+      this.contracts.status = '1';
       this.contracts.remainAmt = 0;
       this.contracts.useType = '1';
       this.contracts.pmtStatus = '1';
