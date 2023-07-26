@@ -184,128 +184,222 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="7" title="Tỷ lệ hoàn thành công việc">
-    <ejs-circulargauge
-      align="center"
-      class="w-100 h-100"
-      background="transparent"
-      style="display: block"
-      #circulargauge=""
-      [tooltip]="tooltip"
-      [legendSettings]="{
-        visible: true
-      }"
-    >
-      <e-axes>
-        <e-axis
-          [title]="'Tỷ lệ hoàn thành công việc'"
-          minimum="0"
-          radius="100%"
-          maximum="100"
-          startAngle="0"
-          endAngle="360"
-          [majorTicks]="{
-            height: 0
-          }"
-          [labelStyle]="{
-            position: 'Inside',
-            useRangeColor: true,
-            font: { size: '0px', fontFamily: 'inherit' }
-          }"
-          [lineStyle]="{
-            width: 0
-          }"
-          [minorTicks]="{
-            height: 0
-          }"
-          [ranges]="[
-            {
-              start: 0,
-              end: 100,
-              radius: '100%',
-              startWidth: 12,
-              endWidth: 12,
-              color: '#E0E0E0'
-            }
-          ]"
-          [pointers]="[
-            {
-              roundedCornerRadius: 20,
-              value: myDBData?.rateDoneTask,
-              type: 'RangeBar',
-              radius: '100%',
-              color: '#0078ff',
-              border: {
-                width: 0
-              },
-              animation: {
-                enable: false
-              },
-              pointerWidth: 12
-            }
-          ]"
-        >
-        </e-axis>
-        <e-axis
-          [title]="'Tỷ lệ hoàn thành đúng hạn'"
-          minimum="0"
-          radius="70%"
-          maximum="100"
-          startAngle="0"
-          endAngle="360"
-          [majorTicks]="{
-            height: 0
-          }"
-          [labelStyle]="{
-            position: 'Inside',
-            useRangeColor: true,
-            font: { size: '0px', fontFamily: 'inherit' }
-          }"
-          [lineStyle]="{
-            width: 0
-          }"
-          [minorTicks]="{
-            height: 0
-          }"
-          [ranges]="[
-            {
-              start: 0,
-              end: 100,
-              radius: '70%',
-              startWidth: 12,
-              endWidth: 12,
-              color: '#E0E0E0'
-            }
-          ]"
-          [pointers]="[
-            {
-              roundedCornerRadius: 20,
-              value: 50,
-              type: 'RangeBar',
-              radius: '70%',
-              color: '#2cd9c5',
-              border: {
-                width: 0
-              },
-              animation: {
-                enable: false
-              },
-              pointerWidth: 12
-            }
-          ]"
-        >
-        </e-axis>
-      </e-axes>
-    </ejs-circulargauge>
+    <div class="d-flex justify-content-center align-items-center w-100 h-100">
+      <ejs-circulargauge
+        class="d-block"
+        style="width: 70%; height: 70%"
+        background="transparent"
+        #circulargauge=""
+        [tooltip]="tooltip"
+        [legendSettings]="{
+          visible: false
+        }"
+      >
+        <e-axes>
+          <e-axis
+            [title]="'Tỷ lệ hoàn thành công việc'"
+            minimum="0"
+            radius="100%"
+            maximum="100"
+            startAngle="0"
+            endAngle="360"
+            [majorTicks]="{
+              height: 0
+            }"
+            [labelStyle]="{
+              position: 'Inside',
+              useRangeColor: true,
+              font: { size: '0px', fontFamily: 'inherit' }
+            }"
+            [lineStyle]="{
+              width: 0
+            }"
+            [minorTicks]="{
+              height: 0
+            }"
+            [ranges]="[
+              {
+                start: 0,
+                end: 100,
+                radius: '100%',
+                startWidth: 12,
+                endWidth: 12,
+                color: '#E0E0E0'
+              }
+            ]"
+            [pointers]="[
+              {
+                roundedCornerRadius: 20,
+                value: myDBData?.rateDoneTask,
+                type: 'RangeBar',
+                radius: '100%',
+                color: '#0078ff',
+                border: {
+                  width: 0
+                },
+                animation: {
+                  enable: false
+                },
+                pointerWidth: 12
+              }
+            ]"
+          >
+          </e-axis>
+          <e-axis
+            [title]="'Tỷ lệ hoàn thành đúng hạn'"
+            minimum="0"
+            radius="90%"
+            maximum="100"
+            startAngle="0"
+            endAngle="360"
+            [majorTicks]="{
+              height: 0
+            }"
+            [labelStyle]="{
+              position: 'Inside',
+              useRangeColor: true,
+              font: { size: '0px', fontFamily: 'inherit' }
+            }"
+            [lineStyle]="{
+              width: 0
+            }"
+            [minorTicks]="{
+              height: 0
+            }"
+            [ranges]="[
+              {
+                start: 0,
+                end: 100,
+                radius: '70%',
+                startWidth: 12,
+                endWidth: 12,
+                color: '#E0E0E0'
+              }
+            ]"
+            [pointers]="[
+              {
+                roundedCornerRadius: 20,
+                value: 50,
+                type: 'RangeBar',
+                radius: '70%',
+                color: '#2cd9c5',
+                border: {
+                  width: 0
+                },
+                animation: {
+                  enable: false
+                },
+                pointerWidth: 12
+              }
+            ]"
+          >
+          </e-axis>
+        </e-axes>
+      </ejs-circulargauge>
+      <!-- <div class="container">
+        <div class="d-flex flex-column">
+          <div class="m-2">
+            <div class="d-flex align-items-center">
+              <div
+                class="me-2"
+                style="
+                  height: 15px;
+                  width: 15px;
+                  border-radius: 10%;
+                  background-color: #5465ff;
+                "
+              ></div>
+              <span>Tỷ lệ hoàn thành công việc</span>
+            </div>
+            <div class="ms-6">
+              <span class="fw-bold fs-3">{{ myDBData?.rateDoneTask }}%</span>
+            </div>
+          </div>
+          <div class="m-2">
+            <div class="d-flex align-items-center">
+              <div
+                class="me-2"
+                style="
+                  height: 15px;
+                  width: 15px;
+                  border-radius: 10%;
+                  background-color: #04deb7;
+                "
+              ></div>
+              <span>Tỷ lệ hoàn thành công việc đúng hạn</span>
+            </div>
+            <div class="ms-6">
+              <span class="fw-bold fs-3"
+                >{{ myDBData?.rateDoneTaskOnTime }}%</span
+              >
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
   </div>
 </ng-template>
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="8" title="Hiệu suất làm việc">
-    <div class="d-flex justify-content-center align-items-center">
-      <img
-        style="width: 50%; height: 50%"
-        src="assets/themes/sys/default/img/Empty_CircularGauge.svg"
-      />
+    <div class="d-flex justify-content-center align-items-center w-100 h-100">
+      <div style="position: relative" class="w-100 h-100">
+        <ejs-circulargauge class="d-block" style="width: 100%; height: 100%">
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="15"
+                  color="#FF8008"
+                  [linearGradient]="rangeLinearGradient2"
+                  startWidth="15"
+                  endWidth="15"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="myDBData?.workPerformance?.performance"
+                  markerShape="Image"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
+                  radius="90%"
+                  markerWidth="30"
+                  markerHeight="30"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div
+          *ngIf="myDBData?.workPerformance?.performance"
+          style="
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            transform: translate(50%, -50%);
+          "
+        >
+          <div class="text-center fs-20 text-gray-600 text-nowrap">KPI</div>
+          <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+            {{ toFixed(myDBData?.workPerformance?.performance) }}
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -1128,7 +1222,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="8" title="Thống kê công việc theo dự án">
+  <div class="w-100 h-100" id="8" title="Thống kê theo nhóm công việc">
     <div class="w-100 h-100">
       <div class="my-2" *ngFor="let task of assignDBData?.tasksByProject">
         <div>
@@ -1230,10 +1324,29 @@
 
 <ng-template #assign_dashboard>
   <div id="10" title="Thống kê công việc theo dự án">
-    <img
-      style="width: 100%; height: 100%"
-      src="assets/themes/sys/default/img/Empty_Piechart.svg"
-    />
+    <ejs-accumulationchart
+      id="pie"
+      class="d-block"
+      style="height: 100%; width: 100%"
+      [legendSettings]="{
+    visible: false,
+  }"
+      [tooltip]="{ enable: true, format: '${point.x}' }"
+      [enableAnimation]="{
+        enable: true
+      }"
+    >
+      <e-accumulation-series-collection>
+        <e-accumulation-series
+          [dataSource]="data1"
+          xName="Product"
+          yName="Percentage"
+          innerRadius="70%"
+          [border]="{ width: 3 }"
+        >
+        </e-accumulation-series>
+      </e-accumulation-series-collection>
+    </ejs-accumulationchart>
   </div>
 </ng-template>
 
