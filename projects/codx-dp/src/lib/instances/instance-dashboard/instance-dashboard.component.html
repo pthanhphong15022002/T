@@ -143,7 +143,10 @@
         default="Top nhân viên có nhiều cơ hội thành công nhất"
       ></codx-label>
     </div>
-    <div class="w-100 d-flex justify-content-center mb-4" *ngIf="countOwners">
+    <div
+      class="w-100 d-flex justify-content-center mb-4"
+      *ngIf="countOwners?.length > 0; else tempNoData"
+    >
       <div class="group-btn" style="z-index: 10">
         <div
           [ngClass]="isTallest ? 'lblDetail' : 'lblRatio'"
@@ -171,11 +174,7 @@
         </div>
       </div>
     </div>
-    <div
-      class="assignchart-group w-100"
-      style="overflow-y: auto"
-      *ngIf="countOwners; else tempNoData"
-    >
+    <div class="assignchart-group w-100" style="overflow-y: auto">
       <div
         *ngFor="let owner of countOwners; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end h-30px"
@@ -224,11 +223,11 @@
         <div class="mx-2 my-3">
           <div class="d-flex justify-content-between">
             <div class="mb-2">
-              <span class="fw-bold">{{ productivity?.name }}</span>
+              <span class="fw-bold">{{ productivity?.objectName }}</span>
             </div>
             <div class="d-flex align-items-end">
               <span class="text-gray-400">{{
-                productivity?.money | currency : "VND"
+                productivity?.sumTarget | currency : productivity?.currencyID
               }}</span>
             </div>
           </div>
@@ -238,7 +237,7 @@
                 class="rounded-4"
                 style="height: 15px"
                 role="progressbar"
-                [style.width]="productivity.percentage + '%'"
+                [style.width]="productivity?.percentage + '%'"
               >
                 <div
                   class="proress h-100 rounded-4 d-flex align-item-center justify-content-end"
@@ -278,7 +277,7 @@
     </div>
     <div
       style="overflow-y: auto; max-height: 130px"
-      *ngIf="countSuscess; else tempNoDataMin"
+      *ngIf="countSuscess?.length > 0; else tempNoDataMin"
     >
       <div *ngFor="let suscess of countSuscess">
         <div class="mx-2 my-2">
@@ -331,7 +330,7 @@
     </div>
     <div
       style="max-height: 130px; overflow: scroll"
-      *ngIf="countFails; else tempNoDataMin"
+      *ngIf="countFails?.lenght > 0; else tempNoDataMin"
     >
       <div *ngFor="let fails of countFails">
         <div class="mx-2 my-2">
@@ -383,7 +382,11 @@
         default="Thống kê hiệu suất trong năm"
       ></codx-label>
     </div>
-    <div *ngIf="productivityYear?.length > 0; else tempNoData">
+    <div
+    class="mt-5"
+      *ngIf="productivityYear?.length > 0; else tempNoData"
+      style="max-height: 92%; overflow: scroll"
+    >
       <div>
         <ejs-chart
           style="display: block"

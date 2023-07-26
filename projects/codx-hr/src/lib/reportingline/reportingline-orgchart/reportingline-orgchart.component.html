@@ -12,6 +12,53 @@
     <!-- <div class="over-view-chart">
       <ejs-overview #overView id="overview" width="100%" height="590px" [sourceID]="'diagram'">
       </ejs-overview>
+      <div class="row property-panel-content" id="appearance" style="padding-top: 10px">
+        <div class="row row-header sb-child-row">
+          Orientation
+        </div>
+        <div class="row ">
+          <div class="image-pattern-style  e-selected-style" id="topToBottom"
+            style="background-image: url(./assets/diagram/Images/common-orientation/toptobottom.png); margin-right: 3px">
+          </div>
+          <div class="image-pattern-style" id="bottomToTop"
+            style="background-image: url(./assets/diagram/Images/common-orientation/bottomtotop.png);margin-right: 3px">
+          </div>
+          <div class="image-pattern-style" id="leftToRight"
+            style="background-image: url(./assets/diagram/Images/common-orientation/lefttoright.png);  margin: 0px 3px">
+          </div>
+        </div>
+        <div class="row">
+          <div class="image-pattern-style" id="rightToLeft"
+            style="background-image: url(./assets/diagram/Images/common-orientation/righttoleft.png); margin: 0px 3px">
+          </div>
+        </div>
+      </div>
+      <div class="row property-panel-content" style="padding-top: 10px">
+        <div class="row d-flex align-items-center justify-content-between">
+          <div class="w-30">Margin X</div>
+          <ejs-numerictextbox id='mleft' class="w-30" [value]="10" format='n0' step="1"
+            (change)='onmarginLeftChange($event)'></ejs-numerictextbox>
+        </div>
+        <div class="row d-flex align-items-center justify-content-between">
+          <div class="w-30">Margin Y</div>
+          <ejs-numerictextbox id='mtop' class="w-30" [value]="50" format='n0' step="1"
+            (change)='onmarginTopChange($event)'></ejs-numerictextbox>
+        </div>
+        <div class="row d-flex align-items-center justify-content-between">
+          <div class="w-30">Horizontal Spacing</div>
+          <ejs-numerictextbox id='hspace' class="w-30" [value]="30" format='n0' step="1"
+            (change)='onhSpacingChange($event)'></ejs-numerictextbox>
+        </div>
+        <div class="row d-flex align-items-center justify-content-between">
+          <div class="w-30">Vertical Spacing</div>
+          <ejs-numerictextbox id='vspace' class="w-30" [value]="80" format='n0' step="1"
+            (change)='onvSpacingChange($event)'></ejs-numerictextbox>
+        </div>
+        <div class="row mt-2 mb-2">
+          <ejs-checkbox #diagram id="lock" label="Prevent Connector Overlapping" [checked]="true"
+            (change)="onChange($event)"></ejs-checkbox>
+        </div>
+      </div>
     </div> -->
   </ng-container>
 </ng-container>
@@ -32,8 +79,10 @@
 
 <ng-template #template let-data>
   <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 h-150px"
-    [ngClass]="data?.isSelected ?'highlight-node-border': 'border'" (click)="changeSelectedItem(data)"
-    [ngStyle]=" { background: data?.positionID == positionID? 'aliceblue': null, borderColor: '' }">
+    [ngClass]="data?.isSelected ?'highlight-node-border': 'border'" (click)="changeSelectedItem(data)" [ngStyle]=" { 
+      background: haveHighLight?(data?.positionID == positionID? 'aliceblue': null) : 'white', 
+      borderColor: '' 
+    }">
     <div class="has-action-menu">
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" type="hover">
       </codx-mfunc>
@@ -64,12 +113,13 @@
 </ng-template>
 <!-- template view employee -->
 <ng-template #templateListEmployee let-data>
-  <div ngbDropdown class="d-flex align-items-center justify-content-center symbol-more" [container]="'body'"  (click)="hasOpenEmpList(data?.positionID, $event)">
+  <div ngbDropdown class="d-flex align-items-center justify-content-center symbol-more" [container]="'body'"
+    (click)="hasOpenEmpList(data?.positionID, $event)">
     <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
       type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
       style="padding: 0 !important ; margin-left: 0 !important; border:none">
       <div class="d-flex align-items-center">
-        <codx-img [funcId]="funcID" [objectId]="data.sampleEmployees[0]?.employeeID" 
+        <codx-img [funcId]="funcID" [objectId]="data.sampleEmployees[0]?.employeeID"
           [objectName]="data.sampleEmployees[0]?.employeeName" [objectType]="'HR_Employees'" [width]="50"
           [referType]="'avt'">
         </codx-img>

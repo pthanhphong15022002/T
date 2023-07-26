@@ -106,7 +106,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   markerRatio = {
     dataLabel: {
-      name: 'TooltipMappingName',
+      name: 'businessLineName',
       visible: true,
       position: 'Middle',
       font: { fontWeight: '500' },
@@ -326,8 +326,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //load default
   loadChangeDefault() {
     if (this.language == 'en') {
-      this.tooltip.format =
-        'Total expected sales : <b>${point.x}</b> <br/>Total target : <b>${point.y}</b><br/>Quantity of deals : <b>${point.size}</b>';
       this.primaryXAxis.title = 'Deployment month';
       this.primaryYAxis.title = 'Ratio(%)';
     }
@@ -373,11 +371,25 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               'Tổng doanh số dự kiến ( ' + this.currencyIDDefault + ')';
             this.primaryYAxisRatio.title =
               'Tổng mục tiêu ( ' + this.currencyIDDefault + ')';
+
+            this.tooltip.format =
+              'Tổng doanh số dự kiến : <b>${point.x} ' +
+              this.currencyIDDefault +
+              '</b> <br/>Tổng mục tiêu : : <b>${point.y} ' +
+              this.currencyIDDefault +
+              '</b><br/>Số lượng cơ hội : <b>${point.size}</b>';
           } else {
             this.primaryXAxisRatio.title =
               'Total expected sales ( ' + this.currencyIDDefault + ')';
             this.primaryYAxisRatio.title =
               'Total target ( ' + this.currencyIDDefault + ')';
+
+            this.tooltip.format =
+              'Total expected sales : <b>${point.x} ' +
+              this.currencyIDDefault +
+              '</b> <br/>Total target : <b>${point.y} ' +
+              this.currencyIDDefault +
+              '</b><br/>Quantity of deals : <b>${point.size}</b>';
           }
         }
       }

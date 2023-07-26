@@ -1,13 +1,11 @@
 <div (click)="countResource > 0 && openViewPopup ? openPopup() : ''">
-  <div
-    class="d-flex align-items-center"
-  >
+  <div class="d-flex align-items-center">
     <div class="me-1">
       <i
         class="text-hover-primary icon-i-clipboard-check icon-18 cursor-pointer text-gray-400"
       ></i>
     </div>
-    <div>{{ countResource }}</div>
+    <div *ngIf="countResource > 0">{{ countResource }}</div>
   </div>
 </div>
 <ng-template #tmpListResource let-dialog>

@@ -136,6 +136,16 @@
 .ac-input-disable .e-input-group {
     border: none !important;
 }
+.codx-detail-footer .btn-ac-footer{
+    position: absolute !important;
+    top: 5px !important;
+    right: 10px !important;
+    z-index: 9999;
+}
+/* css tắt border footer */
+.codx-detail-footer .tab-footer ul{
+    border-bottom: none !important;
+} 
 /* css vẽ khung input trước khi init */
 
 .ac-input-disable .codx-text{
@@ -150,39 +160,26 @@
 /* css aniamtion slide form */
 .ac-animation-slideRight{
     animation-name: slideRight;
-    animation-duration: 1s;
+    animation-duration: 0.7s;
     animation-fill-mode: both;
-    animation-timing-function: linear;
+    animation-timing-function: cubic-bezier(1, 1, 1, 1);
     -webkit-animation-timing-function: linear;
 }
 @keyframes slideRight {
-    0%{
+    from{
         width: 100%;
         height: 100%;
         position: absolute;
-        transform: translate3d(100%, 0, 0);
-    }
-    50%{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        transform: translate3d(50%, 0, 0);
-    }
-    100%{
-        width: 100%;
-        height: 100%;
-        position: relative;
-        transform: translate3d(0, 0, 0);
-    }
-    /* from{
-       
+        left: 100%;
+        /* transform: translate3d(100%, 0, 0); */
     }
     to{
         width: 100%;
         height: 100%;
         position: relative;
-        transform: translate3d(0, 0, 0);
-    } */
+        left: 0%;
+        /* transform: translate3d(0%, 0, 0); */
+    }
   }
 
 
