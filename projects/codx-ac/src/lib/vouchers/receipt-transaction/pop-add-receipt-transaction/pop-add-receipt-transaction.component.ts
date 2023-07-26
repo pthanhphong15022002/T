@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { PopAddLineReceiptTransactionComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
+import { itemMove } from '@syncfusion/ej2-angular-treemap';
 
 
 @Component({
@@ -48,6 +49,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   modeGrid: any;
   vouchersLines: Array<VouchersLines> = [];
   vouchersLinesDelete: Array<VouchersLines> = [];
+  dataUpdate: VouchersLines = new VouchersLines();
   lockFields = [];
   tab: number = 0;
   total: any = 0;
@@ -227,6 +229,17 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     //   this.setPredicateByIDIM4(e.data[e.field]);
     // }
 
+    if(this.dataUpdate)
+    {
+      if(this.dataUpdate.recID &&
+        this.dataUpdate.recID == e.data.recID &&
+        this.dataUpdate[e.field] == e.data[e.field]
+        )
+        {
+          return;
+        }
+    }
+
     const postFields: string[] = [
       'itemID',
       'costPrice',
@@ -252,10 +265,22 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.vouchers,
           e.data,
         ])
-        .subscribe((line) => {
-          console.log(line);
+        .subscribe((res: any) => {
+          console.log(res);
+          if(res)
+          {
+            var arrColumn = [];
+            arrColumn = res.updateColumns.split(';');
+            arrColumn.forEach((a) => {
+              if (a) {
+                let field = Util.camelize(a);
+                e.data[field] = res[field];
+              }
+            });
+            this.dataUpdate = Object.assign(this.dataUpdate, e.data);
+          }
           
-          this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], line);
+          // this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], res);
         });
     }
     // switch(e.field)
@@ -666,6 +691,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   .save(null, 0, '', '', false)
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
+                      this.vouchers = res.save.data;
                       this.hasSaved = true;
                       this.loadModegrid();
                     }
@@ -1182,9 +1208,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         if (this.gridVouchersLine.autoAddRow) {
           this.addRow();
         }
-        break;
-      case 'closeEdit':
-        this.gridVouchersLine.autoAddRow = true;
         break;
     }
   }

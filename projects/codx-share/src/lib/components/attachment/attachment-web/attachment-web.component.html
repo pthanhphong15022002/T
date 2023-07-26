@@ -55,7 +55,7 @@
                     <tbody>
                       <tr *ngFor="let item of listData" class="border-top">
                         <td class="w-30px">
-                            <ng-container *ngIf="!item?.folderName">
+                            <ng-container *ngIf="!item?.folderName && item?.read">
                                 <codx-input type="checkbox" (valueChange)="selectedFiles($event , item)"></codx-input>
                             </ng-container>
                         </td>
@@ -63,11 +63,17 @@
                             <img *ngIf="item.folderName" class="h-13px me-2" src="../../../assets/themes/dm/default/img/icon-folder.svg" />
                             <img *ngIf="!item.folderName" class="h-16px me-2" [src]="getThumbnail(item)" />
                             <span>{{item.folderName ? item.folderName : item.fileName}}</span>
+                            <span *ngIf="item.read == false" class="icon-security text-primary icon-16 mx-2" title="Tài liệu bảo mật"></span>
                         </td>
                         <td>{{item.createdOn | date: 'dd/MM/yyyy'}}</td>
                         <td> 
-                            <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
-                            [imageWidth]="25" [subTitle]="item.userName">
+                            <codx-temp-full 
+                                [imageId]="item.createdBy" 
+                                imageObjType="AD_Users" 
+                                imgCss="me-3 cursor-pointer"
+                                [imageWidth]="25" 
+                                [subTitle]="item.userName"
+                            >
                           </codx-temp-full>
                         </td>
                         <td>{{getSizeKB(item)}}</td>
