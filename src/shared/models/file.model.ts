@@ -175,6 +175,7 @@ export class FileUpload {
     expiredOn:any;
     isAlert:any;
     isEmail:any;
+    autoCreate:any;
 }
 
 
