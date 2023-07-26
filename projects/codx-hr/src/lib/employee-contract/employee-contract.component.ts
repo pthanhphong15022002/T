@@ -313,28 +313,26 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   printContract(moreFC: any, objectID: string) {
-    this.getReportSource(moreFC.functionID, 'reportID', objectID).subscribe(
-      (src: any) => {
-        let dialogModel = new DialogModel();
-        dialogModel.FormModel = this.view.formModel;
-        dialogModel.DataService = this.view.dataService;
-        let data = {
-          headerText: moreFC.text,
-          reportID: moreFC.functionID,
-          dataSource: src,
-        };
-        debugger
-        this.callfc.openForm(
-          CodxListReportsComponent,
-          moreFC.defaultName,
-          0,
-          0,
-          moreFC.functionID,
-          data,
-          '',
-          dialogModel
-        );
-      }
+    let parameters = {
+      recID:objectID
+    };
+    let dialogModel = new DialogModel();
+    dialogModel.FormModel = this.view.formModel;
+    dialogModel.DataService = this.view.dataService;
+    let data = {
+      headerText: moreFC.text,
+      reportID: moreFC.functionID,
+      parameters:parameters
+    };
+    this.callfc.openForm(
+      CodxListReportsComponent,
+      moreFC.defaultName,
+      0,
+      0,
+      moreFC.functionID,
+      data,
+      '',
+      dialogModel
     );
   }
   // unites get data source
