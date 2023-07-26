@@ -295,24 +295,31 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           res.isbookmark = false;
         }
         switch (res.functionID) {
+          //gui duyet
           case 'CM0202_1':
             if (data.status != '0' && data.status != '4') {
               res.disabled = true;
             }
             break;
+          //huy duyet
           case 'CM0202_2':
             if (data.status != '1') {
               res.disabled = true;
             }
             break;
+          //tao hop dong
           case 'CM0202_3':
             if (data.status != '2') {
               res.isblur = true;
             }
             break;
+          //tao version moi
           case 'CM0202_4':
             if (data.status < 2) {
               res.isblur = true;
+            }
+            if (data?.newVerCreated) {
+              res.disabled = true;
             }
             break;
           case 'CM0202_5':
@@ -323,8 +330,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           //da duyet hoac huy thi ko cho edit
           case 'SYS03':
             if (
+              data.status == '1' ||
               data.status == '2' ||
               data.status == '4' ||
+              data.approveStatus == '3' ||
               data.approveStatus == '0' ||
               data.approveStatus == '5'
             ) {
@@ -490,7 +499,13 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       );
 
       dialog.closed.subscribe((e) => {
-        if (this.isNewVersion) this.isNewVersion = false;
+        if (e?.event != null) {
+          if (this.isNewVersion) {
+            this.itemSelected.newVerCreated = true;
+            this.view.dataService.update(this.itemSelected).subscribe();
+          }
+        }
+        this.isNewVersion = false;
       });
     });
   }
