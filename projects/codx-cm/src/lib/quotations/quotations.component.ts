@@ -320,6 +320,17 @@ export class QuotationsComponent extends UIComponent implements OnInit {
               res.disabled = true;
             } else res.disabled = false;
             break;
+          //da duyet hoac huy thi ko cho edit
+          case 'SYS03':
+            if (
+              data.status == '2' ||
+              data.status == '4' ||
+              data.approveStatus == '0' ||
+              data.approveStatus == '5'
+            ) {
+              res.disabled = true;
+            }
+            break;
         }
       });
     }
@@ -450,6 +461,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         '',
         option
       );
+      if (this.isNewVersion) this.isNewVersion = false;
     });
   }
 
@@ -466,6 +478,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         res.status = '0';
         res.approveStatus = '1';
         res.approvedDate = null;
+        res.refID = data.recID;
       }
 
       var obj = {
@@ -473,6 +486,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         action: 'copy',
         headerText: this.titleAction,
         copyToRecID: copyToRecID,
+        isNewVersion: this.isNewVersion,
       };
       let option = new DialogModel();
       option.IsFull = true;

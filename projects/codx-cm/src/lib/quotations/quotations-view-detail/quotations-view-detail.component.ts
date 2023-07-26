@@ -1,8 +1,10 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   TemplateRef,
@@ -19,8 +21,9 @@ import { CM_Contracts } from '../../models/cm_model';
   templateUrl: './quotations-view-detail.component.html',
   styleUrls: ['./quotations-view-detail.component.css'],
 })
-export class QuotationsViewDetailComponent implements OnChanges {
+export class QuotationsViewDetailComponent implements OnChanges, OnInit {
   @ViewChild('contract') contract: TemplateRef<any>;
+  @ViewChild('connectiveTab') connectiveTab: TemplateRef<any>;
   @Input() itemSelected: any;
   @Input() hideMF: any = false;
   @Input() formModel: FormModel;
@@ -43,26 +46,25 @@ export class QuotationsViewDetailComponent implements OnChanges {
       isActive: false,
       template: null,
     },
-    // { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     {
       name: 'Approve',
       textDefault: 'Ký duyệt',
       isActive: false,
       template: null,
     },
-    {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    },
-    // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-    {
-      name: 'Contract',
-      textDefault: 'Hợp đồng',
-      isActive: false,
-      template: null,
-    },
+    // {
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
+    //   isActive: false,
+    //   template: null,
+    // },
+    // // { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+    // {
+    //   name: 'Contract',
+    //   textDefault: 'Hợp đồng',
+    //   isActive: false,
+    //   template: null,
+    // },
   ];
 
   fmQuotationLines: FormModel = {
@@ -80,14 +82,21 @@ export class QuotationsViewDetailComponent implements OnChanges {
   };
   dataSource = [];
   crrContactID: any;
+  loadedRef: boolean = false;
+  dataRef: any;
 
   constructor(
     private api: ApiHttpService,
     private codxCM: CodxCmService,
-    protected sanitizer: DomSanitizer
+    protected sanitizer: DomSanitizer,
+    private changeDef: ChangeDetectorRef
   ) {}
+  ngOnInit(): void {}
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.itemSelected) return;
+    this.loadedRef = false;
+
     if (this.itemSelected?.contactID != this.crrContactID) {
       this.crrContactID = this.itemSelected.contactID;
       this.loadDetailContactByID(this.crrContactID);
@@ -99,20 +108,46 @@ export class QuotationsViewDetailComponent implements OnChanges {
           this.dataSource = res;
         }
       });
+    if (this.itemSelected.refID) {
+      debugger;
+      this.codxCM
+        .getOneObject(this.itemSelected.refID, 'QuotationsBusiness')
+        .subscribe((ref) => {
+          this.dataRef = ref;
+          this.loadedRef = true;
+          this.changeDef.detectChanges();
+        });
+    } else {
+      this.loadedRef = true;
+      this.dataRef = null;
+    }
+    this.loadTabs();
   }
 
-  ngAfterViewInit(): void {
-    let index = this.tabControl.findIndex((item) => item.name == 'Contract');
-    if (index >= 0) {
-      let contract = {
-        name: 'Contract',
-        textDefault: 'Hợp đồng',
-        isActive: false,
-        icon: 'icon-sticky_note_2',
-        template: this.contract,
-      };
-      this.tabControl.splice(index, 1, contract);
-    }
+  ngAfterViewInit(): void {}
+
+  loadTabs() {
+    let references = {
+      name: 'Connective',
+      textDefault: 'Liên kết',
+      isActive: false,
+      icon: 'icon-i-link',
+      template: this.connectiveTab,
+    };
+    let idx = this.tabControl.findIndex((x) => x.name == 'Connective');
+    if (idx != -1) this.tabControl.splice(idx, 1);
+    this.tabControl.push(references);
+
+    let contract = {
+      name: 'Contract',
+      textDefault: 'Hợp đồng',
+      isActive: false,
+      icon: 'icon-sticky_note_2',
+      template: this.contract,
+    };
+    let idx2 = this.tabControl.findIndex((x) => x.name == 'Contract');
+    if (idx2 != -1) this.tabControl.splice(idx2, 1);
+    this.tabControl.push(contract);
   }
 
   loadDetailContactByID(contactID) {
