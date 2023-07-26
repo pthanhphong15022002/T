@@ -537,7 +537,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   onClick(e: HTMLElement): void {
     if (
       this.gridPurchaseInvoiceLines.gridRef.isEdit &&
-      !e.closest('#gridViewV2 > .e-gridcontent')
+      !e.closest('.edit-value')
     ) {
       this.gridPurchaseInvoiceLines.endEdit();
     }
