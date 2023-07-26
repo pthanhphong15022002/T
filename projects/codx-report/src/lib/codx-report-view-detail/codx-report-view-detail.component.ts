@@ -203,6 +203,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
       this._labelString = JSON.stringify(objLabel);
     }
+    this.test(this.funcItem.recID);
   }
 
   getRootFunction(module:string, type:string){
@@ -236,7 +237,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
         this.pageTitle.setSubTitle("");
         if(res.displayMode == "3"){
-          this.test();
+          this.test(res.recID);
         }
       }
     });
@@ -280,9 +281,10 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
 
   url:string = "";
-  test(){
+  test(recID:string){
+    debugger
     let sk = "sk=" + btoa(this.authSV.userValue.userID+"|"+this.authSV.userValue.securityKey);
-    this.url = `http://localhost:9002/api/reportdowload/GetReportByPDF?reportID=58007c85-00e4-ed11-94ac-00155d03551a&${sk}`;
+    this.url = `http://localhost:9002/api/reportdowload/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(this._paramString)}&${sk}`;
   }
 }
 

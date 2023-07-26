@@ -368,6 +368,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onEndEdit(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
+    line.unbounds = {
+      invoiceForm: this.master.invoiceForm,
+      invoiceSeriNo: this.master.invoiceSeriNo,
+      invoiceNo: this.master.invoiceNo,
+      invoiceDate: this.master.invoiceDate,
+    };
     this.purchaseInvoiceLineService.updateDatas.set(line.recID, line);
     this.purchaseInvoiceLineService
       .save(null, null, null, null, false)
@@ -387,6 +393,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onEndAddNew(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
+    line.unbounds = {
+      invoiceForm: this.master.invoiceForm,
+      invoiceSeriNo: this.master.invoiceSeriNo,
+      invoiceNo: this.master.invoiceNo,
+      invoiceDate: this.master.invoiceDate,
+    };
     this.purchaseInvoiceLineService
       .save(null, null, null, null, false)
       .subscribe((res: any) => {
@@ -525,7 +537,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   onClick(e: HTMLElement): void {
     if (
       this.gridPurchaseInvoiceLines.gridRef.isEdit &&
-      !e.closest('.e-gridcontent')
+      !e.closest('#gridViewV2 > .e-gridcontent')
     ) {
       this.gridPurchaseInvoiceLines.endEdit();
     }
@@ -547,7 +559,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.gridPurchaseInvoiceLines.gridRef.startEdit();
   }
 
-  deleteRow(data) {
+  deleteRow(data: IPurchaseInvoiceLine) {
     this.purchaseInvoiceLineService.delete([data]).subscribe((res: any) => {
       if (res.error === false) {
         this.gridPurchaseInvoiceLines.deleteRow(data, true);

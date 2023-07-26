@@ -133,64 +133,7 @@ export class TargetsComponent
     this.getSchedule();
   }
   ngAfterViewInit(): void {
-    let lst = [];
 
-    for (let i = 0; i < 13; i++) {
-      var tmp = {};
-      if (i == 0) {
-        tmp['field'] = '';
-        tmp['headerText'] = '';
-        tmp['width'] = 350;
-        tmp['template'] = this[`templateMonth${0}`];
-      } else {
-        tmp['field'] = '';
-        tmp['headerText'] = 'Tháng ' + i;
-        tmp['width'] = 175;
-        tmp['template'] = this[`templateMonth${i}`];
-      }
-      lst.push(Object.assign({}, tmp));
-    }
-    this.columnGrids = lst;
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnGrids,
-          hideMoreFunc: true,
-        },
-      },
-      {
-        sameData: false,
-        type: ViewType.schedule,
-        active: false,
-        request2: this.scheduleHeader,
-        request: this.schedules,
-        toolbarTemplate: this.footerButton,
-        showSearchBar: false,
-        showFilter: false,
-        model: {
-          eventModel: this.scheduleModel,
-          resourceModel: this.scheduleHeaderModel, //resource
-          template: this.cardTemplate,
-          template4: this.resourceHeader,
-          // template5: this.resourceTootip, //tooltip
-          template6: this.mfButton, //header
-          template8: this.contentTmp, //content
-          //template7: this.footerButton,//footer
-          // statusColorRef: 'EP022',
-        },
-      },
-    ];
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -302,7 +245,67 @@ export class TargetsComponent
     this.fmTargetLines = formModel;
     this.detectorRef.detectChanges();
   }
-  onLoading(e) {}
+  onLoading(e) {
+    let lst = [];
+
+    for (let i = 0; i < 13; i++) {
+      var tmp = {};
+      if (i == 0) {
+        tmp['field'] = '';
+        tmp['headerText'] = '';
+        tmp['width'] = 350;
+        tmp['template'] = this[`templateMonth${0}`];
+      } else {
+        tmp['field'] = '';
+        tmp['headerText'] = 'Tháng ' + i;
+        tmp['width'] = 175;
+        tmp['template'] = this[`templateMonth${i}`];
+      }
+      lst.push(Object.assign({}, tmp));
+    }
+    this.columnGrids = lst;
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelRightRef: this.panelRight,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnGrids,
+          hideMoreFunc: true,
+        },
+      },
+      {
+        sameData: false,
+        type: ViewType.schedule,
+        active: false,
+        request2: this.scheduleHeader,
+        request: this.schedules,
+        toolbarTemplate: this.footerButton,
+        showSearchBar: false,
+        showFilter: false,
+        model: {
+          eventModel: this.scheduleModel,
+          resourceModel: this.scheduleHeaderModel, //resource
+          template: this.cardTemplate,
+          template4: this.resourceHeader,
+          // template5: this.resourceTootip, //tooltip
+          template6: this.mfButton, //header
+          template8: this.contentTmp, //content
+          //template7: this.footerButton,//footer
+          // statusColorRef: 'EP022',
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
+  }
   searchChanged(e) {}
   selectedChange(e) {}
   //#endregion

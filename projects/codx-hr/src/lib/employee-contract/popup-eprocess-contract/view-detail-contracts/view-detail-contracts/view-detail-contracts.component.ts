@@ -16,6 +16,7 @@ import {
   FormModel,
   ViewsComponent,
 } from 'codx-core';
+import moment from 'moment';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -75,6 +76,8 @@ export class ViewDetailContractsComponent implements OnInit {
   benefitFormGroup: FormGroup;
   lstBenefit;
   active = 1;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   ngOnInit(): void {
     // this.userID = this.authStore.get().userID;

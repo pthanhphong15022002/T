@@ -162,21 +162,21 @@
         </div>
         <div class="col-2 form-group">
           <codx-label
-            fiedName="invoiceSeri"
+            fiedName="invoiceSeriNo"
             [formModel]="form.formModel"
             default="Ký hiệu"
           >
           </codx-label>
           <codx-input
             [Group]="form.formGroup"
-            field="invoiceSeri"
+            field="invoiceSeriNo"
             [formModel]="form.formModel"
             (valueChange)="onInputChange($event)"
           ></codx-input>
         </div>
         <div class="col-4 form-group">
           <codx-label
-            fiedName="InvoiceNo"
+            fiedName="invoiceNo"
             [formModel]="form.formModel"
             default="Số hóa đơn"
           >
@@ -311,22 +311,7 @@
           >
           </codx-input>
         </div>
-        <div class="col-6 form-group">
-          <codx-label
-            fiedName="objectName"
-            [formModel]="form.formModel"
-            default="Tên nhà cung cấp"
-          >
-          </codx-label>
-          <codx-input
-            field="objectName"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [disabled]="true"
-          >
-          </codx-input>
-        </div>
-        <div class="col-3 form-group">
+        <div class="col-9 form-group">
           <codx-label fiedName="pmtMethodID" [formModel]="form.formModel">
           </codx-label>
           <codx-input
