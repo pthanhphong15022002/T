@@ -91,6 +91,7 @@ export class QuotationsTabViewComponent
   itemSelected: any;
   popupView: DialogRef;
   isNewVersion: boolean;
+  oldVersion: any;
 
   constructor(
     private inject: Injector,
@@ -239,7 +240,23 @@ export class QuotationsTabViewComponent
       case 'CM0202_5':
         this.viewDetail(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   add() {
@@ -289,6 +306,7 @@ export class QuotationsTabViewComponent
       action: action,
       headerText: action == 'add' ? this.titleActionAdd : this.titleAction,
       copyToRecID: copyToRecID,
+      isNewVersion: this.isNewVersion,
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -307,8 +325,16 @@ export class QuotationsTabViewComponent
     dialog.closed.subscribe((e) => {
       if (e?.event) {
         this.listQuotations.push(e.event);
-        if (this.isNewVersion) this.isNewVersion = false;
+        if (this.isNewVersion && this.oldVersion) {
+          this.oldVersion.newVerCreated = true;
+          let idx = this.listQuotations.findIndex(
+            (x) => x.recID == this.oldVersion.recID
+          );
+          if (idx != -1) this.listQuotations[idx] = this.oldVersion;
+          this.oldVersion = null;
+        }
       }
+      this.isNewVersion = false;
     });
   }
 
@@ -338,6 +364,7 @@ export class QuotationsTabViewComponent
       option
     );
     dialog.closed.subscribe((e) => {
+      if (this.isNewVersion) this.isNewVersion = false;
       if (e?.event) {
         let dataUp = e?.event;
         let idxUp = this.listQuotations.findIndex(
@@ -364,22 +391,18 @@ export class QuotationsTabViewComponent
           data[field] = dataCopy[field];
         });
       }
+
+      if (this.isNewVersion) {
+        data.revision = dataCopy.revision;
+        data.versionNo = dataCopy.versionNo;
+        data.versionName = dataCopy.versionName;
+        data.status = '0';
+        data.approveStatus = '1';
+        data.approvedDate = null;
+        data.refID = dataCopy.recID;
+      }
       this.quotation = data;
       this.openPopup(this.quotation, 'copy', copyToRecID);
-      // if (!this.quotation.quotationsID) {
-      //   this.api
-      //     .execSv<any>(
-      //       'SYS',
-      //       'AD',
-      //       'AutoNumbersBusiness',
-      //       'GenAutoNumberAsync',
-      //       [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-      //     )
-      //     .subscribe((id) => {
-      //       res.quotationID = id;
-      //       this.openPopup(this.quotation, 'copy', copyToRecID);
-      //     });
-      // } else this.openPopup(this.quotation, 'copy', copyToRecID);
     });
   }
 
@@ -457,6 +480,7 @@ export class QuotationsTabViewComponent
     switch (dt.status) {
       case '4':
       case '2':
+        this.oldVersion = JSON.parse(JSON.stringify(data));
         dt.versionNo =
           dt.versionNo[0] + (Number.parseInt(dt.versionNo.slice(1)) + 1);
         dt.revision = 0;

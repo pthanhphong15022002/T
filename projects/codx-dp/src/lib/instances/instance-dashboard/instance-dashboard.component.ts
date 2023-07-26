@@ -15,6 +15,7 @@ import {
   AnimationModel,
   ChartAnnotationSettingsModel,
 } from '@syncfusion/ej2-angular-charts';
+import { Browser } from '@syncfusion/ej2-base';
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -136,21 +137,21 @@ export class InstanceDashboardComponent implements OnInit {
       row: 11,
       col: 0,
       sizeX: 16,
-      sizeY: 5,
+      sizeY: 6,
       minSizeX: 16,
-      minSizeY: 5,
+      minSizeY: 6,
       maxSizeX: null,
       maxSizeY: null,
       // header: 'Lý do thành công',
     },
     {
       id: '90.06496875406606994_layout',
-      row: 16,
+      row: 17,
       col: 0,
       sizeX: 16,
-      sizeY: 5,
+      sizeY: 6,
       minSizeX: 16,
-      minSizeY: 5,
+      minSizeY: 6,
       maxSizeX: null,
       maxSizeY: null,
       // header: 'Lý do thất bại',
@@ -160,9 +161,9 @@ export class InstanceDashboardComponent implements OnInit {
       row: 11,
       col: 16,
       sizeX: 32,
-      sizeY: 10,
+      sizeY: 12,
       minSizeX: 32,
-      minSizeY: 10,
+      minSizeY: 12,
       maxSizeX: null,
       maxSizeY: null,
       // header: 'Thống kê hiệu suất trong năm',
@@ -245,7 +246,7 @@ export class InstanceDashboardComponent implements OnInit {
 
 
   ]
-  productivityYear;
+  productivityYear: ProductivityYear[] = [];
 
   CountInsSteps: any;
   sumStep = 0;
@@ -266,20 +267,7 @@ export class InstanceDashboardComponent implements OnInit {
       y: '50%',
     },
   ];
-  public data: Object[] = [
-    { name: 'Giai đoạn 1', count: 20, text: '35%' },
-    { name: 'Giai đoạn 2', count: 15, text: '35%' },
-    { name: 'Giai đoạn 3', count: 5, text: '35%' },
-    { name: 'Giai đoạn 4', count: 16, text: '35%' },
-    { name: 'Giai đoạn 5', count: 20, text: '35%' },
-    { name: 'Giai đoạn 6', count: 35, text: '35%' },
-  ];
-  public tooltip: Object = {
-    enable: true,
-    format:
-      '<b>${point.x}</b><br>Tỷ lệ: <b>${point.text}%</b><br>Số lượng: <b>${point.y}</b>',
-    header: '',
-  };
+
   //Initializing Legend
   public innerRadius: string = '85%';
   public radius: string = '100%';
@@ -303,48 +291,6 @@ export class InstanceDashboardComponent implements OnInit {
     'rgb(0 82 177 / 30%)',
   ];
 
-  //thóng kê
-  public chartArea: Object = {
-    border: {
-      width: 0,
-    },
-  };
-  //Initializing Primary X Axis
-  public primaryXAxis: Object = {
-    interval: 1,
-    valueType: 'Category',
-    majorGridLines: { width: 0 },
-    minorGridLines: { width: 0 },
-    majorTickLines: { width: 0 },
-    minorTickLines: { width: 0 },
-    lineStyle: { width: 0 },
-    labelIntersectAction: 'Rotate90',
-  };
-  //Initializing Primary Y Axis
-  public primaryYAxis: Object = {
-    title: '',
-    minimum: 0,
-    maximum: 100,
-    interval: 10,
-    lineStyle: { width: 0 },
-    majorTickLines: { width: 0 },
-    majorGridLines: { width: 1 },
-    minorGridLines: { width: 1 },
-    minorTickLines: { width: 0 },
-  };
-  tooltip1: Object = {
-    enable: true,
-    shared: true,
-    format: '${series.name} : <b>${point.y}</b>',
-  };
-  public data1: Object[] = [
-    { x: 'Button Defect', y: 23 },
-    { x: 'Pocket Defect', y: 16 },
-    { x: 'Collar Defect', y: 10 },
-    { x: 'Cuff Defect', y: 7 },
-    { x: 'Sleeve Defect', y: 6 },
-    { x: 'Other Defect', y: 2 },
-  ];
   paretoOptions: Object = {
     marker: {
       visible: true,
@@ -369,6 +315,32 @@ export class InstanceDashboardComponent implements OnInit {
 
   isQuantity = false;
   isTallest = true;
+
+  public chartArea: Object = {
+    border: {
+        width: 0
+    }
+};
+public width: string = Browser.isDevice ? '100%' : '75%';
+
+primaryXAxis;
+primaryYAxis;
+
+public legend: Object = {
+    visible: true,
+    enableHighlight : true
+};
+public marker1: Object = {
+  visible: true,
+  shape: 'Circle',
+  fill: 'gray',
+  width: 2,
+  height: 2,
+  border: { color: 'black', width: 0 }
+};
+tooltip = {};
+ 
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -395,6 +367,7 @@ export class InstanceDashboardComponent implements OnInit {
     this.funcID = this.router.snapshot.params['funcID'];
     this.getDataDashboard('ProcessID==@0', this.processID);
   }
+
   setQuantity(data) {
     this.isQuantity = data;
   }
@@ -438,6 +411,7 @@ export class InstanceDashboardComponent implements OnInit {
       this.countFails = this.dataDashBoard?.countsReasonsFails;
       this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
       this.countInstances = this.dataDashBoard?.countsInstance;
+      this.productivityOwner = this.dataDashBoard?.productivity;
 
       let counts = this.dataDashBoard?.counts;
       for (var prop in counts) {
@@ -445,6 +419,7 @@ export class InstanceDashboardComponent implements OnInit {
           this.sumStep += counts[prop];
         }
       }
+      this.setDataProductivityYear(this.dataDashBoard?.revenue);
       this.content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`;
       console.log(this.dataDashBoard);
       this.isLoaded = true;
@@ -458,8 +433,63 @@ export class InstanceDashboardComponent implements OnInit {
       this.isLoaded = true;
     }
   }
+
+  setDataProductivityYear(data){
+    if(data && data.length > 0){
+      let max = 0;
+      data?.forEach(item => {
+        let productivity = new ProductivityYear();
+        productivity.month = "Tháng " + item?.month.toString(); 
+        productivity.expected = item?.expectedRevenue || 0;
+        productivity.reality = item?.revenue || 0;
+        this.productivityYear.push(productivity);
+        let maxProductivity =  productivity.expected > productivity.reality ? productivity.expected : productivity.reality;
+        max = maxProductivity > max ? maxProductivity : max;
+      });
+      this.settingChart(max)
+    }
+  }
+
+  settingChart(max){
+    let interval = Math.ceil(max / 10);
+    let maximum = interval*10;
+    
+    this.primaryXAxis = {
+      title: null,
+      interval: Browser.isDevice ? 2 : 1,
+      labelIntersectAction: 'Rotate45',
+      valueType: 'Category',
+      majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
+      lineStyle: { width: 0 },
+    };
+    this.primaryYAxis = {
+      title: 'VND',
+      minimum: 0,
+      maximum: maximum,
+      interval: interval,
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 }, minorTickLines: { width: 0 },
+      labelFormat: '{value}',
+    };
+
+    this.tooltip = {
+      enable: true,
+      shared: true,
+      format: '${series.name} : <b>${point.y}</b>',
+    };
+  
+  }
+
   setID() {
     let id = Util.uid();
     return id;
   }
+}
+
+export class ProductivityYear {
+  month: string;
+  expected: number;
+  reality: number;
 }

@@ -1350,23 +1350,23 @@ export class CodxHrService {
     );
   }
 
-  AddEmployeeBasicSalariesInfo(data) {
+  AddEmployeeBasicSalariesInfo(data, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EBasicSalariesBusiness',
       'AddEmployeeBasicSalariesInfoAsync',
-      data
+      [data, useForQTNS]
     );
   }
 
-  UpdateEmployeeBasicSalariesInfo(data) {
+  UpdateEmployeeBasicSalariesInfo(data, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EBasicSalariesBusiness',
       'UpdateEmployeeBasicSalariesInfoAsync',
-      data
+      [data, useForQTNS]
     );
   }
   getOldBasicSalary(data) {
@@ -1735,35 +1735,39 @@ export class CodxHrService {
     );
   }
 
-  addEContract(data: any) {
+  addEContract(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'AddEContractAsync',
-      [data]
+      [data, useForQTNS]
     );
   }
 
-  validateBeforeSaveContract(data: any, isAddNew: boolean) {
+  validateBeforeSaveContract(
+    data: any,
+    isAddNew: boolean,
+    useForQTNS: boolean
+  ) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'ValidateBeforeSaveAsync',
-      [data, isAddNew]
+      [data, isAddNew, useForQTNS]
     );
   }
 
   ValidateBeforeSaveAsync;
 
-  editEContract(data: any) {
+  editEContract(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'EditEContractAsync',
-      data
+      [data, useForQTNS]
     );
   }
 
@@ -1800,13 +1804,13 @@ export class CodxHrService {
     );
   }
 
-  AddEBenefit(data: any) {
+  AddEBenefit(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'AddEBenefitAsync',
-      [data]
+      [data, useForQTNS]
     );
   }
 
@@ -1830,13 +1834,13 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeBenefitMoreFunc(data: any) {
+  EditEmployeeBenefitMoreFunc(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'EditEmployeeBenefitMoreFunc',
-      data
+      [data, useForQTNS]
     );
   }
   //#endregion

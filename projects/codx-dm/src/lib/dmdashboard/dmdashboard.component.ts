@@ -61,7 +61,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     { month: 'Nov', sales: 25 },
     { month: 'Dec', sales: 32 },
   ];
-  
+
   public primaryXAxis: Object = {
     valueType: 'Category',
   };
@@ -148,6 +148,26 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     },
   ];
 
+  public data1: object[] = [
+    { Product: 'TV : 30 (12%)', Percentage: 12, TextMapping: 'TV, 30 <br>12%' },
+    { Product: 'PC : 20 (8%)', Percentage: 8, TextMapping: 'PC, 20 <br>8%' },
+    {
+      Product: 'Laptop : 40 (16%)',
+      Percentage: 16,
+      TextMapping: 'Laptop, 40 <br>16%',
+    },
+    {
+      Product: 'Mobile : 90 (36%)',
+      Percentage: 36,
+      TextMapping: 'Mobile, 90 <br>36%',
+    },
+    {
+      Product: 'Camera : 27 (11%)',
+      Percentage: 11,
+      TextMapping: 'Camera, 27 <br>11%',
+    },
+  ];
+
   public leafItemSettings: object = {
     labelPath: 'State',
   };
@@ -168,6 +188,10 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     this.datas = JSON.parse(
       '[{"panelId":"0.9605255352952085_layout","data":""},{"panelId":"0.47112877938374287_layout","data":""},{"panelId":"0.7647024471772221_layout","data":""},{"panelId":"0.6213687501730532_layout","data":""},{"panelId":"0.7292886175486251_layout","data":""}]'
     );
+
+    // this.api
+    //   .execSv('DM', 'DM', 'FileBussiness', 'GetDataDashboardAsync', [])
+    //   .subscribe((res: any) => {});
   }
 
   ngAfterViewInit(): void {

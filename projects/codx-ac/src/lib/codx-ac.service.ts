@@ -8,19 +8,49 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, takeUntil, tap } from 'rxjs';
 import { Reason } from './models/Reason.model';
+import { Subject } from '@microsoft/signalr';
+import { log } from 'console';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxAcService {
   childMenuClick = new BehaviorSubject<any>(null);
+  stores = new Map<string, any>();
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService
-  ) {}
+  ) {
+    this.getCache();
+  }
+
+  getCache() {
+    this.api
+      .exec('AC', 'CommonBusiness', 'GetCacheAccountAsync', '')
+      .subscribe((res) => {
+        if (res) this.stores.set('account', res);
+      });
+
+    // this.api
+    //   .exec('AC', 'CommonBusiness', 'GetCacheSubObjectAsync', '')
+    //   .subscribe((res) => {
+    //     if (res) this.stores.set('subobject', res);
+    //   });
+  }
+
+  getCacheValue(storeName: string, value: string) {
+    let v = '';
+    if (this.stores.has(storeName)) v = this.stores.get(storeName)[value];
+    return v;
+  }
+
+  getGridViewSetup(formName:any,gridViewName:any){
+    return this.cache.gridViewSetup(formName,gridViewName)
+  }
+
   setCacheFormModel(formModel: FormModel) {
     this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
       this.cache.setGridView(formModel.gridViewName, gridView);
@@ -37,6 +67,10 @@ export class CodxAcService {
   }
 
   loadData(assemblyName: any, className: any, methodName: any, data: any) {
+    return this.api.exec(assemblyName, className, methodName, data);
+  }
+
+  execApi(assemblyName: any, className: any, methodName: any, data: any){
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
@@ -169,7 +203,7 @@ export class CodxAcService {
           gridViewSetup[propName].dataType === 'String' &&
           !data[dataPropName]?.trim()
         ) {
-          console.log('invalid', { propName });
+          //console.log('invalid', { propName });
 
           this.notiService.notifyCode(
             'SYS009',
@@ -209,7 +243,7 @@ export class CodxAcService {
           gridViewSetup[propName].dataType === 'String' &&
           !data[dataPropName]?.trim()
         ) {
-          console.log('invalid', { propName });
+          //console.log('invalid', { propName });
 
           this.notiService.notifyCode(
             'SYS009',
@@ -255,9 +289,9 @@ export class CodxAcService {
         [dataRequest]
       )
       .pipe(
-        tap((p) => console.log(p)),
+        //tap((p) => console.log(p)),
         map((p) => JSON.parse(p[0])),
-        tap((p) => console.log(p))
+        //tap((p) => console.log(p))
       );
   }
 
@@ -265,7 +299,7 @@ export class CodxAcService {
     return this.api
       .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
       .pipe(
-        tap((r) => console.log(r)),
+        //tap((r) => console.log(r)),
         map((r) => r[0])
       );
   }
@@ -313,7 +347,7 @@ export class CodxAcService {
         'DeleteByObjectIDAsync',
         [objectId, objectType, true]
       )
-      .subscribe((res) => console.log('deleteFile', res));
+      .subscribe();
   }
 
   getACParameters(category: string = '1'): Observable<any> {
@@ -322,8 +356,16 @@ export class CodxAcService {
       map((data) => JSON.parse(data.dataValue))
     );
   }
+  
+  getCompanySetting(){
+    return this.cache.companySetting();
+  }
 
-  CheckExistAccount(data: any): boolean {
+  getFunctionList(funcID){
+    return this.cache.functionList(funcID);
+  }
+
+  checkExistAccount(data: any): boolean {
     let result: boolean = true;
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'CheckExistAccount', [data])

@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { PopAddLineReceiptTransactionComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
+import { itemMove } from '@syncfusion/ej2-angular-treemap';
 
 
 @Component({
@@ -48,6 +49,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   modeGrid: any;
   vouchersLines: Array<VouchersLines> = [];
   vouchersLinesDelete: Array<VouchersLines> = [];
+  dataUpdate: VouchersLines = new VouchersLines();
   lockFields = [];
   tab: number = 0;
   total: any = 0;
@@ -114,6 +116,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
+    if (dialogData?.data.lockFields && dialogData?.data.lockFields.length > 0) {
+      this.lockFields = [...dialogData?.data.lockFields];
+    }
     this.funcID = dialog.formModel.funcID;
     this.cache
       .gridViewSetup(this.fmVouchers.formName, this.fmVouchers.gridViewName)
@@ -127,9 +132,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     .subscribe((res) => {
       if (res) {
         this.gridViewSetupLine = res;
-        this.lockFields.forEach((field) => {
-          this.gridViewSetupLine[field].isVisible = false;
-        });
       }
     });
   }
@@ -152,8 +154,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   //#region Event
 
-  gridCreated() {
-    this.gridVouchersLine.hideColumns(this.lockFields);
+  gridInit(columnsGrid)
+  {
+    this.setVisibleColumn(columnsGrid);
+    this.setHideColumns(columnsGrid);
     setTimeout(() => {
       this.loadingform = false;
     }, 1000);
@@ -230,6 +234,17 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     //   this.setPredicateByIDIM4(e.data[e.field]);
     // }
 
+    if(this.dataUpdate)
+    {
+      if(this.dataUpdate.recID &&
+        this.dataUpdate.recID == e.data.recID &&
+        this.dataUpdate[e.field] == e.data[e.field]
+        )
+        {
+          return;
+        }
+    }
+
     const postFields: string[] = [
       'itemID',
       'costPrice',
@@ -255,10 +270,22 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.vouchers,
           e.data,
         ])
-        .subscribe((line) => {
-          console.log(line);
+        .subscribe((res: any) => {
+          console.log(res);
+          if(res)
+          {
+            var arrColumn = [];
+            arrColumn = res.updateColumns.split(';');
+            arrColumn.forEach((a) => {
+              if (a) {
+                let field = Util.camelize(a);
+                e.data[field] = res[field];
+              }
+            });
+            this.dataUpdate = Object.assign(this.dataUpdate, e.data);
+          }
           
-          this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], line);
+          // this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], res);
         });
     }
     // switch(e.field)
@@ -314,14 +341,29 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   onDiscard(){
+    if(this.modeGrid == 1)
+    {
+      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+      {
+        this.discard();
+      }
+    }
+    else
+    {
+      this.discard();
+    }
+  }
+
+  discard()
+  {
     this.dialog.dataService
-      .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
-      .subscribe((res) => {
-        if (res.data != null) {
-          this.dialog.close();
-          this.dt.detectChanges();
-        }
-      });
+    .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
+    .subscribe((res) => {
+      if (res.data != null) {
+        this.dialog.close();
+        this.dt.detectChanges();
+      }
+    });
   }
 
   onDoubleClick(data)
@@ -583,28 +625,28 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.getWarehouseName(this.vouchers.warehouseID);
     }
 
-    if (
-      this.vouchers &&
-      this.vouchers.unbounds &&
-      this.vouchers.unbounds.lockFields &&
-      this.vouchers.unbounds.lockFields.length
-    ){
-      this.lockFields = this.vouchers.unbounds
-        .lockFields as Array<string>;
-    }
-    else{
-      this.api
-        .exec('IV', 'VouchersBusiness', 'SetUnboundsAsync', [
-          this.vouchers
-        ])
-        .subscribe((res: any) => {
-          if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
-            this.vouchers.unbounds = res.unbounds;
-            this.lockFields = this.vouchers.unbounds
-              .lockFields as Array<string>;
-          }
-        });
-    }
+    // if (
+    //   this.vouchers &&
+    //   this.vouchers.unbounds &&
+    //   this.vouchers.unbounds.lockFields &&
+    //   this.vouchers.unbounds.lockFields.length
+    // ){
+    //   this.lockFields = this.vouchers.unbounds
+    //     .lockFields as Array<string>;
+    // }
+    // else{
+    //   this.api
+    //     .exec('IV', 'VouchersBusiness', 'SetUnboundsAsync', [
+    //       this.vouchers
+    //     ])
+    //     .subscribe((res: any) => {
+    //       if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
+    //         this.vouchers.unbounds = res.unbounds;
+    //         this.lockFields = this.vouchers.unbounds
+    //           .lockFields as Array<string>;
+    //       }
+    //     });
+    // }
     if (this.vouchers.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
@@ -669,6 +711,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   .save(null, 0, '', '', false)
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
+                      this.vouchers = res.save.data;
                       this.hasSaved = true;
                       this.loadModegrid();
                     }
@@ -1186,34 +1229,31 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.addRow();
         }
         break;
-      case 'closeEdit':
-        this.gridVouchersLine.autoAddRow = true;
-        break;
     }
   }
 
-  setPredicatesByItemID(dataValue: string): void {
-    for (const v of this.gridVouchersLine.visibleColumns) {
-      if (
-        ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
-          v.fieldName?.toLowerCase()
-        )
-      ) {
-        v.predicate = 'ItemID=@0';
-        v.dataValue = dataValue;
-      }
-    }
-  }
+  // setPredicatesByItemID(dataValue: string): void {
+  //   for (const v of this.gridVouchersLine.visibleColumns) {
+  //     if (
+  //       ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
+  //         v.fieldName?.toLowerCase()
+  //       )
+  //     ) {
+  //       v.predicate = 'ItemID=@0';
+  //       v.dataValue = dataValue;
+  //     }
+  //   }
+  // }
 
-  setPredicateByIDIM4(dataValue: string): void {
-    const idim5 = this.gridVouchersLine.visibleColumns.find(
-      (v) => v.fieldName?.toLowerCase() === 'idim5'
-    );
-    if (idim5) {
-      idim5.predicate = 'WarehouseID=@0';
-      idim5.dataValue = dataValue;
-    }
-  }
+  // setPredicateByIDIM4(dataValue: string): void {
+  //   const idim5 = this.gridVouchersLine.visibleColumns.find(
+  //     (v) => v.fieldName?.toLowerCase() === 'idim5'
+  //   );
+  //   if (idim5) {
+  //     idim5.predicate = 'WarehouseID=@0';
+  //     idim5.dataValue = dataValue;
+  //   }
+  // }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
@@ -1240,6 +1280,43 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.gridVouchersLine.endEdit();
       }
     }
+  }
+
+  setVisibleColumn(columnsGrid)
+  {
+    let arr = [
+      'IDIM0',
+      'IDIM1',
+      'IDIM2',
+      'IDIM3',
+      'IDIM4',
+      'IDIM5',
+      'IDIM6',
+      'IDIM7',
+      'IDIM8',
+      'IDIM9',
+    ];
+    let visibleColumns = arr.filter((x) => !this.lockFields.includes(x));
+    if(visibleColumns.length > 0)
+    {
+      visibleColumns.forEach((fieldName) => {
+        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+        if (i > -1) {
+          columnsGrid[i].isVisible = true;
+        }
+      });
+    }
+  }
+
+  setHideColumns(columnsGrid)
+  {
+    this.lockFields.forEach((fieldName) => {
+      let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+      if (i > -1) {
+        columnsGrid[i].isVisible = false;
+      }
+    });
+    //this.gridVouchersLine.hideColumns(this.lockFields);
   }
   //#endregion
 }

@@ -58,7 +58,6 @@ export class CashPaymentsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   };
   headerText: any;
-  moreFuncName: any;
   funcName: any;
   journalNo: string;
   itemSelected: any;
@@ -75,8 +74,9 @@ export class CashPaymentsComponent extends UIComponent {
   settledInvoices: any;
   acctTrans: any;
   baseCurr: any;
-  oCash:any;
+  oCash: any;
   isLoadDataAcct: any = true;
+  hideFields: Array<any> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -87,10 +87,6 @@ export class CashPaymentsComponent extends UIComponent {
     gridViewName: 'grvSettledInvoices',
     entityName: 'AC_SettledInvoices',
   };
-  tabItem: any = [
-    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
-    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
-  ];
   //Bo
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -118,32 +114,32 @@ export class CashPaymentsComponent extends UIComponent {
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
-    this.cache.companySetting().subscribe((res) => {
-      this.baseCurr = res.filter((x) => x.baseCurr != null)[0].baseCurr;
-    });
-
-    this.routerActive.queryParams.subscribe((params) => {
-      this.journalNo = params?.journalNo;
-    });
+    this.userID = this.authStore.get().userID;
+    acService
+      .getCompanySetting()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.baseCurr = res[0].baseCurr;
+      });
+    this.routerActive.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        this.journalNo = params?.journalNo;
+      });
+    this.loadjounal();
   }
   //#endregion
   //#region Init
-  
-  onInit(): void {
-    this.userID = this.authStore.get().userID;
-    this.loadjounal();
-  }
+
+  onInit(): void {}
 
   ngAfterViewInit() {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
-    });
+    this.acService
+      .getFunctionList(this.view.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) this.funcName = res.defaultName;
+      });
     this.views = [
       {
         type: ViewType.listdetail,
@@ -203,9 +199,10 @@ export class CashPaymentsComponent extends UIComponent {
 
   ngOnDestroy() {
     this.view.setRootNode('');
+    this.onDestroy();
   }
 
-  onDestroy(){
+  onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -240,7 +237,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.cancelRelease(data);
         break;
       case 'ACT041009':
-        this.checkValidate(data);
+        this.validateVourcher(data);
         break;
       case 'ACT041003':
         this.post(data);
@@ -264,16 +261,18 @@ export class CashPaymentsComponent extends UIComponent {
       if (this.journal) {
         clearInterval(ins);
         this.headerText = this.funcName;
-        this.view.dataService.dataSelected = {...this.oCash};
+        this.view.dataService.dataSelected = { ...this.oCash };
         // this.view.dataService
         //   .addNew((o) => this.setDefault(o))
         //   .subscribe((res: any) => {
-           
+
         //   });
         let obj = {
           formType: 'add',
           headerText: this.headerText,
-          journal: {...this.journal},
+          journal: { ...this.journal },
+          hideFields: [...this.hideFields],
+          baseCurr : this.baseCurr
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -284,10 +283,12 @@ export class CashPaymentsComponent extends UIComponent {
           obj,
           option,
           this.view.funcID
-        ); 
+        );
       }
-      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
-    })
+      setTimeout(() => {
+        if (ins) clearInterval(ins);
+      }, 10000);
+    });
   }
 
   edit(e, data) {
@@ -296,27 +297,31 @@ export class CashPaymentsComponent extends UIComponent {
         clearInterval(ins);
         this.view.dataService.dataSelected = data;
         this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res: any) => {
-          var obj = {
-            formType: 'edit',
-            headerText: this.funcName,
-            journal: {...this.journal},
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
-          var dialog = this.callfunc.openSide(
-            PopAddCashComponent,
-            obj,
-            option,
-            this.view.funcID
-          );
-        });
-      }  
-      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
-    })   
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res: any) => {
+            var obj = {
+              formType: 'edit',
+              headerText: this.funcName,
+              journal: { ...this.journal },
+              hideFields: [...this.hideFields],
+              baseCurr : this.baseCurr
+            };
+            let option = new SidebarModel();
+            option.DataService = this.view.dataService;
+            option.FormModel = this.view.formModel;
+            option.isFull = true;
+            var dialog = this.callfunc.openSide(
+              PopAddCashComponent,
+              obj,
+              option,
+              this.view.funcID
+            );
+          });
+      }
+      setTimeout(() => {
+        if (ins) clearInterval(ins);
+      }, 10000);
+    });
   }
 
   copy(e, data) {
@@ -325,27 +330,29 @@ export class CashPaymentsComponent extends UIComponent {
         clearInterval(ins);
         this.view.dataService.dataSelected = data;
         this.view.dataService
-        .copy((o) => this.setDefault(o))
-        .subscribe((res: any) => {
-          var obj = {
-            formType: 'copy',
-            headerText: this.funcName,
-            journal: {...this.journal},
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
-          var dialog = this.callfunc.openSide(
-            PopAddCashComponent,
-            obj,
-            option,
-            this.view.funcID
-          );
-        });
-      }  
-      setTimeout(()=>{if(ins) clearInterval(ins)},10000)
-    })   
+          .copy()
+          .subscribe((res: any) => {
+            var obj = {
+              formType: 'copy',
+              headerText: this.funcName,
+              journal: { ...this.journal },
+            };
+            let option = new SidebarModel();
+            option.DataService = this.view.dataService;
+            option.FormModel = this.view.formModel;
+            option.isFull = true;
+            var dialog = this.callfunc.openSide(
+              PopAddCashComponent,
+              obj,
+              option,
+              this.view.funcID
+            );
+          });
+      }
+      setTimeout(() => {
+        if (ins) clearInterval(ins);
+      }, 10000);
+    });
   }
 
   delete(data) {
@@ -379,15 +386,6 @@ export class CashPaymentsComponent extends UIComponent {
       [gridModel, data.recID],
       null
     );
-  }
-
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'CashPaymentsBusiness';
-    opt.assemblyName = 'AC';
-    opt.service = 'AC';
-    opt.data = data;
-    return true;
   }
 
   changeDataMF(e: any, data: any) {
@@ -622,7 +620,7 @@ export class CashPaymentsComponent extends UIComponent {
         //   this.itemSelected = event?.data;
         //   return;
         // } else {
-          
+
         // }
       }
     }
@@ -634,17 +632,21 @@ export class CashPaymentsComponent extends UIComponent {
     switch (data.subType) {
       case '9':
       case '2':
-        this.api
-          .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [data.recID])
-          .subscribe((res: any) => {
+        this.acService
+          .execApi('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
+            data.recID,
+          ])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
             this.settledInvoices = res;
             this.loadTotalSet();
           });
         break;
     }
-    this.api
-      .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
-      .subscribe((res: any) => {
+    this.acService
+      .execApi('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
         this.acctTrans = res;
         this.loadTotal();
         this.isLoadDataAcct = false;
@@ -655,6 +657,7 @@ export class CashPaymentsComponent extends UIComponent {
   release(data: any) {
     this.acService
       .getCategoryByEntityName(this.view.formModel.entityName)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
         this.shareService
@@ -668,6 +671,7 @@ export class CashPaymentsComponent extends UIComponent {
             '',
             ''
           )
+          .pipe(takeUntil(this.destroy$))
           .subscribe((result) => {
             if (result?.msgCodeError == null && result?.rowCount) {
               this.notification.notifyCode('ES007');
@@ -684,53 +688,56 @@ export class CashPaymentsComponent extends UIComponent {
   cancelRelease(data: any) {
     this.shareService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
-          this.api
-            .exec('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [
-              data,
-              '1',
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                this.itemSelected = res;
-                this.loadDatadetail(this.itemSelected);
-                this.view.dataService
-                  .update(this.itemSelected)
-                  .subscribe((res) => {});
-                this.detectorRef.detectChanges();
-              }
-            });
+          this.acService.loadData('AC','CashPaymentsBusiness','UpdateStatusAsync',[data,'1'])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res => {
+            if (res) {
+              this.itemSelected = res;
+              this.loadDatadetail(this.itemSelected);
+              this.view.dataService
+                .update(this.itemSelected)
+                .subscribe((res) => {});
+              this.detectorRef.detectChanges();
+            }
+          }))
         } else this.notification.notifyCode(result?.msgCodeError);
       });
   }
 
-  checkValidate(data: any) {
-    this.view.dataService.updateDatas.set(data['_uuid'], data);
-    this.view.dataService.save().subscribe((res: any) => {
-      if (res && res.update.data != null) {
-        this.itemSelected = res.update.data;
-        this.loadDatadetail(this.itemSelected);
-        this.view.dataService.update(this.itemSelected).subscribe();
-      }
-    });
+  validateVourcher(data: any) {
+    this.acService
+      .execApi('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.itemSelected = res;
+          this.loadDatadetail(this.itemSelected);
+          this.view.dataService
+            .update(this.itemSelected)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+        }
+      });
   }
 
   post(data: any) {
-    this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostAsync', [data])
-      .subscribe((res: any) => {});
+    // this.acService.postVourcher(data).subscribe((res =>{
+
+    // }))
   }
 
   loadjounal() {
-    this.api
-      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+    this.acService
+      .execApi('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res) {
-          this.journal = res[0];
-          this.oCash = res[1].data;
-        }
+        this.journal = res[0];
+        this.oCash = res[1].data;
+        this.hideFields = res[2];
       });
   }
 
@@ -767,13 +774,8 @@ export class CashPaymentsComponent extends UIComponent {
   createLine(item) {
     if (item.crediting) {
       var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
-      let index = data
-        .filter((x) => x.crediting == item.crediting)
-        .findIndex((x) => x.recID == item.recID);
-      if (
-        index ==
-        data.filter((x) => x.crediting == item.crediting).length - 1
-      ) {
+      let index = data.filter((x) => x.crediting == item.crediting).findIndex((x) => x.recID == item.recID);
+      if (index == data.filter((x) => x.crediting == item.crediting).length - 1) {
         return true;
       } else {
         return false;
@@ -810,27 +812,26 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   print(data: any, reportID: any, reportType: string = 'V') {
-    
     this.api
-    .execSv(
-      'rptsys',
-      'Codx.RptBusiniess.SYS',
-      'ReportListBusiness',
-      'GetListReportByIDandType',
-      [reportID, reportType]
-    )
-    .subscribe((res: any) => {
-      if (res != null ) {
-        if(res.length > 1)
-        {
-          this.openPopupCashReport(data, res);
+      .execSv(
+        'rptsys',
+        'Codx.RptBusiniess.SYS',
+        'ReportListBusiness',
+        'GetListReportByIDandType',
+        [reportID, reportType]
+      )
+      .subscribe((res: any) => {
+        if (res != null) {
+          if (res.length > 1) {
+            this.openPopupCashReport(data, res);
+          } else if (res.length == 1) {
+            this.codxService.navigate(
+              '',
+              'ac/report/detail/' + `${res[0].recID}`
+            );
+          }
         }
-        else if(res.length == 1)
-        {
-          this.codxService.navigate('', 'ac/report/detail/' + `${res[0].recID}`);
-        }
-      }
-    });
+      });
   }
 
   openPopupCashReport(data: any, reportList: any) {
