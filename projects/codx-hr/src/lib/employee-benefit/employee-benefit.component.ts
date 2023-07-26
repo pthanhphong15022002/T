@@ -22,6 +22,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-employee-benefit.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -62,6 +63,8 @@ export class EmployeeBenefitComponent extends UIComponent {
   cmtStatus: string = '';
   // genderGrvSetup: any;
   processID;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   //#region Update modal Status
   actionSubmit = 'HRTPro05A03';
