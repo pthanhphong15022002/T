@@ -746,7 +746,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP26': // Chi tiết giai đoạn
-            res.isbookmark = true;
+            res.isbookmark = false;
             break;
         }
       });
