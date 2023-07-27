@@ -1888,7 +1888,20 @@ codx-dropdown-calendar {
     height: 33px !important;
   }
 }
-
+.page-pw{
+codx-dropdown-calendar {
+  button.dropdown-toggle.btn {
+    height: 28px !important;
+  }
+  .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(
+      .border-active
+    ):not(.btn-flush):not(.btn-icon) {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    height: 28px !important;
+  }
+}
+}
 
 codx-toolbar{
 codx-dropdown-calendar {
@@ -3449,8 +3462,10 @@ lib-employee-list{
 }
 .text-feed{
   height: 210px;
+  font-size: 12px!important;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+
 }
 
 .multiple-employee.w-25px.h-25px{
@@ -3465,10 +3480,16 @@ lib-employee-list{
 //   background-color: transparent !important; /* ẩn thanh cuộn */
 // }
 
+
+
+/*
 .cm-scroll .e-content{
   padding-bottom: 30px;
   overflow: auto;
 }
+
+*/
+/*
 codx-views[ng-reflect-func-i-d="CM0101"]{
   .cm-scroll .e-content{
     height: calc(100vh - 402px)!important;
@@ -3489,9 +3510,11 @@ codx-views[ng-reflect-func-i-d="CM0104"]{
     height: calc(100vh - 340px)!important;
   }
 }
+*/
 
 //////
 
+/*
 codx-lead-detail{
   .codx-detail-body ejs-tab .e-content{
     height: calc(100vh - 424px)!important;
@@ -3511,3 +3534,4 @@ codx-deal-detail{
 lib-organization .content-tree li.menu-item>div.d-flex.align-items-center{
   align-items: start!important;
 }
+*/
