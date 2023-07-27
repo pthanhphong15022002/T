@@ -1,0 +1,221 @@
+<codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
+    [entityName]="entityName" [className]="className" [method]="method" [button]="button" [idField]="idField"
+    [selectedFirst]="true">
+</codx-views>
+
+
+<!-- #region ListView-Mode -->
+<!-- header -->
+<ng-template #headerTemplate let-data>
+    <div class="d-flex w-100 ps-2 pe-4">
+        <div class="w-35 text-dark fw-bold  fw-500">
+            <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Nhân viên'"></codx-label>
+        </div>
+        <div class="w-10 text-dark fw-bold  fw-500">
+            <codx-label fiedName="lblAlYearMonth" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Kỳ phép'"></codx-label>
+        </div>
+        <div class="w-20 text-dark fw-bold  fw-500">
+            <codx-label fiedName="lblAlYearInfo" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Thông tin phép'"></codx-label>
+        </div>
+        <div class="w-25 text-dark fw-bold  fw-500">
+            <codx-label fiedName="lblRemainAlYear" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Phép còn'"></codx-label>
+        </div>
+        <div class="w-25 text-dark fw-bold  fw-500">
+            <codx-label fiedName="lblDaysOff" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Phép đã dùng'"></codx-label>
+        </div>
+    </div>
+</ng-template>
+<!-- end header -->
+<!-- template list -->
+<ng-template #templateList let-data>
+    <div class="d-flex align-items-center min-h-100px border-bottom">
+        <!-- Nhân viên -->
+        <div class="w-35 ps-5 me-3">
+            <div class="d-flex align-items-center">
+                <div class="d-flex flex-column me-4">
+                    <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
+                        objectType="HR_Employees" [width]="40">
+                    </codx-img>
+                </div>
+                <div class="d-flex flex-column">
+                    <div #nameField [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip :null"
+                        class="align-items-center line-clamp line-clamp-1 mb-1">
+                        <span class="fw-bold fs-6 me-3">
+                            {{data.employeeName || data.employeeID}}</span>
+                        <ng-template #nameTooltip>
+                            <div class="inline-tooltip">
+                                <span class="fw-bold fs-6 me-3">
+                                    {{data.employeeName}}</span>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div #positionField *ngIf="data.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
+                        <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName :
+                            data.positionID}}</span>
+                        <ng-template #positionTooltip>
+                            <div class="d-flex flex-column">
+                                <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+                                <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
+                                    class="text-gray-600">{{data.positionName? data.positionName :
+                                    data.positionID}}</span>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Kỳ phép -->
+        <div class="w-10 me-3">
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <span #emailField class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
+                        {{data.alYearMonth}}
+                    </span>
+                    <ng-template #noALYearMonth>
+                        <span class="place-holder">{{grvSetup['ALYearMonth'].headerText}}</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <!-- Thông tin phép -->
+        <div class="w-20 me-3">
+            <div class="d-flex flex-column">
+                <div class="align-items-center1 mb-1">
+                    <div #alPreYear class="line-clamp line-clamp-1" [ngbTooltip]="(alPreYear.scrollHeight > alPreYear.clientHeight
+                        && data.alPreYear) ? alPreYearToolTip: null">
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'AlPreYear'"
+                            [formModel]="view.formModel" default="Tồn năm trước: "></codx-label>
+                        <ng-container *ngIf="data.alPreYear; else noALPreYear">
+                            <span class="data-text-color">{{ data.alPreYear }}</span>
+                        </ng-container>
+                        <ng-template #noALPreYear>
+                            <span class="place-holder">{{grvSetup['ALPreYear'].headerText}}</span>
+                        </ng-template>
+                    </div>
+                    <ng-template #alPreYearToolTip>
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'AlPreYear'"
+                            [formModel]="view.formModel" default="Tồn năm trước: "></codx-label>
+                        <span class="data-text-color">{{ data.alPreYear }}</span>
+                    </ng-template>
+                </div>
+                <div class="align-items-center mb-1">
+                    <div #alThisYear class="line-clamp line-clamp-1" [ngbTooltip]="(alThisYear.scrollHeight > alThisYear.clientHeight
+                        && data.alThisYear) ? alThisYearToolTip: null">
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ALThisYear'"
+                            [formModel]="view.formModel" default="Tiêu chuẩn năm nay: "></codx-label>
+                        <ng-container *ngIf="data.alThisYear; else noALThisYear">
+                            <span class="data-text-color">{{data?.alThisYear}}</span>
+                        </ng-container>
+                        <ng-template #noALThisYear>
+                            <span class="data-text-color">{{grvSetup['AlThisYear']?.headerText}}</span>
+                        </ng-template>
+                    </div>
+                    <ng-template #alThisYearToolTip>
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ALThisYear'"
+                            [formModel]="view.formModel" default="Tiêu chuẩn năm nay: "></codx-label>
+                        <span class="data-text-color">{{ data.alThisYear }}</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <!-- Phép còn -->
+        <div class="w-25 me-3">
+            <div class="d-flex flex-column">
+                <div class="align-items-center1 mb-1">
+                    <div #realALPreYear class="line-clamp line-clamp-1" [ngbTooltip]="(realALPreYear.scrollHeight > realALPreYear.clientHeight
+                        && data.realALPreYear) ? realALPreYearToolTip: null">
+                        <codx-label class="label-colon label-text-color" [setRequire]="false"
+                            [fiedName]="'RealALPreYear'" [formModel]="view.formModel"
+                            default="Còn năm trước: "></codx-label>
+                        <ng-container *ngIf="data.realALPreYear; else noRealALPreYear">
+                            <span class="data-text-color fw-bold">{{ data.realALPreYear }}</span>
+                        </ng-container>
+                        <ng-template #noRealALPreYear>
+                            <span class="place-holder">{{grvSetup['RealALPreYear'].headerText}}</span>
+                        </ng-template>
+                    </div>
+                    <ng-template #realALPreYearToolTip>
+                        <codx-label class="label-colon label-text-color" [setRequire]="false"
+                            [fiedName]="'RealALPreYear'" [formModel]="view.formModel"
+                            default="Còn năm trước: "></codx-label>
+                        <span class="data-text-color fw-bold">{{ data.realALPreYear }}</span>
+                    </ng-template>
+                </div>
+                <div class="align-items-center mb-1">
+                    <div #realALThisYear class="line-clamp line-clamp-1" [ngbTooltip]="(realALThisYear.scrollHeight > realALThisYear.clientHeight
+                        && data.realALThisYear) ? realALThisYearToolTip: null">
+                        <codx-label class="label-colon label-text-color" [setRequire]="false"
+                            [fiedName]="'RealALThisYear'" [formModel]="view.formModel"
+                            default="Còn năm nay: "></codx-label>
+                        <ng-container *ngIf="data.realALThisYear; else noRealALThisYear">
+                            <span class="data-text-color fw-bold">{{data?.realALThisYear}}</span>
+                        </ng-container>
+                        <ng-template #noRealALThisYear>
+                            <span class="data-text-color">{{grvSetup['RealAlThisYear']?.headerText}}</span>
+                        </ng-template>
+                    </div>
+                    <ng-template #realALThisYearToolTip>
+                        <codx-label class="label-colon label-text-color" [setRequire]="false"
+                            [fiedName]="'RealALThisYear'" [formModel]="view.formModel"
+                            default="Còn năm nay: "></codx-label>
+                        <span class="data-text-color fw-bold">{{data?.realALThisYear}}</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <!-- Đã nghỉ -->
+        <div class="w-25 ">
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center mb-1">
+                    <div #daysOff class="line-clamp line-clamp-1" [ngbTooltip]="(daysOff.scrollHeight > daysOff.clientHeight
+                        && data.daysOff) ? daysOffTooltip: null">
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DaysOff'"
+                            [formModel]="view.formModel" default="Đã nghỉ: ">
+                        </codx-label>
+                        <ng-container *ngIf="data.daysOff; else noDaysOff">
+                            <span class="data-text-color">{{data.daysOff}}</span>
+                        </ng-container>
+                        <ng-template #noDaysOff>
+                            <span class="place-holder">{{grvSetup['DaysOff'].headerText}}</span>
+                        </ng-template>
+                    </div>
+                    <ng-template #daysOffTooltip>
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DaysOff'"
+                            [formModel]="view.formModel" default="Đã nghỉ: ">
+                        </codx-label>
+                        <span class="data-text-color">{{data.daysOff}}</span>
+                    </ng-template>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div #alObjectID class="line-clamp line-clamp-1" [ngbTooltip]="(alObjectID.scrollHeight > alObjectID.clientHeight
+                         && data.alObjectID) ? alObjectToolTip: null">
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ALObjectID'"
+                            [formModel]="view.formModel" default="Đối tượng tính phép năm: ">
+                        </codx-label>
+                        <ng-container *ngIf="data.alObjectID; else noALObjectID">
+                            <span class="data-text-color"
+                                [innerHTML]="data.alObjectID | formatvalue: view.formModel : 'alObjectID' | async"></span>
+                        </ng-container>
+                        <ng-template #noALObjectID>
+                            <span class="place-holder">{{grvSetup['ALObjectID'].headerText}}</span>
+                        </ng-template>
+                    </div>
+                    <ng-template #alObjectToolTip>
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ALObjectID'"
+                            [formModel]="view.formModel" default="Đối tượng tính phép năm: ">
+                        </codx-label>
+                        <span class="data-text-color"
+                            [innerHTML]="data.alObjectID | formatvalue: view.formModel : 'alObjectID' | async"></span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- end template list -->
+<!-- #endregion  -->

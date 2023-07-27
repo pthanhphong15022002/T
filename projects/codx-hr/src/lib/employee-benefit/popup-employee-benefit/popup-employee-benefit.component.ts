@@ -11,6 +11,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { FormGroup } from '@angular/forms';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-employee-benefit',
@@ -34,10 +35,12 @@ export class PopupEmployeeBenefitComponent
   isAfterRender = false;
   headerText: string;
   employeeObj: any;
+  useForQTNS: boolean = false;
   // decisionNoDisable: boolean = false;
   autoNumField: string;
   data: any;
-
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
@@ -55,6 +58,7 @@ export class PopupEmployeeBenefitComponent
     this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
+    this.useForQTNS = data?.data?.useForQTNS;
     if (data.data.empObj) {
       this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     }
@@ -244,15 +248,20 @@ export class PopupEmployeeBenefitComponent
 
     this.currentEJobSalaries.employeeID = this.employeeId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrSevice.AddEBenefit(this.currentEJobSalaries).subscribe((p) => {
-        if (p != null) {
-          this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close(p);
-          p[0].emp = this.employeeObj;
-        } else {
-          this.notify.notifyCode('SYS023');
-        }
-      });
+      this.hrSevice
+        .AddEBenefit(this.currentEJobSalaries, this.useForQTNS)
+        .subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS006');
+            this.dialog && this.dialog.close(p);
+            p[0].emp = this.employeeObj;
+            if (p[1]) {
+              p[1].emp = this.employeeObj;
+            }
+          } else {
+            this.notify.notifyCode('SYS023');
+          }
+        });
     } else {
       this.hrSevice.EditEBenefit(this.formModel.currentData).subscribe((p) => {
         if (p != null) {

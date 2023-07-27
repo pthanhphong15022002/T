@@ -365,3 +365,110 @@
     [type]="'quotation'"
   ></list-contracts>
 </ng-template>
+
+<!-- lien ket -->
+<ng-template #connectiveTab let-data>
+  <ng-container *ngIf="loadedRef">
+    <div *ngIf="dataRef; else noData" class="p-3">
+      <div class="d-flex justify-content-start mb-1">
+        <div>
+          <i></i>
+        </div>
+        <div class="d-flex align-items-stretch">
+          <codx-label
+            fiedName="versionName"
+            [formModel]="formModel"
+            class="label-colon fw-bold"
+          >
+          </codx-label>
+          <span
+            class="text-gray-700 line-clamp-menu"
+            [ngbTooltip]="dataRef.versionName"
+            #versionName
+            [innerHTML]="
+              dataRef?.versionName
+                | formatvalue : formModel : 'versionName'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="ms-auto">
+          <span
+            class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+          ></span>
+          <span
+            class="text-gray-700 line-clamp-menu pe-2"
+            #totalAmt
+            [innerHTML]="
+              dataRef?.totalAmt | formatvalue : formModel : 'totalAmt' | async
+            "
+          ></span>
+          <span
+            class="text-gray-700 line-clamp-menu"
+            #currencyID
+            [innerHTML]="
+              dataRef?.currencyID
+                | formatvalue : formModel : 'currencyID'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-start mb-1">
+        <codx-label
+          fiedName="quotationName"
+          [formModel]="formModel"
+          [setRequire]="false"
+          class="label-colon fw-bold"
+        >
+        </codx-label>
+        <span
+          [innerHTML]="
+            dataRef?.quotationName
+              | formatvalue : formModel : 'quotationName'
+              | async
+          "
+        >
+        </span>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div class="first-div d-flex align-items-start">
+          <codx-vll
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="dataRef?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+          <div>
+            <span class="icon-16 icon-av_timer me-1"></span>
+            <span
+              class="text-gray-700 line-clamp-menu"
+              #createdOn
+              [innerHTML]="
+                dataRef?.createdOn
+                  | formatvalue : formModel : 'createdOn'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="last-div">
+          <codx-imgs
+            [isToolTip]="true"
+            [width]="25"
+            [objectId]="dataRef?.createdBy"
+            objectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+    <ng-template #noData>
+      <codx-no-data> </codx-no-data>
+    </ng-template>
+  </ng-container>
+</ng-template>

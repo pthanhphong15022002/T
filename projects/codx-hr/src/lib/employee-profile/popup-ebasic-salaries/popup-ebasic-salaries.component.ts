@@ -14,6 +14,8 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import moment from 'moment';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-ebasic-salaries',
@@ -39,12 +41,18 @@ export class PopupEBasicSalariesComponent
   headerText: ' ';
   autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   //check where to open the form
   employeeObj: any | null;
   actionArray = ['add', 'edit', 'copy'];
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
+  useForQTNS: boolean = false;
+  loaded: boolean = false;
+  moment = moment;
+  employeeSign;
+  dateNow = moment().format('YYYY-MM-DD');
   // genderGrvSetup: any;
   //end
   constructor(
@@ -61,12 +69,17 @@ export class PopupEBasicSalariesComponent
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.formModel = dialog?.formModel;
     this.fromListView = data?.data?.fromListView;
-    this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
+    this.useForQTNS = data?.data?.useForQTNS;
+    if (data?.data?.salaryObj) {
+      this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
+    } else {
+      this.EBasicSalaryObj = null;
+    }
     if (this.EBasicSalaryObj?.employeeID && this.fromListView) {
       this.employeeId = this.EBasicSalaryObj?.employeeID;
     } else {
@@ -75,7 +88,7 @@ export class PopupEBasicSalariesComponent
     if (this.EBasicSalaryObj?.emp && this.fromListView) {
       this.employeeObj = this.EBasicSalaryObj?.emp;
     } else {
-      this.employeeObj = data?.data?.empObj;
+      this.employeeObj = data?.data?.empObj || null;
     }
   }
 
@@ -151,6 +164,7 @@ export class PopupEBasicSalariesComponent
     empRequest.predicates = 'EmployeeID=@0';
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      this.employeeSign = emp[0][0];
       if (emp[1] > 0) {
         if (fieldName === 'employeeID') {
           this.employeeObj = emp[0][0];
@@ -168,6 +182,7 @@ export class PopupEBasicSalariesComponent
               .getPositionByID(emp[0][0]?.positionID)
               .subscribe((res) => {
                 if (res) {
+                  this.employeeSign.positionName = res.positionName;
                   this.EBasicSalaryObj.signerPosition = res.positionName;
                   this.formGroup.patchValue({
                     signerPosition: this.EBasicSalaryObj.signerPosition,
@@ -181,6 +196,7 @@ export class PopupEBasicSalariesComponent
               signerPosition: this.EBasicSalaryObj.signerPosition,
             });
           }
+          this.loaded = true;
         }
       }
       this.cr.detectChanges();
@@ -193,7 +209,9 @@ export class PopupEBasicSalariesComponent
         this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
       )
       .subscribe((res) => {
-        this.employeeObj.orgUnitName = res.orgUnitName;
+        if (this.employeeObj) {
+          this.employeeObj.orgUnitName = res.orgUnitName;
+        }
       });
     if (this.actionType == 'add') {
       this.hrService
@@ -219,11 +237,18 @@ export class PopupEBasicSalariesComponent
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+      if (
+        this.actionType === 'edit' ||
+        this.actionType === 'copy' ||
+        this.actionType === 'view'
+      ) {
         if (this.actionType == 'copy') {
           if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
             this.EBasicSalaryObj.effectedDate = null;
           }
+        }
+        if (this.EBasicSalaryObj.signerID) {
+          this.getEmployeeInfoById(this.EBasicSalaryObj.signerID, 'signerID');
         }
         this.formGroup.patchValue(this.EBasicSalaryObj);
         this.formModel.currentData = this.EBasicSalaryObj;
@@ -237,7 +262,7 @@ export class PopupEBasicSalariesComponent
     // this.cr.detectChanges();
   }
 
-  onSaveForm() {
+  async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -257,9 +282,17 @@ export class PopupEBasicSalariesComponent
       );
       return;
     }
+
+    (await this.attachment.saveFilesObservable()).subscribe((res: any) => {
+      console.log(res);
+      if (res?.status == 0) {
+        this.fileAdded(res);
+      }
+    });
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
-        .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)
+        .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj, this.useForQTNS)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
@@ -269,7 +302,10 @@ export class PopupEBasicSalariesComponent
         });
     } else {
       this.hrService
-        .UpdateEmployeeBasicSalariesInfo(this.formModel.currentData)
+        .UpdateEmployeeBasicSalariesInfo(
+          this.formModel.currentData,
+          this.useForQTNS
+        )
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
@@ -287,5 +323,13 @@ export class PopupEBasicSalariesComponent
       return date1 <= date2;
     }
     return false;
+  }
+
+  fileAdded(event: any) {
+    this.EBasicSalaryObj.attachments = event.data.length;
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }

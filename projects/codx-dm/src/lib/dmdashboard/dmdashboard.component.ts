@@ -189,9 +189,9 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
       '[{"panelId":"0.9605255352952085_layout","data":""},{"panelId":"0.47112877938374287_layout","data":""},{"panelId":"0.7647024471772221_layout","data":""},{"panelId":"0.6213687501730532_layout","data":""},{"panelId":"0.7292886175486251_layout","data":""}]'
     );
 
-    this.api
-      .execSv('DM', 'DM', 'FileBussiness', 'GetDataDashboardAsync', [])
-      .subscribe((res: any) => {});
+    // this.api
+    //   .execSv('DM', 'DM', 'FileBussiness', 'GetDataDashboardAsync', [])
+    //   .subscribe((res: any) => {});
   }
 
   ngAfterViewInit(): void {

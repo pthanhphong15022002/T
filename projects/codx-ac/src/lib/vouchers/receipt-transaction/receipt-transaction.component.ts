@@ -71,6 +71,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   overflowed: boolean = false;
   expanding: boolean = false;
   isLoadDataAcct: any = true;
+  lockFields: Array<any> = [];
   fmVouchers: FormModel = {
     formName: '',
     gridViewName: '',
@@ -100,6 +101,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   parent: any;
   constructor(
     private inject: Injector,
+    private acService: CodxAcService,
     private notification: NotificationsService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
@@ -162,6 +164,7 @@ export class ReceiptTransactionComponent extends UIComponent {
         });
         break;
     }
+    this.loadLockFields();
   }
   //#endregion
 
@@ -254,6 +257,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             headerText: this.headerText,
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
+            lockFields: this.lockFields,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -282,6 +286,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             headerText: this.funcName,
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
+            lockFields: this.lockFields,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -318,6 +323,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             headerText: this.funcName,
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
+            lockFields: this.lockFields,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -463,6 +469,14 @@ export class ReceiptTransactionComponent extends UIComponent {
       }
     }
     return false;
+  }
+
+  loadLockFields() {
+    this.acService
+      .execApi('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+      .subscribe((res) => {
+        this.lockFields = res[2];
+      });
   }
   //#endregion
 }

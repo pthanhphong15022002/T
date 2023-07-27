@@ -42,9 +42,7 @@
           </div>
           <div class="d-flex flex-column">
             <div class="text-dark fw-bold fs-6">
-              {{
-                employeeObj?.employeeName ?? employeeObj?.emp?.employeeName
-              }}
+              {{ employeeObj?.employeeName ?? employeeObj?.emp?.employeeName }}
             </div>
             <div
               class="text-gray-600"
@@ -86,65 +84,63 @@
         >
         </codx-input>
       </div>
-      <!-- <div class="col-6">
-        <div class="d-flex">
-          <div class="d-flex flex-column">
-            <codx-img
-              [width]="35"
-              class="me-3"
-              [objectId]="
-                employeeObj?.employeeID ?? employeeObj?.emp?.employeeID
-              "
-              [referType]="'avt'"
-              [objectName]="
-                employeeObj?.employeeName ?? employeeObj?.emp?.employeeName
-              "
-              [objectType]="'HR_Employees'"
-            >
-            </codx-img>
-          </div>
-          <div class="d-flex flex-column">
-            <div class="text-dark fw-bold">
-              <span>
-                {{
-                  employeeObj?.employeeName ?? employeeObj?.emp?.employeeName
-                }}
-              </span>
-            </div>
-            <div class="text-gray-700">
-              <span
-                [innerHTML]="
-                  employeeObj?.positionID ?? employeeObj?.emp?.positionID
-                    | formatvalue : formModel : 'positionID'
-                    | async
-                "
-              ></span>
-            </div>
-            <div class="text-gray-700">
-              <span
-                [innerHTML]="
-                  employeeObj?.orgUnitID ?? employeeObj?.emp?.orgUnitID
-                    | formatvalue : formModel : 'orgUnitID'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6" *ngIf="actionType != 'edit'"> 
-        <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="employeeID"
+    </div>
+    <div class="d-flex my-5">
+      <div class="me-4">
+        <codx-vll
+          *ngIf="currentEJobSalaries?.status"
           [formModel]="formModel"
-          [Group]="formGroup"
-          (valueChange)="handleSelectEmp($event)"
+          [field]="'Status'"
+          [value]="currentEJobSalaries?.status"
+          [showText]="true"
+          [showIcon]="false"
+          [showBgColor]="true"
+          ngClass="badge badge-sm badge-light"
         >
-        </codx-input>
-      </div>  -->
+        </codx-vll>
+      </div>
+      <div
+        *ngIf="currentEJobSalaries?.isCurrent && !currentEJobSalaries?.isExpire"
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+        [ngbPopover]="popIsNewest"
+        [style.color]="'#0078FF'"
+        class="icon-bookmark icon-18"
+      ></div>
+
+      <div
+        *ngIf="currentEJobSalaries?.isCurrent && currentEJobSalaries?.isExpire"
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+        [ngbPopover]="popOverDue"
+        [style.color]="'#F64E60'"
+        class="icon-notifications icon-18"
+      ></div>
+
+      <div
+        *ngIf="
+          currentEJobSalaries?.isCurrent &&
+          dateNow <
+            moment(currentEJobSalaries.effectedDate).format('YYYY-MM-DD')
+        "
+        #popOver="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="popOver.open()"
+        (mouseleave)="popOver.close()"
+        placement="left"
+        [ngbPopover]="popIsNotNewsest"
+        [style.color]="'#FFA800'"
+        class="icon-queue_play_next icon-18"
+      ></div>
     </div>
     <div class="form-group row">
-      <div class="col-6">
+      <div class="">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
         <codx-input
           [disabled]="autoNumField === 'DecisionNo'"
@@ -152,19 +148,6 @@
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
-      </div>
-      <div class="col-6">
-        <div>
-          <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
-        </div>
-        <div>
-          <codx-input
-            field="isCurrent"
-            [formModel]="formModel"
-            [Group]="formGroup"
-          >
-          </codx-input>
-        </div>
       </div>
     </div>
 
@@ -294,3 +277,32 @@
     </div>
   </ng-template>
 </codx-form>
+<ng-template #popIsNewest>
+  <span>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Đang hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Quá hạn"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popIsNotNewsest>
+  <span>
+    <codx-label
+      name="lblIsNotCurrent"
+      [formModel]="view.formModel"
+      default="Chưa hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>

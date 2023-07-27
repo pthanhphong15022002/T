@@ -14,6 +14,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { isObservable } from 'rxjs';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-view-basic-salary-detail',
@@ -46,6 +47,8 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
 
   user: any;
   itemDetailStt;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   olderItem: any;
   ngOnInit() {

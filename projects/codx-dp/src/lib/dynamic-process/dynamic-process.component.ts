@@ -36,6 +36,7 @@ import { PopupPropertiesComponent } from './popup-properties/popup-properties.co
 import { firstValueFrom } from 'rxjs';
 import { LayoutComponent } from '../_layout/layout.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -135,7 +136,8 @@ export class DynamicProcessComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private layoutDP: LayoutComponent,
-    private dpService: CodxDpService
+    private dpService: CodxDpService,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -563,7 +565,22 @@ export class DynamicProcessComponent
       case 'DP01018': // hủy phát hành quy trình
         this.cancelReleaseProcess(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   changeDataMF(e, data) {
@@ -790,6 +807,7 @@ export class DynamicProcessComponent
     //thao test khong dc xoa
     if (!data.read) return;
     this.dpService.dataProcess.next(data);
+    //this.codxService.navigate('', `instances/DPT04/${data.recID}`);
     this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
 
     // let isRead = this.checkPermissionRead(data);

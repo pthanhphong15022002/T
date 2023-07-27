@@ -1200,7 +1200,7 @@ codx-layout-add .card-header {
 
 /*** menu tree page detail **/
 .content-tree {
-  padding: 15px;
+  padding: 10px;
 }
 
 .content-tree .icon-node {
@@ -3508,32 +3508,6 @@ codx-deal-detail{
   }
 }
 
-
-
-/*
-.mb-5px, .mb-1, .mb-2, .mb-3{
-  margin-bottom: 50px!important;
+lib-organization .content-tree li.menu-item>div.d-flex.align-items-center{
+  align-items: start!important;
 }
-
-codx-deal-detail{
-  .codx-detail-body .e-content{
-    border: 1px red solid!important;
-  }
-}
-lib-quotations-view-detail{
-  .codx-detail-body{
-    border: 1px rgb(255, 134, 205) solid!important;
-  }
-}
-contracts-view-detail{
-  .codx-detail-body{
-    border: 1px rgb(144, 255, 39) solid!important;
-  }
-}
-contracts-view-detail{
-  border: 1px rgb(7, 224, 80) solid!important;
-  .codx-detail-body{
-    border: 1px rgb(144, 255, 39) solid!important;
-  }
-}
-*/

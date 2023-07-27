@@ -71,8 +71,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   expanded: boolean = false;
   purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
   vatinvoices: VATInvoices = new VATInvoices();
-  isInvoiceRefHidden: boolean = true;
-  lineSubject = new Subject<IPurchaseInvoiceLine[]>();
   fmVATInvoices: FormModel = {
     entityName: 'AC_VATInvoices',
     formName: 'VATInvoices',
@@ -146,10 +144,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
-    this.lineSubject.subscribe((lines: IPurchaseInvoiceLine[]) => {
-      this.isInvoiceRefHidden = lines.find((l) => l.vatid) ? false : true;
-    });
-
     this.acService.getACParameters().subscribe((res) => {
       this.acParams = res;
     });
@@ -186,7 +180,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       options.pageLoading = false;
       this.acService.loadDataAsync('AC', options).subscribe((lines) => {
         this.lines = lines;
-        this.lineSubject.next(lines);
       });
     }
   }
@@ -368,6 +361,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onEndEdit(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
+    line.unbounds = {
+      invoiceForm: this.master.invoiceForm,
+      invoiceSeriNo: this.master.invoiceSeriNo,
+      invoiceNo: this.master.invoiceNo,
+      invoiceDate: this.master.invoiceDate,
+    };
     this.purchaseInvoiceLineService.updateDatas.set(line.recID, line);
     this.purchaseInvoiceLineService
       .save(null, null, null, null, false)
@@ -380,13 +379,17 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
           return;
         }
-
-        this.lineSubject.next(this.lines);
       });
   }
 
   onEndAddNew(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
+    line.unbounds = {
+      invoiceForm: this.master.invoiceForm,
+      invoiceSeriNo: this.master.invoiceSeriNo,
+      invoiceNo: this.master.invoiceNo,
+      invoiceDate: this.master.invoiceDate,
+    };
     this.purchaseInvoiceLineService
       .save(null, null, null, null, false)
       .subscribe((res: any) => {
@@ -398,8 +401,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
           return;
         }
-
-        this.lineSubject.next(this.lines);
       });
   }
 
@@ -525,6 +526,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   onClick(e: HTMLElement): void {
     if (
       this.gridPurchaseInvoiceLines.gridRef.isEdit &&
+      !e.closest('.edit-value') &&
       !e.closest('.e-gridcontent')
     ) {
       this.gridPurchaseInvoiceLines.endEdit();
@@ -547,11 +549,10 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.gridPurchaseInvoiceLines.gridRef.startEdit();
   }
 
-  deleteRow(data) {
+  deleteRow(data: IPurchaseInvoiceLine) {
     this.purchaseInvoiceLineService.delete([data]).subscribe((res: any) => {
       if (res.error === false) {
         this.gridPurchaseInvoiceLines.deleteRow(data, true);
-        this.lineSubject.next(this.lines);
       }
     });
   }
