@@ -406,8 +406,10 @@ export class ReportinglineComponent extends UIComponent {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    var totalScroll = ele.offsetHeight + ele.scrollTop;
-    if (this.scrolling && (totalScroll <= ele.scrollHeight + 2) && (totalScroll >= ele.scrollHeight - 2)) {
+    
+    //var totalScroll = ele.offsetHeight + ele.scrollTop;
+    var totalScroll = ele.clientHeight + ele.scrollTop;
+    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
       this.getEmpListPaging(positionID);
     }
   }
@@ -435,4 +437,5 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
 
+  
 }

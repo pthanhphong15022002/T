@@ -146,10 +146,10 @@
             <div class="py-2">
                 <codx-searchbar (searchEvent)="searchUser($event, data?.positionID) "></codx-searchbar>
             </div>
-            <div #posListEmp class="hr-list-employee"
+            <div #posListEmp class="hr-list-employee" id="listPosEmp"
                 (scroll)="onScrollEmpList(posListEmp,data?.positionID, data.staff)">
                 <ng-container *ngFor="let emp of data.staffEmp">
-                    <div class="d-flex align-items-centerp py-1">
+                    <div class="d-flex align-items-centerp py-1 h-50px">
                         <codx-img [objectId]="emp?.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
                             [objectName]="emp.employeeName" [width]="30">
                         </codx-img>

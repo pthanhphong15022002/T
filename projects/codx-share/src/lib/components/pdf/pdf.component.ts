@@ -735,7 +735,7 @@ export class PdfComponent
         //     resolve(status);
         //   });
         this.codxShareService
-          .codxApprove(this.transRecID, mode, null, comment,null)
+          .codxApprove(this.transRecID, mode, null, comment, null)
           .subscribe((res: any) => {
             if (res?.msgCodeError == null) {
               resolve(true);
@@ -2910,6 +2910,14 @@ export class PdfComponent
       console.log('remove', res);
     });
   }
+
+  // testCreateCA() {
+  //   this.signPDF(5, "test").then(res =>{
+  //     console.log('sign pdf', res);
+
+  //   })
+  //   this.api.execSv
+  // }
   //#endregion
 }
 //create new guid

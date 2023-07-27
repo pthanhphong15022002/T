@@ -455,7 +455,7 @@ export class CodxEsService {
       [data, isAdd]
     );
   }
-  getAllCategory(category:string): Observable<any> {
+  getAllCategory(category: string): Observable<any> {
     return this.api.execSv(
       'ES',
       'ES',
@@ -639,7 +639,7 @@ export class CodxEsService {
     );
   }
 
-  getCategoryByCateIDType(categoryID: string, category :string) {
+  getCategoryByCateIDType(categoryID: string, category: string) {
     return this.api.execSv<any>(
       'ES',
       'ES',
@@ -1227,7 +1227,6 @@ export class CodxEsService {
       [content]
     );
   }
-  
 
   getOneApprovalTrans(recID: string) {
     return this.api.execSv<any>(
@@ -1483,7 +1482,6 @@ export class CodxEsService {
     );
   }
 
-  
   //#endregion
 
   //#region CA
@@ -1608,13 +1606,23 @@ export class CodxEsService {
       [recID]
     );
   }
-  getDataValueOfSetting(formName:string,transType:string,category:string) {
+  getDataValueOfSetting(formName: string, transType: string, category: string) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
       'GetDataValueOfSettingAsync',
-      [formName,transType,category]
+      [formName, transType, category]
+    );
+  }
+
+  testCreateCA() {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'CreateLocalCertificatePFXAsync',
+      []
     );
   }
 }
