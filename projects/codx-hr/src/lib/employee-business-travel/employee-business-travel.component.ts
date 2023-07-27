@@ -254,21 +254,15 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.codxShareService
-            .codxRelease(
-              'HR',
-              this.itemDetail.recID,
-              this.processID.processID,
-              this.view.formModel.entityName,
-              this.view.formModel.funcID,
-              '',
-              this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo,
-              ''
-            )
-            .subscribe((result) => {
-              if (result?.msgCodeError == null && result?.rowCount) {
+          this.codxShareService.codxReleaseDynamic(
+            'HR',
+            this.itemDetail,
+            this.processID,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
@@ -281,8 +275,38 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
                         .subscribe();
                     }
                   });
-              } else this.notify.notifyCode(result?.msgCodeError);
-            });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+          // this.codxShareService
+          //   .codxRelease(
+          //     'HR',
+          //     this.itemDetail.recID,
+          //     this.processID.processID,
+          //     this.view.formModel.entityName,
+          //     this.view.formModel.funcID,
+          //     '',
+          //     this.view.function.description +
+          //       ' - ' +
+          //       this.itemDetail.decisionNo,
+          //     ''
+          //   )
+          //   .subscribe((result) => {
+          //     if (result?.msgCodeError == null && result?.rowCount) {
+          //       this.notify.notifyCode('ES007');
+          //       this.itemDetail.status = '3';
+          //       this.itemDetail.approveStatus = '3';
+          //       this.hrService
+          //         .EditEBusinessTravelMoreFunc(this.itemDetail)
+          //         .subscribe((res) => {
+          //           if (res) {
+          //             this.view?.dataService
+          //               ?.update(this.itemDetail)
+          //               .subscribe();
+          //           }
+          //         });
+          //     } else this.notify.notifyCode(result?.msgCodeError);
+          //   });
         }
       });
   }
