@@ -7,6 +7,7 @@ import {
   EventEmitter,
   SimpleChanges,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import {
   AuthStore,
@@ -20,6 +21,7 @@ import {
   NotificationsService,
   AlertConfirmInputConfig,
   Util,
+  DialogRef,
 } from 'codx-core';
 import {
   DP_Instances_Steps_TaskGroups,
@@ -50,6 +52,7 @@ import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations
   styleUrls: ['./codx-step-task.component.scss'],
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
+  @ViewChild('popupGuide') popupGuide;
   //#region Input
   @Input() stepId: any;
   @Input() dataSources: any;
@@ -112,6 +115,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
+  dialogGuide: DialogRef;
 
   moreDefaut = {
     share: true,
@@ -2207,5 +2211,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     //       });
     //   }
     // });
+  }
+  showGuide(p) {
+    p.close();
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    if (this.popupGuide) {
+      this.dialogGuide = this.callfc.openForm(
+        this.popupGuide,
+        '',
+        600,
+        470,
+        '',
+        null,
+        '',
+        option
+      );
+    }
   }
 }

@@ -37,6 +37,8 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: '';
   disabledInput = false;
+  loaded: boolean = false;
+  employeeSign;
 
   defaultDisciplineDate: string = '0001-01-01T00:00:00';
   autoNumField: string;
@@ -75,7 +77,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     }
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.lstDiscipline = data?.data?.lstDiscipline;
@@ -129,6 +131,11 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       ) {
         this.disciplineObj.disciplineDate = null;
       }
+
+      if (this.disciplineObj.signerID) {
+        this.getEmployeeInfoById(this.disciplineObj.signerID, 'SignerID');
+      }
+
       this.formGroup.patchValue(this.disciplineObj);
       this.formModel.currentData = this.disciplineObj;
       this.isAfterRender = true;
@@ -248,12 +255,14 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       if (emp[1] > 0) {
         if (fieldName === 'SignerID') {
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+            this.employeeSign = emp[0][0];
             if (emp[1] > 0) {
               let positionID = emp[0][0].positionID;
 
               if (positionID) {
                 this.hrService.getPositionByID(positionID).subscribe((res) => {
                   if (res) {
+                    this.employeeSign.positionName = res.positionName;
                     this.disciplineObj.signerPosition = res.positionName;
                     this.formGroup.patchValue({
                       signerPosition: this.disciplineObj.signerPosition,
@@ -267,6 +276,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
                   signerPosition: this.disciplineObj.signerPosition,
                 });
               }
+              this.loaded = true;
             }
           });
         }

@@ -366,6 +366,7 @@ export class PopupAddJournalComponent
     console.log('onSelect', e);
     this.journal.fiscalYear = e.itemData.value;
     // this.form.formGroup.controls.periodID.reset();
+    // (this.periodID.ComponentCurrent.dataService as CRUDService).data = [];
     // (this.periodID.ComponentCurrent.dataService as CRUDService).setPredicates(
     //   ['FiscalYear=@0'],
     //   [e.itemData.value]

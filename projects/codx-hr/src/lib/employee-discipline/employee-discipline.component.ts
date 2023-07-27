@@ -322,8 +322,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
           let eDisciplinessObj = parsedJSON[index];
           if (eDisciplinessObj['ApprovalRule'] == '1') {
             this.release();
-          } else {
-            //đợi BA mô tả
           }
         }
       }
@@ -346,20 +344,15 @@ export class EmployeeDisciplineComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService
-            .codxRelease(
-              'HR',
-              this.itemDetail.recID,
-              this.dataCategory.processID,
-              this.view.formModel.entityName,
-              this.view.formModel.funcID,
-              '',
-              'Kỷ luật - ' + this.itemDetail.decisionNo,
-              ''
-            )
-            .subscribe((result) => {
-              console.log('ok', result);
-              if (result?.msgCodeError == null && result?.rowCount) {
+          this.codxShareService.codxReleaseDynamic(
+            'HR',
+            this.itemDetail,
+            this.dataCategory,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
@@ -372,8 +365,37 @@ export class EmployeeDisciplineComponent extends UIComponent {
                         .subscribe();
                     }
                   });
-              } else this.notify.notifyCode(result?.msgCodeError);
-            });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+          // this.codxShareService
+          //   .codxRelease(
+          //     'HR',
+          //     this.itemDetail.recID,
+          //     this.dataCategory.processID,
+          //     this.view.formModel.entityName,
+          //     this.view.formModel.funcID,
+          //     '',
+          //     'Kỷ luật - ' + this.itemDetail.decisionNo,
+          //     ''
+          //   )
+          //   .subscribe((result) => {
+          //     console.log('ok', result);
+          //     if (result?.msgCodeError == null && result?.rowCount) {
+          //       this.notify.notifyCode('ES007');
+          //       this.itemDetail.status = '3';
+          //       this.itemDetail.approveStatus = '3';
+          //       this.hrService
+          //         .UpdateEmployeeDisciplineInfo(this.itemDetail)
+          //         .subscribe((res) => {
+          //           if (res) {
+          //             this.view?.dataService
+          //               ?.update(this.itemDetail)
+          //               .subscribe();
+          //           }
+          //         });
+          //     } else this.notify.notifyCode(result?.msgCodeError);
+          //   });
         }
       });
   }

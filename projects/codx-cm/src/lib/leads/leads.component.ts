@@ -114,6 +114,7 @@ export class LeadsComponent
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';
+  applyProcess:boolean = true;
   funcIDCrr: any;
   gridViewSetup: any;
   colorReasonSuccess: any;
@@ -125,8 +126,10 @@ export class LeadsComponent
   moreFuncInstance: any;
   dataColums: any;
   viewCrr: any;
-  isLoading = false;
+  paramDefault:any;
   action: any;
+  currencyIDDefault:any;
+  isLoading = false;
   readonly applyForLead: string = '5';
   constructor(
     private inject: Injector,
@@ -206,7 +209,26 @@ export class LeadsComponent
       await this.getFuncID(this.funcID);
       await this.getColorReason();
       await this.getProcessSetting();
+      await this.getCurrentSetting();
     } catch (error) {}
+  }
+  async getCurrentSetting(){
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        // currnecy
+        let dataParamCurrency = res.filter((x) => x.category == '4' && !x.transType)[0];
+        if (dataParamCurrency) {
+          this.paramDefault = JSON.parse(dataParamCurrency.dataValue);
+          this.currencyIDDefault = this.paramDefault['DefaultCurrency'];
+        }
+        // applyProcess
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) {
+           var applyProcessSetting = JSON.parse(dataParam.dataValue);
+          this.applyProcess = applyProcessSetting['ProcessLeadUsed']  == '1';
+        }
+      }
+    });
   }
   async getProcessSetting() {
     this.codxCmService
@@ -350,7 +372,7 @@ export class LeadsComponent
       eventItem.disabled = !data.closed;
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed || data.applyProcess;
+      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed || !data.applyProcess;
     };
     var isConvertLead = (eventItem, data) => {
       eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
@@ -617,7 +639,10 @@ export class LeadsComponent
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
       processId: this.processId,
-      gridViewSetup: this.gridViewSetup
+      gridViewSetup: this.gridViewSetup,
+      applyProcess: this.dataSelected.applyProcess,
+      currencyIDDefault: this.currencyIDDefault,
+      applyProcessSetting: this.applyProcess
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,

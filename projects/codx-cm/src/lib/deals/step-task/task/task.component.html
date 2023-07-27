@@ -60,7 +60,7 @@
 </div>
 
 <ng-template #taskTemplate let-data="value">
-  <div class="d-flex justify-content-start align-items-center has-action-menu">
+  <div class="d-flex justify-content-start align-items-center has-action-menu task-hover cursor-pointer">
     <!-- icon task -->
     <div
       class="icon-container me-3 d-flex justify-content-center align-items-center"
@@ -72,8 +72,8 @@
       ></span>
     </div>
     <div class="steplist-hearder">
-      <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1">
-        <span>{{ data?.task?.taskName }}</span>
+      <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 task-name">
+         {{data?.task?.taskName}} 
       </div>
       <div class="text-gray-600">
         <codx-label class="title" fiedName="updateTime" default="Cập nhật:">

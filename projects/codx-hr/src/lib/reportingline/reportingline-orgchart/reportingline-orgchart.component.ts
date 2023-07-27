@@ -162,7 +162,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
     if (sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
       connector.style!.strokeColor = '#3699FF';
-      connector.style!.strokeWidth = 5;
+      connector.style!.strokeWidth = 2;
     }
     return connector;
   }

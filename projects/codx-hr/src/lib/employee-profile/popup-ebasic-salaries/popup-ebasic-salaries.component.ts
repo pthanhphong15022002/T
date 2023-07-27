@@ -283,12 +283,13 @@ export class PopupEBasicSalariesComponent
       return;
     }
 
-    (await this.attachment.saveFilesObservable()).subscribe((res: any) => {
-      console.log(res);
-      if (res?.status == 0) {
-        this.fileAdded(res);
-      }
-    });
+    if (this.attachment.fileUploadList.length !== 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+        if (item2?.status == 0) {
+          this.fileAdded(item2);
+        }
+      });
+    }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
