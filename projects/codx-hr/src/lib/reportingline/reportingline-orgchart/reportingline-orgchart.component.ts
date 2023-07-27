@@ -511,8 +511,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    var totalScroll = ele.offsetHeight + ele.scrollTop;
-
+    //var totalScroll = ele.offsetHeight + ele.scrollTop;
+    var totalScroll = ele.clientHeight + ele.scrollTop;
     if (this.scrolling && totalScroll == ele.scrollHeight) {
       this.getEmpListPaging(positionID);
     }
