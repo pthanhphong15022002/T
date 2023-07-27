@@ -1275,10 +1275,10 @@
           <label class="form-check-label" for="shapeNone"> Mặc định </label>
         </div>
 
-        <div class="text-dark fw-bold mt-5 mb-3">Chiều rộng đường viền</div>
+        <div class="text-dark fw-bold mt-5 mb-1">Chiều rộng đường viền</div>
         <select
           id="borderLineWidth"
-          class="w-50 m-2 p-2"
+          class="form-select"
           (change)="changeMode($event)"
         >
           <option value="0">0</option>
@@ -1328,10 +1328,10 @@
           </label>
         </div>
 
-        <div class="text-dark fw-bold mt-5 mb-3">Độ trong suốt</div>
+        <div class="text-dark fw-bold mt-5 mb-1">Độ trong suốt</div>
         <select
           id="opacityMarker"
-          class="w-50 m-2 p-2"
+          class="form-select"
           (change)="changeMode($event)"
         >
           <option value="0">0</option>
@@ -1361,277 +1361,301 @@
           [ngClass]="collapsed[4] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div #collapse4="ngbCollapse" [ngbCollapse]="!collapsed[4]">
-        <div class="text-dark fw-bold mt-5 mb-3">Khoảng cách dọc giữa các hàng</div>
-        <div class="text-dark fw-bold mt-5 mb-3">Bình thường</div>
-        <select
-          id="verticalBetweenNormal"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-        </select>
-
-        <div class="text-dark fw-bold mt-5 mb-3">Dấu chấm</div>
-        <select
-          id="verticalBetweenDot"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-          <option value="80">80</option>
-          <option value="160">160</option>
-          <option value="240">240</option>
-          <option value="320">320</option>
-        </select>
-
-        <div class="text-dark fw-bold mt-5 mb-3">Đường thẳng</div>
-        <select
-          id="verticalBetweenLine"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-          <option value="80">80</option>
-          <option value="160">160</option>
-          <option value="240">240</option>
-          <option value="320">320</option>
-        </select>
-
-        <div class="text-dark fw-bold mt-5 mb-3">
+      <div class="px-6 pb-3" #collapse4="ngbCollapse" [ngbCollapse]="!collapsed[4]">
+        <div class="text-primary fw-bold mt-5">Khoảng cách dọc giữa các hàng</div>
+        <div class="row">
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Bình thường</div>
+            <select
+              id="verticalBetweenNormal"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Dấu chấm</div>
+            <select
+              id="verticalBetweenDot"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="80">80</option>
+              <option value="160">160</option>
+              <option value="240">240</option>
+              <option value="320">320</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Đường thẳng</div>
+            <select
+              id="verticalBetweenLine"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="80">80</option>
+              <option value="160">160</option>
+              <option value="240">240</option>
+              <option value="320">320</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="text-primary fw-bold mt-5">
           Khoảng cách ngang giữa các mục trong hàng
         </div>
-        <div class="text-dark fw-bold mt-5 mb-3">Bình thường</div>
-        <select
-          id="horizontalBetweenNormal"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-        </select>
-
-        <div class="text-dark fw-bold mt-5 mb-3">Dấu chấm</div>
-        <select
-          id="horizontalBetweenDot"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-        </select>
-
-        <div class="text-dark fw-bold mt-5 mb-3">Đường thẳng</div>
-        <select
-          id="horizontaletweenLine"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-        </select>
-
-        <div class="text-dark fw-bold mt-5 mb-3">
-          Không gian giữa các hệ thống phân cấp
+        <div class="row">
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Bình thường</div>
+            <select
+              id="horizontalBetweenNormal"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Dấu chấm</div>
+            <select
+              id="horizontalBetweenDot"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Đường thẳng</div>
+            <select
+              id="horizontaletweenLine"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">
+              Không gian giữa các hệ thống phân cấp
+            </div>
+            <select
+              id="cousinInterval"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+            </select>
+          </div>
         </div>
-        <select
-          id="cousinInterval"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-        </select>
-
-        <div class="text-dark fw-bold mt-5 mb-3">Tăng khoảng cách</div>
-        <div class="text-dark fw-bold mt-5 mb-3">Trái</div>
-        <select
-          id="paddingIntervalLeft"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-          <option value="50">50</option>
-          <option value="60">60</option>
-          <option value="70">70</option>
-          <option value="80">80</option>
-          <option value="90">90</option>
-          <option value="100">100</option>
-        </select>
-        <div class="text-dark fw-bold mt-5 mb-3">Trên cùng</div>
-        <select
-          id="paddingIntervalTop"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-          <option value="50">50</option>
-          <option value="60">60</option>
-          <option value="70">70</option>
-          <option value="80">80</option>
-          <option value="90">90</option>
-          <option value="100">100</option>
-        </select>
-        <div class="text-dark fw-bold mt-5 mb-3">Phải</div>
-        <select
-          id="paddingIntervalRight"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-          <option value="50">50</option>
-          <option value="60">60</option>
-          <option value="70">70</option>
-          <option value="80">80</option>
-          <option value="90">90</option>
-          <option value="100">100</option>
-        </select>
-        <div class="text-dark fw-bold mt-5 mb-3">Bên dưới</div>
-        <select
-          id="paddingIntervalBottom"
-          class="w-50 m-2 p-2"
-          (change)="changeMode($event)"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-          <option value="50">50</option>
-          <option value="60">60</option>
-          <option value="70">70</option>
-          <option value="80">80</option>
-          <option value="90">90</option>
-          <option value="100">100</option>
-        </select>
+       
+        <div class="text-primary fw-bold mt-5">Tăng khoảng cách</div>
+        <div class="row">
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Trái</div>
+            <select
+              id="paddingIntervalLeft"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+              <option value="60">60</option>
+              <option value="70">70</option>
+              <option value="80">80</option>
+              <option value="90">90</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Trên cùng</div>
+            <select
+              id="paddingIntervalTop"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+              <option value="60">60</option>
+              <option value="70">70</option>
+              <option value="80">80</option>
+              <option value="90">90</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Phải</div>
+            <select
+              id="paddingIntervalRight"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+              <option value="60">60</option>
+              <option value="70">70</option>
+              <option value="80">80</option>
+              <option value="90">90</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="text-dark mt-3 mb-1">Bên dưới</div>
+            <select
+              id="paddingIntervalBottom"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+              <option value="60">60</option>
+              <option value="70">70</option>
+              <option value="80">80</option>
+              <option value="90">90</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+ 
       </div>
       <!-- #endregion-->
       <!-- #region Kết nối -->
@@ -1779,10 +1803,10 @@
           <option value="10">10</option>
         </select>
 
-        <div class="text-dark fw-bold mt-5 mb-3">Kích cỡ chỗ gập</div>
+        <div class="text-dark mb-1">Kích cỡ chỗ gập</div>
         <select
           id="elbowDotSize"
-          class="w-50 m-2 p-2"
+          class="form-select"
           (change)="changeMode($event)"
         >
           <option value="0">0</option>
@@ -1830,10 +1854,10 @@
           <label class="form-check-label" for="linesTypeDash"> Gạch ngang </label>
         </div>
 
-        <div class="text-dark fw-bold mt-5 mb-3">Màu đường kẻ</div>
+        <div class="text-dark mt-5 mb-1">Màu đường kẻ</div>
         <select
           id="linesColor"
-          class="w-50 m-2 p-2"
+          class="text-dark mt-3 mb-1"
           (change)="changeMode($event)"
         >
           <option value="#F0F8FF">Màu xanh Alice</option>

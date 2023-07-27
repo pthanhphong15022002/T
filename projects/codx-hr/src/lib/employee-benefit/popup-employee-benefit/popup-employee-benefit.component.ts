@@ -11,6 +11,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { FormGroup } from '@angular/forms';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-employee-benefit',
@@ -38,7 +39,8 @@ export class PopupEmployeeBenefitComponent
   // decisionNoDisable: boolean = false;
   autoNumField: string;
   data: any;
-
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
