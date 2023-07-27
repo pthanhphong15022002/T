@@ -81,6 +81,7 @@ export class DealsComponent
   @ViewChild('templateSteps') templateSteps: TemplateRef<any>;
   @ViewChild('templateConsultant') templateConsultant: TemplateRef<any>;
   @ViewChild('templateExpectedClosed') templateExpectedClosed: TemplateRef<any>;
+  @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   popupConfirm: DialogRef;
 
@@ -251,6 +252,17 @@ export class DealsComponent
           template2: this.templateMore,
           resources: this.columnGrids,
           // frozenColumns: 1,
+        },
+      },
+      {
+        type: ViewType.chart,
+        active: false,
+        sameData: false,
+        reportType: 'D',
+        // reportView: true,
+        showFilter: true,
+        model: {
+          panelLeftRef: this.dashBoard,
         },
       },
     ];
