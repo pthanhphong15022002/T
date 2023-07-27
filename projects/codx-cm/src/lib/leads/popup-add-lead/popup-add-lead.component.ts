@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -26,6 +27,7 @@ import { CM_Deals, CM_Leads } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
 import { recordEdited } from '@syncfusion/ej2-pivotview';
 import { environment } from 'src/environments/environment';
+import { T } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -129,6 +131,10 @@ export class PopupAddLeadComponent
   funcID: any;
   instanceSteps: any;
   addFieldsControl: any = '1';
+  planceHolderAutoNumber: any = '';
+  leadNoProcess: any;
+  leadNoSetting: any;
+  leadNoSystem: any;
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -140,6 +146,9 @@ export class PopupAddLeadComponent
   avatarChangeLead: boolean = false;
   avatarChangeContact: boolean = false;
   isCategory: boolean = true;
+  disabledShowInput: boolean = true;
+  isExist: boolean = false;
+
 
   constructor(
     private inject: Injector,
@@ -158,21 +167,26 @@ export class PopupAddLeadComponent
     this.action = dt?.data?.action;
     this.lead.processID = dt?.data?.processId;
     this.applyFor = dt?.data?.applyFor;
-    this.executeApiCalls();
+    this.gridViewSetup = dt?.data?.gridViewSetup;
     if (this.action !== this.actionAdd) {
       this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.lead?.customerID;
-
+      if (this.action === this.actionCopy) {
+        this.leadId = dt?.data?.leadIdOld;
+        this.contactId = dt?.data?.contactIdOld;
+        this.oldIdInstance = this.lead.refID;
+        this.lead.leadID ='';
+      }
+      else {
+        this.planceHolderAutoNumber = this.lead.leadID;
+      }
     }
-    else if (this.action === this.actionCopy) {
-      this.leadId = dt?.data?.leadIdOld;
-      this.contactId = dt?.data?.contactIdOld;
-      this.oldIdInstance = this.lead.refID;
-    } else {
+    else {
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
-    this.isCategory = this.lead.category == "1";
+    this.executeApiCalls();
+    this.isCategory = this.lead.category == '1';
   }
 
   onInit(): void {}
@@ -187,25 +201,24 @@ export class PopupAddLeadComponent
   }
   loadExchangeRate() {
     let day = this.lead.createdOn ?? new Date();
-    if(this.lead.currencyID) {
+    if (this.lead.currencyID) {
       this.codxCmService
-      .getExchangeRate(this.lead.currencyID, day)
-      .subscribe((res) => {
-        let exchangeRateNew = res?.exchRate ?? 0;
-        if (exchangeRateNew == 0) {
-          this.notificationsService.notify(
-            'Tỷ giá tiền tệ "' +
-              this.lead.currencyID +
-              '" chưa thiết lập xin hay chọn lại !',
-            '3'
-          );
-          this.form.formGroup.patchValue(this.lead);
-          return;
-        }
-        else {
-          this.lead.exchangeRate = exchangeRateNew;
-        }
-      });
+        .getExchangeRate(this.lead.currencyID, day)
+        .subscribe((res) => {
+          let exchangeRateNew = res?.exchRate ?? 0;
+          if (exchangeRateNew == 0) {
+            this.notificationsService.notify(
+              'Tỷ giá tiền tệ "' +
+                this.lead.currencyID +
+                '" chưa thiết lập xin hay chọn lại !',
+              '3'
+            );
+            this.form.formGroup.patchValue(this.lead);
+            return;
+          } else {
+            this.lead.exchangeRate = exchangeRateNew;
+          }
+        });
     }
   }
   valueChangeDate($event) {
@@ -223,11 +236,32 @@ export class PopupAddLeadComponent
       );
       return;
     }
-
-    this.convertDataInstance(this.lead, this.instance);
-    this.updateDataLead(this.instance, this.lead);
-    this.updateDateCategory();
-    this.promiseSaveFile();
+    if (!this.lead?.leadID?.trim()) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['LeadID']?.headerText + '"'
+      );
+      return;
+    }
+    if (this.lead.leadID && this.lead.leadID.includes(' ')) {
+      this.notificationsService.notifyCode(
+        'CM026',
+        0,
+        '"' + this.gridViewSetup['LeadID'].headerText + '"'
+      );
+      return;
+    }
+    if (this.isExist) {
+      this.notificationsService.notifyCode(
+        'CM003',
+        0,
+        '"' + this.gridViewSetup['LeadID'].headerText + '"'
+      );
+      return;
+    } else {
+      this.promiseSaveFile();
+    }
   }
   cbxChange($event, field) {
     if ($event && $event.data) {
@@ -245,16 +279,71 @@ export class PopupAddLeadComponent
       this.listIndustries.push($event.data);
     }
   }
-  valueChangeCategory($event,field) {
+  valueChangeIsProcess($event) {
+    if ($event) {
+      if ($event.data) {
+        this.lead.leadID = this.leadNoProcess;
+        this.planceHolderAutoNumber = this.leadNoProcess;
+        this.disabledShowInput = true;
+        this.removeItemInTab(true);
+      } else {
+        this.codxCmService
+          .getFieldAutoNoDefault(this.funcID, this.formModel.entityName)
+          .subscribe((res) => {
+            if (res && !res.stop) {
+              this.cache.message('AD019').subscribe((mes) => {
+                if (mes) {
+                  this.planceHolderAutoNumber =
+                    mes?.customName || mes?.description;
+                }
+              });
+              !this.leadNoSetting && this.getAutoNumberSetting();
+              this.lead.leadID = this.leadNoSetting;
+              this.disabledShowInput = true;
+            } else {
+              this.planceHolderAutoNumber = '';
+              this.lead.leadID = '';
+              this.disabledShowInput = false;
+            }
+          });
+        this.removeItemInTab(false);
+      }
+      this.lead.applyProcess = $event.data;
+    }
+
+  }
+  async getAutoNumberSetting() {
+    this.codxCmService
+      .genAutoNumberDefault(
+        this.formModel.funcID,
+        this.formModel.entityName,
+        'LeadID'
+      )
+      .subscribe((autoNum) => {
+        this.leadNoSetting = autoNum;
+        this.lead.leadID = this.leadNoSetting;
+      });
+  }
+  async getAutoNumberSystem() {
+    this.codxCmService
+      .genAutoNumber(this.formModel.funcID, this.formModel.entityName, 'LeadID')
+      .subscribe((res) => {
+        if (res) {
+          this.leadNoSystem = res;
+          this.lead.leadID = this.leadNoSystem;
+        }
+      });
+  }
+  valueChangeCategory($event, field) {
     if ($event) {
       let checked = $event.component.checked;
-        if ($event.field === this.radioCompany && checked) {
-          this.isCategory = true;
-          this.lead.category ="1"
-        } else if ($event.field === this.radioCustomer && checked) {
-          this.isCategory = false;
-          this.lead.category="2";
-        }
+      if ($event.field === this.radioCompany && checked) {
+        this.isCategory = true;
+        this.lead.category = '1';
+      } else if ($event.field === this.radioCustomer && checked) {
+        this.isCategory = false;
+        this.lead.category = '2';
+      }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -300,7 +389,7 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionEdit) {
       lead.stepID = this.listInstanceSteps[0]?.stepID;
       lead.nextStep = this.listInstanceSteps[1]?.stepID;
-      lead.status = this.owner? '1':'0';
+      lead.status = this.owner ? '1' : '0';
       lead.refID = instance.recID;
       lead.startDate = null;
     }
@@ -308,6 +397,9 @@ export class PopupAddLeadComponent
   }
 
   async promiseSaveFile() {
+    this.lead.applyProcess && this.convertDataInstance(this.lead, this.instance);
+    this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
+    this.action != this.actionEdit && this.updateDateCategory();
     try {
       if (this.avatarChangeLead) {
         await this.saveFileLead(this.leadId);
@@ -319,10 +411,10 @@ export class PopupAddLeadComponent
       if (this.isLoading) {
       } else {
         if (this.action !== this.actionEdit) {
-          await this.insertInstance();
+          this.lead.applyProcess && (await this.insertInstance());
           await this.onAdd();
         } else {
-          await this.editInstance();
+          this.lead.applyProcess && (await this.editInstance());
           await this.onEdit();
         }
       }
@@ -395,22 +487,11 @@ export class PopupAddLeadComponent
   }
   async executeApiCalls() {
     try {
-      await this.getGridView(this.formModel);
-      await this.getListInstanceSteps(this.lead.processID);
+      this.lead.applyProcess && await this.getListInstanceSteps(this.lead.processID);
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
   }
-  async getGridView(formModel) {
-    this.cache
-      .gridViewSetup(formModel.formName, formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-  }
-
 
   async getListInstanceSteps(processId: any) {
     processId =
@@ -424,6 +505,7 @@ export class PopupAddLeadComponent
           permissions: await this.getListPermission(res[1]),
           leadID: this.action !== this.actionEdit ? res[2] : this.lead.leadID,
         };
+        this.leadNoProcess = res[2];
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
@@ -446,6 +528,7 @@ export class PopupAddLeadComponent
           this.action,
           this.action != this.actionEdit ? null : this.lead.createdOn
         );
+        this.planceHolderAutoNumber = this.lead.leadID;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -609,15 +692,43 @@ export class PopupAddLeadComponent
   valueTagChange(e) {
     this.lead.tags = e.data;
   }
-  updateDateCategory(){
-    if(this.lead.category == "2") {
+  updateDateCategory() {
+    if (this.lead.category == '2') {
       this.lead.industries = null;
       this.lead.annualRevenue = 0;
       this.lead.headcounts = null;
-    }
-    else {
+    } else {
       this.lead.jobTitle = null;
     }
-
+  }
+  changeAutoNum(e) {
+    if (!this.disabledShowInput && e) {
+      this.lead.leadID = e?.crrValue;
+      if (this.lead.leadID && this.lead.leadID.includes(' ')) {
+        this.notificationsService.notifyCode(
+          'CM026',
+          0,
+          '"' + this.gridViewSetup['LeadID'].headerText + '"'
+        );
+        return;
+      } else {
+        if (this.isExistLeadID(this.lead.leadID)) {
+          return;
+        }
+      }
+    }
+  }
+  async isExistLeadID(leadID) {
+    this.codxCmService.isExistLeadId([leadID]).subscribe((res) => {
+      if (res) {
+        this.notificationsService.notifyCode(
+          'CM003',
+          0,
+          '"' + this.gridViewSetup['LeadID'].headerText + '"'
+        );
+        this.isExist = res;
+      }
+      this.isExist = res;
+    });
   }
 }

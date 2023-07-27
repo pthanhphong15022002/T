@@ -10,3 +10,24 @@
         }
     }
 }
+.es-upload-button{
+    border: none;
+    background: transparent;
+}
+.es-bg-primary-light{
+    background-color: var(--primary-light) !important;
+}
+.es-upload-button:hover{
+    background-color: var(--primary-lighter) !important;
+}
+.es-pick-template{
+    border: dashed 1px;
+    border-color: #a4a9ac;
+}
+.mw-550px{
+    min-width: 550px !important;
+}
+.es-button{
+    border: none;
+    background: transparent;
+}
