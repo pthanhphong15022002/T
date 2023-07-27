@@ -3786,14 +3786,14 @@
                   [dataItem]="benefit"
                   [formModel]="benefitFormodel"
                   [footer]="footerBenefit"
-                  cardCss="mb-2 py-2 hover-active bg-hover cursor-pointer"
+                  cardCss="hover-active bg-hover cursor-pointer"
                   [typeMF]="'hover'"
                 >
                 </codx-temp-full>
                 <ng-template #footerBenefit let-data>
-                  <div class="row">
-                    <div class="col-4" >
-                      <div class="d-flex align-items-top mb-3">
+                  <div class="d-flex align-items-center">
+                    <div class="w-125px min-w-125px" >
+                      <div class="d-flex align-items-top">
                         <span
                           class="icon-card_giftcard text-gray-700 me-2 icon-16"
                         ></span>
@@ -3809,8 +3809,8 @@
                         </span>
                       </div>
                     </div>
-                    <div class="col-4">
-                      <div class="d-flex align-items-center mb-3">
+                    <div class="w-100">
+                      <div class="d-flex align-items-center">
                         <div class="w-100px d-flex justify-content-end">
                           <span class="text-dark fw-bold">{{ data.benefitAmt }}</span>
                         </div>
