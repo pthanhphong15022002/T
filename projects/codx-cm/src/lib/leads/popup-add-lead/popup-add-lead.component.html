@@ -75,8 +75,9 @@
           <codx-input
             field="leadID"
             type="text"
-            [crrValue]="lead?.leadID"
-            [disabled]="true"
+            [crrValue]="planceHolderAutoNumber"
+            [disabled]="disabledShowInput || action === actionEdit"
+            (controlBlur)="changeAutoNum($event)"
           ></codx-input>
         </div>
       </div>
@@ -114,12 +115,14 @@
         <codx-label [formModel]="form.formModel" fiedName="ApplyProcess" class="pe-2">
         </codx-label>
         <codx-input
-          field="ApplyProcess"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
+        field="ApplyProcess"
+        [type]="'checkbox'"
+        [default]="gridViewSetup?.ApplyProcess.text"
+        [disabled]="action === actionEdit"
+        [crrValue]="lead?.applyProcess"
+        (valueChange)="valueChangeIsProcess($event)"
+      >
+      </codx-input>
       </div>
     </div>
   </div>
@@ -350,10 +353,22 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-      <ejs-combobox [dataSource]="listParticipants"
-      (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
-      [placeholder]="gridViewSetup?.Owner?.description"
-      [allowFiltering]='true' [value]="owner"></ejs-combobox>
+        <div  *ngIf="!lead.applyProcess; else ownerProcess">
+          <codx-input
+            field="owner"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <ng-template #ownerProcess>
+          <ejs-combobox [dataSource]="listParticipants"
+          (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+          [placeholder]="gridViewSetup?.Owner?.description"
+          [allowFiltering]='true' [value]="owner"></ejs-combobox>
+        </ng-template>
+
       </div>
     </div>
   </div>

@@ -219,8 +219,6 @@ export class AddContractsComponent implements OnInit {
       this.contracts.pmtStatus = '1';
       this.contracts.delStatus = '1';
       this.contracts.pmtMethodID = 'ATM';
-
-      // this.contracts.contractID = 'HD-' + (Math.random() * 10000000000).toFixed(0);
       this.contracts.pmtStatus = this.contracts.pmtStatus
         ? this.contracts.pmtStatus
         : '0';
@@ -427,7 +425,10 @@ export class AddContractsComponent implements OnInit {
 
   addContracts() {
     if (this.type == 'view') {
-      this.setDataInstance(this.contracts, this.instance);
+      if(this.contracts?.applyProcess){
+        this.setDataInstance(this.contracts, this.instance);
+        this.insertInstance();
+      }
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {
@@ -441,7 +442,6 @@ export class AddContractsComponent implements OnInit {
           }
           // this.changeDetector.detectChanges();
         });
-        this.insertInstance();
     } else {
       this.cmService
         .addContracts([this.contracts, this.listPaymentAdd])
@@ -573,25 +573,6 @@ export class AddContractsComponent implements OnInit {
         event?.data == '0' || event?.data == '1' ? true : false;
     }
   }
-  // async setPermissions(processID) {
-  //   if (processID) {
-  //     this.listParticipants = this.objPermissions?.[processID];
-  //     if (!this.listParticipants) {
-  //       let permission = await firstValueFrom(
-  //         this.api.exec<any>(
-  //           'DP',
-  //           'InstancesBusiness',
-  //           'GetPermissionsInProcessIDAsync',
-  //           [processID]
-  //         )
-  //       );
-  //       if (permission) {
-  //         this.objPermissions[processID] = permission;
-  //         this.listParticipants = permission;
-  //       }
-  //     }
-  //   }
-  // }
 
   setDataInstance(contract: CM_Contracts, instance: tmpInstances) {
     instance.title = contract?.contractName;

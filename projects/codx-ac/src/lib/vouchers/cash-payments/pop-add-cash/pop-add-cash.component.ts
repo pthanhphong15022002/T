@@ -542,7 +542,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadAccountControl(columnsGrid);
     this.loadFormat(columnsGrid);
     this.predicateControl(columnsGrid);
-    this.hideGrid(columnsGrid);
+    this.hideGrid(columnsGrid,this.hideFields);
     if (this.action == 'add') {
       setTimeout(() => {
         this.loadingform = false;
@@ -550,7 +550,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     } else {
       setTimeout(() => {
         this.loadingform = false;
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -561,22 +561,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     this.loadVisibleColumn(this.gridCash.columnsGrid);
     this.loadAccountControl(this.gridCash.columnsGrid);
-    this.hideGrid(this.gridCash.columnsGrid);
+    this.hideGrid(this.gridCash.columnsGrid,this.hideFields);
     setTimeout(() => {
       this.gridCash.refresh();
     });
   }
 
-  gridInitSet() {
+  gridInitSet(columnsGrid) {
     this.hideFieldsSet = [];
     let arr = ['BalAmt2', 'SettledAmt2', 'SettledDisc2'];
     arr.forEach((fieldName) => {
-      let i = this.gridSet.columnsGrid.findIndex(
+      let i = columnsGrid.findIndex(
         (x) => x.fieldName == fieldName
       );
       if (i > -1) {
-        this.gridSet.columnsGrid[i].isVisible = true;
-        this.gridSet.visibleColumns.push(this.gridSet.columnsGrid[i]);
+        columnsGrid[i].isVisible = true;
+        // this.gridSet.visibleColumns.push(this.gridSet.columnsGrid[i]);
       }
     });
     if (this.cashpayment.currencyID == this.baseCurr) {
@@ -584,7 +584,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.hideFieldsSet.push('SettledAmt2');
       this.hideFieldsSet.push('SettledDisc2');
     }
-    this.gridSet.hideColumns(this.hideFieldsSet);
+    this.hideGrid(columnsGrid,this.hideFieldsSet);
     setTimeout(() => {
       this.loadingform = false;
     }, 1000);
@@ -1164,6 +1164,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     let obj = {
       cashpayment: this.cashpayment,
+      objectName: this.cbxObjectID.ComponentCurrent.itemsSelected[0].ObjectName,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -1358,9 +1359,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onDestroy() {
-    this.isInit = false;
     this.destroy$.next();
     this.destroy$.complete();
+    this.isInit = false;
   }
   //#endregion
 
@@ -1556,9 +1557,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.gridCash.disableField(this.lockFields);
   }
 
-  hideGrid(columnsGrid) {
-    if (this.hideFields.length > 0) {
-      this.hideFields.forEach((fieldName) => {
+  hideGrid(columnsGrid,hideFields) {
+    if (hideFields.length > 0) {
+      hideFields.forEach((fieldName) => {
         let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
         if (i > -1) {
           columnsGrid[i].isVisible = false;

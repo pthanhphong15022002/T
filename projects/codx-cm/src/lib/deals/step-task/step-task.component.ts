@@ -1,6 +1,6 @@
 import { filter } from 'rxjs';
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, DialogRef, FormModel, NotificationsService,} from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DialogModel, DialogRef, FormModel, NotificationsService,} from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstancesStepsReasons } from '../../models/tmpModel';
@@ -12,6 +12,7 @@ import { tmpInstancesStepsReasons } from '../../models/tmpModel';
 })
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('task') task : CodxStepTaskComponent;
+  @ViewChild('popupGuide') popupGuide;
   @Input() typeTask = 1; // 2 = hợp đồng
   @Input() customerID = '';
   @Input() isPause = false;
@@ -46,6 +47,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   listStepSuccess:tmpInstancesStepsReasons[] = [];
   listStepFail:tmpInstancesStepsReasons[] = [];
   stepIdReason: string ='';
+  dialogGuide: DialogRef;
+  stepViews = [];
 
   formModel: FormModel = {
     entityName: 'DP_Instances_Steps_Reasons',
@@ -91,7 +94,20 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         this.stepIdReason = this.listInstanceStep[this.listInstanceStep.length - 1].stepID
         this.listStepReasonValue =this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
       }
+      if (this.listInstanceStep?.length > 0){
+        this.listInstanceStep.forEach((x) => {
+          if (!x.isFailStep && !x.isSuccessStep) {
+            let obj = {
+              stepName: x.stepName,
+              memo: x.memo,
+            };
+            this.stepViews.push(obj);
+          }
+        });
+      }
+      
     }
+
     if (changes.dataSelected) {
       this.dataSelected = changes.dataSelected?.currentValue;
       this.type = this.dataSelected.viewModeDetail || "S";
@@ -331,4 +347,22 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   autoStart(event){
     this.changeProgress.emit(event);
   }
+
+  showGuide(p) {
+    p.close();
+    let option = new DialogModel();
+    option.zIndex = 1001;
+
+    this.dialogGuide = this.callfc.openForm(
+      this.popupGuide,
+      '',
+      600,
+      470,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
 }

@@ -72,7 +72,7 @@
       <div class="d-flex align-items-center">
         <i class="icon-i-wallet2 icon-16 me-1"></i>
         <codx-label class="fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Thanh toán"></codx-label>
+          [gridViewName]="formModel?.gridViewName" default="Chọn"></codx-label>
       </div>
     </button>
   </div>
@@ -83,7 +83,7 @@
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
     <div class="p-3 tab-basic">
-      <div #itemRef class="row">
+      <div class="row">
         <div class="col-3">
           <div class="form-group">
             <codx-label fiedName="objectID" default="Đối tượng">
@@ -221,7 +221,7 @@
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div *ngIf="!loadingPop" class="tabset-content position-relative">
+  <div class="tabset-content position-relative">
     <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName"
       [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices"
       service="AC" [autoLoad]="false" [editSettings]="editSettings" [autoFitColumns]="false"
@@ -239,7 +239,7 @@
       <div class="form-group">
         <codx-label fiedName="lblCurencies" [formModel]="form.formModel" default="Số tiền chi trả">
         </codx-label>
-        <codx-input type="number" field="payAmt" (valueChange)="payAmtChange($event)" (keyUpEnter)="payAmtEnter($event)">
+        <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="payAmtChange($event)" (keyUpEnter)="payAmtEnter($event)">
         </codx-input>
       </div>
     </div>
@@ -259,7 +259,7 @@
       <div class="form-group">
         <codx-label fiedName="lblType" [formModel]="form.formModel" default="Cấn trừ hóa đơn">
         </codx-label>
-        <codx-input type="valuelist" refValue="AC083" field="payType" (valueChange)="valueChange($event)"></codx-input>
+        <codx-input type="valuelist" [crrValue]="'2'" refValue="AC083" field="payType" (valueChange)="valueChange($event)"></codx-input>
       </div>
     </div>
   </div>

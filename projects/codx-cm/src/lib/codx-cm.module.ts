@@ -93,6 +93,7 @@ import {
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
 import { CmApprovalComponent } from './cm-approval/cm-approval.component';
+import { PopupAssginDealComponent } from './deals/popup-assgin-deal/popup-assgin-deal.component';
 
 export const routes: Routes = [
   {
@@ -226,6 +227,7 @@ const T_Component: Type<any>[] = [
   CodxTabCmComponent,
   ViewTreeTargetsComponent,
   CmApprovalComponent,
+  PopupAssginDealComponent,
 ];
 
 @NgModule({
