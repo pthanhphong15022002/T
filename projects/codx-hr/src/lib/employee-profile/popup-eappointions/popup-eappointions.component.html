@@ -103,8 +103,7 @@
       <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
-          #orgUnit
-          [disabled]="disabledInput"
+        [disabled]="disabledInput"
           (render)="onRenderOrgUnitID($event)"
           field="orgUnitID"
           [formModel]="formModel"
@@ -119,6 +118,7 @@
         ></codx-label>
         <codx-input
           [disabled]="true"
+          (render)="onRenderOldOrgUnitID($event)"
           field="oldOrgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -132,6 +132,7 @@
         <codx-input
           [disabled]="disabledInput"
           field="jobLevel"
+          (render)="onRenderJobLevel($event)"
           [formModel]="formModel"
           [Group]="formGroup"
           (valueChange)="onChangeJobLevel($event)"
@@ -142,6 +143,7 @@
         <codx-input
           [disabled]="true"
           field="oldJobLevel"
+          (render)="onRenderOldJobLevel($event)"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -154,6 +156,7 @@
         <codx-input
           [disabled]="disabledInput"
           field="positionID"
+          (render)="onRenderPositionID($event)"
           [formModel]="formModel"
           [Group]="formGroup"
           (valueChange)="onChangePosition($event)"
@@ -167,6 +170,7 @@
         <codx-input
           [disabled]="true"
           field="oldPositionID"
+          (render)="onRenderOldPositionID($event)"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -177,7 +181,8 @@
       <div class="col-6">
         <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
         <codx-input
-          [disabled]="disabledInput"
+        [disabled]="disabledInput"
+        (render)="onRenderLocationID($event)"
           field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -190,7 +195,8 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
-          [disabled]="disabledInput"
+        [disabled]="disabledInput"
+        (render)="onRenderOldLocationID($event)"
           [disabled]="true"
           field="oldLocationID"
           [formModel]="formModel"

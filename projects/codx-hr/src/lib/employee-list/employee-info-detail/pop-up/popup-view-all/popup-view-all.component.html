@@ -354,7 +354,7 @@
 
 <!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
-  <div class="d-flex align-items-center hover-active cursor-pointer">
+  <div class="d-flex align-items-center hover-active cursor-pointer w-150px">
     <!-- <span
       class="bullet bullet-vertical d-flex align-items-center min-h-30px mh-100 me-3"
       [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
@@ -402,7 +402,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol2 let-data>
-  <div class="d-flex justify-content-end w-90px">
+  <div class="d-flex justify-content-end w-110px">
     <div class="d-flex align-items-center w-auto">
       <span
         [ngClass]="
@@ -425,7 +425,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol3 let-data>
-  <div class="d-flex justify-content-end w-125px">
+  <div class="d-flex justify-content-end w-100px">
     <!-- placement="top" [ngbTooltip]="basicSalaryHeaderText.JSalary" -->
     <span class="text-dark"
     [title]="basicSalaryHeaderText.JSalary"
@@ -440,7 +440,7 @@
 </ng-template>
 
 <ng-template #basicSalaryCol4 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu w-150px">
     <div class="d-flex flex-column">
       <div
         class="d-flex align-items-center text-dark"
@@ -527,7 +527,7 @@
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
-  <div class="d-flex align-items-center justify-content-center w-100" #benefitNorm>
+  <div class="d-flex align-items-center w-100" #benefitNorm>
     <div class="d-flex align-items-center">
       <div class="w-100px d-flex justify-content-end">
         <!-- placement="top" [ngbTooltip]="benefitHeaderText.BenefitAmt" -->
