@@ -3465,10 +3465,16 @@ lib-employee-list{
 //   background-color: transparent !important; /* ẩn thanh cuộn */
 // }
 
+
+
+/*
 .cm-scroll .e-content{
   padding-bottom: 30px;
   overflow: auto;
 }
+
+*/
+/*
 codx-views[ng-reflect-func-i-d="CM0101"]{
   .cm-scroll .e-content{
     height: calc(100vh - 402px)!important;
@@ -3489,9 +3495,11 @@ codx-views[ng-reflect-func-i-d="CM0104"]{
     height: calc(100vh - 340px)!important;
   }
 }
+*/
 
 //////
 
+/*
 codx-lead-detail{
   .codx-detail-body ejs-tab .e-content{
     height: calc(100vh - 424px)!important;
@@ -3511,3 +3519,4 @@ codx-deal-detail{
 lib-organization .content-tree li.menu-item>div.d-flex.align-items-center{
   align-items: start!important;
 }
+*/
