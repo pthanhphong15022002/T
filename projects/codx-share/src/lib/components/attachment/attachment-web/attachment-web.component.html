@@ -8,13 +8,12 @@
 </codx-form>
 <ng-template #header>
    <div class="d-flex justify-content-between align-items-center w-100">
-        <div class="d-flex align-items-center">
-            <div class="d-flex align-items-center">
-                <img src="../../../../../../../../../src/assets/themes/sys/default/img/BrowseLocal.svg"/>
-                <codx-label default="Kho tài liệu" fiedName="lblAttachmentArchives" formName="AttachmentArchives"></codx-label>
+        <div class="d-flex align-items-center ">
+            <div class="d-flex align-items-center div-btn-tab-attachment py-4 px-5 cursor-pointer" [class.active]="tab == 0" (click)="activeTab(0)">
+                <span class="fs-6 fw-normal">Kho tài liệu</span>
             </div>
-            <div class="d-flex align-items-center ms-3">
-                <codx-label default="Tài liệu của tôi" fiedName="lblAttachmentMyDocument" formName="AttachmentMyDocument"></codx-label>
+            <div class="d-flex align-items-center div-btn-tab-attachment py-4 px-5 cursor-pointer" [class.active]="tab == 1" (click)="activeTab(1)">
+                <span class="fs-6 fw-normal">Tài liệu của tôi</span>
             </div>
         </div>
         <div class="cursor-pointer" (click)="close()">
@@ -23,17 +22,98 @@
     </div>
 </ng-template>
 <ng-template #body>
-    <div class="row w-100 h-100">
-        <div class="col-4 bg-danger">
+    <div class="row w-100 h-100 border-bottom border-top">
+        <div class="col-4 div-tree-attachment-web border-right">
+            <codx-treeview
+                #treeview
+                [service]="'DM'"
+                [assemblyName]="'DM'"
+                [className]="'FolderBussiness'"
+                [method]="'GetFoldersAsync'"
+                fieldCheck="hasChildren" 
+                textField="folderName"
+                idField="recID" 
+                parentIdField="parentId"
+                [data]="data"
+                [itemTemplate]="templateorg"
+                (selectionChange)="selectionChange($event)"
+            >
+            </codx-treeview>
         </div>
         <div class="col-8">
+            <ng-container *ngIf="(listData && listData.length > 0) , else nodata">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Tên tài liệu</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col" class="text-center">Người tạo</th>
+                        <th scope="col">Dung lượng</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of listData" class="border-top">
+                        <td class="w-30px">
+                            <ng-container *ngIf="!item?.folderName && item?.read">
+                                <codx-input type="checkbox" (valueChange)="selectedFiles($event , item)"></codx-input>
+                            </ng-container>
+                        </td>
+                        <td class="d-flex align-items-center border-0">
+                            <img *ngIf="item.folderName" class="h-13px me-2" src="../../../assets/themes/dm/default/img/icon-folder.svg" />
+                            <img *ngIf="!item.folderName" class="h-16px me-2" [src]="getThumbnail(item)" />
+                            <span>{{item.folderName ? item.folderName : item.fileName}}</span>
+                            <span *ngIf="item.read == false" class="icon-security text-primary icon-16 mx-2" title="Tài liệu bảo mật"></span>
+                        </td>
+                        <td>{{item.createdOn | date: 'dd/MM/yyyy'}}</td>
+                        <td> 
+                            <codx-temp-full 
+                                [imageId]="item.createdBy" 
+                                imageObjType="AD_Users" 
+                                imgCss="me-3 cursor-pointer"
+                                [imageWidth]="25" 
+                                [subTitle]="item.userName"
+                            >
+                          </codx-temp-full>
+                        </td>
+                        <td>{{getSizeKB(item)}}</td>
+                      </tr>
+                    </tbody>
+                </table>
+            </ng-container>
         </div>
     </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex">
-            <button type="button" class="btn btn-primary" ><codx-label default="Tải lên" fiedName="lblAttachmentUploadFile" formName="AttachmentUploadFile"></codx-label></button>
+            <span>Đã chọn {{countItems}} tập tin</span>
+        </div>
+        <div class="d-flex">
+            <button type="button" class="btn btn-primary" (click)="onSave()"><codx-label default="Tải lên" fiedName="lblAttachmentUploadFile" formName="AttachmentUploadFile"></codx-label></button>
         </div>
     </div>
 </ng-template>
+
+<ng-template #templateorg let-data>
+    <div class="d-flex align-items-center align-items-center m-2">
+        <img class="h-13px" src="../../../assets/themes/dm/default/img/icon-folder.svg" />
+        <span class="ms-2">{{data.folderName}}</span>
+    </div>
+</ng-template>
+
+<ng-template #nodata>
+    <ng-container *ngIf="loaded">
+      <div class="container h-100">
+        <div class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <div class="fw-bold mt-1 text-center">
+              {{ "SYS011" | mssg | async }}
+            </div>
+            <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>

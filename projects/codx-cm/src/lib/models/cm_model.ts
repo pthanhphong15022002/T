@@ -1,4 +1,3 @@
-import { Double } from '@syncfusion/ej2-angular-charts';
 import { Util } from 'codx-core';
 
 export class CM_Products {
@@ -88,6 +87,7 @@ export class CM_Quotations {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  newVerCreated: boolean = false;
 }
 
 export class CM_QuotationsLines {
@@ -511,7 +511,11 @@ export class CM_Contracts {
   delPhone: string;
   delContactID: string; // Liên hệ giao hàng
   processID: string; // Liên hệ giao hàng
-
+  applyProcess: boolean = false;
+  approveStatus: string;
+  closed: boolean;
+  closedOn: Date;
+  closedBy: string;
   // Điều khoản hồ sơ liên quan -- memo
 }
 
@@ -676,7 +680,7 @@ export class CM_Leads {
   leadID: string;
   leadName: string;
   leadName2: string;
-  category: string = "1";
+  category: string = '1';
   channelID: string;
   campaignID: string;
   businessLineID: string;

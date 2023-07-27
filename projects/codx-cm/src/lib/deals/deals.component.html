@@ -25,7 +25,7 @@
     cardCss="border h-100"
     [hideMF]="!data?.roles?.isOnwer"
     (clickMF)="clickMF($event, data)"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    cardCss="card-template border-bottom pt-3"
     [typeMF]="'hover'"
     [titleTmp]="cardTitleTmp"
     [formModel]="view.formModel"
@@ -60,10 +60,10 @@
   </ng-template>
   <ng-template #descTmpCard>
     <div class="'d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-start mb-1">
-        <i class="icon-subtitles icon-16 me-2"></i>
+      <div class="d-flex align-items-top justify-content-start mb-1">
+        <i class="icon-subtitles icon-16 me-1"></i>
         <span
-          class="text-gray-700 line-clamp line-clamp-2"
+          class="text-gray-600 fs-7 line-clamp line-clamp-2"
           #dealName
           [ngbTooltip]="tooltipDealName"
           [innerHTML]="
@@ -74,7 +74,7 @@
         ></span>
       </div>
       <div class="d-flex justify-content-start mb-1 w-100">
-        <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
+        <i class="icon-add_shopping_cart icon-16 me-1"></i>
         <span
           class="text-gray-600 fs-7 line-clamp-menu"
           #businessLineID
@@ -106,8 +106,8 @@
       ></span>
     </div>
   </ng-template>
-  <div class="d-flex flex-column">
-    <div class="d-flex justify-content-between mt-2">
+  <div class="d-flex flex-column mt-1">
+    <div class="d-flex justify-content-between">
       <div
         class="w-auto d-flex align-items-center text-nowrap line-clamp line-clamp-1"
       >
@@ -159,7 +159,7 @@
         ><span>%</span>
       </div>
     </div>
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center mt-1">
       <div class="d-flex align-items-end codx-badge">
         <div
           *ngIf="data.status == '2'; else statusDefault"
@@ -205,8 +205,8 @@
       </div>
 
       <div class="d-flex justify-content-end align-items-center">
-        <span class="me-1" [ngbTooltip]="gridViewSetup['EndDate']?.headerText">
-          <span class="icon-16 icon-av_timer me-1"></span>
+        <div class="d-flex align-items-center me-1" [ngbTooltip]="gridViewSetup['EndDate']?.headerText">
+          <span class="icon-14 icon-av_timer me-1"></span>
           <span
             class="text-gray-700"
             #endDate
@@ -214,15 +214,17 @@
               data.endDate | formatvalue : view.formModel : 'endDate' | async
             "
           ></span>
+        </div>
+        <span class="h-25px">
+          <codx-imgs
+            [isToolTip]="true"
+            [width]="25"
+            [objectId]="data.owner"
+            objectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
         </span>
-        <codx-imgs
-          [isToolTip]="true"
-          [width]="25"
-          [objectId]="data.owner"
-          objectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
       </div>
     </div>
   </div>
@@ -437,7 +439,7 @@
         ></span>
       </div>
     </div>
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-top mt-2">
       <div class="d-flex align-items-end codx-badge">
         <div
           *ngIf="data.status == '2'; else statusDefault"
@@ -492,10 +494,10 @@
           ></span>
         </div>
       </div>
-      <div class="d-flex justify-content-center mt-1">
+      <div class="d-flex justify-content-center">
         <codx-imgs
           [isToolTip]="true"
-          [width]="25"
+          [width]="20"
           [objectId]="data.owner"
           objectType="AD_Users"
           [numberImages]="1"
@@ -674,7 +676,7 @@
 </ng-template>
 
 <ng-template #templateConsultant let-data>
-  <div>
+  <div *ngIf="data?.consultantID">
     <codx-imgs
       [width]="25"
       [objectId]="data?.consultantID"
@@ -682,6 +684,15 @@
       [numberImages]="1"
     >
     </codx-imgs>
+  </div>
+  <div *ngIf="!data?.consultantID">
+    <span
+      [innerHTML]="
+        data.consultantID
+          | formatvalue : view.formModel : 'consultantID'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
@@ -704,4 +715,18 @@
       >{{ data?.currentStepName }}</span
     >
   </div>
+</ng-template>
+
+<ng-template #templateExpectedClosed let-data>
+  <span class="icon-16 icon-av_timer me-1"></span>
+  <span
+    class="text-gray-700 fs-7 line-clamp-menu"
+    #expectedClosed
+    [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
+    [innerHTML]="
+      data.expectedClosed
+        | formatvalue : view.formModel : 'expectedClosed'
+        | async
+    "
+  ></span>
 </ng-template>

@@ -1133,16 +1133,16 @@ export class CodxShareService {
 
   codxReleaseDynamic(
     module: string, //Tên service
-    data: any, //RecID nghiệp vụ gốc
-    category: any, //Mã quy trình duyệt
+    data: any, //data nghiệp vụ gốc – thay cho việc truyền recID như trước: phục vụ cho việc xuất dữ liệu
+    category: any, //Phân loại tài liệu hiện hành - thay cho việc truyền processID như trước: phục vụ cho việc kiểm tra loại quy trình gửi duyệt và tích hợp với form trình kí số.
     entityName: string, //EntityName nghiệp vụ gốc
     funcID: string, //FunctionID nghiệp vụ gốc
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     releaseCallback: (response: ResponseModel) => void, //Hàm xử lí kết quả trả về
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
-    approvers: Array<string> = null, //Danh sách userID của RO
+    approvers: Array<string> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
-    releaseOnly: boolean = false
+    releaseOnly: boolean = false //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;
@@ -1524,6 +1524,57 @@ export class CodxShareService {
     );
   }
   //#endregion Codx Quy trình duyệt
+
+  //Lấy icon Folder/File
+  getIconFile(ex: string) {
+    if (!ex) return 'file.svg';
+    var ext = ex.toLocaleLowerCase();
+    switch (ext) {
+      case '.txt':
+        return 'txt.svg';
+      case '.doc':
+      case '.docx':
+        return 'doc.svg';
+      case '.7z':
+      case '.rar':
+      case '.zip':
+        return 'zip.svg';
+      case '.jpg':
+      case '.jpeg':
+      case '.jfif':
+        return 'jpg.svg';
+      case '.mp4':
+        return 'mp4.svg';
+      case '.xls':
+      case '.xlsx':
+        return 'xls.svg';
+      case '.pdf':
+        return 'pdf.svg';
+      case '.png':
+        return 'png.svg';
+      case '.js':
+        return 'javascript.svg';
+      case '.apk':
+        return 'android.svg';
+      case '.ppt':
+        return 'ppt.svg';
+      case '.mp3':
+      case '.wma':
+      case '.wav':
+      case '.flac':
+      case '.ogg':
+      case '.aiff':
+      case '.aac':
+      case '.alac':
+      case '.lossless':
+      case '.wma9':
+      case '.aac+':
+      case '.ac3':
+        return 'audio.svg';
+      default:
+        return 'file.svg';
+    }
+  }
 }
 //#region Model
 export class ResponseModel {

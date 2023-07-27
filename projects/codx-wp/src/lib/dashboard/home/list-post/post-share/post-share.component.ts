@@ -70,7 +70,7 @@ export class PostShareComponent implements OnInit {
       [this.objectID])
       .subscribe((res:any) => {
         this.loaded = true;
-        if(res.pattern){
+        if(res?.pattern){
           res.backgroundImg = environment.urlUpload + "/" + res.pattern.url;
         }
         this.data = res;

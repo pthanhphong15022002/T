@@ -307,42 +307,46 @@
               </span>
             </th> -->
             <th class="w-40 border-bottom">
-              <codx-label class="ps-3 fw-bold" fiedName="lblAccountName" default="Tài khoản">
-              </codx-label>
+              <div class="d-flex align-items-center justify-content-start ps-3">
+                <codx-label class="fw-bold" fiedName="lblAccountName" default="Tài khoản">
+                </codx-label>
+              </div>       
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
-              <div class="d-flex align-items-center justify-content-end">
-                <codx-label class="ps-3 fw-bold" fiedName="lblAccountID" default="Nợ">
+            <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ">
                 </codx-label>
               </div>     
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
-              <div class="d-flex align-items-center justify-content-end">
-                <codx-label class="ps-3 fw-bold" fiedName="lblAccountID" default="Nợ, HT">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ, HT">
                 </codx-label>
               </div>    
             </th>
-            <th *ngIf="itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
-              <div class="d-flex align-items-center justify-content-end">
-                <codx-label class="ps-3 fw-bold" fiedName="lblOffSetAccID" default="Có">
+            <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có">
                 </codx-label>
               </div>   
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
-              <div class="d-flex align-items-center justify-content-end">
-                <codx-label class="ps-3 fw-bold" fiedName="lblOffSetAccID" default="Có, HT">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có, HT">
                 </codx-label>
               </div>  
             </th>
-            <th *ngIf="itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
-              <div class="d-flex align-items-center justify-content-end">
-                <codx-label class="ps-3 fw-bold" fiedName="lblDR2" default="Số tiền, NT">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblDR2" default="Số tiền, NT">
                 </codx-label>
               </div>  
             </th>
             <th class="w-30 border-bottom">
-              <codx-label class="ps-3 fw-bold" fiedName="lblNote" default="Ghi chú">
-              </codx-label>
+              <div class="d-flex align-items-center justify-content-start ps-3">
+                <codx-label class="fw-bold" fiedName="lblNote" default="Ghi chú">
+                </codx-label>
+              </div>
             </th>
           </tr>
         </thead>
@@ -452,11 +456,11 @@
               </td>
               <td class="text-center">
                 <div *ngIf="!item.crediting" class="d-flex align-items-center justify-content-end ps-3">
-                  <ng-container *ngIf="itemSelected?.currencyID == baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
-                  <ng-container *ngIf="itemSelected?.currencyID != baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt2
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
@@ -464,14 +468,20 @@
               </td>
               <td class="text-center">
                 <div *ngIf="item.crediting" class="d-flex align-items-center justify-content-end ps-3">
-                  <ng-container *ngIf="itemSelected?.currencyID == baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
-                  <ng-container *ngIf="itemSelected?.currencyID != baseCurr">
+                  <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt2
                       | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
+                </div>
+              </td>
+              <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-center">
+                <div class="d-flex align-items-center justify-content-end ps-3">
+                  <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
+                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
                 </div>
               </td>
               <td>
@@ -507,14 +517,6 @@
           </div>
         </div>
       </div>
-      <!-- <div *ngIf="isLoadDataAcct" class="ac-load">
-        <ejs-progressbar #pgbAcctranst id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
-          [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
-          <e-progressbar-annotations>
-            <e-progressbar-annotation content=" "> </e-progressbar-annotation>
-          </e-progressbar-annotations>
-        </ejs-progressbar>
-      </div> -->
     </div>
     <table style="table-layout: fixed;" class="table mb-0">
       <tfoot style="position: sticky;bottom: 0;background-color:#f8f9fa;border-top: 1px solid #dee2e6;">
@@ -546,26 +548,26 @@
         <thead class="border-gray-200" style="position: sticky; top: 0;z-index: 15;">
           <tr class="border-bottom">
             <th class="border-bottom w-20">
-              <div class="d-flex">
-                <codx-label class="ps-3 fw-bold" fiedName="lblInvoiceNo" default="Số hóa đơn">
+              <div class="d-flex align-items-center justify-content-start ps-3">
+                <codx-label class="fw-bold" fiedName="lblInvoiceNo" default="Số hóa đơn">
                 </codx-label>
               </div>
             </th>
             <th class="border-bottom w-30">
-              <div class="d-flex">
-                <codx-label class="ps-3 fw-bold" fiedName="lblInvoiceDate" default="Ngày hóa đơn">
+              <div class="d-flex align-items-center justify-content-start ps-3">
+                <codx-label class="fw-bold" fiedName="lblInvoiceDate" default="Ngày hóa đơn">
                 </codx-label>
               </div>
             </th>
             <th class="border-bottom w-30">
-              <div class="d-flex">
-                <codx-label class="ps-3 fw-bold" fiedName="lblDueDate" default="Hạn thanh toán">
+              <div class="d-flex ps-3 align-items-center justify-content-start ps-3">
+                <codx-label class="fw-bold" fiedName="lblDueDate" default="Hạn thanh toán">
                 </codx-label>
               </div>
             </th>
             <th class="border-bottom w-20">
-              <div class="d-flex align-items-center justify-content-end">
-                <codx-label class="ps-3 fw-bold" fiedName="lblBalanceAmt" default="Số dư">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblBalanceAmt" default="Số dư">
                 </codx-label>
               </div>
             </th>
@@ -577,14 +579,14 @@
               </div>
             </th> -->
             <th class="border-bottom w-30">
-              <div class="d-flex align-items-center justify-content-end">
-                <codx-label class="ps-3 fw-bold" fiedName="lblSettledAmt" default="Thanh toán">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblSettledAmt" default="Thanh toán">
                 </codx-label>
               </div>
             </th>
             <th class="border-bottom w-30">
-              <div class="d-flex">
-                <codx-label class="ps-3 fw-bold" fiedName="lblNote" default="Ghi chú">
+              <div class="d-flex align-items-center justify-content-start ps-3">
+                <codx-label class="fw-bold" fiedName="lblNote" default="Ghi chú">
                 </codx-label>
               </div>
             </th>
@@ -592,8 +594,8 @@
         </thead>
         <tbody class="border-bottom">
           <tr *ngFor="let item of settledInvoices">
-            <td class="ps-3">
-              <div class="d-flex align-items-center justify-content-start">
+            <td>
+              <div class="d-flex align-items-center justify-content-start ps-3">
                 <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">
                   <span [ngbTooltip]="popno" class="fw-bold line-clamp line-clamp-1">{{item.invoiceNo}}</span>
                   <ng-template #popno>
@@ -603,39 +605,41 @@
               </div>
             </td>
             <td>
-              <div class="d-flex align-items-center justify-content-start">
+              <div class="d-flex align-items-center justify-content-start ps-3">
                 <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
                   <span #invoiceDate [innerHTML]="
                     item?.invoiceDate
               | formatvalue : view.formModel : 'invoiceDate' : invoiceDate : 'SettledInvoices' : 'grvSettledInvoices'
               | async
-          " class="text-gray-600 mt-1"></span>
+          " class="text-gray-600"></span>
                 </ng-container>
               </div>
             </td>
             <td>
-              <div class="d-flex align-items-center justify-content-start">
+              <div class="d-flex align-items-center justify-content-start ps-3">
                 <ng-container *ngIf="(item.dueDate != null && item.dueDate != '')">
                   <span #dueDate [innerHTML]="
                     item?.dueDate | formatvalue : fmSettledInvoices : 'dueDate' : dueDate | async"
-                    class="text-gray-600 mt-1"></span>
+                    class="text-gray-600"></span>
                 </ng-container>
               </div>
             </td>
             <td>
-              <div class="d-flex align-items-center justify-content-start">
-                <span class="fw-bold line-clamp line-clamp-1" #balAmt [innerHTML]="item?.balAmt
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <span *ngIf="(item?.balAmt > 0)" class="fw-bold line-clamp line-clamp-1" #balAmt [innerHTML]="item?.balAmt
                       | formatvalue : fmSettledInvoices : 'balAmt' : balAmt | async"></span>
+                <span *ngIf="(item?.balAmt == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
               </div>
             </td>
             <td>
-              <div class="d-flex align-items-center justify-content-start">
-                <span class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="item?.settledAmt
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <span *ngIf="(item?.settledAmt > 0)" class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="item?.settledAmt
                       | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
+                <span *ngIf="(item?.settledAmt == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
               </div>
             </td>
             <td>
-              <div class="d-flex align-items-center justify-content-start">
+              <div class="d-flex align-items-center justify-content-start ps-3">
                 <ng-container *ngIf="(item.note != null && item.note != '')">
                   <span [ngbTooltip]="popnote" class="fw-bold line-clamp line-clamp-1">{{item.note}}</span>
                   <ng-template #popnote>
@@ -667,14 +671,14 @@
           <div class="d-flex align-items-center justify-content-end ps-3">
             <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #balAmt [innerHTML]="totalbalAmt
                   | formatvalue : fmSettledInvoices : 'balAmt' : balAmt | async"></span>
-            <span *ngIf="settledInvoices.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
+            <span *ngIf="settledInvoices.length == 0 || totalbalAmt == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
         <td class="w-30">
           <div class="d-flex align-items-center justify-content-end ps-3">
             <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="totalsettledAmt
                   | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
-            <span *ngIf="settledInvoices.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
+            <span *ngIf="settledInvoices.length == 0 || totalsettledAmt == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
         <td class="w-30"></td>

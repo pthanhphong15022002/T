@@ -14,6 +14,7 @@ import {
 import {
   ApiHttpService,
   CacheService,
+  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -49,6 +50,11 @@ export class AddLinkComponent implements OnInit , AfterViewInit {
     { icon: '', text: 'Liên kết', name: 'tbLink' },
     { icon: '', text: 'Văn bản đã liên kết', name: 'tbLinkText' },
   ];
+
+  page = 0;
+  pageSize = 20;
+
+  model = new DataRequest();
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -92,25 +98,11 @@ export class AddLinkComponent implements OnInit , AfterViewInit {
   }
 
   searchText(val: any) {
-    /* this.api.execSv<any>("OD","ERM.Business.Core", "DataBusiness", "GetFullTextSearchDataAsync",
-    {
-     /*filter:{}
-      query: "Phòng CNTT",
-      functionID: "ODT3",
-      entityName: "OD_Dispatches",
-      page: 1,
-      pageSize: 20
-    }).subscribe((item) => {
-      console.log(item);
-    }); */
+    this.model.dataValue = val;
+    this.model.page = this.page;
+    this.model.pageSize = this.pageSize;
     this.api
-      .execSv<any>('OD', 'Core', 'DataBusiness', 'SearchFullTextAdvAsync', {
-        query: val,
-        functionID: this.funcID,
-        entityName: 'OD_Dispatches',
-        page: 1,
-        pageSize: 20,
-      })
+      .execSv<any>('OD', 'OD', 'DispatchesBusiness', 'DispatchLinkAsync', this.model)
       .subscribe((item) => {
         if(item)
         {

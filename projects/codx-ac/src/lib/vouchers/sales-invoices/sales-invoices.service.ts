@@ -4,7 +4,6 @@ import {
   CacheService,
   FormModel
 } from 'codx-core';
-import { tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 
 @Injectable({
@@ -38,12 +37,5 @@ export class SalesInvoiceService {
     this.acService
       .loadComboboxData('VATCodesAC', 'AC')
       .subscribe((res) => (this.vats = res));
-  }
-
-  deleteLinesByTransID(transId: string): void {
-    this.apiService
-      .exec('AC', 'SalesInvoicesLinesBusiness', 'DeleteByTransIDAsync', transId)
-      .pipe(tap((t) => console.log(t)))
-      .subscribe();
   }
 }

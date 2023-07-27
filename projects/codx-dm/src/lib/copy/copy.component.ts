@@ -55,6 +55,7 @@ export class CopyComponent implements OnInit {
   objectType: string;
   copy = false;
   interval: ItemInterval[];
+  btnDisabled = false;
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
   
@@ -89,11 +90,16 @@ export class CopyComponent implements OnInit {
               }
               this.changeDetectorRef.detectChanges();
             });
+         
         }  
         else 
           this.fullName = this.data.folderName;
       }
-    
+      
+      if(!this.copy)
+      {
+        this.btnDisabled = true;
+      }
    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
@@ -109,6 +115,7 @@ export class CopyComponent implements OnInit {
   }
 
   SaveData() {
+    this.btnDisabled = true;
     var that = this;
     if (this.fullName === "") {
       this.changeDetectorRef.detectChanges();
@@ -116,9 +123,9 @@ export class CopyComponent implements OnInit {
     }
     if (this.objectType == 'file') {
       // doi ten file
-      that.fullName = that.fullName + that.data.extension;
+      var fullName = that.fullName + that.data.extension;
       if (this.copy) {
-        this.fileService.copyFile(that.id, that.fullName, "").subscribe(async res => {
+        this.fileService.copyFile(that.id, fullName, "").subscribe(async res => {
           if (res.status == 0) {
             var files = that.dmSV.listFiles;
             if (files == null) files = [];
@@ -130,10 +137,12 @@ export class CopyComponent implements OnInit {
             that.displayThumbnail(res.data);
             this.dialog.close();
             that.notificationsService.notify(res.message);
+            this.btnDisabled = false;
           }
           else {       
             this.titleMessage = res.message;
             this.errorshow = true;
+            this.btnDisabled = false;
           }
 
           if (res.status == 6) 
@@ -146,7 +155,6 @@ export class CopyComponent implements OnInit {
                   if (item.status == 0) {
                     var files = that.dmSV.listFiles;
                     if (files == null) files = [];
-
                     let index = files.findIndex(d => d.recID.toString() === item.data.recID);
                     if (index != -1) {
                       item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//"../../../assets/img/loader.gif";
@@ -159,6 +167,7 @@ export class CopyComponent implements OnInit {
                     this.changeDetectorRef.detectChanges();  
                     this.dialog.close();                  
                   }
+                  this.btnDisabled = false;
                   that.notificationsService.notify(item.message);
                 });
               }
@@ -168,8 +177,9 @@ export class CopyComponent implements OnInit {
       }
       else {
         // rename
-        this.fileService.renameFile(that.id, that.fullName).subscribe(async res => {
+        this.fileService.renameFile(that.id, fullName).subscribe(async res => {
           if (res.status == 0) {
+            
             var files = that.dmSV.listFiles;
             let index = files.findIndex(d => d.recID.toString() === this.id);
             if (index != -1) {
@@ -180,11 +190,13 @@ export class CopyComponent implements OnInit {
             this.dmSV.ChangeOneFolder.next(files[index]);
             this.changeDetectorRef.detectChanges();
             this.dialog.close();     
+            this.btnDisabled = false;
          //   that.notificationsService.notify(res.message);    
           }
           else {          
             this.titleMessage = res.message;
             this.errorshow = true;
+            this.btnDisabled = false;
           }
 
           if (res.status == 6) {     
@@ -194,6 +206,7 @@ export class CopyComponent implements OnInit {
               that.fileService.renameFile(that.id, res.data.fileName).subscribe(async item => {
                 if (item.status == 0) {
                   var files = that.dmSV.listFiles;
+                  
                   let index = files.findIndex(d => d.recID.toString() === this.id);
                   if (index != -1) {
                     files[index].fileName = item.data.fileName;
@@ -203,12 +216,14 @@ export class CopyComponent implements OnInit {
                   this.dialog.close();
                 }
                 that.notificationsService.notify(item.message);
+                this.btnDisabled = false;
               });
             });
           }
           else {
             this.notificationsService.notify(res.message);
             this.dialog.close();         
+            this.btnDisabled = false;
           }
         });
       }
@@ -310,12 +325,13 @@ export class CopyComponent implements OnInit {
   }
 
   changeValue($event, type) {
-    console.log($event);
     switch(type) {
       case "fullName":
-        this.fullName = $event.data;    
-     //   alert(this.folderName);
+      {
+        this.fullName = $event.data;  
+        if(!this.copy) this.btnDisabled = false;
         break;
+      }
     }
   }
 }

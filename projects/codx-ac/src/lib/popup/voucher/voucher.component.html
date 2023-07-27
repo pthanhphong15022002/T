@@ -72,7 +72,7 @@
       <div class="d-flex align-items-center">
         <i class="icon-i-wallet2 icon-16 me-1"></i>
         <codx-label class="fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Thanh toán"></codx-label>
+          [gridViewName]="formModel?.gridViewName" default="Chọn"></codx-label>
       </div>
     </button>
   </div>
@@ -83,7 +83,7 @@
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
     <div class="p-3 tab-basic">
-      <div #itemRef class="row">
+      <div class="row">
         <div class="col-3">
           <div class="form-group">
             <codx-label fiedName="objectID" default="Đối tượng">
@@ -112,7 +112,7 @@
           <div class="col-2">
             <div class="form-group">
               <div class="form-group">
-                <codx-label fiedName="InvoiceDueDate" [formModel]="form.formModel" default="Lọc từ ngày">
+                <codx-label fiedName="InvoiceDueDate" default="Lọc từ ngày">
                 </codx-label>
                 <codx-input field="invoiceDueDate" [Group]="form.formGroup" (valueChange)="valueChange($event)"
                   [formModel]="form.formModel">
@@ -132,19 +132,14 @@
         <ng-container *ngIf="type === 1">
           <ng-container *ngTemplateOutlet="tempAutpay"></ng-container>
         </ng-container>
-        <div class="col-2 d-flex align-items-center">
-          <button *ngIf="type === 0" type="button" class="btn btn-secondary btn-sm" style="min-width: 60px;height: 32px;"
+        <div class="col-2 d-flex align-items-center mt-1">
+          <button type="button" class="btn btn-md btn-light-primary" style="min-width: 60px;border: 1px solid var(--primary-dark) !important;"
               (click)="submit()">
               <div class="d-flex align-items-center">
                 <i class="icon-i-funnel icon-16 me-1"></i>
-                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                <codx-label *ngIf="type === 0"  class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
                   [gridViewName]="formModel?.gridViewName" default="Lấy dữ liệu"></codx-label>
-              </div>
-            </button>
-            <button *ngIf="type === 1" type="button" class="btn btn-secondary btn-sm" style="min-width: 60px;height: 32px;"
-              (click)="submit()">
-              <div class="d-flex align-items-center">
-                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                <codx-label *ngIf="type === 1"  class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
                   [gridViewName]="formModel?.gridViewName" default="Cấn trừ"></codx-label>
               </div>
             </button>
@@ -226,7 +221,7 @@
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div *ngIf="!loadingPop" class="tabset-content position-relative">
+  <div class="tabset-content position-relative">
     <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName"
       [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices"
       service="AC" [autoLoad]="false" [editSettings]="editSettings" [autoFitColumns]="false"
@@ -244,7 +239,7 @@
       <div class="form-group">
         <codx-label fiedName="lblCurencies" [formModel]="form.formModel" default="Số tiền chi trả">
         </codx-label>
-        <codx-input type="number" field="payAmt" (valueChange)="payAmtChange($event)" (keyUpEnter)="payAmtEnter($event)">
+        <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="payAmtChange($event)" (keyUpEnter)="payAmtEnter($event)">
         </codx-input>
       </div>
     </div>
@@ -264,7 +259,7 @@
       <div class="form-group">
         <codx-label fiedName="lblType" [formModel]="form.formModel" default="Cấn trừ hóa đơn">
         </codx-label>
-        <codx-input type="valuelist" refValue="AC083" field="payType" (valueChange)="valueChange($event)"></codx-input>
+        <codx-input type="valuelist" [crrValue]="'2'" refValue="AC083" field="payType" (valueChange)="valueChange($event)"></codx-input>
       </div>
     </div>
   </div>

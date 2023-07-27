@@ -116,6 +116,11 @@ export class VersionComponent implements OnInit {
   //   return false;
   // }
 
+  uploadFile() {
+    var ctrl = this.uploadObj.element as HTMLElement;
+    //var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
+    if (ctrl != null) ctrl.click();
+  }
   getNow() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
