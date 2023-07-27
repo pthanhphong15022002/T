@@ -21,7 +21,7 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
   onInit(): void {}
 
   valueChange(e) {
-    if (e) this.email = e.data;
+    if (e) this.email = e.data?.replace(/\s/g, '');
   }
 
   onContinue() {
