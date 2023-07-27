@@ -193,10 +193,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.baseCurr = dialogData.data?.baseCurr;
     this.isInit = true;
     this.loadInit();
-<<<<<<< HEAD
-=======
-
->>>>>>> 967df0ceca3c131776e2a93d4b3bbb06b19d7642
   }
   //#endregion
 
