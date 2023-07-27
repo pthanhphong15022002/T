@@ -401,12 +401,12 @@
               [ngClass]="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5' ? 'icon-i-building' : item?.okrLink[0]?.objectType =='9' ? 'icon-person':'icon-person_pin_circle' "></span>
           </span>
           <span class="ps-3 d-flex align-items-center">
-            <span *ngIf="item?.okrLink[0]?.objectType =='9'"
+            <span id='assignName' *ngIf="item?.okrLink[0]?.objectType =='9'"
               [innerHTML]="item?.okrLink[0]?.owner | formatvalue : okrFM?.krFM : 'owner' | async"></span>
-            <span
+            <span id='assignOrg'
               *ngIf="item?.okrLink[0]?.objectType =='1' || item?.okrLink[0]?.objectType =='3' || item?.okrLink[0]?.objectType =='5'"
               [innerHTML]="item?.okrLink[0]?.orgUnitName "></span>
-            <span *ngIf="item?.okrLink[0]?.objectType =='7'" [innerHTML]="item?.okrLink[0]?.positionName"></span>
+            <span id='assignPosition' *ngIf="item?.okrLink[0]?.objectType =='7'" [innerHTML]="item?.okrLink[0]?.positionName"></span>
           </span>
         </div>
         <!-- mặc định-->

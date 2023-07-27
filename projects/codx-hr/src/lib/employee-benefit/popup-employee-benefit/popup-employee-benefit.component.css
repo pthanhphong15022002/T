@@ -1,0 +1,19 @@
+.c-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(0px, 10px);
+}
+
+.p-25 {
+  width: 25%;
+}
+.p-5 {
+  width: 5%;
+}
+.p-30 {
+  width: 30%;
+}
+.p-40 {
+  width: 40%;
+}

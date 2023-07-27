@@ -684,7 +684,24 @@ export class CodxCmService {
     );
   }
   // API for More in deal
-
+  getEmployeesByEmpID(data) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmployeeInforAsync',
+      data
+    );
+  }
+  isExistLeadId(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'IsExitsAutoCodeNumberAsync',
+      data
+    );
+  }
   startDeal(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1102,6 +1119,16 @@ export class CodxCmService {
       recID
     );
   }
+  //get trinh ki mac dinh
+  getDeafaultCategory(entityName) {
+    return this.api.exec<any>(
+      'ES',
+      'CategoriesBusiness',
+      'GetDefaulProcessIDAsync',
+      entityName
+    );
+  }
+
   //get data instance
   getDataInstance(recID) {
     return this.api.exec<any>(

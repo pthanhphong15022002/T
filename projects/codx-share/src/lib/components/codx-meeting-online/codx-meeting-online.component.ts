@@ -94,20 +94,20 @@ export class CodxMeetingOnlineComponent extends UIComponent {
         this.ownerLink = ownerUrl;
       });
 
-      this.connectMeetingNow(
-        this.meetingTitle,
-        this.meetingDescription,
-        this.meetingDuration,
-        this.meetingPassword,
-        this.userName,
-        this.mail,
-        !isManager,
-        this.meetingUrl,
-        this.meetingStartDate,
-        this.meetingStartTime
-      ).then((attendeeUrl) => {
-        this.meetingUrl = attendeeUrl;
-      });
+      // this.connectMeetingNow(
+      //   this.meetingTitle,
+      //   this.meetingDescription,
+      //   this.meetingDuration,
+      //   this.meetingPassword,
+      //   this.userName,
+      //   this.mail,
+      //   !isManager,
+      //   this.meetingUrl,
+      //   this.meetingStartDate,
+      //   this.meetingStartTime
+      // ).then((attendeeUrl) => {
+      //   this.meetingUrl = attendeeUrl;
+      // });
       this.detectorRef.detectChanges();
     });
   }
