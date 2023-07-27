@@ -1119,6 +1119,16 @@ export class CodxCmService {
       recID
     );
   }
+  //get trinh ki mac dinh
+  getDeafaultCategory(entityName) {
+    return this.api.exec<any>(
+      'ES',
+      'CategoriesBusiness',
+      'GetDefaulProcessIDAsync',
+      entityName
+    );
+  }
+
   //get data instance
   getDataInstance(recID) {
     return this.api.exec<any>(
