@@ -94,6 +94,7 @@ import {
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
 import { CmApprovalComponent } from './cm-approval/cm-approval.component';
 import { PopupAssginDealComponent } from './deals/popup-assgin-deal/popup-assgin-deal.component';
+import { InstanceDashboardComponent } from './deals/instance-dashboard/instance-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -228,6 +229,7 @@ const T_Component: Type<any>[] = [
   ViewTreeTargetsComponent,
   CmApprovalComponent,
   PopupAssginDealComponent,
+  InstanceDashboardComponent,
 ];
 
 @NgModule({

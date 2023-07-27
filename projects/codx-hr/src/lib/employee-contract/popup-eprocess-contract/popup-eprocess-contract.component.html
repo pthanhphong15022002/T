@@ -20,7 +20,7 @@
     class="form-group d-flex justify-content-between"
   >
     <div class="w-100">
-      <div class="d-flex border-bottom pb-1">
+      <div class="d-flex pb-1">
         <div class="d-flex flex-column position-relative">
           <codx-img
             [width]="35"
@@ -83,8 +83,8 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-5">
-    <div class="col-6">
+  <div class="d-flex mt-5">
+    <div class="me-4">
       <codx-vll
         *ngIf="data.status"
         [formModel]="formModel"
@@ -97,7 +97,45 @@
       >
       </codx-vll>
     </div>
-    <div class="col-6">
+    <div
+      *ngIf="data?.isCurrent && !data?.isExpire"
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popIsNewest"
+      [style.color]="'#0078FF'"
+      class="icon-bookmark icon-18"
+    ></div>
+
+    <div
+      *ngIf="data?.isCurrent && data?.isExpire"
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popOverDue"
+      [style.color]="'#F64E60'"
+      class="icon-notifications icon-18"
+    ></div>
+
+    <div
+      *ngIf="
+        data?.isCurrent &&
+        dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+      "
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popIsNotNewsest"
+      [style.color]="'#FFA800'"
+      class="icon-queue_play_next icon-18"
+    ></div>
+    <!-- <div class="col-6">
       <codx-input
         [disabled]="'true'"
         field="isCurrent"
@@ -109,30 +147,9 @@
         fiedName="IsCurrent"
         [formModel]="formModel"
       ></codx-label>
-    </div>
+    </div> -->
   </div>
   <div class="form-group row mt-5">
-    <div class="col-6">
-      <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
-      <codx-input
-        *ngIf="loadedAutoField == true"
-        [disabled]="autoNumField == 'ContractNo' || disabledInput"
-        field="contractNo"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
-      <codx-input
-        [disabled]="disabledInput"
-        field="signedDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-  </div>
-  <div class="form-group row">
     <div class="col-6">
       <codx-label
         fiedName="ContractTypeID"
@@ -223,6 +240,85 @@
   </div>
 
   <div class="form-group row">
+    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-input
+      [disabled]="disabledInput"
+      field="note"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <span class="text-primary fw-bold fs-6">
+    <codx-label
+      default="Hợp đồng"
+      name="lblContract"
+      [formModel]="formModel"
+    ></codx-label>
+  </span>
+
+  <div class="form-group row mt-4">
+    <div class="col-6">
+      <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
+      <codx-input
+        *ngIf="loadedAutoField == true"
+        [disabled]="autoNumField == 'ContractNo' || disabledInput"
+        field="contractNo"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        [disabled]="disabledInput"
+        field="signedDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between mt-5">
+    <codx-label
+      class="fw-bold"
+      fiedName="SignerID"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [disabled]="disabledInput"
+      field="signerID"
+      [showInput]="false"
+      [formModel]="formModel"
+      [Group]="formGroup"
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+  </div>
+  <div class="d-flex mb-8" *ngIf="loaded">
+    <div class="d-flex flex-column">
+      <codx-img
+        [width]="35"
+        class="me-4"
+        [objectId]="employeeSign?.employeeID"
+        [referType]="'avt'"
+        [objectName]="employeeSign?.employeeName"
+        [objectType]="'HR_Employees'"
+      >
+      </codx-img>
+    </div>
+    <div class="d-flex flex-column">
+      <div class="text-dark fw-bold">
+        <span>
+          {{ employeeSign?.employeeName }}
+        </span>
+      </div>
+      <span class="text-gray-700 fs-7" *ngIf="employeeSign?.positionName">{{
+        employeeSign?.positionName
+      }}</span>
+    </div>
+  </div>
+
+  <!-- <div class="form-group row">
     <div class="col-12">
       <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
       <div class="border-bottom pb-1">
@@ -235,9 +331,9 @@
         ></codx-input>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <div class="form-group row">
+  <!-- <div class="form-group row">
     <codx-label fiedName="SignerPosition" [formModel]="formModel"></codx-label>
     <codx-input
       [disabled]="disabledInput"
@@ -245,23 +341,70 @@
       [formModel]="formModel"
       [Group]="formGroup"
     ></codx-input>
-  </div>
+  </div> -->
 
-  <div class="form-group row">
-    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-    <codx-input
-      [disabled]="disabledInput"
-      field="note"
-      [formModel]="formModel"
-      [Group]="formGroup"
-    ></codx-input>
+  <div class="d-flex flex-column mb-4">
+    <div
+      class="d-flex justify-content-between align-items-center mb-2 form-group text-primary fw-bold fs-6"
+    >
+      <codx-label
+        default="File đính kèm"
+        name="lblAttachments"
+        [formModel]="formModel"
+      >
+      </codx-label>
+    </div>
+    <div class="AttachmentFile-group flex-nowrap">
+      <codx-attachment
+        #attachment
+        [objectId]="data?.recID"
+        [objectType]="formModel.entityName"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        [formModel]="formModel"
+        displayThumb="full"
+        showMessage="0"
+      >
+      </codx-attachment>
+      <!-- <codx-attachment
+        #attachment
+        [objectType]="'HR_EContracts'"
+        [showMessage]="0"
+        hideBtnSave="1"
+        hideFolder="1"
+        hideUploadBtn="1"
+        hideDes="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        [functionID]="funcID"
+        [objectId]="data?.recID"
+        allowMultiFile="1"
+        [idBrowse]="'add'"
+        displayThumb="full"
+        (fileAdded)="fileAdded($event)"
+        [referType]="'source'"
+      >
+      </codx-attachment> -->
+    </div>
   </div>
 
   <div
     class="extend-function"
     *ngIf="actionType == 'edit' && lstSubContract?.length > 0"
   >
-    <hr />
+    <span class="text-primary text-hover-primary_darker fw-bold me-1 fs-6">
+      <codx-label
+        default="Phụ lục hợp đồng"
+        name="lblSubContract"
+        [formModel]="formModel"
+      ></codx-label>
+    </span>
+    <!-- <hr />
     <div class="d-flex justify-content-center">
       <div class="d-flex align-items-center w-auto extend-title">
         <span class="text-primary text-hover-primary_darker fw-bold me-1">
@@ -272,7 +415,7 @@
           ></codx-label>
         </span>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <div
@@ -460,18 +603,31 @@
       actionType == 'edit' ? 'justify-content-between' : 'justify-content-end'
     "
   >
-    <button
-      *ngIf="actionType == 'edit'"
-      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
-      (click)="handleSubContract('Thêm', 'add', null)"
-    >
-      <span class="icon-add btn-text-primary me-2"></span>
-      <codx-label
-        name="lblAddSubContract"
-        default="Thêm phụ lục HĐLĐ"
-        [formModel]="formModel"
-      ></codx-label>
-    </button>
+    <div class="d-flex">
+      <button
+        (click)="popupUploadFile()"
+        class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+      >
+        <span class="icon-cloud_upload btn-text-primary me-2"></span>
+        <codx-label
+          fiedName="lblUploadFile"
+          default="Đính kèm"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+      <button
+        *ngIf="actionType == 'edit'"
+        class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+        (click)="handleSubContract('Thêm', 'add', null)"
+      >
+        <span class="icon-add btn-text-primary me-2"></span>
+        <codx-label
+          name="lblAddSubContract"
+          default="Thêm phụ lục HĐLĐ"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
     <button
       class="btn btn-primary"
       (click)="onSaveForm()"
@@ -572,4 +728,33 @@
       </div>
     </div>
   </div>
+</ng-template>
+<ng-template #popIsNewest>
+  <span>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Đang hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Quá hạn"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popIsNotNewsest>
+  <span>
+    <codx-label
+      name="lblIsNotCurrent"
+      [formModel]="view.formModel"
+      default="Chưa hiệu lực"
+    ></codx-label>
+  </span>
 </ng-template>

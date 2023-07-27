@@ -14,6 +14,8 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import moment from 'moment';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-ebasic-salaries',
@@ -39,6 +41,7 @@ export class PopupEBasicSalariesComponent
   headerText: ' ';
   autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   //check where to open the form
   employeeObj: any | null;
@@ -46,6 +49,10 @@ export class PopupEBasicSalariesComponent
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
   useForQTNS: boolean = false;
+  loaded: boolean = false;
+  moment = moment;
+  employeeSign;
+  dateNow = moment().format('YYYY-MM-DD');
   // genderGrvSetup: any;
   //end
   constructor(
@@ -157,6 +164,7 @@ export class PopupEBasicSalariesComponent
     empRequest.predicates = 'EmployeeID=@0';
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      this.employeeSign = emp[0][0];
       if (emp[1] > 0) {
         if (fieldName === 'employeeID') {
           this.employeeObj = emp[0][0];
@@ -174,6 +182,7 @@ export class PopupEBasicSalariesComponent
               .getPositionByID(emp[0][0]?.positionID)
               .subscribe((res) => {
                 if (res) {
+                  this.employeeSign.positionName = res.positionName;
                   this.EBasicSalaryObj.signerPosition = res.positionName;
                   this.formGroup.patchValue({
                     signerPosition: this.EBasicSalaryObj.signerPosition,
@@ -187,6 +196,7 @@ export class PopupEBasicSalariesComponent
               signerPosition: this.EBasicSalaryObj.signerPosition,
             });
           }
+          this.loaded = true;
         }
       }
       this.cr.detectChanges();
@@ -237,6 +247,9 @@ export class PopupEBasicSalariesComponent
             this.EBasicSalaryObj.effectedDate = null;
           }
         }
+        if (this.EBasicSalaryObj.signerID) {
+          this.getEmployeeInfoById(this.EBasicSalaryObj.signerID, 'signerID');
+        }
         this.formGroup.patchValue(this.EBasicSalaryObj);
         this.formModel.currentData = this.EBasicSalaryObj;
         this.isAfterRender = true;
@@ -249,7 +262,7 @@ export class PopupEBasicSalariesComponent
     // this.cr.detectChanges();
   }
 
-  onSaveForm() {
+  async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -269,6 +282,14 @@ export class PopupEBasicSalariesComponent
       );
       return;
     }
+
+    (await this.attachment.saveFilesObservable()).subscribe((res: any) => {
+      console.log(res);
+      if (res?.status == 0) {
+        this.fileAdded(res);
+      }
+    });
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj, this.useForQTNS)
@@ -302,5 +323,13 @@ export class PopupEBasicSalariesComponent
       return date1 <= date2;
     }
     return false;
+  }
+
+  fileAdded(event: any) {
+    this.EBasicSalaryObj.attachments = event.data.length;
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }

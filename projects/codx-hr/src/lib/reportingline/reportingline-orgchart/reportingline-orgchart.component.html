@@ -147,7 +147,7 @@
       </div>
       <div #posListEmp class="hr-list-employee" (scroll)="onScrollEmpList(posListEmp, data?.positionID, data.countEmp)">
         <ng-container *ngFor="let emp of currentViewPosEmp?.employees">
-          <div class="d-flex align-items-centerp py-1">
+          <div class="d-flex align-items-centerp py-1 h-50px">
             <codx-img [objectId]="emp?.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
               [objectName]="emp.employeeName" [width]="30">
             </codx-img>
