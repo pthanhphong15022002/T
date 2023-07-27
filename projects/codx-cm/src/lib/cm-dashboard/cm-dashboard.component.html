@@ -429,9 +429,9 @@
       gridViewName="grvCMMyDashboard"
       default="Thống kê hiệu suất trong năm"
     ></codx-label>
-    <ng-container *ngIf="dataStatisticTarget; else noData">
+    <ng-container *ngIf="dataStatisticTarget?.length > 0; else noData">
       <div class="row w-100">
-        <div class="col-10">
+        <div class="col-10 me-3">
           <div class="control-section mb-10">
             <div class="trackball-control-section" align="center">
               <ejs-chart
