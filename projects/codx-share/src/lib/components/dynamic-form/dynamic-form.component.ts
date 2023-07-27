@@ -113,6 +113,15 @@ export class DynamicFormComponent extends UIComponent {
         delMF[0].disabled = true;
       }
     }
+    if (data.isActive) {
+      let sendMailActiveMF = e.filter(
+        (x: { functionID: string }) => x.functionID == 'TNT0015'
+      );
+
+      if (sendMailActiveMF) {
+        sendMailActiveMF[0].disabled = true;
+      }
+    }
   }
   clickMF(evt?: any, data?: any) {
     this.function = evt;
@@ -155,9 +164,28 @@ export class DynamicFormComponent extends UIComponent {
       case 'CMS0105_1':
         this.openEditProcess(data, evt);
         break;
+
+      //resend active tenant email
+      case 'TNT0015': {
+        this.sendActiveTenantEmail(data);
+        break;
+      }
       default:
         break;
     }
+  }
+
+  //resend active tenant email
+  sendActiveTenantEmail(data) {
+    this.api
+      .execSv(
+        'Tenant',
+        'Tenant',
+        'PaymentsBusiness',
+        'ReactiveTenantAsync',
+        data.tenantID
+      )
+      .subscribe((res) => {});
   }
 
   //Form lịch sử đơn hàng

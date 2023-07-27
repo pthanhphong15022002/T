@@ -52,7 +52,7 @@
         [value]="currentStep?.stepStatus"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-sm"
+        class="badge badge-primary badge-sm w-95px"
       >
       </codx-vll>
       <span
@@ -116,6 +116,7 @@
       cdkDropList
       class="list"
       (cdkDropListDropped)="drop($event, listGroupTask, true)"
+      [ngStyle]="isShowStep && currentStep ? {'margin-right': '38px'} : {}"
     >
       <div cdkDropListGroup>
         <ng-container *ngFor="let groupTask of listGroupTask">
