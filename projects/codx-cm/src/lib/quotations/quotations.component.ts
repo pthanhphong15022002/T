@@ -593,8 +593,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.codxCmService.getProcess(deals.processID).subscribe((process) => {
           if (process) {
             debugger;
+            // this.codxCmService
+            //   .getESCategoryByCategoryID(process.processNo)
+            //   .subscribe((res) => {
             this.codxCmService
-              .getESCategoryByCategoryID(process.processNo)
+              .getDeafaultCategory('CM_Quotations')
               .subscribe((res) => {
                 if (!res) {
                   this.notiService.notifyCode('ES028');
